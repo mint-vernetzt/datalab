@@ -1,0 +1,20 @@
+@font-face {
+  src: url(SourceSans3/SourceSans3-Bold.ttf);
+  font-family: "SourceSans3-Bold";
+}
+
+@font-face {
+  src: url(SourceSans3/SourceSans3-Regular.ttf);
+  font-family: "SourceSans3-Regular";
+}
+
+
+.h1, .h2, .h3, .h4, .h5,
+.h6, h1, h2, h3, h4, h5, h6
+{
+  font-family: SourceSans3-Bold;
+}
+
+* {
+  font-family: SourceSans3-Regular;
+}
