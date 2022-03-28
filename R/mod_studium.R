@@ -28,6 +28,15 @@ mod_studium_ui <- function(id){
             mod_studium_abschluss_ui("mod_studium_abschluss_ui_1")
           )
         )
+      ),
+      fluidRow(
+        shinydashboard::box(
+          title = "Vergleich",
+          width = 12,
+          shiny::mainPanel(
+            mod_studium_compare_ui("mod_studium_compare_ui_1")
+          )
+        )
       )
     )
 
@@ -53,7 +62,14 @@ mod_studium_server <- function(id, data, r){
                       durchgefallen = NULL,
                       ing_natwi = NULL,
                       ing_natwi_1 = NULL,
-                      durchgefallen_1 = NULL,)
+                      durchgefallen_1 = NULL,
+                      date_compare = NULL,
+                      indikator_compare_1 = NULL,
+                      indikator_compare_2 = NULL,
+                      ing_natwi_compare_1 = NULL,
+                      durchgefallen_compare = NULL,
+                      ing_natwi_compare_2 = NULL,
+                      ing_natwi_compare_3 = NULL)
   # comment
   mod_studium_studienzahl_choice_1_server("mod_studium_studienzahl_choice_ui_1_1", r)
   mod_studium_studienzahl_choice_2_server("mod_studium_studienzahl_choice_ui_2_1", r)
@@ -64,6 +80,9 @@ mod_studium_server <- function(id, data, r){
   mod_studium_abschluss_choice_2_server("mod_studium_abschluss_choice_ui_2_1", r)
   mod_studium_abschluss_server("mod_studium_abschluss_ui_1", data, r)
 
+  #comment
+  mod_studium_compare_choice_server("mod_studium_compare_choice_ui_1", r)
+  mod_studium_compare_server("mod_studium_compare_ui_1", data, r)
 }
 
 ## To be copied in the UI
