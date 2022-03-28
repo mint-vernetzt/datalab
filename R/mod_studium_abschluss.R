@@ -19,12 +19,14 @@ mod_studium_abschluss_ui <- function(id){
                     shinydashboard::valueBoxOutput(ns("box_abschluss_female")))),
     br(), br(),br(), br(),
     fluidRow(
-      shiny::column(width = 6,
-                    plotOutput(ns("bar_abschluss"))),
-      shiny::column(width = 6,
-                    plotOutput(ns("waffle_abschluss")))),
+      shiny::column(width = 12,
+                    tabsetPanel(type = "tabs",
+                                tabPanel("Balkendiagramm",plotOutput(ns("bar_abschluss"))),
+                                tabPanel("Waffle",plotOutput(ns("waffle_abschluss")))))
+      ),
     br(), br(),br(), br(),
     fluidRow(
+
       shiny::column(width = 6,
                     mod_studium_abschluss_choice_2_ui("mod_studium_abschluss_choice_ui_2_1")
       ),
@@ -33,11 +35,12 @@ mod_studium_abschluss_ui <- function(id){
                     shinydashboard::valueBoxOutput(ns("box_abschluss_female_2")))),
     br(), br(),br(), br(),
     fluidRow(
-      shiny::column(width = 6,
-                    plotOutput(ns("bar_abschluss_2"))),
-      shiny::column(width = 6,
-                    plotOutput(ns("bar_abschluss_aenderung"))))
-
+      shiny::column(width = 12,
+                    tabsetPanel(type = "tabs",
+                                tabPanel("Balkendiagramm",plotOutput(ns("bar_abschluss_2"))),
+                                tabPanel("Änderung",plotOutput(ns("bar_abschluss_aenderung"))))
+      )
+    )
   )
 }
 
@@ -71,7 +74,8 @@ mod_studium_abschluss_server <- function(id, data, r){
     output$box_abschluss_male <- shinydashboard::renderValueBox({
       res <- box_dynamic_2(data,r)
       value <- tags$p(style = "font-size: 15px;", paste0(res$male))
-      subtitle <- tags$p(style = "font-size: 15px;", paste0("Summe der Abschlüse Männer"))
+      subtitle <- tags$p(style = "font-size: 15px;", paste0("Summe der Abschlüse ",
+                                                            "(", res$pass_fail,")", " Männer"))
       shinydashboard::valueBox(
         value, subtitle, icon = icon("glyphicon-education", lib = "glyphicon"),
         color = "blue"
@@ -81,7 +85,8 @@ mod_studium_abschluss_server <- function(id, data, r){
     output$box_abschluss_female <- shinydashboard::renderValueBox({
       res <- box_dynamic_2(data,r)
       value <- tags$p(style = "font-size: 15px;", paste0(res$female))
-      subtitle <- tags$p(style = "font-size: 15px;", paste0("Summe der Abschlüse Frauen"))
+      subtitle <- tags$p(style = "font-size: 15px;", paste0("Summe der Abschlüse ",
+                                                            "(", res$pass_fail,")", " Männer"))
       shinydashboard::valueBox(
         value, subtitle, icon = icon("glyphicon-education", lib = "glyphicon"),
         color = "blue"

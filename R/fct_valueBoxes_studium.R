@@ -40,18 +40,18 @@ box_dynamic_2 <- function(data,r){
 
   timestamp <- r$date_abschluss
 
-  #geschlecht <- r$geschlecht_abschluss
+  pass_fail <- r$durchgefallen
 
   df <- filter_data_abschluss(data)
 
   df <- df %>% dplyr::filter(jahr == timestamp)
 
-  #df <- df %>% dplyr::filter(status == indicator)
+  df <- df %>% dplyr::filter(prüfungsstatus == pass_fail)
 
   value_string_male <- as.character(sum(df$wert[df$frauen_manner_alle == "männlich"]))
   value_string_female <- as.character(sum(df$wert[df$frauen_manner_alle == "weiblich"]))
 
-  return(list(male = value_string_male, female = value_string_female))
+  return(list(male = value_string_male, female = value_string_female, pass_fail = pass_fail))
 }
 
 #' make_valueBoxes_studium
@@ -68,13 +68,17 @@ box_dynamic_3 <- function(data,r){
 
   date_range <- r$date_abschluss_1
 
+  pass_fail <- r$durchgefallen_1
+
   df <- filter_data_abschluss(data)
 
   df <- df %>% dplyr::filter(jahr >= date_range[1] & jahr <= date_range[2])
+
+  df <- df %>% dplyr::filter(prüfungsstatus == pass_fail)
 
   value_string_male <- as.character(round(mean(df$wert[df$frauen_manner_alle == "männlich"], na.rm = TRUE),1))
   value_string_female <- as.character(round(mean(df$wert[df$frauen_manner_alle == "weiblich"], na.rm = TRUE),1))
 
   return(list(male = value_string_male, female = value_string_female,
-              year_1 = date_range[1], year_2 = date_range[2]))
+              year_1 = date_range[1], year_2 = date_range[2], pass_fail = pass_fail))
 }

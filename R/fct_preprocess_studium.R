@@ -37,7 +37,11 @@ filter_data_abschluss <- function(data){
     dplyr::select(var,frauen_manner_alle,
                   fachbereich_alle_mint_mathe_ing, jahr, wert, quelle)
 
+  # extract string after last underscore
   df <- df %>% tidyr::extract(var, c("var", "status"), "(.*)_([^_]+)")
+
+  # extract string before first underscore
+  df <- df %>% tidyr::extract(var, c("prüfungsstatus", "var"), "([^_]*)_(.*)")
 
   df <- df %>% dplyr::filter(status != "alle")
 
@@ -47,3 +51,35 @@ filter_data_abschluss <- function(data){
 
   return(df)
 }
+
+
+#' filter_studium_studienzahl
+#'
+#' @description A fct function
+#' @param data
+#' @return The return value, if any, from executing the function.
+#'
+#' @noRd
+# filter_data_compare <- function(data){
+#
+#   df <- data %>% dplyr::filter((bereich == "studium") &
+#                                  (typ_absolut_oder_realtiv == "anzahl")) %>%
+#     dplyr::select(var,indikator,frauen_manner_alle,
+#                   fachbereich_alle_mint_mathe_ing, jahr, wert, quelle)
+#
+#   df <- df %>% tidyr::extract(var, c("var", "status"), "(.*)_([^_]+)")
+#
+#   df <- df %>% dplyr::filter(status != "alle")
+#
+#   df <- df[!grepl("quote", df$var),]
+#
+#   df <- df %>%  dplyr::filter((frauen_manner_alle != "gesamt") &
+#                                 (fachbereich_alle_mint_mathe_ing != "alle"))
+#
+#   df2 <- df %>% dplyr::group_by(status, indikator, frauen_manner_alle, jahr) %>%
+#     dplyr::summarize(wert= sum(wert))
+#
+#   df$var <- NULL
+#
+#   return(df)
+# }

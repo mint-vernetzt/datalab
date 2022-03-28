@@ -49,7 +49,11 @@ mod_studium_server <- function(id, data, r){
                       geschlecht_abschluss = NULL,
                       date_abschluss_1 = NULL,
                       geschlecht_abschluss_1 = NULL,
-                      indikator_abschluss_1 = NULL)
+                      indikator_abschluss_1 = NULL,
+                      durchgefallen = NULL,
+                      ing_natwi = NULL,
+                      ing_natwi_1 = NULL,
+                      durchgefallen_1 = NULL,)
   # comment
   mod_studium_studienzahl_choice_1_server("mod_studium_studienzahl_choice_ui_1_1", r)
   mod_studium_studienzahl_choice_2_server("mod_studium_studienzahl_choice_ui_2_1", r)

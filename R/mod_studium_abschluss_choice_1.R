@@ -22,9 +22,25 @@ mod_studium_abschluss_choice_1_ui <- function(id){
         fill = TRUE
       ),
       shinyWidgets::radioGroupButtons(
+        inputId = ns("durchgefallen"),
+        label = "Welchen Status soll der Abschluss haben ?",
+        choices = c("bestanden", "durchgefallen"),
+        justified = TRUE,
+        checkIcon = list(yes = icon("ok",
+                                    lib = "glyphicon"))
+      ),
+      shinyWidgets::radioGroupButtons(
         inputId = ns("geschlecht_abschluss"),
-        label = "Soll die Aufteilung nach Geschlecht getrennt werden ?",
+        label = "Soll nach Geschlecht getrennt werden ?",
         choices = c("Ja", "Nein"),
+        justified = TRUE,
+        checkIcon = list(yes = icon("ok",
+                                    lib = "glyphicon"))
+      ),
+      shinyWidgets::radioGroupButtons(
+        inputId = ns("ing_natwi"),
+        label = "Wähle ein Fach oder gesamt ?",
+        choices = c("Ingenieur" = "ingenieur", "Mathe & Natwi" = "mathe_natwi", "Gesamt"),
         justified = TRUE,
         checkIcon = list(yes = icon("ok",
                                     lib = "glyphicon"))
@@ -46,6 +62,14 @@ mod_studium_abschluss_choice_1_server <- function(id, r){
 
     observeEvent(input$date_abschluss, {
       r$date_abschluss <- input$date_abschluss
+    })
+
+    observeEvent(input$durchgefallen, {
+      r$durchgefallen <- input$durchgefallen
+    })
+
+    observeEvent(input$ing_natwi, {
+      r$ing_natwi <- input$ing_natwi
     })
 
   })
