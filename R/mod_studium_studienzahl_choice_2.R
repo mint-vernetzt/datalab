@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_studium_studienzahl_choice_ui <- function(id){
+mod_studium_studienzahl_choice_2_ui <- function(id){
   ns <- NS(id)
   tagList(
     shiny::column(
@@ -45,7 +45,7 @@ mod_studium_studienzahl_choice_ui <- function(id){
 #' studium_studienzahl_choice_2 Server Functions
 #'
 #' @noRd
-mod_studium_studienzahl_choice_server <- function(id, r){
+mod_studium_studienzahl_choice_2_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     # ns <- session$ns
 

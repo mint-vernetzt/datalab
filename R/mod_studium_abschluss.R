@@ -12,7 +12,7 @@ mod_studium_abschluss_ui <- function(id){
   tagList(
     fluidRow(
       shiny::column(width = 6,
-                    mod_studium_abschluss_choice_2_ui("mod_studium_abschluss_choice_ui_2_1")
+                    mod_studium_abschluss_choice_1_ui("mod_studium_abschluss_choice_ui_1_1")
       ),
       shiny::column(width = 6,
                     shinydashboard::valueBoxOutput(ns("box_abschluss_male")),
@@ -26,7 +26,7 @@ mod_studium_abschluss_ui <- function(id){
     br(), br(),br(), br(),
     fluidRow(
       shiny::column(width = 6,
-                    mod_studium_abschluss_choice_1_ui("mod_studium_abschluss_choice_ui_1_1")
+                    mod_studium_abschluss_choice_2_ui("mod_studium_abschluss_choice_ui_2_1")
       ),
       shiny::column(width = 6,
                     shinydashboard::valueBoxOutput(ns("box_abschluss_male_2")),

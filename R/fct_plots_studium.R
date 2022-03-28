@@ -16,7 +16,7 @@ studienzahl_plot <- function(data,r){
 
   indicator <- r$indikator
 
-  df <- filter_data(data)
+  df <- filter_data_studienanzahl(data)
 
   df <- df %>% dplyr::filter(jahr >= date_range[1] & jahr <= date_range[2])
 
@@ -69,7 +69,7 @@ studienzahl_waffle <- function(data,r) {
 
   indicator <- r$indikator_waffle
 
-  df <- filter_data(data)
+  df <- filter_data_studienanzahl(data)
 
   df <- df %>% dplyr::filter(jahr == timestamp)
 
@@ -141,7 +141,7 @@ studienzahl_line <- function(data, r){
 
   date_range <- r$date
 
-  df <- filter_data(data)
+  df <- filter_data_studienanzahl(data)
 
   df <- df %>% dplyr::filter(jahr >= date_range[1] & jahr <= date_range[2])
 

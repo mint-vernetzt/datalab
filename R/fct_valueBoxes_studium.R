@@ -14,7 +14,7 @@ box_dynamic_1 <- function(data,r){
 
   indicator <- r$indikator_waffle
 
-  df <- filter_data(data)
+  df <- filter_data_studienanzahl(data)
 
   df <- df %>% dplyr::filter(jahr == timestamp)
 
