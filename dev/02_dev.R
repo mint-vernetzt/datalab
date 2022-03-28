@@ -21,11 +21,22 @@ attachment::att_amend_desc()
 ## Create a module infrastructure in R/
 golem::add_module(name = "randomplot", with_test = FALSE) # Name of the module
 golem::add_module(name = "name_of_module2", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_studienzahl", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_studienzahl_choice_1", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_studienzahl_choice_2", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_abschluss", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_abschluss_choice_1", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_abschluss_choice_2", with_test = TRUE) # Name of the module
+
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
 golem::add_fct("helpers", with_test = TRUE)
+golem::add_fct(name = "preprocess_studium", module = NULL,with_test = TRUE)
+golem::add_fct(name = "plots_studium", module = NULL,with_test = TRUE)
+golem::add_fct(name = "valueBoxes_studium", module = NULL,with_test = TRUE)
 golem::add_utils("ui_body", with_test = FALSE)
+golem::add_utils(name = "helpers")
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

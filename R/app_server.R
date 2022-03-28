@@ -17,4 +17,6 @@ app_server <- function(input, output, session) {
   # callModule(mod_schule_server, "schule_ui_1", data=example_data, filter_name="schule")
   mod_schule_server("schule_ui_1", data=example_data, filter_name="schule")
 
+  mod_studium_server("studium_ui_1", data=example_data)
+
 }
