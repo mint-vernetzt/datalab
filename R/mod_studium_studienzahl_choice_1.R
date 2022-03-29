@@ -12,18 +12,18 @@ mod_studium_studienzahl_choice_1_ui <- function(id){
   tagList(
 
     shiny::column(
-      width = 2,
+      width = 6,
       shinyWidgets::prettyRadioButtons(
         inputId = ns("date_waffle"),
         label = "Wähle ein Jahr:",
         choices = c(2012, 2015, 2018, 2020),
-        selected = 2020,
+        selected = 2012,
         inline = TRUE,
         fill = TRUE
       ),
       shinyWidgets::radioGroupButtons(
-        inputId = ns("geschlecht_waffle"),
-        label = "Soll die Aufteilung nach Geschlecht getrennt werden ?",
+        inputId = ns("fach_waffle"),
+        label = "Soll nach Studienfach aufgeteilt werden ?",
         choices = c("Ja", "Nein"),
         justified = TRUE,
         checkIcon = list(yes = icon("ok",
@@ -32,10 +32,9 @@ mod_studium_studienzahl_choice_1_ui <- function(id){
       shinyWidgets::pickerInput(
         inputId = ns("indikator_waffle"),
         label = "Wähle ein Indikator:",
-        choices = list(
-          Insgesamt = c("eingeschrieben"),
-          Studienanfänger = c("1hs", "1fs")
-        )
+        choices = c("Eingeschrieben" = "eingeschrieben",
+                    "1.Hochschulemester" = "1hs",
+                    "1.Fachsemester" = "1fs")
       )
     )
 
@@ -49,8 +48,8 @@ mod_studium_studienzahl_choice_1_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     # ns <- session$ns
 
-    observeEvent(input$geschlecht_waffle, {
-      r$geschlecht_waffle <- input$geschlecht_waffle
+    observeEvent(input$fach_waffle, {
+      r$fach_waffle <- input$fach_waffle
     })
 
     observeEvent(input$date_waffle, {

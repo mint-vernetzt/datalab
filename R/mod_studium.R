@@ -13,7 +13,7 @@ mod_studium_ui <- function(id){
     fluidPage(
       fluidRow(
         shinydashboard::box(
-          title = "Studentenzahl nach Fach",
+          title = "Studentenzahlen von eingeschriebenen Studenten:innen und Studienanfänger:innen",
           width = 12,
           shiny::mainPanel(
             mod_studium_studienzahl_ui("mod_studium_studienzahl_ui_1")
@@ -51,7 +51,7 @@ mod_studium_server <- function(id, data, r){
   r <- reactiveValues(geschlecht = NULL,
                       date = NULL,
                       indikator = NULL,
-                      geschlecht_waffle = NULL,
+                      fach_waffle = NULL,
                       date_waffle = NULL,
                       indikator_waffle = NULL,
                       date_abschluss = NULL,

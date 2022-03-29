@@ -11,7 +11,7 @@ mod_studium_studienzahl_choice_2_ui <- function(id){
   ns <- NS(id)
   tagList(
     shiny::column(
-      width = 2,
+      width = 6,
       shinyWidgets::sliderTextInput(
         inputId = ns("date"),
         label = "Wähle ein Zeitraum:",
@@ -33,10 +33,9 @@ mod_studium_studienzahl_choice_2_ui <- function(id){
       shinyWidgets::pickerInput(
         inputId = ns("indikator"),
         label = "Wähle ein Indikator:",
-        choices = list(
-          Insgesamt = c("eingeschrieben"),
-          Studienanfänger = c("1hs", "1fs")
-        )
+        choices = c("Eingeschrieben" = "eingeschrieben",
+                    "1.Hochschulemester" = "1hs",
+                    "1.Fachsemester" = "1fs")
       )
     )
   )

@@ -37,7 +37,7 @@ studienzahl_plot <- function(data,r){
                                    dictionary_title_studium_studentenzahl[[indicator]],
                                    " für die Jahre ", date_range[1], " bis ", date_range[2]),
                     caption = paste0("Quelle: ", unique(df$quelle))) + ggplot2::theme_bw() +
-      ggplot2::xlab("Wert") + ggplot2::ylab("Jahr")
+      ggplot2::ylab("Anzahl Student:innen") + ggplot2::xlab("Jahre")
 
   }else {
 
@@ -51,7 +51,7 @@ studienzahl_plot <- function(data,r){
                                    dictionary_title_studium_studentenzahl[[indicator]],
                                    " für die Jahre \n ", date_range[1], " bis ", date_range[2]),
                     caption = paste0("Quelle: ", unique(df$quelle))) + ggplot2::theme_bw() +
-      ggplot2::xlab("Wert") + ggplot2::ylab("Jahr")
+      ggplot2::ylab("Anzahl Student:innen") + ggplot2::ylab("Jahre")
   }
 }
 
@@ -67,7 +67,7 @@ studienzahl_plot <- function(data,r){
 
 studienzahl_waffle <- function(data,r) {
 
-  gender_select <- r$geschlecht_waffle
+  studienfach <- r$fach_waffle
 
   timestamp <- r$date_waffle
 
@@ -79,51 +79,68 @@ studienzahl_waffle <- function(data,r) {
 
   df <- df %>% dplyr::filter(status == indicator)
 
-  df$wert <- df$wert/1000
+  df <- df %>% dplyr::filter(frauen_manner_alle != "gesamt")
 
 
 
-  if(gender_select == "Nein"){
+  if(studienfach == "Nein"){
 
-    ggplot2::ggplot(df, ggplot2::aes(fill = fachbereich_alle_mint_mathe_ing, values = wert)) +
+    df <- df %>% dplyr::group_by(frauen_manner_alle) %>%
+      dplyr::mutate(props = sum(wert))
+
+    df <- df[!duplicated(df$props), ]
+
+    df <- df %>% dplyr::group_by(frauen_manner_alle) %>%
+      dplyr::summarize(proportion = wert/props)
+
+    df$proportion <- df$proportion * 100
+
+    ggplot2::ggplot(df, ggplot2::aes(fill = frauen_manner_alle, values = proportion)) +
       ggplot2::expand_limits(x = c(0, 0), y = c(0, 0)) +
       ggplot2::coord_equal() +
       ggplot2::labs(fill = NULL, colour = NULL) +
       waffle::theme_enhance_waffle() +
       waffle::geom_waffle(
-        n_rows = 5,
+        #n_rows = 5,
         flip = FALSE,
         color = "white",
         size = 0.33
       ) +
       ggplot2::theme_void() +  ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
                                               legend.position = "bottom") +
-      ggplot2::labs(title = paste0("Gesamtzahl der Studenten \n" ,
+      ggplot2::labs(title = paste0("Anteil der Studenten \n" ,
                                    dictionary_title_studium_studentenzahl[[indicator]],
                                    " für das Jahr ", timestamp),
-                    subtitle = "1 box = 1000 Personen")
+                    subtitle = "1 box = 1%")
 
   }else{
-    df <- df %>% dplyr::filter(frauen_manner_alle != "gesamt")
 
-    ggplot2::ggplot(df, ggplot2::aes(fill = fachbereich_alle_mint_mathe_ing, values = wert)) +
+    df <- df %>% dplyr::group_by(fachbereich_alle_mint_mathe_ing) %>%
+      dplyr::mutate(props = sum(wert))
+
+    df <- df %>% dplyr::group_by(frauen_manner_alle, fachbereich_alle_mint_mathe_ing) %>%
+      dplyr::summarize(proportion = wert/props)
+
+    df$proportion <- df$proportion * 100
+
+    ggplot2::ggplot(df, ggplot2::aes(fill = frauen_manner_alle, values = proportion)) +
       ggplot2::expand_limits(x = c(0, 0), y = c(0, 0)) +
       ggplot2::coord_equal() +
       ggplot2::labs(fill = NULL, colour = NULL) +
       waffle::theme_enhance_waffle() +
       waffle::geom_waffle(
-        n_rows = 5,
+       # n_rows = 5,
         flip = FALSE,
         color = "white",
         size = 0.33
       ) +
       ggplot2::theme_void() +  ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
                                               legend.position = "bottom")+
-      ggplot2::labs(title = paste0("Gesamtzahl der Studenten \n" ,
+      ggplot2::labs(title = paste0("Anteil der Studenten \n" ,
                                    dictionary_title_studium_studentenzahl[[indicator]],
                                    " für das Jahr ", timestamp),
-                    subtitle = "1 box = 1000 Personen") +
-      ggplot2::facet_grid(~frauen_manner_alle)
+                    subtitle = "1 box = 1%") +
+      ggplot2::facet_grid(~fachbereich_alle_mint_mathe_ing)
 
   }
 
@@ -147,6 +164,8 @@ studienzahl_line <- function(data, r){
 
   df <- filter_data_studienanzahl(data)
 
+  quelle <- unique(df$quelle)
+
   df <- df %>% dplyr::filter(jahr >= date_range[1] & jahr <= date_range[2])
 
   if(gender_select == "Nein"){
@@ -155,7 +174,10 @@ studienzahl_line <- function(data, r){
 
     ggplot2::ggplot(df, ggplot2::aes(y=wert, x=jahr, color = frauen_manner_alle)) +
       ggplot2::geom_line() + ggplot2::theme_bw() +
-      ggplot2::xlab("Wert") + ggplot2::ylab("Jahr")
+      ggplot2::ylab("Anzahl Studenten:innen") + ggplot2::ylab("Jahre") +
+      ggplot2::labs(title = paste0("Anzahl der Studenten:innen für die Jahre von",
+                    date_range[1], " bis ", date_range[2]),
+                    caption = paste0("Quelle: ", quelle))
 
   }else{
 
@@ -163,7 +185,12 @@ studienzahl_line <- function(data, r){
 
     ggplot2::ggplot(df, ggplot2::aes(y=wert, x=jahr, color = frauen_manner_alle)) +
       ggplot2::geom_line() + ggplot2::theme_bw() +
-      ggplot2::xlab("Wert") + ggplot2::ylab("Jahr")
+      ggplot2::ylab("Anzahl Studenten:innen") + ggplot2::xlab("Jahre") +
+      ggplot2::labs(color = "Geschlecht",
+                    title = paste0("Anzahl der Studenten:innen für die Jahre von",
+                    date_range[1], " bis ", date_range[2]),
+                    caption = paste0("Quelle: ", quelle))
+
 
   }
 
@@ -740,7 +767,8 @@ comparer_plot <- function(data, r, r_abschluss,
     ggplot2::xlab("prozentualer Anteil") +
     ggplot2::xlim(0,1) +
     ggplot2::theme_minimal() +
-    ggplot2::labs(title = paste0("Verhältnis von Frauen und Männern im akademischen Bereich für den Bereich MINT für das Jahr ", timestamp),
+    ggplot2::labs(title = paste0("Verhältnis von Frauen und Männern im akademischen Bereich für den Bereich MINT
+                                 für das Jahr ", timestamp),
                   caption = paste0("Quelle: ", quelle),
                   color='Geschlecht')
 

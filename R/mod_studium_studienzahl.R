@@ -13,17 +13,27 @@ mod_studium_studienzahl_ui <- function(id){
     br(),br(),br(),
     fluidRow(
       shiny::column(width = 6,
+                    mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
+      shiny::column(width = 6,
                     shinydashboard::valueBoxOutput(ns("box_durchschnitt_male")),
-                    shinydashboard::valueBoxOutput(ns("box_durchschnitt_female")))),
-    mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1"),
+                    shinydashboard::valueBoxOutput(ns("box_durchschnitt_female"))
+                   )),
+    br(),
+    fluidRow(
     shiny::column(width = 10,
-                  plotOutput(ns("plot_waffle"))),
-    br(), br(),br(), br(),
-    mod_studium_studienzahl_choice_2_ui("mod_studium_studienzahl_choice_ui_2_1"),
+                  plotOutput(ns("plot_waffle")))),
+    hr(),
+    h4("Studienzahlen im zeitlichen Verlauf vergleichbar"),
+    br(),br(),
+    fluidRow(
+    shiny::column(width = 6,
+    mod_studium_studienzahl_choice_2_ui("mod_studium_studienzahl_choice_ui_2_1"))),
+    br(),br(),
+    fluidRow(
     shiny::column(width = 10,
                   tabsetPanel(type = "tabs",
                               tabPanel("Balkendiagramm",plotOutput(ns("plot"))),
-                              tabPanel("Linienplot",plotOutput(ns("plot_line"))))
+                              tabPanel("Linienplot",plotOutput(ns("plot_line")))))
     )
   )
 }

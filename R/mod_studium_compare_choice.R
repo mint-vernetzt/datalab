@@ -39,8 +39,8 @@ mod_studium_compare_choice_ui <- function(id){
         inputId = ns("indikator_compare_2"),
         label = "Wähle ob eingeschrieben oder Studienanfänger:innen:",
         choices = c("Eingeschrieben" = "eingeschrieben",
-                    "1. HS-Semester" = "1hs",
-                    "1. FS-Semester" = "1fs"),
+                    "1.Hochschulemester" = "1hs",
+                    "1.Fachsemester" = "1fs"),
         multiple = TRUE
       ),
       hr(),
