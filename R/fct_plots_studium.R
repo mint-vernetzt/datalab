@@ -609,3 +609,99 @@ abschluss_aenderung <- function(data,r){
     }
   }
 }
+
+#' @description A fct function
+#'
+#' @return The return value, if any, from executing the function.
+#' @param data
+#' @param r
+#' @noRd
+
+comparer_plot <- function(data, r){
+
+  timestamp <- r$date_compare
+
+  df <- df %>% dplyr::filter(jahr == timestamp)
+
+  df <- df %>% dplyr::filter(frauen_manner_alle != "gesamt")
+
+################################# Abschluss ####################################
+
+  # Abschluss reactives
+  indikator_abschluss <- r$indikator_compare_1
+  durchgefallen_abschluss <- r$durchgefallen_compare
+  subject_abschluss <- r$ing_natwi_compare_3
+
+  # Abschluss dataset
+  df_abschluss <- df %>% subset(prüfungsstatus %in% durchgefallen_abschluss)
+  df_abschluss <- df_abschluss %>% subset(status %in% indikator_abschluss)
+  df_abschluss <- filter_data_compare(df_abschluss, subject_abschluss, "Abschluss")
+
+  df_abschluss <- df_abschluss %>% dplyr::group_by(prüfungsstatus, status,
+                                                   fachbereich_alle_mint_mathe_ing) %>%
+    dplyr::mutate(props = sum(wert))
+
+  df_abschluss <- df_abschluss_2 %>% dplyr::group_by(prüfungsstatus, status,frauen_manner_alle,
+                                                     fachbereich_alle_mint_mathe_ing) %>%
+    dplyr::summarize(proportion = wert/props)
+
+################################# Studienzahl ##################################
+  # Abschluss reactives
+  indikator_studienzahl <- r$indikator_compare_2
+  subject_studienzahl <- r$ing_natwi_compare_2
+
+  # Studienzahl dataset
+  df_studienzahl <- df %>% subset(status %in% indikator_studienzahl)
+  df_studienzahl <- filter_data_compare(df_studienzahl, subject_studienzahl, "Studienzahl")
+
+
+  df_studienzahl <- df_studienzahl %>% dplyr::group_by(prüfungsstatus, status,
+                                                     fachbereich_alle_mint_mathe_ing) %>%
+    dplyr::mutate(props = sum(wert))
+
+  df_studienzahl <- df_studienzahl %>% dplyr::group_by(prüfungsstatus, status,frauen_manner_alle,
+                                                       fachbereich_alle_mint_mathe_ing) %>%
+    dplyr::summarize(proportion = wert/props)
+
+
+################################# Habilitation #################################
+  # Habilitation reactives
+  subject_habilitation <- r$ing_natwi_compare_1
+
+  # Habilitation dataset
+  df_habil <- filter_data_compare(df, subject_habilitation, "Habilitation")
+
+  df_habil <- df_habil %>% dplyr::group_by(prüfungsstatus, status,
+                                                       fachbereich_alle_mint_mathe_ing) %>%
+    dplyr::mutate(props = sum(wert))
+
+  df_habil <- df_habil %>% dplyr::group_by(prüfungsstatus, status,frauen_manner_alle,
+                                                       fachbereich_alle_mint_mathe_ing) %>%
+    dplyr::summarize(proportion = wert/props)
+
+################################################################################
+
+
+  df <- rbind(df_studienzahl,df_studienzahl,df_habil)
+
+  Males <- df_abschluss_2 %>%
+    dplyr::filter(frauen_manner_alle == "männlich")
+  Females <- df_abschluss_2 %>%
+    dplyr::filter(frauen_manner_alle == "weiblich")
+
+  ggplot2::ggplot(df_abschluss_2) +
+    ggplot2::geom_segment(data = Males,
+                          ggplot2::aes(x = proportion, y = status,
+                     yend = Females$status, xend = Females$proportion), #use the $ operator to fetch data from our "Females" tibble
+                 color = "#aeb6bf",
+                 size = 4.5, #Note that I sized the segment to fit the points
+                 alpha = .5) +
+    ggplot2::geom_point(ggplot2::aes(x = proportion, y = status, color = frauen_manner_alle),
+                        size = 4, show.legend = TRUE)
+
+}
+
+
+
+
+

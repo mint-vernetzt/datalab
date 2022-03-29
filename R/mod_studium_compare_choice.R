@@ -20,6 +20,7 @@ mod_studium_compare_choice_ui <- function(id){
         inline = TRUE,
         fill = TRUE
       ),
+      hr(),
       h4("Abschlusszahlen"),
       shinyWidgets::pickerInput(
         inputId = ns("indikator_compare_1"),
@@ -30,6 +31,7 @@ mod_studium_compare_choice_ui <- function(id){
                     "Promotion" = "promotion"),
         multiple = TRUE
       ),
+      hr(),
       h4("Studierendenzahlen"),
       shinyWidgets::pickerInput(
         inputId = ns("indikator_compare_2"),
@@ -39,16 +41,19 @@ mod_studium_compare_choice_ui <- function(id){
                     "1. FS-Semester" = "1fs"),
         multiple = TRUE
       ),
+      hr(),
       h4("Habilitationszahlen"),
       shinyWidgets::checkboxGroupButtons(
         inputId = ns("ing_natwi_compare_1"),
         label = "Wähle ein Fach oder gesamt ?",
-        choices = c("Ingenieur" = "ingenieur", "Mathe & Natwi" = "mathe_natwi", "Gesamt"),
+        choices = c("Ingenieur" = "ingenieur", "Mathe & Natwi" = "mathe_natwi"),
         justified = TRUE,
         checkIcon = list(yes = icon("ok",
                                     lib = "glyphicon"))
       )
     ),
+    br(),br(),br(),br(),
+    p(" ", style = "margin-bottom: 31px;"),
     shiny::column(
       width = 4,
       shinyWidgets::checkboxGroupButtons(
@@ -59,10 +64,12 @@ mod_studium_compare_choice_ui <- function(id){
         checkIcon = list(yes = icon("ok",
                                     lib = "glyphicon"))
       ),
-      shinyWidgets::radioGroupButtons(
+      br(),br(),br(),br(),
+      #p(" ", style = "margin-bottom: 5px;"),
+      shinyWidgets::checkboxGroupButtons(
         inputId = ns("ing_natwi_compare_2"),
         label = "Wähle ein Fach oder gesamt ?",
-        choices = c("Ingenieur" = "ingenieur", "Mathe & Natwi" = "mathe_natwi", "Gesamt"),
+        choices = c("Ingenieur" = "ingenieur", "Mathe & Natwi" = "mathe_natwi"),
         justified = TRUE,
         checkIcon = list(yes = icon("ok",
                                     lib = "glyphicon"))
@@ -70,10 +77,10 @@ mod_studium_compare_choice_ui <- function(id){
     ),
     shiny::column(
       width = 4,
-      shinyWidgets::radioGroupButtons(
+      shinyWidgets::checkboxGroupButtons(
         inputId = ns("ing_natwi_compare_3"),
         label = "Wähle ein Fach oder gesamt ?",
-        choices = c("Ingenieur" = "ingenieur", "Mathe & Natwi" = "mathe_natwi", "Gesamt"),
+        choices = c("Ingenieur" = "ingenieur", "Mathe & Natwi" = "mathe_natwi"),
         justified = TRUE,
         checkIcon = list(yes = icon("ok",
                                     lib = "glyphicon"))
@@ -85,7 +92,7 @@ mod_studium_compare_choice_ui <- function(id){
 #' studium_compare_choice Server Functions
 #'
 #' @noRd
-mod_studium_compare_choice_server <- function(id){
+mod_studium_compare_choice_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     #ns <- session$ns
 

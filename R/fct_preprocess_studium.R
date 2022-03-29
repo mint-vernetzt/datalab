@@ -83,3 +83,34 @@ filter_data_compare <- function(data){
 
   return(df)
 }
+
+#' filter_studium_studienzahl
+#'
+#' @description A fct function
+#' @param data
+#' @return The return value, if any, from executing the function.
+#'
+#' @noRd
+filter_data_compare <- function(df, subject, type){
+
+  if (type == "Abschluss"){
+
+    df <- df %>% dplyr::filter(indikator == "abschlusspruefungszahlen")
+
+  } else if (type == "Studienzahl"){
+
+    df <- df %>% dplyr::filter(indikator == "studierendenanzahl")
+
+  } else {
+
+    df <- df %>% dplyr::filter(indikator == "habilitationszahlen")
+
+  }
+
+
+
+  df <- df %>% subset(fachbereich_alle_mint_mathe_ing %in% subject)
+
+
+  return(df)
+}
