@@ -223,20 +223,21 @@ abschlusszahl_bar <- function(data,r){
     plot <- ggplot2::ggplot(df, ggplot2::aes(fill=frauen_manner_alle, y=reorder(status,wert), x=wert)) +
       ggplot2::geom_bar(stat="identity", position = "dodge") +
       ggplot2::theme_bw() +
-      ggplot2::xlab("Wert") + ggplot2::ylab("Jahr") +
+      ggplot2::xlab("Jahre") + ggplot2::ylab("akademischer Grad") +
       ggplot2::geom_text(ggplot2::aes(label=wert, hjust = "left"),
                          position=ggplot2::position_dodge(width=0.9))
 
     if(subject == "Gesamt"){
 
       plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")"," im Jahr ",
-                                          timestamp, " im gesamten MINT Fachebreich"),
+                                          timestamp, " im gesamten MINT Fachebreich"), fill = "Geschlecht",
                                  caption = paste0("Quelle: ", unique(df$quelle)))
     }else{
 
       plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")"," im Jahr ",
                                           timestamp, " im Fachebreich ",
                                           dictionary_title_studium_abschluss[[subject]]),
+                           fill = "Geschlecht",
                            caption = paste0("Quelle: ", unique(df$quelle)))
     }
 
@@ -247,7 +248,7 @@ abschlusszahl_bar <- function(data,r){
     plot <- ggplot2::ggplot(df, ggplot2::aes(y=reorder(status,wert), x=wert)) +
       ggplot2::geom_bar(stat="identity", position = "dodge") +
       ggplot2::theme_bw() +
-      ggplot2::xlab("Wert") + ggplot2::ylab("Jahr") +
+      ggplot2::xlab("Jahre") + ggplot2::ylab("akademischer Grad") +
       ggplot2::geom_text(ggplot2::aes(label=wert, hjust = "left"),
                          position=ggplot2::position_dodge(width=0.9))
 
@@ -438,13 +439,13 @@ abschluss_bar_2 <- function(data,r){
       ggplot2::facet_wrap(~frauen_manner_alle) +
       ggplot2::geom_bar(position="stack", stat="identity") +
       ggplot2::theme_bw() +
-      ggplot2::xlab("Wert") + ggplot2::ylab("Jahr")
+      ggplot2::xlab("Jahre") + ggplot2::ylab("Anzahl Abschlüsse")
 
     if(subject == "Gesamt"){
 
       plot +  ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,") /n",
                                            "für die Jahre ", date_range[1], " bis ", date_range[2],
-                                           " im gesamten MINT Fachebreich"),
+                                           " im gesamten MINT Fachebreich"),fill = "Indikator",
                                  caption = paste0("Quelle: ", unique(df$quelle)))
     }else{
 
@@ -452,6 +453,7 @@ abschluss_bar_2 <- function(data,r){
                                           " für die Jahre ", date_range[1], " bis ", date_range[2],
                                           " im Fachebreich ",
                                           dictionary_title_studium_abschluss[[subject]]),
+                           fill = "Indikator",
                            caption = paste0("Quelle: ", unique(df$quelle)))
     }
 
@@ -465,19 +467,19 @@ abschluss_bar_2 <- function(data,r){
       ggplot2::labs(title = paste0("Anzahl der Abschlüsse \n ",
                                    "für die Jahre ", date_range[1], " bis ", date_range[2]),
                     caption = paste0("Quelle: ", unique(df$quelle))) + ggplot2::theme_bw() +
-      ggplot2::xlab("Wert") + ggplot2::ylab("Jahr")
+      ggplot2::xlab("Jahre") + ggplot2::ylab("Anzahl Abschlüsse")
 
     if(subject == "Gesamt"){
 
       plot +  ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,") /n",
                                            " für die Jahre ", date_range[1], " bis ", date_range[2],
-                                           " im gesamten MINT Fachebreich"),
+                                           " im gesamten MINT Fachebreich"),fill = "Indikator",
                             caption = paste0("Quelle: ", unique(df$quelle)))
     }else{
 
       plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")",
                                           " für die Jahre ", date_range[1], " bis ", date_range[2],
-                                          " im Fachebreich ",
+                                          " im Fachebreich ",fill = "Indikator",
                                           dictionary_title_studium_abschluss[[subject]]),
                            caption = paste0("Quelle: ", unique(df$quelle)))
     }
@@ -550,8 +552,8 @@ abschluss_aenderung <- function(data,r){
       ggplot2::geom_text(ggplot2::aes(label = paste(round(aenderung, 2),"%")),
                          hjust = ifelse(df$aenderung < 0, 0, 1),
                          vjust = 0.5) +
-      ggplot2::xlab("prozentuale Änderung") +
-      ggplot2::ylab("Kategorie") +
+      ggplot2::xlab("") +
+      ggplot2::ylab("prozentuale Änderung") +
       ggplot2::coord_flip() + ggplot2::theme_bw() +
       ggplot2::labs(title = paste0("Prozentual Änderung der Abschlüsse: \n ",
                                    date_range[1], " vs ", date_range[2]),
@@ -738,7 +740,7 @@ comparer_plot <- function(data, r, r_abschluss,
     ggplot2::xlab("prozentualer Anteil") +
     ggplot2::xlim(0,1) +
     ggplot2::theme_minimal() +
-    ggplot2::labs(title = paste0("Verhältnis von Frauen Männern im akademischen Bereich für den Bereich MINT für das Jahr ", timestamp),
+    ggplot2::labs(title = paste0("Verhältnis von Frauen und Männern im akademischen Bereich für den Bereich MINT für das Jahr ", timestamp),
                   caption = paste0("Quelle: ", quelle),
                   color='Geschlecht')
 

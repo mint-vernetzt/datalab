@@ -10,6 +10,7 @@
 mod_studium_studienzahl_ui <- function(id){
   ns <- NS(id)
   tagList(
+    br(),br(),br(),
     fluidRow(
       shiny::column(width = 6,
                     shinydashboard::valueBoxOutput(ns("box_durchschnitt_male")),

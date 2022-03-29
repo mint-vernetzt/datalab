@@ -22,7 +22,7 @@ mod_studium_ui <- function(id){
       ),
       fluidRow(
         shinydashboard::box(
-          title = "Abschlusszahlen nach akademischem Grad",
+          title = "Abschlusszahlen von Studierenden unterteilt nach akademischem Grad",
           width = 12,
           shiny::mainPanel(
             mod_studium_abschluss_ui("mod_studium_abschluss_ui_1")

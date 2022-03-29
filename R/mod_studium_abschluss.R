@@ -10,6 +10,7 @@
 mod_studium_abschluss_ui <- function(id){
   ns <- NS(id)
   tagList(
+    br(),br(),br(),
     fluidRow(
       shiny::column(width = 6,
                     mod_studium_abschluss_choice_1_ui("mod_studium_abschluss_choice_ui_1_1")
@@ -24,7 +25,9 @@ mod_studium_abschluss_ui <- function(id){
                                 tabPanel("Balkendiagramm",plotOutput(ns("bar_abschluss"))),
                                 tabPanel("Waffle",plotOutput(ns("waffle_abschluss")))))
       ),
-    br(), br(),br(), br(),
+    hr(),
+    h4("Abschlusszahlen im zeitlichen Verlauf vergleichbar"),
+    br(),br(),
     fluidRow(
 
       shiny::column(width = 6,
@@ -86,7 +89,7 @@ mod_studium_abschluss_server <- function(id, data, r){
       res <- box_dynamic_2(data,r)
       value <- tags$p(style = "font-size: 15px;", paste0(res$female))
       subtitle <- tags$p(style = "font-size: 15px;", paste0("Summe der Abschlüse ",
-                                                            "(", res$pass_fail,")", " Männer"))
+                                                            "(", res$pass_fail,")", " Frauen"))
       shinydashboard::valueBox(
         value, subtitle, icon = icon("glyphicon-education", lib = "glyphicon"),
         color = "blue"

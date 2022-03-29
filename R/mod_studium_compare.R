@@ -10,6 +10,7 @@
 mod_studium_compare_ui <- function(id){
   ns <- NS(id)
   tagList(
+    br(),br(),br(),
     fluidRow(
     mod_studium_compare_choice_ui("mod_studium_compare_choice_ui_1"),
     ),

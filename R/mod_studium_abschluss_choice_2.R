@@ -26,6 +26,7 @@ mod_studium_abschluss_choice_2_ui <- function(id){
         inputId = ns("durchgefallen_1"),
         label = "Welchen Status soll der Abschluss haben ?",
         choices = c("bestanden", "durchgefallen"),
+        width = "260px",
         justified = TRUE,
         checkIcon = list(yes = icon("ok",
                                     lib = "glyphicon"))
@@ -40,15 +41,16 @@ mod_studium_abschluss_choice_2_ui <- function(id){
       ),
       shinyWidgets::radioGroupButtons(
         inputId = ns("ing_natwi_1"),
-        label = "Wähle ein Fach oder gesamt ?",
+        label = "Wähle ein Fach oder gesamt:",
         choices = c("Ingenieur" = "ingenieur", "Mathe & Natwi" = "mathe_natwi", "Gesamt"),
         justified = TRUE,
+        width = "360px",
         checkIcon = list(yes = icon("ok",
                                     lib = "glyphicon"))
       ),
       shinyWidgets::awesomeCheckboxGroup(
         inputId = ns("indikator_abschluss_1"),
-        label = "Indikator",
+        label = "Wähle ein oder mehrere Indikatoren:",
         choices = c("bachelor", "fh", "lehramt", "master", "promotion", "uni"),
         selected = "bachelor",
         status = "primary",
