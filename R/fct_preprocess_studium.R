@@ -79,6 +79,8 @@ filter_data_compare <- function(data){
 
   df <- df %>%  dplyr::filter((fachbereich_alle_mint_mathe_ing != "alle"))
 
+  df <- df[!grepl("lehramt", df$var),]
+
   df$var <- NULL
 
   return(df)
@@ -91,7 +93,7 @@ filter_data_compare <- function(data){
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-filter_data_compare <- function(df, subject, type){
+filter_indikator <- function(df, subject, type){
 
   if (type == "Abschluss"){
 

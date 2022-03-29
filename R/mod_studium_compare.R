@@ -11,7 +11,12 @@ mod_studium_compare_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(
-    mod_studium_compare_choice_ui("mod_studium_compare_choice_ui_1")
+    mod_studium_compare_choice_ui("mod_studium_compare_choice_ui_1"),
+    #shiny::submitButton("Update View", icon("refresh"))
+    ),
+    fluidRow(
+      shiny::column(width = 12, plotOutput(ns("plot_compare"))
+      )
     )
   )
 }
@@ -23,6 +28,10 @@ mod_studium_compare_server <- function(id, data, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    output$plot_compare <- renderPlot({
+      comparer_plot(data,r)
+
+    })
   })
 }
 

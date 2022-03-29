@@ -29,6 +29,8 @@ mod_studium_compare_choice_ui <- function(id){
                     "Master" = "master",
                     "Lehramt" = "lehramt",
                     "Promotion" = "promotion"),
+        selected = c("Bachelor" = "bachelor",
+                     "Master" = "master"),
         multiple = TRUE
       ),
       hr(),
@@ -94,7 +96,45 @@ mod_studium_compare_choice_ui <- function(id){
 #' @noRd
 mod_studium_compare_choice_server <- function(id, r){
   moduleServer( id, function(input, output, session){
-    #ns <- session$ns
+   ns <- session$ns
+
+    observe({
+
+      if(!isTruthy(input$indikator_compare_1)) {
+
+        shinyWidgets::updateCheckboxGroupButtons(session=session,
+                                                 inputId = "durchgefallen_compare",
+                                                 disabled=T)
+
+        shinyWidgets::updateCheckboxGroupButtons(session=session,
+                                                 inputId = "ing_natwi_compare_3",
+                                                 disabled=T)
+      } else{
+
+        shinyWidgets::updateCheckboxGroupButtons(session=session,
+                                                 inputId = "durchgefallen_compare",
+                                                 disabled=F)
+
+        shinyWidgets::updateCheckboxGroupButtons(session=session,
+                                                 inputId = "ing_natwi_compare_3",
+                                                 disabled=F)
+      }
+
+      if(!isTruthy(input$indikator_compare_2)) {
+
+        shinyWidgets::updateCheckboxGroupButtons(session=session,
+                                                 inputId = "ing_natwi_compare_2",
+                                                 disabled=T)
+      } else{
+
+        shinyWidgets::updateCheckboxGroupButtons(session=session,
+                                                 inputId = "ing_natwi_compare_2",
+                                                 disabled=F)
+
+      }
+
+    })
+
 
     observeEvent(input$date_compare, {
       r$date_compare <- input$date_compare
@@ -123,6 +163,9 @@ mod_studium_compare_choice_server <- function(id, r){
     observeEvent(input$ing_natwi_compare_3, {
       r$ing_natwi_compare_3 <- input$ing_natwi_compare_3
     })
+
+
+
 
   })
 }
