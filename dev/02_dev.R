@@ -29,6 +29,7 @@ golem::add_module(name = "studium_abschluss_choice_1", with_test = TRUE) # Name 
 golem::add_module(name = "studium_abschluss_choice_2", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_compare", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_compare_choice", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_compare_choice_updates", with_test = FALSE) # Name of the module
 
 
 ## Add helper functions ----

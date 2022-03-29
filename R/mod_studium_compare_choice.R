@@ -24,7 +24,7 @@ mod_studium_compare_choice_ui <- function(id){
       h4("Abschlusszahlen"),
       shinyWidgets::pickerInput(
         inputId = ns("indikator_compare_1"),
-        label = "Wähle Indikators",
+        label = "Wähle ein oder mehrere Indikatoren:",
         choices = c("Bachelor" = "bachelor",
                     "Master" = "master",
                     "Lehramt" = "lehramt",
@@ -37,7 +37,7 @@ mod_studium_compare_choice_ui <- function(id){
       h4("Studierendenzahlen"),
       shinyWidgets::pickerInput(
         inputId = ns("indikator_compare_2"),
-        label = "Studierendenzahl",
+        label = "Wähle ob eingeschrieben oder Studienanfänger:innen:",
         choices = c("Eingeschrieben" = "eingeschrieben",
                     "1. HS-Semester" = "1hs",
                     "1. FS-Semester" = "1fs"),
@@ -47,7 +47,7 @@ mod_studium_compare_choice_ui <- function(id){
       h4("Habilitationszahlen"),
       shinyWidgets::checkboxGroupButtons(
         inputId = ns("ing_natwi_compare_1"),
-        label = "Wähle ein Fach oder gesamt ?",
+        label = "Wähle ein Fach oder mehrere Fächer:",
         choices = c("Ingenieur" = "ingenieur", "Mathe & Natwi" = "mathe_natwi"),
         justified = TRUE,
         checkIcon = list(yes = icon("ok",
@@ -55,7 +55,7 @@ mod_studium_compare_choice_ui <- function(id){
       )
     ),
     br(),br(),br(),br(),
-    p(" ", style = "margin-bottom: 31px;"),
+    p(" ", style = "margin-bottom: 36.5px;"),
     shiny::column(
       width = 4,
       shinyWidgets::checkboxGroupButtons(
@@ -66,27 +66,27 @@ mod_studium_compare_choice_ui <- function(id){
         checkIcon = list(yes = icon("ok",
                                     lib = "glyphicon"))
       ),
-      br(),br(),br(),br(),
-      #p(" ", style = "margin-bottom: 5px;"),
+      hr(),
+      p(" ", style = "margin-bottom: 68.5px;"),
       shinyWidgets::checkboxGroupButtons(
         inputId = ns("ing_natwi_compare_2"),
-        label = "Wähle ein Fach oder gesamt ?",
+        label = "Wähle ein Fach oder mehrere Fächer:",
         choices = c("Ingenieur" = "ingenieur", "Mathe & Natwi" = "mathe_natwi"),
         justified = TRUE,
         checkIcon = list(yes = icon("ok",
                                     lib = "glyphicon"))
-      )
+      ),hr()
     ),
     shiny::column(
       width = 4,
       shinyWidgets::checkboxGroupButtons(
         inputId = ns("ing_natwi_compare_3"),
-        label = "Wähle ein Fach oder gesamt ?",
+        label = "Wähle ein Fach oder mehrere Fächer:",
         choices = c("Ingenieur" = "ingenieur", "Mathe & Natwi" = "mathe_natwi"),
         justified = TRUE,
         checkIcon = list(yes = icon("ok",
                                     lib = "glyphicon"))
-      )
+      ),hr()
     )
   )
 }
@@ -94,9 +94,12 @@ mod_studium_compare_choice_ui <- function(id){
 #' studium_compare_choice Server Functions
 #'
 #' @noRd
-mod_studium_compare_choice_server <- function(id, r){
+mod_studium_compare_choice_server <- function(id, r, r_abschluss,
+                                              r_studienzahl, r_habil){
   moduleServer( id, function(input, output, session){
    ns <- session$ns
+
+   # control the hide of inputs
 
     observe({
 
@@ -141,27 +144,27 @@ mod_studium_compare_choice_server <- function(id, r){
     })
 
     observeEvent(input$indikator_compare_1, {
-      r$indikator_compare_1 <- input$indikator_compare_1
+      r_abschluss$indikator_compare_1 <- input$indikator_compare_1
     })
 
     observeEvent(input$indikator_compare_2, {
-      r$indikator_compare_2 <- input$indikator_compare_2
+      r_studienzahl$indikator_compare_2 <- input$indikator_compare_2
     })
 
     observeEvent(input$ing_natwi_compare_1, {
-      r$ing_natwi_compare_1 <- input$ing_natwi_compare_1
+      r_habil$ing_natwi_compare_1 <- input$ing_natwi_compare_1
     })
 
     observeEvent(input$durchgefallen_compare, {
-      r$durchgefallen_compare <- input$durchgefallen_compare
+      r_abschluss$durchgefallen_compare <- input$durchgefallen_compare
     })
 
     observeEvent(input$ing_natwi_compare_2, {
-      r$ing_natwi_compare_2 <- input$ing_natwi_compare_2
+      r_studienzahl$ing_natwi_compare_2 <- input$ing_natwi_compare_2
     })
 
     observeEvent(input$ing_natwi_compare_3, {
-      r$ing_natwi_compare_3 <- input$ing_natwi_compare_3
+      r_abschluss$ing_natwi_compare_3 <- input$ing_natwi_compare_3
     })
 
 

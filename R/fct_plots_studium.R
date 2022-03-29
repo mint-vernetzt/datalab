@@ -617,7 +617,8 @@ abschluss_aenderung <- function(data,r){
 #' @param r
 #' @noRd
 
-comparer_plot <- function(data, r){
+comparer_plot <- function(data, r, r_abschluss,
+                          r_studienzahl, r_habil){
 
   timestamp <- r$date_compare
 
@@ -627,12 +628,14 @@ comparer_plot <- function(data, r){
 
   df <- df %>% dplyr::filter(frauen_manner_alle != "gesamt")
 
+  quelle <- unique(df$quelle)
+
 ################################# Abschluss ####################################
 
   # Abschluss reactives
-  indikator_abschluss <- r$indikator_compare_1
-  durchgefallen_abschluss <- r$durchgefallen_compare
-  subject_abschluss <- r$ing_natwi_compare_3
+  indikator_abschluss <- r_abschluss$indikator_compare_1
+  durchgefallen_abschluss <- r_abschluss$durchgefallen_compare
+  subject_abschluss <- r_abschluss$ing_natwi_compare_3
 
   # Abschluss dataset
   df_abschluss <- df %>% subset(prüfungsstatus %in% durchgefallen_abschluss)
@@ -660,8 +663,8 @@ comparer_plot <- function(data, r){
 
 ################################# Studienzahl ##################################
   # Abschluss reactives
-  indikator_studienzahl <- r$indikator_compare_2
-  subject_studienzahl <- r$ing_natwi_compare_2
+  indikator_studienzahl <- r_studienzahl$indikator_compare_2
+  subject_studienzahl <- r_studienzahl$ing_natwi_compare_2
 
   # Studienzahl dataset
   df_studienzahl <- df %>% subset(status %in% indikator_studienzahl)
@@ -689,20 +692,19 @@ comparer_plot <- function(data, r){
 
 ################################# Habilitation #################################
   # Habilitation reactives
-  subject_habilitation <- r$ing_natwi_compare_1
+  subject_habilitation <- r_habil$ing_natwi_compare_1
 
   # Habilitation dataset
   df_habil <- filter_indikator(df, subject_habilitation, "Habilitation")
 
-  df_habil <- df_habil %>% dplyr::group_by(prüfungsstatus, status,
-                                                       fachbereich_alle_mint_mathe_ing) %>%
+  df_habil <- df_habil %>% dplyr::group_by(fachbereich_alle_mint_mathe_ing) %>%
     dplyr::mutate(props = sum(wert))
 
-  df_habil <- df_habil %>% dplyr::group_by(prüfungsstatus, status,frauen_manner_alle,
+  df_habil <- df_habil %>% dplyr::group_by(prüfungsstatus,frauen_manner_alle,
                                                        fachbereich_alle_mint_mathe_ing) %>%
     dplyr::summarize(proportion = wert/props)
 
-  col_order <- c("frauen_manner_alle", "fachbereich_alle_mint_mathe_ing", "status",
+  col_order <- c("frauen_manner_alle", "fachbereich_alle_mint_mathe_ing",
                  "prüfungsstatus", "proportion")
   df_habil <- df_habil[, col_order]
 
@@ -721,17 +723,24 @@ comparer_plot <- function(data, r){
   Females <- df %>%
     dplyr::filter(frauen_manner_alle == "weiblich")
 
+
   ggplot2::ggplot(df) +
     ggplot2::geom_segment(data = Males,
-                          ggplot2::aes(x = proportion, y = label, group  = label,
-                     yend = Females$label, xend = Females$proportion), #use the $ operator to fetch data from our "Females" tibble
+                          ggplot2::aes(x = proportion, y = reorder(label, proportion),
+                                       group = label,
+                     yend = Females$label, xend = Females$proportion),
                  color = "#aeb6bf",
-                 size = 4.5, #Note that I sized the segment to fit the points
+                 size = 4.5,
                  alpha = .5) +
     ggplot2::geom_point(ggplot2::aes(x = proportion, y = label, color = frauen_manner_alle),
                         size = 4, show.legend = TRUE) +
+    ggplot2::ylab(" ") +
+    ggplot2::xlab("prozentualer Anteil") +
     ggplot2::xlim(0,1) +
-    ggplot2::theme_minimal()
+    ggplot2::theme_minimal() +
+    ggplot2::labs(title = paste0("Verhältnis von Frauen Männern im akademischen Bereich für den Bereich MINT für das Jahr ", timestamp),
+                  caption = paste0("Quelle: ", quelle),
+                  color='Geschlecht')
 
 
 }

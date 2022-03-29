@@ -31,7 +31,7 @@ mod_studium_ui <- function(id){
       ),
       fluidRow(
         shinydashboard::box(
-          title = "Vergleich",
+          title = "Verhältnis der Geschlechter in MINT für den akademischen Bereich",
           width = 12,
           shiny::mainPanel(
             mod_studium_compare_ui("mod_studium_compare_ui_1")
@@ -63,13 +63,19 @@ mod_studium_server <- function(id, data, r){
                       ing_natwi = NULL,
                       ing_natwi_1 = NULL,
                       durchgefallen_1 = NULL,
-                      date_compare = NULL,
-                      indikator_compare_1 = NULL,
-                      indikator_compare_2 = NULL,
-                      ing_natwi_compare_1 = NULL,
-                      durchgefallen_compare = NULL,
-                      ing_natwi_compare_2 = NULL,
-                      ing_natwi_compare_3 = NULL)
+                      date_compare = NULL)
+
+  r_abschluss <- reactiveValues(indikator_compare_1 = NULL,
+                                durchgefallen_compare = NULL,
+                                ing_natwi_compare_3 = NULL)
+
+  r_studienzahl <- reactiveValues(indikator_compare_2 = NULL,
+                                  ing_natwi_compare_2 = NULL)
+
+  r_habil <- reactiveValues(ing_natwi_compare_1 = NULL)
+
+
+
   # comment
   mod_studium_studienzahl_choice_1_server("mod_studium_studienzahl_choice_ui_1_1", r)
   mod_studium_studienzahl_choice_2_server("mod_studium_studienzahl_choice_ui_2_1", r)
@@ -81,8 +87,10 @@ mod_studium_server <- function(id, data, r){
   mod_studium_abschluss_server("mod_studium_abschluss_ui_1", data, r)
 
   #comment
-  mod_studium_compare_choice_server("mod_studium_compare_choice_ui_1", r)
-  mod_studium_compare_server("mod_studium_compare_ui_1", data, r)
+  mod_studium_compare_choice_server("mod_studium_compare_choice_ui_1", r, r_abschluss,
+                                    r_studienzahl, r_habil)
+  mod_studium_compare_server("mod_studium_compare_ui_1", data, r, r_abschluss,
+                             r_studienzahl, r_habil)
 }
 
 ## To be copied in the UI
