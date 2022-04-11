@@ -17,7 +17,7 @@ gather_gender <- function(data_states, data_sub, input_string) {
   data_sub <- rbind(c(NA, NA, NA), data_sub)
 
   # specify the origin: deutsch, ausländer, insgesamt
-  data_sub$origin <- input_string
+  data_sub$Herkunft <- input_string
 
   # combine data
   data_final <- cbind(data_states, data_sub)
@@ -67,18 +67,18 @@ string_states <- c("Baden-Württemberg",
 
 
 # create new column where all states will be listed
-state_year$states <- state_year$Indikator
+state_year$Bundesländer <- state_year$Indikator
 
 # specify a "not in" operator
 `%notin%` <- Negate(`%in%`)
 
 # replace string with NA if not present in states string list
 state_year <- state_year %>% naniar::replace_with_na_at(
-  .vars = "states",
+  .vars = "Bundesländer",
   condition =  ~.x %notin% string_states)
 
 # forward fill missing values
-state_year <- state_year %>% tidyr::fill(states)
+state_year <- state_year %>% tidyr::fill(Bundesländer)
 
 ##############################################################################
 #############################  call function to create subdatasets
