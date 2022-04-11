@@ -12,6 +12,7 @@ Imports:
     golem (>= 0.3.2),
     readxl,
     janitor,
+    naniar,
     shinipsum,
     shiny (>= 1.7.1),
     shinydashboard,

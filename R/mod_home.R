@@ -27,6 +27,11 @@ mod_home_ui <- function(id){
                  title = "Congrats!"),
                br(), br(), br(), br()
         )),
+      fluidRow(
+        shinydashboard::box(
+          title = "New Data Table",
+          width = 12,
+          DT::dataTableOutput(ns('new_table')))),
 
       fluidRow(
         shinydashboard::box(
@@ -54,7 +59,7 @@ mod_home_ui <- function(id){
 #' home Server Functions
 #'
 #' @noRd
-mod_home_server <- function(id, data){
+mod_home_server <- function(id, data, data_new){
   moduleServer( id, function(input, output, session){
   ns <- session$ns
 
@@ -64,6 +69,10 @@ mod_home_server <- function(id, data){
 
   output$data_table <- DT::renderDT({
     utils::head(data)
+  })
+
+  output$new_table <- DT::renderDT({
+    utils::head(data_new)
   })
 
   output$plot <- renderPlot({
