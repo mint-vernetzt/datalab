@@ -22,9 +22,9 @@ gather_gender <- function(data_states, data_sub, input_string) {
   # combine data
   data_final <- cbind(data_states, data_sub)
 
-  # gather the columns: männlich, weiblich, insgesamt into on column
+  # gather the columns: männlich, weiblich, insgesamt into one column
   data_final <- data_final %>%
-    tidyr::gather(key="Geschlecht", value="Wert", 5:7)
+    tidyr::gather(key="Geschlecht", value="Wert", c("männlich", "weiblich", "Insgesamt"))
 
   # return data
   return(data_final)
@@ -34,11 +34,21 @@ gather_gender <- function(data_states, data_sub, input_string) {
 ##############################################################################
 #############################  create the basis dataset with year and state
 
-# subset the column containing year, state and subject
-state_year <- des056[, 1:2]
-
 # rename
-names(state_year) <- c("Indikator", "Studienfach")
+names(des056) <- c("Indikator",
+                   "Studienfach",
+                   "deutsche_m",
+                   "deutsche_w",
+                   "detusche_insg",
+                   "auslaender_m",
+                   "auslaender_w",
+                   "auslaender_insg",
+                   "insgesamt_m",
+                   "insgesamt_w",
+                   "insgesamt_insg")
+
+# subset the column containing year, state and subject
+state_year <- des056[, c("Indikator", "Studienfach")]
 
 # extract the year e.g. WS 2010/11
 state_year <- state_year %>%
@@ -67,35 +77,35 @@ string_states <- c("Baden-Württemberg",
 
 
 # create new column where all states will be listed
-state_year$Bundesländer <- state_year$Indikator
+state_year$Bundeslaender <- state_year$Indikator
 
 # specify a "not in" operator
-`%notin%` <- Negate(`%in%`)
+source("./R/golem_utils_server.R", local = TRUE)
 
 # replace string with NA if not present in states string list
 state_year <- state_year %>% naniar::replace_with_na_at(
-  .vars = "Bundesländer",
-  condition =  ~.x %notin% string_states)
+  .vars = "Bundeslaender",
+  condition =  ~.x %not_in% string_states)
 
 # forward fill missing values
-state_year <- state_year %>% tidyr::fill(Bundesländer)
+state_year <- state_year %>% tidyr::fill(Bundeslaender)
 
 ##############################################################################
 #############################  call function to create subdatasets
 
-data_deutsch <- des056[, 3:5]
+data_deutsch <- des056[, c("deutsche_m", "deutsche_w", "detusche_insg")]
 
 state_deutsch_comb <- gather_gender(data_states = state_year,
                                     data_sub = data_deutsch,
                                     input_string = "deutsch")
 
-data_ausl <- des056[, 6:8]
+data_ausl <- des056[, c("auslaender_m", "auslaender_w", "auslaender_insg")]
 
 state_ausl_comb <- gather_gender(data_states = state_year,
                                  data_sub = data_ausl,
-                                 input_string = "ausländer")
+                                 input_string = "auslaender")
 
-data_insg <- des056[, 9:11]
+data_insg <- des056[, c("insgesamt_m", "insgesamt_w", "insgesamt_insg")]
 
 state_insg_comb <- gather_gender(data_states = state_year,
                                  data_sub = data_insg,
@@ -116,5 +126,14 @@ des056_final[des056_final == "-" ] <- NA
 # drop ID number from subject
 des056_final$Indikator <- NULL
 
+# insert zero if NA
+des056_final[is.na(des056_final)] <- 0
 
-usethis::use_data(des056_final)
+# transform to numeric
+des056_final$Wert <- as.numeric(des056_final$Wert)
+
+# sort des056_final
+des056_final <- des056_final[with(des056_final,
+                                  order(Studienfach, Semester ,Bundeslaender)), ]
+
+usethis::use_data(des056_final, overwrite = T)
