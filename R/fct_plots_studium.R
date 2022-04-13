@@ -90,28 +90,24 @@ studienzahl_waffle <- function(data,r) {
 
     df <- df[!duplicated(df$props), ]
 
+    sum_help <- sum(df$props)
+
     df <- df %>% dplyr::group_by(frauen_manner_alle) %>%
-      dplyr::summarize(proportion = wert/props)
+      dplyr::summarize(proportion = props/sum_help)
 
     df$proportion <- df$proportion * 100
 
-    ggplot2::ggplot(df, ggplot2::aes(fill = frauen_manner_alle, values = proportion)) +
-      ggplot2::expand_limits(x = c(0, 0), y = c(0, 0)) +
-      ggplot2::coord_equal() +
-      ggplot2::labs(fill = NULL, colour = NULL) +
-      waffle::theme_enhance_waffle() +
-      waffle::geom_waffle(
-        #n_rows = 5,
-        flip = FALSE,
-        color = "white",
-        size = 0.33
-      ) +
-      ggplot2::theme_void() +  ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
-                                              legend.position = "bottom") +
-      ggplot2::labs(title = paste0("Anteil der Studenten \n" ,
-                                   dictionary_title_studium_studentenzahl[[indicator]],
-                                   " für das Jahr ", timestamp),
-                    subtitle = "1 box = 1%")
+    x <- c(männlich = round(df[df$frauen_manner_alle == "männlich", "proportion"][[1]]),
+           weiblich = round(df[df$frauen_manner_alle == "weiblich", "proportion"][[1]]))
+
+      waffle::waffle(x, keep = FALSE) +
+        ggplot2::labs(title = paste0("Anteil der Studenten \n" ,
+                                     dictionary_title_studium_studentenzahl[[indicator]],
+                                     " für das Jahr ", timestamp),
+                      subtitle = "1 box = 1%") +
+         ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
+                                               legend.position = "bottom")
+
 
   }else{
 
@@ -123,24 +119,23 @@ studienzahl_waffle <- function(data,r) {
 
     df$proportion <- df$proportion * 100
 
-    ggplot2::ggplot(df, ggplot2::aes(fill = frauen_manner_alle, values = proportion)) +
-      ggplot2::expand_limits(x = c(0, 0), y = c(0, 0)) +
-      ggplot2::coord_equal() +
-      ggplot2::labs(fill = NULL, colour = NULL) +
-      waffle::theme_enhance_waffle() +
-      waffle::geom_waffle(
-       # n_rows = 5,
-        flip = FALSE,
-        color = "white",
-        size = 0.33
-      ) +
-      ggplot2::theme_void() +  ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
-                                              legend.position = "bottom")+
-      ggplot2::labs(title = paste0("Anteil der Studenten \n" ,
+    x_ingenieur <- setNames(as.numeric(round(df[df$fachbereich_alle_mint_mathe_ing == "ingenieur", "proportion"][[1]])),
+                       df[df$fachbereich_alle_mint_mathe_ing == "ingenieur", "frauen_manner_alle"][[1]])
+
+    x_mathe_natwi <- setNames(as.numeric(round(df[df$fachbereich_alle_mint_mathe_ing == "mathe_natwi", "proportion"][[1]])),
+                         df[df$fachbereich_alle_mint_mathe_ing == "mathe_natwi", "frauen_manner_alle"][[1]])
+
+    waffle_ingenieur <- waffle::waffle(x_ingenieur, keep = FALSE) +
+       ggplot2::labs(title = paste0("Anteil der Studenten \n" ,
                                    dictionary_title_studium_studentenzahl[[indicator]],
                                    " für das Jahr ", timestamp),
-                    subtitle = "1 box = 1%") +
-      ggplot2::facet_grid(~fachbereich_alle_mint_mathe_ing)
+                     subtitle = "1 box = 1%")
+
+    waffle_mathe_natwi <- waffle::waffle(x_mathe_natwi, keep = FALSE)
+
+    waffle::iron(waffle_ingenieur, waffle_mathe_natwi) +
+       ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
+                                               legend.position = "bottom")
 
   }
 
@@ -344,31 +339,25 @@ abschlusszahl_waffle <- function(data,r) {
 
   if(gender_select == "Nein"){
 
-   plot <-  ggplot2::ggplot(df, ggplot2::aes(fill = status, values = wert)) +
-      ggplot2::expand_limits(x = c(0, 0), y = c(0, 0)) +
-      ggplot2::coord_equal() +
-      ggplot2::labs(fill = NULL, colour = NULL) +
-      waffle::theme_enhance_waffle() +
-      waffle::geom_waffle(
-        n_rows = 5,
-        flip = FALSE,
-        color = "white",
-        size = 0.33
-      ) +
-      ggplot2::theme_void() +  ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
-                                              legend.position = "bottom")
+  df <- df %>% dplyr::filter(frauen_manner_alle == "gesamt")
+
+  x <- setNames(as.numeric(round(df$wert)), df$status)
 
     if(subject == "Gesamt"){
 
-      plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")"," im Jahr ",
-                                          timestamp, " im gesamten MINT Fachebreich"),
-                           subtitle = "1 box = 1000 Personen",
-                           caption = paste0("Quelle: ", unique(df$quelle)))
+
+      waffle::waffle(x, keep = FALSE, rows = 5) +
+        ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse"),
+                      subtitle = "1 box = 1000 Personen",
+                      caption = paste0("Quelle: ", unique(df$quelle))) +
+        ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
+                       legend.position = "bottom")
+
+
     }else{
 
-      plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")"," im Jahr ",
-                                          timestamp, " im Fachebreich ",
-                                          dictionary_title_studium_abschluss[[subject]]),
+      waffle::waffle(x, keep = FALSE, rows = 5) +
+        ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse nach Fachbereich"),
                            subtitle = "1 box = 1000 Personen",
                            caption = paste0("Quelle: ", unique(df$quelle)))
     }
@@ -377,36 +366,46 @@ abschlusszahl_waffle <- function(data,r) {
 
     df <- df %>% dplyr::filter(frauen_manner_alle != "gesamt")
 
-    plot <- ggplot2::ggplot(df, ggplot2::aes(fill = status, values = wert)) +
-      ggplot2::expand_limits(x = c(0, 0), y = c(0, 0)) +
-      ggplot2::coord_equal() +
-      ggplot2::labs(fill = NULL, colour = NULL) +
-      waffle::theme_enhance_waffle() +
-      waffle::geom_waffle(
-        n_rows = 5,
-        flip = FALSE,
-        color = "white",
-        size = 0.33
-      ) +
-      ggplot2::theme_void() +  ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
-                                              legend.position = "bottom") +
-      ggplot2::facet_grid(~frauen_manner_alle)
 
-    if(subject == "Gesamt"){
+    x_male <- setNames(as.numeric(round(df[df$frauen_manner_alle == "männlich", "wert"][[1]])),
+                       df[df$frauen_manner_alle == "männlich", "status"][[1]])
 
-      plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")"," im Jahr ",
-                                          timestamp, " im gesamten MINT Fachebreich"),
-                           subtitle = "1 box = 1000 Personen",
-                           caption = paste0("Quelle: ", unique(df$quelle)))
+    x_female <- setNames(as.numeric(round(df[df$frauen_manner_alle == "weiblich", "wert"][[1]])),
+                         df[df$frauen_manner_alle == "weiblich", "status"][[1]])
+
+  if(subject == "Gesamt"){
+
+      waffle_male <- waffle::waffle(x_male, rows = 5, pad = 0, keep = FALSE) +
+        ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse männlich")) +
+        ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
+                       legend.position = "bottom")
+
+      waffle_female <- waffle::waffle(x_female, rows = 5, pad = 7, keep = FALSE) +
+        ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse weiblich"),
+                      caption = paste0("Quelle: ", unique(df$quelle),
+                                       ", 1 box = 1000 Personen")) +
+        ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
+                       legend.position = "bottom")
+
+      waffle::iron(waffle_male,waffle_female)
+
     }else{
 
-      plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")"," im Jahr ",
-                                          timestamp, " im Fachebreich ",
-                                          dictionary_title_studium_abschluss[[subject]]),
-                           subtitle = "1 box = 1000 Personen",
-                           caption = paste0("Quelle: ", unique(df$quelle)))
-    }
+      waffle_male <- waffle::waffle(x_male,  pad = 0, rows = 5, keep = FALSE) +
+        ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse männlich")) +
+        ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
+                       legend.position = "bottom")
 
+        waffle_female <- waffle::waffle(x_female,  pad = 4, rows = 5, keep = FALSE) +
+          ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse weiblich"),
+            caption = paste0("Quelle: ", unique(df$quelle),
+                                         ", 1 box = 1000 Personen")) +
+          ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
+                         legend.position = "bottom")
+
+        waffle::iron(waffle_male,waffle_female)
+
+    }
 
   }
 
