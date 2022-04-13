@@ -1,5 +1,6 @@
 ## code to prepare `hochschulpersonal` dataset goes here
 
+# vector containing all bundeslaener
 bundeslaender <-
   c(
     "Baden-Württemberg",
@@ -22,6 +23,7 @@ bundeslaender <-
 
 enrich_bundeslaender <- function(list_element) {
 
+  # function to enrich dataset with zeros row for each missing bundesland
   if (length(setdiff(bundeslaender, list_element %>% dplyr::pull(region)) >
              0)) {
 
@@ -56,16 +58,20 @@ enrich_bundeslaender <- function(list_element) {
 
 get_all_hochschulpersonal_data <- function(filename) {
 
+  # collect all sheets
   sheets <- readxl::excel_sheets(filename)
 
+  # get hochschulpersonal_data for each sheet
   x <- lapply(sheets, function(X) get_hochschulpersonal_data(filename, sheet = X))
 
+  # bind each hochschulpersonal_data to one dataframe
   hochschulpersonal_data <- purrr::reduce(x, rbind)
   return(hochschulpersonal_data)
 }
 
 get_hochschulpersonal_data <- function(filename, sheet) {
 
+  # read sheet, clean names and remove empty rows and columns
   hochschulpersonal_read <-
     suppressMessages(readxl::read_xlsx(filename,
                                        sheet = sheet,
@@ -74,8 +80,11 @@ get_hochschulpersonal_data <- function(filename, sheet) {
     janitor::remove_empty(c("rows", "cols"))
 
 
+  # name columns and conduct agrar_fort_ernaerungs and veterinaer medicine which
+  # was split before 2015
   if (as.numeric(sheet) > 2014) {
 
+    # 2015 and later
     colnames(hochschulpersonal_read) <-
       c(
         "region",
@@ -94,6 +103,7 @@ get_hochschulpersonal_data <- function(filename, sheet) {
 
   } else {
 
+    # 2014 and earlier
     colnames(hochschulpersonal_read) <-
       c(
         "region",
@@ -119,6 +129,8 @@ get_hochschulpersonal_data <- function(filename, sheet) {
   }
 
 
+  # clean data input, remove some rows, move data from headlines in 'insgesamt'
+  # column which was not in older sheets
   hochschulpersonal_read <- hochschulpersonal_read %>%
     dplyr::mutate(region = gsub("\\.", "", region)) %>%
     dplyr::mutate(region = stringr::str_trim(region, side = c("both"))) %>%
@@ -131,6 +143,8 @@ get_hochschulpersonal_data <- function(filename, sheet) {
     dplyr::mutate(region = dplyr::case_when(insgesamt != region ~ region,
                                             TRUE ~  as.character(NA)))
 
+  # if any bundesland is missing in a data package it is enriched by a row of
+  # zeros
   if (any(
     hochschulpersonal_read %>%
     dplyr::group_by(region) %>%
@@ -158,13 +172,18 @@ get_hochschulpersonal_data <- function(filename, sheet) {
       dplyr::select(-group_col)
   }
 
+  # prepare dataframe for further usage
   hochschulpersonal_data <- hochschulpersonal_read %>%
+
+    # clean rows
     dplyr::filter(!grepl("___", region)) %>%
     dplyr::filter(!grepl("Berichtsjahr", region)) %>%
     dplyr::filter(!grepl("Ergebnisse nach", region)) %>%
     dplyr::filter(!grepl("Statistisches Bundesamt", region)) %>%
     dplyr::filter(!region %in% "Zusammen") %>%
     dplyr::filter(!region %in% "Insgesamt") %>%
+
+    # remove several data packages
     dplyr::slice(-(purrr::map2(
       which(.$insgesamt == "Personal insgesamt"),
       (which(.$insgesamt == "Personal insgesamt") + 16),
@@ -184,7 +203,11 @@ get_hochschulpersonal_data <- function(filename, sheet) {
       grep("zusammen", .$insgesamt), (grep("zusammen", .$insgesamt) + 16),
       ~ .x:.y
     ) %>% unlist())) %>%
+
+    # remove specific unused lines
     dplyr::slice(-c(37, 73, 110)) %>%
+
+    # use headlins as column values
     dplyr::mutate(
       geschlecht_aggregat = dplyr::case_when(
         insgesamt %in% c("Insgesamt", "Weiblich") ~ insgesamt,
@@ -202,6 +225,8 @@ get_hochschulpersonal_data <- function(filename, sheet) {
       insgesamt %in% c("Hauptberuflich", "Nebenberuflich") ~ insgesamt,
       TRUE ~ as.character(NA)
     )) %>%
+
+    # fill columns with headline info
     tidyr::fill(geschlecht_aggregat, personal, taetigkeit) %>%
     dplyr::filter(!is.na(region)) %>%
     dplyr::mutate(jahr = as.numeric(sheet))
