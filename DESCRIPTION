@@ -13,6 +13,7 @@ Imports:
     readxl,
     janitor,
     naniar,
+    readxlsb,
     shinipsum,
     shiny (>= 1.7.1),
     shinydashboard,
