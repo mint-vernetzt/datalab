@@ -1,21 +1,27 @@
 Package: datalab
 Title: MINT Datalab
 Version: 0.0.0.9000
-Authors@R: person('Andreas', 'Vogl', email = 'andreas.vogl@statworx.com', role = c('cre', 'aut'))
+Authors@R: 
+    person("Andreas", "Vogl", , "andreas.vogl@statworx.com", role = c("cre", "aut"))
 Description: PKG_DESC.
 License: MIT + file LICENSE
+Depends: 
+    R (>= 2.10)
 Imports: 
     config (>= 0.3.1),
-    magrittr,
     dplyr,
     DT,
+    ggplot2,
     golem (>= 0.3.2),
-    readxl,
-    janitor,
+    magrittr,
     shinipsum,
     shiny (>= 1.7.1),
     shinydashboard,
-    utils
+    shinyWidgets,
+    stringr,
+    tidyr,
+    utils,
+    waffle
 Suggests: 
     spelling,
     testthat (>= 3.0.0)
@@ -24,5 +30,3 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 RoxygenNote: 7.1.2
-Depends: 
-    R (>= 2.10)
