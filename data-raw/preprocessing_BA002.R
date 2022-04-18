@@ -26,15 +26,15 @@ data_naa <- data_naa %>% dplyr::filter(!grepl('Referenzzeile', fachrichtung)) %>
 data_naa <- data_naa %>% tidyr::gather(region, anzahl, -ebene, -fachrichtung)
 
 # extract the information of gender contained in the strings of the
-# column "Bundesländer"
+# column "region"
 data_naa <- data_naa %>% dplyr::mutate(geschlecht_aggregat = stringr::str_extract(region, "_w_"),
                                        # replace "_w_" with "weiblich"
                                        geschlecht_aggregat = gsub("^.*\\_","weiblich", geschlecht_aggregat),
                                        # the remaining NA are replaced by the label "insgesamt"
                                        geschlecht_aggregat = tidyr::replace_na(geschlecht_aggregat, 'insgesamt')) %>%
-  # extract the information of the year from the string in column "Bundesländer"
+  # extract the information of the year from the string in column "region"
   tidyr::extract(region, c("region", "jahr"), "(.*)_([^_]+)") %>%
-  # clean the string so that only the names of the "Bundesländer" are left
+  # clean the string so that only the names of the "region" are left
   dplyr::mutate(region = sub(".NAA.*", "", region),
                 # replace dot with dash
                 region = gsub('\\.', '-', region)) %>%

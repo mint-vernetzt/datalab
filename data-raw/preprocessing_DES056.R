@@ -7,6 +7,8 @@ des056 <- readxl::read_xlsx(system.file(package="datalab", "data-raw/DES056_Stat
 ##############################################################################
 ############################# specify function
 
+# specify a "not in" operator
+source("./R/golem_utils_server.R", local = TRUE)
 
 gather_gender <- function(data_states, data_sub, input_string) {
 
@@ -78,9 +80,6 @@ string_states <- c("Baden-Württemberg",
 
 # create new column where all states will be listed
 state_year$region <- state_year$Indikator
-
-# specify a "not in" operator
-source("./R/golem_utils_server.R", local = TRUE)
 
 # replace string with NA if not present in states string list
 state_year <- state_year %>% naniar::replace_with_na_at(
