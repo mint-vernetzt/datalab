@@ -9,14 +9,14 @@ professor_innen_read <- readxl::read_xlsx(system.file(package="datalab", "data-r
   dplyr::slice(1:(dplyr::n()-5))
 
 # adjust column names
-colnames(professor_innen_read) <- c("code", "fachrichtung", "jahr", "Insgesamt", "Frauen", "frauenanteil")
+colnames(professor_innen_read) <- c("code", "fachrichtung", "jahr", "insgesamt", "weiblich", "frauenanteil")
 
 # prepare data
 professor_innen <- professor_innen_read %>%
-  dplyr::select(fachrichtung, jahr, Insgesamt, Frauen) %>%
-  tidyr::pivot_longer(cols = c("Insgesamt", "Frauen"),
+  dplyr::select(fachrichtung, jahr, insgesamt, weiblich) %>%
+  tidyr::pivot_longer(cols = c("insgesamt", "weiblich"),
                       names_to = "geschlecht_aggregat",
-                      values_to = "count")
+                      values_to = "anzahl")
 
 
 usethis::use_data(professor_innen, overwrite = TRUE)

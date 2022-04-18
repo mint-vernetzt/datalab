@@ -17,14 +17,14 @@ gather_gender <- function(data_states, data_sub, input_string) {
   data_sub <- rbind(c(NA, NA, NA), data_sub)
 
   # specify the origin: deutsch, ausländer, insgesamt
-  data_sub$Herkunft <- input_string
+  data_sub$herkunft <- input_string
 
   # combine data
   data_final <- cbind(data_states, data_sub)
 
   # gather the columns: männlich, weiblich, insgesamt into one column
   data_final <- data_final %>%
-    tidyr::gather(key="Geschlecht", value="Wert", c("männlich", "weiblich", "Insgesamt"))
+    tidyr::gather(key="geschlecht_aggregat", value="anzahl", c("männlich", "weiblich", "Insgesamt"))
 
   # return data
   return(data_final)
@@ -36,7 +36,7 @@ gather_gender <- function(data_states, data_sub, input_string) {
 
 # rename
 names(des056) <- c("Indikator",
-                   "Studienfach",
+                   "fachrichtung",
                    "deutsche_m",
                    "deutsche_w",
                    "detusche_insg",
@@ -48,14 +48,14 @@ names(des056) <- c("Indikator",
                    "insgesamt_insg")
 
 # subset the column containing year, state and subject
-state_year <- des056[, c("Indikator", "Studienfach")]
+state_year <- des056[, c("Indikator", "fachrichtung")]
 
 # extract the year e.g. WS 2010/11
 state_year <- state_year %>%
-  dplyr::mutate(Semester = stringr::str_extract(Indikator, "^.*/(\\d+)"))
+  dplyr::mutate(semester = stringr::str_extract(Indikator, "^.*/(\\d+)"))
 
 # forward fill missing values
-state_year <- state_year %>% tidyr::fill(Semester)
+state_year <- state_year %>% tidyr::fill(semester)
 
 # specify all german states
 string_states <- c("Baden-Württemberg",
@@ -77,18 +77,18 @@ string_states <- c("Baden-Württemberg",
 
 
 # create new column where all states will be listed
-state_year$Bundeslaender <- state_year$Indikator
+state_year$region <- state_year$Indikator
 
 # specify a "not in" operator
 source("./R/golem_utils_server.R", local = TRUE)
 
 # replace string with NA if not present in states string list
 state_year <- state_year %>% naniar::replace_with_na_at(
-  .vars = "Bundeslaender",
+  .vars = "region",
   condition =  ~.x %not_in% string_states)
 
 # forward fill missing values
-state_year <- state_year %>% tidyr::fill(Bundeslaender)
+state_year <- state_year %>% tidyr::fill(region)
 
 ##############################################################################
 #############################  call function to create subdatasets
@@ -130,10 +130,10 @@ des056_final$Indikator <- NULL
 des056_final[is.na(des056_final)] <- 0
 
 # transform to numeric
-des056_final$Wert <- as.numeric(des056_final$Wert)
+des056_final$anzahl <- as.numeric(des056_final$anzahl)
 
 # sort des056_final
 des056_final <- des056_final[with(des056_final,
-                                  order(Studienfach, Semester ,Bundeslaender)), ]
+                                  order(fachrichtung, semester ,region)), ]
 
 usethis::use_data(des056_final, overwrite = T)

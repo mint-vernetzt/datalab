@@ -25,7 +25,10 @@ langzeitarbeitslose <- langzeitarbeitslose_read %>%
   dplyr::mutate(jahr = stringr::str_sub(xjahr_geschlecht, 2, 5),
                 geschlecht_aggregat = stringr::str_sub(xjahr_geschlecht, 7, nchar(xjahr_geschlecht))) %>%
   dplyr::select(-xjahr_geschlecht) %>%
-  dplyr::mutate(anzahl = round(as.numeric(anzahl),0))
+  dplyr::mutate(anzahl = round(as.numeric(anzahl),0)) %>%
+  dplyr::mutate(geschlecht_aggregat=dplyr::recode(geschlecht_aggregat,
+                    Insgesamt="insgesamt",
+                    Frauen="weiblich"))
 
 
 usethis::use_data(langzeitarbeitslose, overwrite = TRUE)

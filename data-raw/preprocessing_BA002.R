@@ -11,66 +11,61 @@ data_naa <- data_naa %>% subset(select = -c(code, Bezeichnung))
 
 # clean column with job titles
 # rename column
-names(data_naa)[2] <- "Bezeichnung"
+data_naa <- data_naa %>% dplyr::rename(ebene = "Ebene",
+                           fachrichtung = "Bezeichnung.BIBB.modifiziert")
 # remove row with sum over all jobs
-data_naa <- data_naa[!grepl('Referenzzeile', data_naa$Bezeichnung),]
-# remove numbers from job title
-data_naa$Bezeichnung <- gsub('[[:digit:]]+', '', data_naa$Bezeichnung)
-# remove white space
-data_naa$Bezeichnung <- gsub(' ', '', data_naa$Bezeichnung)
-
-# remove all column which provide information about the "Frauenanteil"
-data_naa <- data_naa %>% dplyr::select(-contains("anteil"))
+data_naa <- data_naa %>% dplyr::filter(!grepl('Referenzzeile', fachrichtung)) %>%
+  # remove numbers from job title
+  dplyr::mutate(fachrichtung = gsub('[[:digit:]]+', '', fachrichtung),
+                # remove white space
+                fachrichtung = gsub(' ', '', fachrichtung)) %>%
+  # remove all column which provide information about the "Frauenanteil"
+  dplyr::select(-contains("anteil"))
 
 # reshape data_naa in long format
-data_naa <- data_naa %>% tidyr::gather(Bundeslaender, Wert, -Ebene, -Bezeichnung)
+data_naa <- data_naa %>% tidyr::gather(region, anzahl, -ebene, -fachrichtung)
 
 # extract the information of gender contained in the strings of the
 # column "Bundesländer"
-data_naa <- data_naa %>% dplyr::mutate(Geschlecht = stringr::str_extract(Bundeslaender, "_w_"))
-
-# replace "_w_" with "weiblich"
-data_naa$Geschlecht <- gsub("^.*\\_","weiblich", data_naa$Geschlecht)
-
-# the remaining NA are replaced by the label "insgesamt"
-data_naa$Geschlecht <- data_naa$Geschlecht %>% tidyr::replace_na('insgesamt')
-
-# extract the information of the year from the string in column "Bundesländer"
-data_naa <- data_naa %>% tidyr::extract(Bundeslaender, c("Bundeslaender", "Jahr"), "(.*)_([^_]+)")
-
-# clean the string so that only the names of the "Bundesländer" are left
-data_naa$Bundeslaender <-  sub(".NAA.*", "", data_naa$Bundeslaender)
-
-# replace dot with dash
-data_naa$Bundeslaender <- gsub('\\.', '-', data_naa$Bundeslaender)
-
-# drop row if no label for the job title is given
-data_naa <- data_naa[-which(data_naa$Bezeichnung == ""), ]
+data_naa <- data_naa %>% dplyr::mutate(geschlecht_aggregat = stringr::str_extract(region, "_w_"),
+                                       # replace "_w_" with "weiblich"
+                                       geschlecht_aggregat = gsub("^.*\\_","weiblich", geschlecht_aggregat),
+                                       # the remaining NA are replaced by the label "insgesamt"
+                                       geschlecht_aggregat = tidyr::replace_na(geschlecht_aggregat, 'insgesamt')) %>%
+  # extract the information of the year from the string in column "Bundesländer"
+  tidyr::extract(region, c("region", "jahr"), "(.*)_([^_]+)") %>%
+  # clean the string so that only the names of the "Bundesländer" are left
+  dplyr::mutate(region = sub(".NAA.*", "", region),
+                # replace dot with dash
+                region = gsub('\\.', '-', region)) %>%
+  # drop row if no label for the job title is given
+  dplyr::filter(fachrichtung != "")
 
 # create a sub-data_naaframe split by gender
-data_naa_weiblich <- data_naa %>% dplyr::group_by(Ebene, Bezeichnung, Bundeslaender, Jahr) %>%
-  dplyr::filter(Geschlecht == "weiblich")
+data_naa_weiblich <- data_naa %>% dplyr::group_by(ebene, fachrichtung, region, jahr) %>%
+  dplyr::filter(geschlecht_aggregat == "weiblich")
 
 # same for "insgesamt"
-data_naa_insgesamt <- data_naa %>% dplyr::group_by(Ebene, Bezeichnung, Bundeslaender, Jahr) %>%
-  dplyr::filter(Geschlecht == "insgesamt")
+data_naa_insgesamt <- data_naa %>% dplyr::group_by(ebene, fachrichtung, region, jahr) %>%
+  dplyr::filter(geschlecht_aggregat == "insgesamt")
 
 # now subtract the values for "weiblich" from "insgesamt" to create "männnlich"
  # first create new data_frame (copy)
 data_naa_maennlich <- data_naa_insgesamt
  # second subtract values
-data_naa_maennlich$Wert <- data_naa_maennlich$Wert - data_naa_weiblich$Wert
+data_naa_maennlich$anzahl <- data_naa_maennlich$anzahl - data_naa_weiblich$anzahl
  # specify gender as "männlich"
-data_naa_maennlich$Geschlecht <- "männlich"
+data_naa_maennlich$geschlecht_aggregat <- "männlich"
 
 # combine data_frames
 data_naa <- rbind(data_naa_insgesamt, data_naa_weiblich, data_naa_maennlich)
 
 # insert zero if NA
-data_naa[is.na(data_naa)] <- 0
+data_naa <- data_naa %>%
+  dplyr::mutate(anzahl = tidyr::replace_na(anzahl, 0))
 
 # sort data_naa
-data_naa <- data_naa[with(data_naa, order(Bezeichnung, Bundeslaender, Jahr)), ]
+data_naa <- data_naa[with(data_naa, order(fachrichtung, region, jahr)), ]
 
 usethis::use_data(data_naa, overwrite = T)
 

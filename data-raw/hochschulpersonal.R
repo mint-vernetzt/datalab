@@ -229,7 +229,10 @@ get_hochschulpersonal_data <- function(filename, sheet) {
     # fill columns with headline info
     tidyr::fill(geschlecht_aggregat, personal, taetigkeit) %>%
     dplyr::filter(!is.na(region)) %>%
-    dplyr::mutate(jahr = as.numeric(sheet))
+    dplyr::mutate(jahr = as.numeric(sheet)) %>%
+    dplyr::mutate(geschlecht_aggregat=dplyr::recode(geschlecht_aggregat,
+                                                    Insgesamt="insgesamt",
+                                                    Weiblich="weiblich"))
 
   return(hochschulpersonal_data)
 
