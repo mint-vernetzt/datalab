@@ -44,19 +44,19 @@ mod_studium_studienzahl_ui <- function(id){
         shiny::sidebarPanel(
           mod_studium_studienzahl_verlauf_ui("mod_studium_studienzahl_verlauf_ui_1")),
         shiny::mainPanel(highcharter::highchartOutput(ns("plot_verlauf_studienzahl"))))),
-    hr(),
-    h4("Studienzahlen im zeitlichen Verlauf vergleichbar"),
-    br(),br(),
-    fluidRow(
-    shiny::column(width = 6,
-    mod_studium_studienzahl_choice_2_ui("mod_studium_studienzahl_choice_ui_2_1"))),
-    br(),br(),
-    fluidRow(
-    shiny::column(width = 10,
-                  tabsetPanel(type = "tabs",
-                              tabPanel("Balkendiagramm",plotOutput(ns("plot"))),
-                              tabPanel("Linienplot",plotOutput(ns("plot_line")))))
-    )
+    # hr(),
+    # h4("Studienzahlen im zeitlichen Verlauf vergleichbar"),
+    # br(),br(),
+    # fluidRow(
+    # shiny::column(width = 6,
+    # mod_studium_studienzahl_choice_2_ui("mod_studium_studienzahl_choice_ui_2_1"))),
+    # br(),br(),
+    # fluidRow(
+    # shiny::column(width = 10,
+    #               tabsetPanel(type = "tabs",
+    #                           tabPanel("Balkendiagramm",plotOutput(ns("plot"))),
+    #                           tabPanel("Linienplot",plotOutput(ns("plot_line")))))
+    # )
   )
 }
 

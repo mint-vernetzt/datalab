@@ -14,24 +14,24 @@ mod_studium_ui <- function(id){
       fluidRow(
         mod_studium_studienzahl_ui("mod_studium_studienzahl_ui_1")
       ),
-      fluidRow(
-        shinydashboard::box(
-          title = "Abschlusszahlen von Studierenden unterteilt nach akademischem Grad",
-          width = 12,
-          shiny::mainPanel(
-            mod_studium_abschluss_ui("mod_studium_abschluss_ui_1")
-          )
-        )
-      ),
-      fluidRow(
-        shinydashboard::box(
-          title = "Verhältnis der Geschlechter in MINT für den akademischen Bereich",
-          width = 12,
-          shiny::mainPanel(
-            mod_studium_compare_ui("mod_studium_compare_ui_1")
-          )
-        )
-      )
+      # fluidRow(
+      #   shinydashboard::box(
+      #     title = "Abschlusszahlen von Studierenden unterteilt nach akademischem Grad",
+      #     width = 12,
+      #     shiny::mainPanel(
+      #       mod_studium_abschluss_ui("mod_studium_abschluss_ui_1")
+      #     )
+      #   )
+      # ),
+      # fluidRow(
+      #   shinydashboard::box(
+      #     title = "Verhältnis der Geschlechter in MINT für den akademischen Bereich",
+      #     width = 12,
+      #     shiny::mainPanel(
+      #       mod_studium_compare_ui("mod_studium_compare_ui_1")
+      #     )
+      #   )
+      # )
     )
   )
 }
