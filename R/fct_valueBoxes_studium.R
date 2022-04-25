@@ -1,65 +1,44 @@
-#' make_valueBoxes_studium
+#' @description A function to create the value used to fill the value boxes in the
+#' the first box of the tab "Studium"
 #'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
-#' @param data
-#' @param r
+#' @return The return value is a list of values used to fill the value box
+#' @param data The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 #'
 
 box_einstieg <- function(df,r){
 
+  # load UI inputs from reactive value
   timerange <- r$date_studierende_einstieg
 
   status_studierende <- r$indikator_studierende_einstieg
 
   lehramt_enthalten <- r$nurLehramt_studierende_einstieg
 
+  # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   df <- df %>% dplyr::filter(indikator == status_studierende)
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  df[df$fachbereich == "Alle", "wert"] <- df[df$fachbereich == "Alle", "wert"] -
-    df[df$fachbereich == "Mathe", "wert"] -
-    df[df$fachbereich == "Ingenieur", "wert"]
+  # call function to calculate the share of MINT and the remaining subjects
+  df <- calc_share_MINT(df)
 
-  df[df$fachbereich == "Alle", "fachbereich"] <- "Rest"
+  # calculate the share of males
+  df <- calc_share_male(df, type = "box_1")
 
-
-  df[df$fachbereich == "Ingenieur", "wert"] <- df[df$fachbereich == "Mathe", "wert"] +
-    df[df$fachbereich == "Ingenieur", "wert"]
-
-  df[df$fachbereich == "Ingenieur", "fachbereich"] <- "MINT"
-
-  df <- df %>% dplyr::filter(fachbereich != "Mathe")
-
-  help_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "gesamt") %>%
-    dplyr::group_by(jahr, fachbereich)
-
-  help_weiblich <- df %>% dplyr::filter(anzeige_geschlecht == "frauen") %>%
-    dplyr::group_by(jahr, fachbereich)
-
-  wert_männlich <- help_gesamt$wert - help_weiblich$wert
-
-  help_männlich <- help_weiblich
-
-  help_männlich$wert <- wert_männlich
-  help_männlich$anzeige_geschlecht <- "männer"
-
-  df <- rbind(df, help_männlich)
-
-  df <- df[with(df, order(fachbereich, jahr, decreasing = TRUE)), ]
-
+  # calculate the mean
   df <- df %>% dplyr::filter(hochschulform == "insgesamt") %>%
     dplyr::group_by(anzeige_geschlecht, fachbereich) %>%
     dplyr::summarise(wert_mean = mean(wert))
 
+  # calculate the share of females on MINT
   anteil_mint <- round((df[(df$anzeige_geschlecht == "frauen" & df$fachbereich == "MINT"), "wert_mean"][[1]] /
     df[(df$anzeige_geschlecht == "gesamt" & df$fachbereich == "MINT"), "wert_mean"][[1]])*100)
 
+  # calculate the share of females on the remaining subjects
   anteil_rest <- round((df[(df$anzeige_geschlecht == "frauen" & df$fachbereich == "Rest"), "wert_mean"][[1]] /
                           df[(df$anzeige_geschlecht == "gesamt" & df$fachbereich == "Rest"), "wert_mean"][[1]])*100)
 
@@ -68,112 +47,22 @@ box_einstieg <- function(df,r){
 
 
 
-#' make_valueBoxes_studium
+
+#' @description A function to create the value box
 #'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
-#' @param data
-#' @param r
-#' @noRd
-#'
-
-box_dynamic_1 <- function(data,r){
-
-  timestamp <- r$date_waffle
-
-  indicator <- r$indikator_waffle
-
-  df <- filter_data_studienanzahl(data)
-
-  df <- df %>% dplyr::filter(jahr == timestamp)
-
-  df <- df %>% dplyr::filter(status == indicator)
-
-  value_string_male <- as.character(round(mean(df$wert[df$frauen_manner_alle == "männlich"]),1))
-  value_string_female <- as.character(round(mean(df$wert[df$frauen_manner_alle == "weiblich"]),1))
-
-  return(list(male = value_string_male, female = value_string_female, year = timestamp))
-}
-
-#' make_valueBoxes_studium
-#'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
-#' @param data
-#' @param r
-#' @noRd
-#'
-
-box_dynamic_2 <- function(data,r){
-
-  timestamp <- r$date_abschluss
-
-  pass_fail <- r$durchgefallen
-
-  df <- filter_data_abschluss(data)
-
-  df <- df %>% dplyr::filter(jahr == timestamp)
-
-  df <- df %>% dplyr::filter(prüfungsstatus == pass_fail)
-
-  value_string_male <- as.character(sum(df$wert[df$frauen_manner_alle == "männlich"]))
-  value_string_female <- as.character(sum(df$wert[df$frauen_manner_alle == "weiblich"]))
-
-  return(list(male = value_string_male, female = value_string_female, pass_fail = pass_fail))
-}
-
-#' make_valueBoxes_studium
-#'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
-#' @param data
-#' @param r
-#' @noRd
-#'
-
-box_dynamic_3 <- function(data,r){
-
-  date_range <- r$date_abschluss_1
-
-  pass_fail <- r$durchgefallen_1
-
-  df <- filter_data_abschluss(data)
-
-  df <- df %>% dplyr::filter(jahr >= date_range[1] & jahr <= date_range[2])
-
-  df <- df %>% dplyr::filter(prüfungsstatus == pass_fail)
-
-  value_string_male <- as.character(round(mean(df$wert[df$frauen_manner_alle == "männlich"], na.rm = TRUE),1))
-  value_string_female <- as.character(round(mean(df$wert[df$frauen_manner_alle == "weiblich"], na.rm = TRUE),1))
-
-  return(list(male = value_string_male, female = value_string_female,
-              year_1 = date_range[1], year_2 = date_range[2], pass_fail = pass_fail))
-}
-
-
-
-
-#' make_valueBoxes_studium
-#'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
-#' @param value
-#' @param title
-#' @param subtitle
-#' @param icon
-#' @param color
-#' @param width
-#' @param href
-#' @param info
-#' @param sparkobj
+#' @return The return is a value box
+#' @param value The value to display in the box. Usually a number or short text.
+#' @param title Title of the value box
+#' @param subtitle Subtitle below the big number
+#' @param icon An icon tag
+#' @param color color of the box
+#' @param width Width of the box
+#' @param href An optional URL to link to.
+#' @param info Text of information helper.
 #' @noRd
 #'
 valueBox2 <- function(value, title, subtitle, icon = NULL, color = "aqua", width = 4, href = NULL,
-                      info = NULL, sparkobj = NULL){
+                      info = NULL){
 
   #shinydashboard:::validateColor(color)
 

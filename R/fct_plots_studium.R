@@ -3,19 +3,19 @@
 ################################################################################
 
 
-#' make_plots_studium
+#' A function to plot a graph.
 #'
-#' @description A fct function
+#' @description A function to create a stacked bar chart for the first box
+#' inside the tab "Studium".
 #'
-#' @return The return value, if any, from executing the function.
-#' @param data
-#' @param r
+#' @return The return value is a plot
+#' @param df The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
 studienzahl_einstieg_bar <- function(df,r) {
 
-  options(scipen=999)
-
+  # load UI inputs from reactive value
   timerange <- r$date_studierende_einstieg
 
   status_studierende <- r$indikator_studierende_einstieg
@@ -26,35 +26,29 @@ studienzahl_einstieg_bar <- function(df,r) {
 
   lehramt_enthalten <- r$nurLehramt_studierende_einstieg
 
+
+  # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   df <- df %>% dplyr::filter(indikator == status_studierende)
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  df <- calc_anteil_MINT(df)
+  # call function to calculate the share of MINT and the remaining subjects
+  df <- calc_share_MINT(df)
 
-  help_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "gesamt") %>%
-    dplyr::group_by(jahr, fachbereich)
+  # calculate the share of males
+  df <- calc_share_male(df, "box_1")
 
-  help_weiblich <- df %>% dplyr::filter(anzeige_geschlecht == "frauen") %>%
-    dplyr::group_by(jahr, fachbereich)
-
-  wert_männlich <- help_gesamt$wert - help_weiblich$wert
-
-  help_männlich <- help_weiblich
-
-  help_männlich$wert <- wert_männlich
-  help_männlich$anzeige_geschlecht <- "männer"
-
-  df <- rbind(df, help_männlich)
-
-  df <- df[with(df, order(fachbereich, jahr, decreasing = TRUE)), ]
-
+  # filter gender
   df <- df %>% dplyr::filter(anzeige_geschlecht %in% geschlecht)
+
+  # remove scientific notation
+  options(scipen=999)
 
   if(isTRUE(lehramt_enthalten)){
 
+    # calculate share of teacher
     values <- df %>%
       dplyr::group_by(jahr, fachbereich, anzeige_geschlecht) %>%
       dplyr::mutate(wert = wert - dplyr::lead(wert, n = 2)) %>% dplyr::select(wert) %>% na.omit()
@@ -70,6 +64,7 @@ studienzahl_einstieg_bar <- function(df,r) {
 
     df[df$nur_lehramt == "Ja", "fachbereich"] <- interaction(df[df$nur_lehramt == "Ja", "fachbereich"][[1]], "_lehramt", sep = "")
 
+    # plot
    p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=wert, x=anzeige_geschlecht)) +
       ggplot2::facet_grid(~jahr,
                  scales = "free_x",
@@ -146,17 +141,19 @@ studienzahl_einstieg_bar <- function(df,r) {
 }
 
 
-#' make_plots_studium
+#' A function to return a filtered dataset
 #'
-#' @description A fct function
+#' @description A function to similar to 'studienzahl_einstieg_bar' but with the
+#' difference that it returns a dataframe instead of plot.
 #'
-#' @return The return value, if any, from executing the function.
-#' @param data
-#' @param r
+#' @return The return value is a dataframe
+#' @param df The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
 data_einstieg <- function(df,r) {
 
+  # load UI inputs from reactive value
   timerange <- r$date_studierende_einstieg
 
   status_studierende <- r$indikator_studierende_einstieg
@@ -165,53 +162,28 @@ data_einstieg <- function(df,r) {
 
   lehramt_enthalten <- r$nurLehramt_studierende_einstieg
 
+  # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
+  # call function to calculate the share of MINT and the remaining subjects
+  df <- calc_share_MINT(df)
 
-  df <- calc_anteil_MINT(df)
+  # calculate the share of males
+  df <- calc_share_male(df, "box_1")
 
-
-  help_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "gesamt") %>%
-    dplyr::group_by(jahr, fachbereich)
-
-  help_weiblich <- df %>% dplyr::filter(anzeige_geschlecht == "frauen") %>%
-    dplyr::group_by(jahr, fachbereich)
-
-  wert_männlich <- help_gesamt$wert - help_weiblich$wert
-
-  help_männlich <- help_weiblich
-
-  help_männlich$wert <- wert_männlich
-  help_männlich$anzeige_geschlecht <- "männer"
-
-  df <- rbind(df, help_männlich)
-
-  df <- df[with(df, order(fachbereich, jahr, decreasing = TRUE)), ]
-
+  # filter gender
   df <- df %>% dplyr::filter(anzeige_geschlecht %in% geschlecht)
 
   if(isTRUE(lehramt_enthalten)){
 
-    values <- df %>%
-      dplyr::group_by(jahr, fachbereich, anzeige_geschlecht) %>%
-      dplyr::mutate(wert = wert - dplyr::lead(wert, n = 2)) %>% dplyr::select(wert) %>% na.omit()
+   # calculate the share of teacher
+   df <- calc_share_teacher(df)
 
-    toDelete <- seq(2, nrow(values), 2)
-    values <- values[-toDelete ,]
-
-    df[df$hochschulform == "insgesamt", "wert"] <- values$wert
-
-    df <- df[!(df$nur_lehramt == "Nein" & df$hochschulform == "Uni"), ]
-
-    df <- df[!(df$nur_lehramt == "Nein" & df$hochschulform == "FH"), ]
-
-    df[df$nur_lehramt == "Ja", "fachbereich"] <- interaction(df[df$nur_lehramt == "Ja", "fachbereich"][[1]], "_lehramt", sep = "")
-
-    df$hochschulform <- NULL
+   df$hochschulform <- NULL
 
     return(df)
 
@@ -232,17 +204,19 @@ data_einstieg <- function(df,r) {
 
 
 
-#' make_plots_studium
+#' A function to plot a waffle chart
 #'
-#' @description A fct function
+#' @description A function to create a waffle chart for the second box inside the
+#' tab "Studium".
 #'
-#' @return The return value, if any, from executing the function.
-#' @param data
-#' @param r
+#' @return The return value is a waffle chart
+#' @param df The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
 studienzahl_waffle <- function(df,r) {
 
+  # load UI inputs from reactive value
   status_studierende <- r$indikator_studierende
 
   timerange <- r$date_studierende
@@ -255,6 +229,7 @@ studienzahl_waffle <- function(df,r) {
 
   hochschulform_select_2 <- r$hochschulform_studierende_2
 
+  # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
   df <- df %>% dplyr::filter(indikator == status_studierende)
@@ -274,66 +249,63 @@ studienzahl_waffle <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  df <- calc_anteil_MINT(df)
+  # call function to calculate the share of MINT and the remaining subjects
+  df <- calc_share_MINT(df)
+
+  # calculate the share of males
+  df <- calc_share_male(df, "box_2")
+
+  # calculate proportions
+  df <- df %>% dplyr::group_by(fachbereich) %>%
+    dplyr::mutate(props = sum(wert))
 
 
-    values <- df %>%
-      dplyr::group_by(jahr, fachbereich) %>%
-      dplyr::mutate(wert = wert - dplyr::lead(wert)) %>% dplyr::select(wert) %>% na.omit()
+  df <- df %>% dplyr::group_by(anzeige_geschlecht, fachbereich) %>%
+    dplyr::summarize(proportion = wert/props)
 
-    df[df$anzeige_geschlecht == "gesamt", "wert"] <- values$wert
+  df$proportion <- df$proportion * 100
 
-    df[df$anzeige_geschlecht == "gesamt", "anzeige_geschlecht"] <- "männer"
+  df <- df %>% dplyr::group_by(anzeige_geschlecht, fachbereich) %>%
+    dplyr::summarize(proportion = sum(proportion))
 
+  x_mint <- setNames(round_preserve_sum(as.numeric(df[df$fachbereich == "MINT", "proportion"][[1]]),0),
+                     df[df$fachbereich == "MINT", "anzeige_geschlecht"][[1]])
 
-    df <- df %>% dplyr::group_by(fachbereich) %>%
-      dplyr::mutate(props = sum(wert))
+  x_rest <- setNames(round_preserve_sum(as.numeric(df[df$fachbereich == "Rest", "proportion"][[1]]),0),
+                     df[df$fachbereich == "Rest", "anzeige_geschlecht"][[1]])
 
-
-      df <- df %>% dplyr::group_by(anzeige_geschlecht, fachbereich) %>%
-        dplyr::summarize(proportion = wert/props)
-
-      df$proportion <- df$proportion * 100
-
-      df <- df %>% dplyr::group_by(anzeige_geschlecht, fachbereich) %>%
-        dplyr::summarize(proportion = sum(proportion))
-
-      x_mint <- setNames(round_preserve_sum(as.numeric(df[df$fachbereich == "MINT", "proportion"][[1]]),0),
-                         df[df$fachbereich == "MINT", "anzeige_geschlecht"][[1]])
-
-      x_rest <- setNames(round_preserve_sum(as.numeric(df[df$fachbereich == "Rest", "proportion"][[1]]),0),
-                         df[df$fachbereich == "Rest", "anzeige_geschlecht"][[1]])
-
-      waffle_mint <- waffle::waffle(x_mint, keep = FALSE, colors = c("#0072B2","#D55E00")) +
-            ggplot2::labs(
-              title = paste0("<span style='color:#0072B2;'>",x_mint[1],"% Frauen</span> vs.
+  # create plot objects for waffle charts
+  waffle_mint <- waffle::waffle(x_mint, keep = FALSE, colors = c("#0072B2","#D55E00")) +
+    ggplot2::labs(
+      title = paste0("<span style='color:#0072B2;'>",x_mint[1],"% Frauen</span> vs.
         <span style='color:#D55E00;'>",x_mint[2],"% Männer</span>"),
-              subtitle = "In MINT-Fächern") +
-            ggplot2::theme(plot.title = ggtext::element_markdown())
+      subtitle = "In MINT-Fächern") +
+    ggplot2::theme(plot.title = ggtext::element_markdown())
 
-      waffle_rest <- waffle::waffle(x_rest, keep = FALSE, colors = c("#0072B2","#D55E00")) +
-        ggplot2::labs(
-          title = paste0("<span style='color:#0072B2;'>",x_rest[1],"% Frauen</span> vs.
+  waffle_rest <- waffle::waffle(x_rest, keep = FALSE, colors = c("#0072B2","#D55E00")) +
+    ggplot2::labs(
+      title = paste0("<span style='color:#0072B2;'>",x_rest[1],"% Frauen</span> vs.
         <span style='color:#D55E00;'>",x_rest[2],"% Männer</span>"),
-          subtitle = "Andere Studienfächer") +
-        ggplot2::theme(plot.title = ggtext::element_markdown())
+      subtitle = "Andere Studienfächer") +
+    ggplot2::theme(plot.title = ggtext::element_markdown())
 
 
-      plot <- ggpubr::ggarrange(waffle_rest, waffle_mint, nrow=1, common.legend = T,
-                        legend="bottom")
+  plot <- ggpubr::ggarrange(waffle_rest, waffle_mint, nrow=1, common.legend = T,
+                            legend="bottom")
 
-      ggpubr::annotate_figure(plot,
-                              top = ggpubr::text_grob(paste0("Anteile der Geschlechter an MINT und allen anderen Studienfächern für das Jahr", timerange),
-                              face = "bold", size = 14))
+  ggpubr::annotate_figure(plot,
+                          top = ggpubr::text_grob(paste0("Anteile der Geschlechter an MINT und allen anderen Studienfächern für das Jahr ", timerange),
+                                                  face = "bold", size = 14))
 }
 
-#' make_plots_studium
+#' A function to create a paired bar plot
 #'
-#' @description A fct function
+#' @description A function to return a paired bar plot for the second box inside
+#' the tab "Studium
 #'
-#' @return The return value, if any, from executing the function.
-#' @param data
-#' @param r
+#' @return The return value is a bar plot
+#' @param data The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
 studienzahl_absolut <- function(df,r) {
@@ -372,48 +344,45 @@ studienzahl_absolut <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
+  # call function to calculate the share of MINT and the remaining subjects
+  df <- calc_share_MINT(df)
 
-  df <- calc_anteil_MINT(df)
+  # calculate the share of males
+  df <- calc_share_male(df, type = "box_2")
 
+  # calculate mean
+  df <- df %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>% dplyr::summarise(mean_wert = round(mean(wert)))
 
-    values <- df %>%
-      dplyr::group_by(jahr, fachbereich) %>%
-      dplyr::mutate(wert = wert - dplyr::lead(wert)) %>% dplyr::select(wert) %>% na.omit()
-
-    df[df$anzeige_geschlecht == "gesamt", "wert"] <- values$wert
-
-    df[df$anzeige_geschlecht == "gesamt", "anzeige_geschlecht"] <- "männer"
-
-
-      df <- df %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>% dplyr::summarise(mean_wert = round(mean(wert)))
-
-      ggplot2::ggplot(df, ggplot2::aes(x=reorder(fachbereich, mean_wert), y=mean_wert, fill = anzeige_geschlecht)) +
-        ggplot2::geom_bar(stat="identity", position = "dodge") +
-        ggplot2::geom_text(ggplot2::aes(label=mean_wert, vjust = - 0.25),
-                           position=ggplot2::position_dodge(width=0.9),
-                           fontface = "bold") +
-        ggplot2::theme_bw() +
-        ggplot2::theme(# = ggplot2::element_text(hjust = 0.5),
-                       plot.title = ggtext::element_markdown()) +
-        ggplot2::xlab("Anzahl") + ggplot2::ylab("Fachrichtung") +
-        ggplot2::labs(title = paste0("**Studierendenzahl in MINT und allen anderen Fächern für das Jahr ", timerange,"**"))
+  # plot
+  ggplot2::ggplot(df, ggplot2::aes(x=reorder(fachbereich, mean_wert), y=mean_wert, fill = anzeige_geschlecht)) +
+    ggplot2::geom_bar(stat="identity", position = "dodge") +
+    ggplot2::geom_text(ggplot2::aes(label=mean_wert, vjust = - 0.25),
+                       position=ggplot2::position_dodge(width=0.9),
+                       fontface = "bold") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(# = ggplot2::element_text(hjust = 0.5),
+      plot.title = ggtext::element_markdown()) +
+    ggplot2::xlab("Anzahl") + ggplot2::ylab("Fachrichtung") +
+    ggplot2::labs(title = paste0("**Studierendenzahl in MINT und allen anderen Fächern für das Jahr ", timerange,"**"))
 
 
 }
 
 
 
-#' make_plots_studium
+#' A function to plot the german map
 #'
-#' @description A fct function
+#' @description A function to plot the german map with all states that contain
+#' information about the share of women in STEM
 #'
-#' @return The return value, if any, from executing the function.
-#' @param data
-#' @param r
+#' @return The return value is the german map with information
+#' @param data The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
 studienzahl_map <- function(df,r) {
 
+  # load UI inputs from reactive value
   status_studierende <- r$indikator_studierende
 
   timerange <- r$date_studierende
@@ -424,7 +393,7 @@ studienzahl_map <- function(df,r) {
 
   hochschulform_select_2 <- r$hochschulform_studierende_2
 
-
+  # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
   df <- df %>% dplyr::filter(indikator == status_studierende)
@@ -442,16 +411,17 @@ studienzahl_map <- function(df,r) {
     df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
   }
 
-
+  # remove
   df <- df %>% dplyr::filter(region != "Deutschland")
 
   df <- df %>% dplyr::filter(region != "Bayern")
 
   df <- df %>% dplyr::filter(region != "Baden-Württemberg")
 
-  df <- calc_anteil_MINT(df)
+  # call function to calculate the share of MINT and the remaining subjects
+  df <- calc_share_MINT(df)
 
-
+  # calculate the share of males per region
   values <- df %>%
     dplyr::group_by(region, fachbereich) %>%
     dplyr::mutate(wert = wert - dplyr::lead(wert)) %>% dplyr::select(wert) %>% na.omit()
@@ -463,8 +433,7 @@ studienzahl_map <- function(df,r) {
   df <- df %>% dplyr::group_by(region, fachbereich) %>%
     dplyr::mutate(props = sum(wert))
 
-
-
+  # calculate proportions per region
   df <- df %>% dplyr::group_by(region, anzeige_geschlecht, fachbereich) %>%
     dplyr::summarize(proportion = wert/props)
 
@@ -474,6 +443,7 @@ studienzahl_map <- function(df,r) {
 
   df <- df %>% dplyr::filter(fachbereich != "Rest")
 
+  # plot
   highcharter::hcmap(
     "countries/de/de-all",
     data = df,
@@ -504,17 +474,18 @@ studienzahl_map <- function(df,r) {
 
 
 
-#' make_plots_studium
+#' A function to plot time series
 #'
-#' @description A fct function
+#' @description A function to plot the time series of the german states
 #'
 #' @return The return value, if any, from executing the function.
-#' @param data
-#' @param r
+#' @param data The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
 studienzahl_verlauf <- function(df,r) {
 
+  # load UI inputs from reactive value
   status_studierende <- r$indikator_studierende_verlauf
 
   timerange <- r$date_studierende_verlauf
@@ -525,9 +496,11 @@ studienzahl_verlauf <- function(df,r) {
 
   topic <- r$topic_studierende_verlauf
 
+  # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   df <- df %>% dplyr::filter(indikator == status_studierende)
+
 
   if(lehramt == "Nein"){
 
@@ -543,34 +516,42 @@ studienzahl_verlauf <- function(df,r) {
   }
 
 
+
+  # call function to calculate the share of MINT and the remaining subjects
+  df <- calc_share_MINT(df)
+
+  # order
+  df <- df[with(df, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+
+  # calculate proportion
+  values <- df %>%
+    dplyr::group_by(jahr, fachbereich, region) %>%
+    dplyr::mutate(wert = dplyr::lead(wert)/wert) %>% dplyr::select(wert) %>% na.omit()
+
+  # remove
   df <- df %>% dplyr::filter(region != "Deutschland")
 
   df <- df %>% dplyr::filter(region != "Bayern")
 
   df <- df %>% dplyr::filter(region != "Baden-Württemberg")
 
-  df <- calc_anteil_MINT(df)
-
-  df <- df[with(df, order(region, fachbereich, jahr, decreasing = TRUE)), ]
-
-  values <- df %>%
-    dplyr::group_by(jahr, fachbereich, region) %>%
-    dplyr::mutate(wert = dplyr::lead(wert)/wert) %>% dplyr::select(wert) %>% na.omit()
-
   values <- values %>% dplyr::filter(region %in% states)
 
+  # filter MINT or remaining subjects
   values <- values %>% dplyr::filter(fachbereich == topic)
 
+  # order years for plot
   values <- values[with(values, order(region, jahr, decreasing = FALSE)), ]
 
   values$wert <- values$wert * 100
 
-    highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(wert,2), group = region)) %>%
-      highcharter::hc_tooltip(pointFormat = "Bundesland: {point.region} <br> Wert: {point.y} %") %>%
-      highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr")) %>%
-      highcharter::hc_caption(text = "Quelle: ") %>%
-      highcharter::hc_title(text = paste0("Anteil von Frauen an MINT im Verlauf für ausgewählte Bundesländer"))
+  # plot
+  highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(wert,2), group = region)) %>%
+    highcharter::hc_tooltip(pointFormat = "Bundesland: {point.region} <br> Wert: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr")) %>%
+    highcharter::hc_caption(text = "Quelle: ") %>%
+    highcharter::hc_title(text = paste0("Anteil von Frauen an MINT im Verlauf für ausgewählte Bundesländer"))
 
 
 }
@@ -587,7 +568,7 @@ studienzahl_verlauf <- function(df,r) {
 #'
 #' @return The return value, if any, from executing the function.
 #' @param data
-#' @param r
+#' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
 #change df to data
