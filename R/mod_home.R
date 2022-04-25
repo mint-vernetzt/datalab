@@ -15,49 +15,49 @@ mod_home_ui <- function(id){
         column(width = 5,
                h2("Welcome!")),
         br(),br(),br()
-      ),
-      fluidRow(
-        column(width = 10,
-               shinydashboard::box(
-                 background = "blue",
-                 h1("H1"),
-                 h2("H2"),
-                 h3("H3"),
-                 h4("H4"),
-                 title = "Congrats!"),
-               br(), br(), br(), br()
-        )),
-      fluidRow(
-        shinydashboard::box(
-          title = "New Data Table",
-          width = 12,
-          DT::dataTableOutput(ns('new_table')))),
-
-      fluidRow(
-        shinydashboard::box(
-          title = "Neue Ausbildungsverträge",
-          width = 12,
-          DT::dataTableOutput(ns('table_naa')))),
-
-      fluidRow(
-        shinydashboard::box(
-          title = "Data Table",
-          width = 6,
-          DT::dataTableOutput(ns('data_table'))),
-        shinydashboard::box(
-          title = "Line-Plot",
-          width = 6,
-          plotOutput(ns("plot"))
-        ),
-        shinydashboard::box(
-          title = "Text-Box",
-          width = 6,
-          p("Hier steht Text aus der UI"),
-          em("Das ist Italic"),
-          textOutput(ns("text"))
-        )
-
-      )
+      )#,
+      # fluidRow(
+      #   column(width = 10,
+      #          shinydashboard::box(
+      #            background = "blue",
+      #            h1("H1"),
+      #            h2("H2"),
+      #            h3("H3"),
+      #            h4("H4"),
+      #            title = "Congrats!"),
+      #          br(), br(), br(), br()
+      #   )),
+      # fluidRow(
+      #   shinydashboard::box(
+      #     title = "New Data Table",
+      #     width = 12,
+      #     DT::dataTableOutput(ns('new_table')))),
+      #
+      # fluidRow(
+      #   shinydashboard::box(
+      #     title = "Neue Ausbildungsverträge",
+      #     width = 12,
+      #     DT::dataTableOutput(ns('table_naa')))),
+      #
+      # fluidRow(
+      #   shinydashboard::box(
+      #     title = "Data Table",
+      #     width = 6,
+      #     DT::dataTableOutput(ns('data_table'))),
+      #   shinydashboard::box(
+      #     title = "Line-Plot",
+      #     width = 6,
+      #     plotOutput(ns("plot"))
+      #   ),
+      #   shinydashboard::box(
+      #     title = "Text-Box",
+      #     width = 6,
+      #     p("Hier steht Text aus der UI"),
+      #     em("Das ist Italic"),
+      #     textOutput(ns("text"))
+      #   )
+      #
+      # )
     )
   )
 }
