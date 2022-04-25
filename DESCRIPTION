@@ -25,7 +25,8 @@ Imports:
     stringr,
     tidyr,
     utils,
-    waffle
+    waffle,
+    highcharter
 Suggests: 
     spelling,
     testthat (>= 3.0.0)

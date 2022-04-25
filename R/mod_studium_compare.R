@@ -14,6 +14,10 @@ mod_studium_compare_ui <- function(id){
     fluidRow(
     mod_studium_compare_choice_ui("mod_studium_compare_choice_ui_1"),
     ),
+    fluidRow(
+      column(6, actionButton(ns("add_graph"), "Add Graph"))
+      #column(6, actionButton("reset_graph", "Reset Graphs"))
+    ),
     br(),br(),br(),br(),
     fluidRow(
       shiny::column(width = 12, plotOutput(ns("plot_compare"))
@@ -30,11 +34,51 @@ mod_studium_compare_server <- function(id, data, r, r_abschluss,
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    plot <- eventReactive(
+      input$add_graph, {
 
-        output$plot_compare <- renderPlot({
-          comparer_plot(data,r, isolate(r_abschluss),
-                        isolate(r_studienzahl), isolate(r_habil))
-    })
+        if(isTruthy(r_abschluss$indikator_compare_1) &
+           isTruthy(r_studienzahl$indikator_compare_2)){
+
+          validate(need(r_abschluss$durchgefallen_compare != "",
+                        'Welchen Status soll der Abschluss haben ?'))
+
+          validate(need(r_abschluss$ing_natwi_compare_3 != "",
+                        'Abschlusszahlen: Wähle ein Fach oder mehrere Fächer'))
+
+          validate(need(r_studienzahl$ing_natwi_compare_2 != "",
+                        'Studierendenzahlen: Wähle ein Fach oder mehrere Fächer'))
+
+          comparer_plot(data,r,r_abschluss, r_studienzahl, r_habil)
+
+        }else if(isTruthy(r_abschluss$indikator_compare_1) &
+                !isTruthy(r_studienzahl$indikator_compare_2)){
+
+          validate(need(r_abschluss$durchgefallen_compare != "",
+                        'Welchen Status soll der Abschluss haben ?'))
+
+          validate(need(r_abschluss$ing_natwi_compare_3 != "",
+                        'Abschlusszahlen: Wähle ein Fach oder mehrere Fächer'))
+
+          comparer_plot(data,r,r_abschluss, r_studienzahl, r_habil)
+
+        }else if(!isTruthy(r_abschluss$indikator_compare_1) &
+                  isTruthy(r_studienzahl$indikator_compare_2)){
+
+          validate(need(r_studienzahl$ing_natwi_compare_2 != "",
+                        'Studierendenzahlen: Wähle ein Fach oder mehrere Fächer'))
+
+          comparer_plot(data,r,r_abschluss, r_studienzahl, r_habil)
+
+        } else{
+
+          comparer_plot(data,r,r_abschluss, r_studienzahl, r_habil)
+      }
+    }
+  )
+
+    output$plot_compare <- renderPlot({plot()})
+
   })
 }
 

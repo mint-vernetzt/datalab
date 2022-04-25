@@ -116,3 +116,31 @@ filter_indikator <- function(df, subject, type){
 
   return(df)
 }
+
+
+
+#' filter_studium_studienzahl
+#'
+#' @description A fct function
+#' @param data
+#' @return The return value, if any, from executing the function.
+#'
+#' @noRd
+calc_anteil_MINT <- function(df){
+
+  df[df$fachbereich == "Alle", "wert"] <- df[df$fachbereich == "Alle", "wert"] -
+    df[df$fachbereich == "Mathe", "wert"] -
+    df[df$fachbereich == "Ingenieur", "wert"]
+
+  df[df$fachbereich == "Alle", "fachbereich"] <- "Rest"
+
+
+  df[df$fachbereich == "Ingenieur", "wert"] <- df[df$fachbereich == "Mathe", "wert"] +
+    df[df$fachbereich == "Ingenieur", "wert"]
+
+  df[df$fachbereich == "Ingenieur", "fachbereich"] <- "MINT"
+
+  df <- df %>% dplyr::filter(fachbereich != "Mathe")
+
+  return(df)
+}

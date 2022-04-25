@@ -12,13 +12,7 @@ mod_studium_ui <- function(id){
   tagList(
     fluidPage(
       fluidRow(
-        shinydashboard::box(
-          title = "Studentenzahlen von eingeschriebenen Studenten:innen und Studienanfänger:innen",
-          width = 12,
-          shiny::mainPanel(
-            mod_studium_studienzahl_ui("mod_studium_studienzahl_ui_1")
-          )
-        )
+        mod_studium_studienzahl_ui("mod_studium_studienzahl_ui_1")
       ),
       fluidRow(
         shinydashboard::box(
@@ -39,21 +33,34 @@ mod_studium_ui <- function(id){
         )
       )
     )
-
   )
 }
 
 #' studium Server Functions
 #'
 #' @noRd
-mod_studium_server <- function(id, data, r){
+mod_studium_server <- function(id, data, data_studierende, r){
 
-  r <- reactiveValues(geschlecht = NULL,
+  r <- reactiveValues(geschlecht_studierende_einstieg = NULL,
+                      indikator_studierende_einstieg = NULL,
+                      date_studierende_einstieg = NULL,
+                      nurLehramt_studierende_einstieg = NULL,
+                      indikator_studierende = NULL,
+                      date_studierende = NULL,
+                      nurLehramt_studierende = NULL,
+                      mint_vs_rest_studierende = NULL,
+                      geschlecht_studierende = NULL,
+                      hochschulform_studierende_1 = NULL,
+                      hochschulform_studierende_2 = NULL,
+                      switch_rel_abs = NULL,
+                      date_studierende_verlauf = NULL,
+                      indikator_studierende_verlauf = NULL,
+                      topic_studierende_verlauf = NULL,
+                      nurLehramt_studierende_verlauf = NULL,
+                      states_studierende_verlauf = NULL,
+                      geschlecht = NULL,
                       date = NULL,
                       indikator = NULL,
-                      fach_waffle = NULL,
-                      date_waffle = NULL,
-                      indikator_waffle = NULL,
                       date_abschluss = NULL,
                       geschlecht_abschluss = NULL,
                       date_abschluss_1 = NULL,
@@ -63,7 +70,8 @@ mod_studium_server <- function(id, data, r){
                       ing_natwi = NULL,
                       ing_natwi_1 = NULL,
                       durchgefallen_1 = NULL,
-                      date_compare = NULL)
+                      date_compare = NULL
+    )
 
   r_abschluss <- reactiveValues(indikator_compare_1 = NULL,
                                 durchgefallen_compare = NULL,
@@ -75,11 +83,12 @@ mod_studium_server <- function(id, data, r){
   r_habil <- reactiveValues(ing_natwi_compare_1 = NULL)
 
 
-
   # comment
   mod_studium_studienzahl_choice_1_server("mod_studium_studienzahl_choice_ui_1_1", r)
   mod_studium_studienzahl_choice_2_server("mod_studium_studienzahl_choice_ui_2_1", r)
-  mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1", data, r)
+  mod_studium_studienzahl_einstieg_server("mod_studium_studienzahl_einstieg_ui_1", r)
+  mod_studium_studienzahl_verlauf_server("mod_studium_studienzahl_verlauf_ui_1", r)
+  mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1", data ,data_studierende, r)
 
   # comment
   mod_studium_abschluss_choice_1_server("mod_studium_abschluss_choice_ui_1_1", r)

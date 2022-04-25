@@ -10,34 +10,48 @@
 mod_studium_studienzahl_choice_1_ui <- function(id){
   ns <- NS(id)
   tagList(
-
-    shiny::column(
-      width = 6,
-      shinyWidgets::prettyRadioButtons(
-        inputId = ns("date_waffle"),
-        label = "Wähle ein Jahr:",
-        choices = c(2012, 2015, 2018, 2020),
-        selected = 2012,
-        inline = TRUE,
-        fill = TRUE
+    p("Wähle einen Zeitpunkt:"),
+      shinyWidgets::sliderTextInput(
+        inputId = ns("date_studierende"),
+        label = NULL,
+        choices = c(2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       ),
+    p("Wähle den Status der Student*innen:"),
       shinyWidgets::radioGroupButtons(
-        inputId = ns("fach_waffle"),
-        label = "Soll nach Studienfach aufgeteilt werden ?",
-        choices = c("Ja", "Nein"),
+        inputId = ns("indikator_studierende"),
+        choices = c("Studierende", "Studienanfänger"),
         justified = TRUE,
         checkIcon = list(yes = icon("ok",
                                     lib = "glyphicon"))
       ),
+    p("Soll nur Lehramt angezeigt werden?"),
+      shinyWidgets::radioGroupButtons(
+        inputId = ns("nurLehramt_studierende"),
+        choices = c("Ja", "Nein")
+        ),
+    p("Wähle eine Hochschulform:"),
+      conditionalPanel(condition = "input.nurLehramt_studierende == 'Nein'",
+                       ns = ns,
       shinyWidgets::pickerInput(
-        inputId = ns("indikator_waffle"),
-        label = "Wähle ein Indikator:",
-        choices = c("Eingeschrieben" = "eingeschrieben",
-                    "1.Hochschulemester" = "1hs",
-                    "1.Fachsemester" = "1fs")
-      )
-    )
-
+        inputId = ns("hochschulform_studierende_1"),
+        choices = c("insgesamt", "Uni", "FH")
+      )),
+      conditionalPanel(condition = "input.nurLehramt_studierende == 'Ja'",
+         ns = ns,
+        shinyWidgets::pickerInput(
+          inputId = ns("hochschulform_studierende_2"),
+          choices = "Uni"
+        ))#,
+      # shinyWidgets::pickerInput(
+      #   inputId = ns("geschlecht_studierende"),
+      #   label = "Soll nach Geschlecht aufgeteilt werden?",
+      #   choices = c("Ja", "Nein")
+      # )
+      # shinyWidgets::pickerInput(
+      #   inputId = ns("mint_vs_rest_studierende"),
+      #   label = "Sollen die MINT-Fachbereiche aggregiert werden?",
+      #   choices = c("Ja", "Nein")
+      # )
   )
 }
 
@@ -48,17 +62,34 @@ mod_studium_studienzahl_choice_1_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     # ns <- session$ns
 
-    observeEvent(input$fach_waffle, {
-      r$fach_waffle <- input$fach_waffle
+    observeEvent(input$date_studierende, {
+      r$date_studierende <- input$date_studierende
     })
 
-    observeEvent(input$date_waffle, {
-      r$date_waffle <- input$date_waffle
+    observeEvent(input$indikator_studierende, {
+      r$indikator_studierende <- input$indikator_studierende
     })
 
-    observeEvent(input$indikator_waffle, {
-      r$indikator_waffle <- input$indikator_waffle
+    observeEvent(input$nurLehramt_studierende, {
+      r$nurLehramt_studierende <- input$nurLehramt_studierende
     })
+
+    observeEvent(input$geschlecht_studierende, {
+      r$geschlecht_studierende <- input$geschlecht_studierende
+    })
+
+    observeEvent(input$hochschulform_studierende_1, {
+      r$hochschulform_studierende_1 <- input$hochschulform_studierende_1
+    })
+
+    observeEvent(input$hochschulform_studierende_2, {
+      r$hochschulform_studierende_2 <- input$hochschulform_studierende_2
+    })
+
+    observeEvent(input$mint_vs_rest_studierende, {
+      r$mint_vs_rest_studierende <- input$mint_vs_rest_studierende
+    })
+
   })
 }
 

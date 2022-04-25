@@ -35,6 +35,12 @@ mod_home_ui <- function(id){
 
       fluidRow(
         shinydashboard::box(
+          title = "Neue Ausbildungsverträge",
+          width = 12,
+          DT::dataTableOutput(ns('table_naa')))),
+
+      fluidRow(
+        shinydashboard::box(
           title = "Data Table",
           width = 6,
           DT::dataTableOutput(ns('data_table'))),
@@ -59,7 +65,7 @@ mod_home_ui <- function(id){
 #' home Server Functions
 #'
 #' @noRd
-mod_home_server <- function(id, data, data_new){
+mod_home_server <- function(id, data, data_new, data_naa){
   moduleServer( id, function(input, output, session){
   ns <- session$ns
 
@@ -73,6 +79,10 @@ mod_home_server <- function(id, data, data_new){
 
   output$new_table <- DT::renderDT({
     utils::head(data_new)
+  })
+
+  output$table_naa <- DT::renderDT({
+    utils::head(data_naa)
   })
 
   output$plot <- renderPlot({
