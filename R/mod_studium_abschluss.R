@@ -50,7 +50,7 @@ mod_studium_abschluss_ui <- function(id){
 #' studium_abschluss Server Functions
 #'
 #' @noRd
-mod_studium_abschluss_server <- function(id, data, r){
+mod_studium_abschluss_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 

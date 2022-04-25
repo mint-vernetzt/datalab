@@ -39,7 +39,7 @@ mod_studium_ui <- function(id){
 #' studium Server Functions
 #'
 #' @noRd
-mod_studium_server <- function(id, data, data_studierende, r){
+mod_studium_server <- function(id, data_studierende, r){
 
   r <- reactiveValues(geschlecht_studierende_einstieg = NULL,
                       indikator_studierende_einstieg = NULL,
@@ -88,17 +88,17 @@ mod_studium_server <- function(id, data, data_studierende, r){
   mod_studium_studienzahl_choice_2_server("mod_studium_studienzahl_choice_ui_2_1", r)
   mod_studium_studienzahl_einstieg_server("mod_studium_studienzahl_einstieg_ui_1", r)
   mod_studium_studienzahl_verlauf_server("mod_studium_studienzahl_verlauf_ui_1", r)
-  mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1", data ,data_studierende, r)
+  mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1", data_studierende, r)
 
   # comment
   mod_studium_abschluss_choice_1_server("mod_studium_abschluss_choice_ui_1_1", r)
   mod_studium_abschluss_choice_2_server("mod_studium_abschluss_choice_ui_2_1", r)
-  mod_studium_abschluss_server("mod_studium_abschluss_ui_1", data, r)
+  mod_studium_abschluss_server("mod_studium_abschluss_ui_1", r)
 
   #comment
   mod_studium_compare_choice_server("mod_studium_compare_choice_ui_1", r, r_abschluss,
                                     r_studienzahl, r_habil)
-  mod_studium_compare_server("mod_studium_compare_ui_1", data, r, r_abschluss,
+  mod_studium_compare_server("mod_studium_compare_ui_1", r, r_abschluss,
                              r_studienzahl, r_habil)
 }
 

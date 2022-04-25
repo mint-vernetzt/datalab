@@ -65,7 +65,7 @@ mod_home_ui <- function(id){
 #' home Server Functions
 #'
 #' @noRd
-mod_home_server <- function(id, data, data_new, data_naa){
+mod_home_server <- function(id, data_new, data_naa){
   moduleServer( id, function(input, output, session){
   ns <- session$ns
 

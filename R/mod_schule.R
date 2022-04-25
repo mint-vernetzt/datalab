@@ -42,7 +42,7 @@ mod_schule_ui <- function(id){
 #' schule Server Functions
 #'
 #' @noRd
-mod_schule_server <- function(id,  data, filter_name){
+mod_schule_server <- function(id, filter_name){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 

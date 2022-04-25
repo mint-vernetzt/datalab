@@ -29,7 +29,7 @@ mod_studium_compare_ui <- function(id){
 #' studium_compare Server Functions
 #'
 #' @noRd
-mod_studium_compare_server <- function(id, data, r, r_abschluss,
+mod_studium_compare_server <- function(id, r, r_abschluss,
                                        r_studienzahl, r_habil){
   moduleServer( id, function(input, output, session){
     ns <- session$ns

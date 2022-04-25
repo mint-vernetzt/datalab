@@ -7,7 +7,6 @@
 app_server <- function(input, output, session) {
   # Your application server logic
 
-  load(file = system.file(package="datalab","data/example_data.rda"))
 
   load(file = system.file(package="datalab","data/des056_final.rda"))
 
@@ -18,11 +17,11 @@ app_server <- function(input, output, session) {
   # example_data <- mod_load_data_server("beispieldatensatz", path=system.file(package="datalab", "data-raw/beispieldatensatz.xlsx"))
 
   # callModule(mod_home_server, "home_ui_1", data=example_data)
-  mod_home_server("home_ui_1", data=example_data, data_new = des056_final, data_naa = data_naa)
+  mod_home_server("home_ui_1", data_new = des056_final, data_naa = data_naa)
 
   # callModule(mod_schule_server, "schule_ui_1", data=example_data, filter_name="schule")
-  mod_schule_server("schule_ui_1", data=example_data, filter_name="schule")
+  mod_schule_server("schule_ui_1", filter_name="schule")
 
-  mod_studium_server("studium_ui_1", data=example_data, data_studierende = studierende)
+  mod_studium_server("studium_ui_1", data_studierende = studierende)
 
 }

@@ -63,7 +63,7 @@ mod_studium_studienzahl_ui <- function(id){
 #' studium_studienzahl Server Functions
 #'
 #' @noRd
-mod_studium_studienzahl_server <- function(id, data, data_studierende, r){
+mod_studium_studienzahl_server <- function(id, data_studierende, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
