@@ -1,0 +1,89 @@
+#' beruf_arbeitsmarkt_verlauf UI Function
+#'
+#' @description A shiny Module.
+#'
+#' @param id,input,output,session Internal parameters for {shiny}.
+#'
+#' @noRd
+#'
+#' @importFrom shiny NS tagList
+mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
+  ns <- NS(id)
+  tagList(
+
+    p("Wähle einen Zeitraum:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("date_arbeitsmarkt_verlauf"),
+      label = NULL,
+      choices = c("2013", "2014", "2015", "2016", "2017",
+                  "2018","2019"),
+      selected = c("2015", "2019")
+    ),
+    p("Wähle den Status der Student*innen:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("indikator_arbeitsmarkt_verlauf"),
+      choices = c("Beschäftigte", "Auszubildende"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
+    ),
+    p("Wähle ob MINT oder alle anderen Studiefächen dargestellt werden sollen:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("topic_arbeitsmarkt_verlauf"),
+      choices = c("MINT", "andere Berufszweige"),
+      selected = "MINT"
+    ),
+    p("Wähle ein oder mehrer Bundesländer:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("states_arbeitsmarkt_verlauf"),
+      choices = c("Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen"),
+      multiple = TRUE,
+      selected = c("Hessen", "Hamburg")
+    )
+  )
+}
+
+#' beruf_arbeitsmarkt_verlauf Server Functions
+#'
+#' @noRd
+mod_beruf_arbeitsmarkt_verlauf_server <- function(id, r){
+  moduleServer( id, function(input, output, session){
+
+    observeEvent(input$date_arbeitsmarkt_verlauf, {
+      r$date_arbeitsmarkt_verlauf <- input$date_arbeitsmarkt_verlauf
+    })
+
+    observeEvent(input$indikator_arbeitsmarkt_verlauf, {
+      r$indikator_arbeitsmarkt_verlauf <- input$indikator_arbeitsmarkt_verlauf
+    })
+
+    observeEvent(input$topic_arbeitsmarkt_verlauf, {
+      r$topic_arbeitsmarkt_verlauf <- input$topic_arbeitsmarkt_verlauf
+    })
+
+    observeEvent(input$states_arbeitsmarkt_verlauf, {
+      r$states_arbeitsmarkt_verlauf <- input$states_arbeitsmarkt_verlauf
+    })
+
+
+  })
+}
+
+## To be copied in the UI
+# mod_beruf_arbeitsmarkt_verlauf_ui("beruf_arbeitsmarkt_verlauf_1")
+
+## To be copied in the server
+# mod_beruf_arbeitsmarkt_verlauf_server("beruf_arbeitsmarkt_verlauf_1")
