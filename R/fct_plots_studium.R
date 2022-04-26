@@ -79,11 +79,12 @@ studienzahl_einstieg_bar <- function(df,r) {
                      strip.background = ggplot2::element_rect(fill = "white"),
                      axis.title = ggplot2::element_blank(),
                      panel.spacing.x = ggplot2::unit(0.5,"line")) +
-      ggplot2::scale_fill_manual(values = c(ggplot2::alpha("#1F78B4", 1),
-                                            ggplot2::alpha("#1F78B4", 0.5),
-                                            ggplot2::alpha("#33A02C", 1),
-                                            ggplot2::alpha("#33A02C", 0.5))) +
+      ggplot2::scale_fill_manual(values = c(ggplot2::alpha("#154194", 1),
+                                            ggplot2::alpha("#154194", 0.5),
+                                            ggplot2::alpha("#b16fab", 1),
+                                            ggplot2::alpha("#b16fab", 0.5))) +
       ggplot2::scale_y_continuous(expand = c(0,0))
+
 
 
    if(isTRUE(switch_absolut)){
@@ -121,7 +122,9 @@ studienzahl_einstieg_bar <- function(df,r) {
                      panel.background = ggplot2::element_rect(fill="white"),
                      strip.background = ggplot2::element_rect(fill = "white"),
                      axis.title = ggplot2::element_blank()) +
-      ggplot2::scale_y_continuous(expand = c(0,0))
+      ggplot2::scale_y_continuous(expand = c(0,0)) +
+      ggplot2::scale_fill_manual(values = colors_mint_vernetzt$general)
+
 
     if(isTRUE(switch_absolut)){
 
@@ -223,8 +226,6 @@ studienzahl_waffle <- function(df,r) {
 
   lehramt <- r$nurLehramt_studierende
 
-  geschlecht <- r$geschlecht_studierende
-
   hochschulform_select_1 <- r$hochschulform_studierende_1
 
   hochschulform_select_2 <- r$hochschulform_studierende_2
@@ -265,36 +266,38 @@ studienzahl_waffle <- function(df,r) {
 
   df$proportion <- df$proportion * 100
 
-  df <- df %>% dplyr::group_by(anzeige_geschlecht, fachbereich) %>%
-    dplyr::summarize(proportion = sum(proportion))
 
   x_mint <- setNames(round_preserve_sum(as.numeric(df[df$fachbereich == "MINT", "proportion"][[1]]),0),
                      df[df$fachbereich == "MINT", "anzeige_geschlecht"][[1]])
 
-  x_rest <- setNames(round_preserve_sum(as.numeric(df[df$fachbereich == "Rest", "proportion"][[1]]),0),
-                     df[df$fachbereich == "Rest", "anzeige_geschlecht"][[1]])
+  x_rest <- setNames(round_preserve_sum(as.numeric(df[df$fachbereich == "andere Studiengänge", "proportion"][[1]]),0),
+                     df[df$fachbereich == "andere Studiengänge", "anzeige_geschlecht"][[1]])
 
   # create plot objects for waffle charts
-  waffle_mint <- waffle::waffle(x_mint, keep = FALSE, colors = c("#0072B2","#D55E00")) +
+  waffle_mint <- waffle::waffle(x_mint, keep = FALSE, colors = colors_mint_vernetzt$gender) +
     ggplot2::labs(
-      title = paste0("<span style='color:#0072B2;'>",x_mint[1],"% Frauen</span> vs.
-        <span style='color:#D55E00;'>",x_mint[2],"% Männer</span>"),
-      subtitle = "In MINT-Fächern") +
-    ggplot2::theme(plot.title = ggtext::element_markdown())
+      subtitle = paste0("<span style='font-size:16.0pt;'>" ,x_mint[1],"% <span style='color:#f5adac; font-size:16.0pt;'> Frauen</span> vs. ",
+                        "<span style='font-size:16.0pt;'>", x_mint[2],"% <span style='color:#b1b5c3; font-size:16.0pt;'> Männer</span>"),
+      title = paste0("<span style='color:#b16fab;'>", "**MINT**</span>")) +
+    ggplot2::theme(plot.title = ggtext::element_markdown(),
+                   plot.subtitle = ggtext::element_markdown(),
+                   plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
-  waffle_rest <- waffle::waffle(x_rest, keep = FALSE, colors = c("#0072B2","#D55E00")) +
+  waffle_rest <- waffle::waffle(x_rest, keep = FALSE, colors = colors_mint_vernetzt$gender) +
     ggplot2::labs(
-      title = paste0("<span style='color:#0072B2;'>",x_rest[1],"% Frauen</span> vs.
-        <span style='color:#D55E00;'>",x_rest[2],"% Männer</span>"),
-      subtitle = "Andere Studienfächer") +
-    ggplot2::theme(plot.title = ggtext::element_markdown())
+      subtitle = paste0("<span style='font-size:16.0pt;'>" ,x_rest[1],"% <span style='color:#f5adac; font-size:16.0pt;'> Frauen </span> vs. ",
+                        "<span style='font-size:16.0pt;'>", x_rest[2],"% <span style='color:#b1b5c3; font-size:16.0pt;'> Männer</span>"),
+      title = paste0("<span style='color:#154194;'>", "**Andere Studiengänge**</span>")) +
+    ggplot2::theme(plot.title = ggtext::element_markdown(),
+                   plot.subtitle = ggtext::element_markdown(),
+                   plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
 
-  plot <- ggpubr::ggarrange(waffle_rest, waffle_mint, nrow=1, common.legend = T,
+  plot <- ggpubr::ggarrange(waffle_mint, NULL ,waffle_rest, widths = c(1, -0.15, 1), nrow=1, common.legend = T,
                             legend="bottom")
 
   ggpubr::annotate_figure(plot,
-                          top = ggpubr::text_grob(paste0("Anteile der Geschlechter an MINT und allen anderen Studienfächern für das Jahr ", timerange),
+                          top = ggpubr::text_grob(paste0("Anteile der Geschlechter an MINT und allen anderen Studiengängen für das Jahr ", timerange),
                                                   face = "bold", size = 14))
 }
 
@@ -350,19 +353,18 @@ studienzahl_absolut <- function(df,r) {
   # calculate the share of males
   df <- calc_share_male(df, type = "box_2")
 
-  # calculate mean
-  df <- df %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>% dplyr::summarise(mean_wert = round(mean(wert)))
 
   # plot
-  ggplot2::ggplot(df, ggplot2::aes(x=reorder(fachbereich, mean_wert), y=mean_wert, fill = anzeige_geschlecht)) +
+  ggplot2::ggplot(df, ggplot2::aes(x=reorder(fachbereich, wert), y=wert, fill = anzeige_geschlecht)) +
     ggplot2::geom_bar(stat="identity", position = "dodge") +
-    ggplot2::geom_text(ggplot2::aes(label=mean_wert, vjust = - 0.25),
+    ggplot2::geom_text(ggplot2::aes(label=wert, vjust = - 0.25),
                        position=ggplot2::position_dodge(width=0.9),
                        fontface = "bold") +
     ggplot2::theme_bw() +
     ggplot2::theme(# = ggplot2::element_text(hjust = 0.5),
       plot.title = ggtext::element_markdown()) +
     ggplot2::xlab("Anzahl") + ggplot2::ylab("Fachrichtung") +
+    ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
     ggplot2::labs(title = paste0("**Studierendenzahl in MINT und allen anderen Fächern für das Jahr ", timerange,"**"))
 
 
@@ -441,7 +443,7 @@ studienzahl_map <- function(df,r) {
 
   df <- tidyr::spread(df, key=anzeige_geschlecht, value=proportion)
 
-  df <- df %>% dplyr::filter(fachbereich != "Rest")
+  df <- df %>% dplyr::filter(fachbereich != "andere Studiengänge")
 
   # plot
   highcharter::hcmap(
@@ -545,13 +547,23 @@ studienzahl_verlauf <- function(df,r) {
 
   values$wert <- values$wert * 100
 
+  if (topic == "MINT"){
+
+    title_help <- "MINT"
+
+  }else {
+
+    title_help <- "anderen Studienfächern"
+
+  }
+
   # plot
   highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(wert,2), group = region)) %>%
     highcharter::hc_tooltip(pointFormat = "Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr")) %>%
     highcharter::hc_caption(text = "Quelle: ") %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen an MINT im Verlauf für ausgewählte Bundesländer"))
+    highcharter::hc_title(text = paste0("Anteil von Frauen an ", title_help ," im Verlauf für ausgewählte Bundesländer"))
 
 
 }

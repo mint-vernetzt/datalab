@@ -97,21 +97,27 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
     output$plot_verlauf_studienzahl <- highcharter::renderHighchart({
       studienzahl_verlauf(data_studierende,r)
     })
-    studienzahl_verlauf
 
     output$plot_line <- renderPlot({
       studienzahl_line(data,r)
     })
 
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
-      res <- box_einstieg(data_studierende,r)
+      res <- box_einstieg_studium(data_studierende,r)
 
       value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint,"%"))
 
-      title <- "Studierende"
+      if (r$indikator_studierende_einstieg == "Studierende"){
 
-      text <- paste0("Durschnittlicher Anteil der Frauen an MINT!
-                            ")
+        title <- "Studierende"
+
+      } else {
+
+        title <- "Studienanfänger"
+
+      }
+
+      text <- paste0("Durschnittlicher Anteil der Frauen an MINT!")
 
       text_info <- paste0("Durchschnittlicher Anteil der Frauen an MINT berechnet für
                           den gewählten Zeitraum und abhängig von den gewählten Filter")
@@ -121,16 +127,27 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
         subtitle = text,
         color = "navy",
         width = 6,
-        info = text_info
+        info = text_info,
+        type = "MINT"
+
       )
     })
 
     output$valueBox_einstieg_rest <- shinydashboard::renderValueBox({
-      res <- box_einstieg(data_studierende,r)
+      res <- box_einstieg_studium(data_studierende,r)
 
       value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_rest,"%"))
 
-      title <- "Studierende"
+      if (r$indikator_studierende_einstieg == "Studierende"){
+
+        title <- "Studierende"
+
+      } else {
+
+        title <- "Studienanfänger"
+
+      }
+
 
       text <- paste0("Durschnittlicher Anteil der Frauen an allen anderen Fächer!")
 
@@ -145,47 +162,6 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
         info = text_info
       )
     })
-
-    output$box_durchschnitt_male <- shinydashboard::renderValueBox({
-      res <- box_dynamic_1(data,r)
-      value <- tags$p(style = "font-size: 100px;", paste0(res$male))
-      title <- tags$p(style = "font-size: 25px;", paste0("Durchschnitt Männer in ",
-                                                         res$year))
-      ratio <-  round((as.numeric(res$male) /
-        (as.numeric(res$female) + as.numeric(res$male)))*100)
-
-      text <- paste0(ratio, "% Anteil der Männer (durchschn.)")
-
-      text_info <- paste0("Durchschnittlicher Anteil der Männer ",
-                          dictionary_title_studium_studentenzahl[[r$indikator_waffle]],
-                         " für das Jahr ", r$date_waffle)
-
-      valueBox2(
-        value, title, icon = icon("graduation-cap"),
-        subtitle = tagList(HTML("&excl;"), text),
-        color = "blue",
-        width = 4,
-        info = text_info
-      )
-    })
-
-
-
-
-
-
-    output$box_durchschnitt_female <- shinydashboard::renderValueBox({
-      res <- box_dynamic_1(data,r)
-      value <- tags$p(style = "font-size: 15px;", paste0(res$female))
-      subtitle <- tags$p(style = "font-size: 15px;", paste0("Durchschnitt an Frauen /n
-                                                            im Jahr ", res$year))
-      shinydashboard::valueBox(
-        value, subtitle, icon = icon("glyphicon-education", lib = "glyphicon"),
-        color = "blue"
-      )
-    })
-
-
 
   })
 }
