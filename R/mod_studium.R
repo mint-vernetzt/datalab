@@ -83,7 +83,7 @@ mod_studium_server <- function(id, data_studierende, r){
   r_habil <- reactiveValues(ing_natwi_compare_1 = NULL)
 
 
-  # comment
+  # Studienzahl
   mod_studium_studienzahl_choice_1_server("mod_studium_studienzahl_choice_ui_1_1", r)
   mod_studium_studienzahl_choice_2_server("mod_studium_studienzahl_choice_ui_2_1", r)
   mod_studium_studienzahl_einstieg_server("mod_studium_studienzahl_einstieg_ui_1", r)
