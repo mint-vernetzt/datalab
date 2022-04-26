@@ -34,7 +34,7 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
     p("Wähle ob MINT oder alle anderen Studiefächen dargestellt werden sollen:"),
     shinyWidgets::pickerInput(
       inputId = ns("topic_studierende_verlauf"),
-      choices = c("MINT", "Alle anderen Studienfächer" = "Rest"),
+      choices = c("MINT", "Alle anderen Studienfächer" = "andere Studiengänge"),
       selected = "MINT"
     ),
     p("Wähle ein oder mehrer Bundesländer:"),
