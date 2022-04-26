@@ -9,7 +9,7 @@ calc_share_MINT <- function(df){
     df[df$fachbereich == "Mathe", "wert"] -
     df[df$fachbereich == "Ingenieur", "wert"]
 
-  df[df$fachbereich == "Alle", "fachbereich"] <- "Rest"
+  df[df$fachbereich == "Alle", "fachbereich"] <- "andere Studiengänge"
 
 
   df[df$fachbereich == "Ingenieur", "wert"] <- df[df$fachbereich == "Mathe", "wert"] +
