@@ -352,24 +352,17 @@ arbeitsmarkt_map <- function(df,r) {
   df[df$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige"
 
 
-  df <- df %>% dplyr::group_by(region, fachbereich) %>%
-    dplyr::mutate(props = sum(wert))
-
-  # calculate proportions per region
-  df <- df %>% dplyr::group_by(region, anzeige_geschlecht, fachbereich) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df$proportion <- df$proportion * 100
-
-  df <- tidyr::spread(df, key=anzeige_geschlecht, value=proportion)
-
   df <- df %>% dplyr::filter(fachbereich != "andere Berufszweige")
+
+  values <- (df[df$anzeige_geschlecht == "Frauen", "wert"]/df[df$anzeige_geschlecht == "Gesamt", "wert"])*100
+
+  values$region <- df[df$anzeige_geschlecht == "Frauen", "region"][[1]]
 
   # plot
   highcharter::hcmap(
     "countries/de/de-all",
-    data = df,
-    value = "Frauen",
+    data = values,
+    value = "wert",
     joinBy = c("name", "region"),
     borderColor = "#FAFAFA",
     name = "Anteil Frauen an MINT",
@@ -413,6 +406,10 @@ arbeitsmarkt_verlauf <- function(df,r) {
 
   topic <- r$topic_arbeitsmarkt_verlauf
 
+  anforderung <- r$anforderungsniveau_arbeitsmarkt_verlauf
+
+  ost_west <- r$ost_west
+
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
@@ -439,6 +436,21 @@ arbeitsmarkt_verlauf <- function(df,r) {
 
 
   values <- values %>% dplyr::filter(region %in% states)
+
+
+  if (ost_west == "Nein") {
+
+    values <- values %>% dplyr::filter(region %in% states)
+
+  } else{
+
+    values$dummy_west <- ifelse(values$region %in% states_east_west$west, "Westen", "Osten")
+
+    values <- values %>% dplyr::group_by(jahr, fachbereich, dummy_west) %>%
+      dplyr::summarise(wert = mean(wert))
+
+    names(values)[3] <- "region"
+  }
 
   # filter MINT or remaining subjects
   values <- values %>% dplyr::filter(fachbereich == topic)

@@ -37,6 +37,14 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
       choices = c("MINT", "Alle anderen Studienfächer" = "andere Studiengänge"),
       selected = "MINT"
     ),
+    p("Sollen die Bundesländern auf Ost und West aggregiert werden?"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("ost_west"),
+      choices = c("Ja", "Nein"),
+      selected = "Nein"
+    ),
+    conditionalPanel(condition = "input.ost_west == 'Nein'",
+                     ns = ns,
     p("Wähle ein oder mehrer Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studierende_verlauf"),
@@ -56,7 +64,9 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
                   "Thüringen"),
       multiple = TRUE,
       selected = c("Hessen", "Hamburg")
-    )
+    )),
+    conditionalPanel(condition = "input.ost_west == 'Ja'",
+                     ns = ns)
   )
 }
 
@@ -84,6 +94,10 @@ mod_studium_studienzahl_verlauf_server <- function(id, r){
 
     observeEvent(input$nurLehramt_studierende_verlauf, {
       r$nurLehramt_studierende_verlauf <- input$nurLehramt_studierende_verlauf
+    })
+
+    observeEvent(input$ost_west, {
+      r$ost_west <- input$ost_west
     })
 
   })

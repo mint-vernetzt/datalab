@@ -19,7 +19,7 @@ mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
                   "2018","2019"),
       selected = c("2015", "2019")
     ),
-    p("Wähle den Status der Student*innen:"),
+    p("Wähle den Status der Arbeitnehmer*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_arbeitsmarkt_verlauf"),
       choices = c("Beschäftigte", "Auszubildende"),
@@ -27,12 +27,25 @@ mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
+    p("Wähle ein Anforderungsniveu:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("anforderungsniveau_arbeitsmarkt_verlauf"),
+      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte")
+    ),
     p("Wähle ob MINT oder alle anderen Studiefächen dargestellt werden sollen:"),
     shinyWidgets::pickerInput(
       inputId = ns("topic_arbeitsmarkt_verlauf"),
       choices = c("MINT", "andere Berufszweige"),
       selected = "MINT"
     ),
+    p("Sollen die Bundesländern auf Ost und West aggregiert werden?"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("ost_west"),
+      choices = c("Ja", "Nein"),
+      selected = "Nein"
+    ),
+    conditionalPanel(condition = "input.ost_west == 'Nein'",
+                     ns = ns,
     p("Wähle ein oder mehrer Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_arbeitsmarkt_verlauf"),
@@ -52,7 +65,9 @@ mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
                   "Thüringen"),
       multiple = TRUE,
       selected = c("Hessen", "Hamburg")
-    )
+    )),
+    conditionalPanel(condition = "input.ost_west == 'Ja'",
+                     ns = ns)
   )
 }
 
@@ -78,6 +93,13 @@ mod_beruf_arbeitsmarkt_verlauf_server <- function(id, r){
       r$states_arbeitsmarkt_verlauf <- input$states_arbeitsmarkt_verlauf
     })
 
+    observeEvent(input$anforderungsniveau_arbeitsmarkt_verlauf, {
+      r$anforderungsniveau_arbeitsmarkt_verlauf <- input$anforderungsniveau_arbeitsmarkt_verlauf
+    })
+
+    observeEvent(input$ost_west, {
+      r$ost_west <- input$ost_west
+    })
 
   })
 }

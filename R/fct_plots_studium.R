@@ -48,19 +48,16 @@ studienzahl_einstieg_bar <- function(df,r) {
 
   if(isTRUE(lehramt_enthalten)){
 
-    # calculate share of teacher
-    values <- df %>%
-      dplyr::group_by(jahr, fachbereich, anzeige_geschlecht) %>%
-      dplyr::mutate(wert = wert - dplyr::lead(wert, n = 2)) %>% dplyr::select(wert) %>% na.omit()
-
-    toDelete <- seq(2, nrow(values), 2)
-    values <- values[-toDelete ,]
-
-    df[df$hochschulform == "insgesamt", "wert"] <- values$wert
-
     df <- df[!(df$nur_lehramt == "Nein" & df$hochschulform == "Uni"), ]
 
     df <- df[!(df$nur_lehramt == "Nein" & df$hochschulform == "FH"), ]
+
+    # calculate share of teacher
+    values <- df %>%
+      dplyr::group_by(jahr, fachbereich, anzeige_geschlecht) %>%
+      dplyr::mutate(wert = wert - dplyr::lead(wert)) %>% na.omit()
+
+    df[df$hochschulform == "insgesamt", "wert"] <- values$wert
 
     df[df$nur_lehramt == "Ja", "fachbereich"] <- interaction(df[df$nur_lehramt == "Ja", "fachbereich"][[1]], "_lehramt", sep = "")
 
@@ -423,33 +420,17 @@ studienzahl_map <- function(df,r) {
   # call function to calculate the share of MINT and the remaining subjects
   df <- calc_share_MINT(df)
 
-  # calculate the share of males per region
-  values <- df %>%
-    dplyr::group_by(region, fachbereich) %>%
-    dplyr::mutate(wert = wert - dplyr::lead(wert)) %>% dplyr::select(wert) %>% na.omit()
-
-  df[df$anzeige_geschlecht == "gesamt", "wert"] <- values$wert
-
-  df[df$anzeige_geschlecht == "gesamt", "anzeige_geschlecht"] <- "männer"
-
-  df <- df %>% dplyr::group_by(region, fachbereich) %>%
-    dplyr::mutate(props = sum(wert))
-
-  # calculate proportions per region
-  df <- df %>% dplyr::group_by(region, anzeige_geschlecht, fachbereich) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df$proportion <- df$proportion * 100
-
-  df <- tidyr::spread(df, key=anzeige_geschlecht, value=proportion)
-
   df <- df %>% dplyr::filter(fachbereich != "andere Studiengänge")
+
+  values <- (df[df$anzeige_geschlecht == "frauen", "wert"]/df[df$anzeige_geschlecht == "gesamt", "wert"])*100
+
+  values$region <- df[df$anzeige_geschlecht == "frauen", "region"][[1]]
 
   # plot
   highcharter::hcmap(
     "countries/de/de-all",
-    data = df,
-    value = "frauen",
+    data = values,
+    value = "wert",
     joinBy = c("name", "region"),
     borderColor = "#FAFAFA",
     name = "Anteil Frauen an MINT",
@@ -498,11 +479,19 @@ studienzahl_verlauf <- function(df,r) {
 
   topic <- r$topic_studierende_verlauf
 
+  ost_west <- r$ost_west
+
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   df <- df %>% dplyr::filter(indikator == status_studierende)
 
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- df %>% dplyr::filter(region != "Bayern")
+
+  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
 
   if(lehramt == "Nein"){
 
@@ -530,14 +519,20 @@ studienzahl_verlauf <- function(df,r) {
     dplyr::group_by(jahr, fachbereich, region) %>%
     dplyr::mutate(wert = dplyr::lead(wert)/wert) %>% dplyr::select(wert) %>% na.omit()
 
-  # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(region != "Bayern")
+  if (ost_west == "Nein") {
 
-  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+    values <- values %>% dplyr::filter(region %in% states)
 
-  values <- values %>% dplyr::filter(region %in% states)
+  } else{
+
+    values$dummy_west <- ifelse(values$region %in% states_east_west$west, "Westen", "Osten")
+
+    values <- values %>% dplyr::group_by(jahr, fachbereich, dummy_west) %>%
+      dplyr::summarise(wert = mean(wert))
+
+    names(values)[3] <- "region"
+  }
 
   # filter MINT or remaining subjects
   values <- values %>% dplyr::filter(fachbereich == topic)

@@ -34,7 +34,8 @@ mod_beruf_server <- function(id, data_arbeitsmarkt, r){
                       indikator_arbeitsmarkt_verlauf = NULL,
                       topic_arbeitsmarkt_verlauf = NULL,
                       states_arbeitsmarkt_verlauf = NULL,
-                      anforderungsniveau_verlauf = NULL)
+                      anforderungsniveau_arbeitsmarkt_verlauf = NULL,
+                      ost_west = NULL)
 
   # Arbeitsmarkt
   mod_beruf_arbeitsmarkt_einstieg_server("mod_beruf_arbeitsmarkt_einstieg_ui_1", r)

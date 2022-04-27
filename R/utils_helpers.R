@@ -60,6 +60,18 @@ colors_mint_vernetzt <- list(general = c("#154194", "#b16fab", "#efe8e6"),
                              neutral = c("#141416", "#e6e8ec"),
                              gender = c("#f5adac", "#b1b5c3"))
 
+#' helpers
+#'
+#' @description A utils list which contains the all states of the former west and
+#' east of germany
+#'
+#' @noRd
+states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Hamburg",
+                                  "Hessen", "Niedersachsen", "Nordrhein-Westfalen",
+                                  "Rheinland-Pfalz", "Saarland", "Schleswig-Holstein"),
+                        east = c("Brandenburg", "Mecklenburg-Vorpommern", "Sachsen",
+                                 "Sachsen-Anhalt", "Thüringen", "Berlin"))
+
 
 #' @description A function to create the value box
 #'

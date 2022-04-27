@@ -98,10 +98,10 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
 
       }
 
-      text <- paste0("Durschnittlicher Anteil der Frauen an MINT!")
+      text <- paste0("Durschnittlicher Anteil von MINT bei berufstätigen Frauen!")
 
-      text_info <- paste0("Durchschnittlicher Anteil der Frauen an MINT berechnet für
-                          den gewählten Zeitraum und abhängig von den gewählten Filter")
+      text_info <- paste0("Durschnittlicher Anteil von MINT bei berufstätigen Frauen berechnet für
+                          den gewählten Zeitraum und abhängig von den gewählten Filter.")
 
       valueBox2(
         value, title, #icon = icon("graduation-cap"),
@@ -129,10 +129,10 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
       }
 
 
-      text <- paste0("Durschnittlicher Anteil der Frauen an allen anderen Berufszweigen!")
+      text <- paste0("Durschnittlicher Anteil von allen anderen Berufszweigen bei berufstätigen Frauen!")
 
-      text_info <- paste0("Durchschnittlicher Anteil der Frauen an anderen Berufszweigen berechnet für
-                          den gewählten Zeitraum und abhängig von den gewählten Filter")
+      text_info <- paste0("Durschnittlicher Anteil von allen anderen Berufszweigen bei berufstätigen Frauen berechnet für
+                          den gewählten Zeitraum und abhängig von den gewählten Filter.")
 
       valueBox2(
         value, title, #icon = icon("graduation-cap"),

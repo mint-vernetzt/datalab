@@ -58,6 +58,7 @@ mod_studium_server <- function(id, data_studierende, r){
                       topic_studierende_verlauf = NULL,
                       nurLehramt_studierende_verlauf = NULL,
                       states_studierende_verlauf = NULL,
+                      ost_west = NULL,
                       geschlecht = NULL,
                       date = NULL,
                       indikator = NULL,
