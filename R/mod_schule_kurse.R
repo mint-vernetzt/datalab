@@ -26,7 +26,22 @@ mod_schule_kurse_ui <- function(id){
                       tabPanel("Bar Chart", plotly::plotlyOutput(ns("plot_einstieg_bar"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
                                                 style = "font-size: 75%; width: 75%"))))
-      ))
+      )),
+    fluidRow(
+      shinydashboard::box(
+        title = "Lorem Ipsum",
+        width = 12,
+        shiny::sidebarPanel(
+          mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
+        shiny::mainPanel(
+          tabsetPanel(type = "tabs",
+                      tabPanel("Anteil", plotOutput(ns("plot_waffle"))),
+                      tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
+                      tabPanel("Ranking1", plotOutput(ns("plot_ranking_1"))),
+                      tabPanel("Ranking2", plotOutput(ns("plot_ranking_2"))),
+                      tabPanel("Map", highcharter::highchartOutput(ns("plot_map_kurse"))))
+
+        )))
   )
 }
 
@@ -45,6 +60,27 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
     output$data_table_einstieg <- DT::renderDT({
       data_einstieg_kurse(data_kurse, r)
     })
+
+    output$plot_waffle <- renderPlot({
+      kurse_waffle(data_kurse,r)
+    })
+
+    output$plot_absolut <- renderPlot({
+      kurse_absolut(data_kurse,r)
+    })
+
+    output$plot_ranking_1 <- renderPlot({
+      kurse_ranking(data_kurse,r, type="first")
+    })
+
+    output$plot_ranking_2 <- renderPlot({
+      kurse_ranking(data_kurse,r, type="other")
+    })
+
+    output$plot_map_kurse <- highcharter::renderHighchart({
+      kurse_map(data_kurse,r)
+    })
+
 
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
       res <- box_einstieg_kurse(data_kurse,r)

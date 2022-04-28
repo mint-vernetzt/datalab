@@ -26,10 +26,14 @@ mod_schule_server <- function(id, data_kurse, r){
   r <- reactiveValues(date_kurse_einstieg = NULL,
                       indikator_kurse_einstieg = NULL,
                       switch_rel_abs = NULL,
-                      geschlecht_kurse_einstieg = NULL)
+                      geschlecht_kurse_einstieg = NULL,
+                      date_kurse = NULL,
+                      indikator_kurse = NULL)
+
 
   # Kurse
   mod_schule_kurse_einstieg_server("mod_schule_kurse_einstieg_ui_1", r)
+  mod_schule_kurse_multiple_server("mod_schule_kurse_multiple_ui_1", r)
   mod_schule_kurse_server("mod_schule_kurse_ui_1", data_kurse, r)
 
 
