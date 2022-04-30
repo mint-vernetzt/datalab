@@ -16,6 +16,7 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         shiny::sidebarPanel(
           tags$style(".well {background-color:#FFFFFF;}"),
+          tags$head(tags$style(HTML(".small-box {height: 140px}"))),
           mod_schule_kurse_einstieg_ui("mod_schule_kurse_einstieg_ui_1")),
         shinydashboard::valueBoxOutput(ns("valueBox_einstieg_mint")),
         shinydashboard::valueBoxOutput(ns("valueBox_einstieg_rest")),
@@ -37,10 +38,19 @@ mod_schule_kurse_ui <- function(id){
           tabsetPanel(type = "tabs",
                       tabPanel("Anteil", plotOutput(ns("plot_waffle"))),
                       tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
-                      tabPanel("Ranking1", plotOutput(ns("plot_ranking_1"))),
-                      tabPanel("Ranking2", plotOutput(ns("plot_ranking_2"))),
+                      tabPanel("Ranking 1", plotOutput(ns("plot_ranking_1"))),
+                      tabPanel("Ranking 2", plotOutput(ns("plot_ranking_2"))),
                       tabPanel("Map", highcharter::highchartOutput(ns("plot_map_kurse"))))
 
+        ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Lorem Ipsum",
+        width = 12,
+        shiny::sidebarPanel(
+          mod_schule_kurse_verlauf_ui("mod_schule_kurse_verlauf_ui_1")),
+        shiny::mainPanel(
+          highcharter::highchartOutput(ns("plot_verlauf_kurse"))
         )))
   )
 }
@@ -81,6 +91,9 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
       kurse_map(data_kurse,r)
     })
 
+    output$plot_verlauf_kurse <- highcharter::renderHighchart({
+      kurse_verlauf(data_kurse,r)
+    })
 
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
       res <- box_einstieg_kurse(data_kurse,r)

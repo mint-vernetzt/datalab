@@ -30,9 +30,9 @@ mod_studium_studienzahl_einstieg_ui <- function(id){
     p("Wähle ein oder mehrere Vergleichspunkte:"),
       shinyWidgets::pickerInput(
         inputId = ns("geschlecht_studierende_einstieg"),
-        choices = c("gesamt", "frauen", "männer"),
+        choices = c("Gesamt", "Frauen", "Männer"),
         multiple = TRUE,
-        selected = "gesamt"
+        selected = "Gesamt"
       ),
     p("Soll der Anteil von Lehramt angezeigt werden?"),
       shinyWidgets::materialSwitch(

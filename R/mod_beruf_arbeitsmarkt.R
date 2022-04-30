@@ -16,6 +16,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         width = 12,
         shiny::sidebarPanel(
           tags$style(".well {background-color:#FFFFFF;}"),
+          tags$head(tags$style(HTML(".small-box {height: 140px}"))),
           mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")),
         shinydashboard::valueBoxOutput(ns("valueBox_einstieg_mint")),
         shinydashboard::valueBoxOutput(ns("valueBox_einstieg_rest")),

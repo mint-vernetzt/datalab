@@ -42,10 +42,10 @@ box_einstieg_studium <- function(df,r){
 
 
   # calculate the share of females on MINT
-  anteil_mint <- df[(df$anzeige_geschlecht == "frauen" & df$fachbereich == "MINT"), "proportion"]*100
+  anteil_mint <- df[(df$anzeige_geschlecht == "Frauen" & df$fachbereich == "MINT"), "proportion"]*100
 
   # calculate the share of females on the remaining subjects
-  anteil_rest <- df[(df$anzeige_geschlecht == "frauen" & df$fachbereich == "andere Studiengänge"), "proportion"]*100
+  anteil_rest <- df[(df$anzeige_geschlecht == "Frauen" & df$fachbereich == "andere Studiengänge"), "proportion"]*100
 
   vec_anteile <- c(anteil_mint$proportion, anteil_rest$proportion)
 

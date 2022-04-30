@@ -27,7 +27,8 @@ mod_studium_studienzahl_choice_1_ui <- function(id){
     p("Soll nur Lehramt angezeigt werden?"),
       shinyWidgets::radioGroupButtons(
         inputId = ns("nurLehramt_studierende"),
-        choices = c("Ja", "Nein")
+        choices = c("Ja", "Nein"),
+        selected = "Nein"
         ),
     p("Wähle eine Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studierende == 'Nein'",

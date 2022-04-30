@@ -46,7 +46,20 @@ studienzahl_einstieg_bar <- function(df,r) {
   # remove scientific notation
   options(scipen=999)
 
+
+  if (status_studierende == "Grundkurse"){
+
+    title_help <- "der Studierenden"
+
+  }else{
+
+    title_help <- "der Studienanfängern"
+
+  }
+
+
   if(isTRUE(lehramt_enthalten)){
+
 
     df <- df[!(df$nur_lehramt == "Nein" & df$hochschulform == "Uni"), ]
 
@@ -59,23 +72,48 @@ studienzahl_einstieg_bar <- function(df,r) {
 
     df[df$hochschulform == "insgesamt", "wert"] <- values$wert
 
-    df[df$nur_lehramt == "Ja", "fachbereich"] <- interaction(df[df$nur_lehramt == "Ja", "fachbereich"][[1]], "_lehramt", sep = "")
+    df[df$nur_lehramt == "Ja", "fachbereich"] <- interaction(df[df$nur_lehramt == "Ja", "fachbereich"][[1]], " (lehramt)", sep = "")
+
+    df <- df[with(df, order(anzeige_geschlecht, jahr, decreasing = TRUE)), ]
+
+    values <- df %>% dplyr::group_by(anzeige_geschlecht, jahr) %>%
+      dplyr::summarize(wert = sum(wert))
+
+    values <- values[with(values, order(anzeige_geschlecht, jahr, decreasing = TRUE)), ]
+
+
+    df$Anteil <- NA
+
+    df[df$fachbereich == "andere Studiengänge", "Anteil"] <- round((df[df$fachbereich == "andere Studiengänge", "wert"]/
+                          values$wert)*100)
+
+    df[df$fachbereich == "andere Studiengänge (lehramt)", "Anteil"] <- round((df[df$fachbereich == "andere Studiengänge (lehramt)", "wert"]/
+                                                                              values$wert)*100)
+
+    df[df$fachbereich == "MINT", "Anteil"] <- round((df[df$fachbereich == "MINT", "wert"]/
+                                                     values$wert)*100)
+
+    df[df$fachbereich == "MINT (lehramt)", "Anteil"] <- round((df[df$fachbereich == "MINT (lehramt)", "wert"]/
+                                                               values$wert)*100)
+
+    df$Anteil <- paste(df$Anteil,"%")
+
+    names(df)[3] <- "Wert"
 
     # plot
-   p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=wert, x=anzeige_geschlecht)) +
+   p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
       ggplot2::facet_grid(~jahr,
                  scales = "free_x",
                  space = "free_x",
                  switch = "x")  +
-      ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Studienfächer")) +
+      ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Studienfächer", title_help)) +
       ggplot2::theme(strip.placement = "outside",
                      panel.grid.major.x = ggplot2::element_blank(),
                      panel.grid.minor.x = ggplot2::element_blank(),
                      panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
                      panel.background = ggplot2::element_rect(fill="white"),
                      strip.background = ggplot2::element_rect(fill = "white"),
-                     axis.title = ggplot2::element_blank(),
-                     panel.spacing.x = ggplot2::unit(0.5,"line")) +
+                     axis.title = ggplot2::element_blank()) +
       ggplot2::scale_fill_manual(values = c(ggplot2::alpha("#154194", 1),
                                             ggplot2::alpha("#154194", 0.5),
                                             ggplot2::alpha("#b16fab", 1),
@@ -83,19 +121,22 @@ studienzahl_einstieg_bar <- function(df,r) {
       ggplot2::scale_y_continuous(expand = c(0,0))
 
 
+   t <- list(
+     family = "serif", size = 14)
+
 
    if(isTRUE(switch_absolut)){
 
     p <- p + ggplot2::geom_bar(position="stack", stat="identity")
 
-    plotly::ggplotly(p)
+    plotly::ggplotly(p, tooltip = "Wert") %>% plotly::layout(font=t)
 
    }else{
 
      p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
                 ggplot2::scale_y_continuous(labels = scales::percent_format())
 
-     plotly::ggplotly(p)
+     plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::layout(font=t)
 
    }
 
@@ -106,8 +147,27 @@ studienzahl_einstieg_bar <- function(df,r) {
 
     df <- df %>% dplyr::filter(hochschulform == "insgesamt")
 
-    p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=wert, x=anzeige_geschlecht)) +
-      ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Studienfächer")) +
+    df <- df[with(df, order(anzeige_geschlecht, jahr, decreasing = TRUE)), ]
+
+    values <- df %>% dplyr::group_by(anzeige_geschlecht, jahr) %>%
+      dplyr::summarize(wert = sum(wert))
+
+    values <- values[with(values, order(anzeige_geschlecht, jahr, decreasing = TRUE)), ]
+
+
+    df$Anteil <- NA
+
+    df[df$fachbereich == "andere Studiengänge", "Anteil"] <- round((df[df$fachbereich == "andere Studiengänge", "wert"]/values$wert)*100)
+
+    df[df$fachbereich == "MINT", "Anteil"] <- round((df[df$fachbereich == "MINT", "wert"]/values$wert)*100)
+
+
+    df$Anteil <- paste(df$Anteil,"%")
+
+    names(df)[3] <- "Wert"
+
+    p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
+      ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Studienfächer", title_help)) +
       ggplot2::facet_grid(~jahr,
                           scales = "free_x",
                           space = "free_x",
@@ -122,17 +182,19 @@ studienzahl_einstieg_bar <- function(df,r) {
       ggplot2::scale_y_continuous(expand = c(0,0)) +
       ggplot2::scale_fill_manual(values = colors_mint_vernetzt$general)
 
+    t <- list(
+      family = "serif", size = 14)
 
     if(isTRUE(switch_absolut)){
 
       p <- p + ggplot2::geom_bar(position="stack", stat="identity")
-      plotly::ggplotly(p)
+      plotly::ggplotly(p, tooltip = "Wert") %>% plotly::layout(font=t)
 
     }else{
 
      p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
         ggplot2::scale_y_continuous(labels = scales::percent_format())
-      plotly::ggplotly(p)
+      plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::layout(font=t)
 
     }
 
@@ -278,6 +340,7 @@ studienzahl_waffle <- function(df,r) {
       title = paste0("<span style='color:#b16fab;'>", "**MINT**</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
+                   text = ggplot2::element_text(family="serif", size = 14),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
   waffle_rest <- waffle::waffle(x_rest, keep = FALSE, colors = colors_mint_vernetzt$gender) +
@@ -287,15 +350,28 @@ studienzahl_waffle <- function(df,r) {
       title = paste0("<span style='color:#154194;'>", "**Andere Studiengänge**</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
+                   text = ggplot2::element_text(family="serif", size = 14),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
+
+  if (status_studierende == "Studierende"){
+
+    title_help <- "für Studierende"
+
+  }else{
+
+    title_help <- "für Studienanfänger"
+
+  }
 
   plot <- ggpubr::ggarrange(waffle_mint, NULL ,waffle_rest, widths = c(1, -0.15, 1), nrow=1, common.legend = T,
                             legend="bottom")
 
-  ggpubr::annotate_figure(plot,
-                          top = ggpubr::text_grob(paste0("Anteile der Geschlechter an MINT und allen anderen Studiengängen für das Jahr ", timerange),
-                                                  face = "bold", size = 14))
+  text <- c(
+    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteil von Frauen und Männern an MINT und allen andere Studiengängen ", title_help,
+           " für das Jahr ",timerange))
+  ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
+
 }
 
 #' A function to create a paired bar plot
@@ -359,10 +435,15 @@ studienzahl_absolut <- function(df,r) {
                        fontface = "bold") +
     ggplot2::theme_bw() +
     ggplot2::theme(# = ggplot2::element_text(hjust = 0.5),
-      plot.title = ggtext::element_markdown()) +
-    ggplot2::xlab("Anzahl") + ggplot2::ylab("Fachrichtung") +
+      text = ggplot2::element_text(family="serif", size = 14),
+      axis.text.x = ggplot2::element_text(colour = c("#b16fab", "#154194"), size = 14),
+      plot.title = ggtext::element_markdown(hjust = 0.5)) +
+    ggplot2::ylab("Anzahl") + ggplot2::xlab("Fachrichtung") +
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
-    ggplot2::labs(title = paste0("**Studierendenzahl in MINT und allen anderen Fächern für das Jahr ", timerange,"**"))
+    ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
+                               "Student*innen in MINT und allen anderen Fächern für das Jahr ", timerange,
+                               "<br><br><br>"),
+                fill = "")
 
 
 }
@@ -422,9 +503,21 @@ studienzahl_map <- function(df,r) {
 
   df <- df %>% dplyr::filter(fachbereich != "andere Studiengänge")
 
-  values <- (df[df$anzeige_geschlecht == "frauen", "wert"]/df[df$anzeige_geschlecht == "gesamt", "wert"])*100
+  values <- (df[df$anzeige_geschlecht == "Frauen", "wert"]/df[df$anzeige_geschlecht == "Gesamt", "wert"])*100
 
-  values$region <- df[df$anzeige_geschlecht == "frauen", "region"][[1]]
+  values$region <- df[df$anzeige_geschlecht == "Frauen", "region"][[1]]
+
+
+  if (status_studierende == "Studierende"){
+
+    title_help <- "weiblichen Student*innen"
+
+  }else{
+
+    title_help <- "weiblichen Studienanfänger*innen"
+
+  }
+
 
   # plot
   highcharter::hcmap(
@@ -441,14 +534,17 @@ studienzahl_map <- function(df,r) {
     )
   ) %>%
     highcharter::hc_title(
-      text = paste0("<b>Anteil der Frauen</b> an MINT-Fächer für das Jahr ", timerange),
+      text = paste0("Anteil der ",title_help ," an MINT für das Jahr ", timerange),
       margin = 20,
       align = "center",
-      style = list(color = "black", useHTML = TRUE)
+      style = list(color = "black", useHTML = TRUE, fontFamily = "serif")
     ) %>%
     highcharter::hc_caption(
       text = "Für die Bundesländer Bayern und Baden-Württemberg sind leider keine Daten über den Anteil von Frauen
-      an MINT-Fächern verfügbar."
+      an MINT-Fächern verfügbar.",style = list(fontSize = "12px")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "serif")
     )
 
 
@@ -556,9 +652,15 @@ studienzahl_verlauf <- function(df,r) {
   highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(wert,2), group = region)) %>%
     highcharter::hc_tooltip(pointFormat = "Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr")) %>%
-    highcharter::hc_caption(text = "Quelle: ") %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen an ", title_help ," im Verlauf für ausgewählte Bundesländer"))
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "serif")) %>%
+    highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
+    highcharter::hc_title(text = paste0("Anteil von Frauen an ", title_help ," im Verlauf"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "serif", fontSize = "14px")
+    )
 
 
 }
@@ -597,7 +699,7 @@ abschlusszahl_bar <- function(data,r){
 
   if(subject == "Gesamt"){
 
-    df <- df %>% dplyr::group_by(status, frauen_manner_alle, quelle) %>%
+    df <- df %>% dplyr::group_by(status, Frauen_manner_alle, quelle) %>%
     dplyr::summarize(wert = sum(wert))
 
   } else if(subject == "ingenieur"){
@@ -613,9 +715,9 @@ abschlusszahl_bar <- function(data,r){
 
   if(gender_select == "Ja"){
 
-    df <- df %>% dplyr::filter(frauen_manner_alle != "gesamt")
+    df <- df %>% dplyr::filter(Frauen_manner_alle != "Gesamt")
 
-    plot <- ggplot2::ggplot(df, ggplot2::aes(fill=frauen_manner_alle, y=reorder(status,wert), x=wert)) +
+    plot <- ggplot2::ggplot(df, ggplot2::aes(fill=Frauen_manner_alle, y=reorder(status,wert), x=wert)) +
       ggplot2::geom_bar(stat="identity", position = "dodge") +
       ggplot2::theme_bw() +
       ggplot2::xlab("Jahre") + ggplot2::ylab("akademischer Grad") +
@@ -625,7 +727,7 @@ abschlusszahl_bar <- function(data,r){
     if(subject == "Gesamt"){
 
       plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")"," im Jahr ",
-                                          timestamp, " im gesamten MINT Fachebreich"), fill = "Geschlecht",
+                                          timestamp, " im Gesamten MINT Fachebreich"), fill = "Geschlecht",
                                  caption = paste0("Quelle: ", unique(df$quelle)))
     }else{
 
@@ -638,7 +740,7 @@ abschlusszahl_bar <- function(data,r){
 
   }else {
 
-    df <- df %>% dplyr::filter(frauen_manner_alle == "gesamt")
+    df <- df %>% dplyr::filter(Frauen_manner_alle == "Gesamt")
 
     plot <- ggplot2::ggplot(df, ggplot2::aes(y=reorder(status,wert), x=wert)) +
       ggplot2::geom_bar(stat="identity", position = "dodge") +
@@ -650,7 +752,7 @@ abschlusszahl_bar <- function(data,r){
     if(subject == "Gesamt"){
 
       plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")"," im Jahr ",
-                                          timestamp, " im gesamten MINT Fachebreich"),
+                                          timestamp, " im Gesamten MINT Fachebreich"),
                            caption = paste0("Quelle: ", unique(df$quelle)))
     }else{
 
@@ -696,7 +798,7 @@ abschlusszahl_waffle <- function(data,r) {
 
   if(subject == "Gesamt"){
 
-    df <- df %>% dplyr::group_by(status, frauen_manner_alle, quelle) %>%
+    df <- df %>% dplyr::group_by(status, Frauen_manner_alle, quelle) %>%
       dplyr::summarize(wert = sum(wert))
 
   } else if(subject == "ingenieur"){
@@ -712,7 +814,7 @@ abschlusszahl_waffle <- function(data,r) {
 
   if(gender_select == "Nein"){
 
-  df <- df %>% dplyr::filter(frauen_manner_alle == "gesamt")
+  df <- df %>% dplyr::filter(Frauen_manner_alle == "Gesamt")
 
   x <- setNames(as.numeric(round(df$wert)), df$status)
 
@@ -730,31 +832,31 @@ abschlusszahl_waffle <- function(data,r) {
     }else{
 
       waffle::waffle(x, keep = FALSE, rows = 5) +
-        ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse nach Fachbereich"),
+        ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse nach Fachbereich"),
                            subtitle = "1 box = 1000 Personen",
                            caption = paste0("Quelle: ", unique(df$quelle)))
     }
 
   }else{
 
-    df <- df %>% dplyr::filter(frauen_manner_alle != "gesamt")
+    df <- df %>% dplyr::filter(Frauen_manner_alle != "Gesamtt")
 
 
-    x_male <- setNames(as.numeric(round(df[df$frauen_manner_alle == "männlich", "wert"][[1]])),
-                       df[df$frauen_manner_alle == "männlich", "status"][[1]])
+    x_male <- setNames(as.numeric(round(df[df$Frauen_manner_alle == "männlich", "wert"][[1]])),
+                       df[df$Frauen_manner_alle == "männlich", "status"][[1]])
 
-    x_female <- setNames(as.numeric(round(df[df$frauen_manner_alle == "weiblich", "wert"][[1]])),
-                         df[df$frauen_manner_alle == "weiblich", "status"][[1]])
+    x_female <- setNames(as.numeric(round(df[df$Frauen_manner_alle == "weiblich", "wert"][[1]])),
+                         df[df$Frauen_manner_alle == "weiblich", "status"][[1]])
 
-  if(subject == "Gesamt"){
+  if(subject == "Gesamtt"){
 
       waffle_male <- waffle::waffle(x_male, rows = 5, pad = 0, keep = FALSE) +
-        ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse männlich")) +
+        ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse männlich")) +
         ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
                        legend.position = "bottom")
 
       waffle_female <- waffle::waffle(x_female, rows = 5, pad = 7, keep = FALSE) +
-        ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse weiblich"),
+        ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse weiblich"),
                       caption = paste0("Quelle: ", unique(df$quelle),
                                        ", 1 box = 1000 Personen")) +
         ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
@@ -765,12 +867,12 @@ abschlusszahl_waffle <- function(data,r) {
     }else{
 
       waffle_male <- waffle::waffle(x_male,  pad = 0, rows = 5, keep = FALSE) +
-        ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse männlich")) +
+        ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse männlich")) +
         ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
                        legend.position = "bottom")
 
         waffle_female <- waffle::waffle(x_female,  pad = 4, rows = 5, keep = FALSE) +
-          ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse weiblich"),
+          ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse weiblich"),
             caption = paste0("Quelle: ", unique(df$quelle),
                                          ", 1 box = 1000 Personen")) +
           ggplot2::theme(strip.text.x = ggplot2::element_text(hjust = 0.5),
@@ -814,9 +916,9 @@ abschluss_bar_2 <- function(data,r){
 
   df <- df %>% subset(status %in% indikators)
 
-  if(subject == "Gesamt"){
+  if(subject == "Gesamtt"){
 
-    df <- df %>% dplyr::group_by(status, frauen_manner_alle, jahr, quelle) %>%
+    df <- df %>% dplyr::group_by(status, Frauen_manner_alle, jahr, quelle) %>%
       dplyr::summarize(wert = sum(wert))
 
   } else if(subject == "ingenieur"){
@@ -832,23 +934,23 @@ abschluss_bar_2 <- function(data,r){
 
   if(gender_select == "Ja"){
 
-    df <- df %>% dplyr::filter(frauen_manner_alle != "gesamt")
+    df <- df %>% dplyr::filter(Frauen_manner_alle != "Gesamtt")
 
     plot <- ggplot2::ggplot(df, ggplot2::aes(fill=status, y=wert, x=jahr)) +
-      ggplot2::facet_wrap(~frauen_manner_alle) +
+      ggplot2::facet_wrap(~Frauen_manner_alle) +
       ggplot2::geom_bar(position="stack", stat="identity") +
       ggplot2::theme_bw() +
       ggplot2::xlab("Jahre") + ggplot2::ylab("Anzahl Abschlüsse")
 
-    if(subject == "Gesamt"){
+    if(subject == "Gesamtt"){
 
-      plot +  ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,") /n",
+      plot +  ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse ","(", pass_fail,") /n",
                                            "für die Jahre ", date_range[1], " bis ", date_range[2],
-                                           " im gesamten MINT Fachebreich"),fill = "Indikator",
+                                           " im Gesamtten MINT Fachebreich"),fill = "Indikator",
                                  caption = paste0("Quelle: ", unique(df$quelle)))
     }else{
 
-      plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")",
+      plot + ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse ","(", pass_fail,")",
                                           " für die Jahre ", date_range[1], " bis ", date_range[2],
                                           " im Fachebreich ",
                                           dictionary_title_studium_abschluss[[subject]]),
@@ -859,7 +961,7 @@ abschluss_bar_2 <- function(data,r){
   }else {
 
 
-    df <- df %>% dplyr::filter(frauen_manner_alle == "gesamt")
+    df <- df %>% dplyr::filter(Frauen_manner_alle == "Gesamtt")
 
     plot <- ggplot2::ggplot(df, ggplot2::aes(fill=status, y=wert, x=jahr)) +
       ggplot2::geom_bar(position="stack", stat="identity") +
@@ -868,15 +970,15 @@ abschluss_bar_2 <- function(data,r){
                     caption = paste0("Quelle: ", unique(df$quelle))) + ggplot2::theme_bw() +
       ggplot2::xlab("Jahre") + ggplot2::ylab("Anzahl Abschlüsse")
 
-    if(subject == "Gesamt"){
+    if(subject == "Gesamtt"){
 
-      plot +  ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,") /n",
+      plot +  ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse ","(", pass_fail,") /n",
                                            " für die Jahre ", date_range[1], " bis ", date_range[2],
-                                           " im gesamten MINT Fachebreich"),fill = "Indikator",
+                                           " im Gesamtten MINT Fachebreich"),fill = "Indikator",
                             caption = paste0("Quelle: ", unique(df$quelle)))
     }else{
 
-      plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")",
+      plot + ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse ","(", pass_fail,")",
                                           " für die Jahre ", date_range[1], " bis ", date_range[2],
                                           " im Fachebreich ",fill = "Indikator",
                                           dictionary_title_studium_abschluss[[subject]]),
@@ -916,9 +1018,9 @@ abschluss_aenderung <- function(data,r){
 
   df <- df %>% subset(status %in% indikators)
 
-  if(subject == "Gesamt"){
+  if(subject == "Gesamtt"){
 
-    df <- df %>% dplyr::group_by(status, frauen_manner_alle, jahr, quelle) %>%
+    df <- df %>% dplyr::group_by(status, Frauen_manner_alle, jahr, quelle) %>%
       dplyr::summarize(wert = sum(wert))
 
   } else if(subject == "ingenieur"){
@@ -931,17 +1033,17 @@ abschluss_aenderung <- function(data,r){
 
   }
 
-  df <- df %>% dplyr::group_by(status, frauen_manner_alle, quelle) %>%
+  df <- df %>% dplyr::group_by(status, Frauen_manner_alle, quelle) %>%
     dplyr::filter((jahr == min(jahr)) | (jahr == max(jahr)))
 
-  df <- df %>% dplyr::group_by(status, frauen_manner_alle, quelle) %>%
+  df <- df %>% dplyr::group_by(status, Frauen_manner_alle, quelle) %>%
     dplyr::summarize(aenderung = (dplyr::lead(wert)/wert -1) *100) %>% na.omit()
 
-  df$comb <- stringr::str_c(df$status, " ", df$frauen_manner_alle)
+  df$comb <- stringr::str_c(df$status, " ", df$Frauen_manner_alle)
 
   if(gender_select == "Ja"){
 
-    df <- df %>% dplyr::filter(frauen_manner_alle != "gesamt")
+    df <- df %>% dplyr::filter(Frauen_manner_alle != "Gesamtt")
 
     color <- ifelse(df$aenderung < 0, "pink", "lightblue")
 
@@ -958,15 +1060,15 @@ abschluss_aenderung <- function(data,r){
                                    date_range[1], " vs ", date_range[2]),
                     caption = paste0("Quelle: ", unique(df$quelle)))
 
-    if(subject == "Gesamt"){
+    if(subject == "Gesamtt"){
 
-      plot +  ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,") /n",
+      plot +  ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse ","(", pass_fail,") /n",
                                            " für die Jahre ", date_range[1], " bis ", date_range[2],
-                                           " im gesamten MINT Fachebreich"),
+                                           " im Gesamtten MINT Fachebreich"),
                             caption = paste0("Quelle: ", unique(df$quelle)))
     }else{
 
-      plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")",
+      plot + ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse ","(", pass_fail,")",
                                           " für die Jahre ", date_range[1], " bis ", date_range[2],
                                           " im Fachebreich ",
                                           dictionary_title_studium_abschluss[[subject]]),
@@ -977,7 +1079,7 @@ abschluss_aenderung <- function(data,r){
   }else {
 
 
-    df <- df %>% dplyr::filter(frauen_manner_alle == "gesamt")
+    df <- df %>% dplyr::filter(Frauen_manner_alle == "Gesamtt")
 
     color <- ifelse(df$aenderung < 0, "pink", "lightblue")
 
@@ -994,15 +1096,15 @@ abschluss_aenderung <- function(data,r){
                                    date_range[1], " vs ", date_range[2]),
                     caption = paste0("Quelle: ", unique(df$quelle)))
 
-    if(subject == "Gesamt"){
+    if(subject == "Gesamtt"){
 
-      plot +  ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,") /n",
+      plot +  ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse ","(", pass_fail,") /n",
                                            " für die Jahre ", date_range[1], " bis ", date_range[2],
-                                           " im gesamten MINT Fachebreich"),
+                                           " im Gesamtten MINT Fachebreich"),
                             caption = paste0("Quelle: ", unique(df$quelle)))
     }else{
 
-      plot + ggplot2::labs(title = paste0("Gesamtzahl Abschlüsse ","(", pass_fail,")",
+      plot + ggplot2::labs(title = paste0("Gesamttzahl Abschlüsse ","(", pass_fail,")",
                                           " für die Jahre ", date_range[1], " bis ", date_range[2],
                                           " im Fachebreich ",
                                           dictionary_title_studium_abschluss[[subject]]),
@@ -1027,7 +1129,7 @@ comparer_plot <- function(data, r, r_abschluss,
 
   df <- df %>% dplyr::filter(jahr == timestamp)
 
-  df <- df %>% dplyr::filter(frauen_manner_alle != "gesamt")
+  df <- df %>% dplyr::filter(Frauen_manner_alle != "Gesamtt")
 
   quelle <- unique(df$quelle)
 
@@ -1047,12 +1149,12 @@ comparer_plot <- function(data, r, r_abschluss,
                                                    fachbereich_alle_mint_mathe_ing) %>%
     dplyr::mutate(props = sum(wert))
 
-  df_abschluss <- df_abschluss %>% dplyr::group_by(prüfungsstatus, status,frauen_manner_alle,
+  df_abschluss <- df_abschluss %>% dplyr::group_by(prüfungsstatus, status,Frauen_manner_alle,
                                                      fachbereich_alle_mint_mathe_ing) %>%
     dplyr::summarize(proportion = wert/props)
 
 
-  col_order <- c("frauen_manner_alle", "fachbereich_alle_mint_mathe_ing", "status",
+  col_order <- c("Frauen_manner_alle", "fachbereich_alle_mint_mathe_ing", "status",
                  "prüfungsstatus", "proportion")
   df_abschluss <- df_abschluss[, col_order]
 
@@ -1060,7 +1162,7 @@ comparer_plot <- function(data, r, r_abschluss,
                                        df_abschluss$fachbereich_alle_mint_mathe_ing,
                                          " (", df_abschluss$status, ", ", df_abschluss$prüfungsstatus, ")")
 
-  df_abschluss <- df_abschluss[, c("label", "proportion", "frauen_manner_alle")]
+  df_abschluss <- df_abschluss[, c("label", "proportion", "Frauen_manner_alle")]
 
 ################################# Studienzahl ##################################
   # Abschluss reactives
@@ -1076,12 +1178,12 @@ comparer_plot <- function(data, r, r_abschluss,
                                                      fachbereich_alle_mint_mathe_ing) %>%
     dplyr::mutate(props = sum(wert))
 
-  df_studienzahl <- df_studienzahl %>% dplyr::group_by(prüfungsstatus, status,frauen_manner_alle,
+  df_studienzahl <- df_studienzahl %>% dplyr::group_by(prüfungsstatus, status,Frauen_manner_alle,
                                                        fachbereich_alle_mint_mathe_ing) %>%
     dplyr::summarize(proportion = wert/props)
 
 
-  col_order <- c("frauen_manner_alle", "fachbereich_alle_mint_mathe_ing", "status",
+  col_order <- c("Frauen_manner_alle", "fachbereich_alle_mint_mathe_ing", "status",
                  "prüfungsstatus", "proportion")
   df_studienzahl <- df_studienzahl[, col_order]
 
@@ -1089,7 +1191,7 @@ comparer_plot <- function(data, r, r_abschluss,
                                          df_studienzahl$fachbereich_alle_mint_mathe_ing,
                                        " (", df_studienzahl$status, ")")
 
-  df_studienzahl <- df_studienzahl[, c("label", "proportion", "frauen_manner_alle")]
+  df_studienzahl <- df_studienzahl[, c("label", "proportion", "Frauen_manner_alle")]
 
 ################################# Habilitation #################################
   # Habilitation reactives
@@ -1101,18 +1203,18 @@ comparer_plot <- function(data, r, r_abschluss,
   df_habil <- df_habil %>% dplyr::group_by(fachbereich_alle_mint_mathe_ing) %>%
     dplyr::mutate(props = sum(wert))
 
-  df_habil <- df_habil %>% dplyr::group_by(prüfungsstatus,frauen_manner_alle,
+  df_habil <- df_habil %>% dplyr::group_by(prüfungsstatus,Frauen_manner_alle,
                                                        fachbereich_alle_mint_mathe_ing) %>%
     dplyr::summarize(proportion = wert/props)
 
-  col_order <- c("frauen_manner_alle", "fachbereich_alle_mint_mathe_ing",
+  col_order <- c("Frauen_manner_alle", "fachbereich_alle_mint_mathe_ing",
                  "prüfungsstatus", "proportion")
   df_habil <- df_habil[, col_order]
 
   df_habil$label <- stringr::str_c("Habilitationszahl:",
                                    df_habil$fachbereich_alle_mint_mathe_ing)
 
-  df_habil <- df_habil[, c("label", "proportion", "frauen_manner_alle")]
+  df_habil <- df_habil[, c("label", "proportion", "Frauen_manner_alle")]
 
 ################################################################################
 
@@ -1120,9 +1222,9 @@ comparer_plot <- function(data, r, r_abschluss,
   df <- rbind(df_abschluss,df_studienzahl,df_habil)
 
   Males <- df %>%
-    dplyr::filter(frauen_manner_alle == "männlich")
+    dplyr::filter(Frauen_manner_alle == "männlich")
   Females <- df %>%
-    dplyr::filter(frauen_manner_alle == "weiblich")
+    dplyr::filter(Frauen_manner_alle == "weiblich")
 
 
   ggplot2::ggplot(df) +
@@ -1133,7 +1235,7 @@ comparer_plot <- function(data, r, r_abschluss,
                  color = "#aeb6bf",
                  size = 4.5,
                  alpha = .5) +
-    ggplot2::geom_point(ggplot2::aes(x = proportion, y = label, color = frauen_manner_alle),
+    ggplot2::geom_point(ggplot2::aes(x = proportion, y = label, color = Frauen_manner_alle),
                         size = 4, show.legend = TRUE) +
     ggplot2::ylab(" ") +
     ggplot2::xlab("prozentualer Anteil") +
