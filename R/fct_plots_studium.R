@@ -108,6 +108,7 @@ studienzahl_einstieg_bar <- function(df,r) {
                  switch = "x")  +
       ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Studienfächer", title_help)) +
       ggplot2::theme(strip.placement = "outside",
+                     plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
                      panel.grid.major.x = ggplot2::element_blank(),
                      panel.grid.minor.x = ggplot2::element_blank(),
                      panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
@@ -173,6 +174,7 @@ studienzahl_einstieg_bar <- function(df,r) {
                           space = "free_x",
                           switch = "x")  +
       ggplot2::theme(strip.placement = "outside",
+                     plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
                      panel.grid.major.x = ggplot2::element_blank(),
                      panel.grid.minor.x = ggplot2::element_blank(),
                      panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
@@ -368,7 +370,7 @@ studienzahl_waffle <- function(df,r) {
                             legend="bottom")
 
   text <- c(
-    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteil von Frauen und Männern an MINT und allen andere Studiengängen ", title_help,
+    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteil von Frauen und Männern an MINT und allen andere Studiengängen <br> ", title_help,
            " für das Jahr ",timerange))
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
@@ -535,12 +537,12 @@ studienzahl_map <- function(df,r) {
   ) %>%
     highcharter::hc_title(
       text = paste0("Anteil der ",title_help ," an MINT für das Jahr ", timerange),
-      margin = 20,
+      margin = 45,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "serif")
     ) %>%
     highcharter::hc_caption(
-      text = "Für die Bundesländer Bayern und Baden-Württemberg sind leider keine Daten über den Anteil von Frauen
+      text = "Für die Bundesländer Bayern und Baden-Württemberg sind leider keine Daten <br> über den Anteil von Frauen
       an MINT-Fächern verfügbar.",style = list(fontSize = "12px")
     ) %>%
     highcharter::hc_chart(

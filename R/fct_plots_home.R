@@ -129,6 +129,8 @@ home_leaky_pipeline <- function(df,r) {
   values$indikator <- factor(values$indikator,levels = c("Leistungskurse", "Studienanfänger",
                                                          "Studierende", "Promotionen (angestrebt)",
                                                          "Habilitationen"))
+  values$proportion <- values$proportion * 100
+
   values %>%
     ggplot2::ggplot(ggplot2::aes(y = proportion, x = indikator, color = anzeige_geschlecht, group = anzeige_geschlecht)) +
     ggplot2::geom_line() +
@@ -141,7 +143,7 @@ home_leaky_pipeline <- function(df,r) {
                                          title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
                                                         "Anteil von Frauen an MINT für verschiedene Bereiche in ", timerange,
                                                         "<br><br><br>")) +
-    ggplot2::scale_y_continuous(labels = scales::percent_format()) +
+    ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"), limits = c(0, 100)) +
     ggplot2::scale_color_manual(values = colors_mint_vernetzt$gender)
 
 
@@ -186,14 +188,29 @@ home_rest_mint_verlauf <- function(df,r, order) {
 
   }
 
-  if (indikator_choice_1 == "Auszubildende" | indikator_choice_1 == "Beschäftigte") {
+  if (order == "first") {
 
-    title_help <- "anderen Berufszweigen"
+    if ((indikator_choice_1 == "Auszubildende" | indikator_choice_1 == "Beschäftigte")) {
+
+      title_help <- "anderen Berufszweigen"
+
+    } else {
+
+      title_help <- "anderen Fächern"
+
+    }
 
   } else {
 
-    title_help <- "anderen Fächern"
+    if ((indikator_choice_2 == "Auszubildende" | indikator_choice_2 == "Beschäftigte")) {
 
+      title_help <- "anderen Berufszweigen"
+
+    } else {
+
+      title_help <- "anderen Fächern"
+
+    }
   }
 
 

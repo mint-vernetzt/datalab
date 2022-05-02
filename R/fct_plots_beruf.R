@@ -288,7 +288,7 @@ arbeitnehmer_waffle <- function(df,r) {
   plot <- ggpubr::ggarrange(waffle_mint, NULL ,waffle_rest, widths = c(1, -0.15, 1), nrow=1, common.legend = T,
                             legend="bottom")
   text <- c(
-    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteile von Frauen und Männer ", title_help," an MINT und allen anderen Berufszweigen für das Jahr ", timerange))
+    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteile von Frauen und Männer ", title_help," an MINT und allen anderen Berufszweigen <br> für das Jahr ", timerange))
 
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
