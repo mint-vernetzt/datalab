@@ -106,7 +106,8 @@ studienzahl_einstieg_bar <- function(df,r) {
                  scales = "free_x",
                  space = "free_x",
                  switch = "x")  +
-      ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Studienfächer", title_help)) +
+      ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Studienfächer", title_help),
+                    fill = "") +
       ggplot2::theme(strip.placement = "outside",
                      plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
                      panel.grid.major.x = ggplot2::element_blank(),
@@ -168,7 +169,8 @@ studienzahl_einstieg_bar <- function(df,r) {
     names(df)[3] <- "Wert"
 
     p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
-      ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Studienfächer", title_help)) +
+      ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Studienfächer", title_help),
+                    fill = "") +
       ggplot2::facet_grid(~jahr,
                           scales = "free_x",
                           space = "free_x",
