@@ -261,7 +261,8 @@ kurse_waffle <- function(df,r) {
   plot <- ggpubr::ggarrange(waffle_mint, NULL ,waffle_rest, widths = c(1, -0.15, 1), nrow=1, common.legend = T,
                             legend="bottom")
   text <- c(
-    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteil von Frauen und Männern an MINT und allen andere Fächern ", title_help,
+    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteil von Frauen und Männern an MINT und allen
+           andere Fächern ", title_help,
            " in ",timerange))
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 }
@@ -327,7 +328,7 @@ kurse_absolut <- function(df,r) {
     ggplot2::xlab("Fachrichtung") + ggplot2::ylab("Anzahl") +
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
     ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
-                                 "Schüler*innen in MINT und allen anderen Fächern für das Jahr ", timerange,
+                                 "Schülerinnen in MINT und allen anderen Fächern für das Jahr ", timerange,
                                  "<br><br><br>"),
                   fill = "")
 
