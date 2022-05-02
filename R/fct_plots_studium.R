@@ -34,6 +34,8 @@ studienzahl_einstieg_bar <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
+
+
   # call function to calculate the share of MINT and the remaining subjects
   df <- calc_share_MINT(df)
 
@@ -581,6 +583,10 @@ studienzahl_verlauf <- function(df,r) {
 
   ost_west <- r$ost_west
 
+  subject_aggregated <- r$subjects_aggregated
+
+  subjects_select <- r$subject_selected
+
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
@@ -607,9 +613,28 @@ studienzahl_verlauf <- function(df,r) {
   }
 
 
+  if (subject_aggregated == "aggregiert"){
 
-  # call function to calculate the share of MINT and the remaining subjects
-  df <- calc_share_MINT(df)
+    # call function to calculate the share of MINT and the remaining subjects
+    df <- calc_share_MINT(df)
+
+    if (topic == "MINT"){
+
+      title_help <- "MINT"
+
+    } else {
+
+      title_help <- "anderen Studienfächern"
+
+    }
+
+  }else {
+
+
+    df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
+
+    title_help <- dictionary_title_studium[[subjects_select]]
+  }
 
   # order
   df <- df[with(df, order(region, fachbereich, jahr, decreasing = TRUE)), ]
@@ -634,23 +659,17 @@ studienzahl_verlauf <- function(df,r) {
     names(values)[3] <- "region"
   }
 
-  # filter MINT or remaining subjects
-  values <- values %>% dplyr::filter(fachbereich == topic)
+  if (subject_aggregated == "aggregiert"){
+    # filter MINT or remaining subjects
+    values <- values %>% dplyr::filter(fachbereich == topic)
+  }
 
   # order years for plot
   values <- values[with(values, order(region, jahr, decreasing = FALSE)), ]
 
   values$wert <- values$wert * 100
 
-  if (topic == "MINT"){
 
-    title_help <- "MINT"
-
-  }else {
-
-    title_help <- "anderen Studienfächern"
-
-  }
 
   # plot
   highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(wert), group = region)) %>%
@@ -658,7 +677,7 @@ studienzahl_verlauf <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "serif")) %>%
     highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen an ", title_help ," im Verlauf"),
+    highcharter::hc_title(text = paste0("Anteil von Frauen ", title_help ," im Verlauf"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")) %>%

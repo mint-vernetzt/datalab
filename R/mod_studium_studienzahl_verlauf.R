@@ -29,14 +29,34 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
     p("Soll nur Lehramt angezeigt werden?"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("nurLehramt_studierende_verlauf"),
-      choices = c("Ja", "Nein")
+      choices = c("Ja", "Nein"),
+      selected = "Nein"
     ),
+    p("Einzelne Fächer oder als MINT aggregiert:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("subjects_aggregated"),
+      choices = c("einzeln", "aggregiert"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon")),
+      selected = "aggregiert"
+    ),
+    conditionalPanel(condition = "input.subjects_aggregated == 'aggregiert'",
+                     ns = ns,
     p("Wähle ob MINT oder alle anderen Studiefächen dargestellt werden sollen:"),
     shinyWidgets::pickerInput(
       inputId = ns("topic_studierende_verlauf"),
       choices = c("MINT", "Alle anderen Studienfächer" = "andere Studiengänge"),
       selected = "MINT"
-    ),
+    )),
+    conditionalPanel(condition = "input.subjects_aggregated == 'einzeln'",
+                     ns = ns,
+                     p("Wähle ein Fach:"),
+                     shinyWidgets::pickerInput(
+                       inputId = ns("subject_selected"),
+                       choices = c("Mathematik" = "Mathe", "Ingenieurswesen" = "Ingenieur"),
+                       selected = "Mathematik"
+                     )),
     p("Sollen die Bundesländern auf Ost und West aggregiert werden?"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("ost_west"),
@@ -63,6 +83,7 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"),
       multiple = TRUE,
+      options = list(`actions-box` = TRUE),
       selected = c("Hessen", "Hamburg")
     )),
     conditionalPanel(condition = "input.ost_west == 'Ja'",
@@ -98,6 +119,14 @@ mod_studium_studienzahl_verlauf_server <- function(id, r){
 
     observeEvent(input$ost_west, {
       r$ost_west <- input$ost_west
+    })
+
+    observeEvent(input$subject_selected, {
+      r$subject_selected <- input$subject_selected
+    })
+
+    observeEvent(input$subjects_aggregated, {
+      r$subjects_aggregated <- input$subjects_aggregated
     })
 
   })

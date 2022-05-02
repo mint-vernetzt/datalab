@@ -64,6 +64,7 @@ mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"),
       multiple = TRUE,
+      options = list(`actions-box` = TRUE),
       selected = c("Hessen", "Hamburg")
     )),
     conditionalPanel(condition = "input.ost_west == 'Ja'",

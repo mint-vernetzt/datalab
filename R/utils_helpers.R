@@ -19,8 +19,8 @@ dictionary_title_studium_studentenzahl <- list("eingeschrieben" = "die insgesamt
 #'
 #' @noRd
 
-dictionary_title_studium_abschluss <- list("mathe_natwi" = "Mathe & Naturwissenschaften",
-                                               "ingenieur" = "Ingenieurswesen")
+dictionary_title_studium <- list("Mathe" = "in Mathematik",
+                                               "Ingenieur" = "am Ingenieurswesen")
 
 
 #' helpers

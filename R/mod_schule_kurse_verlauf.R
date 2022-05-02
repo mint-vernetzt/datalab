@@ -51,7 +51,7 @@ mod_schule_kurse_verlauf_ui <- function(id){
     )),
     conditionalPanel(condition = "input.subjects_aggregated == 'einzeln'",
                      ns = ns,
-                     p("Wähle ein odere mehere Fächer:"),
+                     p("Wähle ein Fach:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("subject_selected"),
                        choices = unique(kurse$fachbereich),
@@ -83,6 +83,7 @@ mod_schule_kurse_verlauf_ui <- function(id){
                                    "Schleswig-Holstein",
                                    "Thüringen"),
                        multiple = TRUE,
+                       options = list(`actions-box` = TRUE),
                        selected = c("Hessen", "Hamburg")
                      )),
     conditionalPanel(condition = "input.ost_west == 'Ja'",
