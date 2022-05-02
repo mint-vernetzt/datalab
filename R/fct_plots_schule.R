@@ -539,7 +539,7 @@ kurse_map <- function(df,r) {
     name = "Anteil Frauen an MINT",
     borderWidth = 0.1,
     tooltip = list(
-      valueDecimals = 2,
+      valueDecimals = 0,
       valueSuffix = "%"
     )
   ) %>%

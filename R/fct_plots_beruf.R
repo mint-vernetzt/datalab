@@ -423,7 +423,7 @@ arbeitsmarkt_map <- function(df,r) {
     name = "Anteil Frauen an MINT",
     borderWidth = 0.1,
     tooltip = list(
-      valueDecimals = 2,
+      valueDecimals = 0,
       valueSuffix = "%"
     )
   ) %>%
@@ -529,7 +529,7 @@ arbeitsmarkt_verlauf <- function(df,r) {
   }
 
   # plot
-  highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(wert,2), group = region)) %>%
+  highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(wert), group = region)) %>%
     highcharter::hc_tooltip(pointFormat = "Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), style = list(fontFamily = "serif")) %>%
