@@ -12,52 +12,8 @@ mod_home_ui <- function(id){
   tagList(
     fluidPage(
       fluidRow(
-        column(width = 5,
-               h2("Welcome!")),
-        br(),br(),br()
-      )#,
-      # fluidRow(
-      #   column(width = 10,
-      #          shinydashboard::box(
-      #            background = "blue",
-      #            h1("H1"),
-      #            h2("H2"),
-      #            h3("H3"),
-      #            h4("H4"),
-      #            title = "Congrats!"),
-      #          br(), br(), br(), br()
-      #   )),
-      # fluidRow(
-      #   shinydashboard::box(
-      #     title = "New Data Table",
-      #     width = 12,
-      #     DT::dataTableOutput(ns('new_table')))),
-      #
-      # fluidRow(
-      #   shinydashboard::box(
-      #     title = "Neue Ausbildungsverträge",
-      #     width = 12,
-      #     DT::dataTableOutput(ns('table_naa')))),
-      #
-      # fluidRow(
-      #   shinydashboard::box(
-      #     title = "Data Table",
-      #     width = 6,
-      #     DT::dataTableOutput(ns('data_table'))),
-      #   shinydashboard::box(
-      #     title = "Line-Plot",
-      #     width = 6,
-      #     plotOutput(ns("plot"))
-      #   ),
-      #   shinydashboard::box(
-      #     title = "Text-Box",
-      #     width = 6,
-      #     p("Hier steht Text aus der UI"),
-      #     em("Das ist Italic"),
-      #     textOutput(ns("text"))
-      #   )
-      #
-      # )
+        mod_home_start_ui("mod_home_start_ui_1")
+      )
     )
   )
 }
@@ -65,30 +21,21 @@ mod_home_ui <- function(id){
 #' home Server Functions
 #'
 #' @noRd
-mod_home_server <- function(id, data_new, data_naa){
-  moduleServer( id, function(input, output, session){
-  ns <- session$ns
+mod_home_server <- function(id, data_zentral, r){
 
-  output$text <- renderPrint({
-    "... und hier aus'm Server"
-  })
 
-  output$data_table <- DT::renderDT({
-    utils::head(data)
-  })
+  r <- reactiveValues(date_start_comparison = NULL,
+                      indikator_start_comparison = NULL,
+                      date_start_leaky = NULL,
+                      date_start_multiple = NULL,
+                      indikator_start_multiple_1 = NULL,
+                      indikator_start_multiple_2 = NULL,)
 
-  output$new_table <- DT::renderDT({
-    utils::head(data_new)
-  })
+  mod_home_start_multiple_server("mod_home_start_multiple_ui_1", r)
+  mod_home_start_leaky_server("mod_home_start_leaky_ui_1", r)
+  mod_home_start_comparison_server("mod_home_start_comparison_ui_1", r)
+  mod_home_start_server("mod_home_start_ui_1", data_zentral, r)
 
-  output$table_naa <- DT::renderDT({
-    utils::head(data_naa)
-  })
-
-  output$plot <- renderPlot({
-    shinipsum::random_ggplot(type = "line")
-  })
-  })
 }
 
 

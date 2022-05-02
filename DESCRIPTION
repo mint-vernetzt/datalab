@@ -26,7 +26,9 @@ Imports:
     tidyr,
     utils,
     waffle,
-    highcharter
+    highcharter,
+    ggpol,
+    ggtext
 Suggests: 
     spelling,
     testthat (>= 3.0.0)
