@@ -55,7 +55,7 @@ data_naa_maennlich <- data_naa_insgesamt
  # second subtract values
 data_naa_maennlich$anzahl <- data_naa_maennlich$anzahl - data_naa_weiblich$anzahl
  # specify gender as "männlich"
-data_naa_maennlich$geschlecht_aggregat <- "männlich"
+data_naa_maennlich$geschlecht_aggregat <- "Männer"
 
 # combine data_frames
 data_naa <- rbind(data_naa_insgesamt, data_naa_weiblich, data_naa_maennlich)
@@ -64,8 +64,22 @@ data_naa <- rbind(data_naa_insgesamt, data_naa_weiblich, data_naa_maennlich)
 data_naa <- data_naa %>%
   dplyr::mutate(anzahl = tidyr::replace_na(anzahl, 0))
 
+names(data_naa)[6] <- "anzeige_geschlecht"
+names(data_naa)[2] <- "fachbereich"
+names(data_naa)[5] <- "wert"
+
+data_naa[data_naa$anzeige_geschlecht == "weiblich", "anzeige_geschlecht"] <- "Frauen"
+data_naa[data_naa$anzeige_geschlecht == "insgesamt", "anzeige_geschlecht"] <- "Gesamt"
+
+data_naa[data_naa$region == "Ost", "region"] <- "Osten"
+data_naa[data_naa$region == "West", "region"] <- "Westen"
+
 # sort data_naa
-data_naa <- data_naa[with(data_naa, order(fachrichtung, region, jahr)), ]
+data_naa <- data_naa[with(data_naa, order(fachbereich, region, jahr)), ]
+
+rm(data_naa_insgesamt, data_naa_maennlich, data_naa_weiblich)
+
+data_naa <- data_naa %>% dplyr::filter(ebene == "Ebene 1")
 
 usethis::use_data(data_naa, overwrite = T)
 

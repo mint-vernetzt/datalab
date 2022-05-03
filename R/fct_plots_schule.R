@@ -328,7 +328,7 @@ kurse_absolut <- function(df,r) {
     ggplot2::xlab("Fachrichtung") + ggplot2::ylab("Anzahl") +
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
     ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
-                                 "Schülerinnen in MINT und allen anderen Fächern für das Jahr ", timerange,
+                                 "Schüler*innen in MINT und allen anderen Fächern für das Jahr ", timerange,
                                  "<br><br><br>"),
                   fill = "")
 
