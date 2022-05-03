@@ -20,6 +20,21 @@ ausbildungsvertraege_waffle <- function(df, r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
+  df_sub <- df %>% dplyr::group_by(anzeige_geschlecht) %>%
+    dplyr::summarize(proportion = sum(wert))
+
+  df_sub <- df_sub %>% dplyr::group_by(anzeige_geschlecht) %>%
+    dplyr::summarize(proportion = proportion/ df_sub[df_sub$anzeige_geschlecht == "Gesamt", "proportion"][[1]])
+
+  df_sub$proportion <- df_sub$proportion * 100
+
+  df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+  x_gesamt <- setNames(round_preserve_sum(as.numeric(df_sub$proportion),0),
+                       df_sub$anzeige_geschlecht)
+
+
+
   df <- df %>% dplyr::filter(fachbereich == ausbildung_bereich)
 
   df <- df %>% dplyr::group_by(anzeige_geschlecht, fachbereich) %>%
@@ -43,8 +58,19 @@ ausbildungsvertraege_waffle <- function(df, r) {
                    text = ggplot2::element_text(family="serif", size = 14),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
+  # create plot objects for waffle charts
+  waffle_gesamt <- waffle::waffle(x_gesamt, keep = FALSE, colors = colors_mint_vernetzt$gender) +
+    ggplot2::labs(
+      subtitle = paste0("<span style='font-size:16.0pt;'>" ,x_gesamt[1],"% <span style='color:#f5adac; font-size:16.0pt;'> Frauen</span> vs. ",
+                        "<span style='font-size:16.0pt;'>", x_gesamt[2],"% <span style='color:#b1b5c3; font-size:16.0pt;'> Männer</span>"),
+      title = paste0("**Gesamt** <span style='color:#b16fab;'>", "**MINT**</span>")) +
+    ggplot2::theme(plot.title = ggtext::element_markdown(),
+                   plot.subtitle = ggtext::element_markdown(),
+                   text = ggplot2::element_text(family="serif", size = 14),
+                   plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
-  plot <- ggpubr::ggarrange(waffle_mint,
+
+  plot <- ggpubr::ggarrange(waffle_mint, NULL ,waffle_gesamt, widths = c(1, -0.15, 1), nrow=1, common.legend = T,
                             legend="bottom")
 
   text <- c(
@@ -204,7 +230,7 @@ vertraege_ranking <- function(df, r) {
     ggplot2::geom_text(nudge_x = 7) +
     ggplot2::theme_classic() +
     ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
-                                 "Anteil von Frauen an neuen Ausbildungsverträgen für alle MINT-Bereiche", timerange,
+                                 "Anteil von Frauen an neuen Ausbildungsverträgen für alle MINT-Bereiche ", timerange,
                                  "<br><br><br>"),
                   y = "", x = "Anteil") +
     ggplot2::theme(text = ggplot2::element_text(family="serif", size = 14),

@@ -7,6 +7,7 @@ kurse_read <-
 
 kurse <- kurse_read %>% dplyr::filter(jahr >= 2010)
 
+kurse$wert <- round(kurse$wert)
 
 kurse <- kurse %>% dplyr::filter(region != "Baden-Württemberg")
 

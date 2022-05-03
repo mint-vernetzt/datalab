@@ -114,14 +114,18 @@ arbeitsmarkt_einstieg_bar <- function(df,r) {
   if(isTRUE(switch_absolut)){
 
     p <- p + ggplot2::geom_bar(position="stack", stat="identity")
-    plotly::ggplotly(p, tooltip = "Wert") %>% plotly::layout(font=t)
+    plotly::ggplotly(p, tooltip = "Wert") %>% plotly::layout(font=t) %>%
+      plotly::config(displayModeBar = FALSE,
+                     displaylogo = FALSE)
 
   }else{
 
     p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
       ggplot2::scale_y_continuous(labels = scales::percent_format())
 
-    plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::layout(font=t)
+    plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::layout(font=t) %>%
+      plotly::config(displayModeBar = FALSE,
+                     displaylogo = FALSE)
 
   }
 }
