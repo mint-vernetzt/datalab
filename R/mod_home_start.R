@@ -30,6 +30,25 @@ mod_home_start_ui <- function(id){
         sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
         aliquyam erat, sed diam voluptua.")
       )),
+    fluidRow(
+      shinydashboard::box(
+        title = "Lorem Ipsum",
+        width = 12,
+        shiny::column(12,
+                      mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1")),
+
+        column(5,
+               plotOutput(ns("plot_mint_rest_einstieg_1")
+               ), br(), br(), hr()),
+        column(5, offset = 2,
+               plotOutput(ns("plot_mint_rest_einstieg_2")), br(), br(), hr()),
+
+      # column(5,
+      #        plotOutput(ns("plot_mint_rest_einstieg_3")
+      #        ), br(), br()),
+      # column(5, offset = 2,
+      #        plotOutput(ns("plot_mint_rest_einstieg_4")), br(), br())
+    )),
 
     fluidRow(
       shinydashboard::box(
@@ -93,6 +112,22 @@ mod_home_start_server <- function(id, data_zentral, r){
 
     output$plot_mint_rest_2 <- renderPlot({
       home_rest_mint_verlauf(data_zentral,r, "second")
+    })
+
+    output$plot_mint_rest_einstieg_1 <- renderPlot({
+      home_einsitieg_waffle(data_zentral,r, "first")
+    })
+
+    output$plot_mint_rest_einstieg_2 <- renderPlot({
+      home_einsitieg_waffle(data_zentral,r, "second")
+    })
+
+    output$plot_mint_rest_einstieg_3 <- renderPlot({
+      home_einsitieg_waffle_female(data_zentral,r, "first")
+    })
+
+    output$plot_mint_rest_einstieg_4 <- renderPlot({
+      home_einsitieg_waffle_female(data_zentral,r, "second")
     })
 
 

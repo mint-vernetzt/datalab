@@ -1,5 +1,246 @@
 #' A function to plot a graph.
 #'
+#' @description A function to create a stacked bar chart for the first box
+#' inside the tab "Home".
+#'
+#' @return The return value is a plot
+#' @param df The dataframe "zentral.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+home_einsitieg_waffle <- function(df,r, order) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_home_einstieg
+
+  indikator_choice_1 <- r$indikator_start_einstieg_1
+
+  indikator_choice_2 <- r$indikator_start_einstieg_2
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(region == "Deutschland")
+
+
+  # aggeregate every "bereich to Rest vs MINT
+  df <- share_MINT(df)
+
+
+  if (order == "first") {
+
+    df <- df %>% dplyr::filter(indikator == indikator_choice_1)
+
+  } else {
+
+    df <- df %>% dplyr::filter(indikator == indikator_choice_2)
+
+  }
+
+  if (order == "first") {
+
+    if ((indikator_choice_1 == "Auszubildende" | indikator_choice_1 == "Beschäftigte")) {
+
+      title_help <- "anderen Berufszweigen"
+
+    } else {
+
+      title_help <- "anderen Fächern"
+
+    }
+
+  } else {
+
+    if ((indikator_choice_2 == "Auszubildende" | indikator_choice_2 == "Beschäftigte")) {
+
+      title_help <- "anderen Berufszweigen"
+
+    } else {
+
+      title_help <- "anderen Fächern"
+
+    }
+  }
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+  # calculate proportions
+  df <- df %>% dplyr::mutate(props = sum(wert))
+
+
+  df <- df %>% dplyr::group_by(fachbereich) %>%
+    dplyr::summarize(proportion = wert/props)
+
+  df$proportion <- df$proportion * 100
+
+
+
+  x_mint_rest <- setNames(round_preserve_sum(as.numeric(df$proportion),0),
+                     df$fachbereich)
+
+  # create plot objects for waffle charts
+  waffle_mint_rest <- waffle::waffle(x_mint_rest, keep = FALSE, colors = colors_mint_vernetzt$general) +
+    ggplot2::labs(
+      subtitle = paste0("<span style='font-size:16.0pt;'>", x_mint_rest[1],"% <span style='color:#154194; font-size:16.0pt;'>", title_help,"</span> vs. ",
+                        "<span style='font-size:16.0pt;'>" ,x_mint_rest[2],"% <span style='color:#b16fab; font-size:16.0pt;'>MINT</span>")) +
+    ggplot2::theme(plot.title = ggtext::element_markdown(),
+                   plot.subtitle = ggtext::element_markdown(),
+                   text = ggplot2::element_text(family="serif", size = 14),
+                   plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
+
+  plot <- ggpubr::ggarrange(waffle_mint_rest, legend="bottom")
+  text <- c(
+    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteil von MINT an ", title_help,
+           " <br> in ",timerange))
+  ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
+
+}
+
+
+#' A function to plot a graph.
+#'
+#' @description A function to create a stacked bar chart for the first box
+#' inside the tab "Home".
+#'
+#' @return The return value is a plot
+#' @param df The dataframe "zentral.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+home_einsitieg_waffle_female <- function(df,r, order) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_home_einstieg
+
+  indikator_choice_1 <- r$indikator_start_einstieg_1
+
+  indikator_choice_2 <- r$indikator_start_einstieg_2
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(region == "Deutschland")
+
+
+  # aggeregate every "bereich to Rest vs MINT
+  df <- share_MINT(df)
+
+
+  if (order == "first") {
+
+    df <- df %>% dplyr::filter(indikator == indikator_choice_1)
+
+  } else {
+
+    df <- df %>% dplyr::filter(indikator == indikator_choice_2)
+
+  }
+
+  if (order == "first") {
+
+    if ((indikator_choice_1 == "Auszubildende" | indikator_choice_1 == "Beschäftigte")) {
+
+      title_help <- "anderen Berufszweigen"
+
+    } else {
+
+      title_help <- "anderen Fächern"
+
+    }
+
+  } else {
+
+    if ((indikator_choice_2 == "Auszubildende" | indikator_choice_2 == "Beschäftigte")) {
+
+      title_help <- "anderen Berufszweigen"
+
+    } else {
+
+      title_help <- "anderen Fächern"
+
+    }
+  }
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
+
+  # calculate proportions
+  df <- df %>% dplyr::mutate(props = sum(wert))
+
+
+  df <- df %>% dplyr::group_by(fachbereich) %>%
+    dplyr::summarize(proportion = wert/props)
+
+  df$proportion <- df$proportion * 100
+
+
+  x_mint_rest <- setNames(round_preserve_sum(as.numeric(df$proportion),0),
+                          df$fachbereich)
+
+  # create plot objects for waffle charts
+  waffle_mint_rest <- waffle::waffle(x_mint_rest, keep = FALSE, colors = colors_mint_vernetzt$general) +
+    ggplot2::labs(
+      subtitle = paste0("<span style='font-size:16.0pt;'>", x_mint_rest[1],"% <span style='color:#154194; font-size:16.0pt;'>", title_help,"</span> vs. ",
+                        "<span style='font-size:16.0pt;'>" ,x_mint_rest[2],"% <span style='color:#b16fab; font-size:16.0pt;'>MINT</span>")) +
+    ggplot2::theme(plot.title = ggtext::element_markdown(),
+                   plot.subtitle = ggtext::element_markdown(),
+                   text = ggplot2::element_text(family="serif", size = 14),
+                   plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
+
+  plot <- ggpubr::ggarrange(waffle_mint_rest, legend="bottom")
+  text <- c(
+    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Verhältnis zwischen MINT und  ", title_help,
+           " <br> für Frauen in ",timerange))
+  ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
+
+}
+
+
+
+
+
+
+#' A function to plot a graph.
+#'
+#' @description A function to create a line chart for the first box
+#' inside the tab "Home".
+#'
+#' @return The return value is a plot
+#' @param df The dataframe "zentral.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+home_comparison_line <- function(df,r) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_start_comparison
+
+  indikator_choice <- r$indikator_start_comparison
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  df <- df %>% dplyr::filter(region == "Deutschland")
+
+
+  # aggeregate every "bereich to Rest vs MINT
+  df <- share_MINT(df)
+
+
+  df <- df %>% dplyr::filter(indikator %in% indikator_choice)
+
+  # calculate female share of MINT and Rest
+  df <- share_female(df)
+
+  #here only MINT
+  df <- df %>% dplyr::filter(fachbereich == "MINT")
+
+  # order years for plot
+  df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
+
+
+}
+
+
+
+#' A function to plot a graph.
+#'
 #' @description A function to create a line chart for the first box
 #' inside the tab "Home".
 #'
@@ -36,15 +277,16 @@ home_comparison_line <- function(df,r) {
   df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
 
   # plot
+
   highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = indikator)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "serif")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "serif")) %>%
     highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen an MINT im Verlauf"),
+    highcharter::hc_title(text = "Anteil von Frauen an MINT im Verlauf",
                           margin = 45,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")) %>%
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "19px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "serif", fontSize = "14px")
     )
@@ -133,7 +375,7 @@ home_leaky_pipeline <- function(df,r) {
 
   values %>%
     ggplot2::ggplot(ggplot2::aes(y = proportion, x = indikator, color = anzeige_geschlecht, group = anzeige_geschlecht)) +
-    ggplot2::geom_line() +
+    ggplot2::geom_line(size = 1.5) +
     ggplot2::theme_classic() +
     ggplot2::theme(plot.title = ggtext::element_markdown(hjust = 0.5),
                    text = ggplot2::element_text(family="serif", size = 14),
@@ -217,9 +459,9 @@ home_rest_mint_verlauf <- function(df,r, order) {
   df <- share_female(df)
 
   ggplot2::ggplot(df, ggplot2::aes(x = jahr, y = proportion, color = fachbereich, group = fachbereich)) +
-    ggplot2::geom_line() +
+    ggplot2::geom_line(size = 1.5) +
     ggplot2::scale_color_manual(values = colors_mint_vernetzt$general) +
-    ggplot2::labs(color = "", title = paste0("<span style='font-size:14pt; color:black; font-family: serif'>",
+    ggplot2::labs(color = "", title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
                                              "Anteil von Frauen an MINT und ", title_help,
                                              "<br><br><br>"),
                   x = "Jahre", y = "Anteil") +
