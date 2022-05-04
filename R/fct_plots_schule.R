@@ -560,6 +560,57 @@ kurse_map <- function(df,r) {
 
 }
 
+#' A function to return a filtered dataset
+#'
+#' @description A function to similar to 'kurse_einstieg_bar' but with the
+#' difference that it returns a dataframe instead of plot.
+#'
+#' @return The return value is a dataframe
+#' @param df The dataframe "Kurse.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+data_mix_kurse <- function(df,r) {
+
+  # load UI inputs from reactive value
+  level_kurs <- r$indikator_kurse
+
+  timerange <- r$date_kurse
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(indikator == level_kurs)
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Bayern")
+
+  # combine subjects to get numbers on share of MINT
+  # make a function out of it
+  subjects <- c("Mathematik", "Informatik", "Naturwissenschaften",  "Biologie", "Chemie",
+                "Physik", "andere naturwiss.-technische Fächer",  "Erdkunde", "Alle Fächer")
+
+  df <- df %>% dplyr::filter(fachbereich %in% subjects)
+
+  df$fachbereich <- ifelse(df$fachbereich != "Alle Fächer", "MINT", "andere Fächer")
+
+  df <- df %>% dplyr::group_by(region, fachbereich, anzeige_geschlecht, jahr, indikator, bereich) %>%
+    dplyr::summarize(wert = sum(wert, na.rm = T))
+
+
+  # call function to calculate the share of MINT and the remaining subjects
+  df[df$fachbereich == "andere Fächer", "wert"] <- df[df$fachbereich == "andere Fächer", "wert"] -
+    df[df$fachbereich == "MINT", "wert"]
+
+
+
+  colnames(df) <- c("Region", "Fachbereich", "Geschlecht", "Jahr", "Indikator", "Bereich", "Wert")
+
+  return(df)
+
+}
+
+
 
 #' A function to plot time series
 #'
@@ -687,3 +738,114 @@ kurse_verlauf <- function(df,r) {
 
 
 }
+
+
+#' A function to return a filtered dataset
+#'
+#' @description A function to similar to 'kurse_einstieg_bar' but with the
+#' difference that it returns a dataframe instead of plot.
+#'
+#' @return The return value is a dataframe
+#' @param df The dataframe "Kurse.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+data_verlauf_kurse <- function(df,r) {
+
+  # load UI inputs from reactive value
+  level_kurs <- r$indikator_kurse_verlauf
+
+  timerange <- r$date_kurse_verlauf
+
+  states <- r$states_kurse_verlauf
+
+  topic <- r$topic_kurse_verlauf
+
+  ost_west <- r$ost_west
+
+  subject_aggregated <- r$subjects_aggregated
+
+  subjects_select <- r$subject_selected
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  df <- df %>% dplyr::filter(indikator == level_kurs)
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- df %>% dplyr::filter(region != "Bayern")
+
+  if (subject_aggregated == "aggregiert"){
+
+    # combine subjects to get numbers on share of MINT
+    # make a function out of it
+    subjects <- c("Mathematik", "Informatik", "Naturwissenschaften",  "Biologie", "Chemie",
+                  "Physik", "andere naturwiss.-technische Fächer",  "Erdkunde", "Alle Fächer")
+
+    df <- df %>% dplyr::filter(fachbereich %in% subjects)
+
+    df$fachbereich <- ifelse(df$fachbereich != "Alle Fächer", "MINT", "andere Fächer")
+
+    df <- df %>% dplyr::group_by(region, fachbereich, anzeige_geschlecht, jahr, indikator, bereich) %>%
+      dplyr::summarize(wert = sum(wert, na.rm = T))
+
+
+    # call function to calculate the share of MINT and the remaining subjects
+    df[df$fachbereich == "andere Fächer", "wert"] <- df[df$fachbereich == "andere Fächer", "wert"] -
+      df[df$fachbereich == "MINT", "wert"]
+
+    # filter MINT or remaining subjects
+    df <- df %>% dplyr::filter(fachbereich == topic)
+
+
+  }else {
+
+    df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
+
+    title_help <- subjects_select
+  }
+
+  # calculate proportions
+  # remove "Männer" + "Frauen" does not add up to "Gesamt"
+  # calculate new "Gesamt" based on "Männer" and "Frauen"
+  df <- df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, jahr, indikator, bereich) %>%
+    dplyr::mutate(props = sum(wert))
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
+
+  df <- df %>% dplyr::group_by(region, fachbereich, jahr, indikator, bereich, anzeige_geschlecht) %>%
+    dplyr::summarize(proportion = wert/props)
+
+  df$proportion <- round(df$proportion * 100)
+
+
+  df$proportion <- paste0(df$proportion , "%")
+
+  # order
+  df <- df[with(df, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+
+
+  if (ost_west == FALSE) {
+
+    df <- df %>% dplyr::filter(region %in% states)
+
+  } else{
+
+    df$dummy_west <- ifelse(df$region %in% states_east_west$west, "Westen", "Osten")
+
+    df <- df %>% dplyr::group_by(dummy_west, fachbereich, jahr, indikator, bereich, anzeige_geschlecht) %>%
+      dplyr::summarise(proportion = mean(proportion))
+
+    names(df)[1] <- "region"
+  }
+
+
+  colnames(df) <- c("Region", "Fachbereich", "Jahr", "Indikator", "Bereich", "Geschlecht", "Wert")
+
+  return(df)
+
+}
+

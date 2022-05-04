@@ -40,7 +40,9 @@ mod_schule_kurse_ui <- function(id){
                       tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
                       tabPanel("Ranking 1", plotOutput(ns("plot_ranking_1"))),
                       tabPanel("Ranking 2", plotOutput(ns("plot_ranking_2"))),
-                      tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_kurse")))),
+                      tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_kurse"))),
+                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
+                                                style = "font-size: 75%; width: 75%"))),
           br(),br(),
 
         ))),
@@ -51,7 +53,10 @@ mod_schule_kurse_ui <- function(id){
         shiny::sidebarPanel(
           mod_schule_kurse_verlauf_ui("mod_schule_kurse_verlauf_ui_1")),
         shiny::mainPanel(
-          highcharter::highchartOutput(ns("plot_verlauf_kurse"))
+          tabsetPanel(type = "tabs",
+                      tabPanel("Verlauf", highcharter::highchartOutput(ns("plot_verlauf_kurse"))),
+                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
+                                                style = "font-size: 75%; width: 75%")))
         )))
   )
 }
@@ -94,6 +99,14 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
 
     output$plot_verlauf_kurse <- highcharter::renderHighchart({
       kurse_verlauf(data_kurse,r)
+    })
+
+    output$data_table_mix <- DT::renderDT({
+      data_mix_kurse(data_kurse, r)
+    })
+
+    output$data_table_verlauf <- DT::renderDT({
+      data_verlauf_kurse(data_kurse, r)
     })
 
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({

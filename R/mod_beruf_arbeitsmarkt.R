@@ -38,7 +38,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           tabsetPanel(type = "tabs",
                       tabPanel("Anteil", plotOutput(ns("plot_waffle"))),
                       tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
-                      tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_arbeitsmarkt")))),
+                      tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_arbeitsmarkt"))),
+                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
+                                                style = "font-size: 75%; width: 75%"))),
           br(),br(),
 
         ))),
@@ -48,7 +50,12 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         width = 12,
         shiny::sidebarPanel(
           mod_beruf_arbeitsmarkt_verlauf_ui("mod_beruf_arbeitsmarkt_verlauf_ui_1")),
-        shiny::mainPanel(highcharter::highchartOutput(ns("plot_verlauf_arbeitsmarkt")))))
+        shiny::mainPanel(
+          tabsetPanel(type = "tabs",
+                      tabPanel("Verlauf",highcharter::highchartOutput(ns("plot_verlauf_arbeitsmarkt"))),
+                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
+                                                style = "font-size: 75%; width: 75%"))
+                      ))))
   )
 }
 
@@ -66,6 +73,14 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
 
     output$data_table_einstieg <- DT::renderDT({
       data_einstieg_beruf(data_arbeitsmarkt, r)
+    })
+
+    output$data_table_mix <- DT::renderDT({
+      data_mix_beruf(data_arbeitsmarkt, r)
+    })
+
+    output$data_table_verlauf <- DT::renderDT({
+      data_verlauf_beruf(data_arbeitsmarkt, r)
     })
 
     output$plot_waffle <- renderPlot({

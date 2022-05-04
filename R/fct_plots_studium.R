@@ -439,7 +439,7 @@ studienzahl_absolut <- function(df,r) {
 
   df <- df %>% dplyr::filter(indikator == status_studierende)
 
-  if(lehramt == "Nein"){
+  if(lehramt == FALSE){
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
@@ -513,7 +513,7 @@ studienzahl_map <- function(df,r) {
 
   df <- df %>% dplyr::filter(indikator == status_studierende)
 
-  if(lehramt == "Nein"){
+  if(lehramt == FALSE){
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
@@ -587,6 +587,64 @@ studienzahl_map <- function(df,r) {
 
 }
 
+
+#' A function to return a filtered dataset
+#'
+#' @description A function to create a dataframe for given filter
+#'
+#' @return The return value is a dataframe
+#' @param df The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+data_mix_studium <- function(df,r) {
+
+  # load UI inputs from reactive value
+  status_studierende <- r$indikator_studierende
+
+  timerange <- r$date_studierende
+
+  lehramt <- r$nurLehramt_studierende
+
+  hochschulform_select_1 <- r$hochschulform_studierende_1
+
+  hochschulform_select_2 <- r$hochschulform_studierende_2
+
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(indikator == status_studierende)
+
+  if(lehramt == FALSE){
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
+
+  } else {
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
+  }
+
+  # call function to calculate the share of MINT and the remaining subjects
+  df <- calc_share_MINT(df)
+
+  # calculate the share of males
+  values <- df %>%
+    dplyr::group_by(region, fachbereich, indikator, nur_lehramt, hochschulform, jahr, bereich) %>%
+    dplyr::mutate(wert = wert - dplyr::lead(wert)) %>% dplyr::select(wert) %>% na.omit()
+
+  values$anzeige_geschlecht <- "Männer"
+
+  values <- values[, colnames(df)]
+
+  df <- rbind(df, values)
+
+  colnames(df) <- c("Region", "Geschlecht", "Wert", "Indikator", "Lehramt", "Hochschulform", "Fachbereich", "Jahr", "Bereich")
+
+  return(df)
+}
 
 
 #' A function to plot time series
@@ -717,6 +775,136 @@ studienzahl_verlauf <- function(df,r) {
 
 
 }
+
+
+#' A function to return a filtered dataset
+#'
+#' @description A function to create a dataframe for given filter
+#'
+#' @return The return value is a dataframe
+#' @param df The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+data_verlauf_studium <- function(df,r) {
+
+  # load UI inputs from reactive value
+  status_studierende <- r$indikator_studierende_verlauf
+
+  timerange <- r$date_studierende_verlauf
+
+  lehramt <- r$nurLehramt_studierende_verlauf
+
+  states <- r$states_studierende_verlauf
+
+  topic <- r$topic_studierende_verlauf
+
+  ost_west <- r$ost_west
+
+  subject_aggregated <- r$subjects_aggregated
+
+  subjects_select <- r$subject_selected
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  df <- df %>% dplyr::filter(indikator == status_studierende)
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- df %>% dplyr::filter(region != "Bayern")
+
+  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
+  if(lehramt == FALSE){
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+
+    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+
+  } else {
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+
+    df <- df %>% dplyr::filter(hochschulform == "Uni")
+  }
+
+
+  if (subject_aggregated == "aggregiert"){
+
+    # call function to calculate the share of MINT and the remaining subjects
+    df <- calc_share_MINT(df)
+
+    if (topic == "MINT"){
+
+      title_help <- "MINT"
+
+    } else {
+
+      title_help <- "anderen Studienfächern"
+
+    }
+
+  }else {
+
+
+    df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
+
+    title_help <- dictionary_title_studium[[subjects_select]]
+  }
+
+  # order
+  df <- df[with(df, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+
+  # calculate proportion
+  values <- df %>%
+    dplyr::group_by(jahr, fachbereich, region, indikator, nur_lehramt, hochschulform, bereich) %>%
+    dplyr::mutate(wert = dplyr::lead(wert)/wert) %>% dplyr::select(wert) %>% na.omit()
+
+
+  if (ost_west == FALSE) {
+
+    values <- values %>% dplyr::filter(region %in% states)
+
+  } else{
+
+    values$dummy_west <- ifelse(values$region %in% states_east_west$west, "Westen", "Osten")
+
+    values <- values %>% dplyr::group_by(jahr, fachbereich, dummy_west,
+                                         indikator, nur_lehramt, hochschulform, bereich) %>%
+      dplyr::summarise(wert = mean(wert))
+
+    names(values)[3] <- "region"
+  }
+
+  if (subject_aggregated == "aggregiert"){
+    # filter MINT or remaining subjects
+    values <- values %>% dplyr::filter(fachbereich == topic)
+  }
+
+  # order years for plot
+  values <- values[with(values, order(region, jahr, decreasing = FALSE)), ]
+
+  values$wert <- round(values$wert * 100)
+
+  values$wert <- paste0(values$wert,"%")
+
+  colnames(values) <- c("Jahr", "Fachbereich", "Region", "Indikator", "Lehramt", "Hochschulform", "Bereich", "Wert")
+
+
+  return(values)
+}
+
+
+
+
+
+
+
+
+
+
 
 
 ################################################################################

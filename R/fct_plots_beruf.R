@@ -461,6 +461,60 @@ arbeitsmarkt_map <- function(df,r) {
 
 }
 
+
+#' A function to return a filtered dataset
+#'
+#' @description A function to similar to 'arbeitsmarkt_einstieg_bar' but with the
+#' difference that it returns a dataframe instead of plot.
+#'
+#' @return The return value is a dataframe
+#' @param df The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+data_mix_beruf <- function(df,r) {
+
+  # load UI inputs from reactive value
+  status_arbeitnehmer <- r$indikator_arbeitsmarkt
+
+  timerange <- r$date_arbeitsmarkt
+
+  anforderung <- r$anforderungsniveau_arbeitsmarkt
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(indikator == status_arbeitnehmer)
+
+  df <- df %>% dplyr::filter(anforderungsniveau == anforderung)
+
+  # call function to calculate the share of MINT and the remaining subjects
+  df[df$fachbereich == "Alle", "wert"] <- df[df$fachbereich == "Alle", "wert"] -
+    df[df$fachbereich == "MINT", "wert"]
+
+  df[df$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige"
+
+
+  df <- df %>% dplyr::filter(fachbereich != "andere Berufszweige")
+
+  # calculate the share of males
+  values <- df %>%
+    dplyr::group_by(region) %>%
+    dplyr::mutate(wert = wert - dplyr::lead(wert)) %>% dplyr::select(wert) %>% na.omit()
+
+  df[df$anzeige_geschlecht == "Gesamt", "wert"] <- values$wert
+
+  df[df$anzeige_geschlecht == "Gesamt", "anzeige_geschlecht"] <- "Männer"
+
+  colnames(df) <- c("Region", "Fachbereich", "Anforderungsniveau", "Wert", "Indikator", "Jahr", "Geschlecht", "Bereich")
+
+  return(df)
+
+}
+
+
+
+
 #' A function to plot time series
 #'
 #' @description A function to plot the time series of the german states
@@ -560,4 +614,85 @@ arbeitsmarkt_verlauf <- function(df,r) {
 
 }
 
+
+#' A function to return a filtered dataset
+#'
+#' @description A function to similar to 'arbeitsmarkt_einstieg_bar' but with the
+#' difference that it returns a dataframe instead of plot.
+#'
+#' @return The return value is a dataframe
+#' @param df The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+data_verlauf_beruf <- function(df,r) {
+
+  # load UI inputs from reactive value
+  status_arbeitnehmer <- r$indikator_arbeitsmarkt_verlauf
+
+  timerange <- r$date_arbeitsmarkt_verlauf
+
+  states <- r$states_arbeitsmarkt_verlauf
+
+  topic <- r$topic_arbeitsmarkt_verlauf
+
+  anforderung <- r$anforderungsniveau_arbeitsmarkt_verlauf
+
+  ost_west <- r$ost_west
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  df <- df %>% dplyr::filter(indikator == status_arbeitnehmer)
+
+  df <- df %>% dplyr::filter(anforderungsniveau == anforderung)
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  # call function to calculate the share of MINT and the remaining subjects
+  df[df$fachbereich == "Alle", "wert"] <- df[df$fachbereich == "Alle", "wert"] -
+    df[df$fachbereich == "MINT", "wert"]
+
+  df[df$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige"
+
+  # order
+  df <- df[with(df, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+
+  # calculate proportion
+  values <- df %>%
+    dplyr::group_by(jahr, fachbereich, region, anforderungsniveau, indikator, bereich) %>%
+    dplyr::mutate(wert = dplyr::lead(wert)/wert) %>% dplyr::select(wert) %>% na.omit()
+
+
+  if (ost_west == FALSE) {
+
+    values <- values %>% dplyr::filter(region %in% states)
+
+  } else{
+
+    values$dummy_west <- ifelse(values$region %in% states_east_west$west, "Westen", "Osten")
+
+    values <- values %>% dplyr::group_by(jahr, fachbereich, dummy_west,  anforderungsniveau,
+                                         indikator, bereich) %>%
+      dplyr::summarise(wert = mean(wert))
+
+    names(values)[3] <- "region"
+  }
+
+  # filter MINT or remaining subjects
+  values <- values %>% dplyr::filter(fachbereich == topic)
+
+  # order years for plot
+  values <- values[with(values, order(region, jahr, decreasing = FALSE)), ]
+
+  values$wert <- paste0(round(values$wert * 100),"%")
+
+
+  colnames(values) <- c("Jahr", "Fachbereich", "Region", "Anforderungsniveau", "Indikator",
+                        "Bereich", "Wert")
+
+  return(values)
+
+}
 

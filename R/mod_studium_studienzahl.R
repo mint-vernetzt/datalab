@@ -37,7 +37,9 @@ mod_studium_studienzahl_ui <- function(id){
                   tabsetPanel(type = "tabs",
                               tabPanel("Anteil", plotOutput(ns("plot_waffle"))),
                               tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
-                              tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_studienzahl")))),
+                              tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_studienzahl"))),
+                              tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
+                                                        style = "font-size: 75%; width: 75%"))),
                   br(),br(),
                   ))),
     fluidRow(
@@ -46,7 +48,13 @@ mod_studium_studienzahl_ui <- function(id){
         width = 12,
         shiny::sidebarPanel(
           mod_studium_studienzahl_verlauf_ui("mod_studium_studienzahl_verlauf_ui_1")),
-        shiny::mainPanel(highcharter::highchartOutput(ns("plot_verlauf_studienzahl"))))),
+        shiny::mainPanel(
+          tabsetPanel(type = "tabs",
+                      tabPanel("Verlauf", highcharter::highchartOutput(ns("plot_verlauf_studienzahl"))),
+          tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
+                                    style = "font-size: 75%; width: 75%")))
+
+          )))
     # hr(),
     # h4("Studienzahlen im zeitlichen Verlauf vergleichbar"),
     # br(),br(),
@@ -70,10 +78,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    output$plot <- renderPlot({
-      studienzahl_plot(data,r)
 
-    })
 
     output$plot_einstieg_bar <- plotly::renderPlotly({
       studienzahl_einstieg_bar(data_studierende,r)
@@ -101,9 +106,17 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       studienzahl_verlauf(data_studierende,r)
     })
 
-    output$plot_line <- renderPlot({
-      studienzahl_line(data,r)
+
+
+    output$data_table_mix <- DT::renderDT({
+      data_mix_studium(data_studierende, r)
     })
+
+    output$data_table_verlauf <- DT::renderDT({
+      data_verlauf_studium(data_studierende, r)
+    })
+
+
 
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
       res <- box_einstieg_studium(data_studierende,r)
