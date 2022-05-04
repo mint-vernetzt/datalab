@@ -155,9 +155,10 @@ data_einstieg_kurse <- function(df,r) {
   df[df$fachbereich == "andere Fächer", "wert"] <- df[df$fachbereich == "andere Fächer", "wert"] -
     df[df$fachbereich == "MINT", "wert"]
 
-  colnames(df) <- c("Fachbereich", "Geschlecht", "Jahr", "Wert")
   # filter gender
   df <- df %>% dplyr::filter(anzeige_geschlecht %in% geschlecht)
+
+  colnames(df) <- c("Fachbereich", "Geschlecht", "Jahr", "Wert")
 
   return(df)
 
