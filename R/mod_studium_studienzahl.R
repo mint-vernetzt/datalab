@@ -23,7 +23,7 @@ mod_studium_studienzahl_ui <- function(id){
 
       shiny::mainPanel(
         tabsetPanel(type = "tabs",
-        tabPanel("Bar Chart", plotly::plotlyOutput(ns("plot_einstieg_bar"))),
+        tabPanel("Balkendiagramm", plotly::plotlyOutput(ns("plot_einstieg_bar"))),
         tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
                                   style = "font-size: 75%; width: 75%"))))
       )),
@@ -37,7 +37,9 @@ mod_studium_studienzahl_ui <- function(id){
                   tabsetPanel(type = "tabs",
                               tabPanel("Anteil", plotOutput(ns("plot_waffle"))),
                               tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
-                              tabPanel("Map", highcharter::highchartOutput(ns("plot_map_studienzahl"))))))),
+                              tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_studienzahl")))),
+                  br(),br(),
+                  ))),
     fluidRow(
       shinydashboard::box(
         title = "Lorem Ipsum",
@@ -128,6 +130,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
         subtitle = text,
         color = "navy",
         width = 6,
+        icon = shiny::icon("university"),
         info = text_info,
         type = "MINT"
 
@@ -159,6 +162,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
         value, title, #icon = icon("graduation-cap"),
         subtitle = text,
         color = "navy",
+        icon = shiny::icon("university"),
         width = 6,
         info = text_info
       )

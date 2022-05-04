@@ -1,5 +1,3 @@
-
-
 #' A function to plot a graph.
 #'
 #' @description A function to create a stacked bar chart for the first box
@@ -157,7 +155,7 @@ data_einstieg_kurse <- function(df,r) {
   df[df$fachbereich == "andere Fächer", "wert"] <- df[df$fachbereich == "andere Fächer", "wert"] -
     df[df$fachbereich == "MINT", "wert"]
 
-
+  colnames(df) <- c("Fachbereich", "Geschlecht", "Jahr", "Wert")
   # filter gender
   df <- df %>% dplyr::filter(anzeige_geschlecht %in% geschlecht)
 
@@ -323,9 +321,9 @@ kurse_absolut <- function(df,r) {
     ggplot2::theme_bw() +
     ggplot2::theme(
       text = ggplot2::element_text(family="serif", size = 14),
-      axis.text.x = ggplot2::element_text(colour = c("#b16fab", "#154194"), size = 14),
+      axis.text.x = ggplot2::element_text(colour = c("#b16fab", "#154194"), size = 14, face="bold"),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::xlab("Fachrichtung") + ggplot2::ylab("Anzahl") +
+    ggplot2::xlab("") + ggplot2::ylab("Anzahl") +
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
     ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
                                  "Schüler*innen in MINT und allen anderen Fächern für das Jahr ", timerange,
@@ -545,7 +543,7 @@ kurse_map <- function(df,r) {
   ) %>%
     highcharter::hc_title(
       text = paste0("Anteil der Frauen an MINT-", title_help ," für das Jahr ", timerange),
-      margin = 45,
+      margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "serif")
     ) %>%
@@ -554,7 +552,8 @@ kurse_map <- function(df,r) {
     ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "serif")
-    )
+    ) %>% highcharter::hc_size(600, 440) %>%
+    highcharter::hc_legend(align = "right", layout = "vertical")
 
 
 
@@ -654,7 +653,7 @@ kurse_verlauf <- function(df,r) {
   df <- df[with(df, order(region, fachbereich, jahr, decreasing = TRUE)), ]
 
 
-  if (ost_west == "Nein") {
+  if (ost_west == FALSE) {
 
     df <- df %>% dplyr::filter(region %in% states)
 

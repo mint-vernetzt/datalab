@@ -74,7 +74,7 @@ arbeitsmarkt_einstieg_bar <- function(df,r) {
 
   df[df$fachbereich == "MINT", "Anteil"] <- round((df[df$fachbereich == "MINT", "wert"]/values$wert)*100)
 
-  df$Anteil <- paste(df$Anteil,"%")
+  df$Anteil <- paste0(df$Anteil,"%")
 
   # remove scientific notation
   options(scipen=999)
@@ -114,18 +114,28 @@ arbeitsmarkt_einstieg_bar <- function(df,r) {
   if(isTRUE(switch_absolut)){
 
     p <- p + ggplot2::geom_bar(position="stack", stat="identity")
-    plotly::ggplotly(p, tooltip = "Wert") %>% plotly::layout(font=t) %>%
+    plotly::ggplotly(p, tooltip = "Wert") %>%
       plotly::config(displayModeBar = FALSE,
-                     displaylogo = FALSE)
+                     displaylogo = FALSE,
+                     editable = FALSE,
+                     showTips = FALSE,
+                     edits = FALSE,
+                     scrollZoom = FALSE, doubleClick = FALSE) %>%
+      plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
   }else{
 
     p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
       ggplot2::scale_y_continuous(labels = scales::percent_format())
 
-    plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::layout(font=t) %>%
+    plotly::ggplotly(p, tooltip = "tooltip") %>%
       plotly::config(displayModeBar = FALSE,
-                     displaylogo = FALSE)
+                     displaylogo = FALSE,
+                     editable = FALSE,
+                     showTips = FALSE,
+                     edits = FALSE,
+                     scrollZoom = FALSE, doubleClick = FALSE) %>%
+      plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
   }
 }
@@ -189,6 +199,8 @@ data_einstieg_beruf <- function(df,r) {
 
   # filter gender
   df <- df %>% dplyr::filter(anzeige_geschlecht %in% geschlecht)
+
+  colnames(df) <- c("Region", "Fachbereich", "Anforderungsniveau", "Wert", "Indikator", "Jahr", "Geschlecht", "Bereich")
 
   return(df)
 
@@ -351,9 +363,9 @@ arbeitsmarkt_absolut <- function(df,r) {
     ggplot2::theme_bw() +
     ggplot2::theme(
       text = ggplot2::element_text(family="serif", size = 14),
-      axis.text.x = ggplot2::element_text(colour = c("#b16fab", "#154194"), size = 14),
+      axis.text.x = ggplot2::element_text(colour = c("#b16fab", "#154194"), size = 14, face="bold"),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::ylab("Anzahl") + ggplot2::xlab("Fachrichtung") +
+    ggplot2::ylab("Anzahl") + ggplot2::xlab("") +
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
     ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
                                "Arbeitnehmer*innen in MINT und allen anderen Fächern für das Jahr ", timerange,
@@ -433,7 +445,7 @@ arbeitsmarkt_map <- function(df,r) {
   ) %>%
     highcharter::hc_title(
       text = paste0("Anteil der Frauen ", title_help ," an MINT-Berufen für das Jahr ", timerange),
-      margin = 45,
+      margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "serif")
     ) %>%
@@ -442,7 +454,8 @@ arbeitsmarkt_map <- function(df,r) {
     ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "serif")
-    )
+    ) %>% highcharter::hc_size(600, 440) %>%
+    highcharter::hc_legend(align = "right", layout = "vertical")
 
 
 
@@ -497,10 +510,7 @@ arbeitsmarkt_verlauf <- function(df,r) {
     dplyr::mutate(wert = dplyr::lead(wert)/wert) %>% dplyr::select(wert) %>% na.omit()
 
 
-  values <- values %>% dplyr::filter(region %in% states)
-
-
-  if (ost_west == "Nein") {
+  if (ost_west == FALSE) {
 
     values <- values %>% dplyr::filter(region %in% states)
 

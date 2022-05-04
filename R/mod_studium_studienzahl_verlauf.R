@@ -27,12 +27,16 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
                                   lib = "glyphicon"))
     ),
     p("Soll nur Lehramt angezeigt werden?"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("nurLehramt_studierende_verlauf"),
-      choices = c("Ja", "Nein"),
-      selected = "Nein"
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_verlauf"), label = "Nein", inline = TRUE),
+      tags$span("Ja")
     ),
-    p("Einzelne Fächer oder als MINT aggregiert:"),
+    # shinyWidgets::radioGroupButtons(
+    #   inputId = ns("nurLehramt_studierende_verlauf"),
+    #   choices = c("Ja", "Nein"),
+    #   selected = "Nein"
+    # ),
+    p("Einzelne Fächer oder als MINT zusammengefasst:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("subjects_aggregated"),
       choices = c("einzeln", "aggregiert"),
@@ -43,7 +47,7 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
     ),
     conditionalPanel(condition = "input.subjects_aggregated == 'aggregiert'",
                      ns = ns,
-    p("Wähle ob MINT oder alle anderen Studiefächen dargestellt werden sollen:"),
+    p("Wähle ob MINT oder alle anderen Studienfächer dargestellt werden sollen:"),
     shinyWidgets::pickerInput(
       inputId = ns("topic_studierende_verlauf"),
       choices = c("MINT", "Alle anderen Studienfächer" = "andere Studiengänge"),
@@ -57,15 +61,19 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
                        choices = c("Mathematik" = "Mathe", "Ingenieurswesen" = "Ingenieur"),
                        selected = "Mathematik"
                      )),
-    p("Sollen die Bundesländern auf Ost und West aggregiert werden?"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("ost_west"),
-      choices = c("Ja", "Nein"),
-      selected = "Nein"
+    p("Sollen die Bundesländer in Ost und West zusammengefasst werden?"),
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("ost_west"), label = "Nein", inline = TRUE),
+      tags$span("Ja")
     ),
-    conditionalPanel(condition = "input.ost_west == 'Nein'",
+    # shinyWidgets::radioGroupButtons(
+    #   inputId = ns("ost_west"),
+    #   choices = c("Ja", "Nein"),
+    #   selected = "Nein"
+    # ),
+    conditionalPanel(condition = "input.ost_west == false",
                      ns = ns,
-    p("Wähle ein oder mehrer Bundesländer:"),
+    p("Wähle ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studierende_verlauf"),
       choices = c("Berlin",
@@ -83,10 +91,12 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"),
       multiple = TRUE,
-      options = list(`actions-box` = TRUE),
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Keins auswählen",
+                     `select-all-text` = "Alle auswählen"),
       selected = c("Hessen", "Hamburg")
     )),
-    conditionalPanel(condition = "input.ost_west == 'Ja'",
+    conditionalPanel(condition = "input.ost_west != false",
                      ns = ns)
   )
 }

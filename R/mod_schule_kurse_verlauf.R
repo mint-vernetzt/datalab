@@ -24,7 +24,7 @@ mod_schule_kurse_verlauf_ui <- function(id){
                   "2018","2019"),
       selected = c("2015", "2019")
     ),
-    p("Wähle den Status der Schüler*innen:"),
+    p("Wähle in welcher Form der Kurs belegt wurde:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_kurse_verlauf"),
       choices = c("Grundkurse", "Leistungskurse"),
@@ -32,7 +32,7 @@ mod_schule_kurse_verlauf_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Einzelne Fächer oder als MINT aggregiert:"),
+    p("Einzelne Fächer oder als MINT zusammengefasst:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("subjects_aggregated"),
       choices = c("einzeln", "aggregiert"),
@@ -57,15 +57,19 @@ mod_schule_kurse_verlauf_ui <- function(id){
                        choices = unique(kurse$fachbereich),
                        selected = "Informatik"
                      )),
-    p("Sollen die Bundesländern auf Ost und West aggregiert werden?"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("ost_west"),
-      choices = c("Ja", "Nein"),
-      selected = "Nein"
+    p("Sollen die Bundesländer in Ost und West zusammengefasst werden?"),
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("ost_west"), label = "Nein", inline = TRUE),
+      tags$span("Ja")
     ),
-    conditionalPanel(condition = "input.ost_west == 'Nein'",
+    # shinyWidgets::radioGroupButtons(
+    #   inputId = ns("ost_west"),
+    #   choices = c("Ja", "Nein"),
+    #   selected = "Nein"
+    # ),
+    conditionalPanel(condition = "input.ost_west == false",
                      ns = ns,
-                     p("Wähle ein oder mehrer Bundesländer:"),
+                     p("Wähle ein oder mehrere Bundesländer:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("states_kurse_verlauf"),
                        choices = c("Berlin",
@@ -83,10 +87,12 @@ mod_schule_kurse_verlauf_ui <- function(id){
                                    "Schleswig-Holstein",
                                    "Thüringen"),
                        multiple = TRUE,
-                       options = list(`actions-box` = TRUE),
+                       options = list(`actions-box` = TRUE,
+                                      `deselect-all-text` = "Keins auswählen",
+                                      `select-all-text` = "Alle auswählen"),
                        selected = c("Hessen", "Hamburg")
                      )),
-    conditionalPanel(condition = "input.ost_west == 'Ja'",
+    conditionalPanel(condition = "input.ost_west != false",
                      ns = ns)
   )
 

@@ -24,7 +24,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         shiny::mainPanel(
 
           tabsetPanel(type = "tabs",
-                      tabPanel("Bar Chart", plotly::plotlyOutput(ns("plot_einstieg_bar"))),
+                      tabPanel("Balkendiagramm", plotly::plotlyOutput(ns("plot_einstieg_bar"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
                                                 style = "font-size: 75%; width: 75%"))))
     )),
@@ -38,7 +38,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           tabsetPanel(type = "tabs",
                       tabPanel("Anteil", plotOutput(ns("plot_waffle"))),
                       tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
-                      tabPanel("Map", highcharter::highchartOutput(ns("plot_map_arbeitsmarkt"))))
+                      tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_arbeitsmarkt")))),
+          br(),br(),
 
         ))),
     fluidRow(
@@ -109,6 +110,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
         subtitle = text,
         color = "navy",
         width = 6,
+        icon = shiny::icon("building"),
         info = text_info,
         type = "MINT"
       )
@@ -139,6 +141,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
         value, title, #icon = icon("graduation-cap"),
         subtitle = text,
         color = "navy",
+        icon = shiny::icon("building"),
         width = 6,
         info = text_info
       )

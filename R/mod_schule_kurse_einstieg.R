@@ -18,10 +18,10 @@ mod_schule_kurse_einstieg_ui <- function(id){
                   "2018","2019"),
       selected = c("2015", "2019")
     ),
-    p("Wähle in welcher Formd der Kurs belegt wurde:"),
+    p("Wähle in welcher Form der Kurs belegt wurde:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_kurse_einstieg"),
-      choices = c("Grundkurs" = "Grundkurse", "Leistungskurs" = "Leistungskurse"),
+      choices = c("Grundkurse", "Leistungskurse"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
@@ -33,11 +33,15 @@ mod_schule_kurse_einstieg_ui <- function(id){
       multiple = TRUE,
       selected = "Gesamt"
     ),
-    p("Absolut oder Relativ?"),
-    shinyWidgets::materialSwitch(
-      inputId = ns("switch_rel_abs"),
-      label = "Relativ"
+    p("Relativ oder Absolut?"),
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("switch_rel_abs"), label = "Relativ", inline = TRUE),
+      tags$span("Absolut")
     )
+    # shinyWidgets::materialSwitch(
+    #   inputId = ns("switch_rel_abs"),
+    #   label = "Relativ"
+    # )
   )
 }
 

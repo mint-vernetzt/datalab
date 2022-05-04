@@ -34,11 +34,15 @@ mod_beruf_arbeitsmarkt_einstieg_ui <- function(id){
       multiple = TRUE,
       selected = "Gesamt"
     ),
-    p("Absolut oder Relativ?"),
-    shinyWidgets::materialSwitch(
-      inputId = ns("switch_rel_abs"),
-      label = "Relativ"
+    p("Relativ oder Absolut?"),
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("switch_rel_abs"), label = "Relativ", inline = TRUE),
+      tags$span("Absolut")
     )
+    # shinyWidgets::materialSwitch(
+    #   inputId = ns("switch_rel_abs"),
+    #   label = "Relativ"
+    # )
   )
 }
 

@@ -24,7 +24,7 @@ mod_schule_kurse_ui <- function(id){
         shiny::mainPanel(
 
           tabsetPanel(type = "tabs",
-                      tabPanel("Bar Chart", plotly::plotlyOutput(ns("plot_einstieg_bar"))),
+                      tabPanel("Balkendiagramm", plotly::plotlyOutput(ns("plot_einstieg_bar"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
                                                 style = "font-size: 75%; width: 75%"))))
       )),
@@ -40,7 +40,8 @@ mod_schule_kurse_ui <- function(id){
                       tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
                       tabPanel("Ranking 1", plotOutput(ns("plot_ranking_1"))),
                       tabPanel("Ranking 2", plotOutput(ns("plot_ranking_2"))),
-                      tabPanel("Map", highcharter::highchartOutput(ns("plot_map_kurse"))))
+                      tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_kurse")))),
+          br(),br(),
 
         ))),
     fluidRow(
@@ -116,9 +117,10 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
                           den gewählten Zeitraum und abhängig von den gewählten Filter.")
 
       valueBox2(
-        value, title, #icon = icon("graduation-cap"),
+        value, title,
         subtitle = text,
         color = "navy",
+        icon = shiny::icon("school"),
         width = 6,
         info = text_info,
         type = "MINT"
@@ -147,8 +149,9 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
                           den gewählten Zeitraum und abhängig von den gewählten Filter.")
 
       valueBox2(
-        value, title, #icon = icon("graduation-cap"),
+        value, title,
         subtitle = text,
+        icon = shiny::icon("school"),
         color = "navy",
         width = 6,
         info = text_info

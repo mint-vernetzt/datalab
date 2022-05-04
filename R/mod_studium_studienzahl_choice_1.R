@@ -25,19 +25,23 @@ mod_studium_studienzahl_choice_1_ui <- function(id){
                                     lib = "glyphicon"))
       ),
     p("Soll nur Lehramt angezeigt werden?"),
-      shinyWidgets::radioGroupButtons(
-        inputId = ns("nurLehramt_studierende"),
-        choices = c("Ja", "Nein"),
-        selected = "Nein"
-        ),
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende"), label = "Nein", inline = TRUE),
+      tags$span("Ja")
+    ),
+      # shinyWidgets::radioGroupButtons(
+      #   inputId = ns("nurLehramt_studierende"),
+      #   choices = c("Ja", "Nein"),
+      #   selected = "Nein"
+      #   ),
     p("Wähle eine Hochschulform:"),
-      conditionalPanel(condition = "input.nurLehramt_studierende == 'Nein'",
+      conditionalPanel(condition = "input.nurLehramt_studierende == false",
                        ns = ns,
       shinyWidgets::pickerInput(
         inputId = ns("hochschulform_studierende_1"),
         choices = c("insgesamt", "Uni", "FH")
       )),
-      conditionalPanel(condition = "input.nurLehramt_studierende == 'Ja'",
+      conditionalPanel(condition = "input.nurLehramt_studierende != false",
          ns = ns,
         shinyWidgets::pickerInput(
           inputId = ns("hochschulform_studierende_2"),

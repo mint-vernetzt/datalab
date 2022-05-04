@@ -136,3 +136,95 @@ share_female <- function(df){
   return(df)
 }
 
+
+#' @description A function to calculate the share of females for MINT and Rest
+#' @param data The dataframe "Zentrale_Datensatz.xlsx" needs to be used for this function
+#' @return The return value is a dataframe
+#'
+#' @noRd
+shares_gender <- function(df, indikator, gender){
+
+  if ((indikator != "Leistungskurse") | (indikator != "Habilitationen") | (indikator != "Promotionen (angestrebt)")) {
+
+    # calculate the share of males
+    help_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt") %>%
+      dplyr::group_by(jahr, fachbereich)
+
+    help_weiblich <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen") %>%
+      dplyr::group_by(jahr, fachbereich)
+
+    wert_männlich <- help_gesamt$wert - help_weiblich$wert
+
+    help_männlich <- help_weiblich
+
+    help_männlich$wert <- wert_männlich
+
+    help_männlich$anzeige_geschlecht <- "Männer"
+
+    df <- rbind(df, help_männlich)
+
+    df <- df[with(df, order(anzeige_geschlecht, jahr, decreasing = TRUE)), ]
+
+    # filter gender
+    df <- df %>% dplyr::filter(anzeige_geschlecht %in% geschlecht)
+
+    values <- df %>% dplyr::group_by(anzeige_geschlecht, jahr) %>%
+      dplyr::summarize(wert = sum(wert))
+
+    values <- values[with(values, order(anzeige_geschlecht, jahr, decreasing = TRUE)), ]
+
+    df$Anteil <- NA
+
+    if ((indikator == "Studierende" | indikator == "Studienanfänger")) {
+
+      help_string <- "andere Studiengänge"
+
+    } else {
+
+      help_string <- "andere Berufszweige"
+
+    }
+
+    df[df$fachbereich == help_string, "Anteil"] <- round((df[df$fachbereich == help_string, "wert"]/values$wert)*100)
+
+    df[df$fachbereich == "MINT", "Anteil"] <- round((df[df$fachbereich == "MINT", "wert"]/values$wert)*100)
+
+    df$Anteil <- paste0(df$Anteil,"%")
+
+  } else {
+
+
+    values <- df %>% dplyr::group_by(anzeige_geschlecht, jahr) %>%
+      dplyr::summarize(wert = sum(wert))
+
+
+    if (indikator == "Leistungskurse") {
+
+      help_string <- "andere Fächer"
+
+    } else if (indikator == "Promotionen (angestrebt)") {
+
+      help_string <- "andere Fächer (Promotionen)"
+
+    } else {
+
+      help_string <- "andere Fächer (Habilitationen)"
+
+    }
+
+
+    tooltip_1 <- round((df[df$fachbereich == help_string, "wert"]/values$wert)*100)
+
+    tooltip_2 <- round((df[df$fachbereich == "MINT", "wert"]/values$wert)*100)
+
+    tooltip <- c(tooltip_1[[1]], tooltip_2[[1]])
+
+    df$Anteil <- paste0(tooltip,"%")
+
+
+  }
+
+
+  return(df)
+}
+

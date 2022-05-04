@@ -74,7 +74,7 @@ studienzahl_einstieg_bar <- function(df,r) {
 
     df[df$hochschulform == "insgesamt", "wert"] <- values$wert
 
-    df[df$nur_lehramt == "Ja", "fachbereich"] <- interaction(df[df$nur_lehramt == "Ja", "fachbereich"][[1]], " (lehramt)", sep = "")
+    df[df$nur_lehramt == "Ja", "fachbereich"] <- interaction(df[df$nur_lehramt == "Ja", "fachbereich"][[1]], " (Lehramt)", sep = "")
 
     df <- df[with(df, order(anzeige_geschlecht, jahr, decreasing = TRUE)), ]
 
@@ -89,13 +89,13 @@ studienzahl_einstieg_bar <- function(df,r) {
     df[df$fachbereich == "andere Studiengänge", "Anteil"] <- round((df[df$fachbereich == "andere Studiengänge", "wert"]/
                           values$wert)*100)
 
-    df[df$fachbereich == "andere Studiengänge (lehramt)", "Anteil"] <- round((df[df$fachbereich == "andere Studiengänge (lehramt)", "wert"]/
+    df[df$fachbereich == "andere Studiengänge (Lehramt)", "Anteil"] <- round((df[df$fachbereich == "andere Studiengänge (Lehramt)", "wert"]/
                                                                               values$wert)*100)
 
     df[df$fachbereich == "MINT", "Anteil"] <- round((df[df$fachbereich == "MINT", "wert"]/
                                                      values$wert)*100)
 
-    df[df$fachbereich == "MINT (lehramt)", "Anteil"] <- round((df[df$fachbereich == "MINT (lehramt)", "wert"]/
+    df[df$fachbereich == "MINT (Lehramt)", "Anteil"] <- round((df[df$fachbereich == "MINT (Lehramt)", "wert"]/
                                                                values$wert)*100)
 
     df$Anteil <- paste(df$Anteil,"%")
@@ -231,8 +231,6 @@ data_einstieg <- function(df,r) {
   lehramt_enthalten <- r$nurLehramt_studierende_einstieg
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr == timerange)
-
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   df <- df %>% dplyr::filter(region == "Deutschland")
@@ -253,6 +251,8 @@ data_einstieg <- function(df,r) {
 
    df$hochschulform <- NULL
 
+   colnames(df) <- c("Region", "Geschlecht", "Wert", "Indikator", "Lehramt", "Fachbereich", "Jahr", "Bereich")
+
     return(df)
 
 
@@ -263,6 +263,8 @@ data_einstieg <- function(df,r) {
     df <- df %>% dplyr::filter(hochschulform == "insgesamt")
 
     df$hochschulform <- NULL
+
+    colnames(df) <- c("Region", "Geschlecht", "Wert", "Indikator", "Lehramt", "Fachbereich", "Jahr", "Bereich")
 
     return(df)
 
@@ -300,7 +302,7 @@ studienzahl_waffle <- function(df,r) {
 
   df <- df %>% dplyr::filter(indikator == status_studierende)
 
-  if(lehramt == "Nein"){
+  if(lehramt == FALSE){
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
@@ -360,13 +362,40 @@ studienzahl_waffle <- function(df,r) {
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
 
+
+  if(lehramt == FALSE){
+
+
+    hochschulform <- hochschulform_select_1
+
+  } else {
+
+    hochschulform <- hochschulform_select_2
+
+  }
+
+  if (hochschulform == "Uni"){
+
+    title_help_sub <- "an einer Uni"
+
+  }else if (hochschulform == "FH"){
+
+    title_help_sub <- "an einer FH"
+
+  } else {
+
+    title_help_sub <- "insgesamt"
+
+  }
+
+
   if (status_studierende == "Studierende"){
 
-    title_help <- "für Studierende"
+    title_help <- paste0("für Studierende ", title_help_sub)
 
   }else{
 
-    title_help <- "für Studienanfänger"
+    title_help <- paste0("für Studienanfänger ", title_help_sub)
 
   }
 
@@ -442,9 +471,9 @@ studienzahl_absolut <- function(df,r) {
     ggplot2::theme_bw() +
     ggplot2::theme(# = ggplot2::element_text(hjust = 0.5),
       text = ggplot2::element_text(family="serif", size = 14),
-      axis.text.x = ggplot2::element_text(colour = c("#b16fab", "#154194"), size = 14),
+      axis.text.x = ggplot2::element_text(colour = c("#b16fab", "#154194"), size = 14, face="bold"),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::ylab("Anzahl") + ggplot2::xlab("Fachrichtung") +
+    ggplot2::ylab("Anzahl") + ggplot2::xlab("") +
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
     ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
                                "Student*innen in MINT und allen anderen Fächern für das Jahr ", timerange,
@@ -541,7 +570,7 @@ studienzahl_map <- function(df,r) {
   ) %>%
     highcharter::hc_title(
       text = paste0("Anteil der ",title_help ," an MINT für das Jahr ", timerange),
-      margin = 45,
+      margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "serif")
     ) %>%
@@ -551,7 +580,8 @@ studienzahl_map <- function(df,r) {
     ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "serif")
-    )
+    ) %>% highcharter::hc_size(600, 440) %>%
+    highcharter::hc_legend(align = "right", layout = "vertical")
 
 
 
@@ -599,7 +629,7 @@ studienzahl_verlauf <- function(df,r) {
 
   df <- df %>% dplyr::filter(region != "Baden-Württemberg")
 
-  if(lehramt == "Nein"){
+  if(lehramt == FALSE){
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
@@ -645,7 +675,7 @@ studienzahl_verlauf <- function(df,r) {
     dplyr::mutate(wert = dplyr::lead(wert)/wert) %>% dplyr::select(wert) %>% na.omit()
 
 
-  if (ost_west == "Nein") {
+  if (ost_west == FALSE) {
 
     values <- values %>% dplyr::filter(region %in% states)
 

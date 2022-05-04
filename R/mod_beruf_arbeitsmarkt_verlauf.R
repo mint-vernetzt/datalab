@@ -32,21 +32,25 @@ mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
       inputId = ns("anforderungsniveau_arbeitsmarkt_verlauf"),
       choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte")
     ),
-    p("Wähle ob MINT oder alle anderen Studiefächen dargestellt werden sollen:"),
+    p("Wähle ob MINT oder alle anderen Fachbereiche dargestellt werden sollen:"),
     shinyWidgets::pickerInput(
       inputId = ns("topic_arbeitsmarkt_verlauf"),
       choices = c("MINT", "andere Berufszweige"),
       selected = "MINT"
     ),
-    p("Sollen die Bundesländern auf Ost und West aggregiert werden?"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("ost_west"),
-      choices = c("Ja", "Nein"),
-      selected = "Nein"
+    p("Sollen die Bundesländer in Ost und West zusammengefasst werden?"),
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("ost_west"), label = "Nein", inline = TRUE),
+      tags$span("Ja")
     ),
-    conditionalPanel(condition = "input.ost_west == 'Nein'",
+    # shinyWidgets::radioGroupButtons(
+    #   inputId = ns("ost_west"),
+    #   choices = c("Ja", "Nein"),
+    #   selected = "Nein"
+    # ),
+    conditionalPanel(condition = "input.ost_west == false",
                      ns = ns,
-    p("Wähle ein oder mehrer Bundesländer:"),
+    p("Wähle ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_arbeitsmarkt_verlauf"),
       choices = c("Berlin",
@@ -64,10 +68,12 @@ mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"),
       multiple = TRUE,
-      options = list(`actions-box` = TRUE),
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Keins auswählen",
+                     `select-all-text` = "Alle auswählen"),
       selected = c("Hessen", "Hamburg")
     )),
-    conditionalPanel(condition = "input.ost_west == 'Ja'",
+    conditionalPanel(condition = "input.ost_west != false",
                      ns = ns)
   )
 }

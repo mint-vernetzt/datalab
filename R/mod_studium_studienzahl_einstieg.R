@@ -35,15 +35,23 @@ mod_studium_studienzahl_einstieg_ui <- function(id){
         selected = "Gesamt"
       ),
     p("Soll der Anteil von Lehramt angezeigt werden?"),
-      shinyWidgets::materialSwitch(
-        inputId = ns("nurLehramt_studierende_einstieg"),
-        label = "Nein"
-      ),
-    p("Absolut oder Relativ?"),
-    shinyWidgets::materialSwitch(
-      inputId = ns("switch_rel_abs"),
-      label = "Relativ"
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_einstieg"), label = "Nein", inline = TRUE),
+      tags$span("Ja")
+    ),
+      # shinyWidgets::materialSwitch(
+      #   inputId = ns("nurLehramt_studierende_einstieg"),
+      #   label = "Nein"
+      # ),
+    p("Relativ oder Absolut?"),
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("switch_rel_abs"), label = "Relativ", inline = TRUE),
+      tags$span("Absolut")
     )
+    # shinyWidgets::materialSwitch(
+    #   inputId = ns("switch_rel_abs"),
+    #   label = "Relativ"
+    # )
   )
 }
 
