@@ -18,10 +18,12 @@ mod_ausbildung_vertraege_ui <- function(id){
           mod_ausbildung_vertraege_multiple_ui("mod_ausbildung_vertraege_multiple_ui_1")),
         shiny::mainPanel(
           tabsetPanel(type = "tabs",
-                      tabPanel("Anteil", plotOutput(ns("plot_waffle"))),
-                      tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
-                      tabPanel("Ranking", plotOutput(ns("plot_ranking"))),
-                      tabPanel("Map", highcharter::highchartOutput(ns("plot_map_vertraege"))))
+                      tabPanel("Anteil", br(), plotOutput(ns("plot_waffle"))),
+                      tabPanel("Absolut", br(), plotOutput(ns("plot_absolut"))),
+                      tabPanel("Ranking", br(), plotOutput(ns("plot_ranking"))),
+                      tabPanel("Karte", br(), highcharter::highchartOutput(ns("plot_map_vertraege"))),
+                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
+                                                style = "font-size: 75%; width: 75%")))
 
         )
       )
@@ -32,7 +34,12 @@ mod_ausbildung_vertraege_ui <- function(id){
         width = 12,
         shiny::sidebarPanel(
           mod_ausbildung_vertraege_verlauf_ui("mod_ausbildung_vertraege_verlauf_ui_1")),
-        shiny::mainPanel(plotOutput(ns("plot_verlauf")))
+        shiny::mainPanel(
+          tabsetPanel(type = "tabs",
+                      tabPanel("Ranking", br(), plotOutput(ns("plot_verlauf"))),
+                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
+                                                style = "font-size: 75%; width: 75%"))
+                      ))
       )
     )
   )
@@ -63,6 +70,14 @@ mod_ausbildung_vertraege_server <- function(id, data_ausbildungsvertraege, r){
 
     output$plot_verlauf <- renderPlot({
       vertraege_verlauf(data_ausbildungsvertraege, r)
+    })
+
+    output$data_table_mix <- DT::renderDT({
+      data_mix_vertraege(data_ausbildungsvertraege, r)
+    })
+
+    output$data_table_verlauf <- DT::renderDT({
+      data_verlauf_vertraege(data_ausbildungsvertraege, r)
     })
 
   })

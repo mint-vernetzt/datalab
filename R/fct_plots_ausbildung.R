@@ -74,8 +74,8 @@ ausbildungsvertraege_waffle <- function(df, r) {
                             legend="bottom")
 
   text <- c(
-    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteil von Frauen und Männern im Bereich ", ausbildung_bereich,
-           " für das Jahr ",timerange))
+    paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Anteil von Frauen und Männern im Bereich ", ausbildung_bereich,
+           " in ",timerange))
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
 
@@ -120,8 +120,8 @@ ausbildungsvertraege_absolut <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::xlab("") + ggplot2::ylab("Anzahl") +
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
-    ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
-                                 "Neue Auszubildende im Bereich ", ausbildung_bereich," für das Jahr ", timerange,
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
+                                 "Neue Auszubildende im Bereich ", ausbildung_bereich," in ", timerange,
                                  "<br><br><br>"),
                   fill = "")
 
@@ -179,21 +179,53 @@ vertraege_map <- function(df,r) {
     )
   ) %>%
     highcharter::hc_title(
-      text = paste0("Anteil der Frauen im Bereich", ausbildung_bereich ," für das Jahr ", timerange),
+      text = paste0("Anteil der Frauen im Bereich", ausbildung_bereich ," in ", timerange),
       margin = 45,
       align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "serif")
+      style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")
     ) %>%
     highcharter::hc_caption(
       text = "Quelle:",  style = list(fontSize = "12px")
     ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "serif")
-    )
+    ) %>% highcharter::hc_size(600, 440) %>%
+    highcharter::hc_legend(align = "right", layout = "vertical")
+
 
 
 
 }
+
+#' A function to return a filtered dataset
+#'
+#' @description A function to create a dataset based on filter
+#'
+#' @return The return value is a dataframe
+#' @param df The dataframe "BA002" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+data_mix_vertraege <- function(df,r) {
+
+
+  # load UI inputs from reactive value
+  ausbildung_bereich <- r$indikator_ausbildungsvertraege
+
+  timerange <- r$date_ausbildungsvertraege
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(fachbereich == ausbildung_bereich)
+
+
+  colnames(df) <- c("Ebene", "Fachbereich", "Region", "Jahr", "Wert", "Geschlecht")
+
+  return(df)
+
+}
+
 
 
 #' A function to create a lollipop plot
@@ -229,7 +261,7 @@ vertraege_ranking <- function(df, r) {
     ggplot2::geom_point(size = 2, color = "#b16fab") +
     ggplot2::geom_text(nudge_x = 7) +
     ggplot2::theme_classic() +
-    ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
                                  "Anteil von Frauen an neuen Ausbildungsverträgen für alle MINT-Bereiche ", timerange,
                                  "<br><br><br>"),
                   y = "", x = "Anteil") +
@@ -272,7 +304,7 @@ vertraege_verlauf <- function(df, r) {
 
   df$proportion <- df$proportion * 100
 
-  if (ost_west == "Ja"){
+  if (ost_west != FALSE){
 
     df <- df %>% dplyr::filter((region == "Osten" | region == "Westen"))
 
@@ -291,7 +323,7 @@ vertraege_verlauf <- function(df, r) {
     ggplot2::geom_point(size = 2, color = "#b16fab") +
     ggplot2::geom_text(nudge_x = 7) +
     ggplot2::theme_classic() +
-    ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
                                  "2017",
                                  "<br><br><br>"),
                   y = "", x = "Anteil") +
@@ -307,7 +339,7 @@ vertraege_verlauf <- function(df, r) {
     ggplot2::geom_point(size = 2, color = "#b16fab") +
     ggplot2::geom_text(nudge_x = 7) +
     ggplot2::theme_classic() +
-    ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
                                  "2020",
                                  "<br><br><br>"),
                   y = "", x = "Anteil") +
@@ -318,7 +350,7 @@ vertraege_verlauf <- function(df, r) {
 
 
   text <- c(
-    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteil von Frauen an neuen Ausbildungsverträgen für den Bereich ",
+    paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Anteil von Frauen an neuen Ausbildungsverträgen für den Bereich <br> ",
            ausbildung_bereich))
 
 
@@ -327,5 +359,59 @@ vertraege_verlauf <- function(df, r) {
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
 }
+
+#' A function to return a filtered dataset
+#'
+#' @description A function to create a dataset based on filter
+#'
+#' @return The return value is a dataframe
+#' @param df The dataframe "BA002" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+data_verlauf_vertraege <- function(df,r) {
+
+
+  # load UI inputs from reactive value
+  ausbildung_bereich <- r$indikator_ausbildung_verlauf
+
+  states <- r$states_ausbildung_verlauf
+
+  ost_west <- r$ost_west
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
+
+  df <- df %>% dplyr::filter(fachbereich == ausbildung_bereich)
+
+  df <- df %>% dplyr::group_by(region, jahr, ebene, fachbereich) %>%
+    dplyr::summarize(proportion = dplyr::lead(wert)/wert) %>% na.omit()
+
+  df$proportion <- paste0(round(df$proportion * 100),"%")
+
+  df$anzeige_geschlecht <- "Frauen"
+
+  if (ost_west != FALSE){
+
+    df <- df %>% dplyr::filter((region == "Osten" | region == "Westen"))
+
+  }else {
+
+    df <- df %>% dplyr::filter((region != "Osten" | region != "Westen"))
+
+    df <- df %>% dplyr::filter(region %in% states)
+
+  }
+
+
+  colnames(df) <- c("Region", "Jahr", "Ebene", "Fachbereich", "Wert", "Geschlecht")
+
+  return(df)
+
+}
+
+
 
 

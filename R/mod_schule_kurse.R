@@ -36,11 +36,11 @@ mod_schule_kurse_ui <- function(id){
           mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
         shiny::mainPanel(
           tabsetPanel(type = "tabs",
-                      tabPanel("Anteil", plotOutput(ns("plot_waffle"))),
-                      tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
-                      tabPanel("Ranking 1", plotOutput(ns("plot_ranking_1"))),
-                      tabPanel("Ranking 2", plotOutput(ns("plot_ranking_2"))),
-                      tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_kurse"))),
+                      tabPanel("Anteil", br(), plotOutput(ns("plot_waffle"))),
+                      tabPanel("Absolut", br(), plotOutput(ns("plot_absolut"))),
+                      tabPanel("Ranking 1", br(), plotOutput(ns("plot_ranking_1"))),
+                      tabPanel("Ranking 2", br(), plotOutput(ns("plot_ranking_2"))),
+                      tabPanel("Karte", br(), highcharter::highchartOutput(ns("plot_map_kurse"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
                                                 style = "font-size: 75%; width: 75%"))),
           br(),br(),
@@ -54,7 +54,7 @@ mod_schule_kurse_ui <- function(id){
           mod_schule_kurse_verlauf_ui("mod_schule_kurse_verlauf_ui_1")),
         shiny::mainPanel(
           tabsetPanel(type = "tabs",
-                      tabPanel("Verlauf", highcharter::highchartOutput(ns("plot_verlauf_kurse"))),
+                      tabPanel("Verlauf", br(), highcharter::highchartOutput(ns("plot_verlauf_kurse"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
                                                 style = "font-size: 75%; width: 75%")))
         )))
@@ -112,7 +112,7 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
       res <- box_einstieg_kurse(data_kurse,r)
 
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint,"%"))
+      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_female,"%"))
 
       if (r$indikator_kurse_einstieg == "Grundkurse"){
 
@@ -132,18 +132,17 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
       valueBox2(
         value, title,
         subtitle = text,
-        color = "navy",
         icon = shiny::icon("school"),
         width = 6,
         info = text_info,
-        type = "MINT"
+        type = "Frauen"
       )
     })
 
     output$valueBox_einstieg_rest <- shinydashboard::renderValueBox({
       res <- box_einstieg_kurse(data_kurse,r)
 
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_rest,"%"))
+      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_male,"%"))
 
       if (r$indikator_kurse_einstieg == "Grundkurse"){
 
@@ -156,16 +155,15 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
       }
 
 
-      text <- paste0("Durschnittlicher Anteil von allen anderen Fächern bei Frauen!")
+      text <- paste0("Durschnittlicher Anteil von MINT bei Männer!")
 
-      text_info <- paste0("Durschnittlicher Anteil von allen anderen Fächern bei Frauen in der Schule berechnet für
+      text_info <- paste0("Durschnittlicher Anteil von MINT bei Männer in der Schule berechnet für
                           den gewählten Zeitraum und abhängig von den gewählten Filter.")
 
       valueBox2(
         value, title,
         subtitle = text,
         icon = shiny::icon("school"),
-        color = "navy",
         width = 6,
         info = text_info
       )

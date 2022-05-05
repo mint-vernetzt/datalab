@@ -35,9 +35,9 @@ mod_studium_studienzahl_ui <- function(id){
                     mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
       shiny::mainPanel(
                   tabsetPanel(type = "tabs",
-                              tabPanel("Anteil", plotOutput(ns("plot_waffle"))),
-                              tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
-                              tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_studienzahl"))),
+                              tabPanel("Anteil", br(), plotOutput(ns("plot_waffle"))),
+                              tabPanel("Absolut", br(), plotOutput(ns("plot_absolut"))),
+                              tabPanel("Karte", br(), highcharter::highchartOutput(ns("plot_map_studienzahl"))),
                               tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
                                                         style = "font-size: 75%; width: 75%"))),
                   br(),br(),
@@ -50,7 +50,7 @@ mod_studium_studienzahl_ui <- function(id){
           mod_studium_studienzahl_verlauf_ui("mod_studium_studienzahl_verlauf_ui_1")),
         shiny::mainPanel(
           tabsetPanel(type = "tabs",
-                      tabPanel("Verlauf", highcharter::highchartOutput(ns("plot_verlauf_studienzahl"))),
+                      tabPanel("Verlauf", br(), highcharter::highchartOutput(ns("plot_verlauf_studienzahl"))),
           tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
                                     style = "font-size: 75%; width: 75%")))
 
@@ -121,7 +121,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
       res <- box_einstieg_studium(data_studierende,r)
 
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint,"%"))
+      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_female,"%"))
 
       if (r$indikator_studierende_einstieg == "Studierende"){
 
@@ -141,11 +141,10 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       valueBox2(
         value, title, #icon = icon("graduation-cap"),
         subtitle = text,
-        color = "navy",
         width = 6,
         icon = shiny::icon("university"),
         info = text_info,
-        type = "MINT"
+        type = "Frauen"
 
       )
     })
@@ -153,7 +152,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
     output$valueBox_einstieg_rest <- shinydashboard::renderValueBox({
       res <- box_einstieg_studium(data_studierende,r)
 
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_rest,"%"))
+      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_male,"%"))
 
       if (r$indikator_studierende_einstieg == "Studierende"){
 
@@ -166,15 +165,14 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       }
 
 
-      text <- paste0("Durschnittlicher von allen anderen bei studierenden Frauen!")
+      text <- paste0("Durschnittlicher von MINT bei studierenden Männer!")
 
-      text_info <- paste0("Durschnittlicher von allen anderen bei studierenden Frauen berechnet für
+      text_info <- paste0("Durschnittlicher von MINT bei studierenden Männer berechnet für
                           den gewählten Zeitraum und abhängig von den gewählten Filter")
 
       valueBox2(
         value, title, #icon = icon("graduation-cap"),
         subtitle = text,
-        color = "navy",
         icon = shiny::icon("university"),
         width = 6,
         info = text_info

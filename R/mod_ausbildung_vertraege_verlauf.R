@@ -19,15 +19,19 @@ mod_ausbildung_vertraege_verlauf_ui <- function(id){
       choices = unique(data_naa$fachbereich),
       selected = "Informatik-Fachkräfte"
     ),
-    p("Sollen die Bundesländern auf Ost und West aggregiert werden?"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("ost_west"),
-      choices = c("Ja", "Nein"),
-      selected = "Nein"
+    p("Sollen die Bundesländer auf Ost und West zusammengefasst werden?"),
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("ost_west"), label = "Nein", inline = TRUE),
+      tags$span("Ja")
     ),
-    conditionalPanel(condition = "input.ost_west == 'Nein'",
+    # shinyWidgets::radioGroupButtons(
+    #   inputId = ns("ost_west"),
+    #   choices = c("Ja", "Nein"),
+    #   selected = "Nein"
+    # ),
+    conditionalPanel(condition = "input.ost_west == false",
                      ns = ns,
-                     p("Wähle ein oder mehrer Bundesländer:"),
+                     p("Wähle ein oder mehrere Bundesländer:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("states_ausbildung_verlauf"),
                        choices = c("Berlin",
@@ -45,10 +49,12 @@ mod_ausbildung_vertraege_verlauf_ui <- function(id){
                                    "Schleswig-Holstein",
                                    "Thüringen"),
                        multiple = TRUE,
-                       options = list(`actions-box` = TRUE),
+                       options = list(`actions-box` = TRUE,
+                                      `deselect-all-text` = "Keins auswählen",
+                                      `select-all-text` = "Alle auswählen"),
                        selected = c("Hessen", "Hamburg")
                      )),
-    conditionalPanel(condition = "input.ost_west == 'Ja'",
+    conditionalPanel(condition = "input.ost_west != false",
                      ns = ns)
   )
 }

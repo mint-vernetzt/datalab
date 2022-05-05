@@ -35,13 +35,13 @@ mod_home_start_ui <- function(id){
         title = "Lorem Ipsum",
         width = 12,
         shiny::column(12,
-                      mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1")),
+                      mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),br(),br()),
 
         column(5,
                plotOutput(ns("plot_mint_rest_einstieg_1")
-               ), br(), br(), hr()),
+               ), br(), br()),
         column(5, offset = 2,
-               plotOutput(ns("plot_mint_rest_einstieg_2")), br(), br(), hr()),
+               plotOutput(ns("plot_mint_rest_einstieg_2")), br(), br()),
 
       # column(5,
       #        plotOutput(ns("plot_mint_rest_einstieg_3")

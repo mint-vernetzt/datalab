@@ -32,7 +32,7 @@ mod_beruf_arbeitsmarkt_einstieg_ui <- function(id){
       inputId = ns("geschlecht_arbeitsmarkt_einstieg"),
       choices = c("Gesamt", "Frauen", "Männer"),
       multiple = TRUE,
-      selected = "Gesamt"
+      selected = c("Frauen", "Männer")
     ),
     p("Relativ oder Absolut?"),
     tags$div(

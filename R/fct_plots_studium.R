@@ -49,13 +49,13 @@ studienzahl_einstieg_bar <- function(df,r) {
   options(scipen=999)
 
 
-  if (status_studierende == "Grundkurse"){
+  if (status_studierende == "Studierende"){
 
-    title_help <- "der Studierenden"
+    title_help <- " von Studierenden"
 
   }else{
 
-    title_help <- "der Studienanfängern"
+    title_help <- " von Studienanfängern"
 
   }
 
@@ -108,10 +108,12 @@ studienzahl_einstieg_bar <- function(df,r) {
                  scales = "free_x",
                  space = "free_x",
                  switch = "x")  +
-      ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Studienfächer", title_help),
+      ggplot2::labs(caption = "Quelle:", title = paste0("<span style='font-size:20px; color:black; font-family: serif'>",
+        "Anteile an MINT und allen anderen Studienfächer", title_help),
                     fill = "") +
       ggplot2::theme(strip.placement = "outside",
-                     plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+                     plot.title = ggtext::element_markdown(hjust = 0.5),
+                     #plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
                      panel.grid.major.x = ggplot2::element_blank(),
                      panel.grid.minor.x = ggplot2::element_blank(),
                      panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
@@ -133,14 +135,28 @@ studienzahl_einstieg_bar <- function(df,r) {
 
     p <- p + ggplot2::geom_bar(position="stack", stat="identity")
 
-    plotly::ggplotly(p, tooltip = "Wert") %>% plotly::layout(font=t)
+    plotly::ggplotly(p, tooltip = "Wert") %>% plotly::config(displayModeBar = FALSE,
+                                                             displaylogo = FALSE
+                                                             #editable = FALSE,
+                                                             #showTips = FALSE,
+                                                             #edits = FALSE,
+                                                             #scrollZoom = FALSE,
+    ) %>%
+      plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
    }else{
 
      p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
                 ggplot2::scale_y_continuous(labels = scales::percent_format())
 
-     plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::layout(font=t)
+     plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::config(displayModeBar = FALSE,
+                                                                 displaylogo = FALSE
+                                                                 #editable = FALSE,
+                                                                 #showTips = FALSE,
+                                                                 #edits = FALSE,
+                                                                 #scrollZoom = FALSE,
+     ) %>%
+       plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
    }
 
@@ -171,14 +187,16 @@ studienzahl_einstieg_bar <- function(df,r) {
     names(df)[3] <- "Wert"
 
     p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
-      ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Studienfächer", title_help),
+      ggplot2::labs(caption = "Quelle:", title = paste0("<span style='font-size:20px; color:black; font-family: serif'>",
+        "Anteile an MINT und allen anderen Studienfächer", title_help),
                     fill = "") +
       ggplot2::facet_grid(~jahr,
                           scales = "free_x",
                           space = "free_x",
                           switch = "x")  +
       ggplot2::theme(strip.placement = "outside",
-                     plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+                     plot.title = ggtext::element_markdown(hjust = 0.5),
+                    # plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
                      panel.grid.major.x = ggplot2::element_blank(),
                      panel.grid.minor.x = ggplot2::element_blank(),
                      panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
@@ -194,13 +212,26 @@ studienzahl_einstieg_bar <- function(df,r) {
     if(isTRUE(switch_absolut)){
 
       p <- p + ggplot2::geom_bar(position="stack", stat="identity")
-      plotly::ggplotly(p, tooltip = "Wert") %>% plotly::layout(font=t)
-
+      plotly::ggplotly(p, tooltip = "Wert") %>% plotly::config(displayModeBar = FALSE,
+                                                                     displaylogo = FALSE
+                                                                     #editable = FALSE,
+                                                                     #showTips = FALSE,
+                                                                     #edits = FALSE,
+                                                                     #scrollZoom = FALSE,
+                                                               ) %>%
+        plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
     }else{
 
      p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
         ggplot2::scale_y_continuous(labels = scales::percent_format())
-      plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::layout(font=t)
+      plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::config(displayModeBar = FALSE,
+                                                                  displaylogo = FALSE
+                                                                  #editable = FALSE,
+                                                                  #showTips = FALSE,
+                                                                  #edits = FALSE,
+                                                                  #scrollZoom = FALSE,
+      ) %>%
+        plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
     }
 
@@ -365,10 +396,13 @@ studienzahl_waffle <- function(df,r) {
 
   if(lehramt == FALSE){
 
+    title_help_sub_sub <- ""
 
     hochschulform <- hochschulform_select_1
 
   } else {
+
+    title_help_sub_sub <- " (nur Lehramt)"
 
     hochschulform <- hochschulform_select_2
 
@@ -391,11 +425,11 @@ studienzahl_waffle <- function(df,r) {
 
   if (status_studierende == "Studierende"){
 
-    title_help <- paste0("für Studierende ", title_help_sub)
+    title_help <- paste0("bei Studierenden ", title_help_sub, title_help_sub_sub)
 
   }else{
 
-    title_help <- paste0("für Studienanfänger ", title_help_sub)
+    title_help <- paste0("bei Studienanfängern ", title_help_sub,  title_help_sub_sub)
 
   }
 
@@ -403,8 +437,8 @@ studienzahl_waffle <- function(df,r) {
                             legend="bottom")
 
   text <- c(
-    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteil von Frauen und Männern an MINT und allen andere Studiengängen <br> ", title_help,
-           " für das Jahr ",timerange))
+    paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Anteil von Frauen und Männern an MINT und allen andere Studiengängen <br> ", title_help,
+           " in ",timerange))
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
 }
@@ -461,7 +495,45 @@ studienzahl_absolut <- function(df,r) {
   # calculate the share of males
   df <- calc_share_male(df, type = "box_2")
 
+  if(lehramt == FALSE){
 
+
+    title_help_sub_sub <- ""
+
+    hochschulform <- hochschulform_select_1
+
+  } else {
+
+    title_help_sub_sub <- " (nur Lehramt)"
+
+    hochschulform <- hochschulform_select_2
+
+  }
+
+  if (hochschulform == "Uni"){
+
+    title_help_sub <- "an einer Uni"
+
+  }else if (hochschulform == "FH"){
+
+    title_help_sub <- "an einer FH"
+
+  } else {
+
+    title_help_sub <- "insgesamt"
+
+  }
+
+
+  if (status_studierende == "Studierende"){
+
+    title_help <- paste0("von Studierenden ", title_help_sub, title_help_sub_sub)
+
+  }else{
+
+    title_help <- paste0("von Studienanfängern ", title_help_sub, title_help_sub_sub)
+
+  }
   # plot
   ggplot2::ggplot(df, ggplot2::aes(x=reorder(fachbereich, wert), y=wert, fill = anzeige_geschlecht)) +
     ggplot2::geom_bar(stat="identity", position = "dodge") +
@@ -475,9 +547,10 @@ studienzahl_absolut <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::ylab("Anzahl") + ggplot2::xlab("") +
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
-    ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
-                               "Student*innen in MINT und allen anderen Fächern für das Jahr ", timerange,
-                               "<br><br><br>"),
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
+                                 "Frauen und Männern in MINT und allen andere Studiengängen <br> ", title_help,
+                                 " in ",timerange,
+                                 "<br><br>"),
                 fill = "")
 
 
@@ -543,13 +616,42 @@ studienzahl_map <- function(df,r) {
   values$region <- df[df$anzeige_geschlecht == "Frauen", "region"][[1]]
 
 
+  if(lehramt == FALSE){
+
+
+    title_help_sub_sub <- ""
+
+    hochschulform <- hochschulform_select_1
+
+  } else {
+
+    title_help_sub_sub <- " (nur Lehramt)"
+
+    hochschulform <- hochschulform_select_2
+
+  }
+
+  if (hochschulform == "Uni"){
+
+    title_help_sub <- "an einer Uni"
+
+  }else if (hochschulform == "FH"){
+
+    title_help_sub <- "an einer FH"
+
+  } else {
+
+    title_help_sub <- "insgesamt"
+
+  }
+
   if (status_studierende == "Studierende"){
 
-    title_help <- "weiblichen Student*innen"
+    title_help <- paste0("Studentinnen ", title_help_sub, title_help_sub_sub)
 
   }else{
 
-    title_help <- "weiblichen Studienanfänger*innen"
+    title_help <- paste0("Studienanfängerinnen ", title_help_sub, title_help_sub_sub)
 
   }
 
@@ -569,10 +671,10 @@ studienzahl_map <- function(df,r) {
     )
   ) %>%
     highcharter::hc_title(
-      text = paste0("Anteil der ",title_help ," an MINT für das Jahr ", timerange),
+      text = paste0("Anteil der ",title_help ," an MINT in ", timerange),
       margin = 10,
       align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "serif")
+      style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")
     ) %>%
     highcharter::hc_caption(
       text = "Für die Bundesländer Bayern und Baden-Württemberg sind leider keine Daten <br> über den Anteil von Frauen
@@ -693,12 +795,18 @@ studienzahl_verlauf <- function(df,r) {
 
     df <- df %>% dplyr::filter(hochschulform == "insgesamt")
 
+    title_help_sub_sub <- " insgesamt"
+
   } else {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Ja")
 
     df <- df %>% dplyr::filter(hochschulform == "Uni")
+
+    title_help_sub_sub <- " an einer Uni (nur Lehramt)"
   }
+
+
 
 
   if (subject_aggregated == "aggregiert"){
@@ -708,11 +816,11 @@ studienzahl_verlauf <- function(df,r) {
 
     if (topic == "MINT"){
 
-      title_help <- "MINT"
+      title_help_sub <- "an MINT"
 
     } else {
 
-      title_help <- "anderen Studienfächern"
+      title_help_sub <- "an anderen Studienfächern"
 
     }
 
@@ -721,8 +829,22 @@ studienzahl_verlauf <- function(df,r) {
 
     df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
 
-    title_help <- dictionary_title_studium[[subjects_select]]
+    title_help_sub <- dictionary_title_studium[[subjects_select]]
   }
+
+
+  if (status_studierende == "Studierende"){
+
+    title_help <- paste0("weiblichen Student*innen ", title_help_sub, title_help_sub_sub)
+
+  }else{
+
+    title_help <- paste0("weiblichen Studienanfänger*innen ", title_help_sub, title_help_sub_sub)
+
+  }
+
+
+
 
   # order
   df <- df[with(df, order(region, fachbereich, jahr, decreasing = TRUE)), ]
@@ -765,7 +887,7 @@ studienzahl_verlauf <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "serif")) %>%
     highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen ", title_help ," im Verlauf"),
+    highcharter::hc_title(text = paste0("Anteil an ", title_help ," im Verlauf"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")) %>%
@@ -1483,7 +1605,7 @@ comparer_plot <- function(data, r, r_abschluss,
     ggplot2::xlim(0,1) +
     ggplot2::theme_minimal() +
     ggplot2::labs(title = paste0("Verhältnis von Frauen und Männern im akademischen Bereich für den Bereich MINT
-                                 für das Jahr ", timestamp),
+                                 in ", timestamp),
                   caption = paste0("Quelle: ", quelle),
                   color='Geschlecht')
 

@@ -36,9 +36,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           mod_beruf_arbeitsmarkt_multiple_ui("mod_beruf_arbeitsmarkt_multiple_ui_1")),
         shiny::mainPanel(
           tabsetPanel(type = "tabs",
-                      tabPanel("Anteil", plotOutput(ns("plot_waffle"))),
-                      tabPanel("Absolut", plotOutput(ns("plot_absolut"))),
-                      tabPanel("Karte", highcharter::highchartOutput(ns("plot_map_arbeitsmarkt"))),
+                      tabPanel("Anteil", br(), plotOutput(ns("plot_waffle"))),
+                      tabPanel("Absolut", br(), plotOutput(ns("plot_absolut"))),
+                      tabPanel("Karte", br(), highcharter::highchartOutput(ns("plot_map_arbeitsmarkt"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
                                                 style = "font-size: 75%; width: 75%"))),
           br(),br(),
@@ -52,7 +52,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           mod_beruf_arbeitsmarkt_verlauf_ui("mod_beruf_arbeitsmarkt_verlauf_ui_1")),
         shiny::mainPanel(
           tabsetPanel(type = "tabs",
-                      tabPanel("Verlauf",highcharter::highchartOutput(ns("plot_verlauf_arbeitsmarkt"))),
+                      tabPanel("Verlauf",br(), highcharter::highchartOutput(ns("plot_verlauf_arbeitsmarkt"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
                                                 style = "font-size: 75%; width: 75%"))
                       ))))
@@ -103,7 +103,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
       res <- box_einstieg_beruf(data_arbeitsmarkt,r)
 
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint,"%"))
+      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_female,"%"))
 
       if (r$indikator_arbeitsmarkt_einstieg == "Auszubildende"){
 
@@ -123,18 +123,17 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
       valueBox2(
         value, title, #icon = icon("graduation-cap"),
         subtitle = text,
-        color = "navy",
         width = 6,
         icon = shiny::icon("building"),
         info = text_info,
-        type = "MINT"
+        type = "Frauen"
       )
     })
 
     output$valueBox_einstieg_rest <- shinydashboard::renderValueBox({
       res <- box_einstieg_beruf(data_arbeitsmarkt,r)
 
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_rest,"%"))
+      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_male,"%"))
 
       if (r$indikator_arbeitsmarkt_einstieg == "Auszubildende"){
 
@@ -147,15 +146,14 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
       }
 
 
-      text <- paste0("Durschnittlicher Anteil von allen anderen Berufszweigen bei berufstätigen Frauen!")
+      text <- paste0("Durschnittlicher Anteil von MINT bei berufstätigen Männern!")
 
-      text_info <- paste0("Durschnittlicher Anteil von allen anderen Berufszweigen bei berufstätigen Frauen berechnet für
+      text_info <- paste0("Durschnittlicher Anteil von MINT bei berufstätigen Männern berechnet für
                           den gewählten Zeitraum und abhängig von den gewählten Filter.")
 
       valueBox2(
         value, title, #icon = icon("graduation-cap"),
         subtitle = text,
-        color = "navy",
         icon = shiny::icon("building"),
         width = 6,
         info = text_info

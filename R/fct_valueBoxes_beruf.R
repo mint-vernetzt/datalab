@@ -29,6 +29,25 @@ box_einstieg_beruf <- function(df,r){
 
   df[df$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige"
 
+  # calculate the share of males
+  help_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt") %>%
+    dplyr::group_by(jahr, fachbereich)
+
+  help_weiblich <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen") %>%
+    dplyr::group_by(jahr, fachbereich)
+
+  wert_männlich <- help_gesamt$wert - help_weiblich$wert
+
+  help_männlich <- help_weiblich
+
+  help_männlich$wert <- wert_männlich
+
+  help_männlich$anzeige_geschlecht <- "Männer"
+
+  df <- rbind(df, help_männlich)
+
+  df <- df[with(df, order(anzeige_geschlecht, jahr, decreasing = TRUE)), ]
+
   # calculate the mean
   df <- df %>%
     dplyr::group_by(anzeige_geschlecht, fachbereich) %>%
@@ -43,14 +62,10 @@ box_einstieg_beruf <- function(df,r){
 
 
   # calculate the share of females on MINT
-  anteil_mint <- round(df[(df$anzeige_geschlecht == "Frauen" & df$fachbereich == "MINT"), "proportion"]*100)
+  anteil_mint_female <- round(df[(df$anzeige_geschlecht == "Frauen" & df$fachbereich == "MINT"), "proportion"]*100)
 
   # calculate the share of females on the remaining subjects
-  anteil_rest <- round(df[(df$anzeige_geschlecht == "Frauen" & df$fachbereich == "andere Berufszweige"), "proportion"]*100)
+  anteil_mint_male <- round(df[(df$anzeige_geschlecht == "Männer" & df$fachbereich == "MINT"), "proportion"]*100)
 
-  vec_anteile <- c(anteil_mint$proportion, anteil_rest$proportion)
-
-  vec_anteile <- round_preserve_sum(round(vec_anteile),0)
-
-  return(list(anteil_mint = vec_anteile[1], anteil_rest = vec_anteile[2]))
+  return(list(anteil_mint_female = anteil_mint_female$proportion, anteil_mint_male = anteil_mint_male$proportion))
 }

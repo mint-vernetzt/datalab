@@ -31,7 +31,7 @@ mod_schule_kurse_einstieg_ui <- function(id){
       inputId = ns("geschlecht_kurse_einstieg"),
       choices = c("Gesamt", "Frauen", "Männer"),
       multiple = TRUE,
-      selected = "Gesamt"
+      selected = c("Frauen", "Männer")
     ),
     p("Relativ oder Absolut?"),
     tags$div(

@@ -32,7 +32,7 @@ mod_studium_studienzahl_einstieg_ui <- function(id){
         inputId = ns("geschlecht_studierende_einstieg"),
         choices = c("Gesamt", "Frauen", "Männer"),
         multiple = TRUE,
-        selected = "Gesamt"
+        selected = c("Frauen", "Männer")
       ),
     p("Soll der Anteil von Lehramt angezeigt werden?"),
     tags$div(

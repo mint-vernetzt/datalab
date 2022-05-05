@@ -91,14 +91,16 @@ arbeitsmarkt_einstieg_bar <- function(df,r) {
   names(df)[4] <- "Wert"
 
   p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
-    ggplot2::labs(caption = "Quelle:", title = paste0("Anteile an MINT und allen anderen Berufszweigen", title_help),
+    ggplot2::labs(caption = "Quelle:", title = paste0("<span style='font-size:20px; color:black; font-family: serif'>",
+      "Anteil an MINT und allen anderen Berufszweigen ", title_help),
                   fill = "") +
     ggplot2::facet_grid(~jahr,
                         scales = "free_x",
                         space = "free_x",
                         switch = "x")  +
     ggplot2::theme(strip.placement = "outside",
-                   plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+                   plot.title = ggtext::element_markdown(hjust = 0.5),
+                   #plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
                    panel.grid.major.x = ggplot2::element_blank(),
                    panel.grid.minor.x = ggplot2::element_blank(),
                    panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
@@ -116,11 +118,12 @@ arbeitsmarkt_einstieg_bar <- function(df,r) {
     p <- p + ggplot2::geom_bar(position="stack", stat="identity")
     plotly::ggplotly(p, tooltip = "Wert") %>%
       plotly::config(displayModeBar = FALSE,
-                     displaylogo = FALSE,
-                     editable = FALSE,
-                     showTips = FALSE,
-                     edits = FALSE,
-                     scrollZoom = FALSE, doubleClick = FALSE) %>%
+                     displaylogo = FALSE
+                     #editable = FALSE,
+                     #showTips = FALSE,
+                     #edits = FALSE,
+                     #scrollZoom = FALSE,
+                     ) %>%
       plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
   }else{
@@ -130,11 +133,12 @@ arbeitsmarkt_einstieg_bar <- function(df,r) {
 
     plotly::ggplotly(p, tooltip = "tooltip") %>%
       plotly::config(displayModeBar = FALSE,
-                     displaylogo = FALSE,
-                     editable = FALSE,
-                     showTips = FALSE,
-                     edits = FALSE,
-                     scrollZoom = FALSE, doubleClick = FALSE) %>%
+                     displaylogo = FALSE
+                     #editable = FALSE,
+                     #showTips = FALSE,
+                     #edits = FALSE,
+                     #scrollZoom = FALSE,
+                     ) %>%
       plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
   }
@@ -291,6 +295,19 @@ arbeitnehmer_waffle <- function(df,r) {
                    text = ggplot2::element_text(family="serif", size = 14),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
+
+
+  if (anforderung == "Gesamt"){
+
+    title_help_sub <- " insgesamt"
+
+  } else {
+
+    title_help_sub <- paste0(" (",anforderung,")")
+
+  }
+
+
   if (status_arbeitnehmer == "Auszubildende"){
 
     title_help <- "in Ausbildung"
@@ -304,7 +321,7 @@ arbeitnehmer_waffle <- function(df,r) {
   plot <- ggpubr::ggarrange(waffle_mint, NULL ,waffle_rest, widths = c(1, -0.15, 1), nrow=1, common.legend = T,
                             legend="bottom")
   text <- c(
-    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteile von Frauen und Männer ", title_help," an MINT und allen anderen Berufszweigen <br> für das Jahr ", timerange))
+    paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Anteil von Frauen und Männer ", title_help, title_help_sub," an MINT und <br> allen anderen Berufszweigen in ", timerange))
 
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
@@ -354,6 +371,27 @@ arbeitsmarkt_absolut <- function(df,r) {
 
   df[df$anzeige_geschlecht == "Gesamt", "anzeige_geschlecht"] <- "Männer"
 
+
+  if (anforderung == "Gesamt"){
+
+    title_help_sub <- " insgesamt"
+
+  } else {
+
+    title_help_sub <- paste0(" (",anforderung,")")
+
+  }
+
+
+  if (status_arbeitnehmer == "Auszubildende"){
+
+    title_help <- "in Ausbildung"
+
+  }else{
+
+    title_help <- "in Beschäftigung"
+
+  }
   # plot
   ggplot2::ggplot(df, ggplot2::aes(x=reorder(fachbereich, wert), y=wert, fill = anzeige_geschlecht)) +
     ggplot2::geom_bar(stat="identity", position = "dodge") +
@@ -367,8 +405,8 @@ arbeitsmarkt_absolut <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::ylab("Anzahl") + ggplot2::xlab("") +
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
-    ggplot2::labs(title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
-                               "Arbeitnehmer*innen in MINT und allen anderen Fächern für das Jahr ", timerange,
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
+                               "Arbeitnehmer*innen ",title_help, title_help_sub," in MINT und allen anderen Berufszweigen in ", timerange,
                                "<br><br><br>"),
                 fill = "")
 
@@ -419,7 +457,18 @@ arbeitsmarkt_map <- function(df,r) {
 
   values$region <- df[df$anzeige_geschlecht == "Frauen", "region"][[1]]
 
-   if (status_arbeitnehmer == "Auszubildende"){
+  if (anforderung == "Gesamt"){
+
+    title_help_sub <- " insgesamt"
+
+  } else {
+
+    title_help_sub <- paste0(" (",anforderung,")")
+
+  }
+
+
+  if (status_arbeitnehmer == "Auszubildende"){
 
     title_help <- "in Ausbildung"
 
@@ -444,10 +493,10 @@ arbeitsmarkt_map <- function(df,r) {
     )
   ) %>%
     highcharter::hc_title(
-      text = paste0("Anteil der Frauen ", title_help ," an MINT-Berufen für das Jahr ", timerange),
+      text = paste0("Anteil von Frauen ", title_help, title_help_sub," an MINT-Berufen in ", timerange),
       margin = 10,
       align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "serif")
+      style = list(color = "black", useHTML = TRUE, font = "sans-serif", fontSize = "20px")
     ) %>%
     highcharter::hc_caption(
       text = "Quelle:", style = list(fontSize = "12px")
@@ -586,13 +635,34 @@ arbeitsmarkt_verlauf <- function(df,r) {
 
   values$wert <- values$wert * 100
 
+  if (anforderung == "Gesamt"){
+
+    title_help_sub_sub <- " insgesamt"
+
+  } else {
+
+    title_help_sub_sub <- paste0(" (",anforderung,")")
+
+  }
+
+
+  if (status_arbeitnehmer == "Auszubildende"){
+
+    title_help_sub <- " in Ausbildung"
+
+  }else{
+
+    title_help_sub <- " in Beschäftigung"
+
+  }
+
   if (topic == "MINT"){
 
-    title_help <- "MINT"
+    title_help <- paste0("MINT", title_help_sub, title_help_sub_sub)
 
   }else {
 
-    title_help <- "allen anderen Berufszweigen"
+    title_help <- paste0("allen anderen Berufszweigen", title_help_sub, title_help_sub_sub)
 
   }
 

@@ -40,24 +40,44 @@ home_einsitieg_waffle <- function(df,r, order) {
 
     if ((indikator_choice_1 == "Auszubildende" | indikator_choice_1 == "Beschäftigte")) {
 
-      title_help <- "anderen Berufszweigen"
+      title_help_sub <- "andere Berufszweige"
+
+      title_help <- paste0("anderen Berufszweigen bei<br> ", indikator_choice_1,"n")
 
     } else {
 
-      title_help <- "anderen Fächern"
+      title_help_sub <- "andere Fächer"
 
+      if ((indikator_choice_1 == "Habilitationen" | indikator_choice_1 == "Promotionen (angestrebt)")){
+
+        title_help <- paste0("anderen Fächern bei<br> ", indikator_choice_1)
+
+      }else{
+
+        title_help <- paste0("anderen Fächern bei<br> ", indikator_choice_1,"n")
+      }
     }
 
   } else {
 
     if ((indikator_choice_2 == "Auszubildende" | indikator_choice_2 == "Beschäftigte")) {
 
-      title_help <- "anderen Berufszweigen"
+      title_help_sub <- "andere Berufszweige"
+
+      title_help <- paste0("anderen Berufszweigen bei<br> ", indikator_choice_2,"n")
 
     } else {
 
-      title_help <- "anderen Fächern"
+      title_help_sub <- "andere Fächer"
 
+      if ((indikator_choice_2 == "Habilitationen" | indikator_choice_2 == "Promotionen (angestrebt)")){
+
+        title_help <- paste0("anderen Fächern bei<br> ", indikator_choice_2)
+
+      }else{
+
+        title_help <- paste0("anderen Fächern bei<br> ", indikator_choice_2,"n")
+      }
     }
   }
 
@@ -80,7 +100,7 @@ home_einsitieg_waffle <- function(df,r, order) {
   # create plot objects for waffle charts
   waffle_mint_rest <- waffle::waffle(x_mint_rest, keep = FALSE, colors = colors_mint_vernetzt$general) +
     ggplot2::labs(
-      subtitle = paste0("<span style='font-size:16.0pt;'>", x_mint_rest[1],"% <span style='color:#154194; font-size:16.0pt;'>", title_help,"</span> vs. ",
+      subtitle = paste0("<span style='font-size:16.0pt;'>", x_mint_rest[1],"% <span style='color:#154194; font-size:16.0pt;'>", title_help_sub,"</span> vs. <br>",
                         "<span style='font-size:16.0pt;'>" ,x_mint_rest[2],"% <span style='color:#b16fab; font-size:16.0pt;'>MINT</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
@@ -89,8 +109,8 @@ home_einsitieg_waffle <- function(df,r, order) {
 
   plot <- ggpubr::ggarrange(waffle_mint_rest, legend="bottom")
   text <- c(
-    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Anteil von MINT an ", title_help,
-           " <br> in ",timerange))
+    paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Anteil von MINT an ", title_help,
+           " in ",timerange))
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
 }
@@ -186,7 +206,7 @@ home_einsitieg_waffle_female <- function(df,r, order) {
 
   plot <- ggpubr::ggarrange(waffle_mint_rest, legend="bottom")
   text <- c(
-    paste0("<span style='font-size:20pt; color:black; font-family: serif'> Verhältnis zwischen MINT und  ", title_help,
+    paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Verhältnis zwischen MINT und  ", title_help,
            " <br> für Frauen in ",timerange))
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
@@ -286,7 +306,7 @@ home_comparison_line <- function(df,r) {
     highcharter::hc_title(text = "Anteil von Frauen an MINT im Verlauf",
                           margin = 45,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "19px")) %>%
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "serif", fontSize = "14px")
     )
@@ -382,7 +402,7 @@ home_leaky_pipeline <- function(df,r) {
                    panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
                    panel.grid.major.x = ggplot2::element_line(colour = "#D3D3D3")) +
     ggplot2::labs(x = "", y = "Anteil", color = "",
-                                         title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
+                                         title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
                                                         "Anteil von Frauen an MINT für verschiedene Bereiche in ", timerange,
                                                         "<br><br><br>")) +
     ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"), limits = c(0, 100)) +
@@ -434,34 +454,45 @@ home_rest_mint_verlauf <- function(df,r, order) {
 
     if ((indikator_choice_1 == "Auszubildende" | indikator_choice_1 == "Beschäftigte")) {
 
-      title_help <- "anderen Berufszweigen"
+      title_help <- paste0("anderen Berufszweigen <br>bei ", indikator_choice_1,"n")
 
     } else {
 
-      title_help <- "anderen Fächern"
+      if ((indikator_choice_1 == "Habilitationen" | indikator_choice_1 == "Promotionen (angestrebt)")){
 
+        title_help <- paste0("anderen Fächern <br>bei ", indikator_choice_1)
+
+      }else{
+
+        title_help <- paste0("anderen Fächern <br>bei ", indikator_choice_1,"n")
+      }
     }
 
   } else {
 
     if ((indikator_choice_2 == "Auszubildende" | indikator_choice_2 == "Beschäftigte")) {
 
-      title_help <- "anderen Berufszweigen"
+      title_help <- paste0("anderen Berufszweigen <br>bei ", indikator_choice_2,"n")
 
     } else {
 
-      title_help <- "anderen Fächern"
+      if ((indikator_choice_2 == "Habilitationen" | indikator_choice_2 == "Promotionen (angestrebt)")){
 
+        title_help <- paste0("anderen Fächern <br>bei ", indikator_choice_2)
+
+      }else{
+
+        title_help <- paste0("anderen Fächern <br>bei ", indikator_choice_2,"n")
+      }
     }
   }
-
 
   df <- share_female(df)
 
   ggplot2::ggplot(df, ggplot2::aes(x = jahr, y = proportion, color = fachbereich, group = fachbereich)) +
     ggplot2::geom_line(size = 1.5) +
     ggplot2::scale_color_manual(values = colors_mint_vernetzt$general) +
-    ggplot2::labs(color = "", title = paste0("<span style='font-size:20pt; color:black; font-family: serif'>",
+    ggplot2::labs(color = "", title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
                                              "Anteil von Frauen an MINT und ", title_help,
                                              "<br><br><br>"),
                   x = "Jahre", y = "Anteil") +

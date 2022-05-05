@@ -89,13 +89,13 @@ states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Ham
 valueBox2 <- function(value, title, subtitle, icon = NULL, color = "aqua", width = 4, href = NULL,
                       info = NULL, type = "andere"){
 
-  if (type == "MINT"){
+  if (type == "Frauen"){
 
-    style <- paste0("background-color: ", "#b16fab; color:white;")
+    style <- paste0("background-color: ", "#f5adac; color:white;")
 
   } else {
 
-    style <- paste0("background-color: ", "#154194; color:white;")
+    style <- paste0("background-color: ", "#b1b5c3; color:white;")
 
   }
 

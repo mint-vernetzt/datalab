@@ -28,6 +28,10 @@ box_einstieg_studium <- function(df,r){
   # call function to calculate the share of MINT and the remaining subjects
   df <- calc_share_MINT(df)
 
+  # calculate the share of males
+  df <- calc_share_male(df, "box_1")
+
+
   # calculate the mean
   df <- df %>%
     dplyr::group_by(anzeige_geschlecht, fachbereich) %>%
@@ -42,16 +46,13 @@ box_einstieg_studium <- function(df,r){
 
 
   # calculate the share of females on MINT
-  anteil_mint <- df[(df$anzeige_geschlecht == "Frauen" & df$fachbereich == "MINT"), "proportion"]*100
+  anteil_mint_female <- round(df[(df$anzeige_geschlecht == "Frauen" & df$fachbereich == "MINT"), "proportion"]*100)
 
   # calculate the share of females on the remaining subjects
-  anteil_rest <- df[(df$anzeige_geschlecht == "Frauen" & df$fachbereich == "andere Studiengänge"), "proportion"]*100
+  anteil_mint_male <- round(df[(df$anzeige_geschlecht == "Männer" & df$fachbereich == "MINT"), "proportion"]*100)
 
-  vec_anteile <- c(anteil_mint$proportion, anteil_rest$proportion)
 
-  vec_anteile <- round_preserve_sum(round(vec_anteile),0)
-
-  return(list(anteil_mint = vec_anteile[1], anteil_rest = vec_anteile[2]))
+  return(list(anteil_mint_female = anteil_mint_female$proportion, anteil_mint_male = anteil_mint_male$proportion))
 }
 
 
