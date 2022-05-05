@@ -835,11 +835,11 @@ studienzahl_verlauf <- function(df,r) {
 
   if (status_studierende == "Studierende"){
 
-    title_help <- paste0("weiblichen Student*innen ", title_help_sub, title_help_sub_sub)
+    title_help <- paste0("Studentinnen ", title_help_sub, title_help_sub_sub)
 
   }else{
 
-    title_help <- paste0("weiblichen Studienanfänger*innen ", title_help_sub, title_help_sub_sub)
+    title_help <- paste0("Studienanfängerinnen ", title_help_sub, title_help_sub_sub)
 
   }
 
@@ -883,7 +883,7 @@ studienzahl_verlauf <- function(df,r) {
 
   # plot
   highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(wert), group = region)) %>%
-    highcharter::hc_tooltip(pointFormat = "Bundesland: {point.region} <br> Wert: {point.y} %") %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "serif")) %>%
     highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%

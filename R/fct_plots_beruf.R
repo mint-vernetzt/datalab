@@ -668,7 +668,7 @@ arbeitsmarkt_verlauf <- function(df,r) {
 
   # plot
   highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(wert), group = region)) %>%
-    highcharter::hc_tooltip(pointFormat = "Bundesland: {point.region} <br> Wert: {point.y} %") %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), style = list(fontFamily = "serif")) %>%
     highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
