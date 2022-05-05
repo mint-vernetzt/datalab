@@ -180,7 +180,7 @@ vertraege_map <- function(df,r) {
   ) %>%
     highcharter::hc_title(
       text = paste0("Anteil der Frauen im Bereich", ausbildung_bereich ," in ", timerange),
-      margin = 45,
+      margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")
     ) %>%
