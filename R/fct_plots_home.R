@@ -104,12 +104,12 @@ home_einsitieg_waffle <- function(df,r, order) {
                         "<span style='font-size:16.0pt;'>" ,x_mint_rest[2],"% <span style='color:#b16fab; font-size:16.0pt;'>MINT</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(family="serif", size = 14),
+                   text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
   plot <- ggpubr::ggarrange(waffle_mint_rest, legend="bottom")
   text <- c(
-    paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Anteil von MINT an ", title_help,
+    paste0("<span style='font-size:20.5pt; color:black'> Anteil von MINT an ", title_help,
            " in ",timerange))
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
@@ -201,12 +201,12 @@ home_einsitieg_waffle_female <- function(df,r, order) {
                         "<span style='font-size:16.0pt;'>" ,x_mint_rest[2],"% <span style='color:#b16fab; font-size:16.0pt;'>MINT</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(family="serif", size = 14),
+                   text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
   plot <- ggpubr::ggarrange(waffle_mint_rest, legend="bottom")
   text <- c(
-    paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Verhältnis zwischen MINT und  ", title_help,
+    paste0("<span style='font-size:20.5pt; color:black'> Verhältnis zwischen MINT und  ", title_help,
            " <br> für Frauen in ",timerange))
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
@@ -300,15 +300,17 @@ home_comparison_line <- function(df,r) {
 
   highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = indikator)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
-    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "serif")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "serif")) %>%
+    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"),
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"),
+                          min = 10, max = 45) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = "Anteil von Frauen an MINT im Verlauf",
                           margin = 45,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")) %>%
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "serif", fontSize = "14px")
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     )
 
 
@@ -338,8 +340,9 @@ home_leaky_pipeline <- function(df,r) {
   # aggeregate every "bereich to Rest vs MINT
   df <- share_MINT(df)
 
-  # remove "Arbeitsmarkt"
-  df <- df %>% dplyr::filter(bereich != "Arbeitsmarkt")
+  # remove
+  df <- df %>% dplyr::filter(indikator != "Auszubildende")
+  df <- df %>% dplyr::filter(indikator != "Habilitationen")
 
   # only MINT perspective
   df <- df %>% dplyr::filter(fachbereich == "MINT")
@@ -352,6 +355,17 @@ home_leaky_pipeline <- function(df,r) {
   df_sub <- calc_share_male(df_sub, "box_1")
 
   df <- rbind(df, df_sub)
+
+  df_sub_val <- df %>% dplyr::filter(indikator == "Beschäftigte" & anzeige_geschlecht == "Frauen")
+
+  df_sub_val$anzeige_geschlecht <- "Männer"
+
+  help_val <- df[((df$indikator == "Beschäftigte") & (df$anzeige_geschlecht == "Gesamt")), "wert"] -
+    df[((df$indikator == "Beschäftigte") & (df$anzeige_geschlecht == "Frauen")), "wert"][[1]]
+
+  df_sub_val$wert <- help_val$wert
+
+  df <- rbind(df, df_sub_val)
 
   # calculate the share of male and female
   values_female <- df %>% dplyr::group_by(indikator, fachbereich) %>%
@@ -378,10 +392,10 @@ home_leaky_pipeline <- function(df,r) {
   #   ggplot2::geom_point(ggplot2::aes(color=anzeige_geschlecht), size=6, alpha = 0.6) +
   #   ggplot2::theme_classic() +
   #   ggplot2::theme(legend.position="bottom",
-  #                  legend.text= ggplot2::element_text(family = 'serif'),
+  #                  legend.text= ggplot2::element_text(family = 'SourceSans3-Regular'),
   #                  panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
   #                  plot.title = ggtext::element_markdown(hjust = 0.5),
-  #                  axis.text.y = ggplot2::element_text(size = 11, family = 'serif')) +
+  #                  axis.text.y = ggplot2::element_text(size = 11, family = 'SourceSans3-Regular')) +
   #   ggplot2::scale_x_continuous(labels = scales::percent_format()) +
   #   ggplot2::scale_color_manual(values = colors_mint_vernetzt$gender) +
   #   ggplot2::ylab("") + ggplot2::xlab("") +
@@ -390,7 +404,7 @@ home_leaky_pipeline <- function(df,r) {
 
   values$indikator <- factor(values$indikator,levels = c("Leistungskurse", "Studienanfänger",
                                                          "Studierende", "Promotionen (angestrebt)",
-                                                         "Habilitationen"))
+                                                         "Beschäftigte"))
   values$proportion <- values$proportion * 100
 
   values %>%
@@ -398,11 +412,11 @@ home_leaky_pipeline <- function(df,r) {
     ggplot2::geom_line(size = 1.5) +
     ggplot2::theme_classic() +
     ggplot2::theme(plot.title = ggtext::element_markdown(hjust = 0.5),
-                   text = ggplot2::element_text(family="serif", size = 14),
+                   text = ggplot2::element_text(size = 14),
                    panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
                    panel.grid.major.x = ggplot2::element_line(colour = "#D3D3D3")) +
     ggplot2::labs(x = "", y = "Anteil", color = "",
-                                         title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
+                                         title = paste0("<span style='font-size:20.5pt; color:black'>",
                                                         "Anteil von Frauen an MINT für verschiedene Bereiche in ", timerange,
                                                         "<br><br><br>")) +
     ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"), limits = c(0, 100)) +
@@ -492,13 +506,13 @@ home_rest_mint_verlauf <- function(df,r, order) {
   ggplot2::ggplot(df, ggplot2::aes(x = jahr, y = proportion, color = fachbereich, group = fachbereich)) +
     ggplot2::geom_line(size = 1.5) +
     ggplot2::scale_color_manual(values = colors_mint_vernetzt$general) +
-    ggplot2::labs(color = "", title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
+    ggplot2::labs(color = "", title = paste0("<span style='font-size:20.5pt; color:black'>",
                                              "Anteil von Frauen an MINT und ", title_help,
                                              "<br><br><br>"),
                   x = "Jahre", y = "Anteil") +
     ggplot2::theme_classic() +
     ggplot2::theme(plot.title = ggtext::element_markdown(hjust = 0.5),
-                   text = ggplot2::element_text(family="serif", size = 14),
+                   text = ggplot2::element_text(size = 14),
                    panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
                    legend.position = "bottom") +
     ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"), limits = c(0, 100))

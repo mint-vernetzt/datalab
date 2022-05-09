@@ -55,20 +55,21 @@ mod_home_start_ui <- function(id){
         title = "Lorem Ipsum",
         width = 12,
         shiny::sidebarPanel(
-          mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
-        shiny::mainPanel(
-          highcharter::highchartOutput(ns("plot_verlauf_mint"))
+          mod_home_start_leaky_ui("mod_home_start_leaky_ui_1")),
+        shiny::mainPanel(plotOutput(ns("plot_leaky"))
+
         )
       )
     ),
+
     fluidRow(
       shinydashboard::box(
         title = "Lorem Ipsum",
         width = 12,
         shiny::sidebarPanel(
-          mod_home_start_leaky_ui("mod_home_start_leaky_ui_1")),
-        shiny::mainPanel(plotOutput(ns("plot_leaky"))
-
+          mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
+        shiny::mainPanel(
+          highcharter::highchartOutput(ns("plot_verlauf_mint"))
         )
       )
     ),

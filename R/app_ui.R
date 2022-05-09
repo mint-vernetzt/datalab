@@ -31,7 +31,9 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Schule", icon = shiny::icon("school"), tabName = "schule"),
           shinydashboard::menuItem("Studium", icon = shiny::icon("university"), tabName = "studium"),
           shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
-          shinydashboard::menuItem("Beruf", icon = shiny::icon("building"), tabName = "beruf")
+          shinydashboard::menuItem("Beruf", icon = shiny::icon("building"), tabName = "beruf"),
+          shinydashboard::menuItem("Quellen", icon = shiny::icon("bars"), tabName = "quellen")
+
         )
       ),
       # Show the appropriate tab's content in the main body of our dashboard when we select it
@@ -41,7 +43,9 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="schule", mod_schule_ui("schule_ui_1")),
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
           shinydashboard::tabItem(tabName ="ausbildung", mod_ausbildung_ui("ausbildung_ui_1")),
-          shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1"))
+          shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
+          shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1"))
+
         )
       )
     )

@@ -73,7 +73,7 @@ kurse_einstieg_bar <- function(df,r) {
   names(df)[4] <- "Wert"
 
   p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
-    ggplot2::labs(caption = "Quelle:", title = paste0("<span style='font-size:20px; color:black; font-family: serif'>",
+    ggplot2::labs(caption = "Quelle:", title = paste0("<span style='font-size:20px; color:black; font-family: SourceSans3-Regular'>",
       "Anteile an MINT und allen anderen Schulfächern ", title_help),
                   fill = "") +
     ggplot2::facet_grid(~jahr,
@@ -93,7 +93,7 @@ kurse_einstieg_bar <- function(df,r) {
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$general)
 
   t <- list(
-    family = "serif", size = 14)
+    family = "SourceSans3-Regular", size = 14)
 
   if(isTRUE(switch_absolut)){
 
@@ -250,7 +250,7 @@ kurse_waffle <- function(df,r) {
       title = paste0("<span style='color:#b16fab;'>", "**MINT**</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(family="serif", size = 14),
+                   text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
   waffle_rest <- waffle::waffle(x_rest, keep = FALSE, colors = colors_mint_vernetzt$gender) +
@@ -260,7 +260,7 @@ kurse_waffle <- function(df,r) {
       title = paste0("<span style='color:#154194;'>", "**Andere Fächer**</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(family="serif", size = 14),
+                   text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
   if (level_kurs == "Grundkurse"){
@@ -276,7 +276,7 @@ kurse_waffle <- function(df,r) {
   plot <- ggpubr::ggarrange(waffle_mint, NULL ,waffle_rest, widths = c(1, -0.15, 1), nrow=1, common.legend = T,
                             legend="bottom")
   text <- c(
-    paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Anteil von Schüler und Schülerinnen an MINT und allen
+    paste0("<span style='font-size:20.5pt; color:black'> Anteil von Schüler und Schülerinnen an MINT und allen
            andere Fächern ", title_help,
            " in ",timerange))
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
@@ -347,12 +347,12 @@ kurse_absolut <- function(df,r) {
                        fontface = "bold") +
     ggplot2::theme_bw() +
     ggplot2::theme(
-      text = ggplot2::element_text(family="serif", size = 14),
+      text = ggplot2::element_text(size = 14),
       axis.text.x = ggplot2::element_text(colour = c("#b16fab", "#154194"), size = 14, face="bold"),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::xlab("") + ggplot2::ylab("Anzahl") +
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
                                  "Schüler und Schülerinnen in MINT und allen anderen Fächern ",title_help ," in ", timerange,
                                  "<br><br><br>"),
                   fill = "")
@@ -433,10 +433,10 @@ kurse_ranking <- function(df,r, type) {
       ggplot2::scale_color_manual(values = c("#00a87a", "#ee7775")) +
       ggplot2::theme(legend.position = "none",
                      strip.placement = "outside",
-                     plot.title = ggplot2::element_text(family = 'serif'),
-                     axis.text.y = ggplot2::element_text(family = 'serif'),
+                     #plot.title = ggplot2::element_text(family = 'SourceSans3-Regular'),
+                    # axis.text.y = ggplot2::element_text(family = 'SourceSans3-Regular'),
                      plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"),
-                     strip.text.y = ggplot2::element_text(size = 14, face = "bold", family = 'serif'),
+                     strip.text.y = ggplot2::element_text(size = 14, face = "bold"),
                      panel.grid.major.y = ggplot2::element_blank(),
                      panel.background = ggplot2::element_rect(fill="white"),
                      strip.background = ggplot2::element_blank()) +
@@ -456,8 +456,8 @@ kurse_ranking <- function(df,r, type) {
       ggplot2::scale_color_manual(values = c("#00a87a", "#ee7775")) +
       ggplot2::theme(legend.position = "none",
                      strip.placement = "outside",
-                     plot.title = ggplot2::element_text(family = 'serif'),
-                     axis.text.y = ggplot2::element_text(family = 'serif'),
+                     #plot.title = ggplot2::element_text(family = 'SourceSans3-Regular'),
+                     #axis.text.y = ggplot2::element_text(family = 'SourceSans3-Regular'),
                      plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"),
                      strip.text.y = ggplot2::element_blank(),
                      panel.grid.major.y = ggplot2::element_blank(),
@@ -469,7 +469,7 @@ kurse_ranking <- function(df,r, type) {
 
 
     text <- c(
-      paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Die 5 ", title_help, "mit dem größten und kleinsten Anteil der Schüler*innen",
+      paste0("<span style='font-size:20.5pt; color:black'> Die 5 ", title_help, " mit dem größten und kleinsten Anteil der Schüler*innen",
              " in ",timerange))
 
 
@@ -485,13 +485,13 @@ kurse_ranking <- function(df,r, type) {
       ggplot2::geom_point(ggplot2::aes(color = anzeige_geschlecht), size=6, alpha = 0.3) +
       ggplot2::theme_classic() +
       ggplot2::theme(legend.position="bottom",
-                     legend.text= ggplot2::element_text(family = 'serif'),
+                     #legend.text= ggplot2::element_text(family = 'SourceSans3-Regular'),
                      panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
                      plot.title = ggtext::element_markdown(hjust = 0.5),
-                     axis.text.y = ggplot2::element_text(size = 11, family = 'serif')) +
+                     axis.text.y = ggplot2::element_text(size = 11)) +
       ggplot2::scale_color_manual(values = colors_mint_vernetzt$gender) +
       ggplot2::ylab("") + ggplot2::xlab("") +
-      ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
+      ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
                                    "Relativer Anteil von Schüler*innen aller ", title_help, " in ",timerange,
                                    "<br><br><br>"),
                     color = "") +
@@ -591,13 +591,13 @@ kurse_map <- function(df,r) {
       text = paste0("Anteil der Schülerinnen an MINT für die ", title_help ," in ", timerange),
       margin = 10,
       align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
     ) %>%
     highcharter::hc_caption(
       text = "Quelle:",  style = list(fontSize = "12px")
     ) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "serif")
+      style = list(fontFamily = "SourceSans3-Regular")
     ) %>% highcharter::hc_size(600, 440) %>%
     highcharter::hc_legend(align = "right", layout = "vertical")
 
@@ -783,15 +783,15 @@ kurse_verlauf <- function(df,r) {
   # plot
   highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = region)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil Schülerinnen <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
-    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "serif")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "serif")) %>%
+    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Anteil von Schülerinnen an ", title_help ," im Verlauf"),
                           margin = 45,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")) %>%
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "serif", fontSize = "14px")
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     )
 
 

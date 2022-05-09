@@ -88,7 +88,7 @@ mod_schule_kurse_verlauf_ui <- function(id){
                                    "Thüringen"),
                        multiple = TRUE,
                        options = list(`actions-box` = TRUE,
-                                      `deselect-all-text` = "Keins auswählen",
+                                      `deselect-all-text` = "Alle abwählen",
                                       `select-all-text` = "Alle auswählen"),
                        selected = c("Hessen", "Hamburg")
                      )),

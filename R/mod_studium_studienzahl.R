@@ -135,7 +135,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
       text <- paste0("Durschnittlicher von MINT bei studierenden Frauen!")
 
-      text_info <- paste0("Durschnittlicher von MINT bei studierenden Frauen berechnet für
+      text_info <- paste0("Durschnittlicher Anteil von MINT bei studierenden Frauen berechnet für
                           den gewählten Zeitraum und abhängig von den gewählten Filter")
 
       valueBox2(
@@ -167,7 +167,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
       text <- paste0("Durschnittlicher von MINT bei studierenden Männer!")
 
-      text_info <- paste0("Durschnittlicher von MINT bei studierenden Männer berechnet für
+      text_info <- paste0("Durschnittlicher Anteil von MINT bei studierenden Männer berechnet für
                           den gewählten Zeitraum und abhängig von den gewählten Filter")
 
       valueBox2(

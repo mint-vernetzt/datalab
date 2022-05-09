@@ -25,6 +25,9 @@ mod_home_start_comparison_ui <- function(id){
       choices = c("Beschäftigte", "Auszubildende", "Habilitationen", "Leistungskurse",
       "Promotionen (angestrebt)", "Studienanfänger", "Studierende"),
       selected = c("Studierende", "Beschäftigte"),
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
       multiple = TRUE
 
     )

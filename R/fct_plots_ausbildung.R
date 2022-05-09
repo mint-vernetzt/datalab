@@ -55,7 +55,7 @@ ausbildungsvertraege_waffle <- function(df, r) {
       title = paste0("<span style='color:#b16fab;'>", "**MINT**</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(family="serif", size = 14),
+                   text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
   # create plot objects for waffle charts
@@ -66,7 +66,7 @@ ausbildungsvertraege_waffle <- function(df, r) {
       title = paste0("**Gesamt** <span style='color:#b16fab;'>", "**MINT**</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(family="serif", size = 14),
+                   text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
 
 
@@ -74,7 +74,7 @@ ausbildungsvertraege_waffle <- function(df, r) {
                             legend="bottom")
 
   text <- c(
-    paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Anteil von Frauen und Männern im Bereich ", ausbildung_bereich,
+    paste0("<span style='font-size:20.5pt; color:black'> Anteil von Frauen und Männern im Bereich ", ausbildung_bereich,
            " in ",timerange))
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
@@ -116,11 +116,11 @@ ausbildungsvertraege_absolut <- function(df,r) {
     ggplot2::theme_bw() +
     ggplot2::theme(
       legend.position = "none",
-      text = ggplot2::element_text(family="serif", size = 14),
+      text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::xlab("") + ggplot2::ylab("Anzahl") +
     ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
                                  "Neue Auszubildende im Bereich ", ausbildung_bereich," in ", timerange,
                                  "<br><br><br>"),
                   fill = "")
@@ -182,13 +182,13 @@ vertraege_map <- function(df,r) {
       text = paste0("Anteil der Frauen im Bereich", ausbildung_bereich ," in ", timerange),
       margin = 10,
       align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "serif", fontSize = "20px")
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
     ) %>%
     highcharter::hc_caption(
       text = "Quelle:",  style = list(fontSize = "12px")
     ) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "serif")
+      style = list(fontFamily = "SourceSans3-Regular")
     ) %>% highcharter::hc_size(600, 440) %>%
     highcharter::hc_legend(align = "right", layout = "vertical")
 
@@ -261,11 +261,11 @@ vertraege_ranking <- function(df, r) {
     ggplot2::geom_point(size = 2, color = "#b16fab") +
     ggplot2::geom_text(nudge_x = 7) +
     ggplot2::theme_classic() +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
                                  "Anteil von Frauen an neuen Ausbildungsverträgen für alle MINT-Bereiche ", timerange,
                                  "<br><br><br>"),
                   y = "", x = "Anteil") +
-    ggplot2::theme(text = ggplot2::element_text(family="serif", size = 14),
+    ggplot2::theme(text = ggplot2::element_text(size = 14),
                    plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"), limits = c(0, 100))
 
@@ -323,11 +323,11 @@ vertraege_verlauf <- function(df, r) {
     ggplot2::geom_point(size = 2, color = "#b16fab") +
     ggplot2::geom_text(nudge_x = 7) +
     ggplot2::theme_classic() +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
                                  "2017",
                                  "<br><br><br>"),
                   y = "", x = "Anteil") +
-    ggplot2::theme(text = ggplot2::element_text(family="serif", size = 14),
+    ggplot2::theme(text = ggplot2::element_text(size = 14),
                    plot.title = ggtext::element_markdown(hjust = 0.5),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines")) +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"), limits = c(0, 100))
@@ -339,18 +339,18 @@ vertraege_verlauf <- function(df, r) {
     ggplot2::geom_point(size = 2, color = "#b16fab") +
     ggplot2::geom_text(nudge_x = 7) +
     ggplot2::theme_classic() +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black; font-family: serif'>",
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
                                  "2020",
                                  "<br><br><br>"),
                   y = "", x = "Anteil") +
-    ggplot2::theme(text = ggplot2::element_text(family="serif", size = 14),
+    ggplot2::theme(text = ggplot2::element_text(size = 14),
                    plot.title = ggtext::element_markdown(hjust = 0.5),
                    plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines")) +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"), limits = c(0, 100))
 
 
   text <- c(
-    paste0("<span style='font-size:20.5pt; color:black; font-family: serif'> Anteil von Frauen an neuen Ausbildungsverträgen für den Bereich <br> ",
+    paste0("<span style='font-size:20.5pt; color:black'> Anteil von Frauen an neuen Ausbildungsverträgen für den Bereich <br> ",
            ausbildung_bereich))
 
 
