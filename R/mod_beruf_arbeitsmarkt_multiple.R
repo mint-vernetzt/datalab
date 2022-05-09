@@ -24,7 +24,7 @@ mod_beruf_arbeitsmarkt_multiple_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wähle ein Anforderungsniveu:"),
+    p("Wähle ein Anforderungsniveau:"),
     shinyWidgets::pickerInput(
       inputId = ns("anforderungsniveau_arbeitsmarkt"),
       choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte")
