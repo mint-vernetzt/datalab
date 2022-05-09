@@ -29,7 +29,8 @@ Imports:
     highcharter,
     ggpol,
     ggtext,
-    ggpubr
+    ggpubr,
+    pkgload
 Suggests: 
     spelling,
     testthat (>= 3.0.0)
