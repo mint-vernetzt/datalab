@@ -347,6 +347,10 @@ home_leaky_pipeline <- function(df,r) {
   # only MINT perspective
   df <- df %>% dplyr::filter(fachbereich == "MINT")
 
+  help_val_kurse <- df[((df$indikator == "Leistungskurse") & (df$anzeige_geschlecht == "Männer")), "wert"] +
+    df[((df$indikator == "Leistungskurse") & (df$anzeige_geschlecht == "Frauen")), "wert"][[1]]
+
+  df[((df$indikator == "Leistungskurse") & (df$anzeige_geschlecht == "Gesamt")), "wert"] <- help_val_kurse$wert
 
   # calculate the share of males for "Studierende/Studienanfänger"
   df_sub <- df %>% dplyr::filter(indikator == "Studienanfänger" | indikator == "Studierende")
