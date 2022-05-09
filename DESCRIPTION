@@ -28,7 +28,8 @@ Imports:
     waffle,
     highcharter,
     ggpol,
-    ggtext
+    ggtext,
+    ggpubr
 Suggests: 
     spelling,
     testthat (>= 3.0.0)
