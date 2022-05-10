@@ -24,7 +24,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         shiny::mainPanel(
 
           tabsetPanel(type = "tabs",
-                      tabPanel("Balkendiagramm", plotly::plotlyOutput(ns("plot_einstieg_bar"))),
+                      tabPanel("Balkendiagramm", highcharter::highchartOutput(ns("plot_einstieg_bar"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
                                                 style = "font-size: 75%; width: 75%"))))
     )),
@@ -66,7 +66,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    output$plot_einstieg_bar <- plotly::renderPlotly({
+    output$plot_einstieg_bar <-  highcharter::renderHighchart({
       arbeitsmarkt_einstieg_bar(data_arbeitsmarkt,r)
 
     })

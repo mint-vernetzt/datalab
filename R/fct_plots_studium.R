@@ -100,63 +100,82 @@ studienzahl_einstieg_bar <- function(df,r) {
 
     df$Anteil <- paste(df$Anteil,"%")
 
-    names(df)[3] <- "Wert"
+    df <- df[with(df, order(anzeige_geschlecht, jahr, decreasing = FALSE)), ]
 
-    # plot
-   p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
-      ggplot2::facet_grid(~jahr,
-                 scales = "free_x",
-                 space = "free_x",
-                 switch = "x")  +
-      ggplot2::labs(caption = "Quelle:", title = paste0("<span style='font-size:20px; color:black; font-family: SourceSans3-Regular'>",
-        "Anteile an MINT und allen anderen Studienfächer", title_help),
-                    fill = "") +
-      ggplot2::theme(strip.placement = "outside",
-                     plot.title = ggtext::element_markdown(hjust = 0.5),
-                     #plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
-                     panel.grid.major.x = ggplot2::element_blank(),
-                     panel.grid.minor.x = ggplot2::element_blank(),
-                     panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
-                     panel.background = ggplot2::element_rect(fill="white"),
-                     strip.background = ggplot2::element_rect(fill = "white"),
-                     axis.title = ggplot2::element_blank()) +
-      ggplot2::scale_fill_manual(values = c(ggplot2::alpha("#154194", 1),
-                                            ggplot2::alpha("#154194", 0.5),
-                                            ggplot2::alpha("#b16fab", 1),
-                                            ggplot2::alpha("#b16fab", 0.5))) +
-      ggplot2::scale_y_continuous(expand = c(0,0))
+    #names(df)[3] <- "Wert"
 
-
-   t <- list(
-     family = "SourceSans3-Regular", size = 14)
+   #  # plot
+   # p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
+   #    ggplot2::facet_grid(~jahr,
+   #               scales = "free_x",
+   #               space = "free_x",
+   #               switch = "x")  +
+   #    ggplot2::labs(caption = "Quelle:", title = paste0("<span style='font-size:20px; color:black; font-family: SourceSans3-Regular'>",
+   #      "Anteile an MINT und allen anderen Studienfächer", title_help),
+   #                  fill = "") +
+   #    ggplot2::theme(strip.placement = "outside",
+   #                   plot.title = ggtext::element_markdown(hjust = 0.5),
+   #                   #plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+   #                   panel.grid.major.x = ggplot2::element_blank(),
+   #                   panel.grid.minor.x = ggplot2::element_blank(),
+   #                   panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
+   #                   panel.background = ggplot2::element_rect(fill="white"),
+   #                   strip.background = ggplot2::element_rect(fill = "white"),
+   #                   axis.title = ggplot2::element_blank()) +
+   #    ggplot2::scale_fill_manual(values = c(ggplot2::alpha("#154194", 1),
+   #                                          ggplot2::alpha("#154194", 0.5),
+   #                                          ggplot2::alpha("#b16fab", 1),
+   #                                          ggplot2::alpha("#b16fab", 0.5))) +
+   #    ggplot2::scale_y_continuous(expand = c(0,0))
+   #
+   #
+   # t <- list(
+   #   family = "SourceSans3-Regular", size = 14)
 
 
    if(isTRUE(switch_absolut)){
 
-    p <- p + ggplot2::geom_bar(position="stack", stat="identity")
 
-    plotly::ggplotly(p, tooltip = "Wert") %>% plotly::config(displayModeBar = FALSE,
-                                                             displaylogo = FALSE
-                                                             #editable = FALSE,
-                                                             #showTips = FALSE,
-                                                             #edits = FALSE,
-                                                             #scrollZoom = FALSE,
-    ) %>%
-      plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
+     highchart_obj(df, geschlecht, type = "normal", andere_name = "andere Studiengänge", lehramt = "Ja") %>%
+       highcharter::hc_title(text = paste0("Absoluter Anteil an MINT und allen anderen Studiengängen", title_help),
+                             margin = 45,
+                             align = "center",
+                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+
+    # p <- p + ggplot2::geom_bar(position="stack", stat="identity")
+    #
+    # plotly::ggplotly(p, tooltip = "Wert") %>% plotly::config(displayModeBar = FALSE,
+    #                                                          displaylogo = FALSE
+    #                                                          #editable = FALSE,
+    #                                                          #showTips = FALSE,
+    #                                                          #edits = FALSE,
+    #                                                          #scrollZoom = FALSE,
+    # ) %>%
+    #   plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
    }else{
 
-     p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
-                ggplot2::scale_y_continuous(labels = scales::percent_format())
+     p <- highchart_obj(df, geschlecht, type = "percent", andere_name = "andere Studiengänge", lehramt = "Ja")
 
-     plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::config(displayModeBar = FALSE,
-                                                                 displaylogo = FALSE
-                                                                 #editable = FALSE,
-                                                                 #showTips = FALSE,
-                                                                 #edits = FALSE,
-                                                                 #scrollZoom = FALSE,
-     ) %>%
-       plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
+     p %>% highcharter::hc_yAxis(labels = list(format = "{value}%")) %>%
+       highcharter::hc_tooltip(pointFormat = "{series.name} <br> Anteil: {point.percentage:.0f}%") %>%
+       highcharter::hc_title(text = paste0("Relativer Anteil an MINT und allen anderen Studiengängen", title_help),
+                             margin = 45,
+                             align = "center",
+                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+
+
+     # p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
+     #            ggplot2::scale_y_continuous(labels = scales::percent_format())
+     #
+     # plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::config(displayModeBar = FALSE,
+     #                                                             displaylogo = FALSE
+     #                                                             #editable = FALSE,
+     #                                                             #showTips = FALSE,
+     #                                                             #edits = FALSE,
+     #                                                             #scrollZoom = FALSE,
+     # ) %>%
+     #   plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
    }
 
@@ -184,54 +203,73 @@ studienzahl_einstieg_bar <- function(df,r) {
 
     df$Anteil <- paste(df$Anteil,"%")
 
-    names(df)[3] <- "Wert"
+    df <- df[with(df, order(anzeige_geschlecht, jahr, decreasing = FALSE)), ]
 
-    p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
-      ggplot2::labs(caption = "Quelle:", title = paste0("<span style='font-size:20px; color:black; font-family: SourceSans3-Regular'>",
-        "Anteile an MINT und allen anderen Studienfächer", title_help),
-                    fill = "") +
-      ggplot2::facet_grid(~jahr,
-                          scales = "free_x",
-                          space = "free_x",
-                          switch = "x")  +
-      ggplot2::theme(strip.placement = "outside",
-                     plot.title = ggtext::element_markdown(hjust = 0.5),
-                    # plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
-                     panel.grid.major.x = ggplot2::element_blank(),
-                     panel.grid.minor.x = ggplot2::element_blank(),
-                     panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
-                     panel.background = ggplot2::element_rect(fill="white"),
-                     strip.background = ggplot2::element_rect(fill = "white"),
-                     axis.title = ggplot2::element_blank()) +
-      ggplot2::scale_y_continuous(expand = c(0,0)) +
-      ggplot2::scale_fill_manual(values = colors_mint_vernetzt$general)
-
-    t <- list(
-      family = "SourceSans3-Regular", size = 14)
+    # names(df)[3] <- "Wert"
+    #
+    # p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
+    #   ggplot2::labs(caption = "Quelle:", title = paste0("<span style='font-size:20px; color:black; font-family: SourceSans3-Regular'>",
+    #     "Anteile an MINT und allen anderen Studienfächer", title_help),
+    #                 fill = "") +
+    #   ggplot2::facet_grid(~jahr,
+    #                       scales = "free_x",
+    #                       space = "free_x",
+    #                       switch = "x")  +
+    #   ggplot2::theme(strip.placement = "outside",
+    #                  plot.title = ggtext::element_markdown(hjust = 0.5),
+    #                 # plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
+    #                  panel.grid.major.x = ggplot2::element_blank(),
+    #                  panel.grid.minor.x = ggplot2::element_blank(),
+    #                  panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
+    #                  panel.background = ggplot2::element_rect(fill="white"),
+    #                  strip.background = ggplot2::element_rect(fill = "white"),
+    #                  axis.title = ggplot2::element_blank()) +
+    #   ggplot2::scale_y_continuous(expand = c(0,0)) +
+    #   ggplot2::scale_fill_manual(values = colors_mint_vernetzt$general)
+    #
+    # t <- list(
+    #   family = "SourceSans3-Regular", size = 14)
 
     if(isTRUE(switch_absolut)){
 
-      p <- p + ggplot2::geom_bar(position="stack", stat="identity")
-      plotly::ggplotly(p, tooltip = "Wert") %>% plotly::config(displayModeBar = FALSE,
-                                                                     displaylogo = FALSE
-                                                                     #editable = FALSE,
-                                                                     #showTips = FALSE,
-                                                                     #edits = FALSE,
-                                                                     #scrollZoom = FALSE,
-                                                               ) %>%
-        plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
+      highchart_obj(df, geschlecht, type = "normal", andere_name = "andere Studiengänge", lehramt = "Nein") %>%
+        highcharter::hc_title(text = paste0("Absouluter Anteil an MINT und allen anderen Studiengängen", title_help),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+
+
+      # p <- p + ggplot2::geom_bar(position="stack", stat="identity")
+      # plotly::ggplotly(p, tooltip = "Wert") %>% plotly::config(displayModeBar = FALSE,
+      #                                                                displaylogo = FALSE
+      #                                                                #editable = FALSE,
+      #                                                                #showTips = FALSE,
+      #                                                                #edits = FALSE,
+      #                                                                #scrollZoom = FALSE,
+      #                                                          ) %>%
+      #   plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
     }else{
 
-     p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
-        ggplot2::scale_y_continuous(labels = scales::percent_format())
-      plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::config(displayModeBar = FALSE,
-                                                                  displaylogo = FALSE
-                                                                  #editable = FALSE,
-                                                                  #showTips = FALSE,
-                                                                  #edits = FALSE,
-                                                                  #scrollZoom = FALSE,
-      ) %>%
-        plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
+      p <- highchart_obj(df, geschlecht, type = "percent", andere_name = "andere Studiengänge", lehramt = "Nein")
+
+      p %>% highcharter::hc_yAxis(labels = list(format = "{value}%")) %>%
+        highcharter::hc_tooltip(pointFormat = "{series.name} <br> Anteil: {point.percentage:.0f}%") %>%
+        highcharter::hc_title(text = paste0("Relativer Anteil an MINT und allen anderen Studiengängen", title_help),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+
+#
+#      p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
+#         ggplot2::scale_y_continuous(labels = scales::percent_format())
+#       plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::config(displayModeBar = FALSE,
+#                                                                   displaylogo = FALSE
+#                                                                   #editable = FALSE,
+#                                                                   #showTips = FALSE,
+#                                                                   #edits = FALSE,
+#                                                                   #scrollZoom = FALSE,
+#       ) %>%
+#         plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
     }
 

@@ -23,7 +23,7 @@ mod_studium_studienzahl_ui <- function(id){
 
       shiny::mainPanel(
         tabsetPanel(type = "tabs",
-        tabPanel("Balkendiagramm", plotly::plotlyOutput(ns("plot_einstieg_bar"))),
+        tabPanel("Balkendiagramm", highcharter::highchartOutput(ns("plot_einstieg_bar"))),
         tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
                                   style = "font-size: 75%; width: 75%"))))
       )),
@@ -80,7 +80,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
 
 
-    output$plot_einstieg_bar <- plotly::renderPlotly({
+    output$plot_einstieg_bar <- highcharter::renderHighchart({
       studienzahl_einstieg_bar(data_studierende,r)
 
     })
@@ -133,7 +133,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
       }
 
-      text <- paste0("Durschnittlicher von MINT bei studierenden Frauen!")
+      text <- paste0("Durschnittlicher Anteil von MINT bei studierenden Frauen!")
 
       text_info <- paste0("Durschnittlicher Anteil von MINT bei studierenden Frauen berechnet für
                           den gewählten Zeitraum und abhängig von den gewählten Filter")
@@ -165,7 +165,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       }
 
 
-      text <- paste0("Durschnittlicher von MINT bei studierenden Männer!")
+      text <- paste0("Durschnittlicher Anteil von MINT bei studierenden Männer!")
 
       text_info <- paste0("Durschnittlicher Anteil von MINT bei studierenden Männer berechnet für
                           den gewählten Zeitraum und abhängig von den gewählten Filter")
