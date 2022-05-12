@@ -21,13 +21,14 @@ mod_home_ui <- function(id){
 #' home Server Functions
 #'
 #' @noRd
-mod_home_server <- function(id, data_zentral, r){
+mod_home_server <- function(id, data_zentral, data_ausbildungsvertraege, r){
 
 
   r <- reactiveValues(indikator_start_einstieg_1 = NULL,
                       indikator_start_einstieg_2 = NULL,
                       date_home_einstieg = NULL,
                       date_start_comparison = NULL,
+                      date_start_comparison_mint = NULL,
                       indikator_start_comparison = NULL,
                       date_start_leaky = NULL,
                       date_start_multiple = NULL,
@@ -38,7 +39,8 @@ mod_home_server <- function(id, data_zentral, r){
   mod_home_start_multiple_server("mod_home_start_multiple_ui_1", r)
   mod_home_start_leaky_server("mod_home_start_leaky_ui_1", r)
   mod_home_start_comparison_server("mod_home_start_comparison_ui_1", r)
-  mod_home_start_server("mod_home_start_ui_1", data_zentral, r)
+  mod_home_start_comparison_mint_server("mod_home_start_comparison_mint_ui_1", r)
+  mod_home_start_server("mod_home_start_ui_1", data_zentral, data_ausbildungsvertraege, r)
 
 }
 

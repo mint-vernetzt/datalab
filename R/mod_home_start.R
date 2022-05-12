@@ -49,7 +49,17 @@ mod_home_start_ui <- function(id){
       # column(5, offset = 2,
       #        plotOutput(ns("plot_mint_rest_einstieg_4")), br(), br())
     )),
+    fluidRow(
+      shinydashboard::box(
+        title = "Lorem Ipsum",
+        width = 12,
+        shiny::sidebarPanel(
+          mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
+        shiny::mainPanel(highcharter::highchartOutput(ns("plot_comparison_mint"))
 
+        )
+      )
+    ),
     fluidRow(
       shinydashboard::box(
         title = "Lorem Ipsum",
@@ -94,7 +104,7 @@ mod_home_start_ui <- function(id){
 #' home_start Server Functions
 #'
 #' @noRd
-mod_home_start_server <- function(id, data_zentral, r){
+mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -131,6 +141,9 @@ mod_home_start_server <- function(id, data_zentral, r){
       home_einsitieg_waffle_female(data_zentral,r, "second")
     })
 
+    output$plot_comparison_mint <- highcharter::renderHighchart({
+      home_stacked_comparison(data_zentral, data_ausbildungsvertraege, r)
+    })
 
   })
 }

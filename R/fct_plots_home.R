@@ -214,50 +214,116 @@ home_einsitieg_waffle_female <- function(df,r, order) {
 
 
 
-
-
-
 #' A function to plot a graph.
 #'
-#' @description A function to create a line chart for the first box
-#' inside the tab "Home".
+#' @description A function to create a stacked bar chart
 #'
 #' @return The return value is a plot
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-home_comparison_line <- function(df,r) {
+home_stacked_comparison <- function(df, df_naa, r) {
 
   # load UI inputs from reactive value
-  timerange <- r$date_start_comparison
-
-  indikator_choice <- r$indikator_start_comparison
+  timerange <- r$date_start_comparison_mint
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+  df <- df %>% dplyr::filter(jahr == timerange)
+  df_naa  <- df_naa %>% dplyr::filter(jahr == timerange)
 
   df <- df %>% dplyr::filter(region == "Deutschland")
-
+  df_naa <- df_naa %>% dplyr::filter(region == "Deutschland")
+  # get other dataset
 
   # aggeregate every "bereich to Rest vs MINT
   df <- share_MINT(df)
 
 
-  df <- df %>% dplyr::filter(indikator %in% indikator_choice)
+  df[df$fachbereich != "MINT", "fachbereich"] <- "Andere Fachbereiche"
 
-  # calculate female share of MINT and Rest
-  df <- share_female(df)
+  df <- df %>% dplyr::filter(fachbereich != "Andere Fachbereiche")
 
-  #here only MINT
-  df <- df %>% dplyr::filter(fachbereich == "MINT")
 
-  # order years for plot
-  df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
+  # calculate tnew "Gesamt"
+  df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
+    dplyr::filter(indikator == "Leistungskurse") %>%
+    dplyr::group_by(indikator, jahr) %>%
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
+                       wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+
+
+
+
+  df <- df[with(df, order(indikator, anzeige_geschlecht, decreasing = TRUE)), ]
+
+  df_sub_2 <- df %>% dplyr::filter(indikator == "Promotionen (angestrebt)" |
+                                   indikator == "Habilitationen" | indikator == "Leistungskurse")
+
+
+  df_sub_2[df_sub_2$anzeige_geschlecht == "Frauen", "wert"] <-  df_sub_2 %>% dplyr::group_by(indikator) %>%
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"]/
+                       wert[anzeige_geschlecht == "Gesamt"]) %>%
+    dplyr::arrange(-dplyr::row_number()) %>% dplyr::pull(wert)
+
+
+  df_sub_2[df_sub_2$anzeige_geschlecht == "Männer", "wert"] <- df_sub_2 %>% dplyr::group_by(indikator) %>%
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Männer"]/
+                       wert[anzeige_geschlecht == "Gesamt"]) %>%
+    dplyr::arrange(-dplyr::row_number()) %>% dplyr::pull(wert)
+
+
+  df_sub_2 <- df_sub_2 %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+  df_sub_2$wert <- df_sub_2$wert * 100
+
+
+  df <- df %>% dplyr::filter(indikator != "Promotionen (angestrebt)",
+                             indikator != "Habilitationen", indikator != "Leistungskurse") %>%
+    dplyr::group_by(indikator) %>%
+    dplyr::summarize(wert = dplyr::lead(wert)/wert) %>% na.omit()
+
+  df$wert <- df$wert * 100
+
+  df$anzeige_geschlecht <- "Frauen"
+
+  df_sub <- df
+
+  df_sub$anzeige_geschlecht <- "Männer"
+
+  df_sub$wert <- 100 - df$wert
+
+  df <- rbind(df, df_sub, df_sub_2)
+
+  df_sub <- df_naa %>% dplyr::group_by(anzeige_geschlecht) %>%
+    dplyr::summarize(wert = sum(wert))
+
+  df_sub <- df_sub %>% dplyr::group_by(anzeige_geschlecht) %>%
+    dplyr::summarize(wert = wert/df_sub[df_sub$anzeige_geschlecht == "Gesamt", "wert"][[1]])
+
+  df_sub$wert <- df_sub$wert * 100
+
+  df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+  df_sub$indikator <- "Neue Ausbildungsverträge"
+
+  df <- rbind(df, df_sub)
+
+  highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(wert), x = indikator, group = "anzeige_geschlecht")) %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil an MINT <br> Geschlecht: {point.anzeige_geschlecht} <br> Anteil: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = "Anteil"), labels = list(format = "{value}%")) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+    highcharter::hc_colors(c("#f5adac", "#b1b5c3")) %>%
+    highcharter::hc_title(text = "Anteil von Frauen und Männer an MINT",
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    )
 
 
 }
-
-
 
 #' A function to plot a graph.
 #'
@@ -297,7 +363,6 @@ home_comparison_line <- function(df,r) {
   df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
 
   # plot
-
   highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = indikator)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"),
