@@ -12,7 +12,7 @@ mod_home_start_ui <- function(id){
   tagList(
     fluidRow(
       shinydashboard::box(
-        title = "Lorem Ipsum",
+        title = "Box 1",
         width = 12,
       p(style = "text-align: justify; font-size = 16px",
         "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
@@ -32,7 +32,7 @@ mod_home_start_ui <- function(id){
       )),
     fluidRow(
       shinydashboard::box(
-        title = "Lorem Ipsum",
+        title = "Box 2",
         width = 12,
         shiny::column(12,
                       mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),br(),br()),
