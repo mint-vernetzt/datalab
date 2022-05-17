@@ -34,6 +34,7 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Box 2",
         width = 12,
+        p("Lorem ipsum dolor sit amet"),
         shiny::column(12,
                       mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),br(),br()),
 
@@ -51,8 +52,9 @@ mod_home_start_ui <- function(id){
     )),
     fluidRow(
       shinydashboard::box(
-        title = "Lorem Ipsum",
+        title = "Box 3",
         width = 12,
+        p("Lorem ipsum dolor sit amet"),
         shiny::sidebarPanel(
           mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
         shiny::mainPanel(highcharter::highchartOutput(ns("plot_comparison_mint"))
@@ -62,8 +64,9 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Lorem Ipsum",
+        title = "Box 4",
         width = 12,
+        p("Lorem ipsum dolor sit amet"),
         shiny::sidebarPanel(
           mod_home_start_leaky_ui("mod_home_start_leaky_ui_1")),
         shiny::mainPanel(plotOutput(ns("plot_leaky"))
@@ -74,8 +77,9 @@ mod_home_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Lorem Ipsum",
+        title = "Box 5",
         width = 12,
+        p("Lorem ipsum dolor sit amet"),
         shiny::sidebarPanel(
           mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
         shiny::mainPanel(
@@ -85,8 +89,9 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Lorem Ipsum",
+        title = "Box 6",
         width = 12,
+        p("Lorem ipsum dolor sit amet"),
         shiny::column(12,
           mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")),
         #fluidRow(
