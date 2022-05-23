@@ -30,7 +30,8 @@ Imports:
     ggpol,
     ggtext,
     ggpubr,
-    pkgload
+    pkgload,
+    ggalt
 Suggests: 
     spelling,
     testthat (>= 3.0.0)
