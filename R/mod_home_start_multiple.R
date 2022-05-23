@@ -10,8 +10,6 @@
 mod_home_start_multiple_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fluidRow(
-      column(4,
     p("Wähle einen Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_multiple"),
@@ -19,26 +17,17 @@ mod_home_start_multiple_ui <- function(id){
       choices = c("2015", "2016", "2017",
                   "2018","2019"),
       selected = c("2015", "2019")
-    ))),
-    fluidRow(
-      column(4,
-             p("Wähle ein Bereich:"),
-             shinyWidgets::pickerInput(
-               inputId = ns("indikator_start_multiple_1"),
-               choices = c("Beschäftigte", "Auszubildende", "Habilitationen", "Leistungskurse",
-                           "Promotionen (angestrebt)", "Studienanfänger", "Studierende"),
-               selected = "Auszubildende"
-             )
-      ),
-      column(4, offset = 4,
-             p("Wähle ein Bereich:"),
-             shinyWidgets::pickerInput(
-               inputId = ns("indikator_start_multiple_2"),
-               choices = c("Beschäftigte", "Auszubildende", "Habilitationen", "Leistungskurse",
-                           "Promotionen (angestrebt)", "Studienanfänger", "Studierende"),
-               selected = "Studienanfänger"
-             )
-      )
+    ),
+    p("Wähle ein Bereich:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("indikator_start_multiple_1"),
+      choices = c("Beschäftigte", "Auszubildende", "Habilitationen", "Leistungskurse",
+                  "Promotionen (angestrebt)", "Studienanfänger", "Studierende"),
+      selected = c("Leistungskurse", "Beschäftigte"),
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
+      multiple = T
     )
   )
 }
@@ -55,10 +44,6 @@ mod_home_start_multiple_server <- function(id, r){
 
     observeEvent(input$indikator_start_multiple_1, {
       r$indikator_start_multiple_1 <- input$indikator_start_multiple_1
-    })
-
-    observeEvent(input$indikator_start_multiple_2, {
-      r$indikator_start_multiple_2 <- input$indikator_start_multiple_2
     })
 
   })

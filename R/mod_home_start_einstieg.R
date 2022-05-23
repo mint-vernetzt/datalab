@@ -10,33 +10,16 @@
 mod_home_start_einstieg_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fluidRow(
-      column(4,
-    p("Wähle einen Zeitraum:"),
-    shinyWidgets::sliderTextInput(
-      inputId = ns("date_home_einstieg"),
-      label = NULL,
-      choices = c("2015", "2016", "2017",
-                  "2018","2019"),
-    ))),
-    fluidRow(
-      column(4,
-             p("Wähle ein Bereich:"),
-             shinyWidgets::pickerInput(
-               inputId = ns("indikator_start_einstieg_1"),
-               choices = c("Beschäftigte", "Auszubildende", "Habilitationen", "Leistungskurse",
-                           "Promotionen (angestrebt)", "Studienanfänger", "Studierende"),
-               selected = "Auszubildende"
-             )
-      ),
-      column(4, offset = 4,
-             p("Wähle ein Bereich:"),
-             shinyWidgets::pickerInput(
-               inputId = ns("indikator_start_einstieg_2"),
-               choices = c("Beschäftigte", "Auszubildende", "Habilitationen", "Leistungskurse",
-                           "Promotionen (angestrebt)", "Studienanfänger", "Studierende"),
-               selected = "Studienanfänger"
-             )
+    p("Wähle ein Bereich:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("indikator_start_einstieg_1"),
+      choices = c("Beschäftigte", "Auszubildende", "Habilitationen", "Leistungskurse",
+                  "Promotionen (angestrebt)", "Studienanfänger", "Studierende"),
+      selected = "Auszubildende",
+      multiple = TRUE,
+      options =  list(
+        "max-options" = 3,
+        "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
       )
     )
   )
@@ -48,16 +31,9 @@ mod_home_start_einstieg_ui <- function(id){
 mod_home_start_einstieg_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$date_home_einstieg, {
-      r$date_home_einstieg <- input$date_home_einstieg
-    })
 
     observeEvent(input$indikator_start_einstieg_1, {
       r$indikator_start_einstieg_1 <- input$indikator_start_einstieg_1
-    })
-
-    observeEvent(input$indikator_start_einstieg_2, {
-      r$indikator_start_einstieg_2 <- input$indikator_start_einstieg_2
     })
 
   })

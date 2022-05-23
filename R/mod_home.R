@@ -25,15 +25,12 @@ mod_home_server <- function(id, data_zentral, data_ausbildungsvertraege, r){
 
 
   r <- reactiveValues(indikator_start_einstieg_1 = NULL,
-                      indikator_start_einstieg_2 = NULL,
-                      date_home_einstieg = NULL,
                       date_start_comparison = NULL,
                       date_start_comparison_mint = NULL,
                       indikator_start_comparison = NULL,
                       date_start_leaky = NULL,
                       date_start_multiple = NULL,
-                      indikator_start_multiple_1 = NULL,
-                      indikator_start_multiple_2 = NULL,)
+                      indikator_start_multiple_1 = NULL)
 
   mod_home_start_einstieg_server("mod_home_start_einstieg_ui_1", r)
   mod_home_start_multiple_server("mod_home_start_multiple_ui_1", r)
