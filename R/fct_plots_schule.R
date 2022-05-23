@@ -457,12 +457,14 @@ kurse_waffle <- function(df,r) {
                                             "#b1b5c3",
                                             '#b1b5c3'),
                                 limits = c("Frauen (Informatik)", "Frauen (Mathematik)",
-                                           "Frauen (Naturwissenschaften)"),
+                                           "Frauen (Naturwissenschaften)", "Männer (Informatik)"),
+                                na.value="#b1b5c3",
                       guide = ggplot2::guide_legend(reverse = TRUE),
                       labels = c(
                                  paste0("Frauen (Informatik)",", ",x_gk[1], "%"),
                                  paste0("Frauen (Mathematik)",", ",x_gk[2], "%"),
-                                 paste0("Frauen (Natwi)",", ",x_gk[3], "%"))) +
+                                 paste0("Frauen (Natwi)",", ",x_gk[3], "%"),
+                                 paste0("Männer (MINT)",", ",x_gk[4] + x_gk[5] + x_gk[6], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
 
@@ -489,12 +491,14 @@ kurse_waffle <- function(df,r) {
                       "#b1b5c3",
                       '#b1b5c3'),
           limits = c("Frauen (Mathematik)",
-                     "Frauen (Naturwissenschaften)"),
+                     "Frauen (Naturwissenschaften)", "Männer (Informatik)"),
           guide = ggplot2::guide_legend(reverse = TRUE),
+          na.value="#b1b5c3",
           labels = c(
             #paste0("Frauen (Informatik)",", ",x_gk[1], "%"),
-            paste0("Frauen (Mathematik)",", ",x_gk[2], "%"),
-            paste0("Frauen (Natwi)",", ",x_gk[3], "%"))) +
+            paste0("Frauen (Mathematik)",", ",x_lk[2], "%"),
+            paste0("Frauen (Natwi)",", ",x_lk[3], "%"),
+            paste0("Männer (MINT)",", ",x_lk[4] + x_lk[5] + x_lk[6], "%"))) +
         ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
 
@@ -510,12 +514,14 @@ kurse_waffle <- function(df,r) {
                       "#b1b5c3",
                       '#b1b5c3'),
           limits = c("Frauen (Informatik)", "Frauen (Mathematik)",
-                     "Frauen (Naturwissenschaften)"),
+                     "Frauen (Naturwissenschaften)", "Männer (Informatik)"),
+          na.value="#b1b5c3",
           guide = ggplot2::guide_legend(reverse = TRUE),
           labels = c(
-            paste0("Frauen (Informatik)",", ",x_gk[1], "%"),
-            paste0("Frauen (Mathematik)",", ",x_gk[2], "%"),
-            paste0("Frauen (Natwi)",", ",x_gk[3], "%"))) +
+            paste0("Frauen (Informatik)",", ",x_lk[1], "%"),
+            paste0("Frauen (Mathematik)",", ",x_lk[2], "%"),
+            paste0("Frauen (Natwi)",", ",x_lk[3], "%"),
+            paste0("Männer (MINT)",", ",x_lk[4] + x_lk[5] + x_lk[6], "%"))) +
         ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
 

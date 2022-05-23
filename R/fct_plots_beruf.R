@@ -367,10 +367,12 @@ arbeitnehmer_waffle <- function(df,r) {
     ggplot2::scale_fill_manual(
       values =  c("#b16fab",
                   "#b1b5c3"),
-      limits = c("Frauen (MINT)"),
+      na.value="#b1b5c3",
+      limits = c("Frauen (MINT)", "Männer (MINT)"),
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("Frauen (MINT)",", ",x_auszubildende[1], "%"))) +
+        paste0("Frauen (MINT)",", ",x_auszubildende[1], "%"),
+        paste0("Männer (MINT)",", ",x_auszubildende[2], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
 
@@ -387,10 +389,12 @@ arbeitnehmer_waffle <- function(df,r) {
       ggplot2::scale_fill_manual(
         values =  c("#b16fab",
                     "#b1b5c3"),
-        limits = c("Frauen (MINT)"),
+        na.value="#b1b5c3",
+        limits = c("Frauen (MINT)", "Männer (MINT)"),
         guide = ggplot2::guide_legend(reverse = TRUE),
         labels = c(
-          paste0("Frauen (MINT)",", ",x_beschaeftigte[1], "%"))) +
+          paste0("Frauen (MINT)",", ",x_beschaeftigte[1], "%"),
+          paste0("Männer (MINT)",", ",x_beschaeftigte[2], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
 

@@ -684,11 +684,13 @@ studienzahl_waffle_alternative <- function(df,r) {
                   "#fcc433",
                   "#b1b5c3",
                   '#b1b5c3'),
-      limits = c("Frauen (Ingenieur)", "Frauen (Mathe)"),
+      na.value="#b1b5c3",
+      limits = c("Frauen (Ingenieur)", "Frauen (Mathe)", "Männer (Ingenieur)"),
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
         paste0("Frauen (Ingenieur)",", ",x_studierende[1], "%"),
-        paste0("Frauen (Mathe)",", ",x_studierende[2], "%"))) +
+        paste0("Frauen (Mathe)",", ",x_studierende[2], "%"),
+        paste0("Männer (MINT)",", ",x_studierende[3] + x_studierende[4], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
 
@@ -707,58 +709,15 @@ studienzahl_waffle_alternative <- function(df,r) {
                   "#fcc433",
                   "#b1b5c3",
                   '#b1b5c3'),
-      limits = c("Frauen (Ingenieur)", "Frauen (Mathe)"),
+      na.value="#b1b5c3",
+      limits = c("Frauen (Ingenieur)", "Frauen (Mathe)", "Männer (Ingenieur)"),
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
         paste0("Frauen (Ingenieur)",", ",x_studienanfaenger[1], "%"),
-        paste0("Frauen (Mathe)",", ",x_studienanfaenger[2], "%"))) +
+        paste0("Frauen (Mathe)",", ",x_studienanfaenger[2], "%"),
+        paste0("Männer (MINT)",", ",x_studienanfaenger[3] + x_studienanfaenger[4], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
-
-  # # create plot objects for waffle charts
-  # waffle_studierende_male <- waffle::waffle(x_studierende, keep = FALSE) +
-  #   ggplot2::labs(
-  #     fill = "",
-  #     title = paste0("<span style='color:black;'>", "**Studierende Männer**</span>")) +
-  #   ggplot2::theme(plot.title = ggtext::element_markdown(),
-  #                  plot.subtitle = ggtext::element_markdown(),
-  #                  text = ggplot2::element_text(size = 14),
-  #                  plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-  #                  legend.position = "right") +
-  #   ggplot2::scale_fill_manual(
-  #     values =  c("#00a87a",
-  #                 "#fcc433",
-  #                 "#00a87a",
-  #                 "#fcc433"),
-  #     limits = c("Männer (Ingenieur)", "Männer (Mathe)"),
-  #     guide = ggplot2::guide_legend(reverse = TRUE),
-  #     labels = c(
-  #       paste0("Männer (Ingenieur)",", ",x_studierende[3], "%"),
-  #       paste0("Männer (Mathe)",", ",x_studierende[4], "%"))) +
-  #   ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
-  #
-  #
-  #
-  # waffle_studienanfaenger_male <- waffle::waffle(x_studienanfaenger, keep = FALSE) +
-  #   ggplot2::labs(
-  #     fill = "",
-  #     title = paste0("<span style='color:black;'>", "**Studienanfänger Männer**</span>")) +
-  #   ggplot2::theme(plot.title = ggtext::element_markdown(),
-  #                  plot.subtitle = ggtext::element_markdown(),
-  #                  text = ggplot2::element_text(size = 14),
-  #                  plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-  #                  legend.position = "left") +
-  #   ggplot2::scale_fill_manual(
-  #     values =  c("#00a87a",
-  #                 "#fcc433",
-  #                 "#00a87a",
-  #                 "#fcc433"),
-  #     limits = c("Männer (Ingenieur)", "Männer (Mathe)"),
-  #     guide = ggplot2::guide_legend(reverse = TRUE),
-  #     labels = c(
-  #       paste0("Männer (Ingenieur)",", ",x_studienanfaenger[3], "%"),
-  #       paste0("Männer (Mathe)",", ",x_studienanfaenger[4], "%"))) +
-  #   ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
 
   if(lehramt == FALSE){
