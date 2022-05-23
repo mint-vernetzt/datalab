@@ -30,6 +30,10 @@ ausbildungsvertraege_waffle <- function(df, r) {
 
   df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
 
+  df_sub$fachbereich <- "MINT"
+
+  df_sub$anzeige_geschlecht <- paste0(df_sub$anzeige_geschlecht, " (", df_sub$fachbereich, ")")
+
   x_gesamt <- setNames(round_preserve_sum(as.numeric(df_sub$proportion),0),
                        df_sub$anzeige_geschlecht)
 
@@ -44,34 +48,73 @@ ausbildungsvertraege_waffle <- function(df, r) {
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
 
+  df$anzeige_geschlecht <- paste0(df$anzeige_geschlecht, " (", df$fachbereich, ")")
+
   x_mint <- setNames(round_preserve_sum(as.numeric(df$proportion),0),
                      df$anzeige_geschlecht)
 
   # create plot objects for waffle charts
-  waffle_mint <- waffle::waffle(x_mint, keep = FALSE, colors = colors_mint_vernetzt$gender) +
+  # waffle_mint <- waffle::waffle(x_mint, keep = FALSE, colors = colors_mint_vernetzt$gender) +
+  #   ggplot2::labs(
+  #     subtitle = paste0("<span style='font-size:16.0pt;'>" ,x_mint[1],"% <span style='color:#f5adac; font-size:16.0pt;'> Frauen</span> vs. ",
+  #                       "<span style='font-size:16.0pt;'>", x_mint[2],"% <span style='color:#b1b5c3; font-size:16.0pt;'> Männer</span>"),
+  #     title = paste0("<span style='color:#b16fab;'>", "**MINT**</span>")) +
+  #   ggplot2::theme(plot.title = ggtext::element_markdown(),
+  #                  plot.subtitle = ggtext::element_markdown(),
+  #                  text = ggplot2::element_text(size = 14),
+  #                  plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
+  #
+  waffle_mint <- waffle::waffle(x_mint, keep = FALSE) +
     ggplot2::labs(
-      subtitle = paste0("<span style='font-size:16.0pt;'>" ,x_mint[1],"% <span style='color:#f5adac; font-size:16.0pt;'> Frauen</span> vs. ",
-                        "<span style='font-size:16.0pt;'>", x_mint[2],"% <span style='color:#b1b5c3; font-size:16.0pt;'> Männer</span>"),
-      title = paste0("<span style='color:#b16fab;'>", "**MINT**</span>")) +
+      fill = "",
+      title = paste0("<span style='color:black;'>", "**Neue Auszubildende**</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
+                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                   legend.position = "bottom") +
+    ggplot2::scale_fill_manual(
+      values =  c("#b16fab",
+                  "#b1b5c3"),
+      limits = df$anzeige_geschlecht[1],
+      guide = ggplot2::guide_legend(reverse = TRUE),
+      labels = c(
+        paste0(df$anzeige_geschlecht[1],", ",x_mint[1], "%"))) +
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+
 
   # create plot objects for waffle charts
-  waffle_gesamt <- waffle::waffle(x_gesamt, keep = FALSE, colors = colors_mint_vernetzt$gender) +
+  # waffle_gesamt <- waffle::waffle(x_gesamt, keep = FALSE, colors = colors_mint_vernetzt$gender) +
+  #   ggplot2::labs(
+  #     subtitle = paste0("<span style='font-size:16.0pt;'>" ,x_gesamt[1],"% <span style='color:#f5adac; font-size:16.0pt;'> Frauen</span> vs. ",
+  #                       "<span style='font-size:16.0pt;'>", x_gesamt[2],"% <span style='color:#b1b5c3; font-size:16.0pt;'> Männer</span>"),
+  #     title = paste0("**Gesamt** <span style='color:#b16fab;'>", "**MINT**</span>")) +
+  #   ggplot2::theme(plot.title = ggtext::element_markdown(),
+  #                  plot.subtitle = ggtext::element_markdown(),
+  #                  text = ggplot2::element_text(size = 14),
+  #                  plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
+
+
+  waffle_gesamt <- waffle::waffle(x_gesamt, keep = FALSE) +
     ggplot2::labs(
-      subtitle = paste0("<span style='font-size:16.0pt;'>" ,x_gesamt[1],"% <span style='color:#f5adac; font-size:16.0pt;'> Frauen</span> vs. ",
-                        "<span style='font-size:16.0pt;'>", x_gesamt[2],"% <span style='color:#b1b5c3; font-size:16.0pt;'> Männer</span>"),
-      title = paste0("**Gesamt** <span style='color:#b16fab;'>", "**MINT**</span>")) +
+      fill = "",
+      title = paste0("<span style='color:black;'>", "**Neue Auszubildende Gesamt**</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
+                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                   legend.position = "bottom") +
+    ggplot2::scale_fill_manual(
+      values =  c("#b16fab",
+                  "#b1b5c3"),
+      limits = c("Frauen (MINT)"),
+      guide = ggplot2::guide_legend(reverse = TRUE),
+      labels = c(
+        paste0("Frauen (MINT)",", ",x_gesamt[1], "%"))) +
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
 
-  plot <- ggpubr::ggarrange(waffle_mint, NULL ,waffle_gesamt, widths = c(1, -0.15, 1), nrow=1, common.legend = T,
-                            legend="bottom")
+  plot <- ggpubr::ggarrange(waffle_mint, NULL ,waffle_gesamt, widths = c(1, 0.1, 1), nrow=1)
 
   text <- c(
     paste0("<span style='font-size:20.5pt; color:black'> Anteil von Frauen und Männern im Bereich ", ausbildung_bereich,

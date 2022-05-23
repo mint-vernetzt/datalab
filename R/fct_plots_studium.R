@@ -18,12 +18,6 @@ studienzahl_einstieg_bar <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_studierende_einstieg
 
-  status_studierende <- r$indikator_studierende_einstieg
-
-  geschlecht <- r$geschlecht_studierende_einstieg
-
-  switch_absolut <- r$switch_rel_abs
-
   lehramt_enthalten <- r$nurLehramt_studierende_einstieg
 
 
@@ -102,36 +96,6 @@ studienzahl_einstieg_bar <- function(df,r) {
 
     df <- df[with(df, order(anzeige_geschlecht, jahr, decreasing = FALSE)), ]
 
-    #names(df)[3] <- "Wert"
-
-   #  # plot
-   # p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
-   #    ggplot2::facet_grid(~jahr,
-   #               scales = "free_x",
-   #               space = "free_x",
-   #               switch = "x")  +
-   #    ggplot2::labs(caption = "Quelle:", title = paste0("<span style='font-size:20px; color:black; font-family: SourceSans3-Regular'>",
-   #      "Anteile an MINT und allen anderen Studienfächer", title_help),
-   #                  fill = "") +
-   #    ggplot2::theme(strip.placement = "outside",
-   #                   plot.title = ggtext::element_markdown(hjust = 0.5),
-   #                   #plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
-   #                   panel.grid.major.x = ggplot2::element_blank(),
-   #                   panel.grid.minor.x = ggplot2::element_blank(),
-   #                   panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
-   #                   panel.background = ggplot2::element_rect(fill="white"),
-   #                   strip.background = ggplot2::element_rect(fill = "white"),
-   #                   axis.title = ggplot2::element_blank()) +
-   #    ggplot2::scale_fill_manual(values = c(ggplot2::alpha("#154194", 1),
-   #                                          ggplot2::alpha("#154194", 0.5),
-   #                                          ggplot2::alpha("#b16fab", 1),
-   #                                          ggplot2::alpha("#b16fab", 0.5))) +
-   #    ggplot2::scale_y_continuous(expand = c(0,0))
-   #
-   #
-   # t <- list(
-   #   family = "SourceSans3-Regular", size = 14)
-
 
    if(isTRUE(switch_absolut)){
 
@@ -142,16 +106,6 @@ studienzahl_einstieg_bar <- function(df,r) {
                              align = "center",
                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
 
-    # p <- p + ggplot2::geom_bar(position="stack", stat="identity")
-    #
-    # plotly::ggplotly(p, tooltip = "Wert") %>% plotly::config(displayModeBar = FALSE,
-    #                                                          displaylogo = FALSE
-    #                                                          #editable = FALSE,
-    #                                                          #showTips = FALSE,
-    #                                                          #edits = FALSE,
-    #                                                          #scrollZoom = FALSE,
-    # ) %>%
-    #   plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
    }else{
 
@@ -165,17 +119,6 @@ studienzahl_einstieg_bar <- function(df,r) {
                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
 
 
-     # p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
-     #            ggplot2::scale_y_continuous(labels = scales::percent_format())
-     #
-     # plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::config(displayModeBar = FALSE,
-     #                                                             displaylogo = FALSE
-     #                                                             #editable = FALSE,
-     #                                                             #showTips = FALSE,
-     #                                                             #edits = FALSE,
-     #                                                             #scrollZoom = FALSE,
-     # ) %>%
-     #   plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
    }
 
@@ -205,30 +148,6 @@ studienzahl_einstieg_bar <- function(df,r) {
 
     df <- df[with(df, order(anzeige_geschlecht, jahr, decreasing = FALSE)), ]
 
-    # names(df)[3] <- "Wert"
-    #
-    # p <- ggplot2::ggplot(df, ggplot2::aes(fill=fachbereich, y=Wert, x=anzeige_geschlecht, tooltip = Anteil)) +
-    #   ggplot2::labs(caption = "Quelle:", title = paste0("<span style='font-size:20px; color:black; font-family: SourceSans3-Regular'>",
-    #     "Anteile an MINT und allen anderen Studienfächer", title_help),
-    #                 fill = "") +
-    #   ggplot2::facet_grid(~jahr,
-    #                       scales = "free_x",
-    #                       space = "free_x",
-    #                       switch = "x")  +
-    #   ggplot2::theme(strip.placement = "outside",
-    #                  plot.title = ggtext::element_markdown(hjust = 0.5),
-    #                 # plot.title = ggplot2::element_text(size = 14, hjust = 0.5),
-    #                  panel.grid.major.x = ggplot2::element_blank(),
-    #                  panel.grid.minor.x = ggplot2::element_blank(),
-    #                  panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
-    #                  panel.background = ggplot2::element_rect(fill="white"),
-    #                  strip.background = ggplot2::element_rect(fill = "white"),
-    #                  axis.title = ggplot2::element_blank()) +
-    #   ggplot2::scale_y_continuous(expand = c(0,0)) +
-    #   ggplot2::scale_fill_manual(values = colors_mint_vernetzt$general)
-    #
-    # t <- list(
-    #   family = "SourceSans3-Regular", size = 14)
 
     if(isTRUE(switch_absolut)){
 
@@ -239,15 +158,7 @@ studienzahl_einstieg_bar <- function(df,r) {
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
 
 
-      # p <- p + ggplot2::geom_bar(position="stack", stat="identity")
-      # plotly::ggplotly(p, tooltip = "Wert") %>% plotly::config(displayModeBar = FALSE,
-      #                                                                displaylogo = FALSE
-      #                                                                #editable = FALSE,
-      #                                                                #showTips = FALSE,
-      #                                                                #edits = FALSE,
-      #                                                                #scrollZoom = FALSE,
-      #                                                          ) %>%
-      #   plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
+
     }else{
 
       p <- highchart_obj(df, geschlecht, type = "percent", andere_name = "andere Studiengänge", lehramt = "Nein")
@@ -259,23 +170,222 @@ studienzahl_einstieg_bar <- function(df,r) {
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
 
-#
-#      p <- p + ggplot2::geom_bar(position="fill", stat="identity") +
-#         ggplot2::scale_y_continuous(labels = scales::percent_format())
-#       plotly::ggplotly(p, tooltip = "tooltip") %>% plotly::config(displayModeBar = FALSE,
-#                                                                   displaylogo = FALSE
-#                                                                   #editable = FALSE,
-#                                                                   #showTips = FALSE,
-#                                                                   #edits = FALSE,
-#                                                                   #scrollZoom = FALSE,
-#       ) %>%
-#         plotly::layout(font = t, xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
 
     }
 
   }
 
 }
+
+
+
+#' A function to plot a graph.
+#'
+#' @description A function to create a stacked bar chart for the first box
+#' inside the tab "Schule".
+#'
+#' @return The return value is a plot
+#' @param df The dataframe "Kurse.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+studienzahl_einstieg_pie <- function(df,r) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_studierende_einstieg
+
+  lehramt_enthalten <- r$nurLehramt_studierende_einstieg
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+
+  df <- df %>% dplyr::filter(region == "Deutschland")
+
+  df2 <- calc_share_MINT(df[(df$indikator == "Studierende"), ])
+
+  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger"), ])
+
+  df2 <- calc_share_male(df2, "box_1")
+
+  df3 <- calc_share_male(df3, "box_1")
+
+  df <- rbind(df2, df3)
+
+
+  if(isTRUE(lehramt_enthalten)){
+
+
+    df <- df[!(df$nur_lehramt == "Nein" & df$hochschulform == "Uni"), ]
+
+    df <- df[!(df$nur_lehramt == "Nein" & df$hochschulform == "FH"), ]
+
+    # calculate share of teacher
+    values <- df %>%
+      dplyr::group_by(jahr, fachbereich, anzeige_geschlecht, indikator) %>%
+      dplyr::mutate(wert = wert - dplyr::lead(wert)) %>% na.omit()
+
+
+    df[df$hochschulform == "insgesamt", "wert"] <- values$wert
+
+
+    df[df$nur_lehramt == "Ja", "fachbereich"] <- interaction(df[df$nur_lehramt == "Ja", "fachbereich"][[1]], " (Lehramt)", sep = "")
+
+
+    df_studierende <- df %>% dplyr::filter(indikator == "Studierende")
+
+    df_studierende <- df_studierende %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+    df_studierende$props <- sum(df_studierende$wert)
+
+    df_studierende <- df_studierende %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
+      dplyr::summarize(proportion = wert/props)
+
+    df_studierende$proportion <- df_studierende$proportion * 100
+
+    df_studierende$proportion <- round_preserve_sum(as.numeric(df_studierende$proportion),0)
+
+    df_studierende$anzeige_geschlecht <- paste0(df_studierende$anzeige_geschlecht, " (", df_studierende$fachbereich, ")")
+
+
+    df_anfaenger <- df %>% dplyr::filter(indikator == "Studienanfänger")
+
+    df_anfaenger <- df_anfaenger %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+    df_anfaenger$props <- sum(df_anfaenger$wert)
+
+    df_anfaenger <- df_anfaenger %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
+      dplyr::summarize(proportion = wert/props)
+
+    df_anfaenger$proportion <- df_anfaenger$proportion * 100
+
+    df_anfaenger$proportion <- round_preserve_sum(as.numeric(df_anfaenger$proportion),0)
+
+    df_anfaenger$anzeige_geschlecht <- paste0(df_anfaenger$anzeige_geschlecht, " (", df_anfaenger$fachbereich, ")")
+
+
+    highcharter::hw_grid(
+      highcharter::hchart(df_studierende, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+        highcharter::hc_tooltip(
+          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+        highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.75)','rgba(21, 65, 148, 0.5)', 'rgba(21, 65, 148, 0.25)',
+                                 "#b16fab", 'rgba(177, 111, 171, 0.75)',  'rgba(177, 111, 171, 0.50)', 'rgba(177, 111, 171, 0.25)')) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Studienfächern für Studierende in ", timerange),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_legend(enabled = TRUE, align = "left", verticalAlign = 'middle') %>%
+        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+
+
+      highcharter::hchart(df_anfaenger, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+        highcharter::hc_tooltip(
+          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+        highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.75)','rgba(21, 65, 148, 0.5)', 'rgba(21, 65, 148, 0.25)',
+                                 "#b16fab", 'rgba(177, 111, 171, 0.75)',  'rgba(177, 111, 171, 0.50)', 'rgba(177, 111, 171, 0.25)')) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Studienfächern für Studienanfänger in ", timerange),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_legend(enabled = TRUE, align = "left", verticalAlign = 'middle') %>%
+        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+
+      ncol = 1,
+      browsable = TRUE
+    )
+
+
+  }else{
+
+    df <- df %>% dplyr::filter(nur_lehramt != "Ja")
+
+    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+
+    df <- df[with(df, order(indikator, anzeige_geschlecht, jahr, decreasing = TRUE)), ]
+
+    df_studierende <- df %>% dplyr::filter(indikator == "Studierende")
+
+    df_studierende <- df_studierende %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+    df_studierende$props <- sum(df_studierende$wert)
+
+    df_studierende <- df_studierende %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
+      dplyr::summarize(proportion = wert/props)
+
+    df_studierende$proportion <- df_studierende$proportion * 100
+
+    df_studierende$proportion <- round_preserve_sum(as.numeric(df_studierende$proportion),0)
+
+    df_studierende$anzeige_geschlecht <- paste0(df_studierende$anzeige_geschlecht, " (", df_studierende$fachbereich, ")")
+
+
+    df_anfaenger <- df %>% dplyr::filter(indikator == "Studienanfänger")
+
+    df_anfaenger <- df_anfaenger %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+    df_anfaenger$props <- sum(df_anfaenger$wert)
+
+    df_anfaenger <- df_anfaenger %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
+      dplyr::summarize(proportion = wert/props)
+
+    df_anfaenger$proportion <- df_anfaenger$proportion * 100
+
+    df_anfaenger$proportion <- round_preserve_sum(as.numeric(df_anfaenger$proportion),0)
+
+    df_anfaenger$anzeige_geschlecht <- paste0(df_anfaenger$anzeige_geschlecht, " (", df_anfaenger$fachbereich, ")")
+
+
+    highcharter::hw_grid(
+      highcharter::hchart(df_studierende, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+        highcharter::hc_tooltip(
+          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+        highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.6)',
+                                 "#b16fab", 'rgba(177, 111, 171, 0.6)')) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Studienfächern für Studierende in ", timerange),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_legend(enabled = TRUE) %>%
+        #highcharter::hc_legend(enabled = TRUE, align = "center", layout = "horizontal") %>%
+        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+
+
+      highcharter::hchart(df_anfaenger, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+        highcharter::hc_tooltip(
+          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+        highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.6)',
+                                 "#b16fab", 'rgba(177, 111, 171, 0.6)')) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Studienfächern für Studienanfänger in ", timerange),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+       # highcharter::hc_legend(enabled = TRUE, align = "center", layout = "horizontal") %>%
+        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+
+      ncol = 2,
+      browsable = TRUE
+    )
+
+
+
+  }
+
+
+
+}
+
 
 
 #' A function to return a filtered dataset
@@ -293,9 +403,9 @@ data_einstieg <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_studierende_einstieg
 
-  status_studierende <- r$indikator_studierende_einstieg
+  #status_studierende <- r$indikator_studierende_einstieg
 
-  geschlecht <- r$geschlecht_studierende_einstieg
+  #geschlecht <- r$geschlecht_studierende_einstieg
 
   lehramt_enthalten <- r$nurLehramt_studierende_einstieg
 
@@ -311,7 +421,6 @@ data_einstieg <- function(df,r) {
   df <- calc_share_male(df, "box_1")
 
   # filter gender
-  df <- df %>% dplyr::filter(anzeige_geschlecht %in% geschlecht)
 
   if(isTRUE(lehramt_enthalten)){
 
@@ -356,8 +465,6 @@ data_einstieg <- function(df,r) {
 studienzahl_waffle <- function(df,r) {
 
   # load UI inputs from reactive value
-  status_studierende <- r$indikator_studierende
-
   timerange <- r$date_studierende
 
   lehramt <- r$nurLehramt_studierende
@@ -369,7 +476,6 @@ studienzahl_waffle <- function(df,r) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
-  df <- df %>% dplyr::filter(indikator == status_studierende)
 
   if(lehramt == FALSE){
 
@@ -386,49 +492,73 @@ studienzahl_waffle <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  # call function to calculate the share of MINT and the remaining subjects
-  df <- calc_share_MINT(df)
+  df <- df %>% dplyr::filter(fachbereich != "Alle")
 
   # calculate the share of males
   df <- calc_share_male(df, "box_2")
 
-  # calculate proportions
-  df <- df %>% dplyr::group_by(fachbereich) %>%
-    dplyr::mutate(props = sum(wert))
+  x_studierende <- prep_studium_proportion(df[df$indikator == "Studierende",])
+
+  x_studienanfaenger <- prep_studium_proportion(df[df$indikator == "Studienanfänger",])
 
 
-  df <- df %>% dplyr::group_by(anzeige_geschlecht, fachbereich) %>%
-    dplyr::summarize(proportion = wert/props)
+  x_studierende <- x_studierende[order(factor(names(x_studierende), levels = c('Frauen (Ingenieur)', 'Frauen (Mathe)',
+                                                                               'Männer (Ingenieur)', 'Männer (Mathe)')))]
 
-  df$proportion <- df$proportion * 100
+  x_studienanfaenger <- x_studienanfaenger[order(factor(names(x_studienanfaenger),
+                                                   levels = c('Frauen (Ingenieur)', 'Frauen (Mathe)',
+                                                              'Männer (Ingenieur)', 'Männer (Mathe)')))]
 
 
-  x_mint <- setNames(round_preserve_sum(as.numeric(df[df$fachbereich == "MINT", "proportion"][[1]]),0),
-                     df[df$fachbereich == "MINT", "anzeige_geschlecht"][[1]])
 
-  x_rest <- setNames(round_preserve_sum(as.numeric(df[df$fachbereich == "andere Studiengänge", "proportion"][[1]]),0),
-                     df[df$fachbereich == "andere Studiengänge", "anzeige_geschlecht"][[1]])
 
   # create plot objects for waffle charts
-  waffle_mint <- waffle::waffle(x_mint, keep = FALSE, colors = colors_mint_vernetzt$gender) +
+  waffle_studierende <- waffle::waffle(x_studierende, keep = FALSE) +
     ggplot2::labs(
-      subtitle = paste0("<span style='font-size:16.0pt;'>" ,x_mint[1],"% <span style='color:#f5adac; font-size:16.0pt;'> Frauen</span> vs. ",
-                        "<span style='font-size:16.0pt;'>", x_mint[2],"% <span style='color:#b1b5c3; font-size:16.0pt;'> Männer</span>"),
-      title = paste0("<span style='color:#b16fab;'>", "**MINT**</span>")) +
+      fill = "",
+      title = paste0("<span style='color:black;'>", "**Studierende**</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
+                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                   legend.position = "bottom") +
+    ggplot2::scale_fill_manual(
+      values =  c("#ee7775",
+                  "#f5adac4D",
+                  "#23262F",
+                  '#b1b5c3'),
+      guide = ggplot2::guide_legend(reverse = TRUE),
+      labels = c(
+        paste0("Frauen (Ingenieur)",", ",x_studierende[1], "%"),
+        paste0("Frauen (Mathe)",", ",x_studierende[2], "%"),
+        paste0("Männer (Ingenieur)",", ",x_studierende[3], "%"),
+        paste0("Männer (Mathe)",", ",x_studierende[4], "%"))) +
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
-  waffle_rest <- waffle::waffle(x_rest, keep = FALSE, colors = colors_mint_vernetzt$gender) +
+
+
+  waffle_studienanfaenger <- waffle::waffle(x_studienanfaenger, keep = FALSE) +
     ggplot2::labs(
-      subtitle = paste0("<span style='font-size:16.0pt;'>" ,x_rest[1],"% <span style='color:#f5adac; font-size:16.0pt;'> Frauen </span> vs. ",
-                        "<span style='font-size:16.0pt;'>", x_rest[2],"% <span style='color:#b1b5c3; font-size:16.0pt;'> Männer</span>"),
-      title = paste0("<span style='color:#154194;'>", "**Andere Studiengänge**</span>")) +
+      fill = "",
+      title = paste0("<span style='color:black;'>", "**Studienanfänger**</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
+                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                   legend.position = "bottom") +
+    ggplot2::scale_fill_manual(
+        values =  c("#ee7775",
+                    "#f5adac4D",
+                    "#23262F",
+                    '#b1b5c3'),
+        guide = ggplot2::guide_legend(reverse = TRUE),
+        labels = c(
+          paste0("Frauen (Ingenieur)",", ",x_studienanfaenger[1], "%"),
+          paste0("Frauen (Mathe)",", ",x_studienanfaenger[2], "%"),
+          paste0("Männer (Ingenieur)",", ",x_studienanfaenger[3], "%"),
+          paste0("Männer (Mathe)",", ",x_studienanfaenger[4], "%"))) +
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+
 
 
 
@@ -461,25 +591,220 @@ studienzahl_waffle <- function(df,r) {
   }
 
 
-  if (status_studierende == "Studierende"){
 
-    title_help <- paste0("bei Studierenden ", title_help_sub, title_help_sub_sub)
+  title_help <- paste0(title_help_sub, title_help_sub_sub)
 
-  }else{
 
-    title_help <- paste0("bei Studienanfängern ", title_help_sub,  title_help_sub_sub)
 
-  }
 
-  plot <- ggpubr::ggarrange(waffle_mint, NULL ,waffle_rest, widths = c(1, -0.15, 1), nrow=1, common.legend = T,
-                            legend="bottom")
-
+  plot <- ggpubr::ggarrange(waffle_studienanfaenger, NULL ,
+                            waffle_studierende, widths = c(1, 0.1, 1), nrow=1)
   text <- c(
-    paste0("<span style='font-size:20.5pt; color:black'> Anteil von Frauen und Männern an MINT und allen andere Studiengängen <br> ", title_help,
+    paste0("<span style='font-size:20.5pt; color:black'> Anteil von Frauen und Männern an MINT", title_help,
            " in ",timerange))
   ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
+
 }
+
+
+
+#' A function to plot a waffle chart
+#'
+#' @description A function to create a waffle chart for the second box inside the
+#' tab "Studium".
+#'
+#' @return The return value is a waffle chart
+#' @param df The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+studienzahl_waffle_alternative <- function(df,r) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_studierende
+
+  lehramt <- r$nurLehramt_studierende
+
+  hochschulform_select_1 <- r$hochschulform_studierende_1
+
+  hochschulform_select_2 <- r$hochschulform_studierende_2
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+
+  if(lehramt == FALSE){
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
+
+  } else {
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
+  }
+
+  df <- df %>% dplyr::filter(region == "Deutschland")
+
+  df <- df %>% dplyr::filter(fachbereich != "Alle")
+
+  # calculate the share of males
+  df <- calc_share_male(df, "box_2")
+
+  x_studierende <- prep_studium_proportion(df[df$indikator == "Studierende",])
+
+  x_studienanfaenger <- prep_studium_proportion(df[df$indikator == "Studienanfänger",])
+
+
+  x_studierende <- x_studierende[order(factor(names(x_studierende), levels = c('Frauen (Ingenieur)', 'Frauen (Mathe)',
+                                                                               'Männer (Ingenieur)', 'Männer (Mathe)')))]
+
+  x_studienanfaenger <- x_studienanfaenger[order(factor(names(x_studienanfaenger),
+                                                        levels = c('Frauen (Ingenieur)', 'Frauen (Mathe)',
+                                                                   'Männer (Ingenieur)', 'Männer (Mathe)')))]
+
+
+
+
+  # create plot objects for waffle charts
+  waffle_studierende_female <- waffle::waffle(x_studierende, keep = FALSE) +
+    ggplot2::labs(
+      fill = "",
+      title = paste0("<span style='color:black;'>", "**Studierende**</span>")) +
+    ggplot2::theme(plot.title = ggtext::element_markdown(),
+                   plot.subtitle = ggtext::element_markdown(),
+                   text = ggplot2::element_text(size = 14),
+                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                   legend.position = "right") +
+    ggplot2::scale_fill_manual(
+      values =  c("#00a87a",
+                  "#fcc433",
+                  "#b1b5c3",
+                  '#b1b5c3'),
+      limits = c("Frauen (Ingenieur)", "Frauen (Mathe)"),
+      guide = ggplot2::guide_legend(reverse = TRUE),
+      labels = c(
+        paste0("Frauen (Ingenieur)",", ",x_studierende[1], "%"),
+        paste0("Frauen (Mathe)",", ",x_studierende[2], "%"))) +
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+
+
+
+  waffle_studienanfaenger_female <- waffle::waffle(x_studienanfaenger, keep = FALSE) +
+    ggplot2::labs(
+      fill = "",
+      title = paste0("<span style='color:black;'>", "**Studienanfänger**</span>")) +
+    ggplot2::theme(plot.title = ggtext::element_markdown(),
+                   plot.subtitle = ggtext::element_markdown(),
+                   text = ggplot2::element_text(size = 14),
+                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                   legend.position = "left") +
+    ggplot2::scale_fill_manual(
+      values =  c("#00a87a",
+                  "#fcc433",
+                  "#b1b5c3",
+                  '#b1b5c3'),
+      limits = c("Frauen (Ingenieur)", "Frauen (Mathe)"),
+      guide = ggplot2::guide_legend(reverse = TRUE),
+      labels = c(
+        paste0("Frauen (Ingenieur)",", ",x_studienanfaenger[1], "%"),
+        paste0("Frauen (Mathe)",", ",x_studienanfaenger[2], "%"))) +
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+
+
+  # # create plot objects for waffle charts
+  # waffle_studierende_male <- waffle::waffle(x_studierende, keep = FALSE) +
+  #   ggplot2::labs(
+  #     fill = "",
+  #     title = paste0("<span style='color:black;'>", "**Studierende Männer**</span>")) +
+  #   ggplot2::theme(plot.title = ggtext::element_markdown(),
+  #                  plot.subtitle = ggtext::element_markdown(),
+  #                  text = ggplot2::element_text(size = 14),
+  #                  plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+  #                  legend.position = "right") +
+  #   ggplot2::scale_fill_manual(
+  #     values =  c("#00a87a",
+  #                 "#fcc433",
+  #                 "#00a87a",
+  #                 "#fcc433"),
+  #     limits = c("Männer (Ingenieur)", "Männer (Mathe)"),
+  #     guide = ggplot2::guide_legend(reverse = TRUE),
+  #     labels = c(
+  #       paste0("Männer (Ingenieur)",", ",x_studierende[3], "%"),
+  #       paste0("Männer (Mathe)",", ",x_studierende[4], "%"))) +
+  #   ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+  #
+  #
+  #
+  # waffle_studienanfaenger_male <- waffle::waffle(x_studienanfaenger, keep = FALSE) +
+  #   ggplot2::labs(
+  #     fill = "",
+  #     title = paste0("<span style='color:black;'>", "**Studienanfänger Männer**</span>")) +
+  #   ggplot2::theme(plot.title = ggtext::element_markdown(),
+  #                  plot.subtitle = ggtext::element_markdown(),
+  #                  text = ggplot2::element_text(size = 14),
+  #                  plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+  #                  legend.position = "left") +
+  #   ggplot2::scale_fill_manual(
+  #     values =  c("#00a87a",
+  #                 "#fcc433",
+  #                 "#00a87a",
+  #                 "#fcc433"),
+  #     limits = c("Männer (Ingenieur)", "Männer (Mathe)"),
+  #     guide = ggplot2::guide_legend(reverse = TRUE),
+  #     labels = c(
+  #       paste0("Männer (Ingenieur)",", ",x_studienanfaenger[3], "%"),
+  #       paste0("Männer (Mathe)",", ",x_studienanfaenger[4], "%"))) +
+  #   ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+
+
+  if(lehramt == FALSE){
+
+    title_help_sub_sub <- ""
+
+    hochschulform <- hochschulform_select_1
+
+  } else {
+
+    title_help_sub_sub <- " (nur Lehramt)"
+
+    hochschulform <- hochschulform_select_2
+
+  }
+
+  if (hochschulform == "Uni"){
+
+    title_help_sub <- "an einer Uni"
+
+  }else if (hochschulform == "FH"){
+
+    title_help_sub <- "an einer FH"
+
+  } else {
+
+    title_help_sub <- "insgesamt"
+
+  }
+
+
+
+  title_help <- paste0(title_help_sub, title_help_sub_sub)
+
+  plot <- ggpubr::ggarrange(waffle_studienanfaenger_female, NULL ,waffle_studierende_female,
+                            widths = c(1, 0.1, 1), nrow=1)
+
+  text <- c(
+    paste0("<span style='font-size:20.5pt; color:black'> Anteil von Frauen und Männern an MINT ", title_help,
+           " in ",timerange))
+  ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
+
+
+}
+
+
 
 #' A function to create a paired bar plot
 #'
@@ -493,23 +818,17 @@ studienzahl_waffle <- function(df,r) {
 
 studienzahl_absolut <- function(df,r) {
 
-  status_studierende <- r$indikator_studierende
-
   timerange <- r$date_studierende
 
   lehramt <- r$nurLehramt_studierende
-
-  geschlecht <- r$geschlecht_studierende
 
   hochschulform_select_1 <- r$hochschulform_studierende_1
 
   hochschulform_select_2 <- r$hochschulform_studierende_2
 
-  mint_vs_rest <- r$mint_vs_rest_studierende
 
   df <- df %>% dplyr::filter(jahr == timerange)
 
-  df <- df %>% dplyr::filter(indikator == status_studierende)
 
   if(lehramt == FALSE){
 
@@ -527,8 +846,6 @@ studienzahl_absolut <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  # call function to calculate the share of MINT and the remaining subjects
-  df <- calc_share_MINT(df)
 
   # calculate the share of males
   df <- calc_share_male(df, type = "box_2")
@@ -563,33 +880,33 @@ studienzahl_absolut <- function(df,r) {
   }
 
 
-  if (status_studierende == "Studierende"){
+  title_help <- paste0(title_help_sub, title_help_sub_sub)
 
-    title_help <- paste0("von Studierenden ", title_help_sub, title_help_sub_sub)
 
-  }else{
+  df <- df %>% dplyr::filter(fachbereich != "Alle")
 
-    title_help <- paste0("von Studienanfängern ", title_help_sub, title_help_sub_sub)
+  options(scipen=999)
 
-  }
   # plot
-  ggplot2::ggplot(df, ggplot2::aes(x=reorder(fachbereich, wert), y=wert, fill = anzeige_geschlecht)) +
+  ggplot2::ggplot(df, ggplot2::aes(x=indikator, y=wert, fill = fachbereich)) +
     ggplot2::geom_bar(stat="identity", position = "dodge") +
     ggplot2::geom_text(ggplot2::aes(label=wert, vjust = - 0.25),
                        position=ggplot2::position_dodge(width=0.9),
                        fontface = "bold") +
     ggplot2::theme_bw() +
-    ggplot2::theme(# = ggplot2::element_text(hjust = 0.5),
+    ggplot2::facet_grid(~ anzeige_geschlecht) +
+    ggplot2::theme(
+      strip.background = ggplot2::element_blank(),
       text = ggplot2::element_text(size = 14),
-      axis.text.x = ggplot2::element_text(colour = c("#b16fab", "#154194"), size = 14, face="bold"),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::ylab("Anzahl") + ggplot2::xlab("") +
-    ggplot2::scale_fill_manual(values = colors_mint_vernetzt$gender) +
+    ggplot2::xlab("") + ggplot2::ylab("Anzahl") +
+    ggplot2::scale_fill_manual(values = c("#00a87a", "#fcc433")) +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Frauen und Männern in MINT und allen andere Studiengängen <br> ", title_help,
-                                 " in ",timerange,
-                                 "<br><br>"),
-                fill = "")
+                                 "Frauen und Männer in MINT und allen anderen Studienfächern ",title_help,
+                                 " in ", timerange,
+                                 "<br><br><br>"),
+                  fill = "")
+
 
 
 }
@@ -608,9 +925,6 @@ studienzahl_absolut <- function(df,r) {
 
 studienzahl_map <- function(df,r) {
 
-  # load UI inputs from reactive value
-  status_studierende <- r$indikator_studierende
-
   timerange <- r$date_studierende
 
   lehramt <- r$nurLehramt_studierende
@@ -621,8 +935,6 @@ studienzahl_map <- function(df,r) {
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
-
-  df <- df %>% dplyr::filter(indikator == status_studierende)
 
   if(lehramt == FALSE){
 
@@ -649,9 +961,15 @@ studienzahl_map <- function(df,r) {
 
   df <- df %>% dplyr::filter(fachbereich != "andere Studiengänge")
 
-  values <- (df[df$anzeige_geschlecht == "Frauen", "wert"]/df[df$anzeige_geschlecht == "Gesamt", "wert"])*100
+  values_studierende <- (df[(df$anzeige_geschlecht == "Frauen" & df$indikator == "Studierende"),
+                "wert"]/df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Studierende"), "wert"])*100
 
-  values$region <- df[df$anzeige_geschlecht == "Frauen", "region"][[1]]
+  values_studierende$region <- df[(df$anzeige_geschlecht == "Frauen" & df$indikator == "Studierende"), "region"][[1]]
+
+  values_studienanfaenger <- (df[(df$anzeige_geschlecht == "Frauen" & df$indikator == "Studienanfänger"),
+                            "wert"]/df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Studienanfänger"), "wert"])*100
+
+  values_studienanfaenger$region <- df[(df$anzeige_geschlecht == "Frauen" & df$indikator == "Studienanfänger"), "region"][[1]]
 
 
   if(lehramt == FALSE){
@@ -683,44 +1001,75 @@ studienzahl_map <- function(df,r) {
 
   }
 
-  if (status_studierende == "Studierende"){
 
-    title_help <- paste0("Studentinnen ", title_help_sub, title_help_sub_sub)
-
-  }else{
-
-    title_help <- paste0("Studienanfängerinnen ", title_help_sub, title_help_sub_sub)
-
-  }
+  title_help <- paste0(title_help_sub, title_help_sub_sub)
 
 
-  # plot
-  highcharter::hcmap(
-    "countries/de/de-all",
-    data = values,
-    value = "wert",
-    joinBy = c("name", "region"),
-    borderColor = "#FAFAFA",
-    name = "Anteil Frauen an MINT",
-    borderWidth = 0.1,
-    tooltip = list(
-      valueDecimals = 0,
-      valueSuffix = "%"
-    )
-  ) %>%
-    highcharter::hc_title(
-      text = paste0("Anteil der ",title_help ," an MINT in ", timerange),
-      margin = 10,
-      align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+  highcharter::hw_grid(
+    # plot
+    highcharter::hcmap(
+      "countries/de/de-all",
+      data = values_studierende,
+      value = "wert",
+      joinBy = c("name", "region"),
+      borderColor = "#FAFAFA",
+      name = "Anteil Frauen an MINT",
+      borderWidth = 0.1,
+      nullColor = "#A9A9A9",
+      tooltip = list(
+        valueDecimals = 0,
+        valueSuffix = "%"
+      )
     ) %>%
-    highcharter::hc_caption(
-      text = "Quelle:",  style = list(fontSize = "12px")
+      highcharter::hc_title(
+        text = paste0("Anteil der Studentinnen <br>",title_help ," an MINT in ", timerange),
+        margin = 10,
+        align = "center",
+        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      ) %>%
+      # highcharter::hc_caption(
+      #   text = "Quelle:",  style = list(fontSize = "12px")
+      # ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular")
+      ) %>% highcharter::hc_size(600, 550) %>%
+      highcharter::hc_credits(enabled = FALSE) %>%
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                             verticalAlign = "bottom"),
+
+    highcharter::hcmap(
+      "countries/de/de-all",
+      data = values_studienanfaenger,
+      value = "wert",
+      joinBy = c("name", "region"),
+      borderColor = "#FAFAFA",
+      name = "Anteil Frauen an MINT",
+      borderWidth = 0.1,
+      nullColor = "#A9A9A9",
+      tooltip = list(
+        valueDecimals = 0,
+        valueSuffix = "%"
+      )
     ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular")
-    ) %>% highcharter::hc_size(600, 440) %>%
-    highcharter::hc_legend(align = "right", layout = "vertical")
+      highcharter::hc_title(
+        text = paste0("Anteil der Studienanfängerinnen <br> ",title_help ," an MINT in ", timerange),
+        margin = 10,
+        align = "center",
+        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      ) %>%
+      # highcharter::hc_caption(
+      #   text = "Quelle:",  style = list(fontSize = "12px")
+      # ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular")
+      ) %>% highcharter::hc_size(600, 550) %>%
+      highcharter::hc_credits(enabled = FALSE) %>%
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom"),
+
+
+    ncol = 2,
+    browsable = TRUE
+  )
 
 
 
@@ -739,8 +1088,6 @@ studienzahl_map <- function(df,r) {
 data_mix_studium <- function(df,r) {
 
   # load UI inputs from reactive value
-  status_studierende <- r$indikator_studierende
-
   timerange <- r$date_studierende
 
   lehramt <- r$nurLehramt_studierende
@@ -751,7 +1098,6 @@ data_mix_studium <- function(df,r) {
 
   df <- df %>% dplyr::filter(jahr == timerange)
 
-  df <- df %>% dplyr::filter(indikator == status_studierende)
 
   if(lehramt == FALSE){
 
@@ -766,8 +1112,7 @@ data_mix_studium <- function(df,r) {
     df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
   }
 
-  # call function to calculate the share of MINT and the remaining subjects
-  df <- calc_share_MINT(df)
+
 
   # calculate the share of males
   values <- df %>%
@@ -808,8 +1153,6 @@ studienzahl_verlauf <- function(df,r) {
 
   topic <- r$topic_studierende_verlauf
 
-  ost_west <- r$ost_west
-
   subject_aggregated <- r$subjects_aggregated
 
   subjects_select <- r$subject_selected
@@ -825,6 +1168,10 @@ studienzahl_verlauf <- function(df,r) {
   df <- df %>% dplyr::filter(region != "Bayern")
 
   df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
+
+  df <- prep_studierende_east_west(df)
+
 
   if(lehramt == FALSE){
 
@@ -842,8 +1189,6 @@ studienzahl_verlauf <- function(df,r) {
 
     title_help_sub_sub <- " an einer Uni (nur Lehramt)"
   }
-
-
 
 
   if (subject_aggregated == "aggregiert"){
@@ -881,30 +1226,11 @@ studienzahl_verlauf <- function(df,r) {
   }
 
 
-
-
-  # order
-  df <- df[with(df, order(region, fachbereich, jahr, decreasing = TRUE)), ]
-
-  # calculate proportion
-  values <- df %>%
+  values <-  df %>%
     dplyr::group_by(jahr, fachbereich, region) %>%
-    dplyr::mutate(wert = dplyr::lead(wert)/wert) %>% dplyr::select(wert) %>% na.omit()
+    dplyr::summarise(props = wert[anzeige_geschlecht == "Frauen"] /
+                    wert[anzeige_geschlecht == "Gesamt"])
 
-
-  if (ost_west == FALSE) {
-
-    values <- values %>% dplyr::filter(region %in% states)
-
-  } else{
-
-    values$dummy_west <- ifelse(values$region %in% states_east_west$west, "Westen", "Osten")
-
-    values <- values %>% dplyr::group_by(jahr, fachbereich, dummy_west) %>%
-      dplyr::summarise(wert = mean(wert))
-
-    names(values)[3] <- "region"
-  }
 
   if (subject_aggregated == "aggregiert"){
     # filter MINT or remaining subjects
@@ -914,12 +1240,12 @@ studienzahl_verlauf <- function(df,r) {
   # order years for plot
   values <- values[with(values, order(region, jahr, decreasing = FALSE)), ]
 
-  values$wert <- values$wert * 100
+  values$props <- values$props * 100
 
-
+  values <- values %>% dplyr::filter(region %in% states)
 
   # plot
-  highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(wert), group = region)) %>%
+  highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(props), group = region)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
@@ -1057,6 +1383,129 @@ data_verlauf_studium <- function(df,r) {
 
 
 
+#' A function to plot time series
+#'
+#' @description A function to plot the time series of the german states
+#'
+#' @return The return value, if any, from executing the function.
+#' @param data The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+studienzahl_verlauf_bl <- function(df,r) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_studierende_verlauf_bl
+
+  lehramt <- r$nurLehramt_studierende_verlauf_bl
+
+  states <- r$states_studierende_verlauf_bl
+
+  topic <- r$topic_studierende_verlauf_bl
+
+  subject_aggregated <- r$subjects_aggregated_bl
+
+  subjects_select <- r$subject_selected_bl
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- df %>% dplyr::filter(region != "Bayern")
+
+  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
+
+  df <- prep_studierende_east_west(df)
+
+
+  if(lehramt == FALSE){
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+
+    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+
+    title_help_sub_sub <- " insgesamt"
+
+  } else {
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+
+    df <- df %>% dplyr::filter(hochschulform == "Uni")
+
+    title_help_sub_sub <- " an einer Uni (nur Lehramt)"
+  }
+
+
+  if (subject_aggregated == "aggregiert"){
+
+    # call function to calculate the share of MINT and the remaining subjects
+    df <- calc_share_MINT_bl(df)
+
+    if (topic == "MINT"){
+
+      title_help_sub <- "an MINT"
+
+    } else {
+
+      title_help_sub <- "an anderen Studienfächern"
+
+    }
+
+  }else {
+
+
+    df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
+
+    title_help_sub <- dictionary_title_studium[[subjects_select]]
+  }
+
+
+  df <- calc_share_male_bl(df)
+
+  title_help <- paste0(title_help_sub, title_help_sub_sub)
+
+  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+                    wert[anzeige_geschlecht == "Männer"])
+
+  values <- df %>% dplyr::group_by(region, indikator, fachbereich, anzeige_geschlecht, jahr) %>%
+    dplyr::summarize(proportion = wert/props)
+
+
+  if (subject_aggregated == "aggregiert"){
+    # filter MINT or remaining subjects
+    values <- values %>% dplyr::filter(fachbereich == topic)
+  }
+
+  # order years for plot
+  values <- values[with(values, order(region, jahr, decreasing = FALSE)), ]
+
+  values$proportion <- values$proportion * 100
+
+  values <- values %>% dplyr::filter(region %in% states)
+
+  values$anzeige_geschlecht <- paste0(values$anzeige_geschlecht, " (", values$indikator, ")")
+
+  # plot
+  highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = anzeige_geschlecht)) %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil {point.anzeige_geschlecht} <br> Wert: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
+    highcharter::hc_title(text = paste0("Anteil von Student*innen ", title_help ," im Verlauf"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    )
+
+
+}
 
 
 

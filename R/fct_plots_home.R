@@ -7,14 +7,14 @@
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-home_einsitieg_waffle <- function(df,r, order) {
+home_einstieg_pie <- function(df,r) {
 
   # load UI inputs from reactive value
-  timerange <- r$date_home_einstieg
+  timerange <- 2020
 
   indikator_choice_1 <- r$indikator_start_einstieg_1
 
-  indikator_choice_2 <- r$indikator_start_einstieg_2
+  #indikator_choice_2 <- r$indikator_start_einstieg_2
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
@@ -24,193 +24,176 @@ home_einsitieg_waffle <- function(df,r, order) {
 
   # aggeregate every "bereich to Rest vs MINT
   df <- share_MINT(df)
-
-
-  if (order == "first") {
-
-    df <- df %>% dplyr::filter(indikator == indikator_choice_1)
-
-  } else {
-
-    df <- df %>% dplyr::filter(indikator == indikator_choice_2)
-
-  }
-
-  if (order == "first") {
-
-    if ((indikator_choice_1 == "Auszubildende" | indikator_choice_1 == "Beschäftigte")) {
-
-      title_help_sub <- "andere Berufszweige"
-
-      title_help <- paste0("anderen Berufszweigen bei<br> ", indikator_choice_1,"n")
-
-    } else {
-
-      title_help_sub <- "andere Fächer"
-
-      if ((indikator_choice_1 == "Habilitationen" | indikator_choice_1 == "Promotionen (angestrebt)")){
-
-        title_help <- paste0("anderen Fächern bei<br> ", indikator_choice_1)
-
-      }else{
-
-        title_help <- paste0("anderen Fächern bei<br> ", indikator_choice_1,"n")
-      }
-    }
-
-  } else {
-
-    if ((indikator_choice_2 == "Auszubildende" | indikator_choice_2 == "Beschäftigte")) {
-
-      title_help_sub <- "andere Berufszweige"
-
-      title_help <- paste0("anderen Berufszweigen bei<br> ", indikator_choice_2,"n")
-
-    } else {
-
-      title_help_sub <- "andere Fächer"
-
-      if ((indikator_choice_2 == "Habilitationen" | indikator_choice_2 == "Promotionen (angestrebt)")){
-
-        title_help <- paste0("anderen Fächern bei<br> ", indikator_choice_2)
-
-      }else{
-
-        title_help <- paste0("anderen Fächern bei<br> ", indikator_choice_2,"n")
-      }
-    }
-  }
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
+  df <- df %>% dplyr::filter(indikator %in% indikator_choice_1)
+
+
   # calculate proportions
-  df <- df %>% dplyr::mutate(props = sum(wert))
+  df <- df %>% dplyr::group_by(indikator) %>%
+    dplyr::mutate(props = sum(wert))
 
 
-  df <- df %>% dplyr::group_by(fachbereich) %>%
+  df <- df %>% dplyr::group_by(indikator, fachbereich) %>%
     dplyr::summarize(proportion = wert/props)
 
   df$proportion <- df$proportion * 100
 
 
+  if(length(indikator_choice_1) == 1) {
 
-  x_mint_rest <- setNames(round_preserve_sum(as.numeric(df$proportion),0),
-                     df$fachbereich)
+  df$proportion <- round_preserve_sum(as.numeric(df$proportion),0)
 
-  # create plot objects for waffle charts
-  waffle_mint_rest <- waffle::waffle(x_mint_rest, keep = FALSE, colors = colors_mint_vernetzt$general) +
-    ggplot2::labs(
-      subtitle = paste0("<span style='font-size:16.0pt;'>", x_mint_rest[1],"% <span style='color:#154194; font-size:16.0pt;'>", title_help_sub,"</span> vs. <br>",
-                        "<span style='font-size:16.0pt;'>" ,x_mint_rest[2],"% <span style='color:#b16fab; font-size:16.0pt;'>MINT</span>")) +
-    ggplot2::theme(plot.title = ggtext::element_markdown(),
-                   plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
+  title_help <- helper_title_home(indikator_choice_1)
 
-  plot <- ggpubr::ggarrange(waffle_mint_rest, legend="bottom")
-  text <- c(
-    paste0("<span style='font-size:20.5pt; color:black'> Anteil von MINT an ", title_help,
-           " in ",timerange))
-  ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
+  highcharter::hw_grid(
+  df %>%
+    highcharter::hchart(
+      "pie", highcharter::hcaes(x = fachbereich, y = proportion)
+      ) %>%
+    highcharter::hc_tooltip(
+               pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+    highcharter::hc_colors(c("#154194", "#b16fab")) %>%
+    highcharter::hc_title(text = paste0("Anteil von MINT und allen ", title_help, " in 2020"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                           dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
-}
-
-
-#' A function to plot a graph.
-#'
-#' @description A function to create a stacked bar chart for the first box
-#' inside the tab "Home".
-#'
-#' @return The return value is a plot
-#' @param df The dataframe "zentral.xlsx" needs to be used for this function
-#' @param r Reactive variable that stores all the inputs from the UI
-#' @noRd
-home_einsitieg_waffle_female <- function(df,r, order) {
-
-  # load UI inputs from reactive value
-  timerange <- r$date_home_einstieg
-
-  indikator_choice_1 <- r$indikator_start_einstieg_1
-
-  indikator_choice_2 <- r$indikator_start_einstieg_2
-
-  # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr == timerange)
-
-  df <- df %>% dplyr::filter(region == "Deutschland")
+  ncol = 1,
+  browsable = TRUE
+  )
 
 
-  # aggeregate every "bereich to Rest vs MINT
-  df <- share_MINT(df)
+  } else if(length(indikator_choice_1) == 2) {
+
+    df_1 <- df %>% dplyr::filter(indikator == indikator_choice_1[1])
+
+    df_1$proportion <- round_preserve_sum(as.numeric(df_1$proportion),0)
+
+    title_help_1 <- helper_title_home(indikator_choice_1[1])
+
+    df_2 <- df %>% dplyr::filter(indikator == indikator_choice_1[2])
+
+    df_2$proportion <- round_preserve_sum(as.numeric(df_2$proportion),0)
+
+    title_help_2 <- helper_title_home(indikator_choice_1[2])
 
 
-  if (order == "first") {
+    highcharter::hw_grid(
+      highcharter::hchart(df_1, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+        highcharter::hc_tooltip(
+          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_1, " in 2020"),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_legend(enabled = TRUE) %>%
+        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
-    df <- df %>% dplyr::filter(indikator == indikator_choice_1)
 
-  } else {
+      highcharter::hchart(df_2, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+        highcharter::hc_tooltip(
+          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_2, " in 2020"),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
 
-    df <- df %>% dplyr::filter(indikator == indikator_choice_2)
+      ncol = 2,
+      browsable = TRUE
+    )
 
-  }
 
-  if (order == "first") {
+  } else if(length(indikator_choice_1) == 3) {
 
-    if ((indikator_choice_1 == "Auszubildende" | indikator_choice_1 == "Beschäftigte")) {
 
-      title_help <- "anderen Berufszweigen"
+    df_1 <- df %>% dplyr::filter(indikator == indikator_choice_1[1])
 
-    } else {
+    df_1$proportion <- round_preserve_sum(as.numeric(df_1$proportion),0)
 
-      title_help <- "anderen Fächern"
+    title_help_1 <- helper_title_home(indikator_choice_1[1])
+
+    df_2 <- df %>% dplyr::filter(indikator == indikator_choice_1[2])
+
+    df_2$proportion <- round_preserve_sum(as.numeric(df_2$proportion),0)
+
+    title_help_2 <- helper_title_home(indikator_choice_1[2])
+
+    df_3 <- df %>% dplyr::filter(indikator == indikator_choice_1[3])
+
+    df_3$proportion <- round_preserve_sum(as.numeric(df_3$proportion),0)
+
+    title_help_3 <- helper_title_home(indikator_choice_1[3])
+
+
+    highcharter::hw_grid(
+      highcharter::hchart(df_1, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+        highcharter::hc_tooltip(
+          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_1, " in 2020"),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_legend(enabled = TRUE) %>%
+        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+
+
+      highcharter::hchart(df_2, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+        highcharter::hc_tooltip(
+          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_2, " in 2020"),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+
+      highcharter::hchart(df_3, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+        highcharter::hc_tooltip(
+          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_3, " in 2020"),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_legend(enabled = TRUE) %>%
+        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+
+
+
+      ncol = 3,
+      browsable = TRUE
+    )
 
     }
 
-  } else {
-
-    if ((indikator_choice_2 == "Auszubildende" | indikator_choice_2 == "Beschäftigte")) {
-
-      title_help <- "anderen Berufszweigen"
-
-    } else {
-
-      title_help <- "anderen Fächern"
-
-    }
-  }
-
-  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
-
-  # calculate proportions
-  df <- df %>% dplyr::mutate(props = sum(wert))
-
-
-  df <- df %>% dplyr::group_by(fachbereich) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df$proportion <- df$proportion * 100
-
-
-  x_mint_rest <- setNames(round_preserve_sum(as.numeric(df$proportion),0),
-                          df$fachbereich)
-
-  # create plot objects for waffle charts
-  waffle_mint_rest <- waffle::waffle(x_mint_rest, keep = FALSE, colors = colors_mint_vernetzt$general) +
-    ggplot2::labs(
-      subtitle = paste0("<span style='font-size:16.0pt;'>", x_mint_rest[1],"% <span style='color:#154194; font-size:16.0pt;'>", title_help,"</span> vs. ",
-                        "<span style='font-size:16.0pt;'>" ,x_mint_rest[2],"% <span style='color:#b16fab; font-size:16.0pt;'>MINT</span>")) +
-    ggplot2::theme(plot.title = ggtext::element_markdown(),
-                   plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(2.5,0,0,0), "lines"))
-
-  plot <- ggpubr::ggarrange(waffle_mint_rest, legend="bottom")
-  text <- c(
-    paste0("<span style='font-size:20.5pt; color:black'> Verhältnis zwischen MINT und  ", title_help,
-           " <br> für Frauen in ",timerange))
-  ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
-
 }
+
 
 
 
@@ -307,6 +290,12 @@ home_stacked_comparison <- function(df, df_naa, r) {
   df_sub$indikator <- "Neue Ausbildungsverträge"
 
   df <- rbind(df, df_sub)
+
+  x <- ordered(factor(df$indikator), levels=c('Leistungskurse','Auszubildende','Studienanfänger',
+                                   'Studierende', 'Promotionen (angestrebt)', 'Habilitationen',
+                                   'Beschäftigte'))
+
+  df <- df[order(x),]
 
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(wert), x = indikator, group = "anzeige_geschlecht")) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil an MINT <br> Geschlecht: {point.anzeige_geschlecht} <br> Anteil: {point.y} %") %>%
@@ -451,26 +440,6 @@ home_leaky_pipeline <- function(df,r) {
 
   values <- rbind(values_female, values_male)
 
-  # values$indikator <- factor(values$indikator,levels = c("Habilitationen", "Promotionen (angestrebt)",
-  #                                                        "Studierende", "Studienanfänger",
-  #                                                        "Leistungskurse"))
-
-  # values %>%
-  #   ggplot2::ggplot(ggplot2::aes(x = proportion, y = indikator)) +
-  #   ggplot2::geom_line(ggplot2::aes(group = indikator), color="black")+
-  #   ggplot2::geom_point(ggplot2::aes(color=anzeige_geschlecht), size=6, alpha = 0.6) +
-  #   ggplot2::theme_classic() +
-  #   ggplot2::theme(legend.position="bottom",
-  #                  legend.text= ggplot2::element_text(family = 'SourceSans3-Regular'),
-  #                  panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
-  #                  plot.title = ggtext::element_markdown(hjust = 0.5),
-  #                  axis.text.y = ggplot2::element_text(size = 11, family = 'SourceSans3-Regular')) +
-  #   ggplot2::scale_x_continuous(labels = scales::percent_format()) +
-  #   ggplot2::scale_color_manual(values = colors_mint_vernetzt$gender) +
-  #   ggplot2::ylab("") + ggplot2::xlab("") +
-  #   ggplot2::labs(color = "")
-  #
-
   values$indikator <- factor(values$indikator,levels = c("Leistungskurse", "Studienanfänger",
                                                          "Studierende", "Promotionen (angestrebt)",
                                                          "Beschäftigte"))
@@ -504,15 +473,12 @@ home_leaky_pipeline <- function(df,r) {
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-home_rest_mint_verlauf <- function(df,r, order) {
+home_rest_mint_verlauf <- function(df,r) {
 
   # load UI inputs from reactive value
   timerange <- r$date_start_multiple
 
   indikator_choice_1 <- r$indikator_start_multiple_1
-
-  indikator_choice_2 <- r$indikator_start_multiple_2
-
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
@@ -523,67 +489,38 @@ home_rest_mint_verlauf <- function(df,r, order) {
   # aggeregate every "bereich to Rest vs MINT
   df <- share_MINT(df)
 
-  if (order == "first") {
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
-    df <- df %>% dplyr::filter(indikator == indikator_choice_1)
 
-  } else {
+  df <- df %>% dplyr::filter(indikator %in% indikator_choice_1)
 
-    df <- df %>% dplyr::filter(indikator == indikator_choice_2)
+  # calculate proportions
+  df <- df %>% dplyr::group_by(indikator, jahr) %>%
+    dplyr::mutate(props = sum(wert))
 
-  }
 
-  if (order == "first") {
+  df <- df %>% dplyr::group_by(indikator, jahr,fachbereich) %>%
+    dplyr::summarize(proportion = wert/props)
 
-    if ((indikator_choice_1 == "Auszubildende" | indikator_choice_1 == "Beschäftigte")) {
+  df$proportion <- df$proportion * 100
 
-      title_help <- paste0("anderen Berufszweigen <br>bei ", indikator_choice_1,"n")
 
-    } else {
+  #here only MINT
+  df <- df %>% dplyr::filter(fachbereich == "MINT")
 
-      if ((indikator_choice_1 == "Habilitationen" | indikator_choice_1 == "Promotionen (angestrebt)")){
-
-        title_help <- paste0("anderen Fächern <br>bei ", indikator_choice_1)
-
-      }else{
-
-        title_help <- paste0("anderen Fächern <br>bei ", indikator_choice_1,"n")
-      }
-    }
-
-  } else {
-
-    if ((indikator_choice_2 == "Auszubildende" | indikator_choice_2 == "Beschäftigte")) {
-
-      title_help <- paste0("anderen Berufszweigen <br>bei ", indikator_choice_2,"n")
-
-    } else {
-
-      if ((indikator_choice_2 == "Habilitationen" | indikator_choice_2 == "Promotionen (angestrebt)")){
-
-        title_help <- paste0("anderen Fächern <br>bei ", indikator_choice_2)
-
-      }else{
-
-        title_help <- paste0("anderen Fächern <br>bei ", indikator_choice_2,"n")
-      }
-    }
-  }
-
-  df <- share_female(df)
-
-  ggplot2::ggplot(df, ggplot2::aes(x = jahr, y = proportion, color = fachbereich, group = fachbereich)) +
-    ggplot2::geom_line(size = 1.5) +
-    ggplot2::scale_color_manual(values = colors_mint_vernetzt$general) +
-    ggplot2::labs(color = "", title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                             "Anteil von Frauen an MINT und ", title_help,
-                                             "<br><br><br>"),
-                  x = "Jahre", y = "Anteil") +
-    ggplot2::theme_classic() +
-    ggplot2::theme(plot.title = ggtext::element_markdown(hjust = 0.5),
-                   text = ggplot2::element_text(size = 14),
-                   panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
-                   legend.position = "bottom") +
-    ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"), limits = c(0, 100))
+  # plot
+  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = indikator)) %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil MINT <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"),
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_title(text = "Anteil von MINT im Verlauf",
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    )
 
 }
