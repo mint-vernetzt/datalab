@@ -95,14 +95,23 @@ share_MINT <- function(df){
 
     df_sub <- df %>% dplyr::filter(fachbereich %in% subjects)
 
+
+    df_sub[(df_sub$anzeige_geschlecht == "Gesamt" & df_sub$indikator == "Leistungskurse"), "wert"] <-  df_sub %>%
+      dplyr::filter(indikator == "Leistungskurse") %>%
+      dplyr::group_by(indikator, jahr) %>%
+      dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
+                         wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+
+
     df_sub$fachbereich <- ifelse(df_sub$fachbereich != "Alle Fächer", "MINT", "andere Fächer")
 
-    df_sub <- df_sub %>% dplyr::group_by(fachbereich, anzeige_geschlecht, jahr, region, indikator, bereich) %>%
-      dplyr::summarize(wert = sum(wert))
 
+    df_sub <- df_sub %>% dplyr::group_by(region, fachbereich, anzeige_geschlecht, jahr, indikator, bereich) %>%
+      dplyr::summarize(wert = sum(wert, na.rm = T))
 
     df_sub[df_sub$fachbereich == "andere Fächer", "wert"] <- df_sub[df_sub$fachbereich == "andere Fächer", "wert"] -
       df_sub[df_sub$fachbereich == "MINT", "wert"]
+
 
     df <- df %>% dplyr::filter(bereich != "Schule")
 
