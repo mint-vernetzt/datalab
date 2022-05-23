@@ -43,7 +43,7 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Box 6",
+        title = "Box 3",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         shiny::sidebarPanel(
@@ -67,7 +67,7 @@ mod_home_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Box 5",
+        title = "Box 4",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         shiny::sidebarPanel(
@@ -79,7 +79,7 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Box 3",
+        title = "Box 5",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         shiny::sidebarPanel(

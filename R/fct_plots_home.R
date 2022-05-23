@@ -291,7 +291,7 @@ home_stacked_comparison <- function(df, df_naa, r) {
 
   df <- rbind(df, df_sub)
 
-  x <- ordered(factor(df$indikator), levels=c('Leistungskurse','Auszubildende','Studienanfänger',
+  x <- ordered(factor(df$indikator), levels=c('Leistungskurse',"Neue Ausbildungsverträge",'Auszubildende','Studienanfänger',
                                    'Studierende', 'Promotionen (angestrebt)', 'Habilitationen',
                                    'Beschäftigte'))
 
