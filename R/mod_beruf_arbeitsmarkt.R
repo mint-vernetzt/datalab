@@ -39,13 +39,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           tags$style(".well {background-color:#FFFFFF;}"),
           tags$head(tags$style(HTML(".small-box {height: 140px}"))),
           mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")),
-        shinydashboard::valueBoxOutput(ns("valueBox_einstieg_mint")),
-        shinydashboard::valueBoxOutput(ns("valueBox_einstieg_rest")),
+        #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_mint")),
+        #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_rest")),
 
         shiny::mainPanel(
 
           tabsetPanel(type = "tabs",
-                      tabPanel("Balkendiagramm", highcharter::highchartOutput(ns("plot_einstieg_bar"))),
+                      tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
                                                 style = "font-size: 75%; width: 75%"))))
     )),
@@ -60,7 +60,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           tabsetPanel(type = "tabs",
                       tabPanel("Anteil", br(), plotOutput(ns("plot_waffle"))),
                       tabPanel("Absolut", br(), plotOutput(ns("plot_absolut"))),
-                      tabPanel("Karte", br(), highcharter::highchartOutput(ns("plot_map_arbeitsmarkt"))),
+                      tabPanel("Karte", br(), htmlOutput(ns("plot_map_arbeitsmarkt"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
                                                 style = "font-size: 75%; width: 75%"))),
           br(),br(),
@@ -69,6 +69,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         title = "Box 4",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        shiny::sidebarPanel(
+          mod_beruf_arbeitsmarkt_verlauf_bl_ui("mod_beruf_arbeitsmarkt_verlauf_bl_ui_1")),
+        shiny::mainPanel(
+
+                    highcharter::highchartOutput(ns("plot_verlauf_arbeitsmarkt_bl"))
+          ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Box 5",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         shiny::sidebarPanel(
@@ -89,8 +100,8 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    output$plot_einstieg_bar <-  highcharter::renderHighchart({
-      arbeitsmarkt_einstieg_bar(data_arbeitsmarkt,r)
+    output$plot_einstieg_pie <-  renderUI({
+      arbeitsmarkt_einstieg_pie(data_arbeitsmarkt,r)
 
     })
 
@@ -115,12 +126,16 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
     })
 
 
-    output$plot_map_arbeitsmarkt <- highcharter::renderHighchart({
+    output$plot_map_arbeitsmarkt <- renderUI({
       arbeitsmarkt_map(data_arbeitsmarkt,r)
     })
 
     output$plot_verlauf_arbeitsmarkt <- highcharter::renderHighchart({
       arbeitsmarkt_verlauf(data_arbeitsmarkt,r)
+    })
+
+    output$plot_verlauf_arbeitsmarkt_bl <- highcharter::renderHighchart({
+      arbeitsmarkt_verlauf_bl(data_arbeitsmarkt,r)
     })
 
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({

@@ -10,14 +10,13 @@
 mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
-
     p("Wähle einen Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_verlauf"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019"),
-      selected = c("2015", "2019")
+                  "2018","2019", "2020"),
+      selected = c("2015", "2020")
     ),
     p("Wähle den Status der Arbeitnehmer*innen:"),
     shinyWidgets::radioGroupButtons(
@@ -38,18 +37,6 @@ mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
       choices = c("MINT", "andere Berufszweige"),
       selected = "MINT"
     ),
-    p("Sollen die Bundesländer in Ost und West zusammengefasst werden?"),
-    tags$div(
-      shinyWidgets::materialSwitch(inputId = ns("ost_west"), label = "Nein", inline = TRUE),
-      tags$span("Ja")
-    ),
-    # shinyWidgets::radioGroupButtons(
-    #   inputId = ns("ost_west"),
-    #   choices = c("Ja", "Nein"),
-    #   selected = "Nein"
-    # ),
-    conditionalPanel(condition = "input.ost_west == false",
-                     ns = ns,
     p("Wähle ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_arbeitsmarkt_verlauf"),
@@ -66,15 +53,15 @@ mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen"),
+                  "Thüringen",
+                  "Osten",
+                  "Westen"),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       selected = c("Hessen", "Hamburg")
-    )),
-    conditionalPanel(condition = "input.ost_west != false",
-                     ns = ns)
+    )
   )
 }
 
@@ -104,9 +91,6 @@ mod_beruf_arbeitsmarkt_verlauf_server <- function(id, r){
       r$anforderungsniveau_arbeitsmarkt_verlauf <- input$anforderungsniveau_arbeitsmarkt_verlauf
     })
 
-    observeEvent(input$ost_west, {
-      r$ost_west <- input$ost_west
-    })
 
   })
 }

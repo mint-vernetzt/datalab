@@ -15,14 +15,7 @@ mod_beruf_arbeitsmarkt_multiple_ui <- function(id){
       inputId = ns("date_arbeitsmarkt"),
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
-    ),
-    p("Wähle den Status der Arbeitnehmer*innen:"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("indikator_arbeitsmarkt"),
-      choices = c("Beschäftigte", "Auszubildende"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+      selected = 2020
     ),
     p("Wähle ein Anforderungsniveau:"),
     shinyWidgets::pickerInput(
@@ -42,9 +35,6 @@ mod_beruf_arbeitsmarkt_multiple_server <- function(id, r){
       r$date_arbeitsmarkt <- input$date_arbeitsmarkt
     })
 
-    observeEvent(input$indikator_arbeitsmarkt, {
-      r$indikator_arbeitsmarkt <- input$indikator_arbeitsmarkt
-    })
 
     observeEvent(input$anforderungsniveau_arbeitsmarkt, {
       r$anforderungsniveau_arbeitsmarkt <- input$anforderungsniveau_arbeitsmarkt
