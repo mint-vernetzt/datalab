@@ -41,26 +41,26 @@ mod_studium_ui <- function(id){
 #' @noRd
 mod_studium_server <- function(id, data_studierende, r){
 
-  r <- reactiveValues(geschlecht_studierende_einstieg = NULL,
-                      indikator_studierende_einstieg = NULL,
-                      date_studierende_einstieg = NULL,
+  r <- reactiveValues(date_studierende_einstieg = NULL,
                       nurLehramt_studierende_einstieg = NULL,
-                      indikator_studierende = NULL,
                       date_studierende = NULL,
                       nurLehramt_studierende = NULL,
-                      mint_vs_rest_studierende = NULL,
-                      geschlecht_studierende = NULL,
                       hochschulform_studierende_1 = NULL,
                       hochschulform_studierende_2 = NULL,
-                      switch_rel_abs = NULL,
                       date_studierende_verlauf = NULL,
                       indikator_studierende_verlauf = NULL,
                       topic_studierende_verlauf = NULL,
                       nurLehramt_studierende_verlauf = NULL,
                       states_studierende_verlauf = NULL,
+                      date_studierende_verlauf_bl = NULL,
+                      topic_studierende_verlauf_bl = NULL,
+                      nurLehramt_studierende_verlauf_bl = NULL,
+                      states_studierende_verlauf_bl = NULL,
                       ost_west = NULL,
                       subjects_aggregated = NULL,
                       subject_selected = NULL,
+                      subjects_aggregated_bl = NULL,
+                      subject_selected_bl = NULL,
                       geschlecht = NULL,
                       date = NULL,
                       indikator = NULL,
@@ -91,6 +91,7 @@ mod_studium_server <- function(id, data_studierende, r){
   mod_studium_studienzahl_choice_2_server("mod_studium_studienzahl_choice_ui_2_1", r)
   mod_studium_studienzahl_einstieg_server("mod_studium_studienzahl_einstieg_ui_1", r)
   mod_studium_studienzahl_verlauf_server("mod_studium_studienzahl_verlauf_ui_1", r)
+  mod_studium_studienzahl_verlauf_bl_server("mod_studium_studienzahl_verlauf_bl_ui_1", r)
   mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1", data_studierende, r)
 
   # comment

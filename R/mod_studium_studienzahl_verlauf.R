@@ -31,11 +31,6 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_verlauf"), label = "Nein", inline = TRUE),
       tags$span("Ja")
     ),
-    # shinyWidgets::radioGroupButtons(
-    #   inputId = ns("nurLehramt_studierende_verlauf"),
-    #   choices = c("Ja", "Nein"),
-    #   selected = "Nein"
-    # ),
     p("Einzelne Fächer oder als MINT zusammengefasst:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("subjects_aggregated"),
@@ -61,18 +56,6 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
                        choices = c("Mathematik" = "Mathe", "Ingenieurswesen" = "Ingenieur"),
                        selected = "Mathematik"
                      )),
-    p("Sollen die Bundesländer in Ost und West zusammengefasst werden?"),
-    tags$div(
-      shinyWidgets::materialSwitch(inputId = ns("ost_west"), label = "Nein", inline = TRUE),
-      tags$span("Ja")
-    ),
-    # shinyWidgets::radioGroupButtons(
-    #   inputId = ns("ost_west"),
-    #   choices = c("Ja", "Nein"),
-    #   selected = "Nein"
-    # ),
-    conditionalPanel(condition = "input.ost_west == false",
-                     ns = ns,
     p("Wähle ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studierende_verlauf"),
@@ -89,15 +72,15 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen"),
+                  "Thüringen",
+                  "Osten",
+                  "Westen"),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       selected = c("Hessen", "Hamburg")
-    )),
-    conditionalPanel(condition = "input.ost_west != false",
-                     ns = ns)
+    )
   )
 }
 
@@ -125,10 +108,6 @@ mod_studium_studienzahl_verlauf_server <- function(id, r){
 
     observeEvent(input$nurLehramt_studierende_verlauf, {
       r$nurLehramt_studierende_verlauf <- input$nurLehramt_studierende_verlauf
-    })
-
-    observeEvent(input$ost_west, {
-      r$ost_west <- input$ost_west
     })
 
     observeEvent(input$subject_selected, {

@@ -39,12 +39,12 @@ mod_studium_studienzahl_ui <- function(id){
         tags$style(".well {background-color:#FFFFFF;}"),
         tags$head(tags$style(HTML(".small-box {height: 140px}"))),
         mod_studium_studienzahl_einstieg_ui("mod_studium_studienzahl_einstieg_ui_1")),
-      shinydashboard::valueBoxOutput(ns("valueBox_einstieg_mint")),
-      shinydashboard::valueBoxOutput(ns("valueBox_einstieg_rest")),
+      #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_mint")),
+      #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_rest")),
 
       shiny::mainPanel(
         tabsetPanel(type = "tabs",
-        tabPanel("Balkendiagramm", highcharter::highchartOutput(ns("plot_einstieg_bar"))),
+        tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie"))),
         tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
                                   style = "font-size: 75%; width: 75%"))))
       )),
@@ -59,7 +59,7 @@ mod_studium_studienzahl_ui <- function(id){
                   tabsetPanel(type = "tabs",
                               tabPanel("Anteil", br(), plotOutput(ns("plot_waffle"))),
                               tabPanel("Absolut", br(), plotOutput(ns("plot_absolut"))),
-                              tabPanel("Karte", br(), highcharter::highchartOutput(ns("plot_map_studienzahl"))),
+                              tabPanel("Karte", br(), htmlOutput(ns("plot_map_studienzahl"))),
                               tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
                                                         style = "font-size: 75%; width: 75%"))),
                   br(),br(),
@@ -67,6 +67,18 @@ mod_studium_studienzahl_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         title = "Box 4",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        shiny::sidebarPanel(
+          mod_studium_studienzahl_verlauf_bl_ui("mod_studium_studienzahl_verlauf_bl_ui_1")),
+        shiny::mainPanel(
+
+          highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl"))
+
+        ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Box 5",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         shiny::sidebarPanel(
@@ -103,8 +115,8 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
 
 
-    output$plot_einstieg_bar <- highcharter::renderHighchart({
-      studienzahl_einstieg_bar(data_studierende,r)
+    output$plot_einstieg_pie <- renderUI({
+      studienzahl_einstieg_pie(data_studierende,r)
 
     })
 
@@ -117,11 +129,11 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
     })
 
     output$plot_waffle <- renderPlot({
-      studienzahl_waffle(data_studierende,r)
+      studienzahl_waffle_alternative(data_studierende,r)
     })
 
 
-    output$plot_map_studienzahl <- highcharter::renderHighchart({
+    output$plot_map_studienzahl <-renderUI({
       studienzahl_map(data_studierende,r)
     })
 
@@ -129,6 +141,9 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       studienzahl_verlauf(data_studierende,r)
     })
 
+    output$plot_verlauf_studienzahl_bl <- highcharter::renderHighchart({
+      studienzahl_verlauf_bl(data_studierende,r)
+    })
 
 
     output$data_table_mix <- DT::renderDT({
@@ -138,6 +153,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
     output$data_table_verlauf <- DT::renderDT({
       data_verlauf_studium(data_studierende, r)
     })
+
 
 
 

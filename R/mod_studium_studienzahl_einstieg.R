@@ -16,42 +16,14 @@ mod_studium_studienzahl_einstieg_ui <- function(id){
         inputId = ns("date_studierende_einstieg"),
         label = NULL,
         choices = c("2012", "2013", "2014", "2015", "2016", "2017",
-                    "2018","2019"),
-        selected = c("2015", "2019")
-      ),
-    p("Wähle den Status der Student*innen:"),
-      shinyWidgets::radioGroupButtons(
-        inputId = ns("indikator_studierende_einstieg"),
-        choices = c("Studierende", "Studienanfänger"),
-        justified = TRUE,
-        checkIcon = list(yes = icon("ok",
-                                    lib = "glyphicon"))
-      ),
-    p("Wähle ein oder mehrere Vergleichspunkte:"),
-      shinyWidgets::pickerInput(
-        inputId = ns("geschlecht_studierende_einstieg"),
-        choices = c("Gesamt", "Frauen", "Männer"),
-        multiple = TRUE,
-        selected = c("Frauen", "Männer")
+                    "2018","2019", "2020"),
+        selected = "2020"
       ),
     p("Soll der Anteil von Lehramt angezeigt werden?"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_einstieg"), label = "Nein", inline = TRUE),
-      tags$span("Ja")
-    ),
-      # shinyWidgets::materialSwitch(
-      #   inputId = ns("nurLehramt_studierende_einstieg"),
-      #   label = "Nein"
-      # ),
-    p("Relativ oder Absolut?"),
-    tags$div(
-      shinyWidgets::materialSwitch(inputId = ns("switch_rel_abs"), label = "Relativ", inline = TRUE),
-      tags$span("Absolut")
-    )
-    # shinyWidgets::materialSwitch(
-    #   inputId = ns("switch_rel_abs"),
-    #   label = "Relativ"
-    # )
+      tags$span("Ja"))
+
   )
 }
 
@@ -65,21 +37,11 @@ mod_studium_studienzahl_einstieg_server <- function(id, r){
       r$date_studierende_einstieg <- input$date_studierende_einstieg
     })
 
-    observeEvent(input$indikator_studierende_einstieg, {
-      r$indikator_studierende_einstieg <- input$indikator_studierende_einstieg
-    })
-
-    observeEvent(input$geschlecht_studierende_einstieg, {
-      r$geschlecht_studierende_einstieg <- input$geschlecht_studierende_einstieg
-    })
 
     observeEvent(input$nurLehramt_studierende_einstieg, {
       r$nurLehramt_studierende_einstieg <- input$nurLehramt_studierende_einstieg
     })
 
-    observeEvent(input$switch_rel_abs, {
-      r$switch_rel_abs <- input$switch_rel_abs
-    })
 
   })
 }
