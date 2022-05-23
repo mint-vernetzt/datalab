@@ -21,7 +21,12 @@ attachment::att_amend_desc()
 ## Create a module infrastructure in R/
 golem::add_module(name = "randomplot", with_test = FALSE) # Name of the module
 golem::add_module(name = "name_of_module2", with_test = TRUE) # Name of the module
+
+### Studium
 golem::add_module(name = "studium_studienzahl", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_studienzahl_einstieg", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_studienzahl_verlauf", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_studienzahl_verlauf_bl", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_studienzahl_choice_1", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_studienzahl_choice_2", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_abschluss", with_test = TRUE) # Name of the module
@@ -31,13 +36,67 @@ golem::add_module(name = "studium_compare", with_test = TRUE) # Name of the modu
 golem::add_module(name = "studium_compare_choice", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_compare_choice_updates", with_test = FALSE) # Name of the module
 
+### Beruf
+golem::add_module(name = "beruf_arbeitsmarkt", with_test = TRUE) # Name of the module
+golem::add_module(name = "beruf_arbeitsmarkt_einstieg", with_test = TRUE) # Name of the module
+golem::add_module(name = "beruf_arbeitsmarkt_multiple", with_test = TRUE) # Name of the module
+golem::add_module(name = "beruf_arbeitsmarkt_verlauf", with_test = TRUE) # Name of the module
+golem::add_module(name = "beruf_arbeitsmarkt_verlauf_bl", with_test = TRUE) # Name of the module
+
+### Schule
+golem::add_module(name = "schule_kurse", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_multiple", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_einstieg", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_verlauf", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_ranking", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_verlauf_bl", with_test = TRUE) # Name of the module
+
+
+### Home
+golem::add_module(name = "home_start", with_test = TRUE) # Name of the module
+golem::add_module(name = "home_start_comparison", with_test = TRUE) # Name of the module
+golem::add_module(name = "home_start_comparison_mint", with_test = TRUE) # Name of the module
+golem::add_module(name = "home_start_leaky", with_test = TRUE) # Name of the module
+golem::add_module(name = "home_start_multiple", with_test = TRUE) # Name of the module
+golem::add_module(name = "home_start_einstieg", with_test = TRUE) # Name of the module
+
+### Ausbildung
+golem::add_module(name = "ausbildung_vertraege", with_test = TRUE) # Name of the module
+golem::add_module(name = "ausbildung_vertraege_multiple", with_test = TRUE) # Name of the module
+golem::add_module(name = "ausbildung_vertraege_verlauf", with_test = TRUE) # Name of the module
+
+### Quellen
+golem::add_module(name = "quellen", with_test = TRUE) # Name of the module
+
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
 golem::add_fct("helpers", with_test = TRUE)
+
+# Studium
 golem::add_fct(name = "preprocess_studium", module = NULL,with_test = TRUE)
 golem::add_fct(name = "plots_studium", module = NULL,with_test = TRUE)
 golem::add_fct(name = "valueBoxes_studium", module = NULL,with_test = TRUE)
+
+# Beruf
+golem::add_fct(name = "preprocess_beruf", module = NULL,with_test = TRUE)
+golem::add_fct(name = "plots_beruf", module = NULL,with_test = TRUE)
+golem::add_fct(name = "valueBoxes_beruf", module = NULL,with_test = TRUE)
+
+# Schule
+golem::add_fct(name = "preprocess_schule", module = NULL,with_test = TRUE)
+golem::add_fct(name = "plots_schule", module = NULL,with_test = TRUE)
+golem::add_fct(name = "valueBoxes_schule", module = NULL,with_test = TRUE)
+
+# Home
+golem::add_fct(name = "preprocess_home", module = NULL,with_test = TRUE)
+golem::add_fct(name = "plots_home", module = NULL,with_test = TRUE)
+golem::add_fct(name = "valueBoxes_home", module = NULL,with_test = TRUE)
+
+# Ausbildung
+golem::add_fct(name = "plots_ausbildung", module = NULL,with_test = TRUE)
+
+
 golem::add_utils("ui_body", with_test = FALSE)
 golem::add_utils(name = "helpers")
 

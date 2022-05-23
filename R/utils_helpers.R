@@ -6,6 +6,43 @@
 #'
 #' @noRd
 
+helper_title_home <- function(indikator){
+
+  if ((indikator == "Auszubildende" | indikator == "Beschäftigte")) {
+
+    title_help_sub <- "andere Berufszweige"
+
+    title_help <- paste0("anderen Berufszweigen bei<br> ", indikator,"n")
+
+  } else {
+
+    title_help_sub <- "andere Fächer"
+
+    if ((indikator == "Habilitationen" | indikator == "Promotionen (angestrebt)")){
+
+      title_help <- paste0("anderen Fächern bei<br> ", indikator)
+
+    }else{
+
+      title_help <- paste0("anderen Fächern bei<br> ", indikator,"n")
+    }
+  }
+
+  return(title_help)
+
+}
+
+
+
+
+#' helpers
+#'
+#' @description A utils function
+#'
+#' @return The return value, if any, from executing the utility.
+#'
+#' @noRd
+
 dictionary_title_studium_studentenzahl <- list("eingeschrieben" = "die insgesamt eingeschrieben sind",
                                                "1hs" = "die im 1. Hochschulsemester eingeschrieben sind",
                                                "1fs" = "die im 1. Fachsemester eingeschrieben sind")
