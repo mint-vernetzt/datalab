@@ -21,8 +21,8 @@ mod_schule_kurse_verlauf_ui <- function(id){
       inputId = ns("date_kurse_verlauf"),
       label = NULL,
       choices = c("2010","2011", "2012", "2013", "2014", "2015", "2016", "2017",
-                  "2018","2019"),
-      selected = c("2015", "2019")
+                  "2018","2019", "2020"),
+      selected = c("2015", "2020")
     ),
     p("Wähle in welcher Form der Kurs belegt wurde:"),
     shinyWidgets::radioGroupButtons(
@@ -57,43 +57,31 @@ mod_schule_kurse_verlauf_ui <- function(id){
                        choices = unique(kurse$fachbereich),
                        selected = "Informatik"
                      )),
-    p("Sollen die Bundesländer in Ost und West zusammengefasst werden?"),
-    tags$div(
-      shinyWidgets::materialSwitch(inputId = ns("ost_west"), label = "Nein", inline = TRUE),
-      tags$span("Ja")
-    ),
-    # shinyWidgets::radioGroupButtons(
-    #   inputId = ns("ost_west"),
-    #   choices = c("Ja", "Nein"),
-    #   selected = "Nein"
-    # ),
-    conditionalPanel(condition = "input.ost_west == false",
-                     ns = ns,
-                     p("Wähle ein oder mehrere Bundesländer:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("states_kurse_verlauf"),
-                       choices = c("Berlin",
-                                   "Brandenburg",
-                                   "Bremen",
-                                   "Hamburg",
-                                   "Hessen",
-                                   "Mecklenburg-Vorpommern",
-                                   "Niedersachsen",
-                                   "Nordrhein-Westfalen",
-                                   "Rheinland-Pfalz",
-                                   "Saarland",
-                                   "Sachsen",
-                                   "Sachsen-Anhalt",
-                                   "Schleswig-Holstein",
-                                   "Thüringen"),
-                       multiple = TRUE,
-                       options = list(`actions-box` = TRUE,
-                                      `deselect-all-text` = "Alle abwählen",
-                                      `select-all-text` = "Alle auswählen"),
-                       selected = c("Hessen", "Hamburg")
-                     )),
-    conditionalPanel(condition = "input.ost_west != false",
-                     ns = ns)
+    p("Wähle ein oder mehrere Bundesländer:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("states_kurse_verlauf"),
+      choices = c("Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westen",
+                  "Osten"),
+      multiple = TRUE,
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
+      selected = c("Hessen", "Hamburg")
+    )
   )
 
 }
