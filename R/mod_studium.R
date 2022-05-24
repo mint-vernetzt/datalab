@@ -43,6 +43,7 @@ mod_studium_server <- function(id, data_studierende, r){
 
   r <- reactiveValues(date_studierende_einstieg = NULL,
                       nurLehramt_studierende_einstieg = NULL,
+                      gender_switch = NULL,
                       date_studierende = NULL,
                       nurLehramt_studierende = NULL,
                       hochschulform_studierende_1 = NULL,
@@ -56,6 +57,11 @@ mod_studium_server <- function(id, data_studierende, r){
                       topic_studierende_verlauf_bl = NULL,
                       nurLehramt_studierende_verlauf_bl = NULL,
                       states_studierende_verlauf_bl = NULL,
+                      date_verlauf_subject_bl = NULL,
+                      topic_selected_subject_bl = NULL,
+                      subject_selected_bl = NULL,
+                      states_verlauf_subject_bl = NULL,
+                      nurLehramt_studierende_verlauf_bl_subject = NULL,
                       ost_west = NULL,
                       subjects_aggregated = NULL,
                       subject_selected = NULL,
@@ -92,6 +98,7 @@ mod_studium_server <- function(id, data_studierende, r){
   mod_studium_studienzahl_einstieg_server("mod_studium_studienzahl_einstieg_ui_1", r)
   mod_studium_studienzahl_verlauf_server("mod_studium_studienzahl_verlauf_ui_1", r)
   mod_studium_studienzahl_verlauf_bl_server("mod_studium_studienzahl_verlauf_bl_ui_1", r)
+  mod_studium_studienzahl_verlauf_bl_subject_server("mod_studium_studienzahl_verlauf_bl_subject_ui_1", r)
   mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1", data_studierende, r)
 
   # comment

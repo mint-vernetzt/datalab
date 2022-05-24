@@ -78,6 +78,18 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
+        title = "Box 4",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        shiny::sidebarPanel(
+          mod_studium_studienzahl_verlauf_bl_subject_ui("mod_studium_studienzahl_verlauf_bl_subject_ui_1")),
+        shiny::mainPanel(
+
+          highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject"))
+
+        ))),
+    fluidRow(
+      shinydashboard::box(
         title = "Box 5",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
@@ -145,6 +157,9 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       studienzahl_verlauf_bl(data_studierende,r)
     })
 
+    output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
+      studienzahl_verlauf_bl_subject(data_studierende,r)
+    })
 
     output$data_table_mix <- DT::renderDT({
       data_mix_studium(data_studierende, r)

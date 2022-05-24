@@ -22,8 +22,12 @@ mod_studium_studienzahl_einstieg_ui <- function(id){
     p("Soll der Anteil von Lehramt angezeigt werden?"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_einstieg"), label = "Nein", inline = TRUE),
-      tags$span("Ja"))
-
+      tags$span("Ja")),
+    p("Nach Geschlecht aufteilen?"),
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("gender_switch"), label = "Nein", inline = TRUE),
+      tags$span("Ja")
+    )
   )
 }
 
@@ -40,6 +44,10 @@ mod_studium_studienzahl_einstieg_server <- function(id, r){
 
     observeEvent(input$nurLehramt_studierende_einstieg, {
       r$nurLehramt_studierende_einstieg <- input$nurLehramt_studierende_einstieg
+    })
+
+    observeEvent(input$gender_switch, {
+      r$gender_switch <- input$gender_switch
     })
 
 
