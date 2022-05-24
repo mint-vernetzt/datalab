@@ -12,7 +12,10 @@ mod_schule_kurse_verlauf_ui <- function(id){
 
   load(file = system.file(package="datalab","data/kurse.rda"))
 
-  kurse <- kurse %>% dplyr::filter(fachbereich != "Alle Fächer")
+  kurse <- kurse %>% dplyr::filter(fachbereich != "Alle Fächer",
+                                   fachbereich != "Naturwissenschaften",
+                                   fachbereich != "Gesellschaftswissenschaften",
+                                   fachbereich != "Fremdsprachen")
 
   tagList(
 

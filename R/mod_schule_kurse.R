@@ -95,6 +95,17 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         shiny::sidebarPanel(
+          mod_schule_kurse_verlauf_bl_subjects_ui("mod_schule_kurse_verlauf_bl_subjects_ui_1")),
+        shiny::mainPanel(
+          highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects"))
+
+        ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Box 7",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        shiny::sidebarPanel(
           mod_schule_kurse_verlauf_ui("mod_schule_kurse_verlauf_ui_1")),
         shiny::mainPanel(
           tabsetPanel(type = "tabs",
@@ -148,6 +159,10 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
 
     output$plot_verlauf_kurse_bl <- highcharter::renderHighchart({
       kurse_verlauf_single_bl(data_kurse,r)
+    })
+
+    output$plot_verlauf_kurse_bl_subjects <- highcharter::renderHighchart({
+      kurse_verlauf_subjects_bl(data_kurse,r)
     })
 
     output$data_table_mix <- DT::renderDT({

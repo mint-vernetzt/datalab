@@ -25,6 +25,7 @@ mod_schule_server <- function(id, data_kurse, r){
 
   r <- reactiveValues(date_kurse_einstieg = NULL,
                       date_kurse_einstieg_2 = NULL,
+                      gender_switch = NULL,
                       fachbereich_kurse_einstieg = NULL,
                       date_kurse = NULL,
                       date_kurse_ranking = NULL,
@@ -40,8 +41,11 @@ mod_schule_server <- function(id, data_kurse, r){
                       topic_kurse_verlauf_bl = NULL,
                       states_kurse_verlauf_bl = NULL,
                       subjects_aggregated_bl = NULL,
-                      subject_selected_bl = NULL)
-
+                      subject_selected_bl = NULL,
+                      subject_selected_bl_sub = NULL,
+                      date_kurse_verlauf_subject_bl = NULL,
+                      topic_selected_subject_bl = NULL,
+                      states_kurse_verlauf_subject_bl = NULL)
 
   # Kurse
   mod_schule_kurse_einstieg_server("mod_schule_kurse_einstieg_ui_1", r)
@@ -49,6 +53,7 @@ mod_schule_server <- function(id, data_kurse, r){
   mod_schule_kurse_ranking_server("mod_schule_kurse_ranking_ui_1", r)
   mod_schule_kurse_verlauf_server("mod_schule_kurse_verlauf_ui_1", r)
   mod_schule_kurse_verlauf_bl_server("mod_schule_kurse_verlauf_bl_ui_1", r)
+  mod_schule_kurse_verlauf_bl_subjects_server("mod_schule_kurse_verlauf_bl_subjects_ui_1", r)
   mod_schule_kurse_server("mod_schule_kurse_ui_1", data_kurse, r)
 
 

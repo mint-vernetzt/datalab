@@ -16,7 +16,12 @@ mod_schule_kurse_einstieg_ui <- function(id){
       label = NULL,
       choices = c("2010", "2011", "2012", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020"),
-    selected = "2020")
+    selected = "2020"),
+    p("Nach Geschlecht aufteilen?"),
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("gender_switch"), label = "Nein", inline = TRUE),
+      tags$span("Ja")
+    )
 
     # ),
     # p("Wähle in welcher Form der Kurs belegt wurde:"),
@@ -56,13 +61,17 @@ mod_schule_kurse_einstieg_server <- function(id, r){
       r$date_kurse_einstieg <- input$date_kurse_einstieg
     })
 
-    observeEvent(input$date_kurse_einstieg_2, {
-      r$date_kurse_einstieg_2 <- input$date_kurse_einstieg_2
+    observeEvent(input$gender_switch, {
+      r$gender_switch <- input$gender_switch
     })
 
-    observeEvent(input$fachbereich_kurse_einstieg, {
-      r$fachbereich_kurse_einstieg <- input$fachbereich_kurse_einstieg
-    })
+    # observeEvent(input$date_kurse_einstieg_2, {
+    #   r$date_kurse_einstieg_2 <- input$date_kurse_einstieg_2
+    # })
+    #
+    # observeEvent(input$fachbereich_kurse_einstieg, {
+    #   r$fachbereich_kurse_einstieg <- input$fachbereich_kurse_einstieg
+    # })
 
     # observeEvent(input$indikator_kurse_einstieg, {
     #   r$indikator_kurse_einstieg <- input$indikator_kurse_einstieg
