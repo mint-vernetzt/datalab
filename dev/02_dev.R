@@ -27,6 +27,7 @@ golem::add_module(name = "studium_studienzahl", with_test = TRUE) # Name of the 
 golem::add_module(name = "studium_studienzahl_einstieg", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_studienzahl_verlauf", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_studienzahl_verlauf_bl", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_studienzahl_verlauf_bl_subject", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_studienzahl_choice_1", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_studienzahl_choice_2", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_abschluss", with_test = TRUE) # Name of the module
@@ -50,6 +51,7 @@ golem::add_module(name = "schule_kurse_einstieg", with_test = TRUE) # Name of th
 golem::add_module(name = "schule_kurse_verlauf", with_test = TRUE) # Name of the module
 golem::add_module(name = "schule_kurse_ranking", with_test = TRUE) # Name of the module
 golem::add_module(name = "schule_kurse_verlauf_bl", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_verlauf_bl_subjects", with_test = TRUE) # Name of the module
 
 
 ### Home
