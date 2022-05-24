@@ -15,9 +15,7 @@ kurse_einstieg_bar <- function(df,r) {
 
   level_kurs <- r$indikator_kurse_einstieg
 
-  switch_absolut <- r$switch_rel_abs
-
-  geschlecht <- r$geschlecht_kurse_einstieg
+  geschlecht <- r$gender_switch
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
@@ -114,19 +112,18 @@ kurse_einstieg_pie <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg
 
+  geschlecht <- r$gender_switch
+
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  # combine subjects to get numbers on share of MINT
-  # make a function out of it
-  subjects <- c("Mathematik", "Informatik", "Naturwissenschaften",  "Biologie", "Chemie",
-                "Physik", "andere naturwiss.-technische Fächer",  "Erdkunde", "Alle Fächer")
+  subjects_drop <- c("Naturwissenschaften", "Gesellschaftswissenschaften",
+                     "Fremdsprachen")
 
-  df <- df %>% dplyr::filter(fachbereich %in% subjects)
-
+  df <- df[!(df$fachbereich %in% subjects_drop),]
 
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
     dplyr::filter(indikator == "Leistungskurse") %>%
@@ -143,72 +140,68 @@ kurse_einstieg_pie <- function(df,r) {
 
 
 
-  df$fachbereich <- ifelse(df$fachbereich != "Alle Fächer", "MINT", "andere Fächer")
+  df <- share_mint_kurse(df)
 
 
-  df <- df %>% dplyr::group_by(indikator, fachbereich, anzeige_geschlecht, jahr) %>%
-    dplyr::summarize(wert = sum(wert))
+  if(geschlecht == FALSE) {
+
+    df_gk <- df %>% dplyr::filter(indikator == "Grundkurse")
+
+    df_gk <- df_gk %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+    df_gk <- share_pie(df_gk)
+
+    df_gk$anzeige_geschlecht <- df_gk$fachbereich
+
+    df_lk <- df %>% dplyr::filter(indikator == "Leistungskurse")
+
+    df_lk <- df_lk %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+    df_lk <- share_pie(df_lk)
+
+    df_lk$anzeige_geschlecht <- df_lk$fachbereich
 
 
-  # call function to calculate the share of MINT and the remaining subjects
-  df[df$fachbereich == "andere Fächer", "wert"] <- df[df$fachbereich == "andere Fächer", "wert"] -
-    df[df$fachbereich == "MINT", "wert"]
+  } else {
 
 
   df_gk <- df %>% dplyr::filter(indikator == "Grundkurse")
 
   df_gk <- df_gk %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
 
-  # calculate proportions
-  df_gk$props <- sum(df_gk$wert)
-
-  df_gk <- df_gk %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df_gk$proportion <- df_gk$proportion * 100
-
-  df_gk$proportion <- round_preserve_sum(as.numeric(df_gk$proportion),0)
+  df_gk <- share_pie(df_gk)
 
   df_gk$anzeige_geschlecht <- paste0(df_gk$anzeige_geschlecht, " (", df_gk$fachbereich, ")")
-
 
   df_lk <- df %>% dplyr::filter(indikator == "Leistungskurse")
 
   df_lk <- df_lk %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
 
-  # calculate proportions
-  df_lk$props <- sum(df_lk$wert)
-
-  df_lk <- df_lk %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df_lk$proportion <- df_lk$proportion * 100
-
-  df_lk$proportion <- round_preserve_sum(as.numeric(df_lk$proportion),0)
+  df_lk <- share_pie(df_lk)
 
   df_lk$anzeige_geschlecht <- paste0(df_lk$anzeige_geschlecht, " (", df_lk$fachbereich, ")")
 
 
-  highcharter::hw_grid(
-    highcharter::hchart(df_gk, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
-      highcharter::hc_tooltip(
-        pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-      highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab", 'rgba(177, 111, 171, 0.50)')) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Fächern für Grundkurse in ", timerange),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      highcharter::hc_legend(enabled = TRUE) %>%
-      highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                             dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+  }
 
 
-  highcharter::hchart(df_lk, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+  plot_gk <- highcharter::hchart(df_gk, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-    highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab", 'rgba(177, 111, 171, 0.50)')) %>%
+    highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Fächern für Grundkurse in ", timerange),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                           dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
+
+
+  plot_lk <- highcharter::hchart(df_lk, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+    highcharter::hc_tooltip(
+      pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Fächern für Leistungskurse in ", timerange),
                           margin = 45,
                           align = "center",
@@ -217,7 +210,30 @@ kurse_einstieg_pie <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+                                           dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE))
+
+  if(geschlecht == FALSE) {
+
+    plot_gk <- plot_gk %>% highcharter::hc_colors(c("#154194","#b16fab"))
+
+    plot_lk <- plot_lk %>% highcharter::hc_colors(c("#154194","#b16fab"))
+
+  } else {
+
+    plot_gk <- plot_gk %>% highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab",
+                                                    'rgba(177, 111, 171, 0.50)'))
+
+    plot_lk <- plot_lk %>% highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab",
+                                                    'rgba(177, 111, 171, 0.50)'))
+
+  }
+
+
+  highcharter::hw_grid(
+
+  plot_gk,
+
+  plot_lk,
 
   ncol = 2,
   browsable = TRUE
@@ -250,13 +266,14 @@ data_einstieg_kurse <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  # combine subjects to get numbers on share of MINT
-  # make a function out of it
-  subjects <- c("Mathematik", "Informatik", "Naturwissenschaften",  "Biologie", "Chemie",
-                "Physik", "andere naturwiss.-technische Fächer",  "Erdkunde", "Alle Fächer")
 
-  df <- df %>% dplyr::filter(fachbereich %in% subjects)
 
+  df <- df %>% dplyr::filter(region == "Deutschland")
+
+  subjects_drop <- c("Naturwissenschaften", "Gesellschaftswissenschaften",
+                     "Fremdsprachen")
+
+  df <- df[!(df$fachbereich %in% subjects_drop),]
 
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
     dplyr::filter(indikator == "Leistungskurse") %>%
@@ -273,20 +290,10 @@ data_einstieg_kurse <- function(df,r) {
 
 
 
-  df$fachbereich <- ifelse(df$fachbereich != "Alle Fächer", "MINT", "andere Fächer")
+  df <- share_mint_kurse(df)
 
 
-  df <- df %>% dplyr::group_by(indikator, fachbereich, anzeige_geschlecht, jahr) %>%
-    dplyr::summarize(wert = sum(wert))
-
-
-  # call function to calculate the share of MINT and the remaining subjects
-  df[df$fachbereich == "andere Fächer", "wert"] <- df[df$fachbereich == "andere Fächer", "wert"] -
-    df[df$fachbereich == "MINT", "wert"]
-
-  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
-
-  colnames(df) <- c("Indikator", "Fachbereich" ,"Geschlecht", "Jahr", "Wert")
+  colnames(df) <- c("Jahr", "Region" ,"Indikator", "Geschlecht", "Bereich", "Wert", "Fachbereich")
 
   return(df)
 
@@ -416,27 +423,21 @@ kurse_waffle <- function(df,r) {
 
   # combine subjects to get numbers on share of MINT
   # make a function out of it
-  subjects <- c("Mathematik", "Informatik", "Naturwissenschaften",  "Biologie", "Chemie",
-                "Physik", "andere naturwiss.-technische Fächer",  "Erdkunde", "Alle Fächer")
+  subjects <- c("Mathematik", "Informatik", "Naturwissenschaften")
 
   df <- df %>% dplyr::filter(fachbereich %in% subjects)
-
-  df <- df %>% dplyr::filter(fachbereich == "Mathematik" | fachbereich == "Informatik" |
-                               fachbereich == "Naturwissenschaften" | fachbereich == "Alle Fächer")
-
-
 
   x_gk <- prep_kurse_proportion(df,"Grundkurse")
 
   x_lk <- prep_kurse_proportion(df,"Leistungskurse")
 
   x_gk <- x_gk[order(factor(names(x_gk), levels = c('Frauen (Informatik)', 'Frauen (Mathematik)',
-                                            'Frauen (Naturwissenschaften)', 'Männer (Informatik)',
-                                            'Männer (Mathematik)', 'Männer (Naturwissenschaften)')))]
+                                                    'Frauen (Naturwissenschaften)', 'Männer (Informatik)',
+                                                    'Männer (Mathematik)', 'Männer (Naturwissenschaften)')))]
 
   x_lk <- x_lk[order(factor(names(x_lk), levels = c('Frauen (Informatik)', 'Frauen (Mathematik)',
-                                            'Frauen (Naturwissenschaften)', 'Männer (Informatik)',
-                                            'Männer (Mathematik)', 'Männer (Naturwissenschaften)')))]
+                                                    'Frauen (Naturwissenschaften)', 'Männer (Informatik)',
+                                                    'Männer (Mathematik)', 'Männer (Naturwissenschaften)')))]
 
 
   # create plot objects for waffle charts
@@ -450,21 +451,21 @@ kurse_waffle <- function(df,r) {
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                    legend.position = "left") +
     ggplot2::scale_fill_manual(
-                                values =  c("#ee7775",
-                                            "#fcc433",
-                                            "#00a87a",
-                                            "#b1b5c3",
-                                            "#b1b5c3",
-                                            '#b1b5c3'),
-                                limits = c("Frauen (Informatik)", "Frauen (Mathematik)",
-                                           "Frauen (Naturwissenschaften)", "Männer (Informatik)"),
-                                na.value="#b1b5c3",
-                      guide = ggplot2::guide_legend(reverse = TRUE),
-                      labels = c(
-                                 paste0("Frauen (Informatik)",", ",x_gk[1], "%"),
-                                 paste0("Frauen (Mathematik)",", ",x_gk[2], "%"),
-                                 paste0("Frauen (Natwi)",", ",x_gk[3], "%"),
-                                 paste0("Männer (MINT)",", ",x_gk[4] + x_gk[5] + x_gk[6], "%"))) +
+      values =  c("#ee7775",
+                  "#fcc433",
+                  "#00a87a",
+                  "#b1b5c3",
+                  "#b1b5c3",
+                  '#b1b5c3'),
+      limits = c("Frauen (Informatik)", "Frauen (Mathematik)",
+                 "Frauen (Naturwissenschaften)", "Männer (Informatik)"),
+      na.value="#b1b5c3",
+      guide = ggplot2::guide_legend(reverse = TRUE),
+      labels = c(
+        paste0("Frauen (Informatik)",", ",x_gk[1], "%"),
+        paste0("Frauen (Mathematik)",", ",x_gk[2], "%"),
+        paste0("Frauen (Natwi)",", ",x_gk[3], "%"),
+        paste0("Männer (MINT)",", ",x_gk[4] + x_gk[5] + x_gk[6], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
 
@@ -480,53 +481,53 @@ kurse_waffle <- function(df,r) {
                    legend.position = "right")
 
 
-    if (x_lk[[1]] == 0) {
+  if (x_lk[[1]] == 0) {
 
-      waffle_lk <-  waffle_lk +
-        ggplot2::scale_fill_manual(
-          values =  c(#"#ee7775",
-                      "#fcc433",
-                      "#00a87a",
-                      "#b1b5c3",
-                      "#b1b5c3",
-                      '#b1b5c3'),
-          limits = c("Frauen (Mathematik)",
-                     "Frauen (Naturwissenschaften)", "Männer (Informatik)"),
-          guide = ggplot2::guide_legend(reverse = TRUE),
-          na.value="#b1b5c3",
-          labels = c(
-            #paste0("Frauen (Informatik)",", ",x_gk[1], "%"),
-            paste0("Frauen (Mathematik)",", ",x_lk[2], "%"),
-            paste0("Frauen (Natwi)",", ",x_lk[3], "%"),
-            paste0("Männer (MINT)",", ",x_lk[4] + x_lk[5] + x_lk[6], "%"))) +
-        ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
-
-
-
-    } else{
-
-      waffle_lk <- waffle_lk +
-        ggplot2::scale_fill_manual(
-          values =  c("#ee7775",
-                      "#fcc433",
-                      "#00a87a",
-                      "#b1b5c3",
-                      "#b1b5c3",
-                      '#b1b5c3'),
-          limits = c("Frauen (Informatik)", "Frauen (Mathematik)",
-                     "Frauen (Naturwissenschaften)", "Männer (Informatik)"),
-          na.value="#b1b5c3",
-          guide = ggplot2::guide_legend(reverse = TRUE),
-          labels = c(
-            paste0("Frauen (Informatik)",", ",x_lk[1], "%"),
-            paste0("Frauen (Mathematik)",", ",x_lk[2], "%"),
-            paste0("Frauen (Natwi)",", ",x_lk[3], "%"),
-            paste0("Männer (MINT)",", ",x_lk[4] + x_lk[5] + x_lk[6], "%"))) +
-        ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    waffle_lk <-  waffle_lk +
+      ggplot2::scale_fill_manual(
+        values =  c(#"#ee7775",
+          "#fcc433",
+          "#00a87a",
+          "#b1b5c3",
+          "#b1b5c3",
+          '#b1b5c3'),
+        limits = c("Frauen (Mathematik)",
+                   "Frauen (Naturwissenschaften)", "Männer (Informatik)"),
+        guide = ggplot2::guide_legend(reverse = TRUE),
+        na.value="#b1b5c3",
+        labels = c(
+          #paste0("Frauen (Informatik)",", ",x_gk[1], "%"),
+          paste0("Frauen (Mathematik)",", ",x_lk[2], "%"),
+          paste0("Frauen (Natwi)",", ",x_lk[3], "%"),
+          paste0("Männer (MINT)",", ",x_lk[4] + x_lk[5] + x_lk[6], "%"))) +
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
 
 
-    }
+  } else{
+
+    waffle_lk <- waffle_lk +
+      ggplot2::scale_fill_manual(
+        values =  c("#ee7775",
+                    "#fcc433",
+                    "#00a87a",
+                    "#b1b5c3",
+                    "#b1b5c3",
+                    '#b1b5c3'),
+        limits = c("Frauen (Informatik)", "Frauen (Mathematik)",
+                   "Frauen (Naturwissenschaften)", "Männer (Informatik)"),
+        na.value="#b1b5c3",
+        guide = ggplot2::guide_legend(reverse = TRUE),
+        labels = c(
+          paste0("Frauen (Informatik)",", ",x_lk[1], "%"),
+          paste0("Frauen (Mathematik)",", ",x_lk[2], "%"),
+          paste0("Frauen (Natwi)",", ",x_lk[3], "%"),
+          paste0("Männer (MINT)",", ",x_lk[4] + x_lk[5] + x_lk[6], "%"))) +
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+
+
+
+  }
 
 
 
@@ -564,13 +565,9 @@ kurse_absolut <- function(df,r) {
 
   # combine subjects to get numbers on share of MINT
   # make a function out of it
-  subjects <- c("Mathematik", "Informatik", "Naturwissenschaften",  "Biologie", "Chemie",
-                "Physik", "andere naturwiss.-technische Fächer",  "Erdkunde", "Alle Fächer")
+  subjects <- c("Mathematik", "Informatik", "Naturwissenschaften")
 
   df <- df %>% dplyr::filter(fachbereich %in% subjects)
-
-  df <- df %>% dplyr::filter(fachbereich == "Mathematik" | fachbereich == "Informatik" |
-                               fachbereich == "Naturwissenschaften" | fachbereich == "Alle Fächer")
 
 
   df <- df[with(df, order(indikator, decreasing = TRUE)), ]
@@ -578,7 +575,6 @@ kurse_absolut <- function(df,r) {
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
 
-  df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
   options(scipen=999)
 
@@ -617,50 +613,41 @@ kurse_absolut <- function(df,r) {
 kurse_ranking <- function(df,r, type) {
 
   # load UI inputs from reactive value
-  level_kurs <- r$indikator_kurse_ranking
+  #level_kurs <- r$indikator_kurse_ranking
 
   timerange <- r$date_kurse_ranking
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
-  df <- df %>% dplyr::filter(indikator == level_kurs)
+  #df <- df %>% dplyr::filter(indikator == level_kurs)
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(fachbereich) %>%
+    dplyr::group_by(fachbereich, indikator) %>%
     dplyr::mutate(props = sum(wert))
 
-  df <- df %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
+  df <- df %>% dplyr::group_by(fachbereich, anzeige_geschlecht, indikator) %>%
     dplyr::summarize(proportion = wert/props)
 
   df$proportion <- df$proportion * 100
 
-  # plot
-  top_five <- df %>%
-    dplyr::arrange(desc(proportion)) %>%
-    dplyr::group_by(anzeige_geschlecht) %>%
-    dplyr::slice(1:5) %>% dplyr::mutate(label_rank = "beliebt")
-
-  low_five <- df %>%
-    dplyr::arrange((proportion)) %>%
-    dplyr::group_by(anzeige_geschlecht) %>%
-    dplyr::slice(1:5) %>% dplyr::mutate(label_rank = "weniger beliebt")
-
-  df_ranked <- rbind(top_five, low_five)
-
-  if (level_kurs == "Grundkurse"){
-
-    title_help <- "Grundkurse"
-
-  }else{
-
-    title_help <- "Leistungskurse"
-
-  }
+  # # plot
+  # top_five <- df %>%
+  #   dplyr::arrange(desc(proportion)) %>%
+  #   dplyr::group_by(anzeige_geschlecht) %>%
+  #   dplyr::slice(1:5) %>% dplyr::mutate(label_rank = "beliebt")
+  #
+  # low_five <- df %>%
+  #   dplyr::arrange((proportion)) %>%
+  #   dplyr::group_by(anzeige_geschlecht) %>%
+  #   dplyr::slice(1:5) %>% dplyr::mutate(label_rank = "weniger beliebt")
+  #
+  # df_ranked <- rbind(top_five, low_five)
+  #
 
   if(type == "first"){
 
@@ -723,29 +710,41 @@ kurse_ranking <- function(df,r, type) {
 
   }else{
 
-    df <- tidyr::spread(df, anzeige_geschlecht, proportion)
+    df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
+
+    df$anzeige_geschlecht <- NULL
+
+    # drop subjects
+    subjects <- c("andere moderne Fremdsprachen", "andere naturwiss.-technische Fächer",
+                 "Sonstige Fächer")
+
+
+    df <- df[!(df$fachbereich %in% subjects),]
+
+
+    df <- tidyr::spread(df, indikator, proportion)
 
     df2 <- tidyr::gather(df, group, value, -fachbereich)
 
-    df$fachbereich <- reorder(df$fachbereich, df$Frauen)
+    df$fachbereich <- reorder(df$fachbereich, df$Leistungskurse)
 
     df2$fachbereich <- factor(df2$fachbereich, levels = levels(df$fachbereich))
 
 
     ggplot2::ggplot(df,
-           ggplot2::aes(y = fachbereich)) +
+                    ggplot2::aes(y = fachbereich)) +
       ggplot2::geom_point(data = df2, ggplot2::aes(x = value, color = group), size = 5) +
       ggalt::geom_dumbbell(
-                    ggplot2::aes(x = Frauen, xend = Männer),
-                    size = 0.5,
-                    size_x = 5,
-                    size_xend = 5,
-                    colour = "black",
-                    colour_x = "#f5adac66",
-                    colour_xend = "#b1b5c366",
-                    dot_guide=TRUE) +
+        ggplot2::aes(x = Grundkurse, xend = Leistungskurse),
+        size = 0.5,
+        size_x = 5,
+        size_xend = 5,
+        colour = "black",
+        colour_x = "#b1b5c366",
+        colour_xend = "#f5adac66",
+        dot_guide=TRUE) +
       ggplot2::theme_minimal() +
-      ggplot2::scale_color_manual(name = "", values = c("#f5adac66", "#b1b5c366")) +
+      ggplot2::scale_color_manual(name = "", values = c("#b1b5c366", "#f5adac66")) +
       ggplot2::theme(legend.position="top",
                      #legend.text= ggplot2::element_text(family = 'SourceSans3-Regular'),
                      panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
@@ -753,11 +752,10 @@ kurse_ranking <- function(df,r, type) {
                      axis.text.y = ggplot2::element_text(size = 11)) +
       ggplot2::ylab("") + ggplot2::xlab("") +
       ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                   "Relativer Anteil von Schüler*innen aller ", title_help, " in ",timerange,
+                                   "Relativer Anteil von Schülerinnen and Grund- und Leistungskurse in",timerange,
                                    "<br><br><br>"),
                     color = "") +
       ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
-
 
 
   }
@@ -789,16 +787,17 @@ kurse_map <- function(df,r) {
 
   # combine subjects to get numbers on share of MINT
   # make a function out of it
-  subjects <- c("Mathematik", "Informatik", "Naturwissenschaften",  "Biologie", "Chemie",
-                "Physik", "andere naturwiss.-technische Fächer",  "Erdkunde", "Alle Fächer")
+  subjects <- c("Mathematik", "Informatik", "Biologie", "Chemie",
+                "Physik", "andere naturwiss.-technische Fächer")
 
   df <- df %>% dplyr::filter(fachbereich %in% subjects)
 
-  df$fachbereich <- ifelse(df$fachbereich != "Alle Fächer", "MINT", "andere Fächer")
 
-  df <- df %>% dplyr::group_by(region, indikator, fachbereich, anzeige_geschlecht) %>%
-    dplyr::summarize(wert = sum(wert, na.rm = T))
+  df <- df %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
+    dplyr::summarise(wert = sum(wert))
 
+  df$fachbereich <- "MINT"
 
   # calculate proportions
   # remove "Männer" + "Frauen" does not add up to "Gesamt"
@@ -806,8 +805,6 @@ kurse_map <- function(df,r) {
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
     dplyr::group_by(region, fachbereich, indikator) %>%
     dplyr::mutate(props = sum(wert))
-
-  df <- df %>% dplyr::filter(fachbereich != "andere Fächer")
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
@@ -908,21 +905,10 @@ data_mix_kurse <- function(df,r) {
 
   # combine subjects to get numbers on share of MINT
   # make a function out of it
-  subjects <- c("Mathematik", "Informatik", "Naturwissenschaften",  "Biologie", "Chemie",
-                "Physik", "andere naturwiss.-technische Fächer",  "Erdkunde", "Alle Fächer")
+  subjects <- c("Mathematik", "Informatik", "Biologie", "Chemie",
+                "Physik", "andere naturwiss.-technische Fächer")
 
   df <- df %>% dplyr::filter(fachbereich %in% subjects)
-
-  df$fachbereich <- ifelse(df$fachbereich != "Alle Fächer", "MINT", "andere Fächer")
-
-  df <- df %>% dplyr::group_by(region, fachbereich, anzeige_geschlecht, jahr, indikator, bereich) %>%
-    dplyr::summarize(wert = sum(wert, na.rm = T))
-
-
-  # call function to calculate the share of MINT and the remaining subjects
-  df[df$fachbereich == "andere Fächer", "wert"] <- df[df$fachbereich == "andere Fächer", "wert"] -
-    df[df$fachbereich == "MINT", "wert"]
-
 
 
   colnames(df) <- c("Region", "Fachbereich", "Geschlecht", "Jahr", "Indikator", "Bereich", "Wert")
@@ -984,32 +970,14 @@ kurse_verlauf <- function(df,r) {
 
   df <- prep_kurse_east_west(df)
 
-
   if (subject_aggregated == "aggregiert"){
 
-  # combine subjects to get numbers on share of MINT
-  # make a function out of it
-  subjects <- c("Mathematik", "Informatik", "Naturwissenschaften",  "Biologie", "Chemie",
-                "Physik", "andere naturwiss.-technische Fächer",  "Erdkunde", "Alle Fächer")
-
-  df <- df %>% dplyr::filter(fachbereich %in% subjects)
-
-  df$fachbereich <- ifelse(df$fachbereich != "Alle Fächer", "MINT", "andere Fächer")
-
-  df <- df %>% dplyr::group_by(region,indikator, fachbereich, anzeige_geschlecht, jahr) %>%
-    dplyr::summarize(wert = sum(wert, na.rm = T))
-
-
-  # call function to calculate the share of MINT and the remaining subjects
-  df[df$fachbereich == "andere Fächer", "wert"] <- df[df$fachbereich == "andere Fächer", "wert"] -
-    df[df$fachbereich == "MINT", "wert"]
-
+  df <- share_mint_kurse(df)
 
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
     dplyr::group_by(region, fachbereich, indikator, jahr) %>%
     dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
                     wert[anzeige_geschlecht == "Männer"])
-
 
   # filter MINT or remaining subjects
   df <- df %>% dplyr::filter(fachbereich == topic)
@@ -1088,8 +1056,6 @@ data_verlauf_kurse <- function(df,r) {
 
   topic <- r$topic_kurse_verlauf
 
-  ost_west <- r$ost_west
-
   subject_aggregated <- r$subjects_aggregated
 
   subjects_select <- r$subject_selected
@@ -1104,73 +1070,70 @@ data_verlauf_kurse <- function(df,r) {
 
   df <- df %>% dplyr::filter(region != "Bayern")
 
+  if (level_kurs == "Grundkurse"){
+
+    title_help_sub <- " für die Grundkurse"
+
+  }else{
+
+    title_help_sub <- " für die Leistungskurse"
+
+  }
+
+  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+                    wert[anzeige_geschlecht == "Männer"])
+
+  df <- prep_kurse_east_west(df)
+
   if (subject_aggregated == "aggregiert"){
 
-    # combine subjects to get numbers on share of MINT
-    # make a function out of it
-    subjects <- c("Mathematik", "Informatik", "Naturwissenschaften",  "Biologie", "Chemie",
-                  "Physik", "andere naturwiss.-technische Fächer",  "Erdkunde", "Alle Fächer")
+    df <- share_mint_kurse(df)
 
-    df <- df %>% dplyr::filter(fachbereich %in% subjects)
-
-    df$fachbereich <- ifelse(df$fachbereich != "Alle Fächer", "MINT", "andere Fächer")
-
-    df <- df %>% dplyr::group_by(region, fachbereich, anzeige_geschlecht, jahr, indikator, bereich) %>%
-      dplyr::summarize(wert = sum(wert, na.rm = T))
-
-
-    # call function to calculate the share of MINT and the remaining subjects
-    df[df$fachbereich == "andere Fächer", "wert"] <- df[df$fachbereich == "andere Fächer", "wert"] -
-      df[df$fachbereich == "MINT", "wert"]
+    df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+      dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+      dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+                      wert[anzeige_geschlecht == "Männer"])
 
     # filter MINT or remaining subjects
     df <- df %>% dplyr::filter(fachbereich == topic)
 
 
+    if (topic == "MINT"){
+
+      title_help <- paste0("MINT", title_help_sub)
+
+    }else {
+
+      title_help <- paste0("anderen Fächer", title_help_sub)
+
+    }
+
   }else {
 
     df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
 
-    title_help <- subjects_select
+    title_help <- paste0(subjects_select, title_help_sub)
   }
 
-  # calculate proportions
-  # remove "Männer" + "Frauen" does not add up to "Gesamt"
-  # calculate new "Gesamt" based on "Männer" and "Frauen"
-  df <- df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, jahr, indikator, bereich) %>%
-    dplyr::mutate(props = sum(wert))
+  df <- df %>% dplyr::group_by(region, fachbereich, anzeige_geschlecht, jahr, indikator) %>%
+    dplyr::summarise(proportion = wert/props)
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
-  df <- df %>% dplyr::group_by(region, fachbereich, jahr, indikator, bereich, anzeige_geschlecht) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df$proportion <- round(df$proportion * 100)
-
-
-  df$proportion <- paste0(df$proportion , "%")
+  df$proportion <- df$proportion * 100
 
   # order
   df <- df[with(df, order(region, fachbereich, jahr, decreasing = TRUE)), ]
 
 
-  if (ost_west == FALSE) {
+  df <- df %>% dplyr::filter(region %in% states)
 
-    df <- df %>% dplyr::filter(region %in% states)
+  # order
+  df <- df[with(df, order(region, fachbereich, jahr, decreasing = TRUE)), ]
 
-  } else{
-
-    df$dummy_west <- ifelse(df$region %in% states_east_west$west, "Westen", "Osten")
-
-    df <- df %>% dplyr::group_by(dummy_west, fachbereich, jahr, indikator, bereich, anzeige_geschlecht) %>%
-      dplyr::summarise(proportion = mean(proportion))
-
-    names(df)[1] <- "region"
-  }
-
-
-  colnames(df) <- c("Region", "Fachbereich", "Jahr", "Indikator", "Bereich", "Geschlecht", "Wert")
+  colnames(df) <- c("Region", "Fachbereich", "Geschlecht", "Jahr", "Indikator", "Anteil")
 
   return(df)
 
@@ -1214,29 +1177,13 @@ kurse_verlauf_single_bl <- function(df,r) {
     dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
                        wert[anzeige_geschlecht == "Männer"])
 
-
-
   df <- prep_kurse_east_west(df)
 
 
   if (subject_aggregated == "aggregiert"){
 
-    # combine subjects to get numbers on share of MINT
-    # make a function out of it
-    subjects <- c("Mathematik", "Informatik", "Naturwissenschaften",  "Biologie", "Chemie",
-                  "Physik", "andere naturwiss.-technische Fächer",  "Erdkunde", "Alle Fächer")
+    df <- share_mint_kurse(df)
 
-    df <- df %>% dplyr::filter(fachbereich %in% subjects)
-
-
-    df$fachbereich <- ifelse(df$fachbereich != "Alle Fächer", "MINT", "andere Fächer")
-
-    df <- df %>% dplyr::group_by(region,indikator, fachbereich, anzeige_geschlecht, jahr) %>%
-      dplyr::summarize(wert = sum(wert, na.rm = T))
-
-    # call function to calculate the share of MINT and the remaining subjects
-    df[df$fachbereich == "andere Fächer", "wert"] <- df[df$fachbereich == "andere Fächer", "wert"] -
-      df[df$fachbereich == "MINT", "wert"]
 
     df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
       dplyr::group_by(region, fachbereich, indikator, jahr) %>%
@@ -1303,5 +1250,106 @@ kurse_verlauf_single_bl <- function(df,r) {
 
 
 }
+
+
+#' A function to plot time series
+#'
+#' @description A function to plot the time series of the german states
+#'
+#' @return The return value, if any, from executing the function.
+#' @param data The dataframe "Kurse.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+kurse_verlauf_subjects_bl <- function(df,r) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_kurse_verlauf_subject_bl
+
+  states <- r$states_kurse_verlauf_subject_bl
+
+  indikator_kurse <- r$topic_selected_subject_bl
+
+  subjects_select <- r$subject_selected_bl_sub
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- df %>% dplyr::filter(region != "Bayern")
+
+  df <- df %>% dplyr::filter(indikator == indikator_kurse)
+
+  # calculate new Gesamt
+ values <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+                   wert[anzeige_geschlecht == "Männer"])
+
+ values <- values %>% dplyr::filter(anzeige_geschlecht != "Frauen")
+
+ df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+ df$wert <- values$props
+
+ subjects_drop <- c("Naturwissenschaften", "Gesellschaftswissenschaften",
+                    "Fremdsprachen")
+
+ df <- df[!(df$fachbereich %in% subjects_drop),]
+
+
+ df <- prep_kurse_east_west(df, "subjects")
+
+ df <- df %>% dplyr::filter(region %in% states)
+
+
+ df <- df %>%
+   dplyr::filter(fachbereich != "Alle Fächer") %>%
+   dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
+   dplyr::mutate(props = sum(wert))
+
+
+ df_sub <- share_mint_kurse(df)
+
+ df_sub <- df_sub %>%
+   dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
+   dplyr::mutate(props = sum(wert))
+
+ df_sub <- df_sub[,colnames(df)]
+
+ df <- rbind(df, df_sub)
+
+ df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
+
+
+
+  df <- df %>% dplyr::group_by(region, indikator, fachbereich, anzeige_geschlecht, jahr) %>%
+    dplyr::summarize(proportion = wert/props)
+
+  df$proportion <- df$proportion * 100
+
+
+  # order years for plot
+  df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+
+  # plot
+  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = fachbereich)) %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil {point.fachbereich} <br> Wert: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_title(text = paste0("Anteil von Fächern im Verlauf"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    )
+
+
+}
+
 
 

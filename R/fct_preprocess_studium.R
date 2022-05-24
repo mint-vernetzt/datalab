@@ -235,5 +235,3 @@ calc_share_male_bl <- function(df){
   return(df)
 }
 
-
-

@@ -130,6 +130,8 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_arbeitsmarkt_einstieg
 
+  geschlecht <- r$gender_switch
+
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
@@ -162,69 +164,100 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
   df <- rbind(df, help_männlich)
 
 
-  df_beschaeftigte <- df %>% dplyr::filter(indikator == "Beschäftigte")
+  if(geschlecht == FALSE) {
 
-  df_beschaeftigte <- df_beschaeftigte %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
+    df_beschaeftigte <- df %>% dplyr::filter(indikator == "Beschäftigte")
 
-  # calculate proportions
-  df_beschaeftigte$props <- sum(df_beschaeftigte$wert)
+    df_beschaeftigte <- df_beschaeftigte %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
-  df_beschaeftigte <- df_beschaeftigte %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
-    dplyr::summarize(proportion = wert/props)
+    df_beschaeftigte <- share_pie(df_beschaeftigte)
 
-  df_beschaeftigte$proportion <- df_beschaeftigte$proportion * 100
+    df_beschaeftigte$anzeige_geschlecht <- df_beschaeftigte$fachbereich
 
-  df_beschaeftigte$proportion <- round_preserve_sum(as.numeric(df_beschaeftigte$proportion),0)
+    df_auszubildende <- df %>% dplyr::filter(indikator == "Auszubildende")
 
-  df_beschaeftigte$anzeige_geschlecht <- paste0(df_beschaeftigte$anzeige_geschlecht, " (", df_beschaeftigte$fachbereich, ")")
+    df_auszubildende <- df_auszubildende %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+    df_auszubildende <- share_pie(df_auszubildende)
+
+    df_auszubildende$anzeige_geschlecht <- df_auszubildende$fachbereich
 
 
-  df_auszubildende <- df %>% dplyr::filter(indikator == "Auszubildende")
+  } else {
 
-  df_auszubildende <- df_auszubildende %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
 
-  # calculate proportions
-  df_auszubildende$props <- sum(df_auszubildende$wert)
+    df_beschaeftigte <- df %>% dplyr::filter(indikator == "Beschäftigte")
 
-  df_auszubildende <- df_auszubildende %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
-    dplyr::summarize(proportion = wert/props)
+    df_beschaeftigte <- df_beschaeftigte %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
 
-  df_auszubildende$proportion <- df_auszubildende$proportion * 100
+    df_beschaeftigte <- share_pie(df_beschaeftigte)
 
-  df_auszubildende$proportion <- round_preserve_sum(as.numeric(df_auszubildende$proportion),0)
+    df_beschaeftigte$anzeige_geschlecht <- paste0(df_beschaeftigte$anzeige_geschlecht, " (", df_beschaeftigte$fachbereich, ")")
 
-  df_auszubildende$anzeige_geschlecht <- paste0(df_auszubildende$anzeige_geschlecht, " (", df_auszubildende$fachbereich, ")")
+    df_auszubildende <- df %>% dplyr::filter(indikator == "Auszubildende")
+
+    df_auszubildende <- df_auszubildende %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+    df_auszubildende <- share_pie(df_auszubildende)
+
+    df_auszubildende$anzeige_geschlecht <- paste0(df_auszubildende$anzeige_geschlecht, " (", df_auszubildende$fachbereich, ")")
+
+
+  }
+
+  plot_auszubildende <- highcharter::hchart(df_auszubildende, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+    highcharter::hc_tooltip(
+      pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+    highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab", 'rgba(177, 111, 171, 0.50)')) %>%
+    highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Berufszweigen für Auszubildende in ", timerange),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                           dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
+
+
+
+  plot_beschaeftigte <- highcharter::hchart(df_beschaeftigte, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+    highcharter::hc_tooltip(
+      pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+    highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab", 'rgba(177, 111, 171, 0.50)')) %>%
+    highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Berufszweigen für Beschäftigte in ", timerange),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                           dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE))
+
+
+  if(geschlecht == FALSE) {
+
+    plot_beschaeftigte <- plot_beschaeftigte %>% highcharter::hc_colors(c("#154194","#b16fab"))
+
+    plot_auszubildende <- plot_auszubildende %>% highcharter::hc_colors(c("#154194","#b16fab"))
+
+  } else {
+
+    plot_beschaeftigte <- plot_beschaeftigte %>% highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab",
+                                                    'rgba(177, 111, 171, 0.50)'))
+
+    plot_auszubildende <- plot_auszubildende %>% highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab",
+                                                    'rgba(177, 111, 171, 0.50)'))
+
+  }
 
 
   highcharter::hw_grid(
-    highcharter::hchart(df_auszubildende, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
-      highcharter::hc_tooltip(
-        pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-      highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab", 'rgba(177, 111, 171, 0.50)')) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Berufszweigen für Auszubildende in ", timerange),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      highcharter::hc_legend(enabled = TRUE) %>%
-      highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                             dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
+    plot_auszubildende,
 
-    highcharter::hchart(df_beschaeftigte, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
-      highcharter::hc_tooltip(
-        pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-      highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab", 'rgba(177, 111, 171, 0.50)')) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Berufszweigen für Beschäftigte in ", timerange),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      highcharter::hc_legend(enabled = TRUE) %>%
-      highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                             dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+    plot_beschaeftigte,
 
     ncol = 2,
     browsable = TRUE
