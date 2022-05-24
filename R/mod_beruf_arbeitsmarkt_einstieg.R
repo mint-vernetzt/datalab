@@ -18,6 +18,11 @@ mod_beruf_arbeitsmarkt_einstieg_ui <- function(id){
       choices = c("2013", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020"),
       selected = "2020"
+    ),
+    p("Nach Geschlecht aufteilen?"),
+    tags$div(
+      shinyWidgets::materialSwitch(inputId = ns("gender_switch"), label = "Nein", inline = TRUE),
+      tags$span("Ja")
     )
   )
 }
@@ -30,6 +35,10 @@ mod_beruf_arbeitsmarkt_einstieg_server <- function(id, r){
 
     observeEvent(input$date_arbeitsmarkt_einstieg, {
       r$date_arbeitsmarkt_einstieg <- input$date_arbeitsmarkt_einstieg
+    })
+
+    observeEvent(input$gender_switch, {
+      r$gender_switch <- input$gender_switch
     })
 
   })

@@ -25,6 +25,7 @@ mod_beruf_server <- function(id, data_arbeitsmarkt, r){
 
   r <- reactiveValues(date_arbeitsmarkt_einstieg = NULL,
                       date_arbeitsmarkt = NULL,
+                      gender_switch = NULL,
                       anforderungsniveau_arbeitsmarkt = NULL,
                       date_arbeitsmarkt_verlauf = NULL,
                       indikator_arbeitsmarkt_verlauf = NULL,
