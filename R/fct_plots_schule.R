@@ -198,7 +198,6 @@ kurse_einstieg_pie <- function(df,r) {
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
 
-
   plot_lk <- highcharter::hchart(df_lk, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
@@ -211,6 +210,7 @@ kurse_einstieg_pie <- function(df,r) {
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE))
+
 
   if(geschlecht == FALSE) {
 
@@ -1029,7 +1029,15 @@ kurse_verlauf <- function(df,r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    )
+    ) %>%
+    highcharter::hc_exporting(enabled=TRUE,
+                              filename = "plot-Fächer",
+                              #allowHTML = TRUE,
+                              #formAttributes = list(target = "_blank"),
+                              buttons = list(contextButton = list(menuItems = c("downloadPNG", "downloadJPEG",
+                                                                                "downloadPDF"),
+                                                                  text= '', symbolFill = '#000000'
+                              )))
 
 
 }
@@ -1230,6 +1238,7 @@ kurse_verlauf_single_bl <- function(df,r) {
   df$anzeige_geschlecht <- paste0(df$anzeige_geschlecht, " (", df$indikator, ")")
 
 
+  myMenuItems <- c("downloadPNG")
 
   # order years for plot
   df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
@@ -1246,7 +1255,15 @@ kurse_verlauf_single_bl <- function(df,r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    )
+    ) %>%
+    highcharter::hc_exporting(enabled=TRUE,
+                              filename = "plot-Fächer",
+                              #allowHTML = TRUE,
+                              #formAttributes = list(target = "_blank"),
+                              buttons = list(contextButton = list(menuItems = c("downloadPNG", "downloadJPEG",
+                                                                                "downloadPDF"),
+                                          text= '', symbolFill = '#000000'
+                                          )))
 
 
 }
@@ -1346,7 +1363,15 @@ kurse_verlauf_subjects_bl <- function(df,r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    )
+    ) %>%
+    highcharter::hc_exporting(enabled=TRUE,
+                              filename = "plot-Fächer",
+                              #allowHTML = TRUE,
+                              #formAttributes = list(target = "_blank"),
+                              buttons = list(contextButton = list(menuItems = c("downloadPNG", "downloadJPEG",
+                                                                                "downloadPDF"),
+                                                                  text= '', symbolFill = '#000000'
+                              )))
 
 
 }

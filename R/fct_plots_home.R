@@ -309,7 +309,15 @@ home_stacked_comparison <- function(df, df_naa, r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    )
+    ) %>%
+    highcharter::hc_exporting(enabled=TRUE,
+                              filename = "plot-Fächer",
+                              #allowHTML = TRUE,
+                              #formAttributes = list(target = "_blank"),
+                              buttons = list(contextButton = list(menuItems = c("downloadPNG", "downloadJPEG",
+                                                                                "downloadPDF"),
+                                                                  text= '', symbolFill = '#000000'
+                              )))
 
 
 }
@@ -365,7 +373,15 @@ home_comparison_line <- function(df,r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    )
+    ) %>%
+    highcharter::hc_exporting(enabled=TRUE,
+                              filename = "plot-Fächer",
+                              #allowHTML = TRUE,
+                              #formAttributes = list(target = "_blank"),
+                              buttons = list(contextButton = list(menuItems = c("downloadPNG", "downloadJPEG",
+                                                                                "downloadPDF"),
+                                                                  text= '', symbolFill = '#000000'
+                              )))
 
 
 }
@@ -521,6 +537,14 @@ home_rest_mint_verlauf <- function(df,r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    )
+    ) %>%
+    highcharter::hc_exporting(enabled=TRUE,
+                              filename = "plot-Fächer",
+                              #allowHTML = TRUE,
+                              #formAttributes = list(target = "_blank"),
+                              buttons = list(contextButton = list(menuItems = c("downloadPNG", "downloadJPEG",
+                                                                                "downloadPDF"),
+                                                                  text= '', symbolFill = '#000000'
+                              )))
 
 }

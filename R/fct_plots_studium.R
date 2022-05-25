@@ -457,7 +457,7 @@ data_einstieg <- function(df,r) {
   lehramt_enthalten <- r$nurLehramt_studierende_einstieg
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+  df <- df %>% dplyr::filter(jahr == timerange)
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
@@ -1262,7 +1262,15 @@ studienzahl_verlauf <- function(df,r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    )
+    ) %>%
+    highcharter::hc_exporting(enabled=TRUE,
+                              filename = "plot-Fächer",
+                              #allowHTML = TRUE,
+                              #formAttributes = list(target = "_blank"),
+                              buttons = list(contextButton = list(menuItems = c("downloadPNG", "downloadJPEG",
+                                                                                "downloadPDF"),
+                                                                  text= '', symbolFill = '#000000'
+                              )))
 
 
 }
@@ -1508,7 +1516,15 @@ studienzahl_verlauf_bl <- function(df,r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    )
+    ) %>%
+    highcharter::hc_exporting(enabled=TRUE,
+                              filename = "plot-Fächer",
+                              #allowHTML = TRUE,
+                              #formAttributes = list(target = "_blank"),
+                              buttons = list(contextButton = list(menuItems = c("downloadPNG", "downloadJPEG",
+                                                                                "downloadPDF"),
+                                                                  text= '', symbolFill = '#000000'
+                              )))
 
 
 }
@@ -1628,7 +1644,15 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    )
+    ) %>%
+    highcharter::hc_exporting(enabled=TRUE,
+                              filename = "plot-Fächer",
+                              #allowHTML = TRUE,
+                              #formAttributes = list(target = "_blank"),
+                              buttons = list(contextButton = list(menuItems = c("downloadPNG", "downloadJPEG",
+                                                                                "downloadPDF"),
+                                                                  text= '', symbolFill = '#000000'
+                              )))
 
 
 }

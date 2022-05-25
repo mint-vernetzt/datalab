@@ -35,6 +35,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         title = "Box 2",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
+                             .butt{border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           tags$style(".well {background-color:#FFFFFF;}"),
           tags$head(tags$style(HTML(".small-box {height: 140px}"))),
@@ -47,22 +49,36 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           tabsetPanel(type = "tabs",
                       tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
-                                                style = "font-size: 75%; width: 75%"))))
+                                                style = "font-size: 75%; width: 75%"),
+                               shiny::downloadButton(ns("download_data_box1"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download")))))
     )),
     fluidRow(
       shinydashboard::box(
         title = "Box 3",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
+                             .butt{border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           mod_beruf_arbeitsmarkt_multiple_ui("mod_beruf_arbeitsmarkt_multiple_ui_1")),
         shiny::mainPanel(
           tabsetPanel(type = "tabs",
-                      tabPanel("Anteil", br(), plotOutput(ns("plot_waffle"))),
-                      tabPanel("Absolut", br(), plotOutput(ns("plot_absolut"))),
+                      tabPanel("Anteil", br(), plotOutput(ns("plot_waffle")),
+                               shiny::downloadButton(ns("download_waffle"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download"))),
+                      tabPanel("Absolut", br(), plotOutput(ns("plot_absolut")),
+                               shiny::downloadButton(ns("download_absolut"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download"))),
                       tabPanel("Karte", br(), htmlOutput(ns("plot_map_arbeitsmarkt"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
-                                                style = "font-size: 75%; width: 75%"))),
+                                                style = "font-size: 75%; width: 75%"),
+                               shiny::downloadButton(ns("download_data_box3"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download")))),
           br(),br(),
 
         ))),
@@ -82,14 +98,18 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         title = "Box 5",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
+                             .butt{border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           mod_beruf_arbeitsmarkt_verlauf_ui("mod_beruf_arbeitsmarkt_verlauf_ui_1")),
         shiny::mainPanel(
           tabsetPanel(type = "tabs",
                       tabPanel("Verlauf",br(), highcharter::highchartOutput(ns("plot_verlauf_arbeitsmarkt"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
-                                                style = "font-size: 75%; width: 75%"))
-                      ))))
+                                                style = "font-size: 75%; width: 75%"),
+                               shiny::downloadButton(ns("download_data_box5"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download")))))))
   )
 }
 
@@ -105,24 +125,46 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
 
     })
 
-    output$data_table_einstieg <- DT::renderDT({
+    data_table_einstieg_react <- reactive({
       data_einstieg_beruf(data_arbeitsmarkt, r)
     })
 
-    output$data_table_mix <- DT::renderDT({
+    output$data_table_einstieg <- DT::renderDT({
+      data_table_einstieg_react()
+    })
+
+    data_table_mix_react <- reactive({
       data_mix_beruf(data_arbeitsmarkt, r)
     })
 
-    output$data_table_verlauf <- DT::renderDT({
+
+    output$data_table_mix <- DT::renderDT({
+      data_table_mix_react()
+    })
+
+    data_table_verlauf_react <- reactive({
       data_verlauf_beruf(data_arbeitsmarkt, r)
     })
 
+    output$data_table_verlauf <- DT::renderDT({
+      data_table_verlauf_react()
+    })
+
+
+    plot_waffle_react <- reactive({
+      arbeitnehmer_waffle(data_arbeitsmarkt,r)
+    })
+
     output$plot_waffle <- renderPlot({
-      arbeitnehmer_waffle(data_arbeitsmarkt, r)
+      plot_waffle_react()
+    })
+
+    plot_absolut_react <- reactive({
+      arbeitsmarkt_absolut(data_arbeitsmarkt,r)
     })
 
     output$plot_absolut <- renderPlot({
-      arbeitsmarkt_absolut(data_arbeitsmarkt, r)
+      plot_absolut_react()
     })
 
 
@@ -137,6 +179,62 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
     output$plot_verlauf_arbeitsmarkt_bl <- highcharter::renderHighchart({
       arbeitsmarkt_verlauf_bl(data_arbeitsmarkt,r)
     })
+
+
+    # save histogram using downloadHandler and plot output type
+    output$download_waffle <- shiny::downloadHandler(
+      filename = function() {
+        paste("plot_kurse", "png", sep = ".")
+      },
+      content = function(file){
+        ggplot2::ggsave(file, plot = plot_waffle_react(), device = "png",
+                        dpi = 300, width = 10, height = 6)
+      }
+    )
+
+    # save histogram using downloadHandler and plot output type
+    output$download_absolut <- shiny::downloadHandler(
+      filename = function() {
+        paste("plot_kurse", "png", sep = ".")
+      },
+      content = function(file){
+        ggplot2::ggsave(file, plot = plot_absolut_react(), device = "png",
+                        dpi = 300, width = 10, height = 6)
+      }
+    )
+
+
+
+    # save histogram using downloadHandler and plot output type
+    output$download_data_box3 <- shiny::downloadHandler(
+      filename = function() {
+        paste("data_kurse", "csv", sep = ".")
+      },
+      content = function(file){
+        write.csv(data_table_mix_react(), file)
+      }
+    )
+
+
+    # save histogram using downloadHandler and plot output type
+    output$download_data_box5 <- shiny::downloadHandler(
+      filename = function() {
+        paste("data_kurse", "csv", sep = ".")
+      },
+      content = function(file){
+        write.csv(data_table_verlauf_react(), file)
+      }
+    )
+
+    output$download_data_box1 <- shiny::downloadHandler(
+      filename = function() {
+        paste("data_kurse", "csv", sep = ".")
+      },
+      content = function(file){
+        write.csv(data_table_einstieg_react(), file)
+      }
+    )
+
 
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
       res <- box_einstieg_beruf(data_arbeitsmarkt,r)

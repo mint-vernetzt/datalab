@@ -35,6 +35,8 @@ mod_studium_studienzahl_ui <- function(id){
       title = "Box 2",
       width = 12,
       p("Lorem ipsum dolor sit amet"),
+      tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
+                             .butt{border-color:#FFFFFF}")),
       shiny::sidebarPanel(
         tags$style(".well {background-color:#FFFFFF;}"),
         tags$head(tags$style(HTML(".small-box {height: 140px}"))),
@@ -46,22 +48,36 @@ mod_studium_studienzahl_ui <- function(id){
         tabsetPanel(type = "tabs",
         tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie"))),
         tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
-                                  style = "font-size: 75%; width: 75%"))))
+                                  style = "font-size: 75%; width: 75%"),
+                 shiny::downloadButton(ns("download_data_box1"), label = "",
+                                       class = "butt",
+                                       icon = shiny::icon("download")))))
       )),
     fluidRow(
       shinydashboard::box(
         title = "Box 3",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
+                             .butt{border-color:#FFFFFF}")),
         shiny::sidebarPanel(
                     mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
       shiny::mainPanel(
                   tabsetPanel(type = "tabs",
-                              tabPanel("Anteil", br(), plotOutput(ns("plot_waffle"))),
-                              tabPanel("Absolut", br(), plotOutput(ns("plot_absolut"))),
+                              tabPanel("Anteil", br(), plotOutput(ns("plot_waffle")),
+                                       shiny::downloadButton(ns("download_waffle"), label = "",
+                                                             class = "butt",
+                                                             icon = shiny::icon("download"))),
+                              tabPanel("Absolut", br(), plotOutput(ns("plot_absolut")),
+                                       shiny::downloadButton(ns("download_absolut"), label = "",
+                                                             class = "butt",
+                                                             icon = shiny::icon("download"))),
                               tabPanel("Karte", br(), htmlOutput(ns("plot_map_studienzahl"))),
                               tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
-                                                        style = "font-size: 75%; width: 75%"))),
+                                                        style = "font-size: 75%; width: 75%"),
+                                       shiny::downloadButton(ns("data_table_mix_box3"), label = "",
+                                                             class = "butt",
+                                                             icon = shiny::icon("download")))),
                   br(),br(),
                   ))),
     fluidRow(
@@ -99,7 +115,10 @@ mod_studium_studienzahl_ui <- function(id){
           tabsetPanel(type = "tabs",
                       tabPanel("Verlauf", br(), highcharter::highchartOutput(ns("plot_verlauf_studienzahl"))),
           tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
-                                    style = "font-size: 75%; width: 75%")))
+                                    style = "font-size: 75%; width: 75%"),
+                   shiny::downloadButton(ns("download_data_box5"), label = "",
+                                         class = "butt",
+                                         icon = shiny::icon("download"))))
 
           )))
     # hr(),
@@ -132,16 +151,29 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
     })
 
-    output$data_table_einstieg <- DT::renderDT({
+    data_table_einstieg_react <- reactive({
       data_einstieg(data_studierende, r)
     })
 
-    output$plot_absolut <- renderPlot({
+    output$data_table_einstieg <- DT::renderDT({
+      data_table_einstieg_react()
+    })
+
+    plot_absolut_react <- reactive({
       studienzahl_absolut(data_studierende,r)
     })
 
-    output$plot_waffle <- renderPlot({
+    output$plot_absolut <- renderPlot({
+      plot_absolut_react()
+    })
+
+
+    plot_waffle_react <- reactive({
       studienzahl_waffle_alternative(data_studierende,r)
+    })
+
+    output$plot_waffle <- renderPlot({
+      plot_waffle_react()
     })
 
 
@@ -161,16 +193,74 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       studienzahl_verlauf_bl_subject(data_studierende,r)
     })
 
-    output$data_table_mix <- DT::renderDT({
+    data_table_mix_react <- reactive({
       data_mix_studium(data_studierende, r)
     })
 
-    output$data_table_verlauf <- DT::renderDT({
+    output$data_table_mix <- DT::renderDT({
+      data_table_mix_react()
+    })
+
+   data_table_verlauf_react <- DT::renderDT({
       data_verlauf_studium(data_studierende, r)
     })
 
+    output$data_table_verlauf <- DT::renderDT({
+      data_table_verlauf_react()
+    })
 
 
+    # save histogram using downloadHandler and plot output type
+    output$download_waffle <- shiny::downloadHandler(
+      filename = function() {
+        paste("plot_studium", "png", sep = ".")
+      },
+      content = function(file){
+        ggplot2::ggsave(file, plot = plot_waffle_react(), device = "png",
+                        dpi = 300, width = 10, height = 6)
+      }
+    )
+
+    # save histogram using downloadHandler and plot output type
+    output$download_absolut <- shiny::downloadHandler(
+      filename = function() {
+        paste("plot_studium", "png", sep = ".")
+      },
+      content = function(file){
+        ggplot2::ggsave(file, plot = plot_absolut_react(), device = "png",
+                        dpi = 300, width = 10, height = 6)
+      }
+    )
+
+
+    output$download_data_box1 <- shiny::downloadHandler(
+      filename = function() {
+        paste("data_studium", "csv", sep = ".")
+      },
+      content = function(file){
+        write.csv(data_table_einstieg_react(), file)
+      }
+    )
+
+
+    # save histogram using downloadHandler and plot output type
+    output$data_table_mix_box3 <- shiny::downloadHandler(
+      filename = function() {
+        paste("data_studium", "csv", sep = ".")
+      },
+      content = function(file){
+        write.csv(data_table_mix_react(), file)
+      }
+    )
+
+    output$download_data_box5 <- shiny::downloadHandler(
+      filename = function() {
+        paste("data_studium", "csv", sep = ".")
+      },
+      content = function(file){
+        write.csv(data_table_verlauf_react(), file)
+      }
+    )
 
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
       res <- box_einstieg_studium(data_studierende,r)

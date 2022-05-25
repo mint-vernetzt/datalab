@@ -35,6 +35,8 @@ mod_schule_kurse_ui <- function(id){
         title = "Box 2",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
+                             .butt{border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           tags$style(".well {background-color:#FFFFFF;}"),
           tags$head(tags$style(HTML(".small-box {height: 140px}"))),
@@ -47,24 +49,36 @@ mod_schule_kurse_ui <- function(id){
           tabsetPanel(type = "tabs",
                       tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
-                                                style = "font-size: 75%; width: 75%"))))
+                                                style = "font-size: 75%; width: 75%"),
+                               shiny::downloadButton(ns("download_data_box1"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download")))))
       )),
     fluidRow(
       shinydashboard::box(
         title = "Box 3",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
+                             .butt{border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
         shiny::mainPanel(
           tabsetPanel(type = "tabs",
-                      tabPanel("Anteil", br(), plotOutput(ns("plot_waffle"))),
-                      tabPanel("Absolut", br(), plotOutput(ns("plot_absolut"))),
-                      #tabPanel("Ranking 1", br(), plotOutput(ns("plot_ranking_1"))),
-                      #tabPanel("Ranking 2", br(), plotOutput(ns("plot_ranking_2"))),
+                      tabPanel("Anteil", br(), plotOutput(ns("plot_waffle")),
+                               shiny::downloadButton(ns("download_waffle"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download"))),
+                      tabPanel("Absolut", br(), plotOutput(ns("plot_absolut")),
+                               shiny::downloadButton(ns("download_absolut"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download"))),
                       tabPanel("Karte", br(), htmlOutput(ns("plot_map_kurse"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
-                                                style = "font-size: 75%; width: 75%"))),
+                                                style = "font-size: 75%; width: 75%"),
+                               shiny::downloadButton(ns("download_data_box3"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download")))),
           br(),br(),
 
         ))),
@@ -73,10 +87,15 @@ mod_schule_kurse_ui <- function(id){
         title = "Box 4",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
+                             .butt{border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1")),
         shiny::mainPanel(
-          plotOutput(ns("plot_ranking_2"))
+          plotOutput(ns("plot_ranking_2")),
+          shiny::downloadButton(ns("download_ranking"), label = "",
+                                class = "butt",
+                                icon = shiny::icon("download"))
         ))),
     fluidRow(
       shinydashboard::box(
@@ -105,13 +124,18 @@ mod_schule_kurse_ui <- function(id){
         title = "Box 7",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
+                             .butt{border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           mod_schule_kurse_verlauf_ui("mod_schule_kurse_verlauf_ui_1")),
         shiny::mainPanel(
           tabsetPanel(type = "tabs",
                       tabPanel("Verlauf", br(), highcharter::highchartOutput(ns("plot_verlauf_kurse"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
-                                                style = "font-size: 75%; width: 75%")))
+                                                style = "font-size: 75%; width: 75%"),
+                               shiny::downloadButton(ns("download_data_box7"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download"))))
         )))
   )
 }
@@ -125,28 +149,38 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
 
     output$plot_einstieg_pie <- renderUI({
       kurse_einstieg_pie(data_kurse,r)
-
     })
 
-
-    output$data_table_einstieg <- DT::renderDT({
+    data_table_einstieg_react <- reactive({
       data_einstieg_kurse(data_kurse, r)
     })
 
-    output$plot_waffle <- renderPlot({
+    output$data_table_einstieg <- DT::renderDT({
+      data_table_einstieg_react()
+    })
+
+    plot_waffle_react <- reactive({
       kurse_waffle(data_kurse,r)
     })
 
-    output$plot_absolut <- renderPlot({
+    output$plot_waffle <- renderPlot({
+      plot_waffle_react()
+    })
+
+    plot_absolut_react <- reactive({
       kurse_absolut(data_kurse,r)
     })
 
-    output$plot_ranking_1 <- renderPlot({
-      kurse_ranking(data_kurse,r, type="first")
+    output$plot_absolut <- renderPlot({
+      plot_absolut_react()
+    })
+
+    plot_ranking_react <- reactive({
+      kurse_ranking(data_kurse,r, type="other")
     })
 
     output$plot_ranking_2 <- renderPlot({
-      kurse_ranking(data_kurse,r, type="other")
+      plot_ranking_react()
     })
 
     output$plot_map_kurse <- renderUI({
@@ -165,13 +199,85 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
       kurse_verlauf_subjects_bl(data_kurse,r)
     })
 
-    output$data_table_mix <- DT::renderDT({
+    data_table_mix_react <- reactive({
       data_mix_kurse(data_kurse, r)
     })
 
-    output$data_table_verlauf <- DT::renderDT({
+    output$data_table_mix <- DT::renderDT({
+      data_table_mix_react()
+    })
+
+    data_table_verlauf_react <- reactive({
       data_verlauf_kurse(data_kurse, r)
     })
+
+    output$data_table_verlauf <- DT::renderDT({
+      data_table_verlauf_react()
+    })
+
+
+    # save histogram using downloadHandler and plot output type
+    output$download_waffle <- shiny::downloadHandler(
+      filename = function() {
+        paste("plot_kurse", "png", sep = ".")
+      },
+      content = function(file){
+        ggplot2::ggsave(file, plot = plot_waffle_react(), device = "png",
+                        dpi = 300, width = 10, height = 6)
+      }
+    )
+
+    # save histogram using downloadHandler and plot output type
+    output$download_absolut <- shiny::downloadHandler(
+      filename = function() {
+        paste("plot_kurse", "png", sep = ".")
+      },
+      content = function(file){
+        ggplot2::ggsave(file, plot = plot_absolut_react(), device = "png",
+                        dpi = 300, width = 10, height = 6)
+      }
+    )
+
+
+    output$download_ranking <- shiny::downloadHandler(
+      filename = function() {
+        paste("plot_kurse", "png", sep = ".")
+      },
+      content = function(file){
+        ggplot2::ggsave(file, plot = plot_ranking_react(), device = "png",
+                        dpi = 300, width = 10, height = 6)
+      }
+    )
+
+
+    # save histogram using downloadHandler and plot output type
+    output$download_data_box3 <- shiny::downloadHandler(
+      filename = function() {
+        paste("data_kurse", "csv", sep = ".")
+      },
+      content = function(file){
+        write.csv(data_table_mix_react(), file)
+      }
+    )
+
+    # save histogram using downloadHandler and plot output type
+    output$download_data_box1 <- shiny::downloadHandler(
+      filename = function() {
+        paste("data_kurse", "csv", sep = ".")
+      },
+      content = function(file){
+        write.csv(data_table_einstieg_react(), file)
+      }
+    )
+
+    output$download_data_box7 <- shiny::downloadHandler(
+      filename = function() {
+        paste("data_kurse", "csv", sep = ".")
+      },
+      content = function(file){
+        write.csv(data_table_verlauf_react(), file)
+      }
+    )
 
     output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
       res <- box_einstieg_kurse(data_kurse,r)
