@@ -9,12 +9,6 @@
 #' @importFrom shiny NS tagList
 mod_schule_kurse_verlauf_bl_ui <- function(id){
   ns <- NS(id)
-  load(file = system.file(package="datalab","data/kurse.rda"))
-
-  kurse <- kurse %>% dplyr::filter(fachbereich != "Alle Fächer",
-                                   fachbereich != "Naturwissenschaften",
-                                   fachbereich != "Gesellschaftswissenschaften",
-                                   fachbereich != "Fremdsprachen")
 
   tagList(
 
@@ -26,32 +20,15 @@ mod_schule_kurse_verlauf_bl_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Einzelne Fächer oder als MINT zusammengefasst:"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("subjects_aggregated_bl"),
-      choices = c("einzeln", "aggregiert"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon")),
-      selected = "aggregiert"
+    p("Wähle ein Fach:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("subject_selected_bl"),
+      choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
+                  "Biologie", "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+                  "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
+                  "Sport", "Musik"),
+      selected = "Informatik"
     ),
-    conditionalPanel(condition = "input.subjects_aggregated_bl == 'aggregiert'",
-                     ns = ns,
-                     p("Wähle ob MINT oder alle anderen Fächer dargestellt werden sollen:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("topic_kurse_verlauf_bl"),
-                       choices = c("MINT", "andere Fächer"),
-                       selected = "MINT"
-                     )),
-    conditionalPanel(condition = "input.subjects_aggregated_bl == 'einzeln'",
-                     ns = ns,
-                     p("Wähle ein Fach:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("subject_selected_bl"),
-                       choices = c(unique(kurse$fachbereich)),
-                       selected = "Informatik"
-                     )),
-
     p("Wähle ein Bundesland:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("states_kurse_verlauf_bl"),

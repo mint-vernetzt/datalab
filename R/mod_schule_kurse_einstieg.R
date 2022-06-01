@@ -16,11 +16,7 @@ mod_schule_kurse_einstieg_ui <- function(id){
       label = NULL,
       choices = c("2010", "2011", "2012", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020"),
-    selected = "2020"),
-    p("Nach Geschlecht aufteilen?"),
-    tags$div(
-      shinyWidgets::materialSwitch(inputId = ns("gender_switch"), label = "Nein", inline = TRUE),
-      tags$span("Ja")
+    selected = "2020")
     )
 
     # ),
@@ -48,7 +44,7 @@ mod_schule_kurse_einstieg_ui <- function(id){
     #   inputId = ns("switch_rel_abs"),
     #   label = "Relativ"
     # )
-  )
+
 }
 
 #' schule_kurse_einstieg Server Functions

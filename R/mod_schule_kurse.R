@@ -35,107 +35,226 @@ mod_schule_kurse_ui <- function(id){
         title = "Box 2",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
-                             .butt{border-color:#FFFFFF}")),
-        shiny::sidebarPanel(
-          tags$style(".well {background-color:#FFFFFF;}"),
-          tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-          mod_schule_kurse_einstieg_ui("mod_schule_kurse_einstieg_ui_1")),
-        #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_mint")),
-        #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_rest")),
+        tabsetPanel(type = "tabs",
+                    tabPanel("MINT-Anteile", br(),
 
-        shiny::mainPanel(
+                      tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                      shiny::sidebarPanel(
+                        tags$style(".well {background-color:#FFFFFF;}"),
+                        tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                        mod_schule_kurse_einstieg_ui("mod_schule_kurse_einstieg_ui_1")),
+                      shiny::mainPanel(
+                        htmlOutput(ns("plot_einstieg_pie")))
+                            ),
+                    tabPanel("Zeitverlauf", br(),
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1")),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_einstieg_verlauf")))
+                             ),
+                    tabPanel("Vergleich", br(),
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_einstieg_comparison_ui("mod_schule_kurse_einstieg_comparison_ui_1")),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_einstieg_comparison")))
+                    ),
+                    tabPanel("Datensatz", br(),
 
-          tabsetPanel(type = "tabs",
-                      tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie"))),
-                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
-                                                style = "font-size: 75%; width: 75%"),
-                               shiny::downloadButton(ns("download_data_box1"), label = "",
-                                                     class = "butt",
-                                                     icon = shiny::icon("download")))))
-      )),
+                      tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                               .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                      shiny::sidebarPanel(
+                        tags$style(".well {background-color:#FFFFFF;}"),
+                        tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                        mod_schule_kurse_einstieg_ui("mod_schule_kurse_einstieg_ui_1")),
+                      shiny::mainPanel(
+                        div(DT::dataTableOutput(ns("data_table_einstieg")),
+                            style = "font-size: 75%; width: 75%"),
+                        shiny::downloadButton(ns("download_data_box1"), label = "",
+                                              class = "butt",
+                                              icon = shiny::icon("download")))
+                            )
+      ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box 3",
+        title = "Box 2",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
-                             .butt{border-color:#FFFFFF}")),
-        shiny::sidebarPanel(
-          mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
-        shiny::mainPanel(
-          tabsetPanel(type = "tabs",
-                      tabPanel("Anteil", br(), plotOutput(ns("plot_waffle")),
-                               shiny::downloadButton(ns("download_waffle"), label = "",
-                                                     class = "butt",
-                                                     icon = shiny::icon("download"))),
-                      tabPanel("Absolut", br(), plotOutput(ns("plot_absolut")),
-                               shiny::downloadButton(ns("download_absolut"), label = "",
-                                                     class = "butt",
-                                                     icon = shiny::icon("download"))),
-                      tabPanel("Karte", br(), htmlOutput(ns("plot_map_kurse"))),
-                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
-                                                style = "font-size: 75%; width: 75%"),
-                               shiny::downloadButton(ns("download_data_box3"), label = "",
-                                                     class = "butt",
-                                                     icon = shiny::icon("download")))),
-          br(),br(),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Frauenanteile", br(),
 
-        ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Box 4",
-        width = 12,
-        p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
-                             .butt{border-color:#FFFFFF}")),
-        shiny::sidebarPanel(
-          mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1")),
-        shiny::mainPanel(
-          plotOutput(ns("plot_ranking_2")),
-          shiny::downloadButton(ns("download_ranking"), label = "",
-                                class = "butt",
-                                icon = shiny::icon("download"))
-        ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Box 5",
-        width = 12,
-        p("Lorem ipsum dolor sit amet"),
-        shiny::sidebarPanel(
-          mod_schule_kurse_verlauf_bl_ui("mod_schule_kurse_verlauf_bl_ui_1")),
-        shiny::mainPanel(
-          highcharter::highchartOutput(ns("plot_verlauf_kurse_bl"))
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_schule_kurse_pie_gender_ui("mod_schule_kurse_pie_gender_ui_1")),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_pie_gender")))
+                    ),
+                    tabPanel("Zeitverlauf", br(),
 
-        ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Box 6",
-        width = 12,
-        p("Lorem ipsum dolor sit amet"),
-        shiny::sidebarPanel(
-          mod_schule_kurse_verlauf_bl_subjects_ui("mod_schule_kurse_verlauf_bl_subjects_ui_1")),
-        shiny::mainPanel(
-          highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects"))
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_schule_kurse_verlauf_gender_ui("mod_schule_kurse_verlauf_gender_ui_1")),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_verlauf_gender")))
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_schule_kurse_comparison_gender_ui("mod_schule_kurse_comparison_gender_ui_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_comparison_gender")))
+                    )
 
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box 7",
+        title = "Box 2",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
-                             .butt{border-color:#FFFFFF}")),
-        shiny::sidebarPanel(
-          mod_schule_kurse_verlauf_ui("mod_schule_kurse_verlauf_ui_1")),
-        shiny::mainPanel(
-          tabsetPanel(type = "tabs",
-                      tabPanel("Verlauf", br(), highcharter::highchartOutput(ns("plot_verlauf_kurse"))),
-                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
-                                                style = "font-size: 75%; width: 75%"),
-                               shiny::downloadButton(ns("download_data_box7"), label = "",
+        tabsetPanel(type = "tabs",
+                    tabPanel("Frauenanteile", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                                 shiny::sidebarPanel(
+                                   mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_waffle_mint")))
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                                 shiny::sidebarPanel(
+                                   mod_schule_kurse_verlauf_bl_subjects_ui("mod_schule_kurse_verlauf_bl_subjects_ui_1")),
+                                 shiny::mainPanel(
+                                   highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects"))
+
+                                 )
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_comparison_subjects_ui("mod_schule_kurse_comparison_subjects_ui_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_comparison_subjects"))
+
+                             )
+                    )
+        ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Box 2",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Fächerbelegung", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_waffle")))
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_verlauf_bl_ui("mod_schule_kurse_verlauf_bl_ui_1")),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_verlauf_kurse_bl")))
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_ranking_2")),
+                               shiny::downloadButton(ns("download_ranking"), label = "",
                                                      class = "butt",
-                                                     icon = shiny::icon("download"))))
+                                                     icon = shiny::icon("download"))
+                             )
+                  )
+        ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Box 2",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Fächerbelegung", br(),
+
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1")),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_map_kurse")))
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1")),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_verlauf_multiple")))
+                  ),
+                  tabPanel("Vergleich", br(),
+
+                           shiny::sidebarPanel(
+                             mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1")),
+                           shiny::mainPanel(
+                             plotOutput(ns("plot_comparison_bl")))
+                 )
+        ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Box 2",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Fächerbelegung", br(),
+
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1")),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_map_kurse_gender")))
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_verlauf_ui("mod_schule_kurse_verlauf_ui_1")),
+                             shiny::mainPanel(
+
+                                    highcharter::highchartOutput(ns("plot_verlauf_kurse"))
+
+                             )
+                   ),
+                   tabPanel("Vergleich", br(),
+
+                            tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                            shiny::sidebarPanel(
+                              mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1")),
+                            shiny::mainPanel(
+                              plotOutput(ns("plot_ranking_gender")),
+                              # shiny::downloadButton(ns("download_ranking_gender"), label = "",
+                              #                       class = "butt",
+                              #                       icon = shiny::icon("download"))
+                            )
+
+                  )
         )))
   )
 }
@@ -187,8 +306,16 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
       kurse_map(data_kurse,r)
     })
 
+    output$plot_map_kurse_gender <- renderUI({
+      kurse_map_gender(data_kurse,r)
+    })
+
     output$plot_verlauf_kurse <- highcharter::renderHighchart({
       kurse_verlauf(data_kurse,r)
+    })
+
+    output$plot_verlauf_multiple <- highcharter::renderHighchart({
+      kurse_verlauf_multiple_bl(data_kurse,r)
     })
 
     output$plot_verlauf_kurse_bl <- highcharter::renderHighchart({
@@ -198,6 +325,44 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
     output$plot_verlauf_kurse_bl_subjects <- highcharter::renderHighchart({
       kurse_verlauf_subjects_bl(data_kurse,r)
     })
+
+    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
+      kurse_verlauf_single(data_kurse,r)
+    })
+
+    output$plot_einstieg_comparison <- highcharter::renderHighchart({
+      kurse_einstieg_comparison(data_kurse,r)
+    })
+
+    output$plot_verlauf_gender <- highcharter::renderHighchart({
+      kurse_verlauf_gender(data_kurse,r)
+    })
+
+    output$plot_comparison_gender <- renderPlot({
+      kurse_comparison_gender(data_kurse,r)
+    })
+
+    output$plot_ranking_gender <- renderPlot({
+      kurse_ranking_gender(data_kurse,r)
+    })
+
+
+    output$plot_waffle_mint <- renderPlot({
+      kurse_waffle_mint(data_kurse,r)
+    })
+
+    output$plot_comparison_subjects <- renderPlot({
+      kurse_mint_comparison(data_kurse,r)
+    })
+
+    output$plot_comparison_bl <- renderPlot({
+      kurse_mint_comparison_bl(data_kurse,r)
+    })
+
+    output$plot_pie_gender <- renderUI({
+      kurse_einstieg_pie_gender(data_kurse,r)
+    })
+
 
     data_table_mix_react <- reactive({
       data_mix_kurse(data_kurse, r)
@@ -278,68 +443,6 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
         write.csv(data_table_verlauf_react(), file)
       }
     )
-
-    output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
-      res <- box_einstieg_kurse(data_kurse,r)
-
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_female,"%"))
-
-      if (r$indikator_kurse_einstieg == "Grundkurse"){
-
-        title <- "Grundkurse"
-
-      } else {
-
-        title <- "Leistungskurse"
-
-      }
-
-      text <- paste0("Durschnittlicher Anteil von MINT bei Frauen!")
-
-      text_info <- paste0("Durschnittlicher Anteil von MINT bei Frauen in der Schule berechnet für
-                          den gewählten Zeitraum und abhängig von den gewählten Filter.")
-
-      valueBox2(
-        value, title,
-        subtitle = text,
-        icon = shiny::icon("school"),
-        width = 6,
-        info = text_info,
-        type = "Frauen"
-      )
-    })
-
-    output$valueBox_einstieg_rest <- shinydashboard::renderValueBox({
-      res <- box_einstieg_kurse(data_kurse,r)
-
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_male,"%"))
-
-      if (r$indikator_kurse_einstieg == "Grundkurse"){
-
-        title <- "Grundkurse"
-
-      } else {
-
-        title <- "Leistungskurse"
-
-      }
-
-
-      text <- paste0("Durschnittlicher Anteil von MINT bei Männer!")
-
-      text_info <- paste0("Durschnittlicher Anteil von MINT bei Männer in der Schule berechnet für
-                          den gewählten Zeitraum und abhängig von den gewählten Filter.")
-
-      valueBox2(
-        value, title,
-        subtitle = text,
-        icon = shiny::icon("school"),
-        width = 6,
-        info = text_info
-      )
-    })
-
-
   })
 }
 

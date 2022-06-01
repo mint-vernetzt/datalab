@@ -16,6 +16,14 @@ mod_schule_kurse_multiple_ui <- function(id){
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
+    ),
+    p("Wähle in welcher Form der Kurs belegt wurde:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("indikator_kurse_gender"),
+      choices = c("Grundkurse", "Leistungskurse"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
 }
@@ -28,6 +36,10 @@ mod_schule_kurse_multiple_server <- function(id, r){
 
     observeEvent(input$date_kurse, {
       r$date_kurse <- input$date_kurse
+    })
+
+    observeEvent(input$indikator_kurse_gender, {
+      r$indikator_kurse_gender <- input$indikator_kurse_gender
     })
 
   })

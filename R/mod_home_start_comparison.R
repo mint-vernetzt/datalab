@@ -22,12 +22,13 @@ mod_home_start_comparison_ui <- function(id){
     p("Wähle ein odere mehrere Indikatoren:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_comparison"),
-      choices = c("Beschäftigte", "Auszubildende", "Habilitationen", "Leistungskurse",
-      "Promotionen (angestrebt)", "Studienanfänger", "Studierende"),
-      selected = c("Studierende", "Beschäftigte"),
-      options = list(`actions-box` = TRUE,
-                     `deselect-all-text` = "Alle abwählen",
-                     `select-all-text` = "Alle auswählen"),
+      choices = c("Leistungskurse", "Studienanfänger", "Auszubildende", "Studierende",
+                  "Promotionen (angestrebt)", "Beschäftigte", "Habilitationen"),
+      selected = c("Leistungskurse", "Beschäftigte"),
+      options =  list(
+        "max-options" = 3,
+        "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
+      ),
       multiple = TRUE
 
     )

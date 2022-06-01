@@ -10,13 +10,6 @@
 mod_schule_kurse_verlauf_ui <- function(id){
   ns <- NS(id)
 
-  load(file = system.file(package="datalab","data/kurse.rda"))
-
-  kurse <- kurse %>% dplyr::filter(fachbereich != "Alle Fächer",
-                                   fachbereich != "Naturwissenschaften",
-                                   fachbereich != "Gesellschaftswissenschaften",
-                                   fachbereich != "Fremdsprachen")
-
   tagList(
 
     p("Wähle einen Zeitraum:"),
@@ -35,31 +28,17 @@ mod_schule_kurse_verlauf_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Einzelne Fächer oder als MINT zusammengefasst:"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("subjects_aggregated"),
-      choices = c("einzeln", "aggregiert"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon")),
-      selected = "aggregiert"
-    ),
-    conditionalPanel(condition = "input.subjects_aggregated == 'aggregiert'",
-                     ns = ns,
-    p("Wähle ob MINT oder alle anderen Fächer dargestellt werden sollen:"),
+
+    p("Wähle ein Fach:"),
     shinyWidgets::pickerInput(
-      inputId = ns("topic_kurse_verlauf"),
-      choices = c("MINT", "andere Fächer"),
-      selected = "MINT"
-    )),
-    conditionalPanel(condition = "input.subjects_aggregated == 'einzeln'",
-                     ns = ns,
-                     p("Wähle ein Fach:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("subject_selected"),
-                       choices = unique(kurse$fachbereich),
-                       selected = "Informatik"
-                     )),
+      inputId = ns("subject_selected"),
+      choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
+                  "Biologie", "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+                  "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
+                  "Sport", "Musik"),
+      selected = "MINT (aggregiert)"
+    ),
+
     p("Wähle ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf"),

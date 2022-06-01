@@ -1,4 +1,4 @@
-#' home_start_einstieg UI Function
+#' home_start_einstieg_gender UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,12 +7,12 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_home_start_einstieg_ui <- function(id){
+mod_home_start_einstieg_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
     p("Wähle ein Bereich:"),
     shinyWidgets::pickerInput(
-      inputId = ns("indikator_start_einstieg_1"),
+      inputId = ns("indikator_start_einstieg_1_gender"),
       choices = c("Leistungskurse", "Studienanfänger", "Auszubildende", "Studierende",
                   "Promotionen (angestrebt)", "Beschäftigte", "Habilitationen"),
       selected = c("Leistungskurse", "Beschäftigte"),
@@ -22,25 +22,25 @@ mod_home_start_einstieg_ui <- function(id){
         "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
       )
     )
+
   )
 }
 
-#' home_start_einstieg Server Functions
+#' home_start_einstieg_gender Server Functions
 #'
 #' @noRd
-mod_home_start_einstieg_server <- function(id, r){
+mod_home_start_einstieg_gender_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-
-    observeEvent(input$indikator_start_einstieg_1, {
-      r$indikator_start_einstieg_1 <- input$indikator_start_einstieg_1
+    observeEvent(input$indikator_start_einstieg_1_gender, {
+      r$indikator_start_einstieg_1_gender <- input$indikator_start_einstieg_1_gender
     })
 
   })
 }
 
 ## To be copied in the UI
-# mod_home_start_einstieg_ui("home_start_einstieg_1")
+# mod_home_start_einstieg_gender_ui("home_start_einstieg_gender_1")
 
 ## To be copied in the server
-# mod_home_start_einstieg_server("home_start_einstieg_1")
+# mod_home_start_einstieg_gender_server("home_start_einstieg_gender_1")

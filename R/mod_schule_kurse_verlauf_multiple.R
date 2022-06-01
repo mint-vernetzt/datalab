@@ -1,4 +1,4 @@
-#' schule_kurse_verlauf_bl_subjects UI Function
+#' schule_kurse_verlauf_multiple UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,13 +7,13 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
+mod_schule_kurse_verlauf_multiple_ui <- function(id){
   ns <- NS(id)
   tagList(
 
     p("Wähle einen Zeitraum:"),
     shinyWidgets::sliderTextInput(
-      inputId = ns("date_kurse_verlauf_subject_bl"),
+      inputId = ns("date_kurse_verlauf_multiple"),
       label = NULL,
       choices = c("2010","2011", "2012", "2013", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020"),
@@ -21,7 +21,7 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
     ),
     p("Wähle in welcher Form der Kurs belegt wurde:"),
     shinyWidgets::radioGroupButtons(
-      inputId = ns("topic_selected_subject_bl"),
+      inputId = ns("topic_selected_multiple"),
       choices = c("Grundkurse", "Leistungskurse"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
@@ -29,17 +29,16 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
     ),
     p("Wähle ein oder mehrere Fächer:"),
     shinyWidgets::pickerInput(
-      inputId = ns("subject_selected_bl_sub"),
+      inputId = ns("subject_selected_multiple"),
       choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
                   "Biologie", "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
                   "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
                   "Sport", "Musik"),
-      selected = c("Informatik", "Mathematik"),
-      multiple = TRUE
+      selected = "Mathematik",
     ),
     p("Wähle ein Bundesland:"),
     shinyWidgets::pickerInput(
-      inputId = ns("states_kurse_verlauf_subject_bl"),
+      inputId = ns("states_kurse_verlauf_multiple"),
       choices = c("Berlin",
                   "Brandenburg",
                   "Bremen",
@@ -56,39 +55,41 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
                   "Thüringen",
                   "Westen",
                   "Osten"),
-      selected = "Hessen"
+      selected = c("Hessen", "Berlin"),
+      multiple = TRUE
     )
+
   )
 }
 
-#' schule_kurse_verlauf_bl_subjects Server Functions
+#' schule_kurse_verlauf_multiple Server Functions
 #'
 #' @noRd
-mod_schule_kurse_verlauf_bl_subjects_server <- function(id, r){
+mod_schule_kurse_verlauf_multiple_server <- function(id, r){
   moduleServer( id, function(input, output, session){
-    ns <- session$ns
 
-    observeEvent(input$date_kurse_verlauf_subject_bl, {
-      r$date_kurse_verlauf_subject_bl <- input$date_kurse_verlauf_subject_bl
+    observeEvent(input$states_kurse_verlauf_multiple, {
+      r$states_kurse_verlauf_multiple <- input$states_kurse_verlauf_multiple
     })
 
-    observeEvent(input$subject_selected_bl_sub, {
-      r$subject_selected_bl_sub <- input$subject_selected_bl_sub
+    observeEvent(input$subject_selected_multiple, {
+      r$subject_selected_multiple <- input$subject_selected_multiple
     })
 
-    observeEvent(input$states_kurse_verlauf_subject_bl, {
-      r$states_kurse_verlauf_subject_bl <- input$states_kurse_verlauf_subject_bl
+    observeEvent(input$topic_selected_multiple, {
+      r$topic_selected_multiple <- input$topic_selected_multiple
     })
 
-    observeEvent(input$topic_selected_subject_bl, {
-      r$topic_selected_subject_bl <- input$topic_selected_subject_bl
+    observeEvent(input$date_kurse_verlauf_multiple, {
+      r$date_kurse_verlauf_multiple <- input$date_kurse_verlauf_multiple
     })
+
 
   })
 }
 
 ## To be copied in the UI
-# mod_schule_kurse_verlauf_bl_subjects_ui("schule_kurse_verlauf_bl_subjects_1")
+# mod_schule_kurse_verlauf_multiple_ui("schule_kurse_verlauf_multiple_1")
 
 ## To be copied in the server
-# mod_schule_kurse_verlauf_bl_subjects_server("schule_kurse_verlauf_bl_subjects_1")
+# mod_schule_kurse_verlauf_multiple_server("schule_kurse_verlauf_multiple_1")

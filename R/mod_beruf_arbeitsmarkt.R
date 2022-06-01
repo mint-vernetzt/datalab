@@ -35,8 +35,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         title = "Box 2",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
-                             .butt{border-color:#FFFFFF}")),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           tags$style(".well {background-color:#FFFFFF;}"),
           tags$head(tags$style(HTML(".small-box {height: 140px}"))),
@@ -47,7 +47,10 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         shiny::mainPanel(
 
           tabsetPanel(type = "tabs",
-                      tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie"))),
+                      tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie")),
+                               shiny::downloadButton(ns("download_einstieg"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download"))),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
                                                 style = "font-size: 75%; width: 75%"),
                                shiny::downloadButton(ns("download_data_box1"), label = "",
@@ -59,8 +62,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         title = "Box 3",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
-                             .butt{border-color:#FFFFFF}")),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           mod_beruf_arbeitsmarkt_multiple_ui("mod_beruf_arbeitsmarkt_multiple_ui_1")),
         shiny::mainPanel(
@@ -98,8 +101,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         title = "Box 5",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
-                             .butt{border-color:#FFFFFF}")),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           mod_beruf_arbeitsmarkt_verlauf_ui("mod_beruf_arbeitsmarkt_verlauf_ui_1")),
         shiny::mainPanel(
@@ -120,8 +123,14 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    output$plot_einstieg_pie <-  renderUI({
+
+    plot_einstieg_pie_react <-  reactive({
       arbeitsmarkt_einstieg_pie(data_arbeitsmarkt,r)
+
+    })
+
+    output$plot_einstieg_pie <-  renderUI({
+      plot_einstieg_pie_react()
 
     })
 
@@ -181,6 +190,21 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
     })
 
 
+    output$download_einstieg <- shiny::downloadHandler(
+      filename = function() {
+        paste("org", "png", sep = ".")
+      },
+      content = function(file){
+        fig <- plot_einstieg_pie_react()
+        fig
+        htmlwidgets::saveWidget(widget = fig, "org.html")
+
+        webshot::webshot(url = "org.html",
+                file = file)
+      }
+    )
+
+
     # save histogram using downloadHandler and plot output type
     output$download_waffle <- shiny::downloadHandler(
       filename = function() {
@@ -234,69 +258,6 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
         write.csv(data_table_einstieg_react(), file)
       }
     )
-
-
-    output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
-      res <- box_einstieg_beruf(data_arbeitsmarkt,r)
-
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_female,"%"))
-
-      if (r$indikator_arbeitsmarkt_einstieg == "Auszubildende"){
-
-        title <- "Auszubildende"
-
-      } else {
-
-        title <- "Beschäftigte"
-
-      }
-
-      text <- paste0("Durschnittlicher Anteil von MINT bei berufstätigen Frauen!")
-
-      text_info <- paste0("Durschnittlicher Anteil von MINT bei berufstätigen Frauen berechnet für
-                          den gewählten Zeitraum und abhängig von den gewählten Filter.")
-
-      valueBox2(
-        value, title, #icon = icon("graduation-cap"),
-        subtitle = text,
-        width = 6,
-        icon = shiny::icon("building"),
-        info = text_info,
-        type = "Frauen"
-      )
-    })
-
-    output$valueBox_einstieg_rest <- shinydashboard::renderValueBox({
-      res <- box_einstieg_beruf(data_arbeitsmarkt,r)
-
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_male,"%"))
-
-      if (r$indikator_arbeitsmarkt_einstieg == "Auszubildende"){
-
-        title <- "Auszubildende"
-
-      } else {
-
-        title <- "Beschäftigte"
-
-      }
-
-
-      text <- paste0("Durschnittlicher Anteil von MINT bei berufstätigen Männern!")
-
-      text_info <- paste0("Durschnittlicher Anteil von MINT bei berufstätigen Männern berechnet für
-                          den gewählten Zeitraum und abhängig von den gewählten Filter.")
-
-      valueBox2(
-        value, title, #icon = icon("graduation-cap"),
-        subtitle = text,
-        icon = shiny::icon("building"),
-        width = 6,
-        info = text_info
-      )
-    })
-
-
   })
 }
 

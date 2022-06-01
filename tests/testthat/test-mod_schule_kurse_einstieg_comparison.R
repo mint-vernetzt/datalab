@@ -1,5 +1,5 @@
 testServer(
-  mod_studium_abschluss_server,
+  mod_schule_kurse_einstieg_comparison_server,
   # Add here your module params
   args = list()
   , {
@@ -27,10 +27,10 @@ testServer(
 })
  
 test_that("module ui works", {
-  ui <- mod_studium_abschluss_ui(id = "test")
+  ui <- mod_schule_kurse_einstieg_comparison_ui(id = "test")
   golem::expect_shinytaglist(ui)
   # Check that formals have not been removed
-  fmls <- formals(mod_studium_abschluss_ui)
+  fmls <- formals(mod_schule_kurse_einstieg_comparison_ui)
   for (i in c("id")){
     expect_true(i %in% names(fmls))
   }

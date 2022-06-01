@@ -34,8 +34,8 @@ mod_ausbildung_vertraege_ui <- function(id){
         title = "Box 2",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
-                             .butt{border-color:#FFFFFF}")),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           mod_ausbildung_vertraege_multiple_ui("mod_ausbildung_vertraege_multiple_ui_1")),
         shiny::mainPanel(
@@ -67,8 +67,8 @@ mod_ausbildung_vertraege_ui <- function(id){
         title = "Box 3",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
-                             .butt{border-color:#FFFFFF}")),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           mod_ausbildung_vertraege_verlauf_ui("mod_ausbildung_vertraege_verlauf_ui_1")),
         shiny::mainPanel(

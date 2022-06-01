@@ -24,7 +24,18 @@ golem::add_module(name = "name_of_module2", with_test = TRUE) # Name of the modu
 
 ### Studium
 golem::add_module(name = "studium_studienzahl", with_test = TRUE) # Name of the module
+
 golem::add_module(name = "studium_studienzahl_einstieg", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_studienzahl_einstieg_gender", with_test = TRUE) # Name of the module
+
+golem::add_module(name = "studium_studienzahl_einstieg_verlauf", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_studienzahl_einstieg_verlauf_gender", with_test = TRUE) # Name of the module
+
+golem::add_module(name = "studium_studienzahl_einstieg_comparison", with_test = TRUE) # Name of the module
+golem::add_module(name = "studium_studienzahl_einstieg_comparison_gender", with_test = TRUE) # Name of the module
+
+
+
 golem::add_module(name = "studium_studienzahl_verlauf", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_studienzahl_verlauf_bl", with_test = TRUE) # Name of the module
 golem::add_module(name = "studium_studienzahl_verlauf_bl_subject", with_test = TRUE) # Name of the module
@@ -47,9 +58,26 @@ golem::add_module(name = "beruf_arbeitsmarkt_verlauf_bl", with_test = TRUE) # Na
 ### Schule
 golem::add_module(name = "schule_kurse", with_test = TRUE) # Name of the module
 golem::add_module(name = "schule_kurse_multiple", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_multiple_mint", with_test = TRUE) # Name of the module
 golem::add_module(name = "schule_kurse_einstieg", with_test = TRUE) # Name of the module
-golem::add_module(name = "schule_kurse_verlauf", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_einstieg_verlauf", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_einstieg_comparison", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_pie_gender", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_verlauf_gender", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_comparison_gender", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_comparison_subjects", with_test = TRUE) # Name of the module
+
+golem::add_module(name = "schule_kurse_comparison_bl", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_map", with_test = TRUE) # Name of the module
+
+golem::add_module(name = "schule_kurse_map_gender", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_verlauf_multiple", with_test = TRUE) # Name of the module
+
 golem::add_module(name = "schule_kurse_ranking", with_test = TRUE) # Name of the module
+golem::add_module(name = "schule_kurse_ranking_gender", with_test = TRUE) # Name of the module
+
+
+golem::add_module(name = "schule_kurse_verlauf", with_test = TRUE) # Name of the module
 golem::add_module(name = "schule_kurse_verlauf_bl", with_test = TRUE) # Name of the module
 golem::add_module(name = "schule_kurse_verlauf_bl_subjects", with_test = TRUE) # Name of the module
 
@@ -58,9 +86,11 @@ golem::add_module(name = "schule_kurse_verlauf_bl_subjects", with_test = TRUE) #
 golem::add_module(name = "home_start", with_test = TRUE) # Name of the module
 golem::add_module(name = "home_start_comparison", with_test = TRUE) # Name of the module
 golem::add_module(name = "home_start_comparison_mint", with_test = TRUE) # Name of the module
+golem::add_module(name = "home_start_comparison_mint_gender", with_test = TRUE) # Name of the module
 golem::add_module(name = "home_start_leaky", with_test = TRUE) # Name of the module
 golem::add_module(name = "home_start_multiple", with_test = TRUE) # Name of the module
 golem::add_module(name = "home_start_einstieg", with_test = TRUE) # Name of the module
+golem::add_module(name = "home_start_einstieg_gender", with_test = TRUE) # Name of the module
 
 ### Ausbildung
 golem::add_module(name = "ausbildung_vertraege", with_test = TRUE) # Name of the module

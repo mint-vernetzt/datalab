@@ -23,6 +23,7 @@ ausbildungsvertraege_waffle <- function(df, r) {
   df_sub <- df %>% dplyr::group_by(anzeige_geschlecht) %>%
     dplyr::summarize(proportion = sum(wert))
 
+  # calculate proportion for "Gesamt"
   df_sub <- df_sub %>% dplyr::group_by(anzeige_geschlecht) %>%
     dplyr::summarize(proportion = proportion/ df_sub[df_sub$anzeige_geschlecht == "Gesamt", "proportion"][[1]])
 
@@ -34,11 +35,12 @@ ausbildungsvertraege_waffle <- function(df, r) {
 
   df_sub$anzeige_geschlecht <- paste0(df_sub$anzeige_geschlecht, " (", df_sub$fachbereich, ")")
 
+  # ensure that proportions sums to 1
   x_gesamt <- setNames(round_preserve_sum(as.numeric(df_sub$proportion),0),
                        df_sub$anzeige_geschlecht)
 
 
-
+  # calculate proportion for "ausbildung_bereich"
   df <- df %>% dplyr::filter(fachbereich == ausbildung_bereich)
 
   df <- df %>% dplyr::group_by(anzeige_geschlecht, fachbereich) %>%
@@ -50,6 +52,7 @@ ausbildungsvertraege_waffle <- function(df, r) {
 
   df$anzeige_geschlecht <- paste0(df$anzeige_geschlecht, " (", df$fachbereich, ")")
 
+  # ensure that proportions sums to 1
   x_mint <- setNames(round_preserve_sum(as.numeric(df$proportion),0),
                      df$anzeige_geschlecht)
 
@@ -180,6 +183,7 @@ vertraege_map <- function(df,r) {
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
+  # calculate proportion
   df <- df %>% dplyr::group_by(region) %>%
     dplyr::summarize(proportion = dplyr::lead(wert)/wert) %>% na.omit()
 
@@ -270,6 +274,7 @@ vertraege_ranking <- function(df, r) {
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
+  # calculate proportions
   df <- df %>% dplyr::group_by(fachbereich) %>%
     dplyr::summarize(proportion = dplyr::lead(wert)/wert) %>% na.omit()
 
@@ -320,6 +325,7 @@ vertraege_verlauf <- function(df, r) {
 
   df <- df %>% dplyr::filter(fachbereich == ausbildung_bereich)
 
+  # calculate proportions
   df <- df %>% dplyr::group_by(region, jahr) %>%
     dplyr::summarize(proportion = dplyr::lead(wert)/wert) %>% na.omit()
 
@@ -407,6 +413,7 @@ data_verlauf_vertraege <- function(df,r) {
 
   df <- df %>% dplyr::filter(fachbereich == ausbildung_bereich)
 
+  # calculate proportions
   df <- df %>% dplyr::group_by(region, jahr, ebene, fachbereich) %>%
     dplyr::summarize(proportion = dplyr::lead(wert)/wert) %>% na.omit()
 

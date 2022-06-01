@@ -17,13 +17,26 @@ mod_schule_kurse_ranking_ui <- function(id){
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
     ),
-    p("Wähle in welcher Form der Kurs belegt wurde:"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("indikator_kurse_ranking"),
-      choices = c("Grundkurse", "Leistungskurse"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+    p("Wähle ein Bundesland:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("states_kurse_ranking"),
+      choices = c("Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westen",
+                  "Osten"),
+      selected = "Hessen"
     )
   )
 }
@@ -38,8 +51,8 @@ mod_schule_kurse_ranking_server <- function(id, r){
       r$date_kurse_ranking <- input$date_kurse_ranking
     })
 
-    observeEvent(input$indikator_kurse_ranking, {
-      r$indikator_kurse_ranking <- input$indikator_kurse_ranking
+    observeEvent(input$states_kurse_ranking, {
+      r$states_kurse_ranking <- input$states_kurse_ranking
     })
 
   })

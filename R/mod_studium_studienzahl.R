@@ -32,54 +32,163 @@ mod_studium_studienzahl_ui <- function(id){
     )),
     fluidRow(
       shinydashboard::box(
-      title = "Box 2",
-      width = 12,
-      p("Lorem ipsum dolor sit amet"),
-      tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
-                             .butt{border-color:#FFFFFF}")),
-      shiny::sidebarPanel(
-        tags$style(".well {background-color:#FFFFFF;}"),
-        tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-        mod_studium_studienzahl_einstieg_ui("mod_studium_studienzahl_einstieg_ui_1")),
-      #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_mint")),
-      #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_rest")),
-
-      shiny::mainPanel(
-        tabsetPanel(type = "tabs",
-        tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie"))),
-        tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
-                                  style = "font-size: 75%; width: 75%"),
-                 shiny::downloadButton(ns("download_data_box1"), label = "",
-                                       class = "butt",
-                                       icon = shiny::icon("download")))))
-      )),
-    fluidRow(
-      shinydashboard::box(
-        title = "Box 3",
+        title = "Box 2",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #666666;}
-                             .butt{border-color:#FFFFFF}")),
-        shiny::sidebarPanel(
-                    mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
-      shiny::mainPanel(
-                  tabsetPanel(type = "tabs",
-                              tabPanel("Anteil", br(), plotOutput(ns("plot_waffle")),
-                                       shiny::downloadButton(ns("download_waffle"), label = "",
-                                                             class = "butt",
-                                                             icon = shiny::icon("download"))),
-                              tabPanel("Absolut", br(), plotOutput(ns("plot_absolut")),
-                                       shiny::downloadButton(ns("download_absolut"), label = "",
-                                                             class = "butt",
-                                                             icon = shiny::icon("download"))),
-                              tabPanel("Karte", br(), htmlOutput(ns("plot_map_studienzahl"))),
-                              tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
-                                                        style = "font-size: 75%; width: 75%"),
-                                       shiny::downloadButton(ns("data_table_mix_box3"), label = "",
-                                                             class = "butt",
-                                                             icon = shiny::icon("download")))),
-                  br(),br(),
-                  ))),
+        tabsetPanel(type = "tabs",
+                    tabPanel("MINT-Anteile", br(),
+
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_studium_studienzahl_einstieg_ui("mod_studium_studienzahl_einstieg_ui_1")),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_einstieg_pie")))
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_studium_studienzahl_einstieg_verlauf_ui("mod_studium_studienzahl_einstieg_verlauf_ui_1")),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_einstieg_verlauf")))
+
+
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_studium_studienzahl_einstieg_comparison_ui("mod_studium_studienzahl_einstieg_comparison_ui_1")),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_einstieg_comparison")))
+
+
+
+
+                  ),
+                    tabPanel("Datensatz", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                               .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_studium_studienzahl_einstieg_ui("mod_schule_kurse_einstieg_ui_1")),
+                             shiny::mainPanel(
+                               div(DT::dataTableOutput(ns("data_table_einstieg")),
+                                   style = "font-size: 75%; width: 75%"),
+                               shiny::downloadButton(ns("download_data_box1"), label = "",
+                                                     class = "butt",
+                                                     icon = shiny::icon("download")))
+                    )
+        ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Box 2",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("MINT-Anteile", br(),
+
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_studium_studienzahl_einstieg_gender_ui("mod_studium_studienzahl_einstieg_gender_ui_1")),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_einstieg_pie_gender")))
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_studium_studienzahl_einstieg_verlauf_gender_ui("mod_studium_studienzahl_einstieg_verlauf_gender_ui_1")),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender")))
+
+                  ),
+                  tabPanel("Vergleich", br(),
+
+                           shiny::sidebarPanel(
+                             tags$style(".well {background-color:#FFFFFF;}"),
+                             tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                             mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1")),
+                           shiny::mainPanel(
+                             plotOutput(ns("plot_einstieg_comparison_gender")))
+
+                )
+        ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Box 2",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Fächervergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
+                             shiny::mainPanel(
+                             plotOutput(ns("plot_waffle")))
+                    )
+        ))),
+
+
+    # fluidRow(
+    #   shinydashboard::box(
+    #   title = "Box 2",
+    #   width = 12,
+    #   p("Lorem ipsum dolor sit amet"),
+    #   tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+    #                          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+    #   shiny::sidebarPanel(
+    #     tags$style(".well {background-color:#FFFFFF;}"),
+    #     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+    #     mod_studium_studienzahl_einstieg_ui("mod_studium_studienzahl_einstieg_ui_1")),
+    #   #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_mint")),
+    #   #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_rest")),
+    #
+    #   shiny::mainPanel(
+    #     tabsetPanel(type = "tabs",
+    #     tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie"))),
+    #     tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
+    #                               style = "font-size: 75%; width: 75%"),
+    #              shiny::downloadButton(ns("download_data_box1"), label = "",
+    #                                    class = "butt",
+    #                                    icon = shiny::icon("download")))))
+    #   )),
+    # fluidRow(
+    #   shinydashboard::box(
+    #     title = "Box 3",
+    #     width = 12,
+    #     p("Lorem ipsum dolor sit amet"),
+    #     tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+    #                          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+    #     shiny::sidebarPanel(
+    #                 mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
+    #   shiny::mainPanel(
+    #               tabsetPanel(type = "tabs",
+    #                           tabPanel("Anteil", br(), plotOutput(ns("plot_waffle")),
+    #                                    shiny::downloadButton(ns("download_waffle"), label = "",
+    #                                                          class = "butt",
+    #                                                          icon = shiny::icon("download"))),
+    #                           tabPanel("Absolut", br(), plotOutput(ns("plot_absolut")),
+    #                                    shiny::downloadButton(ns("download_absolut"), label = "",
+    #                                                          class = "butt",
+    #                                                          icon = shiny::icon("download"))),
+    #                           tabPanel("Karte", br(), htmlOutput(ns("plot_map_studienzahl"))),
+    #                           tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
+    #                                                     style = "font-size: 75%; width: 75%"),
+    #                                    shiny::downloadButton(ns("data_table_mix_box3"), label = "",
+    #                                                          class = "butt",
+    #                                                          icon = shiny::icon("download")))),
+    #               br(),br(),
+    #               ))),
     fluidRow(
       shinydashboard::box(
         title = "Box 4",
@@ -109,6 +218,8 @@ mod_studium_studienzahl_ui <- function(id){
         title = "Box 5",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
+        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
         shiny::sidebarPanel(
           mod_studium_studienzahl_verlauf_ui("mod_studium_studienzahl_verlauf_ui_1")),
         shiny::mainPanel(
@@ -121,19 +232,6 @@ mod_studium_studienzahl_ui <- function(id){
                                          icon = shiny::icon("download"))))
 
           )))
-    # hr(),
-    # h4("Studienzahlen im zeitlichen Verlauf vergleichbar"),
-    # br(),br(),
-    # fluidRow(
-    # shiny::column(width = 6,
-    # mod_studium_studienzahl_choice_2_ui("mod_studium_studienzahl_choice_ui_2_1"))),
-    # br(),br(),
-    # fluidRow(
-    # shiny::column(width = 10,
-    #               tabsetPanel(type = "tabs",
-    #                           tabPanel("Balkendiagramm",plotOutput(ns("plot"))),
-    #                           tabPanel("Linienplot",plotOutput(ns("plot_line")))))
-    # )
   )
 }
 
@@ -148,6 +246,11 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
     output$plot_einstieg_pie <- renderUI({
       studienzahl_einstieg_pie(data_studierende,r)
+
+    })
+
+    output$plot_einstieg_pie_gender <- renderUI({
+      studienzahl_einstieg_pie_gender(data_studierende,r)
 
     })
 
@@ -169,7 +272,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
 
     plot_waffle_react <- reactive({
-      studienzahl_waffle_alternative(data_studierende,r)
+      studienzahl_waffle_mint(data_studierende,r)
     })
 
     output$plot_waffle <- renderPlot({
@@ -180,6 +283,24 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
     output$plot_map_studienzahl <-renderUI({
       studienzahl_map(data_studierende,r)
     })
+
+    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
+      studienzahl_verlauf_single(data_studierende,r)
+    })
+
+    output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
+      studienzahl_verlauf_single_gender(data_studierende,r)
+    })
+
+    output$plot_einstieg_comparison <- highcharter::renderHighchart({
+      studienzahl_einstieg_comparison(data_studierende,r)
+    })
+
+    output$plot_einstieg_comparison_gender <- renderPlot({
+      studienzahl_einstieg_comparison_gender(data_studierende,r)
+    })
+
+
 
     output$plot_verlauf_studienzahl <- highcharter::renderHighchart({
       studienzahl_verlauf(data_studierende,r)
@@ -261,68 +382,6 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
         write.csv(data_table_verlauf_react(), file)
       }
     )
-
-    output$valueBox_einstieg_mint <- shinydashboard::renderValueBox({
-      res <- box_einstieg_studium(data_studierende,r)
-
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_female,"%"))
-
-      if (r$indikator_studierende_einstieg == "Studierende"){
-
-        title <- "Studierende"
-
-      } else {
-
-        title <- "Studienanfänger"
-
-      }
-
-      text <- paste0("Durschnittlicher Anteil von MINT bei studierenden Frauen!")
-
-      text_info <- paste0("Durschnittlicher Anteil von MINT bei studierenden Frauen berechnet für
-                          den gewählten Zeitraum und abhängig von den gewählten Filter")
-
-      valueBox2(
-        value, title, #icon = icon("graduation-cap"),
-        subtitle = text,
-        width = 6,
-        icon = shiny::icon("university"),
-        info = text_info,
-        type = "Frauen"
-
-      )
-    })
-
-    output$valueBox_einstieg_rest <- shinydashboard::renderValueBox({
-      res <- box_einstieg_studium(data_studierende,r)
-
-      value <- tags$p(style = "font-size: 40px;", paste0(res$anteil_mint_male,"%"))
-
-      if (r$indikator_studierende_einstieg == "Studierende"){
-
-        title <- "Studierende"
-
-      } else {
-
-        title <- "Studienanfänger"
-
-      }
-
-
-      text <- paste0("Durschnittlicher Anteil von MINT bei studierenden Männer!")
-
-      text_info <- paste0("Durschnittlicher Anteil von MINT bei studierenden Männer berechnet für
-                          den gewählten Zeitraum und abhängig von den gewählten Filter")
-
-      valueBox2(
-        value, title, #icon = icon("graduation-cap"),
-        subtitle = text,
-        icon = shiny::icon("university"),
-        width = 6,
-        info = text_info
-      )
-    })
-
   })
 }
 

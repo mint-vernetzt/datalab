@@ -19,15 +19,23 @@ mod_studium_studienzahl_einstieg_ui <- function(id){
                     "2018","2019", "2020"),
         selected = "2020"
       ),
-    p("Soll der Anteil von Lehramt angezeigt werden?"),
+    p("Soll nur Lehramt angezeigt werden?"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_einstieg"), label = "Nein", inline = TRUE),
       tags$span("Ja")),
-    p("Nach Geschlecht aufteilen?"),
-    tags$div(
-      shinyWidgets::materialSwitch(inputId = ns("gender_switch"), label = "Nein", inline = TRUE),
-      tags$span("Ja")
-    )
+    p("Wähle eine Hochschulform:"),
+    conditionalPanel(condition = "input.nurLehramt_studierende_einstieg == false",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("hochschulform_studierende_einstieg_1"),
+                       choices = c("insgesamt", "Uni", "FH")
+                     )),
+    conditionalPanel(condition = "input.nurLehramt_studierende_einstieg != false",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("hochschulform_studierende_einstieg_2"),
+                       choices = "Uni"
+                     ))
   )
 }
 
@@ -46,10 +54,14 @@ mod_studium_studienzahl_einstieg_server <- function(id, r){
       r$nurLehramt_studierende_einstieg <- input$nurLehramt_studierende_einstieg
     })
 
-    observeEvent(input$gender_switch, {
-      r$gender_switch <- input$gender_switch
+    observeEvent(input$hochschulform_studierende_einstieg_1, {
+      r$hochschulform_studierende_einstieg_1 <- input$hochschulform_studierende_einstieg_1
     })
 
+
+    observeEvent(input$hochschulform_studierende_einstieg_2, {
+      r$hochschulform_studierende_einstieg_2 <- input$hochschulform_studierende_einstieg_2
+    })
 
   })
 }
