@@ -123,7 +123,7 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box (4)",
+        title = "Box 4",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
