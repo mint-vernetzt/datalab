@@ -134,10 +134,33 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
                              shiny::mainPanel(
-                             plotOutput(ns("plot_waffle")))
-                    )
-        ))),
+                               plotOutput(ns("plot_waffle")))
+                    ),
+                    tabPanel("Jahresvergleich", br(),
 
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_verlauf_bl_subject_ui("mod_studium_studienzahl_verlauf_bl_subject_ui_1")),
+                             shiny::mainPanel(
+
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject"))
+
+                             )
+                    ),
+                    tabPanel("Vergleich_uni_fächer", br(),
+                             ## TODO
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
+                             shiny::mainPanel(
+
+                               highcharter::highchartOutput(ns("plot_mint_ranking_bl_subject"))
+
+                             )
+                    ),
+        ))),
 
     # fluidRow(
     #   shinydashboard::box(
@@ -199,18 +222,6 @@ mod_studium_studienzahl_ui <- function(id){
         shiny::mainPanel(
 
           highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl"))
-
-        ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Box 4",
-        width = 12,
-        p("Lorem ipsum dolor sit amet"),
-        shiny::sidebarPanel(
-          mod_studium_studienzahl_verlauf_bl_subject_ui("mod_studium_studienzahl_verlauf_bl_subject_ui_1")),
-        shiny::mainPanel(
-
-          highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject"))
 
         ))),
     fluidRow(
