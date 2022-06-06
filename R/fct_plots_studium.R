@@ -1758,6 +1758,10 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
 
   subjects_select <- r$subject_selected_bl
 
+  hochschulform_select_1 <- r$hochschulform_studierende_verlauf_1
+
+  hochschulform_select_2 <- r$hochschulform_studierende_verlauf_2
+
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
@@ -1778,17 +1782,18 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
-    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
 
-    title_help_sub_sub <- " insgesamt"
+    df$indikator <- paste0(df$indikator, " (", df$hochschulform, ")")
 
   } else {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Ja")
 
-    df <- df %>% dplyr::filter(hochschulform == "Uni")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
 
-    title_help_sub_sub <- " an einer Uni (nur Lehramt)"
+    df$indikator <- paste0(df$indikator, " (", "Lehramt, " ,df$hochschulform, ")")
+
   }
 
 
@@ -1866,5 +1871,110 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
 
 }
 
+#' A function to create a bar plot
+#'
+#' @description A function to return a ranking o
+#'
+#' @return The return value is a bar plot
+#' @param data The dataframe "Kurse.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
 
+ranking_bl_subject <- function(df,r, type) {
+
+  # load UI inputs from reactive value
+
+  timerange <- r$date_ranking_subject_bl
+
+  states <- r$states_ranking_subject_bl
+
+  indikator_comparison <- r$topic_selected_subject_bl
+
+  lehramt <- r$nurLehramt_studierende_ranking_bl_subject
+
+  hochschulform_select_1 <- r$hochschulform_studierende_ranking_bl_1
+
+  hochschulform_select_2 <- r$hochschulform_studierende_ranking_bl_2
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+  df <- df %>% dplyr::filter(indikator == indikator_comparison)
+
+  df <- df %>% dplyr::mutate(fachbereich = replace(fachbereich,
+                                                   fachbereich == "Alle",
+                                                   "Alle restlichen Fächer"))
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  # include "Osten" und "Westen" in Dataframe
+  df <- prep_studierende_east_west(df)
+
+  if(lehramt == FALSE){
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
+
+    df$indikator <- paste0(df$indikator, " (", df$hochschulform, ")")
+
+  } else {
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
+
+    df$indikator <- paste0(df$indikator, " (", "Lehramt, " ,df$hochschulform, ")")
+
+  }
+
+  # aggregate all subjects to calculate proportion later
+  df <- df %>% dplyr::group_by(indikator, region, nur_lehramt, hochschulform) %>%
+    dplyr::mutate(props = sum(wert))
+
+  # aggregate to MINT
+  values_Mint <- df %>%
+    dplyr::filter(fachbereich != "Alle restlichen Fächer") %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, hochschulform,
+                    nur_lehramt, props) %>%
+    dplyr::summarise(wert = sum(wert)) %>%
+    dplyr::mutate(bereich = "Hochschule",
+                  fachbereich = "MINT (aggregiert)")
+
+  df <- rbind(df, values_Mint)
+
+  # calculate proportion
+  df <- df %>% dplyr::group_by(fachbereich, indikator, hochschulform, region) %>%
+    dplyr::summarize(proportion = wert/props)
+
+
+  df$proportion <- df$proportion * 100
+
+  df <- df %>% dplyr::filter(region %in% states)
+
+  # plot
+  a <- ifelse(df$fachbereich == "MINT (aggregiert)" | df$fachbereich == "Alle restlichen Fächer" , "#b16fab", "grey30")
+
+
+  ggplot2::ggplot(df, ggplot2::aes(y=fachbereich, x=proportion)) +
+    ggplot2::geom_bar(stat="identity", fill = "#154194") +
+    ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
+                       fontface = "bold") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.text.y = ggplot2::element_text(colour = a),
+      text = ggplot2::element_text(size = 14),
+      plot.title = ggtext::element_markdown(hjust = 0.5)) +
+    ggplot2::ylab("") + ggplot2::xlab("Anteil") +
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+                                 "Anteil der Fächer im Vergleich",
+                                 "<br><br><br>"),
+                  fill = "") +
+    ggplot2::scale_y_discrete(expand = c(0,0)) +
+    ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
+
+}
 

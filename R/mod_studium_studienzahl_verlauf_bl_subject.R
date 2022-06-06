@@ -22,7 +22,20 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
     p("Soll nur Lehramt angezeigt werden?"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_verlauf_bl_subject"), label = "Nein", inline = TRUE),
-      tags$span("Ja")
+      tags$span("Ja"),
+      p("Wähle eine Hochschulform:"),
+      conditionalPanel(condition = "input.nurLehramt_studierende_verlauf_bl_subject == false",
+                       ns = ns,
+                       shinyWidgets::pickerInput(
+                         inputId = ns("hochschulform_studierende_verlauf_1"),
+                         choices = c("insgesamt", "Uni", "FH")
+                       )),
+      conditionalPanel(condition = "input.nurLehramt_studierende_verlauf_bl_subject != false",
+                       ns = ns,
+                       shinyWidgets::pickerInput(
+                         inputId = ns("hochschulform_studierende_verlauf_2"),
+                         choices = "Uni"
+                       ))
     ),
     p("Wähle in welcher Form der Kurs belegt wurde:"),
     shinyWidgets::radioGroupButtons(
@@ -90,6 +103,15 @@ mod_studium_studienzahl_verlauf_bl_subject_server <- function(id, r){
     observeEvent(input$nurLehramt_studierende_verlauf_bl_subject, {
       r$nurLehramt_studierende_verlauf_bl_subject <- input$nurLehramt_studierende_verlauf_bl_subject
     })
+
+    observeEvent(input$hochschulform_studierende_verlauf_1, {
+      r$hochschulform_studierende_verlauf_1 <- input$hochschulform_studierende_verlauf_1
+    })
+
+    observeEvent(input$hochschulform_studierende_verlauf_2, {
+      r$hochschulform_studierende_verlauf_2 <- input$hochschulform_studierende_verlauf_2
+    })
+
 
   })
 }

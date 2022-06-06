@@ -148,16 +148,14 @@ mod_studium_studienzahl_ui <- function(id){
 
                              )
                     ),
-                    tabPanel("Vergleich_uni_fächer", br(),
-                             ## TODO
+                    tabPanel("Vergleich", br(),
+
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
                              shiny::mainPanel(
-
-                               highcharter::highchartOutput(ns("plot_mint_ranking_bl_subject"))
-
+                               plotOutput(ns("plot_ranking_bl_subject")),
                              )
                     ),
         ))),
@@ -289,6 +287,11 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
     output$plot_waffle <- renderPlot({
       plot_waffle_react()
     })
+
+    output$plot_ranking_bl_subject <- renderPlot({
+      ranking_bl_subject(data_studierende,r)
+    })
+
 
 
     output$plot_map_studienzahl <-renderUI({
