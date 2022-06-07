@@ -192,10 +192,11 @@ mod_studium_studienzahl_ui <- function(id){
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
-                               # mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")
+                               ## TODO
+                               mod_studium_studienzahl_ranking_bl_subject_gender_ui("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1")
                                ),
                              shiny::mainPanel(
-                               # plotOutput(ns("plot_ranking_bl_subject")),
+                               plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),
                              )
                     ),
         ))),
@@ -395,6 +396,15 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
     output$data_table_verlauf <- DT::renderDT({
       data_table_verlauf_react()
+    })
+
+    ## TODO
+    plot_ranking_studienzahl_bl_subject_gender_react <- reactive({
+      studienfaecher_ranking(data_studierende, r, type="other")
+    })
+
+    output$plot_ranking_studienzahl_bl_subject_gender <- renderPlot({
+      plot_ranking_studienzahl_bl_subject_gender_react()
     })
 
 

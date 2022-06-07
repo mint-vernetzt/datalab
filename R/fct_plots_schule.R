@@ -1093,7 +1093,7 @@ kurse_ranking <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Schülerinnen and Grund- und Leistungskurse in ",timerange,
+                                 "Relativer Anteil von Schülerinnen an Grund- und Leistungskurse in ",timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
@@ -1209,7 +1209,7 @@ kurse_ranking_gender <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Schülerinnen and Grund- und Leistungskursen in ",timerange,
+                                 "Relativer Anteil von Schülerinnen an Grund- und Leistungskursen in ",timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
@@ -1296,7 +1296,7 @@ kurse_ranking_bl <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Schülerinnen and Grund- und Leistungskurse in ",timerange,
+                                 "Relativer Anteil von Schülerinnen an Grund- und Leistungskurse in ",timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
