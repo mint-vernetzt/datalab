@@ -192,7 +192,6 @@ mod_studium_studienzahl_ui <- function(id){
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
-                               ## TODO
                                mod_studium_studienzahl_ranking_bl_subject_gender_ui("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1")
                                ),
                              shiny::mainPanel(
@@ -200,69 +199,39 @@ mod_studium_studienzahl_ui <- function(id){
                              )
                     ),
         ))),
-
-
-    # fluidRow(
-    #   shinydashboard::box(
-    #   title = "Box 2",
-    #   width = 12,
-    #   p("Lorem ipsum dolor sit amet"),
-    #   tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-    #                          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-    #   shiny::sidebarPanel(
-    #     tags$style(".well {background-color:#FFFFFF;}"),
-    #     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-    #     mod_studium_studienzahl_einstieg_ui("mod_studium_studienzahl_einstieg_ui_1")),
-    #   #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_mint")),
-    #   #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_rest")),
-    #
-    #   shiny::mainPanel(
-    #     tabsetPanel(type = "tabs",
-    #     tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie"))),
-    #     tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
-    #                               style = "font-size: 75%; width: 75%"),
-    #              shiny::downloadButton(ns("download_data_box1"), label = "",
-    #                                    class = "butt",
-    #                                    icon = shiny::icon("download")))))
-    #   )),
-    # fluidRow(
-    #   shinydashboard::box(
-    #     title = "Box 3",
-    #     width = 12,
-    #     p("Lorem ipsum dolor sit amet"),
-    #     tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-    #                          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-    #     shiny::sidebarPanel(
-    #                 mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
-    #   shiny::mainPanel(
-    #               tabsetPanel(type = "tabs",
-    #                           tabPanel("Anteil", br(), plotOutput(ns("plot_waffle")),
-    #                                    shiny::downloadButton(ns("download_waffle"), label = "",
-    #                                                          class = "butt",
-    #                                                          icon = shiny::icon("download"))),
-    #                           tabPanel("Absolut", br(), plotOutput(ns("plot_absolut")),
-    #                                    shiny::downloadButton(ns("download_absolut"), label = "",
-    #                                                          class = "butt",
-    #                                                          icon = shiny::icon("download"))),
-    #                           tabPanel("Karte", br(), htmlOutput(ns("plot_map_studienzahl"))),
-    #                           tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
-    #                                                     style = "font-size: 75%; width: 75%"),
-    #                                    shiny::downloadButton(ns("data_table_mix_box3"), label = "",
-    #                                                          class = "butt",
-    #                                                          icon = shiny::icon("download")))),
-    #               br(),br(),
-    #               ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box (5)",
+        title = "Box 6",
         width = 12,
-        p("Lorem ipsum dolor sit amet"),
-        shiny::sidebarPanel(
-          mod_studium_studienzahl_verlauf_bl_ui("mod_studium_studienzahl_verlauf_bl_ui_1")),
-        shiny::mainPanel(
+        p("Karte"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Fächerbelegung", br(),
 
-          highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl"))
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_bl_map_ui("mod_studium_studienzahl_bl_map")
+                               ),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_studienzahl_map"))
+                               )
+                    ),
+                    tabPanel("Jahresvergleich", br(),
 
+                             shiny::sidebarPanel(
+                               # mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1")
+                               ),
+                             shiny::mainPanel(
+                               # highcharter::highchartOutput(ns("plot_verlauf_multiple"))
+                               )
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             shiny::sidebarPanel(
+                               # mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1")
+                               ),
+                             shiny::mainPanel(
+                               # plotOutput(ns("plot_comparison_bl"))
+                               )
+                    )
         ))),
     fluidRow(
       shinydashboard::box(
@@ -398,7 +367,6 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       data_table_verlauf_react()
     })
 
-    ## TODO
     plot_ranking_studienzahl_bl_subject_gender_react <- reactive({
       studienfaecher_ranking(data_studierende, r, type="other")
     })
@@ -406,6 +374,11 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
     output$plot_ranking_studienzahl_bl_subject_gender <- renderPlot({
       plot_ranking_studienzahl_bl_subject_gender_react()
     })
+
+    output$plot_studienzahl_map <- renderUI({
+      studierende_map(data_studierende,r)
+    })
+
 
 
     # save histogram using downloadHandler and plot output type
