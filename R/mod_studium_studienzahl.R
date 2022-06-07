@@ -235,23 +235,38 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box (6)",
+        title = "Box 7",
         width = 12,
-        p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-        shiny::sidebarPanel(
-          mod_studium_studienzahl_verlauf_ui("mod_studium_studienzahl_verlauf_ui_1")),
-        shiny::mainPanel(
-          tabsetPanel(type = "tabs",
-                      tabPanel("Verlauf", br(), highcharter::highchartOutput(ns("plot_verlauf_studienzahl"))),
-          tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
-                                    style = "font-size: 75%; width: 75%"),
-                   shiny::downloadButton(ns("download_data_box5"), label = "",
-                                         class = "butt",
-                                         icon = shiny::icon("download"))))
+        p("Karte"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Fächerbelegung", br(),
 
-          )))
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_bl_map_gender_ui("mod_studium_studienzahl_bl_map_gender")
+                             ),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_studienzahl_map_gender"))
+                             )
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             shiny::sidebarPanel(
+                               # mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               # highcharter::highchartOutput(ns("plot_verlauf_multiple"))
+                             )
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             shiny::sidebarPanel(
+                               # mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               # plotOutput(ns("plot_comparison_bl"))
+                             )
+                    )
+        ))),
   )
 }
 
@@ -378,6 +393,11 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
     output$plot_studienzahl_map <- renderUI({
       studierende_map(data_studierende,r)
     })
+
+    output$plot_studienzahl_map_gender <- renderUI({
+      studierende_map_gender(data_studierende,r)
+    })
+
 
 
 

@@ -35,7 +35,7 @@ mod_studium_choice_gender_ui <- function(id){
                          choices = "Uni"
                        ))
     ),
-    p("Wähle in welcher Form der Kurs belegt wurde:"),
+    p("Wähle den Status der Student*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_studium_choice_gender"),
       choices = c("Studierende", "Studienanfänger"),
