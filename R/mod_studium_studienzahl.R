@@ -159,6 +159,47 @@ mod_studium_studienzahl_ui <- function(id){
                              )
                     ),
         ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Box 5",
+        width = 12,
+        p("Fächervergleich Geschlechter"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Fächervergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_studium_choice_gender_ui("mod_studium_studienzahl_choice_gender_ui")
+                               ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_waffle_choice_gender"))
+                               )
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_verlauf_bl_subject_gender_ui("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1")
+                               ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender"))
+                             )
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               # mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")
+                               ),
+                             shiny::mainPanel(
+                               # plotOutput(ns("plot_ranking_bl_subject")),
+                             )
+                    ),
+        ))),
+
 
     # fluidRow(
     #   shinydashboard::box(
@@ -279,7 +320,6 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       plot_absolut_react()
     })
 
-
     plot_waffle_react <- reactive({
       studienzahl_waffle_mint(data_studierende,r)
     })
@@ -290,6 +330,14 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
     output$plot_ranking_bl_subject <- renderPlot({
       ranking_bl_subject(data_studierende,r)
+    })
+
+    plot_waffle_choice_gender_react <- reactive({
+      studienzahl_waffle_choice_gender(data_studierende,r)
+    })
+
+    output$plot_waffle_choice_gender <- renderPlot({
+      plot_waffle_choice_gender_react()
     })
 
 
@@ -327,6 +375,11 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
     output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
       studienzahl_verlauf_bl_subject(data_studierende,r)
     })
+
+    output$plot_verlauf_studienzahl_bl_subject_gender <- highcharter::renderHighchart({
+      studierende_verlauf_single_bl_gender(data_studierende,r)
+    })
+
 
     data_table_mix_react <- reactive({
       data_mix_studium(data_studierende, r)

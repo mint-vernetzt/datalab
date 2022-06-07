@@ -1978,3 +1978,232 @@ ranking_bl_subject <- function(df,r, type) {
 
 }
 
+#' A function to plot a waffle chart
+#'
+#' @description A function to create a waffle chart inside the
+#' tab "Studium".
+#'
+#' @return The return value is a waffle chart
+#' @param df The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+studienzahl_waffle_choice_gender <- function(df,r) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_studium_choice_gender
+
+  lehramt <- r$nurLehramt_studium_choice_gender
+
+  hochschulform_select_1 <- r$hochschulform_studium_choice_gender1
+
+  hochschulform_select_2 <- r$hochschulform_studium_choice_gender2
+
+  studium_level <- r$level_studium_choice_gender
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+
+  if(lehramt == FALSE){
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
+
+  } else {
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
+  }
+
+  df <- df %>% dplyr::filter(region == "Deutschland")
+
+  df <- df %>% dplyr::filter(indikator == studium_level)
+
+  # calculate new "Männer"
+  df <- calc_share_male(df, "box_2")
+
+  df_maenner <- df %>% dplyr::filter(anzeige_geschlecht == "Männer")
+
+  x_maenner <- calc_share_waffle(df_maenner)
+
+
+
+  df_frauen <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
+
+  x_frauen <- calc_share_waffle(df_frauen)
+
+
+  # set order
+  x_maenner <- x_maenner[order(factor(names(x_maenner), levels = c('Ingenieur', 'Mathe',
+                                                                   'andere Studiengänge')))]
+
+  x_frauen <- x_frauen[order(factor(names(x_frauen),
+                                    levels = c('Ingenieur', 'Mathe',
+                                               'andere Studiengänge')))]
+
+
+  # create plot objects for waffle charts
+  waffle_maenner <- waffle::waffle(x_maenner, keep = FALSE) +
+    ggplot2::labs(
+      fill = "",
+      title = paste0("<span style='color:black;'>", "Männliche Studierende</span>")) +
+    ggplot2::theme(plot.title = ggtext::element_markdown(),
+                   plot.subtitle = ggtext::element_markdown(),
+                   text = ggplot2::element_text(size = 14),
+                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                   legend.position = "right") +
+    ggplot2::scale_fill_manual(
+      values =  c("#00a87a",
+                  "#fcc433",
+                  '#b1b5c3'),
+      na.value="#b1b5c3",
+      limits = c("Ingenieur", "Mathe", "andere Studiengänge"),
+      guide = ggplot2::guide_legend(reverse = TRUE),
+      labels = c(
+        paste0("Ingenieur",", ",x_maenner[1], "%"),
+        paste0("Mathe",", ",x_maenner[2], "%"),
+        paste0("andere Studiengänge",", ",x_maenner[3], "%"))) +
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+
+
+
+  waffle_frauen <- waffle::waffle(x_frauen, keep = FALSE) +
+    ggplot2::labs(
+      fill = "",
+      title = paste0("<span style='color:black;'>", "Weibliche Studierende</span>")) +
+    ggplot2::theme(plot.title = ggtext::element_markdown(),
+                   plot.subtitle = ggtext::element_markdown(),
+                   text = ggplot2::element_text(size = 14),
+                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                   legend.position = "left") +
+    ggplot2::scale_fill_manual(
+      values =  c("#00a87a",
+                  "#fcc433",
+                  '#b1b5c3'),
+      na.value="#b1b5c3",
+      limits = c("Ingenieur", "Mathe", "andere Studiengänge"),
+      guide = ggplot2::guide_legend(reverse = TRUE),
+      labels = c(
+        paste0("Ingenieur",", ",x_frauen[1], "%"),
+        paste0("Mathe",", ",x_frauen[2], "%"),
+        paste0("andere Studiengänge",", ",x_frauen[3], "%"))) +
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+
+
+
+  ggpubr::ggarrange(waffle_frauen, NULL ,waffle_maenner,
+                    widths = c(1, 0.1, 1), nrow=1)
+
+}
+
+#' A function to plot time series
+#'
+#' @description A function to plot the time series of the german states
+#'
+#' @return The return value, if any, from executing the function.
+#' @param data The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+studierende_verlauf_single_bl_gender <- function(df,r) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_verlauf_bl_subject_gender
+
+  states <- r$states_verlauf_bl_subject_gender
+
+  subjects_select <- r$subject_verlauf_bl_subject_gender
+
+  lehramt <- r$nurLehramt_studierende_verlauf_bl_subject_gender
+
+  hochschulform_select_1 <- r$hochschulform_studierende_verlauf_bl_subject_gender_1
+
+  hochschulform_select_2 <- r$hochschulform_studierende_verlauf_bl_subject_gender_2
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- df %>% dplyr::filter(region != "Bayern")
+
+  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
+  # include "Osten" und "Westen" in Dataframe
+  df <- prep_studierende_east_west(df)
+
+  if(lehramt == FALSE){
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
+
+    df$indikator <- paste0(df$indikator, " (", df$hochschulform, ")")
+
+  } else {
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
+
+    df$indikator <- paste0(df$indikator, " (", "Lehramt, " ,df$hochschulform, ")")
+
+  }
+
+  if (subjects_select == "MINT"){
+
+    # call function to calculate the share of MINT and the remaining subjects
+    df <- calc_share_MINT_bl(df)
+  }
+
+  df <- df %>% dplyr::filter(fachbereich == subjects_select)
+
+  # calculate share of males for states
+  df <- calc_share_male_bl(df)
+
+  # calculate new "Gesamt"
+  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+                    wert[anzeige_geschlecht == "Männer"])
+
+  # calculate proportions
+  values <- df %>% dplyr::group_by(region, indikator, fachbereich, anzeige_geschlecht, jahr) %>%
+    dplyr::summarize(proportion = wert/props)
+
+  # order years for plot
+  values <- values[with(values, order(region, jahr, decreasing = FALSE)), ]
+
+  values$proportion <- values$proportion * 100
+
+  values <- values %>% dplyr::filter(region %in% states)
+
+  values$anzeige_geschlecht <- paste0(values$anzeige_geschlecht, " (", values$indikator, ")")
+
+  # plot
+  highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = anzeige_geschlecht)) %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil {point.anzeige_geschlecht} <br> Wert: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
+    highcharter::hc_title(text = paste0("Anteil von Student*innen im Verlauf"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+}
