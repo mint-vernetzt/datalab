@@ -217,10 +217,10 @@ mod_studium_studienzahl_ui <- function(id){
                     tabPanel("Jahresvergleich", br(),
 
                              shiny::sidebarPanel(
-                               # mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1")
+                               mod_studium_studienzahl_bl_verlauf_ui("mod_studium_studienzahl_bl_verlauf")
                                ),
                              shiny::mainPanel(
-                               # highcharter::highchartOutput(ns("plot_verlauf_multiple"))
+                               highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf"))
                                )
                     ),
                     tabPanel("Vergleich", br(),
@@ -394,12 +394,13 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       studierende_map(data_studierende,r)
     })
 
+    output$plot_studienzahl_bl_verlauf <- highcharter::renderHighchart({
+      studierende_verlauf_multiple_bl(data_studierende,r)
+    })
+
     output$plot_studienzahl_map_gender <- renderUI({
       studierende_map_gender(data_studierende,r)
     })
-
-
-
 
     # save histogram using downloadHandler and plot output type
     output$download_waffle <- shiny::downloadHandler(

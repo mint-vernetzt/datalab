@@ -36,7 +36,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
                          choices = "Uni"
                        ))
     ),
-    p("Wähle in welcher Form der Kurs belegt wurde:"),
+    p("Wähle den Status der Student*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("topic_selected_subject_bl"),
       choices = c("Studierende", "Studienanfänger"),

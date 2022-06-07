@@ -37,14 +37,6 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
                          choices = "Uni"
                        ))
     ),
-    # p("Wähle in welcher Form der Kurs belegt wurde:"),
-    # shinyWidgets::radioGroupButtons(
-    #   inputId = ns("level_studierende_verlauf_bl_subject_gender"),
-    #   choices = c("Studierende", "Studienanfänger"),
-    #   justified = TRUE,
-    #   checkIcon = list(yes = icon("ok",
-    #                               lib = "glyphicon"))
-    # ),
     p("Wähle ein Fach:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_verlauf_bl_subject_gender"),
