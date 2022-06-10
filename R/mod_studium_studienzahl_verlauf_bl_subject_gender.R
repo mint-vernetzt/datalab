@@ -42,7 +42,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       inputId = ns("subject_verlauf_bl_subject_gender"),
       choices = c("Mathematik" = "Mathe", "Ingenieurswesen" = "Ingenieur",
                   "MINT aggregiert" = "MINT"),
-      selected = "Mathe",
+      selected = "MINT (aggregiert)",
       multiple = FALSE
     ),
     p("Wähle ein Bundesland:"),

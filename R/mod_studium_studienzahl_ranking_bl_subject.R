@@ -44,14 +44,6 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    # p("Wähle ein oder mehrere Fächer:"),
-    # shinyWidgets::pickerInput(
-    #   inputId = ns("subject_selected_bl"),
-    #   choices = c("Mathematik" = "Mathe", "Ingenieurswesen" = "Ingenieur",
-    #               "MINT aggregiert" = "MINT"),
-    #   selected = c("Mathe", "Ingenieur"),
-    #   multiple = TRUE
-    # ),
     p("Wähle ein Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_ranking_subject_bl"),

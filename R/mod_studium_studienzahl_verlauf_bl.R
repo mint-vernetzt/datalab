@@ -49,7 +49,7 @@ mod_studium_studienzahl_verlauf_bl_ui <- function(id){
                        choices = c("Mathematik" = "Mathe", "Ingenieurswesen" = "Ingenieur"),
                        selected = "Mathematik"
                      )),
-    p("Wähle ein oder mehrere Bundesländer:"),
+    p("Wähle ein Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studierende_verlauf_bl"),
       choices = c("Berlin",

@@ -27,14 +27,14 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wähle ein oder mehrere Fächer:"),
+    p("Wähle ein Fach:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_multiple"),
       choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
                   "Biologie", "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
                   "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
                   "Sport", "Musik"),
-      selected = "Mathematik",
+      selected = "MINT (aggregiert)",
     ),
     p("Wähle ein Bundesland:"),
     shinyWidgets::pickerInput(

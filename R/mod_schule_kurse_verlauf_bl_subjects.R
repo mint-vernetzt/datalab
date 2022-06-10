@@ -34,7 +34,10 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
                   "Biologie", "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
                   "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
                   "Sport", "Musik"),
-      selected = c("Informatik", "Mathematik"),
+      selected = c("MINT (aggregiert)", "Mathematik"),
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
       multiple = TRUE
     ),
     p("Wähle ein Bundesland:"),

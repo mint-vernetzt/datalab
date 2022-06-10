@@ -27,7 +27,7 @@ mod_schule_kurse_verlauf_bl_ui <- function(id){
                   "Biologie", "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
                   "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
                   "Sport", "Musik"),
-      selected = "Informatik"
+      selected = "MINT (aggregiert)"
     ),
     p("Wähle ein Bundesland:"),
                      shinyWidgets::pickerInput(

@@ -71,6 +71,9 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
                   "Westen",
                   "Osten"),
       selected = c("Hessen", "Berlin"),
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
       multiple = TRUE
     )
 
