@@ -2596,7 +2596,7 @@ studierende_map_gender <- function(df,r) {
       )
     ) %>%
       highcharter::hc_title(
-        text = paste0("Studentinnen: Anteil an Belegungen <br> in ", subjects),
+        text = paste0("Weibliche ", indikator_choice, ": Anteil an Belegungen <br> in ", subjects),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -2626,7 +2626,7 @@ studierende_map_gender <- function(df,r) {
       )
     ) %>%
       highcharter::hc_title(
-        text = paste0("Studenten: Anteil an Belegungen <br> in ", subjects),
+        text = paste0("Männliche ", indikator_choice, ": Anteil an Belegungen <br> in ", subjects),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
