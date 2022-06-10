@@ -2556,14 +2556,6 @@ studierende_map_gender <- function(df,r) {
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
     dplyr::mutate(wert_sum = sum(props))
 
-  df <- calc_share_MINT_bl(df)
-
-  df <- df[,colnames(df)]
-
-  df[df$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
-
-  df[df$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
-
   df <-  calc_share_male_bl(df)
 
   # calculate the new "Gesamt"
@@ -2735,11 +2727,6 @@ studierende_verlauf_multiple_bl <- function(df,r) {
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
 
-  # df <- calc_share_MINT_bl(df)
-  #
-  #
-  # df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
-
   df <- calc_share_male_bl(df)
 
   # calculate new "Gesamt"
@@ -2776,6 +2763,147 @@ studierende_verlauf_multiple_bl <- function(df,r) {
   }else {
 
     title_help <- "Studienanfänger:"
+
+  }
+
+  # order years for plot
+  df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+
+  # plot
+  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = region)) %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil {point.region} <br> Wert: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_title(text = paste0(title_help, " Anteil an Belegungen in ", subjects_select),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+}
+
+#' A function to plot time series
+#'
+#' @description A function to plot the time series of the german states
+#'
+#' @return The return value, if any, from executing the function.
+#' @param data The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+studierende_verlauf_multiple_bl_gender <- function(df,r) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_studium_studienzahl_bl_gender_verlauf
+
+  subjects_select <- r$subject_studium_studienzahl_bl_gender_verlauf
+
+  lehramt <- r$nurLehramt_studium_studienzahl_bl_gender_verlauf
+
+  hochschulform_select_1 <- r$hochschulform_studium_studienzahl_bl_gender_verlauf1
+
+  hochschulform_select_2 <- r$hochschulform_studium_studienzahl_bl_gender_verlauf2
+
+  studium_level <- r$level_studium_studienzahl_bl_gender_verlauf
+
+  states <- r$states_studium_studienzahl_bl_gender_verlauf
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- df %>% dplyr::filter(region != "Bayern")
+
+  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
+  # include "Osten" und "Westen" in Dataframe
+  df <- prep_studierende_east_west(df)
+
+  if(lehramt == FALSE){
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+
+    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+
+    title_help_sub_sub <- " insgesamt"
+
+  } else {
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+
+    df <- df %>% dplyr::filter(hochschulform == "Uni")
+
+    title_help_sub_sub <- " an einer Uni (nur Lehramt)"
+  }
+
+  # aggregate to MINT
+  df_sub <- calc_share_MINT_bl(df)
+
+  df_sub <- df_sub[,colnames(df)]
+
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+
+  df_sub <-  calc_share_male_bl(df_sub)
+
+  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+                    wert[anzeige_geschlecht == "Männer"])
+
+  df_sub <- df_sub %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
+    dplyr::mutate(wert_sum = sum(props))
+
+  df <-  calc_share_male_bl(df)
+
+  # calculate the new "Gesamt"
+  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+                    wert[anzeige_geschlecht == "Männer"])
+
+  df <- df %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
+    dplyr::mutate(wert_sum = sum(props))
+
+  df <- rbind(df, df_sub)
+
+  df <- df %>% dplyr::filter(fachbereich == subjects_select)
+
+  df <- df %>% dplyr::filter(indikator == studium_level)
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
+
+  df <- df %>% dplyr::filter(region %in% states)
+
+  # calculate proportions
+  df <- df %>% dplyr::group_by(region, fachbereich, jahr, anzeige_geschlecht) %>%
+    dplyr::summarize(proportion = wert/wert_sum) %>% dplyr::ungroup()
+
+  df$proportion <- df$proportion * 100
+
+  if(studium_level == "Studierende") {
+
+    title_help <- "Weibliche Studierende:"
+
+  }else {
+
+    title_help <- "Weibliche Studienanfänger:"
 
   }
 
