@@ -260,10 +260,10 @@ mod_studium_studienzahl_ui <- function(id){
                     tabPanel("Vergleich", br(),
 
                              shiny::sidebarPanel(
-                               # mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1")
+                               mod_studium_studienzahl_bl_vergleich_gender_ui("mod_studium_studienzahl_bl_vergleich_gender_ui")
                              ),
                              shiny::mainPanel(
-                               # plotOutput(ns("plot_comparison_bl"))
+                               plotOutput(ns("plot_ranking_studienzahl_bl_vergleich_gender"))
                              )
                     )
         ))),
@@ -408,6 +408,14 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
     output$plot_studienzahl_bl_verlauf_gender <- highcharter::renderHighchart({
       studierende_verlauf_multiple_bl_gender(data_studierende,r)
+    })
+
+    plot_ranking_studienzahl_bl_vergleich_gender_react <- reactive({
+      bundeslaender_ranking(data_studierende, r, type="other")
+    })
+
+    output$plot_ranking_studienzahl_bl_vergleich_gender <- renderPlot({
+      plot_ranking_studienzahl_bl_vergleich_gender_react()
     })
 
     # save histogram using downloadHandler and plot output type

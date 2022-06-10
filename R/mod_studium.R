@@ -102,7 +102,7 @@ mod_studium_server <- function(id, data_studierende, r){
 
   mod_studium_studienzahl_bl_map_gender_server("mod_studium_studienzahl_bl_map_gender", r)
   mod_studium_studienzahl_bl_verlauf_gender_server("mod_studium_studienzahl_bl_verlauf_gender", r)
-
+  mod_studium_studienzahl_bl_vergleich_gender_server("mod_studium_studienzahl_bl_vergleich_gender_ui", r)
 
 }
 

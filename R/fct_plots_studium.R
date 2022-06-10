@@ -1389,7 +1389,7 @@ studienzahl_verlauf <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
-    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
 
     title_help_sub_sub <- " insgesamt"
 
@@ -1397,7 +1397,7 @@ studienzahl_verlauf <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Ja")
 
-    df <- df %>% dplyr::filter(hochschulform == "Uni")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
 
     title_help_sub_sub <- " an einer Uni (nur Lehramt)"
   }
@@ -1526,13 +1526,13 @@ data_verlauf_studium <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
-    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
 
   } else {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Ja")
 
-    df <- df %>% dplyr::filter(hochschulform == "Uni")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
   }
 
 
@@ -1645,7 +1645,7 @@ studienzahl_verlauf_bl <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
-    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
 
     title_help_sub_sub <- " insgesamt"
 
@@ -1653,7 +1653,7 @@ studienzahl_verlauf_bl <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Ja")
 
-    df <- df %>% dplyr::filter(hochschulform == "Uni")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
 
     title_help_sub_sub <- " an einer Uni (nur Lehramt)"
   }
@@ -2296,7 +2296,6 @@ studienfaecher_ranking <- function(df,r, type) {
 
   df <- df %>% dplyr::select(-hochschulform, -region, -anzeige_geschlecht)
 
-
   df2 <- tidyr::gather(df, group, value, -fachbereich) %>%
     dplyr::filter(is.numeric(value))
 
@@ -2690,7 +2689,7 @@ studierende_verlauf_multiple_bl <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
-    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
 
     title_help_sub_sub <- " insgesamt"
 
@@ -2698,7 +2697,7 @@ studierende_verlauf_multiple_bl <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Ja")
 
-    df <- df %>% dplyr::filter(hochschulform == "Uni")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
 
     title_help_sub_sub <- " an einer Uni (nur Lehramt)"
   }
@@ -2836,7 +2835,7 @@ studierende_verlauf_multiple_bl_gender <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
-    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
 
     title_help_sub_sub <- " insgesamt"
 
@@ -2844,7 +2843,7 @@ studierende_verlauf_multiple_bl_gender <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Ja")
 
-    df <- df %>% dplyr::filter(hochschulform == "Uni")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
 
     title_help_sub_sub <- " an einer Uni (nur Lehramt)"
   }
@@ -2983,7 +2982,7 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
-    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
 
     title_help_sub_sub <- " insgesamt"
 
@@ -2991,7 +2990,7 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Ja")
 
-    df <- df %>% dplyr::filter(hochschulform == "Uni")
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
 
     title_help_sub_sub <- " an einer Uni (nur Lehramt)"
   }
@@ -3036,6 +3035,140 @@ studierende_mint_vergleich_bl <- function(df,r) {
                                  "Anteil der Fächer im Vergleich",
                                  "<br><br><br>"),
                   fill = "") +
+    ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
+
+}
+
+#' A function to create a dumbbell plot
+#'
+#' @description A function to compare a subject for different Bundesländer
+#'
+#' @return The return value is a dumbbell plot
+#' @param data The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+bundeslaender_ranking <- function(df,r, type) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_studium_studienzahl_bl_gender_vergleich
+
+  lehramt <- r$nurLehramt_studium_studienzahl_bl_gender_vergleich
+
+  hochschulform_select_1 <- r$hochschulform_studium_studienzahl_bl_gender_vergleich1
+
+  hochschulform_select_2 <- r$hochschulform_studium_studienzahl_bl_gender_vergleich2
+
+  subject <- r$subject_studium_studienzahl_bl_gender_vergleich
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::mutate(fachbereich = replace(fachbereich,
+                                                   fachbereich == "Alle",
+                                                   "Alle restlichen Fächer"))
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- df %>% dplyr::filter(region != "Bayern")
+
+  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
+  df <- df %>% dplyr::mutate(indikator = replace(indikator,
+                                                 indikator == "Studienanfänger",
+                                                 "Studienanfängerinnen"))
+
+  df <- calc_share_male_bl(df)
+
+  # calculate new "Gesamt"
+  df <- df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
+    dplyr::mutate(wert = wert[anzeige_geschlecht == "Frauen"] +
+                    wert[anzeige_geschlecht == "Männer"])
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
+
+  if(lehramt == FALSE){
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
+
+    title_help_sub_sub <- " insgesamt"
+
+  } else {
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+
+    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
+
+    title_help_sub_sub <- " an einer Uni (nur Lehramt)"
+  }
+
+  # aggregate all subjects to calculate proportion later
+  df <- df %>% dplyr::group_by(indikator, region, nur_lehramt, hochschulform) %>%
+    dplyr::mutate(props = sum(wert))
+
+  # aggregate to MINT
+  values_Mint <- df %>%
+    dplyr::filter(fachbereich != "Alle restlichen Fächer") %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, hochschulform,
+                    nur_lehramt, props) %>%
+    dplyr::summarise(wert = sum(wert)) %>%
+    dplyr::mutate(bereich = "Hochschule",
+                  fachbereich = "MINT (aggregiert)")
+
+  df <- rbind(df, values_Mint)
+
+  # # calculate proportion
+  df <- df %>% dplyr::group_by(fachbereich, indikator, hochschulform, region, anzeige_geschlecht) %>%
+    dplyr::summarize(proportion = wert/props) %>% dplyr::ungroup()
+
+  df$proportion <- df$proportion * 100
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
+
+  df <- df %>% dplyr::filter(fachbereich == subject)
+
+  # spread column
+  df <- tidyr::spread(df, indikator, proportion)
+
+  df <- df %>% tidyr::drop_na()
+
+  df <- df %>% dplyr::select(-hochschulform, -anzeige_geschlecht)
+
+  df2 <- tidyr::gather(df, group, value, -region) %>%
+    dplyr::filter(group != "fachbereich") %>%
+    dplyr::mutate(value = as.numeric(value))
+
+  df$region <- reorder(df$region, df$Studierende)
+
+  df2$region <- factor(df2$region, levels = levels(df$region))
+
+  ggplot2::ggplot(df,
+                  ggplot2::aes(y = region)) +
+    ggplot2::geom_point(data = df2, ggplot2::aes(x = value, color = group), size = 5) +
+    ggalt::geom_dumbbell(
+      ggplot2::aes(x = Studienanfängerinnen, xend = Studierende),
+      size = 0.5,
+      size_x = 5,
+      size_xend = 5,
+      colour = "black",
+      colour_x = "#b1b5c366",
+      colour_xend = "#f5adac66",
+      dot_guide=TRUE) +
+    ggplot2::theme_minimal() +
+    ggplot2::scale_color_manual(name = "", values = c("#b1b5c366", "#f5adac66")) +
+    ggplot2::theme(legend.position="top",
+                   panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
+                   plot.title = ggtext::element_markdown(hjust = 0.5),
+                   axis.text.y = ggplot2::element_text(size = 11)) +
+    ggplot2::ylab("") + ggplot2::xlab("") +
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+                                 "Relativer Anteil von Studientinnen als Studienanfängerinnen oder Studierende in ",timerange,
+                                 "<br><br><br>"),
+                  color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 
 }
