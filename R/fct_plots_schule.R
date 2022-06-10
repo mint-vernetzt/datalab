@@ -19,78 +19,36 @@ kurse_einstieg_pie <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  # drop Überkategorien
-  subjects_drop <- c("Naturwissenschaften", "Gesellschaftswissenschaften",
-                     "Fremdsprachen")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
-  # calcualte the new value for "Gesamt"
-  df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
-    dplyr::filter(indikator == "Leistungskurse") %>%
-    dplyr::group_by(indikator, jahr) %>%
-    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-                       wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
-
-
-  df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Grundkurse"), "wert"] <-  df %>%
-    dplyr::filter(indikator == "Grundkurse") %>%
-    dplyr::group_by(indikator, jahr) %>%
-    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-                       wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
-
-
-  # aggregate the share of the MINT subjects vs Rest
+  # aggregate to MINT
   df <- share_mint_kurse(df)
 
-
-  # if(geschlecht == FALSE) {
-
-    df_gk <- df %>% dplyr::filter(indikator == "Grundkurse")
-
-    df_gk <- df_gk %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
-
-    # calculate proportions
-    df_gk <- share_pie(df_gk)
-
-    df_gk$anzeige_geschlecht <- df_gk$fachbereich
-
-    df_lk <- df %>% dplyr::filter(indikator == "Leistungskurse")
-
-    df_lk <- df_lk %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
-
-    # calculate proportions
-    df_lk <- share_pie(df_lk)
-
-    df_lk$anzeige_geschlecht <- df_lk$fachbereich
+  # calcualte the new "Gesamt"
+  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Frauen"] +
+                    wert[anzeige_geschlecht == "Männer"])
 
 
-  # } else {
-  #
-  #
-  # df_gk <- df %>% dplyr::filter(indikator == "Grundkurse")
-  #
-  # df_gk <- df_gk %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
-  #
-  # # calculate proportions
-  # df_gk <- share_pie(df_gk)
-  #
-  # df_gk$anzeige_geschlecht <- paste0(df_gk$anzeige_geschlecht, " (", df_gk$fachbereich, ")")
-  #
-  # df_lk <- df %>% dplyr::filter(indikator == "Leistungskurse")
-  #
-  # df_lk <- df_lk %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
-  #
-  # # calculate proportions
-  # df_lk <- share_pie(df_lk)
-  #
-  # df_lk$anzeige_geschlecht <- paste0(df_lk$anzeige_geschlecht, " (", df_lk$fachbereich, ")")
-  #
-  #
-  # }
+  df = df[!duplicated(df$wert_new),]
+
+  df$anzeige_geschlecht <- NULL
 
 
-  plot_gk <- highcharter::hchart(df_gk, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+  df <- df %>%
+    dplyr::group_by(jahr, indikator) %>%
+    dplyr::mutate(sum_wert = sum(wert_new))
+
+
+  # calculate proportions
+  df <- df %>% dplyr::group_by(jahr, indikator, fachbereich) %>%
+    dplyr::summarize(proportion = wert_new/sum_wert) %>%
+    dplyr::mutate(proportion = round(proportion, digits = 2)*100)
+
+  df_gk <- df %>% dplyr::filter(indikator == "Grundkurse")
+
+  df_lk <- df %>% dplyr::filter(indikator == "Leistungskurse")
+
+  plot_gk <- highcharter::hchart(df_gk, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Fächern für Grundkurse in ", timerange),
@@ -103,7 +61,7 @@ kurse_einstieg_pie <- function(df,r) {
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
 
-  plot_lk <- highcharter::hchart(df_lk, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+  plot_lk <- highcharter::hchart(df_lk, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Fächern für Leistungskurse in ", timerange),
@@ -117,20 +75,20 @@ kurse_einstieg_pie <- function(df,r) {
                                            dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE))
 
 
-    plot_gk <- plot_gk %>% highcharter::hc_colors(c("#154194","#b16fab"))
+  plot_gk <- plot_gk %>% highcharter::hc_colors(c("#154194","#b16fab"))
 
-    plot_lk <- plot_lk %>% highcharter::hc_colors(c("#154194","#b16fab"))
+  plot_lk <- plot_lk %>% highcharter::hc_colors(c("#154194","#b16fab"))
 
 
   # place plots inside grid
   highcharter::hw_grid(
 
-  plot_gk,
+    plot_gk,
 
-  plot_lk,
+    plot_lk,
 
-  ncol = 2,
-  browsable = TRUE
+    ncol = 2,
+    browsable = TRUE
   )
 
 
