@@ -2933,3 +2933,109 @@ studierende_verlauf_multiple_bl_gender <- function(df,r) {
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 }
+
+#' A function to plot a bar chart
+#'
+#' @description A function to create a bar chart to compare different subjects
+#' for different Bundesländer.
+#'
+#' @return The return value is a bar chart
+#' @param df The dataframe "Studierende.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+studierende_mint_vergleich_bl <- function(df,r) {
+
+  timerange <- r$date_studium_studienzahl_bl_vergleich
+
+  lehramt <- r$nurLehramt_studium_studienzahl_bl_vergleich
+
+  hochschulform_select_1 <- r$hochschulform__studium_studienzahl_bl_vergleich1
+
+  hochschulform_select_2 <- r$hochschulform__studium_studienzahl_bl_vergleich2
+
+  studium_level <- r$level_studium_studienzahl_bl_vergleich
+
+  subject <- r$subject_studium_studienzahl_bl_vergleich
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- df %>% dplyr::filter(region != "Bayern")
+
+  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
+  df <- df %>% dplyr::filter(indikator == studium_level)
+
+  df <- calc_share_male_bl(df)
+
+  # calculate new "Gesamt"
+  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
+    dplyr::mutate(wert = wert[anzeige_geschlecht == "Frauen"] +
+                    wert[anzeige_geschlecht == "Männer"])
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
+
+  if(lehramt == FALSE){
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+
+    df <- df %>% dplyr::filter(hochschulform == "insgesamt")
+
+    title_help_sub_sub <- " insgesamt"
+
+  } else {
+
+    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+
+    df <- df %>% dplyr::filter(hochschulform == "Uni")
+
+    title_help_sub_sub <- " an einer Uni (nur Lehramt)"
+  }
+
+  # aggregate to MINT
+  df_sub <- calc_share_MINT_bl(df)
+
+  df_sub <- df_sub[,colnames(df)]
+
+  # # aggregate all subjects to calculate proportion later
+  df_sub <- df_sub %>% dplyr::group_by(region, indikator) %>%
+    dplyr::mutate(props = sum(wert))
+
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+
+  # aggregate all subjects to calculate proportion later
+  df <- df %>% dplyr::group_by(region, indikator) %>%
+    dplyr::mutate(props = sum(wert))
+
+  df <- rbind(df, df_sub)
+
+  df <- df %>% dplyr::filter(fachbereich == subject)
+
+  # calculate proportion
+  df <- df %>% dplyr::group_by(region, fachbereich, indikator) %>%
+    dplyr::summarize(proportion = wert/props)
+
+  df$proportion <- round(df$proportion * 100)
+
+  ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
+    ggplot2::geom_bar(stat="identity", fill = "#154194") +
+    ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
+                       fontface = "bold") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      text = ggplot2::element_text(size = 14),
+      plot.title = ggtext::element_markdown(hjust = 0.5)) +
+    ggplot2::ylab("") + ggplot2::xlab("Anteil") +
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+                                 "Anteil der Fächer im Vergleich",
+                                 "<br><br><br>"),
+                  fill = "") +
+    ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
+
+}

@@ -226,10 +226,10 @@ mod_studium_studienzahl_ui <- function(id){
                     tabPanel("Vergleich", br(),
 
                              shiny::sidebarPanel(
-                               # mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1")
+                               mod_studium_studienzahl_bl_vergleich_ui("studium_studienzahl_bl_vergleich")
                                ),
                              shiny::mainPanel(
-                               # plotOutput(ns("plot_comparison_bl"))
+                               plotOutput(ns("plot_vergleich_bl"))
                                )
                     )
         ))),
@@ -396,6 +396,10 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
     output$plot_studienzahl_bl_verlauf <- highcharter::renderHighchart({
       studierende_verlauf_multiple_bl(data_studierende,r)
+    })
+
+    output$plot_vergleich_bl <- renderPlot({
+      studierende_mint_vergleich_bl(data_studierende,r)
     })
 
     output$plot_studienzahl_map_gender <- renderUI({
