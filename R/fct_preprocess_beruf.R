@@ -95,7 +95,7 @@ calc_arbeitsmarkt_mint <- function(df) {
 #'
 #' @noRd
 
-calc_arbeitsmarkt_share_bl <- function(df) {
+calc_arbeitsmarkt_share_bl_gender <- function(df) {
 
   df_alle <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt",
                                   anforderungsniveau == "Gesamt") %>%
@@ -124,6 +124,47 @@ calc_arbeitsmarkt_share_bl <- function(df) {
     dplyr::select(-wert_male)
 
   df_return <- rbind(df_female, df_male)
+
+  return(df_return)
+}
+
+#' preprocess_beruf
+#'
+#' @description A fct function
+#'
+#' @return The return value, if any, from executing the function.
+#'
+#' @noRd
+
+calc_arbeitsmarkt_share_bl <- function(df) {
+
+  df_alle <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt",
+                                  anforderungsniveau == "Gesamt") %>%
+    # dplyr::select(-fachbereich) %>%
+    dplyr::group_by(region, indikator, anforderungsniveau, jahr, anzeige_geschlecht, bereich) %>%
+    dplyr::summarise(wert = sum(wert))
+
+  df_employed <- df %>% dplyr::filter(indikator == "Beschäftigte") %>%
+    dplyr::rename(wert_employed = wert)
+
+  df_trainee <- df %>% dplyr::filter(indikator == "Auszubildende") %>%
+    dplyr::rename(wert_trainee = wert)
+
+  df_employed <- df_employed %>% dplyr::left_join(df_alle, by=c("region", "indikator", "anzeige_geschlecht", "jahr", "bereich")) %>%
+    dplyr::select(-"anforderungsniveau.y") %>%
+    dplyr::rename(anforderungsniveau = "anforderungsniveau.x") %>%
+    dplyr::mutate(proportion = (wert_employed/wert)*100) %>%
+    # dplyr::mutate(indikator = "Beschäftigte") %>%
+    dplyr::select(-wert_employed)
+
+  df_trainee <- df_trainee %>% dplyr::left_join(df_alle, by=c("region", "indikator", "anzeige_geschlecht", "jahr", "bereich")) %>%
+    dplyr::select(-"anforderungsniveau.y") %>%
+    dplyr::rename(anforderungsniveau = "anforderungsniveau.x") %>%
+    dplyr::mutate(proportion = (wert_trainee/wert)*100) %>%
+    # dplyr::mutate(indikator = "Auszubildende") %>%
+    dplyr::select(-wert_trainee)
+
+  df_return <- rbind(df_employed, df_trainee)
 
   return(df_return)
 }

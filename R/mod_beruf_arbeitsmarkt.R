@@ -90,6 +90,40 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
+        title = "Box 6",
+        width = 12,
+        p("Karte"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Fächerbelegung", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_arbeitsmarkt_bl"))
+                             )
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_bl_verlauf_ui("mod_beruf_arbeitsmarkt_bl_verlauf_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_verlauf"))
+                             )
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_bl_vergleich_ui("beruf_arbeitsmarkt_bl_vergleich_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_arbeitsmarkt_bl_vergleich"))
+                             )
+                    )
+        ))),
+    fluidRow(
+      shinydashboard::box(
         title = "Box 7",
         width = 12,
         p("Karte"),
@@ -189,7 +223,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # Box 1
+    # Box 2
     plot_einstieg_pie_react <-  reactive({
       arbeitsmarkt_einstieg_pie(data_arbeitsmarkt,r)
 
@@ -214,6 +248,19 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
 
     output$data_table_einstieg <- DT::renderDT({
       data_table_einstieg_react()
+    })
+
+    # Box 6
+    output$plot_arbeitsmarkt_bl <- renderUI({
+      arbeitsmarkt_bl(data_arbeitsmarkt,r)
+    })
+
+    output$plot_beruf_arbeitsmarkt_bl_verlauf <- highcharter::renderHighchart({
+      arbeitsmarkt_bl_verlauf(data_arbeitsmarkt,r)
+    })
+
+    output$plot_arbeitsmarkt_bl_vergleich <- renderPlot({
+      arbeitsmarkt_bl_vergleich(data_arbeitsmarkt,r)
     })
 
     # Box 7

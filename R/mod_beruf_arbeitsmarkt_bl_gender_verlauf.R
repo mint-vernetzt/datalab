@@ -22,7 +22,7 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
     p("Wähle in welcher Form der Kurs belegt wurde:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_beruf_arbeitsmarkt_bl_gender_verlauf"),
-      choices = c("Beschäftigte", "Auszubildende"),
+      choices = c("Auszubildende", "Beschäftigte"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))

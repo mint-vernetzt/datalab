@@ -374,7 +374,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
 
   df <- calc_arbeitsmarkt_males(df)
 
-  df <- calc_arbeitsmarkt_share_bl(df)
+  df <- calc_arbeitsmarkt_share_bl_gender(df)
 
   df <- df %>% dplyr::filter(anforderungsniveau == anforderung)
 
@@ -953,7 +953,7 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
 
   df <- calc_arbeitsmarkt_males(df)
 
-  df <- calc_arbeitsmarkt_share_bl(df)
+  df <- calc_arbeitsmarkt_share_bl_gender(df)
 
   df <- df %>% dplyr::filter(anforderungsniveau %in% anforderung)
 
@@ -1024,7 +1024,7 @@ arbeitsmarkt_bl_gender_vergleich <- function(df, r) {
 
   df <- calc_arbeitsmarkt_males(df)
 
-  df <- calc_arbeitsmarkt_share_bl(df)
+  df <- calc_arbeitsmarkt_share_bl_gender(df)
 
   df <- df %>% dplyr::filter(anforderungsniveau == anforderung)
 
@@ -1082,4 +1082,265 @@ arbeitsmarkt_bl_gender_vergleich <- function(df, r) {
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 
+}
+
+#' A function to plot the german map
+#'
+#' @description A function to plot the german map with all states that contain
+#' information about the share of women in STEM
+#'
+#' @return The return value is the german map with information
+#' @param data The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_bl <- function(df,r) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_arbeitsmarkt_bl
+
+  anforderung <- r$anforderungsniveau_arbeitsmarkt_bl
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+  df <- calc_arbeitsmarkt_share_bl(df)
+
+  df <- df %>% dplyr::filter(fachbereich == "MINT")
+
+  df <- df %>% dplyr::filter(anforderungsniveau == anforderung)
+
+  df_employed <- df %>% dplyr::filter(indikator == "Beschäftigte")
+  df_trainee <- df %>% dplyr::filter(indikator == "Auszubildende")
+
+  if (anforderung == "Gesamt"){
+
+    title_help_sub <- " insgesamt"
+
+  } else {
+
+    title_help_sub <- paste0(" mit Anforderungsniveau ", anforderung)
+
+  }
+
+  highcharter::hw_grid(
+    # plot
+    highcharter::hcmap(
+      "countries/de/de-all",
+      data = df_trainee,
+      value = "proportion",
+      joinBy = c("name", "region"),
+      borderColor = "#FAFAFA",
+      name = "Anteil",
+      borderWidth = 0.1,
+      nullColor = "#A9A9A9",
+      tooltip = list(
+        valueDecimals = 0,
+        valueSuffix = "%"
+      )
+    ) %>%
+      highcharter::hc_title(
+        text = paste0("Auszubildende: Anzeil an Beschäftigung", title_help_sub),
+        margin = 10,
+        align = "center",
+        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      ) %>%
+      # highcharter::hc_caption(
+      #   text = "Quelle:",  style = list(fontSize = "12px")
+      # ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular")
+      ) %>% highcharter::hc_size(600, 550) %>%
+      highcharter::hc_credits(enabled = FALSE) %>%
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                             verticalAlign = "bottom"),
+
+    highcharter::hcmap(
+      "countries/de/de-all",
+      data = df_employed,
+      value = "proportion",
+      joinBy = c("name", "region"),
+      borderColor = "#FAFAFA",
+      name = "Anteil",
+      borderWidth = 0.1,
+      nullColor = "#A9A9A9",
+      tooltip = list(
+        valueDecimals = 0,
+        valueSuffix = "%"
+      )
+    ) %>%
+      highcharter::hc_title(
+        text = paste0("Beschäftigte: Anzeil an Beschäftigung", title_help_sub),
+        margin = 10,
+        align = "center",
+        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      ) %>%
+      # highcharter::hc_caption(
+      #   text = "Quelle:",  style = list(fontSize = "12px")
+      # ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular")
+      ) %>% highcharter::hc_size(600, 550) %>%
+      highcharter::hc_credits(enabled = FALSE) %>%
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom"),
+
+
+    ncol = 2,
+    browsable = TRUE
+  )
+
+}
+
+#' A function to plot time series
+#'
+#' @description A function to plot the time series
+#'
+#' @return The return value, if any, from executing the function.
+#' @param data The dataframe "Kurse.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_bl_verlauf <- function(df,r) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_beruf_arbeitsmarkt_bl_verlauf
+
+  anforderung <- r$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf
+
+  indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_verlauf
+
+  states <- r$states_beruf_arbeitsmarkt_bl_verlauf
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  df <- df %>% dplyr::filter(indikator == indikator_choice)
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df <- prep_arbeitsmarkt_east_west(df)
+
+  df <- df %>% dplyr::filter(region %in% states)
+
+  df <- calc_arbeitsmarkt_males(df)
+
+  df <- calc_arbeitsmarkt_share_bl(df)
+
+  df <- df %>% dplyr::filter(anforderungsniveau %in% anforderung)
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+  df <- df %>% dplyr::filter(fachbereich == "MINT")
+
+  # order years for plot
+  df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+
+  if (anforderung == "Gesamt"){
+
+    title_help <- " insgesamt"
+
+  } else {
+
+    title_help <- paste0(" mit Anforderungsniveau ", anforderung)
+
+  }
+
+  # plot
+  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = region)) %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_title(text = paste0("Weibliche ", indikator_choice, " in MINT-Berufen",title_help),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+}
+
+#' A function to plot time series
+#'
+#' @description A function to plot the time series
+#'
+#' @return The return value, if any, from executing the function.
+#' @param data The dataframe "Kurse.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_bl_vergleich <- function(df,r) {
+
+  browser()
+  # load UI inputs from reactive value
+  timerange <- r$date_beruf_arbeitsmarkt_bl_vergleich
+
+  anforderung <- r$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich
+
+  indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_vergleich
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(indikator == indikator_choice)
+
+  # remove
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  # df <- prep_arbeitsmarkt_east_west(df)
+
+  df <- calc_arbeitsmarkt_males(df)
+
+  df <- calc_arbeitsmarkt_share_bl(df)
+
+  df <- df %>% dplyr::filter(anforderungsniveau %in% anforderung)
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+  df <- df %>% dplyr::filter(fachbereich == "MINT")
+
+  # order years for plot
+  df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+
+  if (anforderung == "Gesamt"){
+
+    title_help <- " insgesamt"
+
+  } else {
+
+    title_help <- paste0(" mit Anforderungsniveau ", anforderung)
+
+  }
+
+  # plot
+  ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
+    ggplot2::geom_bar(stat="identity", fill = "#154194") +
+    ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
+                       fontface = "bold") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      text = ggplot2::element_text(size = 14),
+      plot.title = ggtext::element_markdown(hjust = 0.5)) +
+    ggplot2::ylab("") + ggplot2::xlab("Anteil") +
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+                                 "Anteil der Fächer im Vergleich",
+                                 "<br><br><br>"),
+                  fill = "") +
+    ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 }
