@@ -86,3 +86,44 @@ calc_arbeitsmarkt_mint <- function(df) {
 
   return(df_return)
 }
+
+#' preprocess_beruf
+#'
+#' @description A fct function
+#'
+#' @return The return value, if any, from executing the function.
+#'
+#' @noRd
+
+calc_arbeitsmarkt_share_bl <- function(df) {
+
+  df_alle <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt",
+                                  anforderungsniveau == "Gesamt") %>%
+    dplyr::select(-anzeige_geschlecht)
+
+  df_female <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen") %>%
+    dplyr::rename(wert_female = wert) %>%
+    dplyr::select(-anzeige_geschlecht)
+
+  df_male <- df %>% dplyr::filter(anzeige_geschlecht == "Männer") %>%
+    dplyr::rename(wert_male = wert) %>%
+    dplyr::select(-anzeige_geschlecht)
+
+  df_female <- df_female %>% dplyr::left_join(df_alle, by=c("region", "fachbereich", "indikator", "jahr", "bereich")) %>%
+    dplyr::select(-"anforderungsniveau.y") %>%
+    dplyr::rename(anforderungsniveau = "anforderungsniveau.x") %>%
+    dplyr::mutate(proportion = (wert_female/wert)*100) %>%
+    dplyr::mutate(anzeige_geschlecht = "Frauen") %>%
+    dplyr::select(-wert_female)
+
+  df_male <- df_male %>% dplyr::left_join(df_alle, by=c("region", "fachbereich", "indikator", "jahr", "bereich")) %>%
+    dplyr::select(-"anforderungsniveau.y") %>%
+    dplyr::rename(anforderungsniveau = "anforderungsniveau.x") %>%
+    dplyr::mutate(proportion = (wert_male/wert)*100) %>%
+    dplyr::mutate(anzeige_geschlecht = "Männer") %>%
+    dplyr::select(-wert_male)
+
+  df_return <- rbind(df_female, df_male)
+
+  return(df_return)
+}

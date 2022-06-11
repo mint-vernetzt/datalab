@@ -90,6 +90,40 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
+        title = "Box 7",
+        width = 12,
+        p("Karte"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Fächerbelegung", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_bl_gender_ui("mod_beruf_arbeitsmarkt_bl_gender_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_arbeitsmarkt_bl_gender"))
+                             )
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui("mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_gender_verlauf"))
+                             )
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_bl_gender_vergleich_ui("beruf_arbeitsmarkt_bl_gender_vergleich_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_arbeitsmarkt_bl_gender_vergleich"))
+                             )
+                    )
+        ))),
+    fluidRow(
+      shinydashboard::box(
         title = "Box 3",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
@@ -107,7 +141,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                shiny::downloadButton(ns("download_absolut"), label = "",
                                                      class = "butt",
                                                      icon = shiny::icon("download"))),
-                      tabPanel("Karte", br(), htmlOutput(ns("plot_map_arbeitsmarkt"))),
+                      tabPanel("Karte", br(), #htmlOutput(ns("plot_map_arbeitsmarkt"))
+                               ),
                       tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
                                                 style = "font-size: 75%; width: 75%"),
                                shiny::downloadButton(ns("download_data_box3"), label = "",
@@ -154,7 +189,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-
+    # Box 1
     plot_einstieg_pie_react <-  reactive({
       arbeitsmarkt_einstieg_pie(data_arbeitsmarkt,r)
 
@@ -180,6 +215,21 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
     output$data_table_einstieg <- DT::renderDT({
       data_table_einstieg_react()
     })
+
+    # Box 7
+    output$plot_arbeitsmarkt_bl_gender <- renderUI({
+      arbeitsmarkt_bl_gender(data_arbeitsmarkt,r)
+    })
+
+    output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- highcharter::renderHighchart({
+      arbeitsmarkt_bl_gender_verlauf(data_arbeitsmarkt,r)
+    })
+
+    output$plot_arbeitsmarkt_bl_gender_vergleich <- renderPlot({
+      arbeitsmarkt_bl_gender_vergleich(data_arbeitsmarkt,r)
+    })
+
+
 
     data_table_mix_react <- reactive({
       data_mix_beruf(data_arbeitsmarkt, r)
