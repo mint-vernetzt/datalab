@@ -38,13 +38,15 @@ mod_beruf_server <- function(id, data_arbeitsmarkt, r){
                       anforderungsniveau_arbeitsmarkt_verlauf_bl = NULL)
 
   # Arbeitsmarkt
-  mod_beruf_arbeitsmarkt_einstieg_server("mod_beruf_arbeitsmarkt_einstieg_ui_1", r)
   mod_beruf_arbeitsmarkt_multiple_server("mod_beruf_arbeitsmarkt_multiple_ui_1", r)
   mod_beruf_arbeitsmarkt_verlauf_server("mod_beruf_arbeitsmarkt_verlauf_ui_1", r)
   mod_beruf_arbeitsmarkt_verlauf_bl_server("mod_beruf_arbeitsmarkt_verlauf_bl_ui_1", r)
   mod_beruf_arbeitsmarkt_server("mod_beruf_arbeitsmarkt_ui_1", data_arbeitsmarkt, r)
 
 
+  mod_beruf_arbeitsmarkt_einstieg_server("mod_beruf_arbeitsmarkt_einstieg_ui_1", r)
+  mod_beruf_arbeitsmarkt_einstieg_verlauf_server("mod_beruf_arbeitsmarkt_einstieg_verlauf_ui_1", r)
+  mod_beruf_arbeitsmarkt_einstieg_vergleich_server("mod_beruf_arbeitsmarkt_einstieg_vergleich_ui_1", r)
 }
 
 ## To be copied in the UI

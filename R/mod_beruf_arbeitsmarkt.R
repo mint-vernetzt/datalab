@@ -35,28 +35,59 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         title = "Box 2",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-        shiny::sidebarPanel(
-          tags$style(".well {background-color:#FFFFFF;}"),
-          tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-          mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")),
-        #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_mint")),
-        #shinydashboard::valueBoxOutput(ns("valueBox_einstieg_rest")),
+        tabsetPanel(type = "tabs",
+                    tabPanel("MINT-Anteile", br(),
 
-        shiny::mainPanel(
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_einstieg_pie"))
+                             )
+                    ),
+                    tabPanel("Jahresvergleich", br(),
 
-          tabsetPanel(type = "tabs",
-                      tabPanel("Kuchendiagramm", htmlOutput(ns("plot_einstieg_pie")),
-                               shiny::downloadButton(ns("download_einstieg"), label = "",
-                                                     class = "butt",
-                                                     icon = shiny::icon("download"))),
-                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_einstieg")),
-                                                style = "font-size: 75%; width: 75%"),
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_beruf_arbeitsmarkt_einstieg_verlauf_ui("mod_beruf_arbeitsmarkt_einstieg_verlauf_ui_1")
+                               ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_einstieg_verlauf"))
+                               )
+
+
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_beruf_arbeitsmarkt_einstieg_vergleich_ui("mod_beruf_arbeitsmarkt_einstieg_vergleich_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_einstieg_vergleich"))
+                             )
+                    ),
+                    tabPanel("Datensatz", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                               .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
+                               ),
+                             shiny::mainPanel(
+                               div(DT::dataTableOutput(ns("data_table_einstieg")),
+                                   style = "font-size: 75%; width: 75%"),
                                shiny::downloadButton(ns("download_data_box1"), label = "",
                                                      class = "butt",
-                                                     icon = shiny::icon("download")))))
-    )),
+                                                     icon = shiny::icon("download")))
+                    )
+        ))),
     fluidRow(
       shinydashboard::box(
         title = "Box 3",
@@ -132,6 +163,14 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
     output$plot_einstieg_pie <-  renderUI({
       plot_einstieg_pie_react()
 
+    })
+
+    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
+      beruf_verlauf_single(data_arbeitsmarkt,r)
+    })
+
+    output$plot_einstieg_vergleich <- highcharter::renderHighchart({
+      beruf_einstieg_vergleich(data_arbeitsmarkt,r)
     })
 
     data_table_einstieg_react <- reactive({

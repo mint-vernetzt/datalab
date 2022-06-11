@@ -56,3 +56,33 @@ calc_arbeitsmarkt_males <- function(df) {
   return(df)
 
 }
+
+#' preprocess_beruf
+#'
+#' @description A fct function
+#'
+#' @return The return value, if any, from executing the function.
+#'
+#' @noRd
+
+calc_arbeitsmarkt_mint <- function(df) {
+
+  df_alle <- df %>% dplyr::filter(fachbereich == "Alle") %>%
+    dplyr::select(-fachbereich)
+
+  df_mint <- df %>% dplyr::filter(fachbereich == "MINT") %>%
+    dplyr::rename(wert_mint = wert) %>%
+    dplyr::select(-fachbereich)
+
+  df_andere <- df_alle %>% dplyr::left_join(df_mint) %>%
+    dplyr::mutate(wert = wert-wert_mint) %>%
+    dplyr::mutate(fachbereich = "Andere Berufe") %>%
+    dplyr::select(-wert_mint)
+
+  df_mint <- df_mint %>% dplyr::mutate(fachbereich = "MINT") %>%
+    dplyr::rename(wert = wert_mint)
+
+  df_return <- rbind(df_andere, df_mint)
+
+  return(df_return)
+}
