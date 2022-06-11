@@ -1287,7 +1287,6 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
 
 arbeitsmarkt_bl_vergleich <- function(df,r) {
 
-  browser()
   # load UI inputs from reactive value
   timerange <- r$date_beruf_arbeitsmarkt_bl_vergleich
 
