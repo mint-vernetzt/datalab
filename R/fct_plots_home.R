@@ -290,7 +290,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
   df <- rbind(df, df_sub)
 
-  df <- df %>% dplyr::filter(indikator %in% indikator_choice_1_gender)
+  df <- df %>% dplyr::filter(indikator %in% indikator_choice_1_gender) %>%
+    dplyr::arrange(anzeige_geschlecht)
 
   # create an if statement for the options of plotting 1, 2 or 3 graphs
   if(length(indikator_choice_1_gender) == 1) {
