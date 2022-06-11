@@ -1490,7 +1490,7 @@ kurse_map_gender <- function(df,r) {
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = "Anteil Frauen an MINT",
+      name = "Anteil",
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
@@ -1499,7 +1499,7 @@ kurse_map_gender <- function(df,r) {
       )
     ) %>%
       highcharter::hc_title(
-        text = paste0("Schülerinnen"),
+        text = paste0("Schülerinnen: Anteil an Belegungen in ", subjects),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1520,7 +1520,7 @@ kurse_map_gender <- function(df,r) {
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = "Anteil Frauen an MINT",
+      name = "Anteil",
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
@@ -1529,7 +1529,7 @@ kurse_map_gender <- function(df,r) {
       )
     ) %>%
       highcharter::hc_title(
-        text = paste0("Schüler"),
+        text = paste0("Schüler: Anteil an Belegungen in ", subjects),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
