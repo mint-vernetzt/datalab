@@ -494,11 +494,8 @@ kurse_mint_comparison <- function(df,r) {
 
   indikator_comparison <- r$indikator_comparison_subject
 
-
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
-
-  df <- df %>% dplyr::filter(region == state)
 
   # calculate new "Gesamt"
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
@@ -507,7 +504,6 @@ kurse_mint_comparison <- function(df,r) {
     dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
                        wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
 
-
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Grundkurse"), "wert"] <-  df %>%
     dplyr::filter(indikator == "Grundkurse") %>%
     dplyr::group_by(indikator, jahr) %>%
@@ -515,6 +511,10 @@ kurse_mint_comparison <- function(df,r) {
                        wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+  df <- prep_kurse_east_west(df)
+
+  df <- df %>% dplyr::filter(region == state)
 
   # aggregate to MINT
   df_sub <- share_mint_kurse(df)
@@ -554,27 +554,16 @@ kurse_mint_comparison <- function(df,r) {
 
   df <- df %>% dplyr::filter(indikator == indikator_comparison)
 
-
-  #
-  # x <- c("MINT","Mathematik", "Informatik", "Physik", "Chemie",
-  #        "Biologie", "andere Fächer", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
-  #        "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
-  #        "Sport", "Musik")
-
   x <- c("Musik", "Sport", "Religion, kath.", "Religion, ev.", "Ethik/Philosophie", "Kunst/Gestaltung/Werken",
          "Gesellschaftswissenschaften", "Fremdsprachen", "Deutsch", "andere Fächer (aggregiert)", "Biologie", "Chemie",
          "Physik","Informatik","Mathematik","MINT (aggregiert)")
-
 
   df <- df %>%
     dplyr::mutate(fachbereich =  factor(fachbereich, levels = x)) %>%
     dplyr::arrange(fachbereich)
 
   # plot
-
-  # plot
   a <- ifelse(df$fachbereich == "MINT (aggregiert)" | df$fachbereich == "andere Fächer (aggregiert)" , "#b16fab", "grey30")
-
 
   ggplot2::ggplot(df, ggplot2::aes(y=fachbereich, x=proportion)) +
     ggplot2::geom_bar(stat="identity", fill = "#154194") +

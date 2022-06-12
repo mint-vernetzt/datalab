@@ -90,6 +90,47 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
+        title = "Box 4",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Anforderungsvergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_arbeitsmarkt_waffle"))
+                             )
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf"))
+                             )
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_arbeitsmarkt_vergleich"))#,
+                               # shiny::downloadButton(ns("download_ranking"), label = "",
+                               #                       class = "butt",
+                               #                       icon = shiny::icon("download"))
+                             )
+                    )
+        ))),
+    fluidRow(
+      shinydashboard::box(
         title = "Box 5",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
@@ -289,6 +330,19 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
 
     output$data_table_einstieg <- DT::renderDT({
       data_table_einstieg_react()
+    })
+
+    # Box 4
+    output$plot_arbeitsmarkt_waffle <- renderPlot({
+      arbeitsmarkt_anforderungen(data_arbeitsmarkt, r)
+    })
+
+    output$plot_arbeitsmarkt_verlauf <- highcharter::renderHighchart({
+      arbeitsmarkt_anforderungen_verlauf(data_arbeitsmarkt, r)
+    })
+
+    output$plot_arbeitsmarkt_vergleich <- renderPlot({
+      arbeitsmarkt_anforderungen_vergleich(data_arbeitsmarkt, r)
     })
 
     # Box 5

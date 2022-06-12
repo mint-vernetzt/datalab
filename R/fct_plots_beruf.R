@@ -408,7 +408,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
       )
     ) %>%
       highcharter::hc_title(
-        text = paste0("Weibliche ", indikator_choice, title_help_sub),
+        text = paste0("Weibliche ", indikator_choice, "in MINT-Berufen", title_help_sub),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -438,7 +438,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
       )
     ) %>%
       highcharter::hc_title(
-        text = paste0("Männliche ", indikator_choice, title_help_sub),
+        text = paste0("Männliche ", indikator_choice, " in MINT-Berufen", title_help_sub),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1145,7 +1145,7 @@ arbeitsmarkt_bl <- function(df,r) {
       )
     ) %>%
       highcharter::hc_title(
-        text = paste0("Auszubildende: Anzeil an Beschäftigung", title_help_sub),
+        text = paste0("Auszubildende: Anteil an Beschäftigung", title_help_sub),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1175,7 +1175,7 @@ arbeitsmarkt_bl <- function(df,r) {
       )
     ) %>%
       highcharter::hc_title(
-        text = paste0("Beschäftigte: Anzeil an Beschäftigung", title_help_sub),
+        text = paste0("Beschäftigte: Anteil an Beschäftigung", title_help_sub),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1257,7 +1257,7 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Weibliche ", indikator_choice, " in MINT-Berufen",title_help),
+    highcharter::hc_title(text = paste0("MINT-Anteil", title_help),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1688,6 +1688,329 @@ arbeitsmarkt_anforderungen_vergleich_gender <- function(df, r) {
                                  "Relativer Anteil von Arbeitnehmerinnen in Ausbildung und Beschäftigung in ", states, " in ",timerange,
                                  "<br><br><br>"),
                   color = "") +
+    ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
+
+}
+
+#' A function to plot a waffle chart
+#'
+#' @description A function to create a waffle chart for the tab "Beruf"
+#'
+#' @return The return value is a waffle chart
+#' @param df The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_anforderungen <- function(df,r) {
+
+  timerange <- r$date_arbeitsmarkt_anforderungen
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(region == "Deutschland")
+
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+
+  # calculate new "Gesamt
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
+    dplyr::summarise(wert = sum(wert)) %>%
+    dplyr::mutate(anforderungsniveau = "Gesamt") %>%
+    dplyr::ungroup()
+
+  df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
+
+  df <- calc_arbeitsmarkt_mint(df)
+
+  df_new_gesamt <- df_new_gesamt %>%
+    dplyr::filter(fachbereich == "Alle") %>%
+    dplyr::rename(wert_gesamt = "wert") %>%
+    dplyr::select(-c("fachbereich", "anforderungsniveau"))
+
+  df <- df %>% dplyr::left_join(df_new_gesamt, by = c("region", "indikator", "jahr", "anzeige_geschlecht", "bereich")) %>%
+    dplyr::mutate(proportion = (wert/wert_gesamt)*100) %>%
+    dplyr::select(-c("wert", "wert_gesamt")) %>%
+    dplyr::filter(((fachbereich == "Andere Berufe") & (anforderungsniveau == "Gesamt")) | ((fachbereich != "Andere Berufe") & (anforderungsniveau != "Gesamt"))) %>%
+    dplyr::mutate(anforderungsniveau = dplyr::case_when(anforderungsniveau == "Gesamt" ~ "Andere Berufe",
+                                                        TRUE ~ anforderungsniveau))
+
+  # employed
+  df_employed <- df %>% dplyr::filter(indikator == "Beschäftigte")
+
+  df_employed <- setNames(round_preserve_sum(as.numeric(df_employed$proportion),0),
+                      df_employed$anforderungsniveau)
+
+  df_employed <- df_employed[order(factor(names(df_employed), levels = c('Fachkraft', 'Spezialist',
+                                                             'Experte',
+                                                             'Andere Berufe')))]
+
+  # trainee
+  df_trainee <- df %>% dplyr::filter(indikator == "Auszubildende")
+
+  df_trainee <- setNames(round_preserve_sum(as.numeric(df_trainee$proportion),0),
+                        df_trainee$anforderungsniveau)
+
+  df_trainee <- df_trainee[order(factor(names(df_trainee), levels = c('Fachkraft', 'Spezialist',
+                                                                   'Experte',
+                                                                   'Andere Berufe')))]
+
+  # create plot objects for waffle charts
+  waffle_employed <- waffle::waffle(df_employed, keep = FALSE) +
+    ggplot2::labs(
+      fill = "",
+      title = paste0("<span style='color:black;'>", "Beschäftigte: MINT und andere Berufe im Vergleich</span> <br>")) +
+    ggplot2::theme(plot.title = ggtext::element_markdown(),
+                   plot.subtitle = ggtext::element_markdown(),
+                   text = ggplot2::element_text(size = 14),
+                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                   legend.position = "right") +
+    ggplot2::scale_fill_manual(
+      values =  c("#ee7775",
+                  "#fcc433",
+                  "#00a87a",
+                  '#b1b5c3'),
+      limits = c('Fachkraft', 'Spezialist',
+                 'Experte',
+                 'Andere Berufe'),
+      na.value="#b1b5c3",
+      guide = ggplot2::guide_legend(reverse = TRUE),
+      labels = c(
+        paste0("Fachkraft",", ",df_employed[1], "%"),
+        paste0("Spezialist",", ",df_employed[2], "%"),
+        paste0("Experte",", ",df_employed[3], "%"),
+        paste0("Andere Berufe",", ",df_employed[4], "%"))) +
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+
+
+  waffle_trainee <- waffle::waffle(df_trainee, keep = FALSE) +
+    ggplot2::labs(
+      fill = "",
+      title = paste0("<span style='color:black;'>", "Auszubildende: MINT und andere Berufe im Vergleich</span> <br>")) +
+    ggplot2::theme(plot.title = ggtext::element_markdown(),
+                   plot.subtitle = ggtext::element_markdown(),
+                   text = ggplot2::element_text(size = 14),
+                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                   legend.position = "left")
+
+  # account for the possability that female has 0% share of "Experte
+  if (df_trainee[[3]] == 0) {
+
+    waffle_trainee <- waffle_trainee +
+      ggplot2::scale_fill_manual(
+        values =  c("#ee7775",
+                    "#fcc433",
+                    # "#00a87a",
+                    '#b1b5c3'),
+        limits = c('Fachkraft',
+                   'Spezialist',
+                   'Andere Berufe'),
+        guide = ggplot2::guide_legend(reverse = TRUE),
+        na.value="#b1b5c3",
+        labels = c(
+          paste0("Fachkraft",", ",df_trainee[1], "%"),
+          paste0("Spezialist",", ",df_trainee[2], "%"),
+          # paste0("Experte",", ",df_trainee[3], "%"),
+          paste0("Andere Berufe",", ",df_trainee[4], "%"))) +
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+
+  } else{
+
+    waffle_trainee <- waffle_trainee +
+      ggplot2::scale_fill_manual(
+        values =  c("#ee7775",
+                    "#fcc433",
+                    "#00a87a",
+                    '#b1b5c3'),
+        limits = c('Fachkraft', 'Spezialist',
+                   'Experte',
+                   'Andere Berufe'),
+        na.value="#b1b5c3",
+        guide = ggplot2::guide_legend(reverse = TRUE),
+        labels = c(
+          paste0("Fachkraft",", ",df_trainee[1], "%"),
+          paste0("Spezialist",", ",df_trainee[2], "%"),
+          paste0("Experte",", ",df_trainee[3], "%"),
+          paste0("Andere Berufe",", ",df_trainee[4], "%"))) +
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+
+  }
+
+  ggpubr::ggarrange(waffle_trainee, NULL ,waffle_employed, widths = c(1, 0.1, 1), nrow=1)
+
+}
+
+#' A function to plot time series
+#'
+#' @description A function to plot the time series
+#'
+#' @return The return value, if any, from executing the function.
+#' @param data The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_anforderungen_verlauf <- function(df,r) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_arbeitsmarkt_anforderungen_verlauf
+
+  states <- r$states_arbeitsmarkt_anforderungen_verlauf
+
+  indikator_choice <- r$indikator_arbeitsmarkt_anforderungen_verlauf
+
+  anforderung <- r$anforderungsniveau_arbeitsmarkt_anforderungen_verlauf
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  # remove
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+
+  df <- prep_arbeitsmarkt_east_west(df)
+
+  # calculate new "Gesamt
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
+    dplyr::summarise(wert = sum(wert)) %>%
+    dplyr::mutate(anforderungsniveau = "Gesamt") %>%
+    dplyr::ungroup()
+
+  df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
+
+  # df <- calc_arbeitsmarkt_mint(df)
+
+  df_new_gesamt <- df_new_gesamt %>%
+    dplyr::filter(fachbereich == "Alle") %>%
+    dplyr::rename(wert_gesamt = "wert") %>%
+    dplyr::select(-c("fachbereich", "anforderungsniveau"))
+
+  df <- df %>% dplyr::left_join(df_new_gesamt, by = c("region", "indikator", "jahr", "anzeige_geschlecht", "bereich")) %>%
+    dplyr::mutate(proportion = (wert/wert_gesamt)*100) %>%
+    dplyr::select(-c("wert", "wert_gesamt"))
+
+  df <- df %>% dplyr::filter(region == states)
+
+  df <- df %>% dplyr::filter(indikator == indikator_choice)
+
+  df <- df %>% dplyr::filter(fachbereich == "MINT")
+
+  df <- df %>% dplyr::filter(anforderungsniveau == anforderung)
+
+  if (anforderung == "Gesamt"){
+
+    title_help <- " insgesamt"
+
+  } else {
+
+    title_help <- paste0(" mit Anforderungsniveau ", anforderung)
+
+  }
+
+  # plot
+  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = anzeige_geschlecht)) %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_title(text = paste0("Arbeitnehmerinnen: ", title_help, " in ", states),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+}
+
+#' A function to plot a bar plot
+#'
+#' @description A function to create a bar plot for the "Beruf" tab
+#'
+#' @return The return value is a waffle chart
+#' @param df The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_anforderungen_vergleich <- function(df,r) {
+
+  timerange <- r$date_arbeitsmarkt_anforderungen_vergleich
+
+  states <- r$states_arbeitsmarkt_anforderungen_vergleich
+
+  indikator_choice <- r$indikator_arbeitsmarkt_anforderungen_vergleich
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange)
+
+  # remove
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+
+  df <- prep_arbeitsmarkt_east_west(df)
+
+  # calculate new "Gesamt
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
+    dplyr::summarise(wert = sum(wert)) %>%
+    dplyr::mutate(anforderungsniveau = "Gesamt") %>%
+    dplyr::ungroup()
+
+  df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
+
+  # df <- calc_arbeitsmarkt_mint(df)
+
+  df_new_gesamt <- df_new_gesamt %>%
+    dplyr::filter(fachbereich == "Alle") %>%
+    dplyr::rename(wert_gesamt = "wert") %>%
+    dplyr::select(-c("fachbereich", "anforderungsniveau"))
+
+  df <- df %>% dplyr::filter(region == states)
+
+  df <- df %>% dplyr::left_join(df_new_gesamt, by = c("region", "indikator", "jahr", "anzeige_geschlecht", "bereich")) %>%
+    dplyr::mutate(proportion = (wert/wert_gesamt)*100) %>%
+    dplyr::select(-c("wert", "wert_gesamt"))
+
+  df <- df %>% dplyr::filter(indikator == indikator_choice)
+
+  df <- df %>% dplyr::filter(fachbereich == "MINT")
+
+  reihenfolge <- c("Experte", "Spezialist", "Fachkraft", "Gesamt")
+
+  df <- df %>%
+    dplyr::mutate(anforderungsniveau =  factor(anforderungsniveau, levels = reihenfolge)) %>%
+    dplyr::arrange(anforderungsniveau)
+
+  # plot
+  a <- ifelse(df$anforderungsniveau == "Gesamt", "#b16fab", "grey30")
+
+  ggplot2::ggplot(df, ggplot2::aes(y=anforderungsniveau, x=proportion)) +
+    ggplot2::geom_bar(stat="identity", fill = "#154194") +
+    ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
+                       fontface = "bold") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.text.y = ggplot2::element_text(colour = a),
+      text = ggplot2::element_text(size = 14),
+      plot.title = ggtext::element_markdown(hjust = 0.5)) +
+    ggplot2::ylab("") + ggplot2::xlab("Anteil") +
+    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+                                 "Anteil der Anforderungsniveaus im Vergleich",
+                                 "<br><br><br>"),
+                  fill = "") +
+    ggplot2::scale_y_discrete(expand = c(0,0)) +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 
 }
