@@ -2182,6 +2182,8 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
   values <- values %>% dplyr::filter(region %in% states)
 
+  values <- values %>% dplyr::filter(anzeige_geschlecht == "Frauen")
+
   values$anzeige_geschlecht <- paste0(values$anzeige_geschlecht, " (", values$indikator, ")")
 
   # plot
@@ -2190,7 +2192,7 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil von Student*innen im Verlauf"),
+    highcharter::hc_title(text = paste0("Anteil von Studentinnen im Verlauf"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2243,6 +2245,8 @@ studienfaecher_ranking <- function(df,r, type) {
 
   df <- df %>% dplyr::filter(region != "Bayern")
 
+  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
   # include "Osten" und "Westen" in Dataframe
   df <- prep_studierende_east_west(df)
 
@@ -2265,27 +2269,34 @@ studienfaecher_ranking <- function(df,r, type) {
   }
 
   # aggregate all subjects to calculate proportion later
-  df <- df %>% dplyr::group_by(indikator, region, nur_lehramt, hochschulform) %>%
-    dplyr::mutate(props = sum(wert))
+  df_gesamt <- df %>% dplyr::group_by(region, anzeige_geschlecht, indikator, nur_lehramt, hochschulform, jahr) %>%
+    dplyr::mutate(wert_gesamt = sum(wert)) %>%
+    dplyr::filter(anzeige_geschlecht == "Gesamt") %>%
+    dplyr::distinct(region, indikator, nur_lehramt, hochschulform, jahr, wert_gesamt)
 
   # aggregate to MINT
   values_Mint <- df %>%
     dplyr::filter(fachbereich != "Alle restlichen Fächer") %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, hochschulform,
-                    nur_lehramt, props) %>%
+                    nur_lehramt) %>%
     dplyr::summarise(wert = sum(wert)) %>%
     dplyr::mutate(bereich = "Hochschule",
-                  fachbereich = "MINT (aggregiert)")
+                  fachbereich = "MINT (aggregiert)") %>%
+    dplyr::filter(anzeige_geschlecht == "Frauen")
 
-  df <- rbind(df, values_Mint)
+  einzelne_faecher <- df %>%
+    dplyr::filter(anzeige_geschlecht == "Frauen")
+
+  df <- rbind(values_Mint, einzelne_faecher)
 
   # # calculate proportion
-  df <- df %>% dplyr::group_by(fachbereich, indikator, hochschulform, region, anzeige_geschlecht) %>%
-    dplyr::summarize(proportion = wert/props) %>% dplyr::ungroup()
-
-  df$proportion <- df$proportion * 100
-
-  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
+  df <- df %>%
+    dplyr::left_join(df_gesamt, by = c("region", "indikator", "nur_lehramt",
+                                                   "hochschulform", "jahr")) %>%
+    dplyr::select(-"anzeige_geschlecht.y") %>%
+    dplyr::rename(anzeige_geschlecht = "anzeige_geschlecht.x") %>%
+    dplyr::mutate(proportion = (wert/wert_gesamt)*100) %>%
+    dplyr::select(-c("wert","wert_gesamt"))
 
   df <- df %>% dplyr::filter(region %in% states)
 

@@ -42,7 +42,7 @@ mod_home_start_ui <- function(id){
                       shiny::mainPanel(
                         htmlOutput(ns("plot_mint_rest_einstieg_1")))
                             ),
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Jahresvergleich", br(),
                         shiny::sidebarPanel(
                           mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")),
                         shiny::mainPanel(
@@ -68,7 +68,7 @@ mod_home_start_ui <- function(id){
                              shiny::mainPanel(
                                htmlOutput(ns("plot_pie_mint_gender")))
                             ),
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Jahresvergleich", br(),
                         shiny::sidebarPanel(
                           mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
                         shiny::mainPanel(

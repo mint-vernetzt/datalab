@@ -94,7 +94,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         width = 12,
         p("Karte"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Fächerbelegung", br(),
+                    tabPanel("Regionaler Vergleich", br(),
 
                              shiny::sidebarPanel(
                                mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1")
@@ -128,7 +128,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         width = 12,
         p("Karte"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Fächerbelegung", br(),
+                    tabPanel("Regionaler Vergleich", br(),
 
                              shiny::sidebarPanel(
                                mod_beruf_arbeitsmarkt_bl_gender_ui("mod_beruf_arbeitsmarkt_bl_gender_ui_1")

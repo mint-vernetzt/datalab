@@ -2174,6 +2174,7 @@ kurse_verlauf_single_bl <- function(df,r) {
 
   df$proportion <- df$proportion * 100
 
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
 
   df$anzeige_geschlecht <- paste0(df$anzeige_geschlecht, " (", df$indikator, ")")
 
@@ -2187,7 +2188,7 @@ kurse_verlauf_single_bl <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil von Schüler*innen in ", subjects_select ," in ", states),
+    highcharter::hc_title(text = paste0("Anteil von Schülerinnen in ", subjects_select ," in ", states),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%

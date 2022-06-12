@@ -205,7 +205,7 @@ mod_studium_studienzahl_ui <- function(id){
         width = 12,
         p("Karte"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Fächerbelegung", br(),
+                    tabPanel("Regionaler Vergleich", br(),
 
                              shiny::sidebarPanel(
                                mod_studium_studienzahl_bl_map_ui("mod_studium_studienzahl_bl_map")
@@ -239,7 +239,7 @@ mod_studium_studienzahl_ui <- function(id){
         width = 12,
         p("Karte"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Fächerbelegung", br(),
+                    tabPanel("Regionaler Vergleich", br(),
 
                              shiny::sidebarPanel(
                                mod_studium_studienzahl_bl_map_gender_ui("mod_studium_studienzahl_bl_map_gender")
