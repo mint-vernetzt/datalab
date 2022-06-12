@@ -50,7 +50,7 @@ kurse_einstieg_pie <- function(df,r) {
 
   plot_gk <- highcharter::hchart(df_gk, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
     highcharter::hc_tooltip(
-      pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+      pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Fächern für Grundkurse in ", timerange),
                           margin = 45,
                           align = "center",
@@ -63,7 +63,7 @@ kurse_einstieg_pie <- function(df,r) {
 
   plot_lk <- highcharter::hchart(df_lk, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
     highcharter::hc_tooltip(
-      pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+      pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Fächern für Leistungskurse in ", timerange),
                           margin = 45,
                           align = "center",
@@ -135,7 +135,6 @@ kurse_einstieg_pie_gender <- function(df,r) {
     dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
                        wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
 
-
   # aggregate the share of the MINT subjects vs Rest
   df <- share_mint_kurse(df)
 
@@ -156,7 +155,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
 
   plot_gk_mint <- highcharter::hchart(df_gk[df_gk$fachbereich == "MINT",], size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
-      pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+      pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von Frauen in MINT-Fächern in Grundkursen in ", timerange),
                           margin = 45,
                           align = "center",
@@ -171,7 +170,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
 
   plot_gk_rest <- highcharter::hchart(df_gk[df_gk$fachbereich == "andere Fächer",], size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
-      pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+      pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von Frauen an anderen Fächern in Grundkursen in ", timerange),
                           margin = 45,
                           align = "center",
@@ -186,7 +185,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
 
   plot_lk_mint <- highcharter::hchart(df_lk[df_gk$fachbereich == "MINT",], size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
-      pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+      pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von Frauen in MINT-Fächern in Leistungskursen in ", timerange),
                           margin = 45,
                           align = "center",
@@ -200,7 +199,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
 
   plot_lk_rest <- highcharter::hchart(df_lk[df_gk$fachbereich == "andere Fächer",], size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
-      pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+      pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von Frauen an anderen Fächern in Leistungskursen in ", timerange),
                           margin = 45,
                           align = "center",
@@ -2081,7 +2080,7 @@ kurse_comparison_gender <- function(df,r) {
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::xlab("") + ggplot2::ylab("Anteil") +
-    ggplot2::scale_fill_manual(values = c("#b16fab", "#154194")) +
+    ggplot2::scale_fill_manual(values = c("#154194", "#b16fab")) +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
                                  "Frauenanteil in MINT im Vergleich",
                                  "<br><br><br>"),

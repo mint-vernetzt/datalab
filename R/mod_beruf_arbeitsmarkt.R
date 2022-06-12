@@ -90,6 +90,47 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
+        title = "Box 3",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("MINT-Anteile", br(),
+
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_beruf_arbeitsmarkt_einstieg_gender_ui("mod_beruf_arbeitsmarkt_einstieg_gender_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_einstieg_pie_gender"))
+                             )
+                    ),
+                    tabPanel("Jahresvergleich", br(),
+
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui("mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender"))
+                             )
+
+
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui("mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_einstieg_vergleich_gender"))
+                               )
+                    )))),
+    fluidRow(
+      shinydashboard::box(
         title = "Box 4",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
@@ -306,12 +347,12 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
     ns <- session$ns
 
     # Box 2
-    plot_einstieg_pie_react <-  reactive({
+    plot_einstieg_pie_react <- reactive({
       arbeitsmarkt_einstieg_pie(data_arbeitsmarkt,r)
 
     })
 
-    output$plot_einstieg_pie <-  renderUI({
+    output$plot_einstieg_pie <- renderUI({
       plot_einstieg_pie_react()
 
     })
@@ -330,6 +371,19 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
 
     output$data_table_einstieg <- DT::renderDT({
       data_table_einstieg_react()
+    })
+
+    # Box 3
+    output$plot_einstieg_pie_gender <- renderUI({
+      arbeitsmarkt_einstieg_pie_gender(data_arbeitsmarkt,r)
+    })
+
+    output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
+      arbeitsmarkt_einstieg_verlauf_gender(data_arbeitsmarkt, r)
+    })
+
+    output$plot_einstieg_vergleich_gender <- renderPlot({
+      arbeitsmarkt_einstieg_vergleich_gender(data_arbeitsmarkt,r)
     })
 
     # Box 4
@@ -357,8 +411,6 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
     output$plot_arbeitsmarkt_vergleich_gender <- renderPlot({
       arbeitsmarkt_anforderungen_vergleich_gender(data_arbeitsmarkt, r)
     })
-
-
 
     # Box 6
     output$plot_arbeitsmarkt_bl <- renderUI({
