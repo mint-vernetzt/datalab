@@ -36,7 +36,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "Sport", "Musik"),
       selected = "MINT (aggregiert)",
     ),
-    p("Wähle ein Bundesland:"),
+    p("Wähle ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf_multiple"),
       choices = c("Berlin",
@@ -55,10 +55,12 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "Thüringen",
                   "Westen",
                   "Osten"),
-      selected = c("Hessen", "Berlin"),
-      multiple = TRUE
+      multiple = TRUE,
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
+      selected = c("Hessen", "Hamburg")
     )
-
   )
 }
 

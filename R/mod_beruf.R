@@ -48,6 +48,11 @@ mod_beruf_server <- function(id, data_arbeitsmarkt, r){
   mod_beruf_arbeitsmarkt_einstieg_verlauf_server("mod_beruf_arbeitsmarkt_einstieg_verlauf_ui_1", r)
   mod_beruf_arbeitsmarkt_einstieg_vergleich_server("mod_beruf_arbeitsmarkt_einstieg_vergleich_ui_1", r)
 
+  # Box 5
+  mod_beruf_arbeitsmarkt_anforderungen_gender_server("mod_beruf_arbeitsmarkt_anforderungen_gender_ui_1", r)
+  mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_server("mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui_1", r)
+  mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_server("mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui_1", r)
+
   # Box 6
   mod_beruf_arbeitsmarkt_bl_server("mod_beruf_arbeitsmarkt_bl_ui_1", r)
   mod_beruf_arbeitsmarkt_bl_verlauf_server("mod_beruf_arbeitsmarkt_bl_verlauf_ui_1", r)
