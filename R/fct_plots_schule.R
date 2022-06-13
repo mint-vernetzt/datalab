@@ -879,11 +879,11 @@ kurse_waffle <- function(df,r) {
   }
 
 
-  plot <- ggpubr::ggarrange(waffle_female, NULL ,waffle_male, widths = c(1, 0.1, 1), nrow=1)
+  ggpubr::ggarrange(waffle_female, NULL ,waffle_male, widths = c(1, 0.1, 1), nrow=1)
 
-  text <- c(
-    paste0("<span style='font-size:20.5pt; color:black'> Fächerbelegung im Vergleich"))
-  ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
+  # text <- c(
+  #   paste0("<span style='font-size:20.5pt; color:black'> Fächerbelegung im Vergleich"))
+  # ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
 }
 

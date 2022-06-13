@@ -14,7 +14,7 @@ mod_home_start_multiple_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_multiple"),
       label = NULL,
-      choices = c("2015", "2016", "2017",
+      choices = c("2013", "2014","2015", "2016", "2017",
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),

@@ -10,11 +10,11 @@
 mod_home_start_leaky_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wähle einen Zeitpunkt:"),
+    p("Wähle einen Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_leaky"),
       label = NULL,
-      choices = c(2015, 2016, 2017, 2018, 2019),
+      choices = c(2013,2014,2015, 2016, 2017, 2018, 2019),
     )
   )
 }

@@ -11,11 +11,11 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wähle einen Zeitpunkt:"),
+    p("Wähle einen Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_comparison_bl"),
       label = NULL,
-      choices = c("2010", "2011", "2012", "2014", "2015", "2016", "2017",
+      choices = c("2013","2014", "2015", "2016", "2017",
                   "2018","2019", "2020"),
       selected = "2020"),
 
