@@ -27,16 +27,16 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wähle ein oder mehrere Fächer:"),
+    p("Wähle ein Fach:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_multiple"),
       choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
                   "Biologie", "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
                   "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
                   "Sport", "Musik"),
-      selected = "Mathematik",
+      selected = "MINT (aggregiert)",
     ),
-    p("Wähle ein Bundesland:"),
+    p("Wähle ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf_multiple"),
       choices = c("Berlin",
@@ -55,10 +55,12 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "Thüringen",
                   "Westen",
                   "Osten"),
-      selected = c("Hessen", "Berlin"),
-      multiple = TRUE
+      multiple = TRUE,
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
+      selected = c("Hessen", "Hamburg")
     )
-
   )
 }
 

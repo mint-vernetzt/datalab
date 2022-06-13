@@ -52,7 +52,7 @@ home_einstieg_pie <- function(df,r) {
       "pie", highcharter::hcaes(x = fachbereich, y = proportion)
       ) %>%
     highcharter::hc_tooltip(
-               pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+               pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_colors(c("#154194", "#b16fab")) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT und allen ", title_help, " in 2020"),
                           margin = 45,
@@ -88,7 +88,7 @@ home_einstieg_pie <- function(df,r) {
     highcharter::hw_grid(
       highcharter::hchart(df_1, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_1, " in 2020"),
                               margin = 45,
@@ -103,7 +103,7 @@ home_einstieg_pie <- function(df,r) {
 
       highcharter::hchart(df_2, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_2, " in 2020"),
                               margin = 45,
@@ -145,7 +145,7 @@ home_einstieg_pie <- function(df,r) {
     highcharter::hw_grid(
       highcharter::hchart(df_1, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_1, " in 2020"),
                               margin = 45,
@@ -160,7 +160,7 @@ home_einstieg_pie <- function(df,r) {
 
       highcharter::hchart(df_2, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_2, " in 2020"),
                               margin = 45,
@@ -173,7 +173,7 @@ home_einstieg_pie <- function(df,r) {
 
       highcharter::hchart(df_3, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_3, " in 2020"),
                               margin = 45,
@@ -290,7 +290,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
   df <- rbind(df, df_sub)
 
-  df <- df %>% dplyr::filter(indikator %in% indikator_choice_1_gender)
+  df <- df %>% dplyr::filter(indikator %in% indikator_choice_1_gender) %>%
+    dplyr::arrange(anzeige_geschlecht)
 
   # create an if statement for the options of plotting 1, 2 or 3 graphs
   if(length(indikator_choice_1_gender) == 1) {
@@ -312,8 +313,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
           "pie", highcharter::hcaes(x = anzeige_geschlecht, y = wert)
         ) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194")) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender, " in 2020"),
                               margin = 45,
                               align = "center",
@@ -328,8 +329,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
                             "pie", highcharter::hcaes(x = anzeige_geschlecht, y = wert)
         ) %>%
           highcharter::hc_tooltip(
-            pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-          highcharter::hc_colors(c("#b16fab80", "#15419480")) %>%
+            pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+          highcharter::hc_colors(c("#154194","#b16fab")) %>%
           highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender, " in 2020"),
                                 margin = 45,
                                 align = "center",
@@ -375,8 +376,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
       highcharter::hchart(df_1_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194")) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender[1], " in 2020"),
                               margin = 45,
                               align = "center",
@@ -390,8 +391,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
       highcharter::hchart(df_2_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194")) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender[2], " in 2020"),
                               margin = 45,
                               align = "center",
@@ -405,8 +406,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
       highcharter::hchart(df_1_rest, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-        highcharter::hc_colors(c("#b16fab80", "#15419480")) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender[1], " in 2020"),
                               margin = 45,
                               align = "center",
@@ -419,8 +420,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
       highcharter::hchart(df_2_rest, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-        highcharter::hc_colors(c("#b16fab80", "#15419480")) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender[2], " in 2020"),
                               margin = 45,
                               align = "center",
@@ -472,8 +473,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
       highcharter::hchart(df_1_mint, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194")) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender[1], " in 2020"),
                               margin = 45,
                               align = "center",
@@ -487,8 +488,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
       highcharter::hchart(df_2_mint, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194")) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender[2], " in 2020"),
                               margin = 45,
                               align = "center",
@@ -501,8 +502,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
       highcharter::hchart(df_3_mint, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194")) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender[3], " in 2020"),
                               margin = 45,
                               align = "center",
@@ -516,8 +517,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
       highcharter::hchart(df_1_rest, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-        highcharter::hc_colors(c("#b16fab80", "#15419480")) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender[1], " in 2020"),
                               margin = 45,
                               align = "center",
@@ -530,8 +531,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
       highcharter::hchart(df_2_rest, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-        highcharter::hc_colors(c("#b16fab80", "#15419480")) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender[2], " in 2020"),
                               margin = 45,
                               align = "center",
@@ -543,8 +544,8 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
       highcharter::hchart(df_3_rest, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage:.1f}%')) %>%
-        highcharter::hc_colors(c("#b16fab80", "#15419480")) %>%
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#154194","#b16fab")) %>%
         highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender[3], " in 2020"),
                               margin = 45,
                               align = "center",
@@ -675,7 +676,7 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::xlab("") + ggplot2::ylab("Anteil") +
-    ggplot2::scale_fill_manual(values = c("#b16fab", "#154194")) +
+    ggplot2::scale_fill_manual(values = c("#154194","#b16fab")) +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
                                  "Frauenanteil in MINT im Vergleich",
                                  "<br><br><br>"),

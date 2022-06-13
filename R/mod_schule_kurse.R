@@ -47,7 +47,7 @@ mod_schule_kurse_ui <- function(id){
                       shiny::mainPanel(
                         htmlOutput(ns("plot_einstieg_pie")))
                             ),
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Jahresvergleich", br(),
                              shiny::sidebarPanel(
                                mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1")),
                              shiny::mainPanel(
@@ -77,11 +77,11 @@ mod_schule_kurse_ui <- function(id){
       ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box 2",
+        title = "Box 3",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Frauenanteile", br(),
+                    tabPanel("MINT-Anteile", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -92,7 +92,7 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                htmlOutput(ns("plot_pie_gender")))
                     ),
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Jahresvergleich", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -118,11 +118,11 @@ mod_schule_kurse_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box 2",
+        title = "Box 4",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Frauenanteile", br(),
+                    tabPanel("Fächervergleich", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -156,11 +156,11 @@ mod_schule_kurse_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box 2",
+        title = "Box 5",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Fächerbelegung", br(),
+                    tabPanel("Fächervergleich", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -192,11 +192,11 @@ mod_schule_kurse_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box 2",
+        title = "Box 6",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Fächerbelegung", br(),
+                    tabPanel("Regionaler Vergleich", br(),
 
                              shiny::sidebarPanel(
                                mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1")),
@@ -220,11 +220,11 @@ mod_schule_kurse_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box 2",
+        title = "Box 7",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Fächerbelegung", br(),
+                    tabPanel("Regionaler Vergleich", br(),
 
                              shiny::sidebarPanel(
                                mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1")),

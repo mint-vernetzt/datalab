@@ -1,4 +1,4 @@
-#' beruf_arbeitsmarkt_verlauf UI Function
+#' beruf_arbeitsmarkt_bl_verlauf UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,20 +7,21 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
+mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
+
     p("Wähle einen Zeitraum:"),
     shinyWidgets::sliderTextInput(
-      inputId = ns("date_arbeitsmarkt_verlauf"),
+      inputId = ns("date_beruf_arbeitsmarkt_bl_verlauf"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wähle den Status der Arbeitnehmer*innen:"),
+    p("Wähle eine Beschäftigungsform der Arbeitnehmer*innen:"),
     shinyWidgets::radioGroupButtons(
-      inputId = ns("indikator_arbeitsmarkt_verlauf"),
+      inputId = ns("indikator_beruf_arbeitsmarkt_bl_verlauf"),
       choices = c("Auszubildende", "Beschäftigte"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
@@ -28,18 +29,13 @@ mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
     ),
     p("Wähle ein Anforderungsniveau:"),
     shinyWidgets::pickerInput(
-      inputId = ns("anforderungsniveau_arbeitsmarkt_verlauf"),
-      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte")
-    ),
-    p("Wähle ob MINT oder alle anderen Fachbereiche dargestellt werden sollen:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("topic_arbeitsmarkt_verlauf"),
-      choices = c("MINT", "andere Berufszweige"),
-      selected = "MINT"
+      inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf"),
+      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte"),
+      selected = "Gesamt"
     ),
     p("Wähle ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
-      inputId = ns("states_arbeitsmarkt_verlauf"),
+      inputId = ns("states_beruf_arbeitsmarkt_bl_verlauf"),
       choices = c("Berlin",
                   "Brandenburg",
                   "Bremen",
@@ -54,8 +50,8 @@ mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen",
-                  "Osten",
-                  "Westen"),
+                  "Westen",
+                  "Osten"),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
@@ -65,38 +61,33 @@ mod_beruf_arbeitsmarkt_verlauf_ui <- function(id){
   )
 }
 
-#' beruf_arbeitsmarkt_verlauf Server Functions
+#' beruf_arbeitsmarkt_bl_verlauf Server Functions
 #'
 #' @noRd
-mod_beruf_arbeitsmarkt_verlauf_server <- function(id, r){
+mod_beruf_arbeitsmarkt_bl_verlauf_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$date_arbeitsmarkt_verlauf, {
-      r$date_arbeitsmarkt_verlauf <- input$date_arbeitsmarkt_verlauf
+    observeEvent(input$date_beruf_arbeitsmarkt_bl_verlauf, {
+      r$date_beruf_arbeitsmarkt_bl_verlauf <- input$date_beruf_arbeitsmarkt_bl_verlauf
     })
 
-    observeEvent(input$indikator_arbeitsmarkt_verlauf, {
-      r$indikator_arbeitsmarkt_verlauf <- input$indikator_arbeitsmarkt_verlauf
+    observeEvent(input$indikator_beruf_arbeitsmarkt_bl_verlauf, {
+      r$indikator_beruf_arbeitsmarkt_bl_verlauf <- input$indikator_beruf_arbeitsmarkt_bl_verlauf
     })
 
-    observeEvent(input$topic_arbeitsmarkt_verlauf, {
-      r$topic_arbeitsmarkt_verlauf <- input$topic_arbeitsmarkt_verlauf
+    observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf, {
+      r$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf <- input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf
     })
 
-    observeEvent(input$states_arbeitsmarkt_verlauf, {
-      r$states_arbeitsmarkt_verlauf <- input$states_arbeitsmarkt_verlauf
+    observeEvent(input$states_beruf_arbeitsmarkt_bl_verlauf, {
+      r$states_beruf_arbeitsmarkt_bl_verlauf <- input$states_beruf_arbeitsmarkt_bl_verlauf
     })
-
-    observeEvent(input$anforderungsniveau_arbeitsmarkt_verlauf, {
-      r$anforderungsniveau_arbeitsmarkt_verlauf <- input$anforderungsniveau_arbeitsmarkt_verlauf
-    })
-
 
   })
 }
 
 ## To be copied in the UI
-# mod_beruf_arbeitsmarkt_verlauf_ui("beruf_arbeitsmarkt_verlauf_1")
+# mod_beruf_arbeitsmarkt_bl_verlauf_ui("beruf_arbeitsmarkt_bl_verlauf_1")
 
 ## To be copied in the server
-# mod_beruf_arbeitsmarkt_verlauf_server("beruf_arbeitsmarkt_verlauf_1")
+# mod_beruf_arbeitsmarkt_bl_verlauf_server("beruf_arbeitsmarkt_bl_verlauf_1")
