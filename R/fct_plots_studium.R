@@ -2308,7 +2308,8 @@ studienfaecher_ranking <- function(df,r, type) {
   df <- df %>% dplyr::select(-hochschulform, -region, -anzeige_geschlecht)
 
   df2 <- tidyr::gather(df, group, value, -fachbereich) %>%
-    dplyr::filter(is.numeric(value))
+    dplyr::filter(group %in% c("Studienanfängerinnen", "Studierende")) %>%
+    dplyr::mutate(value = as.numeric(value))
 
   df2$fachbereich <- factor(df2$fachbereich, levels = levels(df$fachbereich))
 
