@@ -12,23 +12,29 @@ mod_home_start_ui <- function(id){
   tagList(
     fluidRow(
       shinydashboard::box(
-        title = "Box 1",
+        title = span("Willkommen im MINT-DataLab", style = "color:#154194; font-size: 50px"),
         width = 12,
       p(style = "text-align: justify; font-size = 16px",
-        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-        invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua"),
-      br(),
+        "Im MINT-DataLab bieten wir Ihnen statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
+        Ausbildung und Arbeitsmarkt in Deutschland. Wir laden Sie dazu ein, sich zu diesen Bereichen mithilfe unserer
+        interaktiven Grafiken zu informieren und inspirieren zu lassen."),
+       p(style = "text-align: justify; font-size = 16px",
+         tags$ul(
+           tags$li("Wie hoch ist der Anteil Studierenden an MINT-Studiengängen?"),
+           tags$li("Wie hoch ist der Anteil weiblicher Auszubildenden in MINT in Hessen?"),
+           tags$li("Wie hat sich der Anteil an Mädchen in Informatik-Unterricht in den letzten 5 Jahren verändert?")
+         )),
       p(style = "text-align: justify; font-size = 16px",
-        span("17%", style = "color:#b16fab; font-size: 50px"),
-        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-        sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-        aliquyam erat, sed diam voluptua."),
-      br(),
+        span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir Ihnen einen ersten Überblick. Auf den Unterseiten finden
+             Sie weiterführende Informationen zu den einzelnen Bereichen.")),
       p(style = "text-align: justify; font-size = 16px",
-        span("38%", style = "color:#f5adac; font-size: 50px"),
-        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-        sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-        aliquyam erat, sed diam voluptua.")
+        span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
+             Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
+             der Zeit integriert. (Button: weitere Informationen: Reiter: Quellen)")),
+      p(style = "text-align: justify; font-size = 16px",
+        span("Haben Sie ", tags$b(span("Anregungen oder Wünsche", style = "color:#b16fab")), " an weitere Datensätze oder Darstellungen,
+             freuen wir uns über Ihr Feedback (Link zu Umfrage ). Für Fragen steht Ihnen Antonia Kröger gerne
+             zur Verfügung."))
       )),
     fluidRow(
       shinydashboard::box(
