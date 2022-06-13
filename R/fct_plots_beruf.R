@@ -408,7 +408,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
       )
     ) %>%
       highcharter::hc_title(
-        text = paste0("Weibliche ", indikator_choice, "in MINT-Berufen", title_help_sub),
+        text = paste0("Weibliche ", indikator_choice, " in MINT-Berufen", title_help_sub),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")

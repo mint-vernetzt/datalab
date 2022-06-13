@@ -278,64 +278,64 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                plotOutput(ns("plot_arbeitsmarkt_bl_gender_vergleich"))
                              )
                     )
-        ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Box 3",
-        width = 12,
-        p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-        shiny::sidebarPanel(
-          mod_beruf_arbeitsmarkt_multiple_ui("mod_beruf_arbeitsmarkt_multiple_ui_1")),
-        shiny::mainPanel(
-          tabsetPanel(type = "tabs",
-                      tabPanel("Anteil", br(), plotOutput(ns("plot_waffle")),
-                               shiny::downloadButton(ns("download_waffle"), label = "",
-                                                     class = "butt",
-                                                     icon = shiny::icon("download"))),
-                      tabPanel("Absolut", br(), plotOutput(ns("plot_absolut")),
-                               shiny::downloadButton(ns("download_absolut"), label = "",
-                                                     class = "butt",
-                                                     icon = shiny::icon("download"))),
-                      tabPanel("Karte", br(), #htmlOutput(ns("plot_map_arbeitsmarkt"))
-                               ),
-                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
-                                                style = "font-size: 75%; width: 75%"),
-                               shiny::downloadButton(ns("download_data_box3"), label = "",
-                                                     class = "butt",
-                                                     icon = shiny::icon("download")))),
-          br(),br(),
-
-        ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Box 4",
-        width = 12,
-        p("Lorem ipsum dolor sit amet"),
-        shiny::sidebarPanel(
-          mod_beruf_arbeitsmarkt_verlauf_bl_ui("mod_beruf_arbeitsmarkt_verlauf_bl_ui_1")),
-        shiny::mainPanel(
-
-                    highcharter::highchartOutput(ns("plot_verlauf_arbeitsmarkt_bl"))
-          ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Box 5",
-        width = 12,
-        p("Lorem ipsum dolor sit amet"),
-        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-        shiny::sidebarPanel(
-          mod_beruf_arbeitsmarkt_verlauf_ui("mod_beruf_arbeitsmarkt_verlauf_ui_1")),
-        shiny::mainPanel(
-          tabsetPanel(type = "tabs",
-                      tabPanel("Verlauf",br(), highcharter::highchartOutput(ns("plot_verlauf_arbeitsmarkt"))),
-                      tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
-                                                style = "font-size: 75%; width: 75%"),
-                               shiny::downloadButton(ns("download_data_box5"), label = "",
-                                                     class = "butt",
-                                                     icon = shiny::icon("download")))))))
+        )))
+    # fluidRow(
+    #   shinydashboard::box(
+    #     title = "Box 3",
+    #     width = 12,
+    #     p("Lorem ipsum dolor sit amet"),
+    #     tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+    #                          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+    #     shiny::sidebarPanel(
+    #       mod_beruf_arbeitsmarkt_multiple_ui("mod_beruf_arbeitsmarkt_multiple_ui_1")),
+    #     shiny::mainPanel(
+    #       tabsetPanel(type = "tabs",
+    #                   tabPanel("Anteil", br(), plotOutput(ns("plot_waffle")),
+    #                            shiny::downloadButton(ns("download_waffle"), label = "",
+    #                                                  class = "butt",
+    #                                                  icon = shiny::icon("download"))),
+    #                   tabPanel("Absolut", br(), plotOutput(ns("plot_absolut")),
+    #                            shiny::downloadButton(ns("download_absolut"), label = "",
+    #                                                  class = "butt",
+    #                                                  icon = shiny::icon("download"))),
+    #                   tabPanel("Karte", br(), #htmlOutput(ns("plot_map_arbeitsmarkt"))
+    #                            ),
+    #                   tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_mix")),
+    #                                             style = "font-size: 75%; width: 75%"),
+    #                            shiny::downloadButton(ns("download_data_box3"), label = "",
+    #                                                  class = "butt",
+    #                                                  icon = shiny::icon("download")))),
+    #       br(),br(),
+    #
+    #     ))),
+    # fluidRow(
+    #   shinydashboard::box(
+    #     title = "Box 4",
+    #     width = 12,
+    #     p("Lorem ipsum dolor sit amet"),
+    #     shiny::sidebarPanel(
+    #       mod_beruf_arbeitsmarkt_verlauf_bl_ui("mod_beruf_arbeitsmarkt_verlauf_bl_ui_1")),
+    #     shiny::mainPanel(
+    #
+    #                 highcharter::highchartOutput(ns("plot_verlauf_arbeitsmarkt_bl"))
+    #       ))),
+    # fluidRow(
+    #   shinydashboard::box(
+    #     title = "Box 5",
+    #     width = 12,
+    #     p("Lorem ipsum dolor sit amet"),
+    #     tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+    #                          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+    #     shiny::sidebarPanel(
+    #       mod_beruf_arbeitsmarkt_verlauf_ui("mod_beruf_arbeitsmarkt_verlauf_ui_1")),
+    #     shiny::mainPanel(
+    #       tabsetPanel(type = "tabs",
+    #                   tabPanel("Verlauf",br(), highcharter::highchartOutput(ns("plot_verlauf_arbeitsmarkt"))),
+    #                   tabPanel("Datensatz", div(DT::dataTableOutput(ns("data_table_verlauf")),
+    #                                             style = "font-size: 75%; width: 75%"),
+    #                            shiny::downloadButton(ns("download_data_box5"), label = "",
+    #                                                  class = "butt",
+    #                                                  icon = shiny::icon("download")))))))
   )
 }
 
