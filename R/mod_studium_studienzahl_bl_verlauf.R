@@ -46,7 +46,7 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
     p("Wähle den Status der Student*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_studium_studienzahl_bl_verlauf"),
-      choices = c("Studierende", "Studienanfänger"),
+      choices = c("Studienanfänger", "Studierende"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
@@ -70,7 +70,7 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
                   "Thüringen",
                   "Westen",
                   "Osten"),
-      selected = c("Hessen", "Berlin"),
+      selected = c("Hessen", "Hamburg"),
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),

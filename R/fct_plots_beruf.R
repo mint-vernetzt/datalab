@@ -1501,7 +1501,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
   # text <- c(
   #   paste0("<span style='font-size:20.5pt; color:black'> Anforderungslevel in MINT-Berufen im Vergleich"))
 
-  ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
+  # ggpubr::annotate_figure(plot, gridtext::richtext_grob(text = text))
 
 }
 

@@ -21,7 +21,7 @@ mod_studium_studienzahl_verlauf_ui <- function(id){
     p("Wähle den Status der Student*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_studierende_verlauf"),
-      choices = c("Studierende", "Studienanfänger"),
+      choices = c("Studienanfänger", "Studierende"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
