@@ -24,24 +24,20 @@ mod_home_ui <- function(id){
 mod_home_server <- function(id, data_zentral, data_ausbildungsvertraege, r){
 
 
-  r <- reactiveValues(indikator_start_einstieg_1 = NULL,
-                      date_start_comparison = NULL,
-                      date_start_comparison_mint = NULL,
-                      date_start_comparison_mint_gender = NULL,
-                      indikator_start_einstieg_1_gender = NULL,
-                      indikator_start_comparison = NULL,
-                      date_start_leaky = NULL,
-                      date_start_multiple = NULL,
-                      indikator_start_multiple_1 = NULL)
+  r <- reactiveValues()
 
-  mod_home_start_einstieg_server("mod_home_start_einstieg_ui_1", r)
-  mod_home_start_einstieg_gender_server("mod_home_start_einstieg_gender_ui_1", r)
-  mod_home_start_multiple_server("mod_home_start_multiple_ui_1", r)
-  #mod_home_start_leaky_server("mod_home_start_leaky_ui_1", r)
-  mod_home_start_comparison_server("mod_home_start_comparison_ui_1", r)
-  mod_home_start_comparison_mint_server("mod_home_start_comparison_mint_ui_1", r)
-  mod_home_start_comparison_mint_gender_server("mod_home_start_comparison_mint_gender_ui_1", r)
+  # Home
   mod_home_start_server("mod_home_start_ui_1", data_zentral, data_ausbildungsvertraege, r)
+
+  # Box 2
+  mod_home_start_einstieg_server("mod_home_start_einstieg_ui_1", r)
+  mod_home_start_multiple_server("mod_home_start_multiple_ui_1", r)
+  mod_home_start_comparison_mint_server("mod_home_start_comparison_mint_ui_1", r)
+
+  # Box 3
+  mod_home_start_einstieg_gender_server("mod_home_start_einstieg_gender_ui_1", r)
+  mod_home_start_comparison_server("mod_home_start_comparison_ui_1", r)
+  mod_home_start_comparison_mint_gender_server("mod_home_start_comparison_mint_gender_ui_1", r)
 
 }
 

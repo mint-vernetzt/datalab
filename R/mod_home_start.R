@@ -32,7 +32,7 @@ mod_home_start_ui <- function(id){
       )),
     fluidRow(
       shinydashboard::box(
-        title = "Box 1",
+        title = "Box 2",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
@@ -58,7 +58,7 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Box 2",
+        title = "Box 3",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
@@ -92,17 +92,9 @@ mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-
-    output$plot_verlauf_mint <- highcharter::renderHighchart({
-      home_comparison_line(data_zentral,r)
-    })
-
+    # Box 2
     output$plot_mint_rest_einstieg_1 <- renderUI({
       home_einstieg_pie(data_zentral,r)
-    })
-
-    output$plot_comparison_gender <- renderPlot({
-      home_stacked_comparison_gender(data_zentral, data_ausbildungsvertraege, r)
     })
 
     output$plot_mint_1 <- highcharter::renderHighchart({
@@ -113,10 +105,18 @@ mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r
       home_stacked_comparison_mint(data_zentral, r)
     })
 
+    # Box 3
     output$plot_pie_mint_gender <- renderUI({
       home_einstieg_pie_gender(data_zentral, data_ausbildungsvertraege, r)
     })
 
+    output$plot_verlauf_mint <- highcharter::renderHighchart({
+      home_comparison_line(data_zentral,r)
+    })
+
+    output$plot_comparison_gender <- renderPlot({
+      home_stacked_comparison_gender(data_zentral, data_ausbildungsvertraege, r)
+    })
 
   })
 }
