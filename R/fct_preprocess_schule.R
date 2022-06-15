@@ -102,14 +102,6 @@ prep_kurse_east_west <- function(df, type = "no_subjects") {
 
 share_mint_kurse <- function(df){
 
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                      "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
   # combine subjects to get numbers on share of MINT
   subjects <- c("Mathematik", "Informatik",  "Biologie", "Chemie",
                 "Physik")

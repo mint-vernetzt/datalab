@@ -115,12 +115,6 @@ kurse_einstieg_pie_gender <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  # drop Überkategorien
-  subjects_drop <- c("Naturwissenschaften", "Gesellschaftswissenschaften",
-                     "Fremdsprachen")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
   # calcualte the new value for "Gesamt"
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
     dplyr::filter(indikator == "Leistungskurse") %>%
@@ -257,11 +251,6 @@ data_einstieg_kurse <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  subjects_drop <- c("Naturwissenschaften", "Gesellschaftswissenschaften",
-                     "Fremdsprachen")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
     dplyr::filter(indikator == "Leistungskurse") %>%
     dplyr::group_by(indikator, jahr) %>%
@@ -321,25 +310,29 @@ kurse_waffle_mint <- function(df,r) {
     dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
                        wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
 
-
   # combine subjects to get numbers on share of MINT
   # make a function out of it
   subjects_not <- c("Mathematik", "Informatik",  "Biologie", "Chemie",
-                "Physik", "andere naturwiss.-technische Fächer", "Naturwissenschaften", "Fremdsprachen", "Gesellschaftswissenschaften")
+                "Physik")
 
+  values_natwi <- df %>%
+    dplyr::filter(fachbereich %in% c("Biologie", "Chemie", "Biologie")) %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
+    dplyr::summarise(wert = sum(wert)) %>%
+    dplyr::mutate(fachbereich = "Naturwissenschaften") %>%
+    dplyr::ungroup()
 
   # aggregate all other values to "Rest"
   values_andere <- df %>%
     dplyr::filter(fachbereich %!in% subjects_not, fachbereich != "Alle Fächer") %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert))
+    dplyr::summarise(wert = sum(wert)) %>%
+    dplyr::mutate(fachbereich = "andere Fächer") %>%
+    dplyr::ungroup()
 
-  values_andere$fachbereich <- "andere Fächer"
-
-  df <- rbind(df, values_andere)
+  df <- rbind(df, values_andere, values_natwi)
 
   df <- df %>% dplyr::filter(fachbereich %in% c("Mathematik", "Informatik", "Naturwissenschaften", "andere Fächer"))
-
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
@@ -515,45 +508,33 @@ kurse_mint_comparison <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == state)
 
+  df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt",
+                                    fachbereich == "Alle Fächer") %>%
+    dplyr::rename(wert_gesamt = "wert")
+
   # aggregate to MINT
   df_sub <- share_mint_kurse(df)
 
   df_sub <- df_sub[,colnames(df)]
 
-  # aggregate all subjects to calculate proportion later
-  df_sub <- df_sub %>% dplyr::group_by(indikator) %>%
-    dplyr::mutate(props = sum(wert))
-
   df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
 
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                     "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen", "Alle Fächer")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
-  # aggregate all subjects to calculate proportion later
-  df <- df %>% dplyr::group_by(indikator) %>%
-    dplyr::mutate(props = sum(wert))
-
-
   df <- rbind(df, df_sub)
 
   # calculate proportion
-  df <- df %>% dplyr::group_by(fachbereich, indikator) %>%
-    dplyr::summarize(proportion = wert/props)
-
-
-  df$proportion <- df$proportion * 100
-
+  df <- df %>% dplyr::left_join(df_gesamt, by = c("jahr", "region", "indikator",
+                                                  "bereich")) %>%
+    dplyr::rename(anzeige_geschlecht = "anzeige_geschlecht.x",
+                  fachbereich = "fachbereich.x") %>%
+    dplyr::select(-c("anzeige_geschlecht.y", "fachbereich.y")) %>%
+    dplyr::filter(fachbereich != "Alle Fächer") %>%
+    dplyr::mutate(proportion = (wert/wert_gesamt)*100)
 
   df <- df %>% dplyr::filter(indikator == indikator_comparison)
 
-  x <- c("Musik", "Sport", "Religion, kath.", "Religion, ev.", "Ethik/Philosophie", "Kunst/Gestaltung/Werken",
+  x <- c("Sport", "Religion/Ethik", "Musik/Kunst",
          "Gesellschaftswissenschaften", "Fremdsprachen", "Deutsch", "andere Fächer (aggregiert)", "Biologie", "Chemie",
          "Physik","Informatik","Mathematik","MINT (aggregiert)")
 
@@ -665,15 +646,6 @@ kurse_mint_comparison_bl <- function(df,r) {
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
 
 
-
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                     "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen", "Alle Fächer")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
   # aggregate all subjects to calculate proportion later
   df <- df %>% dplyr::group_by(region, indikator) %>%
     dplyr::mutate(props = sum(wert))
@@ -736,18 +708,24 @@ kurse_waffle <- function(df,r) {
   # combine subjects to get numbers on share of MINT
   # make a function out of it
   subjects_not <- c("Mathematik", "Informatik",  "Biologie", "Chemie",
-                    "Physik", "andere naturwiss.-technische Fächer", "Naturwissenschaften", "Fremdsprachen", "Gesellschaftswissenschaften")
+                    "Physik")
 
+  values_natwi <- df %>%
+    dplyr::filter(fachbereich %in% c("Biologie", "Chemie", "Biologie")) %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
+    dplyr::summarise(wert = sum(wert)) %>%
+    dplyr::mutate(fachbereich = "Naturwissenschaften") %>%
+    dplyr::ungroup()
 
   # aggregate all other values to "Rest"
   values_andere <- df %>%
     dplyr::filter(fachbereich %!in% subjects_not, fachbereich != "Alle Fächer") %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert))
+    dplyr::summarise(wert = sum(wert)) %>%
+    dplyr::mutate(fachbereich = "andere Fächer") %>%
+    dplyr::ungroup()
 
-  values_andere$fachbereich <- "andere Fächer"
-
-  df <- rbind(df, values_andere)
+  df <- rbind(df, values_andere, values_natwi)
 
   df <- df %>% dplyr::filter(fachbereich %in% c("Mathematik", "Informatik", "Naturwissenschaften", "andere Fächer"))
 
@@ -977,16 +955,6 @@ kurse_ranking <- function(df,r, type) {
   # include "Osten" und "Westen" in Dataframe
   df <- prep_kurse_east_west(df)
 
-
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                     "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen", "Alle Fächer")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
-
   # calcualte the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
     dplyr::group_by(region, fachbereich, indikator, jahr) %>%
@@ -1091,14 +1059,6 @@ kurse_ranking_gender <- function(df,r, type) {
 
   df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                     "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen", "Alle Fächer")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
 
   # calcualte the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -1187,17 +1147,6 @@ kurse_ranking_bl <- function(df,r, type) {
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
   df <- df %>% dplyr::filter(region != "Bayern")
-
-
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                     "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen", "Alle Fächer")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
-
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
 
@@ -1296,15 +1245,6 @@ kurse_map <- function(df,r) {
   df_sub <- df_sub %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
     dplyr::mutate(wert_sum = sum(props))
-
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                     "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen", "Alle Fächer")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
 
   # calculate the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -1440,15 +1380,6 @@ kurse_map_gender <- function(df,r) {
     dplyr::group_by(region, fachbereich, indikator, jahr) %>%
     dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
                     wert[anzeige_geschlecht == "Männer"])
-
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                     "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen", "Alle Fächer")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
 
   # calculate the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -1639,15 +1570,6 @@ kurse_verlauf <- function(df,r) {
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
 
   df_sub <- df_sub[,colnames(df)]
-
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                     "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen", "Alle Fächer")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
 
   df <- rbind(df, df_sub)
 
@@ -2134,15 +2056,6 @@ kurse_verlauf_single_bl <- function(df,r) {
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
 
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                     "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen", "Alle Fächer")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
-
   # calcualte the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
       dplyr::group_by(region, fachbereich, indikator, jahr) %>%
@@ -2248,15 +2161,6 @@ kurse_verlauf_multiple_bl <- function(df,r) {
   df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
-
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                     "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen", "Alle Fächer")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
 
   # calculate the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -2378,15 +2282,6 @@ kurse_verlauf_subjects_bl <- function(df,r) {
   df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
-
-  # drop
-  subjects_drop <- c("Englisch", "Französisch", "andere moderne Fremdsprachen", "Naturwissenschaften",
-                     "andere naturwiss.-technische Fächer", "Erdkunde", "Geschichte", "Wirtschaft/Verwaltung/Recht",
-                     "Sozialkunde/Gesellschaftslehre/Politik", "Psychologie, Pädagogik", "Sonstige Fächer",
-                     "Latein und andere antike Sprachen", "Alle Fächer")
-
-  df <- df[!(df$fachbereich %in% subjects_drop),]
-
 
   # calculate the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
