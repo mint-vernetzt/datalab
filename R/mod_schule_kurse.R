@@ -183,10 +183,7 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_ranking_2")),
-                               shiny::downloadButton(ns("download_ranking"), label = "",
-                                                     class = "butt",
-                                                     icon = shiny::icon("download"))
+                               plotOutput(ns("plot_ranking_2"))
                              )
                   )
         ))),
@@ -248,11 +245,8 @@ mod_schule_kurse_ui <- function(id){
                             shiny::sidebarPanel(
                               mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1")),
                             shiny::mainPanel(
-                              plotOutput(ns("plot_ranking_gender")),
-                              # shiny::downloadButton(ns("download_ranking_gender"), label = "",
-                              #                       class = "butt",
-                              #                       icon = shiny::icon("download"))
-                            )
+                              plotOutput(ns("plot_ranking_gender"))
+                              )
 
                   )
         )))
@@ -266,64 +260,9 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    # Box 2
     output$plot_einstieg_pie <- renderUI({
       kurse_einstieg_pie(data_kurse,r)
-    })
-
-    data_table_einstieg_react <- reactive({
-      data_einstieg_kurse(data_kurse, r)
-    })
-
-    output$data_table_einstieg <- DT::renderDT({
-      data_table_einstieg_react()
-    })
-
-    plot_waffle_react <- reactive({
-      kurse_waffle(data_kurse,r)
-    })
-
-    output$plot_waffle <- renderPlot({
-      plot_waffle_react()
-    })
-
-    plot_absolut_react <- reactive({
-      kurse_absolut(data_kurse,r)
-    })
-
-    output$plot_absolut <- renderPlot({
-      plot_absolut_react()
-    })
-
-    plot_ranking_react <- reactive({
-      kurse_ranking(data_kurse,r, type="other")
-    })
-
-    output$plot_ranking_2 <- renderPlot({
-      plot_ranking_react()
-    })
-
-    output$plot_map_kurse <- renderUI({
-      kurse_map(data_kurse,r)
-    })
-
-    output$plot_map_kurse_gender <- renderUI({
-      kurse_map_gender(data_kurse,r)
-    })
-
-    output$plot_verlauf_kurse <- highcharter::renderHighchart({
-      kurse_verlauf(data_kurse,r)
-    })
-
-    output$plot_verlauf_multiple <- highcharter::renderHighchart({
-      kurse_verlauf_multiple_bl(data_kurse,r)
-    })
-
-    output$plot_verlauf_kurse_bl <- highcharter::renderHighchart({
-      kurse_verlauf_single_bl(data_kurse,r)
-    })
-
-    output$plot_verlauf_kurse_bl_subjects <- highcharter::renderHighchart({
-      kurse_verlauf_subjects_bl(data_kurse,r)
     })
 
     output$plot_einstieg_verlauf <- highcharter::renderHighchart({
@@ -334,6 +273,19 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
       kurse_einstieg_comparison(data_kurse,r)
     })
 
+    data_table_einstieg_react <- reactive({
+      data_einstieg_kurse(data_kurse, r)
+    })
+
+    output$data_table_einstieg <- DT::renderDT({
+      data_table_einstieg_react()
+    })
+
+    # Box 3
+    output$plot_pie_gender <- renderUI({
+      kurse_einstieg_pie_gender(data_kurse,r)
+    })
+
     output$plot_verlauf_gender <- highcharter::renderHighchart({
       kurse_verlauf_gender(data_kurse,r)
     })
@@ -342,90 +294,67 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
       kurse_comparison_gender(data_kurse,r)
     })
 
-    output$plot_ranking_gender <- renderPlot({
-      kurse_ranking_gender(data_kurse,r)
-    })
-
-
+    # Box 4
     output$plot_waffle_mint <- renderPlot({
       kurse_waffle_mint(data_kurse,r)
+    })
+
+    output$plot_verlauf_kurse_bl_subjects <- highcharter::renderHighchart({
+      kurse_verlauf_subjects_bl(data_kurse,r)
     })
 
     output$plot_comparison_subjects <- renderPlot({
       kurse_mint_comparison(data_kurse,r)
     })
 
+    # Box 5
+    plot_waffle_react <- reactive({
+      kurse_waffle(data_kurse,r)
+    })
+
+    output$plot_waffle <- renderPlot({
+      plot_waffle_react()
+    })
+
+    output$plot_verlauf_kurse_bl <- highcharter::renderHighchart({
+      kurse_verlauf_single_bl(data_kurse,r)
+    })
+
+    plot_ranking_react <- reactive({
+      kurse_ranking(data_kurse,r, type="other")
+    })
+
+    output$plot_ranking_2 <- renderPlot({
+      plot_ranking_react()
+    })
+
+    # Box 6
+    output$plot_map_kurse <- renderUI({
+      kurse_map(data_kurse,r)
+    })
+
+    output$plot_verlauf_multiple <- highcharter::renderHighchart({
+      kurse_verlauf_multiple_bl(data_kurse,r)
+    })
+
     output$plot_comparison_bl <- renderPlot({
       kurse_mint_comparison_bl(data_kurse,r)
     })
 
-    output$plot_pie_gender <- renderUI({
-      kurse_einstieg_pie_gender(data_kurse,r)
+    # Box 7
+    output$plot_map_kurse_gender <- renderUI({
+      kurse_map_gender(data_kurse,r)
     })
 
-
-    data_table_mix_react <- reactive({
-      data_mix_kurse(data_kurse, r)
+    output$plot_verlauf_kurse <- highcharter::renderHighchart({
+      kurse_verlauf(data_kurse,r)
     })
 
-    output$data_table_mix <- DT::renderDT({
-      data_table_mix_react()
+    output$plot_ranking_gender <- renderPlot({
+      kurse_ranking_gender(data_kurse,r)
     })
 
-    data_table_verlauf_react <- reactive({
-      data_verlauf_kurse(data_kurse, r)
-    })
-
-    output$data_table_verlauf <- DT::renderDT({
-      data_table_verlauf_react()
-    })
-
-
-    # save histogram using downloadHandler and plot output type
-    output$download_waffle <- shiny::downloadHandler(
-      filename = function() {
-        paste("plot_kurse", "png", sep = ".")
-      },
-      content = function(file){
-        ggplot2::ggsave(file, plot = plot_waffle_react(), device = "png",
-                        dpi = 300, width = 10, height = 6)
-      }
-    )
-
-    # save histogram using downloadHandler and plot output type
-    output$download_absolut <- shiny::downloadHandler(
-      filename = function() {
-        paste("plot_kurse", "png", sep = ".")
-      },
-      content = function(file){
-        ggplot2::ggsave(file, plot = plot_absolut_react(), device = "png",
-                        dpi = 300, width = 10, height = 6)
-      }
-    )
-
-
-    output$download_ranking <- shiny::downloadHandler(
-      filename = function() {
-        paste("plot_kurse", "png", sep = ".")
-      },
-      content = function(file){
-        ggplot2::ggsave(file, plot = plot_ranking_react(), device = "png",
-                        dpi = 300, width = 10, height = 6)
-      }
-    )
-
-
-    # save histogram using downloadHandler and plot output type
-    output$download_data_box3 <- shiny::downloadHandler(
-      filename = function() {
-        paste("data_kurse", "csv", sep = ".")
-      },
-      content = function(file){
-        write.csv(data_table_mix_react(), file)
-      }
-    )
-
-    # save histogram using downloadHandler and plot output type
+    # downloader
     output$download_data_box1 <- shiny::downloadHandler(
       filename = function() {
         paste("data_kurse", "csv", sep = ".")
@@ -435,14 +364,6 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
       }
     )
 
-    output$download_data_box7 <- shiny::downloadHandler(
-      filename = function() {
-        paste("data_kurse", "csv", sep = ".")
-      },
-      content = function(file){
-        write.csv(data_table_verlauf_react(), file)
-      }
-    )
   })
 }
 
