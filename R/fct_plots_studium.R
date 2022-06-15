@@ -1796,11 +1796,6 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
   #filter
   df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
 
-  # rename
-  df[df$fachbereich == "Mathe", "fachbereich"] <- "Mathematik"
-  df[df$fachbereich == "Ingenieur", "fachbereich"] <- "Ingenieurswesen"
-
-
   # calcualte proportions
   df <- df %>% dplyr::group_by(region, indikator, fachbereich, anzeige_geschlecht, jahr) %>%
     dplyr::summarize(proportion = wert/props)

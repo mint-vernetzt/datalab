@@ -31,9 +31,8 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_bl_sub"),
       choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
-                  "Biologie", "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
-                  "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
-                  "Sport", "Musik"),
+                  "Biologie", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+                  "Musik/Kunst", "Religion/Ethik", "Sport"),
       selected = c("MINT (aggregiert)", "Mathematik"),
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",

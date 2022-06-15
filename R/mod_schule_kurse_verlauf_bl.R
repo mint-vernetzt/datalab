@@ -24,9 +24,8 @@ mod_schule_kurse_verlauf_bl_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_bl"),
       choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
-                  "Biologie", "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
-                  "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
-                  "Sport", "Musik"),
+                  "Biologie", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+                  "Musik/Kunst", "Religion/Ethik", "Sport"),
       selected = "MINT (aggregiert)"
     ),
     p("Wähle ein Bundesland:"),
