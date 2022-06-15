@@ -27,7 +27,7 @@ app_ui <- function(request) {
         shinydashboard::sidebarMenu(
           # Setting id makes input$tabs give the tabName of currently-selected tab
           id = "tabs",
-          shinydashboard::menuItem("Home", icon = shiny::icon("globe"), tabName = "home"),
+          shinydashboard::menuItem("Start", icon = shiny::icon("globe"), tabName = "home"),
           shinydashboard::menuItem("Schule", icon = shiny::icon("school"), tabName = "schule"),
           shinydashboard::menuItem("Studium", icon = shiny::icon("university"), tabName = "studium"),
           shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
