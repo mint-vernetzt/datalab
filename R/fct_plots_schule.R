@@ -1598,7 +1598,7 @@ kurse_verlauf <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil Schülerinnen <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_caption(text = "Quelle: KMK 2021, auf Anfrage; eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Schülerinnen: Anteil von ",title_help, "-Belegungen in ", subjects_select ),
                           margin = 45,
                           align = "center",

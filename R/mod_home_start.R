@@ -13,7 +13,7 @@ mod_home_start_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         title = span("Willkommen im MINT-DataLab", style = "color:#154194; font-size: 50px"),
-        width = 12,
+        width = 9,
       p(style = "text-align: justify; font-size = 16px",
         "Im MINT-DataLab bieten wir Ihnen statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
         Ausbildung und Arbeitsmarkt in Deutschland. Wir laden Sie dazu ein, sich zu diesen Bereichen mithilfe unserer
@@ -35,7 +35,33 @@ mod_home_start_ui <- function(id){
         span("Haben Sie ", tags$b(span("Anregungen oder Wünsche", style = "color:#b16fab")), " an weitere Datensätze oder Darstellungen,
              freuen wir uns über Ihr Feedback (Link zu Umfrage ). Für Fragen steht Ihnen Antonia Kröger gerne
              zur Verfügung."))
-      )),
+      ),
+      #shinydashboard::box(
+      #  title = span(" "),
+      #  width = 3,
+      #  header= shinydashboard::dashboardHeader(title= div(img(src= "www/mint-logo.png",height=
+      #                                                     45),style= "text-align: center;")),
+      #  img(src= "www/mint-logo.png",height=100)
+      #)
+      shinydashboard::box(
+        width = 3,
+        solidHeader = TRUE,
+        collapsible = FALSE,
+        br(),
+        a(href = "https://mint-vernetzt.de/", rel="noopener", target="_blank",
+          img(src='www/mint_logo_gross.jpg',
+              class = "img-responsive",
+              alt = "Logo MINT",
+              style="display: block; margin-left: auto; margin-right: auto;"
+          )),
+        a(rel="noopener", target="_blank",
+          img(src='www/BMBF-Logo.jpg',
+              class = "img-responsive",
+              alt = "Logo BMBF",
+              style="display: block; margin-left: auto; margin-right: auto;"
+          ))
+      )
+      ),
     fluidRow(
       shinydashboard::box(
         title = "Anteil von MINT- und anderen Bereichen",

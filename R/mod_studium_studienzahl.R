@@ -7,12 +7,17 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#'
+#'
+
+tab1_name <- "Vergleich"
+
 mod_studium_studienzahl_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(
     shinydashboard::box(
-      title = "Studium und MINt",
+      title = "Studium und MINT",
       width = 12,
       p(style = "text-align: justify; font-size = 16px",
         "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Hochschule."),
@@ -29,7 +34,7 @@ mod_studium_studienzahl_ui <- function(id){
         width = 12,
         #p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
+                    tabPanel(tab1_name[1], br(),
 
                              shiny::sidebarPanel(
                                tags$style(".well {background-color:#FFFFFF;}"),
