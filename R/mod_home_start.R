@@ -20,7 +20,7 @@ mod_home_start_ui <- function(id){
         interaktiven Grafiken zu informieren und inspirieren zu lassen."),
        p(style = "text-align: justify; font-size = 16px",
          tags$ul(
-           tags$li("Wie hoch ist der Anteil Studierenden an MINT-Studiengängen?"),
+           tags$li("Wie hoch ist der Anteil Studierender an MINT-Studiengängen?"),
            tags$li("Wie hoch ist der Anteil weiblicher Auszubildenden in MINT in Hessen?"),
            tags$li("Wie hat sich der Anteil an Mädchen in Informatik-Unterricht in den letzten 5 Jahren verändert?")
          )),
@@ -33,8 +33,14 @@ mod_home_start_ui <- function(id){
              der Zeit integriert. (Button: weitere Informationen: Reiter: Quellen)")),
       p(style = "text-align: justify; font-size = 16px",
         span("Haben Sie ", tags$b(span("Anregungen oder Wünsche", style = "color:#b16fab")), " an weitere Datensätze oder Darstellungen,
-             freuen wir uns über Ihr Feedback (Link zu Umfrage ). Für Fragen steht Ihnen Antonia Kröger gerne
-             zur Verfügung."))
+             freuen wir uns über Ihr Feedback (Link zur Umfrage ).", br(), "Für Fragen steht Ihnen", tags$a(href = "mailto:antonia.kroeger@stifterverband.de?subject=MINT-Vernetzt Datalab", " Antonia Kröger"), " gerne zur Verfügung.")
+            ),
+      p(style = "text-align: justify; font-size = 16px",
+        span(tags$b(span("Was ist MINTvernetzt?", style = "color:#b16fab")), br(),
+              tags$b(span("Die Service- und Anlaufstelle für MINT-Akteur:innen in Deutschland", style = "color:#b16fab")),br(),
+              "Die MINT-Vernetzungsstelle, kurz MINTvernetzt, ist das Dach für die außerschulische MINT-Bildung in Deutschland.
+              MINTvernetzt wird vom Bundesministerium für Bildung und Forschung gefördert und von Mitarbeitenden der Körber-Stiftung, der matrix gGmbH,
+              dem Nationalen MINTForum e.V., dem Stifterverband und der Universität Regensburg als Verbund gemeinsam umgesetzt."))
       ),
       #shinydashboard::box(
       #  title = span(" "),
@@ -50,18 +56,20 @@ mod_home_start_ui <- function(id){
         br(),
         a(href = "https://mint-vernetzt.de/", rel="noopener", target="_blank",
           img(src='www/mint_logo_gross.jpg',
-              class = "img-responsive",
-              alt = "Logo MINT",
+              class = "img-responsive", height = "150px", width = "150px",
+              alt = "Logo MINT-vernetzt",
               style="display: block; margin-left: auto; margin-right: auto;"
           )),
-        a(rel="noopener", target="_blank",
+        br(),
+        br(),
+        br(),
+        a(href = "https://www.bmbf.de/", rel="noopener", target="_blank",
           img(src='www/BMBF-Logo.jpg',
-              class = "img-responsive",
+              class = "img-responsive", height = "150px", width = "150px",
               alt = "Logo BMBF",
               style="display: block; margin-left: auto; margin-right: auto;"
           ))
-      )
-      ),
+      )),
     fluidRow(
       shinydashboard::box(
         title = "Anteil von MINT- und anderen Bereichen",
