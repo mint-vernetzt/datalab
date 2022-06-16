@@ -10,7 +10,7 @@
 mod_home_start_einstieg_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wähle ein Bereich:"),
+    p("Wähle einen oder mehrere Bereich:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_einstieg_1_gender"),
       choices = c("Leistungskurse",

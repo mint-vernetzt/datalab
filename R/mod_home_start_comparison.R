@@ -19,7 +19,7 @@ mod_home_start_comparison_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wähle ein odere mehrere Indikatoren:"),
+    p("Wähle einen odere mehrere Indikatoren:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_comparison"),
       choices = c("Leistungskurse",

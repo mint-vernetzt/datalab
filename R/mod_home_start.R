@@ -25,7 +25,7 @@ mod_home_start_ui <- function(id){
            tags$li("Wie hat sich der Anteil an Mädchen in Informatik-Unterricht in den letzten 5 Jahren verändert?")
          )),
       p(style = "text-align: justify; font-size = 16px",
-        span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir Ihnen einen ersten Überblick. Auf den Unterseiten finden
+        span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir Ihnen einen ersten Überblick. Auf den ", tags$b(span("Unterseiten", style = "color:#b16fab")), " finden
              Sie weiterführende Informationen zu den einzelnen Bereichen.")),
       p(style = "text-align: justify; font-size = 16px",
         span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
@@ -38,23 +38,23 @@ mod_home_start_ui <- function(id){
       )),
     fluidRow(
       shinydashboard::box(
-        title = "Box 2",
+        title = "Anteil von MINT- und anderen Bereichen",
         width = 12,
-        p("Lorem ipsum dolor sit amet"),
+        #p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
-                    tabPanel("MINT-Anteile", br(),
+                    tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1")),
                       shiny::mainPanel(
                         htmlOutput(ns("plot_mint_rest_einstieg_1")))
                             ),
-                    tabPanel("Jahresvergleich", br(),
+                    tabPanel("Zeitverlauf", br(),
                         shiny::sidebarPanel(
                           mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")),
                         shiny::mainPanel(
                           highcharter::highchartOutput(ns("plot_mint_1")))
                              ),
-                    tabPanel("Vergleich", br(),
+                    tabPanel("Überblick", br(),
                              shiny::sidebarPanel(
                                mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
                              shiny::mainPanel(highcharter::highchartOutput(ns("plot_comparison_mint"))
@@ -64,24 +64,24 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Box 3",
+        title = "Anteil von Frauen an MINT-Bereichen",
         width = 12,
-        p("Lorem ipsum dolor sit amet"),
+        #p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
-                    tabPanel("MINT-Anteile", br(),
+                    tabPanel("Vergleich", br(),
                              shiny::sidebarPanel(
                                mod_home_start_einstieg_gender_ui("mod_home_start_einstieg_gender_ui_1")),
                              shiny::mainPanel(
                                htmlOutput(ns("plot_pie_mint_gender")))
                             ),
-                    tabPanel("Jahresvergleich", br(),
+                    tabPanel("Zeitverlauf", br(),
                         shiny::sidebarPanel(
                           mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
                         shiny::mainPanel(
                           highcharter::highchartOutput(ns("plot_verlauf_mint"))
                                         )
                             ),
-                    tabPanel("Vergleich", br(),
+                    tabPanel("Überblick", br(),
                              shiny::sidebarPanel(
                                mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1")),
                              shiny::mainPanel(plotOutput(ns("plot_comparison_gender")))
@@ -98,9 +98,17 @@ mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # Box 2
+
+    output$plot_verlauf_mint <- highcharter::renderHighchart({
+      home_comparison_line(data_zentral,r)
+    })
+
     output$plot_mint_rest_einstieg_1 <- renderUI({
       home_einstieg_pie(data_zentral,r)
+    })
+
+    output$plot_comparison_gender <- renderPlot({
+      home_stacked_comparison_gender(data_zentral, data_ausbildungsvertraege, r)
     })
 
     output$plot_mint_1 <- highcharter::renderHighchart({
@@ -111,18 +119,10 @@ mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r
       home_stacked_comparison_mint(data_zentral, r)
     })
 
-    # Box 3
     output$plot_pie_mint_gender <- renderUI({
       home_einstieg_pie_gender(data_zentral, data_ausbildungsvertraege, r)
     })
 
-    output$plot_verlauf_mint <- highcharter::renderHighchart({
-      home_comparison_line(data_zentral,r)
-    })
-
-    output$plot_comparison_gender <- renderPlot({
-      home_stacked_comparison_gender(data_zentral, data_ausbildungsvertraege, r)
-    })
 
   })
 }
