@@ -277,16 +277,17 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-
-
+    # Box 2
     output$plot_einstieg_pie <- renderUI({
       studienzahl_einstieg_pie(data_studierende,r)
-
     })
 
-    output$plot_einstieg_pie_gender <- renderUI({
-      studienzahl_einstieg_pie_gender(data_studierende,r)
+    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
+      studienzahl_verlauf_single(data_studierende,r)
+    })
 
+    output$plot_einstieg_comparison <- highcharter::renderHighchart({
+      studienzahl_einstieg_comparison(data_studierende,r)
     })
 
     data_table_einstieg_react <- reactive({
@@ -297,14 +298,20 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       data_table_einstieg_react()
     })
 
-    plot_absolut_react <- reactive({
-      studienzahl_absolut(data_studierende,r)
+    # Box 3
+    output$plot_einstieg_pie_gender <- renderUI({
+      studienzahl_einstieg_pie_gender(data_studierende,r)
     })
 
-    output$plot_absolut <- renderPlot({
-      plot_absolut_react()
+    output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
+      studienzahl_verlauf_single_gender(data_studierende,r)
     })
 
+    output$plot_einstieg_comparison_gender <- renderPlot({
+      studienzahl_einstieg_comparison_gender(data_studierende,r)
+    })
+
+    # Box 4
     plot_waffle_react <- reactive({
       studienzahl_waffle_mint(data_studierende,r)
     })
@@ -313,10 +320,15 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       plot_waffle_react()
     })
 
+    output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
+      studienzahl_verlauf_bl_subject(data_studierende,r)
+    })
+
     output$plot_ranking_bl_subject <- renderPlot({
       ranking_bl_subject(data_studierende,r)
     })
 
+    # Box 5
     plot_waffle_choice_gender_react <- reactive({
       studienzahl_waffle_choice_gender(data_studierende,r)
     })
@@ -325,61 +337,8 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       plot_waffle_choice_gender_react()
     })
 
-
-
-    output$plot_map_studienzahl <-renderUI({
-      studienzahl_map(data_studierende,r)
-    })
-
-    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
-      studienzahl_verlauf_single(data_studierende,r)
-    })
-
-    output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
-      studienzahl_verlauf_single_gender(data_studierende,r)
-    })
-
-    output$plot_einstieg_comparison <- highcharter::renderHighchart({
-      studienzahl_einstieg_comparison(data_studierende,r)
-    })
-
-    output$plot_einstieg_comparison_gender <- renderPlot({
-      studienzahl_einstieg_comparison_gender(data_studierende,r)
-    })
-
-
-
-    output$plot_verlauf_studienzahl <- highcharter::renderHighchart({
-      studienzahl_verlauf(data_studierende,r)
-    })
-
-    output$plot_verlauf_studienzahl_bl <- highcharter::renderHighchart({
-      studienzahl_verlauf_bl(data_studierende,r)
-    })
-
-    output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
-      studienzahl_verlauf_bl_subject(data_studierende,r)
-    })
-
     output$plot_verlauf_studienzahl_bl_subject_gender <- highcharter::renderHighchart({
       studierende_verlauf_single_bl_gender(data_studierende,r)
-    })
-
-
-    data_table_mix_react <- reactive({
-      data_mix_studium(data_studierende, r)
-    })
-
-    output$data_table_mix <- DT::renderDT({
-      data_table_mix_react()
-    })
-
-   data_table_verlauf_react <- DT::renderDT({
-      data_verlauf_studium(data_studierende, r)
-    })
-
-    output$data_table_verlauf <- DT::renderDT({
-      data_table_verlauf_react()
     })
 
     plot_ranking_studienzahl_bl_subject_gender_react <- reactive({
@@ -390,6 +349,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       plot_ranking_studienzahl_bl_subject_gender_react()
     })
 
+    # Box 6
     output$plot_studienzahl_map <- renderUI({
       studierende_map(data_studierende,r)
     })
@@ -402,6 +362,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       studierende_mint_vergleich_bl(data_studierende,r)
     })
 
+    # Box 7
     output$plot_studienzahl_map_gender <- renderUI({
       studierende_map_gender(data_studierende,r)
     })
@@ -418,29 +379,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       plot_ranking_studienzahl_bl_vergleich_gender_react()
     })
 
-    # save histogram using downloadHandler and plot output type
-    output$download_waffle <- shiny::downloadHandler(
-      filename = function() {
-        paste("plot_studium", "png", sep = ".")
-      },
-      content = function(file){
-        ggplot2::ggsave(file, plot = plot_waffle_react(), device = "png",
-                        dpi = 300, width = 10, height = 6)
-      }
-    )
-
-    # save histogram using downloadHandler and plot output type
-    output$download_absolut <- shiny::downloadHandler(
-      filename = function() {
-        paste("plot_studium", "png", sep = ".")
-      },
-      content = function(file){
-        ggplot2::ggsave(file, plot = plot_absolut_react(), device = "png",
-                        dpi = 300, width = 10, height = 6)
-      }
-    )
-
-
+    # downloader
     output$download_data_box1 <- shiny::downloadHandler(
       filename = function() {
         paste("data_studium", "csv", sep = ".")
@@ -450,25 +389,6 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       }
     )
 
-
-    # save histogram using downloadHandler and plot output type
-    output$data_table_mix_box3 <- shiny::downloadHandler(
-      filename = function() {
-        paste("data_studium", "csv", sep = ".")
-      },
-      content = function(file){
-        write.csv(data_table_mix_react(), file)
-      }
-    )
-
-    output$download_data_box5 <- shiny::downloadHandler(
-      filename = function() {
-        paste("data_studium", "csv", sep = ".")
-      },
-      content = function(file){
-        write.csv(data_table_verlauf_react(), file)
-      }
-    )
   })
 }
 

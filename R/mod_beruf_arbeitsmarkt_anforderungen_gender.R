@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wähle einen Zeitpunkt:"),
+    p("Wähle einen Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_anforderungen_gender"),
       label = NULL,

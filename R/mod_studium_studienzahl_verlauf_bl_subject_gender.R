@@ -15,7 +15,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_verlauf_bl_subject_gender"),
       label = NULL,
-      choices = c("2010","2011", "2012", "2013", "2014", "2015", "2016", "2017",
+      choices = c("2013", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
@@ -40,8 +40,8 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
     p("Wähle ein Fach:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_verlauf_bl_subject_gender"),
-      choices = c("Mathematik" = "Mathe", "Ingenieurswesen" = "Ingenieur",
-                  "MINT aggregiert" = "MINT"),
+      choices = c("MINT (aggregiert)" = "MINT (aggregiert)",
+                  "Mathematik" = "Mathe", "Ingenieurswesen" = "Ingenieur"),
       selected = "MINT (aggregiert)",
       multiple = FALSE
     ),

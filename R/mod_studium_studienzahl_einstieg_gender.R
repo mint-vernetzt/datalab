@@ -15,7 +15,7 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studierende_einstieg_gender"),
       label = NULL,
-      choices = c("2012", "2013", "2014", "2015", "2016", "2017",
+      choices = c("2013", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020"),
       selected = "2020"
     ),

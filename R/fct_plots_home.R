@@ -660,10 +660,14 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
 
   df <- rbind(df, df_sub)
 
+  df <- df %>% dplyr::filter(indikator %in% c("Leistungskurse",
+                                              "Studienanfänger", "Studierende",
+                                              "Auszubildende", "Beschäftigte"))
+
   # order
-  df$indikator <- factor(df$indikator , levels=c('Leistungskurse',"Neue Ausbildungsverträge",'Auszubildende','Studienanfänger',
-                                             'Studierende', 'Promotionen (angestrebt)', 'Habilitationen',
-                                             'Beschäftigte'))
+  df$indikator <- factor(df$indikator , levels=c("Leistungskurse",
+                                                 "Studienanfänger", "Studierende",
+                                                 "Auszubildende", "Beschäftigte"))
 
 
   ggplot2::ggplot(df, ggplot2::aes(x=indikator, y=wert, fill = anzeige_geschlecht)) +
@@ -682,29 +686,6 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
                                  "<br><br><br>"),
                   fill = "") +
     ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"))
-
-
-  # highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(wert), x = indikator, group = "anzeige_geschlecht")) %>%
-  #   highcharter::hc_tooltip(pointFormat = "Anteil an MINT <br> Geschlecht: {point.anzeige_geschlecht} <br> Anteil: {point.y} %") %>%
-  #   highcharter::hc_yAxis(title = list(text = "Anteil"), labels = list(format = "{value}%")) %>%
-  #   highcharter::hc_xAxis(title = list(text = "")) %>%
-  #   highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-  #   highcharter::hc_colors(c("#f5adac", "#b1b5c3")) %>%
-  #   highcharter::hc_title(text = "Anteil von Frauen und Männer an MINT",
-  #                         margin = 45,
-  #                         align = "center",
-  #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  #   highcharter::hc_chart(
-  #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-  #   ) %>%
-  #   highcharter::hc_exporting(enabled = TRUE,
-  #                             buttons = list(contextButton = list(
-  #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-  #                               onclick = highcharter::JS("function () {
-  #                                                             this.exportChart({ type: 'image/png' }); }"),
-  #                               align = 'right',
-  #                               verticalAlign = 'bottom',
-  #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 }
 
@@ -732,6 +713,10 @@ home_stacked_comparison_mint <- function(df, r) {
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
+  df <- df %>% dplyr::filter(indikator %in% c("Leistungskurse",
+                                              "Studienanfänger", "Studierende",
+                                              "Auszubildende", "Beschäftigte"))
+
   # calculate proportions for MINT vs. Rest
   df <- df %>% dplyr::group_by(indikator) %>%
     dplyr::mutate(props = sum(wert))
@@ -743,9 +728,9 @@ home_stacked_comparison_mint <- function(df, r) {
   df$proportion <- df$proportion * 100
 
   # order
-  x <- ordered(factor(df$indikator), levels=c('Leistungskurse',"Neue Ausbildungsverträge",'Auszubildende','Studienanfänger',
-                                              'Studierende', 'Promotionen (angestrebt)', 'Habilitationen',
-                                              'Beschäftigte'))
+  x <- ordered(factor(df$indikator), levels=c("Leistungskurse",
+                                              "Studienanfänger", "Studierende",
+                                              "Auszubildende", "Beschäftigte"))
 
   df <- df[order(x),]
 

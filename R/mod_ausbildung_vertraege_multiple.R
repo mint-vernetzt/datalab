@@ -13,7 +13,7 @@ mod_ausbildung_vertraege_multiple_ui <- function(id){
   load(file = system.file(package="datalab","data/data_naa.rda"))
 
   tagList(
-    p("Wähle einen Zeitpunkt:"),
+    p("Wähle einen Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_ausbildungsvertraege"),
       label = NULL,

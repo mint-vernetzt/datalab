@@ -148,19 +148,27 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   # remove
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  # aggregate MINT
-  df2 <- calc_share_MINT(df[(df$indikator == "Studierende"), ])
+  df_gesamt <- df %>% dplyr::filter(fachbereich == "Alle",
+                                    anzeige_geschlecht == "Gesamt",
+                                    nur_lehramt == "Nein",
+                                    hochschulform == "insgesamt") %>%
+    dplyr::rename(wert_gesamt = "wert")
 
-  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger"), ])
+  df <- calc_share_MINT(df)
 
-  df2 <- calc_share_male(df2, "box_1")
-
-  df3 <- calc_share_male(df3, "box_1")
-
-  df <- rbind(df2, df3)
+  df <- calc_share_male(df, "box_1")
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
 
+  df <- df %>% dplyr::left_join(df_gesamt, by = c("region", "indikator",
+                                            "jahr", "bereich")) %>%
+    dplyr::rename(anzeige_geschlecht = "anzeige_geschlecht.x",
+                  fachbereich = "fachbereich.x",
+                  nur_lehramt = "nur_lehramt.x",
+                  hochschulform = "hochschulform.x") %>%
+    dplyr::select(-c("anzeige_geschlecht.y", "nur_lehramt.y",
+                     "hochschulform.y", "fachbereich.y")) %>%
+    dplyr::mutate(proportion = (wert/wert_gesamt)*100)
 
 
   if(lehramt == FALSE){
@@ -171,64 +179,25 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
 
     df$indikator <- paste0(df$indikator, " (", df$hochschulform, ")")
 
-    df_studierende <- df %>% dplyr::filter(indikator == paste0("Studierende", " (", df$hochschulform, ")"))
-
-    df_studierende_mint <- df_studierende %>% dplyr::filter(fachbereich == "MINT")
-
-    df_studierende_rest <- df_studierende %>% dplyr::filter(fachbereich == "andere Studiengänge")
-
-    # calculate proportions
-    df_studierende_mint <- share_pie(df_studierende_mint)
-
-    df_studierende_rest <- share_pie(df_studierende_rest)
-
-
-    df_anfaenger <- df %>% dplyr::filter(indikator == paste0("Studienanfänger", " (", df$hochschulform, ")"))
-
-    df_anfaenger_mint <- df_anfaenger %>% dplyr::filter(fachbereich == "MINT")
-
-    df_anfaenger_rest <- df_anfaenger %>% dplyr::filter(fachbereich == "andere Studiengänge")
-
-    # calculate proportions
-    df_anfaenger_mint <- share_pie(df_anfaenger_mint)
-
-    df_anfaenger_rest <- share_pie(df_anfaenger_rest)
-
   } else {
 
     df <- df %>% dplyr::filter(nur_lehramt == "Ja")
 
     df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
 
-    df$indikator <- paste0(df$indikator, " (", "Lehramt, " ,df$hochschulform, ")")
-
-    df_studierende <- df %>% dplyr::filter(indikator == paste0("Studierende", " (", "Lehramt, " ,df$hochschulform, ")"))
-
-    df_studierende_mint <- df_studierende %>% dplyr::filter(fachbereich == "MINT")
-
-    df_studierende_rest <- df_studierende %>% dplyr::filter(fachbereich == "andere Studiengänge")
-
-    # calculate proportions
-    df_studierende_mint <- share_pie(df_studierende_mint)
-
-    df_studierende_rest <- share_pie(df_studierende_rest)
-
-
-    df_anfaenger <- df %>% dplyr::filter(indikator == paste0("Studienanfänger", " (", "Lehramt, " ,df$hochschulform, ")"))
-
-    df_anfaenger_mint <- df_anfaenger %>% dplyr::filter(fachbereich == "MINT")
-
-    df_anfaenger_rest <- df_anfaenger %>% dplyr::filter(fachbereich == "andere Studiengänge")
-
-    # calculate proportions
-    df_anfaenger_mint <- share_pie(df_anfaenger_mint)
-
-    df_anfaenger_rest <- share_pie(df_anfaenger_rest)
-
-
-
   }
 
+  df_studierende_mint <- df %>% dplyr::filter(fachbereich == "MINT",
+                                              grepl("Studierende", indikator))
+
+  df_anfaenger_mint <- df %>% dplyr::filter(fachbereich == "MINT",
+                                              grepl("Studienanfänger", indikator))
+
+  df_studierende_rest <- df %>% dplyr::filter(fachbereich == "andere Studiengänge",
+                                              grepl("Studierende", indikator))
+
+  df_anfaenger_rest <- df %>% dplyr::filter(fachbereich == "andere Studiengänge",
+                                              grepl("Studienanfänger", indikator))
 
   plot_studierende_mint <- highcharter::hchart(df_studierende_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
@@ -241,7 +210,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
+                                           dataLabels = list(enabled = TRUE,  format='{point.y:.0f}%'), showInLegend = TRUE))
 
 
   plot_anfeanger_mint <- highcharter::hchart(df_anfaenger_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
@@ -255,7 +224,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE))
+                                           dataLabels = list(enabled = TRUE, format='{point.y:.0f}%'), showInLegend = TRUE))
 
   plot_studierende_rest <- highcharter::hchart(df_studierende_rest, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
@@ -268,7 +237,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
+                                           dataLabels = list(enabled = TRUE,  format='{point.y:.0f}%'), showInLegend = TRUE))
 
 
   plot_anfeanger_rest <- highcharter::hchart(df_anfaenger_rest, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
@@ -282,7 +251,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE))
+                                           dataLabels = list(enabled = TRUE, format='{point.y:.0f}%'), showInLegend = TRUE))
 
 
   plot_anfeanger_mint <- plot_anfeanger_mint %>% highcharter::hc_colors(c("#154194","#b16fab"))
@@ -1827,11 +1796,6 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
   #filter
   df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
 
-  # rename
-  df[df$fachbereich == "Mathe", "fachbereich"] <- "Mathematik"
-  df[df$fachbereich == "Ingenieur", "fachbereich"] <- "Ingenieurswesen"
-
-
   # calcualte proportions
   df <- df %>% dplyr::group_by(region, indikator, fachbereich, anzeige_geschlecht, jahr) %>%
     dplyr::summarize(proportion = wert/props)
@@ -1903,15 +1867,13 @@ ranking_bl_subject <- function(df,r, type) {
 
   df <- df %>% dplyr::filter(indikator == indikator_comparison)
 
-  df <- df %>% dplyr::mutate(fachbereich = replace(fachbereich,
-                                                   fachbereich == "Alle",
-                                                   "Alle restlichen Fächer"))
-
   # remove
   df <- df %>% dplyr::filter(region != "Deutschland")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_studierende_east_west(df)
+
+  df <- df %>% dplyr::filter(region %in% states)
 
   if(lehramt == FALSE){
 
@@ -1931,32 +1893,33 @@ ranking_bl_subject <- function(df,r, type) {
 
   }
 
-  # aggregate all subjects to calculate proportion later
-  df <- df %>% dplyr::group_by(indikator, region, nur_lehramt, hochschulform) %>%
-    dplyr::mutate(props = sum(wert))
+  df <- df %>%
+    dplyr::mutate(props = df %>%
+                    dplyr::filter(fachbereich == "Alle") %>%
+                    dplyr::pull(wert))
 
   # aggregate to MINT
   values_Mint <- df %>%
-    dplyr::filter(fachbereich != "Alle restlichen Fächer") %>%
+    dplyr::filter(fachbereich != "Alle") %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, hochschulform,
                     nur_lehramt, props) %>%
     dplyr::summarise(wert = sum(wert)) %>%
     dplyr::mutate(bereich = "Hochschule",
                   fachbereich = "MINT (aggregiert)")
 
-  df <- rbind(df, values_Mint)
+  df_andere <- calc_share_MINT(df) %>%
+    dplyr::filter(fachbereich == "andere Studiengänge")
 
-  # calculate proportion
-  df <- df %>% dplyr::group_by(fachbereich, indikator, hochschulform, region) %>%
-    dplyr::summarize(proportion = wert/props)
-
+  df <- rbind(df %>% dplyr::filter(fachbereich != "Alle"),
+              values_Mint,
+              df_andere) %>%
+    dplyr::mutate(proportion = wert/props) %>%
+    dplyr::arrange(fachbereich)
 
   df$proportion <- df$proportion * 100
 
-  df <- df %>% dplyr::filter(region %in% states)
-
   # plot
-  a <- ifelse(df$fachbereich == "MINT (aggregiert)" | df$fachbereich == "Alle restlichen Fächer" , "#b16fab", "grey30")
+  a <- ifelse(df$fachbereich == "MINT (aggregiert)" | df$fachbereich == "andere Studiengänge" , "#b16fab", "grey30")
 
 
   ggplot2::ggplot(df, ggplot2::aes(y=fachbereich, x=proportion)) +
@@ -2126,8 +2089,9 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
-  # remove
   df <- df %>% dplyr::filter(region != "Deutschland")
+
+  # df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
   df <- df %>% dplyr::filter(region != "Bayern")
 
@@ -2136,13 +2100,13 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
   # include "Osten" und "Westen" in Dataframe
   df <- prep_studierende_east_west(df)
 
+  df <- df %>% dplyr::filter(region %in% states)
+
   if(lehramt == FALSE){
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
     df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
-
-    df$indikator <- paste0(df$indikator, " (", df$hochschulform, ")")
 
   } else {
 
@@ -2150,39 +2114,50 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
     df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
 
-    df$indikator <- paste0(df$indikator, " (", "Lehramt, " ,df$hochschulform, ")")
-
   }
 
-  if (subjects_select == "MINT"){
+  # aggregate all subjects to calculate proportion later
+  df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen",
+                                    fachbereich == "Alle") %>%
+    dplyr::group_by(region, anzeige_geschlecht, indikator, nur_lehramt, hochschulform, jahr) %>%
+    dplyr::mutate(wert_gesamt = sum(wert)) %>%
+    dplyr::select(c("region", "indikator", "nur_lehramt",
+                    "hochschulform", "jahr", "wert_gesamt"))
 
-    # call function to calculate the share of MINT and the remaining subjects
-    df <- calc_share_MINT_bl(df)
-  }
+  # aggregate to MINT
+  values_Mint <- df %>%
+    dplyr::filter(fachbereich != "Alle") %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, hochschulform,
+                    nur_lehramt) %>%
+    dplyr::summarise(wert = sum(wert)) %>%
+    dplyr::mutate(bereich = "Hochschule",
+                  fachbereich = "MINT (aggregiert)") %>%
+    dplyr::filter(anzeige_geschlecht == "Frauen")
 
-  df <- df %>% dplyr::filter(fachbereich == subjects_select)
+  einzelne_faecher <- df %>%
+    dplyr::filter(anzeige_geschlecht == "Frauen")
 
-  # calculate share of males for states
-  df <- calc_share_male_bl(df)
+  df_andere <- calc_share_MINT(df) %>%
+    dplyr::filter(fachbereich == "andere Studiengänge",
+                  anzeige_geschlecht == "Frauen")
 
-  # calculate new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  df <- rbind(values_Mint, einzelne_faecher, df_andere)
 
-  # calculate proportions
-  values <- df %>% dplyr::group_by(region, indikator, fachbereich, anzeige_geschlecht, jahr) %>%
-    dplyr::summarize(proportion = wert/props)
+  # # calculate proportion
+  values <- df %>%
+    dplyr::left_join(df_gesamt, by = c("region", "indikator", "nur_lehramt",
+                                       "hochschulform", "jahr")) %>%
+    dplyr::select(-"anzeige_geschlecht.y") %>%
+    dplyr::rename(anzeige_geschlecht = "anzeige_geschlecht.x") %>%
+    dplyr::mutate(proportion = (wert/wert_gesamt)*100) %>%
+    dplyr::select(-c("wert","wert_gesamt")) %>%
+    dplyr::filter(fachbereich != "Alle",
+                  fachbereich != "andere Studiengänge")
 
   # order years for plot
   values <- values[with(values, order(region, jahr, decreasing = FALSE)), ]
 
-  values$proportion <- values$proportion * 100
-
-  values <- values %>% dplyr::filter(region %in% states)
-
-  values <- values %>% dplyr::filter(anzeige_geschlecht == "Frauen")
+  values <- values %>%  dplyr::filter(fachbereich == subjects_select)
 
   values$anzeige_geschlecht <- paste0(values$anzeige_geschlecht, " (", values$indikator, ")")
 
@@ -2233,10 +2208,6 @@ studienfaecher_ranking <- function(df,r, type) {
   hochschulform_select_2 <- r$hochschulform_studium_ranking_bl_subject_gender_2
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::mutate(fachbereich = replace(fachbereich,
-                                                   fachbereich == "Alle",
-                                                   "Alle restlichen Fächer"))
-
   df <- df %>% dplyr::filter(jahr == timerange)
 
   df <- df %>% dplyr::filter(region != "Deutschland")
@@ -2249,6 +2220,8 @@ studienfaecher_ranking <- function(df,r, type) {
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_studierende_east_west(df)
+
+  df <- df %>% dplyr::filter(region %in% states)
 
   df <- df %>% dplyr::mutate(indikator = replace(indikator,
                                                  indikator == "Studienanfänger",
@@ -2269,14 +2242,16 @@ studienfaecher_ranking <- function(df,r, type) {
   }
 
   # aggregate all subjects to calculate proportion later
-  df_gesamt <- df %>% dplyr::group_by(region, anzeige_geschlecht, indikator, nur_lehramt, hochschulform, jahr) %>%
+  df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen",
+                                    fachbereich == "Alle") %>%
+    dplyr::group_by(region, anzeige_geschlecht, indikator, nur_lehramt, hochschulform, jahr) %>%
     dplyr::mutate(wert_gesamt = sum(wert)) %>%
-    dplyr::filter(anzeige_geschlecht == "Gesamt") %>%
-    dplyr::distinct(region, indikator, nur_lehramt, hochschulform, jahr, wert_gesamt)
+    dplyr::select(c("region", "indikator", "nur_lehramt",
+                    "hochschulform", "jahr", "wert_gesamt"))
 
   # aggregate to MINT
   values_Mint <- df %>%
-    dplyr::filter(fachbereich != "Alle restlichen Fächer") %>%
+    dplyr::filter(fachbereich != "Alle") %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, hochschulform,
                     nur_lehramt) %>%
     dplyr::summarise(wert = sum(wert)) %>%
@@ -2287,18 +2262,21 @@ studienfaecher_ranking <- function(df,r, type) {
   einzelne_faecher <- df %>%
     dplyr::filter(anzeige_geschlecht == "Frauen")
 
-  df <- rbind(values_Mint, einzelne_faecher)
+  df_andere <- calc_share_MINT(df) %>%
+    dplyr::filter(fachbereich == "andere Studiengänge",
+                  anzeige_geschlecht == "Frauen")
+
+  df <- rbind(values_Mint, einzelne_faecher, df_andere)
 
   # # calculate proportion
   df <- df %>%
     dplyr::left_join(df_gesamt, by = c("region", "indikator", "nur_lehramt",
-                                                   "hochschulform", "jahr")) %>%
+                                       "hochschulform", "jahr")) %>%
     dplyr::select(-"anzeige_geschlecht.y") %>%
     dplyr::rename(anzeige_geschlecht = "anzeige_geschlecht.x") %>%
     dplyr::mutate(proportion = (wert/wert_gesamt)*100) %>%
-    dplyr::select(-c("wert","wert_gesamt"))
-
-  df <- df %>% dplyr::filter(region %in% states)
+    dplyr::select(-c("wert","wert_gesamt")) %>%
+    dplyr::filter(fachbereich != "Alle")
 
   # spread column
   df <- tidyr::spread(df, indikator, proportion)

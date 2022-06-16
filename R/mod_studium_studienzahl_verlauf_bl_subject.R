@@ -15,7 +15,7 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_verlauf_subject_bl"),
       label = NULL,
-      choices = c("2010","2011", "2012", "2013", "2014", "2015", "2016", "2017",
+      choices = c("2013", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
@@ -40,7 +40,7 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
     p("Wähle den Status der Student*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("topic_selected_subject_bl"),
-      choices = c("Studierende", "Studienanfänger"),
+      choices = c("Studienanfänger", "Studierende"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
@@ -48,8 +48,8 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
     p("Wähle ein oder mehrere Fächer:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_bl"),
-      choices = c("MINT (aggregiert)" = "MINT", "Mathematik" = "Mathe",
-                  "Ingenieurswesen" = "Ingenieur"),
+      choices = c("MINT (aggregiert)" = "MINT", "Mathe" = "Mathe",
+                  "Ingenieur" = "Ingenieur"),
       selected = c("MINT", "Ingenieur"),
       multiple = TRUE
     ),

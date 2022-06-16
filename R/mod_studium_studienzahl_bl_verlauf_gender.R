@@ -15,7 +15,7 @@ mod_studium_studienzahl_bl_verlauf_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_gender_verlauf"),
       label = NULL,
-      choices = c("2010","2011", "2012", "2013", "2014", "2015", "2016", "2017",
+      choices = c("2013", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
@@ -46,7 +46,7 @@ mod_studium_studienzahl_bl_verlauf_gender_ui <- function(id){
     p("Wähle den Status der Student*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_studium_studienzahl_bl_gender_verlauf"),
-      choices = c("Studierende", "Studienanfänger"),
+      choices = c("Studienanfänger", "Studierende"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
@@ -70,7 +70,7 @@ mod_studium_studienzahl_bl_verlauf_gender_ui <- function(id){
                   "Thüringen",
                   "Westen",
                   "Osten"),
-      selected = c("Hessen", "Berlin"),
+      selected = c("Hessen", "Hamburg"),
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),

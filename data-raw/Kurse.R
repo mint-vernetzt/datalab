@@ -1,9 +1,11 @@
 kurse_read <-
   readxl::read_xlsx(
-    system.file(package = "datalab", "data-raw/Kurse.xlsx")
+    system.file(package = "datalab", "data-raw/Kurse_08_06_22.xlsx")
   ) %>%
   janitor::clean_names() %>%
-  janitor::remove_empty()
+  janitor::remove_empty() %>%
+  dplyr::select(-c("quelle", "hinweise")) %>%
+  dplyr::filter(!fachbereich %in% c("Nicht MINT", "MINT"))
 
 kurse <- kurse_read %>% dplyr::filter(jahr >= 2010)
 
