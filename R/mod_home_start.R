@@ -12,56 +12,71 @@ mod_home_start_ui <- function(id){
   tagList(
     fluidRow(
       shinydashboard::box(
-        title = span("Willkommen im MINT-DataLab", style = "color:#154194; font-size: 50px"),
-        width = 9,
-      p(style = "text-align: justify; font-size = 16px",
-        "Im MINT-DataLab bieten wir Ihnen statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
-        Ausbildung und Arbeitsmarkt in Deutschland. Wir laden Sie dazu ein, sich zu diesen Bereichen mithilfe unserer
-        interaktiven Grafiken zu informieren und inspirieren zu lassen."),
-       p(style = "text-align: justify; font-size = 16px",
-         tags$ul(
-           tags$li("Wie hoch ist der Anteil Studierenden an MINT-Studiengängen?"),
-           tags$li("Wie hoch ist der Anteil weiblicher Auszubildenden in MINT in Hessen?"),
-           tags$li("Wie hat sich der Anteil an Mädchen in Informatik-Unterricht in den letzten 5 Jahren verändert?")
-         )),
-      p(style = "text-align: justify; font-size = 16px",
-        span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir Ihnen einen ersten Überblick. Auf den ", tags$b(span("Unterseiten", style = "color:#b16fab")), " finden
-             Sie weiterführende Informationen zu den einzelnen Bereichen.")),
-      p(style = "text-align: justify; font-size = 16px",
-        span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
-             Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
-             der Zeit integriert. (Button: weitere Informationen: Reiter: Quellen)")),
-      p(style = "text-align: justify; font-size = 16px",
-        span("Haben Sie ", tags$b(span("Anregungen oder Wünsche", style = "color:#b16fab")), " an weitere Datensätze oder Darstellungen,
-             freuen wir uns über Ihr Feedback (Link zu Umfrage ). Für Fragen steht Ihnen Antonia Kröger gerne
-             zur Verfügung."))
-      ),
-      #shinydashboard::box(
-      #  title = span(" "),
-      #  width = 3,
-      #  header= shinydashboard::dashboardHeader(title= div(img(src= "www/mint-logo.png",height=
-      #                                                     45),style= "text-align: center;")),
-      #  img(src= "www/mint-logo.png",height=100)
-      #)
-      shinydashboard::box(
-        width = 3,
-        solidHeader = TRUE,
-        collapsible = FALSE,
-        br(),
-        a(href = "https://mint-vernetzt.de/", rel="noopener", target="_blank",
-          img(src='www/mint_logo_gross.jpg',
-              class = "img-responsive",
-              alt = "Logo MINT",
-              style="display: block; margin-left: auto; margin-right: auto;"
-          )),
-        a(rel="noopener", target="_blank",
-          img(src='www/BMBF-Logo.jpg',
-              class = "img-responsive",
-              alt = "Logo BMBF",
-              style="display: block; margin-left: auto; margin-right: auto;"
-          ))
+        #title = span("Willkommen im MINT-DataLab", style = "color:#154194; font-size: 50px"),
+        width = 12,
+        column(width = 9,
+               p(style = "color:#154194; font-size: 50px", "Willkommen im MINT-DataLab"),
+                  p(style = "text-align: justify; font-size = 16px",
+                    "Im MINT-DataLab bieten wir Ihnen statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
+                    Ausbildung und Arbeitsmarkt in Deutschland. Wir laden Sie dazu ein, sich zu diesen Bereichen mithilfe unserer
+                    interaktiven Grafiken zu informieren und inspirieren zu lassen."
+                    ),
+                   p(style = "text-align: justify; font-size = 16px",
+                     tags$ul(
+                       tags$li("Wie hoch ist der Anteil Studierenden an MINT-Studiengängen?"),
+                       tags$li("Wie hoch ist der Anteil weiblicher Auszubildenden in MINT in Hessen?"),
+                       tags$li("Wie hat sich der Anteil an Mädchen in Informatik-Unterricht in den letzten 5 Jahren verändert?")
+                     )
+                     ),
+                  p(style = "text-align: justify; font-size = 16px",
+                    span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir Ihnen einen ersten Überblick. Auf den ", tags$b(span("Unterseiten", style = "color:#b16fab")), " finden
+                         Sie weiterführende Informationen zu den einzelnen Bereichen.")
+                    ),
+                  p(style = "text-align: justify; font-size = 16px",
+                    span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
+                         Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
+                         der Zeit integriert. (Button: weitere Informationen: Reiter: Quellen)")
+                    ),
+                  p(style = "text-align: justify; font-size = 16px",
+                    span("Haben Sie ", tags$b(span("Anregungen oder Wünsche", style = "color:#b16fab")), " an weitere Datensätze oder Darstellungen,
+                         freuen wir uns über Ihr Feedback (Link zu Umfrage ). Für Fragen steht Ihnen Antonia Kröger gerne
+                         zur Verfügung.")
+                    )
+               ),
+        #solidHeader = TRUE,
+        #collapsible = FALSE,
+        #br(),
+        column(width = 3, href = "https://mint-vernetzt.de/", rel="noopener", target="_blank",
+               img(src='www/mint_logo_gross.jpg',
+                   class = "img-responsive",
+                   height = "180px", width = "180px",
+                   alt = "Logo MINT",
+                   style="display: block; margin-left: auto; margin-right: auto;"
+               ),
+               img(src='www/BMBF-Logo.jpg',
+                   class = "img-responsive",
+                   height = "150px", width = "150px",
+                   alt = "Logo BMBF",
+                   style="display: block; margin-left: auto; margin-right: auto;"
+               )),
+        #a(href = "https://mint-vernetzt.de/", rel="noopener", target="_blank",
+        #  img(src='www/mint_logo_gross.jpg',
+        #      class = "img-responsive",
+        #      #height = "150px", width = "150px",
+        #      alt = "Logo MINT",
+        #      style="display: block; margin-left: auto; margin-right: auto;"
+        #      )
+        #  ),
+        #a(rel="noopener", target="_blank",
+        #  img(src='www/BMBF-Logo.jpg',
+        #      class = "img-responsive",
+        #      #height = "150px", width = "150px",
+        #      alt = "Logo BMBF",
+        #      style="display: block; margin-left: auto; margin-right: auto;"
+        #      )
+        #  )
       )
-      ),
+    ),
     fluidRow(
       shinydashboard::box(
         title = "Anteil von MINT- und anderen Bereichen",
