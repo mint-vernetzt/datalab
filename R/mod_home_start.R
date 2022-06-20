@@ -13,7 +13,7 @@ mod_home_start_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         title = span("Willkommen im MINT-DataLab", style = "color:#154194; font-size: 50px"),
-        width = 9,
+        width = 9, height = 450,
       p(style = "text-align: justify; font-size = 16px",
         "Im MINT-DataLab bieten wir Ihnen statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
         Ausbildung und Arbeitsmarkt in Deutschland. Wir laden Sie dazu ein, sich zu diesen Bereichen mithilfe unserer
@@ -33,12 +33,12 @@ mod_home_start_ui <- function(id){
              der Zeit integriert. (Button: weitere Informationen: Reiter: Quellen)")),
       p(style = "text-align: justify; font-size = 16px",
         span("Haben Sie ", tags$b(span("Anregungen oder Wünsche", style = "color:#b16fab")), " an weitere Datensätze oder Darstellungen,
-             freuen wir uns über Ihr Feedback (Link zur Umfrage ).", br(), "Für Fragen steht Ihnen", tags$a(href = "mailto:antonia.kroeger@stifterverband.de?subject=MINT-Vernetzt Datalab", " Antonia Kröger"), " gerne zur Verfügung.")
+             freuen wir uns über Ihr Feedback (Link zur Umfrage ).", br(), "Für Fragen steht Ihnen", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject=MINT-Vernetzt Datalab", " Antonia Kröger"), " gerne zur Verfügung.")
             ),
       p(style = "text-align: justify; font-size = 16px",
         span(tags$b(span("Was ist MINTvernetzt?", style = "color:#b16fab")), br(),
-              tags$b(span("Die Service- und Anlaufstelle für MINT-Akteur:innen in Deutschland", style = "color:#b16fab")),br(),
-              "Die MINT-Vernetzungsstelle, kurz MINTvernetzt, ist das Dach für die außerschulische MINT-Bildung in Deutschland.
+             tags$b(span("Die Service- und Anlaufstelle für MINT-Akteur:innen in Deutschland", style = "color:#b16fab")),br(),
+             "Die MINT-Vernetzungsstelle, kurz MINTvernetzt, ist das Dach für die außerschulische MINT-Bildung in Deutschland.
               MINTvernetzt wird vom Bundesministerium für Bildung und Forschung gefördert und von Mitarbeitenden der Körber-Stiftung, der matrix gGmbH,
               dem Nationalen MINTForum e.V., dem Stifterverband und der Universität Regensburg als Verbund gemeinsam umgesetzt."))
       ),
@@ -50,9 +50,7 @@ mod_home_start_ui <- function(id){
       #  img(src= "www/mint-logo.png",height=100)
       #)
       shinydashboard::box(
-        width = 3,
-        solidHeader = TRUE,
-        collapsible = FALSE,
+        width = 3, height = 450,
         br(),
         a(href = "https://mint-vernetzt.de/", rel="noopener", target="_blank",
           img(src='www/mint_logo_gross.jpg',
@@ -60,8 +58,6 @@ mod_home_start_ui <- function(id){
               alt = "Logo MINT-vernetzt",
               style="display: block; margin-left: auto; margin-right: auto;"
           )),
-        br(),
-        br(),
         br(),
         a(href = "https://www.bmbf.de/", rel="noopener", target="_blank",
           img(src='www/BMBF-Logo.jpg',
@@ -74,7 +70,7 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Anteil von MINT- und anderen Bereichen",
         width = 12,
-        #p("Lorem ipsum dolor sit amet"),
+        p("Hier können Sie sich den Anteil von MINT-Studierenden anschauen."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(
