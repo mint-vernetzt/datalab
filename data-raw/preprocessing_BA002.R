@@ -1,7 +1,7 @@
 
 data_naa <- readxlsb::read_xlsb(system.file(package="datalab",
                                           "data-raw/BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb"),
-                            sheet  = "Verträge_Daten", range = "A4:VE219")
+                            sheet  = "Vertraege_Daten", range = "A4:VE219")
 
 # remove all districts
 data_naa <- data_naa %>% dplyr::select(-contains("X"))

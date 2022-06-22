@@ -12,32 +12,24 @@ mod_schule_kurse_ui <- function(id){
   tagList(
     fluidRow(
       shinydashboard::box(
-        title = "MINT in der Schule",
+        #title = "MINT in der Schule",
         width = 12,
+        tags$h1("MINT in der Schule"),
         p(style = "text-align: justify; font-size = 16px",
-          "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Schule."),
+          "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT
+          im Bereich Schule. Aktuell bieten wir Ihnen Informationen zu den Kursbelegungen
+          von Schülern und Schülerinnen in der Oberstufe. Beispielsweise können Sie sich den Anteil von
+          Leistungskursen im Fachbereich Informatik im Zeitverlauf ausgeben lassen.
+          Oder Sie interessieren sich für die Kursbelegungen von Schülerinnen im Vergleich zu Schülern
+          in MINT. Zudem bieten wir Ihnen die Ergebnisse für einzelne Bundesländer an."),
         #br(),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "KMK")),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
-               "Anders als Studierende und Auszubildende lassen sich Schülerinnen
-               und Schüler der Oberstufe nicht dem Bereich MINT eindeutig
-               zuordnen, weil sie mindestens zwei Leistungskurse wählen müssen.
-               Um dennoch einen Anteil von MINT versus Nicht-MINT angeben zu
-               können, werden die Kursbelegungen der Schülerinnen und Schüler
-               gezählt. Auf die Ausweisung absoluter Zahlen verzichten wir, da
-               sie nicht der Grundgesamtheit der Schülerinnen und Schüler
-               entspricht."))
       )),
-
-
-
     fluidRow(
       shinydashboard::box(
         title = "Anteil von MINT-Fächern in der Schule",
         width = 12,
-        #p("Lorem ipsum dolor sit amet"),
+        p("Hier können Sie sich den Anteil von MINT und nicht-MINT für
+          Leistungs- und Grundkurse anschauen."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -80,9 +72,10 @@ mod_schule_kurse_ui <- function(id){
       ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von Frauen an MINT-Fächern und Nicht-MINT-Fächern",
+        title = "Anteil von Schülerinnen an MINT-Fächern",
         width = 12,
-        #p("Lorem ipsum dolor sit amet"),
+        p("Hier können Sie sich den Anteil von Schülerinnen an MINT- und nicht-MINT-Fächern für
+          Leistungs- und Grundkurse anschauen."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -123,7 +116,7 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "Einzelne MINT-Fächer im Vergleich",
         width = 12,
-        #p("Lorem ipsum dolor sit amet"),
+        p("Hier können Sie sich die Kursbelegungen für die einzelnen Fächer im Vergleich anschauen."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -159,9 +152,9 @@ mod_schule_kurse_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von Frauen in einzelnen MINT-Fächern",
+        title = "Anteil von Schülerinnen in einzelnen MINT-Fächern",
         width = 12,
-        #p("Lorem ipsum dolor sit amet"),
+        p("Hier können Sie die Kursbelegungen von Schülern und Schülerinnen vergleichen."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -194,7 +187,7 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "Bundesländer im Vergleich",
         width = 12,
-        #p("Lorem ipsum dolor sit amet"),
+        p("Hier finden Sie Ergebnisse für die Fächerbelegung in den Bundesländern im Vergleich."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -220,9 +213,9 @@ mod_schule_kurse_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von Frauen in den Bundesländern",
+        title = "Anteil von Schülerinnen in den Bundesländern",
         width = 12,
-        #p("Lorem ipsum dolor sit amet"),
+        p("Hier finden Sie Ergebnisse für die Fächerbelegung nach Geschlecht in den Bundesländern."),
         tabsetPanel(type = "tabs",
                     tabPanel("Regionaler Vergleich", br(),
 
@@ -252,7 +245,24 @@ mod_schule_kurse_ui <- function(id){
                               )
 
                   )
-        )))
+        ))),
+    fluidRow(
+      shinydashboard::box(
+        width = 12,
+    p(style = "text-align: justify; font-size = 16px",
+      span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "KMK 2021, auf Anfrage.")),
+    p(style = "text-align: justify; font-size = 16px",
+      span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
+           "Anders als Studierende und Auszubildende lassen sich Schülerinnen
+               und Schüler der Oberstufe nicht dem Bereich MINT eindeutig
+               zuordnen, weil sie mindestens zwei Leistungskurse wählen müssen.
+               Um dennoch einen Anteil von MINT versus Nicht-MINT angeben zu
+               können, werden die Kursbelegungen der Schülerinnen und Schüler
+               gezählt. Auf die Ausweisung absoluter Zahlen verzichten wir, da
+               sie nicht der Grundgesamtheit der Schülerinnen und Schüler
+               entspricht."))
+      )
+    )
   )
 }
 

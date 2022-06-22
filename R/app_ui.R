@@ -17,8 +17,8 @@ app_ui <- function(request) {
         title = div(
           img(
             src = "www/mint-logo.png",
-            height = 45),
-          "MINT-DataLab",
+            height = 45
+          ),
           style = "text-align: center;"
         )
       ),
@@ -31,8 +31,8 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Schule", icon = shiny::icon("school"), tabName = "schule"),
           shinydashboard::menuItem("Studium", icon = shiny::icon("university"), tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
-          shinydashboard::menuItem("Ausbildung und Beruf", icon = shiny::icon("building"), tabName = "beruf"),
-          shinydashboard::menuItem("Quellen und Hinweise", icon = shiny::icon("bars"), tabName = "quellen")
+          shinydashboard::menuItem("Beruf", icon = shiny::icon("building"), tabName = "beruf"),
+          shinydashboard::menuItem("Quellen", icon = shiny::icon("bars"), tabName = "quellen")
 
         )
       ),

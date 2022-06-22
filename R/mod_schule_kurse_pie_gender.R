@@ -11,7 +11,7 @@ mod_schule_kurse_pie_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wähle einen Zeitraum:"),
+    p("Wähle einen Zeitpunkt:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_pie_gender"),
       label = NULL,
