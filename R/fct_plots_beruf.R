@@ -56,7 +56,7 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
 
@@ -72,7 +72,7 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE))
 
@@ -592,7 +592,7 @@ arbeitsmarkt_verlauf <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), style = list(fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
+    highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.", style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Anteil von Frauen an ", title_help ," im Verlauf"),
                           margin = 45,
                           align = "center",
@@ -775,7 +775,7 @@ arbeitsmarkt_verlauf_bl <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil {point.anzeige_geschlecht} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), style = list(fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
+    highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.", style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Anteil von Frauen und Männer ", title_help ," im Verlauf"),
                           margin = 45,
                           align = "center",
@@ -839,7 +839,7 @@ beruf_verlauf_single <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Anteil"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT im Zeitverlauf"),
                           margin = 45,
                           align = "center",
@@ -908,6 +908,7 @@ beruf_einstieg_vergleich <- function(df,r) {
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(contextButton = list(
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
@@ -979,7 +980,7 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Weibliche ", indikator_choice, " in MINT-Berufen",title_help),
                           margin = 45,
                           align = "center",
@@ -1256,7 +1257,7 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("MINT-Anteil", title_help),
                           margin = 45,
                           align = "center",
@@ -1436,9 +1437,9 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
       na.value="#b1b5c3",
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("Fachkraft",", ",df_male[1], "%"),
-        paste0("Spezialist",", ",df_male[2], "%"),
-        paste0("Experte",", ",df_male[3], "%"),
+        paste0("MINT-Fachkraft",", ",df_male[1], "%"),
+        paste0("MINT-Spezialist",", ",df_male[2], "%"),
+        paste0("MINT-Experte",", ",df_male[3], "%"),
         paste0("Andere Berufe",", ",df_male[4], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -1468,8 +1469,8 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
         guide = ggplot2::guide_legend(reverse = TRUE),
         na.value="#b1b5c3",
         labels = c(
-          paste0("Fachkraft",", ",df_female[1], "%"),
-          paste0("Spezialist",", ",df_female[2], "%"),
+          paste0("MINT-Fachkraft",", ",df_female[1], "%"),
+          paste0("MINT-Spezialist",", ",df_female[2], "%"),
           # paste0("Experte",", ",df_female[3], "%"),
           paste0("Andere Berufe",", ",df_female[4], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
@@ -1488,9 +1489,9 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
         na.value="#b1b5c3",
         guide = ggplot2::guide_legend(reverse = TRUE),
         labels = c(
-          paste0("Fachkraft",", ",df_female[1], "%"),
-          paste0("Spezialist",", ",df_female[2], "%"),
-          paste0("Experte",", ",df_female[3], "%"),
+          paste0("MINT-Fachkraft",", ",df_female[1], "%"),
+          paste0("MINT-Spezialist",", ",df_female[2], "%"),
+          paste0("MINT-Experte",", ",df_female[3], "%"),
           paste0("Andere Berufe",", ",df_female[4], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -1582,7 +1583,7 @@ arbeitsmarkt_anforderungen_verlauf_gender <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Arbeitnehmerinnen: ", title_help, " in ", states),
                           margin = 45,
                           align = "center",
@@ -1761,7 +1762,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
   waffle_employed <- waffle::waffle(df_employed, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Beschäftigte: MINT und andere Berufe im Vergleich</span> <br>")) +
+      title = paste0("<span style='color:black;'>", "Beschäftigte: MINT und<br> andere Berufe im Vergleich</span> <br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -1778,9 +1779,9 @@ arbeitsmarkt_anforderungen <- function(df,r) {
       na.value="#b1b5c3",
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("Fachkraft",", ",df_employed[1], "%"),
-        paste0("Spezialist",", ",df_employed[2], "%"),
-        paste0("Experte",", ",df_employed[3], "%"),
+        paste0("MINT-Fachkraft",", ",df_employed[1], "%"),
+        paste0("MINT-Spezialist",", ",df_employed[2], "%"),
+        paste0("MINT-Experte",", ",df_employed[3], "%"),
         paste0("Andere Berufe",", ",df_employed[4], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -1788,7 +1789,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
   waffle_trainee <- waffle::waffle(df_trainee, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Auszubildende: MINT und andere Berufe im Vergleich</span> <br>")) +
+      title = paste0("<span style='color:black;'>", "Auszubildende: MINT und<br> andere Berufe im Vergleich</span> <br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -1810,8 +1811,8 @@ arbeitsmarkt_anforderungen <- function(df,r) {
         guide = ggplot2::guide_legend(reverse = TRUE),
         na.value="#b1b5c3",
         labels = c(
-          paste0("Fachkraft",", ",df_trainee[1], "%"),
-          paste0("Spezialist",", ",df_trainee[2], "%"),
+          paste0("MINT-Fachkraft",", ",df_trainee[1], "%"),
+          paste0("MINT-Spezialist",", ",df_trainee[2], "%"),
           # paste0("Experte",", ",df_trainee[3], "%"),
           paste0("Andere Berufe",", ",df_trainee[4], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
@@ -1830,9 +1831,9 @@ arbeitsmarkt_anforderungen <- function(df,r) {
         na.value="#b1b5c3",
         guide = ggplot2::guide_legend(reverse = TRUE),
         labels = c(
-          paste0("Fachkraft",", ",df_trainee[1], "%"),
-          paste0("Spezialist",", ",df_trainee[2], "%"),
-          paste0("Experte",", ",df_trainee[3], "%"),
+          paste0("MINT-Fachkraft",", ",df_trainee[1], "%"),
+          paste0("MINT-Spezialist",", ",df_trainee[2], "%"),
+          paste0("MINT-Experte",", ",df_trainee[3], "%"),
           paste0("Andere Berufe",", ",df_trainee[4], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -1915,7 +1916,7 @@ arbeitsmarkt_anforderungen_verlauf <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Arbeitnehmerinnen: ", title_help, " in ", states),
                           margin = 45,
                           align = "center",
@@ -2230,7 +2231,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil Frauen  {point.indikator} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Anteil von Frauen in MINT-Berufen im Zeitverlauf"),
                           margin = 45,
                           align = "center",
