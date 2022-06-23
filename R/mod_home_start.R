@@ -60,6 +60,8 @@ mod_home_start_ui <- function(id){
                    alt = "Logo MINT",
                    style="display: block; margin-left: auto; margin-right: auto;"
                ),
+               br(),
+               br(),
                img(src='www/BMBF-Logo.jpg',
                    class = "img-responsive",
                    height = "150px", width = "150px",

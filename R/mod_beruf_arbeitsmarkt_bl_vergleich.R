@@ -11,7 +11,7 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie einen Zeitraum:"),
+    p("Wählen Sie einen Zeitpunkt:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_bl_vergleich"),
       label = NULL,

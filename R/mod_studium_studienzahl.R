@@ -235,7 +235,7 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "Anteil von Studentinnen in den Bundesländern",
         width = 12,
-        p("Hier finden Sie den Anteil an Belegunden von Frauen und Männern in MINT-Fächern für die Bundesländer im Vergleich. "),
+        p("Hier finden Sie den Anteil an Belegungen von Frauen und Männern in MINT-Fächern für die Bundesländer im Vergleich. "),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 

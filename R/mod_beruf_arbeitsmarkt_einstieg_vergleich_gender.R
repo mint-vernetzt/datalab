@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie einen Zeitraum:"),
+    p("Wählen Sie einen Zeitpunkt:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_einstieg_vergleich_gender"),
       label = NULL,
