@@ -31,8 +31,8 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Schule", icon = shiny::icon("school"), tabName = "schule"),
           shinydashboard::menuItem("Studium", icon = shiny::icon("university"), tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
-          shinydashboard::menuItem("Beruf", icon = shiny::icon("building"), tabName = "beruf"),
-          shinydashboard::menuItem("Quellen", icon = shiny::icon("bars"), tabName = "quellen")
+          shinydashboard::menuItem("Ausbildung & Beruf", icon = shiny::icon("building"), tabName = "beruf"),
+          shinydashboard::menuItem("Quellen & Hinweise", icon = shiny::icon("bars"), tabName = "quellen")
 
         )
       ),

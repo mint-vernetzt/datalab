@@ -12,27 +12,20 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
   tagList(
     fluidRow(
       shinydashboard::box(
-        title = "Box 1",
+        title = "Arbeitsmarkt und MINT",
         width = 12,
         p(style = "text-align: justify; font-size = 16px",
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-        invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua"),
-        br(),
+          "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt"),
+        #br(),
         p(style = "text-align: justify; font-size = 16px",
-          span("17%", style = "color:#b16fab; font-size: 50px"),
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-        sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-        aliquyam erat, sed diam voluptua."),
-        br(),
+          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Hochschul-Statistiken des Statistischen Bundesamtes")),
         p(style = "text-align: justify; font-size = 16px",
-          span("38%", style = "color:#f5adac; font-size: 50px"),
-          "Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-        sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-        aliquyam erat, sed diam voluptua.")
+          span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
+               " "))
       )),
     fluidRow(
       shinydashboard::box(
-        title = "Box 2",
+        title = "Anteil von MINT-Fächern in Ausbildung und Beruf",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
@@ -90,7 +83,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box 3",
+        title = "Anteil von Frauen an MINT-Fächern in Ausbildung und Beruf",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
@@ -131,7 +124,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     )))),
     fluidRow(
       shinydashboard::box(
-        title = "Box 4",
+        title = "Anteil von MINT-Fächern in Ausbildung und Beruf nach Qualifikation",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
@@ -172,7 +165,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Box 5",
+        title = "Anteil von Frauen in MINT-Fächern in Ausbildung und Beruf nach Qualifikation",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
