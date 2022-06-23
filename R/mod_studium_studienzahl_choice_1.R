@@ -10,7 +10,7 @@
 mod_studium_studienzahl_choice_1_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wähle einen Zeitraum:"),
+    p("Wähle einen Zeitpunkt:"),
       shinyWidgets::sliderTextInput(
         inputId = ns("date_studierende"),
         label = NULL,
