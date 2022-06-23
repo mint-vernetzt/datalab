@@ -11,7 +11,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wähle einen Zeitraum:"),
+    p("Wählen Sie einen Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_ranking_subject_bl"),
       label = NULL,
@@ -22,7 +22,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_ranking_bl_subject"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
-      p("Wähle eine Hochschulform:"),
+      p("Wählen Sie eine Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studierende_ranking_bl_subject == false",
                        ns = ns,
                        shinyWidgets::pickerInput(
@@ -36,7 +36,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
                          choices = "Uni"
                        ))
     ),
-    p("Wähle den Status der Student*innen:"),
+    p("Wählen Sie den Status der Student*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("topic_selected_subject_bl"),
       choices = c("Studienanfänger", "Studierende"),
@@ -44,7 +44,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wähle ein Bundesland:"),
+    p("Wählen Sie ein Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_ranking_subject_bl"),
       choices = c("Berlin",

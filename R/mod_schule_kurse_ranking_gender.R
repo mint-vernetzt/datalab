@@ -10,7 +10,7 @@
 mod_schule_kurse_ranking_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wähle einen Zeitpunkt:"),
+    p("Wählen Sie einen Zeitpunkt:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_ranking_gender"),
       label = NULL,
@@ -18,7 +18,7 @@ mod_schule_kurse_ranking_gender_ui <- function(id){
       selected = 2020
     ),
 
-    p("Wähle ein Fach:"),
+    p("Wählen Sie ein Fach:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_kurse_ranking_gender"),
       choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",

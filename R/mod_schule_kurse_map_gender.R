@@ -11,14 +11,14 @@ mod_schule_kurse_map_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wähle einen Zeitpunkt:"),
+    p("Wählen Sie einen Zeitpunkt:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_map_gender"),
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
     ),
-    p("Wähle ein Fach:"),
+    p("Wählen Sie ein Fach:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_map_gender"),
       choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
@@ -28,7 +28,7 @@ mod_schule_kurse_map_gender_ui <- function(id){
       selected = "MINT (aggregiert)"
     ),
 
-    p("Wähle in welcher Form der Kurs belegt wurde:"),
+    p("Wählen Sie in welcher Form der Kurs belegt wurde:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_map_gender"),
       choices = c("Grundkurse", "Leistungskurse"),

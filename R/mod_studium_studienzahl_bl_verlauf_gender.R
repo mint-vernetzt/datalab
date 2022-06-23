@@ -11,7 +11,7 @@ mod_studium_studienzahl_bl_verlauf_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wähle einen Zeitraum:"),
+    p("Wählen Sie einen Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_gender_verlauf"),
       label = NULL,
@@ -23,7 +23,7 @@ mod_studium_studienzahl_bl_verlauf_gender_ui <- function(id){
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_studienzahl_bl_gender_verlauf"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
-      p("Wähle eine Hochschulform:"),
+      p("Wählen Sie eine Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_gender_verlauf == false",
                        ns = ns,
                        shinyWidgets::pickerInput(
@@ -36,14 +36,14 @@ mod_studium_studienzahl_bl_verlauf_gender_ui <- function(id){
                          inputId = ns("hochschulform_studium_studienzahl_bl_gender_verlauf2"),
                          choices = "Uni"
                        )),
-      p("Wähle ein Fach:"),
+      p("Wählen Sie ein Fach:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_gender_verlauf"),
         choices = c("MINT (aggregiert)","Mathe", "Ingenieur"),
         selected = "MINT (aggregiert)"
       )
     ),
-    p("Wähle den Status der Student*innen:"),
+    p("Wählen Sie den Status der Student*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_studium_studienzahl_bl_gender_verlauf"),
       choices = c("Studienanfänger", "Studierende"),
@@ -51,7 +51,7 @@ mod_studium_studienzahl_bl_verlauf_gender_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wähle ein oder mehrere Bundesländer:"),
+    p("Wählen Sie ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studium_studienzahl_bl_gender_verlauf"),
       choices = c("Berlin",

@@ -11,7 +11,7 @@ mod_beruf_arbeitsmarkt_einstieg_ui <- function(id){
   ns <- NS(id)
 
   tagList(
-    p("Wähle einen Zeitpunkt:"),
+    p("Wählen Sie einen Zeitpunkt:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_einstieg"),
       label = NULL,

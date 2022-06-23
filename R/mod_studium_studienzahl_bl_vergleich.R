@@ -11,7 +11,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wähle einen Zeitpunkt:"),
+    p("Wählen Sie einen Zeitpunkt:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_vergleich"),
       label = NULL,
@@ -22,7 +22,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_studienzahl_bl_vergleich"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
-      p("Wähle eine Hochschulform:"),
+      p("Wählen Sie eine Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_vergleich == false",
                        ns = ns,
                        shinyWidgets::pickerInput(
@@ -35,14 +35,14 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                          inputId = ns("hochschulform_studium_studienzahl_bl_vergleich2"),
                          choices = "Uni"
                        )),
-      p("Wähle ein Fach:"),
+      p("Wählen Sie ein Fach:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_vergleich"),
         choices = c("MINT (aggregiert)","Mathe", "Ingenieur"),
         selected = "MINT (aggregiert)"
       )
     ),
-    p("Wähle den Status der Student*innen:"),
+    p("Wählen Sie den Status der Student*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_studium_studienzahl_bl_vergleich"),
       choices = c("Studienanfänger", "Studierende"),

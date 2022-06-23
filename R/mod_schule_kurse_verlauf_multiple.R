@@ -11,7 +11,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wähle einen Zeitraum:"),
+    p("Wählen Sie einen Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_verlauf_multiple"),
       label = NULL,
@@ -19,7 +19,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wähle in welcher Form der Kurs belegt wurde:"),
+    p("Wählen Sie in welcher Form der Kurs belegt wurde:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("topic_selected_multiple"),
       choices = c("Grundkurse", "Leistungskurse"),
@@ -27,7 +27,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wähle ein Fach:"),
+    p("Wählen Sie ein Fach:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_multiple"),
       choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
@@ -36,7 +36,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "Sport", "Musik"),
       selected = "MINT (aggregiert)",
     ),
-    p("Wähle ein oder mehrere Bundesländer:"),
+    p("Wählen Sie ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf_multiple"),
       choices = c("Berlin",
