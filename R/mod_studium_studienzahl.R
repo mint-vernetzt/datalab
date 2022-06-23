@@ -17,22 +17,20 @@ mod_studium_studienzahl_ui <- function(id){
   tagList(
     fluidRow(
     shinydashboard::box(
-      title = "Studium und MINT",
+      tags$h1("Studium und MINT"),
       width = 12,
       p(style = "text-align: justify; font-size = 16px",
-        "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Hochschule."),
-      #br(),
-      p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Hochschul-Statistiken des Statistischen Bundesamtes")),
-      p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
-             " "))
+        "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Hochschule. Sie finden
+        Informationen zum Anteil von MINT-Fächern und nicht-MINT-Fächern an allen Studienfächern im Zeitraum
+        2013 bis 2020. Zudem können Sie sich den Frauen- und Männeranteil in einzelnen MINT-Fächern für
+        Studierende und Studienanfänger*innen ausgeben lassen. Des weiteren haben wir alle Ergebnisse
+        auch für einzelne Bundesländer aufbereitet. ")
     )),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil MINT-Studienfächer",
+        title = "Anteil von MINT-Studienfächern",
         width = 12,
-        #p("Lorem ipsum dolor sit amet"),
+        p("Hier können Sie sich den Anteil von MINT-Studienfächern anschauen."),
         tabsetPanel(type = "tabs",
                     tabPanel(tab1_name[1], br(),
 
@@ -85,9 +83,11 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil Frauen an MINT-Fächern und Nicht-MINT-Fächern",
+        title = "Anteil von Frauen an MINT-Fächern und nicht-MINT-Fächern",
         width = 12,
-        #p("Lorem ipsum dolor sit amet"),
+        p("Hier können Sie sich anschauen, wie hoch der Frauen- und Männeranteil unter
+        Studierenden und
+          Studienanfänger*innen in MINT- und nicht-MINT-Fächern ist."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -123,7 +123,7 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "Einzelne MINT-Fächer im Vergleich",
         width = 12,
-        #p("Lorem ipsum dolor sit amet"),
+        p("Hier finden Sie Analysen für einzelne Studienfächer im Vergleich."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -159,9 +159,9 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil Frauen in einzelnen MINT-Fächern",
+        title = "Anteil von Frauen in den einzelnen MINT-Fächern",
         width = 12,
-        #p("Fächervergleich Geschlechter"),
+        p("Hier finden Sie den Frauen- und Männeranteil in einzelnen Studienfächern im Vergleich."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -201,7 +201,7 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "Bundesländer im Vergleich",
         width = 12,
-        #p("Karte"),
+        p("Hier finden Sie Analysen für einzelne Bundesländer."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -233,9 +233,9 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil Frauen in den Bundesländern",
+        title = "Anteil von Studentinnen in den Bundesländern",
         width = 12,
-        #p("Karte"),
+        p("Hier finden Sie den Anteil an Belegunden von Frauen und Männern in MINT-Fächern für die Bundesländer im Vergleich. "),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -265,6 +265,16 @@ mod_studium_studienzahl_ui <- function(id){
                              )
                     )
         ))),
+    fluidRow(
+      shinydashboard::box(
+        width = 12,
+    p(style = "text-align: justify; font-size = 16px",
+      span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Hochschul-Statistiken des Statistischen Bundesamtes, 2021: auf Anfrage.")),
+    p(style = "text-align: justify; font-size = 16px",
+      span(tags$b(span("Methodische Hinweise: ", style = "color:#b16fab")),
+           " "))
+      )
+    )
   )
 }
 
