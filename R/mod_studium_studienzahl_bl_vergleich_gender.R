@@ -11,7 +11,7 @@ mod_studium_studienzahl_bl_vergleich_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie einen Zeitpunkt:"),
+    p("Wählen Sie ein Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_gender_vergleich"),
       label = NULL,

@@ -11,7 +11,7 @@ mod_studium_studienzahl_einstieg_comparison_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie einen Zeitpunkt:"),
+    p("Wählen Sie ein Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_einstieg_comparison"),
       label = NULL,

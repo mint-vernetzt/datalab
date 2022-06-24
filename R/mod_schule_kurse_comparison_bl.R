@@ -11,7 +11,7 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie einen Zeitpunkt:"),
+    p("Wählen Sie ein Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_comparison_bl"),
       label = NULL,

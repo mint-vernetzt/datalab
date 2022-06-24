@@ -10,7 +10,7 @@
 mod_home_start_comparison_mint_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie einen Zeitpunkt:"),
+    p("Wählen Sie ein Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_comparison_mint_gender"),
       label = NULL,
