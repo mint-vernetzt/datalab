@@ -170,7 +170,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil Frauen in in Ausbildung und Beruf nach Anforderungsprofil auf dem Arbeitsmarkt",
+        title = "Anteil Frauen in Ausbildung und Beruf nach Anforderungsprofil auf dem Arbeitsmarkt",
         width = 12,
         p("Definition von Fachkraft/Spezialist/Experte einfügen"),
         tabsetPanel(type = "tabs",
