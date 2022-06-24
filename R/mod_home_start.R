@@ -37,7 +37,7 @@ mod_home_start_ui <- function(id){
                   p(style = "text-align: justify; font-size = 16px",
                     span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
                          Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
-                         der Zeit integriert. (Button: weitere Informationen: Reiter: Quellen)")
+                         der Zeit integriert. (Siehe Reiter: Quellen & Hinweise)")
                     ),
                    p(style = "text-align: justify; font-size = 16px",
                      span("Haben Sie ", tags$b(span("Anregungen oder Wünsche", style = "color:#b16fab")), " an weitere Datensätze oder Darstellungen,

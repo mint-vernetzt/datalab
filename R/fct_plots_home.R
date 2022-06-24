@@ -96,7 +96,7 @@ home_einstieg_pie <- function(df,r) {
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
@@ -111,6 +111,7 @@ home_einstieg_pie <- function(df,r) {
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
 
@@ -153,7 +154,7 @@ home_einstieg_pie <- function(df,r) {
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
@@ -168,6 +169,7 @@ home_einstieg_pie <- function(df,r) {
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
 
@@ -181,7 +183,7 @@ home_einstieg_pie <- function(df,r) {
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
