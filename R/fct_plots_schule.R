@@ -48,7 +48,7 @@ kurse_einstieg_pie <- function(df,r) {
 
   df_lk <- df %>% dplyr::filter(indikator == "Leistungskurse")
 
-  plot_gk <- highcharter::hchart(df_gk, size = 220, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+  plot_gk <- highcharter::hchart(df_gk, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Fächern für Grundkurse in ", timerange),
@@ -61,7 +61,7 @@ kurse_einstieg_pie <- function(df,r) {
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
 
-  plot_lk <- highcharter::hchart(df_lk, size = 220, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+  plot_lk <- highcharter::hchart(df_lk, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Fächern für Leistungskurse in ", timerange),
@@ -147,7 +147,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
   df_lk <- share_pie(df_lk)
 
 
-  plot_gk_mint <- highcharter::hchart(df_gk[df_gk$fachbereich == "MINT",], size = 250, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+  plot_gk_mint <- highcharter::hchart(df_gk[df_gk$fachbereich == "MINT",], size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von Schülerinnen in MINT-Fächern in Grundkursen in ", timerange),
@@ -173,11 +173,12 @@ kurse_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"), marginTop = 1) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
+                                           dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE,
+                                           opacity = 0.7)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
 
-  plot_lk_mint <- highcharter::hchart(df_lk[df_gk$fachbereich == "MINT",], size = 250, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+  plot_lk_mint <- highcharter::hchart(df_lk[df_gk$fachbereich == "MINT",], size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von Schülerinnen in MINT-Fächern in Leistungskursen in ", timerange),
@@ -202,7 +203,8 @@ kurse_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"), marginTop = 1) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE, format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
+                                           dataLabels = list(enabled = TRUE, format='{point.percentage:.0f}%'), showInLegend = TRUE,
+                                           opacity = 0.7)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
 
@@ -556,7 +558,7 @@ kurse_mint_comparison <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::ylab("") + ggplot2::xlab("Anteil") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil der Fächer im Vergleich",
+                                 indikator_comparison, ": Anteil der Fächer im Vergleich in ", timerange,
                                  "<br><br><br>"),
                   fill = "") +
     ggplot2::scale_y_discrete(expand = c(0,0)) +
@@ -647,7 +649,7 @@ kurse_mint_comparison_bl <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::ylab("") + ggplot2::xlab("Anteil") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil der Fächer im Vergleich",
+                                 indikator_comparison, ": Anteil der Belegungen für ", subject, " im Vergleich in ", timerange,
                                  "<br><br><br>"),
                   fill = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
@@ -1822,7 +1824,7 @@ kurse_einstieg_comparison <- function(df,r) {
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#154194", "#b16fab")) %>%
-    highcharter::hc_title(text = "MINT-Anteile im Vergleich",
+    highcharter::hc_title(text = paste0("MINT-Anteile im Vergleich in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1962,9 +1964,9 @@ kurse_comparison_gender <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::xlab("") + ggplot2::ylab("Anteil") +
     ggplot2::scale_fill_manual(values = c("#154194", "#b16fab")) +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil von Schülerinnen in MINT im Vergleich",
-                                 "<br><br><br>"),
+    ggplot2::labs(title = paste0(paste0("<span style='font-size:20.5pt; color:black'>",
+                                 "Anteil von Schülerinnen in MINT im Vergleich in ", timerange,
+                                 "<br><br><br>")),
                   fill = "") +
     ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"))
 
