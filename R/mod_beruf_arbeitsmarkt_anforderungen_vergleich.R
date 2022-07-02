@@ -30,6 +30,7 @@ mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("states_arbeitsmarkt_anforderungen_vergleich"),
       choices = c("Deutschland",
+                  "Baden-Württemberg",
                   "Berlin",
                   "Brandenburg",
                   "Bremen",

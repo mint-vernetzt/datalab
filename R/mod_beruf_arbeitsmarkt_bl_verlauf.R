@@ -37,6 +37,7 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_bl_verlauf"),
       choices = c("Deutschland",
+                  "Baden-Württemberg",
                   "Berlin",
                   "Brandenburg",
                   "Bremen",

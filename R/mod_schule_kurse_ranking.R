@@ -21,6 +21,7 @@ mod_schule_kurse_ranking_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_ranking"),
       choices = c("Deutschland",
+                  "Bayern",
                   "Berlin",
                   "Brandenburg",
                   "Bremen",

@@ -28,6 +28,7 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("states_arbeitsmarkt_anforderungen_gender_verlauf"),
       choices = c("Deutschland",
+                  "Baden-Württemberg",
                   "Berlin",
                   "Brandenburg",
                   "Bremen",

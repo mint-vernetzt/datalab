@@ -1007,9 +1007,6 @@ kurse_ranking_gender <- function(df,r, type) {
 
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
-  # include "Osten" und "Westen" in Dataframe
-  df <- prep_kurse_east_west(df)
-
   # aggregate to MINT
   df_sub <- share_mint_kurse(df)
 
@@ -1190,8 +1187,6 @@ kurse_map <- function(df,r) {
 
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
-  df <- df %>% dplyr::filter(region != "Bayern")
-
   # aggregate to MINT
   df_sub <- share_mint_kurse(df)
 
@@ -1332,9 +1327,6 @@ kurse_map_gender <- function(df,r) {
   df <- df %>% dplyr::filter(region != "Deutschland")
 
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
-
 
   # aggregate to MINT
   df_sub <- share_mint_kurse(df)

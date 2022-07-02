@@ -161,10 +161,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui_1")
                              ),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_arbeitsmarkt_vergleich"))#,
-                               # shiny::downloadButton(ns("download_ranking"), label = "",
-                               #                       class = "butt",
-                               #                       icon = shiny::icon("download"))
+                               plotOutput(ns("plot_arbeitsmarkt_vergleich"))
                              )
                     )
         ))),
@@ -202,10 +199,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui_1")
                              ),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_arbeitsmarkt_vergleich_gender"))#,
-                               # shiny::downloadButton(ns("download_ranking"), label = "",
-                               #                       class = "butt",
-                               #                       icon = shiny::icon("download"))
+                               plotOutput(ns("plot_arbeitsmarkt_vergleich_gender"))
                              )
                     )
         ))),
