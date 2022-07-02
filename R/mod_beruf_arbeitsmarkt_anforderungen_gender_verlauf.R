@@ -24,7 +24,7 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui <- function(id){
       choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte"),
       selected = "Gesamt"
     ),
-    p("Wählen Sie Bundesland:"),
+    p("Wählen Sie ein Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_arbeitsmarkt_anforderungen_gender_verlauf"),
       choices = c("Berlin",

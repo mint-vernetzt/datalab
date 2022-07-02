@@ -1420,11 +1420,13 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
                                                                    'Experte',
                                                                    'Andere Berufe')))]
 
+  title_male <- paste0("Männliche ", indikator_choice)
+  title_female <- paste0("Weibliche ", indikator_choice)
   # create plot objects for waffle charts
   waffle_male <- waffle::waffle(df_male, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Arbeitnehmer</span> <br>")) +
+      title = paste0("<span style='color:black;'>", title_male, "</span> <br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -1451,7 +1453,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
   waffle_female <- waffle::waffle(df_female, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Arbeitnehmerinnen</span> <br>")) +
+      title = paste0("<span style='color:black;'>", title_female,"</span> <br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -2105,7 +2107,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE,  format='{point.y:.0f}%'), showInLegend = TRUE)) %>%
+                                           dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
   plot_trainee_andere <- highcharter::hchart(df_trainee_andere, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion_gesamt)) %>%
@@ -2119,7 +2121,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE,  format='{point.y:.0f}%'), showInLegend = TRUE)) %>%
+                                           dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
   # Employed plots
@@ -2134,7 +2136,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE,  format='{point.y:.0f}%'), showInLegend = TRUE)) %>%
+                                           dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
   plot_employed_andere <- highcharter::hchart(df_employed_andere, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion_gesamt)) %>%
@@ -2148,7 +2150,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE,  format='{point.y:.0f}%'), showInLegend = TRUE)) %>%
+                                           dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
   # place plots inside grid
