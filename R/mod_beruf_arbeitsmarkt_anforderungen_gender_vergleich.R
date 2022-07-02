@@ -21,7 +21,8 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui <- function(id){
     p("Wählen Sie ein Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_arbeitsmarkt_anforderungen_gender_vegleich"),
-      choices = c("Berlin",
+      choices = c("Deutschland",
+                  "Berlin",
                   "Brandenburg",
                   "Bremen",
                   "Hamburg",

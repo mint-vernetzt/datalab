@@ -30,7 +30,8 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
     p("Wählen Sie ein Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("state_comparison_subject"),
-      choices = c("Berlin",
+      choices = c("Deutschland",
+                  "Berlin",
                   "Brandenburg",
                   "Bremen",
                   "Hamburg",

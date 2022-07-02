@@ -947,9 +947,6 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
 
   df <- df %>% dplyr::filter(indikator == indikator_choice)
 
-  # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
   df <- prep_arbeitsmarkt_east_west(df)
 
   df <- df %>% dplyr::filter(region %in% states)
@@ -1225,9 +1222,6 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   df <- df %>% dplyr::filter(indikator == indikator_choice)
-
-  # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
 
   df <- prep_arbeitsmarkt_east_west(df)
 
@@ -1534,8 +1528,6 @@ arbeitsmarkt_anforderungen_verlauf_gender <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
   df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
 
   df <- prep_arbeitsmarkt_east_west(df)

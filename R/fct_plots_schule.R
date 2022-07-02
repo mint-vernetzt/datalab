@@ -562,30 +562,6 @@ kurse_mint_comparison <- function(df,r) {
     ggplot2::scale_y_discrete(expand = c(0,0)) +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 
-  # highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich)) %>%
-  #   highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
-  #   highcharter::hc_yAxis(title = list(text = "Anteil"), labels = list(format = "{value}%", formatter = '')) %>%
-  #   highcharter::hc_xAxis(title = list(text = "")) %>%
-  #   highcharter::hc_plotOptions(bar = list(stacking = "normal")) %>%
-  #   highcharter::hc_colors(c("#154194")) %>%
-  #   highcharter::hc_title(text = "MINT-Anteile im Vergleich",
-  #                         margin = 45,
-  #                         align = "center",
-  #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  #   highcharter::hc_chart(
-  #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-  #   ) %>%
-  #   highcharter::hc_exporting(enabled = TRUE,
-  #                             buttons = list(contextButton = list(
-  #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-  #                               onclick = highcharter::JS("function () {
-  #                                                             this.exportChart({ type: 'image/png' }); }"),
-  #                               align = 'right',
-  #                               verticalAlign = 'bottom',
-  #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-
-
 }
 
 #' A function to plot a waffle chart
@@ -612,10 +588,7 @@ kurse_mint_comparison_bl <- function(df,r) {
 
   df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(region != "Bayern")
-
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
-
 
   df <- df %>% dplyr::filter(indikator == indikator_comparison)
 
@@ -946,11 +919,7 @@ kurse_ranking <- function(df,r, type) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_kurse_east_west(df)
@@ -1037,8 +1006,6 @@ kurse_ranking_gender <- function(df,r, type) {
   df <- df %>% dplyr::filter(region != "Deutschland")
 
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_kurse_east_west(df)
@@ -1534,11 +1501,6 @@ kurse_verlauf <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   df <- df %>% dplyr::filter(indikator == level_kurs)
-
-  # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
 
   if (level_kurs == "Grundkurse"){
 
@@ -2040,9 +2002,9 @@ kurse_verlauf_single_bl <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
+  # df <- df %>% dplyr::filter(region != "Deutschland")
+  #
+  # df <- df %>% dplyr::filter(region != "Bayern")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_kurse_east_west(df)
@@ -2069,7 +2031,7 @@ kurse_verlauf_single_bl <- function(df,r) {
 
   df <- rbind(df, df_sub)
 
-  # fitler states
+  # filter states
   df <- df %>% dplyr::filter(region %in% states)
 
   df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
@@ -2137,10 +2099,6 @@ kurse_verlauf_multiple_bl <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   df <- df %>% dplyr::filter(indikator == indikator_select)
-  # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_kurse_east_west(df)
@@ -2257,9 +2215,9 @@ kurse_verlauf_subjects_bl <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
+  # df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(region != "Bayern")
+  # df <- df %>% dplyr::filter(region != "Bayern")
 
   df <- df %>% dplyr::filter(indikator == indikator_kurse)
 

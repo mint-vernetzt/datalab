@@ -54,7 +54,8 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
     p("Wählen Sie ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studium_studienzahl_bl_verlauf"),
-      choices = c("Berlin",
+      choices = c("Deutschland",
+                  "Berlin",
                   "Brandenburg",
                   "Bremen",
                   "Hamburg",

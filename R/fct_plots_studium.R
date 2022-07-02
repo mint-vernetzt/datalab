@@ -1737,8 +1737,6 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
   df <- df %>% dplyr::filter(region != "Bayern")
 
   df <- df %>% dplyr::filter(region != "Baden-Württemberg")
@@ -1868,9 +1866,6 @@ ranking_bl_subject <- function(df,r, type) {
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   df <- df %>% dplyr::filter(indikator == indikator_comparison)
-
-  # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_studierende_east_west(df)
@@ -2091,8 +2086,6 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
   # df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
   df <- df %>% dplyr::filter(region != "Bayern")
@@ -2211,8 +2204,6 @@ studienfaecher_ranking <- function(df,r, type) {
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
-
-  df <- df %>% dplyr::filter(region != "Deutschland")
 
   # df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
@@ -2672,8 +2663,6 @@ studierende_verlauf_multiple_bl <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
   df <- df %>% dplyr::filter(region != "Bayern")
 
   df <- df %>% dplyr::filter(region != "Baden-Württemberg")
@@ -2818,8 +2807,6 @@ studierende_verlauf_multiple_bl_gender <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
   df <- df %>% dplyr::filter(region != "Bayern")
 
   df <- df %>% dplyr::filter(region != "Baden-Württemberg")
