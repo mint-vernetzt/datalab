@@ -1320,7 +1320,7 @@ kurse_map_gender <- function(df,r) {
 
   subjects <- r$subject_map_gender
 
-  indikator_choice <- r$indikator_map_gender
+  # indikator_choice <- r$indikator_map_gender
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
@@ -1355,7 +1355,7 @@ kurse_map_gender <- function(df,r) {
 
   df <- df %>% dplyr::filter(fachbereich == subjects)
 
-  df <- df %>% dplyr::filter(indikator == indikator_choice)
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
 
   # calculate proportions
   df <- df %>% dplyr::group_by(region, indikator, anzeige_geschlecht) %>%
@@ -1363,12 +1363,11 @@ kurse_map_gender <- function(df,r) {
 
   df$proportion <- df$proportion * 100
 
-
   highcharter::hw_grid(
     # plot
     highcharter::hcmap(
       "countries/de/de-all",
-      data = df[df$anzeige_geschlecht == "Frauen",],
+      data = df[df$indikator == "Grundkurse",],
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
@@ -1382,7 +1381,7 @@ kurse_map_gender <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0, max=50) %>%
       highcharter::hc_title(
-        text = paste0("Schülerinnen: Anteil an Belegungen in ", subjects),
+        text = paste0("Schülerinnen: Anteil an Grundkursbelegungen in ", subjects),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1399,7 +1398,7 @@ kurse_map_gender <- function(df,r) {
 
     highcharter::hcmap(
       "countries/de/de-all",
-      data = df[df$anzeige_geschlecht == "Männer",],
+      data = df[df$indikator == "Leistungskurse",],
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
@@ -1413,7 +1412,7 @@ kurse_map_gender <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0, max=50) %>%
       highcharter::hc_title(
-        text = paste0("Schüler: Anteil an Belegungen in ", subjects),
+        text = paste0("Schüler: Anteil an Leistungskursbelegungen in ", subjects),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1559,7 +1558,7 @@ kurse_verlauf <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_caption(text = "Quelle: KMK 2021, auf Anfrage; eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Schülerinnen: Anteil von ",title_help, "-Belegungen in ", subjects_select ),
+    highcharter::hc_title(text = paste0("Schülerinnen: Anteil von ",title_help, "belegungen in ", subjects_select ),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%

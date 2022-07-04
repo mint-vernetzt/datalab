@@ -35,17 +35,7 @@ mod_schule_kurse_map_gender_ui <- function(id){
                   "Religion/Ethik",
                   "Sport"),
       selected = "MINT (aggregiert)"
-    ),
-
-    p("Wählen Sie in welcher Form der Kurs belegt wurde:"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("indikator_map_gender"),
-      choices = c("Grundkurse", "Leistungskurse"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
     )
-
   )
 }
 
@@ -61,10 +51,6 @@ mod_schule_kurse_map_gender_server <- function(id, r){
 
     observeEvent(input$subject_map_gender, {
       r$subject_map_gender <- input$subject_map_gender
-    })
-
-    observeEvent(input$indikator_map_gender, {
-      r$indikator_map_gender <- input$indikator_map_gender
     })
 
   })
