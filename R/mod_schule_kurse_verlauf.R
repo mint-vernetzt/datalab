@@ -32,10 +32,19 @@ mod_schule_kurse_verlauf_ui <- function(id){
     p("Wählen Sie ein Fach:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected"),
-      choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
-                  "Biologie", "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
-                  "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
-                  "Sport", "Musik"),
+      choices = c("MINT (aggregiert)",
+                  "Mathematik",
+                  "Informatik",
+                  "Physik",
+                  "Chemie",
+                  "Biologie",
+                  "andere Fächer (aggregiert)",
+                  "Deutsch",
+                  "Fremdsprachen",
+                  "Gesellschaftswissenschaften",
+                  "Musik/Kunst",
+                  "Religion/Ethik",
+                  "Sport"),
       selected = "MINT (aggregiert)"
     ),
 
