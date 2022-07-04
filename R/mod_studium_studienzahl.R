@@ -28,9 +28,9 @@ mod_studium_studienzahl_ui <- function(id){
     )),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von MINT-Studienfächern",
+        title = "Wie hoch ist der Anteil von Studierenden in MINT-Studienfächern?",
         width = 12,
-        p("Hier können Sie sich den Anteil von MINT-Studienfächern anschauen."),
+        p("Hier zeigen wir den Anteil von verschiedenen Studierendengruppen in MINT-Studienfächern.  "),
         tabsetPanel(type = "tabs",
                     tabPanel(tab1_name[1], br(),
 
@@ -83,11 +83,10 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von Frauen an MINT-Fächern und nicht-MINT-Fächern",
+        title = "Wie hoch ist der Anteil von Frauen an MINT-Fächern und Nicht-MINT-Fächern?",
         width = 12,
-        p("Hier können Sie sich anschauen, wie hoch der Frauen- und Männeranteil unter
-        Studierenden und
-          Studienanfänger*innen in MINT- und nicht-MINT-Fächern ist."),
+        p("Hier zeigen wir, wie hoch der Frauenanteil unter verschiedenen
+        Studierendengruppen in MINT- und Nicht-MINT-Fächern ist."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -199,9 +198,9 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Bundesländer im Vergleich",
+        title = "Anteil MINT in den Bundesländern im Vergleich",
         width = 12,
-        p("Hier finden Sie Analysen für einzelne Bundesländer."),
+        p("Hier zeigen wir die Anteil von MINT in einzelnen Bundesländern."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -233,9 +232,9 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von Studentinnen in den Bundesländern",
+        title = "Anteil von Frauen in MINT-Fächern in den Bundesländern",
         width = 12,
-        p("Hier finden Sie den Anteil an Belegungen von Frauen und Männern in MINT-Fächern für die Bundesländer im Vergleich. "),
+        p("Hier zeigen wir den Anteil von Frauen in MINT-Fächern in den einzelnen Bundesländern im Vergleich. "),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 

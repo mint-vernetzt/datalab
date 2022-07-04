@@ -12,7 +12,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
   tagList(
     fluidRow(
       shinydashboard::box(
-        title = "MINT auf dem Arbeitsmarkt",
+        tags$h1("MINT auf dem Arbeitsmarkt"),
         width = 12,
         p(style = "text-align: justify; font-size = 16px",
           "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.

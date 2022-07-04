@@ -38,17 +38,7 @@ mod_home_start_ui <- function(id){
                     span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
                          Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
                          der Zeit integriert. (Siehe Reiter: Quellen & Hinweise)")
-                    ),
-                   p(style = "text-align: justify; font-size = 16px",
-                     span("Haben Sie ", tags$b(span("Anregungen oder Wünsche", style = "color:#b16fab")), " an weitere Datensätze oder Darstellungen,
-                 freuen wir uns über Ihr Feedback (Link zur Umfrage ).", br(), "Für Fragen steht Ihnen", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject=MINT-Vernetzt Datalab", " Antonia Kröger"), " gerne zur Verfügung.")
-                   ),
-                   p(style = "text-align: justify; font-size = 16px",
-                     span(tags$b(span("Was ist MINTvernetzt?", style = "color:#b16fab")), br(),
-                          tags$b(span("Die Service- und Anlaufstelle für MINT-Akteur:innen in Deutschland", style = "color:#b16fab")),br(),
-                          "Die MINT-Vernetzungsstelle, kurz MINTvernetzt, ist das Dach für die außerschulische MINT-Bildung in Deutschland.
-                  MINTvernetzt wird vom Bundesministerium für Bildung und Forschung gefördert und von Mitarbeitenden der Körber-Stiftung, der matrix gGmbH,
-                  dem Nationalen MINTForum e.V., dem Stifterverband und der Universität Regensburg als Verbund gemeinsam umgesetzt."))
+                    )
                ),
         #solidHeader = TRUE,
         #collapsible = FALSE,
@@ -88,10 +78,10 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von MINT- und nicht-MINT",
+        title = "Wie hoch ist der Anteil von MINT in den verschiedenen Bereichen?",
         width = 12,
-        p("Hier können Sie sich den Anteil von MINT und nicht-MINT für verschiedene Indikatoren
-        aus den  Bereichen Schule, Hochschule und Arbeitsmarkt anschauen und vergleichen."),
+        p("Hier zeigen wir den Anteil von MINT für verschiedene Indikatoren
+        aus den  Bereichen Schule, Hochschule und Arbeitsmarkt. Die Folgeseiten zu den einzelnen Bereichen sind genauso aufgebaut."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(
@@ -115,10 +105,10 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von Frauen an MINT-Bereichen",
+        title = "Wie hoch ist der Anteil von Frauen in MINT in den verschiedenen Bereichen?",
         width = 12,
-        p("Hier können Sie sich den Anteil von Frauen an MINT und nicht-MINT für die Indikatoren
-        aus den  Bereichen Schule, Hochschule und Arbeitsmarkt anschauen und vergleichen."),
+        p("Hier zeigen wir den Anteil von Frauen in MINT für die Indikatoren
+        aus den  Bereichen Schule, Hochschule und Arbeitsmarkt anschauen und vergleichen. Zum Vergleich zeigen wir unter jedem Tortendiagramm auch den Anteil von Frauen ingesamt in dem jeweiligen Bereich."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                              shiny::sidebarPanel(
@@ -159,6 +149,10 @@ mod_home_start_ui <- function(id){
              "Die MINT-Vernetzungsstelle, kurz MINTvernetzt, ist das Dach für die außerschulische MINT-Bildung in Deutschland.
                   MINTvernetzt wird vom Bundesministerium für Bildung und Forschung gefördert und von Mitarbeitenden der Körber-Stiftung, der matrix gGmbH,
                   dem Nationalen MINTForum e.V., dem Stifterverband und der Universität Regensburg als Verbund gemeinsam umgesetzt."))
+    ),
+    p(style = "text-align: justify; font-size = 16px",
+      span("Haben Sie ", tags$b(span("Anregungen oder Wünsche", style = "color:#b16fab")), " an weitere Datensätze oder Darstellungen,
+                 freuen wir uns über Ihr Feedback (Link zur Umfrage ).", br(), "Für Fragen steht Ihnen", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject=MINT-Vernetzt Datalab", " Antonia Kröger"), " gerne zur Verfügung.")
     )
   )
   )
