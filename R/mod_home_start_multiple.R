@@ -18,13 +18,13 @@ mod_home_start_multiple_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wählen Sie einen oder mehrere Bereiche:"),
+    p("Auswahl Indikatoren (max. 3 auswählen):"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_multiple_1"),
       choices = c("Leistungskurse",
                   "Studienanfänger", "Studierende",
                   "Auszubildende", "Beschäftigte"),
-      selected = c("Leistungskurse", "Beschäftigte"),
+      selected = c("Studierende", "Beschäftigte"),
       options =  list(
         "max-options" = 3,
         "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
