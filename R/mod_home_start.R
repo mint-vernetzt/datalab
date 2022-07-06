@@ -15,7 +15,7 @@ mod_home_start_ui <- function(id){
         #title = span("Willkommen im interaktiven MINT-DataLab", style = "color:#154194; font-size: 50px"),
         width = 12,
         column(width = 9,
-               tags$h1("Willkommen im interaktiven MINT-DataLab"),
+               tags$h1("Willkommen im interaktiven MINT-DataLab von MINTvernetzt"),
                #tags$h1("Willkommen im interaktiven MINT-DataLab"),
                #p(style = "color:#154194; font-size: 50px", "Willkommen im MINT-DataLab"),
                   p(style = "text-align: justify; font-size = 16px",
@@ -67,8 +67,9 @@ mod_home_start_ui <- function(id){
         title = "Wie hoch ist der Anteil von MINT in den verschiedenen Bereichen?",
         width = 12,
         p("Hier zeigen wir den Anteil von MINT für verschiedene Indikatoren
-        aus den  Bereichen Schule, Hochschule und Arbeitsmarkt. Die Unterseiten zu den einzelnen Bereichen sind genauso aufgebaut."), br(),
-        "Studierende, Auszubildende und Beschäftigte können anhand ihres Studienfaches, Ausbildungsgangs bzw. Tätigkeit in 'MINT' und 'Nicht-MINT' unterteilt werden."
+        aus den  Bereichen Schule, Hochschule und Arbeitsmarkt. Die Unterseiten zu den einzelnen Bereichen sind genauso aufgebaut.", br(), br(),
+        tags$b(span("Methodischer Hinweis:")), "Studierende, Auszubildende und Beschäftigte können anhand ihres Studienfaches, Ausbildungsgangs bzw. Tätigkeit in 'MINT' und 'Nicht-MINT' unterteilt werden.
+        Bei Schüler:innen ist diese eindeutige Unterscheidung nicht möglich, deshalb nutzen wir die Belegungszahlen von Grund- und Leistungskursen als Indikator für den Anteil von MINT in der Schule."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(

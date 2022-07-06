@@ -11,7 +11,7 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_comparison_subject"),
       label = NULL,
@@ -19,7 +19,7 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
                   "2018","2019", "2020"),
       selected = "2020"
     ),
-    p("Wählen Sie in welcher Form der Kurs belegt wurde:"),
+    p("Auswahl Leistungskurs oder Grundkurs:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_comparison_subject"),
       choices = c("Grundkurse", "Leistungskurse"),
@@ -27,7 +27,7 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wählen Sie ein Bundesland:"),
+    p("Auswahl Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("state_comparison_subject"),
       choices = c("Berlin",

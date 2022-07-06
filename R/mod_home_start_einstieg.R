@@ -16,7 +16,7 @@ mod_home_start_einstieg_ui <- function(id){
       choices = c("Leistungskurse",
                   "Studienanfänger", "Studierende",
                   "Auszubildende", "Beschäftigte"),
-      selected = c("Studierende", "Beschäftigte"),
+      selected = c("Studierende", "Auszubildende"),
       multiple = TRUE,
       options =  list(
         "max-options" = 3,

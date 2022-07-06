@@ -10,14 +10,14 @@
 mod_beruf_arbeitsmarkt_bl_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_bl"),
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
     ),
-    p("Wählen Sie ein Anforderungsniveau:"),
+    p("Auswahl Beschäftigungstyp (Anforderungsniveau):"),
     shinyWidgets::pickerInput(
       inputId = ns("anforderungsniveau_arbeitsmarkt_bl"),
       choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte")

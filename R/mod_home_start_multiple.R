@@ -10,7 +10,7 @@
 mod_home_start_multiple_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_multiple"),
       label = NULL,
