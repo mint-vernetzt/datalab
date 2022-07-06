@@ -33,8 +33,8 @@ app_ui <- function(request) {
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf", icon = shiny::icon("building"), tabName = "beruf"),
           shinydashboard::menuItem("Quellen & Hinweise", icon = shiny::icon("bars"), tabName = "quellen"),
-          shinydashboard::menuItem("Impressum & Kontakt", icon = shiny::icon("bars"), tabName = "quellen")
-
+          shinydashboard::menuItem("Kontakt & Feedback", icon = shiny::icon("bars"), tabName = "quellen"),
+          shinydashboard::menuItem("Impressum", icon = shiny::icon("bars"), tabName = "quellen")
         )
       ),
       # Show the appropriate tab's content in the main body of our dashboard when we select it
