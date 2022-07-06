@@ -35,7 +35,9 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
     p("Wählen Sie ein oder mehrere Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_bl_gender_verlauf"),
-      choices = c("Berlin",
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Berlin",
                   "Brandenburg",
                   "Bremen",
                   "Hamburg",

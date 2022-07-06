@@ -39,7 +39,8 @@ mod_studium_studienzahl_ranking_bl_subject_gender_ui <- function(id){
     p("Wählen Sie ein Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studium_ranking_bl_subject_gender"),
-      choices = c("Berlin",
+      choices = c("Deutschland",
+                  "Berlin",
                   "Brandenburg",
                   "Bremen",
                   "Hamburg",

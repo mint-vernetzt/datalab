@@ -48,7 +48,7 @@ kurse_einstieg_pie <- function(df,r) {
 
   df_lk <- df %>% dplyr::filter(indikator == "Leistungskurse")
 
-  plot_gk <- highcharter::hchart(df_gk, size = 220, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+  plot_gk <- highcharter::hchart(df_gk, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Fächern für Grundkurse in ", timerange),
@@ -61,7 +61,7 @@ kurse_einstieg_pie <- function(df,r) {
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
 
-  plot_lk <- highcharter::hchart(df_lk, size = 220, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+  plot_lk <- highcharter::hchart(df_lk, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Fächern für Leistungskurse in ", timerange),
@@ -147,7 +147,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
   df_lk <- share_pie(df_lk)
 
 
-  plot_gk_mint <- highcharter::hchart(df_gk[df_gk$fachbereich == "MINT",], size = 250, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+  plot_gk_mint <- highcharter::hchart(df_gk[df_gk$fachbereich == "MINT",], size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von Schülerinnen in MINT-Fächern in Grundkursen in ", timerange),
@@ -158,7 +158,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"), marginTop = 20, marginBottom = 7) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)) %>%
+                                           dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
 
@@ -173,11 +173,12 @@ kurse_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"), marginTop = 1) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)) %>%
+                                           dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE,
+                                           opacity = 0.7)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
 
-  plot_lk_mint <- highcharter::hchart(df_lk[df_gk$fachbereich == "MINT",], size = 250, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+  plot_lk_mint <- highcharter::hchart(df_lk[df_gk$fachbereich == "MINT",], size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von Schülerinnen in MINT-Fächern in Leistungskursen in ", timerange),
@@ -188,7 +189,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"), marginTop = 20, marginBottom = 7) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)) %>%
+                                           dataLabels = list(enabled = TRUE, format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
   plot_lk_rest <- highcharter::hchart(df_lk[df_gk$fachbereich == "andere Fächer",], size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
@@ -202,7 +203,8 @@ kurse_einstieg_pie_gender <- function(df,r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"), marginTop = 1) %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)) %>%
+                                           dataLabels = list(enabled = TRUE, format='{point.percentage:.0f}%'), showInLegend = TRUE,
+                                           opacity = 0.7)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
 
@@ -556,35 +558,11 @@ kurse_mint_comparison <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::ylab("") + ggplot2::xlab("Anteil") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil der Fächer im Vergleich",
+                                 indikator_comparison, ": Anteil der Fächer im Vergleich in ", timerange,
                                  "<br><br><br>"),
                   fill = "") +
     ggplot2::scale_y_discrete(expand = c(0,0)) +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
-
-  # highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich)) %>%
-  #   highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
-  #   highcharter::hc_yAxis(title = list(text = "Anteil"), labels = list(format = "{value}%", formatter = '')) %>%
-  #   highcharter::hc_xAxis(title = list(text = "")) %>%
-  #   highcharter::hc_plotOptions(bar = list(stacking = "normal")) %>%
-  #   highcharter::hc_colors(c("#154194")) %>%
-  #   highcharter::hc_title(text = "MINT-Anteile im Vergleich",
-  #                         margin = 45,
-  #                         align = "center",
-  #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  #   highcharter::hc_chart(
-  #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-  #   ) %>%
-  #   highcharter::hc_exporting(enabled = TRUE,
-  #                             buttons = list(contextButton = list(
-  #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-  #                               onclick = highcharter::JS("function () {
-  #                                                             this.exportChart({ type: 'image/png' }); }"),
-  #                               align = 'right',
-  #                               verticalAlign = 'bottom',
-  #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-
 
 }
 
@@ -612,10 +590,7 @@ kurse_mint_comparison_bl <- function(df,r) {
 
   df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(region != "Bayern")
-
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
-
 
   df <- df %>% dplyr::filter(indikator == indikator_comparison)
 
@@ -674,7 +649,7 @@ kurse_mint_comparison_bl <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::ylab("") + ggplot2::xlab("Anteil") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil der Fächer im Vergleich",
+                                 indikator_comparison, ": Anteil der Belegungen für ", subject, " im Vergleich in ", timerange,
                                  "<br><br><br>"),
                   fill = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
@@ -946,11 +921,7 @@ kurse_ranking <- function(df,r, type) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_kurse_east_west(df)
@@ -1037,11 +1008,6 @@ kurse_ranking_gender <- function(df,r, type) {
   df <- df %>% dplyr::filter(region != "Deutschland")
 
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
-
-  # include "Osten" und "Westen" in Dataframe
-  df <- prep_kurse_east_west(df)
 
   # aggregate to MINT
   df_sub <- share_mint_kurse(df)
@@ -1223,8 +1189,6 @@ kurse_map <- function(df,r) {
 
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
-  df <- df %>% dplyr::filter(region != "Bayern")
-
   # aggregate to MINT
   df_sub <- share_mint_kurse(df)
 
@@ -1365,9 +1329,6 @@ kurse_map_gender <- function(df,r) {
   df <- df %>% dplyr::filter(region != "Deutschland")
 
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
-
 
   # aggregate to MINT
   df_sub <- share_mint_kurse(df)
@@ -1534,11 +1495,6 @@ kurse_verlauf <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   df <- df %>% dplyr::filter(indikator == level_kurs)
-
-  # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
 
   if (level_kurs == "Grundkurse"){
 
@@ -1868,7 +1824,7 @@ kurse_einstieg_comparison <- function(df,r) {
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#154194", "#b16fab")) %>%
-    highcharter::hc_title(text = "MINT-Anteile im Vergleich",
+    highcharter::hc_title(text = paste0("MINT-Anteile im Vergleich in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2008,9 +1964,9 @@ kurse_comparison_gender <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::xlab("") + ggplot2::ylab("Anteil") +
     ggplot2::scale_fill_manual(values = c("#154194", "#b16fab")) +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil von Schülerinnen in MINT im Vergleich",
-                                 "<br><br><br>"),
+    ggplot2::labs(title = paste0(paste0("<span style='font-size:20.5pt; color:black'>",
+                                 "Anteil von Schülerinnen in MINT im Vergleich in ", timerange,
+                                 "<br><br><br>")),
                   fill = "") +
     ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"))
 
@@ -2040,9 +1996,9 @@ kurse_verlauf_single_bl <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
+  # df <- df %>% dplyr::filter(region != "Deutschland")
+  #
+  # df <- df %>% dplyr::filter(region != "Bayern")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_kurse_east_west(df)
@@ -2069,7 +2025,7 @@ kurse_verlauf_single_bl <- function(df,r) {
 
   df <- rbind(df, df_sub)
 
-  # fitler states
+  # filter states
   df <- df %>% dplyr::filter(region %in% states)
 
   df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
@@ -2137,10 +2093,6 @@ kurse_verlauf_multiple_bl <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   df <- df %>% dplyr::filter(indikator == indikator_select)
-  # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
-  df <- df %>% dplyr::filter(region != "Bayern")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_kurse_east_west(df)
@@ -2257,9 +2209,9 @@ kurse_verlauf_subjects_bl <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
+  # df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(region != "Bayern")
+  # df <- df %>% dplyr::filter(region != "Bayern")
 
   df <- df %>% dplyr::filter(indikator == indikator_kurse)
 
