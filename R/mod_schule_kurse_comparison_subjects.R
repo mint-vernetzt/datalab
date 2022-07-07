@@ -27,30 +27,28 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Auswahl Bundesland:"),
+    p("Auswahl Bundesland oder Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("state_comparison_subject"),
-      choices = c("Deutschland",
-                  "Bayern",
-                  "Berlin",
-                  "Brandenburg",
-                  "Bremen",
-                  "Hamburg",
-                  "Hessen",
-                  "Mecklenburg-Vorpommern",
-                  "Niedersachsen",
-                  "Nordrhein-Westfalen",
-                  "Rheinland-Pfalz",
-                  "Saarland",
-                  "Sachsen",
-                  "Sachsen-Anhalt",
-                  "Schleswig-Holstein",
-                  "Thüringen",
-                  "Westen",
-                  "Osten"),
+      choices = list(
+        Regionen = c("Deutschland", "Westen", "Osten"),
+        Bundesländer = c( "Bayern",
+                          "Berlin",
+                          "Brandenburg",
+                          "Bremen",
+                          "Hamburg",
+                          "Hessen",
+                          "Mecklenburg-Vorpommern",
+                          "Niedersachsen",
+                          "Nordrhein-Westfalen",
+                          "Rheinland-Pfalz",
+                          "Saarland",
+                          "Sachsen",
+                          "Sachsen-Anhalt",
+                          "Schleswig-Holstein",
+                          "Thüringen")),
       selected = "Hessen"
     )
-
   )
 }
 

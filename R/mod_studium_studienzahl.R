@@ -23,7 +23,7 @@ mod_studium_studienzahl_ui <- function(id){
         "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Hochschule. Sie finden
         Informationen zum Anteil von MINT-Fächern und nicht-MINT-Fächern an allen Studienfächern im Zeitraum
         2013 bis 2020. Zudem können Sie sich den Frauen- und Männeranteil in einzelnen MINT-Fächern für
-        Studierende und Studienanfänger*innen ausgeben lassen. Des weiteren haben wir alle Ergebnisse
+        Studierende und Studienanfänger:innen ausgeben lassen. Des weiteren haben wir alle Ergebnisse
         auch für einzelne Bundesländer aufbereitet. ")
     )),
     fluidRow(

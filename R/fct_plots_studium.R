@@ -2306,7 +2306,7 @@ studienfaecher_ranking <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Studientinnen als Studienanfängerinnen oder Studierende in ",timerange,
+                                 "Relativer Anteil von Studentinnen als Studienanfängerinnen oder Studierende in ",timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
@@ -2423,7 +2423,7 @@ studierende_map <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0, max=60) %>%
       highcharter::hc_title(
-        text = paste0("Studienanfänger*innen: Anteil an Belegungen <br> in ", subjects),
+        text = paste0("Studienanfänger:innen: Anteil an Belegungen <br> in ", subjects),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -3151,7 +3151,7 @@ bundeslaender_ranking <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Studientinnen als Studienanfängerinnen oder Studierende in ",timerange,
+                                 "Relativer Anteil von Studentinnen als Studienanfängerinnen oder Studierende in ",timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))

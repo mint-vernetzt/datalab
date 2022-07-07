@@ -131,7 +131,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       shinydashboard::box(
         title = "Anteil von MINT-Fächern in Ausbildung und Beruf nach Anforderungsprofil auf dem Arbeitsmarkt",
         width = 12,
-        p("Definition von Fachkraft/Spezialist/Experte einfügen"),
+        p("Definition von Fachkraft/Spezialist:in/Expert:in einfügen"),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -169,7 +169,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       shinydashboard::box(
         title = "Anteil Frauen in Ausbildung und Beruf nach Anforderungsprofil auf dem Arbeitsmarkt",
         width = 12,
-        p("Definition von Fachkraft/Spezialist/Experte einfügen"),
+        p("Definition von Fachkraft/Spezialist:in/Expert:in einfügen"),
         tabsetPanel(type = "tabs",
                     tabPanel("Anforderungsvergleich", br(),
 

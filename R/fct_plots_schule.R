@@ -1558,7 +1558,7 @@ kurse_verlauf <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil Schülerinnen <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: KMK 2021, auf Anfrage; eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
+    #highcharter::hc_caption(text = "Quelle: KMK 2021, auf Anfrage; eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Schülerinnen: Anteil von ",title_help, "-Belegungen in ", subjects_select ),
                           margin = 45,
                           align = "center",
@@ -1747,7 +1747,7 @@ kurse_verlauf_single <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Anteil"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT im Zeitverlauf"),
                           margin = 45,
                           align = "center",
@@ -1891,7 +1891,7 @@ kurse_verlauf_gender <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil Schülerinnen  {point.indikator} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Anteil von Schülerinnen in MINT-Fächern im Zeitverlauf"),
                           margin = 45,
                           align = "center",
@@ -2049,7 +2049,7 @@ kurse_verlauf_single_bl <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil {point.anzeige_geschlecht} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Anteil von Schülerinnen in ", subjects_select ," in ", states),
                           margin = 45,
                           align = "center",
@@ -2164,7 +2164,7 @@ kurse_verlauf_multiple_bl <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0(title_help, " Anteil an Belegungen in ", subjects_select),
                           margin = 45,
                           align = "center",
@@ -2274,7 +2274,7 @@ kurse_verlauf_subjects_bl <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "Anteil {point.fachbereich} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Anteil von Fächern im Verlauf"),
                           margin = 45,
                           align = "center",

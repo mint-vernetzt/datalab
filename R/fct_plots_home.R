@@ -885,7 +885,7 @@ home_rest_mint_verlauf <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"),
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = "Anteil von MINT im Verlauf",
                           margin = 45,
                           align = "center",
