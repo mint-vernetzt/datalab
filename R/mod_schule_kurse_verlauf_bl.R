@@ -12,7 +12,7 @@ mod_schule_kurse_verlauf_bl_ui <- function(id){
 
   tagList(
 
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_verlauf_bl"),
       label = NULL,
@@ -20,7 +20,7 @@ mod_schule_kurse_verlauf_bl_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wählen Sie ein Fach:"),
+    p("Auswahl Fach:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_bl"),
       choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",

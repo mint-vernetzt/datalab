@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_bl_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_bl_gender"),
       label = NULL,
@@ -25,7 +25,7 @@ mod_beruf_arbeitsmarkt_bl_gender_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wählen Sie ein Anforderungsniveau:"),
+    p("Auswahl Beschäftigungstyp (Anforderungsniveau):"),
     shinyWidgets::pickerInput(
       inputId = ns("anforderungsniveau_arbeitsmarkt_bl_gender"),
       choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte")

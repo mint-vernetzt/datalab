@@ -28,7 +28,7 @@ mod_schule_kurse_map_gender_ui <- function(id){
       selected = "MINT (aggregiert)"
     ),
 
-    p("Auswahl Leistungskurs oder Grundkurs:"),
+    p("Auswahl Grundkurs oder Leistungskurs:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_map_gender"),
       choices = c("Grundkurse", "Leistungskurse"),

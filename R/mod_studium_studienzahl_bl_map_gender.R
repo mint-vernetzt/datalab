@@ -10,7 +10,7 @@
 mod_studium_studienzahl_bl_map_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_gender_map"),
       label = NULL,
@@ -21,7 +21,7 @@ mod_studium_studienzahl_bl_map_gender_ui <- function(id){
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_studienzahl_bl_gender_map"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
-      p("Wählen Sie eine Hochschulform:"),
+      p("Auswahl Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_gender_map == false",
                        ns = ns,
                        shinyWidgets::pickerInput(
@@ -34,13 +34,13 @@ mod_studium_studienzahl_bl_map_gender_ui <- function(id){
                          inputId = ns("hochschulform_studium_studienzahl_bl_gender_map2"),
                          choices = "Uni"
                        )),
-      p("Wählen Sie ein Fach:"),
+      p("Auswahl Fach:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_gender_map"),
         choices = c("MINT (aggregiert)","Mathe", "Ingenieur"),
         selected = "MINT (aggregiert)"
       ),
-      p("Wählen Sie den Status der Student*innen:"),
+      p("Auswahl Status der Student:innen:"),
       shinyWidgets::radioGroupButtons(
         inputId = ns("level_studium_choice_gender"),
         choices = c("Studienanfänger", "Studierende"),

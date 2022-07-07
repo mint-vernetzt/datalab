@@ -11,7 +11,7 @@ mod_studium_studienzahl_bl_verlauf_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl Zeitraum:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_gender_verlauf"),
       label = NULL,
@@ -23,7 +23,7 @@ mod_studium_studienzahl_bl_verlauf_gender_ui <- function(id){
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_studienzahl_bl_gender_verlauf"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
-      p("Wählen Sie eine Hochschulform:"),
+      p("Auswahl Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_gender_verlauf == false",
                        ns = ns,
                        shinyWidgets::pickerInput(
@@ -36,7 +36,7 @@ mod_studium_studienzahl_bl_verlauf_gender_ui <- function(id){
                          inputId = ns("hochschulform_studium_studienzahl_bl_gender_verlauf2"),
                          choices = "Uni"
                        )),
-      p("Wählen Sie ein Fach:"),
+      p("Auswahl Fach:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_gender_verlauf"),
         choices = c("MINT (aggregiert)","Mathe", "Ingenieur"),

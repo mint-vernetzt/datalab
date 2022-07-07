@@ -11,7 +11,7 @@ mod_studium_studienzahl_ranking_bl_subject_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_ranking_bl_subject_gender"),
       label = NULL,
@@ -22,7 +22,7 @@ mod_studium_studienzahl_ranking_bl_subject_gender_ui <- function(id){
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_ranking_bl_subject_gender"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
-      p("Wählen Sie eine Hochschulform:"),
+      p("Auswahl Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studium_ranking_bl_subject_gender == false",
                        ns = ns,
                        shinyWidgets::pickerInput(

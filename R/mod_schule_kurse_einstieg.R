@@ -10,7 +10,7 @@
 mod_schule_kurse_einstieg_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_einstieg"),
       label = NULL,
@@ -20,7 +20,7 @@ mod_schule_kurse_einstieg_ui <- function(id){
     )
 
     # ),
-    # p("Wählen Sie in welcher Form der Kurs belegt wurde:"),
+    # p("Auswahl Grundkurs oder Leistungskurs:"),
     # shinyWidgets::radioGroupButtons(
     #   inputId = ns("indikator_kurse_einstieg"),
     #   choices = c("Grundkurse", "Leistungskurse"),

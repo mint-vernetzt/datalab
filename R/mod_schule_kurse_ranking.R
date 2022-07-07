@@ -10,7 +10,7 @@
 mod_schule_kurse_ranking_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_ranking"),
       label = NULL,

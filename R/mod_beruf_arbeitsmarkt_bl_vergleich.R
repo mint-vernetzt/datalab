@@ -11,7 +11,7 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_bl_vergleich"),
       label = NULL,
@@ -27,7 +27,7 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wählen Sie ein Anforderungsniveau:"),
+    p("Auswahl Beschäftigungstyp (Anforderungsniveau):"),
     shinyWidgets::pickerInput(
       inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich"),
       choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte"),

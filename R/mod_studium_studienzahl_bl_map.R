@@ -10,7 +10,7 @@
 mod_studium_studienzahl_bl_map_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_map"),
       label = NULL,
@@ -21,7 +21,7 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_studienzahl_bl_map"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
-      p("Wählen Sie eine Hochschulform:"),
+      p("Auswahl Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_map == false",
                        ns = ns,
                        shinyWidgets::pickerInput(
@@ -34,7 +34,7 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                          inputId = ns("hochschulform_studium_studienzahl_bl_map2"),
                          choices = "Uni"
                        )),
-      p("Wählen Sie ein Fach:"),
+      p("Auswahl Fach:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_map"),
         choices = c("MINT (aggregiert)","Mathe", "Ingenieur"),

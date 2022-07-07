@@ -19,7 +19,7 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
                   "2018","2019", "2020"),
       selected = "2020"
     ),
-    p("Auswahl Leistungskurs oder Grundkurs:"),
+    p("Auswahl Grundkurs oder Leistungskurs:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_comparison_subject"),
       choices = c("Grundkurse", "Leistungskurse"),
