@@ -20,7 +20,7 @@ mod_beruf_arbeitsmarkt_bl_ui <- function(id){
     p("Auswahl Beschäftigungstyp (Anforderungsniveau):"),
     shinyWidgets::pickerInput(
       inputId = ns("anforderungsniveau_arbeitsmarkt_bl"),
-      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte")
+      choices = c("Gesamt", "Fachkraft", "Spezialist:in", "Expert:in")
     )
   )
 }
