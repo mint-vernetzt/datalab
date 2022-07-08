@@ -14,7 +14,7 @@ mod_home_start_einstieg_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_einstieg_1"),
       choices = c("Leistungskurse",
-                  "Studienanfänger", "Studierende",
+                   "Studierende",
                   "Auszubildende", "Beschäftigte"),
       selected = c("Studierende", "Auszubildende"),
       multiple = TRUE,
@@ -25,6 +25,8 @@ mod_home_start_einstieg_ui <- function(id){
     )
   )
 }
+
+#"Studienanfänger" rausgenommen
 
 #' home_start_einstieg Server Functions
 #'

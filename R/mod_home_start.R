@@ -30,7 +30,7 @@ mod_home_start_ui <- function(id){
                     ),
                   p(style = "text-align: justify; font-size = 16px",
                     span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen",
-                    tags$b(span("Unterseiten", style = "color:#b16fab")), " bieten wir mehr Detaills.")
+                    tags$b(span("Unterseiten", style = "color:#b16fab")), " Schule, Studium und Ausbildung & Beruf bieten wir zusätzliche Vergleiche nach Subgruppen, den einzelnen MINT-Fächern und Bundesländern.")
                     ),
                ),
         #solidHeader = TRUE,
@@ -67,7 +67,7 @@ mod_home_start_ui <- function(id){
         title = "Wie hoch ist der Anteil von MINT in den verschiedenen Bereichen?",
         width = 12,
         p("Hier zeigen wir den Anteil von MINT für verschiedene Indikatoren
-        aus den  Bereichen Schule, Hochschule und Arbeitsmarkt. Die Unterseiten zu den einzelnen Bereichen sind genauso aufgebaut.", br(), br(),
+        aus den  Bereichen Schule, Studium und Arbeitsmarkt. Die Unterseiten zu den einzelnen Bereichen sind genauso aufgebaut.", br(), br(),
         tags$b(span("Methodischer Hinweis:")), "Studierende, Auszubildende und Beschäftigte können anhand ihres Studienfaches, Ausbildungsgangs bzw. Tätigkeit in 'MINT' und 'Nicht-MINT' unterteilt werden.
         Bei Schüler:innen ist diese eindeutige Unterscheidung nicht möglich, deshalb nutzen wir die Belegungszahlen von Grund- und Leistungskursen als Indikator für den Anteil von MINT in der Schule."),
         tabsetPanel(type = "tabs",
