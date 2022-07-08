@@ -16,8 +16,11 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         tags$h1("MINT in der Schule"),
         p(style = "text-align: justify; font-size = 16px",
-          "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT
-          im Bereich Schule. Aktuell bieten wir Ihnen Informationen zu den Kursbelegungen
+          "Auf dieser Seite geht es um statistische Kennzahlen rund um MINT
+          im Bereich Schule. Bei Schüler:innen ist diese eindeutige Unterscheidung nicht möglich,
+          deshalb nutzen wir die Belegungszahlen von Grund- und Leistungskursen als Indikator für den Anteil von MINT in der Schule.
+
+          Aktuell bieten wir Ihnen Informationen zu den Kursbelegungen
           von Schülern und Schülerinnen in der Oberstufe. Beispielsweise können Sie sich den Anteil von
           Leistungskursen im Fachbereich Informatik im Zeitverlauf ausgeben lassen.
           Oder Sie interessieren sich für die Kursbelegungen von Schülerinnen im Vergleich zu Schülern
