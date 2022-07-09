@@ -26,7 +26,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
       conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_vergleich == false",
                        ns = ns,
                        shinyWidgets::pickerInput(
-                         inputId = ns("hochschulform__studium_studienzahl_bl_vergleich1"),
+                         inputId = ns("hochschulform_studium_studienzahl_bl_vergleich1"),
                          choices = c("insgesamt", "Uni", "FH")
                        )),
       conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_vergleich != false",
@@ -38,7 +38,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
       p("Wählen Sie ein Fach:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_vergleich"),
-        choices = c("MINT (aggregiert)","Mathe", "Ingenieur"),
+        choices = c("MINT (aggregiert)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
         selected = "MINT (aggregiert)"
       )
     ),
@@ -68,8 +68,8 @@ mod_studium_studienzahl_bl_vergleich_server <- function(id, r){
       r$nurLehramt_studium_studienzahl_bl_vergleich <- input$nurLehramt_studium_studienzahl_bl_vergleich
     })
 
-    observeEvent(input$hochschulform__studium_studienzahl_bl_vergleich1, {
-      r$hochschulform__studium_studienzahl_bl_vergleich1 <- input$hochschulform__studium_studienzahl_bl_vergleich1
+    observeEvent(input$hochschulform_studium_studienzahl_bl_vergleich1, {
+      r$hochschulform_studium_studienzahl_bl_vergleich1 <- input$hochschulform_studium_studienzahl_bl_vergleich1
     })
 
     observeEvent(input$hochschulform_studium_studienzahl_bl_vergleich2, {

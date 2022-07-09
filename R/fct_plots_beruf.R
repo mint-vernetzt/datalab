@@ -368,15 +368,24 @@ arbeitsmarkt_bl_gender <- function(df,r) {
   # remove
   df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(fachbereich != "Alle")
+  df <- calc_arbeitsmarkt_males(df)
+
+  df_gesamt <- df %>%
+    dplyr::filter(fachbereich == "Alle",
+                  anforderungsniveau == "Gesamt")
 
   df <- df %>% dplyr::filter(indikator == indikator_choice)
 
-  df <- calc_arbeitsmarkt_males(df)
-
-  df <- calc_arbeitsmarkt_share_bl_gender(df)
-
-  df <- df %>% dplyr::filter(anforderungsniveau == anforderung)
+  df <- df %>%
+    dplyr::left_join(df_gesamt, by = c("region", "jahr", "anzeige_geschlecht", "indikator", "bereich")) %>%
+    dplyr::rename(anforderungsniveau = "anforderungsniveau.x",
+                  fachbereich = "fachbereich.x",
+                  wert = "wert.x",
+                  wert_sum = "wert.y") %>%
+    dplyr::select(-c("fachbereich.y", "anforderungsniveau.y")) %>%
+    dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
+    dplyr::filter(anforderungsniveau == anforderung,
+                  fachbereich == "MINT")
 
   values_female <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
   values_male <- df %>% dplyr::filter(anzeige_geschlecht == "Männer")
@@ -953,7 +962,22 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
 
   df <- calc_arbeitsmarkt_males(df)
 
-  df <- calc_arbeitsmarkt_share_bl_gender(df)
+  df_gesamt <- df %>%
+    dplyr::filter(fachbereich == "Alle",
+                  anforderungsniveau == "Gesamt")
+
+  df <- df %>% dplyr::filter(indikator == indikator_choice)
+
+  df <- df %>%
+    dplyr::left_join(df_gesamt, by = c("region", "jahr", "anzeige_geschlecht", "indikator", "bereich")) %>%
+    dplyr::rename(anforderungsniveau = "anforderungsniveau.x",
+                  fachbereich = "fachbereich.x",
+                  wert = "wert.x",
+                  wert_sum = "wert.y") %>%
+    dplyr::select(-c("fachbereich.y", "anforderungsniveau.y")) %>%
+    dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
+    dplyr::filter(anforderungsniveau == anforderung,
+                  fachbereich == "MINT")
 
   df <- df %>% dplyr::filter(anforderungsniveau %in% anforderung)
 
@@ -1024,7 +1048,20 @@ arbeitsmarkt_bl_gender_vergleich <- function(df, r) {
 
   df <- calc_arbeitsmarkt_males(df)
 
-  df <- calc_arbeitsmarkt_share_bl_gender(df)
+  df_gesamt <- df %>%
+    dplyr::filter(fachbereich == "Alle",
+                  anforderungsniveau == "Gesamt")
+
+  df <- df %>%
+    dplyr::left_join(df_gesamt, by = c("region", "jahr", "anzeige_geschlecht", "indikator", "bereich")) %>%
+    dplyr::rename(anforderungsniveau = "anforderungsniveau.x",
+                  fachbereich = "fachbereich.x",
+                  wert = "wert.x",
+                  wert_sum = "wert.y") %>%
+    dplyr::select(-c("fachbereich.y", "anforderungsniveau.y")) %>%
+    dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
+    dplyr::filter(anforderungsniveau == anforderung,
+                  fachbereich == "MINT")
 
   df <- df %>% dplyr::filter(anforderungsniveau == anforderung)
 
@@ -1032,7 +1069,7 @@ arbeitsmarkt_bl_gender_vergleich <- function(df, r) {
 
   df <- df %>% dplyr::filter(fachbereich == "MINT")
 
-  df <- df %>% dplyr::select(-"wert")
+  df <- df %>% dplyr::select(-c("wert", "wert_sum"))
 
   # spread column
   df <- tidyr::spread(df, indikator, proportion)

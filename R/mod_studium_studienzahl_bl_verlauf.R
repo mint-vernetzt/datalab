@@ -39,7 +39,7 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
       p("Wählen Sie ein Fach:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_verlauf"),
-        choices = c("MINT (aggregiert)","Mathe", "Ingenieur"),
+        choices = c("MINT (aggregiert)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
         selected = "MINT (aggregiert)"
       )
     ),

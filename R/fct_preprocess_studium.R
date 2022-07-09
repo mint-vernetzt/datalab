@@ -8,8 +8,8 @@
 calc_share_waffle <- function(df){
 
   df[df$fachbereich == "Alle", "wert"] <- df[df$fachbereich == "Alle", "wert"] -
-    df[df$fachbereich == "Mathe", "wert"] -
-    df[df$fachbereich == "Ingenieur", "wert"]
+    df[df$fachbereich == "Mathematik/Naturwissenschaften", "wert"] -
+    df[df$fachbereich == "Ingenieurwissenschaften", "wert"]
 
   df[df$fachbereich == "Alle", "fachbereich"] <- "andere Studiengänge"
 
@@ -40,18 +40,18 @@ calc_share_waffle <- function(df){
 calc_share_MINT <- function(df){
 
   df[df$fachbereich == "Alle", "wert"] <- df[df$fachbereich == "Alle", "wert"] -
-    df[df$fachbereich == "Mathe", "wert"] -
-    df[df$fachbereich == "Ingenieur", "wert"]
+    df[df$fachbereich == "Mathematik/Naturwissenschaften", "wert"] -
+    df[df$fachbereich == "Ingenieurwissenschaften", "wert"]
 
   df[df$fachbereich == "Alle", "fachbereich"] <- "andere Studiengänge"
 
 
-  df[df$fachbereich == "Ingenieur", "wert"] <- df[df$fachbereich == "Mathe", "wert"] +
-    df[df$fachbereich == "Ingenieur", "wert"]
+  df[df$fachbereich == "Ingenieurwissenschaften", "wert"] <- df[df$fachbereich == "Mathematik/Naturwissenschaften", "wert"] +
+    df[df$fachbereich == "Ingenieurwissenschaften", "wert"]
 
-  df[df$fachbereich == "Ingenieur", "fachbereich"] <- "MINT"
+  df[df$fachbereich == "Ingenieurwissenschaften", "fachbereich"] <- "MINT"
 
-  df <- df %>% dplyr::filter(fachbereich != "Mathe")
+  df <- df %>% dplyr::filter(fachbereich != "Mathematik/Naturwissenschaften")
 
   return(df)
 }
@@ -200,13 +200,13 @@ calc_share_MINT_bl <- function(df){
 
   df <- df[with(df, order(anzeige_geschlecht, fachbereich, indikator, jahr, decreasing = FALSE)), ]
 
-  # calcualte the share of MINT by aggregating "Mathe" and "Ingenieur"
-  df[df$fachbereich == "Ingenieur", "wert"] <- df[df$fachbereich == "Mathe", "wert"] +
-    df[df$fachbereich == "Ingenieur", "wert"]
+  # calcualte the share of MINT by aggregating "Mathematik/Naturwissenschaften" and "Ingenieurwissenschaften"
+  df[df$fachbereich == "Ingenieurwissenschaften", "wert"] <- df[df$fachbereich == "Mathematik/Naturwissenschaften", "wert"] +
+    df[df$fachbereich == "Ingenieurwissenschaften", "wert"]
 
-  df[df$fachbereich == "Ingenieur", "fachbereich"] <- "MINT"
+  df[df$fachbereich == "Ingenieurwissenschaften", "fachbereich"] <- "MINT"
 
-  df <- df %>% dplyr::filter(fachbereich != "Mathe")
+  df <- df %>% dplyr::filter(fachbereich != "Mathematik/Naturwissenschaften")
 
   df <- df[with(df, order(anzeige_geschlecht, fachbereich, indikator, jahr, decreasing = FALSE)), ]
 

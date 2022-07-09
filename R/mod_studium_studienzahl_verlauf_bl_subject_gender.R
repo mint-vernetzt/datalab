@@ -41,7 +41,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("subject_verlauf_bl_subject_gender"),
       choices = c("MINT (aggregiert)" = "MINT (aggregiert)",
-                  "Mathematik" = "Mathe", "Ingenieurswesen" = "Ingenieur"),
+                  "Mathematik/Naturwissenschaften" = "Mathematik/Naturwissenschaften", "Ingenieurwissenschaften" = "Ingenieurwissenschaften"),
       selected = "MINT (aggregiert)",
       multiple = FALSE
     ),

@@ -1007,6 +1007,10 @@ kurse_ranking_gender <- function(df,r, type) {
 
   df <- df %>% dplyr::filter(region != "Deutschland")
 
+  df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen",
+                                    fachbereich == "Alle Fächer") %>%
+    dplyr::rename(wert_sum = "wert")
+
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
   # aggregate to MINT
@@ -1018,48 +1022,30 @@ kurse_ranking_gender <- function(df,r, type) {
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
 
-  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
-
-  df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
-
-
-  # calcualte the new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
-
-  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
-
   df <- rbind(df, df_sub)
 
   df <- df %>% dplyr::filter(fachbereich == subject)
 
   # calcualte propotion
-  df <- df %>% dplyr::group_by(region, fachbereich, anzeige_geschlecht, indikator) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df$proportion <- df$proportion * 100
-
-  df$anzeige_geschlecht <- NULL
-
-  df$fachbereich <- NULL
+  df <- df %>% dplyr::left_join(df_gesamt, by=c("jahr", "region", "indikator",
+                                                "bereich", "anzeige_geschlecht")) %>%
+    dplyr::rename(fachbereich = "fachbereich.x") %>%
+    dplyr::select(-fachbereich.y) %>%
+    dplyr::mutate(proportion = (wert/wert_sum)*100) %>%
+    dplyr::select(-c("wert", "wert_sum")) %>%
+    dplyr::filter(anzeige_geschlecht=="Frauen")
 
 
   # spread column
   df <- tidyr::spread(df, indikator, proportion)
 
-  df <- df %>% tidyr::drop_na()
-
-  df2 <- tidyr::gather(df, group, value, -region)
+  df2 <- tidyr::gather(df, group, value, -region) %>%
+    dplyr::filter(group %in% c("Grundkurse", "Leistungskurse")) %>%
+    dplyr::mutate(value = as.numeric(value))
 
   df$region <- reorder(df$region, df$Leistungskurse)
 
   df2$region <- factor(df2$region, levels = levels(df$region))
-
 
   ggplot2::ggplot(df,
                   ggplot2::aes(y = region)) +
@@ -1320,13 +1306,15 @@ kurse_map_gender <- function(df,r) {
 
   subjects <- r$subject_map_gender
 
-  # indikator_choice <- r$indikator_map_gender
-
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
   # remove
   df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen",
+                                    fachbereich == "Alle Fächer") %>%
+    dplyr::rename(wert_sum = "wert")
 
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
@@ -1339,29 +1327,17 @@ kurse_map_gender <- function(df,r) {
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
 
-  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
-
-  # calculate the new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
-
-
   df <- rbind(df, df_sub)
 
   df <- df %>% dplyr::filter(fachbereich == subjects)
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
 
-  # calculate proportions
-  df <- df %>% dplyr::group_by(region, indikator, anzeige_geschlecht) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df$proportion <- df$proportion * 100
+  df <- df %>% dplyr::left_join(df_gesamt, by=c("jahr", "region", "indikator",
+                                          "bereich", "anzeige_geschlecht")) %>%
+    dplyr::rename(fachbereich = "fachbereich.x") %>%
+    dplyr::select(-fachbereich.y) %>%
+    dplyr::mutate(proportion = (wert/wert_sum)*100)
 
   highcharter::hw_grid(
     # plot
@@ -1412,7 +1388,7 @@ kurse_map_gender <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0, max=50) %>%
       highcharter::hc_title(
-        text = paste0("Schüler: Anteil an Leistungskursbelegungen in ", subjects),
+        text = paste0("Schülerinnen: Anteil an Leistungskursbelegungen in ", subjects),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1493,6 +1469,12 @@ kurse_verlauf <- function(df,r) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
+  df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen",
+                                    fachbereich == "Alle Fächer") %>%
+    dplyr::rename(wert_sum = "wert")
+
   df <- df %>% dplyr::filter(indikator == level_kurs)
 
   if (level_kurs == "Grundkurse"){
@@ -1506,10 +1488,10 @@ kurse_verlauf <- function(df,r) {
   }
 
   # calcualte new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_kurse_east_west(df, "subjects")
@@ -1518,10 +1500,10 @@ kurse_verlauf <- function(df,r) {
   # aggregate to MINT
   df_sub <- share_mint_kurse(df)
 
-  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
 
 
   df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
@@ -1532,22 +1514,20 @@ kurse_verlauf <- function(df,r) {
 
   df <- rbind(df, df_sub)
 
-  # fitler states
+  # filter states
   df <- df %>% dplyr::filter(region %in% states)
 
   df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
 
   # calculate proportions
-  df <- df %>% dplyr::group_by(region, indikator, fachbereich, anzeige_geschlecht, jahr) %>%
-    dplyr::summarize(proportion = wert/props)
+  df <- df %>% dplyr::left_join(df_gesamt, by=c("jahr", "region", "indikator",
+                                                "bereich", "anzeige_geschlecht")) %>%
+    dplyr::rename(fachbereich = "fachbereich.x") %>%
+    dplyr::select(-fachbereich.y) %>%
+    dplyr::mutate(proportion = (wert/wert_sum)*100)
 
-  df$proportion <- df$proportion * 100
 
-
-  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
-
-  df <- df %>% dplyr::filter(region %in% states)
-
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
 
   # order years for plot
   df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]

@@ -97,28 +97,29 @@ calc_arbeitsmarkt_mint <- function(df) {
 
 calc_arbeitsmarkt_share_bl_gender <- function(df) {
 
-  df_alle <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt",
-                                  anforderungsniveau == "Gesamt") %>%
-    dplyr::select(-anzeige_geschlecht)
+  df_alle <- df %>% dplyr::filter(fachbereich == "Alle",
+                                  anforderungsniveau == "Gesamt")
+
+  df <- df %>% dplyr::filter(fachbereich == "MINT")
 
   df_female <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen") %>%
-    dplyr::rename(wert_female = wert) %>%
-    dplyr::select(-anzeige_geschlecht)
+    dplyr::rename(wert_female = wert)
 
   df_male <- df %>% dplyr::filter(anzeige_geschlecht == "Männer") %>%
-    dplyr::rename(wert_male = wert) %>%
-    dplyr::select(-anzeige_geschlecht)
+    dplyr::rename(wert_male = wert)
 
-  df_female <- df_female %>% dplyr::left_join(df_alle, by=c("region", "fachbereich", "indikator", "jahr", "bereich")) %>%
-    dplyr::select(-"anforderungsniveau.y") %>%
-    dplyr::rename(anforderungsniveau = "anforderungsniveau.x") %>%
+  df_female <- df_female %>% dplyr::left_join(df_alle, by=c("region", "indikator", "jahr", "bereich")) %>%
+    dplyr::select(-c("anforderungsniveau.y", "fachbereich.y")) %>%
+    dplyr::rename(anforderungsniveau = "anforderungsniveau.x",
+                  fachbereich = "fachbereich.x") %>%
     dplyr::mutate(proportion = (wert_female/wert)*100) %>%
     dplyr::mutate(anzeige_geschlecht = "Frauen") %>%
     dplyr::select(-wert_female)
 
-  df_male <- df_male %>% dplyr::left_join(df_alle, by=c("region", "fachbereich", "indikator", "jahr", "bereich")) %>%
-    dplyr::select(-"anforderungsniveau.y") %>%
-    dplyr::rename(anforderungsniveau = "anforderungsniveau.x") %>%
+  df_male <- df_male %>% dplyr::left_join(df_alle, by=c("region", "indikator", "jahr", "bereich")) %>%
+    dplyr::select(-c("anforderungsniveau.y", "fachbereich.y")) %>%
+    dplyr::rename(anforderungsniveau = "anforderungsniveau.x",
+                  fachbereich = "fachbereich.x") %>%
     dplyr::mutate(proportion = (wert_male/wert)*100) %>%
     dplyr::mutate(anzeige_geschlecht = "Männer") %>%
     dplyr::select(-wert_male)

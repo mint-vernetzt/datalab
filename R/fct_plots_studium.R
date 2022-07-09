@@ -767,11 +767,11 @@ studienzahl_waffle_mint <- function(df,r) {
 
 
   # set order
-  x_studierende <- x_studierende[order(factor(names(x_studierende), levels = c('Ingenieur', 'Mathe',
+  x_studierende <- x_studierende[order(factor(names(x_studierende), levels = c('Ingenieurwissenschaften', 'Mathematik/Naturwissenschaften',
                                                                                'andere Studiengänge')))]
 
   x_studienanfaenger <- x_studienanfaenger[order(factor(names(x_studienanfaenger),
-                                                        levels = c('Ingenieur', 'Mathe',
+                                                        levels = c('Ingenieurwissenschaften', 'Mathematik/Naturwissenschaften',
                                                                    'andere Studiengänge')))]
 
 
@@ -790,11 +790,11 @@ studienzahl_waffle_mint <- function(df,r) {
                   "#fcc433",
                   '#b1b5c3'),
       na.value="#b1b5c3",
-      limits = c("Ingenieur", "Mathe", "andere Studiengänge"),
+      limits = c("Ingenieurwissenschaften", "Mathematik/Naturwissenschaften", "andere Studiengänge"),
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("Ingenieur",", ",x_studierende[1], "%"),
-        paste0("Mathe",", ",x_studierende[2], "%"),
+        paste0("Ingenieurwissenschaften",", ",x_studierende[1], "%"),
+        paste0("Mathematik/Naturwissenschaften",", ",x_studierende[2], "%"),
         paste0("andere Studiengänge",", ",x_studierende[3], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -814,11 +814,11 @@ studienzahl_waffle_mint <- function(df,r) {
                   "#fcc433",
                   '#b1b5c3'),
       na.value="#b1b5c3",
-      limits = c("Ingenieur", "Mathe", "andere Studiengänge"),
+      limits = c("Ingenieurwissenschaften", "Mathematik/Naturwissenschaften", "andere Studiengänge"),
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("Ingenieur",", ",x_studienanfaenger[1], "%"),
-        paste0("Mathe",", ",x_studienanfaenger[2], "%"),
+        paste0("Ingenieurwissenschaften",", ",x_studienanfaenger[1], "%"),
+        paste0("Mathematik/Naturwissenschaften",", ",x_studienanfaenger[2], "%"),
         paste0("andere Studiengänge",", ",x_studienanfaenger[3], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -1767,7 +1767,6 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
 
   }
 
-
   # call function to calculate the share of MINT and the remaining subjects
   df_sub <- calc_share_MINT_bl(df)
 
@@ -1788,8 +1787,8 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
   df$props = NA
 
   # Assign new "Gesamt" to each subject
-  df[df$fachbereich == "Mathe", "props"] <- df_sub_all$wert
-  df[df$fachbereich == "Ingenieur", "props"] <- df_sub_all$wert
+  df[df$fachbereich == "Mathematik/Naturwissenschaften", "props"] <- df_sub_all$wert
+  df[df$fachbereich == "Ingenieurwissenschaften", "props"] <- df_sub_all$wert
 
   df <- df %>% dplyr::filter(fachbereich != "Alle")
 
@@ -1999,11 +1998,11 @@ studienzahl_waffle_choice_gender <- function(df,r) {
 
 
   # set order
-  x_maenner <- x_maenner[order(factor(names(x_maenner), levels = c('Ingenieur', 'Mathe',
+  x_maenner <- x_maenner[order(factor(names(x_maenner), levels = c('Ingenieurwissenschaften', 'Mathematik/Naturwissenschaften',
                                                                    'andere Studiengänge')))]
 
   x_frauen <- x_frauen[order(factor(names(x_frauen),
-                                    levels = c('Ingenieur', 'Mathe',
+                                    levels = c('Ingenieurwissenschaften', 'Mathematik/Naturwissenschaften',
                                                'andere Studiengänge')))]
 
 
@@ -2022,11 +2021,11 @@ studienzahl_waffle_choice_gender <- function(df,r) {
                   "#fcc433",
                   '#b1b5c3'),
       na.value="#b1b5c3",
-      limits = c("Ingenieur", "Mathe", "andere Studiengänge"),
+      limits = c("Ingenieurwissenschaften", "Mathematik/Naturwissenschaften", "andere Studiengänge"),
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("Ingenieur",", ",x_maenner[1], "%"),
-        paste0("Mathe",", ",x_maenner[2], "%"),
+        paste0("Ingenieurwissenschaften",", ",x_maenner[1], "%"),
+        paste0("Mathematik/Naturwissenschaften",", ",x_maenner[2], "%"),
         paste0("andere Studiengänge",", ",x_maenner[3], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -2046,11 +2045,11 @@ studienzahl_waffle_choice_gender <- function(df,r) {
                   "#fcc433",
                   '#b1b5c3'),
       na.value="#b1b5c3",
-      limits = c("Ingenieur", "Mathe", "andere Studiengänge"),
+      limits = c("Ingenieurwissenschaften", "Mathematik/Naturwissenschaften", "andere Studiengänge"),
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("Ingenieur",", ",x_frauen[1], "%"),
-        paste0("Mathe",", ",x_frauen[2], "%"),
+        paste0("Ingenieurwissenschaften",", ",x_frauen[1], "%"),
+        paste0("Mathematik/Naturwissenschaften",", ",x_frauen[2], "%"),
         paste0("andere Studiengänge",", ",x_frauen[3], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -2381,7 +2380,7 @@ studierende_map <- function(df,r) {
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
     dplyr::mutate(wert_sum = sum(props))
 
-  df <-  calc_share_male_bl(df)
+  df <- calc_share_male_bl(df)
 
   # calculate the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -2934,9 +2933,9 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
   lehramt <- r$nurLehramt_studium_studienzahl_bl_vergleich
 
-  hochschulform_select_1 <- r$hochschulform__studium_studienzahl_bl_vergleich1
+  hochschulform_select_1 <- r$hochschulform_studium_studienzahl_bl_vergleich1
 
-  hochschulform_select_2 <- r$hochschulform__studium_studienzahl_bl_vergleich2
+  hochschulform_select_2 <- r$hochschulform_studium_studienzahl_bl_vergleich2
 
   studium_level <- r$level_studium_studienzahl_bl_vergleich
 
