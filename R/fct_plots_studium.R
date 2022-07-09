@@ -3046,11 +3046,6 @@ bundeslaender_ranking <- function(df,r, type) {
   subject <- r$subject_studium_studienzahl_bl_gender_vergleich
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::mutate(fachbereich = replace(fachbereich,
-                                                   fachbereich == "Alle",
-                                                   "Alle restlichen Fächer"))
-
-  # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
   df <- df %>% dplyr::filter(region != "Deutschland")
@@ -3063,23 +3058,11 @@ bundeslaender_ranking <- function(df,r, type) {
                                                  indikator == "Studienanfänger",
                                                  "Studienanfängerinnen"))
 
-  df <- calc_share_male_bl(df)
-
-  # calculate new "Gesamt"
-  df <- df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
-    dplyr::mutate(wert = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
-
-  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
-
   if(lehramt == FALSE){
 
     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
     df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
-
-    title_help_sub_sub <- " insgesamt"
 
   } else {
 
@@ -3087,40 +3070,53 @@ bundeslaender_ranking <- function(df,r, type) {
 
     df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
 
-    title_help_sub_sub <- " an einer Uni (nur Lehramt)"
   }
 
-  # aggregate all subjects to calculate proportion later
-  df <- df %>% dplyr::group_by(indikator, region, nur_lehramt, hochschulform) %>%
-    dplyr::mutate(props = sum(wert))
-
   # aggregate to MINT
-  values_Mint <- df %>%
-    dplyr::filter(fachbereich != "Alle restlichen Fächer") %>%
-    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, hochschulform,
-                    nur_lehramt, props) %>%
-    dplyr::summarise(wert = sum(wert)) %>%
-    dplyr::mutate(bereich = "Hochschule",
-                  fachbereich = "MINT (aggregiert)")
+  df_sub <- calc_share_MINT_bl(df)
 
-  df <- rbind(df, values_Mint)
+  df_sub <- df_sub[,colnames(df)]
 
-  # # calculate proportion
-  df <- df %>% dplyr::group_by(fachbereich, indikator, hochschulform, region, anzeige_geschlecht) %>%
-    dplyr::summarize(proportion = wert/props) %>% dplyr::ungroup()
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
 
-  df$proportion <- df$proportion * 100
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+
+  df_sub <-  calc_share_male_bl(df_sub)
+
+  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+                    wert[anzeige_geschlecht == "Männer"])
+
+  df_sub <- df_sub %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
+    dplyr::mutate(wert_sum = sum(props))
+
+  df <-  calc_share_male_bl(df)
+
+  # calculate the new "Gesamt"
+  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+                    wert[anzeige_geschlecht == "Männer"])
+
+  df <- df %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
+    dplyr::mutate(wert_sum = sum(props))
+
+  df <- rbind(df, df_sub)
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
 
   df <- df %>% dplyr::filter(fachbereich == subject)
 
+  df <- df %>% dplyr::group_by(region, indikator) %>%
+    dplyr::summarize(proportion = (wert/wert_sum)*100)
+
   # spread column
   df <- tidyr::spread(df, indikator, proportion)
 
   df <- df %>% tidyr::drop_na()
-
-  df <- df %>% dplyr::select(-hochschulform, -anzeige_geschlecht)
 
   df2 <- tidyr::gather(df, group, value, -region) %>%
     dplyr::filter(group != "fachbereich") %>%
