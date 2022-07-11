@@ -30,7 +30,8 @@ mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("anforderungsniveau_arbeitsmarkt_anforderungen_verlauf"),
       choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte"),
-      selected = "Gesamt"
+      selected = "Gesamt",
+      multiple = TRUE
     ),
     p("Wählen Sie ein Bundesland:"),
     shinyWidgets::pickerInput(

@@ -1934,25 +1934,15 @@ arbeitsmarkt_anforderungen_verlauf <- function(df,r) {
 
   df <- df %>% dplyr::filter(fachbereich == "MINT")
 
-  df <- df %>% dplyr::filter(anforderungsniveau == anforderung)
-
-  if (anforderung == "Gesamt"){
-
-    title_help <- " insgesamt"
-
-  } else {
-
-    title_help <- paste0(" mit Anforderungsniveau ", anforderung)
-
-  }
+  df <- df %>% dplyr::filter(anforderungsniveau %in% anforderung)
 
   # plot
-  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = anzeige_geschlecht)) %>%
+  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = anforderungsniveau)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Arbeitnehmerinnen: ", title_help, " in ", states),
+    highcharter::hc_title(text = paste0("Anteil der Arbeitnehmerinnen im Zeitverlauf in ", states),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
