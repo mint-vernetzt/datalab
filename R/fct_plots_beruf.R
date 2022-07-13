@@ -416,7 +416,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, max=80) %>%
+      highcharter::hc_colorAxis(min=0, max=60, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Weibliche ", indikator_choice, " in MINT-Berufen", title_help_sub),
         margin = 10,
@@ -447,7 +447,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, max=80) %>%
+      highcharter::hc_colorAxis(min=0, max=60, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Männliche ", indikator_choice, " in MINT-Berufen", title_help_sub),
         margin = 10,
@@ -1181,7 +1181,7 @@ arbeitsmarkt_bl <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, max=30) %>%
+      highcharter::hc_colorAxis(min=0, max=30, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Auszubildende: Anteil an Beschäftigung", title_help_sub),
         margin = 10,
@@ -1212,7 +1212,7 @@ arbeitsmarkt_bl <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, max=30) %>%
+      highcharter::hc_colorAxis(min=0, max=30, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Beschäftigte: Anteil an Beschäftigung", title_help_sub),
         margin = 10,

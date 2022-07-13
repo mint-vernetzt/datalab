@@ -1205,7 +1205,7 @@ studienzahl_map <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, max=60) %>%
+      highcharter::hc_colorAxis(min=0, max=60, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Anteil der Studentinnen <br>",title_help ," an MINT in ", timerange),
         margin = 10,
@@ -2420,7 +2420,7 @@ studierende_map <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, max=60) %>%
+      highcharter::hc_colorAxis(min=0, max=60, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Studienanfänger*innen: Anteil an Belegungen <br> in ", subjects),
         margin = 10,
@@ -2451,7 +2451,7 @@ studierende_map <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, max=60) %>%
+      highcharter::hc_colorAxis(min=0, max=60, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Studierende: Anteil an Belegungen <br> in ", subjects),
         margin = 10,
@@ -2581,7 +2581,7 @@ studierende_map_gender <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, max=60) %>%
+      highcharter::hc_colorAxis(min=0, max=60, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Weibliche ", indikator_choice, ": Anteil an Belegungen <br> in ", subjects),
         margin = 10,
@@ -2612,7 +2612,7 @@ studierende_map_gender <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, max=60) %>%
+      highcharter::hc_colorAxis(min=0, max=60, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Männliche ", indikator_choice, ": Anteil an Belegungen <br> in ", subjects),
         margin = 10,
