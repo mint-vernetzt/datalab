@@ -2132,13 +2132,13 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
   plot_trainee_andere <- highcharter::hchart(df_trainee_andere, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion_gesamt)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Berufen in Ausbildung in ", timerange),
+    highcharter::hc_title(text = paste0("Zum Vergleich: Anteil von Frauen in anderen Berufen in Ausbildung in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_legend(enabled = TRUE, y = -180) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE,
                                            opacity = 0.7)) %>%
@@ -2162,13 +2162,13 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
   plot_employed_andere <- highcharter::hchart(df_employed_andere, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion_gesamt)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Berufen in Beschäftigung in ", timerange),
+    highcharter::hc_title(text = paste0("Zum Vergleich: Anteil von Frauen in anderen Berufen in Beschäftigung in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_legend(enabled = TRUE, y = -180) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE,
                                            opacity = 0.7)) %>%

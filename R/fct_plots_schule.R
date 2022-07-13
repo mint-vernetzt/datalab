@@ -146,8 +146,16 @@ kurse_einstieg_pie_gender <- function(df,r) {
   # calculate proportions
   df_lk <- share_pie(df_lk)
 
+  df_gk_mint <- df_gk %>% dplyr::filter(fachbereich == "MINT")
 
-  plot_gk_mint <- highcharter::hchart(df_gk[df_gk$fachbereich == "MINT",], size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+  df_lk_mint <- df_lk %>% dplyr::filter(fachbereich == "MINT")
+
+  df_gk_rest <- df_gk %>% dplyr::filter(fachbereich == "andere Fächer")
+
+  df_lk_rest <- df_lk %>% dplyr::filter(fachbereich == "andere Fächer")
+
+
+  plot_gk_mint <- highcharter::hchart(df_gk_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von Schülerinnen in MINT-Fächern in Grundkursen in ", timerange),
@@ -162,7 +170,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
     highcharter::hc_colors(c("#154194","#b16fab"))
 
 
-  plot_gk_rest <- highcharter::hchart(df_gk[df_gk$fachbereich == "andere Fächer",], size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+  plot_gk_rest <- highcharter::hchart(df_gk_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Zum Vergleich: Anteil von Schülerinnen an Nicht-MINT-Fächern in Grundkursen in ", timerange),
@@ -170,15 +178,15 @@ kurse_einstieg_pie_gender <- function(df,r) {
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"), marginTop = 1) %>%
-    highcharter::hc_legend(enabled = TRUE) %>%
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    highcharter::hc_legend(enabled = TRUE, y = -180) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE,
                                            opacity = 0.7)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
 
-  plot_lk_mint <- highcharter::hchart(df_lk[df_gk$fachbereich == "MINT",], size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+  plot_lk_mint <- highcharter::hchart(df_lk_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Anteil von Schülerinnen in MINT-Fächern in Leistungskursen in ", timerange),
@@ -192,7 +200,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
                                            dataLabels = list(enabled = TRUE, format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
     highcharter::hc_colors(c("#154194","#b16fab"))
 
-  plot_lk_rest <- highcharter::hchart(df_lk[df_gk$fachbereich == "andere Fächer",], size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
+  plot_lk_rest <- highcharter::hchart(df_lk_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_title(text = paste0("Zum Vergleich: Anteil von Schülerinnen an Nicht-MINT-Fächern in Leistungskursen in ", timerange),
@@ -200,8 +208,8 @@ kurse_einstieg_pie_gender <- function(df,r) {
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"), marginTop = 1) %>%
-    highcharter::hc_legend(enabled = TRUE) %>%
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    highcharter::hc_legend(enabled = TRUE, y = -180) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE, format='{point.percentage:.0f}%'), showInLegend = TRUE,
                                            opacity = 0.7)) %>%
