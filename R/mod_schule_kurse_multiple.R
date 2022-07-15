@@ -10,14 +10,14 @@
 mod_schule_kurse_multiple_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wähle einen Zeitraum:"),
+    p("Wählen Sie ein Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse"),
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
     ),
-    p("Wähle in welcher Form der Kurs belegt wurde:"),
+    p("Wählen Sie in welcher Form der Kurs belegt wurde:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_kurse_gender"),
       choices = c("Grundkurse", "Leistungskurse"),

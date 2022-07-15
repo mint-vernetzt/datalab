@@ -10,11 +10,20 @@ studierende_read$region <- gsub("\\.", "", studierende_read$region, perl=TRUE)
 
 studierende_read$region <- gsub(' ', '', studierende_read$region)
 
-studierende_read$wert <- as.numeric(studierende_read$wert)
-
-studierende_read[studierende_read$anzeige_geschlecht == "frauen", "anzeige_geschlecht"] <- "Frauen"
-
-studierende_read[studierende_read$anzeige_geschlecht == "gesamt", "anzeige_geschlecht"] <- "Gesamt"
+studierende_read <- studierende_read %>%
+  dplyr::mutate(wert = as.numeric(wert)) %>%
+  dplyr::mutate(anzeige_geschlecht = replace(anzeige_geschlecht,
+                                             anzeige_geschlecht == "frauen",
+                                           "Frauen"),
+                anzeige_geschlecht = replace(anzeige_geschlecht,
+                                             anzeige_geschlecht == "gesamt",
+                                    "Gesamt"),
+                fachbereich = replace(fachbereich,
+                                      fachbereich == "Mathe",
+                                      "Mathematik/Naturwissenschaften"),
+                fachbereich = replace(fachbereich,
+                                      fachbereich == "Ingenieur",
+                                      "Ingenieurwissenschaften"))
 
 studierende <- studierende_read
 

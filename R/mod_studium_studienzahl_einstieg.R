@@ -11,7 +11,7 @@ mod_studium_studienzahl_einstieg_ui <- function(id){
   ns <- NS(id)
 
   tagList(
-    p("Wähle einen Zeitraum:"),
+    p("Wählen Sie ein Jahr:"),
       shinyWidgets::sliderTextInput(
         inputId = ns("date_studierende_einstieg"),
         label = NULL,
@@ -23,7 +23,7 @@ mod_studium_studienzahl_einstieg_ui <- function(id){
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_einstieg"), label = "Nein", inline = TRUE),
       tags$span("Ja")),
-    p("Wähle eine Hochschulform:"),
+    p("Wählen Sie eine Hochschulform:"),
     conditionalPanel(condition = "input.nurLehramt_studierende_einstieg == false",
                      ns = ns,
                      shinyWidgets::pickerInput(

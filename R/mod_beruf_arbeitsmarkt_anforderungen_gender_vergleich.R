@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wähle einen Zeitraum:"),
+    p("Wählen Sie ein Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_anforderungen_gender_vegleich"),
       label = NULL,
@@ -18,10 +18,12 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui <- function(id){
                   "2018","2019", "2020"),
       selected = "2020"
     ),
-    p("Wähle Bundesland:"),
+    p("Wählen Sie ein Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_arbeitsmarkt_anforderungen_gender_vegleich"),
-      choices = c("Berlin",
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Berlin",
                   "Brandenburg",
                   "Bremen",
                   "Hamburg",

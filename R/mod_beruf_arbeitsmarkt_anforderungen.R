@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wähle einen Zeitraum:"),
+    p("Wählen Sie ein Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_anforderungen"),
       label = NULL,

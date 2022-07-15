@@ -13,7 +13,7 @@ mod_ausbildung_vertraege_verlauf_ui <- function(id){
   load(file = system.file(package="datalab","data/data_naa.rda"))
 
   tagList(
-    p("Wähle den Bereich der neuen Auszubildenden:"),
+    p("Wählen Sie den Bereich der neuen Auszubildenden:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_ausbildung_verlauf"),
       choices = unique(data_naa$fachbereich),
@@ -31,10 +31,11 @@ mod_ausbildung_vertraege_verlauf_ui <- function(id){
     # ),
     conditionalPanel(condition = "input.ost_west == false",
                      ns = ns,
-                     p("Wähle ein oder mehrere Bundesländer:"),
+                     p("Wählen Sie ein oder mehrere Bundesländer:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("states_ausbildung_verlauf"),
-                       choices = c("Berlin",
+                       choices = c("Deutschland",
+                                   "Berlin",
                                    "Brandenburg",
                                    "Bremen",
                                    "Hamburg",

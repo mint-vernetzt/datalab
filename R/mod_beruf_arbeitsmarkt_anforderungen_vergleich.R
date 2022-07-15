@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wähle einen Zeitraum:"),
+    p("Wählen Sie ein Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_anforderungen_vergleich"),
       label = NULL,
@@ -18,7 +18,7 @@ mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui <- function(id){
                   "2018","2019", "2020"),
       selected = "2020"
     ),
-    p("Wähle eine Beschäftigungsform der Arbeitnehmer*innen:"),
+    p("Wählen Sie eine Beschäftigungsform der Arbeitnehmer*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_arbeitsmarkt_anforderungen_vergleich"),
       choices = c("Auszubildende", "Beschäftigte"),
@@ -26,10 +26,12 @@ mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wähle ein Bundesland:"),
+    p("Wählen Sie ein Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_arbeitsmarkt_anforderungen_vergleich"),
-      choices = c("Berlin",
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Berlin",
                   "Brandenburg",
                   "Bremen",
                   "Hamburg",

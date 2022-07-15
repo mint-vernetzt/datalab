@@ -60,7 +60,7 @@ home_einstieg_pie <- function(df,r) {
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
@@ -96,7 +96,7 @@ home_einstieg_pie <- function(df,r) {
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
@@ -111,6 +111,7 @@ home_einstieg_pie <- function(df,r) {
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
 
@@ -153,7 +154,7 @@ home_einstieg_pie <- function(df,r) {
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
@@ -168,6 +169,7 @@ home_einstieg_pie <- function(df,r) {
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
 
@@ -181,7 +183,7 @@ home_einstieg_pie <- function(df,r) {
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
@@ -309,7 +311,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
     highcharter::hw_grid(
 
-        highcharter::hchart(df_mint,
+        highcharter::hchart(df_mint, size = 280,
           "pie", highcharter::hcaes(x = anzeige_geschlecht, y = wert)
         ) %>%
         highcharter::hc_tooltip(
@@ -325,7 +327,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
-        highcharter::hchart(df_rest,
+        highcharter::hchart(df_rest, size = 150,
                             "pie", highcharter::hcaes(x = anzeige_geschlecht, y = wert)
         ) %>%
           highcharter::hc_tooltip(
@@ -337,9 +339,10 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-          highcharter::hc_legend(enabled = TRUE) %>%
+          highcharter::hc_legend(enabled = TRUE, y = -120) %>%
           highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                                 dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                                 dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE,
+                                                 opacity = 0.7)),
 
       ncol = 1,
       browsable = TRUE
@@ -404,7 +407,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
 
-      highcharter::hchart(df_1_rest, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
+      highcharter::hchart(df_1_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#b16fab")) %>%
@@ -412,13 +415,15 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_legend(enabled = TRUE, y = -120) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
+                                               opacity = 0.7)),
 
 
-      highcharter::hchart(df_2_rest, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
+      highcharter::hchart(df_2_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#b16fab")) %>%
@@ -426,10 +431,12 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_legend(enabled = TRUE, y = -120) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
+                                               opacity = 0.7)),
 
       ncol = 2,
       browsable = TRUE
@@ -515,7 +522,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
 
-      highcharter::hchart(df_1_rest, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
+      highcharter::hchart(df_1_rest, size = 100, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#b16fab")) %>%
@@ -523,13 +530,15 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_legend(enabled = TRUE, y = -180) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
+                                               opacity = 0.7)),
 
 
-      highcharter::hchart(df_2_rest, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
+      highcharter::hchart(df_2_rest, size = 100, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#b16fab")) %>%
@@ -537,12 +546,14 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_legend(enabled = TRUE, y = -180) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
+                                               opacity = 0.7)),
 
-      highcharter::hchart(df_3_rest, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
+      highcharter::hchart(df_3_rest, size = 100, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#b16fab")) %>%
@@ -550,10 +561,12 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_legend(enabled = TRUE, y = -180) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
+                                               opacity = 0.7)),
 
 
 
@@ -681,9 +694,9 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::xlab("") + ggplot2::ylab("Anteil") +
     ggplot2::scale_fill_manual(values = c("#154194","#b16fab")) +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Frauenanteil in MINT im Vergleich",
-                                 "<br><br><br>"),
+    ggplot2::labs(title = paste0(paste0("<span style='font-size:20.5pt; color:black'>",
+                                 "Frauenanteil in MINT im Vergleich in ", timerange,
+                                 "<br><br><br>")),
                   fill = "") +
     ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"))
 
@@ -744,14 +757,15 @@ home_stacked_comparison_mint <- function(df, r) {
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#154194", "#b16fab")) %>%
-    highcharter::hc_title(text = "MINT-Anteile im Vergleich",
+    highcharter::hc_title(text = paste0("MINT-Anteile im Vergleich in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
-    highcharter::hc_exporting(enabled = TRUE,
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = FALSE,
                               buttons = list(contextButton = list(
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
                                 onclick = highcharter::JS("function () {
@@ -814,7 +828,7 @@ home_comparison_line <- function(df,r) {
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
-    highcharter::hc_exporting(enabled = TRUE,
+    highcharter::hc_exporting(enabled = FALSE,
                               buttons = list(contextButton = list(
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
                                 onclick = highcharter::JS("function () {
@@ -884,7 +898,7 @@ home_rest_mint_verlauf <- function(df,r) {
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
-    highcharter::hc_exporting(enabled = TRUE,
+    highcharter::hc_exporting(enabled = FALSE,
                               buttons = list(contextButton = list(
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
                                 onclick = highcharter::JS("function () {
