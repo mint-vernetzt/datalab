@@ -43,12 +43,6 @@ mod_home_start_ui <- function(id){
                      span("Haben Sie ", tags$b(span("Anregungen oder Wünsche", style = "color:#b16fab")), " an weitere Datensätze oder Darstellungen,
                  freuen wir uns über Ihr Feedback (Link zur Umfrage ).", br(), "Für Fragen steht Ihnen", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject=MINT-Vernetzt Datalab", " Antonia Kröger"), " gerne zur Verfügung.")
                    ),
-                   p(style = "text-align: justify; font-size = 16px",
-                     span(tags$b(span("Was ist MINTvernetzt?", style = "color:#b16fab")), br(),
-                          tags$b(span("Die Service- und Anlaufstelle für MINT-Akteur:innen in Deutschland", style = "color:#b16fab")),br(),
-                          "Die MINT-Vernetzungsstelle, kurz MINTvernetzt, ist das Dach für die außerschulische MINT-Bildung in Deutschland.
-                  MINTvernetzt wird vom Bundesministerium für Bildung und Forschung gefördert und von Mitarbeitenden der Körber-Stiftung, der matrix gGmbH,
-                  dem Nationalen MINTForum e.V., dem Stifterverband und der Universität Regensburg als Verbund gemeinsam umgesetzt."))
                ),
         #solidHeader = TRUE,
         #collapsible = FALSE,
@@ -88,10 +82,10 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von MINT- und nicht-MINT",
+        title = "Wie hoch in der Anteil von MINT in den verschiedenen Bildungsbereichen?",
         width = 12,
-        p("Hier können Sie sich den Anteil von MINT und nicht-MINT für verschiedene Indikatoren
-        aus den  Bereichen Schule, Hochschule und Arbeitsmarkt anschauen und vergleichen."),
+        p("Hier zeigen wir den Anteil von MINT für verschiedene Personengruppen
+        aus den  Bereichen Schule, Studium, Ausbildung und Arbeitsmarkt ."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(
