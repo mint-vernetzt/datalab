@@ -24,7 +24,12 @@ mod_studium_studienzahl_ui <- function(id){
         Informationen zum Anteil von MINT-Fächern und nicht-MINT-Fächern an allen Studienfächern im Zeitraum
         2013 bis 2020. Zudem können Sie sich den Frauen- und Männeranteil in einzelnen MINT-Fächern für
         Studierende und Studienanfänger*innen ausgeben lassen. Des weiteren haben wir alle Ergebnisse
-        auch für einzelne Bundesländer aufbereitet. ")
+        auch für einzelne Bundesländer aufbereitet. "),
+      p(style = "text-align: justify; font-size = 16px",
+        span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")),
+      p(style = "text-align: justify; font-size = 16px",
+        span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
+             " "))
     )),
     fluidRow(
       shinydashboard::box(

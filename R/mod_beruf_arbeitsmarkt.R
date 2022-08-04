@@ -12,8 +12,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
   tagList(
     fluidRow(
       shinydashboard::box(
-        title = "MINT auf dem Arbeitsmarkt",
         width = 12,
+        tags$h2("MINT auf dem Arbeitsmark"),
         p(style = "text-align: justify; font-size = 16px",
           "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
           Dabei unterscheiden wir zwischen Auszubildenden und Beschäftigten sowie nach Geschlecht.

@@ -12,9 +12,8 @@ mod_schule_kurse_ui <- function(id){
   tagList(
     fluidRow(
       shinydashboard::box(
-        #title = "MINT in der Schule",
         width = 12,
-        tags$h1("MINT in der Schule"),
+        tags$h2("MINT in der Schule"),
         p(style = "text-align: justify; font-size = 16px",
           "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT
           im Bereich Schule. Aktuell bieten wir Ihnen Informationen zu den Kursbelegungen
@@ -23,6 +22,11 @@ mod_schule_kurse_ui <- function(id){
           Oder Sie interessieren sich für die Kursbelegungen von Schülerinnen im Vergleich zu Schülern
           in MINT. Zudem bieten wir Ihnen die Ergebnisse für einzelne Bundesländer an."),
         #br(),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
+               " "))
       )),
     fluidRow(
       shinydashboard::box(

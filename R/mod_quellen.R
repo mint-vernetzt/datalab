@@ -4,28 +4,44 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd 
+#' @noRd
 #'
-#' @importFrom shiny NS tagList 
+#' @importFrom shiny NS tagList
 mod_quellen_ui <- function(id){
   ns <- NS(id)
   tagList(
- 
+
   )
 }
-    
+
 #' quellen Server Functions
 #'
-#' @noRd 
+#' @noRd
 mod_quellen_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
- 
+
   })
 }
-    
+
+
+
+
+mod_quellen_ui <- function(id){
+  ns <- NS(id)
+  tagList(
+    fluidRow(
+      shinydashboard::box(
+        width = 12,
+        tags$h2("Quellen und Hinweise zu den Daten"),
+        p(style = "text-align: justify; font-size = 16px",
+          "lorem ipsum"),
+
+      )))
+}
+
 ## To be copied in the UI
 # mod_quellen_ui("quellen_1")
-    
+
 ## To be copied in the server
 # mod_quellen_server("quellen_1")
