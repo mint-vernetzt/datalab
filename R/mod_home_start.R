@@ -85,7 +85,7 @@ mod_home_start_ui <- function(id){
         title = "Wie hoch in der Anteil von MINT in den verschiedenen Bildungsbereichen?",
         width = 12,
         p("Hier zeigen wir den Anteil von MINT für verschiedene Personengruppen
-        aus den  Bereichen Schule, Studium, Ausbildung und Arbeitsmarkt ."),
+        aus den  Bereichen Schule, Studium, Ausbildung und Arbeitsmarkt."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(
