@@ -109,7 +109,7 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von Frauen an MINT-Bereichen",
+        title = "Wie hoch ist der Anteil von Frauen in den verschiedenen Bereichen?",
         width = 12,
         p("Hier können Sie sich den Anteil von Frauen an MINT und nicht-MINT für die Indikatoren
         aus den  Bereichen Schule, Hochschule und Arbeitsmarkt anschauen und vergleichen."),
