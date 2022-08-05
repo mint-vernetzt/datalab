@@ -75,9 +75,9 @@ kurse_einstieg_pie <- function(df,r) {
                                            dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE))
 
 
-  plot_gk <- plot_gk %>% highcharter::hc_colors(c("#154194","#b16fab"))
+  plot_gk <- plot_gk %>% highcharter::hc_colors(c("#efe8e6","#b16fab"))
 
-  plot_lk <- plot_lk %>% highcharter::hc_colors(c("#154194","#b16fab"))
+  plot_lk <- plot_lk %>% highcharter::hc_colors(c("#efe8e6","#b16fab"))
 
 
   # place plots inside grid
@@ -167,7 +167,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
-    highcharter::hc_colors(c("#154194","#b16fab"))
+    highcharter::hc_colors(c("#154194","#efe8e6"))
 
 
   plot_gk_rest <- highcharter::hchart(df_gk_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
@@ -183,7 +183,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE,
                                            opacity = 0.7)) %>%
-    highcharter::hc_colors(c("#154194","#b16fab"))
+    highcharter::hc_colors(c("#154194","#efe8e6"))
 
 
   plot_lk_mint <- highcharter::hchart(df_lk_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
@@ -198,7 +198,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE, format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
-    highcharter::hc_colors(c("#154194","#b16fab"))
+    highcharter::hc_colors(c("#154194","#efe8e6"))
 
   plot_lk_rest <- highcharter::hchart(df_lk_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
@@ -213,7 +213,7 @@ kurse_einstieg_pie_gender <- function(df,r) {
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE, format='{point.percentage:.0f}%'), showInLegend = TRUE,
                                            opacity = 0.7)) %>%
-    highcharter::hc_colors(c("#154194","#b16fab"))
+    highcharter::hc_colors(c("#154194","#efe8e6"))
 
 
   # place plots inside grid

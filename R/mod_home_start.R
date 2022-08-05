@@ -22,7 +22,7 @@ mod_home_start_ui <- function(id){
                     "Im MINT-DataLab zeigen wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
                     Ausbildung und Arbeitsmarkt in Deutschland."
                     ),
-                                   p(style = "text-align: justify; font-size = 16px",
+                    p(style = "text-align: justify; font-size = 16px",
                     span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
                          Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
                          der Zeit integriert. (Weitere Infos unter: Quellen & Hinweise)")

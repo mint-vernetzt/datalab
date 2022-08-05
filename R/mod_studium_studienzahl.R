@@ -33,7 +33,7 @@ mod_studium_studienzahl_ui <- function(id){
     )),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von MINT-Studienfächern",
+        title = "Wie hoch ist der Anteil an Studierenden, die ein MINT-Fach studieren?",
         width = 12,
         p("Hier können Sie sich den Anteil von MINT-Studienfächern anschauen."),
         tabsetPanel(type = "tabs",
@@ -88,7 +88,7 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von Frauen an MINT-Fächern und nicht-MINT-Fächern",
+        title = "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?",
         width = 12,
         p("Hier können Sie sich anschauen, wie hoch der Frauen- und Männeranteil unter
         Studierenden und
