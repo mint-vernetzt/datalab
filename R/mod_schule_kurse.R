@@ -15,18 +15,16 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         tags$h2("MINT in der Schule"),
         p(style = "text-align: justify; font-size = 16px",
-          "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT
-          im Bereich Schule. Aktuell bieten wir Ihnen Informationen zu den Kursbelegungen
-          von Schülern und Schülerinnen in der Oberstufe. Beispielsweise können Sie sich den Anteil von
-          Leistungskursen im Fachbereich Informatik im Zeitverlauf ausgeben lassen.
-          Oder Sie interessieren sich für die Kursbelegungen von Schülerinnen im Vergleich zu Schülern
-          in MINT. Zudem bieten wir Ihnen die Ergebnisse für einzelne Bundesländer an."),
+          "Auf dieser Seite zeigen wir, wie viele Schülerinnen und Schüler in der Oberstufe
+          für MINT-Fächer gewählt haben. "),
         #br(),
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")),
+          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "KMK 2021, auf Anfrage, eigene Berechnungen.")),
         p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
-               " "))
+               "Anders als bei Studierenden oder Auszubildenen wählen Schülerinnen und Schüler mehrere Fächer und können
+          entsprechend nicht eindeutig als 'MINT' oder 'nicht-MINT' eingruppiert werden. Der Vergleich auf dieser Seite
+          erfolgt entsprechend der Belegungen der verschiedenen Kurse."))
       )),
     fluidRow(
       shinydashboard::box(

@@ -32,7 +32,6 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Studium", icon = shiny::icon("university"), tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf", icon = shiny::icon("building"), tabName = "beruf"),
-          shinydashboard::menuItem(" "), tabName = "x"),
           shinydashboard::menuItem("Quellen & Hinweise", icon = shiny::icon("book"), tabName = "quellen"),
           shinydashboard::menuItem("Kontakt & Feedback", icon = shiny::icon("mail-bulk"), tabName = "kontakt"),
           shinydashboard::menuItem("Impressum", icon = shiny::icon("address-card"), tabName = "impressum")
@@ -52,8 +51,7 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1"))
         )
       )
-    )
-  )
+  ))
 }
 
 #' Add external Resources to the Application
