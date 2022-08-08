@@ -78,7 +78,7 @@ studienzahl_einstieg_pie <- function(df,r) {
     plot_studierende <- highcharter::hchart(df_studierende, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Studienfächern für Studierende in ", timerange),
+      highcharter::hc_title(text = paste0(" Studienfachwahl (Studierende) in ", timerange),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -92,7 +92,7 @@ studienzahl_einstieg_pie <- function(df,r) {
   plot_anfeanger <- highcharter::hchart(df_anfaenger, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Studienfächern für Studienanfänger in ", timerange),
+      highcharter::hc_title(text = paste0("Studienfachwahl (Studienanfänger:innen) in ", timerange),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -202,7 +202,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   plot_studierende_mint <- highcharter::hchart(df_studierende_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen an MINT-Fächern für Studierende in ", timerange),
+    highcharter::hc_title(text = paste0("MINT-Fächer (Studierende) in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -216,7 +216,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   plot_anfeanger_mint <- highcharter::hchart(df_anfaenger_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen an MINT-Fächern für Studienanfänger in ", timerange),
+    highcharter::hc_title(text = paste0("MINT-Fächer für (Studienanfänger*innen) in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -229,7 +229,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   plot_studierende_rest <- highcharter::hchart(df_studierende_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("Zum Vergleich: Anteil von Frauen an allen anderen Studienfächern für Studierende in ", timerange),
+    highcharter::hc_title(text = paste0("Nicht-MINT-Fächer (Studierende) in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -244,7 +244,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   plot_anfeanger_rest <- highcharter::hchart(df_anfaenger_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("Zum Vergleich: Anteil von Frauen an allen anderen Studienfächern für Studienanfänger in ", timerange),
+    highcharter::hc_title(text = paste0("Nicht-MINT-Fächer (Studienanfänger*innen) in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
