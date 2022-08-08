@@ -17,7 +17,7 @@ mod_studium_studienzahl_ui <- function(id){
   tagList(
     fluidRow(
     shinydashboard::box(
-      tags$h1("Studium und MINT"),
+      tags$h2("Studium und MINT"),
       width = 12,
       p(style = "text-align: justify; font-size = 16px",
         "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Hochschule. Sie finden

@@ -15,7 +15,7 @@ mod_quellen_ui <- function(id){
         #title = span("Quellen und Hinweise", style = "color:#154194; font-size: 50px"),
         width = 12,
         # column(width = 9,
-        tags$h1("QUELLEN & HINWEISE"),
+        tags$h2("Quellen & Hinweise"),
         p(style = "text-align: justify; font-size = 16px",
           "Hier finden Sie Verweise zu den den Institutionen, wo die im MINT-Datalab verwendeten Daten angefragt wurden. Darüber hinaus listen wir Links zu interesanten weiterführenden Quellen auf.")
       )),
