@@ -13,7 +13,7 @@ mod_ausbildung_vertraege_verlauf_ui <- function(id){
   load(file = system.file(package="datalab","data/data_naa.rda"))
 
   tagList(
-    p("Wählen Sie den Bereich der neuen Auszubildenden:"),
+    p("Bereich der neuen Auszubildenden:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_ausbildung_verlauf"),
       choices = unique(data_naa$fachbereich),

@@ -11,7 +11,7 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_bl_vergleich"),
       label = NULL,
@@ -19,7 +19,7 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
                   "2018","2019", "2020"),
       selected = "2020"
     ),
-    p("Wählen Sie eine Beschäftigungsform der Arbeitnehmer*innen:"),
+    p("Auswahl Beschäftigungsform der Arbeitnehmer*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_beruf_arbeitsmarkt_bl_vergleich"),
       choices = c("Auszubildende", "Beschäftigte"),
@@ -27,10 +27,10 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wählen Sie ein Anforderungsniveau:"),
+    p("Asuwahl Anforderungsniveau:"),
     shinyWidgets::pickerInput(
       inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich"),
-      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte"),
+      choices = c("Gesamt", "Fachkraft", "Spezialist*in", "Expert*in"),
       selected = "Gesamt"
     )
   )

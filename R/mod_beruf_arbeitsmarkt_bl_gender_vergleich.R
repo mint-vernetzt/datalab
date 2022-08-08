@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_bl_gender_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_bl_gender_vergleich"),
       label = NULL,
@@ -20,7 +20,7 @@ mod_beruf_arbeitsmarkt_bl_gender_vergleich_ui <- function(id){
     p("Wählen Sie ein Anforderungsniveau:"),
     shinyWidgets::pickerInput(
       inputId = ns("anforderungsniveau_arbeitsmarkt_bl_gender_vergleich"),
-      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte")
+      choices = c("Gesamt", "Fachkraft", "Spezialist*in", "Expert*in")
     )
   )
 }
