@@ -10,7 +10,7 @@
 mod_studium_choice_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("AUswahl Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_choice_gender"),
       label = NULL,
@@ -21,7 +21,7 @@ mod_studium_choice_gender_ui <- function(id){
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_choice_gender"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
-      p("Wählen Sie eine Hochschulform:"),
+      p("Auswahl Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studium_choice_gender == false",
                        ns = ns,
                        shinyWidgets::pickerInput(
@@ -35,10 +35,10 @@ mod_studium_choice_gender_ui <- function(id){
                          choices = "Uni"
                        ))
     ),
-    p("Wählen Sie den Status der Student*innen:"),
+    p("Auswahl Status der Student*innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_studium_choice_gender"),
-      choices = c("Studienanfänger", "Studierende"),
+      choices = c("Studienanfänger*innen", "Studierende"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
