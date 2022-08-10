@@ -551,7 +551,7 @@ studienzahl_einstieg_comparison <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Anteil"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-    highcharter::hc_colors(c("#154194", "#b16fab")) %>%
+    highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
     highcharter::hc_title(text = paste0("MINT-Anteile im Vergleich in ", timerange),
                           margin = 45,
                           align = "center",
@@ -642,7 +642,7 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::xlab("") + ggplot2::ylab("Anteil") +
-    ggplot2::scale_fill_manual(values = c("#154194", "#b16fab")) +
+    ggplot2::scale_fill_manual(values = c("#efe8e6", "#b16fab")) +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
                                  "Frauenanteil in MINT im Vergleich in ", timerange,
                                  "<br><br><br>"),
