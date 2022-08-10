@@ -11,7 +11,7 @@ mod_studium_studienzahl_einstieg_ui <- function(id){
   ns <- NS(id)
 
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl des Jahres:"),
       shinyWidgets::sliderTextInput(
         inputId = ns("date_studierende_einstieg"),
         label = NULL,
@@ -19,11 +19,11 @@ mod_studium_studienzahl_einstieg_ui <- function(id){
                     "2018","2019", "2020"),
         selected = "2020"
       ),
-    p("Soll nur Lehramt angezeigt werden?"),
+    p("Nur Lehramt anzeigen:"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_einstieg"), label = "Nein", inline = TRUE),
       tags$span("Ja")),
-    p("Wählen Sie eine Hochschulform:"),
+    p("Auswahl der Hochschulform:"),
     conditionalPanel(condition = "input.nurLehramt_studierende_einstieg == false",
                      ns = ns,
                      shinyWidgets::pickerInput(

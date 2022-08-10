@@ -19,7 +19,7 @@ mod_ausbildung_vertraege_verlauf_ui <- function(id){
       choices = unique(data_naa$fachbereich),
       selected = "Informatik-Fachkräfte"
     ),
-    p("Sollen die Bundesländer auf Ost und West zusammengefasst werden?"),
+    p("Zusammenfassen der Bundesländer auf Ost und West:"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("ost_west"), label = "Nein", inline = TRUE),
       tags$span("Ja")

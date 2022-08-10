@@ -40,12 +40,12 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
     p("Status der Student:innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("topic_selected_subject_bl"),
-      choices = c("Studienanfänger:innen", "Studierende"),
+      choices = c("Studienanfänger", "Studierende"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wählen Sie ein oder mehrere Fächer:"),
+    p("Auswahl der Fächer:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_bl"),
       choices = c("MINT (aggregiert)" = "MINT", "Mathematik/Naturwissenschaften" = "Mathematik/Naturwissenschaften",
@@ -53,7 +53,7 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
       selected = c("MINT", "Ingenieurwissenschaften"),
       multiple = TRUE
     ),
-    p("Wählen Sie ein Bundesland:"),
+    p("Auswahl des Bundeslands:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_verlauf_subject_bl"),
       choices = c("Deutschland",

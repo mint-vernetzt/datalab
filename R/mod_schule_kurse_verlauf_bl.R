@@ -12,7 +12,7 @@ mod_schule_kurse_verlauf_bl_ui <- function(id){
 
   tagList(
 
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl des Zeitraums:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_verlauf_bl"),
       label = NULL,
@@ -20,7 +20,7 @@ mod_schule_kurse_verlauf_bl_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wählen Sie ein Fach:"),
+    p("Auswahl des Fachs:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_bl"),
       choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
@@ -28,7 +28,7 @@ mod_schule_kurse_verlauf_bl_ui <- function(id){
                   "Musik/Kunst", "Religion/Ethik", "Sport"),
       selected = "MINT (aggregiert)"
     ),
-    p("Wählen Sie ein Bundesland:"),
+    p("Auswahl des Bundeslands:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("states_kurse_verlauf_bl"),
                        choices = c("Deutschland",

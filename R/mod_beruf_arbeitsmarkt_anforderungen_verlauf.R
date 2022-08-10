@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl Zeitraum:"),
+    p("Auswahl des Zeitraums:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_anforderungen_verlauf"),
       label = NULL,
@@ -18,7 +18,7 @@ mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Auswahl Beschäftigungsform der Arbeitnehmer*innen:"),
+    p("Auswahl der Beschäftigungsform:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_arbeitsmarkt_anforderungen_verlauf"),
       choices = c("Auszubildende", "Beschäftigte"),
@@ -26,14 +26,14 @@ mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wählen Sie ein Anforderungsniveau:"),
+    p("Auswahl des Anforderungsniveaus:"),
     shinyWidgets::pickerInput(
       inputId = ns("anforderungsniveau_arbeitsmarkt_anforderungen_verlauf"),
       choices = c("Gesamt", "Fachkraft", "Spezialist*in", "Expert*in"),
       selected = "Gesamt",
       multiple = TRUE
     ),
-    p("Wählen Sie ein Bundesland:"),
+    p("Auswahl des Bundeslands:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_arbeitsmarkt_anforderungen_verlauf"),
       choices = c("Deutschland",

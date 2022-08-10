@@ -23,7 +23,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_verlauf_bl_subject_gender"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
-      p("Wählen Sie eine Hochschulform:"),
+      p("Auswahl der Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studierende_verlauf_bl_subject_gender == false",
                        ns = ns,
                        shinyWidgets::pickerInput(

@@ -11,18 +11,18 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl des Zeitraums:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_ranking_subject_bl"),
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
     ),
-    p("Soll nur Lehramt angezeigt werden?"),
+    p("Nur Lehramt azeigen:"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_ranking_bl_subject"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
-      p("Wählen Sie eine Hochschulform:"),
+      p("Auswahl der Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studierende_ranking_bl_subject == false",
                        ns = ns,
                        shinyWidgets::pickerInput(
@@ -36,7 +36,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
                          choices = "Uni"
                        ))
     ),
-    p("Wählen Sie den Status der Student*innen:"),
+    p("Status der Student:innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("topic_selected_subject_bl"),
       choices = c("Studienanfänger", "Studierende"),
@@ -44,7 +44,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wählen Sie ein Bundesland:"),
+    p("Auswahl des Bundeslands:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_ranking_subject_bl"),
       choices = c("Deutschland",

@@ -10,14 +10,14 @@
 mod_beruf_arbeitsmarkt_bl_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl Jahr:"),
+    p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_bl_gender"),
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
     ),
-    p("Auswahl der Beschäftigungsform der Arbeitnehmer*innen:"),
+    p("Auswahl der Beschäftigungsform:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_arbeitsmarkt_bl_gender"),
       choices = c("Auszubildende", "Beschäftigte"),
