@@ -78,7 +78,7 @@ studienzahl_einstieg_pie <- function(df,r) {
     plot_studierende <- highcharter::hchart(df_studierende, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-      highcharter::hc_title(text = paste0(" Studienfachwahl (Studierende) in ", timerange),
+      highcharter::hc_title(text = paste0("Studienfachwahl (Studierende) in ", timerange),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -216,7 +216,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   plot_anfeanger_mint <- highcharter::hchart(df_anfaenger_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("MINT-Fächer für (Studienanfänger*innen) in ", timerange),
+    highcharter::hc_title(text = paste0("MINT-Fächer (Studienanfänger*innen) in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -779,7 +779,7 @@ studienzahl_waffle_mint <- function(df,r) {
   waffle_studierende <- waffle::waffle(x_studierende, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Studierende: MINT und  <br> andere Fächer im Vergleich</span>")) +
+      title = paste0("<span style='color:black;'>", "Studienfachwahl (Studierende)")) + ###Von mir. Gemeint: Tatsächlich alle Smester? kab
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -803,7 +803,7 @@ studienzahl_waffle_mint <- function(df,r) {
   waffle_studienanfaenger <- waffle::waffle(x_studienanfaenger, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Studienanfänger: MINT und  <br> andere Fächer im Vergleich</span>")) +
+      title = paste0("<span style='color:black;'>", "Studienfachwahl (Studienanfänger*innen)</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
