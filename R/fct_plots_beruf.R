@@ -49,7 +49,8 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
   plot_auszubildende <- highcharter::hchart(df_auszubildende, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab", 'rgba(177, 111, 171, 0.50)')) %>%
+
+    highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Berufszweigen für Auszubildende in ", timerange),
                           margin = 45,
                           align = "center",
@@ -65,7 +66,7 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
   plot_beschaeftigte <- highcharter::hchart(df_beschaeftigte, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_colors(c("#154194", 'rgba(21, 65, 148, 0.50)',"#b16fab", 'rgba(177, 111, 171, 0.50)')) %>%
+    highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
     highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Berufszweigen für Beschäftigte in ", timerange),
                           margin = 45,
                           align = "center",
@@ -78,9 +79,9 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
 
 
 
-    plot_beschaeftigte <- plot_beschaeftigte %>% highcharter::hc_colors(c("#154194","#b16fab"))
+    plot_beschaeftigte <- plot_beschaeftigte %>% highcharter::hc_colors(c("#efe8e6","#b16fab"))
 
-    plot_auszubildende <- plot_auszubildende %>% highcharter::hc_colors(c("#154194","#b16fab"))
+    plot_auszubildende <- plot_auszubildende %>% highcharter::hc_colors(c("#efe8e6","#b16fab"))
 
 
   highcharter::hw_grid(
@@ -333,7 +334,7 @@ arbeitsmarkt_absolut <- function(df,r) {
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::xlab("") + ggplot2::ylab("Anzahl") +
-    ggplot2::scale_fill_manual(values = c("#b16fab", "#154194")) +
+    ggplot2::scale_fill_manual(values = c("#efe8e6","#b16fab")) +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
                                  "Arbeitnehmer*innen ", title_help_sub," in MINT und allen anderen Berufszweigen in ", timerange,
                                  "<br><br><br>"),
@@ -911,7 +912,7 @@ beruf_einstieg_vergleich <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Anteil"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-    highcharter::hc_colors(c("#154194", "#b16fab")) %>%
+    highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
     highcharter::hc_title(text = paste0("MINT-Anteile im Vergleich in ", timerange),
                           margin = 45,
                           align = "center",
@@ -2127,7 +2128,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
-    highcharter::hc_colors(c("#154194","#b16fab"))
+    highcharter::hc_colors(c("#154194","#efe8e6"))
 
   plot_trainee_andere <- highcharter::hchart(df_trainee_andere, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion_gesamt)) %>%
     highcharter::hc_tooltip(
@@ -2142,7 +2143,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE,
                                            opacity = 0.7)) %>%
-    highcharter::hc_colors(c("#154194","#b16fab"))
+    highcharter::hc_colors(c("#154194","#efe8e6"))
 
   # Employed plots
   plot_employed_mint <- highcharter::hchart(df_employed_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion_gesamt)) %>%
@@ -2157,7 +2158,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE)) %>%
-    highcharter::hc_colors(c("#154194","#b16fab"))
+    highcharter::hc_colors(c("#154194","#efe8e6"))
 
   plot_employed_andere <- highcharter::hchart(df_employed_andere, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion_gesamt)) %>%
     highcharter::hc_tooltip(
@@ -2172,7 +2173,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                            dataLabels = list(enabled = TRUE,  format='{point.percentage:.0f}%'), showInLegend = TRUE,
                                            opacity = 0.7)) %>%
-    highcharter::hc_colors(c("#154194","#b16fab"))
+    highcharter::hc_colors(c("#154194","#efe8e6"))
 
   # place plots inside grid
   highcharter::hw_grid(
@@ -2347,7 +2348,7 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::xlab("") + ggplot2::ylab("Anteil") +
-    ggplot2::scale_fill_manual(values = c("#154194", "#b16fab")) +
+    ggplot2::scale_fill_manual(values = c("#efe8e6","#b16fab")) +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
                                  "Frauenanteil im Vergleich in ", timerange,
                                  "<br><br><br>"),
