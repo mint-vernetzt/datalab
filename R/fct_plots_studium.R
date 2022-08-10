@@ -103,9 +103,9 @@ studienzahl_einstieg_pie <- function(df,r) {
                                              dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE))
 
 
-  plot_anfeanger <- plot_anfeanger %>% highcharter::hc_colors(c("#154194","#b16fab"))
+  plot_anfeanger <- plot_anfeanger %>% highcharter::hc_colors(c("#efe8e6","#b16fab"))
 
-  plot_studierende <- plot_studierende %>% highcharter::hc_colors(c("#154194","#b16fab"))
+  plot_studierende <- plot_studierende %>% highcharter::hc_colors(c("#efe8e6","#b16fab"))
 
     highcharter::hw_grid(
 
@@ -256,13 +256,13 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
                                            opacity = 0.7))
 
 
-  plot_anfeanger_mint <- plot_anfeanger_mint %>% highcharter::hc_colors(c("#154194","#b16fab"))
+  plot_anfeanger_mint <- plot_anfeanger_mint %>% highcharter::hc_colors(c("#154194","#efe8e6"))
 
-  plot_studierende_mint <- plot_studierende_mint %>% highcharter::hc_colors(c("#154194","#b16fab"))
+  plot_studierende_mint <- plot_studierende_mint %>% highcharter::hc_colors(c("#154194","#efe8e6"))
 
-  plot_anfeanger_rest <- plot_anfeanger_rest %>% highcharter::hc_colors(c("#154194", "#b16fab"))
+  plot_anfeanger_rest <- plot_anfeanger_rest %>% highcharter::hc_colors(c("#154194", "#efe8e6"))
 
-  plot_studierende_rest <- plot_studierende_rest %>% highcharter::hc_colors(c("#154194", "#b16fab"))
+  plot_studierende_rest <- plot_studierende_rest %>% highcharter::hc_colors(c("#154194", "#efe8e6"))
 
   highcharter::hw_grid(
 
