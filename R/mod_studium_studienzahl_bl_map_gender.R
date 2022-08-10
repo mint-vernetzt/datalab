@@ -40,7 +40,7 @@ mod_studium_studienzahl_bl_map_gender_ui <- function(id){
         choices = c("MINT (aggregiert)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
         selected = "MINT (aggregiert)"
       ),
-      p("Status der Student*innen:"),
+      p("Status der Student:innen:"),
       shinyWidgets::radioGroupButtons(
         inputId = ns("level_studium_choice_gender"),
         choices = c("Studienanfänger", "Studierende"),
