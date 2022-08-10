@@ -10,7 +10,7 @@
 mod_studium_choice_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("AUswahl des Jahres:"),
+    p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_choice_gender"),
       label = NULL,
