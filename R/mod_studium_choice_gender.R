@@ -10,14 +10,14 @@
 mod_studium_choice_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("AUswahl Jahr:"),
+    p("AUswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_choice_gender"),
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
     ),
-    p("Soll nur Lehramt angezeigt werden?"),
+    p("Nur Lehramt anzeigen:"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_choice_gender"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
@@ -35,7 +35,7 @@ mod_studium_choice_gender_ui <- function(id){
                          choices = "Uni"
                        ))
     ),
-    p("Auswahl Status der Student*innen:"),
+    p("Status der Student:innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_studium_choice_gender"),
       choices = c("Studienanfänger", "Studierende"),
