@@ -10,7 +10,7 @@
 mod_studium_studienzahl_bl_map_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Aus wahl des Jahres:"),
+    p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_map"),
       label = NULL,

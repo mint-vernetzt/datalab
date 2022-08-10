@@ -11,7 +11,7 @@ mod_studium_studienzahl_bl_verlauf_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wäahl des Zeitraums:"),
+    p("Wahl des Zeitraums:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_gender_verlauf"),
       label = NULL,
