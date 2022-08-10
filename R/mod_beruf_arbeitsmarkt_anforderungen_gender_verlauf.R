@@ -21,7 +21,7 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui <- function(id){
     p("Auswahl  Anforderungsniveau:"),
     shinyWidgets::pickerInput(
       inputId = ns("level_arbeitsmarkt_anforderungen_gender_verlauf"),
-      choices = c("Gesamt", "Fachkraft", "Spezialist*in", "Expert*in"),
+      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte"),
       selected = "Gesamt"
     ),
     p("Auswahl Bundesland:"),

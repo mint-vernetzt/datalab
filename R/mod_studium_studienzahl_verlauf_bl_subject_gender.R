@@ -19,7 +19,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Soll nur Lehramt angezeigt werden?"),
+    p("Nur Lehramt anzeigen:"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_verlauf_bl_subject_gender"), label = "Nein", inline = TRUE),
       tags$span("Ja"),

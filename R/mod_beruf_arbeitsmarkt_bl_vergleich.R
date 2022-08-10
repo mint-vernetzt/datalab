@@ -30,7 +30,7 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
     p("Asuwahl Anforderungsniveau:"),
     shinyWidgets::pickerInput(
       inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich"),
-      choices = c("Gesamt", "Fachkraft", "Spezialist*in", "Expert*in"),
+      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte"),
       selected = "Gesamt"
     )
   )
