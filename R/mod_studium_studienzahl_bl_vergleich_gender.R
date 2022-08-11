@@ -27,7 +27,7 @@ mod_studium_studienzahl_bl_vergleich_gender_ui <- function(id){
                        ns = ns,
                        shinyWidgets::pickerInput(
                          inputId = ns("hochschulform_studium_studienzahl_bl_gender_vergleich1"),
-                         choices = c("insgesamt", "Uni", "FH")
+                         choices = c("Insgesamt"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
                        )),
       conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_gender_vergleich != false",
                        ns = ns,

@@ -27,7 +27,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
                        ns = ns,
                        shinyWidgets::pickerInput(
                          inputId = ns("hochschulform_studierende_ranking_bl_1"),
-                         choices = c("insgesamt", "Uni", "FH")
+                         choices = c("Insgesamt"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
                        )),
       conditionalPanel(condition = "input.nurLehramt_studierende_ranking_bl_subject != false",
                        ns = ns,
@@ -39,7 +39,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
     p("Status der Student:innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("topic_selected_subject_bl"),
-      choices = c("Studienanfänger", "Studierende"),
+      choices = c("Studienanfänger:innen"="Studienanfänger", "Studierende"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
