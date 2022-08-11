@@ -26,7 +26,7 @@ mod_studium_choice_gender_ui <- function(id){
                        ns = ns,
                        shinyWidgets::pickerInput(
                          inputId = ns("hochschulform_studium_choice_gender1"),
-                         choices = c("insgesamt", "Uni", "FH")
+                         choices = c("Insgesamt"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
                        )),
       conditionalPanel(condition = "input.nurLehramt_studium_choice_gender != false",
                        ns = ns,
