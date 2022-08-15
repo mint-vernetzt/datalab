@@ -16,75 +16,75 @@ share_MINT <- function(df){
 
 
   # calculate the share of MINT for "Hochschule" and "Habilitationen"
-    df_sub <- df %>% dplyr::filter(indikator == "Habilitationen")
-
-    values <- df_sub %>%
-      dplyr::filter(fachbereich == "Mathe/NaWi: Alle" | fachbereich == "Ingenieurwissenschaften: Alle") %>%
-      dplyr::group_by(anzeige_geschlecht, jahr, bereich, indikator, region) %>%
-      dplyr::summarise(
-        wert = sum(wert))
-
-    values$fachbereich <- "MINT"
-
-    df_sub <- df_sub %>% dplyr::filter(fachbereich == "Alle")
-
-    values <- values[, colnames(df_sub)]
-
-    df_sub <- rbind(df_sub, values)
-
-    df_sub[(df_sub$fachbereich == "Alle" &
-            df_sub$anzeige_geschlecht == "Gesamt"), "wert"] <- df_sub[(df_sub$fachbereich == "Alle" & df_sub$anzeige_geschlecht == "Gesamt"), "wert"] -
-      df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Gesamt"), "wert"]
-
-    df_sub[(df_sub$fachbereich == "Alle" &
-              df_sub$anzeige_geschlecht == "Frauen"), "wert"] <- df_sub[(df_sub$fachbereich == "Alle" & df_sub$anzeige_geschlecht == "Frauen"), "wert"] -
-      df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Frauen"), "wert"]
-
-    df_sub[(df_sub$fachbereich == "Alle" &
-              df_sub$anzeige_geschlecht == "Männer"), "wert"] <- df_sub[(df_sub$fachbereich == "Alle" & df_sub$anzeige_geschlecht == "Männer"), "wert"] -
-      df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Männer"), "wert"]
-
-    df_sub[df_sub$fachbereich == "Alle", "fachbereich"] <- "andere Fächer (Habilitationen)"
-
-    df <- df %>% dplyr::filter(indikator != "Habilitationen")
-
-    df <- rbind(df, df_sub)
+    # df_sub <- df %>% dplyr::filter(indikator == "Habilitationen")
+    #
+    # values <- df_sub %>%
+    #   dplyr::filter(fachbereich == "Mathe/NaWi: Alle" | fachbereich == "Ingenieurwissenschaften: Alle") %>%
+    #   dplyr::group_by(anzeige_geschlecht, jahr, bereich, indikator, region) %>%
+    #   dplyr::summarise(
+    #     wert = sum(wert))
+    #
+    # values$fachbereich <- "MINT"
+    #
+    # df_sub <- df_sub %>% dplyr::filter(fachbereich == "Alle")
+    #
+    # values <- values[, colnames(df_sub)]
+    #
+    # df_sub <- rbind(df_sub, values)
+    #
+    # df_sub[(df_sub$fachbereich == "Alle" &
+    #         df_sub$anzeige_geschlecht == "Gesamt"), "wert"] <- df_sub[(df_sub$fachbereich == "Alle" & df_sub$anzeige_geschlecht == "Gesamt"), "wert"] -
+    #   df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Gesamt"), "wert"]
+    #
+    # df_sub[(df_sub$fachbereich == "Alle" &
+    #           df_sub$anzeige_geschlecht == "Frauen"), "wert"] <- df_sub[(df_sub$fachbereich == "Alle" & df_sub$anzeige_geschlecht == "Frauen"), "wert"] -
+    #   df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Frauen"), "wert"]
+    #
+    # df_sub[(df_sub$fachbereich == "Alle" &
+    #           df_sub$anzeige_geschlecht == "Männer"), "wert"] <- df_sub[(df_sub$fachbereich == "Alle" & df_sub$anzeige_geschlecht == "Männer"), "wert"] -
+    #   df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Männer"), "wert"]
+    #
+    # df_sub[df_sub$fachbereich == "Alle", "fachbereich"] <- "andere Fächer (Habilitationen)"
+    #
+    # df <- df %>% dplyr::filter(indikator != "Habilitationen")
+    #
+    # df <- rbind(df, df_sub)
 
 
     # calculate the share of MINT for "Hochschule" and "Promotionen (angestrebt)"
-    df_sub <- df %>% dplyr::filter(indikator == "Promotionen (angestrebt)")
-
-    values <- df_sub %>%
-      dplyr::filter(fachbereich == "Ingenieurwissenschaften" | fachbereich == "Mathematik, Naturwissenschaften") %>%
-      dplyr::group_by(anzeige_geschlecht, jahr, bereich, indikator, region) %>%
-      dplyr::summarise(
-        wert = sum(wert))
-
-    values$fachbereich <- "MINT"
-
-    df_sub <- df_sub %>% dplyr::filter(fachbereich == "alle")
-
-    values <- values[, colnames(df_sub)]
-
-    df_sub <- rbind(df_sub, values)
-
-    df_sub[(df_sub$fachbereich == "alle" &
-              df_sub$anzeige_geschlecht == "Gesamt"), "wert"] <- df_sub[(df_sub$fachbereich == "alle" & df_sub$anzeige_geschlecht == "Gesamt"), "wert"] -
-      df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Gesamt"), "wert"]
-
-    df_sub[(df_sub$fachbereich == "alle" &
-              df_sub$anzeige_geschlecht == "Frauen"), "wert"] <- df_sub[(df_sub$fachbereich == "alle" & df_sub$anzeige_geschlecht == "Frauen"), "wert"] -
-      df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Frauen"), "wert"]
-
-    df_sub[(df_sub$fachbereich == "alle" &
-              df_sub$anzeige_geschlecht == "Männer"), "wert"] <- df_sub[(df_sub$fachbereich == "alle" & df_sub$anzeige_geschlecht == "Männer"), "wert"] -
-      df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Männer"), "wert"]
-
-    df_sub[df_sub$fachbereich == "alle", "fachbereich"] <- "andere Fächer (Promotionen)"
-
-    df <- df %>% dplyr::filter(indikator != "Promotionen (angestrebt)")
-
-    df <- rbind(df, df_sub)
+    # df_sub <- df %>% dplyr::filter(indikator == "Promotionen (angestrebt)")
+    #
+    # values <- df_sub %>%
+    #   dplyr::filter(fachbereich == "Ingenieurwissenschaften" | fachbereich == "Mathematik, Naturwissenschaften") %>%
+    #   dplyr::group_by(anzeige_geschlecht, jahr, bereich, indikator, region) %>%
+    #   dplyr::summarise(
+    #     wert = sum(wert))
+    #
+    # values$fachbereich <- "MINT"
+    #
+    # df_sub <- df_sub %>% dplyr::filter(fachbereich == "alle")
+    #
+    # values <- values[, colnames(df_sub)]
+    #
+    # df_sub <- rbind(df_sub, values)
+    #
+    # df_sub[(df_sub$fachbereich == "alle" &
+    #           df_sub$anzeige_geschlecht == "Gesamt"), "wert"] <- df_sub[(df_sub$fachbereich == "alle" & df_sub$anzeige_geschlecht == "Gesamt"), "wert"] -
+    #   df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Gesamt"), "wert"]
+    #
+    # df_sub[(df_sub$fachbereich == "alle" &
+    #           df_sub$anzeige_geschlecht == "Frauen"), "wert"] <- df_sub[(df_sub$fachbereich == "alle" & df_sub$anzeige_geschlecht == "Frauen"), "wert"] -
+    #   df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Frauen"), "wert"]
+    #
+    # df_sub[(df_sub$fachbereich == "alle" &
+    #           df_sub$anzeige_geschlecht == "Männer"), "wert"] <- df_sub[(df_sub$fachbereich == "alle" & df_sub$anzeige_geschlecht == "Männer"), "wert"] -
+    #   df_sub[(df_sub$fachbereich == "MINT" & df_sub$anzeige_geschlecht == "Männer"), "wert"]
+    #
+    # df_sub[df_sub$fachbereich == "alle", "fachbereich"] <- "andere Fächer (Promotionen)"
+    #
+    # df <- df %>% dplyr::filter(indikator != "Promotionen (angestrebt)")
+    #
+    # df <- rbind(df, df_sub)
 
 
 
