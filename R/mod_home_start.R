@@ -77,7 +77,7 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Wie hoch ist der Anteil von Frauen in den verschiedenen Bereichen?",
         width = 12,
-        p("ier zeigen wir den Anteil von Frauen in MINT für die Indikatoren
+        p("Hier zeigen wir den Anteil von Frauen in MINT für die Indikatoren
         aus den  Bereichen Schule, Hochschule und Arbeitsmarkt anschauen und vergleichen.
           Zum Vergleich zeigen wir unter jedem Tortendiagramm auch den Anteil von Frauen ingesamt in dem jeweiligen Bereich."),
         tabsetPanel(type = "tabs",
@@ -101,6 +101,33 @@ mod_home_start_ui <- function(id){
 
                              )
                     ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Was wählen Mädchen und Frauen?",
+        width = 12,
+        p("Hier zeigen wir den Anteil von MINT für verschiedene Personengruppen
+        aus den  Bereichen Schule, Studium, Ausbildung und Arbeitsmarkt.")
+        # ,
+        # tabsetPanel(type = "tabs",
+        #             tabPanel("Schülerinnen", br(),
+        #                      shiny::sidebarPanel(
+        #                        mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1")),
+        #                      shiny::mainPanel(
+        #                        htmlOutput(ns("plot_mint_rest_einstieg_1")))
+        #             ),
+        #             tabPanel("Studentinnen", br(),
+        #                      shiny::sidebarPanel(
+        #                        mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")),
+        #                      shiny::mainPanel(
+        #                        highcharter::highchartOutput(ns("plot_mint_1")))
+        #             ),
+        #             tabPanel("Überblick", br(),
+        #                      shiny::sidebarPanel(
+        #                        mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
+        #                      shiny::mainPanel(highcharter::highchartOutput(ns("plot_comparison_mint"))
+
+                             # )))))
+        )),
     fluidRow(
       shinydashboard::box(
         #title = " ",
