@@ -51,7 +51,7 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
 
     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Berufszweigen für Auszubildende in ", timerange),
+    highcharter::hc_title(text = paste0("Auszubildende in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -67,7 +67,7 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT an allen anderen Berufszweigen für Beschäftigte in ", timerange),
+    highcharter::hc_title(text = paste0("Beschäftigte in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1475,9 +1475,9 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
       na.value="#b1b5c3",
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("Fachkraft",", ",df_male[1], "%"),
-        paste0("Spezialist",", ",df_male[2], "%"),
-        paste0("Experte",", ",df_male[3], "%"),
+        paste0("MINT-Fachkraft",", ",df_male[1], "%"),
+        paste0("MINT-Spezialist",", ",df_male[2], "%"),
+        paste0("MINT-Experte",", ",df_male[3], "%"),
         paste0("Andere Berufe",", ",df_male[4], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -1507,8 +1507,8 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
         guide = ggplot2::guide_legend(reverse = TRUE),
         na.value="#b1b5c3",
         labels = c(
-          paste0("Fachkraft",", ",df_female[1], "%"),
-          paste0("Spezialist",", ",df_female[2], "%"),
+          paste0("MINT-Fachkraft",", ",df_female[1], "%"),
+          paste0("MINT-Spezialistin",", ",df_female[2], "%"),
           # paste0("Experte",", ",df_female[3], "%"),
           paste0("Andere Berufe",", ",df_female[4], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
@@ -1798,7 +1798,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
   waffle_employed <- waffle::waffle(df_employed, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Beschäftigte: MINT und<br> andere Berufe im Vergleich</span> <br>")) +
+      title = paste0("<span style='color:black;'>", "Beschäftigte</span> <br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -1815,9 +1815,9 @@ arbeitsmarkt_anforderungen <- function(df,r) {
       na.value="#b1b5c3",
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("Fachkraft",", ",df_employed[1], "%"),
-        paste0("Spezialist",", ",df_employed[2], "%"),
-        paste0("Experte",", ",df_employed[3], "%"),
+        paste0("MINT-Fachkraft",", ",df_employed[1], "%"),
+        paste0("MINT-Spezialist:in",", ",df_employed[2], "%"),
+        paste0("MINT-Expert:in",", ",df_employed[3], "%"),
         paste0("Andere Berufe",", ",df_employed[4], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -1825,7 +1825,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
   waffle_trainee <- waffle::waffle(df_trainee, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Auszubildende: MINT und<br> andere Berufe im Vergleich</span> <br>")) +
+      title = paste0("<span style='color:black;'>", "Auszubildende</span> <br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -1847,9 +1847,9 @@ arbeitsmarkt_anforderungen <- function(df,r) {
         guide = ggplot2::guide_legend(reverse = TRUE),
         na.value="#b1b5c3",
         labels = c(
-          paste0("Fachkraft",", ",df_trainee[1], "%"),
-          paste0("Spezialist",", ",df_trainee[2], "%"),
-          # paste0("Experte",", ",df_trainee[3], "%"),
+          paste0("MINT-Fachkraft",", ",df_trainee[1], "%"),
+          paste0("MINT-Spezialist:in",", ",df_trainee[2], "%"),
+          paste0("MINT-Expert:in",", ",df_trainee[3], "%"),
           paste0("Andere Berufe",", ",df_trainee[4], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -1867,9 +1867,9 @@ arbeitsmarkt_anforderungen <- function(df,r) {
         na.value="#b1b5c3",
         guide = ggplot2::guide_legend(reverse = TRUE),
         labels = c(
-          paste0("Fachkraft",", ",df_trainee[1], "%"),
-          paste0("Spezialist",", ",df_trainee[2], "%"),
-          paste0("Experte",", ",df_trainee[3], "%"),
+          paste0("MINT-Fachkraft",", ",df_trainee[1], "%"),
+          paste0("MINT-Spezialist:in",", ",df_trainee[2], "%"),
+          paste0("MINT-Expert:in",", ",df_trainee[3], "%"),
           paste0("Andere Berufe",", ",df_trainee[4], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 

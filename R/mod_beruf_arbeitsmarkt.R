@@ -88,7 +88,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil Frauen an MINT-Berufen und Nicht-MINT-Berufen",
+        title = "Anteil von Frauen an MINT-Berufen und Nicht-MINT-Berufen",
         width = 12,
         p("Lorem ipsum dolor sit amet"),
         tabsetPanel(type = "tabs",
@@ -167,7 +167,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil Frauen in Ausbildung und Beruf nach Anforderungsprofil auf dem Arbeitsmarkt",
+        title = "Anteil von Frauen in Ausbildung und Beruf nach Anforderungsprofil auf dem Arbeitsmarkt",
         width = 12,
         p("Definition von Fachkraft/Spezialist/Experte einfügen"),
         tabsetPanel(type = "tabs",
@@ -239,7 +239,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil Frauen in den Bundesländern",
+        title = "Anteil von Frauen in den Bundesländern",
         width = 12,
         p("Hier finden Sie den Anteil von Frauen und Männern in MINT-Fächern auf dem Arbeitsmarkt für die Bundesländer im Vergleich."),
         tabsetPanel(type = "tabs",
