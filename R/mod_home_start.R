@@ -106,7 +106,10 @@ mod_home_start_ui <- function(id){
         #title = " ",
         width = 12,
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Quellen:", style = "color:#b16fab")), " ")
+          span(tags$b(span("Quellen:", style = "color:#b16fab")),
+               br(), "Statistisches Bundesamt, 2021, auf Anfrage, eigene Berechnungen" ,
+               br(), "Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.",
+               br(), "KMK, 2021, auf Anfrage, eigene Berechnungen.")
         )
       )
   ),
