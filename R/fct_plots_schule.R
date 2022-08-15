@@ -405,7 +405,7 @@ kurse_waffle_mint <- function(df,r) {
       labels = c(
         paste0("Informatik",", ",x_gk[1], "%"),
         paste0("Mathematik",", ",x_gk[2], "%"),
-        paste0("Natwi",", ",x_gk[3], "%"),
+        paste0("Naturwissenschaften",", ",x_gk[3], "%"),
         paste0("andere Fächer",", ",x_gk[4], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -438,7 +438,7 @@ kurse_waffle_mint <- function(df,r) {
           labels = c(
             #paste0("Frauen (Informatik)",", ",x_gk[1], "%"),
             paste0("Mathematik",", ",x_lk[2], "%"),
-            paste0("Natwi",", ",x_lk[3], "%"),
+            paste0("Naturwissenschaften",", ",x_lk[3], "%"),
             paste0("andere Fächer",", ",x_lk[4], "%"))) +
         ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -459,7 +459,7 @@ kurse_waffle_mint <- function(df,r) {
           labels = c(
             paste0("Informatik",", ",x_lk[1], "%"),
             paste0("Mathematik",", ",x_lk[2], "%"),
-            paste0("Natwi",", ",x_lk[3], "%"),
+            paste0("Naturwissenschaften",", ",x_lk[3], "%"),
             paste0("andere Fächer",", ",x_lk[4], "%"))) +
         ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -777,7 +777,7 @@ kurse_waffle <- function(df,r) {
       labels = c(
         paste0("Informatik",", ",x_male[1], "%"),
         paste0("Mathematik",", ",x_male[2], "%"),
-        paste0("Natwi",", ",x_male[3], "%"),
+        paste0("Naturwissenschaften",", ",x_male[3], "%"),
         paste0("andere Fächer",", ",x_male[4], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -810,7 +810,7 @@ kurse_waffle <- function(df,r) {
         labels = c(
           #paste0("Frauen (Informatik)",", ",x_gk[1], "%"),
           paste0("Mathematik",", ",x_female[2], "%"),
-          paste0("Natwi",", ",x_female[3], "%"),
+          paste0("Naturwissenschaften",", ",x_female[3], "%"),
           paste0("andere Fächer",", ",x_female[4], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
@@ -831,7 +831,7 @@ kurse_waffle <- function(df,r) {
         labels = c(
           paste0("Informatik",", ",x_female[1], "%"),
           paste0("Mathematik",", ",x_female[2], "%"),
-          paste0("Natwi",", ",x_female[3], "%"),
+          paste0("Naturwissenschaften",", ",x_female[3], "%"),
           paste0("andere Fächer",", ",x_female[4], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
 
