@@ -44,6 +44,15 @@ mod_schule_kurse_ui <- function(id){
                       shiny::mainPanel(
                         htmlOutput(ns("plot_einstieg_pie")))
                             ),
+                    tabPanel("Detaillierter Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_waffle_mint")))
+                    ),
                     tabPanel("Zeitverlauf", br(),
                              shiny::sidebarPanel(
                                mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1")),
@@ -90,6 +99,15 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                htmlOutput(ns("plot_pie_gender")))
                     ),
+                    tabPanel("Detaillierter Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_waffle")))
+                    ),
                     tabPanel("Zeitverlauf", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -120,15 +138,15 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         p("Hier können Sie sich die Kursbelegungen für die einzelnen Fächer im Vergleich anschauen."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                                 shiny::sidebarPanel(
-                                   mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_waffle_mint")))
-                    ),
+                    # tabPanel("Vergleich", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #              shiny::sidebarPanel(
+                    #                mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")),
+                    #          shiny::mainPanel(
+                    #            plotOutput(ns("plot_waffle_mint")))
+                    # ),
                     tabPanel("Zeitverlauf", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -158,15 +176,15 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         p("Hier können Sie die Kursbelegungen von Schülern und Schülerinnen vergleichen."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_waffle")))
-                    ),
+                    # tabPanel("Vergleich", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
+                    #          shiny::mainPanel(
+                    #            plotOutput(ns("plot_waffle")))
+                    # ),
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
