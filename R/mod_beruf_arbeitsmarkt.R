@@ -114,18 +114,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                htmlOutput(ns("plot_einstieg_pie_gender"))
                              )
                     ),
-
-                    tabPanel("Detaillierter Vergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_anforderungen_gender_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_arbeitsmarkt_waffle_gender"))
-                             )
-                    ),
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
@@ -150,6 +138,21 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                plotOutput(ns("plot_einstieg_vergleich_gender"))
                                )
                     )))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Test",
+        width = 12,
+        p("Lorem ipsum dolor sit amet"),
+        tabsetPanel(type = "tabs",tabPanel("Detaillierter Vergleich", br(),
+
+                                           tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                                           shiny::sidebarPanel(
+                                             mod_beruf_arbeitsmarkt_anforderungen_gender_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_ui_1")
+                                           ),
+                                           shiny::mainPanel(
+                                             plotOutput(ns("plot_arbeitsmarkt_waffle_gender"))
+                                           ))))),
     fluidRow(
       shinydashboard::box(
         title = "Anteil von MINT-Fächern in Ausbildung und Beruf nach Anforderungsprofil auf dem Arbeitsmarkt",

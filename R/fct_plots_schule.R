@@ -566,7 +566,7 @@ kurse_mint_comparison <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::ylab("") + ggplot2::xlab("Anteil") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 indikator_comparison, ": Anteil der Fächer im Vergleich in ", timerange,
+                                 indikator_comparison, ": Anteile der Fächer im Vergleich in ", timerange,
                                  "<br><br><br>"),
                   fill = "") +
     ggplot2::scale_y_discrete(expand = c(0,0)) +
@@ -1242,7 +1242,7 @@ kurse_map <- function(df,r) {
       valueSuffix = "%"
     )
   ) %>%
-    highcharter::hc_colorAxis(min=0, max=50, labels = list(format = "{text}%")) %>%
+    highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
       text = paste0("Grundkursbelegung: Anteil an Belegungen <br> in ", subjects),
       margin = 10,
@@ -1273,7 +1273,7 @@ kurse_map <- function(df,r) {
       valueSuffix = "%"
     )
   ) %>%
-    highcharter::hc_colorAxis(min=0, max=50, labels = list(format = "{text}%")) %>%
+    highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
       text = paste0("Leistungskursbelegung: Anteil an Belegungen <br> in ", subjects),
       margin = 10,
@@ -1363,7 +1363,7 @@ kurse_map_gender <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, max=50, labels = list(format = "{text}%")) %>%
+      highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Schülerinnen: Anteil an Grundkursbelegungen in ", subjects),
         margin = 10,
@@ -1394,7 +1394,7 @@ kurse_map_gender <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, max=50, labels = list(format = "{text}%")) %>%
+      highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Schülerinnen: Anteil an Leistungskursbelegungen in ", subjects),
         margin = 10,

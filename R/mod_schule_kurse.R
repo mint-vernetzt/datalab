@@ -99,15 +99,7 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                htmlOutput(ns("plot_pie_gender")))
                     ),
-                    tabPanel("Detaillierter Vergleich", br(),
 
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_waffle")))
-                    ),
                     tabPanel("Zeitverlauf", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -132,6 +124,23 @@ mod_schule_kurse_ui <- function(id){
                     )
 
         ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Test",
+        width = 12,
+        p("Hier können Sie sich den Anteil von Schülerinnen an MINT- und nicht-MINT-Fächern für
+          Leistungs- und Grundkurse anschauen."),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Detaillierter Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_waffle")))
+                    )))),
+
     fluidRow(
       shinydashboard::box(
         title = "Einzelne MINT-Fächer im Vergleich",

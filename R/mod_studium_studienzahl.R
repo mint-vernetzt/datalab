@@ -112,17 +112,7 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                htmlOutput(ns("plot_einstieg_pie_gender")))
                     ),
-                    tabPanel("Detaillierter Vergleich", br(),
 
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_studium_choice_gender_ui("mod_studium_studienzahl_choice_gender_ui")
-                             ),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_waffle_choice_gender"))
-                             )
-                    ),
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
@@ -143,6 +133,26 @@ mod_studium_studienzahl_ui <- function(id){
                              plotOutput(ns("plot_einstieg_comparison_gender")))
 
                 )
+        ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "Test",
+        width = 12,
+        p("Hier können Sie sich anschauen, wie hoch der Frauen- und Männeranteil unter
+        Studierenden und
+          Studienanfänger*innen in MINT- und nicht-MINT-Fächern ist."),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Detaillierter Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_studium_choice_gender_ui("mod_studium_studienzahl_choice_gender_ui")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_waffle_choice_gender"))
+                             )
+                    ),
         ))),
     fluidRow(
       shinydashboard::box(
