@@ -211,7 +211,7 @@ arbeitnehmer_waffle <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "left") +
+                   legend.position = "bottom") +
     ggplot2::scale_fill_manual(
       values =  c("#b16fab",
                   "#b1b5c3"),
@@ -221,7 +221,7 @@ arbeitnehmer_waffle <- function(df,r) {
       labels = c(
         paste0("Frauen (MINT)",", ",x_auszubildende[1], "%"),
         paste0("Männer (MINT)",", ",x_auszubildende[2], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -233,7 +233,7 @@ arbeitnehmer_waffle <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "right") +
+                   legend.position = "bottom") +
       ggplot2::scale_fill_manual(
         values =  c("#b16fab",
                     "#b1b5c3"),
@@ -243,7 +243,7 @@ arbeitnehmer_waffle <- function(df,r) {
         labels = c(
           paste0("Frauen (MINT)",", ",x_beschaeftigte[1], "%"),
           paste0("Männer (MINT)",", ",x_beschaeftigte[2], "%"))) +
-      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -1366,7 +1366,7 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
 
   # plot
   ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
-    ggplot2::geom_bar(stat="identity", fill = "#154194") +
+    ggplot2::geom_bar(stat="identity", fill = "#b16fab") +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
                        fontface = "bold") +
     ggplot2::theme_bw() +
@@ -1463,7 +1463,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "right") +
+                   legend.position = "bottom") +
     ggplot2::scale_fill_manual(
       values =  c("#ee7775",
                   "#fcc433",
@@ -1479,7 +1479,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
         paste0("MINT-Spezialist",", ",df_male[2], "%"),
         paste0("MINT-Experte",", ",df_male[3], "%"),
         paste0("Andere Berufe",", ",df_male[4], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
   waffle_female <- waffle::waffle(df_female, keep = FALSE) +
@@ -1490,7 +1490,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "left")
+                   legend.position = "bottom")
 
   # account for the possability that female has 0% share of "Experte
   if (df_female[[3]] == 0) {
@@ -1511,7 +1511,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
           paste0("MINT-Spezialistin",", ",df_female[2], "%"),
           # paste0("Experte",", ",df_female[3], "%"),
           paste0("Andere Berufe",", ",df_female[4], "%"))) +
-      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
   } else{
 
@@ -1531,7 +1531,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
           paste0("Spezialist",", ",df_female[2], "%"),
           paste0("Experte",", ",df_female[3], "%"),
           paste0("Andere Berufe",", ",df_female[4], "%"))) +
-      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
   }
 
@@ -1803,7 +1803,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "right") +
+                   legend.position = "bottom") +
     ggplot2::scale_fill_manual(
       values =  c("#ee7775",
                   "#fcc433",
@@ -1819,7 +1819,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
         paste0("MINT-Spezialist:in",", ",df_employed[2], "%"),
         paste0("MINT-Expert:in",", ",df_employed[3], "%"),
         paste0("Andere Berufe",", ",df_employed[4], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
   waffle_trainee <- waffle::waffle(df_trainee, keep = FALSE) +
@@ -1830,7 +1830,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "left")
+                   legend.position = "bottom")
 
   # account for the possability that female has 0% share of "Experte
   if (df_trainee[[3]] == 0) {
@@ -1851,7 +1851,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
           paste0("MINT-Spezialist:in",", ",df_trainee[2], "%"),
           paste0("MINT-Expert:in",", ",df_trainee[3], "%"),
           paste0("Andere Berufe",", ",df_trainee[4], "%"))) +
-      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
   } else{
 
@@ -1871,7 +1871,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
           paste0("MINT-Spezialist:in",", ",df_trainee[2], "%"),
           paste0("MINT-Expert:in",", ",df_trainee[3], "%"),
           paste0("Andere Berufe",", ",df_trainee[4], "%"))) +
-      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
   }
 
@@ -2024,7 +2024,7 @@ arbeitsmarkt_anforderungen_vergleich <- function(df,r) {
   a <- ifelse(df$anforderungsniveau == "Gesamt", "#b16fab", "grey30")
 
   ggplot2::ggplot(df, ggplot2::aes(y=anforderungsniveau, x=proportion)) +
-    ggplot2::geom_bar(stat="identity", fill = "#154194") +
+    ggplot2::geom_bar(stat="identity", fill = "#b16fab") +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
                        fontface = "bold") +
     ggplot2::theme_bw() +

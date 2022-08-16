@@ -45,6 +45,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                htmlOutput(ns("plot_einstieg_pie"))
                              )
                     ),
+                    tabPanel("Detaillierter Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_arbeitsmarkt_waffle"))
+                             )
+                    ),
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
@@ -103,6 +114,18 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                htmlOutput(ns("plot_einstieg_pie_gender"))
                              )
                     ),
+
+                    tabPanel("Detaillierter Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_anforderungen_gender_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_arbeitsmarkt_waffle_gender"))
+                             )
+                    ),
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
@@ -133,17 +156,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         width = 12,
         p("Definition von Fachkraft/Spezialist/Experte einfügen"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_arbeitsmarkt_waffle"))
-                             )
-                    ),
+                    # tabPanel("Vergleich", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            plotOutput(ns("plot_arbeitsmarkt_waffle"))
+                    #          )
+                    # ),
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
@@ -171,17 +194,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         width = 12,
         p("Definition von Fachkraft/Spezialist/Experte einfügen"),
         tabsetPanel(type = "tabs",
-                    tabPanel("Anforderungsvergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_anforderungen_gender_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_arbeitsmarkt_waffle_gender"))
-                             )
-                    ),
+                    # tabPanel("Anforderungsvergleich", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            mod_beruf_arbeitsmarkt_anforderungen_gender_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_ui_1")
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            plotOutput(ns("plot_arbeitsmarkt_waffle_gender"))
+                    #          )
+                    # ),
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(

@@ -46,6 +46,15 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                htmlOutput(ns("plot_einstieg_pie")))
                     ),
+                    tabPanel("Detaillierter Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_waffle")))
+                    ),
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
@@ -103,6 +112,17 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                htmlOutput(ns("plot_einstieg_pie_gender")))
                     ),
+                    tabPanel("Detaillierter Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_studium_choice_gender_ui("mod_studium_studienzahl_choice_gender_ui")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_waffle_choice_gender"))
+                             )
+                    ),
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
@@ -130,15 +150,15 @@ mod_studium_studienzahl_ui <- function(id){
         width = 12,
         p("Hier finden Sie Analysen für einzelne Studienfächer im Vergleich."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_waffle")))
-                    ),
+                    # tabPanel("Vergleich", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
+                    #          shiny::mainPanel(
+                    #            plotOutput(ns("plot_waffle")))
+                    # ),
                     tabPanel("Zeitverlauf", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -168,17 +188,17 @@ mod_studium_studienzahl_ui <- function(id){
         width = 12,
         p("Hier finden Sie den Frauen- und Männeranteil in einzelnen Studienfächern im Vergleich."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_studium_choice_gender_ui("mod_studium_studienzahl_choice_gender_ui")
-                               ),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_waffle_choice_gender"))
-                               )
-                    ),
+                    # tabPanel("Vergleich", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            mod_studium_choice_gender_ui("mod_studium_studienzahl_choice_gender_ui")
+                    #            ),
+                    #          shiny::mainPanel(
+                    #            plotOutput(ns("plot_waffle_choice_gender"))
+                    #            )
+                    # ),
                     tabPanel("Zeitverlauf", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}

@@ -391,7 +391,7 @@ kurse_waffle_mint <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "left") +
+                   legend.position = "bottom") +
     ggplot2::scale_fill_manual(
       values =  c("#ee7775",
                   "#fcc433",
@@ -407,7 +407,7 @@ kurse_waffle_mint <- function(df,r) {
         paste0("Mathematik",", ",x_gk[2], "%"),
         paste0("Naturwissenschaften",", ",x_gk[3], "%"),
         paste0("andere Fächer",", ",x_gk[4], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -419,7 +419,7 @@ kurse_waffle_mint <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "right")
+                   legend.position = "bottom")
 
     # account for the possability that female has 0% share of Informatik
     if (x_lk[[1]] == 0) {
@@ -440,7 +440,7 @@ kurse_waffle_mint <- function(df,r) {
             paste0("Mathematik",", ",x_lk[2], "%"),
             paste0("Naturwissenschaften",", ",x_lk[3], "%"),
             paste0("andere Fächer",", ",x_lk[4], "%"))) +
-        ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+        ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -461,7 +461,7 @@ kurse_waffle_mint <- function(df,r) {
             paste0("Mathematik",", ",x_lk[2], "%"),
             paste0("Naturwissenschaften",", ",x_lk[3], "%"),
             paste0("andere Fächer",", ",x_lk[4], "%"))) +
-        ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+        ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -763,7 +763,7 @@ kurse_waffle <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "right") +
+                   legend.position = "bottom") +
     ggplot2::scale_fill_manual(
       values =  c("#ee7775",
                   "#fcc433",
@@ -779,7 +779,7 @@ kurse_waffle <- function(df,r) {
         paste0("Mathematik",", ",x_male[2], "%"),
         paste0("Naturwissenschaften",", ",x_male[3], "%"),
         paste0("andere Fächer",", ",x_male[4], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -791,7 +791,7 @@ kurse_waffle <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "left")
+                   legend.position = "bottom")
 
   # account for the possability that female has 0% share of Informatik
   if (x_female[[1]] == 0) {
@@ -812,7 +812,7 @@ kurse_waffle <- function(df,r) {
           paste0("Mathematik",", ",x_female[2], "%"),
           paste0("Naturwissenschaften",", ",x_female[3], "%"),
           paste0("andere Fächer",", ",x_female[4], "%"))) +
-      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -833,7 +833,7 @@ kurse_waffle <- function(df,r) {
           paste0("Mathematik",", ",x_female[2], "%"),
           paste0("Naturwissenschaften",", ",x_female[3], "%"),
           paste0("andere Fächer",", ",x_female[4], "%"))) +
-      ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 

@@ -784,7 +784,7 @@ studienzahl_waffle_mint <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "right") +
+                   legend.position = "bottom") +
     ggplot2::scale_fill_manual(
       values =  c("#00a87a",
                   "#fcc433",
@@ -796,7 +796,7 @@ studienzahl_waffle_mint <- function(df,r) {
         paste0("Ingenieurwissenschaften",", ",x_studierende[1], "%"),
         paste0("Mathematik/Naturwissenschaften",", ",x_studierende[2], "%"),
         paste0("andere Studiengänge",", ",x_studierende[3], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -808,7 +808,7 @@ studienzahl_waffle_mint <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "left") +
+                   legend.position = "bottom") +
     ggplot2::scale_fill_manual(
       values =  c("#00a87a",
                   "#fcc433",
@@ -820,7 +820,7 @@ studienzahl_waffle_mint <- function(df,r) {
         paste0("Ingenieurwissenschaften",", ",x_studienanfaenger[1], "%"),
         paste0("Mathematik/Naturwissenschaften",", ",x_studienanfaenger[2], "%"),
         paste0("andere Studiengänge",", ",x_studienanfaenger[3], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -902,7 +902,7 @@ studienzahl_waffle_alternative <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "right") +
+                   legend.position = "bottom") +
     ggplot2::scale_fill_manual(
       values =  c("#00a87a",
                   "#fcc433",
@@ -915,7 +915,7 @@ studienzahl_waffle_alternative <- function(df,r) {
         paste0("Frauen (Ingenieur)",", ",x_studierende[1], "%"),
         paste0("Frauen (Mathe)",", ",x_studierende[2], "%"),
         paste0("Männer (MINT)",", ",x_studierende[3] + x_studierende[4], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -927,7 +927,7 @@ studienzahl_waffle_alternative <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "left") +
+                   legend.position = "bottom") +
     ggplot2::scale_fill_manual(
       values =  c("#00a87a",
                   "#fcc433",
@@ -940,7 +940,7 @@ studienzahl_waffle_alternative <- function(df,r) {
         paste0("Frauen (Ingenieur)",", ",x_studienanfaenger[1], "%"),
         paste0("Frauen (Mathe)",", ",x_studienanfaenger[2], "%"),
         paste0("Männer (MINT)",", ",x_studienanfaenger[3] + x_studienanfaenger[4], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -2015,7 +2015,7 @@ studienzahl_waffle_choice_gender <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "right") +
+                   legend.position = "bottom") +
     ggplot2::scale_fill_manual(
       values =  c("#00a87a",
                   "#fcc433",
@@ -2027,7 +2027,7 @@ studienzahl_waffle_choice_gender <- function(df,r) {
         paste0("Ingenieurwissenschaften",", ",x_maenner[1], "%"),
         paste0("Mathematik/Naturwissenschaften",", ",x_maenner[2], "%"),
         paste0("andere Studiengänge",", ",x_maenner[3], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
@@ -2039,7 +2039,7 @@ studienzahl_waffle_choice_gender <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "left") +
+                   legend.position = "bottom") +
     ggplot2::scale_fill_manual(
       values =  c("#00a87a",
                   "#fcc433",
@@ -2051,7 +2051,7 @@ studienzahl_waffle_choice_gender <- function(df,r) {
         paste0("Ingenieurwissenschaften",", ",x_frauen[1], "%"),
         paste0("Mathematik/Naturwissenschaften",", ",x_frauen[2], "%"),
         paste0("andere Studiengänge",", ",x_frauen[3], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=4,byrow=TRUE))
+    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
 
