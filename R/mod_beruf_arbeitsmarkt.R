@@ -155,22 +155,29 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                            ))))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von MINT-Fächern in Ausbildung und Beruf nach Anforderungsprofil auf dem Arbeitsmarkt",
+        title = "Bundesländer im Vergleich",
         width = 12,
-        p("Definition von Fachkraft/Spezialist/Experte einfügen"),
+        p("Hier finden Sie Analysen für einzelne Bundesländer."),
         tabsetPanel(type = "tabs",
-                    # tabPanel("Vergleich", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            plotOutput(ns("plot_arbeitsmarkt_waffle"))
-                    #          )
-                    # ),
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Karte", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_arbeitsmarkt_bl"))
+                             )
+                    ),
+                    tabPanel("Vergleich (Bundesländer)", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_bl_verlauf_ui("mod_beruf_arbeitsmarkt_bl_verlauf_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_verlauf"))
+                             )
+                    ),
+                    tabPanel("Vergleich (Anforderungsniveaus)", br(),
 
                              shiny::sidebarPanel(
                                mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui_1")
@@ -179,7 +186,16 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf"))
                              )
                     ),
-                    tabPanel("Überblick", br(),
+                    tabPanel("Überblick (Bundesländer)", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_bl_vergleich_ui("beruf_arbeitsmarkt_bl_vergleich_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_arbeitsmarkt_bl_vergleich"))
+                             )
+                    ),
+                    tabPanel("Überblich (Anforderungsniveau)", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -193,83 +209,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von Frauen in Ausbildung und Beruf nach Anforderungsprofil auf dem Arbeitsmarkt",
-        width = 12,
-        p("Definition von Fachkraft/Spezialist/Experte einfügen"),
-        tabsetPanel(type = "tabs",
-                    # tabPanel("Anforderungsvergleich", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            mod_beruf_arbeitsmarkt_anforderungen_gender_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_ui_1")
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            plotOutput(ns("plot_arbeitsmarkt_waffle_gender"))
-                    #          )
-                    # ),
-                    tabPanel("Zeitverlauf", br(),
-
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf_gender"))
-                             )
-                    ),
-                    tabPanel("Überblick", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_arbeitsmarkt_vergleich_gender"))
-                             )
-                    )
-        ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Bundesländer im Vergleich",
-        width = 12,
-        p("Hier finden Sie Analysen für einzelne Bundesländer."),
-        tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
-
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               htmlOutput(ns("plot_arbeitsmarkt_bl"))
-                             )
-                    ),
-                    tabPanel("Zeitverlauf", br(),
-
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_bl_verlauf_ui("mod_beruf_arbeitsmarkt_bl_verlauf_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_verlauf"))
-                             )
-                    ),
-                    tabPanel("Überblick", br(),
-
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_bl_vergleich_ui("beruf_arbeitsmarkt_bl_vergleich_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_arbeitsmarkt_bl_vergleich"))
-                             )
-                    )
-        ))),
-    fluidRow(
-      shinydashboard::box(
         title = "Anteil von Frauen in den Bundesländern",
         width = 12,
         p("Hier finden Sie den Anteil von Frauen und Männern in MINT-Fächern auf dem Arbeitsmarkt für die Bundesländer im Vergleich."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
+                    tabPanel("Karte", br(),
 
                              shiny::sidebarPanel(
                                mod_beruf_arbeitsmarkt_bl_gender_ui("mod_beruf_arbeitsmarkt_bl_gender_ui_1")
@@ -278,7 +222,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                htmlOutput(ns("plot_arbeitsmarkt_bl_gender"))
                              )
                     ),
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Vergleich (Bundesländer)", br(),
 
                              shiny::sidebarPanel(
                                mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui("mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui_1")
@@ -287,13 +231,33 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_gender_verlauf"))
                              )
                     ),
-                    tabPanel("Überblick", br(),
+                    tabPanel("Vergelich (Beschäftigungsform)", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf_gender"))
+                             )
+                    ),
+                    tabPanel("Überblick (Bundesländer)", br(),
 
                              shiny::sidebarPanel(
                                mod_beruf_arbeitsmarkt_bl_gender_vergleich_ui("beruf_arbeitsmarkt_bl_gender_vergleich_ui_1")
                              ),
                              shiny::mainPanel(
                                plotOutput(ns("plot_arbeitsmarkt_bl_gender_vergleich"))
+                             )
+                    ),
+                    tabPanel("Überblick (Anforderungsniveau)", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_arbeitsmarkt_vergleich_gender"))
                              )
                     )
         )))

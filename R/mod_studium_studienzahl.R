@@ -154,22 +154,32 @@ mod_studium_studienzahl_ui <- function(id){
                              )
                     ),
         ))),
+
     fluidRow(
       shinydashboard::box(
-        title = "Einzelne MINT-Fächer im Vergleich",
+        title = "Bundesländer im Vergleich",
         width = 12,
-        p("Hier finden Sie Analysen für einzelne Studienfächer im Vergleich."),
+        p("Hier finden Sie Analysen für einzelne Bundesländer."),
         tabsetPanel(type = "tabs",
-                    # tabPanel("Vergleich", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
-                    #          shiny::mainPanel(
-                    #            plotOutput(ns("plot_waffle")))
-                    # ),
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Karte", br(),
+
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_bl_map_ui("mod_studium_studienzahl_bl_map")
+                               ),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_studienzahl_map"))
+                               )
+                    ),
+                    tabPanel("Vergleich (Bundesländer)", br(),
+
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_bl_verlauf_ui("mod_studium_studienzahl_bl_verlauf")
+                               ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf"))
+                               )
+                    ),
+                    tabPanel("Vergleich (Fächer)", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -181,7 +191,16 @@ mod_studium_studienzahl_ui <- function(id){
 
                              )
                     ),
-                    tabPanel("Überblick", br(),
+                    tabPanel("Überblick (Bundesländer)", br(),
+
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_bl_vergleich_ui("studium_studienzahl_bl_vergleich")
+                               ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_vergleich_bl"))
+                               )
+                    ),
+                    tabPanel("Überblick (Fächer)", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -194,85 +213,11 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von Frauen in den einzelnen MINT-Fächern",
-        width = 12,
-        p("Hier finden Sie den Frauen- und Männeranteil in einzelnen Studienfächern im Vergleich."),
-        tabsetPanel(type = "tabs",
-                    # tabPanel("Vergleich", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            mod_studium_choice_gender_ui("mod_studium_studienzahl_choice_gender_ui")
-                    #            ),
-                    #          shiny::mainPanel(
-                    #            plotOutput(ns("plot_waffle_choice_gender"))
-                    #            )
-                    # ),
-                    tabPanel("Zeitverlauf", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_studium_studienzahl_verlauf_bl_subject_gender_ui("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1")
-                               ),
-                             shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender"))
-                             )
-                    ),
-                    tabPanel("Überblick", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_studium_studienzahl_ranking_bl_subject_gender_ui("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1")
-                               ),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),
-                             )
-                    ),
-        ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Bundesländer im Vergleich",
-        width = 12,
-        p("Hier finden Sie Analysen für einzelne Bundesländer."),
-        tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
-
-                             shiny::sidebarPanel(
-                               mod_studium_studienzahl_bl_map_ui("mod_studium_studienzahl_bl_map")
-                               ),
-                             shiny::mainPanel(
-                               htmlOutput(ns("plot_studienzahl_map"))
-                               )
-                    ),
-                    tabPanel("Zeitverlauf", br(),
-
-                             shiny::sidebarPanel(
-                               mod_studium_studienzahl_bl_verlauf_ui("mod_studium_studienzahl_bl_verlauf")
-                               ),
-                             shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf"))
-                               )
-                    ),
-                    tabPanel("Überblick", br(),
-
-                             shiny::sidebarPanel(
-                               mod_studium_studienzahl_bl_vergleich_ui("studium_studienzahl_bl_vergleich")
-                               ),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_vergleich_bl"))
-                               )
-                    )
-        ))),
-    fluidRow(
-      shinydashboard::box(
         title = "Anteil von Studentinnen in den Bundesländern",
         width = 12,
         p("Hier finden Sie den Anteil an Belegungen von Frauen und Männern in MINT-Fächern für die Bundesländer im Vergleich. "),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
+                    tabPanel("Karte", br(),
 
                              shiny::sidebarPanel(
                                mod_studium_studienzahl_bl_map_gender_ui("mod_studium_studienzahl_bl_map_gender")
@@ -281,7 +226,7 @@ mod_studium_studienzahl_ui <- function(id){
                                htmlOutput(ns("plot_studienzahl_map_gender"))
                              )
                     ),
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Vergleich (Bundesländer)", br(),
 
                              shiny::sidebarPanel(
                                mod_studium_studienzahl_bl_verlauf_gender_ui("mod_studium_studienzahl_bl_verlauf_gender")
@@ -290,7 +235,18 @@ mod_studium_studienzahl_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf_gender"))
                              )
                     ),
-                    tabPanel("Überblick", br(),
+                    tabPanel("Erstsemester und Studierende", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_verlauf_bl_subject_gender_ui("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender"))
+                             )
+                    ),
+                    tabPanel("Überblick (Bundsländer)", br(),
 
                              shiny::sidebarPanel(
                                mod_studium_studienzahl_bl_vergleich_gender_ui("mod_studium_studienzahl_bl_vergleich_gender_ui")
@@ -298,7 +254,18 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                plotOutput(ns("plot_ranking_studienzahl_bl_vergleich_gender"))
                              )
-                    )
+                    ),
+                    tabPanel("Überblick (Fächer)", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_studium_studienzahl_ranking_bl_subject_gender_ui("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),
+                             )
+                    ),
         ))),
     fluidRow(
       shinydashboard::box(
