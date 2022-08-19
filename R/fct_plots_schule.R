@@ -529,7 +529,9 @@ kurse_mint_comparison <- function(df,r) {
 
   df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  # df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+
+  df_sub <- df_sub[df_sub$fachbereich!="andere Fächer",] # neu, da keine 100 % rauskommen, kab
 
   df <- rbind(df, df_sub)
 
@@ -545,21 +547,28 @@ kurse_mint_comparison <- function(df,r) {
   df <- df %>% dplyr::filter(indikator == indikator_comparison)
 
   x <- c("Sport", "Religion/Ethik", "Musik/Kunst",
-         "Gesellschaftswissenschaften", "Fremdsprachen", "Deutsch", "andere Fächer (aggregiert)", "Biologie", "Chemie",
-         "Physik","Informatik","Mathematik","MINT (aggregiert)")
+         "Gesellschaftswissenschaften", "Fremdsprachen", "Deutsch",
+
+         #"andere Fächer (aggregiert)",# raus, kab
+
+         "Biologie", "Chemie","Physik","Informatik","Mathematik","MINT (aggregiert)")
 
   df <- df %>%
     dplyr::mutate(fachbereich =  factor(fachbereich, levels = x)) %>%
     dplyr::arrange(fachbereich)
 
   # plot
-  a <- ifelse(df$fachbereich == "MINT (aggregiert)" | df$fachbereich == "andere Fächer (aggregiert)" , "#b16fab", "grey30")
+  a <- ifelse(df$fachbereich == "MINT (aggregiert)"
+
+             # | df$fachbereich == "andere Fächer (aggregiert)" # raus, kab
+
+              , "#b16fab", "grey30")
 
   ggplot2::ggplot(df, ggplot2::aes(y=fachbereich, x=proportion)) +
     ggplot2::geom_bar(stat="identity", fill = "#154194") +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::theme(
       axis.text.y = ggplot2::element_text(colour = a),
       text = ggplot2::element_text(size = 14),
@@ -651,7 +660,7 @@ kurse_mint_comparison_bl <- function(df,r) {
     ggplot2::geom_bar(stat="identity", fill = "#154194") +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::theme(
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
@@ -893,7 +902,7 @@ kurse_absolut <- function(df,r) {
     ggplot2::geom_text(ggplot2::aes(label=wert, vjust = - 0.25),
                        position=ggplot2::position_dodge(width=0.9),
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::facet_grid(~ anzeige_geschlecht) +
     ggplot2::theme(
       strip.background = ggplot2::element_blank(),
@@ -1945,7 +1954,7 @@ kurse_comparison_gender <- function(df,r) {
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%"), vjust = - 0.25),
                        position=ggplot2::position_dodge(width=0.9),
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::theme(
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +

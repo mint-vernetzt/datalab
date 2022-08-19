@@ -637,7 +637,7 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%"), vjust= 0.5, hjust = -0.5),
                        position=ggplot2::position_dodge(width=1),
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::theme(
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
@@ -1076,9 +1076,9 @@ studienzahl_absolut <- function(df,r) {
     ggplot2::geom_text(ggplot2::aes(label=wert, vjust = - 0.25),
                        position=ggplot2::position_dodge(width=0.9),
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::facet_grid(~ anzeige_geschlecht) +
-    ggplot2::theme(
+    ggplot2::theme_minimal(
       strip.background = ggplot2::element_blank(),
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
@@ -1924,7 +1924,7 @@ ranking_bl_subject <- function(df,r, type) {
     ggplot2::geom_bar(stat="identity", fill = "#154194") +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::theme(
       axis.text.y = ggplot2::element_text(colour = a),
       text = ggplot2::element_text(size = 14),
@@ -3010,7 +3010,7 @@ studierende_mint_vergleich_bl <- function(df,r) {
     ggplot2::geom_bar(stat="identity", fill = "#154194") +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::theme(
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +

@@ -327,7 +327,7 @@ arbeitsmarkt_absolut <- function(df,r) {
     ggplot2::geom_text(ggplot2::aes(label=wert, vjust = - 0.25),
                        position=ggplot2::position_dodge(width=0.9),
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::facet_grid(~ anzeige_geschlecht) +
     ggplot2::theme(
       strip.background = ggplot2::element_blank(),
@@ -1369,7 +1369,7 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
     ggplot2::geom_bar(stat="identity", fill = "#b16fab") +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::theme(
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
@@ -2027,7 +2027,7 @@ arbeitsmarkt_anforderungen_vergleich <- function(df,r) {
     ggplot2::geom_bar(stat="identity", fill = "#b16fab") +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::theme(
       axis.text.y = ggplot2::element_text(colour = a),
       text = ggplot2::element_text(size = 14),
@@ -2343,7 +2343,7 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion_fachbereich),"%"), vjust = - 0.25),
                        position=ggplot2::position_dodge(width=0.9),
                        fontface = "bold") +
-    ggplot2::theme_bw() +
+    ggplot2::theme_minimal() +
     ggplot2::theme(
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
