@@ -834,7 +834,7 @@ studienzahl_waffle_mint <- function(df,r) {
 
 
 
-#' A function to plot a waffle chart
+#' A function to plot a waffle chart :: b3
 #'
 #' @description A function to create a waffle chart for the second box inside the
 #' tab "Studium".
@@ -2473,7 +2473,7 @@ studierende_map <- function(df,r) {
   )
 }
 
-#' A function to plot the german map
+#' A function to plot the german map ::box 6
 #'
 #' @description A function to plot the german map with all states that contain
 #' information about the share of women in STEM

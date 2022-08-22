@@ -344,7 +344,7 @@ arbeitsmarkt_absolut <- function(df,r) {
 }
 
 
-#' A function to plot the german map
+#' A function to plot the german map ::::box 6
 #'
 #' @description A function to plot the german map with all states that contain
 #' information about the share of women in STEM
@@ -365,6 +365,8 @@ arbeitsmarkt_bl_gender <- function(df,r) {
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
+
+  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer") # kab
 
   # remove
   df <- df %>% dplyr::filter(region != "Deutschland")
@@ -387,6 +389,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
     dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
     dplyr::filter(anforderungsniveau == anforderung,
                   fachbereich == "MINT")
+
 
   values_female <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
   values_male <- df %>% dplyr::filter(anzeige_geschlecht == "Männer")
@@ -1381,7 +1384,7 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 }
 
-#' A function to plot a waffle chart
+#' A function to plot a waffle chart ::: b3
 #'
 #' @description A function to create a waffle chart for the tab "Beruf"
 #'
