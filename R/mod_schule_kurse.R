@@ -81,6 +81,54 @@ mod_schule_kurse_ui <- function(id){
                                               icon = shiny::icon("download")))
                             )
       ))),
+
+    fluidRow(
+      shinydashboard::box(
+        title = "I.b) Anteil von MINT-Fächern an gewählten Kursen für Bundesländer im Vergleich",
+        width = 12,
+        p("Hier finden Sie Ergebnisse für die Fächerbelegung in den Bundesländern im Vergleich."),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Karte", br(),
+
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1")),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_map_kurse")))
+                    ),
+                    tabPanel("Vergleich (Bundesländer)", br(),
+
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1")),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_verlauf_multiple")))
+                    ),
+                    tabPanel("Vergleich (Fächer)", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_verlauf_bl_subjects_ui("mod_schule_kurse_verlauf_bl_subjects_ui_1")),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects"))))
+                    ,
+                    tabPanel("Überblick (Bundesländer)", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_comparison_subjects_ui("mod_schule_kurse_comparison_subjects_ui_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_comparison_subjects"))
+
+                             )),
+                    tabPanel("Überblick (Fächer)", br(),
+
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_comparison_bl"))))
+
+        ))),
     fluidRow(
       shinydashboard::box(
         title = "II. Anteil von Mädchen an MINT-Schüler:innen",
@@ -126,12 +174,20 @@ mod_schule_kurse_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "III. Kurswahlen von Mädchen und Jungen",
+        title = "III. Anteil von MINT an von Mädchen gewählten Kursen",
         width = 12,
         p("Hier können Sie sich den Anteil von Schülerinnen an MINT- und nicht-MINT-Fächern für
           Leistungs- und Grundkurse anschauen."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Detaillierter Vergleich", br(),
+                    tabPanel("ZEitverlauf", br(),
+
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_verlauf_bl_ui("mod_schule_kurse_verlauf_bl_ui_1")),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_verlauf_kurse_bl")))
+                    ),
+
+                    tabPanel("Vergleich Jungen und Mädchen", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -139,59 +195,23 @@ mod_schule_kurse_ui <- function(id){
                                mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
                              shiny::mainPanel(
                                plotOutput(ns("plot_waffle")))
+                    ),
+                    tabPanel("Vergleich der Belegungen (Fächer)", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1")),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_ranking_2"))
+                             )
                     )))),
 
 
+
     fluidRow(
       shinydashboard::box(
-        title = "Bundesländer im Vergleich",
-        width = 12,
-        p("Hier finden Sie Ergebnisse für die Fächerbelegung in den Bundesländern im Vergleich."),
-        tabsetPanel(type = "tabs",
-                    tabPanel("Karte", br(),
-
-                             shiny::sidebarPanel(
-                               mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1")),
-                             shiny::mainPanel(
-                               htmlOutput(ns("plot_map_kurse")))
-                    ),
-                    tabPanel("Vergleich (Bundesländer)", br(),
-
-                             shiny::sidebarPanel(
-                               mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1")),
-                             shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_verlauf_multiple")))
-                  ),
-                  tabPanel("Vergleich (Fächer)", br(),
-
-                           tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                           shiny::sidebarPanel(
-                             mod_schule_kurse_verlauf_bl_subjects_ui("mod_schule_kurse_verlauf_bl_subjects_ui_1")),
-                           shiny::mainPanel(
-                             highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects"))))
-                  ,
-                  tabPanel("Überblick (Bundesländer)", br(),
-
-                           tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                           shiny::sidebarPanel(
-                             mod_schule_kurse_comparison_subjects_ui("mod_schule_kurse_comparison_subjects_ui_1")),
-                           shiny::mainPanel(
-                             plotOutput(ns("plot_comparison_subjects"))
-
-                           )),
-                  tabPanel("Überblick (Fächer)", br(),
-
-                           shiny::sidebarPanel(
-                             mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1")),
-                           shiny::mainPanel(
-                             plotOutput(ns("plot_comparison_bl"))))
-
-      ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Anteil von Schülerinnen in den Bundesländern",
+        title = "III.b) Anteil von MINT an von Mädchen gewählten Kursen für Bundesländer im Vergleich",
         width = 12,
         p("Hier finden Sie Ergebnisse für die Fächerbelegung nach Geschlecht in den Bundesländern."),
         tabsetPanel(type = "tabs",
@@ -208,40 +228,18 @@ mod_schule_kurse_ui <- function(id){
                                mod_schule_kurse_verlauf_ui("mod_schule_kurse_verlauf_ui_1")),
                              shiny::mainPanel(
 
-                                    highcharter::highchartOutput(ns("plot_verlauf_kurse"))
-
-                             )
-                   ),
-                   tabPanel("Vergelich (Fächer)", br(),
-
-                            shiny::sidebarPanel(
-                              mod_schule_kurse_verlauf_bl_ui("mod_schule_kurse_verlauf_bl_ui_1")),
-                            shiny::mainPanel(
-                              highcharter::highchartOutput(ns("plot_verlauf_kurse_bl")))
-                   ),
-                   tabPanel("Vergleich der Belegungen (Bundesländer)", br(),
+                               highcharter::highchartOutput(ns("plot_verlauf_kurse")))
+                    ),
+                    tabPanel("Vergleich der Belegungen (Bundesländer)", br(),
 
                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                             shiny::sidebarPanel(
                               mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1")),
                             shiny::mainPanel(
-                              plotOutput(ns("plot_ranking_gender"))
-                              ),
+                              plotOutput(ns("plot_ranking_gender")))
 
-
-                  ),
-                  tabPanel("Vergleich der Belegungen (Fächer)", br(),
-
-                           tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                           shiny::sidebarPanel(
-                             mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1")),
-                           shiny::mainPanel(
-                             plotOutput(ns("plot_ranking_2"))
-                           )
-                  )
-        ))),
+                  )))),
     fluidRow(
       shinydashboard::box(
         width = 12,
