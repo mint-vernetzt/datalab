@@ -28,7 +28,7 @@ mod_schule_kurse_ui <- function(id){
       )),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von MINT-Fächern in der Schule",
+        title = "I. Anteil von MINT-Fächern an gewählten Kursen in der Oberstufe",
         width = 12,
         p("Hier können Sie sich den Anteil von MINT und nicht-MINT für
           Leistungs- und Grundkurse anschauen."),
@@ -83,7 +83,7 @@ mod_schule_kurse_ui <- function(id){
       ))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil von Schülerinnen an MINT-Fächern",
+        title = "II. Anteil von Mädchen an MINT-Schüler:innen",
         width = 12,
         p("Hier können Sie sich den Anteil von Schülerinnen an MINT- und nicht-MINT-Fächern für
           Leistungs- und Grundkurse anschauen."),
@@ -126,7 +126,7 @@ mod_schule_kurse_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "Test",
+        title = "III. Kurswahlen von Mädchen und Jungen",
         width = 12,
         p("Hier können Sie sich den Anteil von Schülerinnen an MINT- und nicht-MINT-Fächern für
           Leistungs- und Grundkurse anschauen."),
