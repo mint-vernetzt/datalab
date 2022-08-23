@@ -41,6 +41,8 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
 
   df_auszubildende <- df_auszubildende %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
+
+
   # calculate proportions
   df_auszubildende <- share_pie(df_auszubildende)
 
@@ -366,7 +368,6 @@ arbeitsmarkt_bl_gender <- function(df,r) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
-  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer") # kab
 
   # remove
   df <- df %>% dplyr::filter(region != "Deutschland")

@@ -933,6 +933,8 @@ kurse_ranking <- function(df,r, type) {
   # load UI inputs from reactive value
   timerange <- r$date_kurse_ranking
 
+
+
   states <- r$states_kurse_ranking
 
   # filter dataset based on UI inputs
@@ -995,8 +997,8 @@ kurse_ranking <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Schülerinnen an Grund- und Leistungskurse in ",timerange,
-                                 "<br><br><br>"),
+                                 "Fächerwahl von Mädchen: Anteil (...) (",timerange,")", # kab
+                                 "<br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 
@@ -1084,7 +1086,7 @@ kurse_ranking_gender <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Schülerinnen an Grund- und Leistungskursen in ",timerange,
+                                 "Fächerwahl von Mädchen an Grund- und Leistungskursen in ",timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
