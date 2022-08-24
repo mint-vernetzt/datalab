@@ -1405,13 +1405,13 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+  #df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
 
   # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert)) %>%
-    dplyr::mutate(anforderungsniveau = "Gesamt") %>% dplyr::ungroup()
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
+    # dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>% ## Hier vllt drin lassen, da es die Grafik verfälscht
+    # dplyr::summarise(wert = sum(wert)) %>%
+    # dplyr::mutate(anforderungsniveau = "Gesamt") %>% dplyr::ungroup()
 
   df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
 
@@ -1570,15 +1570,17 @@ arbeitsmarkt_anforderungen_verlauf_gender <- function(df,r) {
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # remove
-  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+  #df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")### kab
 
   df <- prep_arbeitsmarkt_east_west(df)
 
   # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert)) %>%
-    dplyr::mutate(anforderungsniveau = "Gesamt") %>% dplyr::ungroup()
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
+    # dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
+    # dplyr::summarise(wert = sum(wert)) %>%
+    # dplyr::mutate(anforderungsniveau = "Gesamt") %>% dplyr::ungroup()
+
+
 
   df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
 
@@ -1662,15 +1664,15 @@ arbeitsmarkt_anforderungen_vergleich_gender <- function(df, r) {
   df <- df %>% dplyr::filter(jahr == timerange)
 
   # remove
-  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+  # df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
 
   df <- prep_arbeitsmarkt_east_west(df)
 
   # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert)) %>%
-    dplyr::mutate(anforderungsniveau = "Gesamt") %>% dplyr::ungroup()
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
+    # dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
+    # dplyr::summarise(wert = sum(wert)) %>%
+    # dplyr::mutate(anforderungsniveau = "Gesamt") %>% dplyr::ungroup()
 
   df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
 
@@ -1753,14 +1755,14 @@ arbeitsmarkt_anforderungen <- function(df,r) {
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
-  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+  #df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
 
   # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert)) %>%
-    dplyr::mutate(anforderungsniveau = "Gesamt") %>%
-    dplyr::ungroup()
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
+    # dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
+    # dplyr::summarise(wert = sum(wert)) %>%
+    # dplyr::mutate(anforderungsniveau = "Gesamt") %>%
+    # dplyr::ungroup()
 
   df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
 
@@ -1909,16 +1911,16 @@ arbeitsmarkt_anforderungen_verlauf <- function(df,r) {
   # remove
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
-  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+  # df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
 
   df <- prep_arbeitsmarkt_east_west(df)
 
   # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert)) %>%
-    dplyr::mutate(anforderungsniveau = "Gesamt") %>%
-    dplyr::ungroup()
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
+    # dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
+    # dplyr::summarise(wert = sum(wert)) %>%
+    # dplyr::mutate(anforderungsniveau = "Gesamt") %>%
+    # dplyr::ungroup()
 
   df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
 
@@ -1988,16 +1990,22 @@ arbeitsmarkt_anforderungen_vergleich <- function(df,r) {
   # remove
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
-  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+  # df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
 
   df <- prep_arbeitsmarkt_east_west(df)
 
   # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert)) %>%
-    dplyr::mutate(anforderungsniveau = "Gesamt") %>%
-    dplyr::ungroup()
+  # df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%                       ###kab
+  #   dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
+  #   dplyr::summarise(wert = sum(wert)) %>%
+  #   dplyr::mutate(anforderungsniveau = "Gesamt") %>%
+  #   dplyr::ungroup()
+
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
+      #dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
+     # dplyr::summarise(wert = sum(wert)) %>%
+      # dplyr::mutate(anforderungsniveau = "Gesamt") %>%
+      #dplyr::ungroup()
 
   df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
 
@@ -2066,14 +2074,14 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
   df <- df %>% dplyr::filter(region == "Deutschland")
 
   # remove
-  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+  # df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
 
   # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert)) %>%
-    dplyr::mutate(anforderungsniveau = "Gesamt") %>%
-    dplyr::ungroup()
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
+    # dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%      ## kab
+    # dplyr::summarise(wert = sum(wert)) %>%
+    # dplyr::mutate(anforderungsniveau = "Gesamt") %>%
+    # dplyr::ungroup()
 
   df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
 
@@ -2216,14 +2224,14 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(df,r) {
   df <- df %>% dplyr::filter(region == "Deutschland")
 
   # remove
-  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+  # df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
 
   # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert)) %>%
-    dplyr::mutate(anforderungsniveau = "Gesamt") %>%
-    dplyr::ungroup()
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
+    # dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
+    # dplyr::summarise(wert = sum(wert)) %>%
+    # dplyr::mutate(anforderungsniveau = "Gesamt") %>%
+    # dplyr::ungroup()
 
   df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
 
@@ -2303,14 +2311,14 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
   df <- df %>% dplyr::filter(region == "Deutschland")
 
   # remove
-  df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
+ #df <- df %>% dplyr::filter(anforderungsniveau != "Helfer")
 
   # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert)) %>%
-    dplyr::mutate(anforderungsniveau = "Gesamt") %>%
-    dplyr::ungroup()
+  df_new_gesamt <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
+    # dplyr::group_by(region, fachbereich, indikator, jahr, anzeige_geschlecht, bereich) %>%
+    # dplyr::summarise(wert = sum(wert)) %>%
+    # dplyr::mutate(anforderungsniveau = "Gesamt") %>%
+    # dplyr::ungroup()
 
   df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
 

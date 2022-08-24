@@ -45,17 +45,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                htmlOutput(ns("plot_einstieg_pie"))
                              )
                     ),
-                    # tabPanel("Detaillierter Vergleich", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            plotOutput(ns("plot_arbeitsmarkt_waffle"))
-                    #          )
-                    # ),
+                    tabPanel("Detaillierter Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_arbeitsmarkt_waffle"))
+                             )
+                    ),
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
@@ -121,15 +121,15 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_verlauf"))
                              )
                     ),
-                    # tabPanel("Vergleich (Anforderungsniveaus)", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui_1")
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf"))
-                    #          )
-                    # ),
+                    tabPanel("Vergleich (Anforderungsniveaus)", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf"))
+                             )
+                    ),
                     tabPanel("Überblick (Bundesländer)", br(),
 
                              shiny::sidebarPanel(
@@ -139,17 +139,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                plotOutput(ns("plot_arbeitsmarkt_bl_vergleich"))
                              )
                     ),
-                    # tabPanel("Überblich (Anforderungsniveau)", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui_1")
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            plotOutput(ns("plot_arbeitsmarkt_vergleich"))
-                    #          )
-                    # )
+                    tabPanel("Überblich (Anforderungsniveau)", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               plotOutput(ns("plot_arbeitsmarkt_vergleich"))
+                             )
+                    )
         ))),
     fluidRow(
       shinydashboard::box(
