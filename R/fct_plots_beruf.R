@@ -1141,7 +1141,7 @@ arbeitsmarkt_bl <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_arbeitsmarkt_bl
 
-  anforderung <- r$anforderungsniveau_arbeitsmarkt_bl
+  #anforderung <- r$anforderungsniveau_arbeitsmarkt_bl
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
@@ -1155,20 +1155,22 @@ arbeitsmarkt_bl <- function(df,r) {
 
   df <- df %>% dplyr::filter(fachbereich == "MINT")
 
-  df <- df %>% dplyr::filter(anforderungsniveau == anforderung)
+  # df <- df %>% dplyr::filter(anforderungsniveau == anforderung) # kab
+
+  df <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
 
   df_employed <- df %>% dplyr::filter(indikator == "Beschäftigte")
   df_trainee <- df %>% dplyr::filter(indikator == "Auszubildende")
 
-  if (anforderung == "Gesamt"){
-
-    title_help_sub <- " insgesamt"
-
-  } else {
-
-    title_help_sub <- paste0(" mit Anforderungsniveau ", anforderung)
-
-  }
+  # if (anforderung == "Gesamt"){
+  #
+  #   title_help_sub <- " insgesamt"
+  #
+  # } else {
+  #
+  #   title_help_sub <- paste0(" mit Anforderungsniveau ", anforderung)
+  #
+  # }
 
   highcharter::hw_grid(
     # plot
@@ -1188,7 +1190,8 @@ arbeitsmarkt_bl <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Auszubildende: Anteil an Beschäftigung", title_help_sub),
+        text = paste0("MINT-Auszubildende: Anteil an Beschäftigung" #, title_help_sub
+                      ),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1219,7 +1222,8 @@ arbeitsmarkt_bl <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Beschäftigte: Anteil an Beschäftigung", title_help_sub),
+        text = paste0("MINT-Beschäftigte: Anteil an Beschäftigung" #, title_help_sub
+                      ),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1254,7 +1258,7 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_beruf_arbeitsmarkt_bl_verlauf
 
-  anforderung <- r$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf
+  #anforderung <- r$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf kab
 
   indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_verlauf
 
@@ -1273,7 +1277,10 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
 
   df <- calc_arbeitsmarkt_share_bl(df)
 
-  df <- df %>% dplyr::filter(anforderungsniveau %in% anforderung)
+  #df <- df %>% dplyr::filter(anforderungsniveau %in% anforderung) kab
+
+  df <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
+
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
@@ -1282,15 +1289,15 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
   # order years for plot
   df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
-  if (anforderung == "Gesamt"){
-
-    title_help <- " insgesamt"
-
-  } else {
-
-    title_help <- paste0(" mit Anforderungsniveau ", anforderung)
-
-  }
+  # if (anforderung == "Gesamt"){
+  #
+  #   title_help <- " insgesamt"
+  #
+  # } else {
+  #
+  #   title_help <- paste0(" mit Anforderungsniveau ", anforderung) kb
+  #
+  # }
 
   # plot
   highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = region)) %>%
@@ -1298,7 +1305,9 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("MINT-Anteil", title_help),
+    highcharter::hc_title(text = paste0("MINT-Anteil"
+                                        #, title_help
+                                        ),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1331,7 +1340,7 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_beruf_arbeitsmarkt_bl_vergleich
 
-  anforderung <- r$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich
+  #anforderung <- r$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich
 
   indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_vergleich
 
@@ -1349,7 +1358,9 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
 
   df <- calc_arbeitsmarkt_share_bl(df)
 
-  df <- df %>% dplyr::filter(anforderungsniveau %in% anforderung)
+  #df <- df %>% dplyr::filter(anforderungsniveau %in% anforderung)
+
+  df <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
@@ -1358,15 +1369,15 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
   # order years for plot
   df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
-  if (anforderung == "Gesamt"){
-
-    title_help <- " insgesamt"
-
-  } else {
-
-    title_help <- paste0(" mit Anforderungsniveau ", anforderung)
-
-  }
+  # if (anforderung == "Gesamt"){
+  #
+  #   title_help <- " insgesamt"
+  #
+  # } else {
+  #
+  #   title_help <- paste0(" mit Anforderungsniveau ", anforderung)
+  #
+  # }
 
   # plot
   ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
@@ -1379,7 +1390,8 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::ylab("") + ggplot2::xlab("Anteil") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 indikator_choice, ": Anteil von Anforderungsniveau ", anforderung," im Vergleich in ", timerange,
+                                 indikator_choice, ": Anteil von MINT
+                                 im Vergleich in ", timerange,
                                  "<br><br><br>"),
                   fill = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))

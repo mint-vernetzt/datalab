@@ -27,12 +27,12 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Auswahl des Anforderungsniveaus:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf"),
-      choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"),
-      selected = "Gesamt"
-    ),
+    # p("Auswahl des Anforderungsniveaus:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf"),
+    #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"), kab
+    #   selected = "Gesamt"
+    # ),
     p("Auswahl der Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_bl_verlauf"),
@@ -77,9 +77,9 @@ mod_beruf_arbeitsmarkt_bl_verlauf_server <- function(id, r){
       r$indikator_beruf_arbeitsmarkt_bl_verlauf <- input$indikator_beruf_arbeitsmarkt_bl_verlauf
     })
 
-    observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf, {
-      r$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf <- input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf
-    })
+    # observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf, {
+    #   r$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf <- input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf
+    # }) kab
 
     observeEvent(input$states_beruf_arbeitsmarkt_bl_verlauf, {
       r$states_beruf_arbeitsmarkt_bl_verlauf <- input$states_beruf_arbeitsmarkt_bl_verlauf

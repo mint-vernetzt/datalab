@@ -27,12 +27,12 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Auswahl des Anforderungsniveaus:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich"),
-      choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"),
-      selected = "Gesamt"
-    )
+    # p("Auswahl des Anforderungsniveaus:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich"),
+    #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"),
+    #   selected = "Gesamt"
+    # )
   )
 }
 
@@ -50,9 +50,9 @@ mod_beruf_arbeitsmarkt_bl_vergleich_server <- function(id, r){
       r$indikator_beruf_arbeitsmarkt_bl_vergleich <- input$indikator_beruf_arbeitsmarkt_bl_vergleich
     })
 
-    observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich, {
-      r$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich <- input$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich
-    })
+    # observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich, {
+    #   r$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich <- input$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich
+    # })
 
   })
 }
