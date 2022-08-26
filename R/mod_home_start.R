@@ -32,7 +32,7 @@ mod_home_start_ui <- function(id){
                  " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
                ),
                    p(style = "text-align: justify; font-size = 16px",
-                     span("Wir freuen uns über Feedback an", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject=MINT-Datalab", "Antonia Kröger"))
+                     span("Wir freuen uns über ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject=MINT-Datalab", "Feedback"),"!")
                    ),
                ),
         #solidHeader = TRUE,
@@ -50,10 +50,12 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Wie hoch in der Anteil von MINT in den verschiedenen Bildungsbereichen?",
+        title = "Anteil MINT",
         width = 12,
-        p("Hier zeigen wir den Anteil von MINT für verschiedene Personengruppen
-        aus den  Bereichen Schule, Studium, Ausbildung und Arbeitsmarkt."),
+        p("Wie hoch ist der Anteil von MINT-Fächern in der Schule?", br(),
+          "Wie hoch ist der Anteil von Studierenden, die MINT studieren?", br(),
+          "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen?", br(),
+          "Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?"),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(
@@ -75,11 +77,10 @@ mod_home_start_ui <- function(id){
          ))))),
     fluidRow(
       shinydashboard::box(
-        title = "Wie hoch ist der Anteil von Frauen in den verschiedenen Bereichen?",
+        title = "Anteil Frauen und Mädchen innerhalb von MINT",
         width = 12,
-        p("Hier zeigen wir den Anteil von Frauen in MINT für die Indikatoren
-        aus den  Bereichen Schule, Hochschule und Arbeitsmarkt anschauen und vergleichen.
-          Zum Vergleich zeigen wir unter jedem Tortendiagramm auch den Anteil von Frauen ingesamt in dem jeweiligen Bereich."),
+        p("Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?", br(),
+        "Und wie hoch ist der Anteil in den anderen Fächern oder Berufszweigen?"),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                              shiny::sidebarPanel(
@@ -101,33 +102,7 @@ mod_home_start_ui <- function(id){
 
                              )
                     ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Was wählen Mädchen und Frauen?",
-        width = 12,
-        p("Hier zeigen wir den Anteil von MINT für verschiedene Personengruppen
-        aus den  Bereichen Schule, Studium, Ausbildung und Arbeitsmarkt.")
-        # ,
-        # tabsetPanel(type = "tabs",
-        #             tabPanel("Schülerinnen", br(),
-        #                      shiny::sidebarPanel(
-        #                        mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1")),
-        #                      shiny::mainPanel(
-        #                        htmlOutput(ns("plot_mint_rest_einstieg_1")))
-        #             ),
-        #             tabPanel("Studentinnen", br(),
-        #                      shiny::sidebarPanel(
-        #                        mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")),
-        #                      shiny::mainPanel(
-        #                        highcharter::highchartOutput(ns("plot_mint_1")))
-        #             ),
-        #             tabPanel("Überblick", br(),
-        #                      shiny::sidebarPanel(
-        #                        mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
-        #                      shiny::mainPanel(highcharter::highchartOutput(ns("plot_comparison_mint"))
 
-                             # )))))
-        )),
     fluidRow(
       shinydashboard::box(
         #title = " ",

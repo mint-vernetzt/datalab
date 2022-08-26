@@ -54,7 +54,7 @@ home_einstieg_pie <- function(df,r) {
     highcharter::hc_tooltip(
                pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT und allen ", title_help, " in 2020"),
+    highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -90,7 +90,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-        highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_1, " in 2020"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -105,7 +105,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-        highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_2, " in 2020"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -148,7 +148,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-        highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_1, " in 2020"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -163,7 +163,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-        highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_2, " in 2020"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -177,7 +177,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-        highcharter::hc_title(text = paste0("Anteil von MINT und allen ",title_help_3, " in 2020"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -317,7 +317,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender, " in 2020"),
+        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender, " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -333,7 +333,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
           highcharter::hc_tooltip(
             pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
           highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-          highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender, " in 2020"),
+          highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender, " (2020)"),
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -381,7 +381,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender[1], " in 2020"),
+        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[1], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -396,7 +396,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender[2], " in 2020"),
+        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[2], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -411,7 +411,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender[1], " in 2020"),
+        highcharter::hc_title(text = paste0("Vergleich: Andere", indikator_choice_1_gender[1], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -427,7 +427,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender[2], " in 2020"),
+        highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[2], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -442,6 +442,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
       browsable = TRUE
     )
 
+    ### 3 Kreise ###
 
   } else if(length(indikator_choice_1_gender) == 3) {
 
@@ -482,7 +483,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender[1], " in 2020"),
+        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[1], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -497,7 +498,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender[2], " in 2020"),
+        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[2], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -511,7 +512,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen im MINT-Bereich für ", indikator_choice_1_gender[3], " in 2020"),
+        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[3], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -521,12 +522,14 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
+## Untere Kreise: Vergleiche
+
 
       highcharter::hchart(df_1_rest, size = 100, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender[1], " in 2020"),
+        highcharter::hc_title(text = paste0("Vergleich: Andere", indikator_choice_1_gender[1], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -542,7 +545,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender[2], " in 2020"),
+        highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[2], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -557,7 +560,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen in anderen Bereichen für ", indikator_choice_1_gender[3], " in 2020"),
+        highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[3], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -695,7 +698,7 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
     ggplot2::xlab("") + ggplot2::ylab("Anteil") +
     ggplot2::scale_fill_manual(values = c("#154194","#efe8e6")) +
     ggplot2::labs(title = paste0(paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Frauenanteil in MINT im Vergleich in ", timerange,
+                                 "Anteil Frauen in MINT  (", timerange, ")",
                                  "<br><br><br>")),
                   fill = "") +
     ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"))
