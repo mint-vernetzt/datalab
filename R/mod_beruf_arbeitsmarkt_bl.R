@@ -17,11 +17,11 @@ mod_beruf_arbeitsmarkt_bl_ui <- function(id){
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
     ),
-    p("Auswahl des Anforderungsniveaus:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("anforderungsniveau_arbeitsmarkt_bl"),
-      choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte")
-    )
+    # p("Auswahl des Anforderungsniveaus:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("anforderungsniveau_arbeitsmarkt_bl"),
+    #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte")
+    # ) kab
   )
 }
 
@@ -35,9 +35,9 @@ mod_beruf_arbeitsmarkt_bl_server <- function(id, r){
       r$date_arbeitsmarkt_bl <- input$date_arbeitsmarkt_bl
     })
 
-    observeEvent(input$anforderungsniveau_arbeitsmarkt_bl, {
-      r$anforderungsniveau_arbeitsmarkt_bl <- input$anforderungsniveau_arbeitsmarkt_bl
-    })
+    # observeEvent(input$anforderungsniveau_arbeitsmarkt_bl, {
+    #   r$anforderungsniveau_arbeitsmarkt_bl <- input$anforderungsniveau_arbeitsmarkt_bl
+    # }) kab
 
   })
 }
