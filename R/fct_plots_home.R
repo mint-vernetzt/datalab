@@ -54,7 +54,7 @@ home_einstieg_pie <- function(df,r) {
     highcharter::hc_tooltip(
                pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
+    highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -90,7 +90,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1[1], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -105,7 +105,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1[2], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -148,7 +148,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1[1], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -163,7 +163,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1[2], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -177,7 +177,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020)"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1[3], " (2020)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
