@@ -1253,7 +1253,7 @@ kurse_map <- function(df,r) {
       valueSuffix = "%"
     )
   ) %>%
-    highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
+    highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
       text = paste0("Grundkursbelegung: Anteil an Belegungen <br> in ", subjects),
       margin = 10,
@@ -1284,7 +1284,7 @@ kurse_map <- function(df,r) {
       valueSuffix = "%"
     )
   ) %>%
-    highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
+    highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
       text = paste0("Leistungskursbelegung: Anteil an Belegungen <br> in ", subjects),
       margin = 10,
@@ -1374,7 +1374,7 @@ kurse_map_gender <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
+      highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#154194", labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Schülerinnen: Anteil an Grundkursbelegungen in ", subjects),
         margin = 10,
@@ -1405,7 +1405,7 @@ kurse_map_gender <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
+      highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#154194", labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Schülerinnen: Anteil an Leistungskursbelegungen in ", subjects),
         margin = 10,

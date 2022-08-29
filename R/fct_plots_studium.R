@@ -244,7 +244,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   plot_anfeanger_rest <- highcharter::hchart(df_anfaenger_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("Nicht-MINT-Fächer (Studienanfänger*innen) in ", timerange),
+    highcharter::hc_title(text = paste0("Nicht-MINT-Fächer (Studienanfänger:innen) in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -803,7 +803,7 @@ studienzahl_waffle_mint <- function(df,r) {
   waffle_studienanfaenger <- waffle::waffle(x_studienanfaenger, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Studienfachwahl (Studienanfänger*innen)</span>")) +
+      title = paste0("<span style='color:black;'>", "Studienfachwahl (Studienanfänger:innen)</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -2420,9 +2420,9 @@ studierende_map <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
+      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Studienanfänger*innen: Anteil an Belegungen <br> in ", subjects),
+        text = paste0("Studienanfänger:innen: Anteil an Belegungen <br> in ", subjects),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -2451,7 +2451,7 @@ studierende_map <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
+      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = paste0("Studierende: Anteil an Belegungen <br> in ", subjects),
         margin = 10,
