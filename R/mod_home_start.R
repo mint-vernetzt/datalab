@@ -50,12 +50,10 @@ mod_home_start_ui <- function(id){
     ),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil MINT",
+        title = "#MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
         width = 12,
-        p("Wie hoch ist der Anteil von MINT-Fächern in der Schule?", br(),
-          "Wie hoch ist der Anteil von Studierenden, die MINT studieren?", br(),
-          "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen?", br(),
-          "Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?"),
+        p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von MINT-Fächern in der Schule? Wie hoch ist der Anteil von Studierenden, die MINT studieren?", br(),
+          "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?"),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(
@@ -77,10 +75,12 @@ mod_home_start_ui <- function(id){
          ))))),
     fluidRow(
       shinydashboard::box(
-        title = "Anteil Frauen und Mädchen innerhalb von MINT",
+        title = "#Frauen_in_MINT: Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?",
         width = 12,
-        p("Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?", br(),
-        "Und wie hoch ist der Anteil in den anderen Fächern oder Berufszweigen?"),
+        p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von Mädchen in MINT-Leistungskursen?
+          Wie hoch ist der Anteil von Frauen in MINT-Studienfächern? Wie hoch ist der Anteil von Frauen in MINT-Ausbildungsgängen?
+          Wie hoch ist der Anteil von Frauen in MINT-Berufen?", br(),
+        "Zum Vergleich zeigen wir jeweils auch, wie hoch ist der Anteil von Frauen in den anderen, nicht-MINT-Fächern oder .Berufszweigen ist."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                              shiny::sidebarPanel(

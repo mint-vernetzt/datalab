@@ -20,22 +20,18 @@ mod_studium_studienzahl_ui <- function(id){
       tags$h2("Studium und MINT"),
       width = 12,
       p(style = "text-align: justify; font-size = 16px",
-        "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Hochschule. Sie finden
-        Informationen zum Anteil von MINT-Fächern und nicht-MINT-Fächern an allen Studienfächern im Zeitraum
-        2013 bis 2020. Zudem können Sie sich den Frauen- und Männeranteil in einzelnen MINT-Fächern für
-        Studierende und Studienanfänger*innen ausgeben lassen. Des weiteren haben wir alle Ergebnisse
-        auch für einzelne Bundesländer aufbereitet. "),
+        "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Hochschule."),
       p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")),
+        span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis 2021, auf Anfrage, eigene Berechnungen.")),
       p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
+        span(tags$b(span("Methodische Hinweise: Die aktuellen Berechnungen erfolgen auf Basis der Studierendenzahlen an allen deutschen Hochschulen.", style = "color:#b16fab")),
              " "))
     )),
     fluidRow(
       shinydashboard::box(
-        title = "I. Anteil von MINT an Fächerwahl in der Hochschulbildung",
+        title = "#MINT: Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?",
         width = 12,
-        p("Hier können Sie sich den Anteil von MINT-Studienfächern anschauen."),
+        p(" "),
         tabsetPanel(type = "tabs",
                     tabPanel(tab1_name[1], br(),
 
@@ -64,7 +60,6 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                highcharter::highchartOutput(ns("plot_einstieg_verlauf")))
 
-
                     ),
                     tabPanel("Überblick", br(),
 
@@ -74,8 +69,6 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_einstieg_comparison_ui("mod_studium_studienzahl_einstieg_comparison_ui_1")),
                              shiny::mainPanel(
                                highcharter::highchartOutput(ns("plot_einstieg_comparison")))
-
-
 
 
                   ),
@@ -107,9 +100,9 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "I.b) Anteil von MINT an Fächerwahl in der Hochschulbildung für Bundesländer im Vergleich",
+        title = "#MINT_im_Detail: Vergleich der einzelnen MINT-Fächer und nach Bundesländern",
         width = 12,
-        p("Hier finden Sie Analysen für einzelne Bundesländer."),
+        p("Hier zeigen wir die Anteile einzelner MINT-Fächer sowie die Unterschiede in den Bundesländern."),
         tabsetPanel(type = "tabs",
                     tabPanel("Karte", br(),
 
@@ -164,11 +157,11 @@ mod_studium_studienzahl_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "II. Anteil von Frauen an MINT-Studierenden",
+        title = "#Frauen_in_MINT: Wie hoch ist der Anteil von Frauen in den MINT-Fächern?",
         width = 12,
-        p("Hier können Sie sich anschauen, wie hoch der Frauen- und Männeranteil unter
-        Studierenden und
-          Studienanfänger*innen in MINT- und nicht-MINT-Fächern ist."),
+        p("Hier schauen wir uns die Verteilung von Frauen und Männern innerhalb der MINT-Studienfächer an.
+        Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern.
+        Die verschiedenen Diagramme bieten außerdem Fächer- und Bundeslandvergleiche."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -194,11 +187,9 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "III. Anteil von MINT an von Frauen gewählten Studienfächern",
+        title = "#Fächerwahl_Frauen: Wie unterscheidet sich die Fächerwahl von Frauen und Männern?",
         width = 12,
-        p("Hier können Sie sich anschauen, wie hoch der Frauen- und Männeranteil unter
-        Studierenden und
-          Studienanfänger*innen in MINT- und nicht-MINT-Fächern ist."),
+        p("Hier xxx"),
         tabsetPanel(type = "tabs",
                     tabPanel("Erstsemester und Studierende", br(),
 
