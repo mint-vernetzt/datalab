@@ -27,16 +27,210 @@ mod_kontakt_server <- function(id){
 mod_kontakt_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+    # Kontakt-Banner
+
     fluidRow(
       shinydashboard::box(
         width = 12,
-        tags$h2("Kontakt"),
-        p(style = "text-align: justify; font-size = 16px",
-          "lorem ipsum"),
+        img(src='www/BMBF-Logo.jpg',
+            class = "img-responsive",
+            height = "150px", width = "150px",
+            alt = "Logo BMBF",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        ))),
 
-      )))
+
+    fluidRow(
+      shinydashboard::box(
+        title = "Über das MINT-DataLab",
+        width = 12,
+        column(width = 9,
+
+               p(style = "text-align: justify; font-size = 16px",
+                 "Im MINT-DataLab präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
+                 Ausbildung und Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
+                für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver Diagramme einen intuitiven und informativen Zugang zu gewähren."
+               ),
+               p(style = "text-align: justify; font-size = 16px",
+                 "Das MINT-DataLab ist ein Angebot aus dem Projekt ", span(tags$b(span("MINTvernetzt", style = "color:#b16fab")), "."
+               )),
+
+               p(style = "text-align: justify; font-size = 16px",
+                   "Die MINT-Vernetzungsstelle, kurz MINTvernetzt, ist die Service- und Anlaufstelle für MINT-Akteur:innen in Deutschlanddas und das
+                      Dach für die außerschulische MINT-Bildung in Deutschland.
+                  MINTvernetzt wird vom Bundesministerium für Bildung und Forschung gefördert und von Mitarbeitenden der Körber-Stiftung, der matrix gGmbH,
+                  dem Nationalen MINTForum e.V., dem Stifterverband und der Universität Regensburg als Verbund gemeinsam umgesetzt."
+                 )),
+
+      # column(width = 3,
+      #          img(src='www/BMBF-Logo.jpg',
+      #              class = "img-responsive",
+      #              height = "150px", width = "150px",
+      #              alt = "Logo BMBF",
+      #              style="display: block; margin-left: auto; margin-right: auto;"
+      #          ))
+      )),
+
+
+
+    fluidRow(
+      shinydashboard::box(
+        width = 12,
+        title = "Kontakt & Feedback",
+        p(style = "text-align: justify; font-size = 16px",
+          "Das MINT-DataLab wird in den nächsten Jahren schrittweise weiterentwickelt.
+          Die Wünsche und Bedarfe unserer Zielgruppen werden über direkten Austausch,
+          eine fortlaufende Umfrage und verschiedene Veranstaltungsformate kontinuierlich erfasst und bestmöglich berücksichtigt.",
+          br(),
+          br(),
+          "Ansprachpartnerin für dieses Projekt ist Antonia Kröger."),
+
+          p(style = "text-align: justify; font-size = 16px",
+            span("Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject=MINT-Datalab", "per Email"),"oder über unsere kurze",
+                 tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Umfrage", target="_blank"), "!"
+                 )
+          )
+        )),
+
+    fluidRow(
+      shinydashboard::box(
+        title = "Datenpool und Quellen",
+        width = 12,
+        p(style = "text-align: justify; font-size = 16px",
+          "Ziel dieses Projektes ist es, die vorhandenen Statistiken über MINT in Deutschland in einem Datenpool zu bündeln
+          und über das MINT-DataLab zur weiteren Nutzung zur Verfügung zu stellen."),
+
+        p(style = "text-align: justify; font-size = 16px",
+          span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
+                         Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
+                         der Zeit integriert.")
+        ),
+
+        p(style = "text-align: justify; font-size = 16px",
+          tags$ul(
+            tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Statisitisches Bundesamt", target="_blank"), " : Zahlen zum Studium"),
+            tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Kultusministerkonferenz", target="_blank"), " : Zahlen zur Schulbildung"),
+            tags$li(tags$a(href="https://statistik.arbeitsagentur.de/DE/Home/home_node.html;jsessionid=B2B7423A23D5B6A5A4C301096D0ABDAB", "Bundesagentur für Arbeit", target="_blank"), " : Arbeitsmarktdaten")
+          ))
+      )),
+
+    # Fußzeile
+
+    fluidRow(
+      shinydashboard::box(
+        width = 12,
+        column(width = 2,
+               img(src='www/BMBF-Logo.jpg',
+                   class = "img-responsive",
+                   height = "150px", width = "150px",
+                   alt = "Logo BMBF",
+                   style="display: block; margin-left: auto; margin-right: auto;"
+               )),
+
+        column(width = 2, p(style = "text-align: justify; font-size = 16px",
+               " Impressum (Link)"
+               )),
+
+        column(width = 2, p(style = "text-align: justify; font-size = 16px",
+              " Datenschutz (Link)"
+        )),
+
+        column(width = 2, p(style = "text-align: justify; font-size = 16px",
+               " Kontakt (Link)"
+        )),
+
+        column(width = 2,
+                p(style = "text-align: justify; font-size = 16px",
+                "Copyright © 2022. Alle Rechte vorbehalten Stifterverband xxx "
+               )),
+
+      column(width = 2,
+               img(src='www/mint_logo_gross.jpg',
+                   class = "img-responsive",
+                   height = "150px", width = "150px",
+                   alt = "Logo BMBF",
+                   style="display: block; margin-left: auto; margin-right: auto;"
+               ))
+      ))
+
+
+
+    # fluidRow(
+    #   shinydashboard::box(
+    #     title = "Hinweise",
+    #     width = 12,
+    #     # p(style = "text-align: justify; font-size = 16px","Test"),
+    #
+    #     p(style = "text-align: justify; font-size = 16px",
+    #       tags$ul(
+    #         tags$li(tags$a(href="https://informatik-monitor.de/", "Informatik-Monitor", target="_blank"), " : Daten Zum Status von Informatik als Pflichtfach"),
+    #         tags$li(tags$a(href="https://www.iqb.hu-berlin.de/bt/BT2018/", "IQB-Bildungstrend 2018", target="_blank"), " : Erhebung und Vergelich von Kompetenzen in Mathe und Naturwissenschaften von Schülern "),
+    #         tags$li("")
+    #       )
+    #     )
+    #
+    #   )),
+
+
+    # fluidRow(
+    #   shinydashboard::box(
+    #     title = "Über das Projekt MINTvernetzt",
+    #     width = 12,
+    #     column(width = 9,
+    #            p(style = "text-align: justify; font-size = 16px",
+    #              span(tags$b(span("MINTvernetzt: Die Service- und Anlaufstelle für MINT-Akteur:innen in Deutschland", style = "color:#b16fab")),br(),
+    #                   "Die MINT-Vernetzungsstelle, kurz MINTvernetzt, ist das Dach für die außerschulische MINT-Bildung in Deutschland.
+    #               MINTvernetzt wird vom Bundesministerium für Bildung und Forschung gefördert und von Mitarbeitenden der Körber-Stiftung, der matrix gGmbH,
+    #               dem Nationalen MINTForum e.V., dem Stifterverband und der Universität Regensburg als Verbund gemeinsam umgesetzt."))),
+    #     column(width = 3,
+    #            img(src='www/BMBF-Logo.jpg',
+    #                class = "img-responsive",
+    #                height = "150px", width = "150px",
+    #                alt = "Logo BMBF",
+    #                style="display: block; margin-left: auto; margin-right: auto;"
+    #            ))
+    #   )
+    # ) #Row zu
+
+    ) #tagList zu
 
 }
+
+# fluidRow(
+# shinydashboard::box(
+#   #title = span("Willkommen im MINT-DataLab von MINTvernetzt", style = "color:#154194; font-size: 50px"),
+#   width = 12,
+#   column(width = 9,
+#          tags$h2("Infos xx"),
+#          #tags$h1("Willkommen im MINT-DataLab"),
+#          #p(style = "color:#154194; font-size: 50px", "Willkommen im MINT-DataLab"),
+#          p(style = "text-align: justify; font-size = 16px",
+#            "Im MINT-DataLab zeigen wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
+#                     Ausbildung und Arbeitsmarkt in Deutschland."
+#          ),
+#
+#          p(style = "text-align: justify; font-size = 16px",
+#            span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
+#                 " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
+#          ),
+#
+#   ),
+#   #solidHeader = TRUE,
+#   #collapsible = FALSE,
+#   #br(),
+#   column(width = 3, href = "https://mint-vernetzt.de/", rel="noopener", target="_blank",
+#          img(src='www/mint_logo_gross.jpg',
+#              class = "img-responsive",
+#              height = "180px", width = "180px",
+#              alt = "Logo MINT",
+#              style="display: block; margin-left: auto; margin-right: auto;"
+#
+#          ))
+# ))
+
+
+
 
 
 

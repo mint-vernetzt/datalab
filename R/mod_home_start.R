@@ -10,44 +10,36 @@
 mod_home_start_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fluidRow(
-      shinydashboard::box(
-        #title = span("Willkommen im MINT-DataLab von MINTvernetzt", style = "color:#154194; font-size: 50px"),
-        width = 12,
-        column(width = 9,
-               tags$h1("WILLKOMMEN IM MINT-DATALAB"),
-               #tags$h1("Willkommen im MINT-DataLab"),
-               #p(style = "color:#154194; font-size: 50px", "Willkommen im MINT-DataLab"),
-                  p(style = "text-align: justify; font-size = 16px",
-                    "Im MINT-DataLab zeigen wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
-                    Ausbildung und Arbeitsmarkt in Deutschland."
-                    ),
-                                   p(style = "text-align: justify; font-size = 16px",
-                    span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
-                         Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
-                         der Zeit integriert. (Weitere Infos unter: Quellen & Hinweise)")
-                    ),
-               p(style = "text-align: justify; font-size = 16px",
-                 span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
-                 " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
-               ),
-                   p(style = "text-align: justify; font-size = 16px",
-                     span("Wir freuen uns über ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject=MINT-Datalab", "Feedback"),"!")
-                   ),
-               ),
-        #solidHeader = TRUE,
-        #collapsible = FALSE,
-        #br(),
-        column(width = 3, href = "https://mint-vernetzt.de/", rel="noopener", target="_blank",
-               img(src='www/mint_logo_gross.jpg',
-                   class = "img-responsive",
-                   height = "180px", width = "180px",
-                   alt = "Logo MINT",
-                   style="display: block; margin-left: auto; margin-right: auto;"
 
-             ))
-             )
-    ),
+    # Start-Banner
+
+      fluidRow(
+        shinydashboard::box(
+          width = 12,
+          img(src='www/BMBF-Logo.jpg',
+              class = "img-responsive",
+              height = "150px", width = "150px",
+              alt = "Logo BMBF",
+              style="display: block; margin-left: auto; margin-right: auto;"
+          ))),
+
+
+      fluidRow(
+       shinydashboard::box(
+        title = "Die wichtigsten Zahlen auf einen Blick",
+        width = 12,
+       p(style = "text-align: justify; font-size = 16px",
+          span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
+               " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
+        ),
+        p(style = "text-align: justify; font-size = 16px",
+          "Erklärvideo xxx")
+
+
+        )),
+
+
+
     fluidRow(
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
@@ -115,24 +107,8 @@ mod_home_start_ui <- function(id){
         )
       )
   ),
-  fluidRow(
-    shinydashboard::box(
-      #title = " ",
-      width = 12,
-      column(width = 9,
-      p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("MINTvernetzt: Die Service- und Anlaufstelle für MINT-Akteur:innen in Deutschland", style = "color:#b16fab")),br(),
-             "Die MINT-Vernetzungsstelle, kurz MINTvernetzt, ist das Dach für die außerschulische MINT-Bildung in Deutschland.
-                  MINTvernetzt wird vom Bundesministerium für Bildung und Forschung gefördert und von Mitarbeitenden der Körber-Stiftung, der matrix gGmbH,
-                  dem Nationalen MINTForum e.V., dem Stifterverband und der Universität Regensburg als Verbund gemeinsam umgesetzt."))),
-          column(width = 3,
-             img(src='www/BMBF-Logo.jpg',
-                 class = "img-responsive",
-                 height = "150px", width = "150px",
-                 alt = "Logo BMBF",
-                 style="display: block; margin-left: auto; margin-right: auto;"
-             ))
-    )))
+
+  )
 }
 
 #' home_start Server Functions
@@ -176,3 +152,60 @@ mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r
 
 ## To be copied in the server
 # mod_home_start_server("home_start_1")
+
+
+
+
+
+
+
+# Alte Start-Box
+
+
+# fluidRow(
+#   shinydashboard::box(
+#     #title = span("Willkommen im MINT-DataLab von MINTvernetzt", style = "color:#154194; font-size: 50px"),
+#     width = 12,
+#     column(width = 9,
+#            tags$h1("WILLKOMMEN IM MINT-DATALAB"),
+#            #tags$h1("Willkommen im MINT-DataLab"),
+#            #p(style = "color:#154194; font-size: 50px", "Willkommen im MINT-DataLab"),
+#            p(style = "text-align: justify; font-size = 16px",
+#              "Im MINT-DataLab zeigen wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
+#                     Ausbildung und Arbeitsmarkt in Deutschland."
+#            ),
+#            p(style = "text-align: justify; font-size = 16px",
+#              span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
+#                          Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
+#                          der Zeit integriert. (Weitere Infos unter: Quellen & Hinweise)")
+#            ),
+#
+#            p(style = "text-align: justify; font-size = 16px",
+#              span("Wir freuen uns über ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject=MINT-Datalab", "Feedback"),"!")
+#            ),
+#     ),
+#     #solidHeader = TRUE,
+#     #collapsible = FALSE,
+#     #br(),
+#     column(width = 3, href = "https://mint-vernetzt.de/", rel="noopener", target="_blank",
+#            img(src='www/mint_logo_gross.jpg',
+#                class = "img-responsive",
+#                height = "180px", width = "180px",
+#                alt = "Logo MINT",
+#                style="display: block; margin-left: auto; margin-right: auto;"
+#
+#            ))
+#   )
+# )
+
+
+
+
+
+
+
+
+
+
+
+
