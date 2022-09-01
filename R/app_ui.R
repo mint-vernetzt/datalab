@@ -32,8 +32,8 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Studium", icon = shiny::icon("university"), tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf", icon = shiny::icon("building"), tabName = "beruf"),
-          shinydashboard::menuItem("Quellen & Hinweise", icon = shiny::icon("book"), tabName = "quellen"),
-          shinydashboard::menuItem("Kontakt & Feedback", icon = shiny::icon("mail-bulk"), tabName = "kontakt"),
+          # shinydashboard::menuItem("Quellen & Hinweise", icon = shiny::icon("book"), tabName = "quellen"),
+          shinydashboard::menuItem("Kontakt", icon = shiny::icon("mail-bulk"), tabName = "kontakt"),
           shinydashboard::menuItem("Impressum", icon = shiny::icon("address-card"), tabName = "impressum")
 
         )
@@ -46,7 +46,7 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
           # shinydashboard::tabItem(tabName ="ausbildung", mod_ausbildung_ui("ausbildung_ui_1")),
           shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
-          shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
+          # shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
           shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
           shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1"))
         )
