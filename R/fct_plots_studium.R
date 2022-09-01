@@ -633,7 +633,7 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
 
   # plot
   ggplot2::ggplot(df, ggplot2::aes(y=indikator, x=proportion, fill = fachbereich)) +
-    ggplot2::geom_bar(stat="identity", position = "dodge") +
+    ggplot2::geom_bar(stat="identity", position = "stack") +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%"), vjust= 0.5, hjust = -0.5),
                        position=ggplot2::position_dodge(width=1),
                        fontface = "bold") +
@@ -644,7 +644,7 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
     ggplot2::xlab("") + ggplot2::ylab("Anteil") +
     ggplot2::scale_fill_manual(values = c("#efe8e6", "#b16fab")) +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Frauenanteil in MINT im Vergleich in ", timerange,
+                                 "Anteile von MINT nach Studierendengruppen (", timerange, ")",
                                  "<br><br><br>"),
                   fill = "") +
     ggplot2::scale_x_continuous(limits = c(0,100), labels = function(x) paste0(x, "%"))
@@ -2163,7 +2163,7 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil von Studentinnen im Verlauf"),
+    highcharter::hc_title(text = paste0("Weibliche Studierende: Anteil MINT-Fächer"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2305,7 +2305,7 @@ studienfaecher_ranking <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Studientinnen als Studienanfängerinnen oder Studierende in ",timerange,
+                                 "Weibliche Studierende: Anteil 'MINTlerinnen' ",timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
