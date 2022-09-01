@@ -15,9 +15,21 @@ tab1_name <- "Vergleich"
 mod_studium_studienzahl_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+    # Banner
     fluidRow(
+      shinydashboard::box(
+        width = 12,
+        img(src='www/Banner_Studium.jpg',
+            class = "img-responsive",
+            #height = "150px", width = "150px",
+            alt = "Banner Studium",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        ))),
+
+     fluidRow(
     shinydashboard::box(
-      tags$h2("Studium und MINT"),
+      #tags$h2("Studium und MINT"),
       width = 12,
       p(style = "text-align: justify; font-size = 16px",
         "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Hochschule."),

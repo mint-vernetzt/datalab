@@ -10,10 +10,22 @@
 mod_schule_kurse_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+    # Banner
     fluidRow(
       shinydashboard::box(
         width = 12,
-        tags$h2("MINT in der Schule"),
+        img(src='www/Banner_Schule.jpg',
+            class = "img-responsive",
+            #height = "150px", width = "150px",
+            alt = "Banner Schule",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        ))),
+
+    fluidRow(
+      shinydashboard::box(
+        width = 12,
+        #tags$h2("MINT in der Schule"),
         p(style = "text-align: justify; font-size = 16px",
           "Auf dieser Seite zeigen wir, wie hoch der Anteil von MINT-Fächern gemessen an allen gewählten Grund- und Leistungskursen ist.
           Je nach Bundesland wählen alle Oberstufen-Schülerinnen und -Schüler mehrere Grund- und Leistungskurse.
