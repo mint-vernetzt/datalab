@@ -21,10 +21,13 @@ mod_home_start_ui <- function(id){
               #height = "150px", width = "150px",
               alt = "Banner Start",
               style="display: block; margin-left: auto; margin-right: auto;"
-          ),
+          ))),
 
+
+      fluidRow(
+       shinydashboard::box(
         title = "Die wichtigsten Zahlen auf einen Blick",
-        #width = 12,
+        width = 12,
        p(style = "text-align: justify; font-size = 16px",
           span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
                " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
