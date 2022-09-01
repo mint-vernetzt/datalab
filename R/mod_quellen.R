@@ -50,7 +50,9 @@ mod_quellen_ui <- function(id){
           )
         )
 
-      )))
+      ))
+
+    )
 
 }
 
