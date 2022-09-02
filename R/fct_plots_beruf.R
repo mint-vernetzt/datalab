@@ -1833,6 +1833,10 @@ arbeitsmarkt_anforderungen <- function(df,r) {
                                                              'Experte',
                                                              'Andere Berufe')))]
 
+  df_employed1 <- c("MINT"=df_employed[1]+df_employed[2]+df_employed[3], "Andere Fachbereiche"= df_employed[4]) # kab
+
+  attr(x = df_employed1, which = "names") <- c("MINT", "Andere Fachbereiche")
+
   # trainee
   df_trainee <- df %>% dplyr::filter(indikator == "Auszubildende")
 
@@ -1843,8 +1847,12 @@ arbeitsmarkt_anforderungen <- function(df,r) {
                                                                    'Experte',
                                                                    'Andere Berufe')))]
 
+  df_trainee1 <- c("MINT"=df_trainee[1]+df_trainee[2]+df_trainee[3], "Andere Fachbereiche"= df_trainee[4]) # kab
+
+  attr(x = df_trainee1, which = "names") <- c("MINT", "Andere Fachbereiche")
+
   # create plot objects for waffle charts
-  waffle_employed <- waffle::waffle(df_employed, keep = FALSE) +
+  waffle_employed <- waffle::waffle(df_employed1, keep = FALSE) +
     ggplot2::labs(
       fill = "",
       title = paste0("<span style='color:black;'>", "Beschäftigte</span> <br>")) +
@@ -1854,24 +1862,25 @@ arbeitsmarkt_anforderungen <- function(df,r) {
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                    legend.position = "bottom") +
     ggplot2::scale_fill_manual(
-      values =  c("#ee7775",
-                  "#fcc433",
-                  "#00a87a",
+      values =  c("#b16fab",
+                  # "#fcc433",
+                  # "#00a87a",
                   '#b1b5c3'),
-      limits = c('Fachkraft', 'Spezialist',
-                 'Experte',
-                 'Andere Berufe'),
+      limits = c("MINT",
+        # 'Fachkraft', 'Spezialist',
+        #          'Experte',
+                 'Andere Fachbereiche'),
       na.value="#b1b5c3",
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("MINT-Fachkraft",", ",df_employed[1], "%"),
-        paste0("MINT-Spezialist:in",", ",df_employed[2], "%"),
-        paste0("MINT-Expert:in",", ",df_employed[3], "%"),
-        paste0("Andere Berufe",", ",df_employed[4], "%"))) +
+        paste0("MINT",", ",df_employed1[1], "%"),
+        # paste0("MINT-Spezialist:in",", ",df_employed[2], "%"),
+        # paste0("MINT-Expert:in",", ",df_employed[3], "%"),
+        paste0("Andere Fachbereche",", ",df_employed1[2], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
-  waffle_trainee <- waffle::waffle(df_trainee, keep = FALSE) +
+  waffle_trainee <- waffle::waffle(df_trainee1, keep = FALSE) +
     ggplot2::labs(
       fill = "",
       title = paste0("<span style='color:black;'>", "Auszubildende</span> <br>")) +
@@ -1882,47 +1891,48 @@ arbeitsmarkt_anforderungen <- function(df,r) {
                    legend.position = "bottom")
 
   # account for the possability that female has 0% share of "Experte
-  if (df_trainee[[3]] == 0) {
+  # if (df_trainee[[3]] == 0) {
 
     waffle_trainee <- waffle_trainee +
       ggplot2::scale_fill_manual(
-        values =  c("#ee7775",
-                    "#fcc433",
-                    # "#00a87a",
+        values =  c("#b16fab",
+                    # "#fcc433",
+                    # # "#00a87a",
                     '#b1b5c3'),
-        limits = c('Fachkraft',
-                   'Spezialist',
-                   'Andere Berufe'),
+        limits = c("MINT",
+          # 'Fachkraft',
+          #          'Spezialist',
+                   'Andere Fachbereiche'),
         guide = ggplot2::guide_legend(reverse = TRUE),
         na.value="#b1b5c3",
         labels = c(
-          paste0("MINT-Fachkraft",", ",df_trainee[1], "%"),
-          paste0("MINT-Spezialist:in",", ",df_trainee[2], "%"),
-          paste0("MINT-Expert:in",", ",df_trainee[3], "%"),
-          paste0("Andere Berufe",", ",df_trainee[4], "%"))) +
+          paste0("MINT",", ",df_trainee1[1], "%"),
+          # paste0("MINT-Spezialist:in",", ",df_trainee[2], "%"),
+          # paste0("MINT-Expert:in",", ",df_trainee[3], "%"),
+          paste0("Andere Fachbereiche",", ",df_trainee1[2], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
-  } else{
-
-    waffle_trainee <- waffle_trainee +
-      ggplot2::scale_fill_manual(
-        values =  c("#ee7775",
-                    "#fcc433",
-                    "#00a87a",
-                    '#b1b5c3'),
-        limits = c('Fachkraft', 'Spezialist',
-                   'Experte',
-                   'Andere Berufe'),
-        na.value="#b1b5c3",
-        guide = ggplot2::guide_legend(reverse = TRUE),
-        labels = c(
-          paste0("MINT-Fachkraft",", ",df_trainee[1], "%"),
-          paste0("MINT-Spezialist:in",", ",df_trainee[2], "%"),
-          paste0("MINT-Expert:in",", ",df_trainee[3], "%"),
-          paste0("Andere Berufe",", ",df_trainee[4], "%"))) +
-      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
-
-  }
+  # } else{
+  #
+  #   waffle_trainee <- waffle_trainee +
+  #     ggplot2::scale_fill_manual(
+  #       values =  c("#ee7775",
+  #                   "#fcc433",
+  #                   "#00a87a",
+  #                   '#b1b5c3'),
+  #       limits = c('Fachkraft', 'Spezialist',
+  #                  'Experte',
+  #                  'Andere Berufe'),
+  #       na.value="#b1b5c3",
+  #       guide = ggplot2::guide_legend(reverse = TRUE),
+  #       labels = c(
+  #         paste0("MINT-Fachkraft",", ",df_trainee[1], "%"),
+  #         paste0("MINT-Spezialist:in",", ",df_trainee[2], "%"),
+  #         paste0("MINT-Expert:in",", ",df_trainee[3], "%"),
+  #         paste0("Andere Berufe",", ",df_trainee[4], "%"))) +
+  #     ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+  #
+  # }
 
   ggpubr::ggarrange(waffle_trainee, NULL ,waffle_employed, widths = c(1, 0.1, 1), nrow=1)
 
