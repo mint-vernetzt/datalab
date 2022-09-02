@@ -28,7 +28,7 @@ mod_studium_studienzahl_einstieg_ui <- function(id){
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("hochschulform_studierende_einstieg_1"),
-                       choices = c("Insgesamt"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
+                       choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
                      )),
     conditionalPanel(condition = "input.nurLehramt_studierende_einstieg != false",
                      ns = ns,
