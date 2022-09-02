@@ -216,7 +216,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   plot_anfeanger_mint <- highcharter::hchart(df_anfaenger_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("MINT-Fächer (Studienanfänger:innen*innen) in ", timerange),
+    highcharter::hc_title(text = paste0("MINT-Fächer (Studienanfänger:innen) in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%

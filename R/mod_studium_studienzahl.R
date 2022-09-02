@@ -32,18 +32,21 @@ mod_studium_studienzahl_ui <- function(id){
       #tags$h2("Studium und MINT"),
       width = 12,
       p(style = "text-align: justify; font-size = 16px",
-        "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Hochschule."),
+        ""),
       p(style = "text-align: justify; font-size = 16px",
         span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis 2021, auf Anfrage, eigene Berechnungen.")),
       p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("Methodische Hinweise: Die aktuellen Berechnungen erfolgen auf Basis der Studierendenzahlen an allen deutschen Hochschulen.", style = "color:#b16fab")),
-             " "))
+        span(tags$b(span("Methodische Hinweise: ", style = "color:#b16fab")),
+             "Die aktuellen Berechnungen erfolgen auf Basis der Studierendenzahlen an allen deutschen Hochschulen. "))
     )),
     fluidRow(
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?",
         width = 12,
-        p(" "),
+        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Fächern ingesamt in der Oberstufe in Deutschland.",
+          br(),
+          br(),
+          "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 37 Prozent der Studienanfänger:innen ein MINT-Fach studieren, bei den Studierenden sind es in 2020 ebenfalls 37 Prozent."),
         tabsetPanel(type = "tabs",
                     tabPanel(tab1_name[1], br(),
 
@@ -98,7 +101,7 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "#MINT_im_Detail: Vergleich der einzelnen MINT-Fächer und nach Bundesländern",
         width = 12,
-        p("Hier zeigen wir die Anteile einzelner MINT-Fächer sowie die Unterschiede in den Bundesländern."),
+
         tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich", br(),
@@ -237,71 +240,69 @@ mod_studium_studienzahl_ui <- function(id){
                                  plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender"))
                                )
                     )
-        ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Nicht zuordbar",
-        width = 12,
-        p("Hier finden Sie den Anteil an Belegungen von Frauen und Männern in MINT-Fächern für die Bundesländer im Vergleich. "),
-        tabsetPanel(type = "tabs",
-                    tabPanel("Karte", br(),
+        ))))
+    # fluidRow(
+    #   shinydashboard::box(
+    #     title = "Nicht zuordbar",
+    #     width = 12,
+    #     p("Hier finden Sie den Anteil an Belegungen von Frauen und Männern in MINT-Fächern für die Bundesländer im Vergleich. "),
+    #     tabsetPanel(type = "tabs",
+    #                 tabPanel("Karte", br(),
+    #
+    #                          shiny::sidebarPanel(
+    #                            mod_studium_studienzahl_bl_map_gender_ui("mod_studium_studienzahl_bl_map_gender")
+    #                          ),
+    #                          shiny::mainPanel(
+    #                            htmlOutput(ns("plot_studienzahl_map_gender"))
+    #                          )
+    #                 ),
+    #                 tabPanel("Vergleich (Bundesländer)", br(),
+    #
+    #                          shiny::sidebarPanel(
+    #                            mod_studium_studienzahl_bl_verlauf_gender_ui("mod_studium_studienzahl_bl_verlauf_gender")
+    #                          ),
+    #                          shiny::mainPanel(
+    #                            highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf_gender"))
+    #                          )
+    #                 ),
+    #
+    #                 tabPanel("Überblick (Bundsländer)", br(),
+    #
+    #                          shiny::sidebarPanel(
+    #                            mod_studium_studienzahl_bl_vergleich_gender_ui("mod_studium_studienzahl_bl_vergleich_gender_ui")
+    #                          ),
+    #                          shiny::mainPanel(
+    #                            plotOutput(ns("plot_ranking_studienzahl_bl_vergleich_gender"))
+    #                          )
+    #                 ),
+    #
+    #
+    #
+    #                 # zeigt Anteile MINT und nicht Gender
+    #
+    #                 tabPanel("Überblick (doppelt)", br(),
+    #
+    #                          shiny::sidebarPanel(
+    #                            tags$style(".well {background-color:#FFFFFF;}"),
+    #                            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+    #                            mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1")),
+    #                          shiny::mainPanel(
+    #                            plotOutput(ns("plot_einstieg_comparison_gender")))
+    #
+    #                 ),
+    #
+    #
+    #     ))),
 
-                             shiny::sidebarPanel(
-                               mod_studium_studienzahl_bl_map_gender_ui("mod_studium_studienzahl_bl_map_gender")
-                             ),
-                             shiny::mainPanel(
-                               htmlOutput(ns("plot_studienzahl_map_gender"))
-                             )
-                    ),
-                    tabPanel("Vergleich (Bundesländer)", br(),
+    # fluidRow(
+    #   shinydashboard::box(
+    #     width = 12,
+    # p(style = "text-align: justify; font-size = 16px",
+    #   span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Hochschul-Statistiken des Statistischen Bundesamtes, 2021: auf Anfrage.")),
+    # p(style = "text-align: justify; font-size = 16px",
+    #   span(tags$b(span("Methodische Hinweise: ", style = "color:#b16fab")),
+    #        " "))
 
-                             shiny::sidebarPanel(
-                               mod_studium_studienzahl_bl_verlauf_gender_ui("mod_studium_studienzahl_bl_verlauf_gender")
-                             ),
-                             shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf_gender"))
-                             )
-                    ),
-
-                    tabPanel("Überblick (Bundsländer)", br(),
-
-                             shiny::sidebarPanel(
-                               mod_studium_studienzahl_bl_vergleich_gender_ui("mod_studium_studienzahl_bl_vergleich_gender_ui")
-                             ),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_ranking_studienzahl_bl_vergleich_gender"))
-                             )
-                    ),
-
-
-
-                    # zeigt Anteile MINT und nicht Gender
-
-                    tabPanel("Überblick (doppelt)", br(),
-
-                             shiny::sidebarPanel(
-                               tags$style(".well {background-color:#FFFFFF;}"),
-                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1")),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_einstieg_comparison_gender")))
-
-                    ),
-
-
-        ))),
-
-    fluidRow(
-      shinydashboard::box(
-        width = 12,
-    p(style = "text-align: justify; font-size = 16px",
-      span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Hochschul-Statistiken des Statistischen Bundesamtes, 2021: auf Anfrage.")),
-    p(style = "text-align: justify; font-size = 16px",
-      span(tags$b(span("Methodische Hinweise: ", style = "color:#b16fab")),
-           " "))
-      )
-    )
-  )
 }
 
 #' studium_studienzahl Server Functions
