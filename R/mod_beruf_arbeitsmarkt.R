@@ -221,25 +221,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_gender_verlauf"))
                              )
                     ),
-                    tabPanel("Überblick (Anforderungsniveau)", br(),
 
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               plotOutput(ns("plot_arbeitsmarkt_vergleich_gender"))
-                             )
-                    ),
-                    tabPanel("Vergleich (Beschäftigungsform)", br(),
-
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf_gender")))
-                             ),
                     tabPanel("Überblick (Bundesländer)", br(),
 
                                        shiny::sidebarPanel(
@@ -248,36 +230,56 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                        shiny::mainPanel(
                                          plotOutput(ns("plot_arbeitsmarkt_bl_gender_vergleich")))
                     )
-        ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "Reste",
-        width = 12,
-        p("Lorem ipsum dolor sit amet"),
-        tabsetPanel(type = "tabs",
-                    tabPanel("Überblick (Anforderungsniveau)", br(),
-
-                                      tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                      .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                                      shiny::sidebarPanel(
-                                        mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui_1")
-                                      ),
-                                      shiny::mainPanel(
-                                        plotOutput(ns("plot_arbeitsmarkt_vergleich"))
-                                      )
-                             ),
-                    tabPanel("Vergleich (Anforderungsniveaus)", br(),
-
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf"))
-                             )
-                    )
-
-    )
-  )))
+        )))
+    # ,
+    # fluidRow(
+    #   shinydashboard::box(
+    #     title = "Reste",
+    #     width = 12,
+    #     p("Lorem ipsum dolor sit amet"),
+    #     tabsetPanel(type = "tabs",
+    #                 tabPanel("Überblick (Anforderungsniveau)", br(),
+    #
+    #                                   tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+    #                                   .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+    #                                   shiny::sidebarPanel(
+    #                                     mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui_1")
+    #                                   ),
+    #                                   shiny::mainPanel(
+    #                                     plotOutput(ns("plot_arbeitsmarkt_vergleich"))
+    #                                   )
+    #                          ),
+    #                 tabPanel("Überblick (Anforderungsniveau)", br(),
+    #
+    #                          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+    #                          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+    #                          shiny::sidebarPanel(
+    #                            mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui_1")
+    #                          ),
+    #                          shiny::mainPanel(
+    #                            plotOutput(ns("plot_arbeitsmarkt_vergleich_gender"))
+    #                          )
+    #                 ),
+    #                 tabPanel("Vergleich (Beschäftigungsform)", br(),
+    #
+    #                          shiny::sidebarPanel(
+    #                            mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui_1")
+    #                          ),
+    #                          shiny::mainPanel(
+    #                            highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf_gender")))
+    #                 ),
+    #                 tabPanel("Vergleich (Anforderungsniveaus)", br(),
+    #
+    #                          shiny::sidebarPanel(
+    #                            mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui_1")
+    #                          ),
+    #                          shiny::mainPanel(
+    #                            highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf"))
+    #                          )
+    #                 )
+    #
+    # )
+  )
 }
 
 #' beruf_arbeitsmarkt Server Functions

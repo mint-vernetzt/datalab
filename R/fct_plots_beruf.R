@@ -361,7 +361,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_arbeitsmarkt_bl_gender
 
-  anforderung <- r$anforderungsniveau_arbeitsmarkt_bl_gender
+  #anforderung <- r$anforderungsniveau_arbeitsmarkt_bl_gender
 
   indikator_choice <- r$level_arbeitsmarkt_bl_gender
 
@@ -388,22 +388,22 @@ arbeitsmarkt_bl_gender <- function(df,r) {
                   wert_sum = "wert.y") %>%
     dplyr::select(-c("fachbereich.y", "anforderungsniveau.y")) %>%
     dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
-    dplyr::filter(anforderungsniveau == anforderung,
+    dplyr::filter(anforderungsniveau == "Gesamt",
                   fachbereich == "MINT")
 
 
   values_female <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
   values_male <- df %>% dplyr::filter(anzeige_geschlecht == "Männer")
 
-  if (anforderung == "Gesamt"){
-
-    title_help_sub <- " insgesamt"
-
-  } else {
-
-    title_help_sub <- paste0(" mit Anforderungsniveau ", anforderung)
-
-  }
+  # if (anforderung == "Gesamt"){
+  #
+  #   title_help_sub <- " insgesamt"
+  #
+  # } else {
+  #
+  #   title_help_sub <- paste0(" mit Anforderungsniveau ", anforderung)
+  #
+  # }
 
   highcharter::hw_grid(
     # plot
@@ -421,9 +421,11 @@ arbeitsmarkt_bl_gender <- function(df,r) {
         valueSuffix = "%"
       )
     ) %>%
-      highcharter::hc_colorAxis(min=0,minColor = "#C5C889",labels = list(format = "{text}%")) %>%
+      highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Weibliche ", indikator_choice, " in MINT-Berufen", title_help_sub),
+        text = paste0("Weibliche ", indikator_choice, " in MINT-Berufen"
+                      #, title_help_sub
+                      ),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -454,7 +456,9 @@ arbeitsmarkt_bl_gender <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Männliche ", indikator_choice, " in MINT-Berufen", title_help_sub),
+        text = paste0("Männliche ", indikator_choice, " in MINT-Berufen"
+                      #, title_help_sub
+                      ),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -950,7 +954,7 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_beruf_arbeitsmarkt_bl_gender_verlauf
 
-  anforderung <- r$anforderungsniveau_beruf_arbeitsmarkt_bl_gender_verlauf
+  #anforderung <- r$anforderungsniveau_beruf_arbeitsmarkt_bl_gender_verlauf
 
   indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_gender_verlauf
 
@@ -981,10 +985,10 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
                   wert_sum = "wert.y") %>%
     dplyr::select(-c("fachbereich.y", "anforderungsniveau.y")) %>%
     dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
-    dplyr::filter(anforderungsniveau == anforderung,
+    dplyr::filter(anforderungsniveau == "Gesamt",
                   fachbereich == "MINT")
 
-  df <- df %>% dplyr::filter(anforderungsniveau %in% anforderung)
+  df <- df %>% dplyr::filter(anforderungsniveau %in% "Gesamt")
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
 
@@ -993,15 +997,15 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
   # order years for plot
   df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
-  if (anforderung == "Gesamt"){
-
-    title_help <- " insgesamt"
-
-  } else {
-
-    title_help <- paste0(" mit Anforderungsniveau ", anforderung)
-
-  }
+  # if (anforderung == "Gesamt"){
+  #
+  #   title_help <- " insgesamt"
+  #
+  # } else {
+  #
+  #   title_help <- paste0(" mit Anforderungsniveau ", anforderung)
+  #
+  # }
 
   # plot
   highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = region)) %>%
@@ -1009,7 +1013,9 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Weibliche ", indikator_choice, " in MINT-Berufen",title_help),
+    highcharter::hc_title(text = paste0("Weibliche ", indikator_choice, " in MINT-Berufen"
+                                        #,title_help
+                                        ),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1043,7 +1049,7 @@ arbeitsmarkt_bl_gender_vergleich <- function(df, r) {
   # load UI inputs from reactive value
   timerange <- r$date_arbeitsmarkt_bl_gender_vergleich
 
-  anforderung <- r$anforderungsniveau_arbeitsmarkt_bl_gender_vergleich
+  #anforderung <- r$anforderungsniveau_arbeitsmarkt_bl_gender_vergleich
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
@@ -1065,10 +1071,10 @@ arbeitsmarkt_bl_gender_vergleich <- function(df, r) {
                   wert_sum = "wert.y") %>%
     dplyr::select(-c("fachbereich.y", "anforderungsniveau.y")) %>%
     dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
-    dplyr::filter(anforderungsniveau == anforderung,
+    dplyr::filter(anforderungsniveau == "Gesamt",
                   fachbereich == "MINT")
 
-  df <- df %>% dplyr::filter(anforderungsniveau == anforderung)
+  df <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
 
@@ -1089,15 +1095,15 @@ arbeitsmarkt_bl_gender_vergleich <- function(df, r) {
 
   df2$region <- factor(df2$region, levels = levels(df$region))
 
-  if (anforderung == "Gesamt"){
-
-    title_help <- " insgesamt"
-
-  } else {
-
-    title_help <- paste0(" mit Anforderungsniveau ", anforderung)
-
-  }
+  # if (anforderung == "Gesamt"){
+  #
+  #   title_help <- " insgesamt"
+  #
+  # } else {
+  #
+  #   title_help <- paste0(" mit Anforderungsniveau ", anforderung)
+  #
+  # }
 
   ggplot2::ggplot(df,
                   ggplot2::aes(y = region)) +
@@ -1119,7 +1125,9 @@ arbeitsmarkt_bl_gender_vergleich <- function(df, r) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Arbeitnehmerinnen in Ausbildung und Beschäftigung<br>", title_help, " in ",timerange,
+                                 "Relativer Anteil von Arbeitnehmerinnen in Ausbildung und Beschäftigung<br>"
+                                 #, title_help
+                                 , " in ",timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
@@ -1408,6 +1416,9 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
 
 arbeitsmarkt_anforderungen_gender <- function(df,r) {
 
+
+
+
   timerange <- r$date_arbeitsmarkt_anforderungen_gender
 
   indikator_choice <- r$level_arbeitsmarkt_anforderungen_gender
@@ -1449,7 +1460,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
 
 
   # male
-  df_male <- df %>% dplyr::filter(anzeige_geschlecht == "Männer")
+  df_male <<- df %>% dplyr::filter(anzeige_geschlecht == "Männer")
 
   df_male <- setNames(round_preserve_sum(as.numeric(df_male$proportion),0),
                       df_male$anforderungsniveau)
@@ -1457,6 +1468,8 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
   df_male <- df_male[order(factor(names(df_male), levels = c('Fachkraft', 'Spezialist',
                                                              'Experte',
                                                              'Andere Berufe')))]
+
+ # df_male <- df_male
 
   # female
   df_female <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
