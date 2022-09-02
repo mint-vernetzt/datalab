@@ -1416,7 +1416,7 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
 
 arbeitsmarkt_anforderungen_gender <- function(df,r) {
 
-  browser()
+
 
 
   timerange <- r$date_arbeitsmarkt_anforderungen_gender
