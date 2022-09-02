@@ -1824,7 +1824,7 @@ kurse_einstieg_comparison <- function(df,r) {
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT in der Fächerwahl in der Schule in Deutschland (", timerange),")",
+    highcharter::hc_title(text = paste0("Anteil von MINT in der Fächerwahl in der Schule in Deutschland (", timerange,")"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
