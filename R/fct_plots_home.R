@@ -683,12 +683,12 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
   df <- rbind(df, df_sub)
 
   df <- df %>% dplyr::filter(indikator %in% c("Leistungskurse",
-                                              "Studienanfänger", "Studierende",
+                                              "Studienanfänger:innen", "Studierende",
                                               "Auszubildende", "Beschäftigte"))
 
   # order
   df$indikator <- factor(df$indikator , levels=c("Leistungskurse",
-                                                 "Studienanfänger", "Studierende",
+                                                 "Studienanfänger:innen", "Studierende",
                                                  "Auszubildende", "Beschäftigte"))
 
 
@@ -737,7 +737,7 @@ home_stacked_comparison_mint <- function(df, r) {
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   df <- df %>% dplyr::filter(indikator %in% c("Leistungskurse",
-                                              "Studienanfänger", "Studierende",
+                                              "Studienanfänger:innen", "Studierende",
                                               "Auszubildende", "Beschäftigte"))
 
   # calculate proportions for MINT vs. Rest
@@ -752,7 +752,7 @@ home_stacked_comparison_mint <- function(df, r) {
 
   # order
   x <- ordered(factor(df$indikator), levels=c("Leistungskurse",
-                                              "Studienanfänger", "Studierende",
+                                              "Studienanfänger:innen", "Studierende",
                                               "Auszubildende", "Beschäftigte"))
 
   df <- df[order(x),]
