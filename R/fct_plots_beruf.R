@@ -1520,7 +1520,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
       # na.value="#b1b5c3",
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("MINT-Beschäftigte",", ",df_male1[1], "%"),
+        paste0("MINT",", ",df_male1[1], "%"),
         # paste0("MINT-Spezialist",", ",df_male[2], "%"),
         # paste0("MINT-Experte",", ",df_male[3], "%"),
         paste0("Andere Bereiche",", ",df_male1[2], "%"))) +
@@ -1553,7 +1553,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
         guide = ggplot2::guide_legend(reverse = TRUE),
         # na.value="#b1b5c3",
         labels = c(
-          paste0("MINT-Beschäftigte",", ",df_female1[1], "%"),
+          paste0("MINT",", ",df_female1[1], "%"),
           #paste0("MINT-Spezialistin",", ",df_female[2], "%"),
           # paste0("Experte",", ",df_female[3], "%"),
           paste0("Andere Fachbereiche",", ",df_female1[2], "%"))) +
