@@ -28,7 +28,7 @@ studienzahl_einstieg_pie <- function(df,r) {
   # aggregate MINT
   df2 <- calc_share_MINT(df[(df$indikator == "Studierende"), ])
 
-  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger"), ])
+  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger:innen"), ])
 
 
   df <- rbind(df2, df3)
@@ -48,7 +48,7 @@ studienzahl_einstieg_pie <- function(df,r) {
     # calculate proportions
     df_studierende <- share_pie(df_studierende)
 
-    df_anfaenger <- df %>% dplyr::filter(indikator == paste0("Studienanfänger", " (", df$hochschulform, ")"))
+    df_anfaenger <- df %>% dplyr::filter(indikator == paste0("Studienanfänger:innen", " (", df$hochschulform, ")"))
 
     # calculate proportions
     df_anfaenger <- share_pie(df_anfaenger)
@@ -66,7 +66,7 @@ studienzahl_einstieg_pie <- function(df,r) {
     # calculate proportions
     df_studierende <- share_pie(df_studierende)
 
-    df_anfaenger <- df %>% dplyr::filter(indikator == paste0("Studienanfänger", " (", "Lehramt, " ,df$hochschulform, ")"))
+    df_anfaenger <- df %>% dplyr::filter(indikator == paste0("Studienanfänger:innen", " (", "Lehramt, " ,df$hochschulform, ")"))
 
     # calculate proportions
     df_anfaenger <- share_pie(df_anfaenger)
@@ -191,13 +191,13 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
                                               grepl("Studierende", indikator))
 
   df_anfaenger_mint <- df %>% dplyr::filter(fachbereich == "MINT",
-                                              grepl("Studienanfänger", indikator))
+                                              grepl("Studienanfänger:innen", indikator))
 
   df_studierende_rest <- df %>% dplyr::filter(fachbereich == "andere Studiengänge",
                                               grepl("Studierende", indikator))
 
   df_anfaenger_rest <- df %>% dplyr::filter(fachbereich == "andere Studiengänge",
-                                              grepl("Studienanfänger", indikator))
+                                              grepl("Studienanfänger:innen", indikator))
 
   plot_studierende_mint <- highcharter::hchart(df_studierende_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
@@ -216,7 +216,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   plot_anfeanger_mint <- highcharter::hchart(df_anfaenger_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = proportion)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("MINT-Fächer (Studienanfänger*innen) in ", timerange),
+    highcharter::hc_title(text = paste0("MINT-Fächer (Studienanfänger:innen*innen) in ", timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -311,7 +311,7 @@ studienzahl_verlauf_single <- function(df,r) {
   # aggregate MINT
   df2 <- calc_share_MINT(df[(df$indikator == "Studierende"), ])
 
-  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger"), ])
+  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger:innen"), ])
 
 
   df <- rbind(df2, df3)
@@ -408,7 +408,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
   # aggregate MINT
   df2 <- calc_share_MINT(df[(df$indikator == "Studierende"), ])
 
-  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger"), ])
+  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger:innen"), ])
 
   df2 <- calc_share_male(df2, "box_1")
 
@@ -507,7 +507,7 @@ studienzahl_einstieg_comparison <- function(df,r) {
   # aggregate MINT
   df2 <- calc_share_MINT(df[(df$indikator == "Studierende"), ])
 
-  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger"), ])
+  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger:innen"), ])
 
 
   df <- rbind(df2, df3)
@@ -596,7 +596,7 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
   # aggregate MINT
   df2 <- calc_share_MINT(df[(df$indikator == "Studierende"), ])
 
-  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger"), ])
+  df3 <- calc_share_MINT(df[(df$indikator == "Studienanfänger:innen"), ])
 
 
   df <- rbind(df2, df3)
@@ -761,7 +761,7 @@ studienzahl_waffle_mint <- function(df,r) {
 
 
 
-  df_anfaenger <- df %>% dplyr::filter(indikator == "Studienanfänger")
+  df_anfaenger <- df %>% dplyr::filter(indikator == "Studienanfänger:innen")
 
   x_studienanfaenger <- calc_share_waffle(df_anfaenger)
 
@@ -882,7 +882,7 @@ studienzahl_waffle_alternative <- function(df,r) {
   # calculate proportions
   x_studierende <- prep_studium_proportion(df[df$indikator == "Studierende",])
 
-  x_studienanfaenger <- prep_studium_proportion(df[df$indikator == "Studienanfänger",])
+  x_studienanfaenger <- prep_studium_proportion(df[df$indikator == "Studienanfänger:innen",])
 
   # set order
   x_studierende <- x_studierende[order(factor(names(x_studierende), levels = c('Frauen (Ingenieur)', 'Frauen (Mathe)',
@@ -922,7 +922,7 @@ studienzahl_waffle_alternative <- function(df,r) {
   waffle_studienanfaenger_female <- waffle::waffle(x_studienanfaenger, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "**Studienanfänger**</span>")) +
+      title = paste0("<span style='color:black;'>", "**Studienanfänger:innen**</span>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -1150,10 +1150,10 @@ studienzahl_map <- function(df,r) {
 
   values_studierende$region <- df[(df$anzeige_geschlecht == "Frauen" & df$indikator == "Studierende"), "region"][[1]]
 
-  values_studienanfaenger <- (df[(df$anzeige_geschlecht == "Frauen" & df$indikator == "Studienanfänger"),
-                            "wert"]/df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Studienanfänger"), "wert"])*100
+  values_studienanfaenger <- (df[(df$anzeige_geschlecht == "Frauen" & df$indikator == "Studienanfänger:innen"),
+                            "wert"]/df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Studienanfänger:innen"), "wert"])*100
 
-  values_studienanfaenger$region <- df[(df$anzeige_geschlecht == "Frauen" & df$indikator == "Studienanfänger"), "region"][[1]]
+  values_studienanfaenger$region <- df[(df$anzeige_geschlecht == "Frauen" & df$indikator == "Studienanfänger:innen"), "region"][[1]]
 
 
   if(lehramt == FALSE){
@@ -1237,7 +1237,7 @@ studienzahl_map <- function(df,r) {
       )
     ) %>%
       highcharter::hc_title(
-        text = paste0("Anteil der Studienanfängerinnen <br> ",title_help ," an MINT in ", timerange),
+        text = paste0("Anteil der Studienanfänger:inneninnen <br> ",title_help ," an MINT in ", timerange),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1406,7 +1406,7 @@ studienzahl_verlauf <- function(df,r) {
 
   }else{
 
-    title_help <- paste0("Studienanfängerinnen ", title_help_sub, title_help_sub_sub)
+    title_help <- paste0("Studienanfänger:inneninnen ", title_help_sub, title_help_sub_sub)
 
   }
 
@@ -2218,8 +2218,8 @@ studienfaecher_ranking <- function(df,r, type) {
   df <- df %>% dplyr::filter(region %in% states)
 
   df <- df %>% dplyr::mutate(indikator = replace(indikator,
-                                                 indikator == "Studienanfänger",
-                                                   "Studienanfängerinnen"))
+                                                 indikator == "Studienanfänger:innen",
+                                                   "Studienanfänger:inneninnen"))
 
   if(lehramt == FALSE){
 
@@ -2280,7 +2280,7 @@ studienfaecher_ranking <- function(df,r, type) {
   df <- df %>% dplyr::select(-hochschulform, -region, -anzeige_geschlecht)
 
   df2 <- tidyr::gather(df, group, value, -fachbereich) %>%
-    dplyr::filter(group %in% c("Studienanfängerinnen", "Studierende")) %>%
+    dplyr::filter(group %in% c("Studienanfänger:inneninnen", "Studierende")) %>%
     dplyr::mutate(value = as.numeric(value))
 
   df2$fachbereich <- factor(df2$fachbereich, levels = levels(df$fachbereich))
@@ -2289,7 +2289,7 @@ studienfaecher_ranking <- function(df,r, type) {
                   ggplot2::aes(y = fachbereich)) +
     ggplot2::geom_point(data = df2, ggplot2::aes(x = value, color = group), size = 5) +
     ggalt::geom_dumbbell(
-      ggplot2::aes(x = Studienanfängerinnen, xend = Studierende),
+      ggplot2::aes(x = Studienanfänger:inneninnen, xend = Studierende),
       size = 0.5,
       size_x = 5,
       size_xend = 5,
@@ -2305,7 +2305,7 @@ studienfaecher_ranking <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Studientinnen als Studienanfängerinnen oder Studierende in ",timerange,
+                                 "Relativer Anteil von Studientinnen als Studienanfänger:inneninnen oder Studierende in ",timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
@@ -2408,7 +2408,7 @@ studierende_map <- function(df,r) {
     # plot
     highcharter::hcmap(
       "countries/de/de-all",
-      data = df[df$indikator == "Studienanfänger",],
+      data = df[df$indikator == "Studienanfänger:innen",],
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
@@ -2747,7 +2747,7 @@ studierende_verlauf_multiple_bl <- function(df,r) {
 
   }else {
 
-    title_help <- "Studienanfänger:"
+    title_help <- "Studienanfänger:innen:"
 
   }
 
@@ -2886,7 +2886,7 @@ studierende_verlauf_multiple_bl_gender <- function(df,r) {
 
   }else {
 
-    title_help <- "Weibliche Studienanfänger:"
+    title_help <- "Weibliche Studienanfänger:innen:"
 
   }
 
@@ -3055,8 +3055,8 @@ bundeslaender_ranking <- function(df,r, type) {
   df <- df %>% dplyr::filter(region != "Baden-Württemberg")
 
   df <- df %>% dplyr::mutate(indikator = replace(indikator,
-                                                 indikator == "Studienanfänger",
-                                                 "Studienanfängerinnen"))
+                                                 indikator == "Studienanfänger:innen",
+                                                 "Studienanfänger:inneninnen"))
 
   if(lehramt == FALSE){
 
@@ -3130,7 +3130,7 @@ bundeslaender_ranking <- function(df,r, type) {
                   ggplot2::aes(y = region)) +
     ggplot2::geom_point(data = df2, ggplot2::aes(x = value, color = group), size = 5) +
     ggalt::geom_dumbbell(
-      ggplot2::aes(x = Studienanfängerinnen, xend = Studierende),
+      ggplot2::aes(x = Studienanfänger:inneninnen, xend = Studierende),
       size = 0.5,
       size_x = 5,
       size_xend = 5,
@@ -3146,7 +3146,7 @@ bundeslaender_ranking <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Studientinnen als Studienanfängerinnen oder Studierende in ",timerange,
+                                 "Relativer Anteil von Studientinnen als Studienanfänger:inneninnen oder Studierende in ",timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))

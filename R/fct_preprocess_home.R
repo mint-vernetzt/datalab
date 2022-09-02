@@ -5,9 +5,9 @@
 #' @noRd
 share_MINT <- function(df){
 
-  # calculate the share of MINT for "Hochschule" and "Studienanfänger/Studierende"
-    df_sub <- df %>% dplyr::filter(indikator == "Studienanfänger" | indikator == "Studierende")
-    df <- df[!(df$indikator == "Studienanfänger" | df$indikator == "Studierende"),]
+  # calculate the share of MINT for "Hochschule" and "Studienanfänger:innen/Studierende"
+    df_sub <- df %>% dplyr::filter(indikator == "Studienanfänger:innen" | indikator == "Studierende")
+    df <- df[!(df$indikator == "Studienanfänger:innen" | df$indikator == "Studierende"),]
 
     ## call function
     df_sub <- calc_share_MINT(df_sub)

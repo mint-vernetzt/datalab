@@ -45,7 +45,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
     p("Status der Student:innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_studium_studienzahl_bl_vergleich"),
-      choices = c("Studienanfänger:innen"="Studienanfänger", "Studierende"),
+      choices = c("Studienanfänger:innen"="Studienanfänger:innen", "Studierende"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))

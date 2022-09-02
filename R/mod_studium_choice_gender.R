@@ -38,7 +38,7 @@ mod_studium_choice_gender_ui <- function(id){
     p("Status der Student:innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_studium_choice_gender"),
-      choices = c("Studienanfänger:innen"="Studienanfänger", "Studierende"),
+      choices = c("Studienanfänger:innen"="Studienanfänger:innen", "Studierende"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
