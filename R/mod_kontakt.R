@@ -53,8 +53,8 @@ mod_kontakt_ui <- function(id){
                 für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver Diagramme einen intuitiven und informativen Zugang zu gewähren."
                ),
                p(style = "text-align: justify; font-size = 16px",
-                 "Das MINT-DataLab ist ein Angebot aus dem Projekt ", span(tags$b(span("MINTvernetzt", style = "color:#b16fab")), "."
-               )),
+                 "Das MINT-DataLab ist ein Angebot aus dem Projekt ", tags$a(href="https://mint-vernetzt.de/", "MINTvernetzt", target="_blank"), "."
+               ),
 
                p(style = "text-align: justify; font-size = 16px",
                    "Die MINT-Vernetzungsstelle, kurz MINTvernetzt, ist die Service- und Anlaufstelle für MINT-Akteur:innen in Deutschlanddas und das
@@ -63,13 +63,13 @@ mod_kontakt_ui <- function(id){
                   dem Nationalen MINTForum e.V., dem Stifterverband und der Universität Regensburg als Verbund gemeinsam umgesetzt."
                  )),
 
-      # column(width = 3,
-      #          img(src='www/BMBF-Logo.jpg',
-      #              class = "img-responsive",
-      #              height = "150px", width = "150px",
-      #              alt = "Logo BMBF",
-      #              style="display: block; margin-left: auto; margin-right: auto;"
-      #          ))
+      column(width = 3,
+               img(src='www/mint_logo_gross.jpg',
+                   class = "img-responsive",
+                   height = "150px", width = "150px",
+                   alt = "Logo MINT",
+                   style="display: block; margin-left: auto; margin-right: auto;"
+               ))
       )),
 
 
@@ -87,8 +87,8 @@ mod_kontakt_ui <- function(id){
           "Ansprachpartnerin für dieses Projekt ist Antonia Kröger."),
 
           p(style = "text-align: justify; font-size = 16px",
-            span("Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject=MINT-Datalab", "per Email"),"oder über unsere kurze",
-                 tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Umfrage", target="_blank"), "!"
+            span("Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+                 tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
                  )
           )
         )),
@@ -123,7 +123,7 @@ mod_kontakt_ui <- function(id){
         column(width = 2,
                img(src='www/BMBF-Logo.jpg',
                    class = "img-responsive",
-                   height = "150px", width = "150px",
+                   height = "100px", width = "100px",
                    alt = "Logo BMBF",
                    style="display: block; margin-left: auto; margin-right: auto;"
                )),
@@ -148,8 +148,8 @@ mod_kontakt_ui <- function(id){
       column(width = 2,
                img(src='www/mint_logo_gross.jpg',
                    class = "img-responsive",
-                   height = "150px", width = "150px",
-                   alt = "Logo BMBF",
+                   height = "50px", width = "50px",
+                   alt = "Logo MINT",
                    style="display: block; margin-left: auto; margin-right: auto;"
                ))
       ))
