@@ -1506,7 +1506,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                    legend.position = "bottom")+
     ggplot2::scale_fill_manual(
-      values =  c("#b16fab",
+      values =  c("#154194",
                   # "#fcc433"
                   # ,
                   # "#00a87a",
@@ -1542,7 +1542,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
 
     waffle_female1 <- waffle_female +
       ggplot2::scale_fill_manual(
-        values =  c("#b16fab",
+        values =  c("#154194",
                     # "#fcc433",
                     # # "#00a87a",
                     '#b1b5c3'),

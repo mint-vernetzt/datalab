@@ -35,9 +35,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")),
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Methodische Hinweise: Die Kategorierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit.
-                           Beschäftigte werden nur als MINT klassifiziert, wenn sie einer MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z.B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend.",
-                           style = "color:#b16fab")))),
+          span(tags$b(span("Methodische Hinweise: ",
+                           style = "color:#b16fab")),"Die Kategorierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit.
+               Beschäftigte werden nur als MINT klassifiziert, wenn sie einer MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z.B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend.")),
 
       )),
     fluidRow(
