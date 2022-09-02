@@ -28,7 +28,16 @@ mod_kontakt_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    # Kontakt-Banner
+    # Banner
+    fluidRow(
+      shinydashboard::box(
+        width = 12,
+        img(src='www/Banner_Kontakt.jpg',
+            class = "img-responsive",
+            #height = "150px", width = "150px",
+            alt = "Banner Schule",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        ))),
 
     fluidRow(
       shinydashboard::box(
