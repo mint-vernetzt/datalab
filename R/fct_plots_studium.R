@@ -360,7 +360,7 @@ studienzahl_verlauf_single <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Anteil"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT im Zeitverlauf"),
+    highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2886,7 +2886,7 @@ studierende_verlauf_multiple_bl_gender <- function(df,r) {
 
   }else {
 
-    title_help <- "Weibliche Studienanfänger:innen:"
+    title_help <- "Studienanfängerinnen:"
 
   }
 

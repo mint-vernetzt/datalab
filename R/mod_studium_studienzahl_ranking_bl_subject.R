@@ -27,7 +27,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
                        ns = ns,
                        shinyWidgets::pickerInput(
                          inputId = ns("hochschulform_studierende_ranking_bl_1"),
-                         choices = c("Insgesamt"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
+                         choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
                        )),
       conditionalPanel(condition = "input.nurLehramt_studierende_ranking_bl_subject != false",
                        ns = ns,

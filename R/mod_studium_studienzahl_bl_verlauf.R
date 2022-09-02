@@ -28,7 +28,7 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
                        ns = ns,
                        shinyWidgets::pickerInput(
                          inputId = ns("hochschulform_studium_studienzahl_bl_verlauf1"),
-                         choices = c("Insgesamt"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
+                         choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
                        )),
       conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_verlauf != false",
                        ns = ns,

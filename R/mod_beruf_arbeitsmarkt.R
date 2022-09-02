@@ -26,25 +26,29 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       shinydashboard::box(
         width = 12,
         #tags$h2("MINT auf dem Arbeitsmark"),
-        p(style = "text-align: justify; font-size = 16px",
-          "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
-          Dabei unterscheiden wir zwischen Auszubildenden und Beschäftigten sowie nach Geschlecht.
-          Zudem können die Daten anhand der Anforderungsprofile auf dem Arbeitsmarkt analysiert werden und unten
-          haben wir alle Ergebnisse auch für einzelne Bundesländer aufbereitet."),
+        # p(style = "text-align: justify; font-size = 16px",
+        #   "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
+        #   Dabei unterscheiden wir zwischen Auszubildenden und Beschäftigten sowie nach Geschlecht.
+        #   Zudem können die Daten anhand der Anforderungsprofile auf dem Arbeitsmarkt analysiert werden und unten
+        #   haben wir alle Ergebnisse auch für einzelne Bundesländer aufbereitet."),
         #br(),
         p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")),
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
-               " "))
+          span(tags$b(span("Methodische Hinweise: Die Kategorierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit.
+                           Beschäftigte werden nur als MINT klassifiziert, wenn sie einer MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z.B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend.",
+                           style = "color:#b16fab")))),
+
       )),
     fluidRow(
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben?",
         width = 12,
-        p("Hier xxx."),
-        br(),
-        p("Interpretationshilfe: xx"),
+        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Berufen ingesamt bei Auszubildenden und Beschäftigten in Deutschland.",
+          br(),
+          "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 32 Prozent aller Auszubildenden eine Ausbildung im Bereich MINT absolvieren.
+          Bei den Beschäftigten liegt der Anteil bei 24 Prozent in 2020."),
+
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -57,7 +61,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                htmlOutput(ns("plot_einstieg_pie"))
                              )
                     ),
-                    tabPanel("Detaillierter Vergleich", br(),
+                    tabPanel("Vergleich 2", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -111,9 +115,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "I.b) Anteil von MINT an Ausbildungen und Berufen für Bundesländer im Vergleich",
+        title = "#MINT im Detail: Vergleiche nach Bundesländern",
         width = 12,
-        p("Hier finden Sie Analysen für einzelne Bundesländer."),
+        p("Hier zeigen wir die Unterschiede nach Bundesländern. Die Aufbereitung nach Fachbereichen steht noch aus."),
         tabsetPanel(type = "tabs",
                     tabPanel("Karte", br(),
 
@@ -147,9 +151,12 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "II. Anteil von Frauen an MINT-Berufen und Nicht-MINT-Berufen",
+        title = "#Frauen in MINT: Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?",
         width = 12,
-        p("Lorem ipsum dolor sit amet"),
+        p("Hier schauen wir uns die Verteilung von Frauen und Männern innerhalb der MINT-Berufe an. Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Berufen."),
+        br(),
+        p("Interpretationshilfe: Der Anteil von Frauen bei MINT-Auszubildenden in Deutschland betrug 13 Prozent in 2020.
+          Bei den MINT-Beschäftigten betrug dieser Anteil 16 Prozent."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -188,9 +195,12 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     )))),
     fluidRow(
       shinydashboard::box(
-        title = "III. Anteil von MINT an von Frauen ausgeübten Berufen",
+        title = "#Berufswahl von Frauen",
         width = 12,
-        p("Lorem ipsum dolor sit amet"),
+        p("Hier zeigen wir die Unterschiede zwischen Frauen und Männern aus einer anderen Perspektive. Welchen Anteil machen MINT-Berufe bei der Berufswahl von Frauen und Männern aus?"),
+        br(),
+        p("Interpretationshilfe: Weibliche Auszubildende haben 2020 zu 10 Prozent eine MINT-Ausbildung gewählt. Bei den Männern waren es 48 Prozent.
+          Bei den Beschäftigten sind die Unterschiede ähntlich: Bei den Frauen machten MINT-Berufe 8 Prozent aus, bei den Männern 38 Prozent."),
         tabsetPanel(type = "tabs",
                     tabPanel("Karte", br(),
 
