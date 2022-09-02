@@ -1419,6 +1419,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
 
 
 
+
   timerange <- r$date_arbeitsmarkt_anforderungen_gender
 
   indikator_choice <- r$level_arbeitsmarkt_anforderungen_gender
@@ -1460,14 +1461,19 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
 
 
   # male
-  df_male <<- df %>% dplyr::filter(anzeige_geschlecht == "Männer")
+  df_male <- df %>% dplyr::filter(anzeige_geschlecht == "Männer")
 
-  df_male <- setNames(round_preserve_sum(as.numeric(df_male$proportion),0),
+  df_male <- setNames(
+    round_preserve_sum(as.numeric(df_male$proportion),0),
                       df_male$anforderungsniveau)
 
   df_male <- df_male[order(factor(names(df_male), levels = c('Fachkraft', 'Spezialist',
                                                              'Experte',
                                                              'Andere Berufe')))]
+
+  df_male1 <- c("MINT"=df_male[1]+df_male[2]+df_male[3], "Andere Fachbereiche"= df_male[4]) # kab
+
+  attr(x = df_male1, which = "names") <- c("MINT", "Andere Fachbereiche")
 
  # df_male <- df_male
 
@@ -1481,10 +1487,16 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
                                                                    'Experte',
                                                                    'Andere Berufe')))]
 
+  df_female1 <- c("MINT"=df_female[1]+df_female[2]+df_female[3], "Andere Fachbereiche"= df_female[4]) # kab
+
+  attr(x = df_female1, which = "names") <- c("MINT", "Andere Fachbereiche")
+
   title_male <- paste0("Männliche ", indikator_choice)
   title_female <- paste0("Weibliche ", indikator_choice)
+
+
   # create plot objects for waffle charts
-  waffle_male <- waffle::waffle(df_male, keep = FALSE) +
+  waffle_male <- waffle::waffle(df_male1, keep = FALSE) +
     ggplot2::labs(
       fill = "",
       title = paste0("<span style='color:black;'>", title_male, "</span> <br>")) +
@@ -1492,26 +1504,30 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "bottom") +
+                   legend.position = "bottom")+
     ggplot2::scale_fill_manual(
-      values =  c("#ee7775",
-                  "#fcc433",
-                  "#00a87a",
-                  '#b1b5c3'),
-      limits = c('Fachkraft', 'Spezialist',
-                 'Experte',
-                 'Andere Berufe'),
-      na.value="#b1b5c3",
+      values =  c("#b16fab",
+                  # "#fcc433"
+                  # ,
+                  # "#00a87a",
+                  '#b1b5c3'
+                  ),
+      limits = c(
+        # 'Fachkraft', 'Spezialist',
+        #          'Experte',
+        "MINT",
+                 'Andere Fachbereiche'),
+      # na.value="#b1b5c3",
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("MINT-Fachkraft",", ",df_male[1], "%"),
-        paste0("MINT-Spezialist",", ",df_male[2], "%"),
-        paste0("MINT-Experte",", ",df_male[3], "%"),
-        paste0("Andere Berufe",", ",df_male[4], "%"))) +
+        paste0("MINT-Beschäftigte",", ",df_male1[1], "%"),
+        # paste0("MINT-Spezialist",", ",df_male[2], "%"),
+        # paste0("MINT-Experte",", ",df_male[3], "%"),
+        paste0("Andere Bereiche",", ",df_male1[2], "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
-  waffle_female <- waffle::waffle(df_female, keep = FALSE) +
+  waffle_female <- waffle::waffle(df_female1, keep = FALSE) +
     ggplot2::labs(
       fill = "",
       title = paste0("<span style='color:black;'>", title_female,"</span> <br>")) +
@@ -1522,49 +1538,51 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
                    legend.position = "bottom")
 
   # account for the possability that female has 0% share of "Experte
-  if (df_female[[3]] == 0) {
+  #if (df_female[[3]] == 0) {
 
-    waffle_female <- waffle_female +
+    waffle_female1 <- waffle_female +
       ggplot2::scale_fill_manual(
-        values =  c("#ee7775",
-                    "#fcc433",
-                    # "#00a87a",
+        values =  c("#b16fab",
+                    # "#fcc433",
+                    # # "#00a87a",
                     '#b1b5c3'),
-        limits = c('Fachkraft',
-                   'Spezialist',
-                   'Andere Berufe'),
+        limits = c("MINT",
+          # 'Fachkraft',
+          #          'Spezialist',
+                   'Andere Fachbereiche'),
         guide = ggplot2::guide_legend(reverse = TRUE),
-        na.value="#b1b5c3",
+        # na.value="#b1b5c3",
         labels = c(
-          paste0("MINT-Fachkraft",", ",df_female[1], "%"),
-          paste0("MINT-Spezialistin",", ",df_female[2], "%"),
+          paste0("MINT-Beschäftigte",", ",df_female1[1], "%"),
+          #paste0("MINT-Spezialistin",", ",df_female[2], "%"),
           # paste0("Experte",", ",df_female[3], "%"),
-          paste0("Andere Berufe",", ",df_female[4], "%"))) +
+          paste0("Andere Fachbereiche",", ",df_female1[2], "%"))) +
       ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
-  } else{
+  # } else{
+  #
+  #   waffle_female <- waffle_female +
+  #     ggplot2::scale_fill_manual(
+  #       values =  c("#ee7775",
+  #                   # "#fcc433",
+  #                   # "#00a87a",
+  #                   '#b1b5c3'),
+  #       limits = c("MINT",
+  #         # 'Fachkraft', 'Spezialist',
+  #         #          'Experte',
+  #                  'Andere Fachbereiche'),
+  #       na.value="#b1b5c3",
+  #       guide = ggplot2::guide_legend(reverse = TRUE),
+  #       labels = c(
+  #         paste0("MINT-Beschäftigte",", ",df_female1[1], "%"),
+  #         # paste0("Spezialist",", ",df_female[2], "%"),
+  #         # paste0("Experte",", ",df_female[3], "%"),
+  #         paste0("Andere Fachbereiche",", ",df_female1[2], "%"))) +
+  #     ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+  #
+  # }
 
-    waffle_female <- waffle_female +
-      ggplot2::scale_fill_manual(
-        values =  c("#ee7775",
-                    "#fcc433",
-                    "#00a87a",
-                    '#b1b5c3'),
-        limits = c('Fachkraft', 'Spezialist',
-                   'Experte',
-                   'Andere Berufe'),
-        na.value="#b1b5c3",
-        guide = ggplot2::guide_legend(reverse = TRUE),
-        labels = c(
-          paste0("Fachkraft",", ",df_female[1], "%"),
-          paste0("Spezialist",", ",df_female[2], "%"),
-          paste0("Experte",", ",df_female[3], "%"),
-          paste0("Andere Berufe",", ",df_female[4], "%"))) +
-      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
-
-  }
-
-  ggpubr::ggarrange(waffle_female, NULL ,waffle_male, widths = c(1, 0.1, 1), nrow=1)
+  ggpubr::ggarrange(waffle_female1, NULL ,waffle_male, widths = c(1, 0.1, 1), nrow=1)
 
   # text <- c(
   #   paste0("<span style='font-size:20.5pt; color:black'> Anforderungslevel in MINT-Berufen im Vergleich"))
