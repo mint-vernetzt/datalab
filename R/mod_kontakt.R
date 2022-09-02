@@ -39,15 +39,6 @@ mod_kontakt_ui <- function(id){
             style="display: block; margin-left: auto; margin-right: auto;"
         ))),
 
-    fluidRow(
-      shinydashboard::box(
-        width = 12,
-        img(src='www/BMBF-Logo.jpg',
-            class = "img-responsive",
-            height = "150px", width = "150px",
-            alt = "Logo BMBF",
-            style="display: block; margin-left: auto; margin-right: auto;"
-        ))),
 
 
     fluidRow(
