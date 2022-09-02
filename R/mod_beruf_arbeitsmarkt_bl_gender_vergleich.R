@@ -16,12 +16,13 @@ mod_beruf_arbeitsmarkt_bl_gender_vergleich_ui <- function(id){
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
-    ),
-    p("Auswahl des Anforderungsniveaus:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("anforderungsniveau_arbeitsmarkt_bl_gender_vergleich"),
-      choices = c("Gesamt", "Fachkraft", "Spezialist:in"="Spezialist", "Expert:in"="Experte")
     )
+    # ,
+    # p("Auswahl des Anforderungsniveaus:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("anforderungsniveau_arbeitsmarkt_bl_gender_vergleich"),
+    #   choices = c("Gesamt", "Fachkraft", "Spezialist:in"="Spezialist", "Expert:in"="Experte")
+    # )
   )
 }
 

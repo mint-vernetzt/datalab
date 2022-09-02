@@ -26,12 +26,12 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Auswahl des Anforderungsniveaus:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_gender_verlauf"),
-      choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"),
-      selected = "Gesamt"
-    ),
+    # p("Auswahl des Anforderungsniveaus:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_gender_verlauf"),
+    #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"),
+    #   selected = "Gesamt"
+    # ),
     p("Auswahl der Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_bl_gender_verlauf"),
