@@ -40,11 +40,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       )),
     fluidRow(
       shinydashboard::box(
-        title = "I. Anteil von MINT an Ausbildungen und Berufen",
+        title = "#MINT: Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben?",
         width = 12,
-        p("Hier können Sie den Anteil der MINT-Fächer im Arbeitsmarkt unter Beschäftigten und Auszubildenden seit 2013 analysieren."),
+        p("Hier xxx."),
         br(),
-        p("Unter Zeitverlauf lässt sich die Entwicklung über die letzten Jahre betrachten, unter Überblick finden Sie die Grafik."),
+        p("Interpretationshilfe: xx"),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
