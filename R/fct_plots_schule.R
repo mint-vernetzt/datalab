@@ -1922,6 +1922,7 @@ kurse_verlauf_gender <- function(df,r) {
 
 kurse_comparison_gender <- function(df,r) {
 
+
   # load UI inputs from reactive value
   timerange <- r$date_kurse_comparison_gender
 
@@ -1943,20 +1944,25 @@ kurse_comparison_gender <- function(df,r) {
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
 
   # calcualte proportions
-  df <- df %>% dplyr::group_by(indikator, fachbereich, anzeige_geschlecht, jahr) %>%
+  df1 <- df %>% dplyr::group_by(indikator, fachbereich, anzeige_geschlecht, jahr) %>%
     dplyr::summarize(proportion = wert/props)
 
-  df$proportion <- df$proportion * 100
+  df1$proportion <- df1$proportion * 100
+
+
+  df1$fachbereich <- factor(df1$fachbereich, levels = c("MINT","andere Fächer"))
+
 
 
   # order years for plot
-  df <- df[with(df, order(jahr, decreasing = FALSE)), ]
+  df1 <- df1[with(df, order(jahr, decreasing = FALSE)), ]
+
 
   # plot
-  ggplot2::ggplot(df, ggplot2::aes(x=indikator, y=proportion, fill = fachbereich)) +
-    ggplot2::geom_bar(stat="identity", position = "dodge") +
+  ggplot2::ggplot(df1, ggplot2::aes(x=indikator, y=proportion, fill = fachbereich)) +
+    ggplot2::geom_bar(stat="identity", position=ggplot2::position_dodge(width=0.5), width=0.5) +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%"), vjust = - 0.25),
-                       position=ggplot2::position_dodge(width=0.9),
+                       position=ggplot2::position_dodge(width=0.5),
                        fontface = "bold") +
     ggplot2::theme_minimal() +
     ggplot2::theme(
