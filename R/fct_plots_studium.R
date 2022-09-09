@@ -1921,7 +1921,7 @@ ranking_bl_subject <- function(df,r, type) {
 
 
   ggplot2::ggplot(df, ggplot2::aes(y=fachbereich, x=proportion)) +
-    ggplot2::geom_bar(stat="identity", fill = "#154194") +
+    ggplot2::geom_bar(stat="identity", fill = "#154194", width=0.5) +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
                        fontface = "bold") +
     ggplot2::theme_minimal() +
@@ -2192,6 +2192,8 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
 studienfaecher_ranking <- function(df,r, type) {
 
+browser()
+
   # load UI inputs from reactive value
   timerange <- r$date_studium_ranking_bl_subject_gender
 
@@ -2285,11 +2287,16 @@ studienfaecher_ranking <- function(df,r, type) {
 
   df2$fachbereich <- factor(df2$fachbereich, levels = levels(df$fachbereich))
 
-  ggplot2::ggplot(df,
+  df2$group <- gsub("Studienanfänger:innen", "Studienanfänger", df2$group)
+
+
+  df2 <<- df2
+
+   ggplot2::ggplot(df,
                   ggplot2::aes(y = fachbereich)) +
     ggplot2::geom_point(data = df2, ggplot2::aes(x = value, color = group), size = 5) +
     ggalt::geom_dumbbell(
-      ggplot2::aes(x = Studienanfänger:inneninnen, xend = Studierende),
+      ggplot2::aes(x =Studienanfänger, xend = Studierende),
       size = 0.5,
       size_x = 5,
       size_xend = 5,
@@ -2363,9 +2370,9 @@ studierende_map <- function(df,r) {
 
   df_sub <- df_sub[,colnames(df)]
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   df_sub <-  calc_share_male_bl(df_sub)
 
