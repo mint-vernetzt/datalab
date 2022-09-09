@@ -2192,7 +2192,7 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
 studienfaecher_ranking <- function(df,r, type) {
 
-browser()
+
 
   # load UI inputs from reactive value
   timerange <- r$date_studium_ranking_bl_subject_gender
@@ -2290,7 +2290,7 @@ browser()
   df2$group <- gsub("Studienanfänger:innen", "Studienanfänger", df2$group)
 
 
-  df2 <<- df2
+  df2 <- df2
 
    ggplot2::ggplot(df,
                   ggplot2::aes(y = fachbereich)) +
