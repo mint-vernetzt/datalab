@@ -2231,6 +2231,8 @@ studienfaecher_ranking <- function(df,r, type) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
+  df <- df %>% dplyr::filter(region != "Deutschland")
+
   # df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
   df <- df %>% dplyr::filter(region != "Bayern")
@@ -2242,9 +2244,9 @@ studienfaecher_ranking <- function(df,r, type) {
 
   df <- df %>% dplyr::filter(region %in% states)
 
-  df <- df %>% dplyr::mutate(indikator = replace(indikator,
-                                                 indikator == "Studienanfänger",
-                                                   "Studienanfänger:innen"))
+  # df <- df %>% dplyr::mutate(indikator = replace(indikator,
+  #                                                indikator == "Studienanfänger",
+  #                                                "Studienanfängerinnen"))
 
   if(lehramt == FALSE){
 
@@ -2297,7 +2299,8 @@ studienfaecher_ranking <- function(df,r, type) {
     dplyr::select(-c("wert","wert_gesamt")) %>%
     dplyr::filter(fachbereich != "Alle")
 
-  df1 <<- df
+  df[df$fachbereich == "MINT (aggregiert)","fachbereich"] <- "MINT (gesamt)"
+
 
   # spread column
   df <- tidyr::spread(df, indikator, proportion)
@@ -2306,22 +2309,23 @@ studienfaecher_ranking <- function(df,r, type) {
 
   df <- df %>% dplyr::select(-hochschulform, -region, -anzeige_geschlecht)
 
-  df$group <- df %>% dplyr::mutate(group= ifelse("Studienanfänger:innen", "Studienanfänger", df$group ))
-
-  df2 <- tidyr::gather(df, group, value, -fachbereich) %>%
-    dplyr::filter(group %in% c("Studienanfänger", "Studierende")) %>%
+  df2 <<- tidyr::gather(df, group, value, -fachbereich)%>%
+    dplyr::filter(group %in% c("Studienanfänger:innen", "Studierende")) %>%
     dplyr::mutate(value = as.numeric(value))
 
   df2$fachbereich <- factor(df2$fachbereich, levels = levels(df$fachbereich))
 
 
 
+  colnames(df)[7] <- "Studienanfängerinnen"
 
-   ggplot2::ggplot(df,
+
+
+  ggplot2::ggplot(df,
                   ggplot2::aes(y = fachbereich)) +
     ggplot2::geom_point(data = df2, ggplot2::aes(x = value, color = group), size = 5) +
     ggalt::geom_dumbbell(
-      ggplot2::aes(x =Studienanfänger, xend = Studierende),
+      ggplot2::aes(x = Studienanfängerinnen, xend = Studierende),
       size = 0.5,
       size_x = 5,
       size_xend = 5,
@@ -2343,6 +2347,134 @@ studienfaecher_ranking <- function(df,r, type) {
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 
 }
+#   browser()
+#
+#   # load UI inputs from reactive value
+#   timerange <- r$date_studium_ranking_bl_subject_gender
+#
+#   states <- r$states_studium_ranking_bl_subject_gender
+#
+#   lehramt <- r$nurLehramt_studium_ranking_bl_subject_gender
+#
+#   hochschulform_select_1 <- r$hochschulform_studium_ranking_bl_subject_gender_1
+#
+#   hochschulform_select_2 <- r$hochschulform_studium_ranking_bl_subject_gender_2
+#
+#   # filter dataset based on UI inputs
+#   df <- df %>% dplyr::filter(jahr == timerange)
+#
+#   # df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
+#
+#   df <- df %>% dplyr::filter(region != "Bayern")
+#
+#   df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+#
+#   # include "Osten" und "Westen" in Dataframe
+#   df <- prep_studierende_east_west(df)
+#
+#   df <- df %>% dplyr::filter(region %in% states)
+#
+#   df <- df %>% dplyr::mutate(indikator = replace(indikator,
+#                                                  indikator == "Studienanfänger",
+#                                                    "Studienanfänger:inneninnen"))
+#
+#   if(lehramt == FALSE){
+#
+#     df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+#
+#     df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
+#
+#   } else {
+#
+#     df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+#
+#     df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
+#
+#   }
+#
+#   # aggregate all subjects to calculate proportion later
+#   df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen",
+#                                     fachbereich == "Alle") %>%
+#     dplyr::group_by(region, anzeige_geschlecht, indikator, nur_lehramt, hochschulform, jahr) %>%
+#     dplyr::mutate(wert_gesamt = sum(wert)) %>%
+#     dplyr::select(c("region", "indikator", "nur_lehramt",
+#                     "hochschulform", "jahr", "wert_gesamt"))
+#
+#   # aggregate to MINT
+#   values_Mint <- df %>%
+#     dplyr::filter(fachbereich != "Alle") %>%
+#     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, hochschulform,
+#                     nur_lehramt) %>%
+#     dplyr::summarise(wert = sum(wert)) %>%
+#     dplyr::mutate(bereich = "Hochschule",
+#                   fachbereich = "MINT (aggregiert)") %>%
+#     dplyr::filter(anzeige_geschlecht == "Frauen")
+#
+#   einzelne_faecher <- df %>%
+#     dplyr::filter(anzeige_geschlecht == "Frauen")
+#
+#   df_andere <- calc_share_MINT(df) %>%
+#     dplyr::filter(fachbereich == "andere Studiengänge",
+#                   anzeige_geschlecht == "Frauen")
+#
+#   df <- rbind(values_Mint, einzelne_faecher, df_andere)
+#
+#   # # calculate proportion
+#   df <- df %>%
+#     dplyr::left_join(df_gesamt, by = c("region", "indikator", "nur_lehramt",
+#                                        "hochschulform", "jahr")) %>%
+#     dplyr::select(-"anzeige_geschlecht.y") %>%
+#     dplyr::rename(anzeige_geschlecht = "anzeige_geschlecht.x") %>%
+#     dplyr::mutate(proportion = (wert/wert_gesamt)*100) %>%
+#     dplyr::select(-c("wert","wert_gesamt")) %>%
+#     dplyr::filter(fachbereich != "Alle")
+#
+#   df1 <<- df
+#
+#   # spread column
+#   df <- tidyr::spread(df, indikator, proportion)
+#
+#   df <- df %>% tidyr::drop_na()
+#
+#   df <- df %>% dplyr::select(-hochschulform, -region, -anzeige_geschlecht)
+#
+#   df$group <- df %>% dplyr::mutate(group= ifelse("Studienanfänger:innen", "Studienanfänger", df$group ))
+#
+#   df2 <- tidyr::gather(df, group, value, -fachbereich) %>%
+#     dplyr::filter(group %in% c("Studienanfänger", "Studierende")) %>%
+#     dplyr::mutate(value = as.numeric(value))
+#
+#   df2$fachbereich <- factor(df2$fachbereich, levels = levels(df$fachbereich))
+#
+#
+#
+#
+#    ggplot2::ggplot(df,
+#                   ggplot2::aes(y = fachbereich)) +
+#     ggplot2::geom_point(data = df2, ggplot2::aes(x = value, color = group), size = 5) +
+#     ggalt::geom_dumbbell(
+#       ggplot2::aes(x =Studienanfänger, xend = Studierende),
+#       size = 0.5,
+#       size_x = 5,
+#       size_xend = 5,
+#       colour = "black",
+#       colour_x = "#b1b5c366",
+#       colour_xend = "#f5adac66",
+#       dot_guide=TRUE) +
+#     ggplot2::theme_minimal() +
+#     ggplot2::scale_color_manual(name = "", values = c("#b1b5c366", "#f5adac66")) +
+#     ggplot2::theme(legend.position="top",
+#                    panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
+#                    plot.title = ggtext::element_markdown(hjust = 0.5),
+#                    axis.text.y = ggplot2::element_text(size = 11)) +
+#     ggplot2::ylab("") + ggplot2::xlab("") +
+#     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+#                                  "Relativer Anteil von Studientinnen als Studienanfänger:innen oder Studierende in ",timerange,
+#                                  "<br><br><br>"),
+#                   color = "") +
+#     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
+#
+# }
 
 #' A function to plot the german map
 #'
