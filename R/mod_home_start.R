@@ -13,46 +13,44 @@ mod_home_start_ui <- function(id){
 
     # Start-Banner
 
-      fluidRow(
-        shinydashboard::box(
-          width = 12,
-          img(src='www/Banner_Start.jpg',
-              class = "img-responsive",
-              height = "300px",
-              # width = "150px",
-              alt = "Banner Start",
-              style="display: block; margin-left: auto; margin-right: auto;"
-          ),
-          br(),
-          # p(style = "text-align: justify; font-size = 32px",
-          #   span("Die wichtigsten Zahlen zu MINT auf einen Blick")
-          # ),
-          br(),
-          p(style = "text-align: justify; font-size = 16px",
-            span(tags$b(span("Willkommen in der Beta-Version des MINT-DataLabs von MINTvernetzt!", style = "color:#b16fab")), " Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
-                 Ausbildung und Arbeitsmarkt in Deutschland.",
-                 br(), br(),
-                 "Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
-                 " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
-          ),
-
-
-          )),
-
-
       # fluidRow(
-      #  shinydashboard::box(
-      #   title = "",
-      #   width = 12,
-      #  p(style = "text-align: justify; font-size = 16px",
-      #     span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
-      #          " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
-      #   ),
-        # p(style = "text-align: justify; font-size = 16px",
-        #   "Erklärvideo xxx")
+      #   shinydashboard::box(
+      #     width = 12,
+      #     img(src='www/Banner_Start.jpg',
+      #         class = "img-responsive",
+      #         height = "300px",
+      #         # width = "150px",
+      #         alt = "Banner Start",
+      #         style="display: block; margin-left: auto; margin-right: auto;"
+      #     ),
+      #     br(),
+      #     # p(style = "text-align: justify; font-size = 32px",
+      #     #   span("Die wichtigsten Zahlen zu MINT auf einen Blick")
+      #     # ),
+      #     br(),
+      #     p(style = "text-align: justify; font-size = 16px",
+      #       span(tags$b(span("Willkommen in der Beta-Version des MINT-DataLabs von MINTvernetzt!", style = "color:#b16fab")), " Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
+      #            Ausbildung und Arbeitsmarkt in Deutschland.",
+      #            br(), br(),
+      #            "Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
+      #            " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
+      #     ),
+      #
+      #
+      #     )),
 
 
-        # )),
+      fluidRow(
+      shinydashboard::box(
+      title = "Überblick alle Bildungsbereiche",
+       width = 12,
+        p(style = "text-align: justify; font-size = 16px",
+        span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
+                " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
+         )
+
+
+         )),
 
 
 
