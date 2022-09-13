@@ -1720,6 +1720,8 @@ studienzahl_verlauf_bl <- function(df,r) {
 
 studienzahl_verlauf_bl_subject <- function(df,r) {
 
+
+
   # load UI inputs from reactive value
   timerange <- r$date_verlauf_subject_bl
 
@@ -1808,11 +1810,11 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
 
 
   # order years for plot
-  df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+  df1 <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
 
   # plot
-  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = fachbereich)) %>%
+  highcharter::hchart(df1, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = fachbereich)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil {point.fachbereich} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
@@ -2071,6 +2073,8 @@ studienzahl_waffle_choice_gender <- function(df,r) {
 
 studierende_verlauf_single_bl_gender <- function(df,r) {
 
+  browser()
+
   # load UI inputs from reactive value
   timerange <- r$date_verlauf_bl_subject_gender
 
@@ -2140,7 +2144,7 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
   df <- rbind(values_Mint, einzelne_faecher, df_andere)
 
   # # calculate proportion
-  values <- df %>%
+  values <<- df %>%
     dplyr::left_join(df_gesamt, by = c("region", "indikator", "nur_lehramt",
                                        "hochschulform", "jahr")) %>%
     dplyr::select(-"anzeige_geschlecht.y") %>%
@@ -2156,6 +2160,10 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
   values <- values %>%  dplyr::filter(fachbereich == subjects_select)
 
   values$anzeige_geschlecht <- paste0(values$anzeige_geschlecht, " (", values$indikator, ")")
+
+  values[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
+
+  values$fachbereich  <- gsub("MINT (aggregiert)", "MINT-Fächer (gesamt)", values$fachbereich)
 
   # plot
   highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = anzeige_geschlecht)) %>%
@@ -2289,8 +2297,6 @@ studienfaecher_ranking <- function(df,r, type) {
 
   df2$group <- gsub("Studienanfänger:innen", "Studienanfänger", df2$group)
 
-
-  df2 <- df2
 
    ggplot2::ggplot(df,
                   ggplot2::aes(y = fachbereich)) +
@@ -2715,9 +2721,9 @@ studierende_verlauf_multiple_bl <- function(df,r) {
     dplyr::mutate(sum_props = sum(props))
 
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   df <- calc_share_male_bl(df)
 
@@ -2995,9 +3001,9 @@ studierende_mint_vergleich_bl <- function(df,r) {
   df_sub <- df_sub %>% dplyr::group_by(region, indikator) %>%
     dplyr::mutate(props = sum(wert))
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   # aggregate all subjects to calculate proportion later
   df <- df %>% dplyr::group_by(region, indikator) %>%
