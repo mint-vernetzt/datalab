@@ -2073,7 +2073,7 @@ studienzahl_waffle_choice_gender <- function(df,r) {
 
 studierende_verlauf_single_bl_gender <- function(df,r) {
 
-  browser()
+
 
   # load UI inputs from reactive value
   timerange <- r$date_verlauf_bl_subject_gender
@@ -2144,7 +2144,7 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
   df <- rbind(values_Mint, einzelne_faecher, df_andere)
 
   # # calculate proportion
-  values <<- df %>%
+  values <- df %>%
     dplyr::left_join(df_gesamt, by = c("region", "indikator", "nur_lehramt",
                                        "hochschulform", "jahr")) %>%
     dplyr::select(-"anzeige_geschlecht.y") %>%
@@ -2157,13 +2157,28 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
   # order years for plot
   values <- values[with(values, order(region, jahr, decreasing = FALSE)), ]
 
+  values <- values %>% dplyr::mutate(fachbereich = ifelse(fachbereich == "MINT (aggregiert)", "MINT-Fächer (gesamt)", values$fachbereich ))
+
+
+  #[values$fachbereich=="MINT (aggregiert)"] <- "MINT (gesamt)"
+
+  #values$fachbereich  <- gsub("MINT (aggregiert)", "MINT-Fächer (gesamt)", values$fachbereich)
+
   values <- values %>%  dplyr::filter(fachbereich == subjects_select)
 
   values$anzeige_geschlecht <- paste0(values$anzeige_geschlecht, " (", values$indikator, ")")
 
-  values[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  values$fachbereich  <- gsub("MINT (aggregiert)", "MINT-Fächer (gesamt)", values$fachbereich)
+
+  #
+
+
+
+  #values[values$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
+
+
+
+  #values$fachbereich  <<- gsub("MINT (aggregiert)", "MINT-Fächer (gesamt)", values$fachbereich)
 
   # plot
   highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = anzeige_geschlecht)) %>%
@@ -2200,7 +2215,7 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
 studienfaecher_ranking <- function(df,r, type) {
 
-
+  browser()
 
   # load UI inputs from reactive value
   timerange <- r$date_studium_ranking_bl_subject_gender
@@ -2228,8 +2243,8 @@ studienfaecher_ranking <- function(df,r, type) {
   df <- df %>% dplyr::filter(region %in% states)
 
   df <- df %>% dplyr::mutate(indikator = replace(indikator,
-                                                 indikator == "Studienanfänger:innen",
-                                                   "Studienanfänger:inneninnen"))
+                                                 indikator == "Studienanfänger",
+                                                   "Studienanfänger:innen"))
 
   if(lehramt == FALSE){
 
@@ -2282,6 +2297,8 @@ studienfaecher_ranking <- function(df,r, type) {
     dplyr::select(-c("wert","wert_gesamt")) %>%
     dplyr::filter(fachbereich != "Alle")
 
+  df1 <<- df
+
   # spread column
   df <- tidyr::spread(df, indikator, proportion)
 
@@ -2289,13 +2306,15 @@ studienfaecher_ranking <- function(df,r, type) {
 
   df <- df %>% dplyr::select(-hochschulform, -region, -anzeige_geschlecht)
 
+  df$group <- df %>% dplyr::mutate(group= ifelse("Studienanfänger:innen", "Studienanfänger", df$group ))
+
   df2 <- tidyr::gather(df, group, value, -fachbereich) %>%
-    dplyr::filter(group %in% c("Studienanfänger:inneninnen", "Studierende")) %>%
+    dplyr::filter(group %in% c("Studienanfänger", "Studierende")) %>%
     dplyr::mutate(value = as.numeric(value))
 
   df2$fachbereich <- factor(df2$fachbereich, levels = levels(df$fachbereich))
 
-  df2$group <- gsub("Studienanfänger:innen", "Studienanfänger", df2$group)
+
 
 
    ggplot2::ggplot(df,
@@ -2318,7 +2337,7 @@ studienfaecher_ranking <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Relativer Anteil von Studientinnen als Studienanfänger:inneninnen oder Studierende in ",timerange,
+                                 "Relativer Anteil von Studientinnen als Studienanfänger:innen oder Studierende in ",timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
