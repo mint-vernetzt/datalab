@@ -2215,7 +2215,6 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
 studienfaecher_ranking <- function(df,r, type) {
 
-  browser()
 
   # load UI inputs from reactive value
   timerange <- r$date_studium_ranking_bl_subject_gender
