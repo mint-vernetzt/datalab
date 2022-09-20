@@ -527,9 +527,9 @@ kurse_mint_comparison <- function(df,r) {
 
   df_sub <- df_sub[,colnames(df)]
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  # df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  # df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   df_sub <- df_sub[df_sub$fachbereich!="andere Fächer",] # neu, da keine 100 % rauskommen, kab
 
@@ -551,14 +551,14 @@ kurse_mint_comparison <- function(df,r) {
 
          #"andere Fächer (aggregiert)",# raus, kab
 
-         "Biologie", "Chemie","Physik","Informatik","Mathematik","MINT (aggregiert)")
+         "Biologie", "Chemie","Physik","Informatik","Mathematik","MINT-Fächer (gesamt)")
 
   df <- df %>%
     dplyr::mutate(fachbereich =  factor(fachbereich, levels = x)) %>%
     dplyr::arrange(fachbereich)
 
   # plot
-  a <- ifelse(df$fachbereich == "MINT (aggregiert)"
+  a <- ifelse(df$fachbereich == "MINT-Fächer (gesamt)"
 
              # | df$fachbereich == "andere Fächer (aggregiert)" # raus, kab
 
@@ -635,9 +635,9 @@ kurse_mint_comparison_bl <- function(df,r) {
   df_sub <- df_sub %>% dplyr::group_by(region, indikator) %>%
     dplyr::mutate(props = sum(wert))
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
 
   # aggregate all subjects to calculate proportion later
@@ -1039,9 +1039,9 @@ kurse_ranking_gender <- function(df,r, type) {
 
   df_sub <- df_sub[,colnames(df)]
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   df <- rbind(df, df_sub)
 
@@ -1201,9 +1201,9 @@ kurse_map <- function(df,r) {
 
   df_sub <- df_sub[,colnames(df)]
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
     dplyr::group_by(region, fachbereich, indikator, jahr) %>%
@@ -1262,9 +1262,9 @@ kurse_map <- function(df,r) {
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
     ) %>%
-    # highcharter::hc_caption(
-    #   text = "Quelle:",  style = list(fontSize = "12px")
-    # ) %>%
+    highcharter::hc_caption(
+      text = "...",  style = list(color= "white", fontSize = "12px")
+    ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>% highcharter::hc_size(600, 550) %>%
@@ -1294,7 +1294,7 @@ kurse_map <- function(df,r) {
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
     ) %>%
     highcharter::hc_caption(
-       text = "Quelle: KMK 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px")
+       text = "Ausgegraut: Daten stehen nicht zur Verfügung",  style = list(fontSize = "12px")
      ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
@@ -1344,9 +1344,9 @@ kurse_map_gender <- function(df,r) {
 
   df_sub <- df_sub[,colnames(df)]
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   df <- rbind(df, df_sub)
 
@@ -1383,9 +1383,9 @@ kurse_map_gender <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-      # highcharter::hc_caption(
-      #   text = "Quelle:",  style = list(fontSize = "12px")
-      # ) %>%
+      highcharter::hc_caption(
+        text = "...",  style = list(color="white",fontSize = "12px")
+      ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
@@ -1414,9 +1414,9 @@ kurse_map_gender <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-      # highcharter::hc_caption(
-      #   text = "Quelle:",  style = list(fontSize = "12px")
-      # ) %>%
+      highcharter::hc_caption(
+        text = "Ausgegraut: Daten stehen nicht zur Verfügung",  style = list(fontSize = "12px")
+      ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
@@ -1527,9 +1527,9 @@ kurse_verlauf <- function(df,r) {
   #                   wert[anzeige_geschlecht == "Männer"])
 
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   df_sub <- df_sub[,colnames(df)]
 
@@ -2019,9 +2019,9 @@ kurse_verlauf_single_bl <- function(df,r) {
     dplyr::mutate(props = sum(wert))
 
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   # calcualte the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -2121,9 +2121,9 @@ kurse_verlauf_multiple_bl <- function(df,r) {
     dplyr::mutate(sum_props = sum(props))
 
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   # calculate the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -2242,9 +2242,9 @@ kurse_verlauf_subjects_bl <- function(df,r) {
     dplyr::mutate(sum_props = sum(props))
 
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT (aggregiert)"
+  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   # calculate the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
