@@ -289,7 +289,23 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
     #                 )
     #
     # )
-  )
+    ,
+    tags$footer(
+
+      div("LOGO MINTV"),
+      div("Impressum"),
+      div("Datenschutz"),
+      div(tags$a(href="https://mint-vernetzt.shinyapps.io/datalab/#shiny-tab-kontakt", "Kontakt", target="_blank")),
+      div("Copyright © 2022. Alle Rechte vorbehalten Stifterverband"),
+      div("LOGO BMBF")
+
+
+
+
+
+
+    )
+    )
 }
 
 #' beruf_arbeitsmarkt Server Functions
