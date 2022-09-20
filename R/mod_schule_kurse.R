@@ -24,12 +24,13 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        width = 12,
-        #tags$h2("MINT in der Schule"),
+        width = 9,
+        tags$h2("MINT in der Schule"),
         p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
           "Auf dieser Seite zeigen wir, wie hoch der Anteil von MINT-Fächern gemessen an allen gewählten Grund- und Leistungskursen ist.
           Je nach Bundesland wählen alle Oberstufen-Schülerinnen und -Schüler mehrere Grund- und Leistungskurse.
-          Anhand dieser Belegungszahlen haben wir den Anteil von MINT-Fächern in der Schule berechnet.",
+          Anhand dieser Belegungszahlen haben wir den Anteil von MINT-Fächern in der Schule berechnet."),
           br(),
           p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "KMK 2021, auf Anfrage, eigene Berechnungen.")),
@@ -40,8 +41,29 @@ mod_schule_kurse_ui <- function(id){
                können, nutzen wir die Kursbelegungszahlen der Schülerinnen und Schüler. Auf die Ausweisung absoluter Zahlen verzichten wir, da
                aus den Belegungszahlen nicht die Gesamtzahl aller Schülerinnen und Schülern abgeleitet werden kann. Der Vergleich auf dieser Seite
           erfolgt entsprechend der Belegungszahlen der verschiedenen Kurse.", br(),
-               "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor."))
-      ))),
+               "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor."
+               ))
+      )),
+      shinydashboard::box(
+        title = "Auf dieser Seite",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#MINT")), ": Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
+          )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#MINT im Detail")), ": Vergleich der einzelnen MINT-Fächer und Unterschiede zwischen den Bundesländern"
+          )),
+        p(style = "text-align: justify; font-size = 16px",
+          "#Frauen in MINT: Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"
+        ),
+
+        p(style = "text-align: justify; font-size = 16px",
+          "#Mädchen_in_MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"
+        ),
+
+      )
+
+      ),
     fluidRow(
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?",
@@ -93,7 +115,7 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "#MINT_im_Detail: Vergleich der einzelnen MINT-Fächern und nach Bundesländern",
+        title = "#MINT_im_Detail: Vergleich der einzelnen MINT-Fächern und Unterschiede zwischen den Bundesländern",
         width = 12,
         p("Hier zeigen wir die Anteile einzelner MINT-Fächer sowie die Unterschiede in den Bundesländern. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse."),
         tabsetPanel(type = "tabs",

@@ -11,7 +11,7 @@ mod_home_start_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    # Start-Banner
+    # Banner
 
       # fluidRow(
       #   shinydashboard::box(
@@ -22,36 +22,56 @@ mod_home_start_ui <- function(id){
       #         # width = "150px",
       #         alt = "Banner Start",
       #         style="display: block; margin-left: auto; margin-right: auto;"
-      #     ),
-      #     br(),
-      #     # p(style = "text-align: justify; font-size = 32px",
-      #     #   span("Die wichtigsten Zahlen zu MINT auf einen Blick")
-      #     # ),
-      #     br(),
-      #     p(style = "text-align: justify; font-size = 16px",
-      #       span(tags$b(span("Willkommen in der Beta-Version des MINT-DataLabs von MINTvernetzt!", style = "color:#b16fab")), " Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
-      #            Ausbildung und Arbeitsmarkt in Deutschland.",
-      #            br(), br(),
-      #            "Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
-      #            " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
-      #     ),
-      #
-      #
+      #     )
       #     )),
 
-
-      fluidRow(
+    fluidRow(
       shinydashboard::box(
-      title = "Überblick alle Bildungsbereiche",
-       width = 12,
+        title = "",
+        width = 12,
         p(style = "text-align: justify; font-size = 16px",
-        span("Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
-                " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
-         )
+          span("BANNER; MINT entlang der Bildungskette")
+      ))
+      ),
 
 
-         )),
 
+    fluidRow(
+      shinydashboard::box(
+        title = "Überblick über alle MINT-Bildungsbereiche",
+        width = 9,
+        p(style = "text-align: justify; font-size = 16px",
+        span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
+               "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die Bildunsgbereiche miteinander.
+               Auf den folgenden, bereichsspezifischen Unterseiten gehen wir je Bildungsbereich mehr ins Detail
+                und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
+               ),
+
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis 2021, Bundesagentur für Arbeit 2021, KMK 2021, alle auf Anfrage, eigene Berechnungen."
+               )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
+               "Anders als bei Studierenden oder Auszubildenen wählen Schülerinnen und Schüler mehrere Grund- und Leistungskurse und können
+          entsprechend nicht eindeutig als 'MINT' oder 'nicht-MINT' eingruppiert werden. Um dennoch einen Anteil von MINT versus Nicht-MINT angeben zu
+               können, nutzen wir die Kursbelegungszahlen der Schülerinnen und Schüler. Auf die Ausweisung absoluter Zahlen verzichten wir, da
+               aus den Belegungszahlen nicht die Gesamtzahl aller Schülerinnen und Schülern abgeleitet werden kann. Der Vergleich auf dieser Seite
+          erfolgt entsprechend der Belegungszahlen der verschiedenen Kurse. Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor."
+          ))
+        ),
+
+      shinydashboard::box(
+        title = "Auf dieser Seite",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#MINT")),": Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
+        )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#Frauen in MINT")),": Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"
+        ),
+
+        )
+        )),
 
 
     fluidRow(
