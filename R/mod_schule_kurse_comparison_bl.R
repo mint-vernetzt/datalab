@@ -31,20 +31,20 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
     p("Auswahl des Fachs:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_comparison_bl"),
-      choices = c("MINT (aggregiert)",
+      choices = c("MINT-Fächer (gesamt)",
                   "Mathematik",
                   "Informatik",
                   "Physik",
                   "Chemie",
                   "Biologie",
-                  "andere Fächer (aggregiert)",
+                  "andere Fächer (gesamt)",
                   "Deutsch",
                   "Fremdsprachen",
                   "Gesellschaftswissenschaften",
                   "Musik/Kunst",
                   "Religion/Ethik",
                   "Sport"),
-      selected = "MINT (aggregiert)"
+      selected = "MINT-Fächer (gesamt)"
     )
 
   )

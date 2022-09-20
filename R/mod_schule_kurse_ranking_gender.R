@@ -21,20 +21,20 @@ mod_schule_kurse_ranking_gender_ui <- function(id){
     p("Auswahl des Fachs:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_kurse_ranking_gender"),
-      choices = c("MINT (aggregiert)",
+      choices = c("MINT-Fächer (gesamt)",
                   "Mathematik",
                   "Informatik",
                   "Physik",
                   "Chemie",
                   "Biologie",
-                  "andere Fächer (aggregiert)",
+                  "andere Fächer (gesamt)",
                   "Deutsch",
                   "Fremdsprachen",
                   "Gesellschaftswissenschaften",
                   "Musik/Kunst",
                   "Religion/Ethik",
                   "Sport"),
-      selected = "MINT (aggregiert)"
+      selected = "MINT-Fächer (gesamt)"
     )
 
   )
