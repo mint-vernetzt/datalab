@@ -290,24 +290,27 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
     #
     # )
     ,
-    tags$footer(
+    tags$footer(style="text-align: justify;",
 
-      div(style="float:left",
+      div(style="display: inline-block;position: relative;top: 1.2em;",
+
           tags$a(href="https://mint-vernetzt.de/",
                     img(src='www/MINTv_tranparent.png',
                      class = "img-responsive",
                     height = "100px", width = "100px",
                       alt = "Logo MINT", target="_blank",
                       style="display: inline-block; margin-left: auto; margin-right:10%;"))),
-      br(),
-      div(style="text-align:center",
-          tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
-          tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
-          tags$a("Datenschutz", href="https://mint-vernetzt.shinyapps.io/datalab/#shiny-tab-kontakt", "data-toggle" = "tab" ),
-          p("Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
 
-          div(style="float:right",
-              tags$a(href="https://www.bmbf.de/bmbf/de/home/home_node.html",
+      div(style="display: inline-block;position: relative;top: 1.2em;",
+
+          p(tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
+          tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
+          tags$a("Datenschutz", href="#shiny-tab-datenschutz", "data-toggle"="tab"),HTML('&nbsp;'),HTML('&nbsp;'),
+          "Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
+
+      div(style="display: inline-block;position: relative;top: 1.2em;",
+
+          tags$a(href="https://www.bmbf.de/bmbf/de/home/home_node.html",
              img(src='www/BMBF-Logo.jpg',
 
                  class = "img-responsive",
@@ -316,9 +319,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                  alt = "Logo BMBF", target="_blank",
 
-                 style="display: inline-block; margin-left: auto; margin-right: auto;")
+                 style="display: inline-block; margin-left: auto; margin-right: auto;"))),
 
-      ))))
+      div(style="display: inline-block;width: 100%;",
+
+          " ")
+
+      ))
 
 
 }
