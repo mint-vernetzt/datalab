@@ -292,20 +292,35 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
     ,
     tags$footer(
 
-      div("LOGO MINTV"),
-      div("Impressum"),
-      div("Datenschutz"),
-      div(tags$a(href="https://mint-vernetzt.shinyapps.io/datalab/#shiny-tab-kontakt", "Kontakt", target="_blank")),
-      div("Copyright © 2022. Alle Rechte vorbehalten Stifterverband"),
-      div("LOGO BMBF")
+      div(style="float:left",
+          tags$a(href="https://mint-vernetzt.de/",
+                    img(src='www/MINTv_tranparent.png',
+                     class = "img-responsive",
+                    height = "100px", width = "100px",
+                      alt = "Logo MINT", target="_blank",
+                      style="display: inline-block; margin-left: auto; margin-right:10%;"))),
+      br(),
+      div(style="text-align:center",
+          tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
+          tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
+          tags$a("Datenschutz", href="https://mint-vernetzt.shinyapps.io/datalab/#shiny-tab-kontakt", "data-toggle" = "tab" ),
+          p("Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
+
+          div(style="float:right",
+              tags$a(href="https://www.bmbf.de/bmbf/de/home/home_node.html",
+             img(src='www/BMBF-Logo.jpg',
+
+                 class = "img-responsive",
+
+                 height = "200px", width = "200px",
+
+                 alt = "Logo BMBF", target="_blank",
+
+                 style="display: inline-block; margin-left: auto; margin-right: auto;")
+
+      ))))
 
 
-
-
-
-
-    )
-    )
 }
 
 #' beruf_arbeitsmarkt Server Functions
