@@ -36,6 +36,7 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Datenquellen & Hinweise", icon = shiny::icon("book"), tabName = "quellen"),
           shinydashboard::menuItem("Kontakt", icon = shiny::icon("mail-bulk"), tabName = "kontakt"),
           shinydashboard::menuItem("Impressum", icon = shiny::icon("address-card"), tabName = "impressum")
+          #shinydashboard::menuItem("Datenschutz", icon = shiny::icon("address-card"), tabName = "datenschutz")
 
         )
       ),
@@ -50,7 +51,8 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
           shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
           shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
-          shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1"))
+          shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),
+          shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))
         )
       )
   ))
