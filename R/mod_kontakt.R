@@ -93,32 +93,7 @@ mod_kontakt_ui <- function(id){
           )
         )),
 
-    fluidRow(
-      shinydashboard::box(
-        title = "Datenpool und Quellen",
-        width = 12,
-        p(style = "text-align: justify; font-size = 16px",
-          "Ziel dieses Projektes ist es, die vorhandenen Statistiken über MINT in Deutschland in einem Datenpool zu bündeln
-          und über das MINT-DataLab zur weiteren Nutzung zur Verfügung zu stellen."
-          ),
 
-        p(style = "text-align: justify; font-size = 16px",
-          span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
-                         Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
-                         der Zeit integriert.")
-        ),
-
-        p(style = "text-align: justify; font-size = 16px",
-          tags$ul(
-            tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Statisitisches Bundesamt", target="_blank"), " : Zahlen zum Studium"),
-            tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Kultusministerkonferenz", target="_blank"), " : Zahlen zur Schulbildung"),
-            tags$li(tags$a(href="https://statistik.arbeitsagentur.de/DE/Home/home_node.html;jsessionid=B2B7423A23D5B6A5A4C301096D0ABDAB", "Bundesagentur für Arbeit", target="_blank"), " : Arbeitsmarktdaten")
-          )),
-        p(style = "text-align: justify; font-size = 16px",
-          "Die Nutzungsbedingungen der Datengeber erlauben die Verwendung der Daten und grafische Aufbereitung sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet. Bei Interesse an den kompletten Datensätzen müssen die Datengeber direkt kontaktiert werden."
-        ),
-
-      )),
 
     # Fußzeile
 
