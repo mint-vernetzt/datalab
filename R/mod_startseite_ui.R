@@ -58,6 +58,65 @@ mod_startseite_ui <- function(id){
 
       ))),
 
+    # Dynamische oder statische Infografiken
+
+    fluidRow(
+      shinydashboard::box(
+        width = 4,
+        img(src='www/DataLab_Trichter_dyn.mp4',
+            #class = "img-responsive",
+            height = "300px",
+            # width = "150px",
+            alt = "Infografik Trichter",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        )),
+      shinydashboard::box(
+        width = 4,
+        img(src='www/DataLab_Trichter_dyn.mp4',
+            #class = "img-responsive",
+            height = "300px",
+            # width = "150px",
+            alt = "Infografik Trichter",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        )),
+      shinydashboard::box(
+        width = 4,
+        img(src='www/DataLab_Trichter_dyn.mp4',
+            #class = "img-responsive",
+            height = "300px",
+            # width = "150px",
+            alt = "Infografik Trichter",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        ))
+
+
+      ),
+
+    # Erläuterung zu den Infografiken
+
+    fluidRow(
+      shinydashboard::box(
+        title = "xx",
+        width = 4,
+        p(style = "text-align: justify; font-size = 16px",
+          span("xx", br(),
+      ))),
+      shinydashboard::box(
+        title = "xx",
+        width = 4,
+        p(style = "text-align: justify; font-size = 16px",
+          span("xx", br(),
+        ))),
+      shinydashboard::box(
+        title = "xx",
+        width = 4,
+        p(style = "text-align: justify; font-size = 16px",
+          span("xx", br(),
+          )))),
+
+
+
+
     fluidRow(
       shinydashboard::box(
           title = "Orientierungshilfe: Wie ist das DataLab aufgebaut?",
@@ -69,7 +128,7 @@ mod_startseite_ui <- function(id){
                tags$b(span("#Frauen in MINT",style = "color:#b16fab"),": Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"), br(),br(),
                tags$b(span("#Fächerwahl von Frauen",style = "color:#b16fab"),": Wie unterscheidet sich die Fächerwahl oder Berufswahl von Frauen und Männern bzw. Mädchen und Jungen?")
                ),
-
+              br(), br(),
 
           span("Auf der Überblicksseite >> Alle Beildunsgbereiche << geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die Bildunsgbereiche miteinander.
           Auf den folgenden, bereichsspezifischen Unterseiten gehen wir je Bildungsbereich mehr ins Detail
@@ -88,20 +147,28 @@ mod_startseite_ui <- function(id){
           )
         ),
 
-      ),
-
-    # Dynamische Diagramme einbauen??
-
-    fluidRow(
       shinydashboard::box(
-        width = 6,
-        img(src='www/DataLab_Trichter_dyn.mp4',
+        width = 8,
+        img(src='www/How to.png',
             #class = "img-responsive",
-            height = "300px",
+            height = "400px",
             # width = "150px",
-            alt = "Infografik Trichter",
+            alt = "How to",
             style="display: block; margin-left: auto; margin-right: auto;"
         ))),
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ) # Taglist zu
 
