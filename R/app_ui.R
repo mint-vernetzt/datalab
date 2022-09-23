@@ -33,9 +33,9 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Studium im Detail", icon = shiny::icon("university"), tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf im Detail", icon = shiny::icon("building"), tabName = "beruf"),
-          shinydashboard::menuItem("Datenquellen & Hinweise", icon = shiny::icon("book"), tabName = "quellen"),
-          shinydashboard::menuItem("Kontakt", icon = shiny::icon("mail-bulk"), tabName = "kontakt"),
-          shinydashboard::menuItem("Impressum", icon = shiny::icon("address-card"), tabName = "impressum")
+          shinydashboard::menuItem("Datenquellen & Hinweise", icon = shiny::icon("book"), tabName = "quellen")
+          #shinydashboard::menuItem("Kontakt", icon = shiny::icon("mail-bulk"), tabName = "kontakt"),
+          #shinydashboard::menuItem("Impressum", icon = shiny::icon("address-card"), tabName = "impressum")
           #shinydashboard::menuItem("Datenschutz", icon = shiny::icon("address-card"), tabName = "datenschutz")
 
         )
