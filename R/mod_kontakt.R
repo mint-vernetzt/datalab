@@ -97,42 +97,42 @@ mod_kontakt_ui <- function(id){
 
     # Fußzeile
 
-    fluidRow(
-      shinydashboard::box(
-        width = 12,
-        column(width = 2,
-               img(src='www/BMBF-Logo.jpg',
-                   class = "img-responsive",
-                   height = "100px", width = "100px",
-                   alt = "Logo BMBF",
-                   style="display: block; margin-left: auto; margin-right: auto;"
-               )),
-
-        column(width = 2, p(style = "text-align: justify; font-size = 16px",
-               " Impressum (Link)"
-               )),
-
-        column(width = 2, p(style = "text-align: justify; font-size = 16px",
-              " Datenschutz (Link)"
-        )),
-
-        column(width = 2, p(style = "text-align: justify; font-size = 16px",
-               " Kontakt (Link)"
-        )),
-
-        column(width = 2,
-                p(style = "text-align: justify; font-size = 16px",
-                "Copyright © 2022. Alle Rechte vorbehalten Stifterverband xxx "
-               )),
-
-      column(width = 2,
-               img(src='www/mint_logo_gross.jpg',
-                   class = "img-responsive",
-                   height = "50px", width = "50px",
-                   alt = "Logo MINT",
-                   style="display: block; margin-left: auto; margin-right: auto;"
-               ))
-      ))
+    # fluidRow(
+    #   shinydashboard::box(
+    #     width = 12,
+    #     column(width = 2,
+    #            img(src='www/BMBF-Logo.jpg',
+    #                class = "img-responsive",
+    #                height = "100px", width = "100px",
+    #                alt = "Logo BMBF",
+    #                style="display: block; margin-left: auto; margin-right: auto;"
+    #            )),
+    #
+    #     column(width = 2, p(style = "text-align: justify; font-size = 16px",
+    #            " Impressum (Link)"
+    #            )),
+    #
+    #     column(width = 2, p(style = "text-align: justify; font-size = 16px",
+    #           " Datenschutz (Link)"
+    #     )),
+    #
+    #     column(width = 2, p(style = "text-align: justify; font-size = 16px",
+    #            " Kontakt (Link)"
+    #     )),
+    #
+    #     column(width = 2,
+    #             p(style = "text-align: justify; font-size = 16px",
+    #             "Copyright © 2022. Alle Rechte vorbehalten Stifterverband xxx "
+    #            )),
+    #
+    #   column(width = 2,
+    #            img(src='www/mint_logo_gross.jpg',
+    #                class = "img-responsive",
+    #                height = "50px", width = "50px",
+    #                alt = "Logo MINT",
+    #                style="display: block; margin-left: auto; margin-right: auto;"
+    #            ))
+      # ))),
 
 
 
@@ -173,7 +173,45 @@ mod_kontakt_ui <- function(id){
     #   )
     # ) #Row zu
 
-    ) #tagList zu
+
+tags$footer(style="text-align: justify;",
+
+            div(style="display: inline-block;position: relative;top: 1.2em;",
+
+                tags$a(href="https://mint-vernetzt.de/",
+                       img(src='www/MINTv_tranparent.png',
+                           class = "img-responsive",
+                           height = "100px", width = "100px",
+                           alt = "Logo MINT", target="_blank",
+                           style="display: inline-block; margin-left: auto; margin-right:10%;"))),
+
+            div(style="display: inline-block;position: relative;top: 1.2em;",
+
+                p(tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
+                  tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
+                  tags$a("Datenschutz", href="#shiny-tab-datenschutz", "data-toggle"="tab"),HTML('&nbsp;'),HTML('&nbsp;'),
+                  "Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
+
+            div(style="display: inline-block;position: relative;top: 1.2em;",
+
+                tags$a(href="https://www.bmbf.de/bmbf/de/home/home_node.html",
+                       img(src='www/BMBF-Logo_transp1.png',
+
+                           class = "img-responsive",
+
+                           height = "200px", width = "200px",
+
+                           alt = "Logo BMBF", target="_blank",
+
+                           style="display: inline-block; margin-left: auto; margin-right: auto;"))),
+
+            div(style="display: inline-block;width: 100%;",
+
+                " ")
+
+))
+
+#tagList zu
 
 }
 
