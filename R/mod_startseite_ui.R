@@ -60,32 +60,61 @@ mod_startseite_ui <- function(id){
 
     # Dynamische oder statische Infografiken
 
+    # Breitere Option mit Text daneben und dynamischer Infografik
+    fluidRow(
+      shinydashboard::box(
+        width = 8,
+          tags$video(src="www/DataLab_Trichter_dyn.mp4", type = "video/mp4", hight = "300px", autoplay = TRUE),
+        #video spielt leider nicht ab - könnte daran liegen dass www Pfad nicht auch für Vidoes eingerichtet ist?
+
+      #  img(src='www/DataLab_Trichter.jpg',
+      #      class = "img-responsive",
+      #      height = "300px",
+      #      # width = "150px",
+      #      alt = "Infografik Trichter",
+      #      style="display: block; margin-left: auto; margin-right: auto;"
+      #   )
+        ),
+
+      shinydashboard::box(
+        title = "Anteil Frauen entlang der Bildungskette",
+        width = 4,
+         p(style = "text-align: justify; font-size = 16px",
+           span("Diese dynamische Grafik zeigt, wie der Anteil an Mädchen beziehungsweise Frauen entlang der Bildungskette abnimmt.
+               Während in der Schule der Anteil an Mädchen und Jungen in MINT-Fächern fast ausgewogen ist, wird der Anteil
+               an Frauen, die MINT-Studiengänge wählen, eine Ausbildung in MINT ergreifen oder in MINT-Berufen arbeiten immer geringer.", br(),
+            ))),
+      ),
+
+    #Option mit drei Boxen nebeneinander und Beschreibung darunter
     fluidRow(
       shinydashboard::box(
         width = 4,
-        img(src='www/DataLab_Trichter_dyn.mp4',
-            #class = "img-responsive",
+       img(src='www/DataLab_Frauenanteil.jpg',
+            class = "img-responsive",
             height = "300px",
-            # width = "150px",
-            alt = "Infografik Trichter",
+           # width = "150px",
+            alt = "Infografik Frauenanteil",
+            style="display: block; margin-left: auto; margin-right: auto;"
+            )
+
+        ),
+      shinydashboard::box(
+        width = 4,
+        img(src='www/DataLab_Anteil_Studis.jpg',
+            class = "img-responsive",
+            height = "300px",
+           # width = "150px",
+            alt = "Infografik Anteil Studierende",
             style="display: block; margin-left: auto; margin-right: auto;"
         )),
       shinydashboard::box(
         width = 4,
-        img(src='www/DataLab_Trichter_dyn.mp4',
+        img(src='www/DataLab_Anteil_Azubis.jpg',
             #class = "img-responsive",
             height = "300px",
-            # width = "150px",
-            alt = "Infografik Trichter",
-            style="display: block; margin-left: auto; margin-right: auto;"
-        )),
-      shinydashboard::box(
-        width = 4,
-        img(src='www/DataLab_Trichter_dyn.mp4',
-            #class = "img-responsive",
-            height = "300px",
-            # width = "150px",
-            alt = "Infografik Trichter",
+            #width = "150px",
+            alt = "Infografik Anteil Auszubildende",
             style="display: block; margin-left: auto; margin-right: auto;"
         ))
 
@@ -96,23 +125,24 @@ mod_startseite_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "xx",
+        title = "Anteil Frauen entlang der Bildungskette",
         width = 4,
         p(style = "text-align: justify; font-size = 16px",
-          span("xx", br(),
+          span("Hier ist nocheinmal der Anteil von Frauen im MINT-Bereich entlang der Bildungskette dargestellt.", br(),
       ))),
       shinydashboard::box(
-        title = "xx",
+        title = "Wie viel macht MINT - bei Studierenden?",
         width = 4,
         p(style = "text-align: justify; font-size = 16px",
-          span("xx", br(),
+          span("Der Anteil an Studierenden, welche einen Studiengang aus dem MINT-Bereich wählen, liegt bei 34 %", br(),
         ))),
       shinydashboard::box(
-        title = "xx",
+        title = "Wie viel macht MINT - bei Auszubildenden?",
         width = 4,
         p(style = "text-align: justify; font-size = 16px",
-          span("xx", br(),
-          )))),
+         span("Bei Auszubildenden wählen weniger einen Beruf aus dem Bildungsbereich. Nur 24 % gehen einer Ausbildung im MINT-Bereich nach.", br(),
+          )))
+      ),
 
 
 
