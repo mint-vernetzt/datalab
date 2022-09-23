@@ -30,7 +30,7 @@ mod_studium_studienzahl_ui <- function(id){
      fluidRow(
     shinydashboard::box(
       #tags$h2("Studium und MINT"),
-      width = 12,
+      width = 9,
       p(style = "text-align: justify; font-size = 16px",
         ""),
       p(style = "text-align: justify; font-size = 16px",
@@ -38,7 +38,27 @@ mod_studium_studienzahl_ui <- function(id){
       p(style = "text-align: justify; font-size = 16px",
         span(tags$b(span("Methodische Hinweise: ", style = "color:#b16fab")),
              "Die aktuellen Berechnungen erfolgen auf Basis der Studierendenzahlen an allen deutschen Hochschulen. "))
+    ),
+    shinydashboard::box(
+      title = "Auf dieser Seite",
+      width = 3,
+      p(style = "text-align: justify; font-size = 16px",
+        span(tags$b(span("#MINT")), ": Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
+        )),
+      p(style = "text-align: justify; font-size = 16px",
+        span(tags$b(span("#MINT im Detail")), ": Vergleich nach einzelnen MINT-Fächer und Bundesländern"
+        )),
+      p(style = "text-align: justify; font-size = 16px",
+        span(tags$b(span("#Frauen in MINT")), ": Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
+      )),
+
+      p(style = "text-align: justify; font-size = 16px",
+        span(tags$b(span("#Fächerwahl von Frauen")), ": Wie unterscheidet sich die Fächerwahl von Frauen und Männern?"
+      ),
+      )
+
     )),
+
     fluidRow(
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?",
@@ -99,7 +119,7 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "#MINT_im_Detail: Vergleich der einzelnen MINT-Fächer und nach Bundesländern",
+        title = "#MINT_im_Detail: Vergleich nach einzelnen MINT-Fächer und Bundesländern",
         width = 12,
 
         tabsetPanel(type = "tabs",

@@ -54,16 +54,15 @@ mod_schule_kurse_ui <- function(id){
           span(tags$b(span("#MINT im Detail")), ": Vergleich der einzelnen MINT-Fächer und Unterschiede zwischen den Bundesländern"
           )),
         p(style = "text-align: justify; font-size = 16px",
-          "#Frauen in MINT: Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"
-        ),
+          span(tags$b(span("#Mädchen in MINT")), ": Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"
+        )),
 
         p(style = "text-align: justify; font-size = 16px",
-          "#Mädchen_in_MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"
+          span(tags$b(span("#Fächerwahl Mädchen")), ": Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"
         ),
 
-      )
+      ))),
 
-      ),
     fluidRow(
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?",

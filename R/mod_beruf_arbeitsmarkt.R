@@ -24,7 +24,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
        fluidRow(
       shinydashboard::box(
-        width = 12,
+        width = 9,
         #tags$h2("MINT auf dem Arbeitsmark"),
         # p(style = "text-align: justify; font-size = 16px",
         #   "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
@@ -39,7 +39,24 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                            style = "color:#b16fab")),"Die Kategorierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit.
                Beschäftigte werden nur als MINT klassifiziert, wenn sie einer MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z.B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend.")),
 
+      ),
+      shinydashboard::box(
+        title = "Auf dieser Seite",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#MINT")),": Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben?"
+          )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#MINT im Detail")),": Vergleiche nach Bundesländern"
+          )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#Frauen in MINT")),": Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
+          )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#Berufswahl von Frauen")),
+          )),
       )),
+
     fluidRow(
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben?",
