@@ -11,6 +11,17 @@ mod_quellen_ui <- function(id){
   ns <- NS(id)
   tagList  (
 
+    # Banner
+    fluidRow(
+      shinydashboard::box(
+        width = 12,
+        img(src='www/Banner_breiter_Quellen.jpg',
+            class = "img-responsive",
+            #height = "150px", width = "150px",
+            alt = "Banner Quellen",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        ))),
+
     fluidRow(
       shinydashboard::box(
         title = "Datenpool und Quellen",

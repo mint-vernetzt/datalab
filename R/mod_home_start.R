@@ -13,26 +13,26 @@ mod_home_start_ui <- function(id){
 
     # Banner
 
-      # fluidRow(
-      #   shinydashboard::box(
-      #     width = 12,
-      #     img(src='www/Banner_Start.jpg',
-      #         class = "img-responsive",
-      #         height = "300px",
-      #         # width = "150px",
-      #         alt = "Banner Start",
-      #         style="display: block; margin-left: auto; margin-right: auto;"
-      #     )
-      #     )),
+       fluidRow(
+         shinydashboard::box(
+           width = 12,
+           img(src='www/Banner_breiter_Alle_Bildungsbereiche.jpg',
+               class = "img-responsive",
+               #height = "300px",
+               #width = "150px",
+               alt = "Banner MINT entlang der Bildungskette",
+               style="display: block; margin-left: auto; margin-right: auto;"
+           )
+           )),
 
-    fluidRow(
-      shinydashboard::box(
-        title = "",
-        width = 12,
-        p(style = "text-align: justify; font-size = 16px",
-          span("BANNER; MINT entlang der Bildungskette")
-      ))
-      ),
+   # fluidRow(
+     # shinydashboard::box(
+     #   title = "",
+     #   width = 12,
+     #   p(style = "text-align: justify; font-size = 16px",
+      #    span("BANNER; MINT entlang der Bildungskette")
+     # ))
+     # ),
 
 
 

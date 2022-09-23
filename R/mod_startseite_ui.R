@@ -34,7 +34,7 @@ mod_startseite_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        img(src='www/Banner_Start.jpg',
+        img(src='www/Banner_breiter_Willkommen.jpg',
             class = "img-responsive",
             height = "300px",
             # width = "150px",
