@@ -29,10 +29,15 @@ mod_studium_studienzahl_ui <- function(id){
 
      fluidRow(
     shinydashboard::box(
-      #tags$h2("Studium und MINT"),
+      titel = "Studium in MINT",
       width = 9,
       p(style = "text-align: justify; font-size = 16px",
-        ""),
+      span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
+             "Auf dieser Seite zeigen wir, statische Kennzahlen zum Thema MINT studieren. Wir zeigen, wie hoch der Anteil von MINT-Fächern gemessen an allen gewählten Studienfächern ist.
+          Dazu zeigen wir Vergleiche nach männlichen und weiblichen Studierenden und nach Bundesländern.
+           Studiernde können außerdem nach Hochschultyp unterschieden werden, oder ob sie auf Lehramt oder im ersten Fachsemester studieren."
+           )),
+        br(),
       p(style = "text-align: justify; font-size = 16px",
         span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis 2021, auf Anfrage, eigene Berechnungen.")),
       p(style = "text-align: justify; font-size = 16px",
@@ -224,7 +229,11 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "#Fächerwahl_Frauen: Wie unterscheidet sich die Fächerwahl von Frauen und Männern?",
         width = 12,
-        p("Hier xxx"),
+        p("Hier zeigen wir die Unterschiede zwischen Männern und Frauen aus einer anderen Perspektive. Welchen Anteil machen MINT-Fächer bei der Studienfachwahl von Frauen und Männern aus? "),
+       br(), br(),
+        p("Interpretationshilfe: Weibliche Studierende haben 2020 zu 24 Prozent ein MINT-Studienfach gewählt. Bei den männlichen Studierenden waren es 51 Prozent.
+          "),
+
         tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich", br(),
