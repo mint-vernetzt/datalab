@@ -85,18 +85,21 @@ mod_home_start_ui <- function(id){
                       shiny::sidebarPanel(
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1")),
                       shiny::mainPanel(
-                        htmlOutput(ns("plot_mint_rest_einstieg_1")))
+                        htmlOutput(ns("plot_mint_rest_einstieg_1"))
+                        ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
                             ),
                     tabPanel("Zeitverlauf", br(),
                         shiny::sidebarPanel(
                           mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")),
                         shiny::mainPanel(
-                          highcharter::highchartOutput(ns("plot_mint_1")))
+                          highcharter::highchartOutput(ns("plot_mint_1"))
+                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
                              ),
                     tabPanel("Überblick", br(),
                              shiny::sidebarPanel(
                                mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
                              shiny::mainPanel(highcharter::highchartOutput(ns("plot_comparison_mint"))
+                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
 
          ))))),
     fluidRow(
@@ -112,25 +115,31 @@ mod_home_start_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_home_start_einstieg_gender_ui("mod_home_start_einstieg_gender_ui_1")),
                              shiny::mainPanel(
-                               htmlOutput(ns("plot_pie_mint_gender")))
+                               htmlOutput(ns("plot_pie_mint_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
                             ),
                     tabPanel("Zeitverlauf", br(),
                         shiny::sidebarPanel(
                           mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
                         shiny::mainPanel(
                           highcharter::highchartOutput(ns("plot_verlauf_mint"))
+                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
                                         )
                             ),
                     tabPanel("Überblick", br(),
                              shiny::sidebarPanel(
                                mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1")),
-                             shiny::mainPanel(plotOutput(ns("plot_comparison_gender")))
+                             shiny::mainPanel(plotOutput(ns("plot_comparison_gender"))
+                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
 
                              )
                     )))
 
 
   ,
+
+
+# Footer
   tags$footer(style="text-align: justify;",
 
               div(style="display: inline-block;position: relative;top: 1.2em;",
