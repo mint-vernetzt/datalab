@@ -69,11 +69,11 @@ mod_startseite_ui <- function(id){
         #   tags$video(src="www/DataLab_Trichter_dyn.mp4", type = "video/mp4", hight = "300px", autoplay = TRUE),
         #video spielt leider nicht ab - könnte daran liegen dass www Pfad nicht auch für Vidoes eingerichtet ist?
 
-        img(src='www/Anteil MINT.png',
+        img(src='www/Anteile MINT.JPG',
             class = "img-responsive",
             height = "150px",
             # width = "150px",
-            alt = "Infografik Anteil MINT",
+            alt = "Infografik Anteile MINT",
             style="display: block; margin-left: auto; margin-right: auto;"
         ),
         br(),
@@ -93,11 +93,11 @@ mod_startseite_ui <- function(id){
        #   tags$video(src="www/DataLab_Trichter_dyn.mp4", type = "video/mp4", hight = "300px", autoplay = TRUE),
         #video spielt leider nicht ab - könnte daran liegen dass www Pfad nicht auch für Vidoes eingerichtet ist?
 
-       img(src='www/Trichter.png',
+       img(src='www/Anteile Frauen.JPG',
            class = "img-responsive",
            height = "150px",
            # width = "150px",
-           alt = "Infografik Trichter",
+           alt = "Infografik Frauen",
            style="display: block; margin-left: auto; margin-right: auto;"
         ),
        br(),
@@ -178,7 +178,7 @@ mod_startseite_ui <- function(id){
          shinydashboard::box(
            title = "Orientierungshilfe für das MINT-DataLab: 4 Seiten - immer die gleiche Logik",
             width = 12,
-           img(src='www/How to4.png',
+           img(src='www/How to 5.JPG',
                         #class = "img-responsive",
                         height = "800px",
                         # width = "150px",
