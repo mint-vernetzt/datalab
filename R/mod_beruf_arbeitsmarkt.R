@@ -25,19 +25,19 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
        fluidRow(
       shinydashboard::box(
         width = 9,
-        #tags$h2("MINT auf dem Arbeitsmark"),
-        # p(style = "text-align: justify; font-size = 16px",
-        #   "Auf dieser Seite finden Sie statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
-        #   Dabei unterscheiden wir zwischen Auszubildenden und Beschäftigten sowie nach Geschlecht.
-        #   Zudem können die Daten anhand der Anforderungsprofile auf dem Arbeitsmarkt analysiert werden und unten
-        #   haben wir alle Ergebnisse auch für einzelne Bundesländer aufbereitet."),
-        #br(),
+        titel = "Ausbildung und Beschäftigung in MINT",
+        p(style = "text-align: justify; font-size = 16px",
+        span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
+          "Auf dieser Seite zeigen wir Sie statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
+        Dabei unterscheiden wir zwischen Auszubildenden und Beschäftigten. Vergleiche sind zusätzlich nach Geschlecht und
+        nach Bundesländers möglich.")),
         p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")),
         p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("Methodische Hinweise: ",
                            style = "color:#b16fab")),"Die Kategorierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit.
-               Beschäftigte werden nur als MINT klassifiziert, wenn sie einer MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z.B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend.")),
+               Beschäftigte werden nur als MINT klassifiziert, wenn sie einer MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z.B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend."
+               )),
 
       ),
       shinydashboard::box(

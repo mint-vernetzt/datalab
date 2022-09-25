@@ -25,7 +25,7 @@ mod_schule_kurse_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 9,
-        tags$h2("MINT in der Schule"),
+        titel = "MINT in der Schule",
         p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
           "Auf dieser Seite zeigen wir, wie hoch der Anteil von MINT-Fächern gemessen an allen gewählten Grund- und Leistungskursen ist.
