@@ -75,7 +75,8 @@ mod_studium_studienzahl_ui <- function(id){
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_studium_studienzahl_einstieg_ui("mod_studium_studienzahl_einstieg_ui_1")),
                              shiny::mainPanel(
-                               htmlOutput(ns("plot_einstieg_pie")))
+                               htmlOutput(ns("plot_einstieg_pie"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
                     tabPanel("Zeitverlauf", br(),
@@ -85,7 +86,7 @@ mod_studium_studienzahl_ui <- function(id){
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_studium_studienzahl_einstieg_verlauf_ui("mod_studium_studienzahl_einstieg_verlauf_ui_1")),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_einstieg_verlauf")))
+                               highcharter::highchartOutput(ns("plot_einstieg_verlauf")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."))
 
                     ),
                     tabPanel("Überblick", br(),
@@ -95,7 +96,7 @@ mod_studium_studienzahl_ui <- function(id){
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_studium_studienzahl_einstieg_comparison_ui("mod_studium_studienzahl_einstieg_comparison_ui_1")),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_einstieg_comparison")))
+                               highcharter::highchartOutput(ns("plot_einstieg_comparison")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."))
 
 
                   ),
@@ -131,7 +132,7 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_waffle")))
+                               plotOutput(ns("plot_waffle")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
                     tabPanel("Karte", br(),
@@ -140,7 +141,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_bl_map_ui("mod_studium_studienzahl_bl_map")
                              ),
                              shiny::mainPanel(
-                               htmlOutput(ns("plot_studienzahl_map"))
+                               htmlOutput(ns("plot_studienzahl_map")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
 
@@ -152,7 +153,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_verlauf_bl_subject_ui("mod_studium_studienzahl_verlauf_bl_subject_ui_1")),
                              shiny::mainPanel(
 
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject"))
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
 
                              )
                     ),
@@ -163,7 +164,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_bl_verlauf_ui("mod_studium_studienzahl_bl_verlauf")
                              ),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf"))
+                               highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
 
@@ -174,7 +175,7 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_ranking_bl_subject")),
+                               plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
 
@@ -184,7 +185,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_bl_vergleich_ui("studium_studienzahl_bl_vergleich")
                              ),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_vergleich_bl"))
+                               plotOutput(ns("plot_vergleich_bl")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     )
         ))),
@@ -204,7 +205,7 @@ mod_studium_studienzahl_ui <- function(id){
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_studium_studienzahl_einstieg_gender_ui("mod_studium_studienzahl_einstieg_gender_ui_1")),
                              shiny::mainPanel(
-                               htmlOutput(ns("plot_einstieg_pie_gender")))
+                               htmlOutput(ns("plot_einstieg_pie_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
                     tabPanel("Zeitverlauf", br(),
@@ -214,7 +215,7 @@ mod_studium_studienzahl_ui <- function(id){
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_studium_studienzahl_einstieg_verlauf_gender_ui("mod_studium_studienzahl_einstieg_verlauf_gender_ui_1")),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender")))
+                               highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."))
 
                   )
 
@@ -234,7 +235,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_choice_gender_ui("mod_studium_studienzahl_choice_gender_ui")
                              ),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_waffle_choice_gender"))
+                               plotOutput(ns("plot_waffle_choice_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
 
@@ -246,7 +247,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_verlauf_bl_subject_gender_ui("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1")
                              ),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender"))
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
                     tabPanel("Überblick", br(),
@@ -257,10 +258,13 @@ mod_studium_studienzahl_ui <- function(id){
                                  mod_studium_studienzahl_ranking_bl_subject_gender_ui("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1")
                                ),
                                shiny::mainPanel(
-                                 plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender"))
+                                 plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
                                )
                     )
         ))),
+
+
+    #Footer
     tags$footer(style="text-align: justify;",
 
                 div(style="display: inline-block;position: relative;top: 1.2em;",

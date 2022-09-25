@@ -80,20 +80,21 @@ mod_schule_kurse_ui <- function(id){
                         tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                         mod_schule_kurse_einstieg_ui("mod_schule_kurse_einstieg_ui_1")),
                       shiny::mainPanel(
-                        htmlOutput(ns("plot_einstieg_pie")))
+                        htmlOutput(ns("plot_einstieg_pie")),p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                             ),
 
                     tabPanel("Zeitverlauf", br(),
                              shiny::sidebarPanel(
                                mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1")),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_einstieg_verlauf")))
+                               highcharter::highchartOutput(ns("plot_einstieg_verlauf")),p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                              ),
                     tabPanel("Überblick", br(),
                              shiny::sidebarPanel(
                                mod_schule_kurse_einstieg_comparison_ui("mod_schule_kurse_einstieg_comparison_ui_1")),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_einstieg_comparison")))
+                               highcharter::highchartOutput(ns("plot_einstieg_comparison"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                     ),
                     tabPanel("Datensatz", br(),
 
@@ -126,7 +127,8 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_waffle_mint")))
+                               plotOutput(ns("plot_waffle_mint"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
 
@@ -135,14 +137,16 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1")),
                              shiny::mainPanel(
-                               htmlOutput(ns("plot_map_kurse")))
+                               htmlOutput(ns("plot_map_kurse"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                     ),
                     tabPanel("Vergleich Bundesländer", br(),
 
                              shiny::sidebarPanel(
                                mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1")),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_verlauf_multiple")))
+                               highcharter::highchartOutput(ns("plot_verlauf_multiple"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                     ),
                     tabPanel("Vergleich Fächer", br(),
 
@@ -151,7 +155,8 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_schule_kurse_verlauf_bl_subjects_ui("mod_schule_kurse_verlauf_bl_subjects_ui_1")),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects"))))
+                               highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen.")))
                     ,
                     tabPanel("Überblick Bundesländer", br(),
 
@@ -161,6 +166,7 @@ mod_schule_kurse_ui <- function(id){
                                mod_schule_kurse_comparison_subjects_ui("mod_schule_kurse_comparison_subjects_ui_1")),
                              shiny::mainPanel(
                                plotOutput(ns("plot_comparison_subjects"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen.")
 
                              )),
                     tabPanel("Überblick Fächer", br(),
@@ -168,7 +174,8 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_comparison_bl"))))
+                               plotOutput(ns("plot_comparison_bl"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen.")))
 
         ))),
     fluidRow(
@@ -191,7 +198,8 @@ mod_schule_kurse_ui <- function(id){
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_schule_kurse_pie_gender_ui("mod_schule_kurse_pie_gender_ui_1")),
                              shiny::mainPanel(
-                               htmlOutput(ns("plot_pie_gender")))
+                               htmlOutput(ns("plot_pie_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
                     # tabPanel("Zeitverlauf MINT", br(), #kann raus
@@ -210,7 +218,8 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_schule_kurse_verlauf_bl_ui("mod_schule_kurse_verlauf_bl_ui_1")),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_verlauf_kurse_bl")))
+                               highcharter::highchartOutput(ns("plot_verlauf_kurse_bl"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                     ),
                     tabPanel("Vergleich Fächer", br(),
 
@@ -219,7 +228,8 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_ranking_2")))
+                               plotOutput(ns("plot_ranking_2"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                              ),
 
                     tabPanel("Überblick", br(),
@@ -232,7 +242,8 @@ mod_schule_kurse_ui <- function(id){
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_schule_kurse_comparison_gender_ui("mod_schule_kurse_comparison_gender_ui_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_comparison_gender")))
+                               plotOutput(ns("plot_comparison_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                     )
                     ))),
 
@@ -254,7 +265,8 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_waffle")))
+                               plotOutput(ns("plot_waffle"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
                     tabPanel("Karte", br(),
@@ -262,7 +274,8 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1")),
                              shiny::mainPanel(
-                               htmlOutput(ns("plot_map_kurse_gender")))
+                               htmlOutput(ns("plot_map_kurse_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
                     # tabPanel("Vergleich (Bundesländer)", br(),
@@ -280,10 +293,12 @@ mod_schule_kurse_ui <- function(id){
                             shiny::sidebarPanel(
                               mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1")),
                             shiny::mainPanel(
-                              plotOutput(ns("plot_ranking_gender")))
+                              plotOutput(ns("plot_ranking_gender"))
+                              ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
 
                   )))),
 
+    # Footer
 
   tags$footer(style="text-align: justify;",
 

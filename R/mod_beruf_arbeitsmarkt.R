@@ -76,6 +76,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                htmlOutput(ns("plot_einstieg_pie"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
                     tabPanel("Vergleich 2", br(),
@@ -84,9 +85,12 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
+
                              ),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_arbeitsmarkt_waffle"))
+                               plotOutput(ns("plot_arbeitsmarkt_waffle")),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
                     tabPanel("Zeitverlauf", br(),
@@ -97,7 +101,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                mod_beruf_arbeitsmarkt_einstieg_verlauf_ui("mod_beruf_arbeitsmarkt_einstieg_verlauf_ui_1")
                                ),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_einstieg_verlauf"))
+                               highcharter::highchartOutput(ns("plot_einstieg_verlauf")),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                                )
 
 
@@ -111,6 +116,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                highcharter::highchartOutput(ns("plot_einstieg_vergleich"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
                     tabPanel("Datensatz", br(),
@@ -121,6 +127,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                                ),
                              shiny::mainPanel(
                                div(DT::dataTableOutput(ns("data_table_einstieg")),
@@ -143,6 +150,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                htmlOutput(ns("plot_arbeitsmarkt_bl"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
                     tabPanel("Vergleich (Bundesländer)", br(),
@@ -152,6 +160,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_verlauf"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
 
@@ -162,6 +171,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                plotOutput(ns("plot_arbeitsmarkt_bl_vergleich"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     )
                     #
@@ -184,6 +194,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                htmlOutput(ns("plot_einstieg_pie_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
                     tabPanel("Zeitverlauf", br(),
@@ -195,6 +206,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
 
 
@@ -208,6 +220,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                plotOutput(ns("plot_einstieg_vergleich_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                                )
                     )))),
     fluidRow(
@@ -226,6 +239,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                htmlOutput(ns("plot_arbeitsmarkt_bl_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
                     tabPanel("Detaillierter Vergleich", br(),
@@ -237,6 +251,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                plotOutput(ns("plot_arbeitsmarkt_waffle_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
                              ),
                     tabPanel("Vergleich (Bundesländer)", br(),
@@ -246,6 +261,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_gender_verlauf"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
 
@@ -255,7 +271,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                          mod_beruf_arbeitsmarkt_bl_gender_vergleich_ui("beruf_arbeitsmarkt_bl_gender_vergleich_ui_1")
                                        ),
                                        shiny::mainPanel(
-                                         plotOutput(ns("plot_arbeitsmarkt_bl_gender_vergleich")))
+                                         plotOutput(ns("plot_arbeitsmarkt_bl_gender_vergleich"))
+                                         ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen."))
+
                     )
         )))
     # ,
