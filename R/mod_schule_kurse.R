@@ -67,7 +67,7 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?",
         width = 12,
-        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Fächern ingesamt in der Oberstufe in Deutschland.",
+        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil davon, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt wurden.",
           br(),
         "Beispiel: In der ersten Einstellung ist zu sehen, dass in Deutschland 24 Prozent aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil bei 33 Prozent in 2020."),
         tabsetPanel(type = "tabs",
