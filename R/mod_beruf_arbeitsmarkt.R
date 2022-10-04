@@ -118,24 +118,25 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_einstieg_vergleich"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
                              )
-                    ),
-                    tabPanel("Datensatz", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                               .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               tags$style(".well {background-color:#FFFFFF;}"),
-                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
-                               ),
-                             shiny::mainPanel(
-                               div(DT::dataTableOutput(ns("data_table_einstieg")),
-                                   style = "font-size: 75%; width: 75%"),
-                               shiny::downloadButton(ns("download_data_box1"), label = "",
-                                                     class = "butt",
-                                                     icon = shiny::icon("download")))
                     )
+                    # ,
+                    # tabPanel("Datensatz", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            tags$style(".well {background-color:#FFFFFF;}"),
+                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                    #            mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
+                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.")
+                    #            ),
+                    #          shiny::mainPanel(
+                    #            div(DT::dataTableOutput(ns("data_table_einstieg")),
+                    #                style = "font-size: 75%; width: 75%"),
+                    #            shiny::downloadButton(ns("download_data_box1"), label = "",
+                    #                                  class = "butt",
+                    #                                  icon = shiny::icon("download")))
+                    # )
         ))),
     fluidRow(
       shinydashboard::box(

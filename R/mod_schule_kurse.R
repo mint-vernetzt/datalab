@@ -69,7 +69,8 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         p("In diesen interaktiven Diagrammen beleuchten wir den Anteil davon, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt wurden.",
           br(),
-        "Beispiel: In der ersten Einstellung ist zu sehen, dass in Deutschland 24 Prozent aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil bei 33 Prozent in 2020."),
+          br(),
+        "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 24 Prozent aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil bei 33 Prozent in 2020."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -95,29 +96,33 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                highcharter::highchartOutput(ns("plot_einstieg_comparison"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
-                    ),
-                    tabPanel("Datensatz", br(),
-
-                      tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                               .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                      shiny::sidebarPanel(
-                        tags$style(".well {background-color:#FFFFFF;}"),
-                        tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                        mod_schule_kurse_einstieg_ui("mod_schule_kurse_einstieg_ui_1")),
-                      shiny::mainPanel(
-                        div(DT::dataTableOutput(ns("data_table_einstieg")),
-                            style = "font-size: 75%; width: 75%"),
-                        shiny::downloadButton(ns("download_data_box1"), label = "",
-                                              class = "butt",
-                                              icon = shiny::icon("download")))
-                            )
+                    )
+                    #,
+                    #  tabPanel("Datensatz", br(),
+                    #
+                    #   tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #   shiny::sidebarPanel(
+                    #     tags$style(".well {background-color:#FFFFFF;}"),
+                    #     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                    #     mod_schule_kurse_einstieg_ui("mod_schule_kurse_einstieg_ui_1")),
+                    #   shiny::mainPanel(
+                    #     div(DT::dataTableOutput(ns("data_table_einstieg")),
+                    #         style = "font-size: 75%; width: 75%"),
+                    #     shiny::downloadButton(ns("download_data_box1"), label = "",
+                    #                           class = "butt",
+                    #                           icon = shiny::icon("download")))
+                    #         )
       ))),
 
     fluidRow(
       shinydashboard::box(
         title = "#MINT_im_Detail: Vergleich der einzelnen MINT-Fächern und Unterschiede zwischen den Bundesländern",
         width = 12,
-        p("Hier zeigen wir die Anteile einzelner MINT-Fächer sowie die Unterschiede in den Bundesländern. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse."),
+        p("Hier zeigen wir die Anteile einzelner MINT-Fächer sowie die Unterschiede in den Bundesländern. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse.",
+        br(), br(),
+        "Interpretationshilfe: Auf der ersten Seite ist zu sehen, dass im Jahr 2020 deutschlandweit 21 Prozent der Grundkurse aus dem MINT Bereich sind, wobei Naturwissenschaften mit 11 Prozent die am häufisten belegte MINT-Disziplin ist.
+        Bei den Leistungskursen sind 2020 sogar 31 Prozent der Belegungen im MINT-Bereich, wobei Mathematik 18 Prozent an allen Leistungskursbelegungen ausmacht."),
         tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich", br(),
@@ -158,7 +163,7 @@ mod_schule_kurse_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen.")))
                     ,
-                    tabPanel("Überblick Bundesländer", br(),
+                    tabPanel("Überblick Fächer", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -169,7 +174,7 @@ mod_schule_kurse_ui <- function(id){
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen.")
 
                              )),
-                    tabPanel("Überblick Fächer", br(),
+                    tabPanel("Überblick Bundesländer", br(),
 
                              shiny::sidebarPanel(
                                mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1")),
@@ -186,7 +191,7 @@ mod_schule_kurse_ui <- function(id){
         Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern.
         Die verschiedenen Diagramme bieten außerdem Fächer- und Bundeslandvergleiche.",
           br(), br(),
-        "Interpretationshilfe: Der Anteil von Mädchen bzw. Frauen in allen MINT-Grundkursen in Deutschland betrug 52 Prozent in 2020.
+        "Interpretationshilfe: Dei erste Darstellung zeigt, dass der Anteil von Mädchen bzw. Frauen in allen MINT-Grundkursen in Deutschland 52 Prozent in 2020 betrug.
         In den MINT-Leistungskursen betrug dieser Anteil 48 Prozent."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
@@ -254,7 +259,7 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         p("Hier zeigen wir die Unterschiede zwischen Mädchen und Jungen aus einer anderen Perspektive. Welchen Anteil machen MINT-Fächer bei der Fächerwahl der Mädchen und der Jungen aus?",
           br(), br(),
-        "Interpretationshilfe: Mädchen haben 2020 zu 22 Prozent Grundkurse aus dem Bereich MINT gewählt. Bei den Jungen waren es 21 Prozent.
+        "Interpretationshilfe: Die erste Grafik zeigt, dass Mädchen 2020 zu 22 Prozent Grundkurse aus dem Bereich MINT gewählt haben. Bei den Jungen waren es 21 Prozent.
         Bei den Leistungskursen zeigt sich ein größerer Unterschied: Bei den Mädchen machten MINT-Leistungskurse 28 Prozent aus, bei den Jungen 35 Prozent." ) ,
         tabsetPanel(type = "tabs",
 

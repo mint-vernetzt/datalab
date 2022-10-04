@@ -79,7 +79,10 @@ mod_home_start_ui <- function(id){
         title = "#MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
         width = 12,
         p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von MINT-Fächern in der Schule? Wie hoch ist der Anteil von Studierenden, die MINT-Fächer belegen?", br(),
-          "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?"),
+          "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?",
+          br(), br(),
+          "Interpretationshilfe: Wenn man auf der ersten Ansicht beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden 24 % dazu entscheiden, eine Ausbildung in einem
+          MINT-Beruf zu machen. Bei den Beschäftigten ist dieser Anteil ein wenig geringer. Nur 20 % der Beschäftigten arbeiten in einem MINT-Beruf."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(
@@ -109,7 +112,10 @@ mod_home_start_ui <- function(id){
         p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von Mädchen in MINT-Leistungskursen?
           Wie hoch ist der Anteil von Frauen in MINT-Studienfächern? Wie hoch ist der Anteil von Frauen in MINT-Ausbildungsgängen?
           Wie hoch ist der Anteil von Frauen in MINT-Berufen?", br(),
-        "Zum Vergleich zeigen wir jeweils auch, wie hoch ist der Anteil von Frauen in den anderen, nicht-MINT-Fächern oder -Berufszweigen ist."),
+        "Zum Vergleich zeigen wir jeweils auch, wie hoch ist der Anteil von Frauen in den anderen, nicht-MINT-Fächern oder -Berufszweigen ist.",
+        br(), br(),
+        "Interpretationshilfe: Betrachtet man hier beispielsweise die Studierenden sieht man, dass in MINT-Fächern nur 32 % der Studierenden Frauen sind.
+        Der Anteil an Frauen in anderen Studiengängen ist dagegen weitaus größer. In Nicht-MINT-Fächern sind 61 % aller Studierenden weiblich."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                              shiny::sidebarPanel(
