@@ -1002,7 +1002,7 @@ kurse_ranking <- function(df,r, type) {
                                  "Fächerwahl von Mädchen: Anteil Mädchen in den einzelnen Fächern (in BL) (",timerange,")", # kab
                                  "<br><br>"),
                   color = "") +
-    ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
+    ggplot2::scale_x_continuous(n.breaks = 7, labels = function(x) paste0(x, "%"))
 
 }
 
