@@ -1212,9 +1212,9 @@ studienzahl_map <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-      # highcharter::hc_caption(
-      #   text = "Quelle:",  style = list(fontSize = "12px")
-      # ) %>%
+       highcharter::hc_caption(
+         text = "...",  style = list(color= "white", fontSize = "12px")
+       ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
@@ -1242,9 +1242,9 @@ studienzahl_map <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-      # highcharter::hc_caption(
-      #   text = "Quelle:",  style = list(fontSize = "12px")
-      # ) %>%
+       highcharter::hc_caption(
+         text = "Ausgegraut: Daten stehen nicht zur Verfügung",  style = list(fontSize = "12px")
+       ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
@@ -2590,9 +2590,9 @@ studierende_map <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-      # highcharter::hc_caption(
-      #   text = "Quelle:",  style = list(fontSize = "12px")
-      # ) %>%
+       highcharter::hc_caption(
+         text = "...",  style = list(color= "white", fontSize = "12px")
+       ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
@@ -2621,9 +2621,9 @@ studierende_map <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-      # highcharter::hc_caption(
-      #   text = "Quelle:",  style = list(fontSize = "12px")
-      # ) %>%
+       highcharter::hc_caption(
+         text = "Ausgegraut: Daten stehen nicht zur Verfügung",  style = list(fontSize = "12px")
+       ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
@@ -2751,9 +2751,9 @@ studierende_map_gender <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-      # highcharter::hc_caption(
-      #   text = "Quelle:",  style = list(fontSize = "12px")
-      # ) %>%
+       highcharter::hc_caption(
+         text = "...",  style = list(color= "white", fontSize = "12px")
+       ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
@@ -2782,9 +2782,9 @@ studierende_map_gender <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-      # highcharter::hc_caption(
-      #   text = "Quelle:",  style = list(fontSize = "12px")
-      # ) %>%
+       highcharter::hc_caption(
+         text = "Ausgegraut: Daten stehen nicht zur Verfügung",  style = list(fontSize = "12px")
+       ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
