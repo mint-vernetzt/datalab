@@ -36,11 +36,11 @@ mod_schule_kurse_ui <- function(id){
           span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "KMK 2021, auf Anfrage, eigene Berechnungen.")),
         p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
-               "Anders als bei Studierenden oder Auszubildenen wählen Schülerinnen und Schüler mehrere Grund- und Leistungskurse und können
-          entsprechend nicht eindeutig als 'MINT' oder 'nicht-MINT' eingruppiert werden. Um dennoch einen Anteil von MINT versus Nicht-MINT angeben zu
-               können, nutzen wir die Kursbelegungszahlen der Schülerinnen und Schüler. Auf die Ausweisung absoluter Zahlen verzichten wir, da
-               aus den Belegungszahlen nicht die Gesamtzahl aller Schülerinnen und Schülern abgeleitet werden kann. Der Vergleich auf dieser Seite
-          erfolgt entsprechend der Belegungszahlen der verschiedenen Kurse.", br(),
+               "Anders als bei Studierenden oder Auszubildenen wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
+               eindeutig als 'MINT' oder 'nicht-MINT' eingruppiert werden. Um dennoch einen Anteil von MINT versus Nicht-MINT angeben zu können,
+               nutzen wir die Kursbelegungszahlen der Schüler:innen. Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
+               nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend der Belegungszahlen
+               der verschiedenen Kurse.", br(),
                "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor."
                ))
       )),
@@ -48,17 +48,17 @@ mod_schule_kurse_ui <- function(id){
         title = "Auf dieser Seite",
         width = 3,
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT")), ": Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
+          span(tags$b(span("#MINT:")), "Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
           )),
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT im Detail")), ": Vergleich der einzelnen MINT-Fächer und Unterschiede zwischen den Bundesländern"
+          span(tags$b(span("#MINT im Detail:")), "Vergleich der einzelnen MINT-Fächer und Bundesländern"
           )),
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#Mädchen in MINT")), ": Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"
+          span(tags$b(span("#Mädchen in MINT:")), "Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"
         )),
 
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#Fächerwahl Mädchen")), ": Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"
+          span(tags$b(span("#Fächerwahl Mädchen:")), "Wie unterscheidet sich die Fächerwahl von Mädchen und Jungen?"
         ),
 
       ))),
@@ -67,10 +67,10 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?",
         width = 12,
-        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil davon, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt wurden.",
+        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil davon, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt werden.",
           br(),
           br(),
-        "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 24 Prozent aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil bei 33 Prozent in 2020."),
+        "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 24 Prozent aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2020 bei 33 Prozent."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -117,12 +117,12 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "#MINT_im_Detail: Vergleich der einzelnen MINT-Fächern und Unterschiede zwischen den Bundesländern",
+        title = "#MINT_im_Detail: Vergleich der einzelnen MINT-Fächern und Bundesländern",
         width = 12,
         p("Hier zeigen wir die Anteile einzelner MINT-Fächer sowie die Unterschiede in den Bundesländern. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse.",
         br(), br(),
-        "Interpretationshilfe: Auf der ersten Seite ist zu sehen, dass im Jahr 2020 deutschlandweit 21 Prozent der Grundkurse aus dem MINT Bereich sind, wobei Naturwissenschaften mit 11 Prozent die am häufisten belegte MINT-Disziplin ist.
-        Bei den Leistungskursen sind 2020 sogar 31 Prozent der Belegungen im MINT-Bereich, wobei Mathematik 18 Prozent an allen Leistungskursbelegungen ausmacht."),
+        "Interpretationshilfe: Auf der ersten Seite ist zu sehen, dass im Jahr 2020 deutschlandweit 21 Prozent der Grundkurse aus dem MINT Bereich sind. Dabei sind Naturwissenschaften mit 11 Prozent
+        die am häufigsten belegte MINT-Disziplin. Bei den Leistungskursen sind 2020 sogar 31 Prozent der Belegungen im MINT-Bereich, wobei Mathematik 18 Prozent an allen Leistungskursbelegungen ausmacht."),
         tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich", br(),
@@ -187,12 +187,13 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "#Mädchen_in_MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?",
         width = 12,
-        p("Hier schauen wir uns die Verteilung von Mädchen und Jungen innerhalb der MINT-Fächer an.
-        Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern.
-        Die verschiedenen Diagramme bieten außerdem Fächer- und Bundeslandvergleiche.",
+        p("Hier schauen wir uns die Verteilung von Mädchen und Jungen innerhalb der MINT-Fächer an. Zum Vergleich
+          zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern. Die verschiedenen Diagramme bieten außerdem
+          Fächer- und Bundeslandvergleiche.",
           br(), br(),
-        "Interpretationshilfe: Dei erste Darstellung zeigt, dass der Anteil von Mädchen bzw. Frauen in allen MINT-Grundkursen in Deutschland 52 Prozent in 2020 betrug.
-        In den MINT-Leistungskursen betrug dieser Anteil 48 Prozent."),
+        "Interpretationshilfe: Die erste Darstellung zeigt, dass der Anteil von Mädchen bzw. Frauen in allen MINT-Grundkursen
+        in Deutschland 2020 52 Prozent beträgt. In den MINT-Leistungskursen beträgt dieser Anteil 48 Prozent. Im Vergleich
+        mit anderen, nicht-MINT Fächern sieht man, dass in ihnen der Anteil an Mädchen bzw. Frauen etwas höher ist: In Grundkursen anderer Fächer machen Frauen 55 Prozent aus, in Leistungskurse sogar 58 Prozent."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -259,8 +260,8 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         p("Hier zeigen wir die Unterschiede zwischen Mädchen und Jungen aus einer anderen Perspektive. Welchen Anteil machen MINT-Fächer bei der Fächerwahl der Mädchen und der Jungen aus?",
           br(), br(),
-        "Interpretationshilfe: Die erste Grafik zeigt, dass Mädchen 2020 zu 22 Prozent Grundkurse aus dem Bereich MINT gewählt haben. Bei den Jungen waren es 21 Prozent.
-        Bei den Leistungskursen zeigt sich ein größerer Unterschied: Bei den Mädchen machten MINT-Leistungskurse 28 Prozent aus, bei den Jungen 35 Prozent." ) ,
+        "Interpretationshilfe: Die erste Grafik zeigt, dass Mädchen 2020 zu 22 Prozent Grundkurse aus dem Bereich MINT wählen. Bei den Jungen sind es 21 Prozent. Bei den Leistungskursen
+        zeigt sich ein größerer Unterschied: Bei den Mädchen machten MINT-Leistungskurse 28 Prozent aus, bei den Jungen 35 Prozent." ) ,
         tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich", br(),

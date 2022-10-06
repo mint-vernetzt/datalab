@@ -48,8 +48,8 @@ mod_startseite_ui <- function(id){
         br(),
         p(style = "text-align: justify; font-size = 48px",
           span(tags$b(span("Willkommen in der Beta-Version des MINT-DataLabs von MINTvernetzt!", style = "color:#b16fab")), br(), br(),
-          "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
-                 Ausbildung und Arbeitsmarkt in Deutschland.",
+          "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
+          Arbeitsmarkt in Deutschland.",
              #  br(), br(),
               # "Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
               # " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
@@ -81,14 +81,15 @@ mod_startseite_ui <- function(id){
           tags$b("Anteil MINT entlang der Bildungskette"),
           ),
         p(style = "text-align: justify; font-size = 16px",
-          span("Diese Grafik zeigt, wie hoch der Anteil von Schüler:innen, Studierenden und
-          Auszubildenden und Beschäftigten ist, die ein MINT-Leistungskurs wählen, ein MINT-Fach studieren, eine MINT-Ausbildung absolvieren bzw. später einen MINT-Beruf ausüben.",
+          span("Diese Grafik zeigt, wie hoch der Anteil von Schüler:innen, Studierenden und Auszubildenden und
+               Beschäftigten ist, die ein MINT-Leistungskurs wählen, ein MINT-Fach studieren, eine MINT-Ausbildung
+               absolvieren bzw. später einen MINT-Beruf ausüben.",
           )
 
       )),
 
       shinydashboard::box(
-        title = "MINT-Gender-Gap wächst entlang der Bildunsgkette",
+        title = "MINT-Gender-Gap wächst entlang der Bildungskette",
         width = 6,
        #   tags$video(src="www/DataLab_Trichter_dyn.mp4", type = "video/mp4", hight = "300px", autoplay = TRUE),
         #video spielt leider nicht ab - könnte daran liegen dass www Pfad nicht auch für Vidoes eingerichtet ist?
@@ -107,7 +108,7 @@ mod_startseite_ui <- function(id){
        p(style = "text-align: justify; font-size = 16px",
          span("Diese Grafik zeigt, wie der Anteil an Mädchen bzw. Frauen entlang der MINT-Bildungskette immer weiter abnimmt.
                Während in den MINT-Leistungskurse in der Oberstufe der Anteil an Mädchen und Jungen fast ausgewogen ist, nimmt der Anteil
-               an Frauen, die MINT-Studiengänge wählen (32 %), eine Ausbildung in MINT ergreifen (13 %) und später in MINT-Berufen (16 %) arbeiten, immer weiter ab.",
+               an Frauen, die MINT-Studiengänge wählen (32 %), eine Ausbildung in MINT ergreifen (13 %) und später in MINT-Berufen arbeiten (16 %), immer weiter ab.",
               br(),
          ))
         )
