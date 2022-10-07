@@ -92,18 +92,18 @@ share_MINT <- function(df){
     df_sub <- df %>% dplyr::filter(indikator == "Leistungskurse")
 
 
-    df_sub[(df_sub$anzeige_geschlecht == "Gesamt" & df_sub$indikator == "Leistungskurse"), "wert"] <-  df_sub %>%
-      dplyr::filter(indikator == "Leistungskurse") %>%
-      dplyr::group_by(indikator, jahr) %>%
-      dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-                         wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+df_sub[(df_sub$anzeige_geschlecht == "Gesamt" & df_sub$indikator == "Leistungskurse"), "wert"] <-  df_sub %>%
+  dplyr::filter(indikator == "Leistungskurse") %>%
+  dplyr::group_by(indikator, jahr) %>%
+  dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
+                     wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
 
 
-    df_sub[(df_sub$anzeige_geschlecht == "Gesamt" & df_sub$indikator == "Grundkurse"), "wert"] <-  df_sub %>%
-      dplyr::filter(indikator == "Grundkurse") %>%
-      dplyr::group_by(indikator, jahr) %>%
-      dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-                         wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+df_sub[(df_sub$anzeige_geschlecht == "Gesamt" & df_sub$indikator == "Grundkurse"), "wert"] <-  df_sub %>%
+  dplyr::filter(indikator == "Grundkurse") %>%
+  dplyr::group_by(indikator, jahr) %>%
+  dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
+                     wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
 
 
 
