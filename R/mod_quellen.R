@@ -37,13 +37,53 @@ mod_quellen_ui <- function(id){
                          der Zeit integriert.")
         ),
 
-        p(style = "text-align: justify; font-size = 16px",
+        p(br(),
+          tags$b(span("Schulbildung", style = "color:#154194")),
+          br(),
+          tags$a(href="https://www.kmk.org/", "Seite der Kultusministerkonferenz", target = "_blank"), br(),
+          tags$a(href="https://www.kmk.org/themen/allgemeinbildende-schulen/unterrichtsfaecher/mathematik-informatik-naturwissenschaften-technik-mint.html", "Definition MINT-Fächer an Schulen", target = "_blank"),
+          br(),
+          "Zu den MINT-Fächern in der Schule gehören Mathematik, Biologie, Chemie, Physik, Informatik und andere naturwissenschaftlich-technische Fächer.", br(), br()
+            ),
+
+        p(tags$b(span("Studium", style = "color:#154194")),
+          br(),
+          tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Seite des Statistischen Bundesamtes ", target = "_blank"),
+          br(),
+          tags$a(href="https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bildung-Forschung-Kultur/Hochschulen/Tabellen/studierende-mint-faechern.html", "Definition MINT-Studienfächer", target = "_blank"),
+          br(),
+          "Zu den MINT-Studienfächern werden folgende Fächergruppen bzw. Studienbereiche der Hoschulstatistik gezählt:",
+          br(),
           tags$ul(
-            tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Statisitisches Bundesamt", target="_blank"), " : Zahlen zum Studium"),
-            tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Kultusministerkonferenz", target="_blank"), " : Zahlen zur Schulbildung"),
-            tags$li(tags$a(href="https://statistik.arbeitsagentur.de/DE/Home/home_node.html;jsessionid=B2B7423A23D5B6A5A4C301096D0ABDAB", "Bundesagentur für Arbeit", target="_blank"), " : Arbeitsmarktdaten")
-          )),
-        p(style = "text-align: justify; font-size = 16px",
+            tags$li("Ingenieurwissenschaften"),
+            "Ingenieurwissenschaften allgemein, Bergbau / Hüttenwesen, Maschinenbau / Verfahrenstechnik, Elektrotechnik,
+          Verkehrstechnik / Nautik, Architektur / Innenarchitektur, Raumplanung, Bauingenieurwesen, Vermessungswesen,
+          Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem. Schwerpunkt",
+            tags$li("Informatik"),
+            tags$li("Fächergruppen Mathematik & Naturwissenschaften"),
+            "Mathematik / Naturwissenschaften allgemein, Mathematik, Informatik, Physik / Astronomie, Chemie, Pharmazie, Biologie, Geowissenschaften, Geographie"
+          ), br()
+        ),
+
+        p(tags$b(span("Berufsbildung und Arbeitsmarkt", style = "color:#154194")),
+          br(),
+          tags$a(href="https://statistik.arbeitsagentur.de/DE/Home/home_node.html;jsessionid=B2B7423A23D5B6A5A4C301096D0ABDAB", "Seite der Bundesagentur für Arbeit", target="_blank"), br(),
+          tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Statistiken/Themen-im-Fokus/Berufe/Generische-Publikationen/Broschuere-MINT.pdf?__blob=publicationFile", "Definition der MINT-Berufe", target = "_blank"), br(),
+          "Das spezifische Berufsaggregat 'MINT-Berufe' umfasst alle Tätigkeiten, für deren Ausübung ein hoher Anteil an Kenntnissen
+          aus den Bereichen Mathematik, Informatik, Naturwissenschaften und/oder Technik erforderlich ist. Dabei wird auch das Bauen und
+          Instandhalten technischer Anlagen und Geräte als zentraler Bestandteil einer Tätigkeit zu den MINT Qualifikationen gezählt. Das Berufsaggregat 'MINT-Berufe'
+          umfasst neben den hoch qualifizierten MINT-Berufen auch die sogenannten mittelqualifizierten MINT-Berufe.", br(),
+          tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Grundlagen/Methodik-Qualitaet/Methodenberichte/Uebergreifend/Generische-Publikationen/Hintergrundinfo-Anpassung-Berufsaggregat-MINT-Berufe.pdf?__blob=publicationFile", "Hier finden sie weitere Informationen zur Definition der MINT-Berufe", target ="_blank"),
+          br(), br(), br()),
+
+        # p(style = "text-align: justify; font-size = 16px",
+        #   tags$ul(
+        #     tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Statistisches Bundesamt", target="_blank"), " : Zahlen zum Studium"),
+        #     tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Kultusministerkonferenz", target="_blank"), " : Zahlen zur Schulbildung"),
+        #     tags$li(tags$a(href="https://statistik.arbeitsagentur.de/DE/Home/home_node.html;jsessionid=B2B7423A23D5B6A5A4C301096D0ABDAB", "Bundesagentur für Arbeit", target="_blank"), " : Arbeitsmarktdaten")
+        #   )),
+
+         p(style = "text-align: justify; font-size = 16px",
           "Die Nutzungsbedingungen der Datengeber erlauben die Verwendung der Daten und grafische Aufbereitung sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet. Bei Interesse an den kompletten Datensätzen müssen die Datengeber direkt kontaktiert werden."
         ),
 
