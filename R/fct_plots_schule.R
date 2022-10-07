@@ -10,23 +10,60 @@
 
 kurse_einstieg_pie <- function(df,r) {
 
+
+
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
-
   df <- df %>% dplyr::filter(region == "Deutschland")
+
+#
+#   df <- df %>% dplyr::filter(region == "Deutschland")%>%
+#     tidyr::pivot_wider(names_from=anzeige_geschlecht, values_from=wert)%>%
+#     dplyr::mutate(Gesamt=Männer+Frauen)%>%
+#     tidyr::pivot_longer(c("Gesamt", "Frauen", "Männer"), names_to = "anzeige_geschlecht", values_to = "wert")
+#
+#
+#   df <- df %>%
+#     tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
+#     dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
+#                   "andere Fächer" =`Alle Fächer`- MINT)%>%
+#     tidyr::pivot_longer(c(6:19), values_to = "wert", names_to= "fachbereich")
+#
+#
+#   df <- df %>%
+#     tidyr::pivot_wider(values_from = wert, names_from = anzeige_geschlecht)%>%
+#     tidyr::pivot_longer(c("Männer","Frauen"),names_to = "anzeige_geschlecht", values_to= "wert")%>%
+#     dplyr::rename(wert_new = Gesamt)%>%
+#     dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
+
+
+
 
   # aggregate to MINT
   df <- share_mint_kurse(df)
+  #
+  # # calcualte the new "Gesamt"
+  # df_sw <<-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
 
-  # calcualte the new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+
+
+  #
+  # df_test <<- df1 %>% tidyr:: pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
+  #   dplyr::mutate(Gesamt= Frauen + Männer)%>%
+  #   tidyr::pivot_longer(c(6:8), values_to = "wert", names_to = "anzeige_geschlecht")
+  #
+  #
+  # df_test1 <<- share_mint_kurse(df_test)%>%
+  #   tidyr::pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
+  #   dplyr::rename(wert_new=Gesamt)%>%
+  #   tidyr::pivot_longer(c(6,8), names_to = "anzeige_geschlecht", values_to = "wert")
 
 
   df = df[!duplicated(df$wert_new),]
@@ -42,7 +79,7 @@ kurse_einstieg_pie <- function(df,r) {
   # calculate proportions
   df <- df %>% dplyr::group_by(jahr, indikator, fachbereich) %>%
     dplyr::summarize(proportion = wert_new/sum_wert) %>%
-    dplyr::mutate(proportion = round(proportion, digits = 2)*100)
+    dplyr::mutate(proportion = round(proportion, 2)*100)
 
   df_gk <- df %>% dplyr::filter(indikator == "Grundkurse")
 
@@ -361,8 +398,10 @@ kurse_waffle_mint <- function(df,r) {
 
   x_gk$proportion <- x_gk$proportion * 100
 
+
+
   # ensure that proportions sum to 1
-  x_gk <- setNames(round_preserve_sum(as.numeric(x_gk$proportion),0),
+  x_gk <- setNames(round(as.numeric(x_gk$proportion),0),
                    x_gk$fachbereich)
 
   x_gk <- x_gk[order(factor(names(x_gk), levels = c('Informatik', 'Mathematik',
