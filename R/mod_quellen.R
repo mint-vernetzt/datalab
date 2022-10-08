@@ -60,20 +60,21 @@ mod_quellen_ui <- function(id){
           Verkehrstechnik / Nautik, Architektur / Innenarchitektur, Raumplanung, Bauingenieurwesen, Vermessungswesen,
           Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem. Schwerpunkt",
             tags$li("Informatik"),
-            tags$li("Fächergruppen Mathematik & Naturwissenschaften"),
+            tags$li("Mathematik & Naturwissenschaften"),
             "Mathematik / Naturwissenschaften allgemein, Mathematik, Informatik, Physik / Astronomie, Chemie, Pharmazie, Biologie, Geowissenschaften, Geographie"
           ), br()
         ),
 
         p(tags$b(span("Berufsbildung und Arbeitsmarkt", style = "color:#154194")),
           br(),
+          icon = icon("arrow-right"),
           tags$a(href="https://statistik.arbeitsagentur.de/DE/Home/home_node.html;jsessionid=B2B7423A23D5B6A5A4C301096D0ABDAB", "Seite der Bundesagentur für Arbeit", target="_blank"), br(),
           tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Statistiken/Themen-im-Fokus/Berufe/Generische-Publikationen/Broschuere-MINT.pdf?__blob=publicationFile", "Definition der MINT-Berufe", target = "_blank"), br(),
           "Das spezifische Berufsaggregat 'MINT-Berufe' umfasst alle Tätigkeiten, für deren Ausübung ein hoher Anteil an Kenntnissen
           aus den Bereichen Mathematik, Informatik, Naturwissenschaften und/oder Technik erforderlich ist. Dabei wird auch das Bauen und
           Instandhalten technischer Anlagen und Geräte als zentraler Bestandteil einer Tätigkeit zu den MINT Qualifikationen gezählt. Das Berufsaggregat 'MINT-Berufe'
           umfasst neben den hoch qualifizierten MINT-Berufen auch die sogenannten mittelqualifizierten MINT-Berufe.", br(),
-          tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Grundlagen/Methodik-Qualitaet/Methodenberichte/Uebergreifend/Generische-Publikationen/Hintergrundinfo-Anpassung-Berufsaggregat-MINT-Berufe.pdf?__blob=publicationFile", "Hier finden sie weitere Informationen zur Definition der MINT-Berufe", target ="_blank"),
+          tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Grundlagen/Methodik-Qualitaet/Methodenberichte/Uebergreifend/Generische-Publikationen/Hintergrundinfo-Anpassung-Berufsaggregat-MINT-Berufe.pdf?__blob=publicationFile", "Weitere Informationen zur Definition der MINT-Berufe", target ="_blank"),
           br(), br(), br()),
 
         # p(style = "text-align: justify; font-size = 16px",

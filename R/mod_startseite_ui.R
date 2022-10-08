@@ -49,7 +49,8 @@ mod_startseite_ui <- function(id){
         p(style = "text-align: justify; font-size = 48px",
           span(tags$b(span("Willkommen in der Beta-Version des MINT-DataLabs von MINTvernetzt!", style = "color:#b16fab")), br(), br(),
           "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
-          Arbeitsmarkt in Deutschland.",
+          Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
+                für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver Diagramme einen intuitiven und informativen Zugang zu gewähren.",
              #  br(), br(),
               # "Auf dieser", tags$b(span("Startseite", style = "color:#b16fab")), "geben wir einen ersten Überblick über die Daten. Auf den bereichsspezifischen", tags$b(span("Unterseiten", style = "color:#b16fab")),
               # " gehen wir mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
@@ -82,8 +83,10 @@ mod_startseite_ui <- function(id){
           ),
         p(style = "text-align: justify; font-size = 16px",
           span("Diese Grafik zeigt, wie hoch der Anteil von Schüler:innen, Studierenden und Auszubildenden und
-               Beschäftigten ist, die ein MINT-Leistungskurs wählen, ein MINT-Fach studieren, eine MINT-Ausbildung
-               absolvieren bzw. später einen MINT-Beruf ausüben.",
+               Beschäftigten ist, die (in Deutschland) einen MINT-Leistungskurs wählen, ein MINT-Fach studieren, eine MINT-Ausbildung
+               absolvieren bzw. später einen MINT-Beruf ausüben. In der Oberstufe machen die MINT-Fächer einen Drittel bei der Leistungskurswahl aus.
+               Gut ein Drittel (27 %) der Studierenden studiert ein MINT-Fach. Unter den Auszubildenden macht knapp jede:r Vierte (24 %) eine Ausbildung
+               im MINT-Bereich. Von allen Beschäftigten in Deutschland geht ein Fünftel (20 %) einem MINT-Beruf nach.",
           )
 
       )),
