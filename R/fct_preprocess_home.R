@@ -91,7 +91,7 @@ share_MINT <- function(df){
     # calculate the share of MINT for "Schule" and "Leistungskurse"
     df_2 <- df %>% dplyr::filter(indikator == "Leistungskurse")
 
-
+#
 # df_sub[(df_sub$anzeige_geschlecht == "Gesamt" & df_sub$indikator == "Leistungskurse"), "wert"] <-  df_sub %>%
 #   dplyr::filter(indikator == "Leistungskurse") %>%
 #   dplyr::group_by(indikator, jahr) %>%
@@ -104,7 +104,6 @@ share_MINT <- function(df){
 #   dplyr::group_by(indikator, jahr) %>%
 #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
 #                      wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
-#
 #
 #
 #     df_sub <- share_mint_kurse(df_sub)

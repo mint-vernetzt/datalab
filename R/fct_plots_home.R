@@ -9,7 +9,6 @@
 #' @noRd
 home_einstieg_pie <- function(df,r) {
 
-browser()
 
   # load UI inputs from reactive value
   timerange <- 2020
@@ -20,8 +19,6 @@ browser()
   df <- df %>% dplyr::filter(jahr == timerange)
 
   df <- df %>% dplyr::filter(region == "Deutschland")
-
-
 
 
 
@@ -265,6 +262,14 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
   #rename
   df[df$fachbereich != "MINT", "fachbereich"] <- "Andere Fachbereiche"
 
+
+  # calculate the new "Gesamt"
+  df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
+    dplyr::filter(indikator == "Leistungskurse") %>%
+    dplyr::group_by(indikator, jahr) %>%
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
+                       wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+
   # order
   df <- df[with(df, order(indikator, anzeige_geschlecht, decreasing = TRUE)), ]
 
@@ -294,6 +299,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
                              indikator != "Habilitationen", indikator != "Leistungskurse") %>%
     dplyr::group_by(indikator, fachbereich) %>%
     dplyr::summarize(wert = dplyr::lead(wert)/wert) %>% na.omit()
+
 
   df$wert <- df$wert * 100
 
