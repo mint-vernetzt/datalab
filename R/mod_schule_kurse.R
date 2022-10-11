@@ -315,7 +315,7 @@ mod_schule_kurse_ui <- function(id){
 
     tags$footer(style="text-align: justify;background-color:white",
 
-                div(style="display: inline-block;position: relative;padding: 2em;",
+                div(style="display: inline-block;position: relative;padding: 1em;",
 
                     tags$a(href="https://mint-vernetzt.de/",
                            img(src='www/MINTv_tranparent.png',
@@ -324,14 +324,14 @@ mod_schule_kurse_ui <- function(id){
                                alt = "Logo MINT", target="_blank",
                                style="display: inline-block; margin-left: auto; margin-right:10%;"))),
 
-                div(style="display: inline-block;position: relative;padding: 2em;",
+                div(style="display: inline-block;position: relative;padding: 1em;",
 
                     p(tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
                       tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
                       tags$a("Datenschutz", href="#shiny-tab-datenschutz", "data-toggle"="tab"),HTML('&nbsp;'),HTML('&nbsp;'),
                       "Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
 
-                div(style="display: inline-block;position: relative;padding: 2em;",
+                div(style="display: inline-block;position: relative;padding: 1em;",
 
                     tags$a(href="https://www.bmbf.de/bmbf/de/home/home_node.html",
                            img(src='www/BMBF-Logo_transp1.png',
