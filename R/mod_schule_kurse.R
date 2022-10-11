@@ -40,7 +40,12 @@ mod_schule_kurse_ui <- function(id){
                eindeutig als 'MINT' oder 'nicht-MINT' eingruppiert werden. Um dennoch einen Anteil von MINT versus Nicht-MINT angeben zu können,
                nutzen wir die Kursbelegungszahlen der Schüler:innen. Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
                nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend der Belegungszahlen
-               der verschiedenen Kurse.", br(),
+               der verschiedenen Kurse.", br(), br(),
+               "Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor.", br(),
+               "In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
+                sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
+               Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
+               die Anteile der Grundlagenfächer an den Grundkursen sehr gering.", br(), br(),
                "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor."
                ))
       )),
@@ -219,14 +224,16 @@ mod_schule_kurse_ui <- function(id){
                     #          shiny::mainPanel(
                     #            highcharter::highchartOutput(ns("plot_verlauf_gender")))
                     # ),
-                    tabPanel("Zeitverlauf", br(),
 
-                             shiny::sidebarPanel(
-                               mod_schule_kurse_verlauf_bl_ui("mod_schule_kurse_verlauf_bl_ui_1")),
-                             shiny::mainPanel(
-                               highcharter::highchartOutput(ns("plot_verlauf_kurse_bl"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
-                    ),
+                    # Fehler drin: erstmal raus:
+                    # tabPanel("Zeitverlauf", br(),
+                    #
+                    #          shiny::sidebarPanel(
+                    #            mod_schule_kurse_verlauf_bl_ui("mod_schule_kurse_verlauf_bl_ui_1")),
+                    #          shiny::mainPanel(
+                    #            highcharter::highchartOutput(ns("plot_verlauf_kurse_bl"))
+                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK 2021, auf Anfrage, eigene Berechnungen."))
+                    # ),
                     tabPanel("Vergleich Fächer", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
