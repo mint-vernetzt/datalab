@@ -23,7 +23,7 @@ mod_home_start_comparison_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_comparison"),
       choices = c("Leistungskurse",
-                  "Studienanfänger:innen", "Studierende",
+                  "Studienanfängerinnen", "Studierende",
                   "Auszubildende", "Beschäftigte"),
       selected = c("Leistungskurse", "Beschäftigte"),
       options =  list(

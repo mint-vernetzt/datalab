@@ -9,7 +9,7 @@
 #' @noRd
 home_einstieg_pie <- function(df,r) {
 
-browser()
+
 
   # load UI inputs from reactive value
   timerange <- 2020
@@ -53,9 +53,6 @@ browser()
   # call function to calculate the share of MINT for every "bereich"
 
   df <- share_MINT(df)
-
-
-  # df_ur <<- share_MINT(df)
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
