@@ -9,7 +9,7 @@
 #' @noRd
 home_einstieg_pie <- function(df,r) {
 
-
+browser()
 
   # load UI inputs from reactive value
   timerange <- 2020
@@ -21,56 +21,43 @@ home_einstieg_pie <- function(df,r) {
 
   df <- df %>% dplyr::filter(region == "Deutschland")
 
-  #df_sub <<- df %>% dplyr::filter(indikator == "Leistungskurse")
-  #
-  #
-  # df_sub[(df_sub$anzeige_geschlecht == "Gesamt" & df_sub$indikator == "Leistungskurse"), "wert"] <-  df_sub %>%
-  #   dplyr::filter(indikator == "Leistungskurse") %>%
-  #   dplyr::group_by(indikator, jahr) %>%
-  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-  #                      wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
-  #
-  #
-  # df_sub[(df_sub$anzeige_geschlecht == "Gesamt" & df_sub$indikator == "Grundkurse"), "wert"] <-  df_sub %>%
-  #   dplyr::filter(indikator == "Grundkurse") %>%
-  #   dplyr::group_by(indikator, jahr) %>%
-  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-  #                      wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
 
 
-  # df_sample_0 <<-df_sub
-
-  df2 <- df %>% dplyr::filter(indikator == "Leistungskurse")
-
-  df2 <- df2 %>%
-    tidyr::pivot_wider(names_from=anzeige_geschlecht, values_from=wert)%>%
-    dplyr::mutate(Gesamt=Männer+Frauen)%>%
-    tidyr::pivot_longer(c("Gesamt", "Frauen", "Männer"), names_to = "anzeige_geschlecht", values_to = "wert")
 
 
-  df8 <<- df2 %>%
-    tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
-    dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
-                  "andere Fächer" =`Alle Fächer`- MINT)%>%
-   tidyr::pivot_longer(c(6:20), values_to = "wert", names_to= "fachbereich")%>%
-   dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
+   # df2 <- df2 %>%
+   #   tidyr::pivot_wider(names_from=anzeige_geschlecht, values_from=wert)%>%
+   #   dplyr::mutate(Gesamt=Männer+Frauen)%>%
+    #   tidyr::pivot_longer(c("Gesamt", "Frauen", "Männer"), names_to = "anzeige_geschlecht", values_to = "wert")
 
 
-  df5 <<- df %>% dplyr::filter(bereich != "Schule")
+   # df8 <<- df2 %>%
+   #   tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
+   #   dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
+   #                 "andere Fächer" =`Alle Fächer`- MINT)%>%
+   #  tidyr::pivot_longer(c(6:20), values_to = "wert", names_to= "fachbereich")%>%
+   #  dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
+   #
+   #
+   # df5 <<- df %>% dplyr::filter(bereich != "Schule")
+   #
+   # #df2<- df2[, colnames(df)]
+   #
+   # df3<<-  dplyr::bind_rows(df5, df8)
 
-  #df2<- df2[, colnames(df)]
-
-  df3<<-  dplyr::bind_rows(df5, df8)
-
-  # df<- df %>%
-  #   tidyr::pivot_wider(values_from = wert, names_from = anzeige_geschlecht)%>%
-  #   tidyr::pivot_longer(c("Männer","Frauen", "Gesamt"),names_to = "anzeige_geschlecht", values_to= "wert")%>%
-  #   dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
+   # df<- df %>%
+   #   tidyr::pivot_wider(values_from = wert, names_from = anzeige_geschlecht)%>%
+   #   tidyr::pivot_longer(c("Männer","Frauen", "Gesamt"),names_to = "anzeige_geschlecht", values_to= "wert")%>%
+   #   dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
 
   # call function to calculate the share of MINT for every "bereich"
+
+  df <- share_MINT(df)
+
+
   # df_ur <<- share_MINT(df)
 
-  df <- df3 %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   df <- df %>% dplyr::filter(indikator %in% indikator_choice_1)
 
