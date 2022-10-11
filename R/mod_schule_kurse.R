@@ -44,7 +44,7 @@ mod_schule_kurse_ui <- function(id){
                "Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor.", br(),
                "In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
                 sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
-               Die Grundlagenfächer können nur an deren Schulformen als Grundkurse gewählt werden und entsprechend sind
+               Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
                die Anteile der Grundlagenfächer an den Grundkursen sehr gering.", br(), br(),
                "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor."
                ))
