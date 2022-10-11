@@ -45,13 +45,20 @@ mod_datenschutz_ui <- function(id){
       shinydashboard::box(
         title = "Datenschutzerklärung",
         width = 12,
-        column(width = 9,
+        column(width = 12,
 
                div(style="text-align:justify", p("
 
-MINTvernetzt ist die Service- und Anlaufstelle für die Community der MINT-Akteur:innen in Deutschland. Diese werden durch Vernetzungsräume, Transferangebote und Innovationsimpulse unterstützt, innovative und nachhaltige MINT-Bildungsangebote zu machen, die noch breitere und diversere Zielgruppen ansprechen. Hierzu zählen insbesondere Mädchen und junge Frauen. MINTvernetzt wird vom Bundesministerium für Bildung und Forschung (BMBF) gefördert und von Mitarbeitenden der Körber-Stiftung, der matrix gGmbH, dem Nationalen MINT Forum e.V., der Universität Regensburg und dem Stifterverband gemeinsam umgesetzt.
+MINTvernetzt ist die Service- und Anlaufstelle für die Community der MINT-Akteur:innen in Deutschland.
+Diese werden durch Vernetzungsräume, Transferangebote und Innovationsimpulse unterstützt, innovative und
+nachhaltige MINT-Bildungsangebote zu machen, die noch breitere und diversere Zielgruppen ansprechen.
+Hierzu zählen insbesondere Mädchen und junge Frauen. MINTvernetzt wird vom Bundesministerium für Bildung
+und Forschung (BMBF) gefördert und von Mitarbeitenden der Körber-Stiftung, der matrix gGmbH, dem Nationalen
+MINT Forum e.V., der Universität Regensburg und dem Stifterverband gemeinsam umgesetzt.
 
-Das DataLab dient in diesem Zusammenhang als Informationsplattform für Interessierte; Akteur:innen und Beteiligte für amtliche Statistiken sowie durch MINTvernetzt erhobene Umfrageergebnisse aus dem Bereich MINT-Bildung. […]",
+Das DataLab dient in diesem Zusammenhang als öffentliche Informationsplattform für amtliche Statistiken sowie durch
+MINTvernetzt erhobene Umfrageergebnisse aus dem Bereich MINT-Bildung. Zielgruppe sind allgemein Interessierte,
+MINT-Akteur:innen und weitere Beteiligte.",
 
 br(),
 br(),
@@ -299,7 +306,7 @@ br(),
 br(),
 br(),
 
-"5. Recht auf Unterrichtung",
+tags$b(span("5. Recht auf Unterrichtung")),
 br(),
 
 "Haben Sie das Recht auf Berichtigung, Löschung oder Einschränkung der Verarbeitung gegenüber dem Verantwortlichen geltend gemacht,
@@ -391,7 +398,7 @@ br(),
 
 
 
-p(tags$b(span("V. Empfänger")),
+p(tags$b(span("IV. Empfänger")),
 br(),
 
 "Die bei Aufruf und Nutzung der Plattform erhobenen Daten und die individuell bereitgestellten Angaben werden an unsere Server
@@ -404,7 +411,7 @@ zur oder im Rahmen einer Auftragsverarbeitung.",
 br(),
 br(),
 
-p(tags$b(span("VI. Links zu Drittseiten")),
+p(tags$b(span("V. Links zu Drittseiten")),
   br(),
 
 "Bei Nutzung der Plattform könnten Inhalte angezeigt werden, die mit den Webseiten Dritter verlinkt sind.
@@ -413,7 +420,7 @@ noch können wir diese kontrollieren. Solche Drittseiten unterliegen nicht diese
 
 br(),br(),
 
-p(tags$b(span("VII. Weitergabe Ihrer Daten an Dritte")),
+p(tags$b(span("VI. Weitergabe Ihrer Daten an Dritte")),
   br(),
 
 "Um unsere Website für Sie als Nutzer so angenehm und komfortable wie möglich gestalten zu können, setzen
