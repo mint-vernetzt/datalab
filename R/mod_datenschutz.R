@@ -422,9 +422,9 @@ Datenschutzbestimmungen zum Einsatz und Verwendung der eingesetzten Dienste und 
 um ggf. auch bei den Dienstleistern Ihre Rechte wahrnehmen zu können. ")))))),
 
 
-tags$footer(style="text-align: justify;",
+tags$footer(style="text-align: justify;background-color:white",
 
-            div(style="display: inline-block;position: relative;top: 1.2em;",
+            div(style="display: inline-block;position: relative;padding: 2em;",
 
                 tags$a(href="https://mint-vernetzt.de/",
                        img(src='www/MINTv_tranparent.png',
@@ -433,14 +433,14 @@ tags$footer(style="text-align: justify;",
                            alt = "Logo MINT", target="_blank",
                            style="display: inline-block; margin-left: auto; margin-right:10%;"))),
 
-            div(style="display: inline-block;position: relative;top: 1.2em;",
+            div(style="display: inline-block;position: relative;padding: 2em;",
 
                 p(tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
                   tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
                   tags$a("Datenschutz", href="#shiny-tab-datenschutz", "data-toggle"="tab"),HTML('&nbsp;'),HTML('&nbsp;'),
                   "Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
 
-            div(style="display: inline-block;position: relative;top: 1.2em;",
+            div(style="display: inline-block;position: relative;padding: 2em;",
 
                 tags$a(href="https://www.bmbf.de/bmbf/de/home/home_node.html",
                        img(src='www/BMBF-Logo_transp1.png',
