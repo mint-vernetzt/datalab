@@ -5,14 +5,16 @@
 #' @noRd
 share_MINT <- function(df){
 
+
+
   # calculate the share of MINT for "Hochschule" and "Studienanfänger:innen/Studierende"
-    df_sub <- df %>% dplyr::filter(indikator == "Studienanfänger:innen" | indikator == "Studierende")
-    df <- df[!(df$indikator == "Studienanfänger:innen" | df$indikator == "Studierende"),]
+    df_sub1 <- df %>% dplyr::filter(indikator == "Studienanfänger" | indikator == "Studierende")
+    df1 <- df[!(df$indikator == "Studienanfänger" | df$indikator == "Studierende"),]
 
     ## call function
-    df_sub <- calc_share_MINT(df_sub)
+    df_sub324 <- calc_share_MINT(df_sub1)
 
-    df <- rbind(df, df_sub)
+    df_k <- rbind(df1, df_sub324)
 
 
   # calculate the share of MINT for "Hochschule" and "Habilitationen"
@@ -89,7 +91,7 @@ share_MINT <- function(df){
 
 
     # calculate the share of MINT for "Schule" and "Leistungskurse"
-    df_2 <- df %>% dplyr::filter(indikator == "Leistungskurse")
+    #df_2 <- df_k %>% dplyr::filter(indikator == "Leistungskurse")
 
 #
 # df_sub[(df_sub$anzeige_geschlecht == "Gesamt" & df_sub$indikator == "Leistungskurse"), "wert"] <-  df_sub %>%
@@ -124,7 +126,7 @@ share_MINT <- function(df){
 #     #df2<- df2[, colnames(df)]
 #
 #     df_sub<-  dplyr::bind_rows(df, df_sub)
-    df2 <- df %>% dplyr::filter(indikator == "Leistungskurse")
+    df2 <- df_k %>% dplyr::filter(indikator == "Leistungskurse")
 
     df8 <- df2 %>%
       tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
@@ -134,18 +136,18 @@ share_MINT <- function(df){
       dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
 
 
-    df5 <- df %>% dplyr::filter(bereich != "Schule")
+    df5 <- df_k %>% dplyr::filter(bereich != "Schule")
 
     #df2<- df2[, colnames(df)]
 
-    df <-  dplyr::bind_rows(df5, df8)
+    df7 <-  dplyr::bind_rows(df5, df8)
+
+    df7$indikator <- gsub("Studienanfänger", "Studienanfängerinnen",  df7$indikator)
 
     # df<- df %>%
     #   tidyr::pivot_wider(values_from = wert, names_from = anzeige_geschlecht)%>%
     #   tidyr::pivot_longer(c("Männer","Frauen", "Gesamt"),names_to = "anzeige_geschlecht", values_to= "wert")%>%
     #   dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
-
-
 
 
     # df <- df %>% dplyr::filter(bereich != "Schule")
@@ -155,9 +157,9 @@ share_MINT <- function(df){
     # df <- rbind(df, df_sub)
 
     #rename
-    df[df$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige"
+    df7[df7$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige"
 
-  return(df)
+  return(df7)
 }
 
 
