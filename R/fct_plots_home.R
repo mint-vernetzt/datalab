@@ -255,16 +255,10 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
   # call function to calculate the share of MINT for every "bereich"
   df<- share_MINT(df)
 
+
   #rename
   df[df$fachbereich != "MINT", "fachbereich"] <- "Andere Fachbereiche"
 
-
-  # calculate the new "Gesamt"
-  df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
-    dplyr::filter(indikator == "Leistungskurse") %>%
-    dplyr::group_by(indikator, jahr) %>%
-    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-                       wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
 
   # order
   df <- df[with(df, order(indikator, anzeige_geschlecht, decreasing = TRUE)), ]
@@ -273,11 +267,20 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
   df_sub_2 <- df %>% dplyr::filter(indikator == "Promotionen (angestrebt)" |
                                      indikator == "Habilitationen" | indikator == "Leistungskurse")
 
+  # calculate the new "Gesamt"
+
+  df_sub_2[(df_sub_2$anzeige_geschlecht == "Gesamt" & df_sub_2$indikator == "Leistungskurse"), "wert"] <-  df_sub_2 %>%
+    dplyr::filter(indikator == "Leistungskurse") %>%
+    dplyr::group_by(indikator, jahr) %>%
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
+                       wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+
   # calculate proprotion female
   df_sub_2[df_sub_2$anzeige_geschlecht == "Frauen", "wert"] <-  df_sub_2 %>% dplyr::group_by(indikator, fachbereich) %>%
     dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"]/
                        wert[anzeige_geschlecht == "Gesamt"]) %>%
     dplyr::arrange(-dplyr::row_number()) %>% dplyr::pull(wert)
+
 
   # calculate proprotion male
   df_sub_2[df_sub_2$anzeige_geschlecht == "Männer", "wert"] <- df_sub_2 %>% dplyr::group_by(indikator, fachbereich) %>%
