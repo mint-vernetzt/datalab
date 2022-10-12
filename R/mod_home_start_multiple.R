@@ -22,7 +22,7 @@ mod_home_start_multiple_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_multiple_1"),
       choices = c("Leistungskurse",
-                  "Studienanfängerinnen", "Studierende",
+                  "Studienanfänger:innen", "Studierende",
                   "Auszubildende", "Beschäftigte"),
       selected = c("Leistungskurse", "Beschäftigte"),
       options =  list(

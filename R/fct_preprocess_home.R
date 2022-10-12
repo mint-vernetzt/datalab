@@ -145,7 +145,7 @@ share_MINT <- function(df){
 
     df7 <-  dplyr::bind_rows(df5, df8)
 
-    df7$indikator <- gsub("Studienanfänger", "Studienanfängerinnen",  df7$indikator)
+    df7$indikator <- gsub("Studienanfänger", "Studienanfänger:innen",  df7$indikator)
 
     # df<- df %>%
     #   tidyr::pivot_wider(values_from = wert, names_from = anzeige_geschlecht)%>%
