@@ -2135,7 +2135,6 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
     # dplyr::summarise(wert = sum(wert)) %>%
     # dplyr::mutate(anforderungsniveau = "Gesamt") %>%
     # dplyr::ungroup()
-
   df <- rbind(df %>% dplyr::filter(anforderungsniveau != "Gesamt"), df_new_gesamt)
 
   df <- df %>% dplyr::filter(anforderungsniveau == "Gesamt")
@@ -2143,6 +2142,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
   df <- calc_arbeitsmarkt_mint(df)
 
   df <- calc_arbeitsmarkt_males(df)
+
 
   df_sub_new_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt") %>%
     dplyr::rename(wert_sub_gesamt = "wert") %>%
@@ -2160,7 +2160,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
                   anforderungsniveau = "anforderungsniveau.x",
                   anzeige_geschlecht = "anzeige_geschlecht.x") %>%
     dplyr::mutate(proportion_fachbereich = (wert/wert_sub_gesamt)*100) %>%
-    dplyr::mutate(proportion_gesamt = (wert/wert_gesamt)*100) %>%
+    dplyr::mutate(proportion_gesamt = (wert/wert_gesamt)*100)%>%
     dplyr::select(-c("wert", "wert_gesamt", "fachbereich.y", "anforderungsniveau.y", "anzeige_geschlecht.y"))
 
   # Datasets

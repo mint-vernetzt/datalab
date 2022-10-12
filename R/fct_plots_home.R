@@ -253,7 +253,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
 
   # call function to calculate the share of MINT for every "bereich"
-  df <- share_MINT(df)
+  df<- share_MINT(df)
 
   #rename
   df[df$fachbereich != "MINT", "fachbereich"] <- "Andere Fachbereiche"

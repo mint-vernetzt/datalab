@@ -126,6 +126,8 @@ share_MINT <- function(df){
 #     #df2<- df2[, colnames(df)]
 #
 #     df_sub<-  dplyr::bind_rows(df, df_sub)
+
+    #Korrektur: prep for ratio
     df2 <- df_k %>% dplyr::filter(indikator == "Leistungskurse")
 
     df8 <- df2 %>%
@@ -158,22 +160,31 @@ share_MINT <- function(df){
     # df <- rbind(df, df_sub)
 
 
-    # calculate ratio fr Arbeitsmarkt
+    # Korrektur: prep for Arbeitsmarkt
 
-    df9 <- df7 %>% dplyr::filter(bereich=="Arbeitsmarkt")%>%
+    df10 <- df7 %>% dplyr::filter(bereich=="Arbeitsmarkt")%>%
       tidyr::pivot_wider(names_from = fachbereich, values_from= wert)%>%
       dplyr::mutate("andere Berufszweige" = Alle-MINT)%>%
-      tidyr::pivot_longer(c("MINT", "Alle", "andere Berufszweige"), names_to = "fachbereich", values_to = "wert")
+      dplyr::select(-Alle)%>%
+      tidyr::pivot_longer(c("MINT", "andere Berufszweige"), names_to = "fachbereich", values_to = "wert")
 
-    df7 <- df7 %>% dplyr::filter(fachbereich != "Arbeitsmarkt")
-browser()
-    df7 <<- dplyr::bind_rows(df9, df7)
+    df12 <- df7 %>% dplyr::filter(bereich != "Arbeitsmarkt")
+
+    df100 <- dplyr::bind_rows(df10, df12)
+
+
+
+
+
+
+
+
 
 
     #rename
     #df7[df7$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige" ## <- WRONG!
 
-  return(df7)
+  return(df100)
 }
 
 
