@@ -140,6 +140,7 @@ share_MINT <- function(df){
 
     #df2<- df2[, colnames(df)]
 
+
     df7 <-  dplyr::bind_rows(df5, df8)
 
     df7$indikator <- gsub("Studienanfänger", "Studienanfängerinnen",  df7$indikator)
@@ -156,8 +157,21 @@ share_MINT <- function(df){
     #
     # df <- rbind(df, df_sub)
 
+
+    # calculate ratio fr Arbeitsmarkt
+
+    df9 <- df7 %>% dplyr::filter(bereich=="Arbeitsmarkt")%>%
+      tidyr::pivot_wider(names_from = fachbereich, values_from= wert)%>%
+      dplyr::mutate("andere Berufszweige" = Alle-MINT)%>%
+      tidyr::pivot_longer(c("MINT", "Alle", "andere Berufszweige"), names_to = "fachbereich", values_to = "wert")
+
+    df7 <- df7 %>% dplyr::filter(fachbereich != "Arbeitsmarkt")
+browser()
+    df7 <<- dplyr::bind_rows(df9, df7)
+
+
     #rename
-    df7[df7$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige"
+    #df7[df7$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige" ## <- WRONG!
 
   return(df7)
 }
