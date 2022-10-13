@@ -102,45 +102,47 @@ prep_kurse_east_west <- function(df, type = "no_subjects") {
 
 share_mint_kurse <- function(df){
 
-  # combine subjects to get numbers on share of MINT
-  # subjects <- c("Mathematik", "Informatik",  "Biologie", "Chemie",
-  #               "Physik")
-  #
-  #
-  # values_Mint <- df %>%
-  #   dplyr::filter(fachbereich %in% subjects) %>%
-  #   dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
-  #   dplyr::summarise(wert = sum(wert))
-  #
-  # values_Mint$fachbereich <- "MINT"
-  #
-  #
-  # values_andere <- df %>%
-  #   dplyr::filter(fachbereich %!in% subjects, fachbereich != "Alle Fächer") %>%
-  #   dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
-  #   dplyr::summarise(wert = sum(wert))
-  #
-  # values_andere$fachbereich <- "andere Fächer"
-  #
-  # df <- rbind(values_Mint, values_andere)
+  #combine subjects to get numbers on share of MINT
+  subjects <- c("Mathematik", "Informatik",  "Biologie", "Chemie",
+                "Physik")
 
 
-df <- df %>%
-    tidyr::pivot_wider(names_from=anzeige_geschlecht, values_from=wert)%>%
-    dplyr::mutate(Gesamt=Männer+Frauen)%>%
-    tidyr::pivot_longer(c("Gesamt", "Frauen", "Männer"), names_to = "anzeige_geschlecht", values_to = "wert")
+  values_Mint <- df %>%
+    dplyr::filter(fachbereich %in% subjects) %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
+    dplyr::summarise(wert = sum(wert))
+
+  values_Mint$fachbereich <- "MINT"
 
 
-  df <- df %>%
-    tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
-    dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
-                  "andere Fächer" =`Alle Fächer`- MINT)%>%
-    tidyr::pivot_longer(c(6:19), values_to = "wert", names_to= "fachbereich")
+  values_andere <- df %>%
+    dplyr::filter(fachbereich %!in% subjects, fachbereich != "Alle Fächer") %>%
+    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
+    dplyr::summarise(wert = sum(wert))
+
+  values_andere$fachbereich <- "andere Fächer"
+
+  df <- rbind(values_Mint, values_andere)
 
 
-  df <- df %>%
-    tidyr::pivot_wider(values_from = wert, names_from = anzeige_geschlecht)%>%
-    tidyr::pivot_longer(c("Männer","Frauen"),names_to = "anzeige_geschlecht", values_to= "wert")%>%
-    dplyr::rename(wert_new = Gesamt)%>%
-    dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
+# df <- df %>%
+#     tidyr::pivot_wider(names_from=anzeige_geschlecht, values_from=wert)%>%
+#     dplyr::mutate(Gesamt=Männer+Frauen)%>%
+#     tidyr::pivot_longer(c("Gesamt", "Frauen", "Männer"), names_to = "anzeige_geschlecht", values_to = "wert")
+#
+#
+#   df <- df %>%
+#     tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
+#     dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
+#                   "andere Fächer" =`Alle Fächer`- MINT)%>%
+#     tidyr::pivot_longer(c(6:19), values_to = "wert", names_to= "fachbereich")
+#
+#
+#   df <- df %>%
+#     tidyr::pivot_wider(values_from = wert, names_from = anzeige_geschlecht)%>%
+#     tidyr::pivot_longer(c("Männer","Frauen"),names_to = "anzeige_geschlecht", values_to= "wert")%>%
+#     dplyr::rename(wert_new = Gesamt)%>%
+#     dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
+
+  return(df)
 }

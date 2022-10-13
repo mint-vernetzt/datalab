@@ -160,6 +160,12 @@ share_MINT <- function(df){
     # df <- rbind(df, df_sub)
 
 
+
+    # calculate the share of MINT for "Beschäftigte" and "Auszubildende"
+
+    #rename
+    #df7[df7$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige" ## <- WRONG!
+
     # Korrektur: prep for Arbeitsmarkt
 
     df10 <- df7 %>% dplyr::filter(bereich=="Arbeitsmarkt")%>%
@@ -173,17 +179,6 @@ share_MINT <- function(df){
     df100 <- dplyr::bind_rows(df10, df12)
 
 
-
-
-
-
-
-
-
-
-    #rename
-    #df7[df7$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige" ## <- WRONG!
-
   return(df100)
 }
 
@@ -194,6 +189,13 @@ share_MINT <- function(df){
 #'
 #' @noRd
 share_female <- function(df){
+
+  # calculate the new "Gesamt" for "Leistungskurse"
+  df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
+    dplyr::filter(indikator == "Leistungskurse") %>%
+    dplyr::group_by(indikator, jahr) %>%
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
+                       wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
 
   # calculate the share of females for "Hochschule" and "Habilitationen"
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")

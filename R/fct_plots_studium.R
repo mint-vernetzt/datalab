@@ -2230,7 +2230,7 @@ studienfaecher_ranking <- function(df,r, type) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
-  df <- df %>% dplyr::filter(region != "Deutschland")
+  #df <- df %>% dplyr::filter(region != "Deutschland")
 
   # df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
@@ -2314,11 +2314,12 @@ studienfaecher_ranking <- function(df,r, type) {
 
   df2$fachbereich <- factor(df2$fachbereich, levels = levels(df$fachbereich))
 
-
+#hier sind keine Daten mehr in df, wenn Deutschland ausgewählt ist, sonst schon
 
   colnames(df)[7] <- "Studienanfängerinnen"
 
-
+#hier sind dann auf einmal die Werte von Hessen (Default Wahl) in df wenn man Deutschland auswählt,
+  #und ein Fehler in der App wird angezeigt
 
   ggplot2::ggplot(df,
                   ggplot2::aes(y = fachbereich)) +
