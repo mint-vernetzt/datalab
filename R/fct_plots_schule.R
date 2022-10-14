@@ -44,10 +44,14 @@ kurse_einstieg_pie <- function(df,r) {
   df <- share_mint_kurse(df)
 
   # calcualte the new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+
+  df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+    dplyr::filter(anzeige_geschlecht != "Gesamt")
 
 
   # df_test <<- df1 %>% tidyr:: pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
@@ -351,15 +355,16 @@ kurse_waffle_mint <- function(df,r) {
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
     dplyr::filter(indikator == "Leistungskurse") %>%
     dplyr::group_by(indikator, jahr) %>%
-    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-                       wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Männer"] + wert[anzeige_geschlecht == "Frauen"]
+                       ) %>% dplyr::pull(wert)
 
 
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Grundkurse"), "wert"] <-  df %>%
     dplyr::filter(indikator == "Grundkurse") %>%
     dplyr::group_by(indikator, jahr) %>%
-    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-                       wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"] ) %>% dplyr::pull(wert)
+
+
 
   # combine subjects to get numbers on share of MINT
   # make a function out of it
@@ -543,17 +548,27 @@ kurse_mint_comparison <- function(df,r) {
   df <- df %>% dplyr::filter(jahr == timerange)
 
   # calculate new "Gesamt"
+  # df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
+  #   dplyr::filter(indikator == "Leistungskurse") %>%
+  #   dplyr::group_by(indikator, jahr) %>%
+  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
+  #                      wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+  #
+  # df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Grundkurse"), "wert"] <-  df %>%
+  #   dplyr::filter(indikator == "Grundkurse") %>%
+  #   dplyr::group_by(indikator, jahr) %>%
+  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
+  #                      wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
     dplyr::filter(indikator == "Leistungskurse") %>%
     dplyr::group_by(indikator, jahr) %>%
-    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-                       wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"]) %>% dplyr::pull(wert)
 
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Grundkurse"), "wert"] <-  df %>%
     dplyr::filter(indikator == "Grundkurse") %>%
     dplyr::group_by(indikator, jahr) %>%
-    dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-                       wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"]) %>% dplyr::pull(wert)
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
@@ -640,6 +655,8 @@ kurse_mint_comparison <- function(df,r) {
 
 kurse_mint_comparison_bl <- function(df,r) {
 
+
+
   timerange <- r$date_comparison_bl
 
   subject <- r$subject_comparison_bl
@@ -657,10 +674,15 @@ kurse_mint_comparison_bl <- function(df,r) {
   df <- df %>% dplyr::filter(indikator == indikator_comparison)
 
   # calculate new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+
+  df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+    dplyr::filter(anzeige_geschlecht != "Gesamt")
+
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
@@ -1248,10 +1270,21 @@ kurse_map <- function(df,r) {
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
-  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+
+    # df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
+    # dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    # dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+    #                 wert[anzeige_geschlecht == "Männer"])
+
+  # df_sub <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+  #   dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+  df_sub <- df_sub %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+    dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+
 
   df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
@@ -1261,10 +1294,14 @@ kurse_map <- function(df,r) {
     dplyr::mutate(wert_sum = sum(props))
 
   # calculate the new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+
+  df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+    dplyr::filter(anzeige_geschlecht != "Gesamt")
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
@@ -1758,10 +1795,14 @@ kurse_verlauf_single <- function(df,r) {
   df <- share_mint_kurse(df)
 
    # calcualte the new "Gesamt"
-   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-     dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-     dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Frauen"] +
-                     wert[anzeige_geschlecht == "Männer"])
+   # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+   #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+   #   dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Frauen"] +
+   #                   wert[anzeige_geschlecht == "Männer"])
+
+  df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+    dplyr::filter(anzeige_geschlecht != "Gesamt")
 
 
    df = df[!duplicated(df$wert_new),]
@@ -1834,10 +1875,14 @@ kurse_einstieg_comparison <- function(df,r) {
   df <- share_mint_kurse(df)
 
   # calcualte the new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+
+  df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+    dplyr::filter(anzeige_geschlecht != "Gesamt")
 
 
   df = df[!duplicated(df$wert_new),]
@@ -2152,10 +2197,14 @@ kurse_verlauf_multiple_bl <- function(df,r) {
   df_sub <- df_sub[,colnames(df)]
 
   # calculate the new "Gesamt"
-  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+
+  df_sub <- df_sub %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+    dplyr::filter(anzeige_geschlecht != "Gesamt")
 
   df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
@@ -2169,10 +2218,14 @@ kurse_verlauf_multiple_bl <- function(df,r) {
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   # calculate the new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+
+  df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+    dplyr::filter(anzeige_geschlecht != "Gesamt")
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
@@ -2273,10 +2326,14 @@ kurse_verlauf_subjects_bl <- function(df,r) {
   df_sub <- df_sub[,colnames(df)]
 
   # calculate the new "Gesamt"
-  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+  #
+  df_sub <- df_sub %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+    dplyr::filter(anzeige_geschlecht != "Gesamt")
 
   df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
@@ -2290,10 +2347,14 @@ kurse_verlauf_subjects_bl <- function(df,r) {
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   # calculate the new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+
+  df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+    dplyr::filter(anzeige_geschlecht != "Gesamt")
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
