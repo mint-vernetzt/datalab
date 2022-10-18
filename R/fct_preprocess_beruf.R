@@ -143,7 +143,9 @@ calc_arbeitsmarkt_share_bl <- function(df) {
                                   anforderungsniveau == "Gesamt") %>%
     # dplyr::select(-fachbereich) %>%
     dplyr::group_by(region, indikator, anforderungsniveau, jahr, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert))
+    #dplyr::summarise(wert = sum(wert)) # Fehler: rechnet damit in jeder Gruppierung Alle + MINT aus
+    dplyr::mutate(wert = wert[fachbereich == "Alle"]) %>%
+    dplyr::select(-fachbereich)
 
   df_employed <- df %>% dplyr::filter(indikator == "Beschäftigte") %>%
     dplyr::rename(wert_employed = wert)
