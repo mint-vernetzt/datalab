@@ -147,6 +147,9 @@ calc_arbeitsmarkt_share_bl <- function(df) {
     dplyr::mutate(wert = wert[fachbereich == "Alle"]) %>%
     dplyr::select(-fachbereich)
 
+  #löschen doppelter Zeilen, die durch Ersetzten vs. falsch Aufsummieren entstanden sind
+  df_alle <- unique.data.frame(df_alle)
+
   df_employed <- df %>% dplyr::filter(indikator == "Beschäftigte") %>%
     dplyr::rename(wert_employed = wert)
 
@@ -168,6 +171,7 @@ calc_arbeitsmarkt_share_bl <- function(df) {
     dplyr::select(-wert_trainee)
 
   df_return <- rbind(df_employed, df_trainee)
+
 
   return(df_return)
 }
