@@ -37,6 +37,7 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
       inputId = ns("states_beruf_arbeitsmarkt_bl_gender_verlauf"),
       choices = c("Deutschland",
                   "Baden-Württemberg",
+                  "Bayern",
                   "Berlin",
                   "Brandenburg",
                   "Bremen",
