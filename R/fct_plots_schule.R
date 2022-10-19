@@ -10,6 +10,8 @@
 
 kurse_einstieg_pie <- function(df,r) {
 
+
+
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg
 
@@ -50,8 +52,9 @@ kurse_einstieg_pie <- function(df,r) {
   #                   wert[anzeige_geschlecht == "Männer"])
 
   df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+    dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Gesamt"] )%>%
     dplyr::filter(anzeige_geschlecht != "Gesamt")
+
 
 
   # df_test <<- df1 %>% tidyr:: pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
@@ -80,7 +83,7 @@ kurse_einstieg_pie <- function(df,r) {
   #   dplyr::summarize(proportion = wert_new/sum_wert) %>%
   #   dplyr::mutate(proportion = round(proportion, 2)*100)
 
-  df <- df %>% dplyr::group_by(jahr, indikator, fachbereich) %>%
+  df<-  df %>% dplyr::group_by(jahr, indikator, fachbereich) %>%
     dplyr::summarize(proportion = wert_new/sum_wert)
 
   df$proportion <- df$proportion * 100
@@ -90,6 +93,8 @@ kurse_einstieg_pie <- function(df,r) {
 
 
   df_gk <- df %>% dplyr::filter(indikator == "Grundkurse")
+
+
 
   df_lk <- df %>% dplyr::filter(indikator == "Leistungskurse")
 
@@ -343,6 +348,8 @@ data_einstieg_kurse <- function(df,r) {
 
 kurse_waffle_mint <- function(df,r) {
 
+
+
   timerange <- r$date_kurse_mint
 
   # filter dataset based on UI inputs
@@ -355,14 +362,17 @@ kurse_waffle_mint <- function(df,r) {
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
     dplyr::filter(indikator == "Leistungskurse") %>%
     dplyr::group_by(indikator, jahr) %>%
-    dplyr::summarise(wert = wert[anzeige_geschlecht == "Männer"] + wert[anzeige_geschlecht == "Frauen"]
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"]
+                    # + wert[anzeige_geschlecht == "Frauen"]
                        ) %>% dplyr::pull(wert)
 
 
   df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Grundkurse"), "wert"] <-  df %>%
     dplyr::filter(indikator == "Grundkurse") %>%
     dplyr::group_by(indikator, jahr) %>%
-    dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"] ) %>% dplyr::pull(wert)
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"]
+                    # + wert[anzeige_geschlecht == "Frauen"]
+                     ) %>% dplyr::pull(wert)
 
 
 
@@ -372,7 +382,7 @@ kurse_waffle_mint <- function(df,r) {
                 "Physik")
 
   values_natwi <- df %>%
-    dplyr::filter(fachbereich %in% c("Biologie", "Chemie", "Biologie")) %>%
+    dplyr::filter(fachbereich %in% c("Biologie", "Chemie", "Physik")) %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
     dplyr::summarise(wert = sum(wert)) %>%
     dplyr::mutate(fachbereich = "Naturwissenschaften") %>%
@@ -392,14 +402,15 @@ kurse_waffle_mint <- function(df,r) {
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
+
+
   # extract new "Gesamt"
   df <- df %>% dplyr::group_by(indikator) %>%
     dplyr::mutate(props = sum(wert))
 
 
-
   # calculate proportion
-  df <- df %>% dplyr::group_by(fachbereich, indikator) %>%
+  df <-  df %>% dplyr::group_by(fachbereich, indikator) %>%
     dplyr::summarize(proportion = wert/props)
 
   # set order
@@ -416,6 +427,8 @@ kurse_waffle_mint <- function(df,r) {
   x_gk <- x_gk[order(factor(names(x_gk), levels = c('Informatik', 'Mathematik',
                                                     'Naturwissenschaften',
                                                     'andere Fächer')))]
+
+
 
   x_lk <- df %>% dplyr::filter(indikator == "Leistungskurse")
 
@@ -522,7 +535,8 @@ kurse_waffle_mint <- function(df,r) {
 
 
 
-  ggpubr::ggarrange(waffle_gk, NULL ,waffle_lk, widths = c(1, 0.1, 1), nrow=1)
+  ggpubr::ggarrange(waffle_gk, NULL ,waffle_lk, widths = c(1, 0.1, 1), nrow=1,
+                    labels="")
 
 }
 
@@ -1249,6 +1263,8 @@ kurse_ranking_bl <- function(df,r, type) {
 
 kurse_map <- function(df,r) {
 
+  browser()
+
   # load UI inputs from reactive value
   timerange <- r$date_map
 
@@ -1259,10 +1275,10 @@ kurse_map <- function(df,r) {
 
   df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
+  #df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
   # aggregate to MINT
-  df_sub <- share_mint_kurse(df)
+  df_sub <<- share_mint_kurse(df)
 
   df_sub <- df_sub[,colnames(df)]
 
