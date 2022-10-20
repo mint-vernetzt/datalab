@@ -1263,8 +1263,6 @@ kurse_ranking_bl <- function(df,r, type) {
 
 kurse_map <- function(df,r) {
 
-  browser()
-
   # load UI inputs from reactive value
   timerange <- r$date_map
 
@@ -1278,7 +1276,7 @@ kurse_map <- function(df,r) {
   #df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
   # aggregate to MINT
-  df_sub <<- share_mint_kurse(df)
+  df_sub <- share_mint_kurse(df)
 
   df_sub <- df_sub[,colnames(df)]
 

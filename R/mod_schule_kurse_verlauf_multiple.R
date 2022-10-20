@@ -49,6 +49,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf_multiple"),
       choices = c("Deutschland",
+                  "Baden-Württemberg",
                   "Bayern",
                   "Berlin",
                   "Brandenburg",
