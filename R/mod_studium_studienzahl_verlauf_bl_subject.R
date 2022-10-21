@@ -57,6 +57,8 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("states_verlauf_subject_bl"),
       choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
                   "Berlin",
                   "Brandenburg",
                   "Bremen",

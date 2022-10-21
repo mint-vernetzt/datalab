@@ -1135,6 +1135,8 @@ studienzahl_map <- function(df,r) {
   # remove
   df <- df %>% dplyr::filter(region != "Deutschland")
 
+  #Verlgeich bei MINT vs nicht-MINT kann BY und BW enthalten, da hier nur gender Daten fehlen
+
   df <- df %>% dplyr::filter(region != "Bayern")
 
   df <- df %>% dplyr::filter(region != "Baden-Württemberg")
@@ -1603,12 +1605,15 @@ studienzahl_verlauf_bl <- function(df,r) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
-  # remove
+  # remove - Muss BY und BW nicht entfernen, da MINT vs nicht-MINT in Daten enthalten
   df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(region != "Bayern")
+  #df <- df %>% dplyr::filter(region != "Bayern")
 
-  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+  #df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
+  #damit alle selbe Srucktur haben; Frauen nicht relevant hier
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_studierende_east_west(df)
@@ -1654,14 +1659,14 @@ studienzahl_verlauf_bl <- function(df,r) {
 
   }
 
-  # calculate share of males for states
-  df <- calc_share_male_bl(df)
-
-  # calculate new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # # calculate share of males for states
+  # df <- calc_share_male_bl(df)
+  #
+  # # calculate new "Gesamt"
+  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
 
   # calculate proportions
   values <- df %>% dplyr::group_by(region, indikator, fachbereich, anzeige_geschlecht, jahr) %>%
@@ -1740,10 +1745,13 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
-  # remove
-  df <- df %>% dplyr::filter(region != "Bayern")
+  # remove - hier nicht nötig, da MINT vs nicht-MINT Daten vorhanden
+ # df <- df %>% dplyr::filter(region != "Bayern")
 
-  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+ # df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
+  #alles in selbe Struktur ohne Frauen bringen, da hier nicht relevant
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   df <- df %>% dplyr::filter(indikator == status_studierende)
 
@@ -1772,7 +1780,7 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
   # call function to calculate the share of MINT and the remaining subjects
   df_sub <- calc_share_MINT_bl(df)
 
-  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Frauen")
+  #df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Frauen")
 
   # aggregate
   df_sub <- df_sub %>%
@@ -1780,7 +1788,7 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
     dplyr::mutate(props = sum(wert))
 
 
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Frauen")
+ # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Frauen")
 
   df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
@@ -2504,9 +2512,12 @@ studierende_map <- function(df,r) {
 
   df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(region != "Bayern")
+ # df <- df %>% dplyr::filter(region != "Bayern")
 
-  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+  # df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
+  #alles in gleiche Struktur bringen ohne Frauen da hier nicht relevant
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   if(lehramt == FALSE){
 
@@ -2531,32 +2542,32 @@ studierende_map <- function(df,r) {
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
-  df_sub <-  calc_share_male_bl(df_sub)
+  #df_sub <-  calc_share_male_bl(df_sub)
 
-  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+  # df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
 
   df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
   df_sub <- df_sub %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
-    dplyr::mutate(wert_sum = sum(props))
+    dplyr::mutate(wert_sum = sum(wert))
 
-  df <- calc_share_male_bl(df)
+#  df <- calc_share_male_bl(df)
 
-  # calculate the new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
-
-  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
+  # # calculate the new "Gesamt"
+  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+  #
+  # df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
   df <- df %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
-    dplyr::mutate(wert_sum = sum(props))
+    dplyr::mutate(wert_sum = sum(wert))
 
   df <- rbind(df, df_sub)
 
@@ -2564,7 +2575,7 @@ studierende_map <- function(df,r) {
 
   # calculate proportions
   df <- df %>% dplyr::group_by(region, indikator) %>%
-    dplyr::summarize(proportion = props/wert_sum)
+    dplyr::summarize(proportion = wert/wert_sum)
 
   df$proportion <- df$proportion * 100
 
@@ -2827,10 +2838,13 @@ studierende_verlauf_multiple_bl <- function(df,r) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
-  # remove
-  df <- df %>% dplyr::filter(region != "Bayern")
+  # remove muss hier nicht raus weil MINT vs nicht-MINT vorliegt
+  #df <- df %>% dplyr::filter(region != "Bayern")
 
-  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+  #df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+
+  #damit alle selbe Form haben:
+   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_studierende_east_west(df)
@@ -2852,43 +2866,66 @@ studierende_verlauf_multiple_bl <- function(df,r) {
     title_help_sub_sub <- " an einer Uni (nur Lehramt)"
   }
 
+  # # aggregate to MINT
+  # df_sub <- calc_share_MINT_bl(df)
+  #
+  # df_sub <- df_sub[,colnames(df)]
+  #
+  # # # aggregate all subjects to calculate proportion later
+  # df_sub <- df_sub %>% dplyr::group_by(region, indikator) %>%
+  #   dplyr::mutate(props = sum(wert))
+  #
+  # df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
+  #
+  # df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
+  #
+  # # aggregate all subjects to calculate proportion later
+  # df <- df %>% dplyr::group_by(jahr, region, indikator) %>%
+  #   dplyr::mutate(sum_props = sum(wert))
+  #
+  # df <- rbind(df, df_sub)
+
+  #df <- df %>% dplyr::filter(fachbereich == subject)
+
+
   # aggregate to MINT
   df_sub <- calc_share_MINT_bl(df)
 
   df_sub <- df_sub[,colnames(df)]
 
-  df_sub <- calc_share_male_bl(df_sub)
+
+#df_sub <- calc_share_male_bl(df_sub)
 
   # calculate the new "Gesamt"
-  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
-
-  df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
+ #  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+ #    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
+ #    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+ #                    wert[anzeige_geschlecht == "Männer"])
+ #
+ # df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
   # aggregate all subjects to calculate proportion later
-  df_sub <- df_sub %>% dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
-    dplyr::mutate(sum_props = sum(props))
+  df_sub <- df_sub %>% dplyr::group_by(jahr, region, indikator) %>%
+    dplyr::mutate(sum_props = sum(wert))
 
 
   df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
-  df <- calc_share_male_bl(df)
+ # df <- calc_share_male_bl(df)
 
   # calculate new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
-
-  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
+  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+  #
+  # df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
   df <- df %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
-    dplyr::mutate(sum_props = sum(props))
+    dplyr::mutate(sum_props = sum(wert))
 
   df <- rbind(df, df_sub)
 
@@ -2901,7 +2938,7 @@ studierende_verlauf_multiple_bl <- function(df,r) {
 
   # calculate proportions
   df <- df %>% dplyr::group_by(jahr, region, indikator) %>%
-    dplyr::summarize(proportion = props/sum_props)
+    dplyr::summarize(proportion = wert/sum_props)
 
   df$proportion <- df$proportion * 100
 
@@ -3110,21 +3147,25 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
   df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(region != "Bayern")
+#muss nicht raus, da hier MINT vs nicht-MINT verglichen wird
 
-  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+#  df <- df %>% dplyr::filter(region != "Bayern")
+
+ # df <- df %>% dplyr::filter(region != "Baden-Württemberg")
 
   df <- df %>% dplyr::filter(indikator == studium_level)
 
-  df <- calc_share_male_bl(df)
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
-  # calculate new "Gesamt"
-  df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-    dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
-    dplyr::mutate(wert = wert[anzeige_geschlecht == "Frauen"] +
-                    wert[anzeige_geschlecht == "Männer"])
+ # df <- calc_share_male_bl(df)
 
-  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
+  # # calculate new "Gesamt"
+  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
+  #   dplyr::mutate(wert = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+  #
+  # df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
   if(lehramt == FALSE){
 
@@ -3214,9 +3255,9 @@ bundeslaender_ranking <- function(df,r, type) {
 
   df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(region != "Bayern")
+  #df <- df %>% dplyr::filter(region != "Bayern")
 
-  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+ # df <- df %>% dplyr::filter(region != "Baden-Württemberg")
 
   df <- df %>% dplyr::mutate(indikator = replace(indikator,
                                                  indikator == "Studienanfänger:innen",
