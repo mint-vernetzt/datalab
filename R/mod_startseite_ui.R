@@ -87,7 +87,8 @@ mod_startseite_ui <- function(id){
                absolvieren bzw. später einen MINT-Beruf ausüben. In der Oberstufe machen die MINT-Fächer einen Drittel bei der Leistungskurswahl aus (34 %).
                Gut ein Drittel (27 %) der Studierenden studiert ein MINT-Fach. Unter den Auszubildenden macht knapp jede:r Vierte (24 %) eine Ausbildung
                im MINT-Bereich. Von allen Beschäftigten in Deutschland geht ein Fünftel (20 %) einem MINT-Beruf nach.",
-          )
+          ),
+          p(style="font-size:12px;color:grey", "Stand 2020, Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
 
       )),
 
@@ -113,6 +114,7 @@ mod_startseite_ui <- function(id){
                Während in den MINT-Leistungskursen in der Oberstufe der Anteil an Mädchen und Jungen fast ausgewogen ist, nimmt der Anteil
                an Frauen, die MINT-Studiengänge wählen (32 %), eine Ausbildung in MINT ergreifen (13 %) und später in MINT-Berufen arbeiten (16 %), immer weiter ab.",
               br(),
+              p(style="font-size:12px;color:grey", "Stand 2020, Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
          ))
         )
           ),
