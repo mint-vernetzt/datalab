@@ -43,19 +43,19 @@ mod_home_start_ui <- function(id){
         p(style = "text-align: justify; font-size = 16px",
         span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
                "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
-             Bildungsbereiche miteinander. Auf den folgenden, bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
+             Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
                ),
 
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis 2021, Bundesagentur für Arbeit 2021, KMK 2021, alle auf Anfrage, eigene Berechnungen."
+          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis, 2021, Bundesagentur für Arbeit, 2021, KMK, 2021, alle auf Anfrage, eigene Berechnungen."
                )),
         p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
-               "Anders als bei Studierenden oder Auszubildenen wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
-               eindeutig als 'MINT' oder 'nicht-MINT' eingruppiert werden. Um dennoch einen Anteil von MINT versus Nicht-MINT angeben zu können,
+               "Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
+               eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
                nutzen wir die Kursbelegungszahlen der Schüler:innen. Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
-               nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend der Belegungszahlen der verschiedenen Kurse.
+               nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen der verschiedenen Kurse.
                Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor."
           ))
         ),
@@ -82,7 +82,7 @@ mod_home_start_ui <- function(id){
           "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?",
           br(), br(),
           "Interpretationshilfe: Wenn man auf der ersten Ansicht beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden
-          24 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten ist dieser Anteil ein wenig geringer. Nur 20 % der Beschäftigten
+          32 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten ist dieser Anteil ein wenig geringer. Nur 24 % der Beschäftigten
           arbeiten in einem MINT-Beruf."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
@@ -115,8 +115,8 @@ mod_home_start_ui <- function(id){
           Wie hoch ist der Anteil von Frauen in MINT-Berufen?", br(),
         "Zum Vergleich zeigen wir jeweils auch, wie hoch der Anteil von Frauen in den anderen, nicht-MINT-Fächern oder -Berufszweigen ist.",
         br(), br(),
-        "Interpretationshilfe: Betrachtet man hier beispielsweise die Studierenden sieht man, dass in MINT-Fächern 32 % der Studierenden
-        Frauen sind. Der Anteil an Frauen in anderen Studiengängen ist dagegen weitaus größer. In Nicht-MINT-Fächern sind 61 % aller Studierenden weiblich."),
+        "Interpretationshilfe: Betrachtet man hier beispielsweise die Studierenden, sieht man, dass in MINT-Fächern 32 % der Studierenden
+        Frauen sind. Der Anteil an Frauen in anderen Studiengängen ist dagegen weitaus größer. In nicht-MINT-Fächern sind 61 % aller Studierenden weiblich."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                              shiny::sidebarPanel(

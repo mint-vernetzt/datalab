@@ -47,7 +47,7 @@ mod_startseite_ui <- function(id){
         # ),
         br(),
         p(style = "text-align: justify; font-size = 48px",
-          span(tags$b(span("Willkommen in der Beta-Version des MINT-DataLabs von MINTvernetzt!", style = "color:#b16fab")), br(), br(),
+          span(tags$b(span("Willkommen in der Betaversion des MINT-DataLabs von MINTvernetzt!", style = "color:#b16fab")), br(), br(),
           "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
           Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
                 für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver Diagramme einen intuitiven und informativen Zugang zu gewähren.",
@@ -92,7 +92,7 @@ mod_startseite_ui <- function(id){
       )),
 
       shinydashboard::box(
-        title = "MINT-Gender-Gap wächst entlang der Bildungskette",
+        title = "MINT-Gendergap wächst entlang der Bildungskette",
         width = 6,
        #   tags$video(src="www/DataLab_Trichter_dyn.mp4", type = "video/mp4", hight = "300px", autoplay = TRUE),
         #video spielt leider nicht ab - könnte daran liegen dass www Pfad nicht auch für Vidoes eingerichtet ist?
@@ -110,7 +110,7 @@ mod_startseite_ui <- function(id){
          ),
        p(style = "text-align: justify; font-size = 16px",
          span("Diese Grafik zeigt, wie der Anteil an Mädchen bzw. Frauen entlang der MINT-Bildungskette immer weiter abnimmt.
-               Während in den MINT-Leistungskurse in der Oberstufe der Anteil an Mädchen und Jungen fast ausgewogen ist, nimmt der Anteil
+               Während in den MINT-Leistungskursen in der Oberstufe der Anteil an Mädchen und Jungen fast ausgewogen ist, nimmt der Anteil
                an Frauen, die MINT-Studiengänge wählen (32 %), eine Ausbildung in MINT ergreifen (13 %) und später in MINT-Berufen arbeiten (16 %), immer weiter ab.",
               br(),
          ))

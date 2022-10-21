@@ -77,7 +77,7 @@ mod_kontakt_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        title = "Kontakt & Feedback",
+        title = "Kontakt und Feedback",
         p(style = "text-align: justify; font-size = 16px",
           "Das MINT-DataLab wird in den nächsten Jahren schrittweise weiterentwickelt.
           Die Wünsche und Bedarfe unserer Zielgruppen werden über direkten Austausch,
