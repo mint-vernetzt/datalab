@@ -46,7 +46,9 @@ mod_schule_kurse_ui <- function(id){
                 sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
                Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
                die Anteile der Grundlagenfächer an den Grundkursen sehr gering.", br(), br(),
-               "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor."
+               "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.",
+               br(),br(),
+               "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen."
                ))
       )),
       shinydashboard::box(

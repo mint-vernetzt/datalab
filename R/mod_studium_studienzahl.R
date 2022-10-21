@@ -38,12 +38,15 @@ mod_studium_studienzahl_ui <- function(id){
            weiblichen Studierenden und nach Bundesländern. Studierende können außerdem nach Hochschultyp unterschieden werden
            oder ob sie auf Lehramt oder im ersten Fachsemester studieren."
            )),
-        br(),
+       # br(),
       p(style = "text-align: justify; font-size = 16px",
         span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis, 2021, auf Anfrage, eigene Berechnungen.")),
       p(style = "text-align: justify; font-size = 16px",
         span(tags$b(span("Methodische Hinweise: ", style = "color:#b16fab")),
-             "Die aktuellen Berechnungen erfolgen auf Basis der Studierendenzahlen an allen deutschen Hochschulen. "))
+             "Die aktuellen Berechnungen erfolgen auf Basis der Studierendenzahlen an allen deutschen Hochschulen. ",
+             br(),br(),
+             "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen."
+             ))
     ),
     shinydashboard::box(
       title = "Auf dieser Seite",
