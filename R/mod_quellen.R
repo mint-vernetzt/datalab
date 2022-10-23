@@ -33,7 +33,7 @@ mod_quellen_ui <- function(id){
 
         p(style = "text-align: justify; font-size = 16px",
           span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
-                         Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
+                         Statistischen Bundesamtes und der Kultusministerkonferenz. Weitere Datenquellen werden im Laufe
                          der Zeit integriert.")
         ),
 
@@ -43,7 +43,7 @@ mod_quellen_ui <- function(id){
           tags$a(href="https://www.kmk.org/", "Seite der Kultusministerkonferenz", target = "_blank"), br(),
           tags$a(href="https://www.kmk.org/themen/allgemeinbildende-schulen/unterrichtsfaecher/mathematik-informatik-naturwissenschaften-technik-mint.html", "Definition MINT-Fächer an Schulen", target = "_blank"),
           br(),
-          "Zu den MINT-Fächern in der Schule gehören Mathematik, Biologie, Chemie, Physik, Informatik und andere naturwissenschaftlich-technische Fächer.", br(), br()
+          "Zu den MINT-Fächern in der Schule gehören: Mathematik, Biologie, Chemie, Physik, Informatik und andere naturwissenschaftlich-technische Fächer.", br(), br()
             ),
 
         p(tags$b(span("Studium", style = "color:#154194")),
@@ -56,12 +56,12 @@ mod_quellen_ui <- function(id){
           br(),
           tags$ul(
             tags$li("Ingenieurwissenschaften"),
-            "Ingenieurwissenschaften allgemein, Bergbau / Hüttenwesen, Maschinenbau / Verfahrenstechnik, Elektrotechnik,
-          Verkehrstechnik / Nautik, Architektur / Innenarchitektur, Raumplanung, Bauingenieurwesen, Vermessungswesen,
+            "Ingenieurwissenschaften allgemein, Bergbau/Hüttenwesen, Maschinenbau/Verfahrenstechnik, Elektrotechnik,
+          Verkehrstechnik/Nautik, Architektur/Innenarchitektur, Raumplanung, Bauingenieurwesen, Vermessungswesen,
           Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem. Schwerpunkt",
             tags$li("Informatik"),
             tags$li("Mathematik & Naturwissenschaften"),
-            "Mathematik / Naturwissenschaften allgemein, Mathematik, Informatik, Physik / Astronomie, Chemie, Pharmazie, Biologie, Geowissenschaften, Geographie"
+            "Mathematik/Naturwissenschaften allgemein, Mathematik, Informatik, Physik/Astronomie, Chemie, Pharmazie, Biologie, Geowissenschaften, Geographie"
           ), br()
         ),
 
@@ -70,9 +70,9 @@ mod_quellen_ui <- function(id){
           icon = icon("arrow-right"),
           tags$a(href="https://statistik.arbeitsagentur.de/DE/Home/home_node.html;jsessionid=B2B7423A23D5B6A5A4C301096D0ABDAB", "Seite der Bundesagentur für Arbeit", target="_blank"), br(),
           tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Statistiken/Themen-im-Fokus/Berufe/Generische-Publikationen/Broschuere-MINT.pdf?__blob=publicationFile", "Definition der MINT-Berufe", target = "_blank"), br(),
-          "Das spezifische Berufsaggregat 'MINT-Berufe' umfasst alle Tätigkeiten, für deren Ausübung ein hoher Anteil an Kenntnissen
+          "Das spezifische Berufsaggregat \"MINT-Berufe\" umfasst alle Tätigkeiten, für deren Ausübung ein hoher Anteil an Kenntnissen
           aus den Bereichen Mathematik, Informatik, Naturwissenschaften und/oder Technik erforderlich ist. Dabei wird auch das Bauen und
-          Instandhalten technischer Anlagen und Geräte als zentraler Bestandteil einer Tätigkeit zu den MINT Qualifikationen gezählt. Das Berufsaggregat 'MINT-Berufe'
+          Instandhalten technischer Anlagen und Geräte als zentraler Bestandteil einer Tätigkeit zu den MINT-Qualifikationen gezählt. Das Berufsaggregat \"MINT-Berufe\"
           umfasst neben den hoch qualifizierten MINT-Berufen auch die sogenannten mittelqualifizierten MINT-Berufe.", br(),
           tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Grundlagen/Methodik-Qualitaet/Methodenberichte/Uebergreifend/Generische-Publikationen/Hintergrundinfo-Anpassung-Berufsaggregat-MINT-Berufe.pdf?__blob=publicationFile", "Weitere Informationen zur Definition der MINT-Berufe", target ="_blank"),
           br(), br(), br()),
@@ -85,7 +85,7 @@ mod_quellen_ui <- function(id){
         #   )),
 
          p(style = "text-align: justify; font-size = 16px",
-          "Die Nutzungsbedingungen der Datengeber erlauben die Verwendung der Daten und grafische Aufbereitung sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet. Bei Interesse an den kompletten Datensätzen müssen die Datengeber direkt kontaktiert werden."
+          "Die Nutzungsbedingungen der Datengeber erlauben die Verwendung der Daten und die grafische Aufbereitung sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet. Bei Interesse an den kompletten Datensätzen müssen die Datengeber direkt kontaktiert werden."
         ),
 
       ))
