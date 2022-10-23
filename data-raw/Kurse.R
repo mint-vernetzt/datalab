@@ -1,6 +1,6 @@
 kurse_read <-
   readxl::read_xlsx(
-    system.file(package = "datalab", "data-raw/Kurse_29_06_22.xlsx")
+    system.file(package = "datalab", "data-raw/Kurse_21_10_22.xlsx")
   ) %>%
   janitor::clean_names() %>%
   janitor::remove_empty() %>%
