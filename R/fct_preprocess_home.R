@@ -130,20 +130,25 @@ share_MINT <- function(df){
     #Korrektur: prep for ratio
     df2 <- df_k %>% dplyr::filter(indikator == "Leistungskurse")
 
-    df8 <- df2 %>%
-      tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
-      dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
-                    "andere Fächer" =`Alle Fächer`- MINT)%>%
-      tidyr::pivot_longer(c(6:20), values_to = "wert", names_to= "fachbereich")%>%
-      dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
+    # df8 <- df2 %>%
+    #   tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
+    #   dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
+    #                 "andere Fächer" =`Alle Fächer`- MINT)%>%
+    #   tidyr::pivot_longer(c(6:20), values_to = "wert", names_to= "fachbereich")%>%
+    #   dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
 
+    mint.vs.andere <- c("Nicht MINT", "MINT")
+
+    df8 <- df2 %>% dplyr::filter(fachbereich %in% mint.vs.andere)
+
+    df8$fachbereich[df8$fachbereich == "Nicht MINT"] <- "andere Fächer"
 
     df5 <- df_k %>% dplyr::filter(bereich != "Schule")
 
     #df2<- df2[, colnames(df)]
 
 
-    df7 <-  dplyr::bind_rows(df5, df8)
+    df7 <-  rbind(df5, df8)
 
     df7$indikator <- gsub("Studienanfänger", "Studienanfänger:innen",  df7$indikator)
 

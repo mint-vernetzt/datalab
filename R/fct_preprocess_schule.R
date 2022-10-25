@@ -47,12 +47,14 @@ prep_kurse_proportion <- function(df, indikator_choice) {
 #'
 #' @noRd
 
-prep_kurse_east_west <- function(df, type = "no_subjects") {
+prep_kurse_east_west <- function(df, type = "no_subjects") { #nicht korrekt bis jetzt!!!
+  #formel von statworx berechnet nur Westen richtig, hab getestet, mit dummy ost würde osten richtig und westen falsch sein
 
   df_incl <- df
 
   # create dummy variable to indicate east or west
   df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west, "Westen", "Osten")
+  #df_incl$dummy_ost <- ifelse(df_incl$region %in% states_east_west$east, "Osten", "Westen")
 
   # aggregate values
   df_incl <- df_incl %>% dplyr::group_by(jahr, anzeige_geschlecht, indikator, fachbereich, dummy_west, bereich) %>%
@@ -107,7 +109,7 @@ share_mint_kurse <- function(df){
                 "Physik", "andere naturwiss.-technische Fächer"
                 )
 
-
+  #calculating MINT
   values_Mint <- df %>%
     dplyr::filter(fachbereich %in% subjects)%>%
      dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
@@ -115,13 +117,34 @@ share_mint_kurse <- function(df){
 
    values_Mint$fachbereich <- "MINT"
 
+#falsches Ergebnis, da Alle Fächer korrekter wäre -->incl. Sonstige Fächer, und so diese Sonstigen Fächer rausfallen
+  # values_andere <- df %>%
+  #   dplyr::filter(fachbereich %!in% subjects, fachbereich != "Alle Fächer") %>%
+  #   dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
+  #   dplyr::summarise(wert = sum(wert))
 
-   values_andere <- df %>%
-     dplyr::filter(fachbereich %!in% subjects, fachbereich != "Alle Fächer") %>%
-     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
-     dplyr::summarise(wert = sum(wert))
 
-   values_andere$fachbereich <- "andere Fächer"
+  #calculating nicht MINT
+
+  values_andere <- df %>% dplyr::filter(fachbereich == "Alle Fächer")
+
+  #sorting for subtraction
+  values_Mint <- values_Mint[with(values_Mint, order(jahr, region, anzeige_geschlecht, indikator, bereich, decreasing = FALSE)), ]
+  values_andere <- values_andere[with(values_andere, order(jahr, region, anzeige_geschlecht, indikator, bereich, decreasing = FALSE)), ]
+
+  values_andere$wert <- values_andere$wert - values_Mint$wert
+
+  values_andere$fachbereich <- "andere Fächer"
+
+
+# #vorläufig mit Nicht MINT berechnet
+#    values_andere <- df %>%
+#      dplyr::filter(fachbereich == "Nicht MINT") %>%
+#      dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
+#      dplyr::summarise(wert = sum(wert))
+#
+#
+#    values_andere$fachbereich <- "andere Fächer"
 
    df <- rbind(values_Mint, values_andere)
 

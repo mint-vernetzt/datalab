@@ -53,9 +53,7 @@ kurse_einstieg_pie <- function(df,r) {
 
   df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
     dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Gesamt"] )%>%
-    dplyr::filter(anzeige_geschlecht != "Gesamt")
-
-
+    dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   # df_test <<- df1 %>% tidyr:: pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
   #   dplyr::mutate(Gesamt= Frauen + Männer)%>%
@@ -382,25 +380,45 @@ kurse_waffle_mint <- function(df,r) {
                 "Physik", "andere naturwiss.-technische Fächer")
 
   values_natwi <- df %>%
-    dplyr::filter(fachbereich %in% c("Biologie", "Chemie", "Physik" )) %>%
+    dplyr::filter(fachbereich %in% c("Biologie", "Chemie", "Physik", "andere naturwiss.-technische Fächer" )) %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
     dplyr::summarise(wert = sum(wert)) %>%
     dplyr::mutate(fachbereich = "Naturwissenschaften") %>%
     dplyr::ungroup()
 
-  # aggregate all other values to "Rest"
-  values_andere <- df %>%
-    dplyr::filter(fachbereich %!in% subjects_not, fachbereich != "Alle Fächer") %>%
+  # aggregate all other values to "Rest" --> hier fehlen dann wieder die "sonstigen Fächer" die nur in "alle Fächer" drin sind
+  # values_andere <- df %>%
+  #   dplyr::filter(fachbereich %!in% subjects_not, fachbereich != "Alle Fächer") %>%
+  #   dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
+  #   dplyr::summarise(wert = sum(wert)) %>%
+  #   dplyr::mutate(fachbereich = "andere Fächer") %>%
+  #   dplyr::ungroup()
+
+  #calculating MINT to be able to calculate nicht MINT
+  #calculating MINT
+  values_Mint <- df %>%
+    dplyr::filter(fachbereich %in% subjects_not)%>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert)) %>%
-    dplyr::mutate(fachbereich = "andere Fächer") %>%
-    dplyr::ungroup()
+    dplyr::summarise(wert = sum(wert))
+
+  values_Mint$fachbereich <- "MINT"
+
+  #calculating nicht MINT
+  values_andere <- df %>% dplyr::filter(fachbereich == "Alle Fächer")
+
+  #sorting for subtraction
+  values_Mint <- values_Mint[with(values_Mint, order(jahr, region, anzeige_geschlecht, indikator, bereich, decreasing = FALSE)), ]
+  values_andere <- values_andere[with(values_andere, order(jahr, region, anzeige_geschlecht, indikator, bereich, decreasing = FALSE)), ]
+
+  values_andere$wert <- values_andere$wert - values_Mint$wert
+
+  values_andere$fachbereich <- "andere Fächer"
+
 
   df <- rbind(df, values_andere, values_natwi)
 
   df <- df %>% dplyr::filter(fachbereich %in% c("Mathematik", "Informatik",
-                                                "Naturwissenschaften",
-                                                "andere naturwiss.-technische Fächer", "andere Fächer"))
+                                                "Naturwissenschaften", "andere Fächer"))
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
@@ -428,7 +446,6 @@ kurse_waffle_mint <- function(df,r) {
 
   x_gk <- x_gk[order(factor(names(x_gk), levels = c('Informatik', 'Mathematik',
                                                     'Naturwissenschaften',
-                                                    "andere naturwiss.-technische Fächer",
                                                     'andere Fächer')))]
 
 
@@ -443,7 +460,6 @@ kurse_waffle_mint <- function(df,r) {
 
   x_lk <- x_lk[order(factor(names(x_lk), levels = c('Informatik', 'Mathematik',
                                                     'Naturwissenschaften',
-                                                    "andere naturwiss.-technische Fächer",
                                                     'andere Fächer')))]  # Bis hier sind andere natTech fächer drin. werden in grafik nicht berücksichtigt
 
 
@@ -592,6 +608,7 @@ kurse_mint_comparison <- function(df,r) {
 
   df <- prep_kurse_east_west(df)
 
+
   df <- df %>% dplyr::filter(region == state)
 
   df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt",
@@ -605,9 +622,9 @@ kurse_mint_comparison <- function(df,r) {
 
   df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  # df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
 
-  df_sub <- df_sub[df_sub$fachbereich!="andere Fächer",] # neu, da keine 100 % rauskommen, kab
+  #df_sub <- df_sub[df_sub$fachbereich!="andere Fächer",] # neu, da keine 100 % rauskommen, kab -->kann wieder rein weil jetzt share_mint angepasst
 
   df <- rbind(df, df_sub)
 
@@ -625,18 +642,20 @@ kurse_mint_comparison <- function(df,r) {
   x <- c("Sport", "Religion/Ethik", "Musik/Kunst",
          "Gesellschaftswissenschaften", "Fremdsprachen", "Deutsch",
 
-         #"andere Fächer (aggregiert)",# raus, kab
+         "andere Fächer (aggregiert)",# raus, kab --> geht jetzt wieder vlg. oben
 
-         "Biologie", "Chemie","Physik","Informatik","Mathematik","MINT-Fächer (gesamt)")
+         "Biologie", "Chemie","Physik","Informatik","Mathematik", "MINT-Fächer (gesamt)")
 
   df <- df %>%
     dplyr::mutate(fachbereich =  factor(fachbereich, levels = x)) %>%
     dplyr::arrange(fachbereich)
 
+  df <- na.omit(df)
+
   # plot
   a <- ifelse(df$fachbereich == "MINT-Fächer (gesamt)"
 
-             # | df$fachbereich == "andere Fächer (aggregiert)" # raus, kab
+              | df$fachbereich == "andere Fächer (aggregiert)" # raus, kab --> rein vlg. oben
 
               , "#b16fab", "grey30")
 
@@ -687,7 +706,11 @@ kurse_mint_comparison_bl <- function(df,r) {
 
   df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
+  #braucht man aktuell für share_mint_kurse, da sonst "Sonstige Fächer" im Gesamt fehlen
+  #df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
+
+  #alles in gleiche Struktur bringen ohne Frauen/Männer da hier nicht relevant
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   df <- df %>% dplyr::filter(indikator == indikator_comparison)
 
@@ -697,17 +720,17 @@ kurse_mint_comparison_bl <- function(df,r) {
   #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
   #                   wert[anzeige_geschlecht == "Männer"])
 
-  df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
-    dplyr::filter(anzeige_geschlecht != "Gesamt")
+  # df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+  #   dplyr::filter(anzeige_geschlecht != "Gesamt")
 
 
-  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
+#  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
 
-  df$wert <- df$props
+ # df$wert <- df$props
 
-  df$props <- NULL
+ # df$props <- NULL
 
   # aggregate to MINT
   df_sub <- share_mint_kurse(df)
@@ -1312,6 +1335,7 @@ kurse_map <- function(df,r) {
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
     dplyr::mutate(wert_sum = sum(props)) # Hier wird eine neuer Wert berechnet,
                                          # der nicht mit dem alle Fächer Wert der KMK über einstimmt. Wie ist hier zu verfahren.
+
 
   # calculate the new "Gesamt"
   # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -2337,63 +2361,80 @@ kurse_verlauf_subjects_bl <- function(df,r) {
 
   df <- df %>% dplyr::filter(indikator == indikator_kurse)
 
-  # include "Osten" und "Westen" in Dataframe
-  df <- prep_kurse_east_west(df)
 
-  # aggregate to MINT
-  df_sub <- share_mint_kurse(df)
+  df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
+    dplyr::filter(indikator == "Leistungskurse") %>%
+    dplyr::group_by(indikator, jahr) %>%
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"]) %>% dplyr::pull(wert)
 
-  df_sub <- df_sub[,colnames(df)]
+  df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Grundkurse"), "wert"] <-  df %>%
+    dplyr::filter(indikator == "Grundkurse") %>%
+    dplyr::group_by(indikator, jahr) %>%
+    dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"]) %>% dplyr::pull(wert)
 
-  # calculate the new "Gesamt"
-  # df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-  #                   wert[anzeige_geschlecht == "Männer"])
-  #
-  df_sub <- df_sub %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
-    dplyr::filter(anzeige_geschlecht != "Gesamt")
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
-  df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
-
-  # aggregate all subjects to calculate proportion later
-  df_sub <- df_sub %>% dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
-    dplyr::mutate(sum_props = sum(props))
+# include "Osten" und "Westen" in Dataframe
+df <- prep_kurse_east_west(df)
 
 
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
+# aggregate to MINT
+df_sub <- share_mint_kurse(df)
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
+df_sub <- df_sub[,colnames(df)]
 
-  # calculate the new "Gesamt"
-  # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-  #                   wert[anzeige_geschlecht == "Männer"])
+# calculate the new "Gesamt"
+# df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+#   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+#   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+#                   wert[anzeige_geschlecht == "Männer"])
+#
+# df_sub <- df_sub %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+#   dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+#   dplyr::filter(anzeige_geschlecht != "Gesamt")
+#
+# df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
-  df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
-    dplyr::filter(anzeige_geschlecht != "Gesamt")
 
-  df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
+# aggregate all subjects to calculate proportion later
+df_sub <- df_sub %>% dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
+  dplyr::mutate(sum_props = sum(wert))
 
-  df <- df %>%
-    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
-    dplyr::mutate(sum_props = sum(props))
+df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df <- rbind(df, df_sub)
+df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
-  # fitler states
-  df <- df %>% dplyr::filter(region %in% states)
+# calculate the new "Gesamt"
+# df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+#   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+#   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+#                   wert[anzeige_geschlecht == "Männer"])
 
-  df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
+# df <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+#   dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+#   dplyr::filter(anzeige_geschlecht != "Gesamt")
+#
+# df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
-  # calculate proportions
-  df <- df %>% dplyr::group_by(jahr, region, fachbereich) %>%
-    dplyr::summarize(proportion = props/sum_props)
+df <- df %>%
+  dplyr::filter(fachbereich != "Alle Fächer") %>%
+  dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
+  dplyr::mutate(sum_props = sum(wert))
 
-  df$proportion <- df$proportion * 100
+
+df <- rbind(df, df_sub)
+
+
+# fitler states
+df <- df %>% dplyr::filter(region %in% states)
+
+df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
+
+# calculate proportions
+df <- df %>% dplyr::group_by(jahr, region, fachbereich) %>%
+  dplyr::summarize(proportion = wert/sum_props)
+
+df$proportion <- df$proportion * 100
 
 
   # order years for plot
