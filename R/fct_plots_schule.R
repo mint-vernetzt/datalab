@@ -379,10 +379,10 @@ kurse_waffle_mint <- function(df,r) {
   # combine subjects to get numbers on share of MINT
   # make a function out of it
   subjects_not <- c("Mathematik", "Informatik",  "Biologie", "Chemie",
-                "Physik")
+                "Physik", "andere naturwiss.-technische Fächer")
 
   values_natwi <- df %>%
-    dplyr::filter(fachbereich %in% c("Biologie", "Chemie", "Physik")) %>%
+    dplyr::filter(fachbereich %in% c("Biologie", "Chemie", "Physik" )) %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
     dplyr::summarise(wert = sum(wert)) %>%
     dplyr::mutate(fachbereich = "Naturwissenschaften") %>%
@@ -398,7 +398,9 @@ kurse_waffle_mint <- function(df,r) {
 
   df <- rbind(df, values_andere, values_natwi)
 
-  df <- df %>% dplyr::filter(fachbereich %in% c("Mathematik", "Informatik", "Naturwissenschaften", "andere Fächer"))
+  df <- df %>% dplyr::filter(fachbereich %in% c("Mathematik", "Informatik",
+                                                "Naturwissenschaften",
+                                                "andere naturwiss.-technische Fächer", "andere Fächer"))
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
@@ -426,6 +428,7 @@ kurse_waffle_mint <- function(df,r) {
 
   x_gk <- x_gk[order(factor(names(x_gk), levels = c('Informatik', 'Mathematik',
                                                     'Naturwissenschaften',
+                                                    "andere naturwiss.-technische Fächer",
                                                     'andere Fächer')))]
 
 
@@ -440,7 +443,8 @@ kurse_waffle_mint <- function(df,r) {
 
   x_lk <- x_lk[order(factor(names(x_lk), levels = c('Informatik', 'Mathematik',
                                                     'Naturwissenschaften',
-                                                    'andere Fächer')))]
+                                                    "andere naturwiss.-technische Fächer",
+                                                    'andere Fächer')))]  # Bis hier sind andere natTech fächer drin. werden in grafik nicht berücksichtigt
 
 
   # create plot objects for waffle charts
@@ -1263,6 +1267,7 @@ kurse_ranking_bl <- function(df,r, type) {
 
 kurse_map <- function(df,r) {
 
+
   # load UI inputs from reactive value
   timerange <- r$date_map
 
@@ -1305,7 +1310,8 @@ kurse_map <- function(df,r) {
 
   df_sub <- df_sub %>%
     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
-    dplyr::mutate(wert_sum = sum(props))
+    dplyr::mutate(wert_sum = sum(props)) # Hier wird eine neuer Wert berechnet,
+                                         # der nicht mit dem alle Fächer Wert der KMK über einstimmt. Wie ist hier zu verfahren.
 
   # calculate the new "Gesamt"
   # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%

@@ -98,7 +98,7 @@ mod_startseite_ui <- function(id){
        #   tags$video(src="www/DataLab_Trichter_dyn.mp4", type = "video/mp4", hight = "300px", autoplay = TRUE),
         #video spielt leider nicht ab - könnte daran liegen dass www Pfad nicht auch für Vidoes eingerichtet ist?
 
-       img(src='www/Anteile Frauen.JPG',
+       img(src='www/Anteile Frauen2.JPG',
            class = "img-responsive",
            height = "150px",
            # width = "150px",

@@ -104,25 +104,26 @@ share_mint_kurse <- function(df){
 
   #combine subjects to get numbers on share of MINT
   subjects <- c("Mathematik", "Informatik",  "Biologie", "Chemie",
-                "Physik")
+                "Physik", "andere naturwiss.-technische Fächer"
+                )
 
 
   values_Mint <- df %>%
-    dplyr::filter(fachbereich %in% subjects) %>%
-    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert))
+    dplyr::filter(fachbereich %in% subjects)%>%
+     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
+     dplyr::summarise(wert = sum(wert))
 
-  values_Mint$fachbereich <- "MINT"
+   values_Mint$fachbereich <- "MINT"
 
 
-  values_andere <- df %>%
-    dplyr::filter(fachbereich %!in% subjects, fachbereich != "Alle Fächer") %>%
-    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert))
+   values_andere <- df %>%
+     dplyr::filter(fachbereich %!in% subjects, fachbereich != "Alle Fächer") %>%
+     dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
+     dplyr::summarise(wert = sum(wert))
 
-  values_andere$fachbereich <- "andere Fächer"
+   values_andere$fachbereich <- "andere Fächer"
 
-  df <- rbind(values_Mint, values_andere)
+   df <- rbind(values_Mint, values_andere)
 
 
 # df <- df %>%
