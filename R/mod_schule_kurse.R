@@ -77,7 +77,7 @@ mod_schule_kurse_ui <- function(id){
         p("In diesen interaktiven Diagrammen beleuchten wir den Anteil davon, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt werden.",
           br(),
           br(),
-        "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2020 bei 34 %."),
+        "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 23 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2020 bei 34 %."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -128,8 +128,8 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         p("Hier zeigen wir die Anteile einzelner MINT-Fächer sowie die Unterschiede in den Bundesländern. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse.",
         br(), br(),
-        "Interpretationshilfe: Auf der ersten Seite ist zu sehen, dass im Jahr 2020 deutschlandweit 21 % der Grundkurse aus dem MINT Bereich sind. Dabei sind Naturwissenschaften mit 11 %
-        die am häufigsten belegte MINT-Disziplin. Bei den Leistungskursen sind 2020 sogar 31 % der Belegungen im MINT-Bereich, wobei Mathematik 18 % an allen Leistungskursbelegungen ausmacht."),
+        "Interpretationshilfe: Auf der ersten Seite ist zu sehen, dass im Jahr 2020 deutschlandweit 23 % der Grundkurse aus dem MINT Bereich sind. Dabei sind Naturwissenschaften mit 14 %
+        die am häufigsten belegte MINT-Disziplin. Bei den Leistungskursen sind 2020 sogar 34 % der Belegungen im MINT-Bereich, wobei Mathematik 17 % an allen Leistungskursbelegungen ausmacht."),
         tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich", br(),
