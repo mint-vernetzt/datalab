@@ -24,31 +24,12 @@ mod_quellen_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        width = 9,
-        title = "Datenpool und Quellen",
+        width = 10,
+        title = "Definition MINT",
                 p(style = "text-align: justify; font-size = 16px",
-          "Ziel dieses Projektes ist es, die vorhandenen Statistiken über MINT in Deutschland in einem Datenpool zu bündeln
-          und über das MINT-DataLab zur weiteren Nutzung zur Verfügung zu stellen. Unser Datenpool besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
-                         Statistischen Bundesamtes und der Kultusministerkonferenz. Weitere Datenquellen werden im Laufe
-                         der Zeit integriert."
-        ),
-
-        p(br(),
-          tags$b(span("Schulbildung", style = "color:#154194")),
-          br(),
-        ),
-
-        p(tags$b(span("Studium", style = "color:#154194")),
-          br(),
-        ),
-
-        p(tags$b(span("Berufsbildung und Arbeitsmarkt", style = "color:#154194")),
-          br(),
-          "Beschäftigte mein alle sozialversicherungspflichtigen Beschäftigten. Fachkräfte...", br(),
-           br(), br(),
-          ),
-
-
+          "MINT ist eine Abkürzung aus den Anfangsbuchstaben bestimmter Schul- und Studienfächer bzw. Berufe.
+          Es steht als Sammelbegriff für die Felder Mathematik, Informatik, Naturwissenschaften und Technik."
+        ), br(), br(),
 
         img(src='www/Definition_MINT.jpg',
             class = "img-responsive",
@@ -62,17 +43,11 @@ mod_quellen_ui <- function(id){
         br(),
         tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Statistiken/Themen-im-Fokus/Berufe/Generische-Publikationen/Broschuere-MINT.pdf?__blob=publicationFile", "Mehr Infos zur Definition der MINT-Berufe", target = "_blank"), br(),
         tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Grundlagen/Methodik-Qualitaet/Methodenberichte/Uebergreifend/Generische-Publikationen/Hintergrundinfo-Anpassung-Berufsaggregat-MINT-Berufe.pdf?__blob=publicationFile", "Aktuelle Infos zur Anpassung der Definition der MINT-Berufe", target ="_blank"),
-        br(),
-        br(),
 
+    ),
 
-
-
-
-
-      ),
       shinydashboard::box(
-          width = 3,
+          width = 2,
           title = "Unsere Datengeber:innen",
           img(src='www/Logo_BA.png',
               class = "img-responsive",
@@ -116,30 +91,23 @@ mod_quellen_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        width = 12,
-        title = "Nutzungsbedingungen",
+        width = 10,
+        title = "Datenpool und Quellen",
+        p(style = "text-align: justify; font-size = 16px",
+          "Ziel dieses Projektes ist es, die vorhandenen Statistiken über MINT in Deutschland in einem Datenpool zu bündeln
+          und über das MINT-DataLab zur weiteren Nutzung zur Verfügung zu stellen. Unser Datenpool besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
+                         Statistischen Bundesamtes und der Kultusministerkonferenz. Weitere Datenquellen werden im Laufe
+                         der Zeit integriert."
+        ))),
+
+    fluidRow(
+      shinydashboard::box(
+        width = 10,
+        title = "Nutzungsbedingungen der Daten",
         p(style = "text-align: justify; font-size = 16px",
           "Die Nutzungsbedingungen der Datengeber erlauben die Verwendung der Daten und die grafische Aufbereitung
           sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet.
           Bei Interesse an den kompletten Datensätzen müssen die Datengeber:innen direkt kontaktiert werden."
-        )
-      )),
-    fluidRow(
-      shinydashboard::box(
-        width = 12,
-        title = "What's coming next: Welche neuen Datensätze und Services sind gerade in Pipeline?",
-        p(style = "text-align: justify; font-size = 16px",
-          tags$li("Absolute Zahlen: Bisher zeigen wir nur Prozentangaben. In der nächsten Entwicklungsphase werden wir
-                  auch die absoluten Zahlen integrieren."), br(),
-          tags$li("Download-Option für Diagramme"), br(),
-          tags$li("Barrierefreiheit der Grafiken"), br(),
-          tags$li("Regionale Daten")
-        ), br(), br(),
-
-        p(style = "text-align: justify; font-size = 16px",
-          span("Wir freuen uns immer über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
-               tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-          )
         )
       )),
 

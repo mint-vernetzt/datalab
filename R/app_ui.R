@@ -27,14 +27,14 @@ app_ui <- function(request) {
         shinydashboard::sidebarMenu(
           # Setting id makes input$tabs give the tabName of currently-selected tab
           id = "tabs",
-          shinydashboard::menuItem("Startseite", icon = shiny::icon("address-card"), tabName = "startseite"),
-          shinydashboard::menuItem("Alle Bildungsbereiche", icon = shiny::icon("house-user"), tabName = "home"),
+          shinydashboard::menuItem("Startseite", icon = shiny::icon("door-open"), tabName = "startseite"),
+          shinydashboard::menuItem("Alle Bildungsbereiche", icon = shiny::icon("object-intersect"), tabName = "home"),
           shinydashboard::menuItem("Schule im Detail", icon = shiny::icon("school"), tabName = "schule"),
           shinydashboard::menuItem("Studium im Detail", icon = shiny::icon("university"), tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf im Detail", icon = shiny::icon("building"), tabName = "beruf"),
-          shinydashboard::menuItem("Datenquellen & Hinweise", icon = shiny::icon("book"), tabName = "quellen")
-          #shinydashboard::menuItem("Kontakt", icon = shiny::icon("mail-bulk"), tabName = "kontakt"),
+          shinydashboard::menuItem("Hinweise & Datenquellen", icon = shiny::icon("book"), tabName = "quellen"),
+          shinydashboard::menuItem("BETAVERSION", icon = shiny::icon("gear"), tabName = "BETAVERSION")
           #shinydashboard::menuItem("Impressum", icon = shiny::icon("address-card"), tabName = "impressum")
           #shinydashboard::menuItem("Datenschutz", icon = shiny::icon("address-card"), tabName = "datenschutz")
 
@@ -50,6 +50,7 @@ app_ui <- function(request) {
           # shinydashboard::tabItem(tabName ="ausbildung", mod_ausbildung_ui("ausbildung_ui_1")),
           shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
           shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
+          shinydashboard::tabItem(tabName ="BETAVERSION", mod_betaversion_ui("betaversion_ui_1")),
           shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
           shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),
           shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))

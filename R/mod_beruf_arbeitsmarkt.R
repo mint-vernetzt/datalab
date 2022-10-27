@@ -38,7 +38,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                            style = "color:#b16fab")),"Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert,
                            wenn sie einer MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Informationen unter \"Datenquellen und Hinweise\".",
                br(),br(),
-               "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen."
+               "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen.",
+               br(), br(),
+               "Der hier verwendete Indikator 'Beschäftigte' umfasst alle sozialversicherungspflichtigen Beschäftigten. Er umfasst sowohl Fachkräfte als auch Hilfskräfte. Eine Differenzierung erfolgt zeitnah."
                )),
 
       ),
