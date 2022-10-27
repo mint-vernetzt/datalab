@@ -58,9 +58,11 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
-                  "Westen",
-                  "Osten"),
+                  "Thüringen"
+                  #,
+                 # "Westen",
+                #  "Osten"
+                  ),
       selected = "Hessen"
     )
   )

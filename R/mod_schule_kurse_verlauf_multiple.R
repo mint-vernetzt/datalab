@@ -64,9 +64,11 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
-                  "Westen",
-                  "Osten"),
+                  "Thüringen"
+                  #,
+                 # "Westen",
+                #  "Osten"
+                  ),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",

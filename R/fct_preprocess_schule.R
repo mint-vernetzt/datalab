@@ -136,16 +136,6 @@ share_mint_kurse <- function(df){
 
   values_andere$fachbereich <- "andere Fächer"
 
-
-# #vorläufig mit Nicht MINT berechnet
-#    values_andere <- df %>%
-#      dplyr::filter(fachbereich == "Nicht MINT") %>%
-#      dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
-#      dplyr::summarise(wert = sum(wert))
-#
-#
-#    values_andere$fachbereich <- "andere Fächer"
-
    df <- rbind(values_Mint, values_andere)
 
 
