@@ -134,10 +134,10 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "#MINT_im_Detail: Vergleich der einzelnen MINT-Fächer und Bundesländer",
         width = 12,
-        p("Hier zeigen wir, wie häufig MINT-Fächer im Vergleich zu anderen Studienfächern gewählt werden.
+        p("Hier zeigen wir, wie häufig MINT-Fächer im Vergleich zu anderen Studienfächern in Deutschland gewählt werden.
           Außerdem kann man den Anteil von MINT-Fächern zwischen den Bundesländern vergleichen. ",
           br(), br(),
-          "Interpretationshilfe: In der ersten Darstellung sieht man, dass Ingenieurwissenschaften den Großteil der MINT-Fächer ausmachen:
+          "Interpretationshilfe: In der ersten Darstellung sieht man, dass in Deutschland 2020 Ingenieurwissenschaften den Großteil der MINT-Fächer ausmachen:
           Unter den Studienanfänger:innen wählen 26 % und unter den Studierenden 27 % eine Ingenieurwissenschaft."),
 
         tabsetPanel(type = "tabs",
@@ -149,7 +149,7 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_waffle")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
+                               plotOutput(ns("plot_waffle")),p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
                     tabPanel("Karte", br(),
@@ -211,14 +211,14 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "#Frauen_in_MINT: Wie hoch ist der Anteil von Frauen in den MINT-Fächern?",
         width = 12,
-        p("Hier schauen wir uns die Verteilung von Frauen und Männern innerhalb der MINT-Studienfächer an.
+        p("Hier schauen wir uns die Verteilung von Frauen und Männern in Deutschland innerhalb der MINT-Studienfächer an.
           Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern.
           Die verschiedenen Diagramme bieten außerdem Fächer- und Bundeslandvergleiche.",
           br(), br(),
           "Interpretationshilfe: In der ersten interaktiven Grafik ist beispielsweise zu sehen,
-          dass 2020 der Anteil von Frauen unter den Studienanfänger:innen in MINT-Fächern 34 % ausmacht.
+          dass deutschlandweit 2020 der Anteil von Frauen unter den Studienanfänger:innen in MINT-Fächern 34 % ausmacht.
           Unter den Studierenden liegt der Frauenanteil in MINT-Fächern bei 32 %. In nicht-MINT-Studienfächern
-          machen Frauen dagegen die Mehrheit aus: 63 % der Studienanfänger:innen und 61 % der Studierenden sind hier weiblich."),
+          machen Frauen dagegen die Mehrheit aus: 63 % der Studienanfänger:innen und 61 % der Studierenden sind hier in Deutschland 2020 weiblich."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
 
@@ -246,7 +246,7 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "#Fächerwahl_Frauen: Wie unterscheidet sich die Fächerwahl von Frauen und Männern?",
         width = 12,
-        p("Hier zeigen wir die Unterschiede zwischen Männern und Frauen aus einer anderen Perspektive. Welchen Anteil machen MINT-Fächer bei der Studienfachwahl von Frauen und Männern aus?"),
+        p("Hier zeigen wir die Unterschiede zwischen Männern und Frauen aus einer anderen Perspektive. Welchen Anteil machen MINT-Fächer bei der Studienfachwahl von Frauen und Männern in Deutschland aus?"),
        br(), br(),
         p("Interpretationshilfe: Weibliche Studierende wählen 2020 zu 24 % ein MINT-Studienfach. Bei den männlichen Studierenden wählen 51 % MINT."),
 

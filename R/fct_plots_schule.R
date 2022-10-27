@@ -1451,14 +1451,14 @@ kurse_map <- function(df,r) {
   ) %>%
     highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Grundkurse: Anteil ", subjects),
+      text = paste0("Grundkurse: Anteil von ", subjects, " (", timerange, ")"),
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
     ) %>%
-    highcharter::hc_caption(
-      text = "...",  style = list(color= "white", fontSize = "12px")
-    ) %>%
+    # highcharter::hc_caption(
+    #   text = "...",  style = list(color= "white", fontSize = "12px")
+    # ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>% highcharter::hc_size(600, 550) %>%
@@ -1482,14 +1482,14 @@ kurse_map <- function(df,r) {
   ) %>%
     highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Leistungskurse: Anteil ", subjects),
+      text = paste0("Leistungskurse: Anteil von ", subjects, " (", timerange, ")"),
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
     ) %>%
-    highcharter::hc_caption(
-       text = "Ausgegraut: Daten stehen nicht zur Verfügung",  style = list(fontSize = "12px")
-     ) %>%
+    # highcharter::hc_caption(
+    #    text = "Ausgegraut: Daten stehen nicht zur Verfügung",  style = list(fontSize = "12px")
+    #  ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>% highcharter::hc_size(600, 550) %>%
@@ -1947,7 +1947,7 @@ kurse_verlauf_single <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = "Anteil"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT im Zeitverlauf"),
+    highcharter::hc_title(text = paste0("Anteil von MINT in der Schule"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2027,7 +2027,7 @@ kurse_einstieg_comparison <- function(df,r) {
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT in der Fächerwahl in der Schule in Deutschland (", timerange,")"),
+    highcharter::hc_title(text = paste0("Anteil von MINT in der Schule (", timerange,")"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2524,7 +2524,7 @@ df$proportion <- df$proportion * 100
     highcharter::hc_tooltip(pointFormat = "Anteil {point.fachbereich} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+   # highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Fächerwahl in der Schule"),
                           margin = 45,
                           align = "center",

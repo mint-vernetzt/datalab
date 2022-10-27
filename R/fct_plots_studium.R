@@ -78,7 +78,7 @@ studienzahl_einstieg_pie <- function(df,r) {
     plot_studierende <- highcharter::hchart(df_studierende, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-      highcharter::hc_title(text = paste0("Studienfachwahl (Studierende) in ", timerange),
+      highcharter::hc_title(text = paste0("Studienfachwahl (Studierende)", br(), timerange),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -92,7 +92,7 @@ studienzahl_einstieg_pie <- function(df,r) {
   plot_anfeanger <- highcharter::hchart(df_anfaenger, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-      highcharter::hc_title(text = paste0("Studienfachwahl (Studienanfänger:innen) in ", timerange),
+      highcharter::hc_title(text = paste0("Studienfachwahl (Studienanfänger:innen)", br(), timerange),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -543,7 +543,6 @@ studienzahl_einstieg_comparison <- function(df,r) {
   df$proportion <- df$proportion * 100
 
 
-
   # plot
 
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = "fachbereich")) %>%
@@ -552,7 +551,7 @@ studienzahl_einstieg_comparison <- function(df,r) {
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_title(text = paste0("MINT-Anteile im Vergleich in ", timerange),
+    highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden ", "(", timerange, ")"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2602,9 +2601,9 @@ studierende_map <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-       highcharter::hc_caption(
-         text = "...",  style = list(color= "white", fontSize = "12px")
-       ) %>%
+       # highcharter::hc_caption(
+       #   text = "...",  style = list(color= "white", fontSize = "12px")
+       # ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
@@ -2633,9 +2632,9 @@ studierende_map <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-       highcharter::hc_caption(
-         text = "Ausgegraut: Daten stehen nicht zur Verfügung",  style = list(fontSize = "12px")
-       ) %>%
+       # highcharter::hc_caption(
+       #   text = "Ausgegraut: Daten stehen nicht zur Verfügung",  style = list(fontSize = "12px")
+       # ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%

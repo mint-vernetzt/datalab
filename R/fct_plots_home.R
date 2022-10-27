@@ -743,7 +743,7 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
     ggplot2::xlab("") + ggplot2::ylab("Anteil") +
     ggplot2::scale_fill_manual(values = c("#154194","#efe8e6")) +
     ggplot2::labs(title = paste0(paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil Frauen in MINT nach Bildungsbereichen (", timerange, ")",
+                                 "Anteil von Frauen in MINT nach Bildungsbereichen (", timerange, ")",
                                  "<br><br><br>")),
                   fill = ""
                   ,
@@ -809,7 +809,7 @@ home_stacked_comparison_mint <- function(df, r) {
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
    # highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil MINT nach Bildungsbereichen (", timerange,")"),
+    highcharter::hc_title(text = paste0("Anteil von MINT nach Bildungsbereichen (", timerange,")"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%

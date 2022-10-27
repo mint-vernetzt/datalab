@@ -83,9 +83,8 @@ mod_home_start_ui <- function(id){
         p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von MINT-Fächern in der Schule? Wie hoch ist der Anteil von Studierenden, die MINT-Fächer belegen?", br(),
           "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?",
           br(), br(),
-          "Interpretationshilfe: Wenn man auf der ersten Ansicht beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden
-          32 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten ist dieser Anteil ein wenig geringer. Nur 24 % der Beschäftigten
-          arbeiten in einem MINT-Beruf."),
+          "Interpretationshilfe: Wenn man auf der ersten Ansicht beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden deutschlandweit im Jahr 2020
+          32 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten in Deutschland ist dieser Anteil ein wenig geringer. Im Jahr 2020 arbeiten nur 24 % der Beschäftigten in einem MINT-Beruf."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(
@@ -117,8 +116,8 @@ mod_home_start_ui <- function(id){
           Wie hoch ist der Anteil von Frauen in MINT-Berufen?", br(),
         "Zum Vergleich zeigen wir jeweils auch, wie hoch der Anteil von Frauen in den anderen, nicht-MINT-Fächern oder -Berufszweigen ist.",
         br(), br(),
-        "Interpretationshilfe: Betrachtet man hier beispielsweise die Studierenden, sieht man, dass in MINT-Fächern 32 % der Studierenden
-        Frauen sind. Der Anteil an Frauen in anderen Studiengängen ist dagegen weitaus größer. In nicht-MINT-Fächern sind 61 % aller Studierenden weiblich."),
+        "Interpretationshilfe: Betrachtet man hier beispielsweise die Studierenden, sieht man, dass deutschlandweit im Jahr 2020 in MINT-Fächern 32 % der Studierenden
+        Frauen sind. Der Anteil an Frauen in anderen Studiengängen ist dagegen weitaus größer. In Deutschland im Jahr 2020 sind 61 % aller Studierenden in nicht-MINT-Fächern weiblich."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                              shiny::sidebarPanel(

@@ -53,7 +53,7 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
 
     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Auszubildende in ", timerange),
+    highcharter::hc_title(text = paste0("Auszubildende", br(), timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -69,7 +69,7 @@ arbeitsmarkt_einstieg_pie <- function(df,r) {
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Beschäftigte in ", timerange),
+    highcharter::hc_title(text = paste0("Beschäftigte", br(), timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%

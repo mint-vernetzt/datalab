@@ -83,18 +83,18 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
-                    tabPanel("Vergleich 2", br(),
+                    tabPanel("weiterer Vergleich", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
+                               ,p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
 
                              ),
                              shiny::mainPanel(
                                plotOutput(ns("plot_arbeitsmarkt_waffle")),
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
+                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
                     tabPanel("Zeitverlauf", br(),
@@ -189,7 +189,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       shinydashboard::box(
         title = "#Frauen_in_MINT: Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?",
         width = 12,
-        p("Hier schauen wir uns die Verteilung von Frauen und Männern innerhalb der MINT-Berufe an. Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Berufen.",
+        p("Hier schauen wir uns die Verteilung von Frauen und Männern innerhalb der MINT-Berufe in Deutschland an. Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Berufen.",
         br(), br(),
         "Interpretationshilfe: Der Anteil von Frauen an MINT-Auszubildenden in Deutschland beträgt 13 % im Jahr 2020.
         Bei den MINT-Beschäftigten beträgt dieser Anteil 16 %. Dagegen machen Frauen in anderen Berufen mehr als die Hälfte aller
@@ -237,9 +237,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       shinydashboard::box(
         title = "#Berufswahl_von_Frauen: Wie unterscheidet sich die Berufswahl von Männern und Frauen?",
         width = 12,
-        p("Hier zeigen wir die Unterschiede zwischen Frauen und Männern aus einer anderen Perspektive. Welchen Anteil machen MINT-Berufe bei der Berufswahl von Frauen und Männern aus?",
+        p("Hier zeigen wir die Unterschiede zwischen Frauen und Männern aus einer anderen Perspektive. Welchen Anteil machen MINT-Berufe bei der Berufswahl von Frauen und Männern in Deutschland aus?",
         br(), br(),
-        "Interpretationshilfe: Der detaillierte Vergleich zeigt, dass weibliche Auszubildende 2020 zu 10 % eine MINT-Ausbildung wählen. Bei den Männern sind es 48 %.
+        "Interpretationshilfe: Der detaillierte Vergleich zeigt, dass weibliche Auszubildende 2020 deutschlandweit zu 10 % eine MINT-Ausbildung wählen. Bei den Männern sind es 48 %.
         Bei den Beschäftigten sind die Unterschiede ähnlich: Bei den Frauen machen MINT-Berufe 8 % aus, bei den Männern 38 %."),
         tabsetPanel(type = "tabs",
                     tabPanel("Karte", br(),
@@ -261,7 +261,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                plotOutput(ns("plot_arbeitsmarkt_waffle_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
+                               ,p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
                              ),
                     tabPanel("Vergleich (Bundesländer)", br(),
