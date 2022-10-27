@@ -57,7 +57,7 @@ mod_betaversion_ui <- function(id){
           ),
           p(style = "text-align: justify; font-size = 16px",
             "Das MINT-DataLab ist ein Angebot aus dem Projekt ", tags$a(href="https://mint-vernetzt.de/", "MINTvernetzt", target="_blank"), "."
-          )),
+          ))),
 
     fluidRow(
       shinydashboard::box(
