@@ -508,7 +508,7 @@ kurse_waffle_mint <- function(df,r) {
   waffle_gk <- waffle::waffle(x_gk, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Fächerwahl (Grundkurse) </span> <br>")) +
+      title = paste0("<span style='color:black;'>", "Fächerwahl (Grundkurse) </span> <br>", timerange, "<br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -536,7 +536,7 @@ kurse_waffle_mint <- function(df,r) {
   waffle_lk <- waffle::waffle(x_lk, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Fächerwahl (Leistungskurse) </span> <br>")) +
+      title = paste0("<span style='color:black;'>", "Fächerwahl (Leistungskurse) </span> <br>", timerange, "<br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -709,11 +709,10 @@ kurse_mint_comparison <- function(df,r) {
       axis.text.y = ggplot2::element_text(colour = a),
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::ylab("") + ggplot2::xlab("Anteil") +
+    ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0( "<span style='font-size:20.5pt; color:black'>",
-                                  "Anteile der Schulfächer im Vergleich (", timerange, ")",
-                                 br(),
-                                 "(", indikator_comparison, ")",
+                                  "Anteil einzelner Fächer (", indikator_comparison, ")",
+                                 br(), timerange,
                                    "<br><br><br>"),
                   fill = "") +
     ggplot2::scale_y_discrete(expand = c(0,0)) +
@@ -813,9 +812,9 @@ kurse_mint_comparison_bl <- function(df,r) {
     ggplot2::theme(
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::ylab("") + ggplot2::xlab("Anteil") +
+    ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 indikator_comparison, ": Anteil ", subject, " nach Bundesländern (", timerange,")",
+                                "Anteil ", subject, " nach Bundesländern (",  indikator_comparison, ")",br(), timerange,
                                  "<br><br><br>"),
                   fill = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
@@ -937,7 +936,7 @@ kurse_waffle <- function(df,r) {
   waffle_male <- waffle::waffle(x_male, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Schüler</span> <br>")) +
+      title = paste0("<span style='color:black;'>", "Fächerwahl von Jungen </span><br>", timerange, "<br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -965,7 +964,7 @@ kurse_waffle <- function(df,r) {
   waffle_female <- waffle::waffle(x_female, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Schülerinnen</span> <br>")) +
+      title = paste0("<span style='color:black;'>", "Fächerwahl von Mädchen </span><br>", timerange, "<br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -1167,7 +1166,7 @@ kurse_ranking <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Fächerwahl von Mädchen: Anteil Mädchen in den einzelnen Fächern (in BL) (",timerange,")", # kab
+                                 "Anteil von Mädchen nach Fächern in ", states, " (",timerange,")",
                                  "<br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(n.breaks = 7, labels = function(x) paste0(x, "%"))
@@ -1256,7 +1255,7 @@ kurse_ranking_gender <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Fächerwahl von Mädchen: Unterschiede in den Bundesländern (",timerange, ")",
+                                 "Mädchen: Fächerwahl von ", subject ,br(),timerange,
                                  "<br><br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
@@ -1451,7 +1450,7 @@ kurse_map <- function(df,r) {
   ) %>%
     highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Grundkurse: Anteil von ", subjects, " (", timerange, ")"),
+      text = paste0("Grundkurse: Anteil ", subjects, " (", timerange, ")"),
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1482,7 +1481,7 @@ kurse_map <- function(df,r) {
   ) %>%
     highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Leistungskurse: Anteil von ", subjects, " (", timerange, ")"),
+      text = paste0("Leistungskurse: Anteil ", subjects, " (", timerange, ")"),
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1573,7 +1572,7 @@ kurse_map_gender <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#154194", labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Schülerinnen: Anteil ", subjects, br(), "(Grundkurse)"),
+        text = paste0("Mädchen: Fächerwahl von ", subjects, " (Grundkurse)", br(), timerange),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1604,7 +1603,7 @@ kurse_map_gender <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#154194", labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Schülerinnen: Anteil ", subjects, br(), "(Leistungskurse)"),
+        text = paste0("Mädchen: Fächerwahl von ", subjects, " (Leistungskurse)", br(), timerange),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -2171,10 +2170,10 @@ kurse_comparison_gender <- function(df,r) {
     ggplot2::theme(
       text = ggplot2::element_text(size = 14),
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::xlab("") + ggplot2::ylab("Anteil") +
-    ggplot2::scale_fill_manual(values = c("#efe8e6", "#b16fab")) +
+    ggplot2::xlab("") + ggplot2::ylab("") +
+    ggplot2::scale_fill_manual(values = c("#b16fab", "#efe8e6")) +
     ggplot2::labs(title = paste0(paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil von Schülerinnen in MINT im Vergleich in ", timerange,
+                                 "Anteil von Mädchen in MINT- und anderen Fächern ", "(", timerange, ")",
                                  "<br><br><br>")),
                   fill = "") +
     ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"))
@@ -2380,14 +2379,13 @@ kurse_verlauf_multiple_bl <- function(df,r) {
 
   }
 
-
   # order years for plot
   df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
   # plot
   highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = region)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil {point.region} <br> Wert: {point.y} %") %>%
-    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0(title_help, " Anteil ", subjects_select),
@@ -2522,10 +2520,10 @@ df$proportion <- df$proportion * 100
   # plot
   highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = fachbereich)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil {point.fachbereich} <br> Wert: {point.y} %") %>%
-    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
    # highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Fächerwahl in der Schule"),
+    highcharter::hc_title(text = paste0("Anteil einzelner Fächer in ", states, " (", indikator_kurse, ")"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
