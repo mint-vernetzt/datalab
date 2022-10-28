@@ -70,9 +70,11 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
-                  "Westen",
-                  "Osten"),
+                  "Thüringen"
+                  # ,
+                  # "Westen",
+                  # "Osten"
+                  ),
       selected = c("Hessen", "Hamburg"),
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",

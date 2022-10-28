@@ -247,7 +247,7 @@ mod_studium_studienzahl_ui <- function(id){
         title = "#Fächerwahl_Frauen: Wie unterscheidet sich die Fächerwahl von Frauen und Männern?",
         width = 12,
         p("Hier zeigen wir die Unterschiede zwischen Männern und Frauen aus einer anderen Perspektive. Welchen Anteil machen MINT-Fächer bei der Studienfachwahl von Frauen und Männern in Deutschland aus?"),
-       br(), br(),
+       br(),
         p("Interpretationshilfe: Weibliche Studierende wählen 2020 zu 24 % ein MINT-Studienfach. Bei den männlichen Studierenden wählen 51 % MINT."),
 
         tabsetPanel(type = "tabs",

@@ -63,9 +63,11 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
-                  "Westen",
-                  "Osten"),
+                  "Thüringen"
+                  # ,
+                  # "Westen",
+                  # "Osten"
+                  ),
       selected = "Hessen"
     )
   )
