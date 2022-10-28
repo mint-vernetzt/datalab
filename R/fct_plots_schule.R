@@ -1432,6 +1432,9 @@ kurse_map <- function(df,r) {
 
   df$proportion <- df$proportion * 100
 
+  help_titel <- ifelse(subjects == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subjects)
+  help_titel <- ifelse(help_titel == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_titel)
+
   highcharter::hw_grid(
   # plot
   highcharter::hcmap(
@@ -1450,7 +1453,7 @@ kurse_map <- function(df,r) {
   ) %>%
     highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Grundkurse: Anteil ", subjects, br(), timerange),
+      text = paste0("Grundkurse: Anteil von ", help_titel, br(), timerange),
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1481,7 +1484,7 @@ kurse_map <- function(df,r) {
   ) %>%
     highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Leistungskurse: Anteil ", subjects, br(), timerange),
+      text = paste0("Leistungskurse: Anteil von ", help_titel, br(), timerange),
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
