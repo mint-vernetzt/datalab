@@ -62,30 +62,57 @@ mod_betaversion_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        title = "Was wir vorhaben: Welche neuen Datensätze und Darstellungen sind gerade in Pipeline?",
-        p(style = "text-align: justify; font-size = 16px",
+        title = "Woran wir arbeiten: Neuen Datensätze und Darstellungen",
+        column(8,
+          p(style = "text-align: justify; font-size = 18px",
+          tags$b(span("Neue Datensätze", style = "color:#154194"))),
+          p(style = "text-align: justify; font-size = 16px",
+          tags$b(span("Regionale Daten:")),
+          "Bisher zeigen wir Daten auf Bundes- und Landesebene. Unser Ziel ist es, auch Vergleiche bzw. Auswertungen auf regionaler Ebene zu ermöglichen.",
+          br(),
+          tags$b(span("Mehr Bereiche abdecken:")),
+          "Frühkindliche Bidlung, außerschulsche Bildung und Weiterbildung fehlen noch im MINT-DataLab.
+          Je nach Datenverfügbarkeit bemühen wir uns, diese Bereiche ebenfalls hier zu beleuchten. Auch allgemeine demografische und sozioökonomische Kennzahlen werden wir aufnehmen.",
+          br(),
+        tags$b(span("Mehr inhaltliche Dimensionen:")),
+          "Bisher zeigen wir nur die Anteile von MINT und den Anteil Frauen in MINT. Besonders für den Schulbereich werden wir noch Kompetenzdaten ergänzen.
+                  Außerdem wollen wir unsere Auswertungen um ausländsiche Studierende, Auszubildende und Fachkräfte erweitern.",
+        br(),
+          tags$b(span("Fokus auf Fachkräfte:")),
+          "Die Kennzahlen um Beschäftige werden wir noch um differenziertere Kennzahlen zu Fachkräften erweitern."),
 
-          "Neue Datensätze",
-          tags$li("Regionale Daten: Bisher zeigen wir Daten auf Bundes- und Landesebene. Unser Ziel ist es, auch Vergleiche bzw. Aufwertungen auf regionaler Ebene zu ermöglichen."),
-          tags$li("Mehr Bereiche abdecken: Frühkindliche Bidlung, außerschulsche Bildung und Weiterbildung fehlen noch im MINT-DataLab.
-          Je nach Datenverfügbarkeit bemühen wir uns diese Bereiche ebenfalls hier zu beleuchten. Auch allgemeine demografische und sozioökonomische Kennzahlen werden wir aufnehmen."),
-          tags$li("Mehr inhaltliche Dimensionen: Bisher zeigen wir nur die Anteile von MINT und den Anteil Frauen in MINT. Besonders für den Schulbereich werden wir noch Kompetenzdaten ergänzen.
-                  Außerdem wollen wir unsere Auswertungen um ausländsiche Studierende, Auszubildende und Fachkräfte erweitern."),
-          tags$li("Fokus auf Fachkräfte: Die Kennzahlen um Beschäftige werden wir noch um differenziertere Kennzahlen zu Fachkräften erweitern."),
+         p(style = "text-align: justify; font-size = 18px",
+          tags$b(span("Neue Darstellungen", style = "color:#154194"))),
+          p(style = "text-align: justify; font-size = 16px",
+          tags$b(span("Absolute Zahlen:")),
+                "Bisher zeigen wir nur Prozentangaben. In der nächsten Entwicklungsphase werden wir
+                  auch die absoluten Zahlen integrieren.",
+          br(),
+          tags$b(span("Download-Option für Diagramme:")),
+          "Unser Ziel ist es, dass unsere Diagramme bestmöglich weiterverwendet werden können. Deshalb werden wir bald eine Download-Option ergänzen.",
+          br(),
+          tags$b(span("Barrierefreiheit der Grafiken:")),
+          "Unsere Grafiken sind leider noch nicht barrierefrei. Hier bemühen wir uns um Verbesserungen!",
+          br(), br()),
 
-          "Neue Darstellungen", br(),
-          tags$li("Absolute Zahlen: Bisher zeigen wir nur Prozentangaben. In der nächsten Entwicklungsphase werden wir
-                  auch die absoluten Zahlen integrieren."),
-          tags$li("Download-Option für Diagramme: Unser Ziel ist es, dass unsere Diagramme bestmöglich weiterverwendet werden können. Deshalb werden wir bald eine Download-Option ergänzen."),
-          tags$li("Barrierefreiheit der Grafiken: Unsere Grafiken sind leider noch nicht barrierefrei. Hier bemühen wir uns um Verbesserungen!"),
-          br(), br(),
+        p(style = "text-align: justify; font-size = 18px",
+          tags$b(span("Fragen oder Feedback?", style = "color:#154194"))),
 
         p(style = "text-align: justify; font-size = 16px",
           span("Wir freuen uns immer über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
-               tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+               tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!")
           )
-        )
-      ))),
+      ),
+      column(4,
+             p(br()),
+             img(src='www/wordcloud.jpg',
+                 class = "img-responsive",
+                 #height = "150px", width = "150px",
+                 alt = "wordcloud",
+                 style="display: block; margin-left: auto; margin-right: auto;"
+             ))
+      )
+      ),
 
 
 
