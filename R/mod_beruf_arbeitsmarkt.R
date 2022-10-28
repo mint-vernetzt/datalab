@@ -242,17 +242,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         "Interpretationshilfe: Der detaillierte Vergleich zeigt, dass weibliche Auszubildende 2020 deutschlandweit zu 10 % eine MINT-Ausbildung wählen. Bei den Männern sind es 48 %.
         Bei den Beschäftigten sind die Unterschiede ähnlich: Bei den Frauen machen MINT-Berufe 8 % aus, bei den Männern 38 %."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Karte", br(),
-
-                             shiny::sidebarPanel(
-                               mod_beruf_arbeitsmarkt_bl_gender_ui("mod_beruf_arbeitsmarkt_bl_gender_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               htmlOutput(ns("plot_arbeitsmarkt_bl_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
-                             )
-                    ),
-                    tabPanel("Detaillierter Vergleich", br(),
+                    tabPanel("Vergleich", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -263,7 +253,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                plotOutput(ns("plot_arbeitsmarkt_waffle_gender"))
                                ,p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
+                    ),
+                    tabPanel("Karte", br(),
+
+                             shiny::sidebarPanel(
+                               mod_beruf_arbeitsmarkt_bl_gender_ui("mod_beruf_arbeitsmarkt_bl_gender_ui_1")
                              ),
+                             shiny::mainPanel(
+                               htmlOutput(ns("plot_arbeitsmarkt_bl_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
+                             )
+                    ),
                     tabPanel("Vergleich (Bundesländer)", br(),
 
                              shiny::sidebarPanel(
