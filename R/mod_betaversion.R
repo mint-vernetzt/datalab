@@ -44,7 +44,7 @@ mod_betaversion_ui <- function(id){
 
     fluidRow(
         shinydashboard::box(
-          width = 9,
+          width = 12,
           title = "Wo wir stehen: Betaversion",
           p(style = "text-align: justify; font-size = 16px",
             "Das Projekt MINT-DataLab ist 2021 gestartet. Unser Ziel ist es, bis 2025 mit den uns zur Verfügungen stehenden Ressourcen ein umfassendes MINT-DataLab aufzubauen.

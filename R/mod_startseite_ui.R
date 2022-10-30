@@ -70,7 +70,7 @@ mod_startseite_ui <- function(id){
         #   tags$video(src="www/DataLab_Trichter_dyn.mp4", type = "video/mp4", hight = "300px", autoplay = TRUE),
         #video spielt leider nicht ab - könnte daran liegen dass www Pfad nicht auch für Vidoes eingerichtet ist?
 
-        img(src='www/MINT_Anteil_neu.JPG',
+        img(src='www/Anteile_MINT.png',
             class = "img-responsive",
             height = "150px",
             # width = "150px",
@@ -95,10 +95,7 @@ mod_startseite_ui <- function(id){
       shinydashboard::box(
         title = "MINT-Gendergap wächst entlang der Bildungskette",
         width = 6,
-       #   tags$video(src="www/DataLab_Trichter_dyn.mp4", type = "video/mp4", hight = "300px", autoplay = TRUE),
-        #video spielt leider nicht ab - könnte daran liegen dass www Pfad nicht auch für Vidoes eingerichtet ist?
-
-       img(src='www/Frauen_Anteil_neu.JPG',
+       img(src='www/Anteile_Frauen.png',
            class = "img-responsive",
            height = "150px",
            # width = "150px",
