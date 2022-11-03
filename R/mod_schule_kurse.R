@@ -124,7 +124,7 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "#MINT_im_Detail: Vergleich der einzelnen MINT-Fächer und Bundesländer",
+        title = "#MINT im Detail: Vergleich der einzelnen MINT-Fächer und Bundesländer",
         width = 12,
         p("Hier zeigen wir die Anteile einzelner MINT-Fächer in Deutschland sowie die Unterschiede in den Bundesländern. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse.",
         br(), br(),
@@ -192,7 +192,7 @@ mod_schule_kurse_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "#Mädchen_in_MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?",
+        title = "#Mädchen in MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?",
         width = 12,
         p("Hier schauen wir uns die Verteilung von Mädchen und Jungen innerhalb der MINT-Fächer in Deutschland an. Zum Vergleich
           zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern. Die verschiedenen Diagramme bieten außerdem
@@ -265,7 +265,7 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "#Fächerwahl_Mädchen: Wie unterscheidet sich die Fächerwahl von Mädchen und Jungen?",
+        title = "#Fächerwahl Mädchen: Wie unterscheidet sich die Fächerwahl von Mädchen und Jungen?",
         width = 12,
         p("Hier zeigen wir die Unterschiede zwischen Mädchen und Jungen aus einer anderen Perspektive. Welchen Anteil machen MINT-Fächer bei der Fächerwahl der Mädchen und der Jungen in Deutschland aus?",
           br(), br(),

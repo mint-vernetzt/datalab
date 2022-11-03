@@ -132,7 +132,7 @@ mod_studium_studienzahl_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "#MINT_im_Detail: Vergleich der einzelnen MINT-Fächer und Bundesländer",
+        title = "#MINT im Detail: Vergleich der einzelnen MINT-Fächer und Bundesländer",
         width = 12,
         p("Hier zeigen wir, wie häufig MINT-Fächer im Vergleich zu anderen Studienfächern in Deutschland gewählt werden.
           Außerdem kann man den Anteil von MINT-Fächern zwischen den Bundesländern vergleichen. ",
@@ -209,7 +209,7 @@ mod_studium_studienzahl_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "#Frauen_in_MINT: Wie hoch ist der Anteil von Frauen in den MINT-Fächern?",
+        title = "#Frauen in MINT: Wie hoch ist der Anteil von Frauen in den MINT-Fächern?",
         width = 12,
         p("Hier schauen wir uns die Verteilung von Frauen und Männern in Deutschland innerhalb der MINT-Studienfächer an.
           Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern.
@@ -244,7 +244,7 @@ mod_studium_studienzahl_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "#Fächerwahl_Frauen: Wie unterscheidet sich die Fächerwahl von Frauen und Männern?",
+        title = "#Fächerwahl Frauen: Wie unterscheidet sich die Fächerwahl von Frauen und Männern?",
         width = 12,
         p("Hier zeigen wir die Unterschiede zwischen Männern und Frauen aus einer anderen Perspektive. Welchen Anteil machen MINT-Fächer bei der Studienfachwahl von Frauen und Männern in Deutschland aus?"),
        br(),

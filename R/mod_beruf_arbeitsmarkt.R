@@ -144,7 +144,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "#MINT_im_Detail: Vergleiche der Bundesländer",
+        title = "#MINT im Detail: Vergleiche der Bundesländer",
         width = 12,
         p("Hier zeigen wir die Unterschiede nach Bundesländern. Die Aufbereitung nach Fachbereichen steht noch aus.",
           br(), br(),
@@ -187,7 +187,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
     fluidRow(
       shinydashboard::box(
-        title = "#Frauen_in_MINT: Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?",
+        title = "#Frauen in MINT: Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?",
         width = 12,
         p("Hier schauen wir uns die Verteilung von Frauen und Männern innerhalb der MINT-Berufe in Deutschland an. Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Berufen.",
         br(), br(),
@@ -235,7 +235,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     )))),
     fluidRow(
       shinydashboard::box(
-        title = "#Berufswahl_von_Frauen: Wie unterscheidet sich die Berufswahl von Männern und Frauen?",
+        title = "#Berufswahl von Frauen: Wie unterscheidet sich die Berufswahl von Männern und Frauen?",
         width = 12,
         p("Hier zeigen wir die Unterschiede zwischen Frauen und Männern aus einer anderen Perspektive. Welchen Anteil machen MINT-Berufe bei der Berufswahl von Frauen und Männern in Deutschland aus?",
         br(), br(),
