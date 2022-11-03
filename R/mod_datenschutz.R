@@ -56,9 +56,9 @@ Hierzu zählen insbesondere Mädchen und junge Frauen. MINTvernetzt wird vom Bun
 und Forschung (BMBF) gefördert und von Mitarbeitenden der Körber-Stiftung, der matrix gGmbH, dem Nationalen
 MINT Forum e.V., der Universität Regensburg und dem Stifterverband gemeinsam umgesetzt.
 
-Das DataLab dient in diesem Zusammenhang als öffentliche Informationsplattform für amtliche Statistiken sowie durch
-MINTvernetzt erhobene Umfrageergebnisse aus dem Bereich MINT-Bildung. Zielgruppe sind allgemein Interessierte,
-MINT-Akteur:innen und weitere Beteiligte.",
+Das DataLab dient in diesem Zusammenhang als Informationsplattform für Interessierte; Akteur:innen und
+Beteiligte für amtliche Statistiken sowie durch MINTvernetzt erhobene Umfrageergebnisse aus dem Bereich
+MINT-Bildung.",
 
 br(),
 br(),
@@ -68,7 +68,11 @@ tags$b(span("Verantwortlicher und Datenschutzbeauftragter")),
 br(),
 
 
-"Verantwortlich für die Verarbeitung von personenbezogenen Daten über die Plattform ist der Stifterverband:",
+"Verantwortlich für die Verarbeitung von personenbezogenen Daten über die Plattform ist der Stifterverband für die Deutsche Wissenschaft e.V.:",
+
+br(),
+
+"Dr. Volker Meyer-Guckel",
 
 br(),
 
@@ -142,6 +146,20 @@ Darüber hinaus erheben und verarbeiten wir Informationen über die Nutzung des 
 br(),
 br(),
 
+p(tags$b(span("2. Feedbackformular")),
+
+br(),
+
+"Wir nutzen zur Durchführung von Onlineumfragen auf unserer Informationsplattform das Tool „LamaPoll“ der Lamano GmbH & Co. KG, Frankfurter Allee 69, 10247 Berlin. Durch die Nutzung des Tools werden verschiedene Daten, unter anderem mit Personenbezug, (z.B. IP-Adresse, Logfiles etc.) erhoben und sog. Session-Cookies auf Ihrem Endgerät gespeichert.
+
+Die Cookies werden nur gespeichert, um die jeweilige Umfrage richtig darzustellen und Ihnen zum Beispiel ein Vor- und Zurückklicken innerhalb der Umfrage zu ermöglichen. Rechtsgrundlage für die Speicherung der Cookies auf Ihrem Endgerät ist § 25 Abs. 2 TTDSDG. Die Cookies werden nach der Nutzung wieder gelöscht.
+
+Die Rechtsgrundlage für die Datenverarbeitung ist der Art. 6 Abs. 1 f) DS-GVO (berechtigtes Interesse). Unser berechtigtes Interesse liegt dabei in unserem Bedürfnis, unsere Angebote stetig zu verbessern und auf den Bedarf unserer Netzwerkmitglieder genau zuschneiden zu können. Diese Daten werden durch die Lamano GmbH & Co. KG für die Dauer von höchstens 14 Tagen aufbewahrt. Eine weitere Speicherung oder Aufbewahrung durch uns findet nicht statt.
+
+Weitere Informationen zu der Verarbeitung der Daten und Speicherung durch die Lamano GmbH und Co. KG finden Sie unter:", tags$a(href="https://www.lamapoll.de/Support/Datenschutz", "Lamapoll, Datenschutz", target = "_blank")),
+
+br(),
+br(),
 
 p(tags$b(span("II. Datenlöschung und Speicherdauer")),
 
@@ -228,7 +246,6 @@ br(),
 br(),
 
 "
-
 Wurde die Verarbeitung der Sie betreffenden personenbezogenen Daten eingeschränkt, dürfen diese Daten – von ihrer Speicherung abgesehen – nur mit Ihrer Einwilligung oder zur Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen oder zum Schutz der Rechte einer
 anderen natürlichen oder juristischen Person oder aus Gründen eines wichtigen öffentlichen Interesses der Union oder eines Mitgliedstaats verarbeitet werden. Wurde die Einschränkung der Verarbeitung nach den o.g. Voraussetzungen eingeschränkt, werden Sie von dem Verantwortlichen
 unterrichtet bevor die Einschränkung aufgehoben wird.",
@@ -238,6 +255,7 @@ br(),
 
 tags$b(span("4. Recht auf Löschung")),
 
+br(),
 br(),
 
 tags$b(span("Löschungspflicht")),
@@ -278,7 +296,6 @@ aller Links zu diesen personenbezogenen Daten oder von Kopien oder Replikationen
 
 br(),
 br(),
-
 
 
 tags$b(span("Ausnahmen")),
