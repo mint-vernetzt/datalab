@@ -181,7 +181,7 @@ mod_startseite_ui <- function(id){
          shinydashboard::box(
            title = "Orientierungshilfe für das MINT-DataLab: 4 Seiten - immer die gleiche Logik",
             width = 12,
-           img(src='www/How to6.png',
+           img(src='www/How to7.png',
                         #class = "img-responsive",
                         height = "800px",
                         # width = "150px",
