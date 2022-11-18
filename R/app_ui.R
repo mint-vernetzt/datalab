@@ -11,15 +11,16 @@ app_ui <- function(request) {
     # Your application UI logic
     shinydashboard::dashboardPage(
       skin = "black",
-      title="MINTvernetzt - DataLab",
+      #title="MINTvernetzt - DataLab",
 
       header = shinydashboard::dashboardHeader(
         title = div(
           img(
-            src = "www/mint-logo.png",
+            src = "www/MINTvernetztLogo_klein.png",
             height = 45
           ),
-          style = "text-align: center;"
+          "   MINT-DataLab",
+          style = "text-align: justify; color:#154194;"
         )
       ),
       # Create our navigation menu that links to each of the tabs we defined
@@ -38,6 +39,7 @@ app_ui <- function(request) {
           #shinydashboard::menuItem("Impressum", icon = shiny::icon("address-card"), tabName = "impressum")
           #shinydashboard::menuItem("Datenschutz", icon = shiny::icon("address-card"), tabName = "datenschutz")
 
+
         )
       ),
       # Show the appropriate tab's content in the main body of our dashboard when we select it
@@ -55,6 +57,56 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),
           shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))
         )
+       #so sollte man alle Fraben aller Elemente (Sidebar, obere Leiste über dem Banner, Hintergrund) ändern können, aber das einzige, das funktioniert, ist der Hintergrund der App (habe ich deshalb in /* */ gesetzt)
+         # ,
+        # tags$head(tags$style(HTML('
+        #                         /* logo */
+        #                         .skin-blue .main-header .logo {
+        #                         background-color: #f4b943;
+        #                         }
+        #
+        #                         /* logo when hovered */
+        #                         .skin-blue .main-header .logo:hover {
+        #                         background-color: #f4b943;
+        #                         }
+        #
+        #                         /* navbar (rest of the header) */
+        #                         .skin-blue .main-header .navbar {
+        #                         background-color: #f4b943;
+        #                         }
+        #
+        #                         /* main sidebar */
+        #                         .skin-blue .main-sidebar {
+        #                         background-color: #f4b943;
+        #                         }
+        #
+        #                         /* active selected tab in the sidebarmenu */
+        #                         .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
+        #                         background-color: #ff0000;
+        #                         }
+        #
+        #                         /* other links in the sidebarmenu */
+        #                         .skin-blue .main-sidebar .sidebar .sidebar-menu a{
+        #                         background-color: #00ff00;
+        #                         color: #000000;
+        #                         }
+        #
+        #                         /* other links in the sidebarmenu when hovered */
+        #                         .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
+        #                         background-color: #ff69b4;
+        #                         }
+        #                         /* toggle button when hovered  */
+        #                         .skin-blue .main-header .navbar .sidebar-toggle:hover{
+        #                         background-color: #ff69b4;
+        #                         }
+        #
+        #                         /* body
+        #                         .content-wrapper, .right-side {
+        #                         background-color: #7da2d1;
+        #                         }*/
+        #
+        #                         ')))
+
       )
   ))
 }
