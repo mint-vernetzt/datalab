@@ -47,21 +47,21 @@ prep_kurse_proportion <- function(df, indikator_choice) {
 #'
 #' @noRd
 
-prep_kurse_east_west <- function(df, type = "no_subjects") { #nicht korrekt bis jetzt!!!
-  #formel von statworx berechnet nur Westen richtig, hab getestet, mit dummy ost würde osten richtig und westen falsch sein
+prep_kurse_east_west <- function(df, type = "no_subjects") { #nicht korrekt bis jetzt!!! ifelse anpassen oder Deutschland rausfiltern
+  #berechnet Falsch - Deutschland in Osten enthalten
 
   df_incl <- df
 
   # create dummy variable to indicate east or west
-  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west, "Westen", "Osten")
-  #df_incl$dummy_ost <- ifelse(df_incl$region %in% states_east_west$east, "Osten", "Westen")
+  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west, "Westen", "Osten") #Deutschland nicht westen -->osten
+
+
 
   # aggregate values
   df_incl <- df_incl %>% dplyr::group_by(jahr, anzeige_geschlecht, indikator, fachbereich, dummy_west, bereich) %>%
     dplyr::summarise(wert = sum(wert, na.rm = T))
 
   names(df_incl)[5] <- "region"
-
 
   if(type == "subjects"){
 

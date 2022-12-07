@@ -110,32 +110,10 @@ share_MINT <- function(df){
 #
 #     df_sub <- share_mint_kurse(df_sub)
 
-#
-#     df_sub <- df %>%
-#       tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
-#       dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
-#                     "andere Fächer" =`Alle Fächer`- MINT)%>%
-#     tidyr::pivot_longer(c(6:20), values_to = "wert", names_to= "fachbereich")%>%
-#       dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
-#
-#
-#
-#
-#     df_sub <- df_sub %>% dplyr::filter(bereich != "Schule")
-#
-#     #df2<- df2[, colnames(df)]
-#
-#     df_sub<-  dplyr::bind_rows(df, df_sub)
 
     #Korrektur: prep for ratio
     df2 <- df_k %>% dplyr::filter(indikator == "Leistungskurse")
 
-    # df8 <- df2 %>%
-    #   tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
-    #   dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
-    #                 "andere Fächer" =`Alle Fächer`- MINT)%>%
-    #   tidyr::pivot_longer(c(6:20), values_to = "wert", names_to= "fachbereich")%>%
-    #   dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
 
     mint.vs.andere <- c("Nicht MINT", "MINT")
 
@@ -169,7 +147,7 @@ share_MINT <- function(df){
     # calculate the share of MINT for "Beschäftigte" and "Auszubildende"
 
     #rename
-    #df7[df7$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige" ## <- WRONG!
+    #df7[df7$fachbereich == "Alle", "fachbereich"] <- "andere Berufszweige" ## <- FALSCH!
 
     # Korrektur: prep for Arbeitsmarkt
 
