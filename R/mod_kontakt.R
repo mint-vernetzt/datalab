@@ -28,25 +28,44 @@ mod_kontakt_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    # Banner
+    # # Banner
+    # fluidRow(
+    #   shinydashboard::box(
+    #     width = 12,
+    #     img(src='www/Banner_Kontakt.jpg',
+    #         class = "img-responsive",
+    #         #height = "150px", width = "150px",
+    #         alt = "Banner Schule",
+    #         style="display: block; margin-left: auto; margin-right: auto;"
+        # ))
+
+
+
+
     fluidRow(
       shinydashboard::box(
-        width = 12,
-        img(src='www/Banner_Kontakt.jpg',
-            class = "img-responsive",
-            #height = "150px", width = "150px",
-            alt = "Banner Schule",
-            style="display: block; margin-left: auto; margin-right: auto;"
-        ))),
-
-
-
-    fluidRow(
-      shinydashboard::box(
-        title = "Über das MINT-DataLab",
+        title = "Kontakt und Feedback",
         width = 12,
         column(width = 9,
+               tags$b(span("Wir freuen uns über Feedback!", style = "color:#154194")),
+               br(),
+                p(style = "text-align: justify; font-size = 16px",
+                 "Das MINT-DataLab wird in den nächsten Jahren schrittweise weiterentwickelt.
+          Die Wünsche und Bedarfe unserer Zielgruppen werden über direkten Austausch,
+          eine fortlaufende Umfrage und verschiedene Veranstaltungsformate kontinuierlich erfasst und bestmöglich berücksichtigt.",
+                 br(),
+                 br(),
+                 "Ansprachpartnerin für dieses Projekt ist Antonia Kröger."),
 
+               p(style = "text-align: justify; font-size = 16px",
+                 span("Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+                      tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+                 ),
+                 br(),
+                 br(),
+                 br(),
+                 br(),
+               tags$b(span("Über das MINT-DataLab", style = "color:#154194"))),
                p(style = "text-align: justify; font-size = 16px",
                  "Im MINT-DataLab präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
                  Ausbildung und Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
@@ -73,25 +92,25 @@ mod_kontakt_ui <- function(id){
       )),
 
 
-
-    fluidRow(
-      shinydashboard::box(
-        width = 12,
-        title = "Kontakt und Feedback",
-        p(style = "text-align: justify; font-size = 16px",
-          "Das MINT-DataLab wird in den nächsten Jahren schrittweise weiterentwickelt.
-          Die Wünsche und Bedarfe unserer Zielgruppen werden über direkten Austausch,
-          eine fortlaufende Umfrage und verschiedene Veranstaltungsformate kontinuierlich erfasst und bestmöglich berücksichtigt.",
-          br(),
-          br(),
-          "Ansprachpartnerin für dieses Projekt ist Antonia Kröger."),
-
-          p(style = "text-align: justify; font-size = 16px",
-            span("Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
-                 tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-                 )
-          )
-        )),
+#
+#     fluidRow(
+#       shinydashboard::box(
+#         width = 12,
+#         title = "",
+#         p(style = "text-align: justify; font-size = 16px",
+#           "Das MINT-DataLab wird in den nächsten Jahren schrittweise weiterentwickelt.
+#           Die Wünsche und Bedarfe unserer Zielgruppen werden über direkten Austausch,
+#           eine fortlaufende Umfrage und verschiedene Veranstaltungsformate kontinuierlich erfasst und bestmöglich berücksichtigt.",
+#           br(),
+#           br(),
+#           "Ansprachpartnerin für dieses Projekt ist Antonia Kröger."),
+#
+#           p(style = "text-align: justify; font-size = 16px",
+#             span("Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+#                  tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+#                  )
+#           )
+#         )),
 
 
 

@@ -15,7 +15,7 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        img(src='www/Banner_breiter_Quellen.jpg',
+        img(src='www/Banner_Hinweise2.jpg',
             class = "img-responsive",
             #height = "150px", width = "150px",
             alt = "Banner Quellen",

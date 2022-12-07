@@ -15,7 +15,7 @@ mod_schule_kurse_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        img(src='www/Banner_breiter_Schule.jpg',
+        img(src='www/Banner_Schule.jpg',
             class = "img-responsive",
             #height = "150px", width = "150px",
             alt = "Banner Schule",

@@ -15,7 +15,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       fluidRow(
         shinydashboard::box(
           width = 12,
-          img(src='www/Banner_breiter_Beruf.jpg',
+          img(src='www/Banner_Ausbildung.jpg',
               class = "img-responsive",
               #height = "150px", width = "150px",
               alt = "Banner Beruf",

@@ -34,7 +34,7 @@ mod_startseite_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        img(src='www/Banner_Willkommen_beta_rot.jpg',
+        img(src='www/Banner_Willkommen_grau.jpg',
             class = "img-responsive",
             height = "300px",
             # width = "150px",
@@ -46,7 +46,7 @@ mod_startseite_ui <- function(id){
         #   span("Die wichtigsten Zahlen zu MINT auf einen Blick")
         # ),
         br(),
-        p(style = "text-align: justify; font-size = 48px",
+        p(style = "text-align: justify; font-size = 400px",
           span(tags$b(span("Willkommen in der Betaversion des MINT-DataLabs von MINTvernetzt!", style = "color:#b16fab")), br(), br(),
           "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
           Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
@@ -70,7 +70,7 @@ mod_startseite_ui <- function(id){
         #   tags$video(src="www/DataLab_Trichter_dyn.mp4", type = "video/mp4", hight = "300px", autoplay = TRUE),
         #video spielt leider nicht ab - könnte daran liegen dass www Pfad nicht auch für Vidoes eingerichtet ist?
 
-        img(src='www/Anteile_MINT.png',
+        img(src='www/Infografik_Anteil.png',
             class = "img-responsive",
             height = "150px",
             # width = "150px",
@@ -78,24 +78,24 @@ mod_startseite_ui <- function(id){
             style="display: block; margin-left: auto; margin-right: auto;"
         ),
         br(),
-        p(style = "text-align: justify; font-size = 24px",
+        p(style = "text-align: justify; font-size = 400px",
           tags$b("Anteil MINT entlang der Bildungskette"),
           ),
-        p(style = "text-align: justify; font-size = 16px",
+        p(style = "text-align: justify; font-size = 400px",
           span("Diese Grafik zeigt, wie hoch der Anteil von Schüler:innen, Studierenden und Auszubildenden und
                Beschäftigten ist, die (in Deutschland) einen MINT-Leistungskurs wählen, ein MINT-Fach studieren, eine MINT-Ausbildung
                absolvieren bzw. später einen MINT-Beruf ausüben. In der Oberstufe machen die MINT-Fächer einen Drittel bei der Leistungskurswahl aus (34 %).
                Gut ein Drittel (27 %) der Studierenden studiert ein MINT-Fach. Unter den Auszubildenden macht knapp jede:r Vierte (24 %) eine Ausbildung
                im MINT-Bereich. Von allen Beschäftigten in Deutschland geht ein Fünftel (20 %) einem MINT-Beruf nach.",
           ),
-          p(style="font-size:12px;color:grey", "Stand 2020, Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
+          #p(style="font-size:12px;color:grey", "Stand 2020, Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
 
       )),
 
       shinydashboard::box(
         title = "MINT-Gendergap wächst entlang der Bildungskette",
         width = 6,
-       img(src='www/Anteile_Frauen.png',
+       img(src='www/Infografik_Frauen.png',
            class = "img-responsive",
            height = "150px",
            # width = "150px",
@@ -103,15 +103,15 @@ mod_startseite_ui <- function(id){
            style="display: block; margin-left: auto; margin-right: auto;"
         ),
        br(),
-       p(style = "text-align: justify; font-size = 24px",
+       p(style = "text-align: justify; font-size = 400px",
          tags$b("Anteil Frauen in MINT entlang der Bildungskette"),
          ),
-       p(style = "text-align: justify; font-size = 16px",
+       p(style = "text-align: justify; font-size = 400px",
          span("Diese Grafik zeigt, wie der Anteil an Mädchen bzw. Frauen entlang der MINT-Bildungskette immer weiter abnimmt.
                Während in den MINT-Leistungskursen in der Oberstufe der Anteil an Mädchen und Jungen fast ausgewogen ist, nimmt der Anteil
                an Frauen, die MINT-Studiengänge wählen (32 %), eine Ausbildung in MINT ergreifen (13 %) und später in MINT-Berufen arbeiten (16 %), immer weiter ab.",
               br(),
-              p(style="font-size:12px;color:grey", "Stand 2020, Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
+              #p(style="font-size:12px;color:grey", "Stand 2020, Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
          ))
         )
           ),
