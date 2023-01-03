@@ -11,7 +11,7 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studierende_einstieg_gender"),
       label = NULL,
@@ -19,16 +19,16 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
                   "2018","2019", "2020"),
       selected = "2020"
     ),
-    p("Soll nur Lehramt angezeigt werden?"),
+    p("Nur Lehramt angzeigen:?"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_einstieg_gender"), label = "Nein", inline = TRUE),
       tags$span("Ja")),
-    p("Wählen Sie eine Hochschulform:"),
+    p("Auswahl der Hochschulform:"),
     conditionalPanel(condition = "input.nurLehramt_studierende_einstieg_gender == false",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("hochschulform_studierende_einstieg_1_gender"),
-                       choices = c("insgesamt", "Uni", "FH")
+                       choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
                      )),
     conditionalPanel(condition = "input.nurLehramt_studierende_einstieg_gender != false",
                      ns = ns,

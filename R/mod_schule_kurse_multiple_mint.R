@@ -11,7 +11,7 @@ mod_schule_kurse_multiple_mint_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_mint"),
       label = NULL,

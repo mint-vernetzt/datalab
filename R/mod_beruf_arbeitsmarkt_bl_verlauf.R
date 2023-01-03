@@ -11,7 +11,7 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl des Zeitraums:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_bl_verlauf"),
       label = NULL,
@@ -19,7 +19,7 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wählen Sie eine Beschäftigungsform der Arbeitnehmer*innen:"),
+    p("Auswahl der Beschäftigungsform der Arbeitnehmer:innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_beruf_arbeitsmarkt_bl_verlauf"),
       choices = c("Auszubildende", "Beschäftigte"),
@@ -27,17 +27,18 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wählen Sie ein Anforderungsniveau:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf"),
-      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte"),
-      selected = "Gesamt"
-    ),
-    p("Wählen Sie ein oder mehrere Bundesländer:"),
+    # p("Auswahl des Anforderungsniveaus:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf"),
+    #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"), kab
+    #   selected = "Gesamt"
+    # ),
+    p("Auswahl der Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_bl_verlauf"),
       choices = c("Deutschland",
                   "Baden-Württemberg",
+                  "Bayern",
                   "Berlin",
                   "Brandenburg",
                   "Bremen",
@@ -51,9 +52,11 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
-                  "Westen",
-                  "Osten"),
+                  "Thüringen"
+                  # ,
+                  # "Westen",
+                  # "Osten"
+                  ),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
@@ -77,9 +80,9 @@ mod_beruf_arbeitsmarkt_bl_verlauf_server <- function(id, r){
       r$indikator_beruf_arbeitsmarkt_bl_verlauf <- input$indikator_beruf_arbeitsmarkt_bl_verlauf
     })
 
-    observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf, {
-      r$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf <- input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf
-    })
+    # observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf, {
+    #   r$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf <- input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf
+    # }) kab
 
     observeEvent(input$states_beruf_arbeitsmarkt_bl_verlauf, {
       r$states_beruf_arbeitsmarkt_bl_verlauf <- input$states_beruf_arbeitsmarkt_bl_verlauf

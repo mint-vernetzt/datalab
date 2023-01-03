@@ -11,7 +11,7 @@ mod_home_start_comparison_ui <- function(id){
   ns <- NS(id)
 
   tagList(
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl des Zeitraums:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_comparison"),
       label = NULL,
@@ -19,11 +19,11 @@ mod_home_start_comparison_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wählen Sie einen odere mehrere Bereiche:"),
+    p("Auswahl eines odere mehrerer Bereiche:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_comparison"),
       choices = c("Leistungskurse",
-                  "Studienanfänger", "Studierende",
+                  "Studienanfänger:innen", "Studierende",
                   "Auszubildende", "Beschäftigte"),
       selected = c("Leistungskurse", "Beschäftigte"),
       options =  list(

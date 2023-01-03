@@ -11,7 +11,7 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_bl_vergleich"),
       label = NULL,
@@ -19,7 +19,7 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
                   "2018","2019", "2020"),
       selected = "2020"
     ),
-    p("Wählen Sie eine Beschäftigungsform der Arbeitnehmer*innen:"),
+    p("Auswahl der Beschäftigungsform der Arbeitnehmer:innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_beruf_arbeitsmarkt_bl_vergleich"),
       choices = c("Auszubildende", "Beschäftigte"),
@@ -27,12 +27,12 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wählen Sie ein Anforderungsniveau:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich"),
-      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte"),
-      selected = "Gesamt"
-    )
+    # p("Auswahl des Anforderungsniveaus:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich"),
+    #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"),
+    #   selected = "Gesamt"
+    # )
   )
 }
 
@@ -50,9 +50,9 @@ mod_beruf_arbeitsmarkt_bl_vergleich_server <- function(id, r){
       r$indikator_beruf_arbeitsmarkt_bl_vergleich <- input$indikator_beruf_arbeitsmarkt_bl_vergleich
     })
 
-    observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich, {
-      r$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich <- input$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich
-    })
+    # observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich, {
+    #   r$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich <- input$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich
+    # })
 
   })
 }

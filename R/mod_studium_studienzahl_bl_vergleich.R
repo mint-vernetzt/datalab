@@ -11,23 +11,23 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_vergleich"),
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
     ),
-    p("Soll nur Lehramt angezeigt werden?"),
+    p("Nur Lehramt anzeigen:"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_studienzahl_bl_vergleich"), label = "Nein", inline = TRUE),
       tags$span("Ja"),
-      p("Wählen Sie eine Hochschulform:"),
+      p("Auswahl der Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_vergleich == false",
                        ns = ns,
                        shinyWidgets::pickerInput(
                          inputId = ns("hochschulform_studium_studienzahl_bl_vergleich1"),
-                         choices = c("insgesamt", "Uni", "FH")
+                         choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
                        )),
       conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_vergleich != false",
                        ns = ns,
@@ -35,17 +35,17 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                          inputId = ns("hochschulform_studium_studienzahl_bl_vergleich2"),
                          choices = "Uni"
                        )),
-      p("Wählen Sie ein Fach:"),
+      p("Auswahl des Fachs:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_vergleich"),
-        choices = c("MINT (aggregiert)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
-        selected = "MINT (aggregiert)"
+        choices = c("MINT-Fächer (gesamt)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
+        selected = "MINT-Fächer (gesamt)"
       )
     ),
-    p("Wählen Sie den Status der Student*innen:"),
+    p("Status der Student:innen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_studium_studienzahl_bl_vergleich"),
-      choices = c("Studienanfänger", "Studierende"),
+      choices = c("Studienanfänger:innen"="Studienanfänger:innen", "Studierende"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))

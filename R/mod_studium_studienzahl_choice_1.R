@@ -10,24 +10,24 @@
 mod_studium_studienzahl_choice_1_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl des Jahres:"),
       shinyWidgets::sliderTextInput(
         inputId = ns("date_studierende"),
         label = NULL,
         choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
         selected = 2020
       ),
-    p("Soll nur Lehramt angezeigt werden?"),
+    p("Nur Lehramt anzeigen:"),
     tags$div(
       shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende"), label = "Nein", inline = TRUE),
       tags$span("Ja")
     ),
-    p("Wählen Sie eine Hochschulform:"),
+    p("Auswahl der Hochschulform:"),
       conditionalPanel(condition = "input.nurLehramt_studierende == false",
                        ns = ns,
       shinyWidgets::pickerInput(
         inputId = ns("hochschulform_studierende_1"),
-        choices = c("insgesamt", "Uni", "FH")
+        choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
       )),
       conditionalPanel(condition = "input.nurLehramt_studierende != false",
          ns = ns,

@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl des Zeitraums:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_anforderungen_gender_verlauf"),
       label = NULL,
@@ -18,13 +18,13 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wählen Sie ein Anforderungsniveau:"),
+    p("Auswahl  des Anforderungsniveaus:"),
     shinyWidgets::pickerInput(
       inputId = ns("level_arbeitsmarkt_anforderungen_gender_verlauf"),
       choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte"),
       selected = "Gesamt"
     ),
-    p("Wählen Sie ein Bundesland:"),
+    p("Auswahl des Bundeslands:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_arbeitsmarkt_anforderungen_gender_verlauf"),
       choices = c("Deutschland",

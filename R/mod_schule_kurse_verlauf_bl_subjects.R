@@ -11,7 +11,7 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl des Zeitraums:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_verlauf_subject_bl"),
       label = NULL,
@@ -19,7 +19,7 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wählen Sie in welcher Form der Kurs belegt wurde:"),
+    p("Form der Kursbelegung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("topic_selected_subject_bl"),
       choices = c("Grundkurse", "Leistungskurse"),
@@ -27,22 +27,23 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wählen Sie ein oder mehrere Fächer:"),
+    p("Auswahl eines oder mehrerer Fächer:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_bl_sub"),
-      choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
+      choices = c("MINT-Fächer (gesamt)","Mathematik", "Informatik", "Physik", "Chemie",
                   "Biologie", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
                   "Musik/Kunst", "Religion/Ethik", "Sport"),
-      selected = c("MINT (aggregiert)", "Mathematik"),
+      selected = c("MINT-Fächer (gesamt)", "Mathematik"),
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       multiple = TRUE
     ),
-    p("Wählen Sie ein Bundesland:"),
+    p("Auswahl eines Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf_subject_bl"),
       choices = c("Deutschland",
+                  "Baden-Württemberg",
                   "Bayern",
                   "Berlin",
                   "Brandenburg",
@@ -57,9 +58,11 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
-                  "Westen",
-                  "Osten"),
+                  "Thüringen"
+                  #,
+                 # "Westen",
+                #  "Osten"
+                  ),
       selected = "Hessen"
     )
   )
