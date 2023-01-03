@@ -213,7 +213,7 @@ mod_kontakt_ui <- function(id){
 
                 div(style="display: inline-block;position: relative;padding: 1em;",
 
-                    tags$a(href="https://www.bmbf.de/bmbf/de/home/home_node.html",
+                    tags$a(#href="https://www.bmbf.de/bmbf/de/home/home_node.html",
                            img(src='www/BMBF-Logo_transp1.png',
 
                                class = "img-responsive",
