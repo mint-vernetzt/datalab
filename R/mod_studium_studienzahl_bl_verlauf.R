@@ -71,9 +71,9 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen"
-                  # ,
-                  # "Westen",
-                  # "Osten"
+                  ,
+                  "Westen",
+                  "Osten"
                   ),
       selected = c("Hessen", "Hamburg"),
       options = list(`actions-box` = TRUE,

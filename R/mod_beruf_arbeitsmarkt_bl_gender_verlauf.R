@@ -52,9 +52,9 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen"
-                  # ,
-                  # "Westen",
-                  # "Osten"
+                  ,
+                  "Westen",
+                  "Osten"
                   ),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,

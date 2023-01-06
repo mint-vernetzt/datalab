@@ -53,15 +53,16 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen"
-                  # ,
-                  # "Westen",
-                  # "Osten"
+                  ,
+                  "Westen",
+                  "Osten"
                   ),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       selected = c("Hessen", "Hamburg")
+
     )
   )
 }
