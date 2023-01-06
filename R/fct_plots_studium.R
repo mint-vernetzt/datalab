@@ -521,13 +521,21 @@ studienzahl_einstieg_comparison <- function(df,r) {
   df_sub$indikator <- paste0(df_sub$indikator, " (", df_sub$hochschulform, ")")
 
 
-
   df_sub2 <- df %>% dplyr::filter(nur_lehramt == "Ja")
 
   df_sub2$indikator <- paste0(df_sub2$indikator, " (", "Lehramt, " ,df_sub2$hochschulform, ")")
 
 
   df <- rbind(df_sub, df_sub2)
+
+  df$indikator <- factor(df$indikator, levels = c("Studienanfänger:innen (FH)",
+                                                          "Studienanfänger:innen (Uni)",
+                                                          "Studienanfänger:innen (insgesamt)",
+                                                          "Studienanfänger:innen (Lehramt, Uni)",
+                                                          "Studierende (FH)",
+                                                          "Studierende (Uni)",
+                                                          "Studierende (insgesamt)",
+                                                          "Studierende (Lehramt, Uni)"))
 
   # aggregate
   df <- df %>%
@@ -1818,7 +1826,6 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
   # order years for plot
   df1 <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
-
   # if(hochschulform_select_1 == "Studierende") {
   #
   #   title_help <- "Studierende"
@@ -2199,13 +2206,16 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
   #values$fachbereich  <<- gsub("MINT (aggregiert)", "MINT-Fächer (gesamt)", values$fachbereich)
 
+  help_title <- ifelse(subjects_select == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subjects_select)
+
+
   # plot
   highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = anzeige_geschlecht)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil {point.anzeige_geschlecht} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Frauen: Studienfachwahl von ", subjects_select, " in ", states),
+    highcharter::hc_title(text = paste0("Frauen: Studienfachwahl von ", help_title, " in ", states),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2591,7 +2601,10 @@ studierende_map <- function(df,r) {
   df$proportion <- df$proportion * 100
 
 
-  highcharter::hw_grid(
+  help_title <- ifelse(subjects == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subjects)
+
+
+highcharter::hw_grid(
     # plot
     highcharter::hcmap(
       "countries/de/de-all",
@@ -2609,7 +2622,7 @@ studierende_map <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Studienanfänger:innen: Anteil ", subjects, "<br>", timerange),
+        text = paste0("Studienanfänger:innen: Anteil von ", help_title, "<br>", timerange),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -2640,7 +2653,7 @@ studierende_map <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Studierende: Anteil ", subjects, "<br>", timerange),
+        text = paste0("Studierende: Anteil von ", help_title, "<br>", timerange),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -2964,6 +2977,8 @@ studierende_verlauf_multiple_bl <- function(df,r) {
 
   }
 
+  help_title <- ifelse(subjects_select == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subjects_select)
+
   # order years for plot
   df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
@@ -2973,7 +2988,7 @@ studierende_verlauf_multiple_bl <- function(df,r) {
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil ", subjects_select, " (",title_help, ")"),
+    highcharter::hc_title(text = paste0("Anteil von ", help_title, " (",title_help, ")"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3223,6 +3238,8 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
   df$proportion <- round(df$proportion * 100)
 
+  help_title <- ifelse(subject == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subject)
+
   ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
     ggplot2::geom_bar(stat="identity", fill = "#154194") +
     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
@@ -3233,7 +3250,7 @@ studierende_mint_vergleich_bl <- function(df,r) {
       plot.title = ggtext::element_markdown(hjust = 0.5)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                "Anteil ", subject ," (", studium_level,  ") <br>", timerange,
+                                "Anteil von ", help_title ," (", studium_level,  ") <br>", timerange,
                                  "<br><br><br>"),
                   fill = "") +
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
