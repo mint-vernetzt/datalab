@@ -65,9 +65,9 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen"
-                  #,
-                 # "Westen",
-                #  "Osten"
+                  ,
+                  "Westen",
+                  "Osten"
                   ),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,

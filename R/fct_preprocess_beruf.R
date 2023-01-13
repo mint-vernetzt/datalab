@@ -11,7 +11,12 @@ prep_arbeitsmarkt_east_west <- function(df) {
   df_incl <- df
 
   # set dummy variable to indicate "Osten" und "Westen"
-  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west, "Westen", "Osten")
+  ## Falls DE enthalten falsch
+  #df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west, "Westen", "Osten")
+
+   df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west & df_incl$region != "Deutschland", "Westen", NA)
+  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$east & df_incl$region != "Deutschland", "Osten", df_incl$dummy_west)
+  df <- na.omit(df) # NA aus ifelse erstellt nochmal DE mit NA als region-Name -->löschen
 
   # sum values
   df_incl <- df_incl %>% dplyr::group_by(jahr, anzeige_geschlecht, indikator, fachbereich, dummy_west,

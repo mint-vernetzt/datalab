@@ -170,7 +170,11 @@ prep_studierende_east_west <- function(df) {
   df_incl <- df
 
   # create dummy to indicate "Osten" or "Westen"
-  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west, "Westen", "Osten")
+  ## Fehlerhaft falls DE mit in df
+  # df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west, "Westen", "Osten")
+
+  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west & df_incl$region != "Deutschland", "Westen", NA)
+  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$east & df_incl$region != "Deutschland", "Osten", df_incl$dummy_west)
 
   df_incl <- df_incl %>% dplyr::group_by(jahr, anzeige_geschlecht, indikator, fachbereich, dummy_west,
                                          nur_lehramt, hochschulform ,bereich) %>%
@@ -181,6 +185,7 @@ prep_studierende_east_west <- function(df) {
   df_incl <- df_incl[, colnames(df)]
 
   df <- rbind(df, df_incl)
+  df <- na.omit(df) # NA aus ifelse erstellt nochmal DE mit NA als region-Name -->löschen
 
   return(df)
 

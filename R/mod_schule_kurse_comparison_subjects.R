@@ -47,11 +47,12 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen"
-                  #,
-                #  "Westen",
-                 # "Osten"
+                ,
+                 "Westen",
+                "Osten"
                   ),
       selected = "Hessen"
+
     )
 
   )
