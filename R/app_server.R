@@ -34,9 +34,5 @@ app_server <- function(input, output, session) {
 
   mod_ausbildung_server("ausbildung_ui_1", data_ausbildungsvertraege = data_naa)
 
-  # mod_studium2_server("studium2_ui_1", data_studierende = studierende)
-  #
-  # mod_beruf2_server("beruf2_ui_1", data_arbeitsmarkt = arbeitsmarkt)
-
 
 }
