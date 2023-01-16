@@ -10,7 +10,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic
     shinydashboard::dashboardPage(
-      skin = "black",
+      skin = "blue",
       #title="MINTvernetzt - DataLab",
 
       header = shinydashboard::dashboardHeader(
@@ -50,48 +50,49 @@ app_ui <- function(request) {
         tags$head(tags$style(HTML('
                                 /* logo */
                                 .skin-blue .main-header .logo {
-                                background-color: #f4b943;
+                                background-color: #FFFFFF;
                                 }
 
                                 /* logo when hovered */
                                 .skin-blue .main-header .logo:hover {
-                                background-color: #f4b943;
+                                background-color: #FFFFFF;
                                 }
 
                                 /* navbar (rest of the header) */
                                 .skin-blue .main-header .navbar {
-                                background-color: #f4b943;
+                                background-color: #FFFFFF;
                                 }
 
                                 /* main sidebar */
                                 .skin-blue .main-sidebar {
-                                background-color: #f4b943;
+                                background-color: #FFFFFF;
                                 }
 
                                 /* active selected tab in the sidebarmenu */
                                 .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
-                                background-color: #ff0000;
+                                background-color: #FFFFFF;
                                 }
 
                                 /* other links in the sidebarmenu */
                                 .skin-blue .main-sidebar .sidebar .sidebar-menu a{
-                                background-color: #00ff00;
+                                background-color: #FFFFFF;
                                 color: #000000;
                                 }
 
                                 /* other links in the sidebarmenu when hovered */
                                 .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
-                                background-color: #ff69b4;
+                                background-color: #154194;
+                                color: #FFFFFF;
                                 }
                                 /* toggle button when hovered  */
                                 .skin-blue .main-header .navbar .sidebar-toggle:hover{
-                                background-color: #ff69b4;
+                                background-color: #154194;
                                 }
 
-                                /* body
+                                /*body*/
                                 .content-wrapper, .right-side {
-                                background-color: #7da2d1;
-                                }*/
+                                background-color: #FFFFFF;
+                                }
 
                                 '))),
           shinydashboard::tabItems(
