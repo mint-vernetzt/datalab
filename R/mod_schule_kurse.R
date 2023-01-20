@@ -177,7 +177,7 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_schule_kurse_comparison_subjects_ui("mod_schule_kurse_comparison_subjects_ui_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_comparison_subjects"))
+                               highcharter::highchartOutput(ns("plot_comparison_subjects"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen.")
 
                              )),
@@ -186,7 +186,7 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_comparison_bl"))
+                               highcharter::highchartOutput(ns("plot_comparison_bl"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen.")))
 
         ))),
@@ -405,7 +405,7 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
       kurse_verlauf_subjects_bl(data_kurse,r)
     })
 
-    output$plot_comparison_subjects <- renderPlot({
+    output$plot_comparison_subjects <- highcharter::renderHighchart({
       kurse_mint_comparison(data_kurse,r)
     })
 
@@ -439,9 +439,13 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
       kurse_verlauf_multiple_bl(data_kurse,r)
     })
 
-    output$plot_comparison_bl <- renderPlot({
+    output$plot_comparison_bl <- highcharter::renderHighchart({
       kurse_mint_comparison_bl(data_kurse,r)
     })
+
+    # output$plot_comparison_bl <- renderPlot({
+    #   kurse_mint_comparison_bl(data_kurse,r)
+    # })
 
     # Box 7
     output$plot_map_kurse_gender <- renderUI({

@@ -680,13 +680,10 @@ kurse_mint_comparison <- function(df,r) {
 
   df <- df %>% dplyr::filter(indikator == indikator_comparison)
 
-  x <- c("Sport", "Religion/Ethik", "Musik/Kunst",
-         "Gesellschaftswissenschaften", "Fremdsprachen", "Deutsch",
-
-         "andere Fächer (aggregiert)",# raus, kab --> geht jetzt wieder vlg. oben
-
-         "andere naturwiss.-technische Fächer", "Biologie", "Chemie","Physik","Informatik","Mathematik",
-         "MINT-Fächer (gesamt)")
+  x <- c("MINT-Fächer (gesamt)", "Mathematik", "Informatik", "Physik", "Chemie",
+         "Biologie", "andere naturwiss.-technische Fächer",
+         "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+         "Musik/Kunst", "Religion/Ethik", "Sport")
 
   df <- df %>%
     dplyr::mutate(fachbereich =  factor(fachbereich, levels = x)) %>%
@@ -695,28 +692,54 @@ kurse_mint_comparison <- function(df,r) {
   df <- na.omit(df)
 
   # plot
-  a <- ifelse(df$fachbereich == "MINT-Fächer (gesamt)"
+  highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich)) %>%
+    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    #highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+    #highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+    highcharter::hc_colors("#b16fab") %>%
+    highcharter::hc_title(text = paste0( "Anteil einzelner Fächer (", indikator_comparison, ")",
+                                                                        br(), timerange,
+                                                                          "<br><br><br>"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-              | df$fachbereich == "andere Fächer (aggregiert)" # raus, kab --> rein vlg. oben
-              , "#b16fab", "grey30")
-
-  ggplot2::ggplot(df, ggplot2::aes(y=fachbereich, x=proportion)) +
-    ggplot2::geom_bar(stat="identity", fill = "#154194") +
-    ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
-                       fontface = "bold") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      axis.text.y = ggplot2::element_text(colour = a),
-      text = ggplot2::element_text(size = 14),
-      plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::ylab("") + ggplot2::xlab("") +
-    ggplot2::labs(title = paste0( "<span style='font-size:20.5pt; color:black'>",
-                                  "Anteil einzelner Fächer (", indikator_comparison, ")",
-                                 br(), timerange,
-                                   "<br><br><br>"),
-                  fill = "") +
-    ggplot2::scale_y_discrete(expand = c(0,0)) +
-    ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
+  # a <- ifelse(df$fachbereich == "MINT-Fächer (gesamt)"
+  #
+  #             | df$fachbereich == "andere Fächer (aggregiert)" # raus, kab --> rein vlg. oben
+  #             , "#b16fab", "grey30")
+  #
+  # ggplot2::ggplot(df, ggplot2::aes(y=fachbereich, x=proportion)) +
+  #   ggplot2::geom_bar(stat="identity", fill = "#154194") +
+  #   ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
+  #                      fontface = "bold") +
+  #   ggplot2::theme_minimal() +
+  #   ggplot2::theme(
+  #     axis.text.y = ggplot2::element_text(colour = a),
+  #     text = ggplot2::element_text(size = 14),
+  #     plot.title = ggtext::element_markdown(hjust = 0.5)) +
+  #   ggplot2::ylab("") + ggplot2::xlab("") +
+  #   ggplot2::labs(title = paste0( "<span style='font-size:20.5pt; color:black'>",
+  #                                 "Anteil einzelner Fächer (", indikator_comparison, ")",
+  #                                br(), timerange,
+  #                                  "<br><br><br>"),
+  #                 fill = "") +
+  #   ggplot2::scale_y_discrete(expand = c(0,0)) +
+  #   ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 
 }
 
@@ -731,7 +754,6 @@ kurse_mint_comparison <- function(df,r) {
 #' @noRd
 
 kurse_mint_comparison_bl <- function(df,r) {
-
 
 
   timerange <- r$date_comparison_bl
@@ -777,6 +799,7 @@ kurse_mint_comparison_bl <- function(df,r) {
 
   df_sub <- df_sub[,colnames(df)]
 
+
   # # aggregate all subjects to calculate proportion later
   df_sub <- df_sub %>% dplyr::group_by(region, indikator) %>%
     dplyr::mutate(props = sum(wert))
@@ -785,15 +808,20 @@ kurse_mint_comparison_bl <- function(df,r) {
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
-
   # aggregate all subjects to calculate proportion later
   df <- df %>% dplyr::group_by(region, indikator) %>%
-    dplyr::mutate(props = sum(wert))
-
+  dplyr::mutate(props = sum(wert))
 
   df <- rbind(df, df_sub)
 
   df <- df %>% dplyr::filter(fachbereich == subject)
+
+  #gegenwert Berechnen für jeweilige Auswahl
+  df_n <- df %>% dplyr::group_by(region, indikator) %>%
+    dplyr::mutate(wert = props - wert)
+  df_n$fachbereich <- "andere Fächer (gesamt)"
+
+  df <- rbind(df, df_n)
 
   # calculate proportion
   df <- df %>% dplyr::group_by(region, fachbereich, indikator) %>%
@@ -804,20 +832,45 @@ kurse_mint_comparison_bl <- function(df,r) {
   df <- subset(df, proportion >= 0.5)
 
 
-  ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
-    ggplot2::geom_bar(stat="identity", fill = "#154194") +
-    ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
-                       fontface = "bold") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      text = ggplot2::element_text(size = 14),
-      plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::ylab("") + ggplot2::xlab("") +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                "Anteil ", subject, " nach Bundesländern (",  indikator_comparison, ")",br(), timerange,
-                                 "<br><br><br>"),
-                  fill = "") +
-    ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
+  highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = region, group = "fachbereich")) %>%
+    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+    highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+    highcharter::hc_title(text = paste0( "Anteil ", subject, " nach Bundesländern (",  indikator_comparison, ")",br(), timerange,
+                                         "<br><br><br>"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+#
+#   ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
+#     ggplot2::geom_bar(stat="identity", fill = "#154194") +
+#     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
+#                        fontface = "bold") +
+#     ggplot2::theme_minimal() +
+#     ggplot2::theme(
+#       text = ggplot2::element_text(size = 14),
+#       plot.title = ggtext::element_markdown(hjust = 0.5)) +
+#     ggplot2::ylab("") + ggplot2::xlab("") +
+#     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+#                                 "Anteil ", subject, " nach Bundesländern (",  indikator_comparison, ")",br(), timerange,
+#                                  "<br><br><br>"),
+#                   fill = "") +
+#     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 
 }
 
