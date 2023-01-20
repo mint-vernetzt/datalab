@@ -550,6 +550,9 @@ studienzahl_einstieg_comparison <- function(df,r) {
 
   df$proportion <- df$proportion * 100
 
+# browser()
+#
+# df_o <<- df
 
   # plot
 
@@ -1941,28 +1944,59 @@ ranking_bl_subject <- function(df,r, type) {
 
   df$proportion <- df$proportion * 100
 
+# browser()
+#   df_k <<- df
+
+ highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x= fachbereich, group ="indikator"))
+
+
+
   # plot
-  a <- ifelse(df$fachbereich == "MINT (aggregiert)" | df$fachbereich == "andere Studiengänge" , "#b16fab", "grey30")
+  # a <- ifelse(df$fachbereich == "MINT (aggregiert)" | df$fachbereich == "andere Studiengänge" , "#b16fab", "grey30")
+  #
+  # highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = "fachbereich")) %>%
+  #   highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
+  #   highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
+  #   highcharter::hc_xAxis(title = list(text = "")) %>%
+  #   highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+  #   highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+  #   highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden ", "(", timerange, ")"),
+  #                         margin = 45,
+  #                         align = "center",
+  #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+  #   highcharter::hc_chart(
+  #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+  #   ) %>%
+  #   highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+  #   highcharter::hc_exporting(enabled = FALSE,
+  #                             buttons = list(contextButton = list(
+  #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+  #                               onclick = highcharter::JS("function () {
+  #                                                             this.exportChart({ type: 'image/png' }); }"),
+  #                               align = 'right',
+  #                               verticalAlign = 'bottom',
+  #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-
-  ggplot2::ggplot(df, ggplot2::aes(y=fachbereich, x=proportion)) +
-    ggplot2::geom_bar(stat="identity", fill = "#154194", width=0.5) +
-    ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
-                       fontface = "bold") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      axis.text.y = ggplot2::element_text(colour = a),
-      text = ggplot2::element_text(size = 14),
-      plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::ylab("") + ggplot2::xlab("") +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil von MINT-Fächergruppen in ", states ," (", indikator_comparison, ") <br>",   timerange,
-                                 "<br><br><br>"),
-                  fill = "") +
-    ggplot2::scale_y_discrete(expand = c(0,0)) +
-    ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 
 }
+#   ggplot2::ggplot(df, ggplot2::aes(y=fachbereich, x=proportion)) +
+#     ggplot2::geom_bar(stat="identity", fill = "#154194", width=0.5) +
+#     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
+#                        fontface = "bold") +
+#     ggplot2::theme_minimal() +
+#     ggplot2::theme(
+#       axis.text.y = ggplot2::element_text(colour = a),
+#       text = ggplot2::element_text(size = 14),
+#       plot.title = ggtext::element_markdown(hjust = 0.5)) +
+#     ggplot2::ylab("") + ggplot2::xlab("") +
+#     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+#                                  "Anteil von MINT-Fächergruppen in ", states ," (", indikator_comparison, ") <br>",   timerange,
+#                                  "<br><br><br>"),
+#                   fill = "") +
+#     ggplot2::scale_y_discrete(expand = c(0,0)) +
+#     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
+#
+# }
 
 #' A function to plot a waffle chart
 #'
@@ -2346,6 +2380,12 @@ studienfaecher_ranking <- function(df,r, type) {
 #hier sind keine Daten mehr in df, wenn Deutschland ausgewählt ist, sonst schon
 
   colnames(df)[7] <- "Studienanfängerinnen"
+
+
+  # browser()
+  # df_lo <<-df
+
+  #highcharter::hchart(df, 'dumbbell', highcharter::hcaes(y = Studienanfängerinnen, x= Studierende, group ="indikator"))
 
 #hier sind dann auf einmal die Werte von Hessen (Default Wahl) in df wenn man Deutschland auswählt,
   #und ein Fehler in der App wird angezeigt
@@ -3237,24 +3277,29 @@ studierende_mint_vergleich_bl <- function(df,r) {
     dplyr::summarize(proportion = wert/props)
 
   df$proportion <- round(df$proportion * 100)
+  # browser()
+  # df_2 <<- df
 
   help_title <- ifelse(subject == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subject)
 
-  ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
-    ggplot2::geom_bar(stat="identity", fill = "#154194") +
-    ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
-                       fontface = "bold") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      text = ggplot2::element_text(size = 14),
-      plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::ylab("") + ggplot2::xlab("") +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                "Anteil von ", help_title ," (", studium_level,  ") <br>", timerange,
-                                 "<br><br><br>"),
-                  fill = "") +
-    ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 
+  highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = round(proportion), group= "fachbereich"))
+
+#   ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
+#     ggplot2::geom_bar(stat="identity", fill = "#154194") +
+#     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
+#                        fontface = "bold") +
+#     ggplot2::theme_minimal() +
+#     ggplot2::theme(
+#       text = ggplot2::element_text(size = 14),
+#       plot.title = ggtext::element_markdown(hjust = 0.5)) +
+#     ggplot2::ylab("") + ggplot2::xlab("") +
+#     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+#                                 "Anteil von ", help_title ," (", studium_level,  ") <br>", timerange,
+#                                  "<br><br><br>"),
+#                   fill = "") +
+#     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
+#
 }
 
 #' A function to create a dumbbell plot

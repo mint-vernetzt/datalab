@@ -192,7 +192,8 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(
                                mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen.")
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen.")
+                               #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
 
@@ -202,7 +203,8 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_bl_vergleich_ui("studium_studienzahl_bl_vergleich")
                              ),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_vergleich_bl")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen.")
+                               highcharter::highchartOutput(ns("plot_vergleich_bl1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen.")
+                               #plotOutput(ns("plot_vergleich_bl")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     )
         ))),
@@ -283,6 +285,7 @@ mod_studium_studienzahl_ui <- function(id){
                                  mod_studium_studienzahl_ranking_bl_subject_gender_ui("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1")
                                ),
                                shiny::mainPanel(
+                                 #highcharter::highchartOutput(ns("plot_ranking_studienzahl_bl_subject_gender1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
                                  plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
                                )
                     )
@@ -431,6 +434,16 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       studienzahl_einstieg_comparison_gender(data_studierende,r)
     })
 
+    output$plot_verlauf_studienzahl_bl_subject1 <- highcharter::renderHighchart({
+      ranking_bl_subject(data_studierende,r)
+    })
+
+
+
+    output$plot_verlauf_studienzahl_bl1 <- highcharter::renderHighchart({
+      ranking_bl_subject(data_studierende,r)
+    })
+
     # Box 4
     plot_waffle_react <- reactive({
       studienzahl_waffle_mint(data_studierende,r)
@@ -469,6 +482,12 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       plot_ranking_studienzahl_bl_subject_gender_react()
     })
 
+    output$plot_ranking_studienzahl_bl_subject_gender1 <- highcharter::renderHighchart({
+      plot_ranking_studienzahl_bl_subject_gender_react(data_studierende,r)
+    })
+
+
+
     # Box 6
     output$plot_studienzahl_map <- renderUI({
       studierende_map(data_studierende,r)
@@ -478,9 +497,15 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       studierende_verlauf_multiple_bl(data_studierende,r)
     })
 
-    output$plot_vergleich_bl <- renderPlot({
+
+     output$plot_vergleich_bl <-  renderPlot({
       studierende_mint_vergleich_bl(data_studierende,r)
     })
+
+     output$plot_vergleich_bl1 <- highcharter::renderHighchart({
+       studierende_mint_vergleich_bl(data_studierende,r)
+     })
+
 
     # Box 7
     output$plot_studienzahl_map_gender <- renderUI({
