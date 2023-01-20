@@ -60,9 +60,10 @@ data_naa_maennlich$geschlecht_aggregat <- "Männer"
 # combine data_frames
 data_naa <- rbind(data_naa_insgesamt, data_naa_weiblich, data_naa_maennlich)
 
+#läuft nicht durch
 # insert zero if NA
-data_naa <- data_naa %>%
-  dplyr::mutate(anzahl = tidyr::replace_na(anzahl, 0))
+# data_naa <- data_naa %>%
+#   dplyr::mutate(anzahl = tidyr::replace_na(anzahl, 0))
 
 names(data_naa)[6] <- "anzeige_geschlecht"
 names(data_naa)[2] <- "fachbereich"
@@ -81,7 +82,9 @@ rm(data_naa_insgesamt, data_naa_maennlich, data_naa_weiblich)
 
 data_naa <- data_naa %>% dplyr::filter(ebene == "Ebene 1")
 
-usethis::use_data(data_naa, overwrite = T)
+data_naa_2020 <- data_naa
+
+usethis::use_data(data_naa_2020, overwrite = T)
 
 
 
