@@ -179,7 +179,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                mod_beruf_arbeitsmarkt_bl_vergleich_ui("beruf_arbeitsmarkt_bl_vergleich_ui_1")
                              ),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_arbeitsmarkt_bl_vergleich"))
+                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_bl_vergleich"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     )
@@ -229,7 +229,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui("mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui_1")
                              ),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_einstieg_vergleich_gender"))
+                               highcharter::highchartOutput(ns("plot_einstieg_vergleich_gender"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                                )
                     )))),
@@ -418,7 +418,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
       arbeitsmarkt_einstieg_verlauf_gender(data_arbeitsmarkt, r)
     })
 
-    output$plot_einstieg_vergleich_gender <- renderPlot({
+    output$plot_einstieg_vergleich_gender <- highcharter::renderHighchart({
       arbeitsmarkt_einstieg_vergleich_gender(data_arbeitsmarkt,r)
     })
 
@@ -457,7 +457,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
       arbeitsmarkt_bl_verlauf(data_arbeitsmarkt,r)
     })
 
-    output$plot_arbeitsmarkt_bl_vergleich <- renderPlot({
+    output$plot_arbeitsmarkt_bl_vergleich <- highcharter::renderHighchart({
       arbeitsmarkt_bl_vergleich(data_arbeitsmarkt,r)
     })
 

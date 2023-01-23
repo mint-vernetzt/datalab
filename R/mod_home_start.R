@@ -137,7 +137,7 @@ mod_home_start_ui <- function(id){
                     tabPanel("Überblick", br(),
                              shiny::sidebarPanel(
                                mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1")),
-                             shiny::mainPanel(plotOutput(ns("plot_comparison_gender"))
+                             shiny::mainPanel(highcharter::highchartOutput(ns("plot_comparison_gender"))
                                               ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
 
                              )
@@ -203,7 +203,7 @@ mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r
       home_einstieg_pie(data_zentral,r)
     })
 
-    output$plot_comparison_gender <- renderPlot({
+    output$plot_comparison_gender <- highcharter::renderHighchart({
       home_stacked_comparison_gender(data_zentral, data_ausbildungsvertraege, r)
     })
 

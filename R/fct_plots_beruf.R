@@ -1360,6 +1360,7 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
   # remove
   df <- df %>% dplyr::filter(region != "Deutschland")
 
+
   # df <- prep_arbeitsmarkt_east_west(df)
 
   df <- calc_arbeitsmarkt_males(df)
@@ -1373,6 +1374,14 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   df <- df %>% dplyr::filter(fachbereich == "MINT")
+
+  # nur nötig für stacked, machen wir hier doch nicht
+  # #gegenwert Berechnen für jeweilige Auswahl
+  # df_n <- df %>% dplyr::group_by(region, indikator) %>%
+  #   dplyr::mutate(proportion = 100 - proportion)
+  # df_n$fachbereich <- "andere Bereiche"
+  #
+  # df <- rbind(df, df_n)
 
   # order years for plot
   df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
@@ -1388,21 +1397,47 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
   # }
 
   # plot
-  ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
-    ggplot2::geom_bar(stat="identity", fill = "#b16fab") +
-    ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
-                       fontface = "bold") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      text = ggplot2::element_text(size = 14),
-      plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::ylab("") + ggplot2::xlab("") +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                "Anteil von MINT-Berufen (", indikator_choice, ")",
-                                 br(), timerange,
-                                 "<br><br><br>"),
-                  fill = "") +
-    ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
+  highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = region)) %>%
+    highcharter::hc_tooltip(pointFormat = "{point.fachbereich}-Anteil: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+   # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+   # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+    highcharter::hc_colors( "#b16fab") %>%
+    highcharter::hc_title(text = paste0( "Anteil von MINT-Berufen (", indikator_choice, ")",
+                                                                        br(), timerange,
+                                                                        "<br><br><br>"),
+                          margin = 20,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  # ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
+  #   ggplot2::geom_bar(stat="identity", fill = "#b16fab") +
+  #   ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
+  #                      fontface = "bold") +
+  #   ggplot2::theme_minimal() +
+  #   ggplot2::theme(
+  #     text = ggplot2::element_text(size = 14),
+  #     plot.title = ggtext::element_markdown(hjust = 0.5)) +
+  #   ggplot2::ylab("") + ggplot2::xlab("") +
+  #   ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+  #                               "Anteil von MINT-Berufen (", indikator_choice, ")",
+  #                                br(), timerange,
+  #                                "<br><br><br>"),
+  #                 fill = "") +
+  #   ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 }
 
 #' A function to plot a waffle chart ::: b3
@@ -2402,23 +2437,62 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
     dplyr::filter(anzeige_geschlecht == "Frauen",
                   fachbereich != "Gesamt")
 
+  #gegenwert Berechnen für jeweilige Auswahl
+  df_n <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+    dplyr::mutate(proportion_fachbereich = 100 - proportion_fachbereich)
+  df_n$anzeige_geschlecht <- "Männer"
+
+  df <- rbind(df, df_n)
+
+  # Indikator-Kombination benennen
+  df$indikator <- ifelse(df$indikator == "Auszubildende" & df$fachbereich == "MINT", "Auszubildende in MINT", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Auszubildende" & df$fachbereich == "Andere Berufe", "Auszubildende in anderen Berufen", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Beschäftigte" & df$fachbereich == "MINT", "Beschäftigte in MINT", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Beschäftigte" & df$fachbereich == "Andere Berufe", "Beschäftigte in anderen Berufen", df$indikator)
+
+
   # plot
-  ggplot2::ggplot(df, ggplot2::aes(x=indikator, y=proportion_fachbereich, fill = fachbereich)) +
-    ggplot2::geom_bar(stat="identity", position = "dodge") +
-    ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion_fachbereich),"%"), vjust = - 0.25),
-                       position=ggplot2::position_dodge(width=0.9),
-                       fontface = "bold") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      text = ggplot2::element_text(size = 14),
-      plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::xlab("") + ggplot2::ylab("") +
-    ggplot2::scale_fill_manual(values = c("#efe8e6","#b16fab")) +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil von Frauen in MINT- und anderen Berufen (", timerange, ")",
-                                 "<br><br><br>"),
-                  fill = "") +
-    ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"))
+  highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion_fachbereich), group = anzeige_geschlecht)) %>%
+    highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}-Anteil: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+    highcharter::hc_xAxis(title = list(text = ""), categories = c("Auszubildende in MINT", "Auszubildende in anderen Berufen",
+                                                                  "Beschäftigte in MINT", "Beschäftigte in anderen Berufen")) %>%
+    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+    highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
+    highcharter::hc_title(text = paste0("Anteil von Frauen in MINT- und anderen Berufen (", timerange, ")",
+                                          "<br><br><br>"),
+                          margin = 25,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  # ggplot2::ggplot(df, ggplot2::aes(x=indikator, y=proportion_fachbereich, fill = fachbereich)) +
+  #   ggplot2::geom_bar(stat="identity", position = "dodge") +
+  #   ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion_fachbereich),"%"), vjust = - 0.25),
+  #                      position=ggplot2::position_dodge(width=0.9),
+  #                      fontface = "bold") +
+  #   ggplot2::theme_minimal() +
+  #   ggplot2::theme(
+  #     text = ggplot2::element_text(size = 14),
+  #     plot.title = ggtext::element_markdown(hjust = 0.5)) +
+  #   ggplot2::xlab("") + ggplot2::ylab("") +
+  #   ggplot2::scale_fill_manual(values = c("#efe8e6","#b16fab")) +
+  #   ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+  #                                "Anteil von Frauen in MINT- und anderen Berufen (", timerange, ")",
+  #                                "<br><br><br>"),
+  #                 fill = "") +
+  #   ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"))
 
 }
 

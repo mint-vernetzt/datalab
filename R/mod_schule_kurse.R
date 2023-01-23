@@ -257,7 +257,7 @@ mod_schule_kurse_ui <- function(id){
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_schule_kurse_comparison_gender_ui("mod_schule_kurse_comparison_gender_ui_1")),
                              shiny::mainPanel(
-                               plotOutput(ns("plot_comparison_gender"))
+                               highcharter::highchartOutput(ns("plot_comparison_gender"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
                     )
                     ))),
@@ -392,7 +392,7 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
       kurse_verlauf_gender(data_kurse,r)
     })
 
-    output$plot_comparison_gender <- renderPlot({
+    output$plot_comparison_gender <- highcharter::renderHighchart({
       kurse_comparison_gender(data_kurse,r)
     })
 

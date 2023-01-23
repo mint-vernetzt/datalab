@@ -313,7 +313,11 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
   df <- rbind(df, df_sub, df_sub_2)
 
   # calcualte proportion for "neue ausbildungsverträge"
-  df_sub <- df_naa %>% dplyr::group_by(anzeige_geschlecht) %>%
+  #vorläufige Anpassung, dass in beiden df gleicher Name ist
+  df_n <- df_naa %>%
+    dplyr::rename(anzeige_geschlecht = geschlecht)
+
+  df_sub <- df_n %>% dplyr::group_by(anzeige_geschlecht) %>%
     dplyr::summarize(wert = sum(wert))
 
   df_sub <- df_sub %>% dplyr::group_by(anzeige_geschlecht) %>%
@@ -707,7 +711,11 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
   df <- rbind(df, df_sub, df_sub_2)
 
   # calcualte proportion for "neue ausbildungsverträge"
-  df_sub <- df_naa %>% dplyr::group_by(anzeige_geschlecht) %>%
+  #vorläufige Anpassung, dass in beiden df gleicher Name ist
+  df_n <- df_naa %>%
+    dplyr::rename(anzeige_geschlecht = geschlecht)
+
+  df_sub <- df_n %>% dplyr::group_by(anzeige_geschlecht) %>%
     dplyr::summarize(wert = sum(wert))
 
   df_sub <- df_sub %>% dplyr::group_by(anzeige_geschlecht) %>%
@@ -729,27 +737,53 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
   df$indikator <- factor(df$indikator , levels=c("Leistungskurse",
                                                  "Studienanfänger:innen", "Studierende",
                                                  "Auszubildende", "Beschäftigte"))
+  # plot
+  highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(wert), group = anzeige_geschlecht)) %>%
+    highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}-Anteil: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+    highcharter::hc_xAxis(title = list(text = ""), categories = c("Leistungskurse",
+                                                 "Studienanfänger:innen", "Studierende",
+                                                 "Auszubildende", "Beschäftigte")) %>%
+    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+    highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
+    highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen (", timerange, ")",
+                                          "<br><br><br>"),
+                          margin = 25,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
-  ggplot2::ggplot(df, ggplot2::aes(x=indikator, y=wert, fill = anzeige_geschlecht)) +
-    ggplot2::geom_bar(stat="identity", position = "dodge") +
-    ggplot2::geom_text(ggplot2::aes(label=paste(round(wert),"%"), vjust = - 0.25),
-                       position=ggplot2::position_dodge(width=0.9),
-                       fontface = "bold") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      text = ggplot2::element_text(size = 12),
-      plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::xlab("") + ggplot2::ylab("Anteil") +
-    ggplot2::scale_fill_manual(values = c("#154194","#efe8e6")) +
-    ggplot2::labs(title = paste0(paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil von Frauen in MINT nach Bildungsbereichen (", timerange, ")",
-                                 "<br><br><br>")),
-                  fill = ""
-                  ,
-             # caption = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."
-              ) +
-    ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"))
+  # ggplot2::ggplot(df, ggplot2::aes(x=indikator, y=wert, fill = anzeige_geschlecht)) +
+  #   ggplot2::geom_bar(stat="identity", position = "dodge") +
+  #   ggplot2::geom_text(ggplot2::aes(label=paste(round(wert),"%"), vjust = - 0.25),
+  #                      position=ggplot2::position_dodge(width=0.9),
+  #                      fontface = "bold") +
+  #   ggplot2::theme_minimal() +
+  #   ggplot2::theme(
+  #     text = ggplot2::element_text(size = 12),
+  #     plot.title = ggtext::element_markdown(hjust = 0.5)) +
+  #   ggplot2::xlab("") + ggplot2::ylab("Anteil") +
+  #   ggplot2::scale_fill_manual(values = c("#154194","#efe8e6")) +
+  #   ggplot2::labs(title = paste0(paste0("<span style='font-size:20.5pt; color:black'>",
+  #                                "Anteil von Frauen in MINT nach Bildungsbereichen (", timerange, ")",
+  #                                "<br><br><br>")),
+  #                 fill = ""
+  #                 ,
+  #            # caption = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."
+  #             ) +
+  #   ggplot2::scale_y_continuous(labels = function(x) paste0(x, "%"))
 
 }
 
