@@ -8,6 +8,34 @@
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
+
+studienzahl_test <- function(df,r){
+
+  #browser()
+  df <-data.frame(head(df))
+
+  # year<- r$year
+  # indi_select <- r$indi_sel
+  #
+  # df5 <- df1 %>% dplyr::filter(jahr==year)
+  #
+  # df_test <- df %>% dplyr::filter(indikator==indi_select)
+  #
+  # df_test <- df_test %>% dplyr::filter(region == "Deutschland")
+  #
+  # df_test <- df_test %>% group_by(region, geschlecht, hochschulform)
+  #
+  # df_test <- df1 %>%
+  #   tidyr::pivot_wider(values_from = wert, names_from = fachbereich)
+  #
+  #
+  #
+  # plot_test <- highcharter::hchart
+  # (df_test, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
+
+
+}
+
 studienzahl_einstieg_pie <- function(df,r) {
 
   # load UI inputs from reactive value
