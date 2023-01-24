@@ -702,13 +702,13 @@ kurse_mint_comparison <- function(df,r) {
 
   # plot
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich)) %>%
-    highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} %") %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     #highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     #highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
     highcharter::hc_colors("#b16fab") %>%
-    highcharter::hc_title(text = paste0( "Anteil einzelner Fächer (", indikator_comparison, ")",
+    highcharter::hc_title(text = paste0( "Anteil einzelner Fächer in ",state, " (", indikator_comparison, ")",
                                                                         br(), timerange,
                                                                           "<br><br><br>"),
                           margin = 45,
@@ -1258,6 +1258,7 @@ kurse_ranking_gender <- function(df,r, type) {
   df <- df %>% dplyr::filter(jahr == timerange)
 
   df <- df %>% dplyr::filter(region != "Deutschland")
+  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
 
   df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen",
                                     fachbereich == "Alle Fächer") %>%
