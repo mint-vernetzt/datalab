@@ -4,9 +4,14 @@
 # Rohdaten einlesen ---------------------------------------------------
 
 # Einlesen Hauptdatensatz
-data <- readxl::read_excel(system.file(package="datalab",
-                                       "data-raw/BA006_221123_Besch_MINT.xlsx"),
+# data <- readxl::read_excel(system.file(package="datalab",
+#                                        "data-raw/BA006_221123_Besch_MINT.xlsx"),
+#                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
+
+# läuft seit neuem Laptop mit Code drüber nicht mehr druch, daher umgeschrieben (kbr)
+data <- readxl::read_excel("data-raw/BA006_221123_Besch_MINT.xlsx",
                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
+
 #[c(17:7576),c(1:37)]
 
 # Spalten zusammenfassen/löschen
@@ -134,8 +139,12 @@ data <- data[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht"
 # Rohdaten einlesen ---------------------------------------------------
 
 #Einlesen Auzubi extra Datensatz
-data_a <- readxl::read_excel(system.file(package = "datalab", "data-raw/BA007_221205_AusbV_MINT.xlsx"),
-                           sheet = "Auswertung2", col_names = F, range = "A12:L4201")
+# data_a <- readxl::read_excel(system.file(package = "datalab", "data-raw/BA007_221205_AusbV_MINT.xlsx"),
+#                            sheet = "Auswertung2", col_names = F, range = "A12:L4201")
+
+# läuft seit neuem Laptop mit Code drüber nicht mehr druch, daher umgeschrieben (kbr)
+data_a <- readxl::read_excel("data-raw/BA007_221205_AusbV_MINT.xlsx",
+                             sheet = "Auswertung2", col_names = F, range = "A12:L4201")
 #[c(12:4201),c(1:12)]
 
 # Spalten zusammenfassen/löschen

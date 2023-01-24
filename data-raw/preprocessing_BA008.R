@@ -1,12 +1,18 @@
 
 # nur 2022 einlesen, bei gleichzeitigem Einlesen von 2017 und 2022 führen 699 abweichende Spalten zu Fehlern im Code (insgesamt > frauen)
 
-data_naa_a <- readxl::read_excel(system.file(package="datalab",
-                                            "data-raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx"),
-                                sheet  = "Verträge_Daten", range = "A4:D238") #nur Spalten von Anfang
+# data_naa_a <- readxl::read_excel(system.file(package="datalab",
+#                                             "data-raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx"),
+#                                 sheet  = "Verträge_Daten", range = "A4:D238") #nur Spalten von Anfang
+# data_naa <- readxl::read_excel(system.file(package="datalab",
+#                                            "data-raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx"),
+#                                sheet  = "Verträge_Daten", range = "TA4:AMS238") #alles aus 2022, auch Regionen
 
-data_naa <- readxl::read_excel(system.file(package="datalab",
-                                            "data-raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx"),
+# läuft mit neuem Laptop oben nicht mehr durch, deshalb umgeschrieben (kbr)
+data_naa_a <- readxl::read_excel("data-raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx",
+                                 sheet  = "Verträge_Daten", range = "A4:D238") #nur Spalten von Anfang
+
+data_naa <- readxl::read_excel("data-raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx",
                                 sheet  = "Verträge_Daten", range = "TA4:AMS238") #alles aus 2022, auch Regionen
 
 data_naa <- cbind(data_naa_a, data_naa)
@@ -79,9 +85,9 @@ names(data_naa)[6] <- "geschlecht"
 names(data_naa)[2] <- "fachbereich"
 names(data_naa)[5] <- "wert"
 
-data_naa[data_naa$geschlecht == "weiblich", "geschlecht"] <- "frauen"
-data_naa[data_naa$geschlecht == "Männer", "geschlecht"] <- "männer"
-data_naa[data_naa$geschlecht == "insgesamt", "geschlecht"] <- "gesamt"
+data_naa[data_naa$geschlecht == "weiblich", "geschlecht"] <- "Frauen"
+data_naa[data_naa$geschlecht == "Männer", "geschlecht"] <- "Männer"
+data_naa[data_naa$geschlecht == "insgesamt", "geschlecht"] <- "Gesamt"
 
 data_naa[data_naa$region == "Ost", "region"] <- "Osten"
 data_naa[data_naa$region == "West", "region"] <- "Westen"
@@ -95,12 +101,14 @@ rm(data_naa_a, data_naa_insgesamt, data_naa_maennlich, data_naa_weiblich)
 
 
 # nur 2017 einlesen, bei gleichzeitigem Einlesen von 2017 und 2022 führen 699 abweichende Spalten zu Fehlern im Code (insgesamt > frauen)
+#
+# data_naa <- readxl::read_excel(system.file(package="datalab",
+#                                             "data-raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx"),
+#                                 sheet  = "Verträge_Daten", range = "A4:SW238") #alle Daten aus 2017 incl Regionen
 
-
-data_naa <- readxl::read_excel(system.file(package="datalab",
-                                            "data-raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx"),
-                                sheet  = "Verträge_Daten", range = "A4:SW238") #alle Daten aus 2017 incl Regionen
-
+# funktioniert drüber seit neuem Laptop nicht mehr, deshalb umgeschrieben (kbr)
+data_naa <- readxl::read_excel("data-raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx",
+                               sheet  = "Verträge_Daten", range = "A4:SW238") #alle Daten aus 2017 incl Regionen
 
 # behalte Landkreise
 # remove all districts
@@ -169,9 +177,9 @@ names(data_naa)[6] <- "geschlecht"
 names(data_naa)[2] <- "fachbereich"
 names(data_naa)[5] <- "wert"
 
-data_naa[data_naa$geschlecht == "weiblich", "geschlecht"] <- "frauen"
-data_naa[data_naa$geschlecht == "Männer", "geschlecht"] <- "männer"
-data_naa[data_naa$geschlecht == "insgesamt", "geschlecht"] <- "gesamt"
+data_naa[data_naa$geschlecht == "weiblich", "geschlecht"] <- "Frauen"
+data_naa[data_naa$geschlecht == "Männer", "geschlecht"] <- "Männer"
+data_naa[data_naa$geschlecht == "insgesamt", "geschlecht"] <- "Gesamt"
 
 data_naa[data_naa$region == "Ost", "region"] <- "Osten"
 data_naa[data_naa$region == "West", "region"] <- "Westen"
@@ -186,11 +194,17 @@ data_naa_17 <- data_naa
 
 # 2020 einlesen
 
-data_naa_a <- readxlsb::read_xlsb(system.file(package="datalab",
-                                            "data-raw/BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb"),
-                                sheet  = "Vertraege_Daten", range = "A4:D218")
-data_naa <- readxlsb::read_xlsb(system.file(package="datalab",
-                                            "data-raw/BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb"),
+# data_naa_a <- readxlsb::read_xlsb(system.file(package="datalab",
+#                                             "data-raw/BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb"),
+#                                 sheet  = "Vertraege_Daten", range = "A4:D218")
+# data_naa <- readxlsb::read_xlsb(system.file(package="datalab",
+#                                             "data-raw/BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb"),
+#                                 sheet  = "Vertraege_Daten", range = "TA4:AMV218")
+
+# funktioniert seit neuem Laptop nicht mehr so, deshalb umgeschrieben (kbr)
+data_naa_a <- readxlsb::read_xlsb("data-raw/BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb",
+                                  sheet  = "Vertraege_Daten", range = "A4:D218")
+data_naa <- readxlsb::read_xlsb("data-raw/BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb",
                                 sheet  = "Vertraege_Daten", range = "TA4:AMV218")
 
 data_naa <- cbind(data_naa_a, data_naa)
@@ -262,9 +276,9 @@ names(data_naa)[6] <- "geschlecht"
 names(data_naa)[2] <- "fachbereich"
 names(data_naa)[5] <- "wert"
 
-data_naa[data_naa$geschlecht == "weiblich", "geschlecht"] <- "frauen"
-data_naa[data_naa$geschlecht == "Männer", "geschlecht"] <- "männer"
-data_naa[data_naa$geschlecht == "insgesamt", "geschlecht"] <- "gesamt"
+data_naa[data_naa$geschlecht == "weiblich", "geschlecht"] <- "Frauen"
+data_naa[data_naa$geschlecht == "Männer", "geschlecht"] <- "Männer"
+data_naa[data_naa$geschlecht == "insgesamt", "geschlecht"] <- "Gesamt"
 
 data_naa[data_naa$region == "Ost", "region"] <- "Osten"
 data_naa[data_naa$region == "West", "region"] <- "Westen"
