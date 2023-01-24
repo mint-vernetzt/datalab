@@ -2004,10 +2004,19 @@ ranking_bl_subject <- function(df,r, type) {
 # browser()
 #   df_k <<- df
 
- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x= fachbereich, group ="indikator"))
+ highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x= fachbereich)) %>%
+   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} %") %>% #Inhalt für Hover-Box
+   highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
+   highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
+   highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
+   highcharter::hc_title(text = paste0( "Anteil einzelner Fächer in ",states, " (", indikator_comparison, ")",
+                                        br(), timerange,
+                                        "<br><br><br>"),
+                         margin = 45,
+                         align = "center",
+                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))   #Schrift-Formatierung Überschrift
 
-
-
+}
   # plot
   # a <- ifelse(df$fachbereich == "MINT (aggregiert)" | df$fachbereich == "andere Studiengänge" , "#b16fab", "grey30")
   #
@@ -2035,7 +2044,6 @@ ranking_bl_subject <- function(df,r, type) {
   #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
-}
 #   ggplot2::ggplot(df, ggplot2::aes(y=fachbereich, x=proportion)) +
 #     ggplot2::geom_bar(stat="identity", fill = "#154194", width=0.5) +
 #     ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%")), hjust = -0.3,
@@ -2053,7 +2061,7 @@ ranking_bl_subject <- function(df,r, type) {
 #     ggplot2::scale_y_discrete(expand = c(0,0)) +
 #     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 #
-# }
+
 
 #' A function to plot a waffle chart
 #'
@@ -3340,7 +3348,17 @@ studierende_mint_vergleich_bl <- function(df,r) {
   help_title <- ifelse(subject == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subject)
 
 
-  highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = round(proportion), group= "fachbereich"))
+  highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = round(proportion))) %>%
+    highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} %") %>% #Inhalt für Hover-Box
+    highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
+    highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
+    highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
+    highcharter::hc_title(text = paste0( "Anteil von ", help_title ," (", studium_level,  ") <br>", timerange,
+                                                                          "<br><br><br>"),
+                          margin = 25,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))   #Schrift-Formatierung Überschrift
+
 
 #   ggplot2::ggplot(df, ggplot2::aes(y=region, x=proportion)) +
 #     ggplot2::geom_bar(stat="identity", fill = "#154194") +
