@@ -611,8 +611,7 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
 
   df <- rbind(df2, df3)
 
-  df <- df %>% dplyr::filter(anzeige_geschlecht != "Frauen")
-
+  #df <- df %>% dplyr::filter(anzeige_geschlecht != "Frauen")
 
 
   df_sub <- df %>% dplyr::filter(nur_lehramt == "Nein")
@@ -628,37 +627,95 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
 
   df <- rbind(df_sub, df_sub2)
 
-  # aggregate
+  df <- df %>% dplyr::filter(indikator %in% c("Studienanfänger:innen (insgesamt)",
+                                              "Studierende (insgesamt)",
+                                              "Studienanfänger:innen (Lehramt, Uni)",
+                                              "Studierende (Lehramt, Uni)"))
+
+  #gesamt durch Männer ersetzten
+  df_m <- df %>%
+    dplyr::group_by(indikator, fachbereich) %>%
+    dplyr::mutate(wert = wert[anzeige_geschlecht == "Gesamt"] - wert[anzeige_geschlecht == "Frauen"])
+
+  df_m$anzeige_geschlecht[df_m$anzeige_geschlecht == "Gesamt"] <- "Männer"
+
+  #Datensatz aus Frauen und Männern zusammennehmen
+  df_m <- df_m %>% dplyr::filter(anzeige_geschlecht == "Männer")
+  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
+
+  df <- rbind(df, df_m)
+
+  # aggregate zu gesamt
   df <- df %>%
-    dplyr::group_by(indikator) %>%
+    dplyr::group_by(indikator, fachbereich) %>%
     dplyr::mutate(props = sum(wert))
 
-
-
   # calculate proportions
-  df <- df %>% dplyr::group_by(indikator, fachbereich) %>%
+  df <- df %>% dplyr::group_by(indikator, fachbereich, anzeige_geschlecht) %>%
     dplyr::summarize(proportion = wert/props)
 
   df$proportion <- df$proportion * 100
 
-  # plot
-  ggplot2::ggplot(df, ggplot2::aes(y=indikator, x=proportion, fill = fachbereich)) +
-    ggplot2::geom_bar(stat="identity", position = "dodge") +
-    ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%"), vjust= 0.5, hjust = -0.5),
-                       position=ggplot2::position_dodge(width=1),
-                       fontface = "bold") +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      text = ggplot2::element_text(size = 14),
-      plot.title = ggtext::element_markdown(hjust = 0.5)) +
-    ggplot2::xlab("") + ggplot2::ylab("Anteil") +
-    ggplot2::scale_fill_manual(values = c("#efe8e6", "#b16fab")) +
-    ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Frauenanteil in MINT im Vergleich in ", timerange,
-                                 "<br><br><br>"),
-                  fill = "") +
-    ggplot2::scale_x_continuous(limits = c(0,100), labels = function(x) paste0(x, "%"))
+  df$indikator <- ifelse(df$indikator == "Studienanfänger:innen (insgesamt)" & df$fachbereich == "MINT", "Studienanfänger:innen in MINT", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Studienanfänger:innen (insgesamt)" & df$fachbereich == "andere Studiengänge", "Studienanfänger:innen in anderen Studiengängen", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Studierende (insgesamt)" & df$fachbereich == "MINT", "Studierende in MINT", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Studierende (insgesamt)" & df$fachbereich == "andere Studiengänge", "Studierende in anderen Studiengängen", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Studienanfänger:innen (Lehramt, Uni)" & df$fachbereich == "MINT", "Lehrarmt-Studienanfänger:innen in MINT", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Studienanfänger:innen (Lehramt, Uni)" & df$fachbereich == "andere Studiengänge", "Lehramt-Studienanfänger:innen in anderen Studiengängen", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Studierende (Lehramt, Uni)" & df$fachbereich == "MINT", "Lehramt-Studierende in MINT", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Studierende (Lehramt, Uni)" & df$fachbereich == "andere Studiengänge", "Lehramt-Studierende in anderen Studiengängen", df$indikator)
 
+  # plot
+  highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion), group = anzeige_geschlecht)) %>%
+    highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}-Anteil: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+    highcharter::hc_xAxis(title = list(text = ""), categories=c("Studienanfänger:innen in MINT",
+                                                                "Studienanfänger:innen in anderen Studiengängen",
+                                                                "Studierende in MINT",
+                                                                "Studierende in anderen Studiengängen",
+                                                                "Lehrarmt-Studienanfänger:innen in MINT",
+                                                                "Lehramt-Studienanfänger:innen in anderen Studiengängen",
+                                                                "Lehramt-Studierende in MINT",
+                                                                "Lehramt-Studierende in anderen Studiengängen"
+                                                                )) %>%
+    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+    highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
+    highcharter::hc_title(text = paste0("Anteil von Frauen in MINT- und anderen Studiengängen ", "(", timerange, ")",
+                                        "<br><br><br>"),
+                          margin = 25,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  # # plot
+  # ggplot2::ggplot(df, ggplot2::aes(y=indikator, x=proportion, fill = fachbereich)) +
+  #   ggplot2::geom_bar(stat="identity", position = "dodge") +
+  #   ggplot2::geom_text(ggplot2::aes(label=paste(round(proportion),"%"), vjust= 0.5, hjust = -0.5),
+  #                      position=ggplot2::position_dodge(width=1),
+  #                      fontface = "bold") +
+  #   ggplot2::theme_minimal() +
+  #   ggplot2::theme(
+  #     text = ggplot2::element_text(size = 14),
+  #     plot.title = ggtext::element_markdown(hjust = 0.5)) +
+  #   ggplot2::xlab("") + ggplot2::ylab("Anteil") +
+  #   ggplot2::scale_fill_manual(values = c("#efe8e6", "#b16fab")) +
+  #   ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
+  #                                "Frauenanteil in MINT im Vergleich in ", timerange,
+  #                                "<br><br><br>"),
+  #                 fill = "") +
+  #   ggplot2::scale_x_continuous(limits = c(0,100), labels = function(x) paste0(x, "%"))
+  #
 
 }
 

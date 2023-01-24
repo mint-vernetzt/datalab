@@ -241,8 +241,17 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
 
-                  )
+                  ),
 
+                  tabPanel("Überblick", br(),
+
+                           shiny::sidebarPanel(
+                             tags$style(".well  {background-color:#FFFFFF;}"),
+                             tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                             mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1")),
+                           shiny::mainPanel(
+                             highcharter::highchartOutput(ns("plot_einstieg_comparison_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
+                  )
         ))),
     fluidRow(
       shinydashboard::box(
@@ -430,7 +439,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
       studienzahl_verlauf_single_gender(data_studierende,r)
     })
 
-    output$plot_einstieg_comparison_gender <- renderPlot({
+    output$plot_einstieg_comparison_gender <- highcharter::renderHighchart({
       studienzahl_einstieg_comparison_gender(data_studierende,r)
     })
 
