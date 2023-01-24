@@ -413,7 +413,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = "Anteil",
+      name = paste0("Anteil von MINT-Berufen"),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
@@ -446,7 +446,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = "Anteil",
+      name = "Anteil von MINT-Berufen",
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
@@ -1188,7 +1188,7 @@ arbeitsmarkt_bl <- function(df,r) {
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = "Anteil",
+      name = "MINT-Anteil",
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
@@ -1220,7 +1220,7 @@ arbeitsmarkt_bl <- function(df,r) {
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = "Anteil",
+      name = "MINT-Anteil",
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(

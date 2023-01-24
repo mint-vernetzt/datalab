@@ -2717,7 +2717,7 @@ highcharter::hw_grid(
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = "Anteil",
+      name = paste0("Anteil ", subjects),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
@@ -2748,7 +2748,7 @@ highcharter::hw_grid(
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = "Anteil",
+      name = paste0("Anteil ", subjects),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(

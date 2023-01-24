@@ -838,7 +838,7 @@ home_stacked_comparison_mint <- function(df, r) {
 
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = "fachbereich")) %>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
-    highcharter::hc_yAxis(title = list(text = "Anteil"), labels = list(format = "{value}%")) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
@@ -902,7 +902,7 @@ home_comparison_line <- function(df,r) {
   # plot
   highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = indikator)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
-    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"),
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"),
                           min = 10, max = 45) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -973,7 +973,7 @@ home_rest_mint_verlauf <- function(df,r) {
   # plot
   highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = indikator)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil MINT <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
-    highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"),
+    highcharter::hc_yAxis(title = list(text = " "), labels = list(format = "{value}%"),
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%

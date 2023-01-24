@@ -841,6 +841,8 @@ kurse_mint_comparison_bl <- function(df,r) {
 
   df <- subset(df, proportion >= 0.5)
 
+  help_title <- ifelse(subject == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subject)
+  help_title <- ifelse(help_title == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_title)
 
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = region)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} %") %>%
@@ -849,7 +851,7 @@ kurse_mint_comparison_bl <- function(df,r) {
     # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
     highcharter::hc_colors("#b16fab") %>%
-    highcharter::hc_title(text = paste0( "Anteil ", subject, " nach Bundesländern (",  indikator_comparison, ")",br(), timerange,
+    highcharter::hc_title(text = paste0( "Anteil von ", help_title, " nach Bundesländern (",  indikator_comparison, ")",br(), timerange,
                                          "<br><br><br>"),
                           margin = 20,
                           align = "center",
@@ -1300,6 +1302,9 @@ kurse_ranking_gender <- function(df,r, type) {
 
   df2$region <- factor(df2$region, levels = levels(df$region))
 
+  help_title <- ifelse(subject == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subject)
+  help_title <- ifelse(help_title == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_title)
+
   ggplot2::ggplot(df,
                   ggplot2::aes(y = region)) +
     ggplot2::geom_point(data = df2, ggplot2::aes(x = value, color = group), size = 5) +
@@ -1508,7 +1513,7 @@ kurse_map <- function(df,r) {
     value = "proportion",
     joinBy = c("name", "region"),
     borderColor = "#FAFAFA",
-    name = "Anteil",
+    name = paste0("Anteil ", subjects),
     borderWidth = 0.1,
     nullColor = "#A9A9A9",
     tooltip = list(
@@ -1539,7 +1544,7 @@ kurse_map <- function(df,r) {
     value = "proportion",
     joinBy = c("name", "region"),
     borderColor = "#FAFAFA",
-    name = "Anteil",
+    name = paste0("Anteil ", subjects),
     borderWidth = 0.1,
     nullColor = "#A9A9A9",
     tooltip = list(
@@ -1622,6 +1627,9 @@ kurse_map_gender <- function(df,r) {
     dplyr::select(-fachbereich.y) %>%
     dplyr::mutate(proportion = (wert/wert_sum)*100)
 
+  help_title <- ifelse(subjects == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subjects)
+  help_title <- ifelse(help_title == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_title)
+
   highcharter::hw_grid(
     # plot
     highcharter::hcmap(
@@ -1630,7 +1638,7 @@ kurse_map_gender <- function(df,r) {
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = "Anteil",
+      name = paste0("Anteil ", subjects),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
@@ -1640,7 +1648,7 @@ kurse_map_gender <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#154194", labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Mädchen: Wahl von ", subjects, " (Grundkurse)", br(), timerange),
+        text = paste0("Mädchen: Wahl von ", help_title, " (Grundkurse)", br(), timerange),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1661,7 +1669,7 @@ kurse_map_gender <- function(df,r) {
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = "Anteil",
+      name = paste0("Anteil ", subjects),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
