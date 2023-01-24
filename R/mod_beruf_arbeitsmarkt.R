@@ -74,11 +74,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Vergleich", br(),
 
                              shiny::sidebarPanel(
+                               width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                htmlOutput(ns("plot_einstieg_pie"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
@@ -88,11 +90,12 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
+                               width = 3,
                                mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
-                               ,p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
 
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                plotOutput(ns("plot_arbeitsmarkt_waffle")),
                                p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
@@ -100,11 +103,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
+                               width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_verlauf_ui("mod_beruf_arbeitsmarkt_einstieg_verlauf_ui_1")
                                ),
                              shiny::mainPanel(
+                               width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_verlauf")),
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                                )
@@ -114,11 +119,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Überblick", br(),
 
                              shiny::sidebarPanel(
+                               width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_vergleich_ui("mod_beruf_arbeitsmarkt_einstieg_vergleich_ui_1")
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_vergleich"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
@@ -155,9 +162,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Karte", br(),
 
                              shiny::sidebarPanel(
+                               width = 3,
                                mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1")
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                htmlOutput(ns("plot_arbeitsmarkt_bl"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
@@ -165,9 +174,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Vergleich (Bundesländer)", br(),
 
                              shiny::sidebarPanel(
+                               width = 3,
                                mod_beruf_arbeitsmarkt_bl_verlauf_ui("mod_beruf_arbeitsmarkt_bl_verlauf_ui_1")
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_verlauf"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
@@ -176,9 +187,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Überblick (Bundesländer)", br(),
 
                              shiny::sidebarPanel(
+                               width = 3,
                                mod_beruf_arbeitsmarkt_bl_vergleich_ui("beruf_arbeitsmarkt_bl_vergleich_ui_1")
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                highcharter::highchartOutput(ns("plot_arbeitsmarkt_bl_vergleich"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
@@ -198,11 +211,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Vergleich", br(),
 
                              shiny::sidebarPanel(
+                               width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_gender_ui("mod_beruf_arbeitsmarkt_einstieg_gender_ui_1")
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                htmlOutput(ns("plot_einstieg_pie_gender"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
@@ -210,11 +225,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
+                               width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui("mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui_1")
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
@@ -224,11 +241,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Überblick", br(),
 
                              shiny::sidebarPanel(
+                               width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui("mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui_1")
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_vergleich_gender"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                                )
@@ -247,9 +266,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
+                               width = 3,
                                mod_beruf_arbeitsmarkt_anforderungen_gender_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_ui_1")
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                plotOutput(ns("plot_arbeitsmarkt_waffle_gender"))
                                ,p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
@@ -257,9 +278,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Karte", br(),
 
                              shiny::sidebarPanel(
+                               width = 3,
                                mod_beruf_arbeitsmarkt_bl_gender_ui("mod_beruf_arbeitsmarkt_bl_gender_ui_1")
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                htmlOutput(ns("plot_arbeitsmarkt_bl_gender"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
@@ -267,9 +290,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Vergleich (Bundesländer)", br(),
 
                              shiny::sidebarPanel(
+                               width = 3,
                                mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui("mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui_1")
                              ),
                              shiny::mainPanel(
+                               width = 9,
                                highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_gender_verlauf"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
@@ -278,9 +303,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     tabPanel("Überblick (Bundesländer)", br(),
 
                                        shiny::sidebarPanel(
+                                         width = 3,
                                          mod_beruf_arbeitsmarkt_bl_gender_vergleich_ui("beruf_arbeitsmarkt_bl_gender_vergleich_ui_1")
                                        ),
                                        shiny::mainPanel(
+                                         width = 9,
                                          plotOutput(ns("plot_arbeitsmarkt_bl_gender_vergleich"))
                                          ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen."))
 
