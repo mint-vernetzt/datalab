@@ -110,12 +110,13 @@ mod_studium_studienzahl_ui <- function(id){
                     ),
                     tabPanel("Überblick_test", br(),
 
-                             # shiny::sidebarPanel(
-                             #   tags$style(".well {background-color:#FFFFFF;}"),
-                             #   tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                             #   mod_studium_studienzahl_einstieg_comparison_ui("mod_studium_studienzahl_einstieg_comparison_ui_1")),
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_studium_studienzahl_all_23_ui("mod_studium_studienzahl_ui_1")),
                              shiny::mainPanel(
-                               shiny::tableOutput(ns("test")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
+                               htmlOutput(ns("all_mint_23")),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
 
 
                   )
@@ -420,8 +421,12 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
       studienzahl_verlauf_single(data_studierende,r)
     })
 
-    output$test <- shiny::renderTable({
-      studienzahl_test(data_studierende2, r)
+    all_mint_23_react <- reactive({
+      studienzahl_all_mint_23(data_studierende2, r)
+    })
+
+    output$all_mint_23 <- renderUI({
+      all_mint_23_react()
     })
 
     output$plot_einstieg_comparison <- highcharter::renderHighchart({

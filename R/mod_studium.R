@@ -27,6 +27,7 @@ mod_studium_server <- function(id, data_studierende, data_studierende2, r){
 
   # Studienzahl
   mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1", data_studierende, data_studierende2, r)
+  mod_studium_studienzahl_all_23_server("mod_studium_studienzahl_all_23_server_1",  r)
 
   # Box 2
   mod_studium_studienzahl_einstieg_server("mod_studium_studienzahl_einstieg_ui_1", r)
