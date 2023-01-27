@@ -113,6 +113,16 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_comparison")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
+                    ),
+                    tabPanel("Überblick_test", br(),
+
+                             shiny::sidebarPanel(
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_studium_studienzahl_all_23_ui("mod_studium_studienzahl_ui_1")),
+                             shiny::mainPanel(
+                               htmlOutput(ns("all_mint_23")),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
 
 
                   )
@@ -435,9 +445,11 @@ mod_studium_studienzahl_ui <- function(id){
 #' studium_studienzahl Server Functions
 #'
 #' @noRd
-mod_studium_studienzahl_server <- function(id, data_studierende, r){
+mod_studium_studienzahl_server <- function(id, data_studierende, data_studierende2, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+
 
     # Box 2
     output$plot_einstieg_pie <- renderUI({
@@ -446,6 +458,14 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
 
     output$plot_einstieg_verlauf <- highcharter::renderHighchart({
       studienzahl_verlauf_single(data_studierende,r)
+    })
+
+    all_mint_23_react <- reactive({
+      studienzahl_all_mint_23(data_studierende2, r)
+    })
+
+    output$all_mint_23 <- renderUI({
+      all_mint_23_react()
     })
 
     output$plot_einstieg_comparison <- highcharter::renderHighchart({

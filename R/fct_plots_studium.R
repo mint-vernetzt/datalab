@@ -8,6 +8,193 @@
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
+
+studienzahl_all_mint_23 <- function(df,r){
+
+# Box 1 Pie ab 2023
+browser()
+  df <-data.frame(df)
+
+ year_select <- r$all_23_year
+ label_select <<- r$all_23_label_sel
+
+ df1 <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
+   dplyr::filter(region== "Deutschland")%>%
+   dplyr::select(-hochschulform, -region)%>%
+   tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
+   dplyr::mutate("MINT (aggregiert)" = Mathematik_Naturwissenschaften+Ingenieurwissenschaften)%>%
+   dplyr::mutate("Nicht MINT"= Alle-`MINT (aggregiert)`)%>%
+   dplyr::mutate(props=`MINT (aggregiert)`/Alle)%>%
+   dplyr::select(-Ingenieurwissenschaften,- Mathematik_Naturwissenschaften,-Alle, -`MINT (aggregiert)`, -`Nicht MINT` )
+ #,
+  #               prop_n_mint=`Nicht MINT`/Alle)%>%
+   # dplyr::mutate(wert = dplyr::case_when(fachbereich== "MINT (aggregiert)" ~ `MINT (aggregiert)`/Alle,
+   #                                        fachbereich== "Nicht MINT" ~  `Nicht MINT`/Alle, )) %>%
+   #tidyr::pivot_longer(c(Alle,Mathematik_Naturwissenschaften, Ingenieurwissenschaften, `MINT (aggregiert)`, `Nicht MINT`),
+    #                    names_to = "fachbereich", values_to = "wert")%>%
+   #dplyr::select(-fachbereich,-wert)%>%
+   #tidyr::pivot_longer(c(prop_mint, prop_n_mint), values_to = "wert", names_to = "props")
+   #dplyr::filter(fachbereich== "MINT (aggregiert)"| fachbereich== "Nicht MINT")
+
+
+
+
+
+ df1$props <- df1$props *100
+ df1$props <- round(df1$props, 0)
+
+ df2 <- df1 %>% dplyr::filter(jahr==year_select)
+ #df3 <- df2%>% dplyr::filter(label== label_select)
+
+
+
+
+
+  if(length(label_select) == 1) {
+
+    df_fn <- df2 %>% dplyr::filter(label %in% label_select)
+
+    highcharter::hw_grid(
+      df_fn %>%
+        highcharter::hchart(
+          "pie", highcharter::hcaes(x = label , y = props )
+        ))
+    #   %>%
+    #     highcharter::hc_tooltip(
+    #       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+    #     highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+    #     highcharter::hc_title(text = paste0("MINT-", all_23_label_sel, "in", all_23_year),
+    #                           margin = 45,
+    #                           align = "center",
+    #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    #     highcharter::hc_chart(
+    #       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    #     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    #     #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
+    #     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+    #                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+    #
+    #   ncol = 1,
+    #   browsable = TRUE
+    # )
+    #
+
+  }
+
+  else if(length(label_select) == 2) {
+
+    # filter for UI input and ensure proportions sum to 1
+    df_1_pie <- df2 %>% dplyr::filter(label == label_select[1])
+
+    df_2_pie <- df2 %>% dplyr::filter(label == label_select[2])
+
+
+    highcharter::hw_grid(
+      highcharter::hchart(df_1_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = label, y = props)))
+
+    #   %>%
+    #     highcharter::hc_tooltip(
+    #       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+    #     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
+    #     highcharter::hc_title(text = paste0("", indikator_choice_1[1], " (2020)"),
+    #                           margin = 45,
+    #                           align = "center",
+    #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    #     highcharter::hc_chart(
+    #       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    #     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    #     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+    #                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+    #
+    #
+    #   highcharter::hchart(df_2, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+    #     highcharter::hc_tooltip(
+    #       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+    #     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
+    #     highcharter::hc_title(text = paste0("", indikator_choice_1[2], " (2020)"),
+    #                           margin = 45,
+    #                           align = "center",
+    #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    #     highcharter::hc_chart(
+    #       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    #     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    #     #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
+    #     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+    #                                            dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+    #
+    #   ncol = 2,
+    #   browsable = TRUE
+    # )
+
+
+  } else if(length(label_select) == 3) {
+
+    # filter for UI input and ensure proportions sum to 1
+
+    df_1_pie <- df2 %>% dplyr::filter(label == label_select[1])
+
+    df_2_pie <- df2 %>% dplyr::filter(label == label_select[2])
+
+    df_3_pie <- df2 %>% dplyr::filter(label == label_select[3])
+
+
+    highcharter::hw_grid(
+      highcharter::hchart(df_1, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)))
+    #   %>%
+    #     highcharter::hc_tooltip(
+    #       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+    #     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
+    #     highcharter::hc_title(text = paste0("", indikator_choice_1[1], " (2020)"),
+    #                           margin = 45,
+    #                           align = "center",
+    #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    #     highcharter::hc_chart(
+    #       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    #     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    #     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+    #                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+    #
+    #
+    #   highcharter::hchart(df_2, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+    #     highcharter::hc_tooltip(
+    #       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+    #     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
+    #     highcharter::hc_title(text = paste0("", indikator_choice_1[2], " (2020)"),
+    #                           margin = 45,
+    #                           align = "center",
+    #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    #     highcharter::hc_chart(
+    #       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    #     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    #     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+    #                                            dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+    #
+    #   highcharter::hchart(df_3, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+    #     highcharter::hc_tooltip(
+    #       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+    #     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
+    #     highcharter::hc_title(text = paste0("", indikator_choice_1[3], " (2020)"),
+    #                           margin = 45,
+    #                           align = "center",
+    #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    #     highcharter::hc_chart(
+    #       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    #     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    #     #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
+    #     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+    #                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+    #
+    #
+    #
+    #   ncol = 3,
+    #   browsable = TRUE
+    # )
+
+
+
+  }
+  }
+
 studienzahl_einstieg_pie <- function(df,r) {
 
   # load UI inputs from reactive value
