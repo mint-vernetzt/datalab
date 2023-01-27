@@ -329,6 +329,36 @@ mod_studium_studienzahl_ui <- function(id){
                                )
                     )
         ))),
+    fluidRow(shinydashboard::box(
+      title = "#XXX?",
+      width = 12,
+      p("XXX?"),
+      br(),
+      p("Interpretationshilfe: XXX."),
+
+      tabsetPanel(
+        type = "tabs",
+        tags$head(
+          tags$style(
+            ".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}"
+          )
+        ),
+        shiny::sidebarPanel(
+          width = 3,
+          mod_studium_top_faecher_ui("mod_studium_top_faecher")
+        ),
+        shiny::mainPanel(
+          width = 9,
+          htmlOutput(ns("plot_top_faecher")),
+          p(
+            style = "font-size:12px;color:grey",
+            "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."
+          )
+        )
+      )
+    )),
+
 
 
     #Footer
@@ -435,7 +465,7 @@ mod_studium_studienzahl_ui <- function(id){
 #' studium_studienzahl Server Functions
 #'
 #' @noRd
-mod_studium_studienzahl_server <- function(id, data_studierende, r){
+mod_studium_studienzahl_server <- function(id, data_studierende, data_studierende_faecher, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -562,6 +592,12 @@ mod_studium_studienzahl_server <- function(id, data_studierende, r){
     output$plot_ranking_studienzahl_bl_vergleich_gender <- renderPlot({
       plot_ranking_studienzahl_bl_vergleich_gender_react()
     })
+
+    # Box 8
+    output$plot_top_faecher <-  renderUI({
+      plot_ranking_top_faecher(data_studierende_faecher, r)
+    })
+
 
     # downloader
     output$download_data_box1 <- shiny::downloadHandler(

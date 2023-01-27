@@ -3506,3 +3506,124 @@ bundeslaender_ranking <- function(df,r, type) {
     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 
 }
+
+
+#' A function to create barplots, showing ranked study subjects
+#'
+#' @description A function to compare different subjects
+#'
+#' @return The return value is a barplot
+#' @param data The dataframe "studierende_faecher.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+plot_ranking_top_faecher <- function(df, r, type) {
+
+  # load UI inputs from reactive value
+  timerange <- r$date_top_faecher
+
+  states <- r$states_top_faecher
+
+  subject <- r$subject_top_faecher
+
+  # filter dataset based on UI inputs
+  df <- df %>% dplyr::filter(jahr == timerange) %>%
+    dplyr::filter(indikator == "Studierende",
+                  jahr == timerange,
+                  region %in% states)
+
+  # Calculate male numbers
+  df <- calc_share_male(df, "box_1")
+
+  df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+
+  # Calculate proportion
+  df <- df %>%
+    dplyr::left_join(df_gesamt,
+                     by = c("region",
+                            "jahr",
+                            "fachbereich",
+                            "fach")) %>%
+    dplyr::mutate(prop = (wert.x/wert.y)*100) %>%
+    dplyr::rename(wert = wert.x,
+                  anzeige_geschlecht = anzeige_geschlecht.x,
+                  indikator = indikator.x) %>%
+    dplyr::select(-c("wert.y", "anzeige_geschlecht.y", "indikator.y")) %>%
+    dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+  # Create female dateframe
+  studierende_faecher_frauen <- df %>%
+    dplyr::filter(anzeige_geschlecht == "Frauen") %>%
+    dplyr::arrange(desc(prop)) %>%
+    dplyr::filter(!(fach %in% c("Alle Fächer", "Alle MINT-Fächer"))) %>%
+    dplyr::slice(1:10)
+
+  # Create female plot
+  hc_frau <- highcharter::hchart(studierende_faecher_frauen, 'bar', highcharter::hcaes(y = round(prop), x = fach)) %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        boderWidth = 0,
+        dataLabels = list(enabled = TRUE, format = "{point.wert}")
+      )) %>%
+    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_colors(c("#154194")) %>%
+    highcharter::hc_title(text = paste0("Anteil von Frauen an Studienfächern ", "(", "2020", ")"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/jpeg' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  # Create male dateframe
+  studierende_faecher_maenner <- df %>%
+    dplyr::filter(anzeige_geschlecht == "Männer") %>%
+    dplyr::arrange(desc(prop)) %>%
+    dplyr::filter(!(fach %in% c("Alle Fächer", "Alle MINT-Fächer"))) %>%
+    dplyr::slice(1:10)
+
+  # Create male plot
+  hc_mann <- highcharter::hchart(studierende_faecher_maenner, 'bar', highcharter::hcaes(y = round(prop), x = fach)) %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        boderWidth = 0,
+        dataLabels = list(enabled = TRUE, format = "{point.wert}")
+      )) %>%
+    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_colors(c("#66cbaf")) %>%
+    highcharter::hc_title(text = paste0("Anteil von Männern an Studienfächern ", "(", "2020", ")"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/jpeg' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  highcharter::hw_grid(hc_frau,
+                       hc_mann,
+                       ncol = 1,
+                       browsable = TRUE)
+
+}
