@@ -193,7 +193,7 @@ share_pie <- function(df) {
   # calculate proportions
   df$props <- sum(df$wert)
 
-  df <- df %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
+  df <- df %>% dplyr::group_by(fachbereich, geschlecht) %>%
     dplyr::summarize(proportion = wert/props)
 
   df$proportion <- df$proportion * 100
