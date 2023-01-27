@@ -21,30 +21,30 @@ home_einstieg_pie <- function(df,r) {
 
 
 
-   # df2 <- df2 %>%
-   #   tidyr::pivot_wider(names_from=anzeige_geschlecht, values_from=wert)%>%
-   #   dplyr::mutate(Gesamt=Männer+Frauen)%>%
-    #   tidyr::pivot_longer(c("Gesamt", "Frauen", "Männer"), names_to = "anzeige_geschlecht", values_to = "wert")
+  # df2 <- df2 %>%
+  #   tidyr::pivot_wider(names_from=anzeige_geschlecht, values_from=wert)%>%
+  #   dplyr::mutate(Gesamt=Männer+Frauen)%>%
+  #   tidyr::pivot_longer(c("Gesamt", "Frauen", "Männer"), names_to = "anzeige_geschlecht", values_to = "wert")
 
 
-   # df8 <<- df2 %>%
-   #   tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
-   #   dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
-   #                 "andere Fächer" =`Alle Fächer`- MINT)%>%
-   #  tidyr::pivot_longer(c(6:20), values_to = "wert", names_to= "fachbereich")%>%
-   #  dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
-   #
-   #
-   # df5 <<- df %>% dplyr::filter(bereich != "Schule")
-   #
-   # #df2<- df2[, colnames(df)]
-   #
-   # df3<<-  dplyr::bind_rows(df5, df8)
+  # df8 <<- df2 %>%
+  #   tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
+  #   dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
+  #                 "andere Fächer" =`Alle Fächer`- MINT)%>%
+  #  tidyr::pivot_longer(c(6:20), values_to = "wert", names_to= "fachbereich")%>%
+  #  dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
+  #
+  #
+  # df5 <<- df %>% dplyr::filter(bereich != "Schule")
+  #
+  # #df2<- df2[, colnames(df)]
+  #
+  # df3<<-  dplyr::bind_rows(df5, df8)
 
-   # df<- df %>%
-   #   tidyr::pivot_wider(values_from = wert, names_from = anzeige_geschlecht)%>%
-   #   tidyr::pivot_longer(c("Männer","Frauen", "Gesamt"),names_to = "anzeige_geschlecht", values_to= "wert")%>%
-   #   dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
+  # df<- df %>%
+  #   tidyr::pivot_wider(values_from = wert, names_from = anzeige_geschlecht)%>%
+  #   tidyr::pivot_longer(c("Männer","Frauen", "Gesamt"),names_to = "anzeige_geschlecht", values_to= "wert")%>%
+  #   dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
 
   # call function to calculate the share of MINT for every "bereich"
 
@@ -68,36 +68,33 @@ home_einstieg_pie <- function(df,r) {
   # create an if statement for the options of plotting 1, 2 or 3 graphs
   if(length(indikator_choice_1) == 1) {
 
-  # ensure that proportion sum to 1
-  df$proportion <- round_preserve_sum(as.numeric(df$proportion),0)
+    # ensure that proportion sum to 1
+    df$proportion <- round_preserve_sum(as.numeric(df$proportion),0)
 
-  title_help <- helper_title_home(indikator_choice_1)
+    title_help <- helper_title_home(indikator_choice_1)
 
-  browser()
-  df_muster <<- df
+    highcharter::hw_grid(
+      df %>%
+        highcharter::hchart(
+          "pie", highcharter::hcaes(x = fachbereich, y = proportion)
+        ) %>%
+        highcharter::hc_tooltip(
+          pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+        highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020"),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+        #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
+        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
-  highcharter::hw_grid(
-  df %>%
-    highcharter::hchart(
-      "pie", highcharter::hcaes(x = fachbereich, y = proportion)
-      ) %>%
-    highcharter::hc_tooltip(
-               pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020"),
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                           dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
-
-  ncol = 1,
-  browsable = TRUE
-  )
+      ncol = 1,
+      browsable = TRUE
+    )
 
 
   } else if(length(indikator_choice_1) == 2) {
@@ -226,7 +223,7 @@ home_einstieg_pie <- function(df,r) {
       browsable = TRUE
     )
 
-    }
+  }
 
 }
 
