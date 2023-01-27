@@ -15,10 +15,10 @@ studienzahl_all_mint_23 <- function(df,r){
 browser()
   df <-data.frame(df)
 
- year_select <- r$all_23_year
- label_select <<- r$all_23_label_sel
+ year_select <- "2021" #r$all_23_year
+ label_select <<- c("Studierende (Universität)")#r$all_23_label_sel
 
- df1 <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
+ df1 <<- df %>% dplyr::filter(geschlecht == "gesamt")%>%
    dplyr::filter(region== "Deutschland")%>%
    dplyr::select(-hochschulform, -region)%>%
    tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
@@ -52,7 +52,7 @@ browser()
 
   if(length(label_select) == 1) {
 
-    df_fn <- df2 %>% dplyr::filter(label %in% label_select)
+    df_a <- df2 %>% dplyr::filter(label %in% label_select)
 
     highcharter::hw_grid(
       df_fn %>%

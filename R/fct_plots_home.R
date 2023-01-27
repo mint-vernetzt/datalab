@@ -49,7 +49,7 @@ home_einstieg_pie <- function(df,r) {
   # call function to calculate the share of MINT for every "bereich"
 
   df <- share_MINT(df)
-browser()
+
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   df <- df %>% dplyr::filter(indikator %in% indikator_choice_1)
@@ -60,7 +60,7 @@ browser()
     dplyr::mutate(props = sum(wert))
 
 
-  dfz <<- df %>% dplyr::group_by(indikator, fachbereich) %>%
+  df <- df %>% dplyr::group_by(indikator, fachbereich) %>%
     dplyr::summarize(proportion = wert/props)
 
   df$proportion <- df$proportion * 100
@@ -72,6 +72,9 @@ browser()
   df$proportion <- round_preserve_sum(as.numeric(df$proportion),0)
 
   title_help <- helper_title_home(indikator_choice_1)
+
+  browser()
+  df_muster <<- df
 
   highcharter::hw_grid(
   df %>%
