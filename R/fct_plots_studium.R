@@ -9,23 +9,29 @@
 #' @noRd
 
 
-studienzahl_all_mint_23 <- function(df,r){
+studienzahl_test <- function(df,r){
 
 # Box 1 Pie ab 2023
-browser()
+
   df <-data.frame(df)
 
- year_select <- "2021" #r$all_23_year
- label_select <<- c("Studierende (Universität)")#r$all_23_label_sel
+ testy <- r$testy
+ testl <- r$testl
 
- df1 <<- df %>% dplyr::filter(geschlecht == "gesamt")%>%
+ df2 <- df %>% dplyr::filter(jahr==testy)
+ df3 <- df2 %>% dplyr::filter(label %in% testl)
+
+browser()
+ df4 <<- df3 %>% dplyr::filter(geschlecht == "gesamt")%>%
    dplyr::filter(region== "Deutschland")%>%
    dplyr::select(-hochschulform, -region)%>%
    tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
    dplyr::mutate("MINT (aggregiert)" = Mathematik_Naturwissenschaften+Ingenieurwissenschaften)%>%
    dplyr::mutate("Nicht MINT"= Alle-`MINT (aggregiert)`)%>%
-   dplyr::mutate(props=`MINT (aggregiert)`/Alle)%>%
-   dplyr::select(-Ingenieurwissenschaften,- Mathematik_Naturwissenschaften,-Alle, -`MINT (aggregiert)`, -`Nicht MINT` )
+   dplyr::mutate(proportion_mint=`MINT (aggregiert)`/Alle)%>%
+   dplyr::mutate(proportion_nicht_mint=`Nicht MINT`/Alle)%>%
+   dplyr::select(-Ingenieurwissenschaften,- Mathematik_Naturwissenschaften,-Alle, -`MINT (aggregiert)`,- `Nicht MINT`)%>%
+   tidyr::pivot_longer(c(proportion_mint, proportion_nicht_mint), names_to = "proportion", values_to = "wert")
  #,
   #               prop_n_mint=`Nicht MINT`/Alle)%>%
    # dplyr::mutate(wert = dplyr::case_when(fachbereich== "MINT (aggregiert)" ~ `MINT (aggregiert)`/Alle,
@@ -37,27 +43,18 @@ browser()
    #dplyr::filter(fachbereich== "MINT (aggregiert)"| fachbereich== "Nicht MINT")
 
 
+ df4$wert <- df4$wert *100
+ df4$wert <- round(df4$wert, 0)
 
 
-
- df1$props <- df1$props *100
- df1$props <- round(df1$props, 0)
-
- df2 <- df1 %>% dplyr::filter(jahr==year_select)
- #df3 <- df2%>% dplyr::filter(label== label_select)
+  if(length(testl) == 1) {
 
 
-
-
-
-  if(length(label_select) == 1) {
-
-    df_a <- df2 %>% dplyr::filter(label %in% label_select)
 
     highcharter::hw_grid(
-      df_fn %>%
+      df4 %>%
         highcharter::hchart(
-          "pie", highcharter::hcaes(x = label , y = props )
+          "pie", highcharter::hcaes(x = proportion , y = wert)
         ))
     #   %>%
     #     highcharter::hc_tooltip(
@@ -79,18 +76,16 @@ browser()
     # )
     #
 
-  }
-
-  else if(length(label_select) == 2) {
+  } else if(length(testl) == 2) {
 
     # filter for UI input and ensure proportions sum to 1
-    df_1_pie <- df2 %>% dplyr::filter(label == label_select[1])
+    df_1_pie <- df4 %>% dplyr::filter(label == testl[1])
 
-    df_2_pie <- df2 %>% dplyr::filter(label == label_select[2])
+    df_2_pie <- df4 %>% dplyr::filter(label == testl[2])
 
 
     highcharter::hw_grid(
-      highcharter::hchart(df_1_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = label, y = props)))
+      highcharter::hchart(df_1_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)),
 
     #   %>%
     #     highcharter::hc_tooltip(
@@ -107,9 +102,12 @@ browser()
     #                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
     #
     #
-    #   highcharter::hchart(df_2, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+      highcharter::hchart(df_2_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)))
+
+
+    #%>%
     #     highcharter::hc_tooltip(
-    #       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+    #       pointFormat=paste('Anteil: {point.percentage:.0f}%'))%>%
     #     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
     #     highcharter::hc_title(text = paste0("", indikator_choice_1[2], " (2020)"),
     #                           margin = 45,
@@ -127,19 +125,19 @@ browser()
     # )
 
 
-  } else if(length(label_select) == 3) {
+  } else if(length(testl) == 3) {
 
     # filter for UI input and ensure proportions sum to 1
 
-    df_1_pie <- df2 %>% dplyr::filter(label == label_select[1])
+    df_1_pie <- df4 %>% dplyr::filter(label == testl[1])
 
-    df_2_pie <- df2 %>% dplyr::filter(label == label_select[2])
+    df_2_pie <- df4 %>% dplyr::filter(label == testl[2])
 
-    df_3_pie <- df2 %>% dplyr::filter(label == label_select[3])
+    df_3_pie <- df4 %>% dplyr::filter(label == testl[3])
 
 
     highcharter::hw_grid(
-      highcharter::hchart(df_1, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)))
+      highcharter::hchart(df_1_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)),
     #   %>%
     #     highcharter::hc_tooltip(
     #       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
@@ -155,7 +153,10 @@ browser()
     #                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
     #
     #
-    #   highcharter::hchart(df_2, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+       highcharter::hchart(df_2_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)),
+
+
+    #%>%
     #     highcharter::hc_tooltip(
     #       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     #     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
@@ -169,7 +170,10 @@ browser()
     #     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
     #                                            dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
     #
-    #   highcharter::hchart(df_3, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+       highcharter::hchart(df_3_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)))
+
+
+       #%>%
     #     highcharter::hc_tooltip(
     #       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
     #     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
