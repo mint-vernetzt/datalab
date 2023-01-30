@@ -3551,11 +3551,17 @@ plot_ranking_top_faecher <- function(df, r, type) {
     dplyr::select(-c("wert.y", "anzeige_geschlecht.y", "indikator.y")) %>%
     dplyr::filter(anzeige_geschlecht != "Gesamt")
 
+  if(subject == "MINT-Fächer"){
+
+    df <- df %>% dplyr::filter(fachbereich %in% c("MINT",
+                                                  "Mathematik, Naturwissenschaften",
+                                                  "Ingenieurwissenschaften"))
+  }
+
   # Create female dateframe
   studierende_faecher_frauen <- df %>%
     dplyr::filter(anzeige_geschlecht == "Frauen") %>%
     dplyr::arrange(desc(prop)) %>%
-    dplyr::filter(!(fach %in% c("Alle Fächer", "Alle MINT-Fächer"))) %>%
     dplyr::slice(1:10)
 
   # Create female plot
@@ -3590,7 +3596,6 @@ plot_ranking_top_faecher <- function(df, r, type) {
   studierende_faecher_maenner <- df %>%
     dplyr::filter(anzeige_geschlecht == "Männer") %>%
     dplyr::arrange(desc(prop)) %>%
-    dplyr::filter(!(fach %in% c("Alle Fächer", "Alle MINT-Fächer"))) %>%
     dplyr::slice(1:10)
 
   # Create male plot
