@@ -21,8 +21,8 @@ studienzahl_test <- function(df,r){
  df2 <- df %>% dplyr::filter(jahr==testy)
  df3 <- df2 %>% dplyr::filter(label %in% testl)
 
-browser()
- df4 <<- df3 %>% dplyr::filter(geschlecht == "gesamt")%>%
+
+ df4 <- df3 %>% dplyr::filter(geschlecht == "gesamt")%>%
    dplyr::filter(region== "Deutschland")%>%
    dplyr::select(-hochschulform, -region)%>%
    tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
