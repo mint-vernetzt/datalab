@@ -13,13 +13,13 @@ mod_ausbildung_vertraege_multiple_ui <- function(id){
   load(file = system.file(package="datalab","data/data_naa.rda"))
 
   tagList(
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl des Zeitraums:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_ausbildungsvertraege"),
       label = NULL,
       choices = c(2017, 2020),
     ),
-    p("Wählen Sie den Bereich der neuen Auszubildenden:"),
+    p("Bereich der neuen Auszubildenden:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_ausbildungsvertraege"),
       choices = unique(data_naa$fachbereich),

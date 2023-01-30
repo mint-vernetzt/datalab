@@ -10,18 +10,18 @@
 mod_beruf_arbeitsmarkt_bl_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_bl"),
       label = NULL,
-      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
-      selected = 2020
+      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
+      selected = 2021
     ),
-    p("Wählen Sie ein Anforderungsniveau:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("anforderungsniveau_arbeitsmarkt_bl"),
-      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte")
-    )
+    # p("Auswahl des Anforderungsniveaus:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("anforderungsniveau_arbeitsmarkt_bl"),
+    #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte")
+    # ) kab
   )
 }
 
@@ -35,9 +35,9 @@ mod_beruf_arbeitsmarkt_bl_server <- function(id, r){
       r$date_arbeitsmarkt_bl <- input$date_arbeitsmarkt_bl
     })
 
-    observeEvent(input$anforderungsniveau_arbeitsmarkt_bl, {
-      r$anforderungsniveau_arbeitsmarkt_bl <- input$anforderungsniveau_arbeitsmarkt_bl
-    })
+    # observeEvent(input$anforderungsniveau_arbeitsmarkt_bl, {
+    #   r$anforderungsniveau_arbeitsmarkt_bl <- input$anforderungsniveau_arbeitsmarkt_bl
+    # }) kab
 
   })
 }

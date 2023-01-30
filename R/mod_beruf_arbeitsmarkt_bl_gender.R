@@ -10,26 +10,27 @@
 mod_beruf_arbeitsmarkt_bl_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_bl_gender"),
       label = NULL,
-      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
-      selected = 2020
+      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
+      selected = 2021
     ),
-    p("Wählen Sie eine Beschäftigungsform der Arbeitnehmer*innen:"),
+    p("Auswahl der Beschäftigungsform:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("level_arbeitsmarkt_bl_gender"),
       choices = c("Auszubildende", "Beschäftigte"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    ),
-    p("Wählen Sie ein Anforderungsniveau:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("anforderungsniveau_arbeitsmarkt_bl_gender"),
-      choices = c("Gesamt", "Fachkraft", "Spezialist", "Experte")
     )
+    # ,
+    # p("Auswahl des Anforderungsniveaus:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("anforderungsniveau_arbeitsmarkt_bl_gender"),
+    #   choices = c("Gesamt", "Fachkraft", "Spezialist:in"="Spezialist", "Expert:in"="Experte")
+    # )
   )
 }
 

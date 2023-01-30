@@ -10,7 +10,7 @@
 mod_home_start_multiple_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl des Zeitraums:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_multiple"),
       label = NULL,
@@ -18,11 +18,11 @@ mod_home_start_multiple_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wählen Sie einen oder mehrere Bereiche:"),
+    p("Auswahl eines oder mehrerer Bereiche:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_multiple_1"),
       choices = c("Leistungskurse",
-                  "Studienanfänger", "Studierende",
+                  "Studienanfänger:innen", "Studierende",
                   "Auszubildende", "Beschäftigte"),
       selected = c("Leistungskurse", "Beschäftigte"),
       options =  list(

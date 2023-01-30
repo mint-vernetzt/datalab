@@ -11,11 +11,16 @@ prep_arbeitsmarkt_east_west <- function(df) {
   df_incl <- df
 
   # set dummy variable to indicate "Osten" und "Westen"
-  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west, "Westen", "Osten")
+  ## Falls DE enthalten falsch
+  #df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west, "Westen", "Osten")
+
+   df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west & df_incl$region != "Deutschland", "Westen", NA)
+  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$east & df_incl$region != "Deutschland", "Osten", df_incl$dummy_west)
+  df <- na.omit(df) # NA aus ifelse erstellt nochmal DE mit NA als region-Name -->löschen
 
   # sum values
-  df_incl <- df_incl %>% dplyr::group_by(jahr, anzeige_geschlecht, indikator, fachbereich, dummy_west,
-                                         anforderungsniveau, bereich) %>%
+  df_incl <- df_incl %>% dplyr::group_by(jahr, geschlecht, indikator, fachbereich, dummy_west,
+                                         anforderung, bereich) %>%
     dplyr::summarise(wert = sum(wert, na.rm = T))
 
   names(df_incl)[5] <- "region"
@@ -37,10 +42,10 @@ prep_arbeitsmarkt_east_west <- function(df) {
 
 calc_arbeitsmarkt_males <- function(df) {
 
-  help_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt") %>%
+  help_gesamt <- df %>% dplyr::filter(geschlecht == "Gesamt") %>%
     dplyr::group_by(jahr, fachbereich)
 
-  help_weiblich <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen") %>%
+  help_weiblich <- df %>% dplyr::filter(geschlecht == "Frauen") %>%
     dplyr::group_by(jahr, fachbereich)
 
   wert_männlich <- help_gesamt$wert - help_weiblich$wert
@@ -49,7 +54,7 @@ calc_arbeitsmarkt_males <- function(df) {
 
   help_männlich$wert <- wert_männlich
 
-  help_männlich$anzeige_geschlecht <- "Männer"
+  help_männlich$geschlecht <- "Männer"
 
   df <- rbind(df, help_männlich)
 
@@ -97,30 +102,31 @@ calc_arbeitsmarkt_mint <- function(df) {
 
 calc_arbeitsmarkt_share_bl_gender <- function(df) {
 
-  df_alle <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt",
-                                  anforderungsniveau == "Gesamt") %>%
-    dplyr::select(-anzeige_geschlecht)
+  df_alle <- df %>% dplyr::filter(fachbereich == "Alle",
+                                  anforderung == "Gesamt")
 
-  df_female <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen") %>%
-    dplyr::rename(wert_female = wert) %>%
-    dplyr::select(-anzeige_geschlecht)
+  df <- df %>% dplyr::filter(fachbereich == "MINT")
 
-  df_male <- df %>% dplyr::filter(anzeige_geschlecht == "Männer") %>%
-    dplyr::rename(wert_male = wert) %>%
-    dplyr::select(-anzeige_geschlecht)
+  df_female <- df %>% dplyr::filter(geschlecht == "Frauen") %>%
+    dplyr::rename(wert_female = wert)
 
-  df_female <- df_female %>% dplyr::left_join(df_alle, by=c("region", "fachbereich", "indikator", "jahr", "bereich")) %>%
-    dplyr::select(-"anforderungsniveau.y") %>%
-    dplyr::rename(anforderungsniveau = "anforderungsniveau.x") %>%
+  df_male <- df %>% dplyr::filter(geschlecht == "Männer") %>%
+    dplyr::rename(wert_male = wert)
+
+  df_female <- df_female %>% dplyr::left_join(df_alle, by=c("region", "indikator", "jahr", "bereich")) %>%
+    dplyr::select(-c("anforderung.y", "fachbereich.y")) %>%
+    dplyr::rename(anforderung = "anforderung.x",
+                  fachbereich = "fachbereich.x") %>%
     dplyr::mutate(proportion = (wert_female/wert)*100) %>%
-    dplyr::mutate(anzeige_geschlecht = "Frauen") %>%
+    dplyr::mutate(geschlecht = "Frauen") %>%
     dplyr::select(-wert_female)
 
-  df_male <- df_male %>% dplyr::left_join(df_alle, by=c("region", "fachbereich", "indikator", "jahr", "bereich")) %>%
-    dplyr::select(-"anforderungsniveau.y") %>%
-    dplyr::rename(anforderungsniveau = "anforderungsniveau.x") %>%
+  df_male <- df_male %>% dplyr::left_join(df_alle, by=c("region", "indikator", "jahr", "bereich")) %>%
+    dplyr::select(-c("anforderung.y", "fachbereich.y")) %>%
+    dplyr::rename(anforderung = "anforderung.x",
+                  fachbereich = "fachbereich.x") %>%
     dplyr::mutate(proportion = (wert_male/wert)*100) %>%
-    dplyr::mutate(anzeige_geschlecht = "Männer") %>%
+    dplyr::mutate(geschlecht = "Männer") %>%
     dplyr::select(-wert_male)
 
   df_return <- rbind(df_female, df_male)
@@ -138,11 +144,16 @@ calc_arbeitsmarkt_share_bl_gender <- function(df) {
 
 calc_arbeitsmarkt_share_bl <- function(df) {
 
-  df_alle <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt",
-                                  anforderungsniveau == "Gesamt") %>%
+  df_alle <- df %>% dplyr::filter(geschlecht == "Gesamt",
+                                  anforderung == "Gesamt") %>%
     # dplyr::select(-fachbereich) %>%
-    dplyr::group_by(region, indikator, anforderungsniveau, jahr, anzeige_geschlecht, bereich) %>%
-    dplyr::summarise(wert = sum(wert))
+    dplyr::group_by(region, indikator, anforderung, jahr, geschlecht, bereich) %>%
+    #dplyr::summarise(wert = sum(wert)) # Fehler: rechnet damit in jeder Gruppierung Alle + MINT aus
+    dplyr::mutate(wert = wert[fachbereich == "Alle"]) %>%
+    dplyr::select(-fachbereich)
+
+  #löschen doppelter Zeilen, die durch Ersetzten vs. falsch Aufsummieren entstanden sind
+  df_alle <- unique.data.frame(df_alle)
 
   df_employed <- df %>% dplyr::filter(indikator == "Beschäftigte") %>%
     dplyr::rename(wert_employed = wert)
@@ -150,21 +161,22 @@ calc_arbeitsmarkt_share_bl <- function(df) {
   df_trainee <- df %>% dplyr::filter(indikator == "Auszubildende") %>%
     dplyr::rename(wert_trainee = wert)
 
-  df_employed <- df_employed %>% dplyr::left_join(df_alle, by=c("region", "indikator", "anzeige_geschlecht", "jahr", "bereich")) %>%
-    dplyr::select(-"anforderungsniveau.y") %>%
-    dplyr::rename(anforderungsniveau = "anforderungsniveau.x") %>%
+  df_employed <- df_employed %>% dplyr::left_join(df_alle, by=c("region", "indikator", "geschlecht", "jahr", "bereich")) %>%
+    dplyr::select(-"anforderung.y") %>%
+    dplyr::rename(anforderung = "anforderung.x") %>%
     dplyr::mutate(proportion = (wert_employed/wert)*100) %>%
     # dplyr::mutate(indikator = "Beschäftigte") %>%
     dplyr::select(-wert_employed)
 
-  df_trainee <- df_trainee %>% dplyr::left_join(df_alle, by=c("region", "indikator", "anzeige_geschlecht", "jahr", "bereich")) %>%
-    dplyr::select(-"anforderungsniveau.y") %>%
-    dplyr::rename(anforderungsniveau = "anforderungsniveau.x") %>%
+  df_trainee <- df_trainee %>% dplyr::left_join(df_alle, by=c("region", "indikator", "geschlecht", "jahr", "bereich")) %>%
+    dplyr::select(-"anforderung.y") %>%
+    dplyr::rename(anforderung = "anforderung.x") %>%
     dplyr::mutate(proportion = (wert_trainee/wert)*100) %>%
     # dplyr::mutate(indikator = "Auszubildende") %>%
     dplyr::select(-wert_trainee)
 
   df_return <- rbind(df_employed, df_trainee)
+
 
   return(df_return)
 }

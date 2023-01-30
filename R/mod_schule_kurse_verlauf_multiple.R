@@ -11,7 +11,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Wählen Sie einen Zeitraum:"),
+    p("Auswahl des Zeitraums:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_verlauf_multiple"),
       label = NULL,
@@ -19,7 +19,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "2018","2019", "2020"),
       selected = c("2015", "2020")
     ),
-    p("Wählen Sie in welcher Form der Kurs belegt wurde:"),
+    p("Form der Kursbelegung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("topic_selected_multiple"),
       choices = c("Grundkurse", "Leistungskurse"),
@@ -27,19 +27,31 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Wählen Sie ein Fach:"),
+    p("Auswahl des Fachs:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_multiple"),
-      choices = c("MINT (aggregiert)","Mathematik", "Informatik", "Physik", "Chemie",
-                  "Biologie", "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
-                  "Kunst/Gestaltung/Werken", "Ethik/Philosophie", "Religion, ev.", "Religion, kath.",
-                  "Sport", "Musik"),
-      selected = "MINT (aggregiert)",
+      choices = c("MINT-Fächer (gesamt)",
+                  "Mathematik",
+                  "Informatik",
+                  "Physik",
+                  "Chemie",
+                  "Biologie",
+                  "andere Fächer (gesamt)",
+                  "Deutsch",
+                  "Fremdsprachen",
+                  "Gesellschaftswissenschaften",
+                  "Musik/Kunst",
+                  "Religion/Ethik",
+                  "Sport"),
+      selected = "MINT-Fächer (gesamt)",
     ),
-    p("Wählen Sie ein oder mehrere Bundesländer:"),
+    p("Auswahl eines oder mehrerer Bundesländer:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf_multiple"),
-      choices = c("Berlin",
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
                   "Brandenburg",
                   "Bremen",
                   "Hamburg",
@@ -52,9 +64,11 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
+                  "Thüringen"
+                  ,
                   "Westen",
-                  "Osten"),
+                  "Osten"
+                  ),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",

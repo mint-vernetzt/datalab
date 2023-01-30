@@ -10,17 +10,19 @@
 mod_schule_kurse_ranking_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Wählen Sie ein Jahr:"),
+    p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_ranking"),
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
       selected = 2020
     ),
-    p("Wählen Sie ein Bundesland:"),
+    p("Asuwahl des Bundeslands:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_ranking"),
-      choices = c("Berlin",
+      choices = c("Deutschland",
+                  "Bayern",
+                  "Berlin",
                   "Brandenburg",
                   "Bremen",
                   "Hamburg",
@@ -33,10 +35,12 @@ mod_schule_kurse_ranking_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
+                  "Thüringen"
+                  ,
                   "Westen",
-                  "Osten"),
-      selected = "Hessen"
+                  "Osten"
+                  ),
+       selected = "Hessen"
     )
   )
 }
