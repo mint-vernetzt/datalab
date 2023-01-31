@@ -85,21 +85,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
-                    tabPanel("weiterer Vergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
-
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               plotOutput(ns("plot_arbeitsmarkt_waffle")),
-                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
-                             )
-                    ),
                     tabPanel("Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
@@ -159,6 +144,21 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           den geringsten Anteil an Auszubildenden im MINT-Bereich aufweist. Das Bundesland mit dem höchsten Anteil an Beschäftigten im MINT-Bereich
           ist Baden-Württemberg mit 29 %."),
         tabsetPanel(type = "tabs",
+                    tabPanel("Vergleich", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
+
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               plotOutput(ns("plot_arbeitsmarkt_waffle")),
+                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
+                             )
+                    ),
                     tabPanel("Karte", br(),
 
                              shiny::sidebarPanel(
@@ -405,7 +405,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 #' beruf_arbeitsmarkt Server Functions
 #'
 #' @noRd
-mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
+mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt,data_arbeitsmarkt_detail, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -451,7 +451,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
 
     # Box 4
     output$plot_arbeitsmarkt_waffle <- renderPlot({
-      arbeitsmarkt_anforderungen(data_arbeitsmarkt, r)
+      arbeitsmarkt_anforderungen(data_arbeitsmarkt_detail, r)
     })
 
     output$plot_arbeitsmarkt_verlauf <- highcharter::renderHighchart({

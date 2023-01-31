@@ -1835,119 +1835,212 @@ arbeitsmarkt_anforderungen <- function(df,r) {
 
   df <- df %>% dplyr::filter(geschlecht == "Gesamt")
 
-  #df <- df %>% dplyr::filter(anforderung != "Helfer")
+  df <- df %>% dplyr::filter(anforderung == "Gesamt")
 
-  # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderung == "Gesamt")
-    # dplyr::group_by(region, fachbereich, indikator, jahr, geschlecht, bereich) %>%
-    # dplyr::summarise(wert = sum(wert)) %>%
-    # dplyr::mutate(anforderung = "Gesamt") %>%
-    # dplyr::ungroup()
+  # Vorläufig nur Indiaktoren Beschäftigte, Auszubildende, später hier mehr Auswahl
+  df <- df %>% dplyr::filter(indikator %in% c("Beschäftigte", "Auszubildende"))
 
-  df <- rbind(df %>% dplyr::filter(anforderung != "Gesamt"), df_new_gesamt)
+  # Auswahl der Berufsgruppen für Waffel
+  df <- df %>% dplyr::filter(fachbereich %in% c("Alle", "MINT", "Mathematik, Naturwissenschaften",
+                                                "Informatik", "Technik (gesamt)"))
 
-  df <- calc_arbeitsmarkt_mint(df)
+  # Berechnung von andere Fächergruppen
+  df[df$fachbereich == "Alle", "wert"] <- df[df$fachbereich == "Alle", "wert"]-
+    df[df$fachbereich == "MINT", "wert"]
+  df$fachbereich[df$fachbereich == "Alle"]<-"andere Fächergruppen"
+    df <- df %>% dplyr::filter(fachbereich != "MINT")
 
-  df_new_gesamt <- df_new_gesamt %>%
-    dplyr::filter(fachbereich == "Alle") %>%
-    dplyr::rename(wert_gesamt = "wert") %>%
-    dplyr::select(-c("fachbereich", "anforderung"))
+  # Anteil berechnen
+    df <- df %>%
+      dplyr::group_by(indikator) %>%
+      dplyr::mutate(props = sum(wert))
 
-  df <- df %>% dplyr::left_join(df_new_gesamt, by = c("region", "indikator", "jahr", "geschlecht", "bereich")) %>%
-    dplyr::mutate(proportion = (wert/wert_gesamt)*100) %>%
-    dplyr::select(-c("wert", "wert_gesamt")) %>%
-    dplyr::filter(((fachbereich == "Andere Berufe") & (anforderung == "Gesamt")) | ((fachbereich != "Andere Berufe") & (anforderung != "Gesamt"))) %>%
-    dplyr::mutate(anforderung = dplyr::case_when(anforderung == "Gesamt" ~ "Andere Berufe",
-                                                        TRUE ~ anforderung))
+    df <- df %>% dplyr::group_by(fachbereich, indikator) %>%
+      dplyr::summarize(proportion = wert/props)
 
-  # employed
-  df_employed <- df %>% dplyr::filter(indikator == "Beschäftigte")
+    df$proportion <- df$proportion * 100
 
-  df_employed <- setNames(round_preserve_sum(as.numeric(df_employed$proportion),0),
-                      df_employed$anforderung)
+    df <- setNames(round_preserve_sum(as.numeric(df$proportion),0),
+                  df$fachbereich)
 
-  df_employed <- df_employed[order(factor(names(df_employed), levels = c('Fachkraft', 'Spezialist',
-                                                             'Experte',
-                                                             'Andere Berufe')))]
+  #  Aufteilung nach Indikator
+    df_besch <- df %>% dplyr::filter(indikator == "Beschäftigte")
+    df_azubi <- df %>% dplyr::filter(indikator == "Auszubildende")
 
-  df_employed1 <- c("MINT"=df_employed[1]+df_employed[2]+df_employed[3], "Andere Fachbereiche"= df_employed[4]) # kab
-
-  attr(x = df_employed1, which = "names") <- c("MINT", "Andere Fachbereiche")
-
-  # trainee
-  df_trainee <- df %>% dplyr::filter(indikator == "Auszubildende")
-
-  df_trainee <- setNames(round_preserve_sum(as.numeric(df_trainee$proportion),0),
-                        df_trainee$anforderung)
-
-  df_trainee <- df_trainee[order(factor(names(df_trainee), levels = c('Fachkraft', 'Spezialist',
-                                                                   'Experte',
-                                                                   'Andere Berufe')))]
-
-  df_trainee1 <- c("MINT"=df_trainee[1]+df_trainee[2]+df_trainee[3], "Andere Fachbereiche"= df_trainee[4]) # kab
-
-  attr(x = df_trainee1, which = "names") <- c("MINT", "Andere Fachbereiche")
-
-  # create plot objects for waffle charts
-  waffle_employed <- waffle::waffle(df_employed1, keep = FALSE) +
-    ggplot2::labs(
-      fill = "",
-      title = paste0("<span style='color:black;'>", "Berufswahl (Beschäftigte)</span> <br>", timerange, "<br>")) +
-    ggplot2::theme(plot.title = ggtext::element_markdown(),
-                   plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "bottom") +
-    ggplot2::scale_fill_manual(
-      values =  c("#b16fab",
-                  # "#fcc433",
-                  # "#00a87a",
-                  '#b1b5c3'),
-      limits = c("MINT",
-        # 'Fachkraft', 'Spezialist',
-        #          'Experte',
-                 'Andere Fachbereiche'),
-      na.value="#b1b5c3",
-      guide = ggplot2::guide_legend(reverse = TRUE),
-      labels = c(
-        paste0("MINT",", ",df_employed1[1], "%"),
-        # paste0("MINT-Spezialist:in",", ",df_employed[2], "%"),
-        # paste0("MINT-Expert:in",", ",df_employed[3], "%"),
-        paste0("Andere Fachbereche",", ",df_employed1[2], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+  # plots
+      waffle_employed <- waffle::waffle(df_besch, keep = FALSE) +
+        ggplot2::labs(
+          fill = "",
+          title = paste0("<span style='color:black;'>", "Berufswahl (Beschäftigte)</span> <br>", timerange, "<br>")) +
+        ggplot2::theme(plot.title = ggtext::element_markdown(),
+                       plot.subtitle = ggtext::element_markdown(),
+                       text = ggplot2::element_text(size = 14),
+                       plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                       legend.position = "bottom") +
+        ggplot2::scale_fill_manual(
+          values =  c(# "#b16fab",
+                       "#fcc433",
+                       "#00a87a",
+                       "#ee7775",
+                      '#b1b5c3'),
+          limits = c("MINT",
+            # 'Fachkraft', 'Spezialist',
+            #          'Experte',
+                     'Andere Fachbereiche'),
+          na.value="#b1b5c3",
+          guide = ggplot2::guide_legend(reverse = TRUE),
+          labels = c(
+            paste0("MINT",", ",df_employed1[1], "%"),
+            # paste0("MINT-Spezialist:in",", ",df_employed[2], "%"),
+            # paste0("MINT-Expert:in",", ",df_employed[3], "%"),
+            paste0("Andere Fachbereche",", ",df_employed1[2], "%"))) +
+        ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 
-  waffle_trainee <- waffle::waffle(df_trainee1, keep = FALSE) +
-    ggplot2::labs(
-      fill = "",
-      title = paste0("<span style='color:black;'>", "Berufswahl (Auszubildende)</span> <br>", timerange, "<br>")) +
-    ggplot2::theme(plot.title = ggtext::element_markdown(),
-                   plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "bottom")
+      waffle_trainee <- waffle::waffle(df_trainee1, keep = FALSE) +
+        ggplot2::labs(
+          fill = "",
+          title = paste0("<span style='color:black;'>", "Berufswahl (Auszubildende)</span> <br>", timerange, "<br>")) +
+        ggplot2::theme(plot.title = ggtext::element_markdown(),
+                       plot.subtitle = ggtext::element_markdown(),
+                       text = ggplot2::element_text(size = 14),
+                       plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                       legend.position = "bottom")
 
-  # account for the possability that female has 0% share of "Experte
-  # if (df_trainee[[3]] == 0) {
+      # account for the possability that female has 0% share of "Experte
+      # if (df_trainee[[3]] == 0) {
 
-    waffle_trainee <- waffle_trainee +
-      ggplot2::scale_fill_manual(
-        values =  c("#b16fab",
-                    # "#fcc433",
-                    # # "#00a87a",
-                    '#b1b5c3'),
-        limits = c("MINT",
-          # 'Fachkraft',
-          #          'Spezialist',
-                   'Andere Fachbereiche'),
-        guide = ggplot2::guide_legend(reverse = TRUE),
-        na.value="#b1b5c3",
-        labels = c(
-          paste0("MINT",", ",df_trainee1[1], "%"),
-          # paste0("MINT-Spezialist:in",", ",df_trainee[2], "%"),
-          # paste0("MINT-Expert:in",", ",df_trainee[3], "%"),
-          paste0("Andere Fachbereiche",", ",df_trainee1[2], "%"))) +
-      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+        waffle_trainee <- waffle_trainee +
+          ggplot2::scale_fill_manual(
+            values =  c("#b16fab",
+                        # "#fcc433",
+                        # # "#00a87a",
+                        '#b1b5c3'),
+            limits = c("MINT",
+              # 'Fachkraft',
+              #          'Spezialist',
+                       'Andere Fachbereiche'),
+            guide = ggplot2::guide_legend(reverse = TRUE),
+            na.value="#b1b5c3",
+            labels = c(
+              paste0("MINT",", ",df_trainee1[1], "%"),
+              # paste0("MINT-Spezialist:in",", ",df_trainee[2], "%"),
+              # paste0("MINT-Expert:in",", ",df_trainee[3], "%"),
+              paste0("Andere Fachbereiche",", ",df_trainee1[2], "%"))) +
+          ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+
+#
+#   # calculate new "Gesamt
+#   df_new_gesamt <- df %>% dplyr::filter(anforderung == "Gesamt")
+#     # dplyr::group_by(region, fachbereich, indikator, jahr, geschlecht, bereich) %>%
+#     # dplyr::summarise(wert = sum(wert)) %>%
+#     # dplyr::mutate(anforderung = "Gesamt") %>%
+#     # dplyr::ungroup()
+#
+#   df <- rbind(df %>% dplyr::filter(anforderung != "Gesamt"), df_new_gesamt)
+#
+#   df <- calc_arbeitsmarkt_mint(df)
+#
+#   df_new_gesamt <- df_new_gesamt %>%
+#     dplyr::filter(fachbereich == "Alle") %>%
+#     dplyr::rename(wert_gesamt = "wert") %>%
+#     dplyr::select(-c("fachbereich", "anforderung"))
+#
+#   df <- df %>% dplyr::left_join(df_new_gesamt, by = c("region", "indikator", "jahr", "geschlecht", "bereich")) %>%
+#     dplyr::mutate(proportion = (wert/wert_gesamt)*100) %>%
+#     dplyr::select(-c("wert", "wert_gesamt")) %>%
+#     dplyr::filter(((fachbereich == "Andere Berufe") & (anforderung == "Gesamt")) | ((fachbereich != "Andere Berufe") & (anforderung != "Gesamt"))) %>%
+#     dplyr::mutate(anforderung = dplyr::case_when(anforderung == "Gesamt" ~ "Andere Berufe",
+#                                                         TRUE ~ anforderung))
+#
+#   # employed
+#   df_employed <- df %>% dplyr::filter(indikator == "Beschäftigte")
+#
+#   df_employed <- setNames(round_preserve_sum(as.numeric(df_employed$proportion),0),
+#                       df_employed$anforderung)
+#
+#   df_employed <- df_employed[order(factor(names(df_employed), levels = c('Fachkraft', 'Spezialist',
+#                                                              'Experte',
+#                                                              'Andere Berufe')))]
+#
+#   df_employed1 <- c("MINT"=df_employed[1]+df_employed[2]+df_employed[3], "Andere Fachbereiche"= df_employed[4]) # kab
+#
+#   attr(x = df_employed1, which = "names") <- c("MINT", "Andere Fachbereiche")
+#
+#   # trainee
+#   df_trainee <- df %>% dplyr::filter(indikator == "Auszubildende")
+#
+#   df_trainee <- setNames(round_preserve_sum(as.numeric(df_trainee$proportion),0),
+#                         df_trainee$anforderung)
+#
+#   df_trainee <- df_trainee[order(factor(names(df_trainee), levels = c('Fachkraft', 'Spezialist',
+#                                                                    'Experte',
+#                                                                    'Andere Berufe')))]
+#
+#   df_trainee1 <- c("MINT"=df_trainee[1]+df_trainee[2]+df_trainee[3], "Andere Fachbereiche"= df_trainee[4]) # kab
+#
+#   attr(x = df_trainee1, which = "names") <- c("MINT", "Andere Fachbereiche")
+#
+#   # create plot objects for waffle charts
+#   waffle_employed <- waffle::waffle(df_employed1, keep = FALSE) +
+#     ggplot2::labs(
+#       fill = "",
+#       title = paste0("<span style='color:black;'>", "Berufswahl (Beschäftigte)</span> <br>", timerange, "<br>")) +
+#     ggplot2::theme(plot.title = ggtext::element_markdown(),
+#                    plot.subtitle = ggtext::element_markdown(),
+#                    text = ggplot2::element_text(size = 14),
+#                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+#                    legend.position = "bottom") +
+#     ggplot2::scale_fill_manual(
+#       values =  c("#b16fab",
+#                   # "#fcc433",
+#                   # "#00a87a",
+#                   '#b1b5c3'),
+#       limits = c("MINT",
+#         # 'Fachkraft', 'Spezialist',
+#         #          'Experte',
+#                  'Andere Fachbereiche'),
+#       na.value="#b1b5c3",
+#       guide = ggplot2::guide_legend(reverse = TRUE),
+#       labels = c(
+#         paste0("MINT",", ",df_employed1[1], "%"),
+#         # paste0("MINT-Spezialist:in",", ",df_employed[2], "%"),
+#         # paste0("MINT-Expert:in",", ",df_employed[3], "%"),
+#         paste0("Andere Fachbereche",", ",df_employed1[2], "%"))) +
+#     ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+#
+#
+#   waffle_trainee <- waffle::waffle(df_trainee1, keep = FALSE) +
+#     ggplot2::labs(
+#       fill = "",
+#       title = paste0("<span style='color:black;'>", "Berufswahl (Auszubildende)</span> <br>", timerange, "<br>")) +
+#     ggplot2::theme(plot.title = ggtext::element_markdown(),
+#                    plot.subtitle = ggtext::element_markdown(),
+#                    text = ggplot2::element_text(size = 14),
+#                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+#                    legend.position = "bottom")
+#
+#   # account for the possability that female has 0% share of "Experte
+#   # if (df_trainee[[3]] == 0) {
+#
+#     waffle_trainee <- waffle_trainee +
+#       ggplot2::scale_fill_manual(
+#         values =  c("#b16fab",
+#                     # "#fcc433",
+#                     # # "#00a87a",
+#                     '#b1b5c3'),
+#         limits = c("MINT",
+#           # 'Fachkraft',
+#           #          'Spezialist',
+#                    'Andere Fachbereiche'),
+#         guide = ggplot2::guide_legend(reverse = TRUE),
+#         na.value="#b1b5c3",
+#         labels = c(
+#           paste0("MINT",", ",df_trainee1[1], "%"),
+#           # paste0("MINT-Spezialist:in",", ",df_trainee[2], "%"),
+#           # paste0("MINT-Expert:in",", ",df_trainee[3], "%"),
+#           paste0("Andere Fachbereiche",", ",df_trainee1[2], "%"))) +
+#       ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
   # } else{
   #
