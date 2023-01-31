@@ -464,7 +464,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt,data_arbeitsmark
 
     # Box 5
     output$plot_arbeitsmarkt_waffle_gender <- renderPlot({
-      arbeitsmarkt_anforderungen_gender(data_arbeitsmarkt, r)
+      arbeitsmarkt_anforderungen_gender(data_arbeitsmarkt_detail, r)
     })
 
     output$plot_arbeitsmarkt_verlauf_gender <- highcharter::renderHighchart({
