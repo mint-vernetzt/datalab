@@ -336,6 +336,7 @@ data_a <- data_a %>%
               )
 
 data_a$geschlecht[data_a$geschlecht == "frauen"]<-"Frauen"
+data_a$geschlecht[data_a$geschlecht == "gesamt"]<-"Gesamt"
 
 # Spalten in logische Reihenfolge bringen
 data_a <- data_a[,c("bereich","kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
