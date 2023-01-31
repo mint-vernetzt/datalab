@@ -16,8 +16,9 @@ setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
 path<-"C:/Users/kab/Downloads/datalab/datalab/data-raw/BA006_221123_Besch_MINT.xlsx"
 data <- readxl::read_excel("BA006_221123_Besch_MINT.xlsx",
                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
-
-#[c(17:7576),c(1:37)]
+#
+# data <- readxl::read_excel("data-raw/BA006_221123_Besch_MINT.xlsx",
+#                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
 
 # Spalten zusammenfassen/löschen
 data$...1 <- dplyr::coalesce(data$...4, data$...3, data$...2, data$...1) # Regionen in eine Spalte
@@ -133,11 +134,6 @@ data$zusatz <- ifelse(data$zusatz == data$region, NA, data$zusatz )
 data$schluesselnummer <- ifelse(data$schluesselnummer == data$region, NA, data$schluesselnummer )
 
 
-
-
-
-
-
 #Fachbereich und Arbeitslevel trennen
 data$anforderung <- ifelse(data$fachbereich %in% c("Helfer", "Fachkraft", "Spezialist",
                                                    "Experte", "keine Angabe"), data$fachbereich, "Gesamt")
@@ -218,7 +214,8 @@ data <- data[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht"
 # läuft seit neuem Laptop mit Code drüber nicht mehr druch, daher umgeschrieben (kbr)
 data_a <- readxl::read_excel("BA007_221205_AusbV_MINT.xlsx",
                              sheet = "Auswertung2", col_names = F, range = "A12:L4201")
-#[c(12:4201),c(1:12)]
+# data_a <- readxl::read_excel("data-raw/BA007_221205_AusbV_MINT.xlsx",
+#                              sheet = "Auswertung2", col_names = F, range = "A12:L4201")
 
 # Spalten zusammenfassen/löschen
 data_a$...1 <- dplyr::coalesce(data_a$...4, data_a$...3, data_a$...2, data_a$...1) # Regionen in eine Spalte
