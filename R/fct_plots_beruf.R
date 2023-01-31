@@ -1454,14 +1454,16 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
 arbeitsmarkt_anforderungen_gender <- function(df,r) {
 
 
-  timerange <- r$date_arbeitsmarkt_anforderungen_gender
+  #timerange <- r$date_arbeitsmarkt_anforderungen_gender
 
   indikator_choice <- r$level_arbeitsmarkt_anforderungen_gender
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr == timerange)
+  df <- df %>% dplyr::filter(jahr == 2021)
 
   df <- df %>% dplyr::filter(bundesland == "Deutschland")
+
+  df <- df %>% dplyr::filter(landkreis == "alle Landkreise")
 
   df <- df %>% dplyr::filter(anforderung == "Gesamt")
 
@@ -1516,8 +1518,8 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
                                                                 "Informatik", "Technik (gesamt)",
                                                                 'andere Fächergruppen')))]
   # Titel für Plots
-  title_male <- paste0("Berufswahl von Männern <br>(", indikator_choice, ", ", timerange, ")")
-  title_female <- paste0("Berufswahl von Frauen <br>(", indikator_choice, ", ", timerange, ")")
+  title_male <- paste0("Berufswahl von Männern <br>(", indikator_choice, ", 2021)")
+  title_female <- paste0("Berufswahl von Frauen <br>(", indikator_choice, ", 2021)")
 
   #waffles
   waffle_fr <- waffle::waffle(df_fr, keep = FALSE) +
@@ -1943,7 +1945,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
   timerange <- r$date_arbeitsmarkt_anforderungen
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr == timerange)
+ # df <- df %>% dplyr::filter(jahr == timerange)
 
   df <- df %>% dplyr::filter(bundesland == "Deutschland")
 
