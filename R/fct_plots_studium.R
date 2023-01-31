@@ -3526,6 +3526,8 @@ plot_ranking_top_faecher <- function(df, r, type) {
 
   subject <- r$subject_top_faecher
 
+  abs_rel <- r$subject_abs_rel
+
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange) %>%
     dplyr::filter(indikator == "Studierende",
@@ -3544,7 +3546,7 @@ plot_ranking_top_faecher <- function(df, r, type) {
                             "jahr",
                             "fachbereich",
                             "fach")) %>%
-    dplyr::mutate(prop = (wert.x/wert.y)*100) %>%
+    dplyr::mutate(prop = round((wert.x/wert.y)*100)) %>%
     dplyr::rename(wert = wert.x,
                   anzeige_geschlecht = anzeige_geschlecht.x,
                   indikator = indikator.x) %>%
@@ -3558,77 +3560,155 @@ plot_ranking_top_faecher <- function(df, r, type) {
                                                   "Ingenieurwissenschaften"))
   }
 
-  # Create female dateframe
-  studierende_faecher_frauen <- df %>%
-    dplyr::filter(anzeige_geschlecht == "Frauen") %>%
-    dplyr::arrange(desc(prop)) %>%
-    dplyr::slice(1:10)
+  # Split dataframe by gender and create plots
+  if(abs_rel == "Relativ"){
 
-  # Create female plot
-  hc_frau <- highcharter::hchart(studierende_faecher_frauen, 'bar', highcharter::hcaes(y = round(prop), x = fach)) %>%
-    highcharter::hc_plotOptions(
-      series = list(
-        boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert}")
-      )) %>%
-    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(c("#154194")) %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen an Studienfächern ", "(", "2020", ")"),
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
+    # female
+    studierende_faecher_frauen <- df %>%
+      dplyr::filter(anzeige_geschlecht == "Frauen") %>%
+      dplyr::arrange(desc(prop)) %>%
+      dplyr::slice(1:10)
+
+    # male
+    studierende_faecher_maenner <- df %>%
+      dplyr::filter(anzeige_geschlecht == "Männer") %>%
+      dplyr::arrange(desc(prop)) %>%
+      dplyr::slice(1:10)
+
+    # Create female plot
+    hc_frau <- highcharter::hchart(studierende_faecher_frauen, 'bar', highcharter::hcaes(y = prop, x = fach)) %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.prop} %")
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Absolut: {point.wert}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(c("#154194")) %>%
+      highcharter::hc_title(text = paste0("Fächer mit höchsten Frauenanteil ", "(", timerange, ")"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
                                                               this.exportChart({ type: 'image/jpeg' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-  # Create male dateframe
-  studierende_faecher_maenner <- df %>%
-    dplyr::filter(anzeige_geschlecht == "Männer") %>%
-    dplyr::arrange(desc(prop)) %>%
-    dplyr::slice(1:10)
 
-  # Create male plot
-  hc_mann <- highcharter::hchart(studierende_faecher_maenner, 'bar', highcharter::hcaes(y = round(prop), x = fach)) %>%
-    highcharter::hc_plotOptions(
-      series = list(
-        boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert}")
-      )) %>%
-    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(c("#66cbaf")) %>%
-    highcharter::hc_title(text = paste0("Anteil von Männern an Studienfächern ", "(", "2020", ")"),
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
+    # Create male plot
+    hc_mann <- highcharter::hchart(studierende_faecher_maenner, 'bar', highcharter::hcaes(y = prop, x = fach)) %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.prop} %")
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Absolut: {point.wert}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(c("#66cbaf")) %>%
+      highcharter::hc_title(text = paste0("Fächer mit höchsten Männeranteil ", "(", timerange, ")"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
                                                               this.exportChart({ type: 'image/jpeg' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  } else if(abs_rel == "Absolut"){
+
+    # female
+    studierende_faecher_frauen <- df %>%
+      dplyr::filter(anzeige_geschlecht == "Frauen") %>%
+      dplyr::arrange(desc(wert)) %>%
+      dplyr::slice(1:10)
+
+    # male
+    studierende_faecher_maenner <- df %>%
+      dplyr::filter(anzeige_geschlecht == "Männer") %>%
+      dplyr::arrange(desc(wert)) %>%
+      dplyr::slice(1:10)
+
+    # Create female plot
+    hc_frau <- highcharter::hchart(studierende_faecher_frauen, 'bar', highcharter::hcaes(y = wert, x = fach)) %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Absolut: {point.wert}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(studierende_faecher_frauen$wert), 1000, f = ceiling), tickInterval = 1000) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(c("#154194")) %>%
+      highcharter::hc_title(text = paste0("Am häufigsten gewählte Fächer von Frauen ", "(", timerange, ")"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/jpeg' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+    # Create male plot
+    hc_mann <- highcharter::hchart(studierende_faecher_maenner, 'bar', highcharter::hcaes(y = wert, x = fach)) %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Absolut: {point.wert}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(studierende_faecher_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(c("#66cbaf")) %>%
+      highcharter::hc_title(text = paste0("Am häufigsten gewählte Fächer von Männern ", "(", timerange, ")"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/jpeg' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  }
+
 
   highcharter::hw_grid(hc_frau,
                        hc_mann,
-                       ncol = 1,
+                       ncol = 2,
                        browsable = TRUE)
 
 }

@@ -44,10 +44,20 @@ mod_studium_top_faecher_ui <- function(id){
       selected = "Hessen"
     ),
     p("Auswahl des Fachs:"),
-    shinyWidgets::pickerInput(
+    shinyWidgets::radioGroupButtons(
       inputId = ns("subject_top_faecher"),
-      choices = c("MINT-Fächer","Alle Fächer"),
-      selected = "MINT-Fächer"
+      choices = c("MINT-Fächer", "Alle Fächer"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("subject_abs_rel"),
+      choices = c("Relativ", "Absolut"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
 }
@@ -70,6 +80,11 @@ mod_studium_top_faecher_server <- function(id, r){
     observeEvent(input$subject_top_faecher, {
       r$subject_top_faecher <- input$subject_top_faecher
     })
+
+    observeEvent(input$subject_abs_rel, {
+      r$subject_abs_rel <- input$subject_abs_rel
+    })
+
 
   })
 }
