@@ -189,7 +189,20 @@ valueBox2 <- function(value, title, subtitle, icon = NULL, color = "aqua", width
 #' @noRd
 
 share_pie <- function(df) {
+    # calculate proportions
+    df$props <- sum(df$wert)
 
+  df <- df %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
+    dplyr::summarize(proportion = wert/props)
+
+  df$proportion <- df$proportion * 100
+
+  df$proportion <- round_preserve_sum(as.numeric(df$proportion),0)
+
+  return(df)
+}
+
+share_pie_neu <- function(df) {
   # calculate proportions
   df$props <- sum(df$wert)
 
@@ -201,6 +214,4 @@ share_pie <- function(df) {
   df$proportion <- round_preserve_sum(as.numeric(df$proportion),0)
 
   return(df)
-
 }
-
