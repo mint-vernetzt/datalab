@@ -14,7 +14,7 @@ mod_home_start_einstieg_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_einstieg_1"),
       choices = c("Leistungskurse",
-                  "Studienanfänger:innen", "Studierende",
+                   "Studierende",
                   "Auszubildende", "Beschäftigte"),
       selected = c("Leistungskurse", "Beschäftigte"),
       multiple = TRUE,

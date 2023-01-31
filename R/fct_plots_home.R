@@ -729,20 +729,17 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
 
   df <- rbind(df, df_sub)
 
-  df <- df %>% dplyr::filter(indikator %in% c("Leistungskurse",
-                                              "Studienanfänger:innen", "Studierende",
+  df <- df %>% dplyr::filter(indikator %in% c("Leistungskurse", "Studierende",
                                               "Auszubildende", "Beschäftigte"))
 
   # order
-  df$indikator <- factor(df$indikator , levels=c("Leistungskurse",
-                                                 "Studienanfänger:innen", "Studierende",
+  df$indikator <- factor(df$indikator , levels=c("Leistungskurse", "Studierende",
                                                  "Auszubildende", "Beschäftigte"))
   # plot
   highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(wert), group = anzeige_geschlecht)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}-Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
-    highcharter::hc_xAxis(title = list(text = ""), categories = c("Leistungskurse",
-                                                 "Studienanfänger:innen", "Studierende",
+    highcharter::hc_xAxis(title = list(text = ""), categories = c("Leistungskurse", "Studierende",
                                                  "Auszubildende", "Beschäftigte")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
@@ -811,8 +808,7 @@ home_stacked_comparison_mint <- function(df, r) {
 
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
-  df <- df %>% dplyr::filter(indikator %in% c("Leistungskurse",
-                                              "Studienanfänger:innen", "Studierende",
+  df <- df %>% dplyr::filter(indikator %in% c("Leistungskurse", "Studierende",
                                               "Auszubildende", "Beschäftigte"))
 
   # calculate proportions for MINT vs. Rest
@@ -826,8 +822,7 @@ home_stacked_comparison_mint <- function(df, r) {
   df$proportion <- df$proportion * 100
 
   # order
-  x <- ordered(factor(df$indikator), levels=c("Leistungskurse",
-                                              "Studienanfänger:innen", "Studierende",
+  x <- ordered(factor(df$indikator), levels=c("Leistungskurse", "Studierende",
                                               "Auszubildende", "Beschäftigte"))
 
   df <- df[order(x),]
