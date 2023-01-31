@@ -22,7 +22,7 @@ data <- readxl::read_excel("BA006_221123_Besch_MINT.xlsx",
 
 # Spalten zusammenfassen/löschen
 data$...1 <- dplyr::coalesce(data$...4, data$...3, data$...2, data$...1) # Regionen in eine Spalte
-data$...5 <- dplyr::coalesce(data$...8, data$...7, data$...6, data$...5) # MINT/Niveau in eine Spalte
+data$...5 <- dplyr::coalesce(data$...8, data$...7, data$...6, data$...5) # Hilfspalte für MINT/Niveau gesamt, wird später getrennt
 
 # region formattieren (kab)
 
@@ -57,7 +57,8 @@ data1$b <- ifelse(data1$b == data1$c, NA, data1$b)
 colnames(data1)[6] <- "schluesselnummer"
 colnames(data1)[5] <- "zusatz"
 
-data <- data1[,-c(2,3,7,8,9,11)] # nun überflüssige Spalten löschen
+data <- data1[,-c(2,3,8:11)] # nun überflüssige Spalten löschen
+
 
 # Header ergänzen
 header <- c("region", "ort", "zusatz", "schluesselnummer", "fachbereich",
@@ -110,6 +111,7 @@ colnames(data) <- header
 # data <- data %>%
 #   dplyr::mutate_all(~dplyr::replace(., . %in% c(0, "*"), NA))
 
+# Orte/Schlüsselnummern trennen
 data <- data %>%
   dplyr::mutate(dplyr::across(c(6:33), as.numeric))
 
@@ -147,7 +149,7 @@ data$fachbereich[data$fachbereich=="Technik"]<-"Technik (gesamt)"
 
 # Lücken füllen, die durch Zellverbünde entstanden sind
 # data$region <- stats::ave(data$region, cumsum(!is.na(data$region)), FUN=function(x) x[1])
-# data$fachbereich <- stats::ave(data$fachbereich, cumsum(!is.na(data$fachbereich)), FUN=function(x) x[1])
+data$fachbereich <- stats::ave(data$fachbereich, cumsum(!is.na(data$fachbereich)), FUN=function(x) x[1])
 
 # ins long-Format bringen
 data <- data %>%
@@ -196,9 +198,16 @@ data <- data %>%
   dplyr::rename(wert=value,
                 indikator=name)
 
+data <- data %>%
+  dplyr::rename(
+    landkreis = region,
+    landkreis_zusatz = zusatz,
+    landkreis_nummer = schluesselnummer
+  )
+
 
 # Spalten in logische Reihenfolge bringen
-data <- data[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht", "region", "bundesland", "schluesselnummer", "zusatz", "jahr", "anforderung", "wert"
+data <- data[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
                 #, "hinweise", "quelle"
 )]
 
@@ -219,8 +228,9 @@ data_a <- readxl::read_excel("BA007_221205_AusbV_MINT.xlsx",
 
 # Spalten zusammenfassen/löschen
 data_a$...1 <- dplyr::coalesce(data_a$...4, data_a$...3, data_a$...2, data_a$...1) # Regionen in eine Spalte
-data_a$...5 <- dplyr::coalesce(data_a$...8, data_a$...7, data_a$...6, data_a$...5) # MINT in eine Spalte
+data_a$...5 <- dplyr::coalesce(data_a$...8, data_a$...7, data_a$...6, data_a$...5) # Fachbereich in eine Spalte
 
+# Bundesland-Spalte erstellen
 data_a1 <- data_a %>%
   dplyr::mutate(bundesland=dplyr::case_when(
     ...1 == "Deutschland" ~ "Deutschland",
@@ -319,12 +329,16 @@ data_a <- data_a %>%
     jahr = 2021,
     anforderung = "Gesamt") %>%
   dplyr::rename(geschlecht = name,
-              wert = value)
+              wert = value,
+              landkreis = region,
+              landkreis_zusatz = zusatz,
+              landkreis_nummer = schluesselnummer
+              )
 
 data_a$geschlecht[data_a$geschlecht == "frauen"]<-"Frauen"
 
 # Spalten in logische Reihenfolge bringen
-data_a <- data_a[,c("bereich","kategorie", "indikator", "fachbereich", "geschlecht", "region", "bundesland", "zusatz", "schluesselnummer", "jahr", "anforderung", "wert"
+data_a <- data_a[,c("bereich","kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
                     #, "hinweise", "quelle"
 )]
 
@@ -332,7 +346,7 @@ data_a <- data_a[,c("bereich","kategorie", "indikator", "fachbereich", "geschlec
 
 arbeitsmarkt_detail <- rbind(data, data_a)
 
-arbeitsmarkt_detail$bundesland <- ifelse(arbeitsmarkt_detail$bundesland==arbeitsmarkt_detail$region, NA, arbeitsmarkt_detail$bundesland)
+arbeitsmarkt_detail$landkreis <- ifelse(arbeitsmarkt_detail$bundesland==arbeitsmarkt_detail$landkreis, "alle Landkreise", arbeitsmarkt_detail$landkreis)
 
 
 
