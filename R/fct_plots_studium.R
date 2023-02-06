@@ -15,14 +15,14 @@ studienzahl_test <- function(df,r){
 
   df <-data.frame(df)
 
- testy <- r$testy
- testl <- r$testl
+ testy1 <- r$testy
+ testl1 <- r$testl
 
- df2 <- df %>% dplyr::filter(jahr==testy)
- df3 <- df2 %>% dplyr::filter(label %in% testl)
+ df2 <- df %>% dplyr::filter(jahr==testy1)
 
 
- df4 <- df3 %>% dplyr::filter(geschlecht == "gesamt")%>%
+
+ df4 <- df2 %>% dplyr::filter(geschlecht == "gesamt")%>%
    dplyr::filter(region== "Deutschland")%>%
    dplyr::select(-hochschulform, -region)%>%
    tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
@@ -47,12 +47,13 @@ studienzahl_test <- function(df,r){
  df4$wert <- round(df4$wert, 0)
 
 
-  if(length(testl) == 1) {
+  if(length(testl1) == 1) {
 
-
+    df_pie <- df4 %>% dplyr::filter(label == testl1[1])
 
     highcharter::hw_grid(
-      df4 %>%
+
+      df_pie %>%
         highcharter::hchart(
           "pie", highcharter::hcaes(x = proportion , y = wert)
         ))
@@ -76,16 +77,16 @@ studienzahl_test <- function(df,r){
     # )
     #
 
-  } else if(length(testl) == 2) {
+  } else if(length(testl1) == 2) {
 
     # filter for UI input and ensure proportions sum to 1
-    df_1_pie <- df4 %>% dplyr::filter(label == testl[1])
+    df_1_pie <- df4 %>% dplyr::filter(label == testl1[1])
 
-    df_2_pie <- df4 %>% dplyr::filter(label == testl[2])
+    df_2_pie <- df4 %>% dplyr::filter(label == testl1[2])
 
 
-    highcharter::hw_grid(
-      highcharter::hchart(df_1_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)),
+     highcharter::hw_grid(
+       highcharter::hchart(df_1_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)),
 
     #   %>%
     #     highcharter::hc_tooltip(
@@ -102,7 +103,7 @@ studienzahl_test <- function(df,r){
     #                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
     #
     #
-      highcharter::hchart(df_2_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)))
+    highcharter:: hchart(df_2_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)))
 
 
     #%>%
@@ -125,19 +126,19 @@ studienzahl_test <- function(df,r){
     # )
 
 
-  } else if(length(testl) == 3) {
+  } else if(length(testl1) == 3) {
 
     # filter for UI input and ensure proportions sum to 1
 
-    df_1_pie <- df4 %>% dplyr::filter(label == testl[1])
+    df_1_pie <- df4 %>% dplyr::filter(label == testl1[1])
 
-    df_2_pie <- df4 %>% dplyr::filter(label == testl[2])
+    df_2_pie <- df4 %>% dplyr::filter(label == testl1[2])
 
-    df_3_pie <- df4 %>% dplyr::filter(label == testl[3])
+    df_3_pie <- df4 %>% dplyr::filter(label == testl1[3])
 
 
-    highcharter::hw_grid(
-      highcharter::hchart(df_1_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)),
+     highcharter::hw_grid(
+       highcharter::hchart(df_1_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)),
     #   %>%
     #     highcharter::hc_tooltip(
     #       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
@@ -153,7 +154,7 @@ studienzahl_test <- function(df,r){
     #                                            dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
     #
     #
-       highcharter::hchart(df_2_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)),
+    highcharter::hchart(df_2_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)),
 
 
     #%>%
@@ -170,7 +171,7 @@ studienzahl_test <- function(df,r){
     #     highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
     #                                            dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
     #
-       highcharter::hchart(df_3_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)))
+    highcharter::hchart(df_3_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = wert)))
 
 
        #%>%

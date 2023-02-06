@@ -121,7 +121,7 @@ mod_studium_studienzahl_ui <- function(id){
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_studium_studienzahl_test_ui("mod_studium_studienzahl_test_ui_1")),
                              shiny::mainPanel(
-                               highcharter::highchartOutput(ns("test")),
+                               htmlOutput(ns("test")),
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
 
 
@@ -500,7 +500,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
       ranking_bl_subject(data_studierende,r)
     })
 
-    output$test <- highcharter::renderHighchart({
+    output$test <- renderUI({
       studienzahl_test(data_studierende2, r)
     })
 
