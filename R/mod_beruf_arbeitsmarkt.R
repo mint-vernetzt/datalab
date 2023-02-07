@@ -329,12 +329,26 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               htmlOutput(ns("plot_arbeitsmarkt_detail")
+                               htmlOutput(ns("plot_arbeitsmarkt_detail_map")
                                ),
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                              )
+                    ),
+                    tabPanel("Vergleich", br(),
+
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_beruf_arbeitsmarkt_landkreis_vergleich_ui("mod_beruf_arbeitsmarkt_landkreis_vergleich_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_detail_vergleich"))
+                             ),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
+                             )
                     )
-            )))
+
+            ))
 
     # ,
     # fluidRow(
@@ -525,9 +539,14 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
     })
 
     # Box 8
-    output$plot_arbeitsmarkt_detail <- renderUI({
-      arbeitsmarkt_bl_detail(data_arbeitsmarkt_detail, r)
+    output$plot_arbeitsmarkt_detail_map <- renderUI({
+      arbeitsmarkt_lk_detail_map(data_arbeitsmarkt_detail, r)
     })
+
+    output$plot_arbeitsmarkt_detail_vergleich <- highcharter::renderHighchart({
+      arbeitsmarkt_lk_detail_vergleich(data_arbeitsmarkt_detail, r)
+    })
+
 
     # downloader
     output$download_data_box1 <- shiny::downloadHandler(

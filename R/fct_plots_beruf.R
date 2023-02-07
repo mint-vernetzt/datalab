@@ -2503,11 +2503,11 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
 #' @description A function to plot a map
 #'
 #' @return The return value, if any, from executing the function.
-#' @param data The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
+#' @param data The dataframe "Arbeitsmarkt_detailliert.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
-arbeitsmarkt_bl_detail <- function(df,r) {
+arbeitsmarkt_lk_detail_map <- function(df,r) {
 
   # load UI inputs from reactive value
   states <- r$states_beruf_arbeitsmarkt_landkreis_karte
@@ -2610,8 +2610,7 @@ arbeitsmarkt_bl_detail <- function(df,r) {
     dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
     dplyr::rename(wert = wert.x,
                   geschlecht = geschlecht.x) %>%
-    dplyr::select(-c(wert.y, geschlecht.y)) %>%
-    dplyr::filter(!is.na(landkreis_nummer))
+    dplyr::select(-c(wert.y, geschlecht.y))
 
 
 
@@ -2815,6 +2814,157 @@ arbeitsmarkt_bl_detail <- function(df,r) {
     ncol = 2,
     browsable = TRUE
   )
+}
 
+#' A function to plot a bar chart
+#'
+#' @description A function to create a bar chart for detailed overview for landkreise
+#'
+#' @return The return value is a bar chart
+#' @param df The dataframe "Arbeitsmarkt_detailliert.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
+
+  # load UI inputs from reactive value
+  states <- r$states_beruf_arbeitsmarkt_landkreis_vergleich
+
+  # input values for first map
+  category <- r$kategorie_beruf_arbeitsmarkt_landkreis_vergleich
+  domain <- r$fachbereich_beruf_arbeitsmarkt_landkreis_vergleich
+  indikator_azubi <- r$indikator1_beruf_arbeitsmarkt_landkreis_vergleich
+  indikator_besch <- r$indikator2_beruf_arbeitsmarkt_landkreis_vergleich
+  display_form <- r$darstellung_beruf_arbeitsmarkt_landkreis_vergleich
+
+  # first map ------------------------------------------------------------------
+  # filter dataset based on UI inputs
+  df_filtered <- df %>% dplyr::filter(bundesland == states,
+                              anforderung == "Gesamt",
+                              kategorie == category) # dropdown 1
+
+  # dropdown 2 auf Gesamt
+  if (domain == "Alle") {
+    df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == "Alle",
+                                        indikator == category,
+                                        geschlecht == "Gesamt")
+
+    titel_gesamt <- paste0("allen ", domain)
+
+  } else {
+    # dropdown 2 nicht auf Gesamt
+
+    # dropdown 3 auf Gesamt
+    if ((category == indikator_besch) |
+        (category == indikator_azubi)) {
+      df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == "Alle",
+                                          indikator == category,
+                                          geschlecht == "Gesamt")
+
+      titel_gesamt <- paste0("allen ", domain)
+
+    } else {
+      # dropdown 3 nicht auf Gesamt
+
+      df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == domain,
+                                          indikator == category,
+                                          geschlecht == "Gesamt")
+
+      titel_gesamt <- paste0(domain, " in der Kategorie ", category)
+
+    }
+
+  }
+
+  df_sub <- df_filtered %>% dplyr::filter(fachbereich == domain)
+
+  # dropdown 3
+  if(category == "Beschäftigte"){
+
+    titel_sub <- indikator_besch
+
+    if(indikator_besch != "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == indikator_besch,
+                                           geschlecht == "Gesamt")
+
+    } else if(indikator_besch == "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == category,
+                                           geschlecht == indikator_besch)
+    }
+
+  } else if(category == "Auszubildende"){
+
+    titel_sub <- indikator_azubi
+
+    if(indikator_azubi != "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == indikator_azubi,
+                                           geschlecht == "Gesamt")
+
+    } else if(indikator_azubi == "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == category,
+                                           geschlecht == indikator_azubi)
+    }
+  }
+
+  df_compare <- df_sub %>%
+    dplyr::left_join(df_gesamt,
+                     by = c("bereich",
+                            "kategorie",
+                            "bundesland",
+                            "landkreis",
+                            "landkreis_zusatz",
+                            "landkreis_nummer",
+                            "jahr",
+                            "anforderung")) %>%
+    dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
+    dplyr::rename(wert = wert.x,
+                  geschlecht = geschlecht.x) %>%
+    dplyr::select(-c(wert.y, geschlecht.y))
+
+
+  if(display_form == "Relativ") {
+    df_compare <- df_compare %>%
+      dplyr::mutate(display_value = prob) %>%
+      dplyr::arrange(display_value)
+
+    legende <- paste0("{point.landkreis} <br> Anteil: {point.y} %")
+    yAxis <- "{value}%"
+    titel <- paste0("Anteil ", titel_sub, " an ", titel_gesamt)
+  } else {
+    df_compare <- df_compare %>%
+      dplyr::mutate(display_value = wert) %>%
+      dplyr::arrange(display_value)
+
+    legende <- paste0("{point.landkreis} <br> Wert: {point.y}")
+    yAxis <- "{value}"
+    titel <- paste0(titel_sub, " innerhalb von allen ", titel_gesamt)
+  }
+
+  # plot
+  highcharter::hchart(df_compare, 'bar', highcharter::hcaes(y = display_value, x = landkreis)) %>%
+    highcharter::hc_tooltip(pointFormat = legende) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = yAxis)) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_colors("#154194") %>%
+    highcharter::hc_title(text = paste0(titel, "<br><br><br>"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 }

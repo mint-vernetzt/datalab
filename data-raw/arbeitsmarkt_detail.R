@@ -43,26 +43,4 @@ arbeitsmarkt_detail_final <- dplyr::bind_rows(arbeitsmarkt_detail_geschlecht, ar
   dplyr::distinct() %>%
   dplyr::filter(!is.na(landkreis_nummer))
 
-# arbeitsmarkt_detail_gesamt <- arbeitsmarkt_detail %>%
-#   dplyr::filter(geschlecht == "Gesamt")
-#
-# # Calculate proportion
-# arbeitsmarkt_detail_final <- arbeitsmarkt_detail %>%
-#   dplyr::left_join(arbeitsmarkt_detail_gesamt,
-#                    by = c("bereich",
-#                           "kategorie",
-#                           "indikator",
-#                           "fachbereich",
-#                           "bundesland",
-#                           "landkreis",
-#                           "landkreis_zusatz",
-#                           "landkreis_nummer",
-#                           "jahr",
-#                           "anforderung")) %>%
-#   dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
-#   dplyr::rename(wert = wert.x,
-#                 geschlecht = geschlecht.x) %>%
-#   dplyr::select(-c(wert.y, geschlecht.y)) %>%
-#   dplyr::filter()
-
 usethis::use_data(arbeitsmarkt_detail_final, overwrite = T)
