@@ -312,7 +312,30 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                          ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen."))
 
                     )
-        )))
+        ))),
+    fluidRow(
+      shinydashboard::box(
+        title = "#XXX?",
+        width = 12,
+        p("abc",
+          br(), br(),
+          "abc"),
+        tabsetPanel(type = "tabs",
+                    tabPanel("Karte", br(),
+
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_beruf_arbeitsmarkt_landkreis_map_ui("mod_beruf_arbeitsmarkt_landkreis_map_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               htmlOutput(ns("plot_arbeitsmarkt_detail")
+                               ),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
+                             )
+                    )
+            )))
+
     # ,
     # fluidRow(
     #   shinydashboard::box(
@@ -405,7 +428,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 #' beruf_arbeitsmarkt Server Functions
 #'
 #' @noRd
-mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
+mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -499,6 +522,11 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, r){
 
     output$plot_arbeitsmarkt_bl_gender_vergleich <- renderPlot({
       arbeitsmarkt_bl_gender_vergleich(data_arbeitsmarkt,r)
+    })
+
+    # Box 8
+    output$plot_arbeitsmarkt_detail <- renderUI({
+      arbeitsmarkt_bl_detail(data_arbeitsmarkt_detail, r)
     })
 
     # downloader
