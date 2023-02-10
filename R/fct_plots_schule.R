@@ -2059,7 +2059,7 @@ kurse_verlauf_single <- function(df,r) {
 #' @noRd
 
 kurse_einstieg_comparison <- function(df,r) {
-
+browser()
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg_comparison
 
@@ -2100,11 +2100,11 @@ kurse_einstieg_comparison <- function(df,r) {
   df$proportion <- df$proportion * 100
 
   # order years for plot
-  df <- df[with(df, order(jahr, decreasing = FALSE)), ]
+  dfü <<- df[with(df, order(jahr, decreasing = FALSE)), ]
 
   # plot
 
-  highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = "fachbereich")) %>%
+  highcharter::hchart(dfü, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = "fachbereich")) %>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%

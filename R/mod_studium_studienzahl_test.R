@@ -34,7 +34,7 @@ mod_studium_studienzahl_test_ui <- function(id){
                   "Studierende (Universität)"
       ),
       selected = c("Studierende"
-                   #, "Studienanfänger:innen (1.Fachsemester)"
+                   , "Studienanfänger:innen (1.Fachsemester)"
                    ),
       multiple = TRUE,
       options =  list(
