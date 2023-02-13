@@ -12,36 +12,37 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
   tagList(
     p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
-      inputId = ns("date_studium_studienzahl_bl_map"),
+      inputId = ns("map_y"),
       label = NULL,
-      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
-      selected = 2020
+      choices = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"),
+      selected = "2021"
     ),
-    p("Nur Lehramt anzeigen:"),
-    tags$div(
-      shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_studienzahl_bl_map"), label = "Nein", inline = TRUE),
-      tags$span("Ja"),
-      p("Auswahl der Hochschulform:"),
-      conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_map == false",
-                       ns = ns,
-                       shinyWidgets::pickerInput(
-                         inputId = ns("hochschulform_studium_studienzahl_bl_map1"),
-                         choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
-                       )),
-      conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_map != false",
-                       ns = ns,
-                       shinyWidgets::pickerInput(
-                         inputId = ns("hochschulform_studium_studienzahl_bl_map2"),
-                         choices = "Uni"
-                       )),
-      p("Auswahl des Fachs:"),
-      shinyWidgets::pickerInput(
-        inputId = ns("subject_studium_studienzahl_bl_map"),
-        choices = c("MINT-Fächer (gesamt)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
-        selected = "MINT-Fächer (gesamt)"
-      )
+    p("Auswahl der Indikatoren (max. 3):"),
+    shinyWidgets::pickerInput(
+      inputId = ns("map_l"),
+      choices = c("Studienanfänger:innen (1.Fachsemester)",
+                  "Studienanfänger:innen (1.Hochschulsemester)",
+                  "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
+                  "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
+                  "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
+                  "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
+                  "Studienanfänger:innen (Universität, 1.Fachsemester)",
+                  "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
+                  "Studierende",
+                  "Studierende (Fachhochschulen)",
+                  "Studierende (Lehramt, Universität)",
+                  "Studierende (Universität)"
+      ),
+      selected = c("Studierende"
+                   , "Studienanfänger:innen (1.Fachsemester)"
+      ),
+      multiple = TRUE,
+      options =  list(
+        "max-options" = 3,
+        "max-options-text" = "Maximal 3 Indikatoren auswählen")
     )
   )
+
 }
 
 #' studium_studienzahl_bl_map Server Functions
@@ -51,25 +52,25 @@ mod_studium_studienzahl_bl_map_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    observeEvent(input$date_studium_studienzahl_bl_map, {
-      r$date_studium_studienzahl_bl_map <- input$date_studium_studienzahl_bl_map
+    observeEvent(input$map_y, {
+      r$map_y <- input$map_y
     })
 
-    observeEvent(input$nurLehramt_studium_studienzahl_bl_map, {
-      r$nurLehramt_studium_studienzahl_bl_map <- input$nurLehramt_studium_studienzahl_bl_map
+    observeEvent(input$map_l, {
+      r$map_l <- input$map_l
     })
 
-    observeEvent(input$hochschulform_studium_studienzahl_bl_map1, {
-      r$hochschulform_studium_studienzahl_bl_map1 <- input$hochschulform_studium_studienzahl_bl_map1
-    })
-
-    observeEvent(input$hochschulform_studium_studienzahl_bl_map2, {
-      r$hochschulform_studium_studienzahl_bl_map2 <- input$hochschulform_studium_studienzahl_bl_map2
-    })
-
-    observeEvent(input$subject_studium_studienzahl_bl_map, {
-      r$subject_studium_studienzahl_bl_map <- input$subject_studium_studienzahl_bl_map
-    })
+    # observeEvent(input$hochschulform_studium_studienzahl_bl_map1, {
+    #   r$hochschulform_studium_studienzahl_bl_map1 <- input$hochschulform_studium_studienzahl_bl_map1
+    # })
+    #
+    # observeEvent(input$hochschulform_studium_studienzahl_bl_map2, {
+    #   r$hochschulform_studium_studienzahl_bl_map2 <- input$hochschulform_studium_studienzahl_bl_map2
+    # })
+    #
+    # observeEvent(input$subject_studium_studienzahl_bl_map, {
+    #   r$subject_studium_studienzahl_bl_map <- input$subject_studium_studienzahl_bl_map
+    # })
 
   })
 }

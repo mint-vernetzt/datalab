@@ -1051,108 +1051,338 @@ data_einstieg <- function(df,r) {
 
 studienzahl_waffle_mint <- function(df,r) {
 
+
+
   # load UI inputs from reactive value
-  timerange <- r$date_studierende
+  timerange <<- r$waffle_y
 
-  lehramt <- r$nurLehramt_studierende
+  label_w <<- r$waffle_l
 
-  hochschulform_select_1 <- r$hochschulform_studierende_1
-
-  hochschulform_select_2 <- r$hochschulform_studierende_2
+  # hochschulform_select_1 <- r$hochschulform_studierende_1
+  #
+  # hochschulform_select_2 <- r$hochschulform_studierende_2
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr == timerange)
 
 
-  if(lehramt == FALSE){
+  df2 <<- df %>% dplyr::filter(jahr == timerange) %>%
+    dplyr::filter(region== "Deutschland")%>%
+    dplyr::filter(geschlecht== "gesamt")%>%
+    dplyr::select(-region, -geschlecht, - indikator, - hochschulform, - quelle, - bereich, - jahr)%>%
+    tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
+    dplyr::mutate(`Nicht MINT` = Alle - Ingenieurwissenschaften - Mathematik_Naturwissenschaften)%>%
+    dplyr::mutate(pro_mathe = Mathematik_Naturwissenschaften/Alle,
+                  pro_nicht = `Nicht MINT`/Alle,
+                  pro_ing = Ingenieurwissenschaften/Alle)%>%
+    dplyr::select(label, pro_ing, pro_mathe,pro_nicht)
 
-    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
 
-    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
+  if(length(label_w)==1){
 
-  } else {
+    waf_1 <- df2 %>%
+      dplyr::filter(label==label_w)
 
-    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+    title_1 <<- as.character(label_w)
+    data_1 <<- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
+    data_1 <<- round(data_1 * 100)
+    names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
-    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
+    data_k <<- data_1
+
+
+
+
+
+    waffle_a <- waffle::waffle(data_1, keep = FALSE)+
+      ggplot2::labs(
+        fill = "",
+        title = paste0("<span style='color:black;'>", title_1, "<br>", timerange, "<br>")) + ###Von mir. Gemeint: Tatsächlich alle Smester? kab
+      ggplot2::theme(plot.title = ggtext::element_markdown(),
+                     plot.subtitle = ggtext::element_markdown(),
+                     text = ggplot2::element_text(size = 14),
+                     plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                     legend.position = "bottom") +
+      ggplot2::scale_fill_manual(
+        values =  c("#00a87a",
+                    "#fcc433",
+                    '#b1b5c3'),
+        na.value="#b1b5c3",
+        limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
+        guide = ggplot2::guide_legend(reverse = TRUE),
+        labels = c(
+          paste0("Ingenieurwissenschaften",", ",data_1[1], "%"),
+          paste0("Mathematik/Naturwissenschaften",", ",data_1[2], "%"),
+          paste0("andere Studiengänge",", ",data_1[3], "%"))) +
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+
+    ggpubr::ggarrange(NULL, waffle_a ,NULL,
+                      widths = c(1, 1, 1), nrow=1)
+
+  } else if(length(label_w)==2){
+
+    waf_1 <- df2 %>%
+      dplyr::filter(label==label_w[1])
+
+    waf_2 <- df2 %>%
+      dplyr::filter(label==label_w[2])
+
+    title_1 <- as.character(as.vector(waf_1[1,1]))
+    data_1 <<- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
+    data_1 <<- round(data_1 * 100)
+    names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
+
+    title_2 <- as.character(as.vector(waf_2[1,1]))
+    data_2 <<- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
+    data_2 <<- round(data_2 * 100)
+    names(data_2) <- colnames(waf_2[2:ncol(waf_2)])
+
+
+
+    waffle_a <- waffle::waffle(data_1, keep = FALSE)+
+    ggplot2::labs(
+          fill = "",
+          title = paste0("<span style='color:black;'>", title_1, "<br>", timerange, "<br>")) + ###Von mir. Gemeint: Tatsächlich alle Smester? kab
+        ggplot2::theme(plot.title = ggtext::element_markdown(),
+                       plot.subtitle = ggtext::element_markdown(),
+                       text = ggplot2::element_text(size = 14),
+                       plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                       legend.position = "bottom") +
+        ggplot2::scale_fill_manual(
+          values =  c("#00a87a",
+                      "#fcc433",
+                      '#b1b5c3'),
+          na.value="#b1b5c3",
+          limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
+          guide = ggplot2::guide_legend(reverse = TRUE),
+          labels = c(
+            paste0("Ingenieurwissenschaften",", ",data_1[1], "%"),
+            paste0("Mathematik/Naturwissenschaften",", ",data_1[2], "%"),
+            paste0("andere Studiengänge",", ",data_1[3], "%"))) +
+        ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+
+    waffle_b <- waffle::waffle(data_2, keep = FALSE)+
+      ggplot2::labs(
+        fill = "",
+        title = paste0("<span style='color:black;'>", title_2, "<br>", timerange, "<br>")) + ###Von mir. Gemeint: Tatsächlich alle Smester? kab
+      ggplot2::theme(plot.title = ggtext::element_markdown(),
+                     plot.subtitle = ggtext::element_markdown(),
+                     text = ggplot2::element_text(size = 14),
+                     plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                     legend.position = "bottom") +
+      ggplot2::scale_fill_manual(
+        values =  c("#00a87a",
+                    "#fcc433",
+                    '#b1b5c3'),
+        na.value="#b1b5c3",
+        limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
+        guide = ggplot2::guide_legend(reverse = TRUE),
+        labels = c(
+          paste0("Ingenieurwissenschaften",", ",data_2[1], "%"),
+          paste0("Mathematik/Naturwissenschaften",", ",data_2[2], "%"),
+          paste0("andere Studiengänge",", ",data_2[3], "%"))) +
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+
+
+
+    ggpubr::ggarrange(waffle_a, NULL ,waffle_b,
+                      widths = c(1, 0.1, 1), nrow=1)
+
+  } else if (length(label_w)==3){
+
+    waf_1 <- df2 %>%
+      dplyr::filter(label==label_w[1])
+
+    waf_2 <- df2 %>%
+      dplyr::filter(label==label_w[2])
+
+    waf_3 <- df2 %>%
+      dplyr::filter(label==label_w[3])
+
+    title_1 <- as.character(as.vector(waf_1[1,1]))
+    data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
+    data_1 <- round(data_1 * 100)
+    names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
+
+    title_2 <- as.character(as.vector(waf_2[1,1]))
+    data_2 <- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
+    data_2 <- round(data_2 * 100)
+    names(data_2) <- colnames(waf_2[2:ncol(waf_2)])
+
+    title_3 <- as.character(as.vector(waf_3[1,1]))
+    data_3 <- as.numeric(as.vector(waf_3[1,2:ncol(waf_3)]))
+    data_3 <- round(data_3 * 100)
+    names(data_3) <- colnames(waf_3[2:ncol(waf_3)])
+
+
+
+    waffle_a <- waffle::waffle(data_1, keep = FALSE)+
+      ggplot2::labs(
+        fill = "",
+        title = paste0("<span style='color:black;'>", title_1, "<br>", timerange, "<br>")) + ###Von mir. Gemeint: Tatsächlich alle Smester? kab
+      ggplot2::theme(plot.title = ggtext::element_markdown(),
+                     plot.subtitle = ggtext::element_markdown(),
+                     text = ggplot2::element_text(size = 14),
+                     plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                     legend.position = "bottom") +
+      ggplot2::scale_fill_manual(
+        values =  c("#00a87a",
+                    "#fcc433",
+                    '#b1b5c3'),
+        na.value="#b1b5c3",
+        limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
+        guide = ggplot2::guide_legend(reverse = TRUE),
+        labels = c(
+          paste0("Ingenieurwissenschaften",", ",data_1[1], "%"),
+          paste0("Mathematik/Naturwissenschaften",", ",data_1[2], "%"),
+          paste0("andere Studiengänge",", ",data_1[3], "%"))) +
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+
+    waffle_b <- waffle::waffle(data_2, keep = FALSE)+
+      ggplot2::labs(
+        fill = "",
+        title = paste0("<span style='color:black;'>", title_2, "<br>", timerange, "<br>")) + ###Von mir. Gemeint: Tatsächlich alle Smester? kab
+      ggplot2::theme(plot.title = ggtext::element_markdown(),
+                     plot.subtitle = ggtext::element_markdown(),
+                     text = ggplot2::element_text(size = 14),
+                     plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                     legend.position = "bottom") +
+      ggplot2::scale_fill_manual(
+        values =  c("#00a87a",
+                    "#fcc433",
+                    '#b1b5c3'),
+        na.value="#b1b5c3",
+        limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
+        guide = ggplot2::guide_legend(reverse = TRUE),
+        labels = c(
+          paste0("Ingenieurwissenschaften",", ",data_2[1], "%"),
+          paste0("Mathematik/Naturwissenschaften",", ",data_2[2], "%"),
+          paste0("andere Studiengänge",", ",data_2[3], "%"))) +
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+
+    waffle_c <- waffle::waffle(data_3, keep = FALSE)+
+      ggplot2::labs(
+        fill = "",
+        title = paste0("<span style='color:black;'>", title_3, "<br>", timerange, "<br>")) +
+      ggplot2::theme(plot.title = ggtext::element_markdown(),
+                     plot.subtitle = ggtext::element_markdown(),
+                     text = ggplot2::element_text(size = 14),
+                     plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                     legend.position = "bottom") +
+      ggplot2::scale_fill_manual(
+        values =  c("#00a87a",
+                    "#fcc433",
+                    '#b1b5c3'),
+        na.value="#b1b5c3",
+        limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
+        guide = ggplot2::guide_legend(reverse = TRUE),
+        labels = c(
+          paste0("Ingenieurwissenschaften",", ",data_3[1], "%"),
+          paste0("Mathematik/Naturwissenschaften",", ",data_3[2], "%"),
+          paste0("andere Studiengänge",", ",data_3[3], "%"))) +
+      ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+
+
+
+    ggpubr::ggarrange(waffle_a ,waffle_b, waffle_c,
+                      widths = c(1, 1, 1), nrow=1)
+
+
+
+
+
+
   }
 
-  df <- df %>% dplyr::filter(region == "Deutschland")
 
-  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+  # if(lehramt == FALSE){
+  #
+  #   df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+  #
+  #   df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
+  #
+  # } else {
+  #
+  #   df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+  #
+  #   df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
+  # }
+  #
+  # df <- df %>% dplyr::filter(region == "Deutschland")
+  #
+  # df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
 
-  df_studierende <- df %>% dplyr::filter(indikator == "Studierende")
-
-  x_studierende <- calc_share_waffle(df_studierende)
-
-
-
-  df_anfaenger <- df %>% dplyr::filter(indikator == "Studienanfänger:innen")
-
-  x_studienanfaenger <- calc_share_waffle(df_anfaenger)
-
-
-  # set order
-  x_studierende <- x_studierende[order(factor(names(x_studierende), levels = c('Ingenieurwissenschaften', 'Mathematik/Naturwissenschaften',
-                                                                               'andere Studiengänge')))]
-
-  x_studienanfaenger <- x_studienanfaenger[order(factor(names(x_studienanfaenger),
-                                                        levels = c('Ingenieurwissenschaften', 'Mathematik/Naturwissenschaften',
-                                                                   'andere Studiengänge')))]
+  # df_studierende <- df %>% dplyr::filter(indikator == "Studierende")
+  #
+  # x_studierende <- calc_share_waffle(df_studierende)
+  #
+  #
+  #
+  # df_anfaenger <- df %>% dplyr::filter(indikator == "Studienanfänger:innen")
+  #
+  # x_studienanfaenger <- calc_share_waffle(df_anfaenger)
+  #
+  #
+  # # set order
+  # x_studierende <- x_studierende[order(factor(names(x_studierende), levels = c('Ingenieurwissenschaften', 'Mathematik/Naturwissenschaften',
+  #                                                                              'andere Studiengänge')))]
+  #
+  # x_studienanfaenger <- x_studienanfaenger[order(factor(names(x_studienanfaenger),
+  #                                                       levels = c('Ingenieurwissenschaften', 'Mathematik/Naturwissenschaften',
+  #                                                                  'andere Studiengänge')))]
 
 
   # create plot objects for waffle charts
-  waffle_studierende <- waffle::waffle(x_studierende, keep = FALSE) +
-    ggplot2::labs(
-      fill = "",
-      title = paste0("<span style='color:black;'>", "Studienfachwahl (Studierende) <br>", timerange, "<br>")) + ###Von mir. Gemeint: Tatsächlich alle Smester? kab
-    ggplot2::theme(plot.title = ggtext::element_markdown(),
-                   plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "bottom") +
-    ggplot2::scale_fill_manual(
-      values =  c("#00a87a",
-                  "#fcc433",
-                  '#b1b5c3'),
-      na.value="#b1b5c3",
-      limits = c("Ingenieurwissenschaften", "Mathematik/Naturwissenschaften", "andere Studiengänge"),
-      guide = ggplot2::guide_legend(reverse = TRUE),
-      labels = c(
-        paste0("Ingenieurwissenschaften",", ",x_studierende[1], "%"),
-        paste0("Mathematik/Naturwissenschaften",", ",x_studierende[2], "%"),
-        paste0("andere Studiengänge",", ",x_studierende[3], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
-
-
-
-  waffle_studienanfaenger <- waffle::waffle(x_studienanfaenger, keep = FALSE) +
-    ggplot2::labs(
-      fill = "",
-      title = paste0("<span style='color:black;'>", "Studienfachwahl (Studienanfänger:innen)</span> <br>", timerange, "<br>")) +
-    ggplot2::theme(plot.title = ggtext::element_markdown(),
-                   plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "bottom") +
-    ggplot2::scale_fill_manual(
-      values =  c("#00a87a",
-                  "#fcc433",
-                  '#b1b5c3'),
-      na.value="#b1b5c3",
-      limits = c("Ingenieurwissenschaften", "Mathematik/Naturwissenschaften", "andere Studiengänge"),
-      guide = ggplot2::guide_legend(reverse = TRUE),
-      labels = c(
-        paste0("Ingenieurwissenschaften",", ",x_studienanfaenger[1], "%"),
-        paste0("Mathematik/Naturwissenschaften",", ",x_studienanfaenger[2], "%"),
-        paste0("andere Studiengänge",", ",x_studienanfaenger[3], "%"))) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
-
-
-
-  ggpubr::ggarrange(waffle_studienanfaenger, NULL ,waffle_studierende,
-                            widths = c(1, 0.1, 1), nrow=1)
+  # waffle_studierende <- waffle::waffle(x_studierende, keep = FALSE) +
+  #   ggplot2::labs(
+  #     fill = "",
+  #     title = paste0("<span style='color:black;'>", "Studienfachwahl (Studierende) <br>", timerange, "<br>")) + ###Von mir. Gemeint: Tatsächlich alle Smester? kab
+  #   ggplot2::theme(plot.title = ggtext::element_markdown(),
+  #                  plot.subtitle = ggtext::element_markdown(),
+  #                  text = ggplot2::element_text(size = 14),
+  #                  plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+  #                  legend.position = "bottom") +
+  #   ggplot2::scale_fill_manual(
+  #     values =  c("#00a87a",
+  #                 "#fcc433",
+  #                 '#b1b5c3'),
+  #     na.value="#b1b5c3",
+  #     limits = c("Ingenieurwissenschaften", "Mathematik/Naturwissenschaften", "andere Studiengänge"),
+  #     guide = ggplot2::guide_legend(reverse = TRUE),
+  #     labels = c(
+  #       paste0("Ingenieurwissenschaften",", ",x_studierende[1], "%"),
+  #       paste0("Mathematik/Naturwissenschaften",", ",x_studierende[2], "%"),
+  #       paste0("andere Studiengänge",", ",x_studierende[3], "%"))) +
+  #   ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+  #
+  #
+  #
+  # waffle_studienanfaenger <- waffle::waffle(x_studienanfaenger, keep = FALSE) +
+  #   ggplot2::labs(
+  #     fill = "",
+  #     title = paste0("<span style='color:black;'>", "Studienfachwahl (Studienanfänger:innen)</span> <br>", timerange, "<br>")) +
+  #   ggplot2::theme(plot.title = ggtext::element_markdown(),
+  #                  plot.subtitle = ggtext::element_markdown(),
+  #                  text = ggplot2::element_text(size = 14),
+  #                  plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+  #                  legend.position = "bottom") +
+  #   ggplot2::scale_fill_manual(
+  #     values =  c("#00a87a",
+  #                 "#fcc433",
+  #                 '#b1b5c3'),
+  #     na.value="#b1b5c3",
+  #     limits = c("Ingenieurwissenschaften", "Mathematik/Naturwissenschaften", "andere Studiengänge"),
+  #     guide = ggplot2::guide_legend(reverse = TRUE),
+  #     labels = c(
+  #       paste0("Ingenieurwissenschaften",", ",x_studienanfaenger[1], "%"),
+  #       paste0("Mathematik/Naturwissenschaften",", ",x_studienanfaenger[2], "%"),
+  #       paste0("andere Studiengänge",", ",x_studienanfaenger[3], "%"))) +
+  #   ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+  #
+  #
+  #
+  # ggpubr::ggarrange(waffle_studienanfaenger, NULL ,waffle_studierende,
+  #                           widths = c(1, 0.1, 1), nrow=1)
 
 
 
@@ -2881,16 +3111,20 @@ studienfaecher_ranking <- function(df,r, type) {
 
 studierende_map <- function(df,r) {
 
+  browser()
+
   # load UI inputs from reactive value
-  timerange <- r$date_studium_studienzahl_bl_map
+  timerange <- r$map_y
 
-  subjects <- r$subject_studium_studienzahl_bl_map
+  label_m <- r$map_l
 
-  lehramt <- r$nurLehramt_studium_studienzahl_bl_map
+  browser()
 
-  hochschulform_select_1 <- r$hochschulform_studium_studienzahl_bl_map1
-
-  hochschulform_select_2 <- r$hochschulform_studium_studienzahl_bl_map2
+  # lehramt <- r$nurLehramt_studium_studienzahl_bl_map
+  #
+  # hochschulform_select_1 <- r$hochschulform_studium_studienzahl_bl_map1
+  #
+  # hochschulform_select_2 <- r$hochschulform_studium_studienzahl_bl_map2
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
@@ -2901,44 +3135,95 @@ studierende_map <- function(df,r) {
 
   # df <- df %>% dplyr::filter(region != "Baden-Württemberg")
 
-  #alles in gleiche Struktur bringen ohne Frauen da hier nicht relevant
-  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
-  if(lehramt == FALSE){
+  df2 <<- df %>% dplyr::filter(jahr == timerange) %>%
+    dplyr::filter(geschlecht== "gesamt")%>%
+    dplyr::select(-geschlecht, - indikator, - hochschulform, - quelle, - bereich, - jahr)%>%
+    tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
+    dplyr::mutate(proportion =  (Ingenieurwissenschaften + Mathematik_Naturwissenschaften)/ Alle )%>%
+    dplyr::select(region, label, proportion)
 
-    df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+  df2$proportion <- round(df2$proportion *100, 1)
 
-    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
 
-  } else {
+  if(length(label_m)==1){
 
-    df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+    map_1 <- df2 %>%
+      dplyr::filter(label == label_m)
 
-    df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
+    highcharter::hcmap(
+      "countries/de/de-all",
+      data = map_1,
+      value = "proportion",
+      joinBy = c("name", "region"),
+      borderColor = "#FAFAFA",
+      name = paste0("Anteil ", subjects),
+      borderWidth = 0.1,
+      nullColor = "#A9A9A9",
+      tooltip = list(
+        valueDecimals = 0,
+        valueSuffix = "%"
+      )
+    ) %>%
+      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+      highcharter::hc_title(
+        text = paste0("Studienanfänger:innen: Anteil von ", help_title, "<br>", timerange),
+        margin = 10,
+        align = "center",
+        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      ) %>%
+      # highcharter::hc_caption(
+      #   text = "...",  style = list(color= "white", fontSize = "12px")
+      # ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular")
+      ) %>% highcharter::hc_size(600, 550) %>%
+      highcharter::hc_credits(enabled = FALSE) %>%
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                             verticalAlign = "bottom")
+
 
   }
 
-  # aggregate to MINT
-  df_sub <- calc_share_MINT_bl(df)
 
-  df_sub <- df_sub[,colnames(df)]
-
-  df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
-
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
-
-  #df_sub <-  calc_share_male_bl(df_sub)
-
-  # df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-  #   dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
-  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-  #                   wert[anzeige_geschlecht == "Männer"])
-
-  #df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
-
-  df_sub <- df_sub %>%
-    dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
-    dplyr::mutate(wert_sum = sum(wert))
+  # #alles in gleiche Struktur bringen ohne Frauen da hier nicht relevant
+  # df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+  #
+  # if(lehramt == FALSE){
+  #
+  #   df <- df %>% dplyr::filter(nur_lehramt == "Nein")
+  #
+  #   df <- df %>% dplyr::filter(hochschulform == hochschulform_select_1)
+  #
+  # } else {
+  #
+  #   df <- df %>% dplyr::filter(nur_lehramt == "Ja")
+  #
+  #   df <- df %>% dplyr::filter(hochschulform == hochschulform_select_2)
+  #
+  # }
+  #
+  # # aggregate to MINT
+  # df_sub <- calc_share_MINT_bl(df)
+  #
+  # df_sub <- df_sub[,colnames(df)]
+  #
+  # df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
+  #
+  # df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
+  #
+  # #df_sub <-  calc_share_male_bl(df_sub)
+  #
+  # # df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+  # #   dplyr::group_by(region, fachbereich, indikator, jahr, nur_lehramt, hochschulform) %>%
+  # #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  # #                   wert[anzeige_geschlecht == "Männer"])
+  #
+  # #df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
+  #
+  # df_sub <- df_sub %>%
+  #   dplyr::group_by(jahr, region, indikator, anzeige_geschlecht) %>%
+  #   dplyr::mutate(wert_sum = sum(wert))
 
 #  df <- calc_share_male_bl(df)
 
@@ -2964,7 +3249,7 @@ studierende_map <- function(df,r) {
 
   df$proportion <- df$proportion * 100
 
-
+df_scope <<- df
   help_title <- ifelse(subjects == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subjects)
 
 

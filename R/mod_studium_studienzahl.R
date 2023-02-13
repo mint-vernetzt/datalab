@@ -495,7 +495,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
 
     # Box 4
     plot_waffle_react <- reactive({
-      studienzahl_waffle_mint(data_studierende,r)
+      studienzahl_waffle_mint(data_studierende2,r)
     })
 
     output$plot_waffle <- renderPlot({
@@ -539,7 +539,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
 
     # Box 6
     output$plot_studienzahl_map <- renderUI({
-      studierende_map(data_studierende,r)
+      studierende_map(data_studierende2,r)
     })
 
     output$plot_studienzahl_bl_verlauf <- highcharter::renderHighchart({
