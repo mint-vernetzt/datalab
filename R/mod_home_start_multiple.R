@@ -21,8 +21,7 @@ mod_home_start_multiple_ui <- function(id){
     p("Auswahl eines oder mehrerer Bereiche:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_multiple_1"),
-      choices = c("Leistungskurse",
-                  "Studienanfänger:innen", "Studierende",
+      choices = c("Leistungskurse", "Studierende",
                   "Auszubildende", "Beschäftigte"),
       selected = c("Leistungskurse", "Beschäftigte"),
       options =  list(

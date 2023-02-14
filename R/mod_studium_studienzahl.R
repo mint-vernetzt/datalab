@@ -78,17 +78,17 @@ mod_studium_studienzahl_ui <- function(id){
           br(),
           "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 37 % der Studienanfänger:innen ein MINT-Fach studieren, bei den Studierenden sind es im Jahr 2020 ebenfalls 37 %."),
         tabsetPanel(type = "tabs",
-                    tabPanel(tab1_name[1], br(),
+                    tabPanel("Überblick", br(),
 
                              shiny::sidebarPanel(
-                               width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_studium_studienzahl_einstieg_ui("mod_studium_studienzahl_einstieg_ui_1")),
+                               mod_studium_studienzahl_test_ui("mod_studium_studienzahl_test_ui_1")),
                              shiny::mainPanel(
-                               width = 9,
-                               htmlOutput(ns("plot_einstieg_pie"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
+                               htmlOutput(ns("test")),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
+
+
                     ),
 
                     tabPanel("Zeitverlauf", br(),
@@ -113,9 +113,8 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_comparison")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
+                    )
 
-
-                  )
                   # ,
                   #
                   #
@@ -465,9 +464,11 @@ mod_studium_studienzahl_ui <- function(id){
 #' studium_studienzahl Server Functions
 #'
 #' @noRd
-mod_studium_studienzahl_server <- function(id, data_studierende, data_studierende_faecher, r){
+mod_studium_studienzahl_server <- function(id, data_studierende, data_studierende2, data_studierende_faecher, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+
 
     # Box 2
     output$plot_einstieg_pie <- renderUI({
@@ -475,23 +476,29 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
     })
 
     output$plot_einstieg_verlauf <- highcharter::renderHighchart({
-      studienzahl_verlauf_single(data_studierende,r)
+      studienzahl_verlauf_single(data_studierende2,r)
     })
 
+    # all_mint_23_react <- reactive({
+    #   studienzahl_all_mint_23(data_studierende2, r)
+    # })
+
+
+
     output$plot_einstieg_comparison <- highcharter::renderHighchart({
-      studienzahl_einstieg_comparison(data_studierende,r)
+      studienzahl_einstieg_comparison(data_studierende2,r)
     })
 
     data_table_einstieg_react <- reactive({
       data_einstieg(data_studierende, r)
     })
 
-    output$data_table_einstieg <- DT::renderDT({
-      data_table_einstieg_react()
-    })
+    # output$data_table_einstieg <- DT::renderDT({
+    #   data_table_einstieg_react()
+    # })
 
     # Box 3
-    output$plot_einstieg_pie_gender <- renderUI({
+    output$plot_einstieg_pie_gender <- highcharter::renderHighchart({
       studienzahl_einstieg_pie_gender(data_studierende,r)
     })
 
@@ -508,14 +515,17 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
     })
 
 
-
     output$plot_verlauf_studienzahl_bl1 <- highcharter::renderHighchart({
       ranking_bl_subject(data_studierende,r)
     })
 
+    output$test <- renderUI({
+      studienzahl_test(data_studierende2, r)
+    })
+
     # Box 4
     plot_waffle_react <- reactive({
-      studienzahl_waffle_mint(data_studierende,r)
+      studienzahl_waffle_mint(data_studierende2,r)
     })
 
     output$plot_waffle <- renderPlot({
@@ -559,7 +569,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
 
     # Box 6
     output$plot_studienzahl_map <- renderUI({
-      studierende_map(data_studierende,r)
+      studierende_map(data_studierende2,r)
     })
 
     output$plot_studienzahl_bl_verlauf <- highcharter::renderHighchart({

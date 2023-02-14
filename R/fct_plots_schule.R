@@ -271,7 +271,11 @@ kurse_einstieg_pie_gender <- function(df,r) {
   plot_gk_rest <- highcharter::hchart(df_gk_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+
+    highcharter::hc_title(text = paste0("Zum Vergleich: Anteil von Schülerinnen an Nicht-MINT-Fächern in Grundkursen in ", timerange))
+
     highcharter::hc_title(text = paste0("Vergleich: Andere Fächer (Grundkurse)", br(), timerange),
+
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -301,7 +305,11 @@ kurse_einstieg_pie_gender <- function(df,r) {
   plot_lk_rest <- highcharter::hchart(df_lk_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
+
+    highcharter::hc_title(text = paste0("Zum Vergleich: Anteil von Schülerinnen an Nicht-MINT-Fächern in Leistungskursen in ", timerange))
+
     highcharter::hc_title(text = paste0("Vergleich: Andere Fächer (Leistungskurse) ", br(), timerange),
+
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2051,7 +2059,7 @@ kurse_verlauf_single <- function(df,r) {
 #' @noRd
 
 kurse_einstieg_comparison <- function(df,r) {
-
+browser()
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg_comparison
 
@@ -2092,11 +2100,11 @@ kurse_einstieg_comparison <- function(df,r) {
   df$proportion <- df$proportion * 100
 
   # order years for plot
-  df <- df[with(df, order(jahr, decreasing = FALSE)), ]
+  dfü <<- df[with(df, order(jahr, decreasing = FALSE)), ]
 
   # plot
 
-  highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = "fachbereich")) %>%
+  highcharter::hchart(dfü, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = "fachbereich")) %>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%

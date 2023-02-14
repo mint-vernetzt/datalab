@@ -21,17 +21,18 @@ mod_studium_ui <- function(id){
 #' studium Server Functions
 #'
 #' @noRd
-mod_studium_server <- function(id, data_studierende, data_studierende_faecher, r){
-
+mod_studium_server <- function(id, data_studierende, data_studierende2, data_studierende_faecher, r){
   r <- reactiveValues()
 
   # Studienzahl
-  mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1", data_studierende, data_studierende_faecher, r)
+  mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1", data_studierende, data_studierende2, data_studierende_faecher, r)
 
   # Box 2
   mod_studium_studienzahl_einstieg_server("mod_studium_studienzahl_einstieg_ui_1", r)
   mod_studium_studienzahl_einstieg_verlauf_server("mod_studium_studienzahl_einstieg_verlauf_ui_1", r)
   mod_studium_studienzahl_einstieg_comparison_server("mod_studium_studienzahl_einstieg_comparison_ui_1", r)
+  mod_studium_studienzahl_test_server("mod_studium_studienzahl_test_ui_1",  r)
+
 
   # Box 3
   mod_studium_studienzahl_einstieg_gender_server("mod_studium_studienzahl_einstieg_gender_ui_1", r)
