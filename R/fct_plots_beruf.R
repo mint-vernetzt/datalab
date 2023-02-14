@@ -2524,185 +2524,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
   indikator_azubi_2 <- r$indikator1_beruf_arbeitsmarkt_landkreis_karte2
   indikator_besch_2 <- r$indikator2_beruf_arbeitsmarkt_landkreis_karte2
 
-  # first map ------------------------------------------------------------------
-  # filter dataset based on UI inputs
-  df1 <- df %>% dplyr::filter(bundesland == states,
-                             anforderung == "Gesamt",
-                             kategorie == category_1) # dropdown 1
-
-  # dropdown 2 auf Gesamt
-  if (domain_1 == "Alle") {
-    df1_gesamt <- df1 %>% dplyr::filter(fachbereich == "Alle",
-                                        indikator == category_1,
-                                        geschlecht == "Gesamt")
-
-    titel_gesamt1 <- paste0(" an allen ", domain_1)
-
-  } else {
-    # dropdown 2 nicht auf Gesamt
-
-    # dropdown 3 auf Gesamt
-    if ((category_1 == indikator_besch_1) |
-        (category_1 == indikator_azubi_1)) {
-      df1_gesamt <- df1 %>% dplyr::filter(fachbereich == "Alle",
-                                          indikator == category_1,
-                                          geschlecht == "Gesamt")
-
-      titel_gesamt1 <- paste0(" an allen ", domain_1)
-
-    } else {
-      # dropdown 3 nicht auf Gesamt
-
-      df1_gesamt <- df1 %>% dplyr::filter(fachbereich == domain_1,
-                                          indikator == category_1,
-                                          geschlecht == "Gesamt")
-
-      titel_gesamt1 <- paste0(" an allen ", domain_1, category_1)
-
-    }
-
-  }
-
-  df1_sub <- df1 %>% dplyr::filter(fachbereich == domain_1)
-
-  # dropdown 3
-  if(category_1 == "Beschäftigte"){
-
-    titel_sub1 <- indikator_besch_1
-
-    if(indikator_besch_1 != "Frauen"){
-
-      df1_sub <- df1_sub %>% dplyr::filter(indikator == indikator_besch_1,
-                                           geschlecht == "Gesamt")
-
-    } else if(indikator_besch_1 == "Frauen"){
-
-      df1_sub <- df1_sub %>% dplyr::filter(indikator == category_1,
-                                           geschlecht == indikator_besch_1)
-    }
-
-  } else if(category_1 == "Auszubildende"){
-
-    titel_sub1 <- indikator_azubi_1
-
-    if(indikator_azubi_1 != "Frauen"){
-
-      df1_sub <- df1_sub %>% dplyr::filter(indikator == indikator_azubi_1,
-                                           geschlecht == "Gesamt")
-
-    } else if(indikator_azubi_1 == "Frauen"){
-
-      df1_sub <- df1_sub %>% dplyr::filter(indikator == category_1,
-                                           geschlecht == indikator_azubi_1)
-    }
-  }
-
-  df1_map <- df1_sub %>%
-    dplyr::left_join(df1_gesamt,
-                     by = c("bereich",
-                            "kategorie",
-                            "bundesland",
-                            "landkreis",
-                            "landkreis_zusatz",
-                            "landkreis_nummer",
-                            "jahr",
-                            "anforderung")) %>%
-    dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
-    dplyr::rename(wert = wert.x,
-                  geschlecht = geschlecht.x) %>%
-    dplyr::select(-c(wert.y, geschlecht.y))
-
-
-
-  # second map -----------------------------------------------------------------
-  # filter dataset based on UI inputs
-  df2 <- df %>% dplyr::filter(bundesland == states,
-                              anforderung == "Gesamt",
-                              kategorie == category_2) # dropdown 1
-
-  # dropdown 2 auf Gesamt
-  if(domain_2 == "Alle"){
-
-    df2_gesamt <- df2 %>% dplyr::filter(fachbereich == "Alle",
-                                        indikator == category_2,
-                                        geschlecht == "Gesamt")
-
-    titel_gesamt2 <- paste0(" an allen ", domain_2)
-
-
-  } else {
-    # dropdown 2 nicht auf Gesamt
-
-    # dropdown 3 auf Gesamt
-    if((category_2 == indikator_besch_2) | (category_2 == indikator_azubi_2)){
-
-      df2_gesamt <- df2 %>% dplyr::filter(fachbereich == "Alle",
-                                          indikator == category_2,
-                                          geschlecht == "Gesamt")
-
-      titel_gesamt2 <- paste0(" an allen ", domain_2)
-
-    } else { # dropdown 3 nicht auf Gesamt
-
-      df2_gesamt <- df2 %>% dplyr::filter(fachbereich == domain_2,
-                                          indikator == category_2,
-                                          geschlecht == "Gesamt")
-
-      titel_gesamt2 <- paste0(" an allen", domain_2, category_2)
-
-    }
-
-  }
-
-  df2_sub <- df2 %>% dplyr::filter(fachbereich == domain_2)
-
-  # dropdown 3
-  if(category_2 == "Beschäftigte"){
-
-    titel_sub2 <- indikator_besch_2
-
-    if(indikator_besch_2 != "Frauen"){
-
-      df2_sub <- df2_sub %>% dplyr::filter(indikator == indikator_besch_2,
-                                           geschlecht == "Gesamt")
-
-    } else if(indikator_besch_2 == "Frauen"){
-
-      df2_sub <- df2_sub %>% dplyr::filter(indikator == category_2,
-                                           geschlecht == indikator_besch_2)
-    }
-
-  } else if(category_2 == "Auszubildende"){
-
-    titel_sub2 <- indikator_azubi_2
-
-    if(indikator_azubi_2 != "Frauen"){
-
-      df2_sub <- df2_sub %>% dplyr::filter(indikator == indikator_azubi_2,
-                                           geschlecht == "Gesamt")
-
-    } else if(indikator_azubi_2 == "Frauen"){
-
-      df2_sub <- df2_sub %>% dplyr::filter(indikator == category_2,
-                                           geschlecht == indikator_azubi_2)
-    }
-  }
-
-  df2_map <- df2_sub %>%
-    dplyr::left_join(df2_gesamt,
-                     by = c("bereich",
-                            "kategorie",
-                            "bundesland",
-                            "landkreis",
-                            "landkreis_zusatz",
-                            "landkreis_nummer",
-                            "jahr",
-                            "anforderung")) %>%
-    dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
-    dplyr::rename(wert = wert.x,
-                  geschlecht = geschlecht.x) %>%
-    dplyr::select(-c(wert.y, geschlecht.y))
-
+  # map states for state codes
   state_codes <- data.frame(
     state = c(
       "Baden-Württemberg",
@@ -2744,14 +2566,28 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
 
   state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
 
+  # calculate comparison map 1
+  df1_list <- calculate_landkreis(df, states, category_1, domain_1, indikator_azubi_1, indikator_besch_1)
 
+  df1_map <- df1_list[[1]]
+  titel_gesamt1 <- df1_list[[2]]
+  titel_sub1 <- df1_list[[3]]
+
+  # calculate comparison map 2
+  df2_list <- calculate_landkreis(df, states, category_2, domain_2, indikator_azubi_2, indikator_besch_2)
+
+  df2_map <- df2_list[[1]]
+  titel_gesamt2 <- df2_list[[2]]
+  titel_sub2 <- df2_list[[3]]
+
+  # adjust landkreis_nummer for correct mapping
   df1_map <- df1_map %>% dplyr::mutate(
     landkreis_nummer = paste0("de-", state_code, "-", landkreis_nummer, "000"))
 
   df2_map <- df2_map %>% dplyr::mutate(
     landkreis_nummer = paste0("de-", state_code, "-", landkreis_nummer, "000"))
 
-  ### Create Plots
+  # create plots
   map1 <- highcharter::hcmap(
     paste0("countries/de/de-", state_code ,"-all"),
     data = df1_map,
@@ -2778,7 +2614,15 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     ) %>% highcharter::hc_size(600, 550) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom")
+                           verticalAlign = "bottom") %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/jpeg' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
   map2 <- highcharter::hcmap(
     paste0("countries/de/de-", state_code ,"-all"),
@@ -2806,7 +2650,15 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     ) %>% highcharter::hc_size(600, 550) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom")
+                           verticalAlign = "bottom") %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/jpeg' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
   highcharter::hw_grid(
     map1,
@@ -2830,102 +2682,21 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
   # load UI inputs from reactive value
   states <- r$states_beruf_arbeitsmarkt_landkreis_vergleich
 
-  # input values for first map
+  # input values
   category <- r$kategorie_beruf_arbeitsmarkt_landkreis_vergleich
   domain <- r$fachbereich_beruf_arbeitsmarkt_landkreis_vergleich
   indikator_azubi <- r$indikator1_beruf_arbeitsmarkt_landkreis_vergleich
   indikator_besch <- r$indikator2_beruf_arbeitsmarkt_landkreis_vergleich
   display_form <- r$darstellung_beruf_arbeitsmarkt_landkreis_vergleich
 
-  # first map ------------------------------------------------------------------
-  # filter dataset based on UI inputs
-  df_filtered <- df %>% dplyr::filter(bundesland == states,
-                              anforderung == "Gesamt",
-                              kategorie == category) # dropdown 1
+  # calculate comparison
+  df_compare_list <- calculate_landkreis(df, states, category, domain, indikator_azubi, indikator_besch)
 
-  # dropdown 2 auf Gesamt
-  if (domain == "Alle") {
-    df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == "Alle",
-                                        indikator == category,
-                                        geschlecht == "Gesamt")
+  df_compare <- df_compare_list[[1]]
+  titel_gesamt <- df_compare_list[[2]]
+  titel_sub <- df_compare_list[[3]]
 
-    titel_gesamt <- paste0("allen ", domain)
-
-  } else {
-    # dropdown 2 nicht auf Gesamt
-
-    # dropdown 3 auf Gesamt
-    if ((category == indikator_besch) |
-        (category == indikator_azubi)) {
-      df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == "Alle",
-                                          indikator == category,
-                                          geschlecht == "Gesamt")
-
-      titel_gesamt <- paste0("allen ", domain)
-
-    } else {
-      # dropdown 3 nicht auf Gesamt
-
-      df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == domain,
-                                          indikator == category,
-                                          geschlecht == "Gesamt")
-
-      titel_gesamt <- paste0(domain, " in der Kategorie ", category)
-
-    }
-
-  }
-
-  df_sub <- df_filtered %>% dplyr::filter(fachbereich == domain)
-
-  # dropdown 3
-  if(category == "Beschäftigte"){
-
-    titel_sub <- indikator_besch
-
-    if(indikator_besch != "Frauen"){
-
-      df_sub <- df_sub %>% dplyr::filter(indikator == indikator_besch,
-                                           geschlecht == "Gesamt")
-
-    } else if(indikator_besch == "Frauen"){
-
-      df_sub <- df_sub %>% dplyr::filter(indikator == category,
-                                           geschlecht == indikator_besch)
-    }
-
-  } else if(category == "Auszubildende"){
-
-    titel_sub <- indikator_azubi
-
-    if(indikator_azubi != "Frauen"){
-
-      df_sub <- df_sub %>% dplyr::filter(indikator == indikator_azubi,
-                                           geschlecht == "Gesamt")
-
-    } else if(indikator_azubi == "Frauen"){
-
-      df_sub <- df_sub %>% dplyr::filter(indikator == category,
-                                           geschlecht == indikator_azubi)
-    }
-  }
-
-  df_compare <- df_sub %>%
-    dplyr::left_join(df_gesamt,
-                     by = c("bereich",
-                            "kategorie",
-                            "bundesland",
-                            "landkreis",
-                            "landkreis_zusatz",
-                            "landkreis_nummer",
-                            "jahr",
-                            "anforderung")) %>%
-    dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
-    dplyr::rename(wert = wert.x,
-                  geschlecht = geschlecht.x) %>%
-    dplyr::select(-c(wert.y, geschlecht.y))
-
-
+  # differentiate between relative and absolute
   if(display_form == "Relativ") {
     df_compare <- df_compare %>%
       dplyr::mutate(display_value = prob) %>%
@@ -2934,6 +2705,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
     legende <- paste0("{point.landkreis} <br> Anteil: {point.y} %")
     yAxis <- "{value}%"
     titel <- paste0("Anteil ", titel_sub, " an ", titel_gesamt)
+
   } else {
     df_compare <- df_compare %>%
       dplyr::mutate(display_value = wert) %>%
@@ -2944,7 +2716,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
     titel <- paste0(titel_sub, " innerhalb von allen ", titel_gesamt)
   }
 
-  # plot
+  # create plot
   highcharter::hchart(df_compare, 'bar', highcharter::hcaes(y = display_value, x = landkreis)) %>%
     highcharter::hc_tooltip(pointFormat = legende) %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = yAxis)) %>%
@@ -2958,13 +2730,75 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = FALSE,
+    highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(contextButton = list(
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
                                 onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
+                                                              this.exportChart({ type: 'image/jpeg' }); }"),
                                 align = 'right',
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+}
+
+
+#' A function to plot a table
+#'
+#' @description A function to create a table for detailed overview for landkreise
+#'
+#' @return The return value is a table
+#' @param df The dataframe "Arbeitsmarkt_detailliert.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_lk_detail_table <- function(df, input_values, r) {
+
+  # get input variables
+  input_count <- stringr::str_sub(names(input_values), 1, 4) %>% unique()
+  variable_counts <- input_count[input_count %>% stringr::str_detect("var")] %>% sort()
+
+  state1 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_1-states_beruf_arbeitsmarkt_landkreis_table"]]
+  state2 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_2-states_beruf_arbeitsmarkt_landkreis_table"]]
+  state3 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_3-states_beruf_arbeitsmarkt_landkreis_table"]]
+
+  region1 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_1-region_beruf_arbeitsmarkt_landkreis_table"]]
+  region2 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_2-region_beruf_arbeitsmarkt_landkreis_table"]]
+  region3 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_3-region_beruf_arbeitsmarkt_landkreis_table"]]
+
+
+  # create empty dataframe
+  df_steckbrief <- data.frame()
+
+  # for each 'Betrachtung' = variable_counts, get detailed input, calculate
+  # values and build display dataframe
+  for(i in variable_counts){
+
+    category <- input_values[[paste0(i, "-kategorie_beruf_arbeitsmarkt_landkreis_vergleich")]]
+    domain <- input_values[[paste0(i, "-fachbereich_beruf_arbeitsmarkt_landkreis_vergleich")]]
+    indikator_azubi <- input_values[[paste0(i, "-indikator1_beruf_arbeitsmarkt_landkreis_vergleich")]]
+    indikator_besch <- input_values[[paste0(i, "-indikator2_beruf_arbeitsmarkt_landkreis_vergleich")]]
+
+    df_compare_list_region1 <- calculate_landkreis(df, state1, category, domain, indikator_azubi, indikator_besch)
+    df_compare_list_region1[[1]] <- df_compare_list_region1[[1]] %>% dplyr::filter(landkreis == region1)
+
+    df_compare_list_region2 <- calculate_landkreis(df, state2, category, domain, indikator_azubi, indikator_besch)
+    df_compare_list_region2[[1]] <- df_compare_list_region2[[1]] %>% dplyr::filter(landkreis == region2)
+
+    df_compare_list_region3 <- calculate_landkreis(df, state3, category, domain, indikator_azubi, indikator_besch)
+    df_compare_list_region3[[1]] <- df_compare_list_region3[[1]] %>% dplyr::filter(landkreis == region3)
+
+    df_var <- data.frame(region1 = paste0(df_compare_list_region1[[1]]$wert, "<br/>(", df_compare_list_region1[[1]]$prob, "% ", df_compare_list_region1[[3]], " an ", df_compare_list_region1[[2]], ")"),
+                         region2 = paste0(df_compare_list_region2[[1]]$wert, "<br/>(", df_compare_list_region2[[1]]$prob, "% ", df_compare_list_region2[[3]], " an ", df_compare_list_region2[[2]], ")"),
+                         region3 = paste0(df_compare_list_region3[[1]]$wert, "<br/>(", df_compare_list_region3[[1]]$prob, "% ", df_compare_list_region3[[3]], " an ", df_compare_list_region3[[2]], ")"))
+
+
+    df_steckbrief <- dplyr::bind_rows(df_steckbrief, df_var)
+
+  }
+
+  # adjust names for the dataframe
+  names(df_steckbrief) <- c(region1, region2, region3)
+
+  return(df_steckbrief)
 
 }

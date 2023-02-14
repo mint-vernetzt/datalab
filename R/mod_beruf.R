@@ -61,7 +61,10 @@ mod_beruf_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, r)
   # Box 8
   mod_beruf_arbeitsmarkt_landkreis_map_server("mod_beruf_arbeitsmarkt_landkreis_map_ui_1", r)
   mod_beruf_arbeitsmarkt_landkreis_vergleich_server("mod_beruf_arbeitsmarkt_landkreis_vergleich_ui_1", r)
-
+  mod_beruf_arbeitsmarkt_landkreis_table_lk_server("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_1", r, data_arbeitsmarkt_detail)
+  mod_beruf_arbeitsmarkt_landkreis_table_lk_server("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_2", r, data_arbeitsmarkt_detail)
+  mod_beruf_arbeitsmarkt_landkreis_table_lk_server("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_3", r, data_arbeitsmarkt_detail)
+  mod_beruf_arbeitsmarkt_landkreis_table_lk_analysis_server("xxxxxxxxxxx", btn, r)
 
 
 }

@@ -344,9 +344,43 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_arbeitsmarkt_detail_vergleich"))
                              ),
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
-                             )
-                    )
+                             p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
+                    ),
+                    tabPanel("Tabelle", br(),
+
+                             fluidRow(
+                               shiny::sidebarPanel(
+                                 width = 3
+                             ),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_beruf_arbeitsmarkt_landkreis_table_lk_ui("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_1")
+                             ),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_beruf_arbeitsmarkt_landkreis_table_lk_ui("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_2")
+                             ),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_beruf_arbeitsmarkt_landkreis_table_lk_ui("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_3")
+                             )),
+                             fluidRow(
+                               shiny::sidebarPanel(
+                                 width = 12,
+                                 p(),
+                                 mod_beruf_arbeitsmarkt_landkreis_table_lk_analysis_ui(ns("var1")),
+                                 h5(""),
+                                 actionButton(ns("insertBtn"), "Weitere Betrachtung hinzufügen"),
+                                 actionButton(ns("runBtn"), "Betrachtungen anzeigen")
+
+                                 ),
+                             shiny::mainPanel(
+                               width = 12,
+                               DT::DTOutput(ns("table_lk_analysis"))
+                             ),
+                             p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
+                    ))
+        )
 
             ))
 
@@ -547,6 +581,38 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
       arbeitsmarkt_lk_detail_vergleich(data_arbeitsmarkt_detail, r)
     })
 
+    var1 <- data_arbeitsmarkt_detail[1,]
+
+    observeEvent(input$insertBtn, {
+
+      btn <- sum(input$insertBtn, 1)
+
+      insertUI(
+        selector = "h5",
+        where = "beforeEnd",
+        ui = tagList(
+          mod_beruf_arbeitsmarkt_landkreis_table_lk_analysis_ui(ns(paste0("var", btn)))
+        )
+      )
+    })
+
+
+    table_lk_analysis_react <- reactive({
+      arbeitsmarkt_lk_detail_table(data_arbeitsmarkt_detail, input, r)
+    })
+
+    observeEvent(input$runBtn, {
+      output$table_lk_analysis <- DT::renderDT({
+        DT::datatable(isolate(table_lk_analysis_react()),
+                      style = "bootstrap",
+                      selection = "none",
+                      rownames = FALSE,
+                      options = list(dom = 't',
+                                     columnDefs = list(list(className = "dt-center", targets = "_all"))),
+                      escape = FALSE
+                      )
+        })
+    })
 
     # downloader
     output$download_data_box1 <- shiny::downloadHandler(
