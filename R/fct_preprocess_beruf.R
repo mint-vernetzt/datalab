@@ -180,3 +180,113 @@ calc_arbeitsmarkt_share_bl <- function(df) {
 
   return(df_return)
 }
+
+
+
+
+
+#' preprocess_beruf on landkreis level
+#'
+#' @description Function calculates the shares on landkreis level
+#'
+#' @return a dataframe.
+#'
+#' @noRd
+calculate_landkreis <- function(df, states, category, domain, indikator_azubi, indikator_besch) {
+
+  # filter dataset based on UI inputs
+  df_filtered <- df %>% dplyr::filter(bundesland == states,
+                                      anforderung == "Gesamt",
+                                      kategorie == category) # dropdown 1
+
+  # dropdown 2 auf Gesamt
+  if (domain == "Alle") {
+    df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == "Alle",
+                                               indikator == category,
+                                               geschlecht == "Gesamt")
+
+    titel_gesamt <- paste0("allen ", domain)
+
+  } else {
+    # dropdown 2 nicht auf Gesamt
+
+    # dropdown 3 auf Gesamt
+    if ((category == indikator_besch) |
+        (category == indikator_azubi)) {
+      df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == "Alle",
+                                                 indikator == category,
+                                                 geschlecht == "Gesamt")
+
+      titel_gesamt <- paste0("allen ", domain)
+
+    } else {
+      # dropdown 3 nicht auf Gesamt
+
+      df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == domain,
+                                                 indikator == category,
+                                                 geschlecht == "Gesamt")
+
+      titel_gesamt <- paste0(domain, " in der Kategorie ", category)
+
+    }
+
+  }
+
+  df_sub <- df_filtered %>% dplyr::filter(fachbereich == domain)
+
+  # dropdown 3
+  if(category == "Beschäftigte"){
+
+    titel_sub <- indikator_besch
+
+    if(indikator_besch != "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == indikator_besch,
+                                         geschlecht == "Gesamt")
+
+    } else if(indikator_besch == "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == category,
+                                         geschlecht == indikator_besch)
+    }
+
+  } else if(category == "Auszubildende"){
+
+    titel_sub <- indikator_azubi
+
+    if(indikator_azubi != "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == indikator_azubi,
+                                         geschlecht == "Gesamt")
+
+    } else if(indikator_azubi == "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == category,
+                                         geschlecht == indikator_azubi)
+    }
+  }
+
+  # merge dataframes and compute prob
+  df_compare <- df_sub %>%
+    dplyr::left_join(df_gesamt,
+                     by = c("bereich",
+                            "kategorie",
+                            "bundesland",
+                            "landkreis",
+                            "landkreis_zusatz",
+                            "landkreis_nummer",
+                            "jahr",
+                            "anforderung")) %>%
+    dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
+    dplyr::rename(wert = wert.x,
+                  geschlecht = geschlecht.x) %>%
+    dplyr::select(-c(wert.y, geschlecht.y))
+
+  # return relevant values as a list
+  return_list <- list()
+  return_list[[1]] <- df_compare
+  return_list[[2]] <- titel_gesamt
+  return_list[[3]] <- titel_sub
+
+  return(return_list)
+}

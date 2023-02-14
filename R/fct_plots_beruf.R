@@ -2714,3 +2714,309 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
 
 }
 
+#' A function to plot a single bundesland with landkreise
+#'
+#' @description A function to plot a map
+#'
+#' @return The return value, if any, from executing the function.
+#' @param data The dataframe "Arbeitsmarkt_detailliert.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_lk_detail_map <- function(df,r) {
+
+  # load UI inputs from reactive value
+  states <- r$states_beruf_arbeitsmarkt_landkreis_karte
+
+  # input values for first map
+  category_1 <- r$kategorie_beruf_arbeitsmarkt_landkreis_karte1
+  domain_1 <- r$fachbereich_beruf_arbeitsmarkt_landkreis_karte1
+  indikator_azubi_1 <- r$indikator1_beruf_arbeitsmarkt_landkreis_karte1
+  indikator_besch_1 <- r$indikator2_beruf_arbeitsmarkt_landkreis_karte1
+
+  # input values for second map
+  category_2 <- r$kategorie_beruf_arbeitsmarkt_landkreis_karte2
+  domain_2 <- r$fachbereich_beruf_arbeitsmarkt_landkreis_karte2
+  indikator_azubi_2 <- r$indikator1_beruf_arbeitsmarkt_landkreis_karte2
+  indikator_besch_2 <- r$indikator2_beruf_arbeitsmarkt_landkreis_karte2
+
+  # map states for state codes
+  state_codes <- data.frame(
+    state = c(
+      "Baden-Württemberg",
+      "Bayern",
+      "Berlin",
+      "Brandenburg",
+      "Bremen",
+      "Hamburg",
+      "Hessen",
+      "Mecklenburg-Vorpommern",
+      "Niedersachsen",
+      "Nordrhein-Westfalen",
+      "Rheinland-Pfalz",
+      "Saarland",
+      "Sachsen",
+      "Sachsen-Anhalt",
+      "Schleswig-Holstein",
+      "Thüringen"
+    ),
+    short = c(
+      "bw",
+      "by",
+      "be",
+      "bb",
+      "hb",
+      "hh",
+      "he",
+      "mv",
+      "ni",
+      "nw",
+      "rp",
+      "sl",
+      "sn",
+      "st",
+      "sh",
+      "th"
+    )
+  )
+
+  state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
+
+  # calculate comparison map 1
+  df1_list <- calculate_landkreis(df, states, category_1, domain_1, indikator_azubi_1, indikator_besch_1)
+
+  df1_map <- df1_list[[1]]
+  titel_gesamt1 <- df1_list[[2]]
+  titel_sub1 <- df1_list[[3]]
+
+  # calculate comparison map 2
+  df2_list <- calculate_landkreis(df, states, category_2, domain_2, indikator_azubi_2, indikator_besch_2)
+
+  df2_map <- df2_list[[1]]
+  titel_gesamt2 <- df2_list[[2]]
+  titel_sub2 <- df2_list[[3]]
+
+  # adjust landkreis_nummer for correct mapping
+  df1_map <- df1_map %>% dplyr::mutate(
+    landkreis_nummer = paste0("de-", state_code, "-", landkreis_nummer, "000"))
+
+  df2_map <- df2_map %>% dplyr::mutate(
+    landkreis_nummer = paste0("de-", state_code, "-", landkreis_nummer, "000"))
+
+  # create plots
+  map1 <- highcharter::hcmap(
+    paste0("countries/de/de-", state_code ,"-all"),
+    data = df1_map,
+    value = "prob",
+    joinBy = c("hc-key","landkreis_nummer"),
+    borderColor = "#FAFAFA",
+    name = paste0("Anteil ", titel_sub1, " ", titel_gesamt1),
+    borderWidth = 0.1,
+    nullColor = "#A9A9A9",
+    tooltip = list(
+      valueDecimals = 0,
+      valueSuffix = "%"
+    )
+  ) %>%
+    highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
+    highcharter::hc_title(
+      text = paste0("Anteil ", titel_sub1,  " ", titel_gesamt1),
+      margin = 10,
+      align = "center",
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular")
+    ) %>% highcharter::hc_size(600, 550) %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                           verticalAlign = "bottom") %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/jpeg' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  map2 <- highcharter::hcmap(
+    paste0("countries/de/de-", state_code ,"-all"),
+    data = df2_map,
+    value = "prob",
+    joinBy = c("hc-key", "landkreis_nummer"),
+    borderColor = "#FAFAFA",
+    name = paste0("Anteil ", titel_sub2,  " ", titel_gesamt2),
+    borderWidth = 0.1,
+    nullColor = "#A9A9A9",
+    tooltip = list(
+      valueDecimals = 0,
+      valueSuffix = "%"
+    )
+  ) %>%
+    highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
+    highcharter::hc_title(
+      text = paste0("Anteil ", titel_sub2,  " ", titel_gesamt2),
+      margin = 10,
+      align = "center",
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular")
+    ) %>% highcharter::hc_size(600, 550) %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                           verticalAlign = "bottom") %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/jpeg' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  highcharter::hw_grid(
+    map1,
+    map2,
+    ncol = 2,
+    browsable = TRUE
+  )
+}
+
+#' A function to plot a bar chart
+#'
+#' @description A function to create a bar chart for detailed overview for landkreise
+#'
+#' @return The return value is a bar chart
+#' @param df The dataframe "Arbeitsmarkt_detailliert.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
+
+  # load UI inputs from reactive value
+  states <- r$states_beruf_arbeitsmarkt_landkreis_vergleich
+
+  # input values
+  category <- r$kategorie_beruf_arbeitsmarkt_landkreis_vergleich
+  domain <- r$fachbereich_beruf_arbeitsmarkt_landkreis_vergleich
+  indikator_azubi <- r$indikator1_beruf_arbeitsmarkt_landkreis_vergleich
+  indikator_besch <- r$indikator2_beruf_arbeitsmarkt_landkreis_vergleich
+  display_form <- r$darstellung_beruf_arbeitsmarkt_landkreis_vergleich
+
+  # calculate comparison
+  df_compare_list <- calculate_landkreis(df, states, category, domain, indikator_azubi, indikator_besch)
+
+  df_compare <- df_compare_list[[1]]
+  titel_gesamt <- df_compare_list[[2]]
+  titel_sub <- df_compare_list[[3]]
+
+  # differentiate between relative and absolute
+  if(display_form == "Relativ") {
+    df_compare <- df_compare %>%
+      dplyr::mutate(display_value = prob) %>%
+      dplyr::arrange(display_value)
+
+    legende <- paste0("{point.landkreis} <br> Anteil: {point.y} %")
+    yAxis <- "{value}%"
+    titel <- paste0("Anteil ", titel_sub, " an ", titel_gesamt)
+
+  } else {
+    df_compare <- df_compare %>%
+      dplyr::mutate(display_value = wert) %>%
+      dplyr::arrange(display_value)
+
+    legende <- paste0("{point.landkreis} <br> Wert: {point.y}")
+    yAxis <- "{value}"
+    titel <- paste0(titel_sub, " innerhalb von allen ", titel_gesamt)
+  }
+
+  # create plot
+  highcharter::hchart(df_compare, 'bar', highcharter::hcaes(y = display_value, x = landkreis)) %>%
+    highcharter::hc_tooltip(pointFormat = legende) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = yAxis)) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_colors("#154194") %>%
+    highcharter::hc_title(text = paste0(titel, "<br><br><br>"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/jpeg' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+}
+
+
+#' A function to plot a table
+#'
+#' @description A function to create a table for detailed overview for landkreise
+#'
+#' @return The return value is a table
+#' @param df The dataframe "Arbeitsmarkt_detailliert.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_lk_detail_table <- function(df, input_values, r) {
+
+  # get input variables
+  input_count <- stringr::str_sub(names(input_values), 1, 4) %>% unique()
+  variable_counts <- input_count[input_count %>% stringr::str_detect("var")] %>% sort()
+
+  state1 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_1-states_beruf_arbeitsmarkt_landkreis_table"]]
+  state2 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_2-states_beruf_arbeitsmarkt_landkreis_table"]]
+  state3 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_3-states_beruf_arbeitsmarkt_landkreis_table"]]
+
+  region1 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_1-region_beruf_arbeitsmarkt_landkreis_table"]]
+  region2 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_2-region_beruf_arbeitsmarkt_landkreis_table"]]
+  region3 <- r[["mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_3-region_beruf_arbeitsmarkt_landkreis_table"]]
+
+
+  # create empty dataframe
+  df_steckbrief <- data.frame()
+
+  # for each 'Betrachtung' = variable_counts, get detailed input, calculate
+  # values and build display dataframe
+  for(i in variable_counts){
+
+    category <- input_values[[paste0(i, "-kategorie_beruf_arbeitsmarkt_landkreis_vergleich")]]
+    domain <- input_values[[paste0(i, "-fachbereich_beruf_arbeitsmarkt_landkreis_vergleich")]]
+    indikator_azubi <- input_values[[paste0(i, "-indikator1_beruf_arbeitsmarkt_landkreis_vergleich")]]
+    indikator_besch <- input_values[[paste0(i, "-indikator2_beruf_arbeitsmarkt_landkreis_vergleich")]]
+
+    df_compare_list_region1 <- calculate_landkreis(df, state1, category, domain, indikator_azubi, indikator_besch)
+    df_compare_list_region1[[1]] <- df_compare_list_region1[[1]] %>% dplyr::filter(landkreis == region1)
+
+    df_compare_list_region2 <- calculate_landkreis(df, state2, category, domain, indikator_azubi, indikator_besch)
+    df_compare_list_region2[[1]] <- df_compare_list_region2[[1]] %>% dplyr::filter(landkreis == region2)
+
+    df_compare_list_region3 <- calculate_landkreis(df, state3, category, domain, indikator_azubi, indikator_besch)
+    df_compare_list_region3[[1]] <- df_compare_list_region3[[1]] %>% dplyr::filter(landkreis == region3)
+
+    line_name <- paste(category, domain, ifelse(category=="Auszubildende", indikator_azubi, indikator_besch), sep = "-")
+    df_var <- data.frame(line_name = line_name,
+                         region1 = paste0(df_compare_list_region1[[1]]$wert, "<br/>(", df_compare_list_region1[[1]]$prob, "% ", df_compare_list_region1[[3]], " an ", df_compare_list_region1[[2]], ")"),
+                         region2 = paste0(df_compare_list_region2[[1]]$wert, "<br/>(", df_compare_list_region2[[1]]$prob, "% ", df_compare_list_region2[[3]], " an ", df_compare_list_region2[[2]], ")"),
+                         region3 = paste0(df_compare_list_region3[[1]]$wert, "<br/>(", df_compare_list_region3[[1]]$prob, "% ", df_compare_list_region3[[3]], " an ", df_compare_list_region3[[2]], ")"))
+
+
+    df_steckbrief <- dplyr::bind_rows(df_steckbrief, df_var)
+
+  }
+
+  # adjust names for the dataframe
+  names(df_steckbrief) <- c("", paste0("<b>", region1, "</b>"), paste0("<b>", region2, "</b>"), paste0("<b>", region3, "</b>"))
+
+  return(df_steckbrief)
+
+}
