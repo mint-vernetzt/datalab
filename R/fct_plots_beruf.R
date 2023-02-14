@@ -2787,7 +2787,9 @@ arbeitsmarkt_lk_detail_table <- function(df, input_values, r) {
     df_compare_list_region3 <- calculate_landkreis(df, state3, category, domain, indikator_azubi, indikator_besch)
     df_compare_list_region3[[1]] <- df_compare_list_region3[[1]] %>% dplyr::filter(landkreis == region3)
 
-    df_var <- data.frame(region1 = paste0(df_compare_list_region1[[1]]$wert, "<br/>(", df_compare_list_region1[[1]]$prob, "% ", df_compare_list_region1[[3]], " an ", df_compare_list_region1[[2]], ")"),
+    line_name <- paste(category, domain, ifelse(category=="Auszubildende", indikator_azubi, indikator_besch), sep = "-")
+    df_var <- data.frame(line_name = line_name,
+                         region1 = paste0(df_compare_list_region1[[1]]$wert, "<br/>(", df_compare_list_region1[[1]]$prob, "% ", df_compare_list_region1[[3]], " an ", df_compare_list_region1[[2]], ")"),
                          region2 = paste0(df_compare_list_region2[[1]]$wert, "<br/>(", df_compare_list_region2[[1]]$prob, "% ", df_compare_list_region2[[3]], " an ", df_compare_list_region2[[2]], ")"),
                          region3 = paste0(df_compare_list_region3[[1]]$wert, "<br/>(", df_compare_list_region3[[1]]$prob, "% ", df_compare_list_region3[[3]], " an ", df_compare_list_region3[[2]], ")"))
 
@@ -2797,7 +2799,7 @@ arbeitsmarkt_lk_detail_table <- function(df, input_values, r) {
   }
 
   # adjust names for the dataframe
-  names(df_steckbrief) <- c(region1, region2, region3)
+  names(df_steckbrief) <- c("", paste0("<b>", region1, "</b>"), paste0("<b>", region2, "</b>"), paste0("<b>", region3, "</b>"))
 
   return(df_steckbrief)
 
