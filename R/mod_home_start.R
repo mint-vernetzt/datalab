@@ -89,6 +89,10 @@ mod_home_start_ui <- function(id){
                     tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(
                         width = 3,
+                        shinyBS::bsPopover(id="q1", title = "Überschrift, kann auch leer bleiben und dadurch ausgeblendet",
+                                           content = "Inhalt<br><br><br><i>auch HTML tags möglich</i>",
+                                           trigger = "hover"),
+                        tags$a(icon("question-circle"), id="q1"),
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1")),
                       shiny::mainPanel(
                         width = 9,
