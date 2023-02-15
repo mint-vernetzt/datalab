@@ -16,6 +16,8 @@ app_server <- function(input, output, session) {
 
   load(file = system.file(package="datalab","data/studierende_faecher.rda"))
 
+  load(file = system.file(package="datalab","data/studierende_faecher_alle_indi.rda"))
+
   load(file = system.file(package="datalab","data/arbeitsmarkt.rda"))
 
   load(file = system.file(package="datalab","data/arbeitsmarkt_detail_final.rda"))
@@ -34,7 +36,8 @@ app_server <- function(input, output, session) {
   # callModule(mod_schule_server, "schule_ui_1", data=example_data, filter_name="schule")
   mod_schule_server("schule_ui_1", data_kurse = kurse)
 
-  mod_studium_server("studium_ui_1", data_studierende = studierende, data_studierende2 = studierende2, data_studierende_faecher = studierende_faecher)
+  mod_studium_server("studium_ui_1", data_studierende = studierende, data_studierende2 = studierende2, data_studierende_faecher = studierende_faecher,
+                     data_studierende_faecher_alle_indi = studierende_faecher_alle_indi)
 
   mod_beruf_server("beruf_ui_1", data_arbeitsmarkt = arbeitsmarkt, data_arbeitsmarkt_detail = arbeitsmarkt_detail_final)
 

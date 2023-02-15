@@ -14,10 +14,10 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("map_y"),
       label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"),
+      choices = c("2018", "2019", "2020", "2021"),
       selected = "2021"
     ),
-    p("Auswahl der Indikatoren (max. 3):"),
+    p("Auswahl des Indikators:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -33,14 +33,52 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                   "Studierende (Lehramt, Universität)",
                   "Studierende (Universität)"
       ),
-      selected = c("Studierende"
-                   , "Studienanfänger:innen (1.Fachsemester)"
+      selected = c("Studierende")
+      ,
+      multiple = F,
+      options =  list(
+        "max-options" = 3,
+        "max-options-text" = "Maximal 3 Indikatoren auswählen")
+    ),
+    p("Auswahl der Fächer (max. 3):"),
+    shinyWidgets::pickerInput(
+      inputId = ns("map_f"),
+      choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+                  "Biologie",
+                  "Elektrotechnik und Informationstechnik",
+                  "Geowissenschaften und Geographie",
+                  "Informatik",
+                  "Ingenieurwissenschaften ohne Informatik",
+                  "Maschinenbau/Verfahrenstechnik",
+                  "Mathematik",
+                  "MINT",
+                  "Nicht MINT",
+                  "Physik, Astronomie",
+                  "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                  "Vermessungswesen",
+                  "Architektur, Innenarchitektur",
+                  "Bauingenieurwesen",
+                  "Chemie",
+                  "Geisteswissenschaften",
+                  "Humanmedizin/Gesundheitswissenschaften",
+                  "Ingenieurwissenschaften",
+                  "Kunst, Kunstwissenschaft",
+                  "Materialwissenschaft und Werkstofftechnik",
+                  "Mathematik, Naturwissenschaften",
+                  "Naturwissenschaften",
+                  "Pharmazie",
+                  "Sport",
+                  "Verkehrstechnik, Nautik",
+                  "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt"
       ),
+      selected = c(
+                   "Informatik"),
       multiple = TRUE,
       options =  list(
         "max-options" = 3,
         "max-options-text" = "Maximal 3 Indikatoren auswählen")
     )
+
   )
 
 }
@@ -60,10 +98,10 @@ mod_studium_studienzahl_bl_map_server <- function(id, r){
       r$map_l <- input$map_l
     })
 
-    # observeEvent(input$hochschulform_studium_studienzahl_bl_map1, {
-    #   r$hochschulform_studium_studienzahl_bl_map1 <- input$hochschulform_studium_studienzahl_bl_map1
-    # })
-    #
+    observeEvent(input$map_f, {
+      r$map_f <- input$map_f
+    })
+
     # observeEvent(input$hochschulform_studium_studienzahl_bl_map2, {
     #   r$hochschulform_studium_studienzahl_bl_map2 <- input$hochschulform_studium_studienzahl_bl_map2
     # })

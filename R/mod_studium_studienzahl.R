@@ -533,7 +533,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
     })
 
     output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
-      studienzahl_verlauf_bl_subject(data_studierende,r)
+      studienzahl_verlauf_bl_subject(data_studierende2,r)
     })
 
     output$plot_ranking_bl_subject <- renderPlot({
@@ -569,7 +569,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
 
     # Box 6
     output$plot_studienzahl_map <- renderUI({
-      studierende_map(data_studierende2,r)
+      studierende_map(studierende_faecher_alle_indi,r)
     })
 
     output$plot_studienzahl_bl_verlauf <- highcharter::renderHighchart({

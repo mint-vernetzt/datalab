@@ -21,7 +21,7 @@ mod_studium_ui <- function(id){
 #' studium Server Functions
 #'
 #' @noRd
-mod_studium_server <- function(id, data_studierende, data_studierende2, data_studierende_faecher, r){
+mod_studium_server <- function(id, data_studierende, data_studierende2, data_studierende_faecher, data_studierende_faecher_alle_indi, r){
   r <- reactiveValues()
 
   # Studienzahl
