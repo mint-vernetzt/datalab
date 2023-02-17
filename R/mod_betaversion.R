@@ -34,7 +34,7 @@ mod_betaversion_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        img(src='www/Banner_Beta2.jpg',
+        img(src='www/Banner_Betaversion.jpg',
             class = "img-responsive",
             height = "300px",
             # width = "150px",
