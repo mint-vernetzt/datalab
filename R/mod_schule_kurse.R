@@ -75,7 +75,21 @@ mod_schule_kurse_ui <- function(id){
           br(),
         "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 23 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2020 bei 34 %."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
+
+                    tabPanel("Waffle", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")),
+                             shiny::mainPanel(
+                               width = 9,
+                               plotOutput(ns("plot_waffle_mint"))
+                               ,p(style="font-size:12px;color:grey", br(), "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+                    ),
+
+                    tabPanel("Vergleich (Pie)", br(),
 
                       tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -97,7 +111,7 @@ mod_schule_kurse_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_verlauf")),p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
                              ),
-                    tabPanel("Überblick", br(),
+                    tabPanel("Balkendiagramm", br(),
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_einstieg_comparison_ui("mod_schule_kurse_einstieg_comparison_ui_1")),
@@ -108,7 +122,7 @@ mod_schule_kurse_ui <- function(id){
                     ),
 
 
-                    tabPanel("Vergleich: Fächerwahl Mädchen & Jungen", br(),
+                    tabPanel("Waffle: Fächerwahl Mädchen & Jungen", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -140,19 +154,7 @@ mod_schule_kurse_ui <- function(id){
                     #
                     #            highcharter::highchartOutput(ns("plot_verlauf_kurse")))
                     # ),
-                    tabPanel("Überblick Bundesländer (Mädchen & Jungen)", br(),
 
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1")),
-                             shiny::mainPanel(
-                               width = 9,
-                               plotOutput(ns("plot_ranking_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
-
-                    )
                     #,
                     #  tabPanel("Datensatz", br(),
                     #
@@ -173,27 +175,13 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "#MINT im Detail: Vergleich der einzelnen MINT-Fächer und Bundesländer",
+        title = "#MINT im Detail: Vergleich der einzelnen MINT-Fächer",
         width = 12,
-        p("Hier zeigen wir die Anteile einzelner MINT-Fächer in Deutschland sowie die Unterschiede in den Bundesländern. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse.",
+        p("Hier zeigen wir die Anteile einzelner MINT-Fächer in Deutschland. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse.",
         br(), br(),
         "Interpretationshilfe: Auf der ersten Seite ist zu sehen, dass im Jahr 2020 deutschlandweit 23 % der Grundkurse aus dem MINT Bereich sind. Dabei sind Naturwissenschaften mit 14 %
         die am häufigsten belegte MINT-Disziplin. Bei den Leistungskursen sind 2020 34 % der Belegungen im MINT-Bereich, wobei Mathematik 17 % an allen Leistungskursbelegungen ausmacht."),
         tabsetPanel(type = "tabs",
-
-                    tabPanel("Vergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")),
-                             shiny::mainPanel(
-                               width = 9,
-                               plotOutput(ns("plot_waffle_mint"))
-                               ,p(style="font-size:12px;color:grey", br(), "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
-                    ),
-
 
                     tabPanel("Karte", br(),
 
@@ -205,7 +193,7 @@ mod_schule_kurse_ui <- function(id){
                                htmlOutput(ns("plot_map_kurse"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
                     ),
-                    tabPanel("Vergleich Bundesländer", br(),
+                    tabPanel("Zeitverlauf: Vergleich Bundesländer", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -215,7 +203,7 @@ mod_schule_kurse_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_verlauf_multiple"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
                     ),
-                    tabPanel("Vergleich Fächer", br(),
+                    tabPanel("Zeitverlauf: Vergleich Fächer", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -227,7 +215,23 @@ mod_schule_kurse_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen.")))
                     ,
-                    tabPanel("Überblick Fächer", br(),
+
+
+                    tabPanel("Vergleich Anteil Mädchen in LK und GK nach Bundesländer", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1")),
+                             shiny::mainPanel(
+                               width = 9,
+                               plotOutput(ns("plot_ranking_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+
+                    ),
+
+                    tabPanel("Alle Fächer auf einen Blick", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -240,7 +244,7 @@ mod_schule_kurse_ui <- function(id){
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen.")
 
                              )),
-                    tabPanel("Überblick Bundesländer", br(),
+                    tabPanel("Alle Bundesländer auf einen Blick", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -263,7 +267,11 @@ mod_schule_kurse_ui <- function(id){
         in Deutschland 2020 53 % beträgt. In den MINT-Leistungskursen beträgt dieser Anteil 48 %. Im Vergleich
         mit anderen, nicht-MINT Fächern sieht man, dass in ihnen der Anteil an Mädchen bzw. Frauen etwas höher ist: In Grundkursen anderer Fächer machen Frauen 55 % aus, in Leistungskursen sogar 58 %."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
+
+                    tabPanel("Neu: "),
+
+                    tabPanel("Vergleich Fächergruppen", br(),
+
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -271,12 +279,30 @@ mod_schule_kurse_ui <- function(id){
                                width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_schule_kurse_pie_gender_ui("mod_schule_kurse_pie_gender_ui_1")),
+                               mod_schule_kurse_comparison_gender_ui("mod_schule_kurse_comparison_gender_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               htmlOutput(ns("plot_pie_gender"))
+                               highcharter::highchartOutput(ns("plot_comparison_gender"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
                     ),
+
+
+                    # erstmal raus, weil Pies nicht so schön
+
+                    # tabPanel("Vergleich (Pie) ", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            tags$style(".well {background-color:#FFFFFF;}"),
+                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                    #            mod_schule_kurse_pie_gender_ui("mod_schule_kurse_pie_gender_ui_1")),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            htmlOutput(ns("plot_pie_gender"))
+                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+                    # ),
 
                     # tabPanel("Zeitverlauf MINT", br(), #kann raus
                     #
@@ -299,7 +325,7 @@ mod_schule_kurse_ui <- function(id){
                     #            highcharter::highchartOutput(ns("plot_verlauf_kurse_bl"))
                     #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
                     # ),
-                    tabPanel("Vergleich Fächer", br(),
+                    tabPanel("Vergleich nach einzelnen Fächern", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -312,21 +338,7 @@ mod_schule_kurse_ui <- function(id){
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
                              ),
 
-                    tabPanel("Überblick", br(),
 
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               tags$style(".well {background-color:#FFFFFF;}"),
-                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_schule_kurse_comparison_gender_ui("mod_schule_kurse_comparison_gender_ui_1")),
-                             shiny::mainPanel(
-                               width = 9,
-                               highcharter::highchartOutput(ns("plot_comparison_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
-                    )
                     ))),
 
 
