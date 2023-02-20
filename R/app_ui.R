@@ -50,10 +50,10 @@ app_ui <- function(request) {
           id = "tabs",
           shinydashboard::menuItem("Startseite",  tabName = "startseite"),
           shinydashboard::menuItem("Alle Bildungsbereiche",  tabName = "home"),
-          shinydashboard::menuItem("Schule im Detail",  tabName = "schule"),
-          shinydashboard::menuItem("Studium im Detail",  tabName = "studium"),
+          shinydashboard::menuItem("Schule",  tabName = "schule"),
+          shinydashboard::menuItem("Studium",  tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
-          shinydashboard::menuItem("Ausbildung & Beruf im Detail",  tabName = "beruf"),
+          shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen"),
           shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION")
           #shinydashboard::menuItem("Impressum",  tabName = "impressum")
