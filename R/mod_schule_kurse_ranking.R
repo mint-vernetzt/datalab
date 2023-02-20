@@ -40,8 +40,10 @@ mod_schule_kurse_ranking_ui <- function(id){
                   "Westen",
                   "Osten"
                   ),
-       selected = "Hessen"
-    )
+       selected = "Mecklenburg-Vorpommern"
+    ),
+br(), br(),
+    p("Lesehilfe: Hier zeigen wir einen direkten Vergleich zwischen den Anteilen von Mädchen in Grundkursen und Leistungskursen. Die Grafik kann wie ein Balkendigramm gelesen werden. Die Verbindungslinie zwischen den Punkten verdeutlicht lediglich die Diskrepanz zwischen den Werten.")
   )
 }
 
