@@ -55,20 +55,16 @@ mod_schule_kurse_ui <- function(id){
         title = "Auf dieser Seite",
         width = 3,
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT:")), "Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
+          span(tags$b(span("#MINT:")), "Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe? Und wie unterscheidet sich die Fächerwahl zwischen Mädchen und Jungen?"
           )),
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT im Detail:")), "Vergleich der einzelnen MINT-Fächer und Bundesländer"
+          span(tags$b(span("#MINT im Detail:")), "Vergleich der einzelnen MINT-Fächer"
           )),
         p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("#Mädchen in MINT:")), "Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"
         )),
 
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#Fächerwahl Mädchen:")), "Wie unterscheidet sich die Fächerwahl von Mädchen und Jungen?"
-        ),
-
-      ))),
+     )),
 
     fluidRow(
       shinydashboard::box(
@@ -109,6 +105,53 @@ mod_schule_kurse_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_comparison"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+                    ),
+
+
+                    tabPanel("Vergleich: Fächerwahl Mädchen & Jungen", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
+                             shiny::mainPanel(
+                               width = 9,
+                               plotOutput(ns("plot_waffle"))
+                               ,p(style="font-size:12px;color:grey", br(),"Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+                    ),
+
+                    tabPanel("Karte: Vergleich Mädchen & Jungen", br(),
+
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1")),
+                             shiny::mainPanel(
+                               width = 9,
+                               htmlOutput(ns("plot_map_kurse_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+                    ),
+
+                    # tabPanel("Vergleich (Bundesländer)", br(),
+                    #
+                    #          shiny::sidebarPanel(
+                    #            mod_schule_kurse_verlauf_ui("mod_schule_kurse_verlauf_ui_1")),
+                    #          shiny::mainPanel(
+                    #
+                    #            highcharter::highchartOutput(ns("plot_verlauf_kurse")))
+                    # ),
+                    tabPanel("Überblick Bundesländer (Mädchen & Jungen)", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1")),
+                             shiny::mainPanel(
+                               width = 9,
+                               plotOutput(ns("plot_ranking_gender"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+
                     )
                     #,
                     #  tabPanel("Datensatz", br(),
@@ -286,62 +329,6 @@ mod_schule_kurse_ui <- function(id){
                     )
                     ))),
 
-
-    fluidRow(
-      shinydashboard::box(
-        title = "#Fächerwahl Mädchen: Wie unterscheidet sich die Fächerwahl von Mädchen und Jungen?",
-        width = 12,
-        p("Hier zeigen wir die Unterschiede zwischen Mädchen und Jungen aus einer anderen Perspektive. Welchen Anteil machen MINT-Fächer bei der Fächerwahl der Mädchen und der Jungen in Deutschland aus?",
-          br(), br(),
-        "Interpretationshilfe: Die erste Grafik zeigt, dass Mädchen in Deutschland 2020 zu 21 % Grundkurse aus dem Bereich MINT wählen. Bei den Jungen sind es 24 %. Bei den Leistungskursen
-        zeigt sich ein größerer Unterschied: Bei den Mädchen machten 2020 deutschlandweit MINT-Leistungskurse 29 % aus, bei den Jungen 38 %." ) ,
-        tabsetPanel(type = "tabs",
-
-                    tabPanel("Vergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
-                             shiny::mainPanel(
-                               width = 9,
-                               plotOutput(ns("plot_waffle"))
-                               ,p(style="font-size:12px;color:grey", br(),"Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
-                    ),
-
-                    tabPanel("Karte", br(),
-
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1")),
-                             shiny::mainPanel(
-                               width = 9,
-                               htmlOutput(ns("plot_map_kurse_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
-                    ),
-
-                    # tabPanel("Vergleich (Bundesländer)", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            mod_schule_kurse_verlauf_ui("mod_schule_kurse_verlauf_ui_1")),
-                    #          shiny::mainPanel(
-                    #
-                    #            highcharter::highchartOutput(ns("plot_verlauf_kurse")))
-                    # ),
-                    tabPanel("Überblick Bundesländer", br(),
-
-                            tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                            shiny::sidebarPanel(
-                              width = 3,
-                              mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1")),
-                            shiny::mainPanel(
-                              width = 9,
-                              plotOutput(ns("plot_ranking_gender"))
-                              ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
-
-                  )))),
 
     # Footer
 
