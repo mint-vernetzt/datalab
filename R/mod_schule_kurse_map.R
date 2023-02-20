@@ -14,8 +14,8 @@ mod_schule_kurse_map_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_map"),
       label = NULL,
-      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
-      selected = 2020
+      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
+      selected = 2021
     ),
     p("Auswahl des Fachs:"),
     shinyWidgets::pickerInput(
