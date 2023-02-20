@@ -27,18 +27,7 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Auswahl eines oder mehrerer Fächer:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("subject_selected_bl_sub"),
-      choices = c("MINT-Fächer (gesamt)","Mathematik", "Informatik", "Physik", "Chemie",
-                  "Biologie", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
-                  "Musik/Kunst", "Religion/Ethik", "Sport"),
-      selected = c("MINT-Fächer (gesamt)", "Mathematik"),
-      options = list(`actions-box` = TRUE,
-                     `deselect-all-text` = "Alle abwählen",
-                     `select-all-text` = "Alle auswählen"),
-      multiple = TRUE
-    ),
+
     p("Auswahl eines Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf_subject_bl"),
@@ -59,12 +48,26 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen"
-                ,
-                "Westen",
-                 "Osten"
-                  ),
-      selected = "Hessen"
+                  ,
+                  "Westen",
+                  "Osten"
+      ),
+      selected = "Brandenburg"
+    ),
+
+    p("Auswahl eines oder mehrerer Fächer:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("subject_selected_bl_sub"),
+      choices = c("MINT-Fächer (gesamt)","Mathematik", "Informatik", "Physik", "Chemie",
+                  "Biologie", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+                  "Musik/Kunst", "Religion/Ethik", "Sport"),
+      selected = c("MINT-Fächer (gesamt)", "Mathematik"),
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
+      multiple = TRUE
     )
+
   )
 }
 
