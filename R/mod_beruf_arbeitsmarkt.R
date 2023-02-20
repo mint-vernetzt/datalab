@@ -486,7 +486,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 #' beruf_arbeitsmarkt Server Functions
 #'
 #' @noRd
-mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, r){
+mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, data_arbeitsmarkt_detail_aggregiert, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -532,7 +532,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
 
     # Box 4
     output$plot_arbeitsmarkt_waffle <- renderPlot({
-      arbeitsmarkt_anforderungen(data_arbeitsmarkt_detail, r)
+      arbeitsmarkt_anforderungen(data_arbeitsmarkt_detail_aggregiert, r)
     })
 
     output$plot_arbeitsmarkt_verlauf <- highcharter::renderHighchart({
@@ -545,7 +545,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
 
     # Box 5
     output$plot_arbeitsmarkt_waffle_gender <- renderPlot({
-      arbeitsmarkt_anforderungen_gender(data_arbeitsmarkt_detail, r)
+      arbeitsmarkt_anforderungen_gender(data_arbeitsmarkt_detail_aggregiert, r)
     })
 
     output$plot_arbeitsmarkt_verlauf_gender <- highcharter::renderHighchart({

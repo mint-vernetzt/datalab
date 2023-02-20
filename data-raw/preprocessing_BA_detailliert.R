@@ -34,7 +34,7 @@ data1 <- data %>%
     ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
     ...1 == "Bayern" ~"Bayern",
     ...1 == "Berlin" ~"Berlin",
-    ...1 == "Brandenburg" ~ "Brandenbrug",
+    ...1 == "Brandenburg" ~ "Brandenburg",
     ...1 == "Bremen" ~ "Bremen",
     ...1 == "Hamburg" ~"Hamburg",
     ...1 == "Hessen" ~"Hessen",
@@ -257,7 +257,7 @@ data_a1 <- data_a %>%
     ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
     ...1 == "Bayern" ~"Bayern",
     ...1 == "Berlin" ~"Berlin",
-    ...1 == "Brandenburg" ~ "Brandenbrug",
+    ...1 == "Brandenburg" ~ "Brandenburg",
     ...1 == "Bremen" ~ "Bremen",
     ...1 == "Hamburg" ~"Hamburg",
     ...1 == "Hessen" ~"Hessen",
@@ -388,6 +388,9 @@ arbeitsmarkt_detail$landkreis <- ifelse(arbeitsmarkt_detail$bundesland==arbeitsm
 
 #Wert als numerisch definieren
 arbeitsmarkt_detail$wert <- as.numeric(arbeitsmarkt_detail$wert)
+
+# übergangsweise Arbeitsmarkt-Datensatz mit Aggregaten DE und Bundesländer
+usethis::use_data(arbeitsmarkt_detail, overwrite = T)
 
 ######## Weitere Anpassungen/Berechnungen von Andi ###################################
 

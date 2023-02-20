@@ -272,9 +272,9 @@ kurse_einstieg_pie_gender <- function(df,r) {
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
 
-    highcharter::hc_title(text = paste0("Zum Vergleich: Anteil von Schülerinnen an Nicht-MINT-Fächern in Grundkursen in ", timerange))
+    highcharter::hc_title(text = paste0(br(), "Zum Vergleich: Anteil von Schülerinnen an Nicht-MINT-Fächern in Grundkursen in ", timerange),
 
-    highcharter::hc_title(text = paste0("Vergleich: Andere Fächer (Grundkurse)", br(), timerange),
+   # highcharter::hc_title(text = paste0("Vergleich: Andere Fächer (Grundkurse)", br(), timerange),
 
                           margin = 45,
                           align = "center",
@@ -306,9 +306,9 @@ kurse_einstieg_pie_gender <- function(df,r) {
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
 
-    highcharter::hc_title(text = paste0("Zum Vergleich: Anteil von Schülerinnen an Nicht-MINT-Fächern in Leistungskursen in ", timerange))
+    highcharter::hc_title(text = paste0(br(), "Zum Vergleich: Anteil von Schülerinnen an Nicht-MINT-Fächern in Leistungskursen in ", timerange),
 
-    highcharter::hc_title(text = paste0("Vergleich: Andere Fächer (Leistungskurse) ", br(), timerange),
+   # highcharter::hc_title(text = paste0("Vergleich: Andere Fächer (Leistungskurse) ", br(), timerange),
 
                           margin = 45,
                           align = "center",
@@ -2059,7 +2059,7 @@ kurse_verlauf_single <- function(df,r) {
 #' @noRd
 
 kurse_einstieg_comparison <- function(df,r) {
-browser()
+
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg_comparison
 
