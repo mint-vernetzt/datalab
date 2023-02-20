@@ -352,7 +352,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_detail_vergleich"))
+                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_detail_vergleich"), height = "800px")
                              ),
                              p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.")
                     ),

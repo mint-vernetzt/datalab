@@ -1,7 +1,8 @@
-studierende_faecher_alle_indi <-
-  readxl::read_xlsx(
-    system.file(package = "datalab", "data-raw/studierende_faecher.xlsx")
-  ) %>%
+wd <- getwd()
+setwd(wd)
+studierende_faecher_alle_indi <- readxl::read_xlsx("studierende_faecher.xlsx")
+
+studierende_faecher_alle_indi <- studierende_faecher_alle_indi %>%
   janitor::clean_names() %>%
   janitor::remove_empty() %>%
   dplyr::rename(anzeige_geschlecht = geschlecht) %>%
