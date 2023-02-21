@@ -21,12 +21,12 @@ mod_beruf_ui <- function(id){
 #' beruf Server Functions
 #'
 #' @noRd
-mod_beruf_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, r){
+mod_beruf_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, data_arbeitsmarkt_detail_aggregiert, r){
 
   r <- reactiveValues()
 
   # Arbeitsmarkt
-  mod_beruf_arbeitsmarkt_server("mod_beruf_arbeitsmarkt_ui_1", data_arbeitsmarkt, data_arbeitsmarkt_detail, r)
+  mod_beruf_arbeitsmarkt_server("mod_beruf_arbeitsmarkt_ui_1", data_arbeitsmarkt, data_arbeitsmarkt_detail, data_arbeitsmarkt_detail_aggregiert, r)
 
   # Box 2
   mod_beruf_arbeitsmarkt_einstieg_server("mod_beruf_arbeitsmarkt_einstieg_ui_1", r)
