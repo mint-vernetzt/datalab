@@ -37,8 +37,8 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
       ,
       multiple = F,
       options =  list(
-        "max-options" = 3,
-        "max-options-text" = "Maximal 3 Indikatoren auswählen")
+        "max-options" = 2,
+        "max-options-text" = "Maximal 2 Indikatoren auswählen")
     ),
     p("Auswahl der Fächer (max. 3):"),
     shinyWidgets::pickerInput(
@@ -75,8 +75,8 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                    "Informatik"),
       multiple = TRUE,
       options =  list(
-        "max-options" = 3,
-        "max-options-text" = "Maximal 3 Indikatoren auswählen")
+        "max-options" = 2,
+        "max-options-text" = "Maximal 2 Indikatoren auswählen")
     )
 
   )
