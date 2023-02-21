@@ -70,7 +70,7 @@ mod_studium_studienzahl_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "#MINT: Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?",
+        title = "#Fächerwahl MINT: Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?", br(), "Und wie unterscheidet sich die Fächerwahl von Frauen und Männern?",
         width = 12,
         p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Fächern an allen Studienfächern in Deutschland.
           Dabei betrachten wir sowohl Studienanfänger:innen als auch Studierende allgemein. ",
@@ -90,6 +90,17 @@ mod_studium_studienzahl_ui <- function(id){
 
 
                     ),
+                    tabPanel("Waffle", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
+                             shiny::mainPanel(
+                               width = 9,
+                               plotOutput(ns("plot_waffle")),p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
+                    ),
 
                     tabPanel("Zeitverlauf", br(),
 
@@ -103,6 +114,33 @@ mod_studium_studienzahl_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_einstieg_verlauf")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
 
                     ),
+
+                    tabPanel("Zeitverlauf Anteil MINT nach Bundesländern", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_studium_studienzahl_verlauf_bl_subject_ui("mod_studium_studienzahl_verlauf_bl_subject_ui_1")),
+                             shiny::mainPanel(
+                               width = 9,
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen.")
+
+                             )
+                    ),
+
+                    tabPanel("Zeitverlauf Anteil MINT (Vergleich Bundesländer)", br(),
+
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_studium_studienzahl_bl_verlauf_ui("mod_studium_studienzahl_bl_verlauf")
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen.")
+                             )
+                    ),
                     tabPanel("Überblick", br(),
 
                              shiny::sidebarPanel(
@@ -113,6 +151,49 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_comparison")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
+                    ),
+
+
+                    tabPanel("Vergleich Frauen & Männer", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_studium_choice_gender_ui("mod_studium_studienzahl_choice_gender_ui")
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               plotOutput(ns("plot_waffle_choice_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
+                             )
+                    ),
+
+                    tabPanel("Zeitverlauf Frauen & Männer", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_studium_studienzahl_verlauf_bl_subject_gender_ui("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
+                             )
+                    ),
+                    tabPanel("Überblick Frauen und Männer", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_studium_studienzahl_ranking_bl_subject_gender_ui("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               #highcharter::highchartOutput(ns("plot_ranking_studienzahl_bl_subject_gender1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
+                               plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
+                             )
                     )
 
                   # ,
@@ -137,7 +218,7 @@ mod_studium_studienzahl_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "#MINT im Detail: Vergleich der einzelnen MINT-Fächer und Bundesländer",
+        title = "#MINT im Detail: Vergleich der einzelnen MINT-Fächer",
         width = 12,
         p("Hier zeigen wir, wie häufig MINT-Fächer im Vergleich zu anderen Studienfächern in Deutschland gewählt werden.
           Außerdem kann man den Anteil von MINT-Fächern zwischen den Bundesländern vergleichen. ",
@@ -147,16 +228,21 @@ mod_studium_studienzahl_ui <- function(id){
 
         tabsetPanel(type = "tabs",
 
-                    tabPanel("Vergleich", br(),
 
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
-                             shiny::mainPanel(
-                               width = 9,
-                               plotOutput(ns("plot_waffle")),p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
+                    tabPanel("TOP-10-Fächer", br(),
+                        #tags$head(
+                       # tags$style(
+                       #   ".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                       #      .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                      shiny::sidebarPanel(
+                        width = 3,
+                        mod_studium_top_faecher_ui("mod_studium_top_faecher")),
+                      shiny::mainPanel(
+                        width = 9,
+                        htmlOutput(ns("plot_top_faecher")),
+                        p(
+                          style = "font-size:12px;color:grey",
+                          "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
                     tabPanel("Karte", br(),
@@ -171,34 +257,8 @@ mod_studium_studienzahl_ui <- function(id){
                              )
                     ),
 
-                    tabPanel("Vergleich (Fächer)", br(),
 
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_studium_studienzahl_verlauf_bl_subject_ui("mod_studium_studienzahl_verlauf_bl_subject_ui_1")),
-                             shiny::mainPanel(
-                               width = 9,
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen.")
-
-                             )
-                    ),
-
-                    tabPanel("Vergleich (Bundesländer)", br(),
-
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_studium_studienzahl_bl_verlauf_ui("mod_studium_studienzahl_bl_verlauf")
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen.")
-                             )
-                    ),
-
-                    tabPanel("Überblick (Fächer)", br(),
+                   tabPanel("Alle Fächer auf einen Blick", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -276,87 +336,7 @@ mod_studium_studienzahl_ui <- function(id){
                              highcharter::highchartOutput(ns("plot_einstieg_comparison_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2021, auf Anfrage, eigene Berechnungen."))
                   )
         ))),
-    fluidRow(
-      shinydashboard::box(
-        title = "#Fächerwahl Frauen: Wie unterscheidet sich die Fächerwahl von Frauen und Männern?",
-        width = 12,
-        p("Hier zeigen wir die Unterschiede zwischen Männern und Frauen aus einer anderen Perspektive. Welchen Anteil machen MINT-Fächer bei der Studienfachwahl von Frauen und Männern in Deutschland aus?"),
-       br(),
-        p("Interpretationshilfe: Weibliche Studierende wählen 2020 zu 24 % ein MINT-Studienfach. Bei den männlichen Studierenden wählen 51 % MINT."),
 
-        tabsetPanel(type = "tabs",
-
-                    tabPanel("Vergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_studium_choice_gender_ui("mod_studium_studienzahl_choice_gender_ui")
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               plotOutput(ns("plot_waffle_choice_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
-                             )
-                    ),
-
-                    tabPanel("Zeitverlauf", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_studium_studienzahl_verlauf_bl_subject_gender_ui("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
-                             )
-                    ),
-                    tabPanel("Überblick", br(),
-
-                               tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                               shiny::sidebarPanel(
-                                 width = 3,
-                                 mod_studium_studienzahl_ranking_bl_subject_gender_ui("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1")
-                               ),
-                               shiny::mainPanel(
-                                 width = 9,
-                                 #highcharter::highchartOutput(ns("plot_ranking_studienzahl_bl_subject_gender1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
-                                 plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
-                               )
-                    )
-        ))),
-    fluidRow(shinydashboard::box(
-      title = "#XXX?",
-      width = 12,
-      p("XXX?"),
-      br(),
-      p("Interpretationshilfe: XXX."),
-
-      tabsetPanel(
-        type = "tabs",
-        tags$head(
-          tags$style(
-            ".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}"
-          )
-        ),
-        shiny::sidebarPanel(
-          width = 3,
-          mod_studium_top_faecher_ui("mod_studium_top_faecher")
-        ),
-        shiny::mainPanel(
-          width = 9,
-          htmlOutput(ns("plot_top_faecher")),
-          p(
-            style = "font-size:12px;color:grey",
-            "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."
-          )
-        )
-      )
-    )),
 
 
 
