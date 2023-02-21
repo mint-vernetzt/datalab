@@ -472,7 +472,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
 
     # Box 2
     output$plot_einstieg_pie <- renderUI({
-      studienzahl_einstieg_pie(data_studierende,r)
+      studienzahl_einstieg_pie(data_studierende2,r)
     })
 
     output$plot_einstieg_verlauf <- highcharter::renderHighchart({
@@ -498,16 +498,16 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
     # })
 
     # Box 3
-    output$plot_einstieg_pie_gender <- highcharter::renderHighchart({
-      studienzahl_einstieg_pie_gender(data_studierende,r)
+    output$plot_einstieg_pie_gender <- renderUI({
+      studienzahl_einstieg_pie_gender(data_studierende2,r)
     })
 
     output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
-      studienzahl_verlauf_single_gender(data_studierende,r)
+      studienzahl_verlauf_single_gender(data_studierende2,r)
     })
 
     output$plot_einstieg_comparison_gender <- highcharter::renderHighchart({
-      studienzahl_einstieg_comparison_gender(data_studierende,r)
+      studienzahl_einstieg_comparison_gender(studierende_faecher_alle_indi,r)
     })
 
     output$plot_verlauf_studienzahl_bl_subject1 <- highcharter::renderHighchart({
@@ -542,7 +542,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
 
     # Box 5
     plot_waffle_choice_gender_react <- reactive({
-      studienzahl_waffle_choice_gender(data_studierende,r)
+      studienzahl_waffle_choice_gender(data_studierende2,r)
     })
 
     output$plot_waffle_choice_gender <- renderPlot({
@@ -550,7 +550,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
     })
 
     output$plot_verlauf_studienzahl_bl_subject_gender <- highcharter::renderHighchart({
-      studierende_verlauf_single_bl_gender(data_studierende,r)
+      studierende_verlauf_single_bl_gender(data_studierende2,r)
     })
 
     plot_ranking_studienzahl_bl_subject_gender_react <- reactive({
@@ -582,7 +582,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
     })
 
      output$plot_vergleich_bl1 <- highcharter::renderHighchart({
-       studierende_mint_vergleich_bl(data_studierende,r)
+       studierende_mint_vergleich_bl(studierende_faecher_alle_indi,r)
      })
 
 
