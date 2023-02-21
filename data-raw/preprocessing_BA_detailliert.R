@@ -56,6 +56,12 @@ data1 <- data1 %>%
 data1$b <- ifelse(!is.na(data1$d), data1$d, data1$b)
 data1 <- data1 %>% dplyr::select(-d)
 
+# Trennen von Infromation und Schlüsselnummer für Städte in Sachsen-Anhalt & Thüringen an :
+data1 <- data1 %>%
+  tidyr::separate(b, c("b", "d"), sep = ":")
+data1$c <- ifelse(!is.na(data1$d), data1$d, data1$c)
+data1 <- data1 %>% dplyr::select(-d)
+
 data1$bundesland <- zoo::na.locf(data1$bundesland)
 
 # Schlüsselnummern in "c" eintragen, falls fehlen
@@ -78,6 +84,9 @@ data1$c <- ifelse(data1$c == "von 01.01.1973", data1$b, data1$c)
 # Spezifalfall Oldenburg mit Beschreibung Oldenburg in Klammern, daher nicht erkannt als identisch in Ansatz davor
 data1$ort <- ifelse(data1$ort == "Oldenburg (Oldenburg)", "Stadt Oldenburg", data1$ort)
 data1$ort <- ifelse(data1$ort == "Oldenburg", "Landkreis Oldenburg", data1$ort)
+
+# Spezialfall Eisenach - Leerzeichen vor Schlüsselnummer
+data1$c <- ifelse(data1$ort == "Eisenach", 16056, data1$c)
 
 data1 <- data1 %>%
   dplyr::rename(
@@ -289,6 +298,13 @@ data_a1 <- data_a1 %>%
 data_a1$b <- ifelse(!is.na(data_a1$d), data_a1$d, data_a1$b)
 data_a1 <- data_a1 %>% dplyr::select(-d)
 
+# Trennen von Infromation und Schlüsselnummer für Städte in Sachsen-Anhalt & Thüringen an :
+data_a1 <- data_a1 %>%
+  tidyr::separate(b, c("b", "d"), sep = ":")
+data_a1$c <- ifelse(!is.na(data_a1$d), data_a1$d, data_a1$c)
+data_a1 <- data_a1 %>% dplyr::select(-d)
+
+
 data_a1$bundesland <- zoo::na.locf(data_a1$bundesland)
 
 data_a1$c <- ifelse(!grepl("[^A-Za-z]", data_a1$c), data_a1$b, data_a1$c)
@@ -312,6 +328,9 @@ data_a1$c <- ifelse(data_a1$c == "von 01.01.1973", data_a1$b, data_a1$c)
 # Spezifalfall Oldenburg mit Beschreibung Oldenburg in Klammern, daher nicht erkannt als identisch in Ansatz davor
 data_a1$ort <- ifelse(data_a1$ort == "Oldenburg (Oldenburg)", "Stadt Oldenburg", data_a1$ort)
 data_a1$ort <- ifelse(data_a1$ort == "Oldenburg", "Landkreis Oldenburg", data_a1$ort)
+
+# Spezialfall Eisenach - Leerzeichen vor Schlüsselnummer
+data_a1$c <- ifelse(data_a1$ort == "Eisenach", 16056, data_a1$c)
 
 data_a1 <- data_a1 %>%
   dplyr::rename(
