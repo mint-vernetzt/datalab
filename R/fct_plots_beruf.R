@@ -2932,12 +2932,34 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
     titel <- paste0(titel_sub, " innerhalb von allen ", titel_gesamt)
   }
 
+  #Vector für angepasste Größe des Plots
+  länder <-   c("Baden-Württemberg",
+      "Bayern",
+      "Berlin",
+      "Brandenburg",
+      "Bremen",
+      "Hamburg",
+      "Hessen",
+      "Mecklenburg-Vorpommern",
+      "Niedersachsen",
+      "Nordrhein-Westfalen",
+      "Rheinland-Pfalz",
+      "Saarland",
+      "Sachsen",
+      "Sachsen-Anhalt",
+      "Schleswig-Holstein",
+      "Thüringen")
+  höhe <- c(10, 20, 3, 6, 3, 3, 8, 5, 11, 11, 10, 4, 6, 6, 6, 7)
+  plt.size <- data.frame(länder, höhe)
+
+
   # create plot
   highcharter::hchart(df_compare, 'bar', highcharter::hcaes(y = display_value, x = landkreis)) %>%
     highcharter::hc_tooltip(pointFormat = legende) %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = yAxis)) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_colors("#154194") %>%
+    highcharter::hc_size(height = 80*plt.size$höhe[plt.size$länder == states]) %>%
     highcharter::hc_title(text = paste0(titel, "<br><br><br>"),
                           margin = 45,
                           align = "center",
