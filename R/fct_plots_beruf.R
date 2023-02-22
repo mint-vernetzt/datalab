@@ -3140,7 +3140,8 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
   } else {
     df_compare <- df_compare %>%
       dplyr::mutate(display_value = wert) %>%
-      dplyr::arrange(display_value)
+      dplyr::arrange(display_value) %>%
+      dplyr::filter(landkreis != "alle Landkreise")
 
     legende <- paste0("{point.landkreis} <br> Wert: {point.y}")
     yAxis <- "{value}"
@@ -3175,7 +3176,10 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
     highcharter::hc_tooltip(pointFormat = legende) %>%
     highcharter::hc_yAxis(title = list(text = paste0(br(), br(),"Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.") , align="left"), labels = list(format = yAxis)) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors("#154194") %>%
+    highcharter::hc_plotOptions(bar = list(
+      colorByPoint = TRUE,
+      colors = ifelse(df_compare$landkreis == "alle Landkreise", "#b16fab", "#154194")
+    )) %>%
     highcharter::hc_size(height = 80*plt.add$höhe[plt.add$länder == states]) %>%
     highcharter::hc_title(text = paste0(titel, "<br><br><br>"),
                           margin = 45,
@@ -3233,14 +3237,22 @@ arbeitsmarkt_lk_detail_table <- function(df, input_values, r) {
     indikator_azubi <- input_values[[paste0(i, "-indikator1_beruf_arbeitsmarkt_landkreis_vergleich")]]
     indikator_besch <- input_values[[paste0(i, "-indikator2_beruf_arbeitsmarkt_landkreis_vergleich")]]
 
-    df_compare_list_region1 <- calculate_landkreis(df, state1, category, domain, indikator_azubi, indikator_besch)
-    df_compare_list_region1[[1]] <- df_compare_list_region1[[1]] %>% dplyr::filter(landkreis == region1)
+    df_compare_list_region1 <- calculate_landkreis(df, state1, category, domain, indikator_azubi, indikator_besch, region1)
+    if(region1 != "Gesamt"){
+      df_compare_list_region1[[1]] <- df_compare_list_region1[[1]] %>% dplyr::filter(landkreis == region1)
+    }
 
-    df_compare_list_region2 <- calculate_landkreis(df, state2, category, domain, indikator_azubi, indikator_besch)
-    df_compare_list_region2[[1]] <- df_compare_list_region2[[1]] %>% dplyr::filter(landkreis == region2)
+    df_compare_list_region2 <- calculate_landkreis(df, state2, category, domain, indikator_azubi, indikator_besch, region2)
 
-    df_compare_list_region3 <- calculate_landkreis(df, state3, category, domain, indikator_azubi, indikator_besch)
-    df_compare_list_region3[[1]] <- df_compare_list_region3[[1]] %>% dplyr::filter(landkreis == region3)
+    if(region2 != "Gesamt"){
+      df_compare_list_region2[[1]] <- df_compare_list_region2[[1]] %>% dplyr::filter(landkreis == region2)
+    }
+
+    df_compare_list_region3 <- calculate_landkreis(df, state3, category, domain, indikator_azubi, indikator_besch, region3)
+
+    if(region3 != "Gesamt"){
+      df_compare_list_region3[[1]] <- df_compare_list_region3[[1]] %>% dplyr::filter(landkreis == region3)
+    }
 
     line_name <- paste(category, domain, ifelse(category=="Auszubildende", indikator_azubi, indikator_besch), sep = "-")
     df_var <- data.frame(line_name = line_name,
@@ -3254,7 +3266,7 @@ arbeitsmarkt_lk_detail_table <- function(df, input_values, r) {
   }
 
   # adjust names for the dataframe
-  names(df_steckbrief) <- c("", paste0("<b>", region1, "</b>"), paste0("<b>", region2, "</b>"), paste0("<b>", region3, "</b>"))
+  names(df_steckbrief) <- c("", paste0("<b>", state1, "-" ,region1, "</b>"), paste0("<b>", state2, "-" ,region2, "</b>"), paste0("<b>", state3, "-" ,region3, "</b>"))
 
   return(df_steckbrief)
 

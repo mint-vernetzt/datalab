@@ -14,7 +14,8 @@ mod_beruf_arbeitsmarkt_landkreis_table_lk_ui <- function(id){
     p("Bundesland:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_landkreis_table"),
-      choices = c("Baden-Württemberg",
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
                   "Bayern",
                   "Berlin",
                   "Brandenburg",
@@ -32,7 +33,7 @@ mod_beruf_arbeitsmarkt_landkreis_table_lk_ui <- function(id){
                   "Thüringen"
       ),
       multiple = FALSE,
-      selected = c("Hessen")
+      selected = c("Deutschland")
     ),
     p("Landkreis:"),
     uiOutput(ns("controls")),
@@ -50,26 +51,34 @@ mod_beruf_arbeitsmarkt_landkreis_table_lk_server <- function(id, r, data){
 
                   output$controls <- renderUI({
 
-                    region <- data %>%
-                      dplyr::filter(bundesland == input$states_beruf_arbeitsmarkt_landkreis_table) %>%
-                      dplyr::pull(landkreis) %>%
-                      unique()
+                    if(input$states_beruf_arbeitsmarkt_landkreis_table == "Deutschland"){
+
+                      region <- "Gesamt"
+
+                    } else {
+
+                      region <- data %>%
+                        dplyr::filter(bundesland == input$states_beruf_arbeitsmarkt_landkreis_table) %>%
+                        dplyr::pull(landkreis) %>%
+                        unique()
+
+                    }
 
                     shinyWidgets::pickerInput(
                       inputId = ns("region_beruf_arbeitsmarkt_landkreis_table"),
                       choices = region,
-                      multiple = FALSE,
-                      selected = c("Hessen")
+                      multiple = FALSE
                     )
                   })
 
-                  observeEvent(input$region_beruf_arbeitsmarkt_landkreis_table, {
-                    ns <- NS(id)
+                  observeEvent(c(input$states_beruf_arbeitsmarkt_landkreis_table,
+                                 input$region_beruf_arbeitsmarkt_landkreis_table), {
+                                   ns <- NS(id)
 
-                    r[[ns("states_beruf_arbeitsmarkt_landkreis_table")]] <- input$states_beruf_arbeitsmarkt_landkreis_table
+                                   r[[ns("states_beruf_arbeitsmarkt_landkreis_table")]] <- input$states_beruf_arbeitsmarkt_landkreis_table
 
-                    r[[ns("region_beruf_arbeitsmarkt_landkreis_table")]] <- input$region_beruf_arbeitsmarkt_landkreis_table
-                  })
+                                   r[[ns("region_beruf_arbeitsmarkt_landkreis_table")]] <- input$region_beruf_arbeitsmarkt_landkreis_table
+                                 })
 
 
                 }
