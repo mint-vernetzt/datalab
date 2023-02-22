@@ -2894,6 +2894,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
   df1_map <- df1_list[[1]]
   titel_gesamt1 <- df1_list[[2]]
   titel_sub1 <- df1_list[[3]]
+  titel_sub1_2 <- df1_list[[4]]
 
   # calculate comparison map 2
   df2_list <- calculate_landkreis(df, states, category_2, domain_2, indikator_azubi_2, indikator_besch_2)
@@ -2901,6 +2902,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
   df2_map <- df2_list[[1]]
   titel_gesamt2 <- df2_list[[2]]
   titel_sub2 <- df2_list[[3]]
+  titel_sub2_2 <- df2_list[[4]]
 
   # adjust landkreis_nummer for correct mapping
   df1_map <- df1_map %>% dplyr::mutate(
@@ -2916,7 +2918,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     value = "prob",
     joinBy = c("hc-key","landkreis_nummer"),
     borderColor = "#FAFAFA",
-    name = paste0("Anteil ", titel_sub1, " ", titel_gesamt1),
+    name = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_sub1_2, " in ", states, " (2021)"),
     borderWidth = 0.1,
     nullColor = "#A9A9A9",
     tooltip = list(
@@ -2926,7 +2928,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
   ) %>%
     highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Anteil ", titel_sub1,  " ", titel_gesamt1),
+      text = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_sub1_2, " in ", states, " (2021)"),
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -2952,7 +2954,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     value = "prob",
     joinBy = c("hc-key", "landkreis_nummer"),
     borderColor = "#FAFAFA",
-    name = paste0("Anteil ", titel_sub2,  " ", titel_gesamt2),
+    name = paste0("Anteil von ", titel_sub2_2, titel_gesamt2, titel_sub2_2, " in ", states, " (2021)"),
     borderWidth = 0.1,
     nullColor = "#A9A9A9",
     tooltip = list(
@@ -2962,7 +2964,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
   ) %>%
     highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Anteil ", titel_sub2,  " ", titel_gesamt2),
+      text = paste0("Anteil von ", titel_sub2_2, titel_gesamt2, titel_sub2_2, " in ", states, " (2021)"),
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -3015,8 +3017,12 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
   df_compare_list <- calculate_landkreis(df, states, category, domain, indikator_azubi, indikator_besch)
 
   df_compare <- df_compare_list[[1]]
-  titel_gesamt <- df_compare_list[[2]]
+  titel_gesamt_1 <- df_compare_list[[2]]
   titel_sub <- df_compare_list[[3]]
+  titel_sub2 <- df_compare_list[[4]]
+
+    # titel_gesamt_2 <- df_compare_list[[3]]
+  # titel_sub <- df_compare_list[[4]]
 
   # differentiate between relative and absolute
   if(display_form == "Relativ") {
@@ -3026,7 +3032,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
 
     legende <- paste0("{point.landkreis} <br> Anteil: {point.y} %")
     yAxis <- "{value}%"
-    titel <- paste0("Anteil ", titel_sub, " an ", titel_gesamt)
+    titel <- paste0("Anteil von ", titel_sub2, titel_gesamt_1, titel_sub2, " in ", states, " (2021)")
 
   } else {
     df_compare <- df_compare %>%
@@ -3035,7 +3041,8 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
 
     legende <- paste0("{point.landkreis} <br> Wert: {point.y}")
     yAxis <- "{value}"
-    titel <- paste0(titel_sub, " innerhalb von allen ", titel_gesamt)
+    titel_gesamt_1 <- stringr::str_remove(titel_gesamt_1, "an allen")
+    titel <- paste0("Anzahl ", titel_sub, titel_gesamt_1, " in ", states, " (2021)")
   }
 
   #Vector für angepasste Größe des Plots
@@ -3063,7 +3070,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
   # create plot
   highcharter::hchart(df_compare, 'bar', highcharter::hcaes(y = display_value, x = landkreis)) %>%
     highcharter::hc_tooltip(pointFormat = legende) %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = yAxis)) %>%
+    highcharter::hc_yAxis(title = list(text = paste0(br(), br(),"Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.") , align="left"), labels = list(format = yAxis)) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_colors("#154194") %>%
     highcharter::hc_size(height = 80*plt.add$höhe[plt.add$länder == states]) %>%
