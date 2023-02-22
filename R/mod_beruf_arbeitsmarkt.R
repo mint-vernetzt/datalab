@@ -522,7 +522,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
     })
 
     output$plot_einstieg_vergleich <- highcharter::renderHighchart({
-      beruf_einstieg_vergleich(data_arbeitsmarkt,r)
+      beruf_einstieg_vergleich(data_arbeitsmarkt_detail,r)
     })
 
     data_table_einstieg_react <- reactive({
@@ -548,7 +548,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
 
     # Box 4
     output$plot_arbeitsmarkt_waffle <- renderPlot({
-      arbeitsmarkt_anforderungen(data_arbeitsmarkt_detail_aggregiert, r)
+      arbeitsmarkt_anforderungen(data_arbeitsmarkt_detail, r)
     })
 
     output$plot_arbeitsmarkt_verlauf <- highcharter::renderHighchart({
@@ -565,7 +565,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
 
     # Box 5
     output$plot_arbeitsmarkt_waffle_gender <- renderPlot({
-      arbeitsmarkt_anforderungen_gender(data_arbeitsmarkt_detail_aggregiert, r)
+      arbeitsmarkt_anforderungen_gender(data_arbeitsmarkt_detail, r)
     })
 
     output$plot_arbeitsmarkt_verlauf_gender <- highcharter::renderHighchart({
