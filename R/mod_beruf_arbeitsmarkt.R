@@ -591,7 +591,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
 
     # Box 7
     output$plot_arbeitsmarkt_bl_gender <- renderUI({
-      arbeitsmarkt_bl_gender(data_arbeitsmarkt,r)
+      arbeitsmarkt_bl_gender(data_arbeitsmarkt_detail,r)
     })
 
     output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- highcharter::renderHighchart({

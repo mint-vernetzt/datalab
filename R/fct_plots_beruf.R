@@ -357,37 +357,62 @@ arbeitsmarkt_absolut <- function(df,r) {
 arbeitsmarkt_bl_gender <- function(df,r) {
 
   # load UI inputs from reactive value
-  timerange <- r$date_arbeitsmarkt_bl_gender
+  #timerange <- r$date_arbeitsmarkt_bl_gender
 
   #anforderung <- r$anforderung_arbeitsmarkt_bl_gender
 
   indikator_choice <- r$level_arbeitsmarkt_bl_gender
 
+  fachbereich_choice <- r$fach_arbeitsmarkt_bl_gender
+
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr == timerange)
+ # df <- df %>% dplyr::filter(jahr == timerange)
 
 
-  # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
+  # remove - Deutschland nicht enthalten in DF
+  #df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df <- calc_arbeitsmarkt_males(df)
 
-  df_gesamt <- df %>%
-    dplyr::filter(fachbereich == "Alle",
-                  anforderung == "Gesamt")
+  # filtern nach Anforderungsniveau
+  df <- df %>% dplyr::filter(anforderung == "Gesamt")
+
+  # # filtern nach Geschlecht (liegt nicht in allen Indikatoren vor)
+  # df <- df %>% dplyr::filter(indikator %in% c("Auszubildende",
+  #                                             "Auszubildende (1. Jahr)",
+  #                                             "Beschäftigte",
+  #                                             "ausländische Beschäftigte"))
+
+  # Aggregat auf Bundeslandebene berechnen und LKs ausschließen
+  df <- df %>%
+    dplyr::group_by(jahr, indikator, fachbereich, geschlecht, bundesland) %>%
+    dplyr::summarize(wert = sum(wert))
+
+  # Berechnung von andere Fächergruppen
+  df_andere <- df %>% dplyr::filter(fachbereich=="Alle")
+  df_mint <- df %>% dplyr::filter(fachbereich=="MINT")
+  df_andere$wert <- df_andere$wert - df_mint$wert
+  df_andere$fachbereich[df_andere$fachbereich == "Alle"]<-"Andere Berufsgruppen"
+
+  df <- rbind(df, df_andere)
+
+  #nicht nötig, da Männer schon in df berechnet
+  #df <- calc_arbeitsmarkt_males(df)
 
   df <- df %>% dplyr::filter(indikator == indikator_choice)
 
+  df_gesamt <- df %>%
+    dplyr::filter(fachbereich == "Alle")
+                  # ,
+                  # anforderung == "Gesamt")
+
   df <- df %>%
-    dplyr::left_join(df_gesamt, by = c("region", "jahr", "geschlecht", "indikator", "bereich")) %>%
-    dplyr::rename(anforderung = "anforderung.x",
-                  fachbereich = "fachbereich.x",
+    dplyr::left_join(df_gesamt, by = c("bundesland", "jahr", "geschlecht", "indikator")) %>%
+    dplyr::rename(fachbereich = fachbereich.x,
                   wert = "wert.x",
                   wert_sum = "wert.y") %>%
-    dplyr::select(-c("fachbereich.y", "anforderung.y")) %>%
+    dplyr::select(-fachbereich.y) %>%
     dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
-    dplyr::filter(anforderung == "Gesamt",
-                  fachbereich == "MINT")
+    dplyr::filter(fachbereich == fachbereich_choice)
 
 
   values_female <- df %>% dplyr::filter(geschlecht == "Frauen")
@@ -409,7 +434,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
       "countries/de/de-all",
       data = values_female,
       value = "proportion",
-      joinBy = c("name", "region"),
+      joinBy = c("name", "bundesland"),
       borderColor = "#FAFAFA",
       name = paste0("Anteil von MINT-Berufen"),
       borderWidth = 0.1,
@@ -421,7 +446,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Frauen: Wahl von MINT-Berufen (", indikator_choice, ")", br(), timerange
+        text = paste0("Frauen: Wahl von MINT-Berufen (", indikator_choice, ")", br(), "2021"
                       #, title_help_sub
                       ),
         margin = 10,
@@ -442,7 +467,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
       "countries/de/de-all",
       data = values_male,
       value = "proportion",
-      joinBy = c("name", "region"),
+      joinBy = c("name", "bundesland"),
       borderColor = "#FAFAFA",
       name = "Anteil von MINT-Berufen",
       borderWidth = 0.1,
@@ -454,7 +479,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Männer: Wahl von MINT-Berufen (", indikator_choice, ")", br(), timerange
+        text = paste0("Männer: Wahl von MINT-Berufen (", indikator_choice, ")", br(), "2021"
                       #, title_help_sub
                       ),
         margin = 10,
