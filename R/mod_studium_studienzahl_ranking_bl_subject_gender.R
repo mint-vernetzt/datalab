@@ -13,32 +13,37 @@ mod_studium_studienzahl_ranking_bl_subject_gender_ui <- function(id){
 
     p("Auswahl des Jahrs:"),
     shinyWidgets::sliderTextInput(
-      inputId = ns("date_studium_ranking_bl_subject_gender"),
+      inputId = ns("dumb_date"),
       label = NULL,
-      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
-      selected = 2020
+      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
+      selected = 2021
     ),
-    p("Nur Lehramt anzeigen:"),
-    tags$div(
-      shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_ranking_bl_subject_gender"), label = "Nein", inline = TRUE),
-      tags$span("Ja"),
-      p("Auswahl der Hochschulform:"),
-      conditionalPanel(condition = "input.nurLehramt_studium_ranking_bl_subject_gender == false",
-                       ns = ns,
-                       shinyWidgets::pickerInput(
-                         inputId = ns("hochschulform_studium_ranking_bl_subject_gender_1"),
-                         choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
-                       )),
-      conditionalPanel(condition = "input.nurLehramt_studium_ranking_bl_subject_gender != false",
-                       ns = ns,
-                       shinyWidgets::pickerInput(
-                         inputId = ns("hochschulform_studium_ranking_bl_subject_gender_2"),
-                         choices = "Uni"
-                       ))
+    p("Auswahl des Indikators:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("dumbb_l"),
+      choices = c("Studienanfänger:innen (1.Fachsemester)",
+                  "Studienanfänger:innen (1.Hochschulsemester)",
+                  "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
+                  "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
+                  "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
+                  "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
+                  "Studienanfänger:innen (Universität, 1.Fachsemester)",
+                  "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
+                  "Studierende",
+                  "Studierende (Fachhochschulen)",
+                  "Studierende (Lehramt, Universität)",
+                  "Studierende (Universität)"
+      ),
+      selected = c("Studierende")
+      ,
+      multiple = F,
+      options =  list(
+        "max-options" = 3,
+        "max-options-text" = "Maximal 3 Indikatoren auswählen")
     ),
     p("Auswahl des Bundeslands:"),
     shinyWidgets::pickerInput(
-      inputId = ns("states_studium_ranking_bl_subject_gender"),
+      inputId = ns("dumbb_states"),
       choices = c("Deutschland",
                   "Berlin",
                   "Brandenburg",
@@ -58,7 +63,7 @@ mod_studium_studienzahl_ranking_bl_subject_gender_ui <- function(id){
                   "Westen",
                   "Osten"
                   ),
-      selected = "Hessen"
+      selected = "Nordrhein-Westfalen"
     )
   )
 }
@@ -70,25 +75,25 @@ mod_studium_studienzahl_ranking_bl_subject_gender_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    observeEvent(input$date_studium_ranking_bl_subject_gender, {
-      r$date_studium_ranking_bl_subject_gender <- input$date_studium_ranking_bl_subject_gender
+    observeEvent(input$dumb_date, {
+      r$dumb_date <- input$dumb_date
     })
 
-    observeEvent(input$nurLehramt_studium_ranking_bl_subject_gender, {
-      r$nurLehramt_studium_ranking_bl_subject_gender <- input$nurLehramt_studium_ranking_bl_subject_gender
+    observeEvent(input$dumbb_l, {
+      r$dumbb_l <- input$dumbb_l
     })
 
-    observeEvent(input$hochschulform_studium_ranking_bl_subject_gender_1, {
-      r$hochschulform_studium_ranking_bl_subject_gender_1 <- input$hochschulform_studium_ranking_bl_subject_gender_1
+    observeEvent(input$dumbb_states, {
+      r$dumbb_states <- input$dumbb_states
     })
-
-    observeEvent(input$hochschulform_studium_ranking_bl_subject_gender_2, {
-      r$hochschulform_studium_ranking_bl_subject_gender_2 <- input$hochschulform_studium_ranking_bl_subject_gender_2
-    })
-
-    observeEvent(input$states_studium_ranking_bl_subject_gender, {
-      r$states_studium_ranking_bl_subject_gender <- input$states_studium_ranking_bl_subject_gender
-    })
+#
+#     observeEvent(input$hochschulform_studium_ranking_bl_subject_gender_2, {
+#       r$hochschulform_studium_ranking_bl_subject_gender_2 <- input$hochschulform_studium_ranking_bl_subject_gender_2
+#     })
+#
+#     observeEvent(input$states_studium_ranking_bl_subject_gender, {
+#       r$states_studium_ranking_bl_subject_gender <- input$states_studium_ranking_bl_subject_gender
+#     })
 
 
   })
