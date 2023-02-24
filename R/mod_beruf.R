@@ -42,6 +42,7 @@ mod_beruf_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, da
   mod_beruf_arbeitsmarkt_anforderungen_server("mod_beruf_arbeitsmarkt_anforderungen_ui_1", r)
   mod_beruf_arbeitsmarkt_anforderungen_verlauf_server("mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui_1", r)
   mod_beruf_arbeitsmarkt_anforderungen_vergleich_server("mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui_1", r)
+  mod_beruf_arbeitsmarkt_überblick_fächer_server("mod_beruf_arbeitsmarkt_überblick_fächer_ui_1", r)
 
   # Box 5
   mod_beruf_arbeitsmarkt_anforderungen_gender_server("mod_beruf_arbeitsmarkt_anforderungen_gender_ui_1", r)

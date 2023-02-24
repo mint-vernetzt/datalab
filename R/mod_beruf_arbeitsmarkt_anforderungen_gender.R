@@ -33,11 +33,11 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
     p("Auswahl der Beschäftigungsform:"),
     shinyWidgets::pickerInput(
       inputId = ns("level_arbeitsmarkt_anforderungen_gender"),
-      choices = c("Beschäftigte",
-                  "Auszubildende",
-                  "Auszubildende (1. Jahr)",
-                  "ausländische Beschäftigte",
-                  "ausländische Auszubildende"),
+      choices = c(
+        "Auszubildende",
+        "Auszubildende (1. Jahr)",
+        "Beschäftigte",
+                  "ausländische Beschäftigte"),
       multiple = FALSE,
       selected = "Beschäftigte")
 
