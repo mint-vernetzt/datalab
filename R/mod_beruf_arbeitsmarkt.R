@@ -543,7 +543,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
     })
 
     output$plot_einstieg_vergleich_gender <- highcharter::renderHighchart({
-      arbeitsmarkt_einstieg_vergleich_gender(data_arbeitsmarkt,r)
+      arbeitsmarkt_einstieg_vergleich_gender(data_arbeitsmarkt_detail,r)
     })
 
     # Box 4
@@ -578,7 +578,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
 
     # Box 6
     output$plot_arbeitsmarkt_bl <- renderUI({
-      arbeitsmarkt_bl(data_arbeitsmarkt,r)
+      arbeitsmarkt_bl(data_arbeitsmarkt_detail,r)
     })
 
     output$plot_beruf_arbeitsmarkt_bl_verlauf <- highcharter::renderHighchart({
@@ -586,7 +586,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
     })
 
     output$plot_arbeitsmarkt_bl_vergleich <- highcharter::renderHighchart({
-      arbeitsmarkt_bl_vergleich(data_arbeitsmarkt,r)
+      arbeitsmarkt_bl_vergleich(data_arbeitsmarkt_detail,r)
     })
 
     # Box 7

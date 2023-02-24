@@ -534,7 +534,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
     })
 
     plot_ranking_studienzahl_bl_subject_gender_react <- reactive({
-      studienfaecher_ranking(data_studierende, r, type="other")
+      studienfaecher_ranking(data_studierende2, r, type="other")
     })
 
     output$plot_ranking_studienzahl_bl_subject_gender <- renderPlot({

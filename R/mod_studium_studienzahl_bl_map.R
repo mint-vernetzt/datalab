@@ -40,7 +40,7 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
         "max-options" = 2,
         "max-options-text" = "Maximal 2 Indikatoren auswählen")
     ),
-    p("Auswahl der Fächer (max. 3):"),
+    p("Auswahl der Fächer (max. 2):"),
     shinyWidgets::pickerInput(
       inputId = ns("map_f"),
       choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",

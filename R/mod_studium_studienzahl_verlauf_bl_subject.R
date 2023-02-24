@@ -89,8 +89,8 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westen",
-                  "Osten"
+                  "Westdeutschland",
+                  "Ostdeutschland"
                   ),
       selected = "Berlin"
 

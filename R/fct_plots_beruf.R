@@ -1213,29 +1213,58 @@ arbeitsmarkt_bl_gender_vergleich <- function(df, r) {
 
 arbeitsmarkt_bl <- function(df,r) {
 
+  df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
+
+  fach_choice <-r$pick_i
+
+
+
+  dfg <<- df
+
+  dfk <<- dfg%>%
+    dplyr::select(-bereich)%>%
+    dplyr::group_by(kategorie, indikator, fachbereich, jahr, anforderung, geschlecht, bundesland)%>%
+      dplyr::summarise(wert = sum(wert))%>%
+    dplyr::filter(anforderung=="Gesamt")%>%
+    tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
+    dplyr::mutate("Bau- und Gebäudetechnik" = `Bau- und Gebäudetechnik`/Alle,
+                  Informatik= Informatik/Alle,
+                  "Mathematik, Naturwissenschaften" = `Mathematik, Naturwissenschaften`/Alle,
+                  Produktionstechnik = `Produktionstechnik`/Alle,
+                  "Verkehrs-, Sicherheits- u. Veranstaltungstechnik" = `Verkehrs-, Sicherheits- u. Veranstaltungstechnik`/Alle,
+                  Landtechnik= `Landtechnik`/Alle,
+                  MINT= `MINT`/Alle,
+                  Gesundheitstechnik= `Gesundheitstechnik`/Alle,
+                  "Technik (gesamt)"= `Technik (gesamt)`/Alle)%>%
+    dplyr::select(-Alle)%>%
+    tidyr::pivot_longer(c(7:15), values_to="proportion", names_to="fachbereich")%>%
+    dplyr::filter(geschlecht=="Gesamt")
+
+
   # load UI inputs from reactive value
-  timerange <- r$date_arbeitsmarkt_bl
+  #timerange <- r$date_arbeitsmarkt_bl
 
   #anforderung <- r$anforderung_arbeitsmarkt_bl
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr == timerange)
+  # df <- dfg %>% dplyr::filter(jahr == timerange)
+  #
+  # # remove
+  # df <- df %>% dplyr::filter(region != "Deutschland")
+  #
+  # df <- df %>% dplyr::filter(geschlecht == "Gesamt")
+  #
+  # df <- calc_arbeitsmarkt_share_bl(df)
+  #
+  # df <- df %>% dplyr::filter(fachbereich == "MINT")
+  #
+  # # df <- df %>% dplyr::filter(anforderung == anforderung) # kab
+  #
+  dfk <- dfk %>%
+    dplyr::filter(fachbereich == fach_choice)
 
-  # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
-  df <- df %>% dplyr::filter(geschlecht == "Gesamt")
-
-  df <- calc_arbeitsmarkt_share_bl(df)
-
-  df <- df %>% dplyr::filter(fachbereich == "MINT")
-
-  # df <- df %>% dplyr::filter(anforderung == anforderung) # kab
-
-  df <- df %>% dplyr::filter(anforderung == "Gesamt")
-
-  df_employed <- df %>% dplyr::filter(indikator == "Beschäftigte")
-  df_trainee <- df %>% dplyr::filter(indikator == "Auszubildende")
+  df_employed <<- dfk %>% dplyr::filter(indikator == "Beschäftigte")
+  df_trainee <<- dfk %>% dplyr::filter(indikator == "Auszubildende")
 
   # if (anforderung == "Gesamt"){
   #
@@ -1253,7 +1282,7 @@ arbeitsmarkt_bl <- function(df,r) {
       "countries/de/de-all",
       data = df_trainee,
       value = "proportion",
-      joinBy = c("name", "region"),
+      joinBy = c("name", "bundesland"),
       borderColor = "#FAFAFA",
       name = "MINT-Anteil",
       borderWidth = 0.1,
@@ -1265,7 +1294,7 @@ arbeitsmarkt_bl <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von MINT-Berufen (Auszubildende)", br(), timerange #, title_help_sub
+        text = paste0("Anteil von MINT-Berufen (Auszubildende)", br(), "in 2021" #, title_help_sub
                       ),
         margin = 10,
         align = "center",
@@ -1285,7 +1314,7 @@ arbeitsmarkt_bl <- function(df,r) {
       "countries/de/de-all",
       data = df_employed,
       value = "proportion",
-      joinBy = c("name", "region"),
+      joinBy = c("name", "bundesland"),
       borderColor = "#FAFAFA",
       name = "MINT-Anteil",
       borderWidth = 0.1,
@@ -1297,7 +1326,7 @@ arbeitsmarkt_bl <- function(df,r) {
     ) %>%
       highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von MINT-Berufen (Beschäftigte)", br(), timerange #, title_help_sub
+        text = paste0("Anteil von MINT-Berufen (Beschäftigte)", br(), " in 2021"#, title_help_sub
                       ),
         margin = 10,
         align = "center",
@@ -1330,41 +1359,135 @@ arbeitsmarkt_bl <- function(df,r) {
 
 arbeitsmarkt_bl_verlauf <- function(df,r) {
 
+
+  #fach_choice <- r$pick_i
+
+  aniveau <<- r$niveau
+
   # load UI inputs from reactive value
-  timerange <- r$date_beruf_arbeitsmarkt_bl_verlauf
+  timerange <<- r$date_beruf_arbeitsmarkt_bl_verlauf
 
-  #anforderung <- r$anforderung_beruf_arbeitsmarkt_bl_verlauf kab
+  # anforderung <- r$anforderung_beruf_arbeitsmarkt_bl_verlauf
+  #
+  # indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_verlauf
 
-  indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_verlauf
-
-  states <- r$states_beruf_arbeitsmarkt_bl_verlauf
+  states <<- r$states_beruf_arbeitsmarkt_bl_verlauf
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
-
-  df <- df %>% dplyr::filter(indikator == indikator_choice)
-
-  df <- prep_arbeitsmarkt_east_west(df)
-
-  df <- df %>% dplyr::filter(region %in% states)
-
-  df <- df %>% dplyr::filter(anforderung != "Keine Zuordnung möglich")
-
-  df <- calc_arbeitsmarkt_males(df)
-
-  df <- calc_arbeitsmarkt_share_bl(df)
-
-  #df <- df %>% dplyr::filter(anforderung %in% anforderung) kab
-
-  df <- df %>% dplyr::filter(anforderung == "Gesamt")
+ df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
 
-  df <- df %>% dplyr::filter(geschlecht == "Gesamt")
 
-  df <- df %>% dplyr::filter(fachbereich == "MINT")
+
+
+  dfg <<- df
+
+
+
+  dfk <<- dfg%>%
+    tidyr::pivot_wider(names_from= region, values_from=wert)%>%
+    dplyr::mutate(Osten = rowSums(dplyr::select(., c(Berlin, Brandenburg, `Mecklenburg-Vorpommern`, Sachsen, `Sachsen-Anhalt`, Thüringen)),na.rm = T),
+                  Westen= rowSums(dplyr::select(., c(`Baden-Württemberg`, Bayern, Bremen, Hamburg, Hessen, Niedersachsen, `Schleswig-Holstein`, `Nordrhein-Westfalen`,
+                                                     `Rheinland-Pfalz`, Saarland  )),na.rm = T))%>%
+    tidyr::pivot_longer(c(7:25),names_to= "bundesland", values_to="wert") %>%
+    tidyr::pivot_wider(values_from=wert, names_from=fachbereich)%>%
+    dplyr::mutate(MINT= round(MINT/Alle*100,2))%>%
+    tidyr::pivot_longer(c(Alle, MINT), names_to="fachbereich", values_to="proportion")%>%
+    dplyr::filter(fachbereich != "Alle")%>%
+    dplyr::filter(geschlecht== "Gesamt")%>%
+    dplyr::filter(anforderung== "Gesamt")
+
+
+  df12 <<- dfk %>% dplyr::filter(bundesland %in% states)
+
+
+  df14 <<- df12 %>% dplyr::filter(indikator == aniveau)
+
+
+  df15 <<- df14[with(df14, order(bundesland, jahr, decreasing = FALSE)), ]
+
+
+  #   dplyr::select(-bereich)%>%
+  #   dplyr::group_by(kategorie, indikator, fachbereich, jahr, anforderung, geschlecht, bundesland)%>%
+  #   dplyr::summarise(wert = sum(wert))%>%
+  #   dplyr::filter(anforderung=="Gesamt")%>%
+  #   dplyr::ungroup()%>%
+  #   tidyr::pivot_wider(names_from= bundesland, values_from=wert)%>%
+  #   dplyr::mutate(Osten = rowSums(dplyr::select(., c(Berlin, Brandenburg, `Mecklenburg-Vorpommern`, Sachsen, `Sachsen-Anhalt`, Thüringen)),na.rm = T),
+  #                 Westen= rowSums(dplyr::select(., c(`Baden-Württemberg`, Bayern, Bremen, Hamburg, Hessen, Niedersachsen, `Schleswig-Holstein`, `Nordrhein-Westfalen`,
+  #                                                    `Rheinland-Pfalz`, Saarland  )),na.rm = T))%>%
+  #   tidyr::pivot_longer(c(7:24),names_to= "bundesland", values_to="wert") %>%
+  # tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
+  #   dplyr::mutate("Bau- und Gebäudetechnik" = `Bau- und Gebäudetechnik`/Alle,
+  #                 Informatik= Informatik/Alle,
+  #                 "Mathematik, Naturwissenschaften" = `Mathematik, Naturwissenschaften`/Alle,
+  #                 Produktionstechnik = `Produktionstechnik`/Alle,
+  #                 "Verkehrs-, Sicherheits- u. Veranstaltungstechnik" = `Verkehrs-, Sicherheits- u. Veranstaltungstechnik`/Alle,
+  #                 Landtechnik= `Landtechnik`/Alle,
+  #                 MINT= `MINT`/Alle,
+  #                 Gesundheitstechnik= `Gesundheitstechnik`/Alle,
+  #                 "Technik (gesamt)"= `Technik (gesamt)`/Alle)%>%
+  #   dplyr::select(-Alle)%>%
+  #   tidyr::pivot_longer(c(7:15), values_to="proportion", names_to="fachbereich")%>%
+  #   dplyr::filter(geschlecht=="Gesamt")
+
+
+
+
+  # load UI inputs from reactive value
+  #timerange <- r$date_arbeitsmarkt_bl
+
+  #anforderung <- r$anforderung_arbeitsmarkt_bl
+
+  # filter dataset based on UI inputs
+  # df <- dfg %>% dplyr::filter(jahr == timerange)
+  #
+  # # remove
+  # df <- df %>% dplyr::filter(region != "Deutschland")
+  #
+  # df <- df %>% dplyr::filter(geschlecht == "Gesamt")
+  #
+  # df <- calc_arbeitsmarkt_share_bl(df)
+  #
+  # df <- df %>% dplyr::filter(fachbereich == "MINT")
+  #
+  # # df <- df %>% dplyr::filter(anforderung == anforderung) # kab
+  #
+
+
+
+  # df11 <<- dfk %>%
+  #   dplyr::filter(fachbereich == fach_choice)
+  #
+  # df12 <<- df11 %>% dplyr::filter(bundesland %in% states)
+  #
+  # #df13 <<- df12 %>% dplyr::filter(anforderung != "Gesamt")
+  #
+  # df14 <<- df12 %>% dplyr::filter(indikator == aniveau)
+
+
+  # df <- prep_arbeitsmarkt_east_west(df)
+  #
+  # df <- df %>% dplyr::filter(region %in% states)
+  #
+  # df <- df %>% dplyr::filter(anforderung != "Keine Zuordnung möglich")
+  #
+  # df <- calc_arbeitsmarkt_males(df)
+  #
+  # df <- calc_arbeitsmarkt_share_bl(df)
+  #
+  # #df <- df %>% dplyr::filter(anforderung %in% anforderung) kab
+  #
+  # df <- df %>% dplyr::filter(anforderung == "Gesamt")
+  #
+  #
+  # df <- df %>% dplyr::filter(geschlecht == "Gesamt")
+  #
+  # df <- df %>% dplyr::filter(fachbereich == "MINT")
 
   # order years for plot
-  df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+  #df15 <<- df14[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
+
 
   # if (anforderung == "Gesamt"){
   #
@@ -1377,12 +1500,12 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
   # }
 
   # plot
-  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = region)) %>%
-    highcharter::hc_tooltip(pointFormat = "Anteil <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
+  highcharter::hchart(df15, 'line', highcharter::hcaes(x = jahr, y = proportion, group = bundesland)) %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil <br> Bundesland: {point.bundesland} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT-Berufen (", indikator_choice, ")"
+    highcharter::hc_title(text = paste0("Anteil von MINT-Berufen (", aniveau, ") in 2021"
                                         #, title_help
                                         ),
                           margin = 45,
@@ -1413,36 +1536,78 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
 #' @noRd
 
 arbeitsmarkt_bl_vergleich <- function(df,r) {
+  browser()
 
+  df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
+
+  dfh <<- df
+
+  dfk <<- dfh%>%
+    dplyr::select(-bereich)%>%
+    dplyr::group_by(kategorie, indikator, fachbereich, jahr, anforderung, geschlecht, bundesland)%>%
+    dplyr::summarise(wert = sum(wert))%>%
+    tidyr::pivot_wider(names_from= bundesland, values_from=wert)%>%
+    dplyr::mutate(Ostdeutschland = Berlin+ Brandenburg+ `Mecklenburg-Vorpommern`+ Sachsen+ `Sachsen-Anhalt`+ Thüringen,
+                  Westdeutschland= `Baden-Württemberg`+ Bayern+ Bremen+ Hamburg+ Hessen+ Niedersachsen+ `Schleswig-Holstein`+ `Nordrhein-Westfalen`+
+                                                     `Rheinland-Pfalz`+ Saarland)%>%
+    tidyr::pivot_longer(c(7:24),names_to= "bundesland", values_to="wert") %>%
+    dplyr::filter(anforderung=="Gesamt")%>%
+    tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
+    dplyr::mutate("Bau- und Gebäudetechnik" = `Bau- und Gebäudetechnik`/Alle,
+                  Informatik= Informatik/Alle,
+                  "Mathematik, Naturwissenschaften" = `Mathematik, Naturwissenschaften`/Alle,
+                  Produktionstechnik = `Produktionstechnik`/Alle,
+                  "Verkehrs-, Sicherheits- u. Veranstaltungstechnik" = `Verkehrs-, Sicherheits- u. Veranstaltungstechnik`/Alle,
+                  Landtechnik= `Landtechnik`/Alle,
+                  MINT= `MINT`/Alle,
+                  Gesundheitstechnik= `Gesundheitstechnik`/Alle,
+                  "Technik (gesamt)"= `Technik (gesamt)`/Alle)%>%
+    dplyr::select(-Alle)%>%
+    tidyr::pivot_longer(c(7:15), values_to="proportion", names_to="fachbereich")%>%
+    dplyr::filter(geschlecht=="Gesamt")
+
+
+    dfk$indikator <- stringr::str_replace(dfk$indikator, "^\\w{1}", toupper)
+
+
+    dfk$proportion = round(dfk$proportion*100, 2)
   # load UI inputs from reactive value
-  timerange <- r$date_beruf_arbeitsmarkt_bl_vergleich
+  states <- r$states
 
   #anforderung <- r$anforderung_beruf_arbeitsmarkt_bl_vergleich
 
-  indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_vergleich
+  indikator_choice <- r$indikator
+
+  dfk <- dfk%>%
+    dplyr::filter(indikator==indikator_choice)%>%
+    dplyr::filter(fachbereich==states)
+
+  dfk <- dfk[with(dfk, order(fachbereich, jahr, decreasing = FALSE)), ]
+
+
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr == timerange)
-
-  df <- df %>% dplyr::filter(indikator == indikator_choice)
-
-  # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
-
-
-  # df <- prep_arbeitsmarkt_east_west(df)
-
-  df <- calc_arbeitsmarkt_males(df)
-
-  df <- calc_arbeitsmarkt_share_bl(df)
-
-  #df <- df %>% dplyr::filter(anforderung %in% anforderung)
-
-  df <- df %>% dplyr::filter(anforderung == "Gesamt")
-
-  df <- df %>% dplyr::filter(geschlecht == "Gesamt")
-
-  df <- df %>% dplyr::filter(fachbereich == "MINT")
+  # df <- df %>% dplyr::filter(jahr == timerange)
+  #
+  # df <- df %>% dplyr::filter(indikator == indikator_choice)
+  #
+  # # remove
+  # df <- df %>% dplyr::filter(region != "Deutschland")
+  #
+  #
+  # # df <- prep_arbeitsmarkt_east_west(df)
+  #
+  # df <- calc_arbeitsmarkt_males(df)
+  #
+  # df <- calc_arbeitsmarkt_share_bl(df)
+  #
+  # #df <- df %>% dplyr::filter(anforderung %in% anforderung)
+  #
+  # df <- df %>% dplyr::filter(anforderung == "Gesamt")
+  #
+  # df <- df %>% dplyr::filter(geschlecht == "Gesamt")
+  #
+  # df <- df %>% dplyr::filter(fachbereich == "MINT")
 
   # nur nötig für stacked, machen wir hier doch nicht
   # #gegenwert Berechnen für jeweilige Auswahl
@@ -1453,7 +1618,7 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
   # df <- rbind(df, df_n)
 
   # order years for plot
-  df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+  # df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
   # if (anforderung == "Gesamt"){
   #
@@ -1466,15 +1631,15 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
   # }
 
   # plot
-  highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = region)) %>%
+  highcharter::hchart(dfk, 'bar', highcharter::hcaes(y = proportion, x = bundesland)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.fachbereich}-Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
    # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
    # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
     highcharter::hc_colors( "#b16fab") %>%
-    highcharter::hc_title(text = paste0( "Anteil von MINT-Berufen (", indikator_choice, ")",
-                                                                        br(), timerange,
+    highcharter::hc_title(text = paste0( "Anteil von MINT an Berufen (", indikator_choice, ") ",
+                                                                        br(), "in 2021",
                                                                         "<br><br><br>"),
                           margin = 20,
                           align = "center",
@@ -1542,9 +1707,9 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
 
 
   # Deutschland gesamt berechnen und Landkreise/Bundesländer ausschließen
-  df <- df %>%
-    dplyr::group_by(jahr, indikator, fachbereich, geschlecht) %>%
-    dplyr::summarize(wert = sum(wert))
+  # df <- df %>%
+  #   dplyr::group_by(jahr, indikator, fachbereich, geschlecht) %>%
+  #   dplyr::summarize(wert = sum(wert))
 
   # Auswahl der Berufsgruppen für Waffel
   df <- df %>% dplyr::filter(fachbereich %in% c("Alle", "MINT", "Mathematik, Naturwissenschaften",
@@ -2698,75 +2863,68 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(df,r) {
 arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
 
   # load UI inputs from reactive value
-  timerange <- r$date_arbeitsmarkt_einstieg_vergleich_gender
+  #timerange <- r$date_arbeitsmarkt_einstieg_gender
+  fach_choice <- r$fach_arbeitsmarkt_einstieg_vergleich_gender
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr == timerange)
-
-  df <- df %>% dplyr::filter(region == "Deutschland")
-
-  # remove
- #df <- df %>% dplyr::filter(anforderung != "Helfer")
-
-  # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderung == "Gesamt")
-    # dplyr::group_by(region, fachbereich, indikator, jahr, geschlecht, bereich) %>%
-    # dplyr::summarise(wert = sum(wert)) %>%
-    # dplyr::mutate(anforderung = "Gesamt") %>%
-    # dplyr::ungroup()
-
-  df <- rbind(df %>% dplyr::filter(anforderung != "Gesamt"), df_new_gesamt)
-
+  #df <- df %>% dplyr::filter(jahr == timerange)
+  df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
   df <- df %>% dplyr::filter(anforderung == "Gesamt")
 
-  df <- calc_arbeitsmarkt_mint(df)
-
-  df <- calc_arbeitsmarkt_males(df)
-
-  df_sub_new_gesamt <- df %>% dplyr::filter(geschlecht == "Gesamt") %>%
-    dplyr::rename(wert_sub_gesamt = "wert") %>%
-    dplyr::select(-c("geschlecht", "anforderung"))
-
-  df_new_gesamt <- df_new_gesamt %>%
-    dplyr::filter(fachbereich == "Alle",
-                  geschlecht == "Gesamt") %>%
-    dplyr::rename(wert_gesamt = "wert")
-
   df <- df %>%
-    dplyr::left_join(df_sub_new_gesamt, by = c("region", "indikator", "jahr", "bereich", "fachbereich")) %>%
-    dplyr::left_join(df_new_gesamt, by = c("region", "indikator", "jahr", "bereich")) %>%
-    dplyr::rename(fachbereich = "fachbereich.x",
-                  anforderung = "anforderung.x",
-                  geschlecht = "geschlecht.x") %>%
-    dplyr::mutate(proportion_fachbereich = (wert/wert_sub_gesamt)*100) %>%
-    dplyr::mutate(proportion_gesamt = (wert/wert_gesamt)*100) %>%
-    dplyr::select(-c("wert", "wert_gesamt", "fachbereich.y", "anforderung.y", "geschlecht.y")) %>%
-    dplyr::filter(geschlecht == "Frauen",
-                  fachbereich != "Gesamt")
+    dplyr::group_by(jahr, indikator, fachbereich, geschlecht, anforderung) %>%
+    dplyr::summarise(wert = sum(wert))
 
-  #gegenwert Berechnen für jeweilige Auswahl
-  df_n <- df %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    dplyr::mutate(proportion_fachbereich = 100 - proportion_fachbereich)
-  df_n$geschlecht <- "Männer"
+  #Indikatoren u25 - ü25 ausfiltern, da hier i nicht nach Geschlecht unterschieden werden kann
+  df <- df %>% dplyr::filter(indikator %in% c("Auszubildende",
+                                              "Auszubildende (1. Jahr)",
+                                              "Beschäftigte",
+                                              "ausländische Beschäftigte"))
 
-  df <- rbind(df, df_n)
+  df <- df %>% dplyr::filter(fachbereich %in% c(fach_choice,"Alle"))
+
+  # Berechnung von andere Berufsgruppen
+  df[df$fachbereich == "Alle", "wert"] <- df[df$fachbereich == "Alle", "wert"]-
+    df[df$fachbereich == fach_choice, "wert"]
+  df$fachbereich[df$fachbereich == "Alle"]<-"Andere Berufe"
+
+  #Geschlecht = "Gesamt" ausschließen und Geschlcht-Gesamt als Wert für alle berechnen
+  df <- df %>% dplyr::filter(geschlecht != "Gesamt")
+  df <- df %>%
+    dplyr::group_by(jahr, indikator, fachbereich) %>%
+    dplyr::mutate(sum_wert = sum(wert))
+
+  # calcualte proportions of gender
+  df <- df %>% dplyr::group_by(jahr, indikator, fachbereich, geschlecht) %>%
+    dplyr::mutate(proportion = wert/sum_wert)
+
+  df$proportion <- df$proportion * 100
+
 
   # Indikator-Kombination benennen
-  df$indikator <- ifelse(df$indikator == "Auszubildende" & df$fachbereich == "MINT", "Auszubildende in MINT", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Auszubildende" & df$fachbereich == fach_choice, paste0("Auszubildende in ",fach_choice), df$indikator)
   df$indikator <- ifelse(df$indikator == "Auszubildende" & df$fachbereich == "Andere Berufe", "Auszubildende in anderen Berufen", df$indikator)
-  df$indikator <- ifelse(df$indikator == "Beschäftigte" & df$fachbereich == "MINT", "Beschäftigte in MINT", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Beschäftigte" & df$fachbereich == fach_choice, paste0("Beschäftigte in ", fach_choice), df$indikator)
   df$indikator <- ifelse(df$indikator == "Beschäftigte" & df$fachbereich == "Andere Berufe", "Beschäftigte in anderen Berufen", df$indikator)
+  df$indikator <- ifelse(df$indikator == "Auszubildende (1. Jahr)" & df$fachbereich == fach_choice, paste0("Auszubildende im 1. Jahr in ",fach_choice), df$indikator)
+  df$indikator <- ifelse(df$indikator == "Auszubildende (1. Jahr)" & df$fachbereich == "Andere Berufe", "Auszubildende im 1. Jahr in anderen Berufen", df$indikator)
+  df$indikator <- ifelse(df$indikator == "ausländische Beschäftigte" & df$fachbereich == fach_choice, paste0("Ausländische Beschäftigte in ",fach_choice), df$indikator)
+  df$indikator <- ifelse(df$indikator == "ausländische Beschäftigte" & df$fachbereich == "Andere Berufe", "Ausländische Beschäftigte in anderen Berufen", df$indikator)
 
 
   # plot
-  highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion_fachbereich), group = geschlecht)) %>%
+  highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion), group = geschlecht)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.geschlecht}-Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
-    highcharter::hc_xAxis(title = list(text = ""), categories = c("Auszubildende in MINT", "Auszubildende in anderen Berufen",
-                                                                  "Beschäftigte in MINT", "Beschäftigte in anderen Berufen")) %>%
+    highcharter::hc_xAxis(title = list(text = "")
+                          # , categories = c("Auszubildende in MINT", "Auszubildende in anderen Berufen",
+                          #                                         "Auszubildende im 1. Jahr in MINT", "Auszubildende im 1. Jahr in anderen Berufen",
+                          #                                         "Beschäftigte in MINT", "Beschäftigte in anderen Berufen",
+                          #                                         "Ausländische Beschäftigte in MINT", "Ausländische Beschäftigte in anderen Berufen")
+                          ) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen in MINT- und anderen Berufen (", timerange, ")",
+    highcharter::hc_title(text = paste0("Anteil von Frauen in MINT- und anderen Berufen (2021)",
                                           "<br><br><br>"),
                           margin = 25,
                           align = "center",
@@ -2814,11 +2972,15 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
 
 arbeitsmarkt_überblick_fächer <- function(df, r) {
   # load UI inputs from reactive value
+
+  df$indikator <- stringr::str_replace(df$indikator, "^\\w{1}", toupper)
+
+  browser()
   state <- r$state_arbeitsmarkt_überblick_fächer
   indikator_choice <- r$indikator_arbeitsmarkt_überblick_fächer
 
   # filtern nach Auswahl
-  df <- df %>% dplyr::filter(bundesland == state)
+  df <- df %>% dplyr::filter(indikator == indikator_choice)
 
   # Anforderung und Geschlecht auf gesamt setzten
   df <- df %>% dplyr::filter(anforderung == "Gesamt")
@@ -2840,7 +3002,7 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
 
   df <- rbind(df, df_de)
 
-  df <- df %>% dplyr::filter(indikator == indikator_choice)
+  df <- df %>% dplyr::filter(bundesland == state)
 
   # MINT direkt berechnen und nicht-MINT berechnen
   df[df$fachbereich == "MINT", "wert"] <- df[df$fachbereich == "Mathematik, Naturwissenschaften", "wert"]+
@@ -2889,6 +3051,20 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
   df$fachbereich[df$fachbereich == "Technik (gesamt)"]<-"Technik"
 
   # Reihenfolge sortieren für Plot
+<<<<<<< HEAD
+ df$fachbereich <- factor(df$fachbereich, levels = c("Alle Berufsfelder außer MINT (gesamt)",
+                                                              "MINT-Berufsfelder (gesamt)",
+                                                              "Mathematik, Naturwissenschaften",
+                                                              "Informatik",
+                                                              "Technik (gesamt)",
+                                                              "Bau- und Gebäudetechnik",
+                                                              "Gesundheitstechnik",
+                                                              "Landtechnik",
+                                                              "Produktionstechnik",
+                                                              "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"
+
+                                              ))
+=======
   df$fachbereich <- factor(df$fachbereich, levels = c("Alle Berufsfelder außer MINT (gesamt)",
                                                         "MINT-Berufsfelder (gesamt)",
                                                         "Mathematik, Naturwissenschaften",
@@ -2913,6 +3089,7 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
   title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
   title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
   title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
+>>>>>>> e4450b1ccc1268c7c49fc300cc3697c21a87a0d1
 
 
 

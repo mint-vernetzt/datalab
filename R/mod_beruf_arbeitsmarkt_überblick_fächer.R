@@ -14,7 +14,8 @@ mod_beruf_arbeitsmarkt_überblick_fächer_ui <- function(id){
     p("Auswahl des Bundeslands:"),
     shinyWidgets::pickerInput(
       inputId = ns("state_arbeitsmarkt_überblick_fächer"),
-      choices = c("Baden-Württemberg",
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
                   "Bayern",
                   "Berlin",
                   "Brandenburg",
@@ -40,9 +41,9 @@ mod_beruf_arbeitsmarkt_überblick_fächer_ui <- function(id){
                   "Auszubildende (1. Jahr)",
                   "Beschäftigte",
                   "ausländische Beschäftigte",
-                  "u25" = "Beschäftigte u25",
-                  "25-55" = "Beschäftigte 25-55",
-                  "ü55" =  "Beschäftigte ü55"),
+                  "Beschäftigte u25",
+                  "Beschäftigte 25-55",
+                  "Beschäftigte ü55"),
       multiple = FALSE,
       selected = "Beschäftigte")
     )
