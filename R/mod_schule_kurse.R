@@ -41,14 +41,8 @@ mod_schule_kurse_ui <- function(id){
                nutzen wir die Kursbelegungszahlen der Schüler:innen. Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
                nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen
                der verschiedenen Kurse.", br(), br(),
-               "Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
-               nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen der verschiedenen Kurse.
-               Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.",
-               "Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor.", br(),
-               "In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
-                sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
-               Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
-               die Anteile der Grundlagenfächer an den Grundkursen sehr gering.", br(), br(),
+               # "Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
+               # nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen der verschiedenen Kurse.",
                "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.",
                br(),br(),
                "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen."
@@ -85,13 +79,18 @@ mod_schule_kurse_ui <- function(id){
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")),
+                               mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")
+
+                               ),
                              shiny::mainPanel(
                                width = 9,
                                plotOutput(ns("plot_waffle_mint"))
-                               ,p(style="font-size:12px;color:grey", br(), "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+                               ,
+                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+
+                               )
                     ),
-                    tabPanel("Vergleich Grund. und Leistungskurse, MINT aggregiert", br(),
+                    tabPanel("Vergleich Grund- und Leistungskurse, MINT aggregiert", br(),
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_einstieg_comparison_ui("mod_schule_kurse_einstieg_comparison_ui_1")),
@@ -99,7 +98,8 @@ mod_schule_kurse_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_comparison"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
-                    ),
+
+                             ),
 
                     # tabPanel("Vergleich Grund- und Leistungskurse, MINT aggregiert", br(),
                     #
@@ -118,7 +118,10 @@ mod_schule_kurse_ui <- function(id){
                     tabPanel("Vergleich Grund- und Leistungskurse im Zeitverlauf", br(),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1")),
+                               mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1")
+
+
+                               ),
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_verlauf")),p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
@@ -147,7 +150,14 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_map_kurse_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+                               ,
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
+                                 sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
+                                 Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering."),
+                               p(style="font-size:12px;color:grey","Hinweis: Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor.")
+                               )
                     ),
 
                     # tabPanel("Vergleich (Bundesländer)", br(),
@@ -195,7 +205,11 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_map_kurse"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
+                                 sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
+                                 Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering."))
                     ),
                     tabPanel("Vergleich Bundesländer im Zeitverlauf", br(),
 
@@ -205,7 +219,11 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_verlauf_multiple"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
+                                 sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
+                                 Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering."))
                     ),
                     tabPanel("Vergleich Fächer im Zeitverlauf", br(),
 
@@ -217,11 +235,15 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen.")))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
+                                 sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
+                                 Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering.")))
                     ,
 
 
-                    tabPanel("Vergleich Grund- und Leistungskurse nach Bundesländer", br(),
+                    tabPanel("Vergleich Grund- und Leistungskurse nach Bundesländern", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -231,7 +253,11 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                plotOutput(ns("plot_ranking_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
+                                 sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
+                                 Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering."))
 
                     ),
 
@@ -245,7 +271,11 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_comparison_subjects"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen.")
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
+                                 sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
+                                 Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering.")
 
                              )),
                     tabPanel("Alle Bundesländer auf einen Blick", br(),
@@ -256,7 +286,12 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_comparison_bl"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen.")))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
+                                 sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
+                                 Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering.")
+                               ))
 
         ))),
     fluidRow(
@@ -339,7 +374,9 @@ mod_schule_kurse_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                plotOutput(ns("plot_ranking_2"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey","Hinweis: Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor.")
+                               )
                              ),
 
 
