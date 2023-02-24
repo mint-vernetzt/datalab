@@ -1184,6 +1184,7 @@ kurse_ranking <- function(df,r, type) {
   df <- df %>% dplyr::filter(jahr == timerange)
 
   df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
+  df <- df %>% dplyr::filter(indikator != "Oberstufenbelegungen")
 
   # include "Osten" und "Westen" in Dataframe
   df <- prep_kurse_east_west(df)
@@ -2249,6 +2250,8 @@ kurse_comparison_gender <- function(df,r) {
   df1$indikator <- ifelse(df1$indikator == "Grundkurse" & df1$fachbereich == "andere Fächer", "Grundkurse andere Fächer", df1$indikator)
   df1$indikator <- ifelse(df1$indikator == "Leistungskurse" & df1$fachbereich == "MINT", "Leistungskurse MINT-Fächer", df1$indikator)
   df1$indikator <- ifelse(df1$indikator == "Leistungskurse" & df1$fachbereich == "andere Fächer", "Leistungskurse andere Fächer", df1$indikator)
+  df1$indikator <- ifelse(df1$indikator == "Oberstufenbelegungen" & df1$fachbereich == "MINT", "Oberstufenbelegungen MINT-Fächer", df1$indikator)
+  df1$indikator <- ifelse(df1$indikator == "Oberstufenbelegungen" & df1$fachbereich == "andere Fächer", "Oberstufenbelegungen andere Fächer", df1$indikator)
 
   # order years for plot
   df1 <- df1[with(df, order(jahr, decreasing = FALSE)), ]
@@ -2269,7 +2272,9 @@ kurse_comparison_gender <- function(df,r) {
     highcharter::hc_xAxis(title = list(text = ""), categories=c("Grundkurse MINT-Fächer",
                                                                 "Grundkurse andere Fächer",
                                                                 "Leistungskurse MINT-Fächer",
-                                                                "Leistungskurse andere Fächer")) %>%
+                                                                "Leistungskurse andere Fächer",
+                                                                "Oberstufenbelegungen MINT-Fächer",
+                                                                "Oberstufenbelegungen andere Fächer")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
     highcharter::hc_title(text = paste0("Anteil von Mädchen in MINT- und anderen Fächern ", "(", timerange, ")",
