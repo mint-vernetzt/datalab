@@ -23,19 +23,21 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
     # Begonnen mit Anpassung, dass beliegige Waffles vergleichen werden können
     # noch nicht implementierbar - Plot Fkt muss noch angepasst werden
 
-    # p("Auswahl der Beschäftigungsform"),
-    # shinyWidgets::pickerInput(
-    #   inputId = ns("job_arbeitsmarkt_anforderungen"),
-    #   choices = c("Beschäftigte",
-    #               "Auszubildende",
-    #               "Auszubildende (1. Jahr)",
-    #               "ausländische Beschäftigte",
-    #               "ausländische Auszubildende"),
-    #   multiple = TRUE,
-    #   options =  list(
-    #     "max-options" = 3,
-    #     "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
-    #   ))
+    p("Auswahl der Beschäftigungsform"),
+    shinyWidgets::pickerInput(
+      inputId = ns("indikator_arbeitsmarkt_anforderungen"),
+      choices = c("Beschäftigte",
+                  "Auszubildende",
+                  "Auszubildende (1. Jahr)",
+                  "ausländische Beschäftigte",
+                  "ausländische Auszubildende"),
+      selected = c("Beschäftigte", "Auszubildende"),
+      multiple = TRUE,
+      options =  list(
+        "max-options" = 2,
+        "max-options-text" = "Bitte nur maximal 2 Bereiche auswählen"
+      ))
+
     )
 }
 
@@ -48,6 +50,9 @@ mod_beruf_arbeitsmarkt_anforderungen_server <- function(id, r){
     # observeEvent(input$date_arbeitsmarkt_anforderungen, {
     #   r$date_arbeitsmarkt_anforderungen <- input$date_arbeitsmarkt_anforderungen
     # })
+    observeEvent(input$indikator_arbeitsmarkt_anforderungen, {
+      r$indikator_arbeitsmarkt_anforderungen <- input$indikator_arbeitsmarkt_anforderungen
+    })
 
   })
 }
