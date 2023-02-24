@@ -38,42 +38,54 @@ mod_home_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Überblick über alle MINT-Bildungsbereiche",
-        width = 9,
+        title = "Auf dieser Seite",
+        width = 3,
         p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
+        # span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
                "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
-               ),
+            ,
 
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis, 2021, Bundesagentur für Arbeit, 2021, KMK, 2021, alle auf Anfrage, eigene Berechnungen."
-               )),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
-               "Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
-               eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
-               nutzen wir die Kursbelegungszahlen der Schüler:innen. Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
-               nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen der verschiedenen Kurse.
-               Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.",
-               br(),br(),
-               "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen."
-          ))
+        # p(style = "text-align: justify; font-size = 16px",
+        #   span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis, 2021, Bundesagentur für Arbeit, 2021, KMK, 2021, alle auf Anfrage, eigene Berechnungen."
+        #        )),
+        # p(style = "text-align: justify; font-size = 16px",
+        #   span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab"))),
+        # )
         ),
 
       shinydashboard::box(
-        title = "Auf dieser Seite",
+        title = "Übersicht Fragestellungen",
         width = 3,
         p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("#MINT:")),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
         )),
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"
+          span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"),
+        )
         ),
 
-        )
-        )),
+      shinydashboard::box(
+        title = "Datenquellen",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          "Studierendenzahlen: Destatis 2022, auf Anfrage"),
+         p("Schüler:innenzahlen: KMK 2022, auf Anfrage"),
+          p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2022, auf Anfrage")
+        ),
+
+   shinydashboard::box(
+     title = "Fragen oder Feedback?",
+     width = 3,
+     p(style = "text-align: justify; font-size = 16px",
+       "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+            tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+       )
+       )
+
+   ),
+
 
 
     fluidRow(
@@ -83,13 +95,22 @@ mod_home_start_ui <- function(id){
         p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von MINT-Fächern in der Schule? Wie hoch ist der Anteil von Studierenden, die MINT-Fächer belegen?", br(),
           "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?",
           br(), br(),
-          "Interpretationshilfe: Wenn man auf der ersten Ansicht beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden deutschlandweit im Jahr 2020
-          32 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten in Deutschland ist dieser Anteil ein wenig geringer. Im Jahr 2020 arbeiten nur 24 % der Beschäftigten in einem MINT-Beruf."),
+
+          "Methodische Hinweise: Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
+                         eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
+                         nutzen wir die Kursbelegungszahlen der Schüler:innen.",
+          br(),br(),
+          "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen.",
+          br(), br(),
+         ),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich", br(),
                       shiny::sidebarPanel(
                         width = 3,
-                        mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1")),
+                        mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
+                        p("Interpretationshilfe: Wenn man beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden deutschlandweit im Jahr 2021
+                          31 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten in Deutschland ist dieser Anteil ein wenig geringer. Im Jahr 2021 arbeiten nur 23 % der Beschäftigten in einem MINT-Beruf.")
+                        ),
                       shiny::mainPanel(
                         width = 9,
                         htmlOutput(ns("plot_mint_rest_einstieg_1"))
