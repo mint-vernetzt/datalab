@@ -24,7 +24,7 @@ mod_quellen_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        width = 10,
+        width = 9,
         title = "Definition MINT",
                 p(style = "text-align: justify; font-size = 16px",
           "MINT ist eine Abkürzung aus den Anfangsbuchstaben bestimmter Schul- und Studienfächer bzw. Berufe.
@@ -47,7 +47,7 @@ mod_quellen_ui <- function(id){
     ),
 
       shinydashboard::box(
-          width = 2,
+          width = 3,
           title = "Unsere Datengeber:innen",
           img(src='www/Logo_BA.png',
               class = "img-responsive",
