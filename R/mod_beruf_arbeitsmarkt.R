@@ -543,7 +543,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
     })
 
     output$plot_einstieg_vergleich_gender <- highcharter::renderHighchart({
-      arbeitsmarkt_einstieg_vergleich_gender(data_arbeitsmarkt,r)
+      arbeitsmarkt_einstieg_vergleich_gender(data_arbeitsmarkt_detail,r)
     })
 
     # Box 4

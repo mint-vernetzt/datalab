@@ -10,6 +10,17 @@
 mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
+    p("Auswahl des Fachbereichs"),
+    shinyWidgets::pickerInput(
+      inputId = ns("fach_arbeitsmarkt_einstieg_vergleich_gender"),
+      choices = c("MINT",
+                  "Mathematik/ Naturwissenschaften" = "Mathematik, Naturwissenschaften",
+                   "Informatik",
+                   "Technik"="Technik (gesamt)"
+                    ),
+        multiple = FALSE,
+        selected = "MINT")
+
     # p("Auswahl des Jahres:"),
     # shinyWidgets::sliderTextInput(
     #   inputId = ns("date_arbeitsmarkt_einstieg_vergleich_gender"),
@@ -30,6 +41,10 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_server <- function(id, r){
     # observeEvent(input$date_arbeitsmarkt_einstieg_vergleich_gender, {
     #   r$date_arbeitsmarkt_einstieg_vergleich_gender <- input$date_arbeitsmarkt_einstieg_vergleich_gender
     # })
+
+    observeEvent(input$fach_arbeitsmarkt_einstieg_vergleich_gender, {
+      r$fach_arbeitsmarkt_einstieg_vergleich_gender <- input$fach_arbeitsmarkt_einstieg_vergleich_gender
+    })
 
   })
 }
