@@ -80,7 +80,21 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           ist Baden-Württemberg mit 29 %."),
 
         tabsetPanel(type = "tabs",
-                    tabPanel("NEU: Waffle MINT"),
+                    tabPanel("Waffle MINT", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
+
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               plotOutput(ns("plot_arbeitsmarkt_waffle")),
+                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
+                             )
+                    ),
 
                     tabPanel("Zeitverlauf", br(),
 
@@ -214,21 +228,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           br(), br(),
           "Interpretationshilfe: "),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
-
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               plotOutput(ns("plot_arbeitsmarkt_waffle")),
-                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
-                             )
-                    ),
                     tabPanel("Karte", br(),
 
                              shiny::sidebarPanel(
@@ -547,8 +546,12 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
     })
 
     # Box 4
-    output$plot_arbeitsmarkt_waffle <- renderPlot({
+    plot_arbeitsmarkt_waffle_react <- reactive({
       arbeitsmarkt_anforderungen(data_arbeitsmarkt_detail, r)
+    })
+
+    output$plot_arbeitsmarkt_waffle <- renderPlot({
+      plot_arbeitsmarkt_waffle_react()
     })
 
     output$plot_arbeitsmarkt_verlauf <- highcharter::renderHighchart({
