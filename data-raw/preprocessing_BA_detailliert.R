@@ -77,9 +77,12 @@ help <- help %>% dplyr::filter(Freq != 1)
 data1$ort <- ifelse(data1$ort %in% help$Var1 & grepl("tadt", data1$b) , stringr::str_c("Stadt ", data1$ort), data1$ort)
 data1$ort <- ifelse(data1$ort %in% help$Var1 & !grepl("tadt", data1$b), stringr::str_c("Landkreis ", data1$ort),data1$ort)
 
-# Spezialfall Augsbrug mit zwei verschiedene Landkreisangaben nähere Erklärung hinzufügen und Schlüsselnummer korrekt in c schreiben:
+# Spezialfall Dillingen ist hier 2. Augsbrug - Name und Schlüsselnummer korrekt in c schreiben:
 data1$ort <- ifelse(data1$c == "von 01.01.1973", stringr::str_c(data1$ort, " ", data1$c), data1$ort)
 data1$c <- ifelse(data1$c == "von 01.01.1973", data1$b, data1$c)
+data1$ort <- ifelse(grepl("von 01.01.1973",data1$ort), "Dillingen a. d. Donau", data1$ort)
+data1$c <- ifelse(grepl("Dillingen",data1$ort), "09773", data1$c)
+data1$b <- ifelse(grepl("Dillingen",data1$ort), NA, data1$b)
 
 # Spezifalfall Oldenburg mit Beschreibung Oldenburg in Klammern, daher nicht erkannt als identisch in Ansatz davor
 data1$ort <- ifelse(data1$ort == "Oldenburg (Oldenburg)", "Stadt Oldenburg", data1$ort)
@@ -323,7 +326,9 @@ data_a1$ort <- ifelse(data_a1$ort %in% help$Var1 & !grepl("tadt", data_a1$b), st
 # Spezialfall Augsbrug mit zwei verschiedene Landkreisangaben nähere Erklärung hinzufügen und Schlüsselnummer korrekt in c schreiben:
 data_a1$ort <- ifelse(data_a1$c == "von 01.01.1973", stringr::str_c(data_a1$ort, " ", data_a1$c), data_a1$ort)
 data_a1$c <- ifelse(data_a1$c == "von 01.01.1973", data_a1$b, data_a1$c)
-
+data_a1$ort <- ifelse(grepl("von 01.01.1973",data_a1$ort), "Dillingen a. d. Donau", data_a1$ort)
+data_a1$c <- ifelse(grepl("Dillingen",data_a1$ort), "09773", data_a1$c)
+data_a1$b <- ifelse(grepl("Dillingen",data_a1$ort), NA, data_a1$b)
 
 # Spezifalfall Oldenburg mit Beschreibung Oldenburg in Klammern, daher nicht erkannt als identisch in Ansatz davor
 data_a1$ort <- ifelse(data_a1$ort == "Oldenburg (Oldenburg)", "Stadt Oldenburg", data_a1$ort)
@@ -470,8 +475,7 @@ arbeitsmarkt_detail_geschlecht <- arbeitsmarkt_detail %>% dplyr::filter(!indikat
   dplyr::bind_rows(., arbeitsmarkt_detail)
 
 arbeitsmarkt_detail_final <- dplyr::bind_rows(arbeitsmarkt_detail_geschlecht, arbeitsmarkt_detail_alter, arbeitsmarkt_detail_ausl_alter) %>%
-  dplyr::distinct() %>%
-  dplyr::filter(!is.na(landkreis_nummer))
+  dplyr::distinct()
 
 #### Datensatz speichern
 
