@@ -17,15 +17,17 @@ mod_beruf_arbeitsmarkt_bl_ui <- function(id){
     #   choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
     #   selected = 2021
     # ),
-    p("Auswahl des Fachs:"),
+    p("Auswahl des Berufsfelds:"),
     shinyWidgets::pickerInput(
       inputId = ns("pick_i"),
-      choices = c( "Bau- und Gebäudetechnik",  "Gesundheitstechnik",
-
-                   "Informatik",    "Landtechnik", "Mathematik, Naturwissenschaften",
-
-                   "MINT",  "Produktionstechnik","Technik (gesamt)",
-
+      choices = c( "MINT",
+                   "Mathematik/ Naturwissenschaften" = "Mathematik, Naturwissenschaften",
+                   "Informatik",
+                   "Technik (gesamt)",
+                   "Bau- und Gebäudetechnik",
+                   "Gesundheitstechnik",
+                   "Landtechnik",
+                   "Produktionstechnik",
                    "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"
                     ),
       selected = "Technik (gesamt)"

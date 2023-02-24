@@ -19,7 +19,7 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
                   "2018","2019", "2020", "2021"),
       selected = c("2016", "2021")
     ),
-    p("Auswahl der Beschäftigungsform der Arbeitnehmer:innen:"),
+    p("Auswahl der Beschäftigungsform"),
     shinyWidgets::pickerInput(
       inputId = ns("niveau"),
       choices = c(
