@@ -19,7 +19,7 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
     #               "2018","2019", "2020", "2021"),
     #   selected = "2021"
     # ),
-    p("Auswahl der Beschäftigungsform der Arbeitnehmer:innen:"),
+    p("Auswahl der Beschäftigungsform"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator"),
       choices = c( "Ausländisch in Minijobs",
@@ -39,19 +39,19 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
       #                             lib = "glyphicon")),
       selected="Beschäftigte"
     ),
-    p("Auswahl des Fachss"),
+    p("Auswahl des Berufsfelds"),
     shinyWidgets::pickerInput(
       inputId = ns("states"),
       choices = c(
+        "MINT",
+        "Mathematik/ Naturwissenschaften" = "Mathematik, Naturwissenschaften",
+        "Informatik",
+        "Technik (gesamt)",
         "Bau- und Gebäudetechnik",
         "Landtechnik",
         "Produktionstechnik",
         "Gesundheitstechnik",
-        "Mathematik, Naturwissenschaften",
-        "Technik (gesamt)",
-        "Informatik",
-        "MINT",
-        "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"),
+         "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"),
       # justified = TRUE,
       # checkIcon = list(yes = icon("ok",
       #                             lib = "glyphicon")),

@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Fachbereichs"),
+    p("Auswahl des Berufsfelds"),
     shinyWidgets::pickerInput(
       inputId = ns("fach_arbeitsmarkt_einstieg_vergleich_gender"),
       choices = c("MINT",

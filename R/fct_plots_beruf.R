@@ -1536,13 +1536,11 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
 #' @noRd
 
 arbeitsmarkt_bl_vergleich <- function(df,r) {
-  browser()
+
 
   df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
 
-  dfh <<- df
-
-  dfk <<- dfh%>%
+  df <- df%>%
     dplyr::select(-bereich)%>%
     dplyr::group_by(kategorie, indikator, fachbereich, jahr, anforderung, geschlecht, bundesland)%>%
     dplyr::summarise(wert = sum(wert))%>%
@@ -1550,7 +1548,8 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
     dplyr::mutate(Ostdeutschland = Berlin+ Brandenburg+ `Mecklenburg-Vorpommern`+ Sachsen+ `Sachsen-Anhalt`+ Thüringen,
                   Westdeutschland= `Baden-Württemberg`+ Bayern+ Bremen+ Hamburg+ Hessen+ Niedersachsen+ `Schleswig-Holstein`+ `Nordrhein-Westfalen`+
                                                      `Rheinland-Pfalz`+ Saarland)%>%
-    tidyr::pivot_longer(c(7:24),names_to= "bundesland", values_to="wert") %>%
+    dplyr::mutate(Deutschland = Ostdeutschland+Westdeutschland)%>%
+    tidyr::pivot_longer(c(7:25),names_to= "bundesland", values_to="wert") %>%
     dplyr::filter(anforderung=="Gesamt")%>%
     tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
     dplyr::mutate("Bau- und Gebäudetechnik" = `Bau- und Gebäudetechnik`/Alle,
@@ -1567,10 +1566,10 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
     dplyr::filter(geschlecht=="Gesamt")
 
 
-    dfk$indikator <- stringr::str_replace(dfk$indikator, "^\\w{1}", toupper)
+    df$indikator <- stringr::str_replace(df$indikator, "^\\w{1}", toupper)
 
 
-    dfk$proportion = round(dfk$proportion*100, 2)
+    df$proportion = round(df$proportion*100, 2)
   # load UI inputs from reactive value
   states <- r$states
 
@@ -1578,11 +1577,11 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
 
   indikator_choice <- r$indikator
 
-  dfk <- dfk%>%
+  df <- df%>%
     dplyr::filter(indikator==indikator_choice)%>%
     dplyr::filter(fachbereich==states)
 
-  dfk <- dfk[with(dfk, order(fachbereich, jahr, decreasing = FALSE)), ]
+  df <- df[with(df, order(fachbereich, jahr, decreasing = FALSE)), ]
 
 
 
@@ -1631,7 +1630,7 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
   # }
 
   # plot
-  highcharter::hchart(dfk, 'bar', highcharter::hcaes(y = proportion, x = bundesland)) %>%
+  highcharter::hchart(df, 'bar', highcharter::hcaes(y = proportion, x = bundesland)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.fachbereich}-Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
@@ -2189,7 +2188,9 @@ arbeitsmarkt_anforderungen_vergleich_gender <- function(df, r) {
 
 arbeitsmarkt_anforderungen <- function(df,r) {
 
-  timerange <- r$date_arbeitsmarkt_anforderungen
+  #timerange <- r$date_arbeitsmarkt_anforderungen
+
+  indikator_choice <- r$indikator_arbeitsmarkt_anforderungen
 
   # filter dataset based on UI inputs
  # df <- df %>% dplyr::filter(jahr == timerange)
@@ -2208,7 +2209,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
     dplyr::summarize(wert = sum(wert))
 
   # Vorläufig nur Indiaktoren Beschäftigte, Auszubildende, später hier mehr Auswahl
-  df <- df %>% dplyr::filter(indikator %in% c("Beschäftigte", "Auszubildende"))
+  # df <- df %>% dplyr::filter(indikator %in% c("Beschäftigte", "Auszubildende"))
 
   # Auswahl der Berufsgruppen für Waffel
   df <- df %>% dplyr::filter(fachbereich %in% c("Alle", "MINT", "Mathematik, Naturwissenschaften",
@@ -2232,27 +2233,39 @@ arbeitsmarkt_anforderungen <- function(df,r) {
     df$proportion <- df$proportion * 100
 
   #  Aufteilung nach Indikator
-    df_besch <- df
-    df_besch <- df_besch %>% dplyr::filter(indikator == "Beschäftigte")
-    df_azubi <- df
-    df_azubi <- df_azubi %>% dplyr::filter(indikator == "Auszubildende")
+    # df_besch <- df
+    # df_besch <- df_besch %>% dplyr::filter(indikator == "Beschäftigte")
+    # df_azubi <- df
+    # df_azubi <- df_azubi %>% dplyr::filter(indikator == "Auszubildende")
+    #
+    # df_besch <- setNames(round_preserve_sum(as.numeric(df_besch$proportion),0),
+    #               df_besch$fachbereich)
+    # df_besch <- df_besch[order(factor(names(df_besch), levels = c("Mathematik, Naturwissenschaften",
+    #                                                               "Informatik", "Technik (gesamt)",
+    #                                                               'andere Fächergruppen')))]
+    # df_azubi <- setNames(round_preserve_sum(as.numeric(df_azubi$proportion),0),
+    #               df_azubi$fachbereich)
+    # df_azubi <- df_azubi[order(factor(names(df_azubi), levels = c("Mathematik, Naturwissenschaften",
+    #                                                               "Informatik", "Technik (gesamt)",
+    #                                                               'andere Fächergruppen')))]
+    # create an if statement for the options of plotting 1, 2 or 3 graphs
 
-    df_besch <- setNames(round_preserve_sum(as.numeric(df_besch$proportion),0),
-                  df_besch$fachbereich)
-    df_besch <- df_besch[order(factor(names(df_besch), levels = c("Mathematik, Naturwissenschaften",
-                                                                  "Informatik", "Technik (gesamt)",
-                                                                  'andere Fächergruppen')))]
-    df_azubi <- setNames(round_preserve_sum(as.numeric(df_azubi$proportion),0),
-                  df_azubi$fachbereich)
-    df_azubi <- df_azubi[order(factor(names(df_azubi), levels = c("Mathematik, Naturwissenschaften",
-                                                                  "Informatik", "Technik (gesamt)",
-                                                                  'andere Fächergruppen')))]
+    if(length(indikator_choice) == 1) {
 
-  # plots
-      waffle_employed <- waffle::waffle(df_besch, keep = FALSE) +
+
+      df <- df %>% dplyr::filter(indikator == indikator_choice)
+
+      df <- setNames(round_preserve_sum(as.numeric(df$proportion),0),
+                                         df$fachbereich)
+      df <- df[order(factor(names(df), levels = c("Mathematik, Naturwissenschaften",
+                                                  "Informatik", "Technik (gesamt)",
+                                                   'andere Fächergruppen')))]
+
+
+     waffle <- waffle::waffle(df, keep = FALSE) +
         ggplot2::labs(
           fill = "",
-          title = paste0("<span style='color:black;'>", "Berufswahl (Beschäftigte)</span> <br>", timerange, "<br>")) +
+          title = paste0("<span style='color:black;'>", "Berufswahl ", indikator_choice, "<br>", "(2021) <br>")) +
         ggplot2::theme(plot.title = ggtext::element_markdown(),
                        plot.subtitle = ggtext::element_markdown(),
                        text = ggplot2::element_text(size = 14),
@@ -2260,51 +2273,174 @@ arbeitsmarkt_anforderungen <- function(df,r) {
                        legend.position = "bottom") +
         ggplot2::scale_fill_manual(
           values =  c(# "#b16fab",
-                        "#ee7775",
-                       "#fcc433",
-                       "#00a87a",
-                      '#b1b5c3'),
-          limits = c("Mathematik, Naturwissenschaften",
-                     "Informatik", "Technik (gesamt)",
-                     'Andere Fachbereiche'),
+            "#ee7775",
+                     "#fcc433",
+                     "#00a87a",
+                     '#b1b5c3'),
+                     limits = c("Mathematik, Naturwissenschaften",
+                                "Informatik", "Technik (gesamt)",
+                                'Andere Fachbereiche'),
           na.value="#b1b5c3",
           guide = ggplot2::guide_legend(reverse = TRUE),
           labels = c(
-            paste0("Mathematik, Naturwissenschaften",", ",df_besch[1], "%"),
-            paste0("Informatik",", ",df_besch[2], "%"),
-            paste0("Technik (gesamt)",", ",df_besch[3], "%"),
-            paste0("Andere Fachbereiche",", ",df_besch[4], "%")
-            )) +
+            paste0("Mathematik, Naturwissenschaften",", ",df[1], "%"),
+            paste0("Informatik",", ",df[2], "%"),
+            paste0("Technik (gesamt)",", ",df[3], "%"),
+            paste0("Andere Fachbereiche",", ",df[4], "%")
+          )) +
         ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
+      cowplot::plot_grid(waffle, ncol = 1)
 
-      waffle_trainee <- waffle::waffle(df_azubi, keep = FALSE) +
+
+
+
+    } else if(length(indikator_choice) == 2) {
+
+
+      df_1 <- df %>% dplyr::filter(indikator == indikator_choice[1])
+
+      titel_1 <- indikator_choice[1]
+
+      df_1 <- setNames(round_preserve_sum(as.numeric(df_1$proportion),0),
+                       df_1$fachbereich)
+      df_1 <- df_1[order(factor(names(df_1), levels = c("Mathematik, Naturwissenschaften",
+                                                  "Informatik", "Technik (gesamt)",
+                                                  'andere Fächergruppen')))]
+
+
+      df_2 <- df %>% dplyr::filter(indikator == indikator_choice[2])
+
+      titel_2 <- indikator_choice[2]
+
+      df_2 <- setNames(round_preserve_sum(as.numeric(df_2$proportion),0),
+                       df_2$fachbereich)
+      df_2 <- df_2[order(factor(names(df_2), levels = c("Mathematik, Naturwissenschaften",
+                                                        "Informatik", "Technik (gesamt)",
+                                                        'andere Fächergruppen')))]
+
+
+      waffle_1 <- waffle::waffle(df_1, keep = FALSE) +
         ggplot2::labs(
           fill = "",
-          title = paste0("<span style='color:black;'>", "Berufswahl (Auszubildende)</span> <br>", timerange, "<br>")) +
+          title = paste0("<span style='color:black;'>", "Berufswahl ", titel_1, "<br>", "(2021) <br>")) +
         ggplot2::theme(plot.title = ggtext::element_markdown(),
                        plot.subtitle = ggtext::element_markdown(),
                        text = ggplot2::element_text(size = 14),
                        plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                       legend.position = "bottom")+
-          ggplot2::scale_fill_manual(
-            values =  c(#"#b16fab",
-                        "#ee7775",
-                       "#fcc433",
-                       "#00a87a",
-                       '#b1b5c3'),
-            limits = c("Mathematik, Naturwissenschaften",
-                       "Informatik", "Technik (gesamt)",
-                       'Andere Fachbereiche'),
-            na.value="#b1b5c3",
-            guide = ggplot2::guide_legend(reverse = TRUE),
-            labels = c(
-              paste0("Mathematik, Naturwissenschaften",", ",df_azubi[1], "%"),
-              paste0("Informatik",", ",df_azubi[2], "%"),
-              paste0("Technik (gesamt)",", ",df_azubi[3], "%"),
-              paste0("Andere Fachbereiche",", ",df_azubi[4], "%")
-            )) +
+                       legend.position = "bottom") +
+        ggplot2::scale_fill_manual(
+          values =  c(# "#b16fab",
+            "#ee7775",
+                     "#fcc433",
+                     "#00a87a",
+                     '#b1b5c3'),
+                     limits = c("Mathematik, Naturwissenschaften",
+                                "Informatik", "Technik (gesamt)",
+                                'Andere Fachbereiche'),
+          na.value="#b1b5c3",
+          guide = ggplot2::guide_legend(reverse = TRUE),
+          labels = c(
+            paste0("Mathematik, Naturwissenschaften",", ",df_1[1], "%"),
+            paste0("Informatik",", ",df_1[2], "%"),
+            paste0("Technik (gesamt)",", ",df_1[3], "%"),
+            paste0("Andere Fachbereiche",", ",df_1[4], "%")
+          )) +
         ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+
+
+
+      waffle_2 <- waffle::waffle(df_2, keep = FALSE) +
+        ggplot2::labs(
+          fill = "",
+          title = paste0("<span style='color:black;'>", "Berufswahl ", titel_2 , "<br>", "(2021) <br>")) +
+        ggplot2::theme(plot.title = ggtext::element_markdown(),
+                       plot.subtitle = ggtext::element_markdown(),
+                       text = ggplot2::element_text(size = 14),
+                       plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+                       legend.position = "bottom") +
+        ggplot2::scale_fill_manual(
+          values =  c(# "#b16fab",
+            "#ee7775",
+                     "#fcc433",
+                     "#00a87a",
+                     '#b1b5c3'),
+                     limits = c("Mathematik, Naturwissenschaften",
+                                "Informatik", "Technik (gesamt)",
+                                'Andere Fachbereiche'),
+          na.value="#b1b5c3",
+          guide = ggplot2::guide_legend(reverse = TRUE),
+          labels = c(
+            paste0("Mathematik, Naturwissenschaften",", ",df_2[1], "%"),
+            paste0("Informatik",", ",df_2[2], "%"),
+            paste0("Technik (gesamt)",", ",df_2[3], "%"),
+            paste0("Andere Fachbereiche",", ",df_2[4], "%")
+          )) +
+        ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+
+
+
+      ggpubr::ggarrange(waffle_1, NULL ,waffle_2, widths = c(1, 0.1, 1), nrow=1)
+
+    }
+
+  # plots
+      # waffle_employed <- waffle::waffle(df_besch, keep = FALSE) +
+      #   ggplot2::labs(
+      #     fill = "",
+      #     title = paste0("<span style='color:black;'>", "Berufswahl (Beschäftigte)</span> <br>", timerange, "<br>")) +
+      #   ggplot2::theme(plot.title = ggtext::element_markdown(),
+      #                  plot.subtitle = ggtext::element_markdown(),
+      #                  text = ggplot2::element_text(size = 14),
+      #                  plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+      #                  legend.position = "bottom") +
+      #   ggplot2::scale_fill_manual(
+      #     values =  c(# "#b16fab",
+      #                   "#ee7775",
+      #                  "#fcc433",
+      #                  "#00a87a",
+      #                 '#b1b5c3'),
+      #     limits = c("Mathematik, Naturwissenschaften",
+      #                "Informatik", "Technik (gesamt)",
+      #                'Andere Fachbereiche'),
+      #     na.value="#b1b5c3",
+      #     guide = ggplot2::guide_legend(reverse = TRUE),
+      #     labels = c(
+      #       paste0("Mathematik, Naturwissenschaften",", ",df_besch[1], "%"),
+      #       paste0("Informatik",", ",df_besch[2], "%"),
+      #       paste0("Technik (gesamt)",", ",df_besch[3], "%"),
+      #       paste0("Andere Fachbereiche",", ",df_besch[4], "%")
+      #       )) +
+      #   ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+      #
+      #
+      # waffle_trainee <- waffle::waffle(df_azubi, keep = FALSE) +
+      #   ggplot2::labs(
+      #     fill = "",
+      #     title = paste0("<span style='color:black;'>", "Berufswahl (Auszubildende)</span> <br>", timerange, "<br>")) +
+      #   ggplot2::theme(plot.title = ggtext::element_markdown(),
+      #                  plot.subtitle = ggtext::element_markdown(),
+      #                  text = ggplot2::element_text(size = 14),
+      #                  plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+      #                  legend.position = "bottom")+
+      #     ggplot2::scale_fill_manual(
+      #       values =  c(#"#b16fab",
+      #                   "#ee7775",
+      #                  "#fcc433",
+      #                  "#00a87a",
+      #                  '#b1b5c3'),
+      #       limits = c("Mathematik, Naturwissenschaften",
+      #                  "Informatik", "Technik (gesamt)",
+      #                  'Andere Fachbereiche'),
+      #       na.value="#b1b5c3",
+      #       guide = ggplot2::guide_legend(reverse = TRUE),
+      #       labels = c(
+      #         paste0("Mathematik, Naturwissenschaften",", ",df_azubi[1], "%"),
+      #         paste0("Informatik",", ",df_azubi[2], "%"),
+      #         paste0("Technik (gesamt)",", ",df_azubi[3], "%"),
+      #         paste0("Andere Fachbereiche",", ",df_azubi[4], "%")
+      #       )) +
+      #   ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
 
 #
 #   # calculate new "Gesamt
@@ -2440,8 +2576,6 @@ arbeitsmarkt_anforderungen <- function(df,r) {
   #     ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
   #
   # }
-
-  ggpubr::ggarrange(waffle_trainee, NULL ,waffle_employed, widths = c(1, 0.1, 1), nrow=1)
 
 }
 
@@ -2917,10 +3051,10 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
     highcharter::hc_tooltip(pointFormat = "{point.geschlecht}-Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
     highcharter::hc_xAxis(title = list(text = "")
-                          # , categories = c("Auszubildende in MINT", "Auszubildende in anderen Berufen",
-                          #                                         "Auszubildende im 1. Jahr in MINT", "Auszubildende im 1. Jahr in anderen Berufen",
-                          #                                         "Beschäftigte in MINT", "Beschäftigte in anderen Berufen",
-                          #                                         "Ausländische Beschäftigte in MINT", "Ausländische Beschäftigte in anderen Berufen")
+                          , categories = c(paste0("Auszubildende in ",fach_choice), "Auszubildende in anderen Berufen",
+                                           paste0("Auszubildende im 1. Jahr in ",fach_choice), "Auszubildende im 1. Jahr in anderen Berufen",
+                                           paste0("Beschäftigte in ", fach_choice), "Beschäftigte in anderen Berufen",
+                                           paste0("Ausländische Beschäftigte in ",fach_choice), "Ausländische Beschäftigte in anderen Berufen")
                           ) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
@@ -2975,7 +3109,7 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
 
   df$indikator <- stringr::str_replace(df$indikator, "^\\w{1}", toupper)
 
-  browser()
+
   state <- r$state_arbeitsmarkt_überblick_fächer
   indikator_choice <- r$indikator_arbeitsmarkt_überblick_fächer
 
@@ -3051,20 +3185,6 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
   df$fachbereich[df$fachbereich == "Technik (gesamt)"]<-"Technik"
 
   # Reihenfolge sortieren für Plot
-<<<<<<< HEAD
- df$fachbereich <- factor(df$fachbereich, levels = c("Alle Berufsfelder außer MINT (gesamt)",
-                                                              "MINT-Berufsfelder (gesamt)",
-                                                              "Mathematik, Naturwissenschaften",
-                                                              "Informatik",
-                                                              "Technik (gesamt)",
-                                                              "Bau- und Gebäudetechnik",
-                                                              "Gesundheitstechnik",
-                                                              "Landtechnik",
-                                                              "Produktionstechnik",
-                                                              "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"
-
-                                              ))
-=======
   df$fachbereich <- factor(df$fachbereich, levels = c("Alle Berufsfelder außer MINT (gesamt)",
                                                         "MINT-Berufsfelder (gesamt)",
                                                         "Mathematik, Naturwissenschaften",
@@ -3089,8 +3209,6 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
   title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
   title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
   title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
->>>>>>> e4450b1ccc1268c7c49fc300cc3697c21a87a0d1
-
 
 
   # plot

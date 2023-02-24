@@ -204,7 +204,8 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
     df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == "Alle",
                                                indikator == category,
                                                geschlecht == "Gesamt")
-    titel_gesamt_1 <- paste0(" an allen ")
+    #titel_gesamt_1 <- paste0(" an allen ")
+    titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
 
 
   } else {
@@ -217,7 +218,9 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
                                                  indikator == category,
                                                  geschlecht == "Gesamt")
 
-      titel_gesamt_1 <- paste0(" an allen ")
+      # titel_gesamt_1 <- paste0(" an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
+
 
     } else {
       # dropdown 3 nicht auf Gesamt --> Fachbereich und Indikator ausgewählt
@@ -226,7 +229,8 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
                                                  indikator == category,
                                                  geschlecht == "Gesamt")
 
-      titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
 
     }
 
@@ -254,7 +258,9 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
       titel_sub2 <- ifelse(grepl("u25", indikator_besch), "Beschäftigten unter 25 Jahren", titel_sub2)
       titel_sub2 <- ifelse(grepl("25-55", indikator_besch), "Beschäftigten zwischen 25 und 55 Jahren", titel_sub2)
       titel_sub2 <- ifelse(grepl("ü55", indikator_besch), "Beschäftigten über 55 Jahren", titel_sub2)
-      #titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
+
 
 
     } else if(indikator_besch == "Frauen"){
@@ -264,7 +270,9 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
 
       titel_sub <- paste0(" weiblicher ", category, "r")
       titel_sub2 <- paste0(" weiblichen ", category, "n")
-      #titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
+
     }
 
   } else if(category == "Auszubildende"){
@@ -282,7 +290,9 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
       titel_sub2 <- paste0(indikator_azubi, "n")
       titel_sub2 <- ifelse(grepl("ausl", indikator_azubi), "ausländischen Auszubildenden", titel_sub2)
       titel_sub2 <- ifelse(grepl("(1.Jahr)", indikator_besch), "Auszubildenden im 1. Lehrjahr", titel_sub2)
-      #titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
+
 
     } else if(indikator_azubi == "Frauen"){
 
@@ -291,7 +301,8 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
 
       titel_sub <- paste0(" weiblicher ", category, "r")
       titel_sub2 <- paste0(" weiblichen ", category, "n")
-      #titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
     }
   }
 

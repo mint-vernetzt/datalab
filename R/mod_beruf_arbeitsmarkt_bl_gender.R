@@ -27,14 +27,14 @@ mod_beruf_arbeitsmarkt_bl_gender_ui <- function(id){
       multiple = FALSE,
       selected = "Beschäftigte"),
 
-    p("Auswahl der Berufsfachgruppe:"),
+    p("Auswahl des Berufsfelds:"),
     shinyWidgets::pickerInput(
       inputId = ns("fach_arbeitsmarkt_bl_gender"),
       choices = c("MINT",
-                  "Mathematik, Naturwissenschaften",
+                  "Mathematik/ Naturwissenschaften" = "Mathematik, Naturwissenschaften",
                   "Informatik",
                   "Technik (gesamt)",
-                  "Andere Berufsgruppen"),
+                  "Alle Berufsfelder außer MINT" = "Andere Berufsgruppen"),
       multiple = FALSE,
       selected = "MINT")
 
