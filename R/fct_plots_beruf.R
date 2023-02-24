@@ -372,6 +372,9 @@ arbeitsmarkt_bl_gender <- function(df,r) {
   # remove - Deutschland nicht enthalten in DF
   #df <- df %>% dplyr::filter(region != "Deutschland")
 
+  # im neuen DF doch Aggregate enthalten, ausfiltern das Folgecode weiter stimmt
+  df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
+
 
   # filtern nach Anforderungsniveau
   df <- df %>% dplyr::filter(anforderung == "Gesamt")
@@ -919,13 +922,13 @@ beruf_einstieg_vergleich <- function(df,r) {
   # filter dataset based on UI inputs
  # df <- df %>% dplyr::filter(jahr == timerange)
 
-  # remove
- # gibt kein DE gesamt, muss erst berechnet werden
-  #df <- df %>% dplyr::filter(region == "Deutschland")
+  # filtern auch nach DE - neuer DF enthält das wieder
+  df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
+ # df <- df %>% dplyr::filter(bundesland == "Deutschland")
   df <- df %>% dplyr::filter(anforderung == "Gesamt")
   df <- df %>% dplyr::filter(geschlecht == "Gesamt")
 
-  # Deutschland gesamt berechnen und Landkreise/Bundesländer ausschließen
+  # Deutschland gesamt berechnen und Landkreise/Bundesländer ausschließen -->nicht mehr nötig dann
   df <- df %>%
     dplyr::group_by(jahr, indikator, fachbereich) %>%
     dplyr::summarize(wert = sum(wert))
@@ -1525,9 +1528,9 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == 2021)
 
-  #df <- df %>% dplyr::filter(bundesland == "Deutschland")
+  df <- df %>% dplyr::filter(bundesland == "Deutschland")
 
-  #df <- df %>% dplyr::filter(landkreis == "alle Landkreise")
+  df <- df %>% dplyr::filter(landkreis == "alle Landkreise")
 
   df <- df %>% dplyr::filter(anforderung == "Gesamt")
 
@@ -2027,6 +2030,8 @@ arbeitsmarkt_anforderungen <- function(df,r) {
  # df <- df %>% dplyr::filter(jahr == timerange)
 
  # df <- df %>% dplyr::filter(bundesland == "Deutschland")
+  # im neuen DF doch Aggregate enthalten, ausfiltern das Folgecode weiter stimmt
+  df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
 
   df <- df %>% dplyr::filter(geschlecht == "Gesamt")
 
@@ -2814,16 +2819,28 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
 
   # filtern nach Auswahl
   df <- df %>% dplyr::filter(bundesland == state)
-  df <- df %>% dplyr::filter(indikator == indikator_choice)
 
   # Anforderung und Geschlecht auf gesamt setzten
   df <- df %>% dplyr::filter(anforderung == "Gesamt")
   df <- df %>% dplyr::filter(geschlecht == "Gesamt")
 
+  # in neuen DF doch Aggregate enthalten, ausfiltern das Folgecode weiter stimmt
+  df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
+
   # Bundesland-Wert aus allen Landkreisen berechnen
   df <- df %>%
     dplyr::group_by(bundesland, jahr, indikator, fachbereich) %>%
     dplyr::summarize(wert = sum(wert))
+
+  # # DE berechnen
+  df_de <- df %>%
+    dplyr::group_by(jahr, indikator, fachbereich) %>%
+    dplyr::summarize(wert = sum(wert))
+  df_de$bundesland <- "Deutschland"
+
+  df <- rbind(df, df_de)
+
+  df <- df %>% dplyr::filter(indikator == indikator_choice)
 
   # MINT direkt berechnen und nicht-MINT berechnen
   df[df$fachbereich == "MINT", "wert"] <- df[df$fachbereich == "Mathematik, Naturwissenschaften", "wert"]+
