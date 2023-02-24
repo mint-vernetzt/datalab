@@ -1536,7 +1536,7 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
 #' @noRd
 
 arbeitsmarkt_bl_vergleich <- function(df,r) {
-  browser()
+
 
   df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
 
@@ -2975,7 +2975,7 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
 
   df$indikator <- stringr::str_replace(df$indikator, "^\\w{1}", toupper)
 
-  browser()
+
   state <- r$state_arbeitsmarkt_überblick_fächer
   indikator_choice <- r$indikator_arbeitsmarkt_überblick_fächer
 
@@ -3051,20 +3051,6 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
   df$fachbereich[df$fachbereich == "Technik (gesamt)"]<-"Technik"
 
   # Reihenfolge sortieren für Plot
-<<<<<<< HEAD
- df$fachbereich <- factor(df$fachbereich, levels = c("Alle Berufsfelder außer MINT (gesamt)",
-                                                              "MINT-Berufsfelder (gesamt)",
-                                                              "Mathematik, Naturwissenschaften",
-                                                              "Informatik",
-                                                              "Technik (gesamt)",
-                                                              "Bau- und Gebäudetechnik",
-                                                              "Gesundheitstechnik",
-                                                              "Landtechnik",
-                                                              "Produktionstechnik",
-                                                              "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"
-
-                                              ))
-=======
   df$fachbereich <- factor(df$fachbereich, levels = c("Alle Berufsfelder außer MINT (gesamt)",
                                                         "MINT-Berufsfelder (gesamt)",
                                                         "Mathematik, Naturwissenschaften",
@@ -3089,8 +3075,6 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
   title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
   title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
   title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
->>>>>>> e4450b1ccc1268c7c49fc300cc3697c21a87a0d1
-
 
 
   # plot
