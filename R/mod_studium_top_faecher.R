@@ -41,7 +41,7 @@ mod_studium_top_faecher_ui <- function(id){
                   "Westen",
                   "Osten"
       ),
-      selected = "Hessen"
+      selected = "Bayern"
     ),
     p("Auswahl des Fachs:"),
     shinyWidgets::radioGroupButtons(
