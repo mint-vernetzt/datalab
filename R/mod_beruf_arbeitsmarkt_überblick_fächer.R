@@ -36,11 +36,20 @@ mod_beruf_arbeitsmarkt_überblick_fächer_ui <- function(id){
     p("Auswahl der Beschäftigungsform:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_arbeitsmarkt_überblick_fächer"),
-      choices = c("Beschäftigte",
-                  "Auszubildende",
-                  "Auszubildende (1. Jahr)",
-                  "ausländische Beschäftigte",
-                  "ausländische Auszubildende"),
+      choices = c(
+        "Ausländisch in Minijobs",
+        "Ausländische Auszubildende",
+        "Ausländische Beschäftigte",
+        "Ausländische Beschäftigte 25-55",
+        "ausländische Beschäftigte u25",
+        "ausländische Beschäftigte ü55",
+        "Auszubildende",
+        "Auszubildende (1. Jahr)",
+        "Beschäftigte",
+        "Beschäftigte 25-55",
+        "Beschäftigte u25",
+        "Beschäftigte ü55",
+                  "In Minijobs"),
       multiple = FALSE,
       selected = "Beschäftigte")
     )

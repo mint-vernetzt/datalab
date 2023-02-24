@@ -11,22 +11,52 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Jahres:"),
-    shinyWidgets::sliderTextInput(
-      inputId = ns("date_beruf_arbeitsmarkt_bl_vergleich"),
-      label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021"),
-      selected = "2021"
-    ),
+    # p("Auswahl des Jahres:"),
+    # shinyWidgets::sliderTextInput(
+    #   inputId = ns("date_beruf_arbeitsmarkt_bl_vergleich"),
+    #   label = NULL,
+    #   choices = c("2013", "2014", "2015", "2016", "2017",
+    #               "2018","2019", "2020", "2021"),
+    #   selected = "2021"
+    # ),
     p("Auswahl der Beschäftigungsform der Arbeitnehmer:innen:"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("indikator_beruf_arbeitsmarkt_bl_vergleich"),
-      choices = c("Auszubildende", "Beschäftigte"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+    shinyWidgets::pickerInput(
+      inputId = ns("indikator"),
+      choices = c( "Ausländisch in Minijobs",
+                   "Ausländische Auszubildende",
+                   "Ausländische Beschäftigte ausländische Beschäftigte 25-55",
+                   "Ausländische Beschäftigte u25",
+                   "Ausländische Beschäftigte ü55",
+                   "Auszubildende",
+                   "Auszubildende (1. Jahr)",
+                   "Beschäftigte",
+                   "Beschäftigte 25-55",
+                   "Beschäftigte u25",
+                   "Beschäftigte ü55",
+                   "In Minijobs"),
+      # justified = TRUE,
+      # checkIcon = list(yes = icon("ok",
+      #                             lib = "glyphicon")),
+      selected="Beschäftigte"
     ),
+    p("Auswahl des Fachss"),
+    shinyWidgets::pickerInput(
+      inputId = ns("states"),
+      choices = c(
+        "Bau- und Gebäudetechnik",
+        "Landtechnik",
+        "Produktionstechnik",
+        "Gesundheitstechnik",
+        "Mathematik, Naturwissenschaften",
+        "Technik (gesamt)",
+        "Informatik",
+        "MINT",
+        "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"),
+      # justified = TRUE,
+      # checkIcon = list(yes = icon("ok",
+      #                             lib = "glyphicon")),
+      selected="Informatik"
+    )
     # p("Auswahl des Anforderungsniveaus:"),
     # shinyWidgets::pickerInput(
     #   inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich"),
@@ -42,12 +72,12 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
 mod_beruf_arbeitsmarkt_bl_vergleich_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$date_beruf_arbeitsmarkt_bl_vergleich, {
-      r$date_beruf_arbeitsmarkt_bl_vergleich <- input$date_beruf_arbeitsmarkt_bl_vergleich
+    observeEvent(input$states, {
+      r$states <- input$states
     })
 
-    observeEvent(input$indikator_beruf_arbeitsmarkt_bl_vergleich, {
-      r$indikator_beruf_arbeitsmarkt_bl_vergleich <- input$indikator_beruf_arbeitsmarkt_bl_vergleich
+    observeEvent(input$indikator, {
+      r$indikator <- input$indikator
     })
 
     # observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich, {
