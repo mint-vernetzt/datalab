@@ -192,7 +192,7 @@ calc_arbeitsmarkt_share_bl <- function(df) {
 #' @return a dataframe.
 #'
 #' @noRd
-calculate_landkreis <- function(df, states, category, domain, indikator_azubi, indikator_besch) {
+calculate_landkreis <- function(df, states, category, domain, indikator_azubi, indikator_besch, region = "") {
 
   # filter dataset based on UI inputs
   df_filtered <- df %>% dplyr::filter(bundesland == states,
@@ -305,11 +305,30 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
                             "landkreis_zusatz",
                             "landkreis_nummer",
                             "jahr",
-                            "anforderung")) %>%
-    dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
-    dplyr::rename(wert = wert.x,
-                  geschlecht = geschlecht.x) %>%
-    dplyr::select(-c(wert.y, geschlecht.y))
+                            "anforderung"))
+
+  if(region == "Gesamt"){
+    df_compare <- df_compare %>%
+      dplyr::group_by(bereich,
+                      kategorie,
+                      bundesland,
+                      jahr,
+                      anforderung) %>%
+      dplyr::summarise(wert.x = sum(wert.x),
+                       wert.y = sum(wert.y)) %>%
+      dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
+      dplyr::rename(wert = wert.x) %>%
+      dplyr::select(-wert.y) %>%
+      dplyr::ungroup()
+
+  } else {
+    df_compare <- df_compare %>%
+      dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
+      dplyr::rename(wert = wert.x,
+                    geschlecht = geschlecht.x) %>%
+      dplyr::select(-c(wert.y, geschlecht.y))
+
+  }
 
   # return relevant values as a list
   return_list <- list()

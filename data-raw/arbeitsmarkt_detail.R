@@ -40,7 +40,6 @@ arbeitsmarkt_detail_geschlecht <- arbeitsmarkt_detail %>% dplyr::filter(!indikat
   dplyr::bind_rows(., arbeitsmarkt_detail)
 
 arbeitsmarkt_detail_final <- dplyr::bind_rows(arbeitsmarkt_detail_geschlecht, arbeitsmarkt_detail_alter, arbeitsmarkt_detail_ausl_alter) %>%
-  dplyr::distinct() %>%
-  dplyr::filter(!is.na(landkreis_nummer))
+  dplyr::distinct()
 
 usethis::use_data(arbeitsmarkt_detail_final, overwrite = T)
