@@ -3788,7 +3788,6 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
 studienfaecher_ranking <- function(df,r, type) {
 
-browser()
 
   timerange <- r$dumb_date
 
@@ -3831,7 +3830,7 @@ browser()
     dffn <- df89 %>% dplyr::filter(region == bl_choice)
 
 
-    df2 <<- dffn %>% tidyr::pivot_wider(names_from=label,values_from = proportion)
+    df2 <- dffn %>% tidyr::pivot_wider(names_from=label,values_from = proportion)
 
 
  # dffn <- df89 %>% dplyr::filter(label == label_choice)
