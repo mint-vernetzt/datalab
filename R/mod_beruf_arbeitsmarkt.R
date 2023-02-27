@@ -22,49 +22,51 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
               style="display: block; margin-left: auto; margin-right: auto;"
           ))),
 
-       fluidRow(
 
-         shinydashboard::box(
-           title = "Auf dieser Seite",
-           width = 3,
-           p(style = "text-align: justify; font-size = 16px",
-             span(tags$b(span("#Berufswahl MINT:")),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben? Und wie unterscheidet sich die Berufswahl von Männern und Frauen?"
-             )),
-           p(style = "text-align: justify; font-size = 16px",
-             span(tags$b(span("#MINT im Detail:")),"Vergleiche der Bundesländer"
-             )),
-           p(style = "text-align: justify; font-size = 16px",
-             span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
-             )),
+      # Info-Texte
 
-         ) ,
+      fluidRow(
+        shinydashboard::box(
+          title = "Auf dieser Seite",
+          width = 3,
+          p(style = "text-align: justify; font-size = 16px",
+            "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
+           Dabei unterscheiden wir zwischen Auszubildenden und (sozialversicherungspflichtigen) Beschäftigten.  Die Kategorisierung in MINT entspricht der Klassifikation durch die Bundesagentur für Arbeit.
+            \"Hinweise & Datenquellen u\".")
+        ),
 
-      shinydashboard::box(
-        width = 6,
-        title = "Methodische Hinweise",
-        p(style = "text-align: justify; font-size = 16px",
-        # span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
-        #   "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
-        #   Dabei unterscheiden wir zwischen Auszubildenden und Beschäftigten. Vergleiche sind zusätzlich nach
-        #   Geschlecht und nach Bundesländern möglich.")),
-        # p(style = "text-align: justify; font-size = 16px",
-        #   span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")),
-        p(style = "text-align: justify; font-size = 16px",
-          # span(tags$b(span("Methodische Hinweise: ",
-          #                  style = "color:#b16fab")),
+        shinydashboard::box(
+          title = "Übersicht Fragestellungen",
+          width = 3,
+          p(style = "text-align: justify; font-size = 16px",
+            span(tags$b(span("#Berufswahl MINT:")),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben? Und wie unterscheidet sich die Berufswahl von Männern und Frauen?"
+            )),
+          p(style = "text-align: justify; font-size = 16px",
+            span(tags$b(span("#MINT im Detail:")),"Vergleiche der Bundesländer"
+            )),
+          p(style = "text-align: justify; font-size = 16px",
+            span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
+            ))),
 
-            "Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert,
-                           wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Informationen unter \"Datenquellen und Hinweise\".",
-           br(),br(),
-               "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen.",
-               br(), br(),
-               "Der hier verwendete Indikator 'Beschäftigte' umfasst alle sozialversicherungspflichtigen Beschäftigten. Er umfasst sowohl Fachkräfte als auch Hilfskräfte. Eine Differenzierung erfolgt zeitnah."
-               )),
+        shinydashboard::box(
+          title = "Datenquellen",
+          width = 3,
+          p(style = "text-align: justify; font-size = 16px",
+            "Auszubildenden- und Beschäftigenzahlen in Deutschland: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
 
+        ),
+
+        shinydashboard::box(
+          title = "Fragen oder Feedback?",
+          width = 3,
+          p(style = "text-align: justify; font-size = 16px",
+            "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+            tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+          ))
       ),
 
 
-      ),
+      # Box 1
 
     fluidRow(
       shinydashboard::box(
@@ -92,8 +94,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                plotOutput(ns("plot_arbeitsmarkt_waffle")),
-                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
-                             )
+                               p(style="font-size:12px;color:grey", br(),
+                                 "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", br(),
+                               "Hinweise: Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert,
+                           wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Informationen unter \"Datenquellen und Hinweise\".", br(),
+                               "Durch Rundung der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen."
+                             ))
                     ),
 
                     tabPanel("Zeitverlauf", br(),

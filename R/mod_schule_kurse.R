@@ -22,46 +22,65 @@ mod_schule_kurse_ui <- function(id){
             style="display: block; margin-left: auto; margin-right: auto;"
         ))),
 
+
+
+    # Info-Texte
+
     fluidRow(
-      shinydashboard::box(
-        width = 9,
-        titel = "MINT in der Schule",
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
-          "Auf dieser Seite zeigen wir, wie hoch der Anteil von MINT-Fächern gemessen an allen gewählten Grund- und Leistungskursen ist.
-          Je nach Bundesland wählen alle Oberstufen-Schülerinnen und -Schüler mehrere Grund- und Leistungskurse.
-          Anhand dieser Belegungszahlen haben wir den Anteil von MINT-Fächern in der Schule berechnet."),
-          br(),
-          p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "KMK, 2021, auf Anfrage, eigene Berechnungen.")),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
-               "Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
-               eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
-               nutzen wir die Kursbelegungszahlen der Schüler:innen. Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
-               nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen
-               der verschiedenen Kurse.", br(), br(),
-               # "Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
-               # nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen der verschiedenen Kurse.",
-               "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.",
-               br(),br(),
-               "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen."
-               ))
-      )),
       shinydashboard::box(
         title = "Auf dieser Seite",
         width = 3,
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT:")), "Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe? Und wie unterscheidet sich die Fächerwahl zwischen Mädchen und Jungen?"
-          )),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT im Detail:")), "Vergleich der einzelnen MINT-Fächer"
-          )),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#Mädchen in MINT:")), "Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"
-        )),
+          "Auf dieser Seite zeigen wir, wie hoch der Anteil von MINT-Fächern an allen Schulfächern - gemessen an allen gewählten Grund- und Leistungskursen - ist.
+          Je nach Bundesland wählen alle Oberstufen-Schülerinnen und -Schüler mehrere Grund- und Leistungskurse.
+          Anhand dieser Belegungszahlen haben wir den Anteil von MINT-Fächern in der Schule berechnet. ")
 
-     )),
+              # Text zu viel?
+              # Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
+              #  eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
+              #  nutzen wir die Kursbelegungszahlen der Schüler:innen. Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
+              #  nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen
+              #  der verschiedenen Kurse."
+      ),
+
+      shinydashboard::box(
+        title = "Übersicht Fragestellungen",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#MINT:")),"Wie hoch ist der Anteil von MINT-Fächern an allen Schulfächern in der Oberstufe?"
+          )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#MINT im Detail:")), "Wie hoch sind die Anteile der einzelnen MINT-Fächer?"
+          )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
+        )
+      ),
+
+
+
+
+
+
+      shinydashboard::box(
+        title = "Datenquellen",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          "Schüler:innenzahlen der Oberstufe: Kulturministerkonferenz (KMK) 2022, auf Anfrage"),
+        p(style = "text-align: justify; font-size = 16px",
+          "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.")
+        ),
+
+      shinydashboard::box(
+        title = "Fragen oder Feedback?",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+        ))
+    ),
+
+  # Box 1
 
     fluidRow(
       shinydashboard::box(
@@ -86,7 +105,10 @@ mod_schule_kurse_ui <- function(id){
                                width = 9,
                                plotOutput(ns("plot_waffle_mint"))
                                ,
-                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", br(),
+                              "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                              p(style="font-size:12px;color:grey", br(),
+                                "Hinweis: Durch Rundung der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen.")
 
                                )
                     ),
@@ -146,7 +168,9 @@ mod_schule_kurse_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1")),
+                               mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
+                               p("Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
+                               ),
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_map_kurse_gender"))
@@ -201,7 +225,9 @@ mod_schule_kurse_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1")),
+                               mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1"),
+                               p("Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
+                               ),
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_map_kurse"))

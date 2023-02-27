@@ -25,35 +25,17 @@ mod_home_start_ui <- function(id){
            )
            )),
 
-   # fluidRow(
-     # shinydashboard::box(
-     #   title = "",
-     #   width = 12,
-     #   p(style = "text-align: justify; font-size = 16px",
-      #    span("BANNER; MINT entlang der Bildungskette")
-     # ))
-     # ),
-
-
+ # Info-Texte
 
     fluidRow(
       shinydashboard::box(
         title = "Auf dieser Seite",
         width = 3,
         p(style = "text-align: justify; font-size = 16px",
-        # span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
-               "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
+           "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
-            ,
-
-        # p(style = "text-align: justify; font-size = 16px",
-        #   span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis, 2021, Bundesagentur für Arbeit, 2021, KMK, 2021, alle auf Anfrage, eigene Berechnungen."
-        #        )),
-        # p(style = "text-align: justify; font-size = 16px",
-        #   span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab"))),
-        # )
-        ),
+          ),
 
       shinydashboard::box(
         title = "Übersicht Fragestellungen",
@@ -79,14 +61,13 @@ mod_home_start_ui <- function(id){
      title = "Fragen oder Feedback?",
      width = 3,
      p(style = "text-align: justify; font-size = 16px",
+       "Sind alle Zahlen und Grafiken verständlich?", br(),
        "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
             tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-       )
-       )
+       ))
+      ),
 
-   ),
-
-
+   # Box 1
 
     fluidRow(
       shinydashboard::box(
@@ -108,6 +89,7 @@ mod_home_start_ui <- function(id){
                       shiny::sidebarPanel(
                         width = 3,
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
+                        p("Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                         p("Interpretationshilfe: Wenn man beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden deutschlandweit im Jahr 2021
                           31 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten in Deutschland ist dieser Anteil ein wenig geringer. Im Jahr 2021 arbeiten nur 23 % der Beschäftigten in einem MINT-Beruf.")
                         ),
@@ -150,7 +132,9 @@ mod_home_start_ui <- function(id){
                     tabPanel("Vergleich", br(),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_home_start_einstieg_gender_ui("mod_home_start_einstieg_gender_ui_1")),
+                               mod_home_start_einstieg_gender_ui("mod_home_start_einstieg_gender_ui_1"),
+                             p("Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
+                             ),
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_pie_mint_gender"))
