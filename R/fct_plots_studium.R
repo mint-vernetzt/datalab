@@ -5665,7 +5665,7 @@ df <- df4
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Fächer mit höchsten Frauenanteil ", "(", timerange, ")"),
+      highcharter::hc_title(text = paste0("Fächer mit dem höchsten Frauenanteil ", "(", timerange, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -5694,7 +5694,7 @@ df <- df4
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("Fächer mit höchsten Männeranteil ", "(", timerange, ")"),
+      highcharter::hc_title(text = paste0("Fächer mit dem höchsten Männeranteil ", "(", timerange, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%

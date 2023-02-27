@@ -18,7 +18,7 @@ mod_studium_top_faecher_ui <- function(id){
       selected = 2021
     ),
     # Region
-    p("Auswahl des Bundeslands:"),
+    p("Auswahl des Bundeslandes:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_top_faecher"),
       choices = c("Deutschland",
@@ -43,7 +43,7 @@ mod_studium_top_faecher_ui <- function(id){
       ),
       selected = "Bayern"
     ),
-    p("Auswahl des Fachs:"),
+    p("Auswahl des Faches:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("subject_top_faecher"),
       choices = c("MINT-Fächer", "Alle Fächer"),
