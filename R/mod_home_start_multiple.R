@@ -15,15 +15,15 @@ mod_home_start_multiple_ui <- function(id){
       inputId = ns("date_start_multiple"),
       label = NULL,
       choices = c("2013", "2014","2015", "2016", "2017",
-                  "2018","2019", "2020"),
-      selected = c("2015", "2020")
+                  "2018","2019", "2020", "2021"),
+      selected = c("2015", "2021")
     ),
     p("Auswahl eines oder mehrerer Bereiche:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_multiple_1"),
-      choices = c("Leistungskurse", "Studierende",
+      choices = c("Schüler:innen Leistungskurse", "Studierende",
                   "Auszubildende", "Beschäftigte"),
-      selected = c("Leistungskurse", "Beschäftigte"),
+      selected = c("Schüler:innen Leistungskurse", "Beschäftigte"),
       options =  list(
         "max-options" = 3,
         "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
