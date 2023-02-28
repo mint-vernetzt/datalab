@@ -1212,7 +1212,7 @@ arbeitsmarkt_bl_gender_vergleich <- function(df, r) {
 #' @noRd
 
 arbeitsmarkt_bl <- function(df,r) {
-browser()
+
   df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
 
   fach_choice <-r$pick_i
