@@ -9,17 +9,17 @@
 #' @noRd
 home_einstieg_pie <- function(df,r) {
 
-  dfj <<- df
+  dfj <- df
   # load UI inputs from reactive value
   timerange <- "2021"
 
-  indikator_choice_1 <<- r$indikator_start_einstieg_1
+  indikator_choice_1 <- r$indikator_start_einstieg_1
 
 
 
   # filter dataset based on UI input
 
-  dfk <<- dfj %>% dplyr::filter(region == "Deutschland")
+  dfk <- dfj %>% dplyr::filter(region == "Deutschland")
 
   dfk <- dfk %>% dplyr::filter(jahr== timerange)
 
@@ -82,9 +82,9 @@ home_einstieg_pie <- function(df,r) {
   dfk2_fn <- dfk2_fn[with(dfk2_fn, order(region, fachbereich, jahr, decreasing = TRUE)), ]
 
   #here only MINT
-  dft <<- dfk2_fn %>% dplyr::filter(fachbereich == "MINT")
+  dft <- dfk2_fn %>% dplyr::filter(fachbereich == "MINT")
 
-  dfö <<- dft %>% dplyr::filter(indikator %in% indikator_choice_1)
+  dfö <- dft %>% dplyr::filter(indikator %in% indikator_choice_1)
 
 
 
