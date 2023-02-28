@@ -22,81 +22,84 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
               style="display: block; margin-left: auto; margin-right: auto;"
           ))),
 
-       fluidRow(
 
-         shinydashboard::box(
-           title = "Auf dieser Seite",
-           width = 3,
-           p(style = "text-align: justify; font-size = 16px",
-             span(tags$b(span("#Berufswahl MINT:")),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben? Und wie unterscheidet sich die Berufswahl von Männern und Frauen?"
-             )),
-           p(style = "text-align: justify; font-size = 16px",
-             span(tags$b(span("#MINT im Detail:")),"Vergleiche der Bundesländer"
-             )),
-           p(style = "text-align: justify; font-size = 16px",
-             span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
-             )),
+      # Info-Texte
 
-         ) ,
+      fluidRow(
+        shinydashboard::box(
+          title = "Auf dieser Seite",
+          width = 3,
+          p(style = "text-align: justify; font-size = 16px",
+            "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
+           Dabei unterscheiden wir zwischen Auszubildenden und (sozialversicherungspflichtigen) Beschäftigten.  Die Kategorisierung in MINT entspricht der Klassifikation durch die Bundesagentur für Arbeit.
+            \"Hinweise & Datenquellen u\".")
+        ),
 
-      shinydashboard::box(
-        width = 6,
-        title = "Methodische Hinweise",
-        p(style = "text-align: justify; font-size = 16px",
-        # span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
-        #   "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
-        #   Dabei unterscheiden wir zwischen Auszubildenden und Beschäftigten. Vergleiche sind zusätzlich nach
-        #   Geschlecht und nach Bundesländern möglich.")),
-        # p(style = "text-align: justify; font-size = 16px",
-        #   span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")),
-        p(style = "text-align: justify; font-size = 16px",
-          # span(tags$b(span("Methodische Hinweise: ",
-          #                  style = "color:#b16fab")),
+        shinydashboard::box(
+          title = "Übersicht Fragestellungen",
+          width = 3,
+          p(style = "text-align: justify; font-size = 16px",
+            span(tags$b(span("#Berufswahl MINT:")),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben? Und wie unterscheidet sich die Berufswahl von Männern und Frauen?"
+            )),
+          p(style = "text-align: justify; font-size = 16px",
+            span(tags$b(span("#MINT im Detail:")),"Vergleiche der Bundesländer"
+            )),
+          p(style = "text-align: justify; font-size = 16px",
+            span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
+            ))),
 
-            "Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert,
-                           wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Informationen unter \"Datenquellen und Hinweise\".",
-           br(),br(),
-               "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen.",
-               br(), br(),
-               "Der hier verwendete Indikator 'Beschäftigte' umfasst alle sozialversicherungspflichtigen Beschäftigten. Er umfasst sowohl Fachkräfte als auch Hilfskräfte. Eine Differenzierung erfolgt zeitnah."
-               )),
+        shinydashboard::box(
+          title = "Datenquellen",
+          width = 3,
+          p(style = "text-align: justify; font-size = 16px",
+            "Auszubildenden- und Beschäftigenzahlen in Deutschland: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
 
+        ),
+
+        shinydashboard::box(
+          title = "Fragen oder Feedback?",
+          width = 3,
+          p(style = "text-align: justify; font-size = 16px",
+            "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+            tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+          ))
       ),
 
 
-      ),
+      # Box 1
 
     fluidRow(
       shinydashboard::box(
         title = "#Berufswahl MINT: Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben? Und wie unterscheidet sich die Berufswahl von Männern und Frauen?",
         width = 12,
-        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Berufen insgesamt bei Auszubildenden und Beschäftigten in Deutschland.",
-          br(), br(),
-          "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 32 % aller Auszubildenden eine Ausbildung im Bereich MINT absolvieren.
-          Bei den Beschäftigten liegt der Anteil 2020 bei 24 %. Der Vergleich nach Geschlechtern zeigt, dass weibliche Auszubildende 2020 deutschlandweit zu 10 % eine MINT-Ausbildung wählen. Bei den Männern sind es 48 %.
-        Bei den Beschäftigten sind die Unterschiede ähnlich: Bei den Frauen machen MINT-Berufe 8 % aus, bei den Männern 38 %.", br(),
-          "Auf der interaktiven Deutschlandkarte sieht man beispielsweise, dass 2020 Berlin mit 23 %
-          den geringsten Anteil an Auszubildenden im MINT-Bereich aufweist. Das Bundesland mit dem höchsten Anteil an Beschäftigten im MINT-Bereich
-          ist Baden-Württemberg mit 29 %."),
+        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Berufen insgesamt bei Auszubildenden und Beschäftigten in Deutschland."),
+
 
         tabsetPanel(type = "tabs",
-                    tabPanel("Waffle MINT", br(),
+                    tabPanel("Vergleich Anteil MINT bei Beschäftigten und Auszubildenden", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1")
+                               mod_beruf_arbeitsmarkt_anforderungen_ui("mod_beruf_arbeitsmarkt_anforderungen_ui_1"),
+                               p(style="font-size:12px;color:grey",
+                               "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland im Jahr 2021 23 % der Beschäftigten in MINT beschäftigt waren (2 + 3 + 18 = 23 %). Bei den Auszubildenden waren dies 30 % bzw. 31 % (je nach Rundung)." )
 
                              ),
                              shiny::mainPanel(
                                width = 9,
                                plotOutput(ns("plot_arbeitsmarkt_waffle")),
-                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
-                             )
+                               p(style="font-size:12px;color:grey", br(),
+                                 "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", br(),
+                               "Hinweise: Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert,
+                           wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Informationen unter \"Datenquellen und Hinweise\".", br(),
+                               "Durch Rundung der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen."
+                             ))
                     ),
 
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Vergleich Anteil MINT an Beschäftigten und Auszubildenden im Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -112,7 +115,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
 
                     ),
-                    tabPanel("Alle Zahlen auf einen Blick", br(),
+                    tabPanel("Alle Beschäftigtengruppen auf einen Blick", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -128,7 +131,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     ),
                     br(),
 
-                    tabPanel("Waffle: Frauen vs. Männer", br(),
+                    tabPanel("Vergleich Anteil MINT bei Frauen und Männern", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -143,11 +146,12 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              )
                     ),
 
-                    tabPanel("Karte: Vergleich Frauen & Männer", br(),
+                    tabPanel("Vergleich Anteil mit bei Frauen & Männer (Karte)", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_bl_gender_ui("mod_beruf_arbeitsmarkt_bl_gender_ui_1")
+                               mod_beruf_arbeitsmarkt_bl_gender_ui("mod_beruf_arbeitsmarkt_bl_gender_ui_1"),
+                               p("Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -156,22 +160,22 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              )
                     ),
 
-                    tabPanel("Pie (RAUS)", br(),
-
-                             shiny::sidebarPanel(
-                               width = 3,
-                               tags$style(".well {background-color:#FFFFFF;}"),
-                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               htmlOutput(ns("plot_einstieg_pie"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
-                             )
-                    ),
+                    # tabPanel("Pie (RAUS)", br(),
+                    #
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            tags$style(".well {background-color:#FFFFFF;}"),
+                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                    #            mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            htmlOutput(ns("plot_einstieg_pie"))
+                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
+                    #          )
+                    # ),
                     br(),
-                    tabPanel("Im Zeitverlauf (nach Bundesländern)", br(),
+                    tabPanel("Vergleich Anteil MINT bei Frauen nach Bundesländern im Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -183,19 +187,32 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
-
-                    tabPanel("Berufswahl MINT Frauen, nach Bundesländer (RAUS))", br(),
+                    tabPanel("Vergleich Anteil MINT nach Bundesländern im Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_bl_gender_vergleich_ui("beruf_arbeitsmarkt_bl_gender_vergleich_ui_1")
+                               mod_beruf_arbeitsmarkt_bl_verlauf_ui("mod_beruf_arbeitsmarkt_bl_verlauf_ui_1")
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               plotOutput(ns("plot_arbeitsmarkt_bl_gender_vergleich"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen."))
+                               highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_verlauf"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
+                             )
+                    ),
 
-                    )
+                    # erstmal raus, weil so kompliziert
+                    # tabPanel("Berufswahl MINT Frauen, nach Bundesländer (RAUS))", br(),
+                    #
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_beruf_arbeitsmarkt_bl_gender_vergleich_ui("beruf_arbeitsmarkt_bl_gender_vergleich_ui_1")
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            plotOutput(ns("plot_arbeitsmarkt_bl_gender_vergleich"))
+                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen."))
+                    #
+                    # )
 
 
                     # ,
@@ -224,15 +241,16 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       shinydashboard::box(
         title = "#MINT im Detail: Berufe innerhalb von MINT ",
         width = 12,
-        p("Hier zeigen wir die Unterschiede nach Bundesländern. Die Aufbereitung nach Fachbereichen steht noch aus.",
-          br(), br(),
-          "Interpretationshilfe: "),
+        p("Hier zeigen wir die Unterschiede nach MINT-Berufsbereichen Mathematik/ Naturwissenschaft, Infromatik und Technik. Die Aufbereitung nach einzelnen Berufen steht noch aus."),
+
         tabsetPanel(type = "tabs",
-                    tabPanel("Karte", br(),
+                    tabPanel("Vergleich Anteil MINT-Berufsfelder zwischen Auszubildenden und Beschäftigten (Karte)", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1")
+                               mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1"),
+                               p(style="font-size:12px;color:grey",
+                                 "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -240,7 +258,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
-                    tabPanel("Alle Fächer auf einen Blick", br(),
+                    tabPanel("Alle Bereiche auf einen Blick", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -254,20 +272,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                ,p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                              ),
-                    tabPanel("Vergleich (Bundesländer)", br(),
 
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_beruf_arbeitsmarkt_bl_verlauf_ui("mod_beruf_arbeitsmarkt_bl_verlauf_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_verlauf"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
-                             )
-                    ),
 
-                    tabPanel("Überblick (Bundesländer)", br(),
+                    tabPanel("Vergleich Anteil MINT-Bereiche nach Bundesländern", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -285,27 +292,31 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       shinydashboard::box(
         title = "#Frauen in MINT: Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?",
         width = 12,
-        p("Hier schauen wir uns die Verteilung von Frauen und Männern innerhalb der MINT-Berufe in Deutschland an. Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Berufen.",
-        br(), br(),
-        "Interpretationshilfe: Der Anteil von Frauen an MINT-Auszubildenden in Deutschland beträgt 13 % im Jahr 2020.
-        Bei den MINT-Beschäftigten beträgt dieser Anteil 16 %. Dagegen machen Frauen in anderen Berufen mehr als die Hälfte aller
-        Auszubildenden und Beschäftigten aus (jeweils 56 %)."),
+        p("Hier schauen wir uns die Verteilung von Frauen und Männern innerhalb der MINT-Berufe in Deutschland an. Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Berufen."),
+
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
+                    tabPanel("Vergleich Anteil Frauen bei MINT-Auszubildenden und MINT-Beschäftigen", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_beruf_arbeitsmarkt_einstieg_gender_ui("mod_beruf_arbeitsmarkt_einstieg_gender_ui_1")
+                               mod_beruf_arbeitsmarkt_einstieg_gender_ui("mod_beruf_arbeitsmarkt_einstieg_gender_ui_1"),
+                               p(style="font-size:12px;color:grey",
+                                 "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                               p(style="font-size:12px;color:grey",
+                               "Interpretationshilfe: Der Anteil von Frauen an MINT-Auszubildenden in Deutschland beträgt 13 % im Jahr 2021.
+                              Bei den MINT-Beschäftigten beträgt dieser Anteil 17 %. Dagegen machen Frauen in anderen, Nicht-MINT-Berufen mehr als die Hälfte aller
+                               Auszubildenden und Beschäftigten aus (56 bzw. 55 %).")
                              ),
+
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_einstieg_pie_gender"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Vergleich Anteil Frauen in MINT-Berufen im Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -321,7 +332,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
 
                     ),
-                    tabPanel("Überblick", br(),
+                    tabPanel("Anteil Frauen an verschiedenen MINT-Berufsgruppen", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -334,17 +345,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_einstieg_vergleich_gender"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                                )
-                    )))),
+                    )
+        ))),
 
     fluidRow(
       shinydashboard::box(
         title = "#Regionaler MINT-Steckbrief",
         width = 12,
-        p("Hier bieten wir die Möglichkeit, sich einen regionalen MINT-Steckbrief zusammenzustellen - als Karte, Balkendiagramm oder Tabelle.",
-          br(), br(),
-          "abc"),
+        p("Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen.",
+
         tabsetPanel(type = "tabs",
-                    tabPanel("Karte", br(),
+                    tabPanel("Vergleich Landkreise (als Karte)", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -358,7 +369,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                # p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
-                    tabPanel("Vergleich", br(),
+                    tabPanel("Vergleich Landkreise, Auflistung aller Landkreise", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -371,43 +382,44 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                     ),
-                    tabPanel("Tabelle", br(),
-
-                             fluidRow(
-                               shiny::sidebarPanel(
-                                 width = 3
-                             ),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_beruf_arbeitsmarkt_landkreis_table_lk_ui("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_1")
-                             ),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_beruf_arbeitsmarkt_landkreis_table_lk_ui("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_2")
-                             ),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_beruf_arbeitsmarkt_landkreis_table_lk_ui("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_3")
-                             )),
-                             fluidRow(
-                               shiny::sidebarPanel(
-                                 width = 12,
-                                 p(),
-                                 mod_beruf_arbeitsmarkt_landkreis_table_lk_analysis_ui(ns("var1")),
-                                 h5(""),
-                                 actionButton(ns("insertBtn"), "Weitere Betrachtung hinzufügen"),
-                                 actionButton(ns("runBtn"), "Betrachtungen anzeigen")
-
-                                 ),
-                             shiny::mainPanel(
-                               width = 12,
-                               DT::DTOutput(ns("table_lk_analysis"))
-                             ),
-                             p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
-                    ))
+                    # Tabelle noch nicht fertig gelayoutet
+                    # tabPanel("Tabelle", br(),
+                    #
+                    #          fluidRow(
+                    #            shiny::sidebarPanel(
+                    #              width = 3
+                    #          ),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_beruf_arbeitsmarkt_landkreis_table_lk_ui("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_1")
+                    #          ),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_beruf_arbeitsmarkt_landkreis_table_lk_ui("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_2")
+                    #          ),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_beruf_arbeitsmarkt_landkreis_table_lk_ui("mod_beruf_arbeitsmarkt_landkreis_table_lk_ui_3")
+                    #          )),
+                    #          fluidRow(
+                    #            shiny::sidebarPanel(
+                    #              width = 12,
+                    #              p(),
+                    #              mod_beruf_arbeitsmarkt_landkreis_table_lk_analysis_ui(ns("var1")),
+                    #              h5(""),
+                    #              actionButton(ns("insertBtn"), "Weitere Betrachtung hinzufügen"),
+                    #              actionButton(ns("runBtn"), "Betrachtungen anzeigen")
+                    #
+                    #              ),
+                    #          shiny::mainPanel(
+                    #            width = 12,
+                    #            DT::DTOutput(ns("table_lk_analysis"))
+                    #          ),
+                    #          p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
+                    # ))
         )
 
-            ))
+            )))
 
     # ,
     # fluidRow(
