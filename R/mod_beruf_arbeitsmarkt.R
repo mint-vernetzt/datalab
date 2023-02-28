@@ -485,7 +485,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           p(tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
           tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
           tags$a("Datenschutz", href="#shiny-tab-datenschutz", "data-toggle"="tab"),HTML('&nbsp;'),HTML('&nbsp;'),
-          "Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
+          "Copyright © 2023. Alle Rechte vorbehalten Stifterverband")),
 
       div(style="display: inline-block;position: relative;padding: 1em;",
 
