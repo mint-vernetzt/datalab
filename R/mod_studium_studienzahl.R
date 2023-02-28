@@ -144,7 +144,7 @@ mod_studium_studienzahl_ui <- function(id){
                              )
                     ),
 
-                    tabPanel("Vergleich Anteil MINT nach Bundesländer im Zeitverlauf)", br(),
+                    tabPanel("Vergleich Anteil MINT nach Bundesländer im Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -264,7 +264,7 @@ mod_studium_studienzahl_ui <- function(id){
                           "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
-                    tabPanel("Karte", br(),
+                    tabPanel("Vergleich Fächer (Karte)", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -297,7 +297,7 @@ mod_studium_studienzahl_ui <- function(id){
                    #           )
                    #  ),
 
-                    tabPanel("Überblick (Bundesländer)", br(),
+                    tabPanel("Vergleich nach Bundesländern", br(),
 
                              shiny::sidebarPanel(
                                width = 3,

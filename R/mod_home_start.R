@@ -34,7 +34,7 @@ mod_home_start_ui <- function(id){
         p(style = "text-align: justify; font-size = 16px",
            "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
-             mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
+             mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")),
 
 
       shinydashboard::box(
@@ -44,7 +44,7 @@ mod_home_start_ui <- function(id){
           span(tags$b(span("#MINT:")),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
         )),
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"),
+          span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?")
         )
         ),
 
@@ -85,7 +85,7 @@ mod_home_start_ui <- function(id){
           br(), br(),
          ),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
+                    tabPanel("Vergleich Bereiche", br(),
                       shiny::sidebarPanel(
                         width = 3,
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
@@ -98,7 +98,7 @@ mod_home_start_ui <- function(id){
                         htmlOutput(ns("plot_mint_rest_einstieg_1"))
                         ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
                             ),
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Vergleich Bereiche im Zeitverlauf", br(),
                         shiny::sidebarPanel(
                           width = 3,
                           mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")),
@@ -131,7 +131,7 @@ mod_home_start_ui <- function(id){
         "Interpretationshilfe: Betrachtet man hier beispielsweise die Studierenden, sieht man, dass deutschlandweit im Jahr 2020 in MINT-Fächern 32 % der Studierenden
         Frauen sind. Der Anteil an Frauen in anderen Studiengängen ist dagegen weitaus größer. In Deutschland im Jahr 2020 sind 61 % aller Studierenden in nicht-MINT-Fächern weiblich."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
+                    tabPanel("", br(),  # Verlgeich
                              shiny::sidebarPanel(
                                width = 3,
                                mod_home_start_einstieg_gender_ui("mod_home_start_einstieg_gender_ui_1"),
