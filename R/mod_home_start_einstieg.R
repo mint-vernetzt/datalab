@@ -13,7 +13,7 @@ mod_home_start_einstieg_ui <- function(id){
     p("Auswahl des Bereichs (max. 3):"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_einstieg_1"),
-      choices = c("Leistungskurse",
+      choices = c("Schüler:innen Leistungskurse",
                    "Studierende",
                   "Auszubildende", "Beschäftigte"),
       selected = c("Leistungskurse", "Beschäftigte"),

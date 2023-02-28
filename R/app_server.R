@@ -30,12 +30,16 @@ app_server <- function(input, output, session) {
 
   load(file = system.file(package="datalab","data/zentral.rda"))
 
+  load(file = system.file(package="datalab","data/zentral_alt.rda"))
+
+  load(file = system.file(package="datalab","data/zentral_neu.rda"))
+
   load(file = system.file(package="datalab","data/studierende2.rda"))
 
   # example_data <- mod_load_data_server("beispieldatensatz", path=system.file(package="datalab", "data-raw/beispieldatensatz.xlsx"))
 
   # callModule(mod_home_server, "home_ui_1", data=example_data)
-  mod_home_server("home_ui_1", data_zentral = zentral, data_ausbildungsvertraege = data_naa)
+  mod_home_server("home_ui_1", data_zentral = zentral,  data_zentral_alt = zentral_alt, data_zentral_neu = zentral_neu, data_ausbildungsvertraege = data_naa)
 
   # callModule(mod_schule_server, "schule_ui_1", data=example_data, filter_name="schule")
   mod_schule_server("schule_ui_1", data_kurse = kurse)

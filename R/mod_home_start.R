@@ -35,7 +35,7 @@ mod_home_start_ui <- function(id){
            "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
-          ),
+
 
       shinydashboard::box(
         title = "Übersicht Fragestellungen",
@@ -96,7 +96,7 @@ mod_home_start_ui <- function(id){
                       shiny::mainPanel(
                         width = 9,
                         htmlOutput(ns("plot_mint_rest_einstieg_1"))
-                        ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
+                        ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
                             ),
                     tabPanel("Zeitverlauf", br(),
                         shiny::sidebarPanel(
@@ -105,18 +105,20 @@ mod_home_start_ui <- function(id){
                         shiny::mainPanel(
                           width = 9,
                           highcharter::highchartOutput(ns("plot_mint_1"))
-                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
-                             ),
-                    tabPanel("Überblick", br(),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
-                             shiny::mainPanel(
-                               width = 9,
-                               highcharter::highchartOutput(ns("plot_comparison_mint"))
-                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
-
-         ))))),
+                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
+                             )
+         #           ,
+         #            tabPanel("Überblick", br(),
+         #                     shiny::sidebarPanel(
+         #                       width = 3,
+         #                       mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
+         #                     shiny::mainPanel(
+         #                       width = 9,
+         #                       highcharter::highchartOutput(ns("plot_comparison_mint"))
+         #                                      ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen.")
+         #
+         # ))
+         ))),
     fluidRow(
       shinydashboard::box(
         title = "#Frauen in MINT: Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?",
@@ -138,28 +140,29 @@ mod_home_start_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_pie_mint_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
-                            ),
-                    tabPanel("Zeitverlauf", br(),
-                        shiny::sidebarPanel(
-                          width = 3,
-                          mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
-                        shiny::mainPanel(
-                          width = 9,
-                          highcharter::highchartOutput(ns("plot_verlauf_mint"))
-                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
-                                        )
-                            ),
-                    tabPanel("Überblick", br(),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1")),
-                             shiny::mainPanel(
-                               width = 9,
-                               highcharter::highchartOutput(ns("plot_comparison_gender"))
-                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
-
-                             )
+                               ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
+                            )
+                    # ,
+                    # tabPanel("Zeitverlauf", br(),
+                    #     shiny::sidebarPanel(
+                    #       width = 3,
+                    #       mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
+                    #     shiny::mainPanel(
+                    #       width = 9,
+                    #       highcharter::highchartOutput(ns("plot_verlauf_mint"))
+                    #       ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen.")
+                    #                     )
+                    #         ),
+                    # tabPanel("Überblick", br(),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1")),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            highcharter::highchartOutput(ns("plot_comparison_gender"))
+                    #                           ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
+                    #
+                    #          )
                     )))
 
 
@@ -209,17 +212,17 @@ tags$footer(style="text-align: justify;background-color:white",
 #' home_start Server Functions
 #'
 #' @noRd
-mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r){
+mod_home_start_server <- function(id, data_zentral, data_zentral_neu, data_zentral_alt,data_ausbildungsvertraege ,r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
 
     output$plot_verlauf_mint <- highcharter::renderHighchart({
-      home_comparison_line(data_zentral,r)
+      home_comparison_line(data_zentral_alt,r)
     })
 
     output$plot_mint_rest_einstieg_1 <- renderUI({
-      home_einstieg_pie(data_zentral,r)
+      home_einstieg_pie(data_zentral_alt,r)
     })
 
     output$plot_comparison_gender <- highcharter::renderHighchart({
@@ -227,7 +230,7 @@ mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r
     })
 
     output$plot_mint_1 <- highcharter::renderHighchart({
-      home_rest_mint_verlauf(data_zentral, r)
+      home_rest_mint_verlauf(data_zentral_alt, r)
     })
 
     output$plot_comparison_mint <- highcharter::renderHighchart({
@@ -235,7 +238,7 @@ mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r
     })
 
     output$plot_pie_mint_gender <- renderUI({
-      home_einstieg_pie_gender(data_zentral, data_ausbildungsvertraege, r)
+      home_einstieg_pie_gender(data_zentral_alt, data_ausbildungsvertraege, r)
     })
 
 
