@@ -22,55 +22,68 @@ mod_schule_kurse_ui <- function(id){
             style="display: block; margin-left: auto; margin-right: auto;"
         ))),
 
+
+
+    # Info-Texte
+
     fluidRow(
-      shinydashboard::box(
-        width = 9,
-        titel = "MINT in der Schule",
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
-          "Auf dieser Seite zeigen wir, wie hoch der Anteil von MINT-Fächern gemessen an allen gewählten Grund- und Leistungskursen ist.
-          Je nach Bundesland wählen alle Oberstufen-Schülerinnen und -Schüler mehrere Grund- und Leistungskurse.
-          Anhand dieser Belegungszahlen haben wir den Anteil von MINT-Fächern in der Schule berechnet."),
-          br(),
-          p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "KMK, 2021, auf Anfrage, eigene Berechnungen.")),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
-               "Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
-               eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
-               nutzen wir die Kursbelegungszahlen der Schüler:innen. Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
-               nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen
-               der verschiedenen Kurse.", br(), br(),
-               # "Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
-               # nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen der verschiedenen Kurse.",
-               "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.",
-               br(),br(),
-               "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen."
-               ))
-      )),
       shinydashboard::box(
         title = "Auf dieser Seite",
         width = 3,
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT:")), "Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe? Und wie unterscheidet sich die Fächerwahl zwischen Mädchen und Jungen?"
-          )),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT im Detail:")), "Vergleich der einzelnen MINT-Fächer"
-          )),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#Mädchen in MINT:")), "Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"
-        )),
+          "Auf dieser Seite zeigen wir, wie hoch der Anteil von MINT-Fächern an allen Schulfächern - gemessen an allen gewählten Grund- und Leistungskursen - ist.
+          Je nach Bundesland wählen alle Oberstufen-Schülerinnen und -Schüler mehrere Grund- und Leistungskurse.
+          Anhand dieser Belegungszahlen haben wir den Anteil von MINT-Fächern in der Schule berechnet. ")
 
-     )),
+              # Text zu viel?
+              # Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
+              #  eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
+              #  nutzen wir die Kursbelegungszahlen der Schüler:innen. Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
+              #  nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen
+              #  der verschiedenen Kurse."
+      ),
+
+      shinydashboard::box(
+        title = "Übersicht Fragestellungen",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#MINT:")),"Wie hoch ist der Anteil von MINT-Fächern an allen Schulfächern in der Oberstufe?"
+          )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#MINT im Detail:")), "Wie hoch sind die Anteile der einzelnen MINT-Fächer?"
+          )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
+        )
+      ),
+
+      shinydashboard::box(
+        title = "Datenquellen",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          "Schüler:innenzahlen der Oberstufe: Kulturministerkonferenz (KMK) 2022, auf Anfrage"),
+        p(style = "text-align: justify; font-size = 16px",
+          "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.")
+        ),
+
+      shinydashboard::box(
+        title = "Fragen oder Feedback?",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+        ))
+    ),
+
+  # Box 1
 
     fluidRow(
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?",
         width = 12,
-        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil davon, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt werden.",
-          br(),
-          br(),
-        "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 23 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2020 bei 34 %."),
+        p("In diesen interaktiven Diagrammen beleuchten wir, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt werden.")
+        ,
+
         tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich Grund- und Leistungskurse, Fachbereiche", br(),
@@ -79,14 +92,18 @@ mod_schule_kurse_ui <- function(id){
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")
-
+                               mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1"),
+                               p(style="font-size:12px;color:grey",
+                                 "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass im Jahr 2021 in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2021 bei 33 %.")
                                ),
                              shiny::mainPanel(
                                width = 9,
                                plotOutput(ns("plot_waffle_mint"))
                                ,
-                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", br(),
+                              "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                              p(style="font-size:12px;color:grey",
+                                "Hinweis: Durch Rundung der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen.")
 
                                )
                     ),
@@ -146,7 +163,10 @@ mod_schule_kurse_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1")),
+                               mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
+                               p(style="font-size:12px;color:grey",
+                                 "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
+                               ),
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_map_kurse_gender"))
@@ -155,8 +175,7 @@ mod_schule_kurse_ui <- function(id){
                                p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
                                  sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
                                  Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
-                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering."),
-                               p(style="font-size:12px;color:grey","Hinweis: Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor.")
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering. Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor.")
                                )
                     ),
 
@@ -192,21 +211,29 @@ mod_schule_kurse_ui <- function(id){
         title = "#MINT im Detail: Vergleich der einzelnen MINT-Fächer",
         width = 12,
         p("Hier zeigen wir die Anteile einzelner MINT-Fächer in Deutschland. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse.",
-        br(), br(),
-        "Interpretationshilfe: Auf der ersten Seite ist zu sehen, dass im Jahr 2020 deutschlandweit 23 % der Grundkurse aus dem MINT Bereich sind. Dabei sind Naturwissenschaften mit 14 %
-        die am häufigsten belegte MINT-Disziplin. Bei den Leistungskursen sind 2020 34 % der Belegungen im MINT-Bereich, wobei Mathematik 17 % an allen Leistungskursbelegungen ausmacht."),
+        ),
         tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich Grund- und Leistungskurse nach Bundesländern (Karte)", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1")),
+                               mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1"),
+                               p(style="font-size:12px;color:grey",
+                               "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal
+                                 minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                               p(style="font-size:12px;color:grey",
+                               "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass die MINT-Fächer in Grundkursen den höchsten Anteil in Sachsen haben mit 29 % Prozent.
+                               Bei den Leistungskursen ist der Anteil der MINT-Fächer in Sachsen-Anhalt mit 50 % am höchsten. Die Vergleiche zwischen den Bundesländern sind jedoch schwierig,
+                               da die Regelungen für die Wahl der Kurse in den Bundesländern sehr unterschiedlich sind.")
+                               ),
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_map_kurse"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
-                               p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
+                               ,p(style="font-size:12px;color:grey",
+                                  "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey",
+                               "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
                                  sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
                                  Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
                                  die Anteile der Grundlagenfächer an den Grundkursen sehr gering."))
@@ -300,14 +327,9 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         p("Hier schauen wir uns die Verteilung von Mädchen und Jungen innerhalb der MINT-Fächer in Deutschland an. Zum Vergleich
           zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern. Die verschiedenen Diagramme bieten außerdem
-          Fächer- und Bundeslandvergleiche.",
-          br(), br(),
-        "Interpretationshilfe: Die erste Darstellung zeigt, dass der Anteil von Mädchen bzw. Frauen in allen MINT-Grundkursen
-        in Deutschland 2020 53 % beträgt. In den MINT-Leistungskursen beträgt dieser Anteil 48 %. Im Vergleich
-        mit anderen, nicht-MINT Fächern sieht man, dass in ihnen der Anteil an Mädchen bzw. Frauen etwas höher ist: In Grundkursen anderer Fächer machen Frauen 55 % aus, in Leistungskursen sogar 58 %."),
-        tabsetPanel(type = "tabs",
+          Fächer- und Bundeslandvergleiche."),
 
-                    # tabPanel("Neu: "),
+        tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich Fächergruppen", br(),
 
@@ -318,7 +340,11 @@ mod_schule_kurse_ui <- function(id){
                                width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_schule_kurse_comparison_gender_ui("mod_schule_kurse_comparison_gender_ui_1")),
+                               mod_schule_kurse_comparison_gender_ui("mod_schule_kurse_comparison_gender_ui_1"),
+                               p(style="font-size:12px;color:grey",
+                               "Interpretationshilfe: Die erste Darstellung zeigt, dass der Anteil von Mädchen bzw. Frauen in allen MINT-Grundkursen
+                                in Deutschland 2021 53 % beträgt. In den MINT-Leistungskursen beträgt dieser Anteil 48 %. In den Nicht-MINT-Fächern
+                               ist der Anteil an Mädchen bzw. Frauen etwas höher: In Grundkursen machen Frauen 54 % aus, in Leistungskursen sogar 58 %.")),
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_comparison_gender"))
@@ -422,7 +448,7 @@ mod_schule_kurse_ui <- function(id){
 
 
   ))
-  #)
+
 }
 
 #' schule_kurse Server Functions

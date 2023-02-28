@@ -1693,9 +1693,9 @@ kurse_map_gender <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-      highcharter::hc_caption(
-        text = "Ausgegraut: Daten stehen nicht zur Verfügung",  style = list(fontSize = "12px")
-      ) %>%
+      # highcharter::hc_caption(
+      #   text = "Ausgegraut: Daten stehen nicht zur Verfügung",  style = list(fontSize = "12px")
+      # ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%

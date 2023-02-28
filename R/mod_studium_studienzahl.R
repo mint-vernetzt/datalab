@@ -27,70 +27,79 @@ mod_studium_studienzahl_ui <- function(id){
             style="display: block; margin-left: auto; margin-right: auto;"
         ))),
 
-     fluidRow(
-    shinydashboard::box(
-      titel = "Studium in MINT",
-      width = 9,
-      p(style = "text-align: justify; font-size = 16px",
-      span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
-             "Auf dieser Seite zeigen wir statistische Kennzahlen zum Thema MINT-Fächer studieren. Wir zeigen, wie hoch der Anteil
-           von MINT-Fächern gemessen an allen gewählten Studienfächern ist. Dazu zeigen wir Vergleiche nach männlichen und
-           weiblichen Studierenden und nach Bundesländern. Studierende können außerdem nach Hochschultyp unterschieden werden
-           oder ob sie auf Lehramt oder im ersten Fachsemester studieren."
-           )),
-       # br(),
-      p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis, 2022, auf Anfrage, eigene Berechnungen.")),
-      p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("Methodische Hinweise: ", style = "color:#b16fab")),
-             "Die aktuellen Berechnungen erfolgen auf Basis der Studierendenzahlen an allen deutschen Hochschulen. ",
-             br(),br(),
-             "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen."
-             ))
-    ),
-    shinydashboard::box(
-      title = "Auf dieser Seite",
-      width = 3,
-      p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("#MINT:")), "Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
-        )),
-      p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("#MINT im Detail:")), "Vergleich der einzelnen MINT-Fächer und Bundesländer"
-        )),
-      p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("#Frauen in MINT:")), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
-      )),
 
-      p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("#Fächerwahl von Frauen:")), "Wie unterscheidet sich die Fächerwahl von Frauen und Männern?"
-      ),
-      )
-
-    )),
+    # Info-Texte
 
     fluidRow(
       shinydashboard::box(
-        title = "#Fächerwahl MINT: Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?", br(), "Und wie unterscheidet sich die Fächerwahl von Frauen und Männern?",
+        title = "Auf dieser Seite",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          "Auf dieser Seite zeigen wir statistische Kennzahlen zum Thema MINT-Fächer studieren. Wir zeigen, wie hoch der Anteil
+           von MINT-Fächern gemessen an allen gewählten Studienfächern ist. Dazu zeigen wir Vergleiche nach männlichen und
+           weiblichen Studierenden, einzelnen Fächern und nach Bundesländern.")
+        ),
+
+      shinydashboard::box(
+        title = "Übersicht Fragestellungen",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#MINT:")), "Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
+          )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#MINT im Detail:")), "Wie hoch ist der Anteil der einzelnen MINT-Fächer?"
+          )),
+        p(style = "text-align: justify; font-size = 16px",
+          span(tags$b(span("#Frauen in MINT:")), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
+          ))),
+
+      shinydashboard::box(
+        title = "Datenquellen",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          "Studierendenzahlen in Deutschland: Destatis 2022, auf Anfrage")
+
+      ),
+
+      shinydashboard::box(
+        title = "Fragen oder Feedback?",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+        ))
+    ),
+
+  # Box 1
+
+    fluidRow(
+      shinydashboard::box(
+        title = "#Fächerwahl MINT: Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren? Und wie unterscheidet sich die Fächerwahl von Frauen und Männern?",
         width = 12,
         p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Fächern an allen Studienfächern in Deutschland.
-          Dabei betrachten wir sowohl Studienanfänger:innen als auch Studierende allgemein. ",
-          br(),
-          br(),
-          "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 37 % der Studienanfänger:innen ein MINT-Fach studieren, bei den Studierenden sind es im Jahr 2020 ebenfalls 37 %."),
+          Dabei betrachten wir sowohl Studienanfänger:innen als auch Studierende allgemein."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Überblick", br(),
+                    tabPanel("Vergleich Anteil MINT nach Studierendengruppen", br(),
 
                              shiny::sidebarPanel(width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_studium_studienzahl_test_ui("mod_studium_studienzahl_test_ui_1")),
+                               mod_studium_studienzahl_test_ui("mod_studium_studienzahl_test_ui_1"),
+                               p(style="font-size:12px;color:grey",
+                               "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal
+                                 minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                               p(style="font-size:12px;color:grey",
+                                 "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 38 %
+                                 der Studienanfänger:innen (1. FS) ein MINT-Fach wählen, bei den Studierenden ist dieser Anteil
+                                 mit 37 % in 2021 etwas geringer, was bedeutet, dass die Abbruchsquote in MINT höher liegt als
+                                 in anderen Fachbereichen.")
+                               ),
                              shiny::mainPanel(width = 9,
                                htmlOutput(ns("test")),
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
-
-
-                    ),
-                    tabPanel("Waffle", br(),
+                               p(style="font-size:12px;color:grey",
+                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                        )),
+                    tabPanel("Vergleich Anteil MINT nach Studierendengruppen II", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -99,10 +108,12 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
                              shiny::mainPanel(
                                width = 9,
-                               plotOutput(ns("plot_waffle")),p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                               plotOutput(ns("plot_waffle")),
+                               p(style="font-size:12px;color:grey",
+                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
                     ),
 
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Vergleich Anteil MINT nach Studierendengruppen im Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -111,11 +122,13 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_einstieg_verlauf_ui("mod_studium_studienzahl_einstieg_verlauf_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_einstieg_verlauf")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                               highcharter::highchartOutput(ns("plot_einstieg_verlauf")),
+                               p(style="font-size:12px;color:grey",
+                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
 
                     ),
 
-                    tabPanel("Zeitverlauf Anteil MINT nach Bundesländern", br(),
+                    tabPanel("Vergleich Anteil MINT nach Bundesländern im Zeitverlauf", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -125,12 +138,13 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                               ,p(style="font-size:12px;color:grey",
+                                  "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
 
                              )
                     ),
 
-                    tabPanel("Zeitverlauf Anteil MINT (Vergleich Bundesländer)", br(),
+                    tabPanel("Vergleich Anteil MINT nach Bundesländer im Zeitverlauf)", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -138,10 +152,12 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                               highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf")),
+                               p(style="font-size:12px;color:grey",
+                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
-                    tabPanel("Überblick", br(),
+                    tabPanel("Alle Studierendengruppen auf einen Blick", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -150,11 +166,13 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_einstieg_comparison_ui("mod_studium_studienzahl_einstieg_comparison_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_einstieg_comparison")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                               highcharter::highchartOutput(ns("plot_einstieg_comparison")),
+                               p(style="font-size:12px;color:grey",
+                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
                     ),
 
 
-                    tabPanel("Vergleich Frauen & Männer", br(),
+                    tabPanel("Vergleich Studienfachwahl zwischen Frauen & Männer", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -168,7 +186,7 @@ mod_studium_studienzahl_ui <- function(id){
                              )
                     ),
 
-                    tabPanel("Zeitverlauf Frauen & Männer", br(),
+                    tabPanel("Studienfachwahl Frauen im Zeitverlauf", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -181,20 +199,20 @@ mod_studium_studienzahl_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
-                    tabPanel("Überblick Frauen und Männer", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_studium_studienzahl_ranking_bl_subject_gender_ui("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1")
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               #highcharter::highchartOutput(ns("plot_ranking_studienzahl_bl_subject_gender1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
-                               plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
-                             )
-                    )
+                    # tabPanel("Überblick Frauen und Männer", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_studium_studienzahl_ranking_bl_subject_gender_ui("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1")
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            #highcharter::highchartOutput(ns("plot_ranking_studienzahl_bl_subject_gender1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
+                    #            plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
+                    #          )
+                    # )
 
                   # ,
                   #
@@ -216,15 +234,14 @@ mod_studium_studienzahl_ui <- function(id){
                   # )
         ))),
 
-    fluidRow(
+    # Box 2
+
+  fluidRow(
       shinydashboard::box(
         title = "#MINT im Detail: Vergleich der einzelnen MINT-Fächer",
         width = 12,
         p("Hier zeigen wir, wie häufig MINT-Fächer im Vergleich zu anderen Studienfächern in Deutschland gewählt werden.
-          Außerdem kann man den Anteil von MINT-Fächern zwischen den Bundesländern vergleichen. ",
-          br(), br(),
-          "Interpretationshilfe: In der ersten Darstellung sieht man, dass in Deutschland 2020 Ingenieurwissenschaften den Großteil der MINT-Fächer ausmachen:
-          Unter den Studienanfänger:innen wählen 26 % und unter den Studierenden 27 % eine Ingenieurwissenschaft."),
+          Außerdem kann man den Anteil von MINT-Fächern zwischen den Bundesländern vergleichen."),
 
         tabsetPanel(type = "tabs",
 
@@ -236,12 +253,14 @@ mod_studium_studienzahl_ui <- function(id){
                        #      .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                       shiny::sidebarPanel(
                         width = 3,
-                        mod_studium_top_faecher_ui("mod_studium_top_faecher")),
+                        mod_studium_top_faecher_ui("mod_studium_top_faecher"),
+                        p(style = "font-size:12px;color:grey",
+                          "Interpretationshilfe: In der ersten Einstellung sind die TOP-10-Fächer in Bayern in MINT bezogen auf den Frauen- bzw. Die Fächer mit dem höchsten Männeranteil in MINT sind dagegen Verkehrstechnik / Nautik mit 86 % Männern und Elektrotechnik und Informationstechnik mit 84 %.")
+                        ),
                       shiny::mainPanel(
                         width = 9,
                         htmlOutput(ns("plot_top_faecher")),
-                        p(
-                          style = "font-size:12px;color:grey",
+                        p(style = "font-size:12px;color:grey",
                           "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
@@ -249,28 +268,34 @@ mod_studium_studienzahl_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_studium_studienzahl_bl_map_ui("mod_studium_studienzahl_bl_map")
+                               mod_studium_studienzahl_bl_map_ui("mod_studium_studienzahl_bl_map"),
+                               p(style="font-size:12px;color:grey",
+                                 "Hinweis zur Darstellung: Falls die Karten abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               htmlOutput(ns("plot_studienzahl_map")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                               htmlOutput(ns("plot_studienzahl_map")),
+                               p(style="font-size:12px;color:grey",
+                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
 
 
-                   tabPanel("Alle Fächer auf einen Blick", br(),
+                    # Fehler in der Boxgrösse, muss noch behoben werden
 
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
-                             shiny::mainPanel(
-                               width = 9,
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
-                               #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
-                             )
-                    ),
+                   # tabPanel("Alle Fächer auf einen Blick", br(),
+                   #
+                   #           tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                   #           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                   #           shiny::sidebarPanel(
+                   #             width = 3,
+                   #             mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
+                   #           shiny::mainPanel(
+                   #             width = 9,
+                   #             highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                   #             #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                   #           )
+                   #  ),
 
                     tabPanel("Überblick (Bundesländer)", br(),
 
@@ -292,20 +317,23 @@ mod_studium_studienzahl_ui <- function(id){
         width = 12,
         p("Hier schauen wir uns die Verteilung von Frauen und Männern in Deutschland innerhalb der MINT-Studienfächer an.
           Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern.
-          Die verschiedenen Diagramme bieten außerdem Fächer- und Bundeslandvergleiche.",
-          br(), br(),
-          "Interpretationshilfe: In der ersten interaktiven Grafik ist beispielsweise zu sehen,
-          dass deutschlandweit 2020 der Anteil von Frauen unter den Studienanfänger:innen in MINT-Fächern 34 % ausmacht.
-          Unter den Studierenden liegt der Frauenanteil in MINT-Fächern bei 32 %. In nicht-MINT-Studienfächern
-          machen Frauen dagegen die Mehrheit aus: 63 % der Studienanfänger:innen und 61 % der Studierenden sind hier in Deutschland 2020 weiblich."),
+          Die verschiedenen Diagramme bieten außerdem Fächer- und Bundeslandvergleiche."),
+
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
+                    tabPanel("Vergleich Anteil Frauen in MINT zwischen Studienanfänger:innen und Studierenden", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_studium_studienzahl_einstieg_gender_ui("mod_studium_studienzahl_einstieg_gender_ui_1")),
+                               mod_studium_studienzahl_einstieg_gender_ui("mod_studium_studienzahl_einstieg_gender_ui_1"),
+                               p(style="font-size:12px;color:grey",
+                                 "Hinweis zur Darstellung: Falls die Karten abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                               p(style="font-size:12px;color:grey",
+                               "Interpretationshilfe: In der ersten interaktiven Grafik ist zu sehen,
+                                dass deutschlandweit 2021 der Anteil von Frauen unter den Studienanfänger:innen in MINT-Fächern 34 % ausmacht.
+                               Unter den Studierenden liegt der Frauenanteil in MINT-Fächern bei 32 % etwas darunter. Dies deutet darauf hin, dass bei weiblichen Studierenden die Abbruchquote in MINT höher ist als bei männlichen Studierenden.")
+                               ),
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_einstieg_pie_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
@@ -376,7 +404,11 @@ mod_studium_studienzahl_ui <- function(id){
 
                     " ")
 
-    ))
+    )
+  ) # Tagslist zu
+
+
+
     # fluidRow(
     #   shinydashboard::box(
     #     title = "Nicht zuordbar",
@@ -430,14 +462,6 @@ mod_studium_studienzahl_ui <- function(id){
     #
     #     ))),
 
-    # fluidRow(
-    #   shinydashboard::box(
-    #     width = 12,
-    # p(style = "text-align: justify; font-size = 16px",
-    #   span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Hochschul-Statistiken des Statistischen Bundesamtes, 2021: auf Anfrage.")),
-    # p(style = "text-align: justify; font-size = 16px",
-    #   span(tags$b(span("Methodische Hinweise: ", style = "color:#b16fab")),
-    #        " "))
 
 }
 
