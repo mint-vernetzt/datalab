@@ -75,16 +75,8 @@ mod_home_start_ui <- function(id){
         title = "#MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
         width = 12,
         p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von MINT-Fächern in der Schule? Wie hoch ist der Anteil von Studierenden, die MINT-Fächer belegen?", br(),
-          "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?",
-          br(), br(),
-
-          "Methodische Hinweise: Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
-                         eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
-                         nutzen wir die Kursbelegungszahlen der Schüler:innen.",
-          br(),br(),
-          "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen.",
-          br(), br(),
-         ),
+          "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?"),
+                 ),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Bereiche", br(),
                       shiny::sidebarPanel(
@@ -97,7 +89,14 @@ mod_home_start_ui <- function(id){
                       shiny::mainPanel(
                         width = 9,
                         htmlOutput(ns("plot_mint_rest_einstieg_1"))
-                        ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
+                        ,p(style="font-size:12px;color:grey",
+                           "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                        p(style="font-size:12px;color:grey",
+                        "Hinweise: Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
+                         eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
+                         nutzen wir die Kursbelegungszahlen der Schüler:innen.", br(),
+                        "Durch Rundungen der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen.")
+                        )
                             ),
                     tabPanel("Vergleich Bereiche im Zeitverlauf", br(),
                         shiny::sidebarPanel(
