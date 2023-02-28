@@ -37,6 +37,7 @@ mod_home_start_ui <- function(id){
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")),
 
 
+
       shinydashboard::box(
         title = "Übersicht Fragestellungen",
         width = 3,
@@ -96,7 +97,7 @@ mod_home_start_ui <- function(id){
                       shiny::mainPanel(
                         width = 9,
                         htmlOutput(ns("plot_mint_rest_einstieg_1"))
-                        ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
+                        ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
                             ),
                     tabPanel("Vergleich Bereiche im Zeitverlauf", br(),
                         shiny::sidebarPanel(
@@ -105,7 +106,7 @@ mod_home_start_ui <- function(id){
                         shiny::mainPanel(
                           width = 9,
                           highcharter::highchartOutput(ns("plot_mint_1"))
-                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
+                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
                              )
          #           ,
          #            tabPanel("Überblick", br(),
@@ -115,7 +116,7 @@ mod_home_start_ui <- function(id){
          #                     shiny::mainPanel(
          #                       width = 9,
          #                       highcharter::highchartOutput(ns("plot_comparison_mint"))
-         #                                      ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen.")
+         #                                      ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen.")
          #
          # ))
          ))),
@@ -140,7 +141,7 @@ mod_home_start_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_pie_mint_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
+                               ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
                             )
                     # ,
                     # tabPanel("Zeitverlauf", br(),
@@ -150,7 +151,7 @@ mod_home_start_ui <- function(id){
                     #     shiny::mainPanel(
                     #       width = 9,
                     #       highcharter::highchartOutput(ns("plot_verlauf_mint"))
-                    #       ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen.")
+                    #       ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen.")
                     #                     )
                     #         ),
                     # tabPanel("Überblick", br(),
@@ -160,7 +161,7 @@ mod_home_start_ui <- function(id){
                     #          shiny::mainPanel(
                     #            width = 9,
                     #            highcharter::highchartOutput(ns("plot_comparison_gender"))
-                    #                           ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
+                    #                           ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
                     #
                     #          )
                     )))
