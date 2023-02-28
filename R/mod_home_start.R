@@ -36,16 +36,7 @@ mod_home_start_ui <- function(id){
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
 
-<<<<<<< HEAD
-        # p(style = "text-align: justify; font-size = 16px",
-        #   span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis, 2022, Bundesagentur für Arbeit, 2022, KMK, 2022, alle auf Anfrage, eigene Berechnungen."
-        #        )),
-        # p(style = "text-align: justify; font-size = 16px",
-        #   span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab"))),
-        # )
-        ),
-=======
->>>>>>> b708bfdba023a3c9db828dafd6cb505675322813
+
 
       shinydashboard::box(
         title = "Übersicht Fragestellungen",
