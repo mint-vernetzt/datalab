@@ -14,8 +14,8 @@ mod_schule_kurse_ranking_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_ranking"),
       label = NULL,
-      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
-      selected = 2020
+      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
+      selected = 2021
     ),
     p("Asuwahl des Bundeslands:"),
     shinyWidgets::pickerInput(
@@ -40,8 +40,10 @@ mod_schule_kurse_ranking_ui <- function(id){
                   "Westen",
                   "Osten"
                   ),
-       selected = "Hessen"
-    )
+       selected = "Mecklenburg-Vorpommern"
+    ),
+br(), br(),
+    p("Lesehilfe: Hier zeigen wir einen direkten Vergleich zwischen den Anteilen von Mädchen in Grundkursen und Leistungskursen. Die Grafik kann wie ein Balkendigramm gelesen werden. Die Verbindungslinie zwischen den Punkten verdeutlicht lediglich die Diskrepanz zwischen den Werten.")
   )
 }
 

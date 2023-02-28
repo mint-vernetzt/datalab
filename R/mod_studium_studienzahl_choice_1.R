@@ -11,31 +11,38 @@ mod_studium_studienzahl_choice_1_ui <- function(id){
   ns <- NS(id)
   tagList(
     p("Auswahl des Jahres:"),
-      shinyWidgets::sliderTextInput(
-        inputId = ns("date_studierende"),
-        label = NULL,
-        choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
-        selected = 2020
-      ),
-    p("Nur Lehramt anzeigen:"),
-    tags$div(
-      shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende"), label = "Nein", inline = TRUE),
-      tags$span("Ja")
+    shinyWidgets::sliderTextInput(
+      inputId = ns("waffle_y"),
+      label = NULL,
+      choices = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"),
+      selected = "2021"
     ),
-    p("Auswahl der Hochschulform:"),
-      conditionalPanel(condition = "input.nurLehramt_studierende == false",
-                       ns = ns,
-      shinyWidgets::pickerInput(
-        inputId = ns("hochschulform_studierende_1"),
-        choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
-      )),
-      conditionalPanel(condition = "input.nurLehramt_studierende != false",
-         ns = ns,
-        shinyWidgets::pickerInput(
-          inputId = ns("hochschulform_studierende_2"),
-          choices = "Uni"
-        ))
+    p("Auswahl der Indikatoren (max. 2):"),
+    shinyWidgets::pickerInput(
+      inputId = ns("waffle_l"),
+      choices = c("Studienanfänger:innen (1.Fachsemester)",
+                  "Studienanfänger:innen (1.Hochschulsemester)",
+                  "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
+                  "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
+                  "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
+                  "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
+                  "Studienanfänger:innen (Universität, 1.Fachsemester)",
+                  "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
+                  "Studierende",
+                  "Studierende (Fachhochschulen)",
+                  "Studierende (Lehramt, Universität)",
+                  "Studierende (Universität)"
+      ),
+      selected = c("Studierende"
+                   , "Studienanfänger:innen (1.Fachsemester)"
+      ),
+      multiple = TRUE,
+      options =  list(
+        "max-options" = 2,
+        "max-options-text" = "Maximal 2 Indikatoren auswählen")
+    )
   )
+
 }
 
 #' studium_studienzahl_choice_1 Server Functions
@@ -45,22 +52,22 @@ mod_studium_studienzahl_choice_1_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     # ns <- session$ns
 
-    observeEvent(input$date_studierende, {
-      r$date_studierende <- input$date_studierende
+    observeEvent(input$waffle_y, {
+      r$waffle_y <- input$waffle_y
     })
 
-    observeEvent(input$nurLehramt_studierende, {
-      r$nurLehramt_studierende <- input$nurLehramt_studierende
+    observeEvent(input$waffle_l, {
+      r$waffle_l <- input$waffle_l
     })
 
 
-    observeEvent(input$hochschulform_studierende_1, {
-      r$hochschulform_studierende_1 <- input$hochschulform_studierende_1
-    })
-
-    observeEvent(input$hochschulform_studierende_2, {
-      r$hochschulform_studierende_2 <- input$hochschulform_studierende_2
-    })
+    # observeEvent(input$hochschulform_studierende_1, {
+    #   r$hochschulform_studierende_1 <- input$hochschulform_studierende_1
+    # })
+    #
+    # observeEvent(input$hochschulform_studierende_2, {
+    #   r$hochschulform_studierende_2 <- input$hochschulform_studierende_2
+    # })
 
 
   })

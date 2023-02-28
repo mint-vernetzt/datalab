@@ -16,7 +16,7 @@ mod_home_start_ui <- function(id){
        fluidRow(
          shinydashboard::box(
            width = 12,
-           img(src='www/Banner_Bildungskette.jpg',
+           img(src='www/Banner_alle.jpg',
                class = "img-responsive",
                #height = "300px",
                #width = "150px",
@@ -25,56 +25,50 @@ mod_home_start_ui <- function(id){
            )
            )),
 
-   # fluidRow(
-     # shinydashboard::box(
-     #   title = "",
-     #   width = 12,
-     #   p(style = "text-align: justify; font-size = 16px",
-      #    span("BANNER; MINT entlang der Bildungskette")
-     # ))
-     # ),
-
-
+ # Info-Texte
 
     fluidRow(
       shinydashboard::box(
-        title = "Überblick über alle MINT-Bildungsbereiche",
-        width = 9,
+        title = "Auf dieser Seite",
+        width = 3,
         p(style = "text-align: justify; font-size = 16px",
-        span(tags$b(span("Kurzbeschreibung der Seite:", style = "color:#b16fab")),
-               "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
+           "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
-             mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
-               ),
+             mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")),
 
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis, 2021, Bundesagentur für Arbeit, 2021, KMK, 2021, alle auf Anfrage, eigene Berechnungen."
-               )),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab")),
-               "Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
-               eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
-               nutzen wir die Kursbelegungszahlen der Schüler:innen. Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
-               nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen der verschiedenen Kurse.
-               Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.",
-               br(),br(),
-               "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen."
-          ))
-        ),
+
 
       shinydashboard::box(
-        title = "Auf dieser Seite",
+        title = "Übersicht Fragestellungen",
         width = 3,
         p(style = "text-align: justify; font-size = 16px",
           span(tags$b(span("#MINT:")),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
         )),
         p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"
+          span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?")
+        )
         ),
 
-        )
-        )),
+      shinydashboard::box(
+        title = "Datenquellen",
+        width = 3,
+        p(style = "text-align: justify; font-size = 16px",
+          "Studierendenzahlen: Destatis 2022, auf Anfrage"),
+         p("Schüler:innenzahlen: KMK 2022, auf Anfrage"),
+          p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2022, auf Anfrage")
+        ),
 
+   shinydashboard::box(
+     title = "Fragen oder Feedback?",
+     width = 3,
+     p(style = "text-align: justify; font-size = 16px",
+       "Sind alle Zahlen und Grafiken verständlich?", br(),
+       "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+            tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+       ))
+      ),
+
+   # Box 1
 
     fluidRow(
       shinydashboard::box(
@@ -83,30 +77,49 @@ mod_home_start_ui <- function(id){
         p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von MINT-Fächern in der Schule? Wie hoch ist der Anteil von Studierenden, die MINT-Fächer belegen?", br(),
           "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?",
           br(), br(),
-          "Interpretationshilfe: Wenn man auf der ersten Ansicht beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden deutschlandweit im Jahr 2020
-          32 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten in Deutschland ist dieser Anteil ein wenig geringer. Im Jahr 2020 arbeiten nur 24 % der Beschäftigten in einem MINT-Beruf."),
+
+          "Methodische Hinweise: Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
+                         eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
+                         nutzen wir die Kursbelegungszahlen der Schüler:innen.",
+          br(),br(),
+          "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen.",
+          br(), br(),
+         ),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
+                    tabPanel("Vergleich Bereiche", br(),
                       shiny::sidebarPanel(
-                        mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1")),
+                        width = 3,
+                        mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
+                        p(style="font-size:12px;color:grey", "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                        p(style="font-size:12px;color:grey", "Interpretationshilfe: Wenn man beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden deutschlandweit im Jahr 2021
+                          31 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten in Deutschland ist dieser Anteil ein wenig geringer. Im Jahr 2021 arbeiten nur 23 % der Beschäftigten in einem MINT-Beruf.")
+                        ),
                       shiny::mainPanel(
+                        width = 9,
                         htmlOutput(ns("plot_mint_rest_einstieg_1"))
-                        ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
+                        ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
                             ),
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Vergleich Bereiche im Zeitverlauf", br(),
                         shiny::sidebarPanel(
+                          width = 3,
                           mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")),
                         shiny::mainPanel(
+                          width = 9,
                           highcharter::highchartOutput(ns("plot_mint_1"))
-                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
-                             ),
-                    tabPanel("Überblick", br(),
-                             shiny::sidebarPanel(
-                               mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
-                             shiny::mainPanel(highcharter::highchartOutput(ns("plot_comparison_mint"))
-                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
-
-         ))))),
+                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
+                             )
+         #           ,
+         #            tabPanel("Überblick", br(),
+         #                     shiny::sidebarPanel(
+         #                       width = 3,
+         #                       mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
+         #                     shiny::mainPanel(
+         #                       width = 9,
+         #                       highcharter::highchartOutput(ns("plot_comparison_mint"))
+         #                                      ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen.")
+         #
+         # ))
+         ))),
     fluidRow(
       shinydashboard::box(
         title = "#Frauen in MINT: Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?",
@@ -119,28 +132,38 @@ mod_home_start_ui <- function(id){
         "Interpretationshilfe: Betrachtet man hier beispielsweise die Studierenden, sieht man, dass deutschlandweit im Jahr 2020 in MINT-Fächern 32 % der Studierenden
         Frauen sind. Der Anteil an Frauen in anderen Studiengängen ist dagegen weitaus größer. In Deutschland im Jahr 2020 sind 61 % aller Studierenden in nicht-MINT-Fächern weiblich."),
         tabsetPanel(type = "tabs",
-                    tabPanel("Vergleich", br(),
+                    tabPanel("", br(),  # Verlgeich
                              shiny::sidebarPanel(
-                               mod_home_start_einstieg_gender_ui("mod_home_start_einstieg_gender_ui_1")),
+                               width = 3,
+                               mod_home_start_einstieg_gender_ui("mod_home_start_einstieg_gender_ui_1"),
+                             p(style="font-size:12px;color:grey", "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
+                             ),
                              shiny::mainPanel(
+                               width = 9,
                                htmlOutput(ns("plot_pie_mint_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
-                            ),
-                    tabPanel("Zeitverlauf", br(),
-                        shiny::sidebarPanel(
-                          mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
-                        shiny::mainPanel(
-                          highcharter::highchartOutput(ns("plot_verlauf_mint"))
-                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
-                                        )
-                            ),
-                    tabPanel("Überblick", br(),
-                             shiny::sidebarPanel(
-                               mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1")),
-                             shiny::mainPanel(plotOutput(ns("plot_comparison_gender"))
-                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
-
-                             )
+                               ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
+                            )
+                    # ,
+                    # tabPanel("Zeitverlauf", br(),
+                    #     shiny::sidebarPanel(
+                    #       width = 3,
+                    #       mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
+                    #     shiny::mainPanel(
+                    #       width = 9,
+                    #       highcharter::highchartOutput(ns("plot_verlauf_mint"))
+                    #       ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen.")
+                    #                     )
+                    #         ),
+                    # tabPanel("Überblick", br(),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1")),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            highcharter::highchartOutput(ns("plot_comparison_gender"))
+                    #                           ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
+                    #
+                    #          )
                     )))
 
 
@@ -190,25 +213,25 @@ tags$footer(style="text-align: justify;background-color:white",
 #' home_start Server Functions
 #'
 #' @noRd
-mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r){
+mod_home_start_server <- function(id, data_zentral, data_zentral_neu, data_zentral_alt,data_ausbildungsvertraege ,r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
 
     output$plot_verlauf_mint <- highcharter::renderHighchart({
-      home_comparison_line(data_zentral,r)
+      home_comparison_line(data_zentral_alt,r)
     })
 
     output$plot_mint_rest_einstieg_1 <- renderUI({
-      home_einstieg_pie(data_zentral,r)
+      home_einstieg_pie(data_zentral_alt,r)
     })
 
-    output$plot_comparison_gender <- renderPlot({
+    output$plot_comparison_gender <- highcharter::renderHighchart({
       home_stacked_comparison_gender(data_zentral, data_ausbildungsvertraege, r)
     })
 
     output$plot_mint_1 <- highcharter::renderHighchart({
-      home_rest_mint_verlauf(data_zentral, r)
+      home_rest_mint_verlauf(data_zentral_alt, r)
     })
 
     output$plot_comparison_mint <- highcharter::renderHighchart({
@@ -216,7 +239,7 @@ mod_home_start_server <- function(id, data_zentral, data_ausbildungsvertraege ,r
     })
 
     output$plot_pie_mint_gender <- renderUI({
-      home_einstieg_pie_gender(data_zentral, data_ausbildungsvertraege, r)
+      home_einstieg_pie_gender(data_zentral_alt, data_ausbildungsvertraege, r)
     })
 
 

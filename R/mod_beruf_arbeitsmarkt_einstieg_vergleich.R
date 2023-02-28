@@ -10,14 +10,14 @@
 mod_beruf_arbeitsmarkt_einstieg_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Jahres:"),
-    shinyWidgets::sliderTextInput(
-      inputId = ns("date_arbeitsmarkt_einstieg_vergleich"),
-      label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020"),
-      selected = "2020"
-    )
+    # p("Auswahl des Jahres:"),
+    # shinyWidgets::sliderTextInput(
+    #   inputId = ns("date_arbeitsmarkt_einstieg_vergleich"),
+    #   label = NULL,
+    #   choices = c("2013", "2014", "2015", "2016", "2017",
+    #               "2018","2019", "2020", "2021"),
+    #   selected = "2021"
+    # )
   )
 }
 
@@ -27,9 +27,9 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_ui <- function(id){
 mod_beruf_arbeitsmarkt_einstieg_vergleich_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$date_arbeitsmarkt_einstieg_vergleich, {
-      r$date_arbeitsmarkt_einstieg_vergleich <- input$date_arbeitsmarkt_einstieg_vergleich
-    })
+    # observeEvent(input$date_arbeitsmarkt_einstieg_vergleich, {
+    #   r$date_arbeitsmarkt_einstieg_vergleich <- input$date_arbeitsmarkt_einstieg_vergleich
+   # })
 
   })
 }
