@@ -34,7 +34,7 @@ mod_home_start_ui <- function(id){
         p(style = "text-align: justify; font-size = 16px",
            "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
-             mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")
+             mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene."),
 
 
 
