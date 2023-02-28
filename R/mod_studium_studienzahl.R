@@ -144,7 +144,7 @@ mod_studium_studienzahl_ui <- function(id){
                              )
                     ),
 
-                    tabPanel("Vergleich Anteil MINT nach Bundesländer im Zeitverlauf)", br(),
+                    tabPanel("Vergleich Anteil MINT nach Bundesländer im Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -264,7 +264,7 @@ mod_studium_studienzahl_ui <- function(id){
                           "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."))
                     ),
 
-                    tabPanel("Karte", br(),
+                    tabPanel("Vergleich Fächer (Karte)", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -297,7 +297,7 @@ mod_studium_studienzahl_ui <- function(id){
                    #           )
                    #  ),
 
-                    tabPanel("Überblick (Bundesländer)", br(),
+                    tabPanel("Vergleich nach Bundesländern", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -339,7 +339,7 @@ mod_studium_studienzahl_ui <- function(id){
                                htmlOutput(ns("plot_einstieg_pie_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
                     ),
 
-                    tabPanel("Zeitverlauf", br(),
+                    tabPanel("Anteil Frauen im Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -352,7 +352,7 @@ mod_studium_studienzahl_ui <- function(id){
 
                   ),
 
-                  tabPanel("Überblick", br(),
+                  tabPanel("Anteil Frauen nach Bundesländern", br(),
 
                            shiny::sidebarPanel(
                              width = 3,
