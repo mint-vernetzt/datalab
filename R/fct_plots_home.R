@@ -108,7 +108,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c( "#efe8e6", "#b16fab")) %>%
-        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2021"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1, " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -145,7 +145,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-        highcharter::hc_title(text = paste0("", indikator_choice_1[1], " (2020)"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -160,7 +160,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-        highcharter::hc_title(text = paste0("", indikator_choice_1[2], " (2020)"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1[2], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -204,7 +204,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-        highcharter::hc_title(text = paste0("", indikator_choice_1[1], " (2020)"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -219,7 +219,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-        highcharter::hc_title(text = paste0("", indikator_choice_1[2], " (2020)"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1[2], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -233,7 +233,7 @@ home_einstieg_pie <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-        highcharter::hc_title(text = paste0("", indikator_choice_1[3], " (2020)"),
+        highcharter::hc_title(text = paste0("", indikator_choice_1[3], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1610,7 +1610,7 @@ home_rest_mint_verlauf <- function(df,r) {
 
   dfk2_fn$proportion <- round_preserve_sum(as.numeric(dfk2_fn$proportion),0)
 
-  dfk2_fn <- dfk2_fn[with(dfk2_fn, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+  dfk2_fn <- dfk2_fn[with(dfk2_fn, order(region, fachbereich, jahr, decreasing = FALSE)), ]
 
   #here only MINT
   dft <- dfk2_fn %>% dplyr::filter(fachbereich == "MINT")

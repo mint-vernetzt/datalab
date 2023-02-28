@@ -72,7 +72,7 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                   "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt"
       ),
       selected = c(
-                   "Informatik"),
+                   "Informatik", "MINT"),
       multiple = TRUE,
       options =  list(
         "max-options" = 2,

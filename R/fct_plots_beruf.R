@@ -1212,7 +1212,7 @@ arbeitsmarkt_bl_gender_vergleich <- function(df, r) {
 #' @noRd
 
 arbeitsmarkt_bl <- function(df,r) {
-
+browser()
   df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
 
   fach_choice <-r$pick_i
@@ -1238,6 +1238,7 @@ arbeitsmarkt_bl <- function(df,r) {
                   "Technik (gesamt)"= `Technik (gesamt)`/Alle)%>%
     dplyr::select(-Alle)%>%
     tidyr::pivot_longer(c(7:15), values_to="proportion", names_to="fachbereich")%>%
+    dplyr::mutate(proportion = round(proportion * 100,))%>%
     dplyr::filter(geschlecht=="Gesamt")
 
 
@@ -2855,7 +2856,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
   plot_employed_mint <- highcharter::hchart(df_employed_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion_gesamt)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("MINT-Berufe (Beschäftigung)",br(), timerange),
+    highcharter::hc_title(text = paste0("MINT-Berufe (Beschäftigte)",br(), timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
