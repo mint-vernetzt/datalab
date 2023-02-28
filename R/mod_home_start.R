@@ -48,7 +48,7 @@ mod_home_start_ui <- function(id){
             ,
 
         # p(style = "text-align: justify; font-size = 16px",
-        #   span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis, 2021, Bundesagentur für Arbeit, 2021, KMK, 2021, alle auf Anfrage, eigene Berechnungen."
+        #   span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")), "Destatis,2022, Bundesagentur für Arbeit,2022, KMK,2022, alle auf Anfrage, eigene Berechnungen."
         #        )),
         # p(style = "text-align: justify; font-size = 16px",
         #   span(tags$b(span("Methodische Hinweise:", style = "color:#b16fab"))),
@@ -114,7 +114,7 @@ mod_home_start_ui <- function(id){
                       shiny::mainPanel(
                         width = 9,
                         htmlOutput(ns("plot_mint_rest_einstieg_1"))
-                        ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
+                        ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
                             ),
                     tabPanel("Zeitverlauf", br(),
                         shiny::sidebarPanel(
@@ -123,7 +123,7 @@ mod_home_start_ui <- function(id){
                         shiny::mainPanel(
                           width = 9,
                           highcharter::highchartOutput(ns("plot_mint_1"))
-                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
+                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
                              )
          #           ,
          #            tabPanel("Überblick", br(),
@@ -133,7 +133,7 @@ mod_home_start_ui <- function(id){
          #                     shiny::mainPanel(
          #                       width = 9,
          #                       highcharter::highchartOutput(ns("plot_comparison_mint"))
-         #                                      ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
+         #                                      ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen.")
          #
          # ))
          ))),
@@ -156,7 +156,7 @@ mod_home_start_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_pie_mint_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
+                               ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
                             )
                     # ,
                     # tabPanel("Zeitverlauf", br(),
@@ -166,7 +166,7 @@ mod_home_start_ui <- function(id){
                     #     shiny::mainPanel(
                     #       width = 9,
                     #       highcharter::highchartOutput(ns("plot_verlauf_mint"))
-                    #       ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
+                    #       ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen.")
                     #                     )
                     #         ),
                     # tabPanel("Überblick", br(),
@@ -176,7 +176,7 @@ mod_home_start_ui <- function(id){
                     #          shiny::mainPanel(
                     #            width = 9,
                     #            highcharter::highchartOutput(ns("plot_comparison_gender"))
-                    #                           ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen."))
+                    #                           ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK,2022, alle auf Anfrage, eigene Berechnungen."))
                     #
                     #          )
                     )))
