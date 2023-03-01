@@ -396,7 +396,10 @@ mod_schule_kurse_ui <- function(id){
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1")),
+                               mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1"), br(),
+                               p(style="font-size:12px;color:grey",
+                                 "Lesehilfe: Hier zeigen wir einen direkten Vergleich zwischen den Anteilen von Mädchen in Grundkursen und Leistungskursen.
+                                 Die Grafik kann wie ein Balkendigramm gelesen werden. Die Verbindungslinie zwischen den Punkten verdeutlicht lediglich die Diskrepanz zwischen den Werten.")),
                              shiny::mainPanel(
                                width = 9,
                                plotOutput(ns("plot_ranking_2"))
