@@ -165,7 +165,7 @@ mod_schule_kurse_ui <- function(id){
                                width = 3,
                                mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
                                p(style="font-size:12px;color:grey",
-                                 "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
+                                 "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
                                ),
                              shiny::mainPanel(
                                width = 9,
@@ -221,7 +221,7 @@ mod_schule_kurse_ui <- function(id){
                                mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1"),
                                p(style="font-size:12px;color:grey",
                                "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal
-                                 minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                                 verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                                p(style="font-size:12px;color:grey",
                                "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass die MINT-Fächer in Grundkursen den höchsten Anteil in Sachsen haben mit 29 % Prozent.
                                Bei den Leistungskursen ist der Anteil der MINT-Fächer in Sachsen-Anhalt mit 50 % am höchsten. Die Vergleiche zwischen den Bundesländern sind jedoch schwierig,
