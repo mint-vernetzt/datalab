@@ -255,7 +255,10 @@ mod_studium_studienzahl_ui <- function(id){
                         width = 3,
                         mod_studium_top_faecher_ui("mod_studium_top_faecher"),
                         p(style = "font-size:12px;color:grey",
-                          "Interpretationshilfe: In der ersten Einstellung sind die TOP-10-Fächer in Bayern in MINT bezogen auf den Frauen- bzw. Die Fächer mit dem höchsten Männeranteil in MINT sind dagegen Verkehrstechnik / Nautik mit 86 % Männern und Elektrotechnik und Informationstechnik mit 84 %.")
+                          "Interpretationshilfe: In der ersten Einstellung sind die TOP-10-Fächer in Bayern in MINT bezogen auf den Frauen- bzw.
+                          Männeranteil zu sehen. Die Fächer mit dem höchsten Frauenanteil in MINT sind Pharmazie (74 % Frauen) und Biologie (65 % Frauen).
+                          Die Fächer mit dem höchsten Männeranteil
+                          in MINT sind dagegen Verkehrstechnik / Nautik mit 86 % Männern und Elektrotechnik und Informationstechnik mit 84 %.")
                         ),
                       shiny::mainPanel(
                         width = 9,
@@ -270,7 +273,7 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 3,
                                mod_studium_studienzahl_bl_map_ui("mod_studium_studienzahl_bl_map"),
                                p(style="font-size:12px;color:grey",
-                                 "Hinweis zur Darstellung: Falls die Karten abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                                 "Hinweis zur Darstellung: Falls die Karten abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -328,7 +331,7 @@ mod_studium_studienzahl_ui <- function(id){
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_studium_studienzahl_einstieg_gender_ui("mod_studium_studienzahl_einstieg_gender_ui_1"),
                                p(style="font-size:12px;color:grey",
-                                 "Hinweis zur Darstellung: Falls die Karten abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                                 "Hinweis zur Darstellung: Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                                p(style="font-size:12px;color:grey",
                                "Interpretationshilfe: In der ersten interaktiven Grafik ist zu sehen,
                                 dass deutschlandweit 2021 der Anteil von Frauen unter den Studienanfänger:innen in MINT-Fächern 34 % ausmacht.
@@ -614,14 +617,14 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
 
 
     # downloader
-    output$download_data_box1 <- shiny::downloadHandler(
-      filename = function() {
-        paste("data_studium", "csv", sep = ".")
-      },
-      content = function(file){
-        write.csv(data_table_einstieg_react(), file)
-      }
-    )
+    # output$download_data_box1 <- shiny::downloadHandler(
+    #   filename = function() {
+    #     paste("data_studium", "csv", sep = ".")
+    #   },
+    #   content = function(file){
+    #     write.csv(data_table_einstieg_react(), file)
+    #   }
+    # )
 
   })
 }
