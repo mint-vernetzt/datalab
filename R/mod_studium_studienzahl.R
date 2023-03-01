@@ -617,14 +617,14 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
 
 
     # downloader
-    output$download_data_box1 <- shiny::downloadHandler(
-      filename = function() {
-        paste("data_studium", "csv", sep = ".")
-      },
-      content = function(file){
-        write.csv(data_table_einstieg_react(), file)
-      }
-    )
+    # output$download_data_box1 <- shiny::downloadHandler(
+    #   filename = function() {
+    #     paste("data_studium", "csv", sep = ".")
+    #   },
+    #   content = function(file){
+    #     write.csv(data_table_einstieg_react(), file)
+    #   }
+    # )
 
   })
 }
