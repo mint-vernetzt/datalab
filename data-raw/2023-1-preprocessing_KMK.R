@@ -136,7 +136,7 @@ data <- data %>%
     region== "HB" ~   "Bremen",
     region== "NW" ~   "Nordrhein-Westfalen",
     region== "HE" ~   "Hessen",
-    region== "RP" ~   "Rheinland-Pflaz",
+    region== "RP" ~   "Rheinland-Pfalz",
     region== "BW" ~   "Baden-Württemberg",
     region== "BY"  ~  "Bayern",
     region== "SL" ~  "Saarland",
@@ -240,7 +240,7 @@ kurse$wert <- round(kurse$wert)
 
 #kurse <- kurse %>% dplyr::filter(region != "Baden-Württemberg")
 
-#kurse[kurse$region == "Rheinland-Pflaz", "region"] <- "Rheinland-Pfalz"
+kurse[kurse$region == "Rheinland-Pflaz", "region"] <- "Rheinland-Pfalz"
 
 kurse[kurse$anzeige_geschlecht == "frauen", "anzeige_geschlecht"] <- "Frauen"
 kurse[kurse$anzeige_geschlecht == "gesamt", "anzeige_geschlecht"] <- "Gesamt"
