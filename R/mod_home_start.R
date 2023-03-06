@@ -74,17 +74,9 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
         width = 12,
-        p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von MINT-Fächern in der Schule? Wie hoch ist der Anteil von Studierenden, die MINT-Fächer belegen?", br(),
-          "Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?",
-          br(), br(),
+        p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von MINT-Fächern in der Schule? Wie hoch ist der Anteil von Studierenden, die MINT-Fächer belegen?
+          Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?"),
 
-          "Methodische Hinweise: Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
-                         eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
-                         nutzen wir die Kursbelegungszahlen der Schüler:innen.",
-          br(),br(),
-          "Die Rundung der berechneten Werte kann zu minimalen Abweichungen zwischen den Grafiken führen.",
-          br(), br(),
-         ),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Bereiche", br(),
                       shiny::sidebarPanel(
@@ -97,7 +89,14 @@ mod_home_start_ui <- function(id){
                       shiny::mainPanel(
                         width = 9,
                         htmlOutput(ns("plot_mint_rest_einstieg_1"))
-                        ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
+                        ,p(style="font-size:12px;color:grey",
+                           "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                        p(style="font-size:12px;color:grey",
+                        "Hinweise: Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
+                         eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
+                         nutzen wir die Kursbelegungszahlen der Schüler:innen.", br(),
+                        "Durch Rundungen der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen.")
+                        )
                             ),
                     tabPanel("Vergleich Bereiche im Zeitverlauf", br(),
                         shiny::sidebarPanel(
@@ -127,21 +126,25 @@ mod_home_start_ui <- function(id){
         p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von Mädchen in MINT-Leistungskursen?
           Wie hoch ist der Anteil von Frauen in MINT-Studienfächern? Wie hoch ist der Anteil von Frauen in MINT-Ausbildungsgängen?
           Wie hoch ist der Anteil von Frauen in MINT-Berufen?", br(),
-        "Zum Vergleich zeigen wir jeweils auch, wie hoch der Anteil von Frauen in den anderen, nicht-MINT-Fächern oder -Berufszweigen ist.",
-        br(), br(),
-        "Interpretationshilfe: Betrachtet man hier beispielsweise die Studierenden, sieht man, dass deutschlandweit im Jahr 2020 in MINT-Fächern 32 % der Studierenden
-        Frauen sind. Der Anteil an Frauen in anderen Studiengängen ist dagegen weitaus größer. In Deutschland im Jahr 2020 sind 61 % aller Studierenden in nicht-MINT-Fächern weiblich."),
+        "Zum Vergleich zeigen wir jeweils auch, wie hoch der Anteil von Frauen in den anderen, nicht-MINT-Fächern oder -Berufszweigen ist."),
+
         tabsetPanel(type = "tabs",
                     tabPanel("", br(),  # Verlgeich
                              shiny::sidebarPanel(
                                width = 3,
                                mod_home_start_einstieg_gender_ui("mod_home_start_einstieg_gender_ui_1"),
-                             p(style="font-size:12px;color:grey", "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
+                             p(style="font-size:12px;color:grey",
+                               "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                             p(style="font-size:12px;color:grey",
+                             "Interpretationshilfe: Betrachtet man hier beispielsweise die MINT-Beschäftigten, sieht man, dass deutschlandweit im Jahr 2021 17 % der in MINT-Beschäftigten
+                              Frauen sind. Der Anteil an Frauen in anderen Berufsgruppen ist dagegen weitaus größer (55 %).")
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               htmlOutput(ns("plot_pie_mint_gender"))
-                               ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
+                               htmlOutput(ns("plot_pie_mint_gender")),
+                               p(style="font-size:12px;color:grey",
+                                  "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen.")
+                               )
                             )
                     # ,
                     # tabPanel("Zeitverlauf", br(),
@@ -187,7 +190,7 @@ tags$footer(style="text-align: justify;background-color:white",
                 p(tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
                   tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
                   tags$a("Datenschutz", href="#shiny-tab-datenschutz", "data-toggle"="tab"),HTML('&nbsp;'),HTML('&nbsp;'),
-                  "Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
+                  "Copyright © 2023. Alle Rechte vorbehalten Stifterverband")),
 
             div(style="display: inline-block;position: relative;padding: 1em;",
 

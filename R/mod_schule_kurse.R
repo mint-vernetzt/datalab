@@ -165,7 +165,7 @@ mod_schule_kurse_ui <- function(id){
                                width = 3,
                                mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
                                p(style="font-size:12px;color:grey",
-                                 "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
+                                 "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
                                ),
                              shiny::mainPanel(
                                width = 9,
@@ -221,7 +221,7 @@ mod_schule_kurse_ui <- function(id){
                                mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1"),
                                p(style="font-size:12px;color:grey",
                                "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal
-                                 minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                                 verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                                p(style="font-size:12px;color:grey",
                                "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass die MINT-Fächer in Grundkursen den höchsten Anteil in Sachsen haben mit 29 % Prozent.
                                Bei den Leistungskursen ist der Anteil der MINT-Fächer in Sachsen-Anhalt mit 50 % am höchsten. Die Vergleiche zwischen den Bundesländern sind jedoch schwierig,
@@ -396,7 +396,10 @@ mod_schule_kurse_ui <- function(id){
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1")),
+                               mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1"), br(),
+                               p(style="font-size:12px;color:grey",
+                                 "Lesehilfe: Hier zeigen wir einen direkten Vergleich zwischen den Anteilen von Mädchen in Grundkursen und Leistungskursen.
+                                 Die Grafik kann wie ein Balkendigramm gelesen werden. Die Verbindungslinie zwischen den Punkten verdeutlicht lediglich die Diskrepanz zwischen den Werten.")),
                              shiny::mainPanel(
                                width = 9,
                                plotOutput(ns("plot_ranking_2"))
@@ -427,7 +430,7 @@ mod_schule_kurse_ui <- function(id){
                     p(tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
                       tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
                       tags$a("Datenschutz", href="#shiny-tab-datenschutz", "data-toggle"="tab"),HTML('&nbsp;'),HTML('&nbsp;'),
-                      "Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
+                      "Copyright © 2023. Alle Rechte vorbehalten Stifterverband")),
 
                 div(style="display: inline-block;position: relative;padding: 1em;",
 

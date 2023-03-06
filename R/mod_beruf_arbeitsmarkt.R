@@ -32,7 +32,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           p(style = "text-align: justify; font-size = 16px",
             "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
            Dabei unterscheiden wir zwischen Auszubildenden und (sozialversicherungspflichtigen) Beschäftigten.  Die Kategorisierung in MINT entspricht der Klassifikation durch die Bundesagentur für Arbeit.
-            \"Hinweise & Datenquellen u\".")
+            'Hinweise & Datenquellen'.")
         ),
 
         shinydashboard::box(
@@ -46,6 +46,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
             )),
           p(style = "text-align: justify; font-size = 16px",
             span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
+            )),
+          p(style = "text-align: justify; font-size = 16px",
+            span(tags$b(span("#Regionaler MINT-Steckbrief:")),"Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen."
             ))),
 
         shinydashboard::box(
@@ -150,7 +153,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_bl_gender_ui("mod_beruf_arbeitsmarkt_bl_gender_ui_1"),
-                               p("Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                               p("Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -249,7 +252,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                width = 3,
                                mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1"),
                                p(style="font-size:12px;color:grey",
-                                 "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
+                                 "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -302,7 +305,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_gender_ui("mod_beruf_arbeitsmarkt_einstieg_gender_ui_1"),
                                p(style="font-size:12px;color:grey",
-                                 "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                                 "Hinweis zur Darstellung: Falls die Grafik abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                                p(style="font-size:12px;color:grey",
                                "Interpretationshilfe: Der Anteil von Frauen an MINT-Auszubildenden in Deutschland beträgt 13 % im Jahr 2021.
                               Bei den MINT-Beschäftigten beträgt dieser Anteil 17 %. Dagegen machen Frauen in anderen, Nicht-MINT-Berufen mehr als die Hälfte aller
@@ -485,7 +488,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           p(tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
           tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
           tags$a("Datenschutz", href="#shiny-tab-datenschutz", "data-toggle"="tab"),HTML('&nbsp;'),HTML('&nbsp;'),
-          "Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
+          "Copyright © 2023. Alle Rechte vorbehalten Stifterverband")),
 
       div(style="display: inline-block;position: relative;padding: 1em;",
 

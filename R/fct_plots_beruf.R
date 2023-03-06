@@ -3309,16 +3309,40 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
 
   df1_map <- df1_list[[1]]
   titel_gesamt1 <- df1_list[[2]]
-  titel_sub1 <- df1_list[[3]]
-  titel_sub1_2 <- df1_list[[4]]
+  titel_gesamt1_2 <- df1_list[[3]]
+  titel_sub1 <- df1_list[[4]]
+  titel_sub1_2 <- df1_list[[5]]
+
+# titel_gesamt1_2 <- ifelse(titel_sub1 %in% c("ausländischer Beschäftigter",
+#                                           "Beschäftigter unter 25 Jahren",
+#                                           "Beschäftigter zwischen 25 und 55 Jahren",
+#                                           "Beschäftigter über 55 Jahren"), paste0("Beschäftigten in ", domain), "Beschäftigten")
+#
+#
+# titel_gesamt1_2 <- ifelse(titel_sub1 %in% c("ausländischer Auszubildender",
+#                                             "Auszubildender im 1. Lehrjahr",
+#                                             "weiblicher Auszubildender"), paste0("Auszubildenden in ", domain_1), "Auszubildenden")
+#
 
   # calculate comparison map 2
   df2_list <- calculate_landkreis(df, states, category_2, domain_2, indikator_azubi_2, indikator_besch_2)
 
   df2_map <- df2_list[[1]]
   titel_gesamt2 <- df2_list[[2]]
-  titel_sub2 <- df2_list[[3]]
-  titel_sub2_2 <- df2_list[[4]]
+  titel_gesamt2_2 <- df2_list[[3]]
+  titel_sub2 <- df2_list[[4]]
+  titel_sub2_2 <- df2_list[[5]]
+
+# titel_gesamt_2_2 <- ifelse(titel_sub %in% c("ausländischer Beschäftigter",
+#                                           "Beschäftigter unter 25 Jahren",
+#                                           "Beschäftigter zwischen 25 und 55 Jahren",
+#                                           "Beschäftigter über 55 Jahren"), paste0("Beschäftigten in ", domain), "Beschäftigten")
+#
+
+  # titel_gesamt2_2 <- ifelse(titel_sub2 %in% c("ausländischer Auszubildender",
+  #                                             "Auszubildender im 1. Lehrjahr",
+  #                                             "weiblicher Auszubildender"), paste0("Auszubildenden in ", domain_2), "Auszubildenden")
+
 
   # adjust landkreis_nummer for correct mapping
   df1_map <- df1_map %>% dplyr::mutate(
@@ -3334,7 +3358,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     value = "prob",
     joinBy = c("hc-key","landkreis_nummer"),
     borderColor = "#FAFAFA",
-    name = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_sub1_2, " in ", states, " (2021)"),
+    name = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (2021)"),
     borderWidth = 0.1,
     nullColor = "#A9A9A9",
     tooltip = list(
@@ -3344,7 +3368,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
   ) %>%
     highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_sub1_2, " in ", states, " (2021)"),
+      text = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (2021)"),
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -3370,7 +3394,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     value = "prob",
     joinBy = c("hc-key", "landkreis_nummer"),
     borderColor = "#FAFAFA",
-    name = paste0("Anteil von ", titel_sub2_2, titel_gesamt2, titel_sub2_2, " in ", states, " (2021)"),
+    name = paste0("Anteil von ", titel_sub2_2, titel_gesamt2, titel_gesamt2_2, " in ", states, " (2021)"),
     borderWidth = 0.1,
     nullColor = "#A9A9A9",
     tooltip = list(
@@ -3380,7 +3404,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
   ) %>%
     highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Anteil von ", titel_sub2_2, titel_gesamt2, titel_sub2_2, " in ", states, " (2021)"),
+      text = paste0("Anteil von ", titel_sub2_2, titel_gesamt2, titel_gesamt2_2, " in ", states, " (2021)"),
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -3434,8 +3458,9 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
 
   df_compare <- df_compare_list[[1]]
   titel_gesamt_1 <- df_compare_list[[2]]
-  titel_sub <- df_compare_list[[3]]
-  titel_sub2 <- df_compare_list[[4]]
+  titel_gesamt_2 <- df_compare_list[[3]]
+  titel_sub <- df_compare_list[[4]]
+  titel_sub2 <- df_compare_list[[5]]
 
     # titel_gesamt_2 <- df_compare_list[[3]]
   # titel_sub <- df_compare_list[[4]]
@@ -3448,7 +3473,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
 
     legende <- paste0("{point.landkreis} <br> Anteil: {point.y} %")
     yAxis <- "{value}%"
-    titel <- paste0("Anteil von ", titel_sub2, titel_gesamt_1, titel_sub2, " in ", states, " (2021)")
+    titel <- paste0("Anteil von ", titel_sub2, titel_gesamt_1, titel_gesamt_2, " in ", states, " (2021)")
 
   } else {
     df_compare <- df_compare %>%
