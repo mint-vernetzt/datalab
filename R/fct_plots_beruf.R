@@ -1359,7 +1359,7 @@ arbeitsmarkt_bl <- function(df,r) {
 #' @noRd
 
 arbeitsmarkt_bl_verlauf <- function(df,r) {
-
+browser()
 
   #fach_choice <- r$pick_i
 
@@ -2840,7 +2840,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
   plot_trainee_andere <- highcharter::hchart(df_trainee_andere, size = 150, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion_gesamt)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("Nicht-MINT-Berufen (Auszubildende)", br(), timerange),
+    highcharter::hc_title(text = paste0("Nicht-MINT-Berufe (Auszubildende)", br(), timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%

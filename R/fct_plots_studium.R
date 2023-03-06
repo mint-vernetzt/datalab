@@ -372,7 +372,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
           pointFormat=paste('Anteil: {point.percentage:.0f}%'))
       %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0(genl[1], " in ", geny),
+        highcharter::hc_title(text = paste0("MINT-",genl[1], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -403,7 +403,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text=paste0(genl[1], " in ", geny),
+        highcharter::hc_title(text=paste0("MINT-", genl[1], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -419,7 +419,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%'))%>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text=paste0(genl[2], " in ", geny),
+        highcharter::hc_title(text=paste0("MINT-",genl[2], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -452,7 +452,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text=paste0(genl[1], " in ", geny),
+        highcharter::hc_title(text=paste0("MINT-",genl[1], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -470,7 +470,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text=paste0(genl[2], " in ", geny),
+        highcharter::hc_title(text=paste0("MINT-",genl[2], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -487,7 +487,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c( "#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text=paste0(genl[3], " in ", geny),
+        highcharter::hc_title(text=paste0("MINT-",genl[3], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
