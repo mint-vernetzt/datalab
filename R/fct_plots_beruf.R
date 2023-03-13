@@ -1219,9 +1219,9 @@ arbeitsmarkt_bl <- function(df,r) {
 
 
 
-  dfg <<- df
+  dfg <- df
 
-  dfk <<- dfg%>%
+  dfk <- dfg%>%
     dplyr::select(-bereich)%>%
     dplyr::group_by(kategorie, indikator, fachbereich, jahr, anforderung, geschlecht, bundesland)%>%
       dplyr::summarise(wert = sum(wert))%>%
@@ -1264,8 +1264,8 @@ arbeitsmarkt_bl <- function(df,r) {
   dfk <- dfk %>%
     dplyr::filter(fachbereich == fach_choice)
 
-  df_employed <<- dfk %>% dplyr::filter(indikator == "Beschäftigte")
-  df_trainee <<- dfk %>% dplyr::filter(indikator == "Auszubildende")
+  df_employed <- dfk %>% dplyr::filter(indikator == "Beschäftigte")
+  df_trainee <- dfk %>% dplyr::filter(indikator == "Auszubildende")
 
   # if (anforderung == "Gesamt"){
   #
@@ -3526,15 +3526,16 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/jpeg' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+  #%>%
+    # highcharter::hc_exporting(enabled = TRUE,
+    #                           buttons = list(contextButton = list(
+    #                             symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #                             onclick = highcharter::JS("function () {
+    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
+    #                             align = 'right',
+    #                             verticalAlign = 'bottom',
+    #                             theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 }
 
