@@ -44,6 +44,9 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
       options =  list(
         "max-options" = 3,
         "max-options-text" = "Maximal 3 Indikatoren auswählen")
+      # options = list(`actions-box` = TRUE,
+      #                `deselect-all-text` = "Alle abwählen",
+      #                `select-all-text` = "Alle auswählen")
     )
     # p("Auswahl der Hochschulform:"),
     # conditionalPanel(condition = "input.nurLehramt_studierende_einstieg_verlauf_gender == false",
