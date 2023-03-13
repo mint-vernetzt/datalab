@@ -381,8 +381,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                width = 9,
                                #highcharter::highchartOutput(ns("plot_arbeitsmarkt_detail_vergleich"))
                                highcharter::highchartOutput(ns("plot_arbeitsmarkt_detail_vergleich"), height = "1600px")
-                             ),
-                             p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
+                             )
+                             # ,
+                             # p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                     ),
                     # Tabelle noch nicht fertig gelayoutet
                     # tabPanel("Tabelle", br(),
