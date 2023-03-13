@@ -1359,7 +1359,7 @@ arbeitsmarkt_bl <- function(df,r) {
 #' @noRd
 
 arbeitsmarkt_bl_verlauf <- function(df,r) {
-browser()
+
 
   #fach_choice <- r$pick_i
 
@@ -3224,7 +3224,11 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
     )) %>%
     # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_colors( "#b16fab") %>%
+    #highcharter::hc_colors( "#b16fab") %>%
+    highcharter::hc_plotOptions(bar = list(
+      colorByPoint = TRUE,
+      colors = ifelse(df$fachbereich %in% c("Alle Berufsfelder außer MINT (gesamt)","MINT-Berufsfelder (gesamt)"), "#b16fab", "#d0a9cd")
+    )) %>%
     highcharter::hc_title(text = paste0( "Überblick über die Berufsfelder von ", title_help,
                                          br(), "in ",state, " (2021)",
                                          "<br><br><br>"),
