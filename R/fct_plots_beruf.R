@@ -3527,15 +3527,17 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-  #%>%
-    # highcharter::hc_exporting(enabled = TRUE,
-    #                           buttons = list(contextButton = list(
-    #                             symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-    #                             onclick = highcharter::JS("function () {
-    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
-    #                             align = 'right',
-    #                             verticalAlign = 'bottom',
-    #                             theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+  %>%
+    highcharter::hc_exporting(enabled = TRUE, #button erscheint
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)', #Bild für Download Symbol
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/jpeg' }); }"), #ruft Java-Skript fkt zum Export auf
+                                                              # mögliche Anpassungen hier drin, z. B. Größe, Name des Downloads, Hintergrund-Bilder
+                                                              # font, Dateiname, subtitle angeben mit Quelle
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 }
 
