@@ -91,8 +91,8 @@ mod_home_start_ui <- function(id){
                         width = 3,
                         shinyBS::bsPopover(id="q1", title = "Überschrift, kann auch leer bleiben und dadurch ausgeblendet",
                                            content = "Inhalt<br><br><br><i>auch HTML tags möglich</i>",
-                                           trigger = "hover"),
-                        tags$a(icon("question-circle"), id="q1"),
+                                           trigger = "hover"), #das ist in Box
+                        tags$a(icon("question-circle"), id="q1"), # das ist was man in App sieht
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1")),
                       shiny::mainPanel(
                         width = 9,
