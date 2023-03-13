@@ -171,7 +171,16 @@ mod_schule_kurse_ui <- function(id){
                                width = 9,
                                htmlOutput(ns("plot_map_kurse_gender"))
                                ,
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="q1", title = "",
+                                                  content = "Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor",
+                                                  trigger = "hover"), #das ist in Box
+                               tags$a(p(style="font-size:12px;color:grey","Darum ist Baden-Württemberg ausgegraut"), id="q1"), # das ist was man in App sieht
+                               shinyBS::bsPopover(id="q2", title = "",
+                                                  content = "Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor",
+                                                  trigger = "hover"), #das ist in Box
+                               tags$a("Darum ist Baden-Württemberg ausgegraut", id="q2"), # das ist was man in App sieht
+
+                               p(style="font-size:12px;color:grey",br(), "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
                                p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
                                  sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
                                  Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
