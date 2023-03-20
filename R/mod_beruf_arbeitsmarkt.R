@@ -41,7 +41,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1",
             span(tags$b(span("Berufswahl MINT:")))),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten in MINT?"
             ),
-          p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump2",
+          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2",
             span(tags$b(span("M-I-N-T:")))),"Blick auf die einzelnen Fächer und Fachbereiche."
 
             ),
