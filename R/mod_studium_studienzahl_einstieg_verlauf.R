@@ -41,6 +41,9 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
       options =  list(
         "max-options" = 3,
         "max-options-text" = "Maximal 3 Indikatoren auswählen")
+      # options = list(`actions-box` = TRUE,
+      #                `deselect-all-text` = "Alle abwählen",
+      #                `select-all-text` = "Alle auswählen")
     )
   )
 

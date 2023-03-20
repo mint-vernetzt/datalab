@@ -715,7 +715,11 @@ kurse_mint_comparison <- function(df,r) {
     highcharter::hc_xAxis(title = list(text = "")) %>%
     #highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     #highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_colors("#b16fab") %>%
+    #highcharter::hc_colors("#b16fab") %>%
+    highcharter::hc_plotOptions(bar = list(
+      colorByPoint = TRUE,
+      colors = ifelse(df$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (aggregiert)"), "#b16fab", "#d0a9cd")
+    )) %>%
     highcharter::hc_title(text = paste0( "Anteil einzelner Fächer in ",state, " (", indikator_comparison, ")",
                                                                         br(), timerange,
                                                                           "<br><br><br>"),

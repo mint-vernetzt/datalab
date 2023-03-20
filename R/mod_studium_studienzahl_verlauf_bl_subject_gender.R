@@ -16,7 +16,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       inputId = ns("choice_V_y"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017", "2018","2019", "2020", "2021"),
-      selected = c("2015","2021")
+      selected = c("2013","2014")
     ),
     p("Auswahl des Indikators:"),
     shinyWidgets::pickerInput(
@@ -40,6 +40,9 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       options =  list(
         "max-options" = 3,
         "max-options-text" = "Maximal 3 Indikatoren auswählen")
+      # options = list(`actions-box` = TRUE,
+      #                `deselect-all-text` = "Alle abwählen",
+      #                `select-all-text` = "Alle auswählen")
     ),
     p("Auswahl des Fachs:"),
     shinyWidgets::pickerInput(

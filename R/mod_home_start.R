@@ -31,7 +31,7 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Auf dieser Seite",
         width = 3,
-        p(style = "text-align: justify; font-size = 16px",
+        p(style = "text-align: left; font-size = 16px",
            "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")),
@@ -41,18 +41,19 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Übersicht Fragestellungen",
         width = 3,
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT:")),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
-        )),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?")
-        )
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1",
+        span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
         ),
+
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2",
+        span(tags$b(span("Frauen in MINT:")))),"Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen"))
+
+        ,
 
       shinydashboard::box(
         title = "Datenquellen",
         width = 3,
-        p(style = "text-align: justify; font-size = 16px",
+        p(style = "text-align: left; font-size = 16px",
           "Studierendenzahlen: Destatis 2022, auf Anfrage"),
          p("Schüler:innenzahlen: KMK 2022, auf Anfrage"),
           p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2022, auf Anfrage")
@@ -61,18 +62,18 @@ mod_home_start_ui <- function(id){
    shinydashboard::box(
      title = "Fragen oder Feedback?",
      width = 3,
-     p(style = "text-align: justify; font-size = 16px",
+     p(style = "text-align: left; font-size = 16px",
        "Sind alle Zahlen und Grafiken verständlich?", br(),
        "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
             tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-       ))
-      ),
+       )))
+      ,
 
    # Box 1
 
-    fluidRow(
+    fluidRow(id="jump1",
       shinydashboard::box(
-        title = "#MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
+        title = "Fächerwahl MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
         width = 12,
         p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von MINT-Fächern in der Schule? Wie hoch ist der Anteil von Studierenden, die MINT-Fächer belegen?
           Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?"),
@@ -119,9 +120,9 @@ mod_home_start_ui <- function(id){
          #
          # ))
          ))),
-    fluidRow(
+    fluidRow(id="jump2",
       shinydashboard::box(
-        title = "#Frauen in MINT: Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?",
+        title = "Frauen in MINT: Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen",
         width = 12,
         p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von Mädchen in MINT-Leistungskursen?
           Wie hoch ist der Anteil von Frauen in MINT-Studienfächern? Wie hoch ist der Anteil von Frauen in MINT-Ausbildungsgängen?

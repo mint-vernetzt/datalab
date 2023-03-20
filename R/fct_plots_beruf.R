@@ -1219,9 +1219,9 @@ arbeitsmarkt_bl <- function(df,r) {
 
 
 
-  dfg <<- df
+  dfg <- df
 
-  dfk <<- dfg%>%
+  dfk <- dfg%>%
     dplyr::select(-bereich)%>%
     dplyr::group_by(kategorie, indikator, fachbereich, jahr, anforderung, geschlecht, bundesland)%>%
       dplyr::summarise(wert = sum(wert))%>%
@@ -1264,8 +1264,8 @@ arbeitsmarkt_bl <- function(df,r) {
   dfk <- dfk %>%
     dplyr::filter(fachbereich == fach_choice)
 
-  df_employed <<- dfk %>% dplyr::filter(indikator == "Beschäftigte")
-  df_trainee <<- dfk %>% dplyr::filter(indikator == "Auszubildende")
+  df_employed <- dfk %>% dplyr::filter(indikator == "Beschäftigte")
+  df_trainee <- dfk %>% dplyr::filter(indikator == "Auszubildende")
 
   # if (anforderung == "Gesamt"){
   #
@@ -2840,7 +2840,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
   plot_trainee_andere <- highcharter::hchart(df_trainee_andere, size = 150, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion_gesamt)) %>%
     highcharter::hc_tooltip(
       pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-    highcharter::hc_title(text = paste0("Nicht-MINT-Berufen (Auszubildende)", br(), timerange),
+    highcharter::hc_title(text = paste0("Nicht-MINT-Berufe (Auszubildende)", br(), timerange),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3224,7 +3224,11 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
     )) %>%
     # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_colors( "#b16fab") %>%
+    #highcharter::hc_colors( "#b16fab") %>%
+    highcharter::hc_plotOptions(bar = list(
+      colorByPoint = TRUE,
+      colors = ifelse(df$fachbereich %in% c("Alle Berufsfelder außer MINT (gesamt)","MINT-Berufsfelder (gesamt)"), "#b16fab", "#d0a9cd")
+    )) %>%
     highcharter::hc_title(text = paste0( "Überblick über die Berufsfelder von ", title_help,
                                          br(), "in ",state, " (2021)",
                                          "<br><br><br>"),
@@ -3507,12 +3511,12 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
   höhe <- c(10, 20, 3, 6, 3, 3, 8, 5, 11, 11, 10, 4, 6, 6, 6, 7)
   plt.add <- data.frame(länder, höhe)
 
-  plt.add$subtitle <- "Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen."
+ # plt.add$subtitle <- "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen."
 
   # create plot
   highcharter::hchart(df_compare, 'bar', highcharter::hcaes(y = display_value, x = landkreis)) %>%
     highcharter::hc_tooltip(pointFormat = legende) %>%
-    highcharter::hc_yAxis(title = list(text = paste0(br(), br(),"Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.") , align="left"), labels = list(format = yAxis)) %>%
+    highcharter::hc_yAxis(title = list(text = paste0(br(), br(),"Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.") , align="left"), labels = list(format = yAxis)) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(
       colorByPoint = TRUE,
@@ -3526,15 +3530,18 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/jpeg' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+  # %>%
+  #   highcharter::hc_exporting(enabled = TRUE, #button erscheint
+  #                             buttons = list(contextButton = list(
+  #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)', #Bild für Download Symbol
+  #                               onclick = highcharter::JS("function () {
+  #                                                             this.exportChart({ type: 'image/jpeg' }); }"), #ruft Java-Skript fkt zum Export auf
+  #                                                             # mögliche Anpassungen hier drin, z. B. Größe, Name des Downloads, Hintergrund-Bilder
+  #                                                             # font, Dateiname, subtitle angeben mit Quelle
+  #                               align = 'right',
+  #                               verticalAlign = 'bottom',
+  #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 }
 

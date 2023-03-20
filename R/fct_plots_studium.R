@@ -372,7 +372,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
           pointFormat=paste('Anteil: {point.percentage:.0f}%'))
       %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0(genl[1], " in ", geny),
+        highcharter::hc_title(text = paste0("MINT-",genl[1], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -403,7 +403,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text=paste0(genl[1], " in ", geny),
+        highcharter::hc_title(text=paste0("MINT-", genl[1], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -419,7 +419,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%'))%>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text=paste0(genl[2], " in ", geny),
+        highcharter::hc_title(text=paste0("MINT-",genl[2], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -452,7 +452,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text=paste0(genl[1], " in ", geny),
+        highcharter::hc_title(text=paste0("MINT-",genl[1], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -470,7 +470,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text=paste0(genl[2], " in ", geny),
+        highcharter::hc_title(text=paste0("MINT-",genl[2], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -487,7 +487,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
         highcharter::hc_colors(c( "#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text=paste0(genl[3], " in ", geny),
+        highcharter::hc_title(text=paste0("MINT-",genl[3], " in ", geny),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3550,6 +3550,8 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
     dplyr::filter(region==states)%>%
     dplyr::filter(fach==subjects_select)
 
+
+
   dfgg <- dfgg[with(dfgg, order( jahr, decreasing = FALSE)), ]
 
 
@@ -3563,12 +3565,20 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
     dfggi <- dfgg%>%
       dplyr::filter(label==v_lab)
 
+    dfggi <- dfggi %>%
+      dplyr::mutate(jahr= as.numeric(.$jahr))
+
+    dfggi <- dfggi[with(dfggi, order( jahr, decreasing = F)), ]
+
+    dfggi <- dfggi %>%
+      dplyr::mutate(jahr= as.character(.$jahr))
+
 
 
   highcharter::hchart(dfggi, 'line', highcharter::hcaes(x = jahr, y = proportion,group=label))%>%
     highcharter::hc_tooltip(pointFormat = "Anteil {point.label} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Frauen: Studienfachwahl von ", subjects_select, " in ", states),
                           margin = 45,
@@ -3591,13 +3601,21 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
     dfggk <- dfgg%>%
       dplyr::filter(label==v_lab[1]|label==v_lab[2])
 
+    dfggk <- dfggk %>%
+      dplyr::mutate(jahr= as.numeric(.$jahr))
+
+    dfggk <- dfggk[with(dfggk, order( jahr, decreasing = T)), ]
+
+    dfggk <- dfggk %>%
+      dplyr::mutate(jahr= as.character(.$jahr))
+
 
 
 
     highcharter::hchart(dfggk, 'line', highcharter::hcaes(x = jahr, y = proportion,group=label))%>%
       highcharter::hc_tooltip(pointFormat = "Anteil {point.label} <br> Wert: {point.y} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
       highcharter::hc_title(text = paste0("Frauen: Studienfachwahl von ", subjects_select, " in ", states),
                             margin = 45,
@@ -3629,14 +3647,22 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
     dfggü <- dfgg%>%
       dplyr::filter(label==v_lab[1]|label==v_lab[2]|label==v_lab[3])
 
+    dfggü <- dfggü %>%
+      dplyr::mutate(jahr= as.numeric(.$jahr))
+
+    dfggü <- dfggü[with(dfggü, order( jahr, decreasing = T)), ]
+
+    dfggü <- dfggü %>%
+      dplyr::mutate(jahr= as.character(.$jahr))
+
 
 
 
 
     highcharter::hchart(dfggü, 'line', highcharter::hcaes(x = jahr, y = proportion, group=label))%>%
       highcharter::hc_tooltip(pointFormat = "Anteil {point.label} <br> Wert: {point.y} %") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_yAxis(title = list(text = ""),  labels = list(format = "{value}%")) %>%
+      highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
       highcharter::hc_title(text = paste0("Frauen: Studienfachwahl von ", subjects_select, " in ", states),
                             margin = 45,
@@ -4143,11 +4169,11 @@ studierende_map <- function(df,r) {
 
 
   # load UI inputs from reactive value
-  timerange <<- r$map_y
+  timerange <- r$map_y
 
-  label_m <<- r$map_l
+  label_m <- r$map_l
 
-  fach_m <<- r$map_f
+  fach_m <- r$map_f
 
 
 
@@ -4183,7 +4209,7 @@ studierende_map <- function(df,r) {
     tidyr::pivot_longer(c(6:ncol(.)), names_to= "fach", values_to="wert")
 
 
-  df3 <- dplyr::bind_rows(df2a, df2b) %>%
+  df3 <<- dplyr::bind_rows(df2a, df2b) %>%
     dplyr::select(-mint_select)%>%
     tidyr::pivot_wider(names_from = fach, values_from=wert)%>%
     dplyr::mutate(total = `MINT` + `Nicht MINT`,
@@ -5672,15 +5698,16 @@ df <- df4
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/jpeg' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    # %>%
+    #   highcharter::hc_exporting(enabled = TRUE,
+    #                             buttons = list(contextButton = list(
+    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #                               onclick = highcharter::JS("function () {
+    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
+    #                               align = 'right',
+    #                               verticalAlign = 'bottom',
+    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
     # Create male plot
@@ -5701,15 +5728,16 @@ df <- df4
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/jpeg' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    # %>%
+    #   highcharter::hc_exporting(enabled = TRUE,
+    #                             buttons = list(contextButton = list(
+    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #                               onclick = highcharter::JS("function () {
+    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
+    #                               align = 'right',
+    #                               verticalAlign = 'bottom',
+    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
   } else if(abs_rel == "Absolut"){
 
@@ -5743,15 +5771,16 @@ df <- df4
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/jpeg' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    # %>%
+    #   highcharter::hc_exporting(enabled = TRUE,
+    #                             buttons = list(contextButton = list(
+    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #                               onclick = highcharter::JS("function () {
+    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
+    #                               align = 'right',
+    #                               verticalAlign = 'bottom',
+    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
     # Create male plot
@@ -5772,15 +5801,16 @@ df <- df4
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/jpeg' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    # %>%
+    #   highcharter::hc_exporting(enabled = TRUE,
+    #                             buttons = list(contextButton = list(
+    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #                               onclick = highcharter::JS("function () {
+    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
+    #                               align = 'right',
+    #                               verticalAlign = 'bottom',
+    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
   }
 

@@ -476,6 +476,8 @@ home_einstieg_pie <- function(df,r) {
 #' @noRd
 home_einstieg_pie_gender <- function(df, df_naa, r) {
 
+
+
   # load UI inputs from reactive value
   timerange <- "2021"
 
@@ -532,7 +534,10 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
   dfk2c <<- dfk %>% dplyr::filter(bereich == "Schule")%>%
     dplyr::filter(fachbereich== "MINT" | fachbereich == "Alle Fächer")%>%
-    dplyr::mutate(indikator= paste0("Schüler:innen ", .$indikator ))
+    dplyr::mutate(indikator= paste0("Schüler:innen ", .$indikator ))%>%
+    tidyr::pivot_wider(names_from=geschlecht, values_from = wert)%>%
+    dplyr::mutate(Gesamt = Frauen + Männer)%>%
+    tidyr::pivot_longer(c("Gesamt", "Männer", "Frauen"), values_to = "wert", names_to = "geschlecht")
 
   dfk2c$fachbereich <- ifelse(grepl("Alle Fächer", dfk2c$fachbereich), "Alle", dfk2c$fachbereich)
 
@@ -561,6 +566,9 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
   dfk2_fn$proportion <- round_preserve_sum(as.numeric(dfk2_fn$proportion),0)
 
   dfk2_fn <- dfk2_fn[with(dfk2_fn, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+
+
+
 
   if(length(indikator_choice_1_gender) == 1) {
 
