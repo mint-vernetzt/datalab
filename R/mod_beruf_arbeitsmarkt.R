@@ -368,8 +368,10 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                width = 9,
                                htmlOutput(ns("plot_arbeitsmarkt_detail_map")
                                )
-                               # ,
-                               # p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
+                               ,
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", "Hinweis: Manche Landkreise sind grau dargestellt oder fehlen in der Darstellung.
+                                 Die zugrundeliegenden Karten enthalten vereinzelt alte oder flasche Landkreiszuordnungen (in Niedersachen, Sachsen-Anhalt) und einzelne Landkreise/Städte können nicht angezeigt werden (in Bremen, Sachsen).")
                              )
                     ),
                     tabPanel("Vergleich Landkreise, Auflistung aller Landkreise", br(),
