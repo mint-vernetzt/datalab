@@ -3511,12 +3511,12 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
   höhe <- c(10, 20, 3, 6, 3, 3, 8, 5, 11, 11, 10, 4, 6, 6, 6, 7)
   plt.add <- data.frame(länder, höhe)
 
-  plt.add$subtitle <- "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen."
+ # plt.add$subtitle <- "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen."
 
   # create plot
   highcharter::hchart(df_compare, 'bar', highcharter::hcaes(y = display_value, x = landkreis)) %>%
     highcharter::hc_tooltip(pointFormat = legende) %>%
-    highcharter::hc_yAxis(title = list(text = paste0(br(), br(),"Quelle der Daten: Bundesagentur für Arbeit, 2021, auf Anfrage, eigene Berechnungen.") , align="left"), labels = list(format = yAxis)) %>%
+    highcharter::hc_yAxis(title = list(text = paste0(br(), br(),"Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.") , align="left"), labels = list(format = yAxis)) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(
       colorByPoint = TRUE,
