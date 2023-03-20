@@ -46,13 +46,15 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "Übersicht Fragestellungen",
         width = 3,
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1",
-        span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT-Fächern an allen Schulfächern in der Oberstufe?"
+
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1a",
+        span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
           ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2",
-         span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche"
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2a",
+         span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
+
           ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3a",
         span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
         ),
 
@@ -75,9 +77,9 @@ mod_schule_kurse_ui <- function(id){
 
   # Box 1
 
-    fluidRow(id="jump1",
+    fluidRow(id="jump1a",
       shinydashboard::box(
-        title = "#MINT: Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?",
+        title = "Fächerwahl MINT: Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?",
         width = 12,
         p("In diesen interaktiven Diagrammen beleuchten wir, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt werden."),
         # p("In diesen interaktiven Diagrammen beleuchten wir, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt werden. Dabei sind die möglichen Belegungen von den Vorgaben der Bundesländer abhängig.", tags$a(icon("question-circle"), id="q3"),),
@@ -232,9 +234,9 @@ mod_schule_kurse_ui <- function(id){
                     #         )
       ))),
 
-    fluidRow(id="jump2",
+    fluidRow(id="jump2a",
       shinydashboard::box(
-        title = "#MINT im Detail: Vergleich der einzelnen MINT-Fächer",
+        title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
         width = 12,
         p("Hier zeigen wir die Anteile einzelner MINT-Fächer in Deutschland. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse.",
         ),
@@ -347,9 +349,9 @@ mod_schule_kurse_ui <- function(id){
                                ))
 
         ))),
-    fluidRow(id="jump3",
+    fluidRow(id="jump3a",
       shinydashboard::box(
-        title = "#Mädchen in MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?",
+        title = "Mädchen in MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?",
         width = 12,
         p("Hier schauen wir uns die Verteilung von Mädchen und Jungen innerhalb der MINT-Fächer in Deutschland an. Zum Vergleich
           zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern. Die verschiedenen Diagramme bieten außerdem

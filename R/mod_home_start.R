@@ -44,8 +44,9 @@ mod_home_start_ui <- function(id){
         p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1",
         span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
         ),
+
         p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2",
-        span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"))
+        span(tags$b(span("Frauen in MINT:")))),"Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen"))
 
         ,
 
@@ -72,7 +73,7 @@ mod_home_start_ui <- function(id){
 
     fluidRow(id="jump1",
       shinydashboard::box(
-        title = "#MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
+        title = "Fächerwahl MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
         width = 12,
         p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von MINT-Fächern in der Schule? Wie hoch ist der Anteil von Studierenden, die MINT-Fächer belegen?
           Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?"),
@@ -121,7 +122,7 @@ mod_home_start_ui <- function(id){
          ))),
     fluidRow(id="jump2",
       shinydashboard::box(
-        title = "#Frauen in MINT: Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?",
+        title = "Frauen in MINT: Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen",
         width = 12,
         p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von Mädchen in MINT-Leistungskursen?
           Wie hoch ist der Anteil von Frauen in MINT-Studienfächern? Wie hoch ist der Anteil von Frauen in MINT-Ausbildungsgängen?

@@ -38,16 +38,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         shinydashboard::box(
           title = "Übersicht Fragestellungen",
           width = 3,
-          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1",
-            span(tags$b(span("Berufswahl MINT:")))),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben? Und wie unterscheidet sich die Berufswahl von Männern und Frauen?"
+          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1d",
+            span(tags$b(span("Berufswahl MINT:")))),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten in MINT?"
             ),
-          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2",
-            span(tags$b(span("M-I-N-T:")))),"Blick auf die einzelnen Fächer und Fachbereiche"
+          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2d",
+            span(tags$b(span("M-I-N-T:")))),"Blick auf die einzelnen Fächer und Fachbereiche."
+
             ),
-          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3",
+          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3d",
             span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
             ),
-          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4",
+          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4d",
             span(tags$b(span("Regionaler MINT-Steckbrief:")))),"Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen."
             )),
 
@@ -71,11 +72,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
       # Box 1
 
-    fluidRow( id="jump1",
+    fluidRow( id="jump1d",
       shinydashboard::box(
-        title = "#Berufswahl MINT: Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben? Und wie unterscheidet sich die Berufswahl von Männern und Frauen?",
+        title = "Berufswahl MINT: Wie hoch ist der Anteil von Auszubildenden und Beschäftigten in MINT?",
         width = 12,
-        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Berufen insgesamt bei Auszubildenden und Beschäftigten in Deutschland."),
+        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Berufen insgesamt bei Auszubildenden und Beschäftigten in Deutschland und Unterschiede in der Berufswahl von Männern und Frauen?"),
 
 
         tabsetPanel(type = "tabs",
@@ -239,9 +240,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
 
 
-    fluidRow(id="jump2",
+    fluidRow(id="jump2d",
       shinydashboard::box(
-        title = "#MINT im Detail: Berufe innerhalb von MINT ",
+        title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
         width = 12,
         p("Hier zeigen wir die Unterschiede nach MINT-Berufsbereichen Mathematik/ Naturwissenschaft, Infromatik und Technik. Die Aufbereitung nach einzelnen Berufen steht noch aus."),
 
@@ -290,9 +291,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     )
                     #
         ))),
-    fluidRow(id="jump3",
+    fluidRow(id="jump3d",
       shinydashboard::box(
-        title = "#Frauen in MINT: Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?",
+        title = "Frauen in MINT: Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?",
         width = 12,
         p("Hier schauen wir uns die Verteilung von Frauen und Männern innerhalb der MINT-Berufe in Deutschland an. Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Berufen."),
 
@@ -350,9 +351,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     )
         ))),
 
-    fluidRow(id="jump4",
+    fluidRow(id="jump4d",
       shinydashboard::box(
-        title = "#Regionaler MINT-Steckbrief",
+        title = "Regionaler MINT-Steckbrief",
         width = 12,
         p("Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen.",
 
