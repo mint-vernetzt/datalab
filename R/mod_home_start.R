@@ -42,10 +42,10 @@ mod_home_start_ui <- function(id){
         title = "Übersicht Fragestellungen",
         width = 3,
         p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump1",
-        span(tags$b(span("#MINT:")))),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
+        span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
         ),
         p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump2",
-        span(tags$b(span("#Frauen in MINT:")))),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"))
+        span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"))
 
         ,
 

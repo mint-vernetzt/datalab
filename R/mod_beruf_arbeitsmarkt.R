@@ -39,16 +39,16 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           title = "Übersicht Fragestellungen",
           width = 3,
           p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump1",
-            span(tags$b(span("#Berufswahl MINT:")))),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben? Und wie unterscheidet sich die Berufswahl von Männern und Frauen?"
+            span(tags$b(span("Berufswahl MINT:")))),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten, die einen MINT-Beruf erlernen bzw. ausüben? Und wie unterscheidet sich die Berufswahl von Männern und Frauen?"
             ),
           p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump2",
-            span(tags$b(span("#MINT im Detail:")))),"Vergleiche der Bundesländer"
+            span(tags$b(span("M-I-N-T:")))),"Blick auf die einzelnen Fächer und Fachbereiche"
             ),
           p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump3",
-            span(tags$b(span("#Frauen in MINT:")))),"Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
+            span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
             ),
           p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump4",
-            span(tags$b(span("#Regionaler MINT-Steckbrief:")))),"Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen."
+            span(tags$b(span("Regionaler MINT-Steckbrief:")))),"Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen."
             )),
 
         shinydashboard::box(

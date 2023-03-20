@@ -45,13 +45,13 @@ mod_studium_studienzahl_ui <- function(id){
         width = 3,
         p(
         style = "text-align: justify; font-size = 16px",tags$a(href="#jump1",
-        span(tags$b(span("#MINT:")))), "Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
+        span(tags$b(span("Fächerwahl MINT:")))), "Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
         ),
         p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump2",
-          span(tags$b(span("#MINT im Detail:")))), "Wie hoch ist der Anteil der einzelnen MINT-Fächer?"
+          span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche"
           ),
         p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump3",
-          span(tags$b(span("#Frauen in MINT:")))), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
+          span(tags$b(span("Frauen in MINT:")))), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
           )),
 
       shinydashboard::box(

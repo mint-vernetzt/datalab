@@ -47,13 +47,13 @@ mod_schule_kurse_ui <- function(id){
         title = "Übersicht Fragestellungen",
         width = 3,
         p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump1",
-        span(tags$b(span("#MINT:")))),"Wie hoch ist der Anteil von MINT-Fächern an allen Schulfächern in der Oberstufe?"
+        span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT-Fächern an allen Schulfächern in der Oberstufe?"
           ),
         p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump2",
-         span(tags$b(span("#MINT im Detail:")))), "Wie hoch sind die Anteile der einzelnen MINT-Fächer?"
+         span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche"
           ),
         p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump3",
-        span(tags$b(span("#Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
+        span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
         ),
 
       shinydashboard::box(
