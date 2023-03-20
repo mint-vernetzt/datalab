@@ -41,13 +41,13 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Übersicht Fragestellungen",
         width = 3,
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT:")),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
-        )),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#Frauen in MINT:")),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?")
-        )
+        p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump1",
+        span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
         ),
+        p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump2",
+        span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?"))
+
+        ,
 
       shinydashboard::box(
         title = "Datenquellen",
@@ -65,12 +65,12 @@ mod_home_start_ui <- function(id){
        "Sind alle Zahlen und Grafiken verständlich?", br(),
        "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
             tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-       ))
-      ),
+       )))
+      ,
 
    # Box 1
 
-    fluidRow(
+    fluidRow(id="jump1",
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
         width = 12,
@@ -119,7 +119,7 @@ mod_home_start_ui <- function(id){
          #
          # ))
          ))),
-    fluidRow(
+    fluidRow(id="jump2",
       shinydashboard::box(
         title = "#Frauen in MINT: Wie hoch ist der Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen?",
         width = 12,

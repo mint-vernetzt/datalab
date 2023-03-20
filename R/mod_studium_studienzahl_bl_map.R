@@ -20,18 +20,12 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
     p("Auswahl des Indikators:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l"),
-      choices = c("Studienanfänger:innen (1.Fachsemester)",
-                  "Studienanfänger:innen (1.Hochschulsemester)",
-                  "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
-                  "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
-                  "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
-                  "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
-                  "Studienanfänger:innen (Universität, 1.Fachsemester)",
-                  "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
+      choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
+                  "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
-                  "Studierende (Fachhochschulen)",
-                  "Studierende (Lehramt, Universität)",
-                  "Studierende (Universität)"
+                  "Ausländische Studierende",
+                  "Studierende (Nur Lehramt)"
+
       ),
       selected = c("Studierende")
       ,
