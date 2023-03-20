@@ -185,7 +185,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               plotOutput(ns("plot_waffle_choice_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
+                               plotOutput(ns("plot_waffle_choice_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
 
@@ -199,7 +199,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
                     # tabPanel("Überblick Frauen und Männer", br(),
@@ -212,8 +212,8 @@ mod_studium_studienzahl_ui <- function(id){
                     #          ),
                     #          shiny::mainPanel(
                     #            width = 9,
-                    #            #highcharter::highchartOutput(ns("plot_ranking_studienzahl_bl_subject_gender1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
-                    #            plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen.")
+                    #            #highcharter::highchartOutput(ns("plot_ranking_studienzahl_bl_subject_gender1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                    #            plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
                     #          )
                     # )
 
@@ -267,7 +267,7 @@ mod_studium_studienzahl_ui <- function(id){
                         width = 9,
                         htmlOutput(ns("plot_top_faecher")),
                         p(style = "font-size:12px;color:grey",
-                          "Quelle der Daten: Destatis 2021, auf Anfrage, eigene Berechnungen."))
+                          "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
                     ),
 
                     tabPanel("Vergleich Fächer (Karte)", br(),
