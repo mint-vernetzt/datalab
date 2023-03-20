@@ -17,7 +17,7 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
                   "Bayern",
                   "Berlin",
                   "Brandenburg",
-                  "Bremen",
+                  #"Bremen",
                   "Hamburg",
                   "Hessen",
                   "Mecklenburg-Vorpommern",
@@ -31,7 +31,7 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
                   "Thüringen"
       ),
       multiple = FALSE,
-      selected = c("Hessen")
+      selected = c("Rheinland-Pfalz")
     ),
     hr(),
     p("Auswahl Darstellung 1:"),

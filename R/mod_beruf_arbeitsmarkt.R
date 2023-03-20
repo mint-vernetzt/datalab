@@ -29,7 +29,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         shinydashboard::box(
           title = "Auf dieser Seite",
           width = 3,
-          p(style = "text-align: justify; font-size = 16px",
+          p(style = "text-align: left; font-size = 16px",
             "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
            Dabei unterscheiden wir zwischen Auszubildenden und (sozialversicherungspflichtigen) Beschäftigten.  Die Kategorisierung in MINT entspricht der Klassifikation durch die Bundesagentur für Arbeit.
             'Hinweise & Datenquellen'.")
@@ -38,23 +38,24 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         shinydashboard::box(
           title = "Übersicht Fragestellungen",
           width = 3,
-          p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump1",
+          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1",
             span(tags$b(span("Berufswahl MINT:")))),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten in MINT?"
             ),
           p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump2",
             span(tags$b(span("M-I-N-T:")))),"Blick auf die einzelnen Fächer und Fachbereiche."
+
             ),
-          p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump3",
+          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3",
             span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
             ),
-          p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump4",
+          p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4",
             span(tags$b(span("Regionaler MINT-Steckbrief:")))),"Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen."
             )),
 
         shinydashboard::box(
           title = "Datenquellen",
           width = 3,
-          p(style = "text-align: justify; font-size = 16px",
+          p(style = "text-align: left; font-size = 16px",
             "Auszubildenden- und Beschäftigenzahlen in Deutschland: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
 
         ),
@@ -62,7 +63,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         shinydashboard::box(
           title = "Fragen oder Feedback?",
           width = 3,
-          p(style = "text-align: justify; font-size = 16px",
+          p(style = "text-align: left; font-size = 16px",
             "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
             tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
           ))
@@ -381,8 +382,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                width = 9,
                                #highcharter::highchartOutput(ns("plot_arbeitsmarkt_detail_vergleich"))
                                highcharter::highchartOutput(ns("plot_arbeitsmarkt_detail_vergleich"), height = "1600px")
-                             ),
-                             p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
+                             )
+                             # ,
+                             # p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                     ),
                     # Tabelle noch nicht fertig gelayoutet
                     # tabPanel("Tabelle", br(),

@@ -22,23 +22,33 @@ data_naa <- cbind(data_naa_a, data_naa)
 # data_naa <- data_naa %>% dplyr::select(-contains("X"))
 
 # remove
-data_naa <- data_naa %>% subset(select = -c(code, Bezeichnung))
+data_naa <- data_naa %>% subset(select = -c(Bezeichnung))
+
+# Fachrichtungen zuweisen und Aggregate löschen
+data_naa <- data_naa %>% dplyr::filter(!(code %in% c("-----", "M", "MI", "MM", "MT", "MTB", "MTG", "MTP", "MTV")))
+
+data_naa <- data_naa %>% dplyr::mutate(code = dplyr::case_when(
+  stringr::str_detect(data_naa$code, "MI") ~"Informatik",
+  stringr::str_detect(data_naa$code, "MM") ~"Mathematik/Naturwissenschaft",
+  stringr::str_detect(data_naa$code, "MTB") ~"Bau- und Gebäudetechnik",
+  stringr::str_detect(data_naa$code, "MTG") ~"Gesundheitstechnik - Fachkräfte",
+  stringr::str_detect(data_naa$code, "MTP") ~"Produktionstechnik",
+  stringr::str_detect(data_naa$code, "MTV") ~"Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+  TRUE ~ code
+))
+
 
 # clean column with job titles
 # rename column
 data_naa <- data_naa %>% dplyr::rename(ebene = "Ebene",
-                                       fachrichtung = "Bezeichnung BIBB modifiziert")
-# remove row with sum over all jobs
-data_naa <- data_naa %>% dplyr::filter(!grepl('Referenzzeile', fachrichtung)) %>%
-  # remove numbers from job title
-  dplyr::mutate(fachrichtung = gsub('[[:digit:]]+', '', fachrichtung),
-                # remove white space
-                fachrichtung = gsub(' ', '', fachrichtung)) %>%
-  # remove all column which provide information about the "Frauenanteil"
-  dplyr::select(-contains("anteil"))
+                                       beruf = "Bezeichnung BIBB modifiziert",
+                                       fachrichtung = "code")
+
+# remove all column which provide information about the "Frauenanteil"
+data_naa <- data_naa %>% dplyr::select(-contains("anteil"))
 
 # reshape data_naa in long format
-data_naa <- data_naa %>% tidyr::gather(region, anzahl, -ebene, -fachrichtung)
+data_naa <- data_naa %>% tidyr::gather(region, anzahl, -ebene, -beruf, -fachrichtung)
 
 # extract the information of gender contained in the strings of the
 # column "region"

@@ -24,10 +24,10 @@ mod_home_start_multiple_ui <- function(id){
       choices = c("Schüler:innen Leistungskurse", "Studierende",
                   "Auszubildende", "Beschäftigte"),
       selected = c("Schüler:innen Leistungskurse", "Beschäftigte"),
-      options =  list(
-        "max-options" = 3,
-        "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
-      ),
+      # options =  list(
+      #   "max-options" = 3,
+      #   "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
+      # ),
       multiple = T
     )
   )

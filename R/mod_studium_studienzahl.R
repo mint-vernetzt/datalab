@@ -34,7 +34,7 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "Auf dieser Seite",
         width = 3,
-        p(style = "text-align: justify; font-size = 16px",
+        p(style = "text-align: left; font-size = 16px",
           "Auf dieser Seite zeigen wir statistische Kennzahlen zum Thema MINT-Fächer studieren. Wir zeigen, wie hoch der Anteil
            von MINT-Fächern gemessen an allen gewählten Studienfächern ist. Dazu zeigen wir Vergleiche nach männlichen und
            weiblichen Studierenden, einzelnen Fächern und nach Bundesländern.")
@@ -44,20 +44,22 @@ mod_studium_studienzahl_ui <- function(id){
         title = "Übersicht Fragestellungen",
         width = 3,
         p(
-        style = "text-align: justify; font-size = 16px",tags$a(href="#jump1",
+        style = "text-align: left; font-size = 16px",tags$a(href="#jump1",
         span(tags$b(span("Fächerwahl MINT:")))), "Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
         ),
-        p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump2",
+
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2",
           span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
+
           ),
-        p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump3",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3",
           span(tags$b(span("Frauen in MINT:")))), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
           )),
 
       shinydashboard::box(
         title = "Datenquellen",
         width = 3,
-        p(style = "text-align: justify; font-size = 16px",
+        p(style = "text-align: left; font-size = 16px",
           "Studierendenzahlen in Deutschland: Destatis 2022, auf Anfrage")
 
       ),
@@ -65,7 +67,7 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "Fragen oder Feedback?",
         width = 3,
-        p(style = "text-align: justify; font-size = 16px",
+        p(style = "text-align: left; font-size = 16px",
           "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         )))

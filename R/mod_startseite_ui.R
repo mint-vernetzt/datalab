@@ -83,7 +83,7 @@ mod_startseite_ui <- function(id){
           ),
         p(style = "text-align: justify; font-size = 400px",
           span("Diese Grafik zeigt, wie hoch der Anteil von Schüler:innen, Studierenden und Auszubildenden und
-               Beschäftigten ist, die (in Deutschland) einen MINT-Leistungskurs wählen, ein MINT-Fach studieren, eine MINT-Ausbildung
+               Beschäftigten ist, die (in Deutschland) einen MINT-Leistungskurs belegt, ein MINT-Fach studieren, eine MINT-Ausbildung
                absolvieren bzw. später einen MINT-Beruf ausüben. In der Oberstufe machen die MINT-Fächer ein Drittel bei der Leistungskurswahl aus (33 %).
                Gut ein Drittel (37 %) der Studierenden studiert ein MINT-Fach. Unter den Auszubildenden macht knapp ein Drittel (31 %) eine Ausbildung
                im MINT-Bereich. Von allen sozialversicherungspflichtig Beschäftigten in Deutschland geht knapp ein Viertel (23 %) einem MINT-Beruf nach.",
@@ -109,7 +109,7 @@ mod_startseite_ui <- function(id){
        p(style = "text-align: justify; font-size = 400px",
          span("Diese Grafik zeigt, wie der Anteil an Mädchen bzw. Frauen entlang der MINT-Bildungskette immer weiter abnimmt.
                Während in den MINT-Leistungskursen in der Oberstufe der Anteil an Mädchen und Jungen fast ausgewogen ist, nimmt der Anteil
-               an Frauen, die MINT-Studiengänge wählen (32 %), eine Ausbildung in MINT ergreifen (13 %) und später in MINT-Berufen arbeiten (17 %), immer weiter ab.",
+               an Frauen in MINT-Studiengänge (32 %), in MINT-Ausbildungen (13 %) und in MINT-Berufen (17 %), immer weiter ab.",
               br(),
               #p(style="font-size:12px;color:grey", "Stand 2020, Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.")
          ))
