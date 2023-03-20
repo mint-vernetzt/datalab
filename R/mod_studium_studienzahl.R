@@ -43,15 +43,16 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "Übersicht Fragestellungen",
         width = 3,
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT:")), "Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
+        p(
+        style = "text-align: justify; font-size = 16px",tags$a(href="#jump1",
+        span(tags$b(span("#MINT:")))), "Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
+        ),
+        p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump2",
+          span(tags$b(span("#MINT im Detail:")))), "Wie hoch ist der Anteil der einzelnen MINT-Fächer?"
+          ),
+        p(style = "text-align: justify; font-size = 16px",tags$a(href="#jump3",
+          span(tags$b(span("#Frauen in MINT:")))), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
           )),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#MINT im Detail:")), "Wie hoch ist der Anteil der einzelnen MINT-Fächer?"
-          )),
-        p(style = "text-align: justify; font-size = 16px",
-          span(tags$b(span("#Frauen in MINT:")), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
-          ))),
 
       shinydashboard::box(
         title = "Datenquellen",
@@ -67,12 +68,12 @@ mod_studium_studienzahl_ui <- function(id){
         p(style = "text-align: justify; font-size = 16px",
           "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-        ))
-    ),
+        )))
+    ,
 
   # Box 1
 
-    fluidRow(
+    fluidRow( id="jump1",
       shinydashboard::box(
         title = "#Fächerwahl MINT: Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren? Und wie unterscheidet sich die Fächerwahl von Frauen und Männern?",
         width = 12,
@@ -236,7 +237,7 @@ mod_studium_studienzahl_ui <- function(id){
 
     # Box 2
 
-  fluidRow(
+  fluidRow( id="jump2",
       shinydashboard::box(
         title = "#MINT im Detail: Vergleich der einzelnen MINT-Fächer",
         width = 12,
@@ -314,7 +315,7 @@ mod_studium_studienzahl_ui <- function(id){
                     )
         ))),
 
-    fluidRow(
+    fluidRow(id="jump3",
       shinydashboard::box(
         title = "#Frauen in MINT: Wie hoch ist der Anteil von Frauen in den MINT-Fächern?",
         width = 12,
