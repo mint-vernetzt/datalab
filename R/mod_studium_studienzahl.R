@@ -44,15 +44,15 @@ mod_studium_studienzahl_ui <- function(id){
         title = "Übersicht Fragestellungen",
         width = 3,
         p(
-        style = "text-align: left; font-size = 16px",tags$a(href="#jump1",
+        style = "text-align: left; font-size = 16px",tags$a(href="#jump1c",
         span(tags$b(span("Fächerwahl MINT:")))), "Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
         ),
 
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2c",
           span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
 
           ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3c",
           span(tags$b(span("Frauen in MINT:")))), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
           )),
 
@@ -75,7 +75,7 @@ mod_studium_studienzahl_ui <- function(id){
 
   # Box 1
 
-    fluidRow( id="jump1",
+    fluidRow( id="jump1c",
       shinydashboard::box(
         title = "Fächerwahl MINT: Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?",
         width = 12,
@@ -239,7 +239,7 @@ mod_studium_studienzahl_ui <- function(id){
 
     # Box 2
 
-  fluidRow( id="jump2",
+  fluidRow( id="jump2c",
       shinydashboard::box(
         title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
         width = 12,
@@ -317,7 +317,7 @@ mod_studium_studienzahl_ui <- function(id){
                     )
         ))),
 
-    fluidRow(id="jump3",
+    fluidRow(id="jump3c",
       shinydashboard::box(
         title = "Frauen in MINT: Wie hoch ist der Anteil von Frauen in den MINT-Fächern?",
         width = 12,

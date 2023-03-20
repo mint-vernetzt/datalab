@@ -47,14 +47,14 @@ mod_schule_kurse_ui <- function(id){
         title = "Übersicht Fragestellungen",
         width = 3,
 
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1a",
         span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
           ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2a",
          span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
 
           ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3a",
         span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
         ),
 
@@ -77,7 +77,7 @@ mod_schule_kurse_ui <- function(id){
 
   # Box 1
 
-    fluidRow(id="jump1",
+    fluidRow(id="jump1a",
       shinydashboard::box(
         title = "Fächerwahl MINT: Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?",
         width = 12,
@@ -234,7 +234,7 @@ mod_schule_kurse_ui <- function(id){
                     #         )
       ))),
 
-    fluidRow(id="jump2",
+    fluidRow(id="jump2a",
       shinydashboard::box(
         title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
         width = 12,
@@ -349,7 +349,7 @@ mod_schule_kurse_ui <- function(id){
                                ))
 
         ))),
-    fluidRow(id="jump3",
+    fluidRow(id="jump3a",
       shinydashboard::box(
         title = "Mädchen in MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?",
         width = 12,
