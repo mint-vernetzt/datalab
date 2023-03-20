@@ -81,10 +81,13 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "#MINT: Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?",
         width = 12,
-        p("In diesen interaktiven Diagrammen beleuchten wir, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt werden.")
-        ,
-
-        tabsetPanel(type = "tabs",
+        p("In diesen interaktiven Diagrammen beleuchten wir, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt werden. Dabei sind die möglichen Belegungen von den Vorgaben der Bundesländer abhängig.", tags$a(icon("question-circle"), id="q3"),),
+        shinyBS::bsPopover(id="q3", title = "",
+                           content = "In vielen werden unterschiedliche und unterschiedlich viele Leistungskurse angeboten.<br><br>
+                           In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer
+                           mit erhöhten Wochenstunden und werden hier als Leistungskurse gezählt. Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden. Entsprechend sind die Anteile der Grundlagenfächer an den Grundkursen sehr gering.",
+                           trigger = "hover"), #das ist in Box
+                tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich Grund- und Leistungskurse, Fachbereiche", br(),
 
@@ -164,8 +167,15 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
+
                                p(style="font-size:12px;color:grey",
                                  "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.")
+                               ,
+                               shinyBS::bsPopover(id="q4", title = "",
+                                                  content = "Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren.
+                                                  Dann stellt sich das Seitenverhältnis des Desktops richtig ein.",
+                                                  trigger = "hover"), #das ist in Box
+                               tags$a(icon("question-circle"), id="q4"),
                                ),
                              shiny::mainPanel(
                                width = 9,
@@ -173,12 +183,16 @@ mod_schule_kurse_ui <- function(id){
                                ,
                                shinyBS::bsPopover(id="q1", title = "",
                                                   content = "Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor",
-                                                  trigger = "hover"), #das ist in Box
+                                                  trigger = "hover", placement = "left"), #das ist in Box
                                tags$a(p(style="font-size:12px;color:grey","Darum ist Baden-Württemberg ausgegraut"), id="q1"), # das ist was man in App sieht
                                shinyBS::bsPopover(id="q2", title = "",
                                                   content = "Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor",
                                                   trigger = "hover"), #das ist in Box
                                tags$a("Darum ist Baden-Württemberg ausgegraut", id="q2"), # das ist was man in App sieht
+                               shinyBS::bsPopover(id="q6", title = "",
+                                                  content = "Für Baden-Würtemberg liegen die Belegungszahlen nur für Mädchen und Jungen aggregiert vor",
+                                                  trigger = "hover"), #das ist in Box
+                               tags$a(icon("question-circle"), id="q6"),
 
                                p(style="font-size:12px;color:grey",br(), "Quelle der Daten: KMK, 2021, auf Anfrage, eigene Berechnungen."),
                                p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
