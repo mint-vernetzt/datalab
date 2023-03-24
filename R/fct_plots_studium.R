@@ -5742,7 +5742,6 @@ df <- df4
       dplyr::arrange(desc(wert)) %>%
       dplyr::slice(1:10)
 
-    browser()
 
     # Create female plot
     hc_frau <- highcharter::hchart(studierende_faecher_frauen, 'bar', highcharter::hcaes(y = wert, x = fach)) %>%
