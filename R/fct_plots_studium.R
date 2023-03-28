@@ -686,6 +686,10 @@ studienzahl_verlauf_single <- function(df,r) {
   indi_selct <- r$studienzahl_einstieg_verlauf_indi
   timerange <- r$date_studienzahl_einstieg_verlauf
 
+  abs_zahlen_selector <<- r$abs_zahlen
+
+
+
 
 
   # lehramt <- r$nurLehramt_studierende_einstieg_verlauf
@@ -695,26 +699,209 @@ studienzahl_verlauf_single <- function(df,r) {
   # hochschulform_select_2 <- r$hochschulform_studierende_einstieg_verlauf_2
 
   # filter dataset based on UI inputs
-  df2 <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+  df2 <<- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # remove
   # df <- df %>% dplyr::filter(region == "Deutschland")
 
-  df4 <- df2 %>% dplyr::filter(geschlecht == "gesamt")%>%
+  df4 <<- df2 %>% dplyr::filter(geschlecht == "gesamt")%>%
     dplyr::filter(region== "Deutschland")%>%
     dplyr::select(-hochschulform, -region)%>%
     tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
     dplyr::mutate("MINT (aggregiert)" = Mathematik_Naturwissenschaften+Ingenieurwissenschaften)%>%
     dplyr::mutate("Nicht MINt"= Alle-`MINT (aggregiert)`)%>%
-    dplyr::mutate(MINT=`MINT (aggregiert)`/Alle)%>%
-    dplyr::mutate("Nicht MINT"=`Nicht MINt`/Alle)%>%
-    dplyr::select(-Ingenieurwissenschaften,- Mathematik_Naturwissenschaften,-Alle, -`MINT (aggregiert)`,- `Nicht MINt`,- `Nicht MINT`)%>%
-    tidyr::pivot_longer(c(MINT), names_to = "proportion", values_to = "wert")
+    dplyr::mutate("MINT (aggregiert)_p"=`MINT (aggregiert)`/Alle)%>%
+    dplyr::mutate("Nicht MINT_p"=`Nicht MINt`/Alle)%>%
+    dplyr::select(-Ingenieurwissenschaften,- Mathematik_Naturwissenschaften,-Alle)%>%
+    tidyr::pivot_longer(c("MINT (aggregiert)", "Nicht MINt", "Nicht MINT_p", "MINT (aggregiert)_p"), names_to = "var", values_to = "wert")%>%
+    dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$var, "p")~"Relativ",
+                  T~ "Absolut"))%>%
+    dplyr::filter(!var %in% c("Nicht MINt", "Nicht MINT_p"))
 
-  df4$wert <- df4$wert *100
-  df4$wert <- round(df4$wert, 0)
 
-  df4 <- df4[with(df4, order( jahr, decreasing = FALSE)), ]
+  if(abs_zahlen_selector == "Relativ"){
+
+    df5 <<- df4 %>%  dplyr::filter(selector=="Relativ")
+
+
+  df5$wert <- df5$wert *100
+  df5$wert <- round(df5$wert, 0)
+
+  df5 <- df5[with(df5, order( jahr, decreasing = FALSE)), ]
+
+  if(length(indi_selct) == 1) {
+
+    df5 <- df5 %>% dplyr::filter(label== indi_selct)
+
+    highcharter::hchart(df5, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
+      highcharter::hc_tooltip(pointFormat = "Anteil {point.wert} <br> Wert: {point.y} %") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+      highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  } else if(length(indi_selct)==2){
+
+    df5 <- df5 %>% dplyr::filter(label == indi_selct[1] | label == indi_selct [2])
+
+    highcharter::hchart(df5, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
+      highcharter::hc_tooltip(pointFormat = "Anteil {point.wert} <br> Wert: {point.y} %") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+      highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  } else if(length(indi_selct == 3)){
+
+    df5<- df5 %>% dplyr::filter(label == indi_selct[1] | label == indi_selct [2] | label == indi_selct [3])
+
+
+    highcharter::hchart(df5, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
+      highcharter::hc_tooltip(pointFormat = "Anteil {point.wert} <br> Wert: {point.y} %") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+      highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+  }
+
+  }else if (abs_zahlen_selector == "Absolut"){
+
+    # hcoptslang <- getOption("highcharter.lang")
+    # hcoptslang$thousandsSep <- "."
+    # options(highcharter.lang = hcoptslang)
+
+    df6 <<- df4 %>%  dplyr::filter(selector=="Absolut")
+
+    df6 <- df6[with(df6, order( jahr, decreasing = FALSE)), ]
+
+    if(length(indi_selct) == 1) {
+
+      df6 <- df6 %>% dplyr::filter(label== indi_selct)
+
+      highcharter::hchart(df6, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
+        highcharter::hc_tooltip(pointFormat = "Wert: {point.y, f .2f}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value,f .2f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_exporting(enabled = FALSE,
+                                  buttons = list(contextButton = list(
+                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                    onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                    align = 'right',
+                                    verticalAlign = 'bottom',
+                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+    } else if(length(indi_selct)==2){
+
+      df6 <- df6 %>% dplyr::filter(label == indi_selct[1] | label == indi_selct [2])
+
+      highcharter::hchart(df6, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
+        highcharter::hc_tooltip(pointFormat = " Wert: {point.y, f .2f}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value, f .2f}}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_exporting(enabled = FALSE,
+                                  buttons = list(contextButton = list(
+                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                    onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                    align = 'right',
+                                    verticalAlign = 'bottom',
+                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+    } else if(length(indi_selct == 3)){
+
+      df6<- df6 %>% dplyr::filter(label == indi_selct[1] | label == indi_selct [2] | label == indi_selct [3])
+
+
+      highcharter::hchart(df6, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
+        highcharter::hc_tooltip(pointFormat = "Anteil {point.wert} <br> Wert: {point.y, f .2f}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value, f .2f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+        highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_exporting(enabled = FALSE,
+                                  buttons = list(contextButton = list(
+                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                    onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                    align = 'right',
+                                    verticalAlign = 'bottom',
+                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+    }
+
+
+
+
+
+  }
 
 
   # aggregate MINT
@@ -765,84 +952,7 @@ studienzahl_verlauf_single <- function(df,r) {
 
   # plot
 
-  if(length(indi_selct) == 1) {
 
-    df5 <- df4 %>% dplyr::filter(label== indi_selct)
-
-    highcharter::hchart(df5, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
-    highcharter::hc_tooltip(pointFormat = "Anteil {point.wert} <br> Wert: {point.y} %") %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-  } else if(length(indi_selct)==2){
-
-    df5 <- df4 %>% dplyr::filter(label == indi_selct[1] | label == indi_selct [2])
-
-    highcharter::hchart(df5, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
-      highcharter::hc_tooltip(pointFormat = "Anteil {point.wert} <br> Wert: {point.y} %") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-  } else if(length(indi_selct == 3)){
-
-    df5<- df4 %>% dplyr::filter(label == indi_selct[1] | label == indi_selct [2] | label == indi_selct [3])
-
-
-    highcharter::hchart(df5, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
-      highcharter::hc_tooltip(pointFormat = "Anteil {point.wert} <br> Wert: {point.y} %") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-
-    }
 }
 
 #' A function to plot time series
@@ -855,7 +965,7 @@ studienzahl_verlauf_single <- function(df,r) {
 #' @noRd
 
 studienzahl_verlauf_single_gender <- function(df,r) {
-
+browser()
   # load UI inputs from reactive value
 
 
@@ -868,6 +978,8 @@ studienzahl_verlauf_single_gender <- function(df,r) {
   # hochschulform_select_1 <- r$hochschulform_studierende_einstieg_verlauf_gender_1
   #
   # hochschulform_select_2 <- r$hochschulform_studierende_einstieg_verlauf_gender_2
+
+
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
@@ -897,9 +1009,9 @@ studienzahl_verlauf_single_gender <- function(df,r) {
 
   if(length(label_sel) == 1) {
 
-    df5 <- dfü %>% dplyr::filter(label== label_sel)
+    df9 <<- dfü %>% dplyr::filter(label== label_sel)
 
-    highcharter::hchart(df5, 'line', highcharter::hcaes(x = jahr, y = proportion, group=label))%>%
+    highcharter::hchart(df9, 'line', highcharter::hcaes(x = jahr, y = proportion, group=label))%>%
       highcharter::hc_tooltip(pointFormat = "Anteil {point.label} <br> Wert: {point.y} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -922,9 +1034,9 @@ studienzahl_verlauf_single_gender <- function(df,r) {
 
   } else if(length(label_sel)==2){
 
-    df5 <- dfü %>% dplyr::filter(label == label_sel[1] | label == label_sel [2])
+    df9 <<- dfü %>% dplyr::filter(label == label_sel[1] | label == label_sel [2])
 
-    highcharter::hchart(df5, 'line', highcharter::hcaes(x = jahr, y = proportion, group=label))%>%
+    highcharter::hchart(df9, 'line', highcharter::hcaes(x = jahr, y = proportion, group=label))%>%
       highcharter::hc_tooltip(pointFormat = "Anteil {point.label} <br> Wert: {point.y} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -947,10 +1059,10 @@ studienzahl_verlauf_single_gender <- function(df,r) {
 
   } else if(length(label_sel == 3)){
 
-    df5<- dfü %>% dplyr::filter(label == label_sel[1] | label == label_sel [2] | label == label_sel [3])
+    df9<<- dfü %>% dplyr::filter(label == label_sel[1] | label == label_sel [2] | label == label_sel [3])
 
 
-    highcharter::hchart(df5, 'line', highcharter::hcaes(x = jahr, y = proportion, group=label))%>%
+    highcharter::hchart(df9, 'line', highcharter::hcaes(x = jahr, y = proportion, group=label))%>%
       highcharter::hc_tooltip(pointFormat = "Anteil {point.label} <br> Wert: {point.y} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -5742,7 +5854,7 @@ df <- df4
       dplyr::arrange(desc(wert)) %>%
       dplyr::slice(1:10)
 
-    browser()
+
 
     # Create female plot
     hc_frau <- highcharter::hchart(studierende_faecher_frauen, 'bar', highcharter::hcaes(y = wert, x = fach)) %>%

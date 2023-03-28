@@ -44,8 +44,17 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
       # options = list(`actions-box` = TRUE,
       #                `deselect-all-text` = "Alle abwählen",
       #                `select-all-text` = "Alle auswählen")
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen"),
+      choices = c("Relativ", "Absolut"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
-  )
+    )
+
 
 }
 
@@ -65,15 +74,19 @@ mod_studium_studienzahl_einstieg_verlauf_server <- function(id, r){
       r$studienzahl_einstieg_verlauf_indi <- input$studienzahl_einstieg_verlauf_indi
     })
 
-#
-#     observeEvent(input$hochschulform_studierende_einstieg_verlauf_1, {
-#       r$hochschulform_studierende_einstieg_verlauf_1 <- input$hochschulform_studierende_einstieg_verlauf_1
-#     })
-#
-#
-#     observeEvent(input$hochschulform_studierende_einstieg_verlauf_2, {
-#       r$hochschulform_studierende_einstieg_verlauf_2 <- input$hochschulform_studierende_einstieg_verlauf_2
-#     })
+    observeEvent(input$abs_zahlen, {
+      r$abs_zahlen <- input$abs_zahlen
+    })
+
+
+    observeEvent(input$abs_zahlen1, {
+      r$abs_zahlen1 <- input$abs_zahlen1
+    })
+
+
+    observeEvent(input$abs_zahlen2, {
+      r$abs_zahlen2 <- input$abs_zahlen2
+    })
 
   })
 }
