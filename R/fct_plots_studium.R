@@ -810,9 +810,9 @@ studienzahl_verlauf_single <- function(df,r) {
 
   }else if (abs_zahlen_selector == "Absolut"){
 
-    # hcoptslang <- getOption("highcharter.lang")
-    # hcoptslang$thousandsSep <- "."
-    # options(highcharter.lang = hcoptslang)
+    hcoptslang <- getOption("highcharter.lang")
+    hcoptslang$thousandsSep <- "."
+    options(highcharter.lang = hcoptslang)
 
     df6 <<- df4 %>%  dplyr::filter(selector=="Absolut")
 
@@ -823,8 +823,8 @@ studienzahl_verlauf_single <- function(df,r) {
       df6 <- df6 %>% dplyr::filter(label== indi_selct)
 
       highcharter::hchart(df6, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
-        highcharter::hc_tooltip(pointFormat = "Wert: {point.y, f .2f}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value,f .2f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
@@ -848,8 +848,8 @@ studienzahl_verlauf_single <- function(df,r) {
       df6 <- df6 %>% dplyr::filter(label == indi_selct[1] | label == indi_selct [2])
 
       highcharter::hchart(df6, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
-        highcharter::hc_tooltip(pointFormat = " Wert: {point.y, f .2f}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value, f .2f}}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
@@ -872,10 +872,11 @@ studienzahl_verlauf_single <- function(df,r) {
 
       df6<- df6 %>% dplyr::filter(label == indi_selct[1] | label == indi_selct [2] | label == indi_selct [3])
 
-
+      # hc_yAxis(title = list(text = "YourAxis"), #new part for axis labelling
+      #          labels=list(format="{value:,f}"))
       highcharter::hchart(df6, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
-        highcharter::hc_tooltip(pointFormat = "Anteil {point.wert} <br> Wert: {point.y, f .2f}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value, f .2f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_title(text = paste0("Anteil von MINT-Studierenden"),
