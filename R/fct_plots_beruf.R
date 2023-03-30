@@ -1493,7 +1493,7 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
   dfg <<- df
 
 
-browser()
+
   dfk <<- dfg%>%
     tidyr::pivot_wider(names_from= region, values_from=wert)%>%
     dplyr::mutate(Osten = rowSums(dplyr::select(., c(Berlin, Brandenburg, `Mecklenburg-Vorpommern`, Sachsen, `Sachsen-Anhalt`, Thüringen)),na.rm = T),
