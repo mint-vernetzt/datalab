@@ -74,8 +74,18 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       selected = c("Hessen", "Hamburg")
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen"),
+      choices = c("Relativ", "Absolut"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
+
+
 }
 
 #' schule_kurse_verlauf_multiple Server Functions
@@ -90,6 +100,10 @@ mod_schule_kurse_verlauf_multiple_server <- function(id, r){
 
     observeEvent(input$subject_selected_multiple, {
       r$subject_selected_multiple <- input$subject_selected_multiple
+    })
+
+    observeEvent(input$abs_zahlen, {
+      r$abs_zahlen <- input$abs_zahlen
     })
 
     observeEvent(input$topic_selected_multiple, {

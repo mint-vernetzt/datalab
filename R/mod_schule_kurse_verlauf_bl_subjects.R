@@ -66,9 +66,17 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       multiple = TRUE
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen"),
+      choices = c("Relativ", "Absolut"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
-
   )
+
 }
 
 #' schule_kurse_verlauf_bl_subjects Server Functions
@@ -84,6 +92,10 @@ mod_schule_kurse_verlauf_bl_subjects_server <- function(id, r){
 
     observeEvent(input$subject_selected_bl_sub, {
       r$subject_selected_bl_sub <- input$subject_selected_bl_sub
+    })
+
+    observeEvent(input$abs_zahlen, {
+      r$abs_zahlen <- input$abs_zahlen
     })
 
     observeEvent(input$states_kurse_verlauf_subject_bl, {

@@ -83,8 +83,17 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
                      `select-all-text` = "Alle auswählen"),
       selected = c("Osten", "Hamburg")
 
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_4"),
+      choices = c("Relativ", "Absolut"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
+
 }
 
 #' beruf_arbeitsmarkt_bl_verlauf Server Functions
@@ -99,6 +108,10 @@ mod_beruf_arbeitsmarkt_bl_verlauf_server <- function(id, r){
 
     observeEvent(input$niveau, {
       r$niveau <- input$niveau
+    })
+
+    observeEvent(input$abs_zahlen_4, {
+      r$abs_zahlen_4 <- input$abs_zahlen_4
     })
 
     # observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf, {
