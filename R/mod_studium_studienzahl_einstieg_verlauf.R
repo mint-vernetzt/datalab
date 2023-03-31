@@ -47,7 +47,7 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
-      inputId = ns("abs_zahlen"),
+      inputId = ns("abs_zahlen_einstieg_verlauf_indi"),
       choices = c("Relativ", "Absolut"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
@@ -74,8 +74,8 @@ mod_studium_studienzahl_einstieg_verlauf_server <- function(id, r){
       r$studienzahl_einstieg_verlauf_indi <- input$studienzahl_einstieg_verlauf_indi
     })
 
-    observeEvent(input$abs_zahlen, {
-      r$abs_zahlen <- input$abs_zahlen
+    observeEvent(input$abs_zahlen_einstieg_verlauf_indi, {
+      r$abs_zahlen_einstieg_verlauf_indi <- input$abs_zahlen_einstieg_verlauf_indi
     })
 
 

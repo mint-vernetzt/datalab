@@ -20,7 +20,7 @@ mod_schule_kurse_einstieg_verlauf_ui <- function(id){
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
-      inputId = ns("abs_zahlen"),
+      inputId = ns("abs_zahlen_kurse_einstieg_verlauf"),
       choices = c("Relativ", "Absolut"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
@@ -41,8 +41,8 @@ mod_schule_kurse_einstieg_verlauf_server <- function(id, r){
       r$date_kurse_einstieg_verlauf <- input$date_kurse_einstieg_verlauf
     })
 
-    observeEvent(input$abs_zahlen, {
-      r$abs_zahlen <- input$abs_zahlen
+    observeEvent(input$abs_zahlen_kurse_einstieg_verlauf, {
+      r$abs_zahlen_kurse_einstieg_verlauf <- input$abs_zahlen_kurse_einstieg_verlauf
     })
 
 

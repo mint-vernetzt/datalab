@@ -686,7 +686,7 @@ studienzahl_verlauf_single <- function(df,r) {
   indi_selct <- r$studienzahl_einstieg_verlauf_indi
   timerange <- r$date_studienzahl_einstieg_verlauf
 
-  abs_zahlen_selector <<- r$abs_zahlen
+  abs_zahlen_selector <<- r$abs_zahlen_einstieg_verlauf_indi
 
 
 
@@ -2998,7 +2998,7 @@ studienzahl_verlauf_bl <- function(df,r) {
 
 studienzahl_verlauf_bl_subject <- function(df,r) {
 
-  absolut_selector <- r$abs_zahlen
+  absolut_selector <- r$abs_zahlen_verlauf_subject_bl
 
   # load UI inputs from reactive value
   timerange <- r$date_verlauf_subject_bl
@@ -3783,7 +3783,7 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
   v_lab <- r$choice_l_v
 
-  absolut_selector <- r$abs_zahlen
+  absolut_selector <- r$abs_zahlen_l_v
 
   subjects_select <<- r$choice_v_f
 
@@ -5351,7 +5351,7 @@ studierende_verlauf_multiple_bl <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_studium_studienzahl_bl_verlauf
 
-  absolut_selector <- r$abs_zahlen
+  absolut_selector <- r$abs_zahlen_studium_studienzahl_bl_verlauf
 
   subjects_select <- r$subject_studium_studienzahl_bl_verlauf
 

@@ -1555,6 +1555,8 @@ home_rest_mint_verlauf <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_start_multiple
 
+  absolut_selector <- r$abs_zahlen_start_multiple
+
   indikator_choice_1 <- r$indikator_start_multiple_1
 
   # filter dataset based on UI inputs
@@ -1599,6 +1601,7 @@ home_rest_mint_verlauf <- function(df,r) {
     dplyr::filter(fachbereich== "MINT" | fachbereich == "Alle Fächer")%>%
     dplyr::mutate(indikator= paste0("Schüler:innen ", .$indikator ))
 
+
   dfk2c$fachbereich <- ifelse(grepl("Alle Fächer", dfk2c$fachbereich), "Alle", dfk2c$fachbereich)
 
   dfk2b <- dfk2 %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
@@ -1606,27 +1609,44 @@ home_rest_mint_verlauf <- function(df,r) {
 
 
 
-  dfk2_fn <- dplyr::bind_rows(dfk2b, dfk2a, dfk2c)%>%
+  dfk2_fn <<- dplyr::bind_rows(dfk2b, dfk2a, dfk2c)%>%
     dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle")%>%
     tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
     dplyr::mutate("Nicht MINT" = Alle - MINT)%>%
-    dplyr::mutate(dplyr::across(c(MINT, `Nicht MINT`), ~./Alle*100))%>%
+    dplyr::mutate(MINT_p= MINT/Alle*100)%>%
+    dplyr::mutate("Nich MINT_p" = `Nicht MINT`/Alle*100)%>%
     dplyr::filter(geschlecht=="Gesamt")%>%
     dplyr::select(- Alle)%>%
-    tidyr::pivot_longer(c(MINT, `Nicht MINT`), names_to = "fachbereich", values_to = "proportion")
+    tidyr::pivot_longer(c(MINT, `Nicht MINT`, `Nich MINT_p`, `MINT_p`), names_to = "fachbereich", values_to = "wert")%>%
+    dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$fachbereich, "_p") ~ "Relativ",
+                                      T~"Absolut"))
+  # %>%
+  #   dplyr::mutate(wert=dplyr::case_when(stringr::str_detect(.$selector, "Relativ") ~ round_preserve_sum(.),
+                                        # T~))
+
+  dfk2_fn$fachbereich <- gsub("_p", "", dfk2_fn$fachbereich)
 
 
-  dfk2_fn$proportion <- round_preserve_sum(as.numeric(dfk2_fn$proportion),0)
+  dfk2_fn$wert <- ifelse(stringr::str_detect(dfk2_fn$selector, "Relativ"),round_preserve_sum(as.numeric(dfk2_fn$wert),0), dfk2_fn$wert )
 
-  dfk2_fn <- dfk2_fn[with(dfk2_fn, order(region, fachbereich, jahr, decreasing = FALSE)), ]
+  # dfk2_fn$proportion[selector=="Relativ",wert] <- round_preserve_sum(as.numeric(dfk2_fn[selector=="Relativ",wert]),0)
+
+
+
+   if(absolut_selector=="Relativ"){
+
+    df <- dfk2_fn %>%
+      dplyr::filter(selector=="Relativ")
+
+  df <- df[with(df, order(region, fachbereich, jahr, decreasing = FALSE)), ]
 
   #here only MINT
-  dft <- dfk2_fn %>% dplyr::filter(fachbereich == "MINT")
+  df <- df %>% dplyr::filter(fachbereich == "MINT")
 
-  dfö <- dft %>% dplyr::filter(indikator %in% indikator_choice_1)
+  df <- df %>% dplyr::filter(indikator %in% indikator_choice_1)
 
   # plot
-  highcharter::hchart(dfö, 'line', highcharter::hcaes(x = jahr, y = proportion, group = indikator)) %>%
+  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil MINT <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = "{value}%"),
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -1647,5 +1667,51 @@ home_rest_mint_verlauf <- function(df,r) {
                                 align = 'right',
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  } else if (absolut_selector=="Absolut") {
+
+    hcoptslang <- getOption("highcharter.lang")
+    hcoptslang$thousandsSep <- "."
+    options(highcharter.lang = hcoptslang)
+
+    #here only MINT
+    dft <- dfk2_fn %>% dplyr::filter(fachbereich == "MINT")
+
+    dfö <- dft %>% dplyr::filter(indikator %in% indikator_choice_1)
+
+
+    df <- dfö %>%
+      dplyr::filter(selector=="Absolut")
+
+    df <- df[with(df, order(region, fachbereich, jahr, decreasing = FALSE)), ]
+
+
+
+    # plot
+    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
+      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
+      highcharter::hc_title(text = "Anteil von MINT nach Bildungsbereichen",
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+
+
+  }
 
 }

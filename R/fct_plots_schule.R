@@ -1987,7 +1987,7 @@ kurse_verlauf_single <- function(df,r) {
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg_verlauf
 
-  absolut_selector <- r$abs_zahlen
+  absolut_selector <- r$abs_zahlen_kurse_einstieg_verlauf
 
 
   # filter dataset based on UI inputs
@@ -2478,7 +2478,7 @@ kurse_verlauf_multiple_bl <- function(df,r) {
   # load UI inputs from reactive value
 
 
-  absolut_selector <- r$abs_zahlen
+  absolut_selector <- r$abs_zahlen_kurse_verlauf_multiple
 
   timerange <- r$date_kurse_verlauf_multiple
 
@@ -2683,7 +2683,7 @@ kurse_verlauf_subjects_bl <- function(df,r) {
 
   # load UI inputs from reactive value
 
-  absolut_selector <- r$abs_zahlen
+  absolut_selector <- r$abs_zahlen_kurse_verlauf_subject_bl
 
   timerange <- r$date_kurse_verlauf_subject_bl
 

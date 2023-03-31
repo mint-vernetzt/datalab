@@ -77,7 +77,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
-      inputId = ns("abs_zahlen"),
+      inputId = ns("abs_zahlen_kurse_verlauf_multiple"),
       choices = c("Relativ", "Absolut"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
@@ -102,8 +102,8 @@ mod_schule_kurse_verlauf_multiple_server <- function(id, r){
       r$subject_selected_multiple <- input$subject_selected_multiple
     })
 
-    observeEvent(input$abs_zahlen, {
-      r$abs_zahlen <- input$abs_zahlen
+    observeEvent(input$abs_zahlen_kurse_verlauf_multiple, {
+      r$abs_zahlen_kurse_verlauf_multiple <- input$abs_zahlen_kurse_verlauf_multiple
     })
 
     observeEvent(input$topic_selected_multiple, {

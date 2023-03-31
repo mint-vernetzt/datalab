@@ -78,7 +78,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
-      inputId = ns("abs_zahlen"),
+      inputId = ns("abs_zahlen_l_v"),
       choices = c("Relativ", "Absolut"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
@@ -103,8 +103,8 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_server <- function(id, r){
       r$choice_v_f <- input$choice_v_f
     })
 
-    observeEvent(input$abs_zahlen, {
-      r$abs_zahlen <- input$abs_zahlen
+    observeEvent(input$abs_zahlen_l_v, {
+      r$abs_zahlen_l_v <- input$abs_zahlen_l_v
     })
 
     observeEvent(input$choice_l_v, {

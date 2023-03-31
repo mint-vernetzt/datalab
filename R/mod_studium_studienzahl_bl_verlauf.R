@@ -98,7 +98,7 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
-      inputId = ns("abs_zahlen"),
+      inputId = ns("abs_zahlen_studium_studienzahl_bl_verlauf"),
       choices = c("Relativ", "Absolut"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
@@ -129,8 +129,8 @@ mod_studium_studienzahl_bl_verlauf_server <- function(id, r){
       r$verl_bl_l <- input$verl_bl_l
     })
 
-    observeEvent(input$abs_zahlen, {
-      r$abs_zahlen <- input$abs_zahlen
+    observeEvent(input$abs_zahlen_studium_studienzahl_bl_verlauf, {
+      r$abs_zahlen_studium_studienzahl_bl_verlauf <- input$abs_zahlen_studium_studienzahl_bl_verlauf
     })
 
     observeEvent(input$hochschulform_studium_studienzahl_bl_verlauf1, {

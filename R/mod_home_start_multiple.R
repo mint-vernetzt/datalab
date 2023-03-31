@@ -29,8 +29,18 @@ mod_home_start_multiple_ui <- function(id){
       #   "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
       # ),
       multiple = T
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_start_multiple"),
+      choices = c("Relativ", "Absolut"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
+
+
 }
 
 #' home_start_multiple Server Functions
@@ -41,6 +51,10 @@ mod_home_start_multiple_server <- function(id, r){
 
     observeEvent(input$date_start_multiple, {
       r$date_start_multiple <- input$date_start_multiple
+    })
+
+    observeEvent(input$abs_zahlen_start_multiple, {
+      r$abs_zahlen_start_multiple <- input$abs_zahlen_start_multiple
     })
 
     observeEvent(input$indikator_start_multiple_1, {
