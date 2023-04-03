@@ -6317,6 +6317,29 @@ plot_auslaender_mint <- function(df,r){
 
   df_aus <<- df
 
+  df_aus_1 <- df_aus %>%
+    dplyr::filter(label %in% c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
+                        "Ausländische Studierende",
+                        "Studienanfänger:innen (1. Hochschulsemester)",
+                        "Studierende"))%>%
+    tidyr::pivot_wider(names_from=label, values_from = wert)%>%
+    dplyr::mutate("Deutsche Studierende" =`Studierende`-`Ausländische Studierende`,
+                  "Deutsche Studienanfänger:innen (1. Hochschulsemester)"=`Studienanfänger:innen (1. Hochschulsemester)`-
+                    `Auländische Studienanfänger:innen (1. Hochschulsemester)`)%>%
+    dplyr::mutate("Deutsche Studierende_p" =`Deutsche Studierende`/Studierende,
+                  "Ausländische Studierende_p"= `Ausländische Studierende`/Studierende,
+                  "Deutsche Studienanfänger:innen (1. Hochschulsemester)_p" =`Deutsche Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`,
+                  "Auländische Studienanfänger:innen (1. Hochschulsemester)_p"=`Auländische Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`)%>%
+    dplyr::select(-c(Studierende, `Studienanfänger:innen (1. Hochschulsemester)` ))%>%
+    dplyr::filter(anzeige_geschlecht=="Gesamt")%>%
+    tidyr::pivot_longer(c(7:14), names_to="label", values_to="wert")%>%
+    dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$label, "_p")~"Relativ",
+                                             T~"Asolut"))
+
+
+  df_aus_1$label <- gsub("_p", "", df_aus_1$label)
+
+
 
 
 
