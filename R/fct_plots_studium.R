@@ -6309,3 +6309,17 @@ df <- df4
                        browsable = TRUE)
 
 }
+
+plot_auslaender_mint <- function(df,r){
+
+
+  browser()
+
+  df_aus <<- df
+
+
+
+
+
+}
+

@@ -371,6 +371,31 @@ mod_studium_studienzahl_ui <- function(id){
                   )
         ))),
 
+  fluidRow(id="jump4c",
+           shinydashboard::box(
+             title = "Ausländische Studierende",
+             width = 12,
+             p("Lorem ipsum"),
+
+             tabsetPanel(type = "tabs"
+                         ,
+
+                         tabPanel("Anteil Studierende", br(),
+
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    tags$style(".well {background-color:#FFFFFF;}"),
+                                    tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                    mod_studium_studienzahl_einstieg_verlauf_gender_ui("mod_studium_studienzahl_einstieg_verlauf_gender_ui_1")),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    highcharter::highchartOutput(ns("plot_auslaender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+
+                         ),
+
+
+             ))),
+
 
 
 
@@ -616,6 +641,12 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
     # Box 8
     output$plot_top_faecher <-  renderUI({
       plot_ranking_top_faecher(data_studierende_faecher, r)
+    })
+
+    # Box Ausländer
+
+    output$plot_auslaender <-  renderUI({
+      plot_auslaender_mint(studierende_faecher_alle_indi, r)
     })
 
 
