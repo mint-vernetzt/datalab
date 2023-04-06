@@ -251,6 +251,45 @@ data <- data[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht"
                 #, "hinweise", "quelle"
 )]
 
+######## Weitere Anpassungen/Berechnungen von Andi ###################################
+
+data <- data %>%
+  dplyr::mutate(wert = ifelse(is.na(wert), 0, wert))
+
+# Calculate Beschäftigte 25-55
+data_alter <- data %>% dplyr::filter(indikator %in% c("Beschäftigte", "Beschäftigte u25", "Beschäftigte ü55"),
+                                                                   geschlecht == "Gesamt")
+
+data_alter <- data_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
+                                                                           landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
+  dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
+  dplyr::mutate(indikator = "Beschäftigte 25-55") %>%
+  dplyr::filter(!is.na(wert)) %>%
+  dplyr::bind_rows(., data_alter)
+
+# Calculate ausländische Beschäftigte 25-55
+data_ausl_alter <- data %>% dplyr::filter(indikator %in% c("ausländische Beschäftigte", "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55"),
+                                                                        geschlecht == "Gesamt")
+
+data_ausl_alter <- data_ausl_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
+                                                                                     landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
+  dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
+  dplyr::mutate(indikator = "ausländische Beschäftigte 25-55") %>%
+  dplyr::filter(!is.na(wert)) %>%
+  dplyr::bind_rows(., data_ausl_alter)
+
+# Calculate males
+data_geschlecht <- data %>% dplyr::filter(!indikator %in% c("Beschäftigte u25", "Beschäftigte ü55",
+                                                                                          "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55")) %>%
+  dplyr::group_by(bereich, kategorie, indikator, fachbereich, bundesland, landkreis,
+                  landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
+  dplyr::summarise(wert = wert - dplyr::lead(wert, 1)) %>%
+  dplyr::mutate(geschlecht = "Männer") %>%
+  dplyr::filter(!is.na(wert)) %>%
+  dplyr::bind_rows(., data)
+
+data_final <- dplyr::bind_rows(data_geschlecht, data_alter, data_ausl_alter) %>%
+  dplyr::distinct()
 
 ######## Arbeitsmarkt detailliert - Azubi-Datensatz #############################
 
@@ -384,8 +423,9 @@ data_a$schluesselnummer <- ifelse(data_a$schluesselnummer == data_a$region, NA, 
 #data_a$region <- stats::ave(data_a$region, cumsum(!is.na(data_a$region)), FUN=function(x) x[1])
 
 # Männer entfernen (haben gesamt und frauen)
-data_a <- data_a %>%
-  dplyr::select(-männer)
+# kann man so nicht machen, würde Daten verlieren, da aus Datenschutz manchmal nur Zahlen der Männer und nicht Gesamt/Frauen angegeben sind
+# data_a <- data_a %>%
+#   dplyr::select(-männer)
 
 # ins long-Format bringen
 data_a <- data_a %>%
@@ -418,64 +458,28 @@ data_a <- data_a %>%
 
 data_a$geschlecht[data_a$geschlecht == "frauen"]<-"Frauen"
 data_a$geschlecht[data_a$geschlecht == "gesamt"]<-"Gesamt"
+data_a$geschlecht[data_a$geschlecht == "männer"]<-"Männer"
 
 # Spalten in logische Reihenfolge bringen
 data_a <- data_a[,c("bereich","kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
                     #, "hinweise", "quelle"
 )]
 
+#### Korrektur
+#für Westdeutschland (ohne Berlin) das auch als Bundesland schreiben, nicht DE, sonst entstehen später möglicherweise Fehler beim aggregieren
+data_a$bundesland <- ifelse(data_a$landkreis == "Westdeutschland (ohne Berlin)", "Westdeutschland (ohne Berlin)", data_a$bundesland)
+
 ######## Arbeitsmarkt detailliert - insgesamt ###################################
 
-arbeitsmarkt_detail <- rbind(data, data_a)
+arbeitsmarkt_detail_final <- rbind(data_final, data_a)
 
-arbeitsmarkt_detail$landkreis <- ifelse(arbeitsmarkt_detail$bundesland==arbeitsmarkt_detail$landkreis & is.na(arbeitsmarkt_detail$landkreis_nummer
-                                                                                                              ), "alle Landkreise", arbeitsmarkt_detail$landkreis)
+arbeitsmarkt_detail_final$landkreis <- ifelse(arbeitsmarkt_detail_final$bundesland==arbeitsmarkt_detail_final$landkreis & is.na(arbeitsmarkt_detail_final$landkreis_nummer
+                                                                                                              ), "alle Landkreise", arbeitsmarkt_detail_final$landkreis)
 
-#Wert als numerisch definieren
-arbeitsmarkt_detail$wert <- as.numeric(arbeitsmarkt_detail$wert)
+#Wert als numerisch definieren und etwaige Gruppierungen entfernen
+arbeitsmarkt_detail_final <- arbeitsmarkt_detail_final %>% dplyr::ungroup()
+arbeitsmarkt_detail_final$wert <- as.numeric(arbeitsmarkt_detail_final$wert)
 
-# übergangsweise Arbeitsmarkt-Datensatz mit Aggregaten DE und Bundesländer
-usethis::use_data(arbeitsmarkt_detail, overwrite = T)
-
-######## Weitere Anpassungen/Berechnungen von Andi ###################################
-
-arbeitsmarkt_detail <- arbeitsmarkt_detail %>%
-  dplyr::mutate(wert = ifelse(is.na(wert), 0, wert))
-
-# Calculate Beschäftigte 25-55
-arbeitsmarkt_detail_alter <- arbeitsmarkt_detail %>% dplyr::filter(indikator %in% c("Beschäftigte", "Beschäftigte u25", "Beschäftigte ü55"),
-                                                                   geschlecht == "Gesamt")
-
-arbeitsmarkt_detail_alter <- arbeitsmarkt_detail_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
-                                                                           landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
-  dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
-  dplyr::mutate(indikator = "Beschäftigte 25-55") %>%
-  dplyr::filter(!is.na(wert)) %>%
-  dplyr::bind_rows(., arbeitsmarkt_detail_alter)
-
-# Calculate ausländische Beschäftigte 25-55
-arbeitsmarkt_detail_ausl_alter <- arbeitsmarkt_detail %>% dplyr::filter(indikator %in% c("ausländische Beschäftigte", "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55"),
-                                                                        geschlecht == "Gesamt")
-
-arbeitsmarkt_detail_ausl_alter <- arbeitsmarkt_detail_ausl_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
-                                                                                     landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
-  dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
-  dplyr::mutate(indikator = "ausländische Beschäftigte 25-55") %>%
-  dplyr::filter(!is.na(wert)) %>%
-  dplyr::bind_rows(., arbeitsmarkt_detail_ausl_alter)
-
-# Calculate males
-arbeitsmarkt_detail_geschlecht <- arbeitsmarkt_detail %>% dplyr::filter(!indikator %in% c("Beschäftigte u25", "Beschäftigte ü55",
-                                                                                          "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55")) %>%
-  dplyr::group_by(bereich, kategorie, indikator, fachbereich, bundesland, landkreis,
-                  landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
-  dplyr::summarise(wert = wert - dplyr::lead(wert, 1)) %>%
-  dplyr::mutate(geschlecht = "Männer") %>%
-  dplyr::filter(!is.na(wert)) %>%
-  dplyr::bind_rows(., arbeitsmarkt_detail)
-
-arbeitsmarkt_detail_final <- dplyr::bind_rows(arbeitsmarkt_detail_geschlecht, arbeitsmarkt_detail_alter, arbeitsmarkt_detail_ausl_alter) %>%
-  dplyr::distinct()
 
 #### Datensatz speichern
 

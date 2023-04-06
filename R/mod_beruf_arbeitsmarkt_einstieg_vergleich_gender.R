@@ -21,6 +21,35 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
         multiple = FALSE,
         selected = "MINT")
 
+    #Auswahl des LAnds grad immer leer übergeben
+    #,
+
+    # p("Auswahl des Bundeslands"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("land_arbeitsmarkt_einstieg_vergleich_gender"),
+    #   choices = c("Deutschland",
+    #               "Baden-Württemberg",
+    #               "Bayern",
+    #               "Berlin",
+    #               "Brandenburg",
+    #               "Bremen",
+    #               "Hamburg",
+    #               "Hessen",
+    #               "Mecklenburg-Vorpommern",
+    #               "Niedersachsen",
+    #               "Nordrhein-Westfalen",
+    #               "Rheinland-Pfalz",
+    #               "Saarland",
+    #               "Sachsen",
+    #               "Sachsen-Anhalt",
+    #               "Schleswig-Holstein",
+    #               "Thüringen",
+    #               "Westdeutschland (o. Berlin)",
+    #               "Ostdeutschland (einschl. Berlin)" ),
+    #   multiple = FALSE,
+    #   selected = "Niedersachsen")
+
+
     # p("Auswahl des Jahres:"),
     # shinyWidgets::sliderTextInput(
     #   inputId = ns("date_arbeitsmarkt_einstieg_vergleich_gender"),
@@ -45,6 +74,12 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_server <- function(id, r){
     observeEvent(input$fach_arbeitsmarkt_einstieg_vergleich_gender, {
       r$fach_arbeitsmarkt_einstieg_vergleich_gender <- input$fach_arbeitsmarkt_einstieg_vergleich_gender
     })
+
+    # Auswahl Land aktuell immer leer übergeben
+
+    # observeEvent(input$land_arbeitsmarkt_einstieg_vergleich_gender, {
+    #   r$land_arbeitsmarkt_einstieg_vergleich_gender <- input$land_arbeitsmarkt_einstieg_vergleich_gender
+    # })
 
   })
 }
