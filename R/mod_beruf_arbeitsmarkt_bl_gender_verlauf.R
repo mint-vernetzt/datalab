@@ -61,8 +61,18 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       selected = c("Hessen", "Hamburg")
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf"),
+      choices = c("Relativ", "Absolut"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
+
+
 }
 
 #' beruf_arbeitsmarkt_bl_gender_verlauf Server Functions
@@ -74,6 +84,11 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_server <- function(id, r){
     observeEvent(input$date_beruf_arbeitsmarkt_bl_gender_verlauf, {
       r$date_beruf_arbeitsmarkt_bl_gender_verlauf <- input$date_beruf_arbeitsmarkt_bl_gender_verlauf
     })
+
+    observeEvent(input$abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf, {
+      r$abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf <- input$abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf
+    })
+
 
     observeEvent(input$indikator_beruf_arbeitsmarkt_bl_gender_verlauf, {
       r$indikator_beruf_arbeitsmarkt_bl_gender_verlauf <- input$indikator_beruf_arbeitsmarkt_bl_gender_verlauf

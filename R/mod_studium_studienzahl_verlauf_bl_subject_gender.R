@@ -16,7 +16,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       inputId = ns("choice_V_y"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017", "2018","2019", "2020", "2021"),
-      selected = c("2013","2014")
+      selected = c("2015","2020")
     ),
     p("Auswahl des Indikators:"),
     shinyWidgets::pickerInput(
@@ -75,7 +75,17 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
                   "Ostdeutschland"
       ),
       selected = "Sachsen"
-    ))
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_l_v"),
+      choices = c("Relativ", "Absolut"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
+    )
+  )
+
 }
 
 #' studium_studienzahl_verlauf_bl_subject_gender Server Functions
@@ -91,6 +101,10 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_server <- function(id, r){
 
     observeEvent(input$choice_v_f, {
       r$choice_v_f <- input$choice_v_f
+    })
+
+    observeEvent(input$abs_zahlen_l_v, {
+      r$abs_zahlen_l_v <- input$abs_zahlen_l_v
     })
 
     observeEvent(input$choice_l_v, {
