@@ -149,7 +149,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              )
                     ),
 
-                    tabPanel("Vergleich Anteil mit bei Frauen & Männer (Karte)", br(),
+                    tabPanel("Vergleich Anteil von Frauen & Männer (Karte)", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -519,7 +519,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 #' beruf_arbeitsmarkt Server Functions
 #'
 #' @noRd
-mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, data_arbeitsmarkt_detail_aggregiert, r){
+mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
