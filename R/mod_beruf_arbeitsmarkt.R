@@ -244,7 +244,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       shinydashboard::box(
         title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
         width = 12,
-        p("Hier zeigen wir die Unterschiede nach MINT-Berufsbereichen Mathematik/ Naturwissenschaft, Infromatik und Technik. Die Aufbereitung nach einzelnen Berufen steht noch aus."),
+        p("Hier zeigen wir die Unterschiede nach MINT-Berufsbereichen Mathematik/ Naturwissenschaft, Informatik und Technik. Die Aufbereitung nach einzelnen Berufen steht noch aus."),
 
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Anteil MINT-Berufsfelder zwischen Auszubildenden und Beschäftigten (Karte)", br(),

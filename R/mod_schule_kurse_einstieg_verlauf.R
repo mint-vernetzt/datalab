@@ -17,8 +17,18 @@ mod_schule_kurse_einstieg_verlauf_ui <- function(id){
       choices = c("2013", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020", "2021"),
       selected = c("2016", "2021")
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_kurse_einstieg_verlauf"),
+      choices = c("Relativ", "Absolut"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
+
+
 }
 
 #' schule_kurse_einstieg_verlauf Server Functions
@@ -30,6 +40,11 @@ mod_schule_kurse_einstieg_verlauf_server <- function(id, r){
     observeEvent(input$date_kurse_einstieg_verlauf, {
       r$date_kurse_einstieg_verlauf <- input$date_kurse_einstieg_verlauf
     })
+
+    observeEvent(input$abs_zahlen_kurse_einstieg_verlauf, {
+      r$abs_zahlen_kurse_einstieg_verlauf <- input$abs_zahlen_kurse_einstieg_verlauf
+    })
+
 
 
   })

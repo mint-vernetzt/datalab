@@ -95,9 +95,19 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       multiple = TRUE
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_studium_studienzahl_bl_verlauf"),
+      choices = c("Relativ", "Absolut"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
-
   )
+
+
+
 }
 
 #' studium_studienzahl_bl_verlauf Server Functions
@@ -117,6 +127,10 @@ mod_studium_studienzahl_bl_verlauf_server <- function(id, r){
 
     observeEvent(input$verl_bl_l, {
       r$verl_bl_l <- input$verl_bl_l
+    })
+
+    observeEvent(input$abs_zahlen_studium_studienzahl_bl_verlauf, {
+      r$abs_zahlen_studium_studienzahl_bl_verlauf <- input$abs_zahlen_studium_studienzahl_bl_verlauf
     })
 
     observeEvent(input$hochschulform_studium_studienzahl_bl_verlauf1, {
