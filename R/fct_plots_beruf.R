@@ -974,7 +974,7 @@ beruf_einstieg_vergleich <- function(df,r) {
  # df <- df %>% dplyr::filter(jahr == timerange)
 
   # filtern auch nach DE - neuer DF enthält das wieder
-  #df <- df %>% dplyr::filter(landkreis != "alle Landkreise")
+  df <- df %>% dplyr::filter(landkreis == "alle Landkreise")
  df <- df %>% dplyr::filter(bundesland == "Deutschland")
   df <- df %>% dplyr::filter(anforderung == "Gesamt")
   df <- df %>% dplyr::filter(geschlecht == "Gesamt")
@@ -998,8 +998,8 @@ beruf_einstieg_vergleich <- function(df,r) {
     dplyr::filter(fachbereich == "MINT") %>%
     dplyr::left_join(df_new_gesamt, by = c("bereich", "kategorie", "indikator", "bundesland", "landkreis",
                                            "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht")) %>%
-    dplyr::rename(fachbereich = "fachbereich.x") %>%
-    dplyr::select(-fachbereich.y) %>%
+    #dplyr::rename(fachbereich = "fachbereich.x") %>%
+    #dplyr::select(-fachbereich.y) %>%
     dplyr::group_by(indikator) %>%
     dplyr::mutate(proportion = (wert/wert_gesamt)*100)
 
@@ -1880,14 +1880,16 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
   df$fachbereich[df$fachbereich == "Alle"]<-"andere Fächergruppen"
   df <- df %>% dplyr::filter(fachbereich != "MINT")
 
-  # Berechnen Männer
-  df_m <- df %>% dplyr::group_by(jahr, indikator, fachbereich) %>%
-    dplyr::summarise(wert = wert[geschlecht=="Gesamt"]-wert[geschlecht=="Frauen"])
-  df_m$geschlecht <- "Männer"
+  # Berechnen Männer - sind enthalten
+  # df_m <- df %>% dplyr::group_by(jahr, indikator, fachbereich) %>%
+  #   dplyr::summarise(wert = wert[geschlecht=="Gesamt"]-wert[geschlecht=="Frauen"])
+  # df_m$geschlecht <- "Männer"
+  #
+  # df <- df %>%dplyr::filter(geschlecht=="Frauen")
+  #
+  # df <- rbind(df, df_m)
 
-  df <- df %>%dplyr::filter(geschlecht=="Frauen")
-
-  df <- rbind(df, df_m)
+  df <- df %>% dplyr::filter(geschlecht != "Gesamt")
 
 
   # Anteil berechnen
@@ -1896,7 +1898,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
     dplyr::mutate(props = sum(wert))
 
   df <- df %>% dplyr::group_by(fachbereich, indikator, geschlecht) %>%
-    dplyr::summarize(proportion = wert/props)
+    dplyr::mutate(proportion = wert/props)
 
   df$proportion <- df$proportion * 100
 
