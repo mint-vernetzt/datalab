@@ -373,24 +373,43 @@ mod_studium_studienzahl_ui <- function(id){
 
   fluidRow(id="jump4c",
            shinydashboard::box(
-             title = "Ausländische Studierende",
+             title = "Internationale Studierende",
              width = 12,
              p("Lorem ipsum"),
-
-             tabsetPanel(type = "tabs"
-                         ,
-
-                         tabPanel("Anteil Studierende", br(),
-
+             tabsetPanel(type = "tabs",
+                         tabPanel("Anteil von internationalen Studierenden nach Fächern", br(),
                                   shiny::sidebarPanel(
                                     width = 3,
                                     tags$style(".well {background-color:#FFFFFF;}"),
                                     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                                    mod_studium_studienzahl_einstieg_verlauf_gender_ui("mod_studium_studienzahl_einstieg_verlauf_gender_ui_1")),
+                                    mod_studium_studienzahl_ausl_ui("mod_studium_studienzahl_ausl_ui")),
                                   shiny::mainPanel(
                                     width = 9,
-                                    highcharter::highchartOutput(ns("plot_auslaender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                                    tags$head(tags$style(HTML(".small-box {height: 400px}"))),
+                                    highcharter::highchartOutput(ns("plot_auslaender_test"), height = "1000px"), p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                                  ),
 
+                         tabPanel("Anteil von internationalen Studierenden im Zeitvergleich", br(),
+
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    tags$style(".well  {background-color:#FFFFFF;}"),
+                                    tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                    mod_studium_studienzahl_ausl_zeit_ui("mod_studium_studienzahl_ausl_zeit_ui")),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    highcharter::highchartOutput(ns("plot_auslaender_zeit")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+
+                         # tabPanel("Anteil von internationalen Studierenden im Zeitgergleich", br(),
+                         #          shiny::sidebarPanel(
+                         #            width = 3,
+                         #            tags$style(".well {background-color:#FFFFFF;}"),
+                         #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                         #            mod_studium_studienzahl_ausl_zeit_ui("mod_studium_studienzahl_ausl_zeit_ui_1")),
+                         #          shiny::mainPanel(
+                         #            width = 9,
+                         #            tags$head(tags$style(HTML(".small-box {height: 400px}"))),
+                         #            highcharter::highchartOutput(ns("plot_auslaender_zeit")), p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
                          ),
 
 
@@ -645,8 +664,12 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
 
     # Box Ausländer
 
-    output$plot_auslaender <-  renderUI({
+    output$plot_auslaender_test <-  highcharter::renderHighchart({
       plot_auslaender_mint(studierende_faecher_alle_indi, r)
+    })
+
+    output$plot_auslaender_zeit <-  highcharter::renderHighchart({
+      plot_auslaender_mint_zeit(studierende_faecher_alle_indi, r)
     })
 
 
