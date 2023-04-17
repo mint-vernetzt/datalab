@@ -39,7 +39,7 @@ mod_studium_studienzahl_ausl_ui <- function(id){
                   "Thüringen",
                   "Westdeutschland",
                   "Ostdeutschland (inkl. Berlin)"
-      ),selected = "Nordrhein-Westfalen"
+      ),selected = "Ostdeutschland (inkl. Berlin)"
     ),
     p("Status der Studierenden:"),
     shinyWidgets::pickerInput(
