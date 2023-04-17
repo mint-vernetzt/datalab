@@ -419,6 +419,9 @@ arbeitsmarkt_bl_gender <- function(df,r) {
   #Gerundetes Prop für Hover:
   df$prop <- round(df$proportion, 0)
 
+  #Trennpunkte für lange Zahlen ergänzen
+  df$wert <- prettyNum(df$wert, big.mark = ".")
+
   values_female <- df %>% dplyr::filter(geschlecht == "Frauen")
   values_male <- df %>% dplyr::filter(geschlecht == "Männer")
 
@@ -1014,6 +1017,9 @@ beruf_einstieg_vergleich <- function(df,r) {
     #Umbennen von MINT/Andere Berufe
     df$fachbereich[df$fachbereich=="MINT"]<-"Berufe in MINT"
 
+    #Trennpunkte für lange Zahlen ergänzen
+    df$wert <- prettyNum(df$wert, big.mark = ".")
+
   # Auswahl Indikatoren
   df <- df %>% dplyr::filter(indikator %in% c("Auszubildende",
                                                 "Auszubildende (1. Jahr)",
@@ -1366,6 +1372,9 @@ arbeitsmarkt_bl <- function(df,r) {
 
     #Gerundetes Prop für Hover:
     df$prop <- round(df$proportion, 1)
+
+    #Trennpunkte für lange Zahlen ergänzen
+    df$wert <- prettyNum(df$wert, big.mark = ".")
 
 
 # Anteil berechnen
@@ -1771,6 +1780,9 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
     dplyr::ungroup()%>%
     dplyr::select(-c("fachbereich.y")) %>%
     dplyr::mutate(prop = (wert/wert_ges)*100)
+
+  #Trennpunkte für lange Zahlen in absolutem Wert ergänzen
+  df$wert <- prettyNum(df$wert, big.mark = ".")
 
 
   df <- df%>%
@@ -2967,6 +2979,9 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
     dplyr::mutate(proportion_gesamt = (wert/wert_gesamt)*100)%>%
     dplyr::select(-c("fachbereich.y", "anforderung.y", "geschlecht.y"))
 
+  #Trennpunkte für lange Zahlen ergänzen
+  df$wert <- prettyNum(df$wert, big.mark = ".")
+
   # Datasets
   df_employed_mint <- df %>% dplyr::filter(indikator == "Beschäftigte",
                        fachbereich == "MINT",
@@ -3255,6 +3270,9 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
 
   df$proportion <- df$proportion * 100
 
+  #Trennpunkte für lange Zahlen ergänzen
+  df$wert <- prettyNum(df$wert, big.mark = ".")
+
 
   # Indikator-Kombination benennen
   df$indikator <- ifelse(df$indikator == "Auszubildende" & df$fachbereich == fach_choice, paste0("Auszubildende in ",fach_choice), df$indikator)
@@ -3387,6 +3405,9 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
 
   #Alle Werte zusammenfügen
   df <- rbind(df, mint_agg, technik_agg)
+
+  #Trennpunkte für lange Zahlen ergänzen
+  df$wert <- prettyNum(df$wert, big.mark = ".")
 
   #für Überblick unterarten von Technik wieder raus
   df <- df %>% dplyr::filter(fachbereich %in% c("Alle Berufsfelder außer MINT (gesamt)",
@@ -3566,6 +3587,10 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
 
   df2_map <- df2_map %>% dplyr::mutate(
     landkreis_nummer = paste0("de-", state_code, "-", landkreis_nummer, "000"))
+
+  #Trennpunkte für lange Zahlen ergänzen in Absolute Zahlen für Hover
+  df1_map$wert <- prettyNum(df1_map$wert, big.mark = ".")
+  df2_map$wert <- prettyNum(df2_map$wert, big.mark = ".")
 
   # create plots
   map1 <- highcharter::hcmap(

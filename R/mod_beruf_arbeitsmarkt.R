@@ -177,7 +177,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                     #          )
                     # ),
-                    br(),
+                    #br(),
                     tabPanel("Vergleich Anteil MINT bei Frauen nach Bundesländern im Zeitverlauf", br(),
 
                              shiny::sidebarPanel(

@@ -83,7 +83,7 @@ mod_home_start_ui <- function(id){
                       shiny::sidebarPanel(
                         width = 3,
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
-                        p(style="font-size:12px;color:grey", "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                        p(style="font-size:12px;color:grey", "Hinweis zur Darstellung: Falls die Grafiken abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                         p(style="font-size:12px;color:grey", "Interpretationshilfe: Wenn man beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden deutschlandweit im Jahr 2021
                           31 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten in Deutschland ist dieser Anteil ein wenig geringer. Im Jahr 2021 arbeiten nur 23 % der Beschäftigten in einem MINT-Beruf.")
                         ),

@@ -50,6 +50,9 @@ df_wert <- df4 %>%
  wert <- df_wert$wert
  df4 <- cbind(df4, wert)
 
+ #Trennpunkte für lange Zahlen ergänzen
+ df4$wert <- prettyNum(df4$wert, big.mark = ".")
+
  df4 <- within(df4, proportion <- factor(proportion, levels=c("Nicht MINT", "MINT")))
 
  #,
@@ -383,6 +386,9 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   #Absoluten wert anhängen
   wert <- df_wert$wert
   dfh <- cbind(dfh, wert)
+
+  #Trennpunkte für lange Zahlen ergänzen
+  dfh$wert <- prettyNum(dfh$wert, big.mark = ".")
 
   if(length(genl) == 1) {
 
@@ -1368,6 +1374,9 @@ studienzahl_einstieg_comparison <- function(df,r) {
   wert <- df_wert$wert
   df4 <- cbind(df4, wert)
 
+  #Trennpunkte für lange Zahlen ergänzen
+  df4$wert <- prettyNum(df4$wert, big.mark = ".")
+
   df4$label <-factor(df4$label,levels= c("Studierende",
                                      "Studierende (Fachhochschulen)",
                                      "Studierende (Lehramt, Universität)",
@@ -1538,6 +1547,9 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
     #Absoluten wert anhängen
     wert <- df_wert$wert
     df_io <- cbind(df_io, wert)
+
+    #Trennpunkte für lange Zahlen ergänzen
+    df_io$wert <- prettyNum(df_io$wert, big.mark = ".")
 
     df_io <- df_io %>%
       dplyr::filter(region==sel_bl)%>%
@@ -4768,10 +4780,14 @@ studierende_map <- function(df,r) {
   wert <- df_wert$wert
   df3 <- cbind(df3, wert)
 
+  #Trennpunkte für lange Zahlen ergänzen
+  df3$wert <- prettyNum(df3$wert, big.mark = ".")
+
   df7 <<- df3 %>%
     dplyr::select(label, region, jahr, fach, proportion, wert)%>%
     dplyr::filter(label== label_m)
 
+  #Anteil mit weniger Nachkommerstellen für Hover
   df7$prop <- df7$proportion
   df7$prop <- round(df7$prop, 0)
 
@@ -6050,6 +6066,9 @@ studierende_mint_vergleich_bl <- function(df,r) {
   wert <- df_wert$wert
   df_io <- cbind(df_io, wert)
 
+  #Trennpunkte für lange Zahlen ergänzen
+  df_io$wert <- prettyNum(df_io$wert, big.mark = ".")
+
   df7 <<- df_io %>%
     dplyr::select(label, region, jahr, fach, proportion, wert)
 
@@ -6252,7 +6271,7 @@ plot_ranking_top_faecher <- function(df, r, type) {
                                "Ingenieurwissenschaften ohne Informatik",
                                "Weitere naturwissenschaftliche und mathematische Fächer"
                                ))
-df <- df4
+  df <- df4
 
 
   # Calculate male numbers
@@ -6273,6 +6292,9 @@ df <- df4
                   indikator = indikator.x) %>%
     dplyr::select(-c("wert.y", "anzeige_geschlecht.y", "indikator.y")) %>%
     dplyr::filter(anzeige_geschlecht != "Gesamt")
+
+  #Trennpunkte für lange Zahlen ergänzen
+  df$wert <- prettyNum(df$wert, big.mark = ".")
 
   if(subject == "MINT-Fächer"){
 

@@ -708,6 +708,9 @@ kurse_mint_comparison <- function(df,r) {
 
   df <- na.omit(df)
 
+  #Trennpunkte für lange Zahlen ergänzen
+  df$wert <- prettyNum(df$wert, big.mark = ".")
+
   # plot
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
@@ -852,6 +855,9 @@ kurse_mint_comparison_bl <- function(df,r) {
   df$proportion <- round(df$proportion * 100)
 
   df <- subset(df, proportion >= 0.5)
+
+  #Trennpunkte für lange Zahlen ergänzen
+  df$wert <- prettyNum(df$wert, big.mark = ".")
 
   help_title <- ifelse(subject == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subject)
   help_title <- ifelse(help_title == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_title)
@@ -1522,6 +1528,9 @@ kurse_map <- function(df,r) {
   df$prop <- df$proportion
   df$prop <- round(df$prop, 0)
 
+  #Trennpunkte für lange Zahlen ergänzen
+  df$wert <- prettyNum(df$wert, big.mark = ".")
+
   highcharter::hw_grid(
   # plot
   highcharter::hcmap(
@@ -1652,6 +1661,9 @@ kurse_map_gender <- function(df,r) {
   #Extra gerundeten Proportions-Wert erstellen, für Anzeige in Hover
   df$prop <- df$proportion
   df$prop <- round(df$prop, 0)
+
+  #Trennpunkte für lange Zahlen ergänzen
+  df$wert <- prettyNum(df$wert, big.mark = ".")
 
   highcharter::hw_grid(
     # plot
@@ -2167,6 +2179,9 @@ kurse_einstieg_comparison <- function(df,r) {
 
   df$proportion <- df$proportion * 100
 
+  #Trennpunkte für lange Zahlen ergänzen
+  df$wert_new <- prettyNum(df$wert_new, big.mark = ".")
+
   # order years for plot
   dfü <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
@@ -2325,6 +2340,9 @@ kurse_comparison_gender <- function(df,r) {
 
   df1$anzeige_geschlecht[df1$anzeige_geschlecht == "Frauen"] <- "Mädchen"
   df1$anzeige_geschlecht[df1$anzeige_geschlecht == "Männer"] <- "Jungen"
+
+  #Trennpunkte für lange Zahlen ergänzen
+  df1$wert <- prettyNum(df1$wert, big.mark = ".")
 
   # plot
   highcharter::hchart(df1, 'bar', highcharter::hcaes( x = indikator, y=round(proportion), group = anzeige_geschlecht)) %>%

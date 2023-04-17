@@ -90,6 +90,9 @@ home_einstieg_pie <- function(df,r) {
   wert <- dfk2_wert$wert
   dfk2_fn <- cbind(dfk2_fn, wert)
 
+  #Trennpunkte für lange Zahlen ergänzen
+  dfk2_fn$wert <- prettyNum(dfk2_fn$wert, big.mark = ".")
+
 
   dfk2_fn$proportion <- round_preserve_sum(as.numeric(dfk2_fn$proportion),0)
 
@@ -585,6 +588,9 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
   # Indikator u25 mit NAs löschen und Runden
   dfk2_fn <- stats::na.omit(dfk2_fn)
   dfk2_fn$proportion <- round_preserve_sum(as.numeric(dfk2_fn$proportion),0)
+
+  #Trennpunkte für lange Zahlen ergänzen
+  dfk2_fn$wert <- prettyNum(dfk2_fn$wert, big.mark = ".")
 
   #sortieren
   dfk2_fn <- dfk2_fn[with(dfk2_fn, order(region, fachbereich, jahr, decreasing = TRUE)), ]
