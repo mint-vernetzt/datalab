@@ -56,6 +56,10 @@ mod_schule_kurse_ui <- function(id){
           ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3a",
         span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
+
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4a",
+        span(tags$b(span("Kompetenzdaten IQB:")))),"MINT-Kompetenzen der 4. Klassen."),
+
         ),
 
       shinydashboard::box(
@@ -439,6 +443,37 @@ mod_schule_kurse_ui <- function(id){
 
                     ))),
 
+      fluidRow(id="jump4a",
+           shinydashboard::box(
+             title = "Kompetenzdaten IQB: MINT-Kompetenzen der 4. Klassen",
+             width = 12,
+             p("Dieses interaktive Diagramm gibt einen ersten Einblick in die Mathe-Kompetenzen von Schülerinnen und Schüler der 4. Klassen.
+               Zeitnah werden weitere Darstellungen der Daten aus den IQB-Befragungen der 4. und 9. Klassen folgen!"),
+             tabsetPanel(type = "tabs",
+
+                         tabPanel("Mindeststandards in Mathematik", br(),
+
+                                  tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    mod_schule_kurse_iqb_standard_zeitverlauf_ui("mod_schule_kurse_iqb_standard_zeitverlauf_ui_1"),
+                                    # p(style="font-size:12px;color:grey",
+                                    #   "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass im Jahr 2021 in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2021 bei 33 %.")
+                                  ),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    highcharter::highchartOutput(ns("plot_iqb_standard_zeitverlauf"))
+                                    ,
+                                    p(style="font-size:12px;color:grey", br(),
+                                      "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen."),
+                                    # p(style="font-size:12px;color:grey",
+                                    #   "Hinweis: Durch Rundung der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen.")
+
+                                  )
+                         )
+             ))),
+
 
     # Footer
 
@@ -485,7 +520,7 @@ mod_schule_kurse_ui <- function(id){
 #' schule_kurse Server Functions
 #'
 #' @noRd
-mod_schule_kurse_server <- function(id, data_kurse, r){
+mod_schule_kurse_server <- function(id, data_kurse, data_iqb_4klasse, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -585,6 +620,10 @@ mod_schule_kurse_server <- function(id, data_kurse, r){
 
     output$plot_ranking_gender <- renderPlot({
       kurse_ranking_gender(data_kurse,r)
+    })
+
+    output$plot_iqb_standard_zeitverlauf <- highcharter::renderHighchart({
+      iqb_standard_zeitverlauf(data_iqb_4klasse,r)
     })
 
     # downloader

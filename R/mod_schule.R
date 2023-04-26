@@ -21,12 +21,12 @@ mod_schule_ui <- function(id){
 #' schule Server Functions
 #'
 #' @noRd
-mod_schule_server <- function(id, data_kurse, r){
+mod_schule_server <- function(id, data_kurse, data_iqb_4klasse, r){
 
   r <- reactiveValues()
 
   # Kurse
-  mod_schule_kurse_server("mod_schule_kurse_ui_1", data_kurse, r)
+  mod_schule_kurse_server("mod_schule_kurse_ui_1", data_kurse, data_iqb_4klasse, r)
 
   # Box 2
   mod_schule_kurse_einstieg_server("mod_schule_kurse_einstieg_ui_1", r)
@@ -57,6 +57,8 @@ mod_schule_server <- function(id, data_kurse, r){
   mod_schule_kurse_map_gender_server("mod_schule_kurse_map_gender_ui_1", r)
   mod_schule_kurse_verlauf_server("mod_schule_kurse_verlauf_ui_1", r)
   mod_schule_kurse_ranking_gender_server("mod_schule_kurse_ranking_gender_ui_1", r)
+
+  mod_schule_kurse_iqb_standard_zeitverlauf_server("mod_schule_kurse_iqb_standard_zeitverlauf_ui_1", r)
 
 }
 
