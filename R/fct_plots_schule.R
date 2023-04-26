@@ -2876,3 +2876,43 @@ df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
 
 
+iqb_standard_zeitverlauf <- function(df, r){
+
+  # reactive values übergeben
+  bl_select <- r$land_iqb_standard_zeitverlauf
+
+  # Region filtern
+  df <- df %>% dplyr::filter(region == bl_select)
+
+  # Anforderungen, die wir nicht betrachten, ausfiltern
+  df <- df %>% dplyr::filter(indikator == "Mindeststandard nicht erreicht")
+
+
+    highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr))%>%
+      highcharter::hc_tooltip(pointFormat = "{point.y} % erfüllen Mindeststandard nicht")%>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %")) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+    #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
+      highcharter::hc_colors(c(#"#efe8e6",
+                               "#b16fab")) %>%
+      highcharter::hc_title(text = paste0("Anteil der Schüler und Schülerinnen aus " , bl_select, ", welche die Mindeststandards in Mathematik nicht erfüllen"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                            this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+}
+
+

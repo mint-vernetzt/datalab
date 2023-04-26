@@ -23,13 +23,21 @@ data <- data %>%
 
 # Datensatz aufbereiten ---------------------------------------------------
 
-# Spalten und Standards umbenennen
+# Spalten umbenennen und BULA-Namen korrigieren
 data <- data %>%
   dplyr::rename(region = ...3,
          indikator = ...4,
          "2011" = perc_2011,
          "2016" = perc_2016,
-         "2021" = perc_2021)
+         "2021" = perc_2021) %>%
+  dplyr::mutate(region = dplyr::case_when(
+    stringr::str_detect(region, "Baden") ~ "Baden-Württemberg",
+    stringr::str_detect(region, "Westf") ~"Nordrhein-Westfalen",
+    stringr::str_detect(region, "Pfal") ~"Rheinland-Pfalz",
+    stringr::str_detect(region, "Anhal")~ "Sachsen-Anhalt",
+    stringr::str_detect(region, "Holst") ~"Schleswig-Holstein",
+    TRUE ~ region
+  ))
 
 # Bundesland Zuweisung auffüllen
 data$region <- stats::ave(data$region, cumsum(!is.na(data$region)), FUN=function(x) x[1])
