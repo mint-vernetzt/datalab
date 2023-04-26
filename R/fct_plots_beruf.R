@@ -3228,16 +3228,16 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
   # load UI inputs from reactive value
   #timerange <- r$date_arbeitsmarkt_einstieg_gender
   fach_choice <- r$fach_arbeitsmarkt_einstieg_vergleich_gender
-  land_choice <-r$land_arbeitsmarkt_einstieg_vergleich_genderr
-
+  land_choice <-r$BULA_arbeitsmarkt_einstieg_vergleich_gender
+browser()
   # filter dataset based on UI inputs
   #df <- df %>% dplyr::filter(jahr == timerange)
   df <- df %>% dplyr::filter(landkreis == "alle Landkreise")
   df <- df %>% dplyr::filter(anforderung == "Gesamt")
 
   #Auswahl region: - geht grad noch nicht, wird als leer übergeben
-  #df <- df %>% dplyr::filter(bundesland == land_choice)
-  df <- df %>% dplyr::filter(bundesland =="Deutschland")
+  df <- df %>% dplyr::filter(bundesland == land_choice)
+ # df <- df %>% dplyr::filter(bundesland =="Deutschland")
 
   # Mit Aggregaten arbeiten, nicht selbst berechnen
 
