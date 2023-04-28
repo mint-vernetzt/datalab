@@ -2916,3 +2916,109 @@ iqb_standard_zeitverlauf <- function(df, r){
 }
 
 
+iqb_mathe_mittel_zeitverlauf <- function(df, r){
+
+  # reactive values übergeben
+  bl_select <- r$land_iqb_mathe_mittel_zeitverlauf
+  indikator_select <- r$indi_iqb_mathe_mittel_zeitverlauf
+
+  # Region filtern
+  df <- df %>% dplyr::filter(region == bl_select)
+
+  # Jahr als Faktor speichern, für schönere x-Achse
+  df$jahr <- as.factor(df$jahr)
+
+  # nach gewählter Vergleichsgruppe filtern
+  if (indikator_select == "nach Geschlecht") {
+    df <- df %>% dplyr::filter(indikator == "Alle")
+
+    df$geschlecht <- as.factor(df$geschlecht)
+    df$geschlecht <- factor(df$geschlecht, levels = c("gesamt", "Mädchen", "Jungen"))
+
+  }
+  else{
+    if (indikator_select == "nach Migrationsgeschichte"){
+      df <- df %>% dplyr::filter(indikator %in% c("Alle", "Migrationsgeschichte", "keine Migrationsgeschichte"))
+      df <- df %>% dplyr::filter(geschlecht == "gesamt")
+
+      df$indikator<- as.factor(df$indikator)
+      df$indikator <- factor(df$indikator, levels = c("Alle", "Migrationsgeschichte", "keine Migrationsgeschichte" ))
+    }
+
+    else{
+      if(indikator_select == "nach Bildungshintergrund")
+      df <- df %>% dplyr::filter(indikator %in% c("Alle", "status_hoch", "status_niedrig"))
+      df <- df %>% dplyr::filter(geschlecht == "gesamt")
+
+      # Labels umbenennen
+      df$indikator[df$indikator == "status_hoch"] <- "Mehr als 100 Bücher zuhause"
+      df$indikator[df$indikator == "status_niedrig"] <- "100 Bücher oder weniger zuhause"
+
+      df$indikator<- as.factor(df$indikator)
+      df$indikator <- factor(df$indikator, levels = c("Alle", "100 Bücher oder weniger zuhause", "Mehr als 100 Bücher zuhause" ))
+    }
+  }
+
+  if(indikator_select == "nach Geschlecht"){
+
+    highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
+      highcharter::hc_tooltip(pointFormat = "{point.group} <br> Mittelwert Mathe: {point.y}")%>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}")) %>%
+      highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
+                                                                    "2016",
+                                                                    "2021")
+      ) %>%
+      #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
+      highcharter::hc_colors(c("#efe8e6",
+                               "#b16fab", "#D0A9CD"
+                               #"#154194",
+      )) %>%
+      highcharter::hc_title(text = paste0("Mittlere Leistung der Schüler und Schülerinnen in Mathematik nach Geschlecht aus " , bl_select),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                            this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+  }
+  else{
+    highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
+      highcharter::hc_tooltip(pointFormat = "{point.group} <br> Mittelwert Mathe : {point.y}")%>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}")) %>%
+      highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
+                                                                    "2016",
+                                                                    "2021")) %>%
+      #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
+      highcharter::hc_colors(c("#efe8e6",
+                               "#b16fab", "#D0A9CD"
+                               #"#154194",
+      )) %>%
+      highcharter::hc_title(text = paste0("Mittlere Leistung der Schüler und Schülerinnen in Mathematik ", indikator_select, " aus " , bl_select),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                            this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+  }
+
+}
+
