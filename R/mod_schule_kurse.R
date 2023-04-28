@@ -448,19 +448,27 @@ mod_schule_kurse_ui <- function(id){
              title = "Kompetenzdaten IQB: MINT-Kompetenzen der 4. Klassen",
              width = 12,
              p("Dieses interaktive Diagramm gibt einen ersten Einblick in die Mathe-Kompetenzen von Schülerinnen und Schüler der 4. Klassen.
-               Zeitnah werden weitere Darstellungen der Daten aus den IQB-Befragungen der 4. und 9. Klassen folgen!"),
+             Die Daten stammen aus der Befragung des Instituts zur Qualitätsentwicklung im Bildungswesen e.V. (IQB), das in regelmäßigen Abständen
+             die Leistung von Schülerinnen und Schülern in verschiedenen Fächern testet."),
+             p(),
+             p("Zeitnah werden weitere Darstellungen der Daten aus den IQB-Befragungen in den 4. und 9. Klassen folgen!"),
              tabsetPanel(type = "tabs",
 
-                         tabPanel("Mindeststandards in Mathematik", br(),
+                         tabPanel("Leistungsschwache Schüler:innen in Mathematik", br(),
 
                                   tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                                   shiny::sidebarPanel(
                                     width = 3,
                                     mod_schule_kurse_iqb_standard_zeitverlauf_ui("mod_schule_kurse_iqb_standard_zeitverlauf_ui_1"),
-                                    # p(style="font-size:12px;color:grey",
-                                    #   "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass im Jahr 2021 in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2021 bei 33 %.")
+                                    p(style="font-size:12px;color:grey",
+                                      "Interpretationshilfe: Während 2011 noch 11.9 % der Schüler und Schülerinnen die Mindestanforderung in Mathe nicht erfüllen,
+                                      gilt 2021 ein fast doppelt so großer Anteil an Schüler/Schülerinnnen als leistungsschwach in Mathematik (21.8 %)."),
+                                    p(style="font-size:12px;color:grey",
+                                      "Hinweis: Für Mecklenburg-Vorpommern liegen keine Daten vor."),
                                   ),
+
+
                                   shiny::mainPanel(
                                     width = 9,
                                     highcharter::highchartOutput(ns("plot_iqb_standard_zeitverlauf"))
@@ -468,7 +476,7 @@ mod_schule_kurse_ui <- function(id){
                                     p(style="font-size:12px;color:grey", br(),
                                       "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen."),
                                     # p(style="font-size:12px;color:grey",
-                                    #   "Hinweis: Durch Rundung der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen.")
+                                      # "Hinweis: Für Mecklenburg-Vorpommern liegen keine Daten vor.")
 
                                   )
                          )
