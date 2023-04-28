@@ -23,7 +23,7 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
                   "Bremen",
                   "Hamburg",
                   "Hessen",
-                  "Mecklenburg-Vorpommern",
+                 # "Mecklenburg-Vorpommern",
                   "Niedersachsen",
                   "Nordrhein-Westfalen",
                   "Rheinland-Pfalz",

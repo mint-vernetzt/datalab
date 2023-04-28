@@ -2889,13 +2889,13 @@ iqb_standard_zeitverlauf <- function(df, r){
 
 
     highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.y} % erfüllen Mindeststandard nicht")%>%
+      highcharter::hc_tooltip(pointFormat = "{point.y} % leistungsschwach")%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %")) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
       highcharter::hc_colors(c(#"#efe8e6",
                                "#b16fab")) %>%
-      highcharter::hc_title(text = paste0("Anteil der Schüler und Schülerinnen aus " , bl_select, ", welche die Mindeststandards in Mathematik nicht erfüllen"),
+      highcharter::hc_title(text = paste0("Anteil der Leistungsschwachen Schüler und Schülerinnen in Mathematik aus " , bl_select),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
