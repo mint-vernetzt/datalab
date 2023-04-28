@@ -2895,7 +2895,7 @@ iqb_standard_zeitverlauf <- function(df, r){
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
       highcharter::hc_colors(c(#"#efe8e6",
                                "#b16fab")) %>%
-      highcharter::hc_title(text = paste0("Anteil der Leistungsschwachen Schüler und Schülerinnen in Mathematik aus " , bl_select),
+      highcharter::hc_title(text = paste0("Anteil der leistungsschwachen Schüler und Schülerinnen in Mathematik aus " , bl_select),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
