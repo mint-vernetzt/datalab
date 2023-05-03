@@ -32,8 +32,13 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen"),
-      multiple = FALSE,
-      selected = c("Deutschland")
+
+    selected = c("Deutschland",
+                 "Bayern","Bremen"),
+      multiple = TRUE,
+      options =  list(
+        "max-options" = 3,
+        "max-options-text" = "Maximal 3 Bundesländer auswählen")
     )
   )
 

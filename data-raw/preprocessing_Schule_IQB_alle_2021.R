@@ -13,6 +13,8 @@ library(dplyr)
 wd <- getwd()
 setwd(wd)
 
+setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
+
 # Mathe Mittel ings. nur DE 2021
 # einlesen IQB016 - sheet "Abb4.7"
 d_m_ges <- readxl::read_excel("IQB016_Abb4.7&4.14 (S.94&107)_2021.xlsx", sheet = "Abb4.7")

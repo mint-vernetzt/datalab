@@ -12,6 +12,7 @@ library(dplyr)
 
 wd <- getwd()
 setwd(wd)
+setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
 # Sheet 2 für alle drei Jahre auswählen
 data <- readxl::read_excel("IQB015_Abb3.17&3.19 (S.71&75)_2021.xlsx", sheet = "Abb3.19")
