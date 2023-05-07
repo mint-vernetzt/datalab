@@ -52,8 +52,8 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                 ,
-                 "Westen",
-                "Osten"
+                 "Westdeutschland (o. Berlin)",
+                "Ostdeutschland (inkl. Berlin)"
                   ),
       selected = "Hessen"
 

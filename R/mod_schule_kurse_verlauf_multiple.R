@@ -66,8 +66,8 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westen",
-                  "Osten"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
                   ),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
@@ -78,7 +78,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_kurse_verlauf_multiple"),
-      choices = c("Relativ", "Absolut"),
+      choices = c("In Prozent", "Anzahl"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))

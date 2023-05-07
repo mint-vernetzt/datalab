@@ -667,7 +667,7 @@ kurse_mint_comparison <- function(df,r) {
   df <- prep_kurse_east_west(df)
 
 
-  df <- df %>% dplyr::filter(region == state)
+
 
   df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt",
                                     fachbereich == "Alle Fächer") %>%
@@ -707,6 +707,16 @@ kurse_mint_comparison <- function(df,r) {
     dplyr::arrange(fachbereich)
 
   df <- na.omit(df)
+
+  df <- df %>%
+    dplyr::ungroup()%>%
+    dplyr::mutate(region= dplyr::case_when(
+      region == "Westen" ~ "Westdeutschland (o. Berlin)",
+      region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
+      T ~ .$region
+    ))
+
+  df <- df %>% dplyr::filter(region == state)
 
   #Trennpunkte für lange Zahlen ergänzen
   df$wert <- prettyNum(df$wert, big.mark = ".")
@@ -1205,8 +1215,16 @@ kurse_ranking <- function(df,r, type) {
     dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
                     wert[anzeige_geschlecht == "Männer"])
 
+  df <- df %>%
+    dplyr::ungroup()%>%
+    dplyr::mutate(region = dplyr::case_when(
+      region == "Westen" ~ "Westdeutschland (o. Berlin)",
+      region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
+      T ~ .$region
+    ))
 
   df <- df %>% dplyr::filter(region == states)
+
 
   df <- df %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
@@ -1223,11 +1241,13 @@ kurse_ranking <- function(df,r, type) {
 
   df <- df %>% tidyr::drop_na()
 
-  df2 <- tidyr::gather(df, group, value, -fachbereich)
+  df2 <<- tidyr::gather(df, group, value, -fachbereich)
 
-  df$fachbereich <- reorder(df$fachbereich, df$Leistungskurse)
+  #df2$fachbereich <- reorder(df2$fachbereich, df2$Leistungskurse)
 
-  df2$fachbereich <- factor(df2$fachbereich, levels = levels(df$fachbereich))
+  df2$fachbereich <- factor(df2$fachbereich, levels = levels(df2$fachbereich))
+
+
 
 
   ggplot2::ggplot(df,
@@ -2050,15 +2070,19 @@ kurse_verlauf_single <- function(df,r) {
     dplyr::summarize(wert = wert_new/sum_wert)%>%
     dplyr::rename(Absolut = wert_new, Relativ=wert)%>%
     tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
-    dplyr::filter(fachbereich == "MINT")
+    dplyr::filter(fachbereich == "MINT")%>%
+    dplyr::mutate(selector=dplyr::case_when(
+      selector == "Relativ" ~ "In Prozent",
+      selector == "Absolut" ~ "Anzahl"
+    ))
 
 
 
 
-  if(absolut_selector == "Relativ"){
+  if(absolut_selector == "In Prozent"){
 
   df <- dfl %>%
-    dplyr::filter(selector == "Relativ")
+    dplyr::filter(selector == "In Prozent")
 
   df$wert <- df$wert * 100
 
@@ -2089,14 +2113,14 @@ kurse_verlauf_single <- function(df,r) {
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-  } else if (absolut_selector=="Absolut") {
+  } else if (absolut_selector=="Anzahl") {
 
     hcoptslang <- getOption("highcharter.lang")
     hcoptslang$thousandsSep <- "."
     options(highcharter.lang = hcoptslang)
 
     df <- dfl %>%
-      dplyr::filter(selector == "Absolut")
+      dplyr::filter(selector == "Anzahl")
 
     # order years for plot
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
@@ -2579,8 +2603,7 @@ kurse_verlauf_multiple_bl <- function(df,r) {
 
   df <- rbind(df, df_sub)
 
-  # fitler states
-  df <- df %>% dplyr::filter(region %in% states)
+
 
   df4 <<- df %>% dplyr::filter(fachbereich %in% subjects_select)
 
@@ -2588,13 +2611,25 @@ kurse_verlauf_multiple_bl <- function(df,r) {
   df5 <<- df4 %>% dplyr::group_by(jahr, region, indikator) %>%
     dplyr::summarize(wert, proportion = wert/sum_props)%>%
     dplyr::rename(Relativ = proportion, Absolut=wert)%>%
-    tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")
+    tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
+    dplyr::mutate(selector = dplyr::case_when(
+      selector == "Relativ" ~ "In Prozent",
+      selector == "Absolut" ~ "Anzahl"
+    ))%>%
+    dplyr::ungroup()%>%
+    dplyr::mutate(region=dplyr::case_when(
+      region == "Westen" ~ "Westdeutschland (o. Berlin)",
+      region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
+      T ~ .$region
+    ))
 
+  # fitler states
+  df5 <- df5 %>% dplyr::filter(region %in% states)
 
-  if(absolut_selector=="Relativ"){
+  if(absolut_selector=="In Prozent"){
 
   df <- df5 %>%
-    dplyr::filter(selector=="Relativ")
+    dplyr::filter(selector=="In Prozent")
 
 
   df$wert <- df$wert * 100
@@ -2639,14 +2674,14 @@ kurse_verlauf_multiple_bl <- function(df,r) {
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-  } else if(absolut_selector =="Absolut"){
+  } else if(absolut_selector =="Anzahl"){
 
     hcoptslang <- getOption("highcharter.lang")
     hcoptslang$thousandsSep <- "."
     options(highcharter.lang = hcoptslang)
 
   df <- df5 %>%
-    dplyr::filter(selector=="Absolut")
+    dplyr::filter(selector=="Anzahl")
 
 
 
@@ -2791,21 +2826,38 @@ df <- df %>%
 df <- rbind(df, df_sub)
 
 
-# fitler states
-df <- df %>% dplyr::filter(region %in% states)
 
 df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
 
+
+
 # calculate proportions
-dfm <<- df %>% dplyr::group_by(jahr, region, fachbereich) %>%
+
+dfm <<- df
+
+dfm <<- dfm %>% dplyr::group_by(jahr, region, fachbereich) %>%
   dplyr::summarize(wert, proportion = wert/sum_props)%>%
   dplyr::rename(Relativ = proportion, Absolut=wert)%>%
-  tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")
+  tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
+  dplyr::mutate(selector= dplyr::case_when(
+    selector == "Absolut" ~ "Anzahl",
+    selector == "Relativ" ~ "In Prozent"
+  ))%>%
+  dplyr::ungroup()%>%
+  dplyr::mutate(region= dplyr::case_when(
+    region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
+    region == "Westen" ~ "Westdeutschland (o. Berlin)",
+    T ~ .$region
+  ))
 
-if(absolut_selector=="Relativ"){
+
+# fitler states
+dfm <- dfm %>% dplyr::filter(region %in% states)
+
+if(absolut_selector=="In Prozent"){
 
   df <- dfm %>%
-    dplyr::filter(selector == "Relativ")
+    dplyr::filter(selector == "In Prozent")
 
 df$wert <- df$wert * 100
 
@@ -2837,14 +2889,14 @@ df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-} else if (absolut_selector=="Absolut"){
+} else if (absolut_selector=="Anzahl"){
 
   hcoptslang <- getOption("highcharter.lang")
   hcoptslang$thousandsSep <- "."
   options(highcharter.lang = hcoptslang)
 
   df <- dfm %>%
-    dplyr::filter(selector == "Absolut")
+    dplyr::filter(selector == "Anzahl")
 
   df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
@@ -2880,37 +2932,49 @@ iqb_standard_zeitverlauf <- function(df, r){
 
   # reactive values übergeben
   bl_select <- r$land_iqb_standard_zeitverlauf
-
+dfg <- df
   # Region filtern
-  df <- df %>% dplyr::filter(region == bl_select)
+  df1 <- dfg %>% dplyr::filter(region %in% bl_select)
 
   # Anforderungen, die wir nicht betrachten, ausfiltern
-  df <- df %>% dplyr::filter(indikator == "Mindeststandard nicht erreicht")
+  dfk <- df1 %>% dplyr::filter(indikator == "Mindeststandard nicht erreicht")
+
+  # title helper
+
+  if (length(bl_select)==1){
+    title_help <- paste0(bl_select)
+  }else if(length(bl_select)==2){
+    title_help <- paste0(bl_select[1], " & ", bl_select[2] )
+  }else if (length(bl_select)==3){
+    title_help <- paste0(bl_select[1], " , ", bl_select[2], " & ", bl_select[3])
+  }
 
 
-    highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = region, group= jahr))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.y} % leistungsschwach")
-    #   highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %")) %>%
-    #   highcharter::hc_xAxis(title = list(text = "")) %>%
-    # #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-    #   highcharter::hc_colors(c(#"#efe8e6",
-    #                            "#b16fab")) %>%
-    #   highcharter::hc_title(text = paste0("Anteil der Leistungsschwachen Schüler und Schülerinnen in Mathematik aus " , bl_select),
-    #                         margin = 45,
-    #                         align = "center",
-    #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    #   ) %>%
-    #   highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-    #   highcharter::hc_exporting(enabled = FALSE,
-    #                             buttons = list(contextButton = list(
-    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-    #                               onclick = highcharter::JS("function () {
-    #                                                         this.exportChart({ type: 'image/png' }); }"),
-    #                               align = 'right',
-    #                               verticalAlign = 'bottom',
-    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hchart(dfk, 'column', highcharter::hcaes(y = wert, x = region, group=jahr))%>%
+      highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
+      highcharter::hc_tooltip(pointFormat = "{point.jahr} <br> {point.y} % leistungsschwach")%>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), pointsWidth=100) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+    #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
+      highcharter::hc_colors(c("#efe8e6","#D0A9CD",
+                               "#b16fab")) %>%
+
+      highcharter::hc_title(text = paste0("Anteil der leistungsschwachen Schüler und Schülerinnen in Mathematik in ", title_help),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                            this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
 }
@@ -2935,14 +2999,42 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
     df$geschlecht <- as.factor(df$geschlecht)
     df$geschlecht <- factor(df$geschlecht, levels = c("gesamt", "Mädchen", "Jungen"))
 
+    df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
+      geschlecht=="gesamt" ~ "Gesamt",
+      T~df$geschlecht
+    ))%>%
+      dplyr::filter(geschlecht != "Gesamt")
+
   }
   else{
+
     if (indikator_select == "nach Migrationsgeschichte"){
       df <- df %>% dplyr::filter(indikator %in% c("Alle", "Migrationsgeschichte", "keine Migrationsgeschichte"))
-      df <- df %>% dplyr::filter(geschlecht == "gesamt")
+      df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
+        dplyr::mutate(indikator=dplyr::case_when(indikator == "Alle" ~"Gesamt",
+                                       indikator=="Migrationsgeschichte" ~ "Mit Migrationshintergrund",
+                                       indikator=="keine Migrationsgeschichte"~"Ohne Migrationshintergrund"
+
+        ))%>%
+        dplyr::filter(indikator != "Gesamt")
+
+
+
+      df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
+        geschlecht=="gesamt" ~ "Gesamt",
+        T~df$geschlecht
+      ))
+
+      # df <- df %>% dplyr::mutate(indikator=case_when(
+      #   indikator=="gesamt" ~ "Gesamt",
+      #   T~df$indikator
+      # ))
 
       df$indikator<- as.factor(df$indikator)
-      df$indikator <- factor(df$indikator, levels = c("Alle", "Migrationsgeschichte", "keine Migrationsgeschichte" ))
+      df$indikator <- factor(df$indikator, levels = c("Gesamt", "Mit Migrationshintergrund",
+                                                      "Ohne Migrationshintergrund" ))
+
+
     }
 
     else{
@@ -2950,19 +3042,28 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
       df <- df %>% dplyr::filter(indikator %in% c("Alle", "status_hoch", "status_niedrig"))
       df <- df %>% dplyr::filter(geschlecht == "gesamt")
 
+      df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
+        geschlecht=="gesamt" ~ "Gesamt",
+        T~df$geschlecht
+      ))
+
       # Labels umbenennen
       df$indikator[df$indikator == "status_hoch"] <- "Mehr als 100 Bücher zuhause"
       df$indikator[df$indikator == "status_niedrig"] <- "100 Bücher oder weniger zuhause"
 
       df$indikator<- as.factor(df$indikator)
       df$indikator <- factor(df$indikator, levels = c("Alle", "100 Bücher oder weniger zuhause", "Mehr als 100 Bücher zuhause" ))
+
+      df <- df %>%
+        dplyr::filter(indikator!="Alle")
     }
   }
 
   if(indikator_select == "nach Geschlecht"){
 
     highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.group} <br> Mittelwert Mathe: {point.y}")%>%
+      highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
+      highcharter::hc_tooltip(pointFormat = "{point.group} <br> Durchschnitt Mathe: {point.y}")%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}")) %>%
       highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
                                                                     "2016",
@@ -2973,14 +3074,14 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
                                "#b16fab", "#D0A9CD"
                                #"#154194",
       )) %>%
-      highcharter::hc_title(text = paste0("Mittlere Leistung der Schüler und Schülerinnen in Mathematik nach Geschlecht aus " , bl_select),
+      highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler und Schülerinnen in Mathematik nach Geschlecht in " , bl_select),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
       highcharter::hc_exporting(enabled = FALSE,
                                 buttons = list(contextButton = list(
                                   symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
@@ -2992,24 +3093,25 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
   }
   else{
     highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.group} <br> Mittelwert Mathe : {point.y}")%>%
+      highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
+      highcharter::hc_tooltip(pointFormat = "{point.group} <br> Durchschnitt Mathe : {point.y}")%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}")) %>%
       highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
                                                                     "2016",
                                                                     "2021")) %>%
       #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#efe8e6",
-                               "#b16fab", "#D0A9CD"
+      highcharter::hc_colors(c("#efe8e6", "#D0A9CD",
+                               "#b16fab"
                                #"#154194",
       )) %>%
-      highcharter::hc_title(text = paste0("Mittlere Leistung der Schüler und Schülerinnen in Mathematik ", indikator_select, " aus " , bl_select),
+      highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler und Schülerinnen in Mathematik ", indikator_select, " in " , bl_select),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
       highcharter::hc_exporting(enabled = FALSE,
                                 buttons = list(contextButton = list(
                                   symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',

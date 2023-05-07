@@ -12,7 +12,7 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
 
   tagList(
 
-    p("Auwahl des Bundeslands:"),
+    p("Auwahl des Bundeslandes:"),
     shinyWidgets::pickerInput(
       inputId = ns("land_iqb_standard_zeitverlauf"),
       choices = c("Deutschland",

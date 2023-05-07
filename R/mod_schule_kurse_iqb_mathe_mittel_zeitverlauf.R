@@ -12,7 +12,7 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
 
   tagList(
 
-    p("Auwahl des Bundeslands:"),
+    p("Auwahl des Bundeslandes:"),
     shinyWidgets::pickerInput(
       inputId = ns("land_iqb_mathe_mittel_zeitverlauf"),
       choices = c("Deutschland",
@@ -36,7 +36,7 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
       selected = c("Brandenburg")
     ),
 
-    p("Auwahl Vergleichsindikator:"),
+    p("Auwahl des Indikators:"),
     shinyWidgets::pickerInput(
       inputId = ns("indi_iqb_mathe_mittel_zeitverlauf"),
       choices = c("nach Geschlecht",
