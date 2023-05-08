@@ -3917,9 +3917,9 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
     dplyr::rename("Mathematik/Naturwissenschaften"=Mathematik_Naturwissenschaften)%>%
     dplyr::filter(geschlecht=="frauen")%>%
     dplyr::mutate(MINT=`Mathematik/Naturwissenschaften`+Ingenieurwissenschaften)%>%
-    dplyr::mutate("Mathematik/Naturwissenschaften_p" =`Mathematik/Naturwissenschaften`/Alle,
-                  "MINT_p"= MINT/Alle,
-                  "Ingenieurwissenschaften_p"= Ingenieurwissenschaften/Alle)%>%
+    dplyr::mutate("Mathematik/Naturwissenschaften_p" =round(`Mathematik/Naturwissenschaften`/Alle*100,1),
+                  "MINT_p"= round(MINT/Alle*100,1),
+                  "Ingenieurwissenschaften_p"= round(Ingenieurwissenschaften/Alle*100,1))%>%
     dplyr::select(-Alle)%>%
     tidyr::pivot_longer(c(5:10),names_to="fach",values_to="wert")%>%
     dplyr::mutate(selector= dplyr::case_when(stringr::str_ends(.$fach, "_p")~"Relativ",
