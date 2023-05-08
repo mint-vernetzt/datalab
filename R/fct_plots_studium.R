@@ -6587,7 +6587,7 @@ status_select <- r$status_ausl
                         "Studierende"))%>%
     tidyr::pivot_wider(names_from=region, values_from=wert)%>%
     dplyr::mutate(Deutschland=rowSums(dplyr::across(c(7:ncol(.)))))%>%
-    dplyr::mutate(Westdeutschland =rowSums(dplyr::across(c(`Nordrhein-Westfalen`, `Hamburg`,
+    dplyr::mutate("Westdeutschland (o. Berlin)" =rowSums(dplyr::across(c(`Nordrhein-Westfalen`, `Hamburg`,
                                                          Bayern, `Baden-Württemberg`, Saarland,
                                                          `Schleswig-Holstein`, Hessen, Niedersachsen,
                                                          `Rheinland-Pfalz`, `Bremen`))))%>%
@@ -6745,7 +6745,7 @@ plot_auslaender_mint_zeit <- function(df, r){
                                "Studierende"))%>%
     tidyr::pivot_wider(names_from=region, values_from=wert)%>%
     dplyr::mutate(Deutschland=rowSums(dplyr::across(c(7:ncol(.)))))%>%
-    dplyr::mutate(Westdeutschland =rowSums(dplyr::across(c(`Nordrhein-Westfalen`, `Hamburg`,
+    dplyr::mutate("Westdeutschland (o. Berlin)" =rowSums(dplyr::across(c(`Nordrhein-Westfalen`, `Hamburg`,
                                                            Bayern, `Baden-Württemberg`, Saarland,
                                                            `Schleswig-Holstein`, Hessen, Niedersachsen,
                                                            `Rheinland-Pfalz`, `Bremen`))))%>%

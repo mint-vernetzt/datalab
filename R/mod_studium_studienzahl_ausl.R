@@ -37,7 +37,7 @@ mod_studium_studienzahl_ausl_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen",
-                  "Westdeutschland",
+                  "Westdeutschland (o. Berlin)",
                   "Ostdeutschland (inkl. Berlin)"
       ),selected = "Ostdeutschland (inkl. Berlin)"
     ),
