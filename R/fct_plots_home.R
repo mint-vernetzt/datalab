@@ -611,7 +611,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
     #df_rest$wert <- round_preserve_sum(as.numeric(df_rest$wert),0)
 
     #title_help <- helper_title_home(indikator_choice_1_gender)
-browser()
+
     highcharter::hw_grid(
 
       highcharter::hchart(df_mint, size = 280,
