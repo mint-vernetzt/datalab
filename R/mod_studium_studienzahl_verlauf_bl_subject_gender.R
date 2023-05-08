@@ -71,15 +71,15 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westdeutschland",
-                  "Ostdeutschland"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
       ),
       selected = "Sachsen"
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_l_v"),
-      choices = c("Relativ", "Absolut"),
+      choices = c("In Prozent", "Anzahl"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))

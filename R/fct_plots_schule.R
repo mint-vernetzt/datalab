@@ -2958,9 +2958,8 @@ dfg <- df
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
       highcharter::hc_colors(c("#efe8e6","#D0A9CD",
                                "#b16fab")) %>%
-
       highcharter::hc_title(text = paste0("Anteil der leistungsschwachen Schüler und Schülerinnen in Mathematik in ", title_help),
-                            margin = 45,
+      margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_chart(

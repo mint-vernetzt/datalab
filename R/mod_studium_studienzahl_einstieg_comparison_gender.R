@@ -74,8 +74,8 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westen",
-                  "Osten"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
       ),
       selected = "Hamburg"
     ))
