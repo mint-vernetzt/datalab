@@ -3004,10 +3004,11 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
     ))%>%
       dplyr::filter(geschlecht != "Gesamt")
 
+
   }
   else{
 
-    if (indikator_select == "nach Migrationsgeschichte"){
+    if (indikator_select == "nach Migrationshintergrund"){
       df <- df %>% dplyr::filter(indikator %in% c("Alle", "Migrationsgeschichte", "keine Migrationsgeschichte"))
       df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
         dplyr::mutate(indikator=dplyr::case_when(indikator == "Alle" ~"Gesamt",
@@ -3060,9 +3061,11 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
 
   if(indikator_select == "nach Geschlecht"){
 
+    df$wert <- round(df$wert,0)
+
     highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
       highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.group} <br> Durchschnitt Mathe: {point.y}")%>%
+      highcharter::hc_tooltip(pointFormat = "{point.group} <br> Durchschnittliche Punktzahl: {point.y}")%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}")) %>%
       highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
                                                                     "2016",
@@ -3091,9 +3094,12 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
                                   theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
   }
   else{
+
+    df$wert <- round(df$wert,0)
+
     highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
       highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.group} <br> Durchschnitt Mathe : {point.y}")%>%
+      highcharter::hc_tooltip(pointFormat = "{point.group} <br> Durchschnittliche Punktzahl: {point.y}")%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}")) %>%
       highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
                                                                     "2016",
