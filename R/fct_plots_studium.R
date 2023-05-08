@@ -1049,10 +1049,16 @@ studienzahl_verlauf_single_gender <- function(df,r) {
     #
     # dplyr::select(-geschlecht)
 
+  dfü <- dfü %>%
+    dplyr::mutate(selector=dplyr::case_when(
+      selector== "Relativ" ~ "In Prozent",
+      selector == "Absolut" ~ "Anzahl"
+    ))
 
-  if(absolut_selector=="Relativ"){
 
-    dfü <- dfü %>% dplyr::filter(selector=="Relativ")
+  if(absolut_selector=="In Prozent"){
+
+    dfü <- dfü %>% dplyr::filter(selector=="In Prozent")
 
   dfü <- dfü[with(dfü, order(region, jahr, decreasing = FALSE)), ]
 
@@ -1133,14 +1139,14 @@ studienzahl_verlauf_single_gender <- function(df,r) {
                                   theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
-  }} else if(absolut_selector=="Absolut"){
+  }} else if(absolut_selector=="Anzahl"){
 
     hcoptslang <- getOption("highcharter.lang")
     hcoptslang$thousandsSep <- "."
     options(highcharter.lang = hcoptslang)
 
     dfü <- dfü%>%
-      dplyr::filter(selector=="Absolut")
+      dplyr::filter(selector=="Anzahl")
 
     dfü <- dfü[with(dfü, order(region, jahr, decreasing = FALSE)), ]
 
@@ -1482,14 +1488,32 @@ studienzahl_einstieg_comparison <- function(df,r) {
 studienzahl_einstieg_comparison_gender <- function(df,r) {
 
   # load UI inputs from reactive value
-  timerange <- r$gen_f_y
+  timerange <<- r$gen_f_y
 
-  sel_f <- r$gen_f
+  sel_f <<- r$gen_f
 
-  sel_bl <- r$gen_states
+  sel_bl <<- r$gen_states
 
   # filter dataset based on UI inputs
-  dfu <<- df %>% dplyr::filter(jahr == timerange)
+  dfu <<- df %>% dplyr::filter(jahr == timerange)%>%
+    tidyr::pivot_wider(names_from=region, values_from = wert)%>%
+    dplyr::mutate("Westdeutschland (o. Berlin)"=rowSums(dplyr::select(.,c(
+
+      Bremen,
+      Hamburg,Hessen,Niedersachsen,
+      `Nordrhein-Westfalen`,`Rheinland-Pfalz`,
+      Saarland,`Schleswig-Holstein`)
+    ),na.rm = T),
+    "Ostdeutschland (inkl. Berlin)"=rowSums(dplyr::select(., c(Berlin,
+                                              Brandenburg,
+                                              `Mecklenburg-Vorpommern`,
+                                              Sachsen,`Sachsen-Anhalt`,
+                                              Thüringen)
+    ),na.rm = T))%>%
+    dplyr::mutate(Deutschland =rowSums(dplyr::select(., c("Ostdeutschland (inkl. Berlin)",
+                                            "Westdeutschland (o. Berlin)")
+    ),na.rm = T))%>%
+    tidyr::pivot_longer(c(7:ncol(.)), values_to = "wert", names_to = "region")
 
 
   # dfüü <<- dfu %>% dplyr::select( -fachbereich)%>%
@@ -1514,15 +1538,15 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
 
 
     df2 <- dfu %>% dplyr::filter(jahr == timerange)
-    df2a <- df2 %>% dplyr::filter(!(fach %in% c("Naturwissenschaften", "Ingenieurwissenschaften ohne Informatik")))
-    df2a <- df2a %>% dplyr::filter(mint_select== "MINT")%>%
+    df2a <<- df2 %>% dplyr::filter(!(fach %in% c("Naturwissenschaften", "Ingenieurwissenschaften ohne Informatik")))
+    df2a <<- df2a %>% dplyr::filter(mint_select== "MINT")%>%
       #dplyr::filter(anzeige_geschlecht== "Gesamt")%>%
       dplyr::select(-fachbereich)%>%
       tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
       dplyr::mutate(MINT=rowSums(dplyr::select(., c(6:23)),na.rm = T))%>%
       tidyr::pivot_longer(c(6:ncol(.)), names_to= "fach", values_to="wert")
 
-    df2b <- dfu %>% dplyr::filter(mint_select== "NIcht MINT")%>%
+    df2b <<- dfu %>% dplyr::filter(mint_select== "NIcht MINT")%>%
       #dplyr::filter(anzeige_geschlecht== "Gesamt")%>%
       dplyr::select(-fachbereich)%>%
       tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
@@ -1530,7 +1554,7 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
       tidyr::pivot_longer(c(6:ncol(.)), names_to= "fach", values_to="wert")
 
     #Absolute Werte abspeichern
-    df_wert <- dplyr::bind_rows(df2a, df2b)%>%
+    df_wert <<- dplyr::bind_rows(df2a, df2b)%>%
       tidyr::pivot_wider(names_from = anzeige_geschlecht, values_from=wert)%>%
       dplyr::mutate(Männer=Gesamt-Frauen)%>%
       dplyr::select(-Gesamt)%>%
@@ -1544,12 +1568,20 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
       dplyr::select(-Gesamt)%>%
       tidyr::pivot_longer(c("Männer", "Frauen"), names_to = "geschlecht", values_to  = "proportion")
 
+
     #Absoluten wert anhängen
     wert <- df_wert$wert
     df_io <- cbind(df_io, wert)
 
     #Trennpunkte für lange Zahlen ergänzen
-    df_io$wert <- prettyNum(df_io$wert, big.mark = ".")
+    #df_io$wert <- prettyNum(df_io$wert, big.mark = ".")
+
+    df_io <<- df_io %>%
+      dplyr::mutate(region = dplyr::case_when(
+        region == "Ostdeutschland" ~ "Ostdeutschland (inkl. Berlin)",
+        region == "Westdeutschland" ~ "Westdeutschland (o. Berlin)",
+        T ~ .$region
+      ))
 
     df_io <- df_io %>%
       dplyr::filter(region==sel_bl)%>%
@@ -3097,15 +3129,27 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
   df4$var <- gsub("_p", "", df4$var)
 
 
+  df4 <- df4 %>%
+    dplyr::mutate(region = dplyr::case_when(
+      region == "Ostdeutschland" ~ "Ostdeutschland (inkl. Berlin)",
+      region == "Westdeutschland" ~ "Westdeutschland (o. Berlin)",
+      T ~ .$region
+    ),
+    selector = dplyr::case_when(
+      selector == "Relativ" ~ "In Prozent",
+      selector == "Absolut" ~ "Anzahl"
+    ))
+
+
 
 
 
     #tidyr::pivot_longer(c(MINT, Ingenieurwissenschaften, `Mathematik/Naturwissenschaften`), names_to = "proportion", values_to = "wert")
 
-  if(absolut_selector=="Relativ"){
+  if(absolut_selector=="In Prozent"){
 
   df4 <- df4 %>%
-    dplyr::filter(selector=="Relativ")
+    dplyr::filter(selector=="In Prozent")
 
   df4$wert <- df4$wert *100
   df4$wert <- round(df4$wert, 0)
@@ -3137,7 +3181,7 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-  } else if (absolut_selector == "Absolut") {
+  } else if (absolut_selector == "Anzahl") {
 
 
     hcoptslang <- getOption("highcharter.lang")
@@ -3145,7 +3189,7 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
     options(highcharter.lang = hcoptslang)
 
     df4 <- df4 %>%
-      dplyr::filter(selector=="Absolut")
+      dplyr::filter(selector=="Anzahl")
 
 
     df5 <- df4 %>% dplyr::filter(label==label_select)
@@ -3887,14 +3931,26 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
   #   tidyr::pivot_longer(c(5:8), names_to = "fach", values_to= "proportion")%>%
   #   dplyr::filter(geschlecht=="frauen")
   #
+  dfff <- dfff %>%
+    dplyr::mutate(region = dplyr::case_when(
+      region == "Ostdeutschland" ~ "Ostdeutschland (inkl. Berlin)",
+      region == "Westdeutschland" ~ "Westdeutschland (o. Berlin)",
+      T ~ .$region
+    ),
+    selector = dplyr::case_when(
+      selector == "Relativ" ~ "In Prozent",
+      selector == "Absolut" ~ "Anzahl"
+    ))
+
+
   dfgg <- dfff %>%
     dplyr::filter(region==states)%>%
     dplyr::filter(fach==subjects_select)
 
-if (absolut_selector=="Relativ"){
+if (absolut_selector=="In Prozent"){
 
   dfgg <- dfgg %>%
-    dplyr::filter(selector=="Relativ")
+    dplyr::filter(selector=="In Prozent")
 
   dfgg <- dfgg[with(dfgg, order( jahr, decreasing = FALSE)), ]
 
@@ -4025,7 +4081,7 @@ if (absolut_selector=="Relativ"){
                                   theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
-  }}else if(absolut_selector=="Absolut"){
+  }}else if(absolut_selector=="Anazhl"){
 
 
     hcoptslang <- getOption("highcharter.lang")
@@ -4034,7 +4090,7 @@ if (absolut_selector=="Relativ"){
 
 
     dfgg <- dfgg %>%
-      dplyr::filter(selector=="Absolut")
+      dplyr::filter(selector=="Anzahl")
 
 
 
@@ -5509,17 +5565,30 @@ studierende_verlauf_multiple_bl <- function(df,r) {
 
    df13 <- df12 %>% dplyr::filter(label==bl_label)
 
-   df13 <- df13 %>%dplyr::filter(region%in%states)
+
 
    df13 <- df13 %>% dplyr::filter(fach %in% subjects_select)
 
    df14 <<- df13[with(df13, order(region, jahr, decreasing = FALSE)), ]
 
+   df14 <- df14 %>%
+     dplyr::mutate(region = dplyr::case_when(
+       region == "Ostdeutschland" ~ "Ostdeutschland (inkl. Berlin)",
+       region == "Westdeutschland" ~ "Westdeutschland (o. Berlin)",
+       T ~ .$region
+     ),
+     selector = dplyr::case_when(
+       selector == "Relativ" ~ "In Prozent",
+       selector == "Absolut" ~ "Anzahl"
+     ))
 
-   if (absolut_selector=="Relativ"){
+   df14 <- df14 %>%dplyr::filter(region%in%states)
+
+
+   if (absolut_selector=="In Prozent"){
 
      df15 <- df14 %>%
-       dplyr::filter(selector=="Relativ")
+       dplyr::filter(selector=="In Prozent")
 
    highcharter::hchart(df15, 'line', highcharter::hcaes(x = jahr, y = wert, group = region))%>%
      highcharter::hc_tooltip(pointFormat = "Anteil {point.region} <br> Wert: {point.y} %") %>%
@@ -5544,7 +5613,7 @@ studierende_verlauf_multiple_bl <- function(df,r) {
 
 
 
-   } else if(absolut_selector=="Absolut"){
+   } else if(absolut_selector=="Anzahl"){
 
 
      hcoptslang <- getOption("highcharter.lang")
@@ -5552,7 +5621,7 @@ studierende_verlauf_multiple_bl <- function(df,r) {
      options(highcharter.lang = hcoptslang)
 
      df16 <<- df14 %>%
-       dplyr::filter(selector == "Absolut")
+       dplyr::filter(selector == "Anzahl")
 
      highcharter::hchart(df16, 'line', highcharter::hcaes(x = jahr, y = wert, group = region))%>%
        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
@@ -6255,7 +6324,7 @@ plot_ranking_top_faecher <- function(df, r, type) {
   # load UI inputs from reactive value
   timerange <- r$date_top_faecher
 
-  states <- r$states_top_faecher
+  states <<- r$states_top_faecher
 
   subject <- r$subject_top_faecher
 
@@ -6264,8 +6333,7 @@ plot_ranking_top_faecher <- function(df, r, type) {
   # filter dataset based on UI inputs
   df3 <- df %>% dplyr::filter(jahr == timerange) %>%
     dplyr::filter(indikator == "Studierende",
-                  jahr == timerange,
-                  region %in% states)
+                  jahr == timerange)
   df4 <- df3 %>%
     dplyr::filter(!fach %in% c("Naturwissenschaften",
                                "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
@@ -6282,7 +6350,7 @@ plot_ranking_top_faecher <- function(df, r, type) {
   df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 
   # Calculate proportion
-  df <- df %>%
+  dfk <<- df %>%
     dplyr::left_join(df_gesamt,
                      by = c("region",
                             "jahr",
@@ -6296,17 +6364,31 @@ plot_ranking_top_faecher <- function(df, r, type) {
     dplyr::filter(anzeige_geschlecht != "Gesamt")
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  #dfk$wert <- prettyNum(dfk$wert, big.mark = ".")
+  #dfk$wert <- as.numeric(dfk$wert)
+
+
+  df <- dfk %>%
+    dplyr::mutate(region = dplyr::case_when(
+      region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
+      region == "Westen" ~ "Westdeutschland (o. Berlin)",
+      T ~ .$region
+    ))%>%
+    dplyr::filter(region %in% states)
 
   if(subject == "MINT-Fächer"){
 
     df <- df %>% dplyr::filter(fachbereich %in% c("MINT",
                                                   "Mathematik, Naturwissenschaften",
                                                   "Ingenieurwissenschaften"))
+
+
+
+
   }
 
   # Split dataframe by gender and create plots
-  if(abs_rel == "Relativ"){
+  if(abs_rel == "In Prozent"){
 
     # female
     studierende_faecher_frauen <- df %>%
@@ -6379,7 +6461,7 @@ plot_ranking_top_faecher <- function(df, r, type) {
     #                               verticalAlign = 'bottom',
     #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-  } else if(abs_rel == "Absolut"){
+  } else if(abs_rel == "Anzahl"){
 
     # female
     studierende_faecher_frauen <- df %>%

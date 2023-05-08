@@ -65,7 +65,7 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen"),
-      choices = c("Relativ", "Absolut"),
+      choices = c("In Prozent", "Anzahl"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))

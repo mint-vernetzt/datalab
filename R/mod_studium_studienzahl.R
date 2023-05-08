@@ -54,7 +54,11 @@ mod_studium_studienzahl_ui <- function(id){
           ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3c",
           span(tags$b(span("Frauen in MINT:")))), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
-          )),
+          ),
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4c",
+          span(tags$b(span("Internationale Studierende:")))), "Wie hoch ist der Anteil von Internationalen Studierenden in den MINT-Fächern?"
+        )
+        ),
 
       shinydashboard::box(
         title = "Datenquellen",

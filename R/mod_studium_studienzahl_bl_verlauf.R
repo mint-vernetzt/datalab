@@ -87,8 +87,8 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westdeutschland",
-                  "Ostdeutschland"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
                   ),
       selected = c("Baden-Württemberg", "Hamburg"),
       options = list(`actions-box` = TRUE,
@@ -99,7 +99,7 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_studium_studienzahl_bl_verlauf"),
-      choices = c("Relativ", "Absolut"),
+      choices = c("In Prozent", "Anzahl"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
