@@ -43,8 +43,8 @@ mod_datenschutz_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Datenschutzerklärung",
         width = 12,
+        tags$h2("Datenschutzerklärung"),
         column(width = 12,
 
                div(style="text-align:justify", p("

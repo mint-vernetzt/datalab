@@ -44,8 +44,8 @@ mod_kontakt_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Kontakt und Feedback",
         width = 12,
+        tags$h2("Kontakt und Feedback"),
         column(width = 9,
                tags$b(span("Wir freuen uns über Feedback!", style = "color:#154194")),
                br(),
