@@ -1647,8 +1647,8 @@ home_rest_mint_verlauf <- function(df,r) {
     dplyr::filter(geschlecht=="Gesamt")%>%
     dplyr::select(- Alle)%>%
     tidyr::pivot_longer(c(MINT, `Nicht MINT`, `Nich MINT_p`, `MINT_p`), names_to = "fachbereich", values_to = "wert")%>%
-    dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$fachbereich, "_p") ~ "Relativ",
-                                      T~"Absolut"))
+    dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$fachbereich, "_p") ~ "In Prozent",
+                                      T~"Anzahl"))
   # %>%
   #   dplyr::mutate(wert=dplyr::case_when(stringr::str_detect(.$selector, "Relativ") ~ round_preserve_sum(.),
                                         # T~))
@@ -1656,16 +1656,16 @@ home_rest_mint_verlauf <- function(df,r) {
   dfk2_fn$fachbereich <- gsub("_p", "", dfk2_fn$fachbereich)
 
 
-  dfk2_fn$wert <- ifelse(stringr::str_detect(dfk2_fn$selector, "Relativ"),round_preserve_sum(as.numeric(dfk2_fn$wert),0), dfk2_fn$wert )
+  dfk2_fn$wert <- ifelse(stringr::str_detect(dfk2_fn$selector, "In Prozent"),round_preserve_sum(as.numeric(dfk2_fn$wert),0), dfk2_fn$wert )
 
   # dfk2_fn$proportion[selector=="Relativ",wert] <- round_preserve_sum(as.numeric(dfk2_fn[selector=="Relativ",wert]),0)
 
 
 
-   if(absolut_selector=="Relativ"){
+   if(absolut_selector=="In Prozent"){
 
     df <- dfk2_fn %>%
-      dplyr::filter(selector=="Relativ")
+      dplyr::filter(selector=="In Prozent")
 
   df <- df[with(df, order(region, fachbereich, jahr, decreasing = FALSE)), ]
 
@@ -1697,7 +1697,7 @@ home_rest_mint_verlauf <- function(df,r) {
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-  } else if (absolut_selector=="Absolut") {
+  } else if (absolut_selector=="Anzahl") {
 
     hcoptslang <- getOption("highcharter.lang")
     hcoptslang$thousandsSep <- "."
@@ -1710,7 +1710,7 @@ home_rest_mint_verlauf <- function(df,r) {
 
 
     df <- dfö %>%
-      dplyr::filter(selector=="Absolut")
+      dplyr::filter(selector=="Anzahl")
 
     df <- df[with(df, order(region, fachbereich, jahr, decreasing = FALSE)), ]
 

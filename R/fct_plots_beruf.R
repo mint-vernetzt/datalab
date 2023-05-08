@@ -882,12 +882,17 @@ beruf_verlauf_single <- function(df,r) {
     dplyr::summarize(wert, proportion = wert/sum_wert)%>%
     dplyr::rename(Relativ = proportion, Absolut=wert)%>%
     tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
-    dplyr::filter(fachbereich == "MINT")
+    dplyr::filter(fachbereich == "MINT")%>%
+    dplyr::ungroup()%>%
+    dplyr::mutate(selector=dplyr::case_when(
+      selector == "Relativ" ~ "In Prozent",
+      selector == "Absolut" ~ "Anzahl"
+    ))
 
-  if (absolut_selector == "Relativ"){
+  if (absolut_selector == "In Prozent"){
 
     df <- dftz %>%
-    dplyr::filter(selector=="Relativ")
+    dplyr::filter(selector=="In Prozent")
 
   df$wert <- df$wert * 100
 
@@ -916,7 +921,7 @@ beruf_verlauf_single <- function(df,r) {
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-  } else if(absolut_selector == "Absolut") {
+  } else if(absolut_selector == "Anzahl") {
 
 
     hcoptslang <- getOption("highcharter.lang")
@@ -925,7 +930,7 @@ beruf_verlauf_single <- function(df,r) {
 
 
     df <- dftz %>%
-      dplyr::filter(selector=="Absolut")
+      dplyr::filter(selector=="Anzahl")
 
 
 
@@ -1106,6 +1111,13 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
 
   df <- prep_arbeitsmarkt_east_west(df)
 
+  df <- df %>%
+    dplyr::mutate(region = dplyr::case_when(
+     region == "Westen" ~ "Westdeutschland (o. Berlin)",
+     region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
+     T ~ .$region
+    ))
+
   df <- df %>% dplyr::filter(region %in% states)
 
   df <- df %>% dplyr::filter(anforderung != "Keine Zuordnung möglich")
@@ -1133,7 +1145,11 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
                   fachbereich == "MINT")%>%
     dplyr::select(-wert_sum)%>%
     dplyr::rename(Relativ = proportion, Absolut=wert)%>%
-    tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")
+    tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
+    dplyr::mutate(selector = dplyr::case_when(
+      selector == "Relativ" ~ "In Prozent",
+      selector == "Absolut" ~ "Anzahl"
+    ))
 
 
 
@@ -1143,10 +1159,10 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
 
   df <- df %>% dplyr::filter(fachbereich == "MINT")
 
-  if(absolut_selector=="Relativ"){
+  if(absolut_selector=="In Prozent"){
 
     df <- df %>%
-    dplyr::filter(selector =="Relativ")
+    dplyr::filter(selector =="In Prozent")
 
 
 
@@ -1188,14 +1204,14 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
-  }else if(absolut_selector=="Absolut"){
+  }else if(absolut_selector=="Anzahl"){
 
     hcoptslang <- getOption("highcharter.lang")
     hcoptslang$thousandsSep <- "."
     options(highcharter.lang = hcoptslang)
 
     df <- df %>%
-    dplyr::filter(selector == "Absolut")
+    dplyr::filter(selector == "Anzahl")
 
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
@@ -1555,31 +1571,35 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
 
   dfk <<- dfg%>%
     tidyr::pivot_wider(names_from= region, values_from=wert)%>%
-    dplyr::mutate(Osten = rowSums(dplyr::select(., c(Berlin, Brandenburg, `Mecklenburg-Vorpommern`, Sachsen, `Sachsen-Anhalt`, Thüringen)),na.rm = T),
-                  Westen= rowSums(dplyr::select(., c(`Baden-Württemberg`, Bayern, Bremen, Hamburg, Hessen, Niedersachsen, `Schleswig-Holstein`, `Nordrhein-Westfalen`,
+    dplyr::mutate("Ostdeutschland (inkl. Berlin)" = rowSums(dplyr::select(., c(Berlin, Brandenburg, `Mecklenburg-Vorpommern`, Sachsen, `Sachsen-Anhalt`, Thüringen)),na.rm = T),
+                  "Westdeutschland (o. Berlin)"= rowSums(dplyr::select(., c(`Baden-Württemberg`, Bayern, Bremen, Hamburg, Hessen, Niedersachsen, `Schleswig-Holstein`, `Nordrhein-Westfalen`,
                                                      `Rheinland-Pfalz`, Saarland  )),na.rm = T))%>%
-    tidyr::pivot_longer(c(7:25),names_to= "bundesland", values_to="wert") %>%
+    tidyr::pivot_longer(c(7:25),names_to= "region", values_to="wert") %>%
     tidyr::pivot_wider(values_from=wert, names_from=fachbereich)%>%
     dplyr::mutate(MINT_p= round(MINT/Alle*100,2))%>%
     dplyr::select(- "Alle")%>%
     dplyr::rename(Absolut = MINT, Relativ = MINT_p)%>%
     tidyr::pivot_longer(c(Absolut , Relativ), names_to="selector", values_to="wert")%>%
     dplyr::filter(geschlecht== "Gesamt")%>%
-    dplyr::filter(anforderung== "Gesamt")
+    dplyr::filter(anforderung== "Gesamt")%>%
+    dplyr::mutate(selector = dplyr::case_when(
+      selector=="Relativ" ~ "In Prozent",
+      selector=="Absolut" ~ "Anzahl"
+    ))
 
 
-  df12 <<- dfk %>% dplyr::filter(bundesland %in% states)
+  df12 <<- dfk %>% dplyr::filter(region %in% states)
 
 
   df14 <<- df12 %>% dplyr::filter(indikator == aniveau)
 
-  if(absolut_selector=="Relativ"){
+  if(absolut_selector=="In Prozent"){
 
     df <- df14 %>%
-      dplyr::filter(selector=="Relativ")
+      dplyr::filter(selector=="In Prozent")
 
 
-  df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
+  df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
 
 
@@ -1676,8 +1696,8 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
   # }
 
   # plot
-  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = bundesland)) %>%
-    highcharter::hc_tooltip(pointFormat = "Anteil <br> Bundesland: {point.bundesland} <br> Wert: {point.y} %") %>%
+  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = region)) %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
@@ -1699,7 +1719,7 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-  } else if(absolut_selector=="Absolut"){
+  } else if(absolut_selector=="Anzahl"){
 
 
     hcoptslang <- getOption("highcharter.lang")
@@ -1707,13 +1727,13 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
     options(highcharter.lang = hcoptslang)
 
     df <- df14 %>%
-      dplyr::filter(selector=="Absolut")
+      dplyr::filter(selector=="Anzahl")
 
-    df <<- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
+    df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
 
     # plot
-    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = bundesland)) %>%
+    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = region)) %>%
       highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -3144,12 +3164,16 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(df,r) {
                   fachbereich == "MINT")%>%
     dplyr::rename(Relativ= proportion_fachbereich, Absolut = wert)%>%
     dplyr::select(-wert_sub_gesamt)%>%
-    tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to= "wert")
+    tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to= "wert")%>%
+    dplyr::mutate(selector=dplyr::case_when(
+      selector == "Relativ" ~ "In Prozent",
+      selector == "Absolut" ~ "Anzahl"
+    ))
 
-  if(absolut_selector=="Relativ"){
+  if(absolut_selector=="In Prozent"){
 
     df <- dfK %>%
-      dplyr::filter(selector =="Relativ")
+      dplyr::filter(selector =="In Prozent")
 
   # order years for plot
   df <- df[with(df, order(jahr, decreasing = FALSE)), ]
@@ -3178,14 +3202,14 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(df,r) {
 
 
 
-  } else if(absolut_selector=="Absolut"){
+  } else if(absolut_selector=="Anzahl"){
 
   hcoptslang <- getOption("highcharter.lang")
   hcoptslang$thousandsSep <- "."
   options(highcharter.lang = hcoptslang)
 
   df <- dfK %>%
-    dplyr::filter(selector =="Absolut")
+    dplyr::filter(selector =="Anzahl")
 
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
@@ -3229,7 +3253,7 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
   #timerange <- r$date_arbeitsmarkt_einstieg_gender
   fach_choice <- r$fach_arbeitsmarkt_einstieg_vergleich_gender
   land_choice <-r$BULA_arbeitsmarkt_einstieg_vergleich_gender
-browser()
+
   # filter dataset based on UI inputs
   #df <- df %>% dplyr::filter(jahr == timerange)
   df <- df %>% dplyr::filter(landkreis == "alle Landkreise")
@@ -3707,7 +3731,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
   # titel_sub <- df_compare_list[[4]]
 
   # differentiate between relative and absolute
-  if(display_form == "Relativ") {
+  if(display_form == "In Prozent") {
     df_compare <- df_compare %>%
       dplyr::mutate(display_value = prob) %>%
       dplyr::arrange(display_value)
@@ -3716,7 +3740,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
     yAxis <- "{value}%"
     titel <- paste0("Anteil von ", titel_sub2, titel_gesamt_1, titel_gesamt_2, " in ", states, " (2021)")
 
-  } else {
+  } else if(display_form== "Anzahl") {
     df_compare <- df_compare %>%
       dplyr::mutate(display_value = wert) %>%
       dplyr::arrange(display_value) %>%

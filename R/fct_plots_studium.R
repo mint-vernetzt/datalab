@@ -745,14 +745,14 @@ studienzahl_verlauf_single <- function(df,r) {
     dplyr::mutate("Nicht MINT_p"=`Nicht MINt`/Alle)%>%
     dplyr::select(-Ingenieurwissenschaften,- Mathematik_Naturwissenschaften,-Alle)%>%
     tidyr::pivot_longer(c("MINT (aggregiert)", "Nicht MINt", "Nicht MINT_p", "MINT (aggregiert)_p"), names_to = "var", values_to = "wert")%>%
-    dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$var, "p")~"Relativ",
-                  T~ "Absolut"))%>%
+    dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$var, "p")~"In Prozent",
+                  T~ "Anzahl"))%>%
     dplyr::filter(!var %in% c("Nicht MINt", "Nicht MINT_p"))
 
 
-  if(abs_zahlen_selector == "Relativ"){
+  if(abs_zahlen_selector == "In Prozent"){
 
-    df5 <<- df4 %>%  dplyr::filter(selector=="Relativ")
+    df5 <<- df4 %>%  dplyr::filter(selector=="In Prozent")
 
 
   df5$wert <- df5$wert *100
@@ -839,13 +839,13 @@ studienzahl_verlauf_single <- function(df,r) {
 
   }
 
-  }else if (abs_zahlen_selector == "Absolut"){
+  }else if (abs_zahlen_selector == "Anzahl"){
 
     hcoptslang <- getOption("highcharter.lang")
     hcoptslang$thousandsSep <- "."
     options(highcharter.lang = hcoptslang)
 
-    df6 <<- df4 %>%  dplyr::filter(selector=="Absolut")
+    df6 <<- df4 %>%  dplyr::filter(selector=="Anzahl")
 
     df6 <- df6[with(df6, order( jahr, decreasing = FALSE)), ]
 
@@ -4081,7 +4081,7 @@ if (absolut_selector=="In Prozent"){
                                   theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
-  }}else if(absolut_selector=="Anazhl"){
+  }}else if(absolut_selector=="Anzahl"){
 
 
     hcoptslang <- getOption("highcharter.lang")

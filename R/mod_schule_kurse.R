@@ -58,7 +58,7 @@ mod_schule_kurse_ui <- function(id){
         span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4a",
-        span(tags$b(span("Kompetenzdaten IQB:")))),"MINT-Kompetenzen der 4. Klassen."),
+        span(tags$b(span("Kompetenzdaten IQB:")))),"Wie hoch ist der Anteil leistungsschwacher Schüler:innen?"),
 
         ),
 
@@ -67,6 +67,8 @@ mod_schule_kurse_ui <- function(id){
         width = 3,
         p(style = "text-align: left; font-size = 16px",
           "Schüler:innenzahlen der Oberstufe: Kulturministerkonferenz (KMK) 2022, auf Anfrage"),
+        p(style = "text-align: left; font-size = 16px",
+          "Leistungsdaten: Institut zur Qualitätsentwicklung im Bildungswesen (IQB), 2022, auf Anfrage, eigene Berechnungen."),
         p(style = "text-align: left; font-size = 16px",
           "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.")
         ),
@@ -445,7 +447,7 @@ mod_schule_kurse_ui <- function(id){
 
       fluidRow(id="jump4a",
            shinydashboard::box(
-             title = "Kompetenzdaten IQB: MINT-Kompetenzen der 4. Klassen",
+             title = "MINT-Kompetenzen in der 4. Klasse",
              width = 12,
              p("Dieses interaktive Diagramm gibt einen ersten Einblick in die Mathe-Kompetenzen von Schülerinnen und Schüler der 4. Klassen.
              Die Daten stammen aus der Befragung des Instituts zur Qualitätsentwicklung im Bildungswesen e.V. (IQB), das in regelmäßigen Abständen
