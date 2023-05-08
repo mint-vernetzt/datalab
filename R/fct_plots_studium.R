@@ -6476,7 +6476,6 @@ plot_ranking_top_faecher <- function(df, r, type) {
       dplyr::slice(1:10)
 
 
-
     # Create female plot
     hc_frau <- highcharter::hchart(studierende_faecher_frauen, 'bar', highcharter::hcaes(y = wert, x = fach)) %>%
       highcharter::hc_plotOptions(
