@@ -1,4 +1,4 @@
-#' mod_schule_kurse_iqb_standard_zeitverlauf UI Function
+#' mod_schule_kurse_iqb_mathe_mittel_zeitverlauf UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,14 +7,14 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
+mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
   ns <- NS(id)
 
   tagList(
 
     p("Auwahl des Bundeslandes:"),
     shinyWidgets::pickerInput(
-      inputId = ns("land_iqb_standard_zeitverlauf"),
+      inputId = ns("land_iqb_mathe_mittel_zeitverlauf"),
       choices = c("Deutschland",
                   "Baden-Württemberg",
                   "Bayern",
@@ -23,7 +23,7 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
                   "Bremen",
                   "Hamburg",
                   "Hessen",
-                 # "Mecklenburg-Vorpommern",
+                  # "Mecklenburg-Vorpommern",
                   "Niedersachsen",
                   "Nordrhein-Westfalen",
                   "Rheinland-Pfalz",
@@ -32,14 +32,20 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen"),
+      multiple = FALSE,
+      selected = c("Brandenburg")
+    ),
 
-    selected = c("Deutschland",
-                 "Bayern","Bremen"),
-      multiple = TRUE,
-      options =  list(
-        "max-options" = 3,
-        "max-options-text" = "Maximal 3 Bundesländer auswählen")
-    )
+    p("Auwahl des Indikators:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("indi_iqb_mathe_mittel_zeitverlauf"),
+      choices = c("nach Geschlecht",
+                  "nach Migrationsgeschichte",
+                  "nach Bildungshintergrund"),
+      multiple = FALSE,
+      selected = c("nach Geschlecht")
+
+  )
   )
 
 }
@@ -47,11 +53,15 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
 #' schule_kurse_verlauf Server Functions
 #'
 #' @noRd
-mod_schule_kurse_iqb_standard_zeitverlauf_server <- function(id, r){
+mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$land_iqb_standard_zeitverlauf, {
-      r$land_iqb_standard_zeitverlauf <- input$land_iqb_standard_zeitverlauf
+    observeEvent(input$land_iqb_mathe_mittel_zeitverlauf, {
+      r$land_iqb_mathe_mittel_zeitverlauf <- input$land_iqb_mathe_mittel_zeitverlauf
+    })
+
+    observeEvent(input$indi_iqb_mathe_mittel_zeitverlauf, {
+      r$indi_iqb_mathe_mittel_zeitverlauf <- input$indi_iqb_mathe_mittel_zeitverlauf
     })
 
   })

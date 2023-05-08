@@ -37,8 +37,8 @@ mod_schule_kurse_ranking_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westen",
-                  "Osten"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
                   ),
        selected = "Mecklenburg-Vorpommern"
       )
