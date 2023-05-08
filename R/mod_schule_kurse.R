@@ -58,7 +58,7 @@ mod_schule_kurse_ui <- function(id){
         span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4a",
-        span(tags$b(span("Kompetenzdaten IQB:")))),"Wie hoch ist der Anteil leistungsschwacher Schüler:innen?"),
+        span(tags$b(span("MINT-Kompetenzen in der 4. Klasse:")))),"Wie hoch ist der Anteil leistungsschwacher Schüler:innen?"),
 
         ),
 
@@ -68,7 +68,7 @@ mod_schule_kurse_ui <- function(id){
         p(style = "text-align: left; font-size = 16px",
           "Schüler:innenzahlen der Oberstufe: Kulturministerkonferenz (KMK) 2022, auf Anfrage"),
         p(style = "text-align: left; font-size = 16px",
-          "Leistungsdaten: Institut zur Qualitätsentwicklung im Bildungswesen (IQB), 2022, auf Anfrage, eigene Berechnungen."),
+          "Kompetenzdaten: Institut zur Qualitätsentwicklung im Bildungswesen (IQB), 2022, auf Anfrage, eigene Berechnungen."),
         p(style = "text-align: left; font-size = 16px",
           "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.")
         ),
