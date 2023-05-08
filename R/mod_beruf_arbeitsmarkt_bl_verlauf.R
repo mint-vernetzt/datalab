@@ -74,17 +74,26 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westen",
-                  "Osten"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
                   ),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
-      selected = c("Osten", "Hamburg")
+      selected = c("Ostdeutschland (inkl. Berlin)", "Hamburg")
 
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_4"),
+      choices = c("In Prozent", "Anzahl"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
+
 }
 
 #' beruf_arbeitsmarkt_bl_verlauf Server Functions
@@ -99,6 +108,10 @@ mod_beruf_arbeitsmarkt_bl_verlauf_server <- function(id, r){
 
     observeEvent(input$niveau, {
       r$niveau <- input$niveau
+    })
+
+    observeEvent(input$abs_zahlen_4, {
+      r$abs_zahlen_4 <- input$abs_zahlen_4
     })
 
     # observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf, {

@@ -38,8 +38,8 @@ mod_studium_top_faecher_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen",
-                  "Westen",
-                  "Osten"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
       ),
       selected = "Bayern"
     ),
@@ -54,7 +54,7 @@ mod_studium_top_faecher_ui <- function(id){
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("subject_abs_rel"),
-      choices = c("Relativ", "Absolut"),
+      choices = c("In Prozent", "Anzahl"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))

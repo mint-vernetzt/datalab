@@ -89,11 +89,20 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westdeutschland",
-                  "Ostdeutschland"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
                   ),
       selected = "Berlin"
 
+    ),
+
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_verlauf_subject_bl"),
+      choices = c("In Prozent", "Anzahl"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
 }
@@ -111,6 +120,10 @@ mod_studium_studienzahl_verlauf_bl_subject_server <- function(id, r){
 
     observeEvent(input$verl_l, {
       r$verl_l <- input$verl_l
+    })
+
+    observeEvent(input$abs_zahlen_verlauf_subject_bl, {
+      r$abs_zahlen_verlauf_subject_bl <- input$abs_zahlen_verlauf_subject_bl
     })
 #
 #     observeEvent(input$subject_selected_bl, {

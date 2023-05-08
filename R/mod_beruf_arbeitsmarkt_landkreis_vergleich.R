@@ -88,7 +88,7 @@ mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
     p("Form der Darstellung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("darstellung_beruf_arbeitsmarkt_landkreis_vergleich"),
-      choices = c("Relativ", "Absolut"),
+      choices = c("In Prozent", "Anzahl"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))

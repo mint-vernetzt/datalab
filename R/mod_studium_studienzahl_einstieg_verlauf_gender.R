@@ -47,7 +47,7 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
       # options = list(`actions-box` = TRUE,
       #                `deselect-all-text` = "Alle abwählen",
       #                `select-all-text` = "Alle auswählen")
-    )
+    ),
     # p("Auswahl der Hochschulform:"),
     # conditionalPanel(condition = "input.nurLehramt_studierende_einstieg_verlauf_gender == false",
     #                  ns = ns,
@@ -62,7 +62,16 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
     #                    choices = "Uni"
     #                  ))
 
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen"),
+      choices = c("In Prozent", "Anzahl"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
+    )
   )
+
 }
 
 #' studium_studienzahl_einstieg_verlauf_gender Server Functions
@@ -77,6 +86,10 @@ mod_studium_studienzahl_einstieg_verlauf_gender_server <- function(id, r){
 
     observeEvent(input$genz_date, {
       r$genz_date <- input$genz_date
+    })
+
+    observeEvent(input$abs_zahlen, {
+      r$abs_zahlen <- input$abs_zahlen
     })
 
 

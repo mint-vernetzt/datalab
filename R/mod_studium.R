@@ -63,6 +63,10 @@ mod_studium_server <- function(id, data_studierende, data_studierende2, data_stu
   # Box 8
   mod_studium_top_faecher_server("mod_studium_top_faecher", r)
 
+  # Box Ausländer
+  mod_studium_studienzahl_ausl_server("mod_studium_studienzahl_ausl_ui",  r)
+  mod_studium_studienzahl_ausl_zeit_server("mod_studium_studienzahl_ausl_zeit_ui", r)
+
 }
 
 ## To be copied in the UI
