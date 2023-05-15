@@ -298,7 +298,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_top10"))
+                               htmlOutput(ns("plot_arbeitsmarkt_top10"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     )
@@ -601,7 +601,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
       arbeitsmarkt_bl_gender_vergleich(data_arbeitsmarkt,r)
     })
 
-    output$plot_arbeitsmarkt_top10 <- highcharter::renderHighchart({
+    output$plot_arbeitsmarkt_top10 <- renderUI({
       arbeitsmarkt_top10(data_naa, r)
     })
 
