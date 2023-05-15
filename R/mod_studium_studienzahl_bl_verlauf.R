@@ -11,7 +11,7 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Zeitraum:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_verlauf"),
       label = NULL,
@@ -36,14 +36,14 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
     #                      inputId = ns("hochschulform_studium_studienzahl_bl_verlauf2"),
     #                      choices = "Uni"
     #                    )),
-      p("Auswahl des Fachs:"),
+      p("Fächergruppe:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_verlauf"),
         choices = c("MINT-Fächer (gesamt)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
         selected = "MINT-Fächer (gesamt)"
       )
     ,
-    p("Auswahl des Indikators:"),
+    p("Indikator:"),
     shinyWidgets::pickerInput(
       inputId = ns("verl_bl_l"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -66,7 +66,7 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
         "max-options" = 3,
         "max-options-text" = "Maximal 3 Indikatoren auswählen")
     ),
-    p("Auswahl der Bundesländer:"),
+    p("Regionen:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studium_studienzahl_bl_verlauf"),
       choices = c("Deutschland",

@@ -10,14 +10,14 @@
 mod_studium_studienzahl_bl_map_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("map_y"),
       label = NULL,
       choices = c("2018", "2019", "2020", "2021"),
       selected = "2021"
     ),
-    p("Auswahl des Indikators:"),
+    p("Indikator:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l"),
       choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
@@ -34,7 +34,7 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
         "max-options" = 2,
         "max-options-text" = "Maximal 2 Indikatoren auswählen")
     ),
-    p("Auswahl der Fächer (max. 2):"),
+    p("Fächer/Fächergruppen (max. 2):"),
     shinyWidgets::pickerInput(
       inputId = ns("map_f"),
       choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",

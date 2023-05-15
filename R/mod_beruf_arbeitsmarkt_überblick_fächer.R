@@ -11,7 +11,7 @@ mod_beruf_arbeitsmarkt_überblick_fächer_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Bundeslandes:"),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("state_arbeitsmarkt_überblick_fächer"),
       choices = c("Deutschland",
@@ -34,7 +34,7 @@ mod_beruf_arbeitsmarkt_überblick_fächer_ui <- function(id){
       multiple = FALSE,
       selected = "Sachsen-Anhalt"
     ),
-    p("Auswahl der Beschäftigungsform:"),
+    p("Beschäftigungsform:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_arbeitsmarkt_überblick_fächer"),
       choices = c("Auszubildende",

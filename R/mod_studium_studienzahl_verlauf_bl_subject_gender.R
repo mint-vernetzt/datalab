@@ -11,14 +11,14 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Zeitraums:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("choice_V_y"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017", "2018","2019", "2020", "2021"),
       selected = c("2015","2020")
     ),
-    p("Auswahl des Indikators:"),
+    p("Indikatoren:"),
     shinyWidgets::pickerInput(
       inputId = ns("choice_l_v"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -44,7 +44,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       #                `deselect-all-text` = "Alle abwählen",
       #                `select-all-text` = "Alle auswählen")
     ),
-    p("Auswahl des Fachs:"),
+    p("Fächergruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("choice_v_f"),
 
@@ -52,7 +52,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
 
       selected = "MINT"
     ),
-    p("Auswahl des Bundeslands:"),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("choice_states"),
       choices = c("Deutschland",

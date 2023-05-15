@@ -10,7 +10,7 @@
 mod_studium_studienzahl_ausl_zeit_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl eines Bundeslandes:"),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studium_studienzahl_ausl_zeit"),
       choices = c("Deutschland",
@@ -34,7 +34,7 @@ mod_studium_studienzahl_ausl_zeit_ui <- function(id){
                   "Ostdeutschland (inkl. Berlin)"
       ),selected = "Nordrhein-Westfalen"
     ),
-    p("Auswahl eines Faches:"),
+    p("Fach/Fächergruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("fach_studium_studienzahl_ausl_zeit"),
       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Vermessungswesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Außerhalb der Studienbereichsgliederung/Sonstige Fächer","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"

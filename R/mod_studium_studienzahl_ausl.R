@@ -10,14 +10,14 @@
 mod_studium_studienzahl_ausl_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_ausl"),
       label = NULL,
       choices = c("2018", "2019", "2020", "2021"),
       selected = "2020"
     ),
-    p("Auswahl eines Bundeslandes:"),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studium_studienzahl_ausl"),
       choices = c("Deutschland",
@@ -41,7 +41,7 @@ mod_studium_studienzahl_ausl_ui <- function(id){
                   "Ostdeutschland (inkl. Berlin)"
       ),selected = "Ostdeutschland (inkl. Berlin)"
     ),
-    p("Status der Studierenden:"),
+    p("Indikator:"),
     shinyWidgets::pickerInput(
       inputId = ns("status_ausl"),
       choices = c("Studierende",
@@ -61,9 +61,9 @@ mod_studium_studienzahl_ausl_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("ebene_ausl"),
       choices = c("MINT-Fächer",
-                  "Fachbereiche"
+                  "Fachbereiche (inkl. Nicht-MINT)" = "Fachbereiche"
       ),
-      selected = "Fachbereiche"
+      selected = "Fachbereiche (inkl. Nicht-MINT)"
     )
     # ,
     # p("Betrachtung:"),

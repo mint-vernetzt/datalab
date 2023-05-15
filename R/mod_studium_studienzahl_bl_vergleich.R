@@ -11,14 +11,14 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("bl_date"),
       label = NULL,
       choices = c("2018", "2019", "2020", "2021"),
       selected = "2021"
     ),
-    p("Auswahl des Indikators:"),
+    p("Indikator:"),
     shinyWidgets::pickerInput(
       inputId = ns("rank_bl_l"),
       choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
@@ -46,7 +46,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
     #                      inputId = ns("hochschulform_studium_studienzahl_bl_vergleich2"),
     #                      choices = "Uni"
     #                    )),
-      p("Auswahl des Fachs:"),
+      p("Fach/Fächergruppe:"),
       shinyWidgets::pickerInput(
         inputId = ns("bl_f"),
 

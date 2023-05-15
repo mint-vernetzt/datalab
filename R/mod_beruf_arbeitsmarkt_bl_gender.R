@@ -17,7 +17,7 @@ mod_beruf_arbeitsmarkt_bl_gender_ui <- function(id){
     #   choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
     #   selected = 2021
     # ),
-    p("Auswahl der Beschäftigungsform:"),
+    p("Beschäftigungsform:"),
     shinyWidgets::pickerInput(
       inputId = ns("level_arbeitsmarkt_bl_gender"),
       choices = c("Auszubildende",
@@ -27,7 +27,7 @@ mod_beruf_arbeitsmarkt_bl_gender_ui <- function(id){
       multiple = FALSE,
       selected = "Beschäftigte"),
 
-    p("Auswahl des Berufsfelds:"),
+    p("Berufsfeld:"),
     shinyWidgets::pickerInput(
       inputId = ns("fach_arbeitsmarkt_bl_gender"),
       choices = c("MINT",

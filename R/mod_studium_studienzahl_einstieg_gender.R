@@ -10,14 +10,14 @@
 mod_studium_studienzahl_einstieg_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("gen_y"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"),
       selected = "2021"
     ),
-    p("Auswahl der Indikatoren (max. 3):"),
+    p("Indikatoren (max. 3):"),
     shinyWidgets::pickerInput(
       inputId = ns("gen_l"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",

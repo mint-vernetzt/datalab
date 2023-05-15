@@ -11,14 +11,14 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Zeitraums:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studienzahl_einstieg_verlauf"),
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020,2021),
       selected = c(2015,2021)
     ),
-    p("Auswahl der Indikatoren (max. 3):"),
+    p("Indikatoren (max. 3):"),
     shinyWidgets::pickerInput(
       inputId = ns("studienzahl_einstieg_verlauf_indi"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",

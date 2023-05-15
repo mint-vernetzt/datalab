@@ -23,7 +23,7 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
     # Begonnen mit Anpassung, dass beliegige Waffles vergleichen werden können
     # noch nicht implementierbar - Plot Fkt muss noch angepasst werden
 
-    p("Auswahl der Beschäftigungsform"),
+    p("Beschäftigungsform:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_arbeitsmarkt_anforderungen"),
       choices = c("Beschäftigte",
