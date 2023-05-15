@@ -288,6 +288,19 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_arbeitsmarkt_bl_vergleich"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                              )
+                    ),
+
+                    tabPanel("Top 10 Ausbildungsberufe", br(),
+
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_beruf_arbeitsmarkt_top10_ui("mod_beruf_arbeitsmarkt_top10_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               highcharter::highchartOutput(ns("plot_arbeitsmarkt_top10"))
+                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
+                             )
                     )
                     #
         ))),
@@ -484,7 +497,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 #' beruf_arbeitsmarkt Server Functions
 #'
 #' @noRd
-mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, r){
+mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, data_naa, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -586,6 +599,10 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
 
     output$plot_arbeitsmarkt_bl_gender_vergleich <- renderPlot({
       arbeitsmarkt_bl_gender_vergleich(data_arbeitsmarkt,r)
+    })
+
+    output$plot_arbeitsmarkt_top10 <- highcharter::renderHighchart({
+      arbeitsmarkt_top10(data_naa, r)
     })
 
     # Box 8
