@@ -45,6 +45,19 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
       selected = "Bayern"
     ),
 
+    p("Fachbereich:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("FB_top_beruf"),
+      choices = c("MINT (gesamt)",
+                  "Informatik",
+                  "Mathematik/Naturwissenschaft",
+                  "Produktionstechnik",
+                  "Bau- und Gebäudetechnik",
+                  "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                  "Gesundheitstechnik" = "Gesundheitstechnik - Fachkräfte"),
+      selected = "MINT (gesamt)"
+    ),
+
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("betr_abs_rel"),
@@ -69,6 +82,10 @@ mod_beruf_arbeitsmarkt_top10_server <- function(id, r){
 
     observeEvent(input$states_top_beruf, {
       r$states_top_beruf <- input$states_top_beruf
+    })
+
+    observeEvent(input$FB_top_beruf, {
+      r$FB_top_beruf <- input$FB_top_beruf
     })
 
     observeEvent(input$betr_abs_rel, {

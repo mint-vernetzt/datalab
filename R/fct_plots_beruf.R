@@ -3512,15 +3512,28 @@ arbeitsmarkt_top10 <- function(df, r){
   time <- r$date_top_beruf
   bula <- r$states_top_beruf
   abs_rel <- r$betr_abs_rel
+  fb <- r$FB_top_beruf
 
   # un-groupen
   df <- df %>%dplyr::ungroup()
 
+  # West- / Ost umbenennen, dass es zum Imput passt
+  df$region[df$region == "Westdeutschland (ohne Berlin)"] <- "Westdeutschland (o. Berlin)"
+  df$region[df$region == "Ostdeutschland (mit Berlin)"] <- "Ostdeutschland (inkl. Berlin)"
+
   # Filtern
   df <- df %>% dplyr::filter(df$ebene == "Ebene 3") #Ebene der einzelnen Berufe aus Datensatz ausfiltern
-  df <- df %>% dplyr::filter(df$region == bula) #gewähltes Bundesland filtern
   df <- df %>% dplyr::filter(df$jahr == time) #Jahr auswählen
+  df <- df %>% dplyr::filter(df$region == bula) #gewähltes Bundesland filtern
   df <- df %>% dplyr::select(-code)
+
+  # Auswahl Fachbereich
+  if(fb != "MINT (gesamt)"){
+    df <- df %>% dplyr::filter(fachbereich == fb)
+  }
+
+  # zu gering besetzte Ausbildungen ausfiltern
+  df <- df %>% dplyr::filter(df$wert > 8)
 
   # Anteile von Frauen/Männern berechnen
   # Gesamt als eigenen Df speichern, mit dem Anteil berechnet wird
@@ -3557,6 +3570,14 @@ arbeitsmarkt_top10 <- function(df, r){
       dplyr::slice(1:10)
 
 
+    if(sum(berufe_maenner$prop)==1000){ #falls alle 10 Berufe 100 % sind
+      berufe_maenner <- df %>%
+        dplyr::filter(geschlecht == "Männer") %>%
+        dplyr::filter(prop == 100) %>% #diese 100% Jobs auswählen
+        dplyr::arrange(desc(wert)) %>% #und die anzeigen, die am stärksten besetzt sind von diesen
+        dplyr::slice(1:10)
+    }
+
     # Create female plot
     plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -3568,7 +3589,7 @@ arbeitsmarkt_top10 <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), min = 0, max = 100, tickInterval = 5) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Ausbildungsberufe mit dem höchsten Frauenanteil ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("MINT-Ausbildungsberufe mit dem höchsten Frauenanteil ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3598,7 +3619,7 @@ arbeitsmarkt_top10 <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), min = 0, max = 100, tickInterval = 5) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("Ausbildungsberufe mit dem höchsten Männeranteil ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("MINT-Ausbildungsberufe mit dem höchsten Männeranteil ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3638,10 +3659,10 @@ arbeitsmarkt_top10 <- function(df, r){
           dataLabels = list(enabled = TRUE, format = "{point.wert}")
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(berufe_frauen$wert), 1000, f = ceiling), tickInterval = 1000) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(berufe_frauen$wert), 500, f = ceiling), tickInterval = 1000) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte Ausbildungsberufe von Frauen ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von Frauen ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3671,7 +3692,7 @@ arbeitsmarkt_top10 <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(berufe_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte Ausbildungsberufe von Männern ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von Männern ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%

@@ -43,10 +43,9 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen"
-                  # ,
-                  # "Westdeutschland (o. Berlin)",
-                  # "Ostdeutschland (einschl. Berlin)"
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
                   ),
       multiple = FALSE,
       selected = "Niedersachsen")
