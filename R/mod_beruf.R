@@ -21,12 +21,12 @@ mod_beruf_ui <- function(id){
 #' beruf Server Functions
 #'
 #' @noRd
-mod_beruf_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, r){
+mod_beruf_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, data_naa, r){
 
   r <- reactiveValues()
 
   # Arbeitsmarkt
-  mod_beruf_arbeitsmarkt_server("mod_beruf_arbeitsmarkt_ui_1", data_arbeitsmarkt, data_arbeitsmarkt_detail, r)
+  mod_beruf_arbeitsmarkt_server("mod_beruf_arbeitsmarkt_ui_1", data_arbeitsmarkt, data_arbeitsmarkt_detail, data_naa, r)
 
   # Box 2
   mod_beruf_arbeitsmarkt_einstieg_server("mod_beruf_arbeitsmarkt_einstieg_ui_1", r)
@@ -53,6 +53,7 @@ mod_beruf_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, r)
   mod_beruf_arbeitsmarkt_bl_server("mod_beruf_arbeitsmarkt_bl_ui_1", r)
   mod_beruf_arbeitsmarkt_bl_verlauf_server("mod_beruf_arbeitsmarkt_bl_verlauf_ui_1", r)
   mod_beruf_arbeitsmarkt_bl_vergleich_server("beruf_arbeitsmarkt_bl_vergleich_ui_1", r)
+  mod_beruf_arbeitsmarkt_top10_server("mod_beruf_arbeitsmarkt_top10_ui_1", r)
 
   # Box 7
   mod_beruf_arbeitsmarkt_bl_gender_server("mod_beruf_arbeitsmarkt_bl_gender_ui_1", r)
