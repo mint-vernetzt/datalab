@@ -244,7 +244,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       shinydashboard::box(
         title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
         width = 12,
-        p("Hier zeigen wir die Unterschiede nach MINT-Berufsbereichen Mathematik/ Naturwissenschaft, Informatik und Technik. Die Aufbereitung nach einzelnen Berufen steht noch aus."),
+        p("Hier zeigen wir die Unterschiede nach MINT-Berufsbereichen Mathematik/ Naturwissenschaft, Informatik und Technik. Außerdem können die Top 10 der MINT-Ausbildungsberufe
+          von Frauen und Männern verglichen werden."),
 
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Anteil MINT-Berufsfelder zwischen Auszubildenden und Beschäftigten (Karte)", br(),
@@ -290,7 +291,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              )
                     ),
 
-                    tabPanel("Top 10 Ausbildungsberufe", br(),
+                    tabPanel("Top 10 MINT-Ausbildungsberufe", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -298,8 +299,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               htmlOutput(ns("plot_arbeitsmarkt_top10"))
-                               ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
+                               htmlOutput(ns("plot_arbeitsmarkt_top10")),
+                               p(style="font-size:12px;color:grey","Hinweis: Ausbidlungsberufe mit weniger als 10 Verträgen wurden ausgeschlossen. In manchen Fällen weisen mehr als 10 Berufe einen Männeranteil von 100 % auf. In diesen Fällen sind die 10 Berufe mit 100 % Männeranteil angezeigt, welche die meisten Auszubildenden haben."),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     )
                     #
