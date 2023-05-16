@@ -1450,7 +1450,7 @@ studienzahl_einstieg_comparison <- function(df,r) {
 
   df4 <<- within(df4, proportion <- factor(proportion, levels=c("Nicht MINT", "MINT")))
 
-  highcharter::hchart(df4, 'bar', highcharter::hcaes(y = prop, x = label, group = proportion))%>%
+  highcharter::hchart(df4, 'bar', highcharter::hcaes(y = prop, x = label, group = forcats::fct_rev(proportion)))%>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.proportion} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
@@ -6665,6 +6665,11 @@ betr_ebene <- r$ebene_ausl
                                "Nicht MINT",
                                "MINT"))
 
+  #Faktor für Höhe des Grafens berechnen
+  ebene <- c("Fachbereiche", "MINT-Fächer")
+  höhe <- c(8, 11)
+  plt.add <- data.frame(ebene, höhe)
+
 if(betr_ebene=="Fachbereiche"){
 
 
@@ -6678,7 +6683,7 @@ if(betr_ebene=="Fachbereiche"){
 
   highcharter::hchart(dfhh1, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
     highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.y} %")%>%
-    highcharter::hc_size(height = 1000)%>%
+    highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
@@ -6715,7 +6720,7 @@ if(betr_ebene=="Fachbereiche"){
 
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
     highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.y}")%>%
-    highcharter::hc_size(height = 1000)%>%
+    highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     #highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
@@ -6750,7 +6755,7 @@ if(betr_ebene=="Fachbereiche"){
 
     highcharter::hchart(dfhh, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
       highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.y} %")%>%
-      highcharter::hc_size(height = 1000)%>%
+      highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
@@ -6787,7 +6792,7 @@ if(betr_ebene=="Fachbereiche"){
 
     highcharter::hchart(df, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
       highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.y}")%>%
-      highcharter::hc_size(height = 1000)%>%
+      highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       #highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
