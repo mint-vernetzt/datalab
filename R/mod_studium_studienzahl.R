@@ -412,7 +412,7 @@ mod_studium_studienzahl_ui <- function(id){
                                   shiny::mainPanel(
                                     width = 9,
                                     highcharter::highchartOutput(ns("plot_auslaender_zeit")),
-                                    p(style="font-size:12px;color:grey", "Hinweis: In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen können keine Balken berechnet werden."),
+                                    p(style="font-size:12px;color:grey", "Hinweis: In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen stehen nur die vorhandenen Studienfachgruppen zur Auswahl."),
                                     p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
 
                          # tabPanel("Anteil von internationalen Studierenden im Zeitgergleich", br(),

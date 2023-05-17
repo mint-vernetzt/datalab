@@ -6848,7 +6848,29 @@ plot_auslaender_mint_zeit <- function(df, r){
 
   status_select <- r$status_ausl_zeit
 
-  fach_select <- r$fach_studium_studienzahl_ausl_zeit
+  if(bl_select %in% c("Deutschland",
+                      "Baden-Württemberg",
+                      "Bayern",
+                      "Berlin",
+                      "Hamburg",
+                      "Hessen",
+                      "Nordrhein-Westfalen",
+                      "Rheinland-Pfalz",
+                      "Sachsen",
+                      "Westdeutschland (o. Berlin)",
+                      "Ostdeutschland (inkl. Berlin)")) {
+    fach_select <- r$fach1_studium_studienzahl_ausl_zeit
+  }
+  else {
+     if(bl_select == "Brandenburg")fach_select <- r$fach2_studium_studienzahl_ausl_zeit
+     if(bl_select == "Bremen")fach_select <- r$fach3_studium_studienzahl_ausl_zeit
+    if(bl_select == "Mecklenburg-Vorpommern")fach_select <- r$fach4_studium_studienzahl_ausl_zeit
+    if(bl_select == "Niedersachsen")fach_select <- r$fach5_studium_studienzahl_ausl_zeit
+    if(bl_select == "Saarland")fach_select <- r$fach6_studium_studienzahl_ausl_zeit
+    if(bl_select == "Sachsen-Anhalt")fach_select <- r$fach7_studium_studienzahl_ausl_zeit
+    if(bl_select == "Schleswig-Holstein")fach_select <- r$fach8_studium_studienzahl_ausl_zeit
+    if(bl_select == "Thüringen")fach_select <- r$fach9_studium_studienzahl_ausl_zeit
+  }
 
   df_aus <- df
 
