@@ -6587,13 +6587,13 @@ betr_ebene <- r$ebene_ausl
                         "Studienanfänger:innen (1. Hochschulsemester)",
                         "Studierende"))%>%
     tidyr::pivot_wider(names_from=region, values_from=wert)%>%
-    dplyr::mutate(Deutschland=rowSums(dplyr::across(c(7:ncol(.)))))%>%
+    dplyr::mutate(Deutschland=rowSums(dplyr::across(c(7:ncol(.))),na.rm=TRUE))%>% #es liegen NAs vor, damit Rest berechent wird na.rm = TRUE
     dplyr::mutate("Westdeutschland (o. Berlin)" =rowSums(dplyr::across(c(`Nordrhein-Westfalen`, `Hamburg`,
                                                          Bayern, `Baden-Württemberg`, Saarland,
                                                          `Schleswig-Holstein`, Hessen, Niedersachsen,
-                                                         `Rheinland-Pfalz`, `Bremen`))))%>%
+                                                         `Rheinland-Pfalz`, `Bremen`)), na.rm = TRUE))%>%
     dplyr::mutate("Ostdeutschland (inkl. Berlin)"=rowSums(dplyr::across(c(Berlin, Sachsen, `Mecklenburg-Vorpommern`,
-                                                                          `Sachsen-Anhalt`, Brandenburg, Thüringen))))%>%
+                                                                          `Sachsen-Anhalt`, Brandenburg, Thüringen)), na.rm = TRUE))%>%
     tidyr::pivot_longer(c(7:ncol(.)), names_to = "region", values_to="wert")%>%
     dplyr::select(-mint_select,- fachbereich)%>%
     tidyr::pivot_wider(values_from = wert, names_from =fach )%>%
@@ -6669,6 +6669,10 @@ betr_ebene <- r$ebene_ausl
   ebene <- c("Fachbereiche", "MINT-Fächer")
   höhe <- c(8, 11)
   plt.add <- data.frame(ebene, höhe)
+
+  # NA aus fach entfernen für BULAs mit weniger Studienfachgruppen
+  df_aus_3 <- stats::na.omit(df_aus_3)
+  df_aus_4 <- stats::na.omit(df_aus_4)
 
 if(betr_ebene=="Fachbereiche"){
 
@@ -6846,7 +6850,6 @@ plot_auslaender_mint_zeit <- function(df, r){
 
   fach_select <- r$fach_studium_studienzahl_ausl_zeit
 
-
   df_aus <- df
 
   df_aus_0 <- df_aus
@@ -6871,13 +6874,13 @@ plot_auslaender_mint_zeit <- function(df, r){
                                "Studienanfänger:innen (1. Hochschulsemester)",
                                "Studierende"))%>%
     tidyr::pivot_wider(names_from=region, values_from=wert)%>%
-    dplyr::mutate(Deutschland=rowSums(dplyr::across(c(7:ncol(.)))))%>%
+    dplyr::mutate(Deutschland=rowSums(dplyr::across(c(7:ncol(.))), na.rm=TRUE))%>% #na.rm = TRUE, da nicht alle Länder alle Fächer haben, sonst NAs
     dplyr::mutate("Westdeutschland (o. Berlin)" =rowSums(dplyr::across(c(`Nordrhein-Westfalen`, `Hamburg`,
                                                            Bayern, `Baden-Württemberg`, Saarland,
                                                            `Schleswig-Holstein`, Hessen, Niedersachsen,
-                                                           `Rheinland-Pfalz`, `Bremen`))))%>%
+                                                           `Rheinland-Pfalz`, `Bremen`)),na.rm=TRUE))%>%
     dplyr::mutate("Ostdeutschland (inkl. Berlin)"=rowSums(dplyr::across(c(Berlin, Sachsen, `Mecklenburg-Vorpommern`,
-                                                                          `Sachsen-Anhalt`, Brandenburg, Thüringen))))%>%
+                                                                          `Sachsen-Anhalt`, Brandenburg, Thüringen)), na.rm=TRUE))%>%
     tidyr::pivot_longer(c(7:ncol(.)), names_to = "region", values_to="wert")%>%
     dplyr::select(-mint_select,- fachbereich)%>%
     tidyr::pivot_wider(values_from = wert, names_from =fach )%>%
