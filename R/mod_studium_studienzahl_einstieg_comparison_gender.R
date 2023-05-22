@@ -11,14 +11,14 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("gen_f_y"),
       label = NULL,
       choices = c("2018", "2019", "2020", "2021"),
       selected = "2021"
     ),
-    p("Auswahl des Fachs:"),
+    p("Fach/Fächergruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("gen_f"),
 
@@ -53,7 +53,7 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
 
       selected = "MINT"
     ),
-    p("Auswahl des Bundeslands:"),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("gen_states"),
       choices = c("Deutschland",

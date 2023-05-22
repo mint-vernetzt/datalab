@@ -11,7 +11,7 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_comparison_bl"),
       label = NULL,
@@ -19,7 +19,7 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
                   "2018","2019", "2020", "2021"),
       selected = "2021"),
 
-    p("Form der Kursbelegung:"),
+    p("Kursart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_comparison_bl"),
       choices = c("Grundkurse", "Leistungskurse"),
@@ -28,7 +28,7 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
                                   lib = "glyphicon"))
     ),
 
-    p("Auswahl des Fachs:"),
+    p("Fach/Fächergruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_comparison_bl"),
       choices = c("MINT-Fächer (gesamt)",

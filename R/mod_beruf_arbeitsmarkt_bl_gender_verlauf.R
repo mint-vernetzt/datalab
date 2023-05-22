@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Zeitraums:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_bl_gender_verlauf"),
       label = NULL,
@@ -18,7 +18,7 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
                   "2018","2019", "2020", "2021"),
       selected = c("2016", "2021")
     ),
-    p("Auswahl der Beschäftigungsform"),
+    p("Beschäftigungsform"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_beruf_arbeitsmarkt_bl_gender_verlauf"),
       choices = c("Auszubildende", "Beschäftigte"),
@@ -32,7 +32,7 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
     #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"),
     #   selected = "Gesamt"
     # ),
-    p("Auswahl der Bundesländer:"),
+    p("Regionen:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_bl_gender_verlauf"),
       choices = c("Deutschland",

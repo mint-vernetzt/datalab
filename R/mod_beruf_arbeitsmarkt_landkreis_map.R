@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl Bundesland:"),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_landkreis_karte"),
       choices = c("Baden-Württemberg",
@@ -34,7 +34,7 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
       selected = c("Rheinland-Pfalz")
     ),
     hr(),
-    p("Auswahl Darstellung 1:"),
+    p("Indikatoren Darstellung links:"),
     shinyWidgets::pickerInput(
       inputId = ns("kategorie_beruf_arbeitsmarkt_landkreis_karte1"),
       choices = c("Auszubildende",
@@ -86,7 +86,7 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
                        multiple = FALSE
                      )),
     hr(),
-    p("Auswahl Darstellung 2:"),
+    p("Indikatoren Darstellung rechts:"),
     shinyWidgets::pickerInput(
       inputId = ns("kategorie_beruf_arbeitsmarkt_landkreis_karte2"),
       choices = c("Auszubildende",

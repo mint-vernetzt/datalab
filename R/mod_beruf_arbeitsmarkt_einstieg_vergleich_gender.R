@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Berufsfelds"),
+    p("Berufsfeld:"),
     shinyWidgets::pickerInput(
       inputId = ns("fach_arbeitsmarkt_einstieg_vergleich_gender"),
       choices = c("MINT",
@@ -24,7 +24,7 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
     #Auswahl des LAnds grad immer leer übergeben
     ,
 
-    p("Auswahl des Bundeslands"),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("BULA_arbeitsmarkt_einstieg_vergleich_gender"),
       choices = c("Deutschland",
@@ -43,10 +43,9 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen"
-                  # ,
-                  # "Westdeutschland (o. Berlin)",
-                  # "Ostdeutschland (einschl. Berlin)"
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
                   ),
       multiple = FALSE,
       selected = "Niedersachsen")

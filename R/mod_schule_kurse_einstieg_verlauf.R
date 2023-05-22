@@ -10,7 +10,7 @@
 mod_schule_kurse_einstieg_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Zeitraums:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_einstieg_verlauf"),
       label = NULL,

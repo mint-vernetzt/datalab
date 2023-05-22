@@ -55,9 +55,9 @@ mod_studium_studienzahl_ui <- function(id){
         p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3c",
           span(tags$b(span("Frauen in MINT:")))), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
           ),
-        # p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4c",
-        #   span(tags$b(span("Internationale Studierende:")))), "Wie hoch ist der Anteil von Internationalen Studierenden in den MINT-Fächern?"
-        # )
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4c",
+          span(tags$b(span("Internationale Studierende in MINT:")))), "Wie hoch ist der Anteil von internationalen Studierenden in den MINT-Fächern?"
+        )
         ),
 
       shinydashboard::box(
@@ -375,49 +375,60 @@ mod_studium_studienzahl_ui <- function(id){
                   )
         ))),
 
-  # fluidRow(id="jump4c",
-  #          shinydashboard::box(
-  #            title = "Internationale Studierende",
-  #            width = 12,
-  #            p("Lorem ipsum"),
-  #            tabsetPanel(type = "tabs",
-  #                        tabPanel("Anteil von internationalen Studierenden nach Fächern", br(),
-  #                                 shiny::sidebarPanel(
-  #                                   width = 3,
-  #                                   tags$style(".well {background-color:#FFFFFF;}"),
-  #                                   tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-  #                                   mod_studium_studienzahl_ausl_ui("mod_studium_studienzahl_ausl_ui")),
-  #                                 shiny::mainPanel(
-  #                                   width = 9,
-  #                                   tags$head(tags$style(HTML(".small-box {height: 400px}"))),
-  #                                   highcharter::highchartOutput(ns("plot_auslaender_test"), height = "1000px"), p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
-  #                                 ),
-  #
-  #                        tabPanel("Anteil von internationalen Studierenden im Zeitvergleich", br(),
-  #
-  #                                 shiny::sidebarPanel(
-  #                                   width = 3,
-  #                                   tags$style(".well  {background-color:#FFFFFF;}"),
-  #                                   tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-  #                                   mod_studium_studienzahl_ausl_zeit_ui("mod_studium_studienzahl_ausl_zeit_ui")),
-  #                                 shiny::mainPanel(
-  #                                   width = 9,
-  #                                   highcharter::highchartOutput(ns("plot_auslaender_zeit")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
-  #
-  #                        # tabPanel("Anteil von internationalen Studierenden im Zeitgergleich", br(),
-  #                        #          shiny::sidebarPanel(
-  #                        #            width = 3,
-  #                        #            tags$style(".well {background-color:#FFFFFF;}"),
-  #                        #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-  #                        #            mod_studium_studienzahl_ausl_zeit_ui("mod_studium_studienzahl_ausl_zeit_ui_1")),
-  #                        #          shiny::mainPanel(
-  #                        #            width = 9,
-  #                        #            tags$head(tags$style(HTML(".small-box {height: 400px}"))),
-  #                        #            highcharter::highchartOutput(ns("plot_auslaender_zeit")), p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
-  #                        ),
-  #
-  #
-  #            ))),
+  fluidRow(id="jump4c",
+           shinydashboard::box(
+             title = "Internationale Studierende in MINT: Wie hoch ist der Anteil internationaler Studierender in den MINT-Fächern?",
+             width = 12,
+             p("Diese Darstellungen zeigen, wie hoch der Anteil internationale Studierender an allen Studierenden eines Fachbereichs oder eines Studienfachs ist.
+               Außerdem zeigen wir hier, wie viele internationale Studierende in welchen Fächern studieren. Als 'internationale Studierende' fassen wir alle
+               Studierenden zusammen, welche in Deutschland studieren, aber keine deutsche Staatsbürgerschaft besitzen."),
+             tabsetPanel(type = "tabs",
+                         tabPanel("Anteil von internationalen Studierenden nach Fächern", br(),
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    tags$style(".well {background-color:#FFFFFF;}"),
+                                    tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                    mod_studium_studienzahl_ausl_ui("mod_studium_studienzahl_ausl_ui"),
+                                    p(style="font-size:12px;color:grey", "Interpretationshilfe: Diese Grafik zeigt z. B., dass im Jahr 2020
+                                      in Ostdeutschland ca. 39 % der Elektortechnik- und Informationstechnik-Studierenden internationale
+                                      Studierende waren. Wählt man als Betrachtung die Anzahl der Studierenden, sieht man das diese 39 % 5.391 internationale
+                                      Studierende in Elektrotechnik und Informationstechnik ausmachen.")),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    tags$head(tags$style(HTML(".small-box {height: 400px}"))),
+                                    highcharter::highchartOutput(ns("plot_auslaender_test"), height = "650px"),
+                                    p(style="font-size:12px;color:grey", "Hinweis: In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die vorhandenen Studienfachgruppen angezeigt."),
+                                    p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                                  )
+                         ,
+
+                         tabPanel("Anteil von internationalen Studierenden im Zeitvergleich", br(),
+
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    tags$style(".well  {background-color:#FFFFFF;}"),
+                                    tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                    mod_studium_studienzahl_ausl_zeit_ui("mod_studium_studienzahl_ausl_zeit_ui")),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    highcharter::highchartOutput(ns("plot_auslaender_zeit")),
+                                    p(style="font-size:12px;color:grey", "Hinweis: In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen stehen nur die vorhandenen Studienfachgruppen zur Auswahl."),
+                                    p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+
+                         # tabPanel("Anteil von internationalen Studierenden im Zeitgergleich", br(),
+                         #          shiny::sidebarPanel(
+                         #            width = 3,
+                         #            tags$style(".well {background-color:#FFFFFF;}"),
+                         #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                         #            mod_studium_studienzahl_ausl_zeit_ui("mod_studium_studienzahl_ausl_zeit_ui_1")),
+                         #          shiny::mainPanel(
+                         #            width = 9,
+                         #            tags$head(tags$style(HTML(".small-box {height: 400px}"))),
+                         #            highcharter::highchartOutput(ns("plot_auslaender_zeit")), p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                         ),
+
+
+             ))),
 
 
 

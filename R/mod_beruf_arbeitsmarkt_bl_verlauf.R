@@ -11,7 +11,7 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Zeitraums:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_bl_verlauf"),
       label = NULL,
@@ -19,7 +19,7 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
                   "2018","2019", "2020", "2021"),
       selected = c("2016", "2021")
     ),
-    p("Auswahl der Beschäftigungsform"),
+    p("Beschäftigungsform"),
     shinyWidgets::pickerInput(
       inputId = ns("niveau"),
       choices = c(
@@ -53,7 +53,7 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
     #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"), kab
     #   selected = "Gesamt"
     # ),
-    p("Auswahl der Bundesländer:"),
+    p("Regionen:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_bl_verlauf"),
       choices = c("Deutschland",

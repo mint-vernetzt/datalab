@@ -752,6 +752,11 @@ kurse_mint_comparison <- function(df,r) {
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
+
+
+
+
+
   # a <- ifelse(df$fachbereich == "MINT-Fächer (gesamt)"
   #
   #             | df$fachbereich == "andere Fächer (aggregiert)" # raus, kab --> rein vlg. oben
@@ -3009,11 +3014,12 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
   else{
 
     if (indikator_select == "nach Migrationshintergrund"){
+      indikator_select <- "nach Zuwanderungsgeschichte"
       df <- df %>% dplyr::filter(indikator %in% c("Alle", "Migrationsgeschichte", "keine Migrationsgeschichte"))
       df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
         dplyr::mutate(indikator=dplyr::case_when(indikator == "Alle" ~"Gesamt",
-                                       indikator=="Migrationsgeschichte" ~ "Mit Migrationshintergrund",
-                                       indikator=="keine Migrationsgeschichte"~"Ohne Migrationshintergrund"
+                                       indikator=="Migrationsgeschichte" ~ "Mit Zuwanderungsgeschichte",
+                                       indikator=="keine Migrationsgeschichte"~"Ohne Zuwanderungsgeschichte"
 
         ))%>%
         dplyr::filter(indikator != "Gesamt")
@@ -3031,8 +3037,8 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
       # ))
 
       df$indikator<- as.factor(df$indikator)
-      df$indikator <- factor(df$indikator, levels = c("Gesamt", "Mit Migrationshintergrund",
-                                                      "Ohne Migrationshintergrund" ))
+      df$indikator <- factor(df$indikator, levels = c("Gesamt", "Mit Zuwanderungsgeschichte",
+                                                      "Ohne Zuwanderungsgeschichte" ))
 
 
     }
@@ -3066,14 +3072,15 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
     highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
       highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
       highcharter::hc_tooltip(pointFormat = "{point.group} <br> Durchschnittliche Punktzahl: {point.y}")%>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}")) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),
+                            min=300) %>%
       highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
                                                                     "2016",
                                                                     "2021")
       ) %>%
       #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
       highcharter::hc_colors(c("#efe8e6",
-                               "#b16fab", "#D0A9CD"
+                               "#154194"
                                #"#154194",
       )) %>%
       highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler und Schülerinnen in Mathematik nach Geschlecht in " , bl_select),
@@ -3100,13 +3107,13 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
     highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
       highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
       highcharter::hc_tooltip(pointFormat = "{point.group} <br> Durchschnittliche Punktzahl: {point.y}")%>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}")) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
       highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
                                                                     "2016",
                                                                     "2021")) %>%
       #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#efe8e6", "#D0A9CD",
-                               "#b16fab"
+      highcharter::hc_colors(c("#efe8e6", "#b16fab"
+
                                #"#154194",
       )) %>%
       highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler und Schülerinnen in Mathematik ", indikator_select, " in " , bl_select),

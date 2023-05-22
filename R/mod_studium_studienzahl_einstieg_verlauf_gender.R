@@ -11,7 +11,7 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Zeitraums:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("genz_date"),
       label = NULL,
@@ -22,7 +22,8 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
     # tags$div(
     #   shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_einstieg_verlauf_gender"), label = "Nein", inline = TRUE),
     #   tags$span("Ja")
-    # ),p("Auswahl der Indikatoren (max. 3):"),
+    # ),
+    p("Indikatoren (max. 3):"),
     shinyWidgets::pickerInput(
       inputId = ns("genzl"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",

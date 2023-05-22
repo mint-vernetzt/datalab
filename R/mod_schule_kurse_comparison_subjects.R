@@ -11,7 +11,7 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_comparison_subject"),
       label = NULL,
@@ -19,7 +19,7 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
                   "2018","2019", "2020", "2021"),
       selected = "2021"
     ),
-    p("Form der Kursbelegung:"),
+    p("Kursart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("indikator_comparison_subject"),
       choices = c("Grundkurse", "Leistungskurse"),
@@ -27,7 +27,7 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
-    p("Auswahl des Bundeslands:"),
+    p("Region:"),
       # shinyBS::bsPopover(id="b2_t5_sb1", title = "",
       #                    content = "Alle Bundesländer haben andere LK vorschriften. In BY ...",
       #                    trigger = "hover"), #das ist in Box

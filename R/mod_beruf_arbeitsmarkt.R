@@ -244,7 +244,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       shinydashboard::box(
         title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
         width = 12,
-        p("Hier zeigen wir die Unterschiede nach MINT-Berufsbereichen Mathematik/ Naturwissenschaft, Informatik und Technik. Die Aufbereitung nach einzelnen Berufen steht noch aus."),
+        p("Hier zeigen wir die Unterschiede nach MINT-Berufsbereichen Mathematik/ Naturwissenschaft, Informatik und Technik. Außerdem können die Top 10 der MINT-Ausbildungsberufe
+          von Frauen und Männern verglichen werden."),
 
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Anteil MINT-Berufsfelder zwischen Auszubildenden und Beschäftigten (Karte)", br(),
@@ -287,6 +288,20 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_arbeitsmarkt_bl_vergleich"))
                                ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
+                             )
+                    ),
+
+                    tabPanel("Top 10 MINT-Ausbildungsberufe", br(),
+
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_beruf_arbeitsmarkt_top10_ui("mod_beruf_arbeitsmarkt_top10_ui_1")
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               htmlOutput(ns("plot_arbeitsmarkt_top10")),
+                               p(style="font-size:12px;color:grey","Hinweis: Ausbidlungsberufe mit weniger als 10 Verträgen wurden ausgeschlossen. In manchen Fällen weisen mehr als 10 Berufe einen Männeranteil von 100 % auf. In diesen Fällen sind die 10 Berufe mit 100 % Männeranteil angezeigt, welche die meisten Auszubildenden haben."),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     )
                     #
@@ -371,7 +386,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                ,
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen."),
                                p(style="font-size:12px;color:grey", "Hinweis: Manche Landkreise sind grau dargestellt oder fehlen in der Darstellung.
-                                 Die zugrundeliegenden Karten enthalten vereinzelt alte oder flasche Landkreiszuordnungen (in Niedersachen, Sachsen-Anhalt) und einzelne Landkreise/Städte können nicht angezeigt werden (in Bremen, Sachsen).")
+                                 Die zugrundeliegenden Karten enthalten vereinzelt alte oder falsche Landkreiszuordnungen (in Niedersachen, Sachsen-Anhalt) und einzelne Bundesländer/Landkreise/Städte können nicht angezeigt werden (Bremen, in Sachsen).")
                              )
                     ),
                     tabPanel("Vergleich Landkreise, Auflistung aller Landkreise", br(),
@@ -484,7 +499,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 #' beruf_arbeitsmarkt Server Functions
 #'
 #' @noRd
-mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, r){
+mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, data_naa, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -586,6 +601,10 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
 
     output$plot_arbeitsmarkt_bl_gender_vergleich <- renderPlot({
       arbeitsmarkt_bl_gender_vergleich(data_arbeitsmarkt,r)
+    })
+
+    output$plot_arbeitsmarkt_top10 <- renderUI({
+      arbeitsmarkt_top10(data_naa, r)
     })
 
     # Box 8

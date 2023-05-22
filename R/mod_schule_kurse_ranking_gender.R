@@ -10,7 +10,7 @@
 mod_schule_kurse_ranking_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswhal des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_ranking_gender"),
       label = NULL,
@@ -18,7 +18,7 @@ mod_schule_kurse_ranking_gender_ui <- function(id){
       selected = 2021
     ),
 
-    p("Auswahl des Fachs:"),
+    p("Fach/Fächergruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_kurse_ranking_gender"),
       choices = c("MINT-Fächer (gesamt)",

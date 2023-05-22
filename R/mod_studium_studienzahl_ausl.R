@@ -10,14 +10,14 @@
 mod_studium_studienzahl_ausl_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_ausl"),
       label = NULL,
       choices = c("2018", "2019", "2020", "2021"),
       selected = "2020"
     ),
-    p("Auswahl eines Bundeslandes:"),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studium_studienzahl_ausl"),
       choices = c("Deutschland",
@@ -41,13 +41,29 @@ mod_studium_studienzahl_ausl_ui <- function(id){
                   "Ostdeutschland (inkl. Berlin)"
       ),selected = "Ostdeutschland (inkl. Berlin)"
     ),
-    p("Status der Studierenden:"),
+    p("Indikator:"),
     shinyWidgets::pickerInput(
       inputId = ns("status_ausl"),
       choices = c("Studierende",
                   "Studienanfänger:innen (1. Hochschulsemester)"
       ),
       selected = "Studierende"
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_studium_studienzahl_ausl"),
+      choices = c("In Prozent", "Anzahl"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
+    ),
+    p("Betrachtungsebene:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("ebene_ausl"),
+      choices = c("MINT-Fächer",
+                  "Fachbereiche (inkl. Nicht-MINT)" = "Fachbereiche"
+      ),
+      selected = "Fachbereiche (inkl. Nicht-MINT)"
     )
     # ,
     # p("Betrachtung:"),
@@ -79,6 +95,14 @@ mod_studium_studienzahl_ausl_server <- function(id, r){
 
     observeEvent(input$states_studium_studienzahl_ausl, {
       r$states_studium_studienzahl_ausl <- input$states_studium_studienzahl_ausl
+    })
+
+    observeEvent(input$abs_zahlen_studium_studienzahl_ausl, {
+      r$abs_zahlen_studium_studienzahl_ausl <- input$abs_zahlen_studium_studienzahl_ausl
+    })
+
+    observeEvent(input$ebene_ausl, {
+      r$ebene_ausl <- input$ebene_ausl
     })
 
     # observeEvent(input$abs_zahlen_studium_studienzahl_ausl, {
