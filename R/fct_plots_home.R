@@ -1585,7 +1585,7 @@ home_stacked_comparison_mint <- function(df, r) {
   #dfk2_fn3$fachbereich <- gsub("_p", "", dfk2_fn3$fachbereich)
 
 
-  dfk2_fn3$wert <- ifelse(stringr::str_detect(dfk2_fn3$selector, "In Prozent"),round(as.numeric(dfk2_fn3$wert),0), dfk2_fn3$wert )
+  #dfk2_fn3$wert <- ifelse(stringr::str_detect(dfk2_fn3$selector, "In Prozent"),round(as.numeric(dfk2_fn3$wert),0), dfk2_fn3$wert )
 
   # dfk2 <- df_k %>% dplyr::filter(geschlecht=="Gesamt")%>%
   #   dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |
