@@ -1451,7 +1451,7 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
 
 
   # plot
-  highcharter::hchart(df6_fn, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,2), group = geschlecht)) %>%
+  highcharter::hchart(df6_fn, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,0), group = geschlecht)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
     highcharter::hc_xAxis(title = list(text = ""), categories = c("Leistungskurse", "Studierende",
@@ -1585,7 +1585,7 @@ home_stacked_comparison_mint <- function(df, r) {
   #dfk2_fn3$fachbereich <- gsub("_p", "", dfk2_fn3$fachbereich)
 
 
-  dfk2_fn3$wert <- ifelse(stringr::str_detect(dfk2_fn3$selector, "In Prozent"),round(as.numeric(dfk2_fn3$wert),1), dfk2_fn3$wert )
+  dfk2_fn3$wert <- ifelse(stringr::str_detect(dfk2_fn3$selector, "In Prozent"),round(as.numeric(dfk2_fn3$wert),0), dfk2_fn3$wert )
 
   # dfk2 <- df_k %>% dplyr::filter(geschlecht=="Gesamt")%>%
   #   dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |
@@ -1653,7 +1653,7 @@ home_stacked_comparison_mint <- function(df, r) {
     dplyr::mutate(fachbereich=dplyr::case_when(
       fachbereich== "Nicht MINT_p" ~ "Nicht MINT",
       fachbereich== "MINT_p" ~ "MINT"
-    ))%>% dplyr::mutate(wert = round(.$wert,2))
+    ))%>% dplyr::mutate(wert = round(.$wert,0))
 
 
 
@@ -1786,7 +1786,7 @@ home_comparison_line <- function(df,r) {
     df_fn51 <<- df_fn51 %>%
       dplyr::filter(selector == "In Prozent")
   # plot
-  highcharter::hchart(df_fn51, 'line', highcharter::hcaes(x = jahr, y = round(wert, 1), group = indikator))%>%
+  highcharter::hchart(df_fn51, 'line', highcharter::hcaes(x = jahr, y = round(wert, 0), group = indikator))%>%
     highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"),
@@ -1940,7 +1940,7 @@ home_rest_mint_verlauf <- function(df,r) {
   dfk2_fn2$fachbereich <- gsub("_p", "", dfk2_fn2$fachbereich)
 
 
-  dfk2_fn2$wert <- ifelse(stringr::str_detect(dfk2_fn2$selector, "In Prozent"),round(as.numeric(dfk2_fn2$wert),2), dfk2_fn2$wert )
+  dfk2_fn2$wert <- ifelse(stringr::str_detect(dfk2_fn2$selector, "In Prozent"),round(as.numeric(dfk2_fn2$wert),0), dfk2_fn2$wert )
 
   #dfk2_fn2$proportion[selector=="In Prozent",wert] <- round_preserve_sum(as.numeric(dfk2_fn2[selector=="In Prozent",wert]),0)
 
