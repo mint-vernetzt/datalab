@@ -91,7 +91,7 @@ home_einstieg_pie <- function(df,r) {
   dfk2_fn <- cbind(dfk2_fn1, wert)
 
   #Trennpunkte für lange Zahlen ergänzen
-  #dfk2_fn$wert <- prettyNum(dfk2_fn$wert, big.mark = ".")
+  dfk2_fn$wert <- prettyNum(dfk2_fn$wert, big.mark = ".")
 
 
   dfk2_fn$proportion <- round_preserve_sum(as.numeric(dfk2_fn$proportion),0)
