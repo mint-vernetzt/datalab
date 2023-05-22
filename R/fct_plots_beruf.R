@@ -3548,9 +3548,10 @@ arbeitsmarkt_top10 <- function(df, r){
                             "beruf")) %>%
     dplyr::mutate(prop = round((wert.x/wert.y)*100)) %>%
     dplyr::rename(wert = wert.x,
+                  wert_ges = wert.y,
                   geschlecht = geschlecht.x,
                   ebene = ebene.x) %>%
-    dplyr::select(-c("wert.y", "geschlecht.y", "ebene.y")) %>%
+    dplyr::select(-c("geschlecht.y", "ebene.y")) %>%
     dplyr::filter(geschlecht != "Gesamt")
 
 
