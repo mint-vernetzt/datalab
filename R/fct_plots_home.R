@@ -1297,94 +1297,7 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(region == "Deutschland")
   df6 <- df %>% dplyr::filter(jahr == timerange)
-  # df_naa  <- df_naa %>% dplyr::filter(jahr == timerange)
-  #
-  # df <- df %>% dplyr::filter(region == "Deutschland")
-  # df_naa <- df_naa %>% dplyr::filter(region == "Deutschland")
-  #
-  # # call function to calculate the share of MINT for every "bereich"
-  # df <- share_MINT(df)
-  #
-  # #rename
-  # df[df$fachbereich != "MINT", "fachbereich"] <- "Andere Fachbereiche"
-  #
-  # df <- df %>% dplyr::filter(fachbereich != "Andere Fachbereiche")
-  #
-  #
-  # # calculate the new "Gesamt"
-  # df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
-  #   dplyr::filter(indikator == "Leistungskurse") %>%
-  #   dplyr::group_by(indikator, jahr) %>%
-  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-  #                      wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
-  #
-  # # order
-  # df <- df[with(df, order(indikator, anzeige_geschlecht, decreasing = TRUE)), ]
-  #
-  # # filter parts which need more invovled calculation of proportion
-  # df_sub_2 <- df %>% dplyr::filter(indikator == "Promotionen (angestrebt)" |
-  #                                  indikator == "Habilitationen" | indikator == "Leistungskurse")
-  #
-  # # calculate proprotion female
-  # df_sub_2[df_sub_2$anzeige_geschlecht == "Frauen", "wert"] <-  df_sub_2 %>% dplyr::group_by(indikator) %>%
-  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"]/
-  #                      wert[anzeige_geschlecht == "Gesamt"]) %>%
-  #   dplyr::arrange(-dplyr::row_number()) %>% dplyr::pull(wert)
-  #
-  # # calculate proprotion male
-  # df_sub_2[df_sub_2$anzeige_geschlecht == "Männer", "wert"] <- df_sub_2 %>% dplyr::group_by(indikator) %>%
-  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Männer"]/
-  #                      wert[anzeige_geschlecht == "Gesamt"]) %>%
-  #   dplyr::arrange(-dplyr::row_number()) %>% dplyr::pull(wert)
-  #
-  #
-  # df_sub_2 <- df_sub_2 %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
-  #
-  # df_sub_2$wert <- df_sub_2$wert * 100
-  #
-  # # calcuate porportion of remaining topics
-  # df <- df %>% dplyr::filter(indikator != "Promotionen (angestrebt)",
-  #                            indikator != "Habilitationen", indikator != "Leistungskurse") %>%
-  #   dplyr::group_by(indikator) %>%
-  #   dplyr::summarize(wert = dplyr::lead(wert)/wert) %>% na.omit()
-  #
-  # df$wert <- df$wert * 100
-  #
-  # df$anzeige_geschlecht <- "Frauen"
-  #
-  # df_sub <- df
-  #
-  # df_sub$anzeige_geschlecht <- "Männer"
-  #
-  # df_sub$wert <- 100 - df$wert
-  #
-  # df <- rbind(df, df_sub, df_sub_2)
-  #
-  # # calcualte proportion for "neue ausbildungsverträge"
-  # #vorläufige Anpassung, dass in beiden df gleicher Name ist
-  # df_n <- df_naa %>%
-  #   dplyr::rename(anzeige_geschlecht = geschlecht)
-  #
-  # df_sub <- df_n %>% dplyr::group_by(anzeige_geschlecht) %>%
-  #   dplyr::summarize(wert = sum(wert))
-  #
-  # df_sub <- df_sub %>% dplyr::group_by(anzeige_geschlecht) %>%
-  #   dplyr::summarize(wert = wert/df_sub[df_sub$anzeige_geschlecht == "Gesamt", "wert"][[1]])
-  #
-  # df_sub$wert <- df_sub$wert * 100
-  #
-  # df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
-  #
-  # df_sub$indikator <- "Neue Ausbildungsverträge"
-  #
-  # df <- rbind(df, df_sub)
-  #
-  # df <- df %>% dplyr::filter(indikator %in% c("Leistungskurse", "Studierende",
-  #                                             "Auszubildende", "Beschäftigte"))
-  #
-  # # order
-  # df$indikator <- factor(df$indikator , levels=c("Leistungskurse", "Studierende",
-  #                                                "Auszubildende", "Beschäftigte"))
+
 
   df6 <<- df6 %>%
     dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften"
@@ -1428,19 +1341,23 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
     tidyr::pivot_longer(c(MINT, `andere Fächer`), names_to = "fachbereich", values_to = "wert")%>%
     tidyr::pivot_wider(names_from = geschlecht, values_from = wert)
 
+  #Trennen um Wert abzuspeichern
+  df_wert <<- df6_fn %>%
+    dplyr::select(- Gesamt)%>%
+    tidyr::pivot_longer(c(Männer, Frauen), names_to = "geschlecht", values_to = "wert")
+
   #Berechnung des Anteils
   df6_fn <<- df6_fn %>%
     dplyr::mutate(dplyr::across(c(Männer, Frauen), ~./Gesamt*100))%>%
     dplyr::select(- Gesamt)%>%
     tidyr::pivot_longer(c(Männer, Frauen), names_to = "geschlecht", values_to = "proportion")
 
-
-
-  # Indikator u25 mit NAs löschen und Runden
-  #df6_fn$proportion <- round_preserve_sum(as.numeric(df6_fn$proportion),0)
+  #Wert anhängen
+  df6_fn <<- df6_fn %>% dplyr::left_join(df_wert, by = c("bereich","indikator", "jahr",   "region",  "fachbereich", "geschlecht"))
 
   #Trennpunkte für lange Zahlen ergänzen
-  #dfk2_fn4$wert <- prettyNum(dfk2_fn4$wert, big.mark = ".")
+  df6_fn$wert <<- prettyNum(df6_fn$wert, big.mark = ".")
+
 
   #sortieren
   df6_fn <<- df6_fn[with(df6_fn, order(region, fachbereich, jahr, decreasing = TRUE)), ]
@@ -1452,7 +1369,7 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
 
   # plot
   highcharter::hchart(df6_fn, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,0), group = geschlecht)) %>%
-    highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.y} %") %>%
+    highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
     highcharter::hc_xAxis(title = list(text = ""), categories = c("Leistungskurse", "Studierende",
                                                  "Auszubildende", "Beschäftigte")) %>%
@@ -1578,67 +1495,7 @@ home_stacked_comparison_mint <- function(df, r) {
                                             T~"Anzahl"))%>%
     dplyr::filter(indikator %in% c("Schüler:innen Leistungskurse", "Studierende",
                                    "Auszubildende", "Beschäftigte"))
-  # %>%
-  #   dplyr::mutate(wert=dplyr::case_when(stringr::str_detect(.$selector, "Relativ") ~ round_preserve_sum(.),
-  # T~))
 
-  #dfk2_fn3$fachbereich <- gsub("_p", "", dfk2_fn3$fachbereich)
-
-
-  #dfk2_fn3$wert <- ifelse(stringr::str_detect(dfk2_fn3$selector, "In Prozent"),round(as.numeric(dfk2_fn3$wert),0), dfk2_fn3$wert )
-
-  # dfk2 <- df_k %>% dplyr::filter(geschlecht=="Gesamt")%>%
-  #   dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |
-  #                   fachbereich == "Mathematik_Naturwissenschaften"|  fachbereich == "Nicht MINT")
-  #
-  # dfk2a <<- dfk2 %>% dplyr::filter(bereich == "Hochschule")%>%
-  #   tidyr::pivot_wider(names_from=fachbereich, values_from=wert)%>%
-  #   dplyr::mutate(MINT=Ingenieurwissenschaften+Mathematik_Naturwissenschaften )%>%
-  #   dplyr::select(-Ingenieurwissenschaften, -Mathematik_Naturwissenschaften)%>%
-  #   tidyr::pivot_longer(c( "Alle", "MINT"), names_to = "fachbereich", values_to="wert")
-  #
-  #
-  # dfk2c <<- dfk2 %>% dplyr::filter(bereich == "Schule")%>%
-  #   dplyr::filter(fachbereich== "MINT" | fachbereich == "	Nicht MINT")%>%
-  #   dplyr::mutate(indikator= paste0("Schüler:innen ", .$indikator ))
-  #
-  #
-  # #dfk2c$fachbereich <- ifelse(grepl("Alle Fächer", dfk2c$fachbereich), "Alle", dfk2c$fachbereich)
-  #
-  # dfk2b <<- dfk2 %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
-  #   unique()
-  #
-  #
-  #
-  # dfk2_fn <<- dplyr::bind_rows(dfk2b, dfk2a, dfk2c)%>%
-  #   dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle")%>%
-  #   tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
-  #   dplyr::mutate("Nicht MINT" = Alle - MINT)%>%
-  #   dplyr::mutate(MINT_p= MINT/Alle*100)%>%
-  #   dplyr::mutate("Nicht MINT_p" = `Nicht MINT`/Alle*100)%>%
-  #   dplyr::filter(geschlecht=="Gesamt")%>%
-  #   dplyr::select(- Alle)%>%
-  #   tidyr::pivot_longer(c(MINT, `Nicht MINT`, `Nicht MINT_p`, `MINT_p`), names_to = "fachbereich", values_to = "wert")%>%
-  #   dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$fachbereich, "_p") ~ "In Prozent",
-  #                                           T~"Anzahl"))
-
-  # # call function to calculate the share of MINT for every "bereich"
-  # df <- share_MINT(df)
-  #
-  # df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
-  #
-  # df <- df %>% dplyr::filter(indikator %in% c("Leistungskurse", "Studierende",
-  #                                             "Auszubildende", "Beschäftigte"))
-  #
-  # # calculate proportions for MINT vs. Rest
-  # df <- df %>% dplyr::group_by(indikator) %>%
-  #   dplyr::mutate(props = sum(wert))
-  #
-  #
-  # df <- df %>% dplyr::group_by(indikator, fachbereich) %>%
-  #   dplyr::summarize(proportion = wert/props)
-  #
-  # df$proportion <- df$proportion * 100
 
   # order
   x <- ordered(factor(dfk2_fn3$indikator), levels=c("Schüler:innen Leistungskurse", "Studierende",
@@ -1648,18 +1505,31 @@ home_stacked_comparison_mint <- function(df, r) {
 
   #df[df$fachbereich != "MINT", "fachbereich"] <- "andere Fachbereiche"
 
+  #Absoluten Wert speichern
+  df_wert <- dfk2_fn3 %>%
+    dplyr::filter(!(stringr::str_ends(.$fachbereich, "_p"))) %>%
+    dplyr::rename(
+      wert_abs = wert
+    )
+
+  wert_abs <- df_wert$wert_abs
+
+  # Protenz filtern und Runden
   dfd3 <<- dfk2_fn3 %>%
-    dplyr::filter(stringr::str_ends(.$fachbereich, "_p"))%>%
+   dplyr::filter(stringr::str_ends(.$fachbereich, "_p"))%>%
     dplyr::mutate(fachbereich=dplyr::case_when(
       fachbereich== "Nicht MINT_p" ~ "Nicht MINT",
       fachbereich== "MINT_p" ~ "MINT"
     ))%>% dplyr::mutate(wert = round(.$wert,0))
 
+  #Ansoluten Wert anhägnge
+  dfd3 <- dfd3 %>% dplyr::left_join(df_wert, by = c("bereich","indikator","geschlecht","jahr","region","fachbereich"))
 
-
+  #Trennpunkte für lange Zahlen ergänzen
+  dfd3$wert_abs <- prettyNum(dfd3$wert_abs, big.mark = ".")
 
   highcharter::hchart(dfd3, 'bar', highcharter::hcaes(y = wert, x = indikator, group = "fachbereich"))%>%
-    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} %") %>%
+    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert_abs}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
