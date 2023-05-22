@@ -1,5 +1,7 @@
 setwd( "C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
+# BEIDE Datensätzte sind identisch!
+
 zentral_read <-
   readxl::read_xlsx(
     system.file(package = "datalab", "data-raw/Zentraler_Datensatz_alt_27_02_23.xlsx")
