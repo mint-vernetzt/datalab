@@ -58,7 +58,7 @@ mod_schule_kurse_ui <- function(id){
         span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4a",
-        span(tags$b(span("MINT-Kompetenzen in der 4. Klasse:")))),"Wie hoch ist der Anteil leistungsschwacher Schüler:innen?"),
+        span(tags$b(span("MINT-Kompetenzen in der 4. Klasse:")))),"Wie hoch ist der Anteil leistungsschwacher Schüler:innen und wie entwickelt sich die MINT-Kompetenz?"),
 
         ),
 
@@ -467,7 +467,7 @@ mod_schule_kurse_ui <- function(id){
                                       "Interpretationshilfe: Während 2011 noch 11.9 % der Schüler und Schülerinnen die Mindestanforderung in Mathe nicht erfüllen,
                                       gilt 2021 ein fast doppelt so großer Anteil an Schüler/Schülerinnnen als leistungsschwach in Mathematik (21.8 %)."),
                                     p(style="font-size:12px;color:grey",
-                                      "Hinweis: Für Mecklenburg-Vorpommern liegen keine Daten vor."),
+                                      "Hinweis: Für Mecklenburg-Vorpommern liegen keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten."),
                                   ),
 
 
@@ -492,7 +492,7 @@ mod_schule_kurse_ui <- function(id){
                                     #   "Interpretationshilfe: Während 2011 noch 11.9 % der Schüler und Schülerinnen die Mindestanforderung in Mathe nicht erfüllen,
                                     #   gilt 2021 ein fast doppelt so großer Anteil an Schüler/Schülerinnnen als leistungsschwach in Mathematik (21.8 %)."),
                                     p(style="font-size:12px;color:grey",
-                                      "Hinweis: Für Mecklenburg-Vorpommern liegen keine Daten vor."),
+                                      "Hinweis: Für Mecklenburg-Vorpommern liegen keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten."),
                                   ),
 
 
@@ -502,8 +502,10 @@ mod_schule_kurse_ui <- function(id){
                                     ,
                                     p(style="font-size:12px;color:grey", br(),
                                       "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen."),
-                                    # p(style="font-size:12px;color:grey",
-                                    # "Hinweis: Für Mecklenburg-Vorpommern liegen keine Daten vor.")
+                                     p(style="font-size:12px;color:grey",
+                                     "Hinweis: Als 'Mit Zuwanderungsgeschichte' werden Kinder bezeichnet, deren beider Eltern nach Deutschland zugewandert sind.
+                                     Zuwanderungsgeschichten 1. Generation (auch Kind ist nach Deutschalnd zugewandert) und 2. Generation (Kind ist in Deutschland geboren) werden zusammengefasst.
+                                     Als 'Ohne Zuwanderungsgeschichte' werden Kinder bezeichnet, deren beider Eltern in Deutschland geboren wurden.")
                                   )
                          )
              ))),

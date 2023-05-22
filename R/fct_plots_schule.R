@@ -3014,11 +3014,12 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
   else{
 
     if (indikator_select == "nach Migrationshintergrund"){
+      indikator_select <- "nach Zuwanderungsgeschichte"
       df <- df %>% dplyr::filter(indikator %in% c("Alle", "Migrationsgeschichte", "keine Migrationsgeschichte"))
       df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
         dplyr::mutate(indikator=dplyr::case_when(indikator == "Alle" ~"Gesamt",
-                                       indikator=="Migrationsgeschichte" ~ "Mit Migrationshintergrund",
-                                       indikator=="keine Migrationsgeschichte"~"Ohne Migrationshintergrund"
+                                       indikator=="Migrationsgeschichte" ~ "Mit Zuwanderungsgeschichte",
+                                       indikator=="keine Migrationsgeschichte"~"Ohne Zuwanderungsgeschichte"
 
         ))%>%
         dplyr::filter(indikator != "Gesamt")
@@ -3036,8 +3037,8 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
       # ))
 
       df$indikator<- as.factor(df$indikator)
-      df$indikator <- factor(df$indikator, levels = c("Gesamt", "Mit Migrationshintergrund",
-                                                      "Ohne Migrationshintergrund" ))
+      df$indikator <- factor(df$indikator, levels = c("Gesamt", "Mit Zuwanderungsgeschichte",
+                                                      "Ohne Zuwanderungsgeschichte" ))
 
 
     }
