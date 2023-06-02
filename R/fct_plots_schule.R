@@ -630,11 +630,11 @@ kurse_waffle_mint <- function(df,r) {
 
 kurse_mint_comparison <- function(df,r) {
 
-  timerange <- r$date_comparison_subject
+  timerange <<- r$date_comparison_subject
 
-  state <- r$state_comparison_subject
+  state <<- r$state_comparison_subject
 
-  indikator_comparison <- r$indikator_comparison_subject
+  indikator_comparison <<- r$indikator_comparison_subject
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
@@ -687,28 +687,30 @@ kurse_mint_comparison <- function(df,r) {
   df <- rbind(df, df_sub)
 
   # calculate proportion
-  df <- df %>% dplyr::left_join(df_gesamt, by = c("jahr", "region", "indikator",
-                                                  "bereich")) %>%
+
+
+  df2 <- df %>% dplyr::left_join(df_gesamt, by = c("jahr", "region", "indikator",
+                                                    "bereich")) %>%
     dplyr::rename(anzeige_geschlecht = "anzeige_geschlecht.x",
                   fachbereich = "fachbereich.x") %>%
     dplyr::select(-c("anzeige_geschlecht.y", "fachbereich.y")) %>%
     dplyr::filter(fachbereich != "Alle Fächer") %>%
     dplyr::mutate(proportion = (wert/wert_gesamt)*100)
 
-  df <- df %>% dplyr::filter(indikator == indikator_comparison)
+  df3 <- df2 %>% dplyr::filter(indikator == indikator_comparison)
 
   x <- c("MINT-Fächer (gesamt)", "Mathematik", "Informatik", "Physik", "Chemie",
          "Biologie", "andere naturwiss.-technische Fächer",
          "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
          "Musik/Kunst", "Religion/Ethik", "Sport")
 
-  df <- df %>%
+  df4 <- df3 %>%
     dplyr::mutate(fachbereich =  factor(fachbereich, levels = x)) %>%
     dplyr::arrange(fachbereich)
 
-  df <- na.omit(df)
+  df4 <- na.omit(df4)
 
-  df <- df %>%
+  df5 <- df4 %>%
     dplyr::ungroup()%>%
     dplyr::mutate(region= dplyr::case_when(
       region == "Westen" ~ "Westdeutschland (o. Berlin)",
@@ -716,13 +718,15 @@ kurse_mint_comparison <- function(df,r) {
       T ~ .$region
     ))
 
-  df <- df %>% dplyr::filter(region == state)
+  df6 <- df5 %>% dplyr::filter(region == state)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df6$wert <- prettyNum(df6$wert, big.mark = ".")
+
+  df6 <- df6 %>% dplyr::filter(fachbereich != "andere naturwiss.-technische Fächer")
 
   # plot
-  highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich)) %>%
+  highcharter::hchart(df6, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich))%>%
     highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
@@ -734,8 +738,8 @@ kurse_mint_comparison <- function(df,r) {
       colors = ifelse(df$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (aggregiert)"), "#b16fab", "#d0a9cd")
     )) %>%
     highcharter::hc_title(text = paste0( "Anteil einzelner Fächer in ",state, " (", indikator_comparison, ")",
-                                                                        br(), timerange,
-                                                                          "<br><br><br>"),
+                                         br(), timerange,
+                                         "<br><br><br>"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
