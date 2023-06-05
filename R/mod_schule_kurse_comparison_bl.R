@@ -29,9 +29,11 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
     ),
 
     p("Fach/Fächergruppe:"),
+    conditionalPanel(condition = "input.indikator_comparison_bl=='Grundkurse'",
+    ns= ns,
     shinyWidgets::pickerInput(
-      inputId = ns("subject_comparison_bl"),
-      choices = c("MINT-Fächer (gesamt)",
+      inputId = ns("subject_comparison_bl1"),
+      choices =  c("MINT-Fächer (gesamt)",
                   "Mathematik",
                   "Informatik",
                   "Physik",
@@ -43,11 +45,24 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
                   "Gesellschaftswissenschaften",
                   "Musik/Kunst",
                   "Religion/Ethik",
-                  "Sport"),
-      selected = "MINT-Fächer (gesamt)"
-    )
+                  "Sport"))),
+    conditionalPanel(condition = "input.indikator_comparison_bl=='Leistungskurse'",
+                     ns= ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("subject_comparison_bl2"),
+                       choices =  c("MINT-Fächer (gesamt)",
+                                    "Mathematik",
+                                    "Informatik",
+                                    "Physik",
+                                    "Chemie",
+                                    "Biologie",
+                                    "andere Fächer (gesamt)",
+                                    "Deutsch",
+                                    "Fremdsprachen",
+                                    "Gesellschaftswissenschaften",
+                                    "Musik/Kunst",
+                                    "Sport"))))
 
-  )
 }
 
 #' schule_kurse_comparison_bl Server Functions
@@ -60,13 +75,20 @@ mod_schule_kurse_comparison_bl_server <- function(id, r){
       r$date_comparison_bl <- input$date_comparison_bl
     })
 
-    observeEvent(input$subject_comparison_bl, {
-      r$subject_comparison_bl <- input$subject_comparison_bl
-    })
-
     observeEvent(input$indikator_comparison_bl, {
       r$indikator_comparison_bl <- input$indikator_comparison_bl
     })
+
+    observeEvent(input$subject_comparison_bl1, {
+      r$subject_comparison_bl1 <- input$subject_comparison_bl1
+    })
+
+    observeEvent(input$subject_comparison_bl2, {
+      r$subject_comparison_bl2 <- input$subject_comparison_bl2
+    })
+
+
+
 
 
   })

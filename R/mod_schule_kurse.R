@@ -336,7 +336,7 @@ mod_schule_kurse_ui <- function(id){
                                p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
                                  sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
                                  Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
-                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering.")
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering. Die Anzeige für Religion/Ehtik für Leistungskurse entfällt, da der Anteil unter 1% liegt")
 
                              )),
                     tabPanel("Alle Bundesländer auf einen Blick", br(),
@@ -351,7 +351,7 @@ mod_schule_kurse_ui <- function(id){
                                p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
                                  sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
                                  Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
-                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering.")
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering. Die Auswahloption Religion/Ehtik für Leistungskurse entfällt, da der Anteil unter 1% liegt")
                                ))
 
         ))),

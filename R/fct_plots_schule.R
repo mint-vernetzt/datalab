@@ -698,6 +698,8 @@ kurse_mint_comparison <- function(df,r) {
     dplyr::filter(fachbereich != "Alle Fächer") %>%
     dplyr::mutate(proportion = (wert/wert_gesamt)*100)
 
+
+# Bei Leistungskurse: Religion/Ethik raus, da minimal
   if(indikator_comparison=="Leistungskurse"){
 
     df2 <- df2 %>%
@@ -809,9 +811,21 @@ kurse_mint_comparison_bl <- function(df,r) {
 
   timerange <- r$date_comparison_bl
 
-  subject <- r$subject_comparison_bl
+
 
   indikator_comparison <- r$indikator_comparison_bl
+
+  if(indikator_comparison=="Grundkurse") {
+
+    subject <- r$subject_comparison_bl1
+
+  } else {
+
+    subject <- r$subject_comparison_bl2
+
+  }
+
+
 
 
   # filter dataset based on UI inputs
