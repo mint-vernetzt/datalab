@@ -630,6 +630,7 @@ kurse_waffle_mint <- function(df,r) {
 
 kurse_mint_comparison <- function(df,r) {
 
+
   timerange <<- r$date_comparison_subject
 
   state <<- r$state_comparison_subject
@@ -689,13 +690,20 @@ kurse_mint_comparison <- function(df,r) {
   # calculate proportion
 
 
-  df2 <- df %>% dplyr::left_join(df_gesamt, by = c("jahr", "region", "indikator",
+  df2 <<- df %>% dplyr::left_join(df_gesamt, by = c("jahr", "region", "indikator",
                                                     "bereich")) %>%
     dplyr::rename(anzeige_geschlecht = "anzeige_geschlecht.x",
                   fachbereich = "fachbereich.x") %>%
     dplyr::select(-c("anzeige_geschlecht.y", "fachbereich.y")) %>%
     dplyr::filter(fachbereich != "Alle Fächer") %>%
     dplyr::mutate(proportion = (wert/wert_gesamt)*100)
+
+  if(indikator_comparison=="Leistungskurse"){
+
+    df2 <- df2 %>%
+      dplyr::filter(fachbereich!="Religion/Ethik")
+
+  }
 
   df3 <- df2 %>% dplyr::filter(indikator == indikator_comparison)
 
