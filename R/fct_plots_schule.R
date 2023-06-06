@@ -2989,7 +2989,8 @@ dfg <- df
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
       highcharter::hc_colors(c("#efe8e6","#D0A9CD",
                                "#b16fab")) %>%
-      highcharter::hc_title(text = paste0("Anteil der leistungsschwachen Schüler und Schülerinnen in Mathematik <br> in ", title_help),
+      highcharter::hc_title(text = paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard
+                                          in Mathematik nicht erreichen"),
       margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3023,6 +3024,8 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
   df$jahr <- as.factor(df$jahr)
 
   # nach gewählter Vergleichsgruppe filtern
+
+  # Datensatzaufbereitung bei Auswahl Geschlecht
   if (indikator_select == "nach Geschlecht") {
     df <- df %>% dplyr::filter(indikator == "Alle")
 
@@ -3034,44 +3037,12 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
       T~df$geschlecht
     ))%>%
       dplyr::filter(geschlecht != "Gesamt")
-
-
   }
+  # Datensatzaufbereitung bei Auswahl Zuwanderungsgeschichte
   else{
 
-    if (indikator_select == "nach Migrationshintergrund"){
-      indikator_select <- "nach Zuwanderungsgeschichte"
-      df <- df %>% dplyr::filter(indikator %in% c("Alle", "Migrationsgeschichte", "keine Migrationsgeschichte"))
-      df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
-        dplyr::mutate(indikator=dplyr::case_when(indikator == "Alle" ~"Gesamt",
-                                       indikator=="Migrationsgeschichte" ~ "Mit Zuwanderungsgeschichte",
-                                       indikator=="keine Migrationsgeschichte"~"Ohne Zuwanderungsgeschichte"
-
-        ))%>%
-        dplyr::filter(indikator != "Gesamt")
-
-
-
-      df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
-        geschlecht=="gesamt" ~ "Gesamt",
-        T~df$geschlecht
-      ))
-
-      # df <- df %>% dplyr::mutate(indikator=case_when(
-      #   indikator=="gesamt" ~ "Gesamt",
-      #   T~df$indikator
-      # ))
-
-      df$indikator<- as.factor(df$indikator)
-      df$indikator <- factor(df$indikator, levels = c("Gesamt", "Mit Zuwanderungsgeschichte",
-                                                      "Ohne Zuwanderungsgeschichte" ))
-
-
-    }
-
-    else{
-      if(indikator_select == "nach Bildungshintergrund")
-      df <- df %>% dplyr::filter(indikator %in% c("Alle", "status_hoch", "status_niedrig"))
+    if (indikator_select == "nach Zuwanderungsgeschichte"){
+      df <- df %>% dplyr::filter(indikator %in% c("Alle", "mit Zuwanderungsgeschichte", "ohne Zuwanderungsgeschichte"))
       df <- df %>% dplyr::filter(geschlecht == "gesamt")
 
       df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
@@ -3079,13 +3050,34 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
         T~df$geschlecht
       ))
 
-      # Labels umbenennen
-      df$indikator[df$indikator == "status_hoch"] <- "Mehr als 100 Bücher zuhause"
-      df$indikator[df$indikator == "status_niedrig"] <- "100 Bücher oder weniger zuhause"
-
+      # Für Grafik als Faktor speichern
       df$indikator<- as.factor(df$indikator)
-      df$indikator <- factor(df$indikator, levels = c("Alle", "100 Bücher oder weniger zuhause", "Mehr als 100 Bücher zuhause" ))
+      df$indikator <- factor(df$indikator, levels = c("Gesamt", "mit Zuwanderungsgeschichte",
+                                                      "ohne Zuwanderungsgeschichte" ))
+      # Alle als Gesamtgruppe ausfiltern
+      df <- df %>%
+        dplyr::filter(indikator!="Alle")
 
+    }
+
+    # Datensatzaufbereitung bei Auswahl Bildungskapital
+    else{
+      if(indikator_select == "nach Bildungskapital")
+      df <- df %>% dplyr::filter(indikator %in% c("Alle", "kapital_hoch", "kapital_niedrig"))
+      df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
+        dplyr::mutate(indikator=dplyr::case_when(indikator == "Alle" ~"Gesamt",
+                                                 indikator == "kapital_hoch" ~ "hohes Bildungskapital (mehr als 100 Bücher zuhause)",
+                                                 indikator == "kapital_niedrig" ~ "niedriges Bildungskapital (100 Bücher oder weniger zuhause)"))
+
+      df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
+        geschlecht=="gesamt" ~ "Gesamt",
+        T~df$geschlecht
+      ))
+      # Für Grafik als Faktor speichern
+      df$indikator<- as.factor(df$indikator)
+      df$indikator <- factor(df$indikator, levels = c("Alle", "hohes Bildungskapital (mehr als 100 Bücher zuhause)", "niedriges Bildungskapital (100 Bücher oder weniger zuhause)" ))
+
+      # Alle als Gesamtgruppe ausfiltern
       df <- df %>%
         dplyr::filter(indikator!="Alle")
     }
@@ -3109,7 +3101,7 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
                                "#154194"
                                #"#154194",
       )) %>%
-      highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler und Schülerinnen in Mathematik nach Geschlecht in " , bl_select),
+      highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht in " , bl_select),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3142,7 +3134,7 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
 
                                #"#154194",
       )) %>%
-      highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler und Schülerinnen in Mathematik ", indikator_select, " in " , bl_select),
+      highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
