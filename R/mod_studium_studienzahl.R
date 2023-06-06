@@ -371,7 +371,12 @@ mod_studium_studienzahl_ui <- function(id){
                              mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1")),
                            shiny::mainPanel(
                              width = 9,
-                             highcharter::highchartOutput(ns("plot_einstieg_comparison_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                             highcharter::highchartOutput(ns("plot_einstieg_comparison_gender")),
+                             p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                             p(style="font-size:12px;color:grey", "Hinweis: Studierende auf Lehramt werden für Fächergruppen, die nicht oder nur von einer
+                               sehr geringen Anzahlen an Lehramtstudierenden deutschlandweit als Hauptfach studiert werden, nicht in der Übersicht angezeigt.
+                               In einzelnen Bundesländern kann es für spezfisiche Fächergruppen zu keinen oder sehr geringen Leharamtstudierendenzahlen kommen.
+                               Achten Sie hierbei auf die absoluten Zahlenangaben zur Anzahl der Studierenden."))
                   )
         ))),
 
