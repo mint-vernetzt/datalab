@@ -390,6 +390,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   #Trennpunkte für lange Zahlen ergänzen
   dfh$wert <- prettyNum(dfh$wert, big.mark = ".")
 
+
   if(length(genl) == 1) {
 
     df_pie <- dfh %>% dplyr::filter(label == genl)
@@ -1587,6 +1588,13 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
       dplyr::filter(region==sel_bl)%>%
       dplyr::filter(fach==sel_f)%>%
       dplyr::filter(label!="Auländische Studienanfänger:innen (1. Hochschulsemester)"&label!= "Ausländische Studierende"  )
+
+    if(sel_f %in% c("Architektur, Innenarchitektur", "Vermessungswesen", "Materialwissenschaft und Werkstofftechnik",
+                    "Pharmazie", "Raumplanung", "Verkehrstechnik, Nautik", "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
+                    "Elektrotechnik und Informationstechnik")) {
+      df_io <- df_io %>%
+        dplyr::filter(label != "Studierende (Nur Lehramt)")
+    }
 
 
 
