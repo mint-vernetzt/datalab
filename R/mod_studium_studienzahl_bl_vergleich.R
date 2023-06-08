@@ -29,27 +29,13 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                   "Studierende (Nur Lehramt)"
       ),
       selected = "Studierende"),
-    # p("Nur Lehramt anzeigen:"),
-    # tags$div(
-    #   shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_studienzahl_bl_vergleich"), label = "Nein", inline = TRUE),
-    #   tags$span("Ja"),
-    #   p("Auswahl der Hochschulform:"),
-    #   conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_vergleich == false",
-    #                    ns = ns,
-    #                    shinyWidgets::pickerInput(
-    #                      inputId = ns("hochschulform_studium_studienzahl_bl_vergleich1"),
-    #                      choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
-    #                    )),
-    #   conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_vergleich != false",
-    #                    ns = ns,
-    #                    shinyWidgets::pickerInput(
-    #                      inputId = ns("hochschulform_studium_studienzahl_bl_vergleich2"),
-    #                      choices = "Uni"
-    #                    )),
-      p("Fach/Fächergruppe:"),
-      shinyWidgets::pickerInput(
-        inputId = ns("bl_f"),
 
+    #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
+      p("Fach/Fächergruppe:"),
+    conditionalPanel(condition = "input.rank_bl_l == 'Studierende (Nur Lehramt)'",
+                     ns = ns,
+      shinyWidgets::pickerInput(
+        inputId = ns("bl_f_lehr"),
         choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
                     "Biologie",
                     "Geowissenschaften und Geographie",
@@ -57,12 +43,8 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                     "Maschinenbau/Verfahrenstechnik",
                     "Nicht MINT",
                     "MINT",
-                    "Vermessungswesen",
-                    "Architektur, Innenarchitektur",
-                    "Bauingenieurwesen",
                     "Chemie",
                     "Mathematik",
-                    "Materialwissenschaft und Werkstofftechnik",
                     "Humanmedizin/Gesundheitswissenschaften",
                     "Geisteswissenschaften",
                     "Ingenieurwissenschaften",
@@ -71,16 +53,53 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                     "Rechts-, Wirtschafts- und Sozialwissenschaften",
                     "Mathematik, Naturwissenschaften",
                     "Naturwissenschaften",
-                    "Pharmazie",
-                    "Raumplanung",
                     "Sport",
-                    "Verkehrstechnik, Nautik",
-                    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
-                    "Kunst, Kunstwissenschaft",
-                    "Elektrotechnik und Informationstechnik"),
+                    "Kunst, Kunstwissenschaft"),
 
         selected = "MINT"
-      )
+      )),
+
+    conditionalPanel(condition = "input.rank_bl_l == 'Auländische Studienanfänger:innen (1. Hochschulsemester)' |
+                     input.rank_bl_l == 'Studienanfänger:innen (1. Fachsemester)' |
+                     input.rank_bl_l == 'Studierende' |
+                     input.rank_bl_l == 'Ausländische Studierende' |
+                     input.rank_bl_l == 'Studienanfänger:innen (1. Hochschulsemester)'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("bl_f_alle"),
+
+                       choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+                                   "Biologie",
+                                   "Geowissenschaften und Geographie",
+                                   "Informatik",
+                                   "Maschinenbau/Verfahrenstechnik",
+                                   "Nicht MINT",
+                                   "MINT",
+                                   "Vermessungswesen",
+                                   "Architektur, Innenarchitektur",
+                                   "Bauingenieurwesen",
+                                   "Chemie",
+                                   "Mathematik",
+                                   "Materialwissenschaft und Werkstofftechnik",
+                                   "Humanmedizin/Gesundheitswissenschaften",
+                                   "Geisteswissenschaften",
+                                   "Ingenieurwissenschaften",
+                                   "Ingenieurwissenschaften ohne Informatik",
+                                   "Physik, Astronomie",
+                                   "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                                   "Mathematik, Naturwissenschaften",
+                                   "Naturwissenschaften",
+                                   "Pharmazie",
+                                   "Raumplanung",
+                                   "Sport",
+                                   "Verkehrstechnik, Nautik",
+                                   "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
+                                   "Kunst, Kunstwissenschaft",
+                                   "Elektrotechnik und Informationstechnik"),
+
+                       selected = "MINT"
+                     ))
+
     # ,
     # p("Status der Student:innen:"),
     # shinyWidgets::radioGroupButtons(
@@ -101,8 +120,12 @@ mod_studium_studienzahl_bl_vergleich_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    observeEvent(input$bl_f, {
-      r$bl_f <- input$bl_f
+    observeEvent(input$bl_f_lehr, {
+      r$bl_f_lehr <- input$bl_f_lehr
+    })
+
+    observeEvent(input$bl_f_alle, {
+      r$bl_f_alle <- input$bl_f_alle
     })
 
     observeEvent(input$rank_bl_l, {
