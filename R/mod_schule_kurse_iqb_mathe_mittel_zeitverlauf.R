@@ -40,8 +40,8 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("indi_iqb_mathe_mittel_zeitverlauf"),
       choices = c("nach Geschlecht",
-                  "nach Zuwanderungsgeschichte" = "nach Migrationshintergrund",
-                  "nach Bildungshintergrund"),
+                  "nach Zuwanderungsgeschichte",
+                  "nach Bildungskapital"),
       multiple = FALSE,
       selected = c("nach Geschlecht")
 

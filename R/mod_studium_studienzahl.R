@@ -286,6 +286,9 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 9,
                                htmlOutput(ns("plot_studienzahl_map")),
                                p(style="font-size:12px;color:grey",
+                                 "Hinweis: In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert.
+                                 In diesen Fällen werden die betroffenen Bundesländer als grau schattiert angezeigt."),
+                               p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
@@ -315,8 +318,12 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_vergleich_bl1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
-                               #plotOutput(ns("plot_vergleich_bl")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                               highcharter::highchartOutput(ns("plot_vergleich_bl1")),
+                               p(style="font-size:12px;color:grey",
+                                 "Hinweis: In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert.
+                                 In diesen Fällen werden nur die Bundesländer angezeigt, welche die betrachtete Studienfachgruppe aufweisen."),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+
                              )
                     )
         ))),
@@ -371,7 +378,12 @@ mod_studium_studienzahl_ui <- function(id){
                              mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1")),
                            shiny::mainPanel(
                              width = 9,
-                             highcharter::highchartOutput(ns("plot_einstieg_comparison_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                             highcharter::highchartOutput(ns("plot_einstieg_comparison_gender")),
+                             p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                             p(style="font-size:12px;color:grey", "Hinweis: Studierende auf Lehramt werden für Fächergruppen, die nicht oder nur von einer
+                               sehr geringen Anzahlen an Lehramtstudierenden deutschlandweit als Hauptfach studiert werden, nicht in der Übersicht angezeigt.
+                               In einzelnen Bundesländern kann es für spezfisiche Fächergruppen zu keinen oder sehr geringen Leharamtstudierendenzahlen kommen.
+                               Achten Sie hierbei auf die absoluten Zahlenangaben zur Anzahl der Studierenden."))
                   )
         ))),
 

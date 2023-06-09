@@ -55,12 +55,12 @@ kurse_einstieg_pie <- function(df,r) {
     dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Gesamt"] )%>%
     dplyr::filter(anzeige_geschlecht == "Gesamt")
 
-  # df_test <<- df1 %>% tidyr:: pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
+  # df_test <- df1 %>% tidyr:: pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
   #   dplyr::mutate(Gesamt= Frauen + Männer)%>%
   #   tidyr::pivot_longer(c(6:8), values_to = "wert", names_to = "anzeige_geschlecht")
   #
   #
-  # df_test1 <<- share_mint_kurse(df_test)%>%
+  # df_test1 <- share_mint_kurse(df_test)%>%
   #   tidyr::pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
   #   dplyr::rename(wert_new=Gesamt)%>%
   #   tidyr::pivot_longer(c(6,8), names_to = "anzeige_geschlecht", values_to = "wert")
@@ -630,6 +630,7 @@ kurse_waffle_mint <- function(df,r) {
 
 kurse_mint_comparison <- function(df,r) {
 
+
   timerange <- r$date_comparison_subject
 
   state <- r$state_comparison_subject
@@ -666,9 +667,6 @@ kurse_mint_comparison <- function(df,r) {
 
   df <- prep_kurse_east_west(df)
 
-
-
-
   df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt",
                                     fachbereich == "Alle Fächer") %>%
     dplyr::rename(wert_gesamt = "wert")
@@ -687,28 +685,37 @@ kurse_mint_comparison <- function(df,r) {
   df <- rbind(df, df_sub)
 
   # calculate proportion
-  df <- df %>% dplyr::left_join(df_gesamt, by = c("jahr", "region", "indikator",
-                                                  "bereich")) %>%
+
+  df2 <- df %>% dplyr::left_join(df_gesamt, by = c("jahr", "region", "indikator",
+                                                    "bereich")) %>%
     dplyr::rename(anzeige_geschlecht = "anzeige_geschlecht.x",
                   fachbereich = "fachbereich.x") %>%
     dplyr::select(-c("anzeige_geschlecht.y", "fachbereich.y")) %>%
     dplyr::filter(fachbereich != "Alle Fächer") %>%
     dplyr::mutate(proportion = (wert/wert_gesamt)*100)
 
-  df <- df %>% dplyr::filter(indikator == indikator_comparison)
+# Bei Leistungskurse: Religion/Ethik raus, da minimal
+  if(indikator_comparison=="Leistungskurse"){
+
+    df2 <- df2 %>%
+      dplyr::filter(fachbereich!="Religion/Ethik")
+
+  }
+
+  df3 <- df2 %>% dplyr::filter(indikator == indikator_comparison)
 
   x <- c("MINT-Fächer (gesamt)", "Mathematik", "Informatik", "Physik", "Chemie",
          "Biologie", "andere naturwiss.-technische Fächer",
          "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
          "Musik/Kunst", "Religion/Ethik", "Sport")
 
-  df <- df %>%
+  df4 <- df3 %>%
     dplyr::mutate(fachbereich =  factor(fachbereich, levels = x)) %>%
     dplyr::arrange(fachbereich)
 
-  df <- na.omit(df)
+  df4 <- na.omit(df4)
 
-  df <- df %>%
+  df5 <- df4 %>%
     dplyr::ungroup()%>%
     dplyr::mutate(region= dplyr::case_when(
       region == "Westen" ~ "Westdeutschland (o. Berlin)",
@@ -716,13 +723,15 @@ kurse_mint_comparison <- function(df,r) {
       T ~ .$region
     ))
 
-  df <- df %>% dplyr::filter(region == state)
+  df6 <- df5 %>% dplyr::filter(region == state)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df6$wert <- prettyNum(df6$wert, big.mark = ".")
+
+  df6 <- df6 %>% dplyr::filter(fachbereich != "andere naturwiss.-technische Fächer")
 
   # plot
-  highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich)) %>%
+  highcharter::hchart(df6, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich))%>%
     highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
@@ -734,8 +743,8 @@ kurse_mint_comparison <- function(df,r) {
       colors = ifelse(df$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (aggregiert)"), "#b16fab", "#d0a9cd")
     )) %>%
     highcharter::hc_title(text = paste0( "Anteil einzelner Fächer in ",state, " (", indikator_comparison, ")",
-                                                                        br(), timerange,
-                                                                          "<br><br><br>"),
+                                         br(), timerange,
+                                         "<br><br><br>"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -797,9 +806,21 @@ kurse_mint_comparison_bl <- function(df,r) {
 
   timerange <- r$date_comparison_bl
 
-  subject <- r$subject_comparison_bl
+
 
   indikator_comparison <- r$indikator_comparison_bl
+
+  if(indikator_comparison=="Grundkurse") {
+
+    subject <- r$subject_comparison_bl1
+
+  } else {
+
+    subject <- r$subject_comparison_bl2
+
+  }
+
+
 
 
   # filter dataset based on UI inputs
@@ -1246,7 +1267,7 @@ kurse_ranking <- function(df,r, type) {
 
   df <- df %>% tidyr::drop_na()
 
-  df2 <<- tidyr::gather(df, group, value, -fachbereich)
+  df2 <- tidyr::gather(df, group, value, -fachbereich)
 
   #df2$fachbereich <- reorder(df2$fachbereich, df2$Leistungskurse)
 
@@ -2047,7 +2068,7 @@ kurse_verlauf_single <- function(df,r) {
 
 
    # aggregate to MINT
-  df1 <<- share_mint_kurse(df)
+  df1 <- share_mint_kurse(df)
 
    # calcualte the new "Gesamt"
    # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -2055,7 +2076,7 @@ kurse_verlauf_single <- function(df,r) {
    #   dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Frauen"] +
    #                   wert[anzeige_geschlecht == "Männer"])
 
-  dfl <<- df1 %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  dfl <- df1 %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
     dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Gesamt"] ) %>%
     dplyr::filter(anzeige_geschlecht != "Gesamt")
 
@@ -2610,10 +2631,10 @@ kurse_verlauf_multiple_bl <- function(df,r) {
 
 
 
-  df4 <<- df %>% dplyr::filter(fachbereich %in% subjects_select)
+  df4 <- df %>% dplyr::filter(fachbereich %in% subjects_select)
 
   # calculate proportions
-  df5 <<- df4 %>% dplyr::group_by(jahr, region, indikator) %>%
+  df5 <- df4 %>% dplyr::group_by(jahr, region, indikator) %>%
     dplyr::summarize(wert, proportion = wert/sum_props)%>%
     dplyr::rename(Relativ = proportion, Absolut=wert)%>%
     tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
@@ -2838,9 +2859,9 @@ df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
 
 # calculate proportions
 
-dfm <<- df
+dfm <- df
 
-dfm <<- dfm %>% dplyr::group_by(jahr, region, fachbereich) %>%
+dfm <- dfm %>% dplyr::group_by(jahr, region, fachbereich) %>%
   dplyr::summarize(wert, proportion = wert/sum_props)%>%
   dplyr::rename(Relativ = proportion, Absolut=wert)%>%
   tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
@@ -2963,7 +2984,8 @@ dfg <- df
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
       highcharter::hc_colors(c("#efe8e6","#D0A9CD",
                                "#b16fab")) %>%
-      highcharter::hc_title(text = paste0("Anteil der leistungsschwachen Schüler und Schülerinnen in Mathematik <br> in ", title_help),
+      highcharter::hc_title(text = paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard
+                                          in Mathematik nicht erreichen"),
       margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2997,6 +3019,8 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
   df$jahr <- as.factor(df$jahr)
 
   # nach gewählter Vergleichsgruppe filtern
+
+  # Datensatzaufbereitung bei Auswahl Geschlecht
   if (indikator_select == "nach Geschlecht") {
     df <- df %>% dplyr::filter(indikator == "Alle")
 
@@ -3008,44 +3032,12 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
       T~df$geschlecht
     ))%>%
       dplyr::filter(geschlecht != "Gesamt")
-
-
   }
+  # Datensatzaufbereitung bei Auswahl Zuwanderungsgeschichte
   else{
 
-    if (indikator_select == "nach Migrationshintergrund"){
-      indikator_select <- "nach Zuwanderungsgeschichte"
-      df <- df %>% dplyr::filter(indikator %in% c("Alle", "Migrationsgeschichte", "keine Migrationsgeschichte"))
-      df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
-        dplyr::mutate(indikator=dplyr::case_when(indikator == "Alle" ~"Gesamt",
-                                       indikator=="Migrationsgeschichte" ~ "Mit Zuwanderungsgeschichte",
-                                       indikator=="keine Migrationsgeschichte"~"Ohne Zuwanderungsgeschichte"
-
-        ))%>%
-        dplyr::filter(indikator != "Gesamt")
-
-
-
-      df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
-        geschlecht=="gesamt" ~ "Gesamt",
-        T~df$geschlecht
-      ))
-
-      # df <- df %>% dplyr::mutate(indikator=case_when(
-      #   indikator=="gesamt" ~ "Gesamt",
-      #   T~df$indikator
-      # ))
-
-      df$indikator<- as.factor(df$indikator)
-      df$indikator <- factor(df$indikator, levels = c("Gesamt", "Mit Zuwanderungsgeschichte",
-                                                      "Ohne Zuwanderungsgeschichte" ))
-
-
-    }
-
-    else{
-      if(indikator_select == "nach Bildungshintergrund")
-      df <- df %>% dplyr::filter(indikator %in% c("Alle", "status_hoch", "status_niedrig"))
+    if (indikator_select == "nach Zuwanderungsgeschichte"){
+      df <- df %>% dplyr::filter(indikator %in% c("Alle", "mit Zuwanderungsgeschichte", "ohne Zuwanderungsgeschichte"))
       df <- df %>% dplyr::filter(geschlecht == "gesamt")
 
       df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
@@ -3053,13 +3045,34 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
         T~df$geschlecht
       ))
 
-      # Labels umbenennen
-      df$indikator[df$indikator == "status_hoch"] <- "Mehr als 100 Bücher zuhause"
-      df$indikator[df$indikator == "status_niedrig"] <- "100 Bücher oder weniger zuhause"
-
+      # Für Grafik als Faktor speichern
       df$indikator<- as.factor(df$indikator)
-      df$indikator <- factor(df$indikator, levels = c("Alle", "100 Bücher oder weniger zuhause", "Mehr als 100 Bücher zuhause" ))
+      df$indikator <- factor(df$indikator, levels = c("Gesamt", "mit Zuwanderungsgeschichte",
+                                                      "ohne Zuwanderungsgeschichte" ))
+      # Alle als Gesamtgruppe ausfiltern
+      df <- df %>%
+        dplyr::filter(indikator!="Alle")
 
+    }
+
+    # Datensatzaufbereitung bei Auswahl Bildungskapital
+    else{
+      if(indikator_select == "nach Bildungskapital")
+      df <- df %>% dplyr::filter(indikator %in% c("Alle", "kapital_hoch", "kapital_niedrig"))
+      df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
+        dplyr::mutate(indikator=dplyr::case_when(indikator == "Alle" ~"Gesamt",
+                                                 indikator == "kapital_hoch" ~ "hohes Bildungskapital (mehr als 100 Bücher zuhause)",
+                                                 indikator == "kapital_niedrig" ~ "niedriges Bildungskapital (100 Bücher oder weniger zuhause)"))
+
+      df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
+        geschlecht=="gesamt" ~ "Gesamt",
+        T~df$geschlecht
+      ))
+      # Für Grafik als Faktor speichern
+      df$indikator<- as.factor(df$indikator)
+      df$indikator <- factor(df$indikator, levels = c("Alle", "hohes Bildungskapital (mehr als 100 Bücher zuhause)", "niedriges Bildungskapital (100 Bücher oder weniger zuhause)" ))
+
+      # Alle als Gesamtgruppe ausfiltern
       df <- df %>%
         dplyr::filter(indikator!="Alle")
     }
@@ -3083,7 +3096,7 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
                                "#154194"
                                #"#154194",
       )) %>%
-      highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler und Schülerinnen in Mathematik nach Geschlecht in " , bl_select),
+      highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht in " , bl_select),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3116,7 +3129,7 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
 
                                #"#154194",
       )) %>%
-      highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler und Schülerinnen in Mathematik ", indikator_select, " in " , bl_select),
+      highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%

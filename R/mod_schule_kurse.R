@@ -336,7 +336,7 @@ mod_schule_kurse_ui <- function(id){
                                p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
                                  sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
                                  Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
-                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering.")
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering. Die Anzeige für Religion/Ehtik für Leistungskurse entfällt, da der Anteil unter 1% liegt")
 
                              )),
                     tabPanel("Alle Bundesländer auf einen Blick", br(),
@@ -351,7 +351,7 @@ mod_schule_kurse_ui <- function(id){
                                p(style="font-size:12px;color:grey", "Hinweis: In Bayern gibt keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache
                                  sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturprüfungsfächer und werden hier als Leistungskurse gezählt.
                                  Die Grundlagenfächer können nur an anderen Schulformen als Grundkurse gewählt werden und entsprechend sind
-                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering.")
+                                 die Anteile der Grundlagenfächer an den Grundkursen sehr gering. Die Auswahloption Religion/Ehtik für Leistungskurse entfällt, da der Anteil unter 1% liegt")
                                ))
 
         ))),
@@ -449,9 +449,10 @@ mod_schule_kurse_ui <- function(id){
            shinydashboard::box(
              title = "MINT-Kompetenzen in der 4. Klasse",
              width = 12,
-             p("Dieses interaktive Diagramm gibt einen ersten Einblick in die Mathe-Kompetenzen von Schülerinnen und Schüler der 4. Klassen.
+             p("Diese interaktiven Diagramme geben einen ersten Einblick in die Mathe-Kompetenzen von Schüler:innen der 4. Klassen.
              Die Daten stammen aus der Befragung des Instituts zur Qualitätsentwicklung im Bildungswesen e.V. (IQB), das in regelmäßigen Abständen
-             die Leistung von Schülerinnen und Schülern in verschiedenen Fächern testet."),
+             die Leistung von Schüler:innen in verschiedenen Fächern testet. Dafür werden deutschlandweit mehr als 1.300 Schulen und
+               über 26.000 Schüler:innen befragt."),
              p(),
              p("Zeitnah werden weitere Darstellungen der Daten aus den IQB-Befragungen in den 4. und 9. Klassen folgen!"),
              tabsetPanel(type = "tabs",
@@ -464,18 +465,20 @@ mod_schule_kurse_ui <- function(id){
                                     width = 3,
                                     mod_schule_kurse_iqb_standard_zeitverlauf_ui("mod_schule_kurse_iqb_standard_zeitverlauf_ui_1"),
                                     p(style="font-size:12px;color:grey",
-                                      "Interpretationshilfe: Während 2011 noch 11.9 % der Schüler und Schülerinnen die Mindestanforderung in Mathe nicht erfüllen,
-                                      gilt 2021 ein fast doppelt so großer Anteil an Schüler/Schülerinnnen als leistungsschwach in Mathematik (21.8 %)."),
+                                      "Interpretationshilfe: Während 2011 noch 11.9 % der Schüler:innen die Mindestanforderung im Mathematik-Kompetenztest nicht erfüllen,
+                                      gilt 2021 ein fast doppelt so großer Anteil an Schüler:innen als leistungsschwach in Mathematik (21.8 % Mindesstandard nicht erreicht)."),
                                     p(style="font-size:12px;color:grey",
                                       "Hinweis: Für Mecklenburg-Vorpommern liegen keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten."),
                                   ),
-
-
                                   shiny::mainPanel(
                                     width = 9,
                                     highcharter::highchartOutput(ns("plot_iqb_standard_zeitverlauf"))
                                     ,
                                     p(style="font-size:12px;color:grey", br(),
+                                      "Gesamte realisierte Stichprobengröße:", br(),
+                                      "2021: 1.464 Schulen mit N = 26.844 Schüler:innen", br(),
+                                      "2016: 1.508 Schulen mit N = 29.259 Schüler:innen", br(),
+                                      "2011: 1.349 Schulen mit N = 27.081 Schüler:innen", br(),br(),
                                       "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen."),
                                     # p(style="font-size:12px;color:grey",
                                       # "Hinweis: Für Mecklenburg-Vorpommern liegen keine Daten vor.")
@@ -500,13 +503,17 @@ mod_schule_kurse_ui <- function(id){
                                     width = 9,
                                     highcharter::highchartOutput(ns("plot_iqb_mathe_mittel_zeitverlauf"))
                                     ,
-                                    p(style="font-size:12px;color:grey", br(),
-                                      "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen."),
-                                     p(style="font-size:12px;color:grey",
-                                     "Hinweis: Als 'Mit Zuwanderungsgeschichte' werden Kinder bezeichnet, deren beider Eltern nach Deutschland zugewandert sind.
+                                    p(style="font-size:12px;color:grey",
+                                      "Gesamte realisierte Stichprobengröße:", br(),
+                                      "2021: 1.464 Schulen mit N = 26.844 Schüler:innen", br(),
+                                      "2016: 1.508 Schulen mit N = 29.259 Schüler:innen", br(),
+                                      "2011: 1.349 Schulen mit N = 27.081 Schüler:innen", br(),br(),
+                                      "Hinweis: Als 'Mit Zuwanderungsgeschichte' werden Kinder bezeichnet, deren beider Eltern nach Deutschland zugewandert sind.
                                      Zuwanderungsgeschichten 1. Generation (auch Kind ist nach Deutschalnd zugewandert) und 2. Generation (Kind ist in Deutschland geboren) werden zusammengefasst.
-                                     Als 'Ohne Zuwanderungsgeschichte' werden Kinder bezeichnet, deren beider Eltern in Deutschland geboren wurden.")
-                                  )
+                                     Als 'Ohne Zuwanderungsgeschichte' werden Kinder bezeichnet, deren beider Eltern in Deutschland geboren wurden."),
+                                    p(style="font-size:12px;color:grey",br(),
+                                      "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen.")
+                                     )
                          )
              ))),
 

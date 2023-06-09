@@ -146,8 +146,8 @@ d_m_bildung <- d_m_bildung %>%
     stringr::str_detect(indikator, "2021") ~2021
   ),
   indikator = dplyr::case_when(
-    stringr::str_detect(indikator, "hoch") ~ "status_hoch",
-    stringr::str_detect(indikator, "niedr") ~ "status_niedrig"
+    stringr::str_detect(indikator, "hoch") ~ "kapital_hoch",
+    stringr::str_detect(indikator, "niedr") ~ "kapital_niedrig"
   ))
 d_m_bildung$geschlecht <- "gesamt"
 
@@ -180,8 +180,8 @@ d_m_migra <- d_m_migra %>%
     stringr::str_detect(indikator, "2021") ~2021
   ),
   indikator = dplyr::case_when(
-    stringr::str_detect(indikator, "keine") ~ "keine Migrationsgeschichte",
-    TRUE ~ "Migrationsgeschichte" #bedeutet hier beide Eltern migriert, Extremwerte verglichen
+    stringr::str_detect(indikator, "keine") ~ "ohne Zuwanderungsgeschichte",
+    TRUE ~ "mit Zuwanderungsgeschichte" #bedeutet hier beide Eltern migriert, Extremwerte verglichen
   ))
 
 d_m_migra$geschlecht <- "gesamt"
