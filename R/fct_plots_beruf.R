@@ -878,7 +878,7 @@ beruf_verlauf_single <- function(df,r) {
     dplyr::mutate(sum_wert = sum(wert))
 
   # calcualte proportions
-  dftz <<- df %>% dplyr::group_by(jahr, indikator, fachbereich) %>%
+  dftz <- df %>% dplyr::group_by(jahr, indikator, fachbereich) %>%
     dplyr::summarize(wert, proportion = wert/sum_wert)%>%
     dplyr::rename(Relativ = proportion, Absolut=wert)%>%
     tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
@@ -1133,7 +1133,7 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
 
 
 
-  dfzu <<- df %>%
+  dfzu <- df %>%
     dplyr::left_join(df_gesamt, by = c("region", "jahr", "geschlecht", "indikator", "bereich")) %>%
     dplyr::rename(anforderung = "anforderung.x",
                   fachbereich = "fachbereich.x",
@@ -1547,16 +1547,16 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
 
   absolut_selector <- r$abs_zahlen_4
 
-  aniveau <<- r$niveau
+  aniveau <- r$niveau
 
   # load UI inputs from reactive value
-  timerange <<- r$date_beruf_arbeitsmarkt_bl_verlauf
+  timerange <- r$date_beruf_arbeitsmarkt_bl_verlauf
 
   # anforderung <- r$anforderung_beruf_arbeitsmarkt_bl_verlauf
   #
   # indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_verlauf
 
-  states <<- r$states_beruf_arbeitsmarkt_bl_verlauf
+  states <- r$states_beruf_arbeitsmarkt_bl_verlauf
 
   # filter dataset based on UI inputs
  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
@@ -1565,11 +1565,11 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
 
 
 
-  dfg <<- df
+  dfg <- df
 
 
 
-  dfk <<- dfg%>%
+  dfk <- dfg%>%
     tidyr::pivot_wider(names_from= region, values_from=wert)%>%
     dplyr::mutate("Ostdeutschland (inkl. Berlin)" = rowSums(dplyr::select(., c(Berlin, Brandenburg, `Mecklenburg-Vorpommern`, Sachsen, `Sachsen-Anhalt`, Thüringen)),na.rm = T),
                   "Westdeutschland (o. Berlin)"= rowSums(dplyr::select(., c(`Baden-Württemberg`, Bayern, Bremen, Hamburg, Hessen, Niedersachsen, `Schleswig-Holstein`, `Nordrhein-Westfalen`,
@@ -1588,10 +1588,10 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
     ))
 
 
-  df12 <<- dfk %>% dplyr::filter(region %in% states)
+  df12 <- dfk %>% dplyr::filter(region %in% states)
 
 
-  df14 <<- df12 %>% dplyr::filter(indikator == aniveau)
+  df14 <- df12 %>% dplyr::filter(indikator == aniveau)
 
   if(absolut_selector=="In Prozent"){
 
@@ -1652,14 +1652,14 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
 
 
 
-  # df11 <<- dfk %>%
+  # df11 <- dfk %>%
   #   dplyr::filter(fachbereich == fach_choice)
   #
-  # df12 <<- df11 %>% dplyr::filter(bundesland %in% states)
+  # df12 <- df11 %>% dplyr::filter(bundesland %in% states)
   #
-  # #df13 <<- df12 %>% dplyr::filter(anforderung != "Gesamt")
+  # #df13 <- df12 %>% dplyr::filter(anforderung != "Gesamt")
   #
-  # df14 <<- df12 %>% dplyr::filter(indikator == aniveau)
+  # df14 <- df12 %>% dplyr::filter(indikator == aniveau)
 
 
   # df <- prep_arbeitsmarkt_east_west(df)
@@ -1682,7 +1682,7 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
   # df <- df %>% dplyr::filter(fachbereich == "MINT")
 
   # order years for plot
-  #df15 <<- df14[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
+  #df15 <- df14[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
 
 
   # if (anforderung == "Gesamt"){
@@ -3154,11 +3154,11 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(df,r) {
                   geschlecht == "Gesamt") %>%
     dplyr::rename(wert_gesamt = "wert")
 
-  dfH <<- df %>%
+  dfH <- df %>%
     dplyr::left_join(df_sub_new_gesamt, by = c("region", "indikator", "jahr", "bereich", "fachbereich")) %>%
     dplyr::left_join(df_new_gesamt, by = c("region", "indikator", "jahr", "bereich"))
 
-  dfJ<<-dfH %>%
+  dfJ<-dfH %>%
     dplyr::rename(fachbereich = `fachbereich.x`,
                   anforderung = `anforderung.x`,
                   geschlecht = `geschlecht.x`) %>%
@@ -3169,7 +3169,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(df,r) {
 
   dfJ <- dfJ[,-11]
 
-  dfK <<- dfJ %>%
+  dfK <- dfJ %>%
     dplyr::filter(geschlecht == "Frauen",
                   fachbereich == "MINT")%>%
     dplyr::rename(Relativ= proportion_fachbereich, Absolut = wert)%>%
