@@ -20,12 +20,10 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
       selected = c("2016", "2021")
     ),
     p("Kursart:"),
-    shinyWidgets::radioGroupButtons(
+    shinyWidgets::pickerInput(
       inputId = ns("topic_selected_multiple"),
       choices = c("Grundkurse", "Leistungskurse"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+      selected = "Leistungskurse"
     ),
     p("Fach/Fächergruppe:"),
     shinyWidgets::pickerInput(

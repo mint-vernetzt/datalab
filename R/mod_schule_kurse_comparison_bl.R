@@ -20,12 +20,10 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
       selected = "2021"),
 
     p("Kursart:"),
-    shinyWidgets::radioGroupButtons(
+    shinyWidgets::pickerInput(
       inputId = ns("indikator_comparison_bl"),
       choices = c("Grundkurse", "Leistungskurse"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+      selected = "Leistunskurse"
     ),
 
     p("Fach/Fächergruppe:"),
