@@ -44,6 +44,7 @@ mod_beruf_arbeitsmarkt_überblick_fächer_ui <- function(id){
                   "Auszubildende (1. Jahr)",
                   "Beschäftigte",
                   "ausländische Beschäftigte",
+                  "ausländische Auszubildende",
                   "Beschäftigte u25",
                   "Beschäftigte 25-55",
                   "Beschäftigte ü55"),

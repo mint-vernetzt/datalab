@@ -19,12 +19,9 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
       selected = c("2016", "2021")
     ),
     p("Beschäftigungsform"),
-    shinyWidgets::radioGroupButtons(
+    shinyWidgets::pickerInput(
       inputId = ns("indikator_beruf_arbeitsmarkt_bl_gender_verlauf"),
       choices = c("Auszubildende", "Beschäftigte"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
     ),
     # p("Auswahl des Anforderungsniveaus:"),
     # shinyWidgets::pickerInput(
