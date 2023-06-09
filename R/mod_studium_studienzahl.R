@@ -498,7 +498,9 @@ mod_studium_studienzahl_ui <- function(id){
 #' studium_studienzahl Server Functions
 #'
 #' @noRd
-mod_studium_studienzahl_server <- function(id, data_studierende, data_studierende2, data_studierende_faecher, r){
+mod_studium_studienzahl_server <- function(id, data_studierende_neu,
+                                           #data_studierende_faecher3,
+                                           r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -506,7 +508,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
 
     # Box 2
     output$plot_einstieg_pie <- renderUI({
-      studienzahl_einstieg_pie(data_studierende2,r)
+      studienzahl_einstieg_pie(data_studierende:neu,r)
     })
 
     output$plot_einstieg_verlauf <- highcharter::renderHighchart({
@@ -554,12 +556,12 @@ mod_studium_studienzahl_server <- function(id, data_studierende, data_studierend
     })
 
     output$test <- renderUI({
-      studienzahl_test(data_studierende2, r)
+      studienzahl_test(data_studierende_neu, r)
     })
 
     # Box 4
     plot_waffle_react <- reactive({
-      studienzahl_waffle_mint(data_studierende2,r)
+      studienzahl_waffle_mint(data_studierende_neu,r)
     })
 
     output$plot_waffle <- renderPlot({

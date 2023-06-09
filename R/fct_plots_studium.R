@@ -14,83 +14,67 @@ studienzahl_test <- function(df,r){
 
 # Box 1 Pie ab 2023
 
-  df <-data.frame(df)
+ browser()
 
+  df1 <<- df
+
+ # ui inputs
  testy1 <- r$testy
  testl1 <- r$testl
 
- dföööö <- df %>% dplyr::filter(jahr==testy1)
+ # filtering
+ df2 <<- df1 %>% dplyr::filter(jahr==testy1)%>%
+   dplyr::filter(geschlecht == "Gesamt")%>%
+   dplyr::filter(region == "Deutschland")%>%
+   dplyr::filter(fachbereich %in% c("Nicht MINT", "MINT", "Alle" ))
 
+ # calculating proportions
+ df3 <<- df2 %>%
+   tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
+   dplyr::mutate(dplyr::across(c(MINT, "Nicht MINT"), ~./Alle))%>%
+   dplyr::mutate(dplyr::across(c("Nicht MINT", MINT), ~ round(.*100,0)))%>%
+   dplyr::select(- Alle)%>%
+   tidyr::pivot_longer(c(MINT, "Nicht MINT"), names_to = "fachbereich", values_to = "proportion")
 
- df4 <- dföööö %>% dplyr::filter(geschlecht == "gesamt")%>%
-   dplyr::filter(region== "Deutschland")%>%
-   dplyr::select(-hochschulform, -region)%>%
-   tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
-   dplyr::mutate("MINT (aggregiert)" = Mathematik_Naturwissenschaften+Ingenieurwissenschaften)%>%
-   dplyr::mutate("Nicht MINt"= Alle-`MINT (aggregiert)`)
+ # joining wert and prportion
+ df4 <- df2%>%
+   dplyr::filter(fachbereich != "Alle")%>%
+   dplyr::left_join(df3)
 
-#Trennen um absoluten Wert später wieder anhängen zu können
-df_wert <- df4 %>%
-  dplyr::mutate(MINT=`MINT (aggregiert)`+0)%>% #da Zeilen noch nicht so heißen, von unten übernommen, nichts berechnet
-  dplyr::mutate("Nicht MINT"=`Nicht MINt`+0)%>%
-  dplyr::select(-Ingenieurwissenschaften,- Mathematik_Naturwissenschaften,-Alle, -`MINT (aggregiert)`,- `Nicht MINt`)%>%
-  tidyr::pivot_longer(c(MINT, `Nicht MINT`), names_to = "proportion", values_to = "wert")
-
-#Anteil berechnen
- df4 <- df4 %>%
-   dplyr::mutate(MINT=`MINT (aggregiert)`/Alle)%>%
-   dplyr::mutate("Nicht MINT"=`Nicht MINt`/Alle)%>%
-   dplyr::select(-Ingenieurwissenschaften,- Mathematik_Naturwissenschaften,-Alle, -`MINT (aggregiert)`,- `Nicht MINt`)%>%
-   tidyr::pivot_longer(c(MINT, `Nicht MINT`), names_to = "proportion", values_to = "prop")
-
- df4$prop <- df4$prop *100
- df4$prop <- round(df4$prop, 0)
-
- #Absoluten Wert anhängen
- wert <- df_wert$wert
- df4 <- cbind(df4, wert)
 
  #Trennpunkte für lange Zahlen ergänzen
  df4$wert <- prettyNum(df4$wert, big.mark = ".")
 
- df4 <- within(df4, proportion <- factor(proportion, levels=c("Nicht MINT", "MINT")))
+ # Ordering
+ df4 <- within(df4, fachbereich <- factor(fachbereich, levels=c("Nicht MINT", "MINT")))
 
- #,
-  #               prop_n_mint=`Nicht MINT`/Alle)%>%
-   # dplyr::mutate(wert = dplyr::case_when(fachbereich== "MINT (aggregiert)" ~ `MINT (aggregiert)`/Alle,
-   #                                        fachbereich== "Nicht MINT" ~  `Nicht MINT`/Alle, )) %>%
-   #tidyr::pivot_longer(c(Alle,Mathematik_Naturwissenschaften, Ingenieurwissenschaften, `MINT (aggregiert)`, `Nicht MINT`),
-    #                    names_to = "fachbereich", values_to = "wert")%>%
-   #dplyr::select(-fachbereich,-wert)%>%
-   #tidyr::pivot_longer(c(prop_mint, prop_n_mint), values_to = "wert", names_to = "props")
-   #dplyr::filter(fachbereich== "MINT (aggregiert)"| fachbereich== "Nicht MINT")
 
 
 
 
   if(length(testl1) == 1) {
 
-    df_pie <- df4 %>% dplyr::filter(label == testl1)
+    df_pie <- df4 %>% dplyr::filter(indikator == testl1)
 
-    df_pie <- within(df_pie, proportion <- factor(proportion, levels=c("Nicht MINT", "MINT")))
+    #df_pie <- within(df_pie, fachbereich <- factor(fachbereich, levels=c("Nicht MINT", "MINT")))
 
     highcharter::hw_grid(
 
       df_pie %>%
         highcharter::hchart(
-          "pie", highcharter::hcaes(x = proportion , y = prop)
+          "pie", highcharter::hcaes(x = fachbereich , y = proportion)
         )
       %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
-        highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+        highcharter::hc_colors(c("#efe8e6", "#b16fab" )) %>%
         highcharter::hc_title(text = paste0(testl1[1], " in ", testy1),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
@@ -103,42 +87,42 @@ df_wert <- df4 %>%
   } else if(length(testl1) == 2) {
 
     # filter for UI input and ensure proportions sum to 1
-    df_1_pie <- df4 %>% dplyr::filter(label == testl1[1])
+    df_1_pie <- df4 %>% dplyr::filter(indikator == testl1[1])
 
-    df_2_pie <- df4 %>% dplyr::filter(label == testl1[2])
+    df_2_pie <- df4 %>% dplyr::filter(indikator == testl1[2])
 
 
      highcharter::hw_grid(
-       highcharter::hchart(df_1_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = proportion, y = prop))
+       highcharter::hchart(df_1_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
 
       %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
-        highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+        highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
         highcharter::hc_title(text=paste0(testl1[1], " in ", testy1),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
 
-    highcharter:: hchart(df_2_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = proportion, y = prop))
+    highcharter:: hchart(df_2_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich , y = proportion))
 
     %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}'))%>%
-        highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+        highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
       highcharter::hc_title(text=paste0(testl1[2], " in ", testy1),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
@@ -152,61 +136,61 @@ df_wert <- df4 %>%
 
     # filter for UI input and ensure proportions sum to 1
 
-    df_1_pie <- df4 %>% dplyr::filter(label == testl1[1])
+    df_1_pie <- df4 %>% dplyr::filter(indikator == testl1[1])
 
-    df_2_pie <- df4 %>% dplyr::filter(label == testl1[2])
+    df_2_pie <- df4 %>% dplyr::filter(indikator == testl1[2])
 
-    df_3_pie <- df4 %>% dplyr::filter(label == testl1[3])
+    df_3_pie <- df4 %>% dplyr::filter(indikator == testl1[3])
 
 
      highcharter::hw_grid(
-       highcharter::hchart(df_1_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = prop))
+       highcharter::hchart(df_1_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
       %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
-        highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+        highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
         highcharter::hc_title(text=paste0(testl1[1], " in ", testy1),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
 
 
-    highcharter::hchart(df_2_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = prop))
+    highcharter::hchart(df_2_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
 
 
     %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
-        highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+        highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
       highcharter::hc_title(text=paste0(testl1[2], " in ", testy1),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
 
-    highcharter::hchart(df_3_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = proportion, y = prop))
+    highcharter::hchart(df_3_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
 
 
     %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
-        highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+        highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
       highcharter::hc_title(text=paste0(testl1[3], " in ", testy1),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),

@@ -38,6 +38,10 @@ app_server <- function(input, output, session) {
 
   load(file=system.file(package="datalab", "data/iqb_ges.rda"))
 
+  load(file=system.file(package="datalab", "data/studierende_neu.rda"))
+
+  load(file=system.file(package="datalab", "data/studierende_faecher3.rda"))
+
   # example_data <- mod_load_data_server("beispieldatensatz", path=system.file(package="datalab", "data-raw/beispieldatensatz.xlsx"))
 
   # callModule(mod_home_server, "home_ui_1", data=example_data)
@@ -46,9 +50,8 @@ app_server <- function(input, output, session) {
   # callModule(mod_schule_server, "schule_ui_1", data=example_data, filter_name="schule")
   mod_schule_server("schule_ui_1", data_kurse = kurse, data_iqb_4klasse = iqb_4klasse, data_iqb_ges = iqb_ges)
 
-  mod_studium_server("studium_ui_1", data_studierende = studierende, data_studierende2 = studierende2, data_studierende_faecher = studierende_faecher,
-                     data_studierende_faecher_alle_indi = studierende_faecher_alle_indi
-                     #data_studierende_faecher_alle_indi2 = studierende_faecher_alle_indi2
+  mod_studium_server("studium_ui_1",data_studierende_neu = studierende_neu
+                     #,data_studierende_faecher3 = studierende_faecher3
                      )
 
   mod_beruf_server("beruf_ui_1", data_arbeitsmarkt = arbeitsmarkt, data_arbeitsmarkt_detail = arbeitsmarkt_detail_final, data_naa = data_naa)
