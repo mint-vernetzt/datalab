@@ -4808,6 +4808,16 @@ studierende_map <- function(df,r) {
                                                                  `Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt`,
                                                                  `Informatik`,
                                                                  `Materialwissenschaft und Werkstofftechnik`),na.rm = T),
+                  `Ingenieurwissenschaften ohne Informatik`= rowSums(dplyr::select(.,`Weitere ingenieurwissenschaftliche Fächer`,
+                                                                 `Maschinenbau/Verfahrenstechnik`,
+                                                                 `Elektrotechnik und Informationstechnik`,
+                                                                 `Verkehrstechnik, Nautik`,
+                                                                 `Architektur, Innenarchitektur`,
+                                                                 `Raumplanung`,
+                                                                 `Bauingenieurwesen`,
+                                                                 `Vermessungswesen`,
+                                                                 `Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt`,
+                                                                 `Materialwissenschaft und Werkstofftechnik`),na.rm = T),
                   `Mathematik, Naturwissenschaften`= rowSums(dplyr::select(.,
                                                                            `Weitere naturwissenschaftliche und mathematische Fächer`,
                                                                            `Mathematik`,
@@ -4815,7 +4825,13 @@ studierende_map <- function(df,r) {
                                                                            `Chemie`,
                                                                            `Pharmazie`,
                                                                            `Biologie`,
-                                                                           `Geowissenschaften und Geographie`),na.rm = T ))%>%
+                                                                           `Geowissenschaften und Geographie`),na.rm = T ),
+                  Naturwissenschaften= rowSums(dplyr::select(.,
+
+
+                                                                           `Physik, Astronomie`,
+                                                                           `Chemie`,
+                                                                           `Biologie`),na.rm = T ))%>%
     tidyr::pivot_longer(c(5:ncol(.)), names_to = "fach", values_to = "wert")%>%
     dplyr::mutate(fachbereich=dplyr::case_when(
       fach=="Weitere naturwissenschaftliche und mathematische Fächer" |
@@ -4846,6 +4862,16 @@ studierende_map <- function(df,r) {
                     `Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt`,
                     `Informatik`,
                     `Materialwissenschaft und Werkstofftechnik`),na.rm = T),
+                  `Ingenieurwissenschaften ohne Informatik`= rowSums(dplyr::select(.,`Weitere ingenieurwissenschaftliche Fächer`,
+                                                                                   `Maschinenbau/Verfahrenstechnik`,
+                                                                                   `Elektrotechnik und Informationstechnik`,
+                                                                                   `Verkehrstechnik, Nautik`,
+                                                                                   `Architektur, Innenarchitektur`,
+                                                                                   `Raumplanung`,
+                                                                                   `Bauingenieurwesen`,
+                                                                                   `Vermessungswesen`,
+                                                                                   `Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt`,
+                                                                                   `Materialwissenschaft und Werkstofftechnik`),na.rm = T),
                   `Mathematik, Naturwissenschaften`= rowSums(dplyr::select(.,
                     `Weitere naturwissenschaftliche und mathematische Fächer`,
                     `Mathematik`,
@@ -4853,7 +4879,13 @@ studierende_map <- function(df,r) {
                     `Chemie`,
                     `Pharmazie`,
                     `Biologie`,
-                    `Geowissenschaften und Geographie`),na.rm = T ))%>%
+                    `Geowissenschaften und Geographie`),na.rm = T ),
+                  Naturwissenschaften= rowSums(dplyr::select(.,
+
+
+                                                             `Physik, Astronomie`,
+                                                             `Chemie`,
+                                                             `Biologie`),na.rm = T ))%>%
     dplyr::mutate(dplyr::across(c(5:ncol(.)), ~ ./total))%>% #note to self: Warum braucht man hier ~?
     tidyr::pivot_longer(c(5:ncol(.)), names_to = "fach", values_to = "prop")%>%
     dplyr::mutate(fachbereich=dplyr::case_when(
@@ -6116,6 +6148,16 @@ studierende_mint_vergleich_bl <- function(df,r) {
                                                                  `Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt`,
                                                                  `Informatik`,
                                                                  `Materialwissenschaft und Werkstofftechnik`),na.rm = T),
+                  `Ingenieurwissenschaften ohne Informatik`= rowSums(dplyr::select(.,`Weitere ingenieurwissenschaftliche Fächer`,
+                                                                                   `Maschinenbau/Verfahrenstechnik`,
+                                                                                   `Elektrotechnik und Informationstechnik`,
+                                                                                   `Verkehrstechnik, Nautik`,
+                                                                                   `Architektur, Innenarchitektur`,
+                                                                                   `Raumplanung`,
+                                                                                   `Bauingenieurwesen`,
+                                                                                   `Vermessungswesen`,
+                                                                                   `Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt`,
+                                                                                   `Materialwissenschaft und Werkstofftechnik`),na.rm = T),
                   `Mathematik, Naturwissenschaften`= rowSums(dplyr::select(.,
                                                                            `Weitere naturwissenschaftliche und mathematische Fächer`,
                                                                            `Mathematik`,
@@ -6123,7 +6165,13 @@ studierende_mint_vergleich_bl <- function(df,r) {
                                                                            `Chemie`,
                                                                            `Pharmazie`,
                                                                            `Biologie`,
-                                                                           `Geowissenschaften und Geographie`),na.rm = T ))%>%
+                                                                           `Geowissenschaften und Geographie`),na.rm = T ),
+                  Naturwissenschaften= rowSums(dplyr::select(.,
+
+
+                                                             `Physik, Astronomie`,
+                                                             `Chemie`,
+                                                             `Biologie`),na.rm = T ))%>%
     tidyr::pivot_longer(c(5:ncol(.)), names_to = "fach", values_to = "wert")%>%
     dplyr::mutate(fachbereich=dplyr::case_when(
       fach=="Weitere naturwissenschaftliche und mathematische Fächer" |
@@ -6155,6 +6203,16 @@ studierende_mint_vergleich_bl <- function(df,r) {
                                                                  `Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt`,
                                                                  `Informatik`,
                                                                  `Materialwissenschaft und Werkstofftechnik`),na.rm = T),
+                  `Ingenieurwissenschaften ohne Informatik`= rowSums(dplyr::select(.,`Weitere ingenieurwissenschaftliche Fächer`,
+                                                                                   `Maschinenbau/Verfahrenstechnik`,
+                                                                                   `Elektrotechnik und Informationstechnik`,
+                                                                                   `Verkehrstechnik, Nautik`,
+                                                                                   `Architektur, Innenarchitektur`,
+                                                                                   `Raumplanung`,
+                                                                                   `Bauingenieurwesen`,
+                                                                                   `Vermessungswesen`,
+                                                                                   `Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt`,
+                                                                                   `Materialwissenschaft und Werkstofftechnik`),na.rm = T),
                   `Mathematik, Naturwissenschaften`= rowSums(dplyr::select(.,
                                                                            `Weitere naturwissenschaftliche und mathematische Fächer`,
                                                                            `Mathematik`,
@@ -6162,7 +6220,13 @@ studierende_mint_vergleich_bl <- function(df,r) {
                                                                            `Chemie`,
                                                                            `Pharmazie`,
                                                                            `Biologie`,
-                                                                           `Geowissenschaften und Geographie`),na.rm = T ))%>%
+                                                                           `Geowissenschaften und Geographie`),na.rm = T ),
+                  Naturwissenschaften= rowSums(dplyr::select(.,
+
+
+                                                             `Physik, Astronomie`,
+                                                             `Chemie`,
+                                                             `Biologie`),na.rm = T ))%>%
     dplyr::mutate(dplyr::across(c(5:ncol(.)), ~ ./total))%>% #note to self: Warum braucht man hier ~?
     tidyr::pivot_longer(c(5:ncol(.)), names_to = "fach", values_to = "prop")%>%
     dplyr::mutate(fachbereich=dplyr::case_when(
@@ -6195,7 +6259,6 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
   # NA aus fach entfernen für BULAs mit weniger Studienfachgruppen
   df77 <- stats::na.omit(df77)
-
 
   highcharter::hchart(df77, 'bar', highcharter::hcaes(x= region, y = proportion)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
