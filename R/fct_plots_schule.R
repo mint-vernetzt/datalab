@@ -55,12 +55,12 @@ kurse_einstieg_pie <- function(df,r) {
     dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Gesamt"] )%>%
     dplyr::filter(anzeige_geschlecht == "Gesamt")
 
-  # df_test <<- df1 %>% tidyr:: pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
+  # df_test <- df1 %>% tidyr:: pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
   #   dplyr::mutate(Gesamt= Frauen + Männer)%>%
   #   tidyr::pivot_longer(c(6:8), values_to = "wert", names_to = "anzeige_geschlecht")
   #
   #
-  # df_test1 <<- share_mint_kurse(df_test)%>%
+  # df_test1 <- share_mint_kurse(df_test)%>%
   #   tidyr::pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
   #   dplyr::rename(wert_new=Gesamt)%>%
   #   tidyr::pivot_longer(c(6,8), names_to = "anzeige_geschlecht", values_to = "wert")
@@ -631,11 +631,11 @@ kurse_waffle_mint <- function(df,r) {
 kurse_mint_comparison <- function(df,r) {
 
 
-  timerange <<- r$date_comparison_subject
+  timerange <- r$date_comparison_subject
 
-  state <<- r$state_comparison_subject
+  state <- r$state_comparison_subject
 
-  indikator_comparison <<- r$indikator_comparison_subject
+  indikator_comparison <- r$indikator_comparison_subject
 
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
@@ -667,9 +667,6 @@ kurse_mint_comparison <- function(df,r) {
 
   df <- prep_kurse_east_west(df)
 
-
-
-
   df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt",
                                     fachbereich == "Alle Fächer") %>%
     dplyr::rename(wert_gesamt = "wert")
@@ -689,15 +686,13 @@ kurse_mint_comparison <- function(df,r) {
 
   # calculate proportion
 
-
-  df2 <<- df %>% dplyr::left_join(df_gesamt, by = c("jahr", "region", "indikator",
+  df2 <- df %>% dplyr::left_join(df_gesamt, by = c("jahr", "region", "indikator",
                                                     "bereich")) %>%
     dplyr::rename(anzeige_geschlecht = "anzeige_geschlecht.x",
                   fachbereich = "fachbereich.x") %>%
     dplyr::select(-c("anzeige_geschlecht.y", "fachbereich.y")) %>%
     dplyr::filter(fachbereich != "Alle Fächer") %>%
     dplyr::mutate(proportion = (wert/wert_gesamt)*100)
-
 
 # Bei Leistungskurse: Religion/Ethik raus, da minimal
   if(indikator_comparison=="Leistungskurse"){
@@ -1272,7 +1267,7 @@ kurse_ranking <- function(df,r, type) {
 
   df <- df %>% tidyr::drop_na()
 
-  df2 <<- tidyr::gather(df, group, value, -fachbereich)
+  df2 <- tidyr::gather(df, group, value, -fachbereich)
 
   #df2$fachbereich <- reorder(df2$fachbereich, df2$Leistungskurse)
 
@@ -2073,7 +2068,7 @@ kurse_verlauf_single <- function(df,r) {
 
 
    # aggregate to MINT
-  df1 <<- share_mint_kurse(df)
+  df1 <- share_mint_kurse(df)
 
    # calcualte the new "Gesamt"
    # df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -2081,7 +2076,7 @@ kurse_verlauf_single <- function(df,r) {
    #   dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Frauen"] +
    #                   wert[anzeige_geschlecht == "Männer"])
 
-  dfl <<- df1 %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  dfl <- df1 %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
     dplyr::mutate(wert_new = wert[anzeige_geschlecht == "Gesamt"] ) %>%
     dplyr::filter(anzeige_geschlecht != "Gesamt")
 
@@ -2636,10 +2631,10 @@ kurse_verlauf_multiple_bl <- function(df,r) {
 
 
 
-  df4 <<- df %>% dplyr::filter(fachbereich %in% subjects_select)
+  df4 <- df %>% dplyr::filter(fachbereich %in% subjects_select)
 
   # calculate proportions
-  df5 <<- df4 %>% dplyr::group_by(jahr, region, indikator) %>%
+  df5 <- df4 %>% dplyr::group_by(jahr, region, indikator) %>%
     dplyr::summarize(wert, proportion = wert/sum_props)%>%
     dplyr::rename(Relativ = proportion, Absolut=wert)%>%
     tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
@@ -2864,9 +2859,9 @@ df <- df %>% dplyr::filter(fachbereich %in% subjects_select)
 
 # calculate proportions
 
-dfm <<- df
+dfm <- df
 
-dfm <<- dfm %>% dplyr::group_by(jahr, region, fachbereich) %>%
+dfm <- dfm %>% dplyr::group_by(jahr, region, fachbereich) %>%
   dplyr::summarize(wert, proportion = wert/sum_props)%>%
   dplyr::rename(Relativ = proportion, Absolut=wert)%>%
   tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
