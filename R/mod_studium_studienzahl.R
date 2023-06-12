@@ -499,7 +499,7 @@ mod_studium_studienzahl_ui <- function(id){
 #'
 #' @noRd
 mod_studium_studienzahl_server <- function(id, data_studierende_neu,
-                                           #data_studierende_faecher3,
+                                           data_studierende_faecher3,
                                            r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -522,7 +522,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
 
 
     output$plot_einstieg_comparison <- highcharter::renderHighchart({
-      studienzahl_einstieg_comparison(data_studierende2,r)
+      studienzahl_einstieg_comparison(data_studierende_neu,r)
     })
 
     data_table_einstieg_react <- reactive({
@@ -569,7 +569,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
     })
 
     output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
-      studienzahl_verlauf_bl_subject(data_studierende2,r)
+      studienzahl_verlauf_bl_subject(data_studierende_neu,r)
     })
 
     output$plot_ranking_bl_subject <- renderPlot({
@@ -578,7 +578,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
 
     # Box 5
     plot_waffle_choice_gender_react <- reactive({
-      studienzahl_waffle_choice_gender(data_studierende2,r)
+      studienzahl_waffle_choice_gender(data_studierende_neu,r)
     })
 
     output$plot_waffle_choice_gender <- renderPlot({
@@ -586,7 +586,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
     })
 
     output$plot_verlauf_studienzahl_bl_subject_gender <- highcharter::renderHighchart({
-      studierende_verlauf_single_bl_gender(data_studierende2,r)
+      studierende_verlauf_single_bl_gender(data_studierende_neu,r)
     })
 
     plot_ranking_studienzahl_bl_subject_gender_react <- reactive({
@@ -605,11 +605,11 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
 
     # Box 6
     output$plot_studienzahl_map <- renderUI({
-      studierende_map(studierende_faecher_alle_indi,r)
+      studierende_map(studierende_faecher3,r)
     })
 
     output$plot_studienzahl_bl_verlauf <- highcharter::renderHighchart({
-      studierende_verlauf_multiple_bl(data_studierende2,r)
+      studierende_verlauf_multiple_bl(data_studierende_neu,r)
     })
 
 
@@ -618,7 +618,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
     })
 
      output$plot_vergleich_bl1 <- highcharter::renderHighchart({
-       studierende_mint_vergleich_bl(studierende_faecher_alle_indi,r)
+       studierende_mint_vergleich_bl(studierende_faecher3,r)
      })
 
 
@@ -641,7 +641,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
 
     # Box 8
     output$plot_top_faecher <-  renderUI({
-      plot_ranking_top_faecher(data_studierende_faecher, r)
+      plot_ranking_top_faecher(data_studierende_faecher3, r)
     })
 
     # Box Ausländer
