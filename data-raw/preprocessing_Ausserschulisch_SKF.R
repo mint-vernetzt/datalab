@@ -70,5 +70,7 @@ data <- data[,c("bereich", "einrichtung", "indikator", "jahr", "wert")]
 data$wert <- ifelse(grepl("keine", data$wert), NA, data$wert)
 data$wert <- as.numeric(data$wert)
 
+ausserschulisch_skf <- data
+
 # Datensatz speichern
 usethis::use_data(ausserschulisch_skf, overwrite = T)
