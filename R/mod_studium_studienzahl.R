@@ -508,11 +508,11 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
 
     # Box 2
     output$plot_einstieg_pie <- renderUI({
-      studienzahl_einstieg_pie(data_studierende:neu,r)
+      studienzahl_einstieg_pie(data_studierende_neu,r)
     })
 
     output$plot_einstieg_verlauf <- highcharter::renderHighchart({
-      studienzahl_verlauf_single(data_studierende2,r)
+      studienzahl_verlauf_single(data_studierende_neu,r)
     })
 
     # all_mint_23_react <- reactive({

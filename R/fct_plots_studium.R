@@ -14,22 +14,22 @@ studienzahl_test <- function(df,r){
 
 # Box 1 Pie ab 2023
 
- browser()
 
-  df1 <<- df
+
+  df1 <- df
 
  # ui inputs
  testy1 <- r$testy
  testl1 <- r$testl
 
  # filtering
- df2 <<- df1 %>% dplyr::filter(jahr==testy1)%>%
+ df2 <- df1 %>% dplyr::filter(jahr==testy1)%>%
    dplyr::filter(geschlecht == "Gesamt")%>%
    dplyr::filter(region == "Deutschland")%>%
    dplyr::filter(fachbereich %in% c("Nicht MINT", "MINT", "Alle" ))
 
  # calculating proportions
- df3 <<- df2 %>%
+ df3 <- df2 %>%
    tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
    dplyr::mutate(dplyr::across(c(MINT, "Nicht MINT"), ~./Alle))%>%
    dplyr::mutate(dplyr::across(c("Nicht MINT", MINT), ~ round(.*100,0)))%>%
@@ -698,8 +698,8 @@ studienzahl_verlauf_single <- function(df,r) {
 
 
 
-  indi_selct <- r$studienzahl_einstieg_verlauf_indi
-  timerange <- r$date_studienzahl_einstieg_verlauf
+  indi_selct <<- r$studienzahl_einstieg_verlauf_indi
+  timerange <<- r$date_studienzahl_einstieg_verlauf
 
   abs_zahlen_selector <<- r$abs_zahlen_einstieg_verlauf_indi
 
@@ -719,14 +719,13 @@ studienzahl_verlauf_single <- function(df,r) {
   # remove
   # df <- df %>% dplyr::filter(region == "Deutschland")
 
-  df4 <<- df2 %>% dplyr::filter(geschlecht == "gesamt")%>%
+  df4 <<- df2 %>% dplyr::filter(geschlecht == "Gesamt")%>%
     dplyr::filter(region== "Deutschland")%>%
-    dplyr::select(-hochschulform, -region)%>%
-    tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
-    dplyr::mutate("MINT (aggregiert)" = Mathematik_Naturwissenschaften+Ingenieurwissenschaften)%>%
-    dplyr::mutate("Nicht MINt"= Alle-`MINT (aggregiert)`)%>%
-    dplyr::mutate("MINT (aggregiert)_p"=`MINT (aggregiert)`/Alle)%>%
-    dplyr::mutate("Nicht MINT_p"=`Nicht MINt`/Alle)%>%
+    dplyr::select( -region)%>%
+    tidyr::pivot_wider(names_from=fachbereich, values_from = wert)
+    dplyr::rename("MINT (gesamt)" = MINT)%>%
+    dplyr::mutate("MINT (gesamt)_p"=`MINT (aggregiert)`/Alle)%>%
+    dplyr::mutate("Nicht MINT_p"=`Nicht MINT`/Alle)%>%
     dplyr::select(-Ingenieurwissenschaften,- Mathematik_Naturwissenschaften,-Alle)%>%
     tidyr::pivot_longer(c("MINT (aggregiert)", "Nicht MINt", "Nicht MINT_p", "MINT (aggregiert)_p"), names_to = "var", values_to = "wert")%>%
     dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$var, "p")~"In Prozent",
@@ -1840,33 +1839,34 @@ studienzahl_waffle_mint <- function(df,r) {
 
 
   # load UI inputs from reactive value
-  timerange <- r$waffle_y
+  timerange <<- r$waffle_y
 
-  label_w <- r$waffle_l
+  label_w <<- r$waffle_l
 
   # hochschulform_select_1 <- r$hochschulform_studierende_1
   #
   # hochschulform_select_2 <- r$hochschulform_studierende_2
 
   # filter dataset based on UI inputs
+browser()
 
+#df2w <<- df
 
-  df2 <<- df %>% dplyr::filter(jahr == timerange) %>%
+  df2 <<- df2w %>% dplyr::filter(jahr == timerange) %>%
     dplyr::filter(region== "Deutschland")%>%
-    dplyr::filter(geschlecht== "gesamt")%>%
-    dplyr::select(-region, -geschlecht, - indikator, - hochschulform, - quelle, - bereich, - jahr)%>%
+    dplyr::filter(geschlecht== "Gesamt")%>%
+    dplyr::select(-region, -geschlecht, - quelle, - bereich, - jahr,- hinweise)%>%
     tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
-    dplyr::mutate(`Nicht MINT` = Alle - Ingenieurwissenschaften - Mathematik_Naturwissenschaften)%>%
-    dplyr::mutate(pro_mathe = Mathematik_Naturwissenschaften/Alle,
+    dplyr::mutate(pro_mathe = `Mathematik, Naturwissenschaften`/Alle,
                   pro_nicht = `Nicht MINT`/Alle,
                   pro_ing = Ingenieurwissenschaften/Alle)%>%
-    dplyr::select(label, pro_ing, pro_mathe,pro_nicht)
+    dplyr::select(indikator, pro_ing, pro_mathe, pro_nicht)
 
 
   if(length(label_w)==1){
 
     waf_1 <- df2 %>%
-      dplyr::filter(label==label_w)
+      dplyr::filter(indikator==label_w)
 
     title_1 <- as.character(label_w)
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
@@ -1907,10 +1907,10 @@ studienzahl_waffle_mint <- function(df,r) {
   } else if(length(label_w)==2){
 
     waf_1 <- df2 %>%
-      dplyr::filter(label==label_w[1])
+      dplyr::filter(indikator==label_w[1])
 
     waf_2 <- df2 %>%
-      dplyr::filter(label==label_w[2])
+      dplyr::filter(indikator==label_w[2])
 
     title_1 <- as.character(as.vector(waf_1[1,1]))
     data_1 <<- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
@@ -1976,13 +1976,13 @@ studienzahl_waffle_mint <- function(df,r) {
   } else if (length(label_w)==3){
 
     waf_1 <- df2 %>%
-      dplyr::filter(label==label_w[1])
+      dplyr::filter(indikator==label_w[1])
 
     waf_2 <- df2 %>%
-      dplyr::filter(label==label_w[2])
+      dplyr::filter(indikator==label_w[2])
 
     waf_3 <- df2 %>%
-      dplyr::filter(label==label_w[3])
+      dplyr::filter(indikator==label_w[3])
 
     title_1 <- as.character(as.vector(waf_1[1,1]))
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
