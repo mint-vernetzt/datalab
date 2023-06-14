@@ -28,8 +28,8 @@ mod_ausserschulisch_skf_personal_ui <- function(id){
                   "Kita",
                   "Hort",
                   "Grundschule"),
-      selected = c("Alle Einrichtungen", "Kita"),
-      multiple = TRUE
+      selected = c("Kita"),
+      multiple = FALSE
 
     )
   )

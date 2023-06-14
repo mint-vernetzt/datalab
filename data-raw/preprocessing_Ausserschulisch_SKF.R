@@ -53,7 +53,7 @@ data <- data %>%
   indikator = dplyr::case_when(
     grepl("aktive", name) ~ "aktive Einrichtungen gesamt",
     grepl("zertif", name) ~ "zertifizierte Einrichtungen",
-    grepl("Schät", name) ~ "Fach- / Lehrkräfte"
+    grepl("Schät", name) ~ "insgesamt fortgebildete Fach- / Lehrkräfte"
   )) %>%
   dplyr::rename(wert = value) %>%
   dplyr::select(-name)
@@ -75,6 +75,20 @@ emf <- emf %>%
 emf$indikator <- "Einrichtungen mit SKf-Fortbildung"
 
 data <- rbind(data, emf)
+
+# Anzahl neuer forgebildeter Fach- / Lehrkräfte berechnen
+nf <- data %>%
+  dplyr::filter(indikator == "insgesamt fortgebildete Fach- / Lehrkräfte")
+
+i <- 2022
+for(i in 2022:2013){
+    nf$wert[nf$jahr == i] <- nf$wert[nf$jahr == i] - nf$wert[nf$jahr == i-1]
+}
+nf$wert[nf$jahr == 2012] <- NA
+
+nf$indikator <- "neu fortgebildete Fach- / Lehrkräfte"
+
+data <- rbind(data, nf)
 
 # bereich Spalte ergänzen
 data$bereich <- "Außerschulisch"

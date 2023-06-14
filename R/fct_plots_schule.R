@@ -3157,7 +3157,7 @@ skf_einrichtungen <- function(df, r){
 
   # Datensatz filtern
   df <- df %>%
-    dplyr::filter(!(indikator %in% c("Fach- / Lehrkräfte","aktive Einrichtungen gesamt"))) %>%
+    dplyr::filter(indikator %in% c("Einrichtungen mit SKf-Fortbildung","zertifizierte Einrichtungen")) %>%
     dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # Alle Einrichtungen berechnen und gewählte Einrichtung filtern
@@ -3230,7 +3230,8 @@ skf_personal <- function(df, r){
 
   # Datensatz filtern
   df <- df %>%
-    dplyr::filter(indikator == "Fach- / Lehrkräfte") %>%
+    dplyr::filter(indikator %in% c("insgesamt fortgebildete Fach- / Lehrkräfte",
+                                   "neu fortgebildete Fach- / Lehrkräfte")) %>%
     dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   # Alle Einrichtungen berechnen und gewählte Einrichtung filtern
@@ -3246,25 +3247,33 @@ skf_personal <- function(df, r){
     df <- df %>%
       dplyr::filter(einrichtung %in% ort_select)
 
+  # Labels anpassen
+    df$indikator[df$indikator == "neu fortgebildete Fach- / Lehrkräfte"] <- "in diesem Jahr fortgebildet"
+    df$indikator[df$indikator == "insgesamt fortgebildete Fach- / Lehrkräfte"] <- "bis jetzt insgesamt fortgebildet"
+
   # Plot
-  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = einrichtung)) %>%
-    highcharter::hc_tooltip(pointFormat = "Anteil {point.einrichtung} <br> Wert: {point.y}") %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Geschätze Anzahl von Fach- und Lehrkräften, die an SKf-Fortbildungen teilgenommen haben"),
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group=indikator))%>%
+      highcharter::hc_plotOptions(column = list(pointWidth = 50))%>%
+      highcharter::hc_tooltip(pointFormat = "{point.indikator}: {point.y}")%>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth=100) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
+      highcharter::hc_colors(c("#66cbaf","#8893a7")) %>%
+      highcharter::hc_title(text = paste0("Geschätzte Anzahl an Fach- und Lehrkräften, die an einer
+                                          SKf-Fortbildung teilgenommen haben"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                            this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 }

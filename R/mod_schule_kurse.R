@@ -573,8 +573,8 @@ mod_schule_kurse_ui <- function(id){
                                     width = 3,
                                     mod_ausserschulisch_skf_personal_ui("mod_ausserschulisch_skf_personal_ui_1"),
                                     p(style="font-size:12px;color:grey",
-                                      "Interpretationshilfe: Diese Darstellung zeigt, wie viele Lehrkräfte bereits durch die Stiftung Kinder forschen in MINT-Bildung
-                                      weitergebildet worden sind. Während die Fortbildungen der SKf 2012 24.000 Fach- und Lehrkräfte erreicht hat, wurden bis 2022
+                                      "Interpretationshilfe: Diese Darstellung zeigt, wie viele Lehrkräfte an SKf-Fortbildungen zur MINT-Bildung teilgenommen haben.
+                                      Während die Fortbildungen der SKf 2012 24.000 Fach- und Lehrkräfte erreicht hat, wurden bis 2022
                                       bereits insgesamt 86.000 Fach- und Lehrkräfte an Kitas, Horten und Grundschulen durch SKf fortgebildet."),
                                     ),
 
@@ -583,9 +583,9 @@ mod_schule_kurse_ui <- function(id){
                                     width = 9,
                                     highcharter::highchartOutput(ns("plot_skf_personal")),
 
+                                    # p(style="font-size:12px;color:grey",
+                                    #   "Hinweis: "),
                                     p(style="font-size:12px;color:grey",
-                                      "Hinweis: "),
-                                    p(style="font-size:12px;color:grey",br(),
                                       "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen.")
                                   )
                          )
