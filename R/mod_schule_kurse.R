@@ -60,6 +60,9 @@ mod_schule_kurse_ui <- function(id){
         p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4a",
         span(tags$b(span("MINT-Kompetenzen in der 4. Klasse:")))),"Wie hoch ist der Anteil leistungsschwacher Schüler:innen und wie entwickelt sich die MINT-Kompetenz?"),
 
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump5a",
+                                                              span(tags$b(span("Außerschulische, frühkindliche MINT-Bildung:")))),"Wie hoch ist die Beteiligung in außerschulische, frühkindliche MINT-Bildung?"),
+
         ),
 
       shinydashboard::box(
@@ -517,6 +520,77 @@ mod_schule_kurse_ui <- function(id){
                          )
              ))),
 
+  fluidRow(id="jump5a",
+           shinydashboard::box(
+             title = "Außerschulische, frühkindliche MINT-Bildung",
+             width = 12,
+             p("In diesem Abschnitt betrachten wir die Entwicklung der außerschulischen, frühkindlichen MINT-Bildung.
+               Die interaktiven Grafiken basieren auf den Daten der 'Stiftung Kinder forschen' (SKf, früher Haus der kleinen Forscher).
+               Es wird gezeigt, wie die Anzahl an Kitas, Horten und Grundschulen wächst, die in der MINT-Bildung aktiv sind. Außerdem wird
+               die Anzahl an Fach- und Lehrkräften dargestellt, die sich in frühkindlicher MINT-Bildung durch die Stiftung Kinder forschen
+               fortgebildet haben."), br(),
+             p("Dies sind bislang die einzigen Darstellungen aus dem Bereich der ausserschulischen MINT-Bildung. Hier wird in Zukunft noch mehr hinzukommen."),
+
+             tabsetPanel(type = "tabs",
+
+                         tabPanel("SKf-zertifizierte und aktive Einrichtungen", br(),
+
+                                  tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    mod_ausserschulisch_skf_einrichtungen_ui("mod_ausserschulisch_skf_einrichtungen_ui_1"),
+
+                                    p(style="font-size:12px;color:grey",
+                                      "Interpretationshilfe: Die erste Einstellung der Grafik zeigt, wie die Anzahl an Kitas, die bei der Stiftung
+                                      Kinder forschen aktiv sind, kontinuierlich steigt. Im Jahr 2022 sind 28.120 Kitas bei SKf aktiv.
+                                      Davon haben 22.638 Kitas Fachpersonal, dass sich bei SKf in MINT-Bildung weitergebildet hat."),
+                                    # p(style="font-size:12px;color:grey",
+                                    #   "Hinweis: "),
+                                  ),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    highcharter::highchartOutput(ns("plot_skf_einrichtungen")),
+
+                                    p(style="font-size:12px;color:grey",
+                                      "Hinweis: "),
+                                    p(style="font-size:12px;color:grey",
+                                      "Zertifizierte Einrichtungen = Einrichtungen, die mindestens einmal als 'Haus der Kleinen Forscher'
+                                      ausgewiesen wurden."),
+                                    p(style="font-size:12px;color:grey",
+                                      "Einrichtungen mit SKf-Fortbildung = Einrichtungen, von welchen Fach- oder Lehrkräfte Fortbildungen der SKf besucht haben."),
+                                    br(),
+                                    p(style="font-size:12px;color:grey",
+                                     "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen."),
+
+                                  )
+                         ),
+                         tabPanel("Fach- und Lehrkräfte mit SKf-Fortbildung", br(),
+
+                                  tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    mod_ausserschulisch_skf_personal_ui("mod_ausserschulisch_skf_personal_ui_1"),
+                                    p(style="font-size:12px;color:grey",
+                                      "Interpretationshilfe: Diese Darstellung zeigt, wie viele Lehrkräfte bereits durch die Stiftung Kinder forschen in MINT-Bildung
+                                      weitergebildet worden sind. Während die Fortbildungen der SKf 2012 24.000 Fach- und Lehrkräfte erreicht hat, wurden bis 2022
+                                      bereits insgesamt 86.000 Fach- und Lehrkräfte an Kitas, Horten und Grundschulen durch SKf fortgebildet."),
+                                    ),
+
+
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    highcharter::highchartOutput(ns("plot_skf_personal")),
+
+                                    p(style="font-size:12px;color:grey",
+                                      "Hinweis: "),
+                                    p(style="font-size:12px;color:grey",br(),
+                                      "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen.")
+                                  )
+                         )
+             ))),
+
 
     # Footer
   funct_footer())
@@ -526,7 +600,7 @@ mod_schule_kurse_ui <- function(id){
 #' schule_kurse Server Functions
 #'
 #' @noRd
-mod_schule_kurse_server <- function(id, data_kurse, data_iqb_4klasse, data_iqb_ges, r){
+mod_schule_kurse_server <- function(id, data_kurse, data_iqb_4klasse, data_iqb_ges, data_skf, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -628,6 +702,8 @@ mod_schule_kurse_server <- function(id, data_kurse, data_iqb_4klasse, data_iqb_g
       kurse_ranking_gender(data_kurse,r)
     })
 
+    # Box Kompetenzdaten / IQB
+
     output$plot_iqb_standard_zeitverlauf <- highcharter::renderHighchart({
       iqb_standard_zeitverlauf(data_iqb_4klasse,r)
     })
@@ -635,6 +711,17 @@ mod_schule_kurse_server <- function(id, data_kurse, data_iqb_4klasse, data_iqb_g
     output$plot_iqb_mathe_mittel_zeitverlauf <- highcharter::renderHighchart({
       iqb_mathe_mittel_zeitverlauf(data_iqb_ges,r)
     })
+
+    # Box außerschulisch  / SKf
+
+    output$plot_skf_einrichtungen <- highcharter::renderHighchart({
+      skf_einrichtungen(data_skf,r)
+    })
+
+    output$plot_skf_personal <- highcharter::renderHighchart({
+      skf_personal(data_skf,r)
+    })
+
 
 
     # downloader

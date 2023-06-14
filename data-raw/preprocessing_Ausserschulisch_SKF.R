@@ -51,12 +51,30 @@ data <- data %>%
     grepl("Gru", name) ~ "Grundschule"
   ),
   indikator = dplyr::case_when(
-    grepl("aktive", name) ~ "aktive Einrichtungen",
+    grepl("aktive", name) ~ "aktive Einrichtungen gesamt",
     grepl("zertif", name) ~ "zertifizierte Einrichtungen",
     grepl("Schät", name) ~ "Fach- / Lehrkräfte"
   )) %>%
   dplyr::rename(wert = value) %>%
   dplyr::select(-name)
+
+# aktive Einrichtungen gesamt = zerfitizierte Einrichtungen + Einrichtungen mit Fortbildung
+# Einrichtungen mit Fortbildung bereichnen
+data$wert <- ifelse(grepl("keine", data$wert), NA, data$wert)
+data$wert <- as.numeric(data$wert)
+
+emf <- data %>%
+  dplyr::filter(indikator == "aktive Einrichtungen gesamt")
+ze <- data %>%
+  dplyr::filter(indikator == "zertifizierte Einrichtungen")
+
+emf <- emf %>%
+  dplyr::left_join(ze, c("jahr", "einrichtung")) %>%
+  dplyr::mutate(wert = wert.x - wert.y) %>%
+  dplyr::select(c(-indikator.x, -indikator.y, -wert.x, -wert.y))
+emf$indikator <- "Einrichtungen mit SKf-Fortbildung"
+
+data <- rbind(data, emf)
 
 # bereich Spalte ergänzen
 data$bereich <- "Außerschulisch"
@@ -66,9 +84,6 @@ data <- data[,c("bereich", "einrichtung", "indikator", "jahr", "wert")]
 
 
 # Datensatz abspeichern ---------------------------------------------------
-
-data$wert <- ifelse(grepl("keine", data$wert), NA, data$wert)
-data$wert <- as.numeric(data$wert)
 
 ausserschulisch_skf <- data
 

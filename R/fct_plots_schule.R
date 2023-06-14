@@ -3149,3 +3149,122 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
 
 }
 
+skf_einrichtungen <- function(df, r){
+
+  # reactive values einlesen
+  timerange <- r$date_skf_einrichtungen
+  ort_select <- r$ort_skf_einrichtungen
+
+  # Datensatz filtern
+  df <- df %>%
+    dplyr::filter(!(indikator %in% c("Fach- / Lehrkräfte","aktive Einrichtungen gesamt"))) %>%
+    dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  # Alle Einrichtungen berechnen und gewählte Einrichtung filtern
+  if(ort_select == "Alle Einrichtungen"){
+    df <- df %>%
+      dplyr::group_by(bereich, indikator, jahr) %>%
+      dplyr::summarise(wert = sum(wert)) %>%
+      dplyr::ungroup()
+    df$einrichtung <- "Alle Einrichtungen"
+  }else{
+    df <- df %>%
+      dplyr::filter(einrichtung == ort_select)
+  }
+
+  # Gesamtanzahl für Hover-Box ergänzen
+  df <- df %>%
+    dplyr::group_by(bereich, einrichtung, jahr) %>%
+    dplyr::mutate(gesamt = sum(wert)) %>%
+    dplyr::ungroup()
+
+  #Trennpunkte für lange Zahlen ergänzen
+  df$gesamt <- prettyNum(df$gesamt, big.mark = ".")
+
+  hcoptslang <- getOption("highcharter.lang")
+  hcoptslang$thousandsSep <- "."
+  options(highcharter.lang = hcoptslang)
+
+  # Hilfe für Überschrift
+  helper <- ort_select
+  helper <- ifelse(helper == "Alle Einrichtungen", "Kitas, Horte und Grundschulen", helper)
+  helper <- ifelse(helper == "Grundschule", "Grundschulen", helper)
+  helper <- ifelse(helper == "Kita", "Kitas", helper)
+  helper <- ifelse(helper == "Hort", "Horte", helper)
+
+  # Plot erstellem
+  highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
+    highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> Anzahl: {point.y} <br> aktive Einrichtungen gesamt: {point.gesamt}")%>%
+    # highcharter::hc_size(height = 1000)%>%
+    highcharter::hc_yAxis(title = list(text = "")
+                          , labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")
+    ) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_plotOptions(column = list(stacking = "normal")) %>%
+    highcharter::hc_plotOptions(column = list(pointWidth = 50))%>%
+    highcharter::hc_colors(c("#efe8e6", "#fbbf24")) %>%
+    highcharter::hc_title(text = paste0(helper, ", die bei Stiftung Kinder forschen aktiv sind"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                            this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+}
+
+skf_personal <- function(df, r){
+
+  # reactive values einlesen
+  timerange <- r$time_skf_personal
+  ort_select <- r$ort_skf_personal
+
+  # Datensatz filtern
+  df <- df %>%
+    dplyr::filter(indikator == "Fach- / Lehrkräfte") %>%
+    dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+
+  # Alle Einrichtungen berechnen und gewählte Einrichtung filtern
+    df_ges <- df %>%
+      dplyr::group_by(bereich, indikator, jahr) %>%
+      dplyr::summarise(wert = sum(wert, na.rm = TRUE)) %>%
+      dplyr::ungroup()
+    df_ges$einrichtung <- "Alle Einrichtungen"
+
+    df <- rbind(df, df_ges)
+
+  # Gewählte Einrichtungen auswählen
+    df <- df %>%
+      dplyr::filter(einrichtung %in% ort_select)
+
+  # Plot
+  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = einrichtung)) %>%
+    highcharter::hc_tooltip(pointFormat = "Anteil {point.einrichtung} <br> Wert: {point.y}") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_title(text = paste0("Geschätze Anzahl von Fach- und Lehrkräften, die an SKf-Fortbildungen teilgenommen haben"),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+}
