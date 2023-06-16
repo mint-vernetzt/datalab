@@ -726,7 +726,7 @@ kurse_mint_comparison <- function(df,r) {
   df6 <- df5 %>% dplyr::filter(region == state)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df6$wert <- prettyNum(df6$wert, big.mark = ".")
+  df6$wert <- prettyNum(df6$wert, big.mark = ".", decimal.mark = ",")
 
   df6 <- df6 %>% dplyr::filter(fachbereich != "andere naturwiss.-technische Fächer")
 
@@ -893,7 +893,7 @@ kurse_mint_comparison_bl <- function(df,r) {
   df <- subset(df, proportion >= 0.5)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
   help_title <- ifelse(subject == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subject)
   help_title <- ifelse(help_title == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_title)
@@ -1575,7 +1575,7 @@ kurse_map <- function(df,r) {
   df$prop <- round(df$prop, 0)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
   highcharter::hw_grid(
   # plot
@@ -1709,7 +1709,7 @@ kurse_map_gender <- function(df,r) {
   df$prop <- round(df$prop, 0)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
   highcharter::hw_grid(
     # plot
@@ -2230,7 +2230,7 @@ kurse_einstieg_comparison <- function(df,r) {
   df$proportion <- df$proportion * 100
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert_new <- prettyNum(df$wert_new, big.mark = ".")
+  df$wert_new <- prettyNum(df$wert_new, big.mark = ".", decimal.mark = ",")
 
   # order years for plot
   dfü <- df[with(df, order(jahr, decreasing = FALSE)), ]
@@ -2392,7 +2392,7 @@ kurse_comparison_gender <- function(df,r) {
   df1$anzeige_geschlecht[df1$anzeige_geschlecht == "Männer"] <- "Jungen"
 
   #Trennpunkte für lange Zahlen ergänzen
-  df1$wert <- prettyNum(df1$wert, big.mark = ".")
+  df1$wert <- prettyNum(df1$wert, big.mark = ".", decimal.mark = ",")
 
   # plot
   highcharter::hchart(df1, 'bar', highcharter::hcaes( x = indikator, y=round(proportion), group = anzeige_geschlecht)) %>%
@@ -3179,7 +3179,7 @@ skf_einrichtungen <- function(df, r){
     dplyr::ungroup()
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$gesamt <- prettyNum(df$gesamt, big.mark = ".")
+  df$gesamt <- prettyNum(df$gesamt, big.mark = ".", decimal.mark = ",")
 
   hcoptslang <- getOption("highcharter.lang")
   hcoptslang$thousandsSep <- "."
@@ -3202,7 +3202,7 @@ skf_einrichtungen <- function(df, r){
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(column = list(stacking = "normal")) %>%
     highcharter::hc_plotOptions(column = list(pointWidth = 50))%>%
-    highcharter::hc_colors(c("#efe8e6", "#fbbf24")) %>%
+    highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
     highcharter::hc_title(text = paste0(helper, ", die bei Stiftung Kinder forschen aktiv sind"),
                           margin = 45,
                           align = "center",
