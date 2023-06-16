@@ -420,7 +420,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
   df$prop <- round(df$proportion, 0)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
   values_female <- df %>% dplyr::filter(geschlecht == "Frauen")
   values_male <- df %>% dplyr::filter(geschlecht == "Männer")
@@ -909,6 +909,7 @@ beruf_verlauf_single <- function(df,r) {
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(c("#b16fab", "#154194")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
@@ -949,6 +950,7 @@ beruf_verlauf_single <- function(df,r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -1023,7 +1025,7 @@ beruf_einstieg_vergleich <- function(df,r) {
     df$fachbereich[df$fachbereich=="MINT"]<-"Berufe in MINT"
 
     #Trennpunkte für lange Zahlen ergänzen
-    df$wert <- prettyNum(df$wert, big.mark = ".")
+    df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
   # Auswahl Indikatoren
   df <- df %>% dplyr::filter(indikator %in% c("Auszubildende",
@@ -1191,6 +1193,8 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+                             "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
@@ -1228,6 +1232,8 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
       margin = 45,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+                               "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -1390,7 +1396,7 @@ arbeitsmarkt_bl <- function(df,r) {
     df$prop <- round(df$proportion, 1)
 
     #Trennpunkte für lange Zahlen ergänzen
-    df$wert <- prettyNum(df$wert, big.mark = ".")
+    df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
 
 # Anteil berechnen
@@ -1707,6 +1713,8 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+                             "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
@@ -1744,6 +1752,8 @@ arbeitsmarkt_bl_verlauf <- function(df,r) {
       margin = 45,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+                               "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -1802,7 +1812,7 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
     dplyr::mutate(prop = (wert/wert_ges)*100)
 
   #Trennpunkte für lange Zahlen in absolutem Wert ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
 
   df <- df%>%
@@ -1986,15 +1996,14 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
     # if (df_trainee[[3]] == 0) {
     # waffle_fr <- waffle_fr +
     ggplot2::scale_fill_manual(
-      values =  c(# "#b16fab",
-        "#ee7775",
-                 "#fcc433",
-                 "#00a87a",
-                 '#b1b5c3'),
+      values =  c("#ee7775",
+                  "#fbbf24",
+                  "#35bd97",
+                  '#8893a7'),
                  limits = c("Mathematik, Naturwissenschaften",
                             "Informatik", "Technik (gesamt)",
                             'Andere Fachbereiche'),
-      na.value="#b1b5c3",
+      na.value='#8893a7',
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
         paste0("Mathematik, Naturwissenschaften",", ",df_fr[1], "%"),
@@ -2015,15 +2024,14 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                    legend.position = "bottom")+
     ggplot2::scale_fill_manual(
-      values =  c(#"#b16fab",
-        "#ee7775",
-                 "#fcc433",
-                 "#00a87a",
-                 '#b1b5c3'),
+      values =  c("#ee7775",
+                  "#fbbf24",
+                  "#35bd97",
+                  '#8893a7'),
                  limits = c("Mathematik, Naturwissenschaften",
                             "Informatik", "Technik (gesamt)",
                             'Andere Fachbereiche'),
-      na.value="#b1b5c3",
+      na.value='#8893a7',
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
         paste0("Mathematik, Naturwissenschaften",", ",df_me[1], "%"),
@@ -2476,15 +2484,14 @@ arbeitsmarkt_anforderungen <- function(df,r) {
                        plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                        legend.position = "bottom") +
         ggplot2::scale_fill_manual(
-          values =  c(# "#b16fab",
-            "#ee7775",
-                     "#fcc433",
-                     "#00a87a",
-                     '#b1b5c3'),
+          values =   c("#ee7775",
+                       "#fbbf24",
+                       "#35bd97",
+                       '#8893a7'),
                      limits = c("Mathematik, Naturwissenschaften",
                                 "Informatik", "Technik (gesamt)",
                                 'Andere Fachbereiche'),
-          na.value="#b1b5c3",
+          na.value='#8893a7',
           guide = ggplot2::guide_legend(reverse = TRUE),
           labels = c(
             paste0("Mathematik, Naturwissenschaften",", ",df[1], "%"),
@@ -2534,15 +2541,14 @@ arbeitsmarkt_anforderungen <- function(df,r) {
                        plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                        legend.position = "bottom") +
         ggplot2::scale_fill_manual(
-          values =  c(# "#b16fab",
-            "#ee7775",
-                     "#fcc433",
-                     "#00a87a",
-                     '#b1b5c3'),
+          values =  c("#ee7775",
+                      "#fbbf24",
+                      "#35bd97",
+                      '#8893a7'),
                      limits = c("Mathematik, Naturwissenschaften",
                                 "Informatik", "Technik (gesamt)",
                                 'Andere Fachbereiche'),
-          na.value="#b1b5c3",
+          na.value='#8893a7',
           guide = ggplot2::guide_legend(reverse = TRUE),
           labels = c(
             paste0("Mathematik, Naturwissenschaften",", ",df_1[1], "%"),
@@ -2564,15 +2570,14 @@ arbeitsmarkt_anforderungen <- function(df,r) {
                        plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                        legend.position = "bottom") +
         ggplot2::scale_fill_manual(
-          values =  c(# "#b16fab",
-            "#ee7775",
-                     "#fcc433",
-                     "#00a87a",
-                     '#b1b5c3'),
+          values =  c("#ee7775",
+                      "#fbbf24",
+                      "#35bd97",
+                      '#8893a7'),
                      limits = c("Mathematik, Naturwissenschaften",
                                 "Informatik", "Technik (gesamt)",
                                 'Andere Fachbereiche'),
-          na.value="#b1b5c3",
+          na.value='#8893a7',
           guide = ggplot2::guide_legend(reverse = TRUE),
           labels = c(
             paste0("Mathematik, Naturwissenschaften",", ",df_2[1], "%"),
@@ -3010,7 +3015,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(df,r) {
     dplyr::select(-c("fachbereich.y", "anforderung.y", "geschlecht.y"))
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
   # Datasets
   df_employed_mint <- df %>% dplyr::filter(indikator == "Beschäftigte",
@@ -3198,6 +3203,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(df,r) {
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(c("#b16fab", "#154194")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
@@ -3233,6 +3239,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(df,r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -3305,7 +3312,7 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(df,r) {
   df$proportion <- df$proportion * 100
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
 
   # Indikator-Kombination benennen
@@ -3439,7 +3446,7 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
   df <- rbind(df, mint_agg, technik_agg)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
   #für Überblick unterarten von Technik wieder raus
   df <- df %>% dplyr::filter(fachbereich %in% c("Alle Berufsfelder außer MINT (gesamt)",
@@ -3488,9 +3495,6 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
                                                                  "Informatik",
                                                                  "Technik"
     )) %>%
-    # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-    # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    #highcharter::hc_colors( "#b16fab") %>%
     highcharter::hc_plotOptions(bar = list(
       colorByPoint = TRUE,
       colors = ifelse(df$fachbereich %in% c("Alle Berufsfelder außer MINT (gesamt)","MINT-Berufsfelder (gesamt)"), "#b16fab", "#d0a9cd")
@@ -3838,8 +3842,8 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     landkreis_nummer = paste0("de-", state_code, "-", landkreis_nummer, "000"))
 
   #Trennpunkte für lange Zahlen ergänzen in Absolute Zahlen für Hover
-  df1_map$wert <- prettyNum(df1_map$wert, big.mark = ".")
-  df2_map$wert <- prettyNum(df2_map$wert, big.mark = ".")
+  df1_map$wert <- prettyNum(df1_map$wert, big.mark = ".", decimal.mark = ",")
+  df2_map$wert <- prettyNum(df2_map$wert, big.mark = ".", decimal.mark = ",")
 
   # create plots
   map1 <- highcharter::hcmap(

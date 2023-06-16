@@ -704,18 +704,9 @@ kurse_mint_comparison <- function(df,r) {
 
   df3 <- df2 %>% dplyr::filter(indikator == indikator_comparison)
 
-  x <- c("MINT-Fächer (gesamt)", "Mathematik", "Informatik", "Physik", "Chemie",
-         "Biologie", "andere naturwiss.-technische Fächer",
-         "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
-         "Musik/Kunst", "Religion/Ethik", "Sport")
+  df3 <- na.omit(df3)
 
-  df4 <- df3 %>%
-    dplyr::mutate(fachbereich =  factor(fachbereich, levels = x)) %>%
-    dplyr::arrange(fachbereich)
-
-  df4 <- na.omit(df4)
-
-  df5 <- df4 %>%
+  df5 <- df3 %>%
     dplyr::ungroup()%>%
     dplyr::mutate(region= dplyr::case_when(
       region == "Westen" ~ "Westdeutschland (o. Berlin)",
@@ -725,8 +716,17 @@ kurse_mint_comparison <- function(df,r) {
 
   df6 <- df5 %>% dplyr::filter(region == state)
 
+  x <- c("MINT-Fächer (gesamt)", "Mathematik", "Informatik", "Physik", "Chemie",
+         "Biologie", "andere naturwiss.-technische Fächer",
+         "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+         "Musik/Kunst", "Religion/Ethik", "Sport")
+
+  df6 <- df6 %>%
+    dplyr::mutate(fachbereich =  factor(fachbereich, levels = x)) %>%
+    dplyr::arrange(fachbereich)
+
   #Trennpunkte für lange Zahlen ergänzen
-  df6$wert <- prettyNum(df6$wert, big.mark = ".")
+  df6$wert <- prettyNum(df6$wert, big.mark = ".", decimal.mark = ",")
 
   df6 <- df6 %>% dplyr::filter(fachbereich != "andere naturwiss.-technische Fächer")
 
@@ -735,10 +735,11 @@ kurse_mint_comparison <- function(df,r) {
   highcharter::hchart(df6, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich))%>%
     highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    #highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-    #highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    #highcharter::hc_colors("#b16fab") %>%
+    highcharter::hc_xAxis(title = list(text = ""), categories = c("MINT-Fächer (gesamt)", "Mathematik", "Informatik", "Physik", "Chemie",
+                                                                  "Biologie",
+                                                                  "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+                                                                  "Musik/Kunst", "Religion/Ethik", "Sport")
+                          ) %>%
     highcharter::hc_plotOptions(bar = list(
       colorByPoint = TRUE,
       colors = ifelse(df$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (aggregiert)"), "#b16fab", "#d0a9cd")
@@ -894,7 +895,7 @@ kurse_mint_comparison_bl <- function(df,r) {
   df <- subset(df, proportion >= 0.5)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
   help_title <- ifelse(subject == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subject)
   help_title <- ifelse(help_title == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_title)
@@ -1576,7 +1577,7 @@ kurse_map <- function(df,r) {
   df$prop <- round(df$prop, 0)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
   highcharter::hw_grid(
   # plot
@@ -1710,7 +1711,7 @@ kurse_map_gender <- function(df,r) {
   df$prop <- round(df$prop, 0)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
   highcharter::hw_grid(
     # plot
@@ -2234,7 +2235,7 @@ kurse_einstieg_comparison <- function(df,r) {
   df$proportion <- df$proportion * 100
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert_new <- prettyNum(df$wert_new, big.mark = ".")
+  df$wert_new <- prettyNum(df$wert_new, big.mark = ".", decimal.mark = ",")
 
   # order years for plot
   dfü <- df[with(df, order(jahr, decreasing = FALSE)), ]
@@ -2396,7 +2397,7 @@ kurse_comparison_gender <- function(df,r) {
   df1$anzeige_geschlecht[df1$anzeige_geschlecht == "Männer"] <- "Jungen"
 
   #Trennpunkte für lange Zahlen ergänzen
-  df1$wert <- prettyNum(df1$wert, big.mark = ".")
+  df1$wert <- prettyNum(df1$wert, big.mark = ".", decimal.mark = ",")
 
   # plot
   highcharter::hchart(df1, 'bar', highcharter::hcaes( x = indikator, y=round(proportion), group = anzeige_geschlecht)) %>%
