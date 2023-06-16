@@ -543,9 +543,9 @@ mod_schule_kurse_server <- function(id, data_kurse, data_iqb_standard, data_iqb_
       kurse_einstieg_comparison(data_kurse,r)
     })
 
-    data_table_einstieg_react <- reactive({
-      data_einstieg_kurse(data_kurse, r)
-    })
+    # data_table_einstieg_react <- reactive({
+    #   data_einstieg_kurse(data_kurse, r)
+    # })
 
     output$data_table_einstieg <- DT::renderDT({
       data_table_einstieg_react()
