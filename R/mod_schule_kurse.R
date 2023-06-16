@@ -526,7 +526,7 @@ mod_schule_kurse_ui <- function(id){
 #' schule_kurse Server Functions
 #'
 #' @noRd
-mod_schule_kurse_server <- function(id, data_kurse, data_iqb_4klasse, data_iqb_ges, r){
+mod_schule_kurse_server <- function(id, data_kurse, data_iqb_standard, data_iqb_score, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -629,11 +629,11 @@ mod_schule_kurse_server <- function(id, data_kurse, data_iqb_4klasse, data_iqb_g
     })
 
     output$plot_iqb_standard_zeitverlauf <- highcharter::renderHighchart({
-      iqb_standard_zeitverlauf(data_iqb_4klasse,r)
+      iqb_standard_zeitverlauf(data_iqb_standard,r)
     })
 
     output$plot_iqb_mathe_mittel_zeitverlauf <- highcharter::renderHighchart({
-      iqb_mathe_mittel_zeitverlauf(data_iqb_ges,r)
+      iqb_mathe_mittel_zeitverlauf(data_iqb_score,r)
     })
 
 
