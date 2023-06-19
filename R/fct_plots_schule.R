@@ -3255,7 +3255,8 @@ skf_personal <- function(df, r){
     highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group=indikator))%>%
       highcharter::hc_plotOptions(column = list(pointWidth = 50))%>%
       highcharter::hc_tooltip(pointFormat = "{point.indikator}: {point.y}")%>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth=100) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"), pointsWidth=100) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
       highcharter::hc_colors(c("#66cbaf","#8893a7")) %>%
