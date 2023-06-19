@@ -730,7 +730,6 @@ kurse_mint_comparison <- function(df,r) {
 
   df6 <- df6 %>% dplyr::filter(fachbereich != "andere naturwiss.-technische Fächer")
 
-
   # plot
   highcharter::hchart(df6, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich))%>%
     highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
@@ -742,7 +741,7 @@ kurse_mint_comparison <- function(df,r) {
                           ) %>%
     highcharter::hc_plotOptions(bar = list(
       colorByPoint = TRUE,
-      colors = ifelse(df$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (aggregiert)"), "#b16fab", "#d0a9cd")
+      colors = ifelse(df6$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (aggregiert)"), "#b16fab", "#d0a9cd")
     )) %>%
     highcharter::hc_title(text = paste0( "Anteil einzelner Fächer in ",state, " (", indikator_comparison, ")",
                                          br(), timerange,
@@ -1381,11 +1380,11 @@ kurse_ranking_gender <- function(df,r, type) {
       size_x = 5,
       size_xend = 5,
       colour = "black",
-      colour_x = "#b1b5c366",
-      colour_xend = "#f5adac66",
+      colour_x = "#bfc6d3",
+      colour_xend = "#66cbaf",
       dot_guide=TRUE) +
     ggplot2::theme_minimal() +
-    ggplot2::scale_color_manual(name = "", values = c("#b1b5c366", "#f5adac66")) +
+    ggplot2::scale_color_manual(name = "", values = c("#bfc6d3", "#66cbaf")) +
     ggplot2::theme(legend.position="top",
                    panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
                    plot.title = ggtext::element_markdown(hjust = 0.5),
