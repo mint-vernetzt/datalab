@@ -14,7 +14,7 @@ wd <- getwd()
 setwd(wd)
 #setwd("C:/Users/kab/Downloads/datalab/datalab")
 
-data <- readxl::read_excel("data-raw/SKF001_230130.xlsx", sheet = "Datentabelle", col_names = FALSE)
+data <- readxl::read_excel("data-raw/raw/SKF001_230130.xlsx", sheet = "Datentabelle", col_names = FALSE)
 
 
 # Datensatz ins passende Format bringen --------------------------------------
