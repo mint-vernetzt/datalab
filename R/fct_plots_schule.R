@@ -3138,7 +3138,7 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
                                                                     "2016",
                                                                     "2021")) %>%
       #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#efe8e6", "#b16fab"
+      highcharter::hc_colors(c("#efe8e6", "#66cbaf"
 
                                #"#154194",
       )) %>%
