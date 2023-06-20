@@ -678,7 +678,7 @@ kurse_mint_comparison <- function(df,r) {
 
   df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
-  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (aggregiert)"
+  df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
   #df_sub <- df_sub[df_sub$fachbereich!="andere Fächer",] # neu, da keine 100 % rauskommen, kab -->kann wieder rein weil jetzt share_mint angepasst
 
@@ -718,7 +718,7 @@ kurse_mint_comparison <- function(df,r) {
 
   x <- c("MINT-Fächer (gesamt)", "Mathematik", "Informatik", "Physik", "Chemie",
          "Biologie", "andere naturwiss.-technische Fächer",
-         "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+         "andere Fächer (gesamt)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
          "Musik/Kunst", "Religion/Ethik", "Sport")
 
   df6 <- df6 %>%
@@ -730,21 +730,34 @@ kurse_mint_comparison <- function(df,r) {
 
   df6 <- df6 %>% dplyr::filter(fachbereich != "andere naturwiss.-technische Fächer")
 
+  #Anordnen mit / ohne Religion
+  c <- c("MINT-Fächer (gesamt)", "Mathematik", "Informatik", "Physik", "Chemie",
+         "Biologie",
+         "andere Fächer (gesamt)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+         "Musik/Kunst", "Religion/Ethik", "Sport")
+  if(indikator_comparison=="Leistungskurse") c <- c("MINT-Fächer (gesamt)", "Mathematik", "Informatik", "Physik", "Chemie",
+                                                     "Biologie",
+                                                     "andere Fächer (gesamt)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+                                                     "Musik/Kunst", "Sport")
+
+  #Vorbereitung für Überschrift
+  if(indikator_comparison=="Leistungskurse"){
+    indikator_comparison <- "Leistungskurs"
+  } else {
+    indikator_comparison <- "Grundkurs"
+  }
+
   # plot
   highcharter::hchart(df6, 'bar', highcharter::hcaes(y = round(proportion), x = fachbereich))%>%
     highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-    highcharter::hc_xAxis(title = list(text = ""), categories = c("MINT-Fächer (gesamt)", "Mathematik", "Informatik", "Physik", "Chemie",
-                                                                  "Biologie",
-                                                                  "andere Fächer (aggregiert)", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
-                                                                  "Musik/Kunst", "Religion/Ethik", "Sport")
+    highcharter::hc_xAxis(title = list(text = ""), categories = c
                           ) %>%
     highcharter::hc_plotOptions(bar = list(
       colorByPoint = TRUE,
-      colors = ifelse(df6$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (aggregiert)"), "#b16fab", "#d0a9cd")
+      colors = ifelse(df6$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (gesamt)"), "#b16fab", "#d0a9cd")
     )) %>%
-    highcharter::hc_title(text = paste0( "Anteil einzelner Fächer in ",state, " (", indikator_comparison, ")",
-                                         br(), timerange,
+    highcharter::hc_title(text = paste0( "Anteil von ", indikator_comparison, "-Belegungen nach Fächern in ", state, " (", timerange, ")",
                                          "<br><br><br>"),
                           margin = 45,
                           align = "center",
@@ -769,7 +782,7 @@ kurse_mint_comparison <- function(df,r) {
 
   # a <- ifelse(df$fachbereich == "MINT-Fächer (gesamt)"
   #
-  #             | df$fachbereich == "andere Fächer (aggregiert)" # raus, kab --> rein vlg. oben
+  #             | df$fachbereich == "andere Fächer (gesamt)" # raus, kab --> rein vlg. oben
   #             , "#b16fab", "grey30")
   #
   # ggplot2::ggplot(df, ggplot2::aes(y=fachbereich, x=proportion)) +
@@ -896,9 +909,13 @@ kurse_mint_comparison_bl <- function(df,r) {
   #Trennpunkte für lange Zahlen ergänzen
   df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
-  help_title <- ifelse(subject == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subject)
-  help_title <- ifelse(help_title == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_title)
+  #Vorbereitung Überschrift
+  help_title <- ifelse(subject == "MINT-Fächer (gesamt)", "MINT", subject)
+  help_title <- ifelse(help_title == "andere Fächer (gesamt)", "allen Fächern außer MINT", help_title)
 
+  kurs_help <- ifelse(indikator_comparison == "Grundkurse", "Grundkurs", "Leistungskurs")
+
+  #Plot
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = region)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -906,7 +923,7 @@ kurse_mint_comparison_bl <- function(df,r) {
     # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
     highcharter::hc_colors("#b16fab") %>%
-    highcharter::hc_title(text = paste0( "Anteil von ", help_title, " nach Bundesländern (",  indikator_comparison, ")",br(), timerange,
+    highcharter::hc_title(text = paste0( "Anteil von ", kurs_help, "-Belegungen in ", help_title, " nach Bundesländern (",  timerange, ")",
                                          "<br><br><br>"),
                           margin = 20,
                           align = "center",
@@ -1302,7 +1319,7 @@ kurse_ranking <- function(df,r, type) {
                    axis.text.y = ggplot2::element_text(size = 11)) +
     ggplot2::ylab("") + ggplot2::xlab("") +
     ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                 "Anteil von Mädchen nach Fächern in ", states, " (",timerange,")",
+                                 "Mädchen-Anteil nach Fächern in ", states, " (",timerange,")",
                                  "<br><br>"),
                   color = "") +
     ggplot2::scale_x_continuous(n.breaks = 7, labels = function(x) paste0(x, "%"))

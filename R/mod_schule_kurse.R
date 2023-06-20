@@ -313,7 +313,12 @@ mod_schule_kurse_ui <- function(id){
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1")),
+                               mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1"),
+                               p(style="font-size:12px;color:grey",
+                                 "Interpretationshilfe: Dieser Plot zeigt, wie sich die Oberstufenbelegungen aller Mädchen auf
+                                 verschiedene Fächer verteilen. Sammelt man etwa die Leistungskursbelegungen aller Mädchen in Sachsen,
+                                 würden knapp 33 % davon Belegungen von MINT-Leistungskursen sein.")),
+
                              shiny::mainPanel(
                                width = 9,
                                plotOutput(ns("plot_ranking_gender"))
@@ -514,6 +519,8 @@ mod_schule_kurse_ui <- function(id){
                                       "Hinweis: Als 'Mit Zuwanderungsgeschichte' werden Kinder bezeichnet, deren beider Eltern nach Deutschland zugewandert sind.
                                      Zuwanderungsgeschichten 1. Generation (auch Kind ist nach Deutschalnd zugewandert) und 2. Generation (Kind ist in Deutschland geboren) werden zusammengefasst.
                                      Als 'Ohne Zuwanderungsgeschichte' werden Kinder bezeichnet, deren beider Eltern in Deutschland geboren wurden."),
+                                    p(style="font-size:12px;color:grey", br(), "Bildungskapital = Ressourcen, Kinder durch (kulturelle) Bildung zu fördern
+                                      und Indikator für den sozialen Status der Eltern"),
                                     p(style="font-size:12px;color:grey",br(),
                                       "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen.")
                                      )
