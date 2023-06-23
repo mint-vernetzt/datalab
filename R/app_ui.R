@@ -63,66 +63,9 @@ app_ui <- function(request) {
         )
       ),
 
-
-
-
-
-
-
       # Show the appropriate tab's content in the main body of our dashboard when we select it
       body = shinydashboard::dashboardBody(
-        #so sollte man alle Fraben aller Elemente (Sidebar, obere Leiste über dem Banner, Hintergrund) ändern können, aber das einzige, das funktioniert, ist der Hintergrund der App (habe ich deshalb in /* */ gesetzt)
-        # tags$head(tags$style(HTML('
-        #                         /* logo */
-        #                         .skin-blue .main-header .logo {
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* logo when hovered */
-        #                         .skin-blue .main-header .logo:hover {
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* navbar (rest of the header) */
-        #                         .skin-blue .main-header .navbar {
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* main sidebar */
-        #                         .skin-blue .main-sidebar {
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* active selected tab in the sidebarmenu */
-        #                         .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* other links in the sidebarmenu */
-        #                         .skin-blue .main-sidebar .sidebar .sidebar-menu a{
-        #                         background-color: #FFFFFF;
-        #                         color: #000000;
-        #                         }
-        #
-        #                         /* other links in the sidebarmenu when hovered */
-        #                         .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
-        #                         background-color: #154194;
-        #                         color: #FFFFFF;
-        #                         }
-        #                         /* toggle button when hovered  */
-        #                         .skin-blue .main-header .navbar .sidebar-toggle:hover{
-        #                         background-color: #154194;
-        #                         }
-        #
-        #                         /*body*/
-        #                         .content-wrapper, .right-side {
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* Box Schatten entfernen */
-        #                         .box{box-shadow: none;}
-        #
-        #                         '))),
+
           shinydashboard::tabItems(
           shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
           shinydashboard::tabItem(tabName ="home", mod_home_ui("home_ui_1")),
