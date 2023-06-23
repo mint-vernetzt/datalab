@@ -91,7 +91,7 @@ home_einstieg_pie <- function(df,r) {
   dfk2_fn <- cbind(dfk2_fn1, wert)
 
   #Trennpunkte für lange Zahlen ergänzen
-  dfk2_fn$wert <- prettyNum(dfk2_fn$wert, big.mark = ".")
+  dfk2_fn$wert <- prettyNum(dfk2_fn$wert, big.mark = ".", decimal.mark = ",")
 
 
   dfk2_fn$proportion <- round_preserve_sum(as.numeric(dfk2_fn$proportion),0)
@@ -594,10 +594,21 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
   dfk2_fn4$proportion <- round_preserve_sum(as.numeric(dfk2_fn4$proportion),0)
 
   #Trennpunkte für lange Zahlen ergänzen
-  dfk2_fn4$wert <- prettyNum(dfk2_fn4$wert, big.mark = ".")
+  dfk2_fn4$wert <- prettyNum(dfk2_fn4$wert, big.mark = ".", decimal.mark = ",")
 
   #sortieren
   dfk2_fn4 <- dfk2_fn4[with(dfk2_fn4, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+
+  #Titel erstellen
+  dfk2_fn4$titel_help <- "Schüler:innen in MINT-Leistungskursen"
+  dfk2_fn4$titel_help <- ifelse(dfk2_fn4$indikator == "Beschäftigte", "MINT-Beschäftigte", dfk2_fn4$titel_help)
+  dfk2_fn4$titel_help <- ifelse(dfk2_fn4$indikator == "Auszubildende", "MINT-Auszubildend", dfk2_fn4$titel_help)
+  dfk2_fn4$titel_help <- ifelse(dfk2_fn4$indikator == "Studierende", "MINT-Studierende", dfk2_fn4$titel_help)
+
+  dfk2_fn4$titel_help2 <- "Vergleich: Schüler:innen in anderen Leistungskursen"
+  dfk2_fn4$titel_help2 <- ifelse(dfk2_fn4$indikator == "Beschäftigte", "Vergleich: Beschäftigte in anderen Bereichen", dfk2_fn4$titel_help2)
+  dfk2_fn4$titel_help2 <- ifelse(dfk2_fn4$indikator == "Auszubildende", "Vergleich: Auszubildend in anderen Bereichen", dfk2_fn4$titel_help2)
+  dfk2_fn4$titel_help2 <- ifelse(dfk2_fn4$indikator == "Studierende", "Vergleich: Studierende in anderen Bereichen", dfk2_fn4$titel_help2)
 
   #gewählte Indikatoren ausfiltern
   dfk2_fn4 <- dfk2_fn4 %>% dplyr::filter(indikator %in% indikator_choice_1_gender)
@@ -610,11 +621,11 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
     #df_mint$wert <- round_preserve_sum(as.numeric(df_mint$wert),0)
 
+
     df_rest4 <- dfk2_fn4 %>% dplyr::filter(fachbereich == "andere Fächer")
 
     #df_rest$wert <- round_preserve_sum(as.numeric(df_rest$wert),0)
 
-    #title_help <- helper_title_home(indikator_choice_1_gender)
 
     highcharter::hw_grid(
 
@@ -624,7 +635,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender, " (2021)"),
+        highcharter::hc_title(text = paste0(df_mint4$titel_help[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -640,7 +651,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender, " (2021)"),
+        highcharter::hc_title(text = paste0(df_mint4$titel_help2[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -689,7 +700,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[1], " (2021)"),
+        highcharter::hc_title(text = paste0(df_1_mint4$titel_help[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -704,7 +715,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[2], " (2021)"),
+        highcharter::hc_title(text = paste0(df_2_mint4$titel_help[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -719,7 +730,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[1], " (2021)"),
+        highcharter::hc_title(text = paste0(df_1_rest4$titel_help2[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -735,7 +746,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[2], " (2021)"),
+        highcharter::hc_title(text = paste0(df_2_rest4$titel_help2[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -792,7 +803,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[1], " (2021)"),
+        highcharter::hc_title(text = paste0(df_1_mint4$titel_help[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -807,7 +818,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[2], " (2021)"),
+        highcharter::hc_title(text = paste0(df_2_mint4$titel_help[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -821,7 +832,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[3], " (2021)"),
+        highcharter::hc_title(text = paste0(df_3_mint4$titel_help[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -838,7 +849,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[1], " (2021)"),
+        highcharter::hc_title(text = paste0(df_1_rest4$titel_help2[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -854,7 +865,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[2], " (2021)"),
+        highcharter::hc_title(text = paste0(df_2_rest4$titel_help2[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -870,7 +881,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-        highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[3], " (2021)"),
+        highcharter::hc_title(text = paste0(df_3_rest4$titel_help2[1], " (2021)"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1356,7 +1367,7 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
   df6_fn <- df6_fn %>% dplyr::left_join(df_wert, by = c("bereich","indikator", "jahr",   "region",  "fachbereich", "geschlecht"))
 
   #Trennpunkte für lange Zahlen ergänzen
-  df6_fn$wert <- prettyNum(df6_fn$wert, big.mark = ".")
+  df6_fn$wert <- prettyNum(df6_fn$wert, big.mark = ".", decimal.mark = ",")
 
 
   #sortieren
@@ -1526,7 +1537,7 @@ home_stacked_comparison_mint <- function(df, r) {
   dfd3 <- dfd3 %>% dplyr::left_join(df_wert, by = c("bereich","indikator","geschlecht","jahr","region","fachbereich"))
 
   #Trennpunkte für lange Zahlen ergänzen
-  dfd3$wert_abs <- prettyNum(dfd3$wert_abs, big.mark = ".")
+  dfd3$wert_abs <- prettyNum(dfd3$wert_abs, big.mark = ".", decimal.mark = ",")
 
   highcharter::hchart(dfd3, 'bar', highcharter::hcaes(y = wert, x = indikator, group = "fachbereich"))%>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert_abs}") %>%
@@ -1639,7 +1650,7 @@ home_comparison_line <- function(df,r) {
 
 
   #Trennpunkte für lange Zahlen ergänzen
-  #df_fn5$proportion <- prettyNum(df_fn5$proportion, big.mark = ".")
+  #df_fn5$proportion <- prettyNum(df_fn5$proportion, big.mark = ".", decimal.mark = ",")
 
   #sortieren
 
@@ -1667,6 +1678,7 @@ home_comparison_line <- function(df,r) {
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24" )) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
@@ -1698,6 +1710,7 @@ home_comparison_line <- function(df,r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24" )) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -1839,6 +1852,7 @@ home_rest_mint_verlauf <- function(df,r) {
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24" )) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
@@ -1876,10 +1890,11 @@ home_rest_mint_verlauf <- function(df,r) {
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = "Anteil von MINT nach Bildungsbereichen",
+      highcharter::hc_title(text = "Anzahl von Personen in MINT nach Bildungsbereichen",
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24" )) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%

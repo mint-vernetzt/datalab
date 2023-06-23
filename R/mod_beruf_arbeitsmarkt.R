@@ -523,13 +523,13 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
       beruf_einstieg_vergleich(data_arbeitsmarkt_detail,r)
     })
 
-    data_table_einstieg_react <- reactive({
-      data_einstieg_beruf(data_arbeitsmarkt, r)
-    })
-
-    output$data_table_einstieg <- DT::renderDT({
-      data_table_einstieg_react()
-    })
+    # data_table_einstieg_react <- reactive({
+    #   data_einstieg_beruf(data_arbeitsmarkt, r)
+    # })
+    #
+    # output$data_table_einstieg <- DT::renderDT({
+    #   data_table_einstieg_react()
+    # })
 
     # Box 3
     output$plot_einstieg_pie_gender <- renderUI({

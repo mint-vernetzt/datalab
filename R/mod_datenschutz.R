@@ -146,7 +146,28 @@ Darüber hinaus erheben und verarbeiten wir Informationen über die Nutzung des 
 br(),
 br(),
 
-p(tags$b(span("2. Feedbackformular")),
+tags$b(span("2. Analyse durch Matomo")),
+br(),
+
+"Wir nutzen den Webanalyse-Dienst Matomo zur Analyse der Nutzung unserer Webseite und Ausgestaltung unseres Online-Angebots. Matomo ist ein Dienst der InnoCraft Ltd., 150 Willis St, 6011 Wellington, Neuseeland.
+
+Dabei verwenden wir standardmäßig keine Cookies für die Web-Analyse und setzen kein Device-Fingerprinting ein. Durch den Aufruf des Analysescripts sendet der auf Deinem Gerät verwendete Browser automatisch Informationen an unseren Webseiten-Server. Dort werden die folgenden Informationen über Dich temporär in sogenannten Logfiles gespeichert. Hieraus lassen sich u.a. Angaben zur Besucheranzahl, Browser, Geräten und Betriebssystem erzeugen. Deine IP-Adresse wird hierbei anonymisiert.
+
+Die Zulässigkeit der Verarbeitung richtet sich nach Art. 6 Abs. 1 f) DS-GVO (berechtigtes Interesse). Unsere berechtigten Interessen liegen in der Verbesserung und Optimierung unseres Online-Angebots sowie unseres Internetauftritts.
+
+Weitere Informationen zu den Nutzungsbedingungen und den Datenschutzbestimmungen bei Matomo erhältst Du direkt bei Matomo.",
+
+HTML(
+  '<div id="matomo-opt-out"></div>
+  <script src="https://analytics.datalab.mint-vernetzt.de/index.php?module=CoreAdminHome&action=optOutJS&divId=matomo-opt-out&language=auto&showIntro=1"></script>'
+),
+
+
+br(),
+br(),
+
+
+p(tags$b(span("3. Feedbackformular")),
 
 br(),
 

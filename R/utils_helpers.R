@@ -101,10 +101,12 @@ round_preserve_sum <- function(x, digits = 0) {
 #' design guide
 #'
 #' @noRd
+# Veraltet - nicht die richtigen Farben und nicht richtige Kategroriezuordnung
 colors_mint_vernetzt <- list(general = c("#154194", "#b16fab", "#efe8e6"),
                              attention = c("#00a87a", "#fcc433", "#ee7775"),
                              neutral = c("#141416", "#e6e8ec"),
                              gender = c("#f5adac", "#b1b5c3"))
+
 
 #' helpers
 #'

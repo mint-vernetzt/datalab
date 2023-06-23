@@ -51,7 +51,7 @@ df_wert <- df4 %>%
  df4 <- cbind(df4, wert)
 
  #Trennpunkte für lange Zahlen ergänzen
- df4$wert <- prettyNum(df4$wert, big.mark = ".")
+ df4$wert <- prettyNum(df4$wert, big.mark = ".", decimal.mark = ",")
 
  df4 <- within(df4, proportion <- factor(proportion, levels=c("Nicht MINT", "MINT")))
 
@@ -388,7 +388,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   dfh <- cbind(dfh, wert)
 
   #Trennpunkte für lange Zahlen ergänzen
-  dfh$wert <- prettyNum(dfh$wert, big.mark = ".")
+  dfh$wert <- prettyNum(dfh$wert, big.mark = ".", decimal.mark = ",")
 
 
   if(length(genl) == 1) {
@@ -774,6 +774,7 @@ studienzahl_verlauf_single <- function(df,r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -799,6 +800,7 @@ studienzahl_verlauf_single <- function(df,r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -825,6 +827,7 @@ studienzahl_verlauf_single <- function(df,r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -863,6 +866,7 @@ studienzahl_verlauf_single <- function(df,r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -888,6 +892,7 @@ studienzahl_verlauf_single <- function(df,r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -915,6 +920,7 @@ studienzahl_verlauf_single <- function(df,r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -1076,6 +1082,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -1101,6 +1108,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -1127,6 +1135,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -1164,6 +1173,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -1189,6 +1199,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -1215,6 +1226,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -1382,7 +1394,7 @@ studienzahl_einstieg_comparison <- function(df,r) {
   df4 <- cbind(df4, wert)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df4$wert <- prettyNum(df4$wert, big.mark = ".")
+  df4$wert <- prettyNum(df4$wert, big.mark = ".", decimal.mark = ",")
 
   df4$label <-factor(df4$label,levels= c("Studierende",
                                      "Studierende (Fachhochschulen)",
@@ -1604,7 +1616,7 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
     df_io <- cbind(df_io, wert)
 
     #Trennpunkte für lange Zahlen ergänzen
-    #df_io$wert <- prettyNum(df_io$wert, big.mark = ".")
+    #df_io$wert <- prettyNum(df_io$wert, big.mark = ".", decimal.mark = ",")
 
     df_io <- df_io %>%
       dplyr::mutate(region = dplyr::case_when(
@@ -1942,10 +1954,10 @@ studienzahl_waffle_mint <- function(df,r) {
                      plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                      legend.position = "bottom") +
       ggplot2::scale_fill_manual(
-        values =  c("#00a87a",
-                    "#fcc433",
-                    '#b1b5c3'),
-        na.value="#b1b5c3",
+        values =  c("#35bd97",
+                    "#fbbf24",
+                    '#8893a7'),
+        na.value='#8893a7',
         limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
         guide = ggplot2::guide_legend(reverse = TRUE),
         labels = c(
@@ -1987,10 +1999,10 @@ studienzahl_waffle_mint <- function(df,r) {
                        plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                        legend.position = "bottom") +
         ggplot2::scale_fill_manual(
-          values =  c("#00a87a",
-                      "#fcc433",
-                      '#b1b5c3'),
-          na.value="#b1b5c3",
+          values =  c("#35bd97",
+                      "#fbbf24",
+                      '#8893a7'),
+          na.value='#8893a7',
           limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
           guide = ggplot2::guide_legend(reverse = TRUE),
           labels = c(
@@ -2009,10 +2021,10 @@ studienzahl_waffle_mint <- function(df,r) {
                      plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                      legend.position = "bottom") +
       ggplot2::scale_fill_manual(
-        values =  c("#00a87a",
-                    "#fcc433",
-                    '#b1b5c3'),
-        na.value="#b1b5c3",
+        values =  c("#35bd97",
+                    "#fbbf24",
+                    "#8893a7"),
+        na.value="#8893a7",
         limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
         guide = ggplot2::guide_legend(reverse = TRUE),
         labels = c(
@@ -2064,10 +2076,10 @@ studienzahl_waffle_mint <- function(df,r) {
                      plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                      legend.position = "bottom") +
       ggplot2::scale_fill_manual(
-        values =  c("#00a87a",
-                    "#fcc433",
-                    '#b1b5c3'),
-        na.value="#b1b5c3",
+        values =  c("#35bd97",
+                    "#fbbf24",
+                    "#8893a7"),
+        na.value="#8893a7",
         limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
         guide = ggplot2::guide_legend(reverse = TRUE),
         labels = c(
@@ -2086,10 +2098,10 @@ studienzahl_waffle_mint <- function(df,r) {
                      plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                      legend.position = "bottom") +
       ggplot2::scale_fill_manual(
-        values =  c("#00a87a",
-                    "#fcc433",
-                    '#b1b5c3'),
-        na.value="#b1b5c3",
+        values =  c("#35bd97",
+                    "#fbbf24",
+                    "#8893a7"),
+        na.value="#8893a7",
         limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
         guide = ggplot2::guide_legend(reverse = TRUE),
         labels = c(
@@ -2108,10 +2120,10 @@ studienzahl_waffle_mint <- function(df,r) {
                      plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                      legend.position = "bottom") +
       ggplot2::scale_fill_manual(
-        values =  c("#00a87a",
-                    "#fcc433",
-                    '#b1b5c3'),
-        na.value="#b1b5c3",
+        values =  c("#35bd97",
+                    "#fbbf24",
+                    "#8893a7"),
+        na.value="#8893a7",
         limits = c("pro_ing" ,  "pro_mathe" ,"pro_nicht"),
         guide = ggplot2::guide_legend(reverse = TRUE),
         labels = c(
@@ -3206,6 +3218,7 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
@@ -3244,6 +3257,7 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -3758,10 +3772,10 @@ studienzahl_waffle_choice_gender <- function(df,r) {
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                    legend.position = "bottom") +
     ggplot2::scale_fill_manual(
-      values =  c("#00a87a",
-                  "#fcc433",
-                  '#b1b5c3'),
-      na.value="#b1b5c3",
+      values =  c("#35bd97",
+                  "#fbbf24",
+                  '#8893a7'),
+      na.value='#8893a7',
       limits = c("Ingenieurwissenschaften", "Mathematik/Naturwissenschaften", "andere Studiengänge"),
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
@@ -3782,10 +3796,10 @@ studienzahl_waffle_choice_gender <- function(df,r) {
                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
                    legend.position = "bottom") +
     ggplot2::scale_fill_manual(
-      values =  c("#00a87a",
-                  "#fcc433",
-                  '#b1b5c3'),
-      na.value="#b1b5c3",
+      values =  c("#35bd97",
+                  "#fbbf24",
+                  '#8893a7'),
+      na.value='#8893a7',
       limits = c("Ingenieurwissenschaften", "Mathematik/Naturwissenschaften", "andere Studiengänge"),
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
@@ -4021,6 +4035,7 @@ if (absolut_selector=="In Prozent"){
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
@@ -4058,6 +4073,7 @@ if (absolut_selector=="In Prozent"){
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -4105,6 +4121,7 @@ if (absolut_selector=="In Prozent"){
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -4161,6 +4178,7 @@ if (absolut_selector=="In Prozent"){
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -4198,6 +4216,7 @@ if (absolut_selector=="In Prozent"){
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -4245,6 +4264,7 @@ if (absolut_selector=="In Prozent"){
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -4907,7 +4927,7 @@ studierende_map <- function(df,r) {
   df3 <- cbind(df3, wert)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df3$wert <- prettyNum(df3$wert, big.mark = ".")
+  df3$wert <- prettyNum(df3$wert, big.mark = ".", decimal.mark = ",")
 
   df7 <- df3 %>%
     dplyr::select(label, region, jahr, fach, proportion, wert)%>%
@@ -5669,6 +5689,8 @@ studierende_verlauf_multiple_bl <- function(df,r) {
                            margin = 45,
                            align = "center",
                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+     highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+                              "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
      highcharter::hc_chart(
        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
      ) %>%
@@ -5702,6 +5724,8 @@ studierende_verlauf_multiple_bl <- function(df,r) {
                              margin = 45,
                              align = "center",
                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+       highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+                                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
        highcharter::hc_chart(
          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
        ) %>%
@@ -6248,7 +6272,7 @@ studierende_mint_vergleich_bl <- function(df,r) {
   df_io <- cbind(df_io, wert)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df_io$wert <- prettyNum(df_io$wert, big.mark = ".")
+  df_io$wert <- prettyNum(df_io$wert, big.mark = ".", decimal.mark = ",")
 
   df7 <- df_io %>%
     dplyr::select(label, region, jahr, fach, proportion, wert)
@@ -6476,7 +6500,7 @@ plot_ranking_top_faecher <- function(df, r, type) {
     dplyr::filter(anzeige_geschlecht != "Gesamt")
 
   #Trennpunkte für lange Zahlen ergänzen
-  #dfk$wert <- prettyNum(dfk$wert, big.mark = ".")
+  #dfk$wert <- prettyNum(dfk$wert, big.mark = ".", decimal.mark = ",")
   #dfk$wert <- as.numeric(dfk$wert)
 
 
@@ -6803,7 +6827,7 @@ if(betr_ebene=="Fachbereiche"){
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-    highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+    highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
     highcharter::hc_title(text = paste0("Anteil internationaler Studierender", " in ", bl_select,  " (",year_select, ")" ),
                           margin = 45,
                           align = "center",
@@ -6840,7 +6864,7 @@ if(betr_ebene=="Fachbereiche"){
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     #highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-    highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+    highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
     highcharter::hc_title(text = paste0("Anteil internationaler Studierender", " in ", bl_select,  " (",year_select, ")" ),
                           margin = 45,
                           align = "center",
@@ -6875,7 +6899,7 @@ if(betr_ebene=="Fachbereiche"){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
-      highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+      highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
       highcharter::hc_title(text = paste0("Anteil internationaler Studierender", " in ", bl_select,  " (",year_select, ")" ),
                             margin = 45,
                             align = "center",
@@ -6912,7 +6936,7 @@ if(betr_ebene=="Fachbereiche"){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       #highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+      highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
       highcharter::hc_title(text = paste0("Anteil internationaler Studierender", " in ", bl_select,  " (",year_select, ")" ),
                             margin = 45,
                             align = "center",
@@ -7084,7 +7108,7 @@ if(absolut_selector=="In Prozent"){
   highcharter::hc_xAxis(title = list(text = "")) %>%
   highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
   highcharter::hc_plotOptions(column = list(pointWidth = 70))%>%
-  highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+  highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
   highcharter::hc_title(text = paste0("Anteil internationaler Studierender", " in ", bl_select,  " (",fach_select, ")" ),
                         margin = 45,
                         align = "center",
@@ -7121,7 +7145,7 @@ if(absolut_selector=="In Prozent"){
                           ) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     #highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-    highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+    highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
     highcharter::hc_title(text = paste0("Anteil internationaler Studierender", " in ", bl_select,  " (",fach_select, ")" ),
                           margin = 45,
                           align = "center",

@@ -23,6 +23,8 @@ app_ui <- function(request) {
           style = "text-align: justify; color:#154194;"
         )
       ),
+
+
       # Create our navigation menu that links to each of the tabs we defined --- MIT ICONS
       # sidebar = shinydashboard::dashboardSidebar(
       #   shinydashboard::sidebarMenu(
@@ -63,66 +65,36 @@ app_ui <- function(request) {
         )
       ),
 
-
-
-
-
-
-
       # Show the appropriate tab's content in the main body of our dashboard when we select it
       body = shinydashboard::dashboardBody(
-        #so sollte man alle Fraben aller Elemente (Sidebar, obere Leiste über dem Banner, Hintergrund) ändern können, aber das einzige, das funktioniert, ist der Hintergrund der App (habe ich deshalb in /* */ gesetzt)
-        # tags$head(tags$style(HTML('
-        #                         /* logo */
-        #                         .skin-blue .main-header .logo {
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* logo when hovered */
-        #                         .skin-blue .main-header .logo:hover {
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* navbar (rest of the header) */
-        #                         .skin-blue .main-header .navbar {
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* main sidebar */
-        #                         .skin-blue .main-sidebar {
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* active selected tab in the sidebarmenu */
-        #                         .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* other links in the sidebarmenu */
-        #                         .skin-blue .main-sidebar .sidebar .sidebar-menu a{
-        #                         background-color: #FFFFFF;
-        #                         color: #000000;
-        #                         }
-        #
-        #                         /* other links in the sidebarmenu when hovered */
-        #                         .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
-        #                         background-color: #154194;
-        #                         color: #FFFFFF;
-        #                         }
-        #                         /* toggle button when hovered  */
-        #                         .skin-blue .main-header .navbar .sidebar-toggle:hover{
-        #                         background-color: #154194;
-        #                         }
-        #
-        #                         /*body*/
-        #                         .content-wrapper, .right-side {
-        #                         background-color: #FFFFFF;
-        #                         }
-        #
-        #                         /* Box Schatten entfernen */
-        #                         .box{box-shadow: none;}
-        #
-        #                         '))),
+        tags$head(HTML(
+          "<script>
+          /*
+      var _paq = _paq || [];
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      _paq.push(['enableHeartBeatTimer']);
+      (function() {
+        var u ='https://analytics.datalab.mint-vernetzt.de/';
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '1']);
+        var d=document,
+            g=d.createElement('script'),
+            s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript';
+            g.async=true; g.defer=true;
+            g.src=u+'matomo.js';
+            s.parentNode.insertBefore(g,s);
+      })();
+      */
+      var _mtm = window._mtm = window._mtm || [];
+          _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+          g.async=true; g.src='https://analytics.datalab.mint-vernetzt.de/js/container_wPdOg8s5.js'; s.parentNode.insertBefore(g,s);
+    </script>"
+
+        )),
+
           shinydashboard::tabItems(
           shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
           shinydashboard::tabItem(tabName ="home", mod_home_ui("home_ui_1")),
@@ -139,7 +111,7 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))
         )
       )
-  ))
+))
 }
 
 #' Add external Resources to the Application
