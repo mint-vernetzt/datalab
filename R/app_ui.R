@@ -23,6 +23,8 @@ app_ui <- function(request) {
           style = "text-align: justify; color:#154194;"
         )
       ),
+
+
       # Create our navigation menu that links to each of the tabs we defined --- MIT ICONS
       # sidebar = shinydashboard::dashboardSidebar(
       #   shinydashboard::sidebarMenu(
@@ -65,6 +67,33 @@ app_ui <- function(request) {
 
       # Show the appropriate tab's content in the main body of our dashboard when we select it
       body = shinydashboard::dashboardBody(
+        tags$head(HTML(
+          "<script>
+          /*
+      var _paq = _paq || [];
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      _paq.push(['enableHeartBeatTimer']);
+      (function() {
+        var u ='https://analytics.datalab.mint-vernetzt.de/';
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '1']);
+        var d=document,
+            g=d.createElement('script'),
+            s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript';
+            g.async=true; g.defer=true;
+            g.src=u+'matomo.js';
+            s.parentNode.insertBefore(g,s);
+      })();
+      */
+      var _mtm = window._mtm = window._mtm || [];
+          _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+          g.async=true; g.src='https://analytics.datalab.mint-vernetzt.de/js/container_wPdOg8s5.js'; s.parentNode.insertBefore(g,s);
+    </script>"
+
+        )),
 
           shinydashboard::tabItems(
           shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
@@ -82,7 +111,7 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))
         )
       )
-  ))
+))
 }
 
 #' Add external Resources to the Application
