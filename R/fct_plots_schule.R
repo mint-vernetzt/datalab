@@ -1078,7 +1078,7 @@ kurse_waffle <- function(df,r) {
   waffle_male <- waffle::waffle(x_male, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", titel_help, " von Jungen <br><br>(", timerange, ")<br>")) +
+      title = paste0("<span style='color:black;'>", titel_help, " von Jungen <br>(", timerange, ")<br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -1106,7 +1106,7 @@ kurse_waffle <- function(df,r) {
   waffle_female <- waffle::waffle(x_female, keep = FALSE) +
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", titel_help," von Mädchen <br><br>(", timerange, ")<br>")) +
+      title = paste0("<span style='color:black;'>", titel_help," von Mädchen <br>(", timerange, ")<br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
