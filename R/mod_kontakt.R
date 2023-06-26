@@ -55,10 +55,10 @@ mod_kontakt_ui <- function(id){
           eine fortlaufende Umfrage und verschiedene Veranstaltungsformate kontinuierlich erfasst und bestmöglich berücksichtigt.",
                  br(),
                  br(),
-                 "Ansprachpartnerin für dieses Projekt ist Antonia Kröger."),
+                 "Ansprachpartnerin für dieses Projekt ist Katharina Brunner."),
 
                p(style = "text-align: justify; font-size = 16px",
-                 span("Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+                 span("Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
                       tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
                  ),
                  br(),
