@@ -69,7 +69,6 @@ app_ui <- function(request) {
       body = shinydashboard::dashboardBody(
         tags$head(HTML(
           "<script>
-          /*
       var _paq = _paq || [];
       _paq.push(['trackPageView']);
       _paq.push(['enableLinkTracking']);
@@ -86,7 +85,6 @@ app_ui <- function(request) {
             g.src=u+'matomo.js';
             s.parentNode.insertBefore(g,s);
       })();
-      */
       var _mtm = window._mtm = window._mtm || [];
           _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
           var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
