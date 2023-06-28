@@ -2634,7 +2634,8 @@ studienzahl_map <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      )
+      ),
+      download_map_data = FALSE
     ) %>%
       highcharter::hc_colorAxis(min=0, max=60, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
@@ -2665,7 +2666,8 @@ studienzahl_map <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      )
+      ),
+      download_map_data = FALSE
     ) %>%
       highcharter::hc_title(
         text = paste0("Anteil der Studienanfänger:inneninnen <br> ",title_help ," an MINT in ", timerange),
@@ -5004,13 +5006,14 @@ highcharter::hw_grid(
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = paste0("Anteil ", fach_m),
+      name = paste0(fach_m),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      )
+      ),
+      download_map_data = FALSE
     )
     %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
@@ -5066,13 +5069,14 @@ highcharter::hw_grid(
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = paste0("Anteil ", fach_m[1]),
+      name = paste0(fach_m[1]),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      )
+      ),
+      download_map_data = FALSE
     )
     %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
@@ -5103,13 +5107,14 @@ highcharter::hw_grid(
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      name = paste0("Anteil ", fach_m[2]),
+      name = paste0(fach_m[2]),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      )
+      ),
+      download_map_data = FALSE
     )
     %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
@@ -5148,13 +5153,14 @@ highcharter::hw_grid(
         value = "proportion",
         joinBy = c("name", "region"),
         borderColor = "#FAFAFA",
-        name = paste0("Anteil ", fach_m[1]),
+        name = paste0(fach_m[1]),
         borderWidth = 0.1,
         nullColor = "#A9A9A9",
         tooltip = list(
           valueDecimals = 0,
           valueSuffix = "%"
-        )
+        ),
+        download_map_data = FALSE
       )
       # %>%
       #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
@@ -5595,7 +5601,8 @@ studierende_map_gender <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      )
+      ),
+      download_map_data = FALSE
     ) %>%
       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
@@ -5626,7 +5633,8 @@ studierende_map_gender <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      )
+      ),
+      download_map_data = FALSE
     ) %>%
       highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(

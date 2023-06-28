@@ -378,7 +378,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_landkreis_map_ui("mod_beruf_arbeitsmarkt_landkreis_map_ui_1")
+                               mod_beruf_arbeitsmarkt_landkreis_map_ui("mod_beruf_arbeitsmarkt_landkreis_map_ui_1"),
+                               p(style="font-size:12px;color:grey", "Hinweis zur Darstellung: Falls die Karten nicht angezeigt werden, wechseln Sie einmal
+                                 zwischen einem beliebigen Indikator, z. B. Beschäftigte - Auszubildende, hin und her.")
                              ),
                              shiny::mainPanel(
                                width = 9,

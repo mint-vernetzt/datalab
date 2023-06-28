@@ -458,13 +458,14 @@ arbeitsmarkt_bl_gender <- function(df,r) {
       value = "proportion",
       joinBy = c("name", "bundesland"),
       borderColor = "#FAFAFA",
-      name = paste0("Anteil von MINT-Berufen"),
+      name = paste0(fachbereich_choice),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      )
+      ),
+      download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
@@ -490,13 +491,14 @@ arbeitsmarkt_bl_gender <- function(df,r) {
       value = "proportion",
       joinBy = c("name", "bundesland"),
       borderColor = "#FAFAFA",
-      name = "Anteil von MINT-Berufen",
+      name = paste0(fachbereich_choice),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      )
+      ),
+      download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
@@ -1483,7 +1485,8 @@ arbeitsmarkt_bl <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      )
+      ),
+      download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
@@ -1510,13 +1513,14 @@ arbeitsmarkt_bl <- function(df,r) {
       value = "proportion",
       joinBy = c("name", "bundesland"),
       borderColor = "#FAFAFA",
-      name = "MINT-Anteil",
+      name = paste0(fach_choice),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      )
+      ),
+      download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
@@ -3851,6 +3855,18 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
   #                                             "Auszubildender im 1. Lehrjahr",
   #                                             "weiblicher Auszubildender"), paste0("Auszubildenden in ", domain_2), "Auszubildenden")
 
+  # hilfe für Hover-Text
+  if(category_1 == "Beschäftigte") {
+    adjektiv_1 <- indikator_besch_1
+  }else{
+    adjketiv_1 <- indikator_azubi_1
+  }
+
+  if(category_2 == "Beschäftigte") {
+    adjektiv_2 <- indikator_besch_2
+  }else{
+    adjketiv_2 <- indikator_azubi_2
+  }
 
   # adjust landkreis_nummer for correct mapping
   df1_map <- df1_map %>% dplyr::mutate(
@@ -3870,13 +3886,15 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     value = "prob",
     joinBy = c("hc-key","landkreis_nummer"),
     borderColor = "#FAFAFA",
-    name = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (2021)"),
+    #name = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (2021)"),
+    name = paste0( domain_1, "<br>", titel_sub1_2),
     borderWidth = 0.1,
     nullColor = "#A9A9A9",
     tooltip = list(
       valueDecimals = 0,
       valueSuffix = "%"
-    )
+    ),
+    download_map_data = FALSE
   ) %>%
     highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
@@ -3906,13 +3924,15 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     value = "prob",
     joinBy = c("hc-key", "landkreis_nummer"),
     borderColor = "#FAFAFA",
-    name = paste0("Anteil von ", titel_sub2_2, titel_gesamt2, titel_gesamt2_2, " in ", states, " (2021)"),
+   # name = paste0("Anteil von ", titel_sub2_2, titel_gesamt2, titel_gesamt2_2, " in ", states, " (2021)"),
+    name = paste0(domain_2, "<br>", titel_sub2_2),
     borderWidth = 0.1,
     nullColor = "#A9A9A9",
     tooltip = list(
       valueDecimals = 0,
       valueSuffix = "%"
-    )
+    ),
+    download_map_data = FALSE
   ) %>%
     highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
