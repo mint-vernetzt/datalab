@@ -80,7 +80,7 @@ mod_schule_kurse_ui <- function(id){
         title = "Fragen oder Feedback?",
         width = 3,
         p(style = "text-align: left; font-size = 16px",
-          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))),
 
@@ -257,7 +257,8 @@ mod_schule_kurse_ui <- function(id){
                                width = 3,
                                mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1"),
                                p(style="font-size:12px;color:grey",
-                               "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal
+                               "Hinweis zur Darstellung: Falls die Karte nicht angezeigt wird, bewegen Sie bitte kurz den Regeler für die Auswahl des Jahrs hin und her.
+                               Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal
                                  verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                                p(style="font-size:12px;color:grey",
                                "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass die MINT-Fächer in Grundkursen den höchsten Anteil in Sachsen haben mit 29 % Prozent.

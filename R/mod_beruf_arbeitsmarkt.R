@@ -64,7 +64,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           title = "Fragen oder Feedback?",
           width = 3,
           p(style = "text-align: left; font-size = 16px",
-            "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+            "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
             tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
           ))
       ),
@@ -378,7 +378,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_landkreis_map_ui("mod_beruf_arbeitsmarkt_landkreis_map_ui_1")
+                               mod_beruf_arbeitsmarkt_landkreis_map_ui("mod_beruf_arbeitsmarkt_landkreis_map_ui_1"),
+                               p(style="font-size:12px;color:grey", "Hinweis zur Darstellung: Falls die Karten nicht angezeigt werden, wechseln Sie einmal
+                                 zwischen einem beliebigen Indikator, z. B. Beschäftigte - Auszubildende, hin und her.")
                              ),
                              shiny::mainPanel(
                                width = 9,
