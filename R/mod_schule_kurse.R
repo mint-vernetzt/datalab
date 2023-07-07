@@ -47,20 +47,20 @@ mod_schule_kurse_ui <- function(id){
         title = "Übersicht Fragestellungen",
         width = 3,
 
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1a",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_mint",
         span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
           ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2a",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_fach",
          span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
 
           ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3a",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_frauen",
         span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
 
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4a",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_kompetenz",
         span(tags$b(span("MINT-Kompetenzen in der 4. Klasse:")))),"Wie hoch ist der Anteil leistungsschwacher Schüler:innen und wie entwickelt sich die MINT-Kompetenz?"),
 
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump5a",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_ausserschulisch",
                                                               span(tags$b(span("Außerschulische, frühkindliche MINT-Bildung:")))),"Wie hoch ist die Beteiligung in außerschulische, frühkindliche MINT-Bildung?"),
 
         ),
@@ -86,7 +86,7 @@ mod_schule_kurse_ui <- function(id){
 
   # Box 1
 
-    fluidRow(id="jump1a",
+    fluidRow(id="schule_mint",
       shinydashboard::box(
         title = "Fächerwahl MINT: Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?",
         width = 12,
@@ -243,7 +243,7 @@ mod_schule_kurse_ui <- function(id){
                     #         )
       ))),
 
-    fluidRow(id="jump2a",
+    fluidRow(id="schule_fach",
       shinydashboard::box(
         title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
         width = 12,
@@ -364,7 +364,7 @@ mod_schule_kurse_ui <- function(id){
                                ))
 
         ))),
-    fluidRow(id="jump3a",
+    fluidRow(id="schule_frauen",
       shinydashboard::box(
         title = "Mädchen in MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?",
         width = 12,
@@ -374,7 +374,22 @@ mod_schule_kurse_ui <- function(id){
 
         tabsetPanel(type = "tabs",
 
-                    tabPanel("Vergleich Fächergruppen", br(),
+                    # tabPanel("Frauenanteil in MINT-Kursen", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            tags$style(".well {background-color:#FFFFFF;}"),
+                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                    #            mod_schule_kurse_pie_gender_ui("mod_schule_kurse_pie_gender_ui_1")),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            htmlOutput(ns("plot_pie_gender"))
+                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen."))
+                    # ),
+
+                    tabPanel("Vergleich Frauenanteil nach Fächergruppen", br(),
 
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -395,22 +410,6 @@ mod_schule_kurse_ui <- function(id){
                     ),
 
 
-                    # erstmal raus, weil Pies nicht so schön
-
-                    # tabPanel("Vergleich (Pie) ", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            tags$style(".well {background-color:#FFFFFF;}"),
-                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #            mod_schule_kurse_pie_gender_ui("mod_schule_kurse_pie_gender_ui_1")),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            htmlOutput(ns("plot_pie_gender"))
-                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen."))
-                    # ),
 
                     # tabPanel("Zeitverlauf MINT", br(), #kann raus
                     #
@@ -454,7 +453,7 @@ mod_schule_kurse_ui <- function(id){
 
                     ))),
 
-      fluidRow(id="jump4a",
+      fluidRow(id="schule_kompetenz",
            shinydashboard::box(
              title = "MINT-Kompetenzen in der 4. Klasse",
              width = 12,
@@ -528,7 +527,7 @@ mod_schule_kurse_ui <- function(id){
                          )
              ))),
 
-  fluidRow(id="jump5a",
+  fluidRow(id="schule_ausserschulisch",
            shinydashboard::box(
              title = "Außerschulische, frühkindliche MINT-Bildung",
              width = 12,

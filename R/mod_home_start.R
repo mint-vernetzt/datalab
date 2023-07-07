@@ -41,11 +41,11 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Übersicht Fragestellungen",
         width = 3,
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump1",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#alle_mint",
         span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
         ),
 
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#alle_frauen",
         span(tags$b(span("Frauen in MINT:")))),"Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen"))
 
         ,
@@ -71,7 +71,7 @@ mod_home_start_ui <- function(id){
 
    # Box 1
 
-    fluidRow(id="jump1",
+    fluidRow(id="alle_mint",
       shinydashboard::box(
         title = "Fächerwahl MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
         width = 12,
@@ -99,7 +99,7 @@ mod_home_start_ui <- function(id){
                         "Durch Rundungen der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen.")
                         )
                             ),
-                    tabPanel("Vergleich Bereiche im Zeitverlauf", br(),
+                    tabPanel("Zeitverlauf", br(),
                         shiny::sidebarPanel(
                           width = 3,
                           mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")),
@@ -120,7 +120,7 @@ mod_home_start_ui <- function(id){
 
          ))
          ))),
-    fluidRow(id="jump2",
+    fluidRow(id="alle_frauen",
       shinydashboard::box(
         title = "Frauen in MINT: Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen",
         width = 12,

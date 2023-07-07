@@ -1691,18 +1691,16 @@ kurse_map_gender <- function(df,r) {
 
   subjects <- r$subject_map_gender
 
+  kurs_select <- r$kurs_map_gender
+
   # filter dataset based on UI inputs
   df <- df %>% dplyr::filter(jahr == timerange)
 
   # remove
   df <- df %>% dplyr::filter(region != "Deutschland")
 
-  df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen",
-                                    fachbereich == "Alle Fächer") %>%
+  df_gesamt <- df %>% dplyr::filter(fachbereich == "Alle Fächer") %>%
     dplyr::rename(wert_sum = "wert")
-
-  #share_mint_kurse ntutz "alle Fächer"
-  #df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
   # aggregate to MINT
   df_sub <- share_mint_kurse(df)
@@ -1717,29 +1715,43 @@ kurse_map_gender <- function(df,r) {
 
   df <- df %>% dplyr::filter(fachbereich == subjects)
 
-  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
+  df_f <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
 
-  df <- df %>% dplyr::left_join(df_gesamt, by=c("jahr", "region", "indikator",
+  df_f <- df_f %>% dplyr::left_join(df_gesamt %>% dplyr::filter(anzeige_geschlecht=="Frauen"), by=c("jahr", "region", "indikator",
                                           "bereich", "anzeige_geschlecht")) %>%
+    dplyr::rename(fachbereich = "fachbereich.x") %>%
+    dplyr::select(-fachbereich.y) %>%
+    dplyr::mutate(proportion = (wert/wert_sum)*100)
+
+  df_m <- df %>% dplyr::filter(anzeige_geschlecht == "Männer")
+
+  df_m <- df_m %>% dplyr::left_join(df_gesamt %>% dplyr::filter(anzeige_geschlecht=="Männer"), by=c("jahr", "region", "indikator",
+                                                                                                    "bereich", "anzeige_geschlecht")) %>%
     dplyr::rename(fachbereich = "fachbereich.x") %>%
     dplyr::select(-fachbereich.y) %>%
     dplyr::mutate(proportion = (wert/wert_sum)*100)
 
   help_title <- ifelse(subjects == "MINT-Fächer (gesamt)", "MINT-Fächern (gesamt)", subjects)
   help_title <- ifelse(help_title == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_title)
+  help_kurs <- ifelse(kurs_select == "Grundkurse", "Grundkurs", "Leistungskurs")
 
   #Extra gerundeten Proportions-Wert erstellen, für Anzeige in Hover
-  df$prop <- df$proportion
-  df$prop <- round(df$prop, 0)
+  df_f$prop <- df_f$proportion
+  df_f$prop <- round(df_f$prop, 0)
+
+  df_m$prop <- df_m$proportion
+  df_m$prop <- round(df_m$prop, 0)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df_f$wert <- prettyNum(df_f$wert, big.mark = ".", decimal.mark = ",")
+  df_m$wert <- prettyNum(df_m$wert, big.mark = ".", decimal.mark = ",")
 
+  # Plots
   highcharter::hw_grid(
-    # plot
+
     highcharter::hcmap(
       "countries/de/de-all",
-      data = df[df$indikator == "Grundkurse",],
+      data = df_f[df_f$indikator == kurs_select,],
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
@@ -1755,7 +1767,7 @@ kurse_map_gender <- function(df,r) {
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#154194", labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Grundkurs-Belegungen von Mädchen in ", help_title, br(), timerange),
+        text = paste0(help_kurs, "-Belegungen von Mädchen in ", help_title, br(), timerange),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1772,7 +1784,7 @@ kurse_map_gender <- function(df,r) {
 
     highcharter::hcmap(
       "countries/de/de-all",
-      data = df[df$indikator == "Leistungskurse",],
+      data = df_m[df_m$indikator == kurs_select,],
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
@@ -1788,7 +1800,7 @@ kurse_map_gender <- function(df,r) {
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
             highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#154194", labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Leistungskurs-Belegungen von Mädchen in ", help_title, br(), timerange),
+        text = paste0(help_kurs, "-Belegungen von Jungen in ", help_title, br(), timerange),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")

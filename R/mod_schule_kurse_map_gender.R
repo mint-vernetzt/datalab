@@ -35,6 +35,13 @@ mod_schule_kurse_map_gender_ui <- function(id){
                   "Religion/Ethik",
                   "Sport"),
       selected = "MINT-Fächer (gesamt)"
+    ),
+    p("Kursart:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("kurs_map_gender"),
+      choices = c("Grundkurse",
+                  "Leistungskurse"),
+      selected = "Leistungskurse"
     )
   )
 }
@@ -51,6 +58,10 @@ mod_schule_kurse_map_gender_server <- function(id, r){
 
     observeEvent(input$subject_map_gender, {
       r$subject_map_gender <- input$subject_map_gender
+    })
+
+    observeEvent(input$kurs_map_gender, {
+      r$kurs_map_gender <- input$kurs_map_gender
     })
 
   })
