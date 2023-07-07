@@ -1848,10 +1848,34 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(prop, 2), x = bundesland)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_xAxis(title = list(text = ""), categories =c("Deutschland",
+                                                                 "Westdeutschland (o. Berlin)",
+                                                                 "Ostdeutschland (einschl. Berlin)",
+                                                                 "Baden-Württemberg",
+                                                                 "Bayern",
+                                                                 "Berlin",
+                                                                 "Brandenburg",
+                                                                 "Bremen",
+                                                                 "Hamburg",
+                                                                 "Hessen",
+                                                                 "Mecklenburg-Vorpommern",
+                                                                 "Niedersachsen",
+                                                                 "Nordrhein-Westfalen",
+                                                                 "Rheinland-Pfalz",
+                                                                 "Saarland",
+                                                                 "Sachsen",
+                                                                 "Sachsen-Anhalt",
+                                                                 "Schleswig-Holstein",
+                                                                 "Thüringen")
+    ) %>%
    # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
    # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_colors( "#b16fab") %>%
+    highcharter::hc_plotOptions(bar = list(
+      colorByPoint = TRUE,
+      colors = ifelse(df$bundesland %in% c("Deutschland","Westdeutschland (o. Berlin)",
+                                           "Ostdeutschland (einschl. Berlin)"), "#d0a9cd", "#b16fab")
+    )) %>%
+    # highcharter::hc_colors( "#b16fab") %>%
     highcharter::hc_title(text = paste0( "Anteil von ", title_help, " in ", states, " an allen ", title_h2, " in 2021",
                                                                         "<br><br><br>"),
                           margin = 20,
