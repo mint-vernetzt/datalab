@@ -3933,7 +3933,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom") %>%
-    highcharter::hc_exporting(enabled = TRUE,
+    highcharter::hc_exporting(enabled = FALSE, #noch kein Download bis jetzt
                               buttons = list(contextButton = list(
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
                                 onclick = highcharter::JS("function () {
@@ -3971,7 +3971,7 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom") %>%
-    highcharter::hc_exporting(enabled = TRUE,
+    highcharter::hc_exporting(enabled = FALSE, #noch kein Download bis jetzt
                               buttons = list(contextButton = list(
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
                                 onclick = highcharter::JS("function () {
