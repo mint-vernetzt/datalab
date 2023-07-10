@@ -3646,7 +3646,7 @@ arbeitsmarkt_top10 <- function(df, r){
           dataLabels = list(enabled = TRUE, format = "{point.prop} %")
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), min = 0, max = 100, tickInterval = 5) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), min = 0, max = 100, tickInterval = 10) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
       highcharter::hc_title(text = paste0("MINT-Ausbildungsberufe mit dem höchsten Frauenanteil ", "(", time, ")"),
@@ -3676,7 +3676,7 @@ arbeitsmarkt_top10 <- function(df, r){
           dataLabels = list(enabled = TRUE, format = "{point.prop} %")
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), min = 0, max = 100, tickInterval = 5) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), min = 0, max = 100, tickInterval = 10) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#66cbaf")) %>%
       highcharter::hc_title(text = paste0("MINT-Ausbildungsberufe mit dem höchsten Männeranteil ", "(", time, ")"),
