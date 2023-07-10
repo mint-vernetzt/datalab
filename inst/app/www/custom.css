@@ -80,6 +80,13 @@
                                 background-color: #154194;
                                 color: #FFFFFF;
                                 }
+
+                                  /* toggle button passive  */
+                                .skin-blue .main-header .navbar .sidebar-toggle{
+                                background-color: #FFFFFF;
+                                color:#154194;
+                                }
+
                                 /* toggle button when hovered  */
                                 .skin-blue .main-header .navbar .sidebar-toggle:hover{
                                 background-color: #154194;
