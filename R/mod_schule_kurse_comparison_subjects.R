@@ -26,10 +26,6 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
       selected = "Leistungskurse"
     ),
     p("Region:"),
-      # shinyBS::bsPopover(id="b2_t5_sb1", title = "",
-      #                    content = "Alle Bundesländer haben andere LK vorschriften. In BY ...",
-      #                    trigger = "hover"), #das ist in Box
-      # tags$a(icon("question-circle"), id="b2_t5_sb1"), # das ist was man in App sieht
     shinyWidgets::pickerInput(
       inputId = ns("state_comparison_subject"),
       choices = c("Deutschland",
@@ -56,12 +52,6 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
       selected = "Hessen"
 
     )
-    # ,
-    # tags$a(p("Hinweis zu Bayern")),
-    # shinyBS::bsPopover(id="b2_t5_sb2", title = "",
-    #                    content = "Hinweis: xxx",
-    #                    trigger = "hover"), #das ist in Box
-    # tags$a(icon("question-circle"), id="b2_t5_sb2"), # das ist was man in App sieht
 
   )
 }
