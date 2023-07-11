@@ -82,11 +82,14 @@ mod_home_start_ui <- function(id){
                     tabPanel("Vergleich Bereiche", br(),
                       shiny::sidebarPanel(
                         width = 3,
-                         shinyBS::bsPopover(id="q1", title = "Überschrift, kann auch leer bleiben und dadurch ausgeblendet",
-                                           content = "Inhalt<br><br><br><i>auch HTML tags möglich</i>",
+                        shinyBS::bsPopover(id="darst_1", title = "",
+                                           content = "Falls die Grafiken abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal
+                                           verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.",
                                            trigger = "hover"), #das ist in Box
-                        tags$a(icon("question-circle"), id="q1"), # das ist was man in App sieht
+                        #p(style="font-size:12px;color:grey", "Probleme bei der Darstellung"),
+                        tags$a(icon("question-circle"), id="darst_1"), # das ist was man in App sieht
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
+
                         p(style="font-size:12px;color:grey", "Hinweis zur Darstellung: Falls die Grafiken abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                         p(style="font-size:12px;color:grey", "Interpretationshilfe: Wenn man beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden deutschlandweit im Jahr 2021
                           31 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten in Deutschland ist dieser Anteil ein wenig geringer. Im Jahr 2021 arbeiten nur 23 % der Beschäftigten in einem MINT-Beruf.")
