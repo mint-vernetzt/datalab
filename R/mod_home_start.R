@@ -82,28 +82,19 @@ mod_home_start_ui <- function(id){
                     tabPanel("Vergleich Bereiche", br(),
                       shiny::sidebarPanel(
                         width = 3,
-                        shinyBS::bsPopover(id="darst_1", title = "",
-                                           content = "Falls die Grafiken abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal
-                                           verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein.",
-                                           trigger = "hover"), #das ist in Box
-                        #p(style="font-size:12px;color:grey", "Probleme bei der Darstellung"),
-                        tags$a(icon("question-circle"), id="darst_1"), # das ist was man in App sieht
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
-
-                        p(style="font-size:12px;color:grey", "Hinweis zur Darstellung: Falls die Grafiken abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                        p(style="font-size:12px;color:grey", "Interpretationshilfe: Wenn man beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden deutschlandweit im Jahr 2021
-                          31 % dazu entscheiden, eine Ausbildung in einem MINT-Beruf zu machen. Bei den Beschäftigten in Deutschland ist dieser Anteil ein wenig geringer. Im Jahr 2021 arbeiten nur 23 % der Beschäftigten in einem MINT-Beruf.")
                         ),
                       shiny::mainPanel(
                         width = 9,
-                        htmlOutput(ns("plot_mint_rest_einstieg_1"))
-                        ,p(style="font-size:12px;color:grey",
-                           "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                        htmlOutput(ns("plot_mint_rest_einstieg_1")),
+                        br(),
                         p(style="font-size:12px;color:grey",
-                        "Hinweise: Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
-                         eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
-                         nutzen wir die Kursbelegungszahlen der Schüler:innen.", br(),
-                        "Durch Rundungen der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen.")
+                             "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+
+                        shinyBS::bsPopover(id="h_alle_mint_1", title = "",
+                                           content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen."),
+                                           trigger = "hover"),
+                         tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_alle_mint_1")
                         )
                             ),
                     tabPanel("Zeitverlauf", br(),
@@ -112,9 +103,17 @@ mod_home_start_ui <- function(id){
                           mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")),
                         shiny::mainPanel(
                           width = 9,
-                          highcharter::highchartOutput(ns("plot_mint_1"))
-                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
-                             )
+                          highcharter::highchartOutput(ns("plot_mint_1")),
+                          br(),
+                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                          shinyBS::bsPopover(id="h_alle_mint_2", title = "",
+                                             content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen."),
+                                             trigger = "hover"),
+                          tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_alle_mint_2")
+                          )
+
+                        )
+
                    ,
                     tabPanel("Überblick", br(),
                              shiny::sidebarPanel(
@@ -122,11 +121,17 @@ mod_home_start_ui <- function(id){
                                mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_comparison_mint"))
-                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen.")
+                               highcharter::highchartOutput(ns("plot_comparison_mint")),
+                               br(),
+                               p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_alle_mint_3", title = "",
+                                                  content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen."),
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_alle_mint_3")
+                             )
 
          ))
-         ))),
+         )),
     fluidRow(id="alle_frauen",
       shinydashboard::box(
         title = "Frauen in MINT: Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen",
@@ -140,18 +145,19 @@ mod_home_start_ui <- function(id){
                     tabPanel("Vergleich Bereiche", br(),  # Verlgeich
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_home_start_einstieg_gender_ui("mod_home_start_einstieg_gender_ui_1"),
-                             p(style="font-size:12px;color:grey",
-                               "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                             p(style="font-size:12px;color:grey",
-                             "Interpretationshilfe: Betrachtet man hier beispielsweise die MINT-Beschäftigten, sieht man, dass deutschlandweit im Jahr 2021 17 % der in MINT-Beschäftigten
-                              Frauen sind. Der Anteil an Frauen in anderen Berufsgruppen ist dagegen weitaus größer (55 %).")
-                             ),
+                               mod_home_start_einstieg_gender_ui("mod_home_start_einstieg_gender_ui_1")
+                               ),
+
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_pie_mint_gender")),
                                p(style="font-size:12px;color:grey",
-                                  "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen.")
+                                  "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_alle_frauen_1", title = "",
+                                                  content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_alle_frauen_1")
                                )
                             )
                     ,
@@ -162,7 +168,12 @@ mod_home_start_ui <- function(id){
                         shiny::mainPanel(
                           width = 9,
                           highcharter::highchartOutput(ns("plot_verlauf_mint"))
-                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen.")
+                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                          shinyBS::bsPopover(id="h_alle_frauen_2", title = "",
+                                             content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                             placement = "top",
+                                             trigger = "hover"),
+                          tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_alle_frauen_2")
                                         )
                             ),
                     tabPanel("Überblick", br(),
@@ -172,10 +183,17 @@ mod_home_start_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_comparison_gender"))
-                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."))
+                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_alle_frauen_3", title = "",
+                                                  content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_alle_frauen_3"))
 
                              )
-                    )))
+                    )
+        )
+    )
 
 
   ,

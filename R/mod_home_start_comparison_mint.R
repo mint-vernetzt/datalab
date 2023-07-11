@@ -16,7 +16,12 @@ mod_home_start_comparison_mint_ui <- function(id){
       label = NULL,
       choices = c("2013", "2014","2015","2016","2017", "2018", "2019", "2020", "2021"),
       selected = "2021"
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_alle_mint_3", title="",
+                       content = paste0("Diese Übersicht zeigt beispielsweise, dass deutschlandweit 2021 37 % der Studierenden ein MINT-Fach studieren. Dagegen studieren 63 % in einem anderen Fachbereich. Über alle Bildungsbereiche hinweg ist der MINT-Anteil der Beschäftigten mit 23 % 2021 am geringsten."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_alle_mint_3")
   )
 }
 

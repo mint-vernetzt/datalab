@@ -176,10 +176,10 @@ mod_schule_kurse_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               shinyBS::bsPopover(id="q1", title = "Überschrift, kann auch leer bleiben und dadurch ausgeblendet",
-                                                  content = "Inhalt<br><br><br><i>auch HTML tags möglich</i>",
-                                                  trigger = "hover"), #das ist in Box
-                               tags$a(icon("question-circle"), id="q1"), # das ist was man in App sieht
+                               # shinyBS::bsPopover(id="q1", title = "Überschrift, kann auch leer bleiben und dadurch ausgeblendet",
+                               #                    content = "Inhalt<br><br><br><i>auch HTML tags möglich</i>",
+                               #                    trigger = "hover"), #das ist in Box
+                               # tags$a(icon("question-circle"), id="q1"), # das ist was man in App sieht
                                mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
 
                                p(style="font-size:12px;color:grey",
