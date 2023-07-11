@@ -11,7 +11,7 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Zeitraums:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_bl_verlauf"),
       label = NULL,
@@ -19,21 +19,41 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
                   "2018","2019", "2020", "2021"),
       selected = c("2016", "2021")
     ),
-    p("Auswahl der Beschäftigungsform der Arbeitnehmer:innen:"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("indikator_beruf_arbeitsmarkt_bl_verlauf"),
-      choices = c("Auszubildende", "Beschäftigte"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+    p("Beschäftigungsform"),
+    shinyWidgets::pickerInput(
+      inputId = ns("niveau"),
+      choices = c(
+                   "Auszubildende",
+
+                   "Beschäftigte"
+
+                   ),
+      # justified = TRUE,
+      # checkIcon = list(yes = icon("ok",
+      #                             lib = "glyphicon")),
+      selected= "Beschäftigte",
+
     ),
+    # p("Auswahl des Fachs:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("pick_i"),
+    #   choices = c( "Bau- und Gebäudetechnik",  "Gesundheitstechnik",
+    #
+    #                "Informatik",    "Landtechnik", "Mathematik, Naturwissenschaften",
+    #
+    #                "MINT",  "Produktionstechnik","Technik (gesamt)",
+    #
+    #                "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"
+    #   ),
+    #   selected = "Informatik"
+    # ),
     # p("Auswahl des Anforderungsniveaus:"),
     # shinyWidgets::pickerInput(
     #   inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf"),
     #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"), kab
     #   selected = "Gesamt"
     # ),
-    p("Auswahl der Bundesländer:"),
+    p("Regionen:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_bl_verlauf"),
       choices = c("Deutschland",
@@ -54,17 +74,26 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westen",
-                  "Osten"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
                   ),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
-      selected = c("Hessen", "Hamburg")
+      selected = c("Ostdeutschland (inkl. Berlin)", "Hamburg")
 
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_4"),
+      choices = c("In Prozent", "Anzahl"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
+
 }
 
 #' beruf_arbeitsmarkt_bl_verlauf Server Functions
@@ -73,12 +102,16 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
 mod_beruf_arbeitsmarkt_bl_verlauf_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$date_beruf_arbeitsmarkt_bl_verlauf, {
-      r$date_beruf_arbeitsmarkt_bl_verlauf <- input$date_beruf_arbeitsmarkt_bl_verlauf
+    observeEvent(input$pick_i, {
+      r$pick_i <- input$pick_i
     })
 
-    observeEvent(input$indikator_beruf_arbeitsmarkt_bl_verlauf, {
-      r$indikator_beruf_arbeitsmarkt_bl_verlauf <- input$indikator_beruf_arbeitsmarkt_bl_verlauf
+    observeEvent(input$niveau, {
+      r$niveau <- input$niveau
+    })
+
+    observeEvent(input$abs_zahlen_4, {
+      r$abs_zahlen_4 <- input$abs_zahlen_4
     })
 
     # observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf, {
@@ -88,6 +121,12 @@ mod_beruf_arbeitsmarkt_bl_verlauf_server <- function(id, r){
     observeEvent(input$states_beruf_arbeitsmarkt_bl_verlauf, {
       r$states_beruf_arbeitsmarkt_bl_verlauf <- input$states_beruf_arbeitsmarkt_bl_verlauf
     })
+
+    observeEvent(input$date_beruf_arbeitsmarkt_bl_verlauf, {
+      r$date_beruf_arbeitsmarkt_bl_verlauf <- input$date_beruf_arbeitsmarkt_bl_verlauf
+    })
+
+
 
   })
 }

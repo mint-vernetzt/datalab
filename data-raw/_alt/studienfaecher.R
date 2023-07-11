@@ -31,7 +31,8 @@ osten <- studierende_faecher %>%
                               "Mecklenburg-Vorpommern",
                               "Sachsen",
                               "Sachsen-Anhalt",
-                              "Thüringen")) %>%
+                              "Thüringen",
+                              "Berlin")) %>%
   dplyr::group_by(indikator,
                   jahr,
                   fachbereich,
@@ -47,7 +48,8 @@ westen <- studierende_faecher %>%
                                 "Mecklenburg-Vorpommern",
                                 "Sachsen",
                                 "Sachsen-Anhalt",
-                                "Thüringen"))) %>%
+                                "Thüringen",
+                                "Berlin"))) %>%
   dplyr::group_by(indikator,
                   jahr,
                   fachbereich,

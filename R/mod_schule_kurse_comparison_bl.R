@@ -11,27 +11,27 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_comparison_bl"),
       label = NULL,
       choices = c("2013","2014", "2015", "2016", "2017",
-                  "2018","2019", "2020"),
-      selected = "2020"),
+                  "2018","2019", "2020", "2021"),
+      selected = "2021"),
 
-    p("Form der Kursbelegung:"),
-    shinyWidgets::radioGroupButtons(
+    p("Kursart:"),
+    shinyWidgets::pickerInput(
       inputId = ns("indikator_comparison_bl"),
       choices = c("Grundkurse", "Leistungskurse"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+      selected = "Leistunskurse"
     ),
 
-    p("Auswahl des Fachs:"),
+    p("Fach/Fächergruppe:"),
+    conditionalPanel(condition = "input.indikator_comparison_bl=='Grundkurse'",
+    ns= ns,
     shinyWidgets::pickerInput(
-      inputId = ns("subject_comparison_bl"),
-      choices = c("MINT-Fächer (gesamt)",
+      inputId = ns("subject_comparison_bl1"),
+      choices =  c("MINT-Fächer (gesamt)",
                   "Mathematik",
                   "Informatik",
                   "Physik",
@@ -43,11 +43,24 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
                   "Gesellschaftswissenschaften",
                   "Musik/Kunst",
                   "Religion/Ethik",
-                  "Sport"),
-      selected = "MINT-Fächer (gesamt)"
-    )
+                  "Sport"))),
+    conditionalPanel(condition = "input.indikator_comparison_bl=='Leistungskurse'",
+                     ns= ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("subject_comparison_bl2"),
+                       choices =  c("MINT-Fächer (gesamt)",
+                                    "Mathematik",
+                                    "Informatik",
+                                    "Physik",
+                                    "Chemie",
+                                    "Biologie",
+                                    "andere Fächer (gesamt)",
+                                    "Deutsch",
+                                    "Fremdsprachen",
+                                    "Gesellschaftswissenschaften",
+                                    "Musik/Kunst",
+                                    "Sport"))))
 
-  )
 }
 
 #' schule_kurse_comparison_bl Server Functions
@@ -60,13 +73,20 @@ mod_schule_kurse_comparison_bl_server <- function(id, r){
       r$date_comparison_bl <- input$date_comparison_bl
     })
 
-    observeEvent(input$subject_comparison_bl, {
-      r$subject_comparison_bl <- input$subject_comparison_bl
-    })
-
     observeEvent(input$indikator_comparison_bl, {
       r$indikator_comparison_bl <- input$indikator_comparison_bl
     })
+
+    observeEvent(input$subject_comparison_bl1, {
+      r$subject_comparison_bl1 <- input$subject_comparison_bl1
+    })
+
+    observeEvent(input$subject_comparison_bl2, {
+      r$subject_comparison_bl2 <- input$subject_comparison_bl2
+    })
+
+
+
 
 
   })

@@ -12,13 +12,13 @@
 
 library(magrittr)
 
-setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
-path<-"C:/Users/kab/Downloads/datalab/datalab/data-raw/BA006_221123_Besch_MINT.xlsx"
-data <- readxl::read_excel("BA006_221123_Besch_MINT.xlsx",
-                           sheet = "Auswertung", col_names = F, range = "A17:AK7576")
-#
-# data <- readxl::read_excel("data-raw/BA006_221123_Besch_MINT.xlsx",
+# setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
+# path<-"C:/Users/kab/Downloads/datalab/datalab/data-raw/BA006_221123_Besch_MINT.xlsx"
+# data <- readxl::read_excel("BA006_221123_Besch_MINT.xlsx",
 #                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
+#
+data <- readxl::read_excel("data-raw/BA006_221123_Besch_MINT.xlsx",
+                           sheet = "Auswertung", col_names = F, range = "A17:AK7576")
 
 # Spalten zusammenfassen/löschen
 data$...1 <- dplyr::coalesce(data$...4, data$...3, data$...2, data$...1) # Regionen in eine Spalte
@@ -30,10 +30,13 @@ data1 <- data %>%
   dplyr::mutate(bundesland=dplyr::case_when(
     ...1 == "Deutschland" ~ "Deutschland",
     ...1 == "Westdeutschland (o. Berlin)" ~"Westdeutschland (o. Berlin)",
+    ...1 == "Ostdeutschland (einschl. Berlin)" ~ "Ostdeutschland (einschl. Berlin)",
     ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
     ...1 == "Bayern" ~"Bayern",
     ...1 == "Berlin" ~"Berlin",
-    ...1 == "Brandenburg" ~"Bremen",
+    ...1 == "Brandenburg" ~ "Brandenburg",
+    ...1 == "Bremen" ~ "Bremen",
+    ...1 == "Hamburg" ~"Hamburg",
     ...1 == "Hessen" ~"Hessen",
     ...1 == "Mecklenburg-Vorpommern" ~"Mecklenburg-Vorpommern",
     ...1 == "Niedersachsen" ~"Niedersachsen",
@@ -43,19 +46,56 @@ data1 <- data %>%
     ...1 == "Sachsen-Anhalt" ~"Sachsen-Anhalt",
     ...1 == "Sachsen" ~"Sachsen",
     ...1 == "Schleswig-Holstein" ~"Schleswig-Holstein",
-    ...1 == "Thüringen" ~"Thüringen",
-    ...1 == "Ostdeutschland (einschl. Berlin)" ~"Ostdeutschland (einschl. Berlin)"
-    ))%>% tidyr::separate(...4, c("a","b","c"), sep = ",")%>%
-      dplyr::rename(ort = a)
+    ...1 == "Thüringen" ~"Thüringen"
+    ))%>% tidyr::separate(...4, c("a","b","c"), sep = ",")%>% #reicht nicht ganz, müsste auch nach : separieren für Sachsen-Anhalt Kreise
+   dplyr::rename(ort = a)
+
+# für LKs von Sachsen-Anhalt Trennung mit :
+data1 <- data1 %>%
+  tidyr::separate(ort, c("ort", "d"), sep = ":")
+data1$b <- ifelse(!is.na(data1$d), data1$d, data1$b)
+data1 <- data1 %>% dplyr::select(-d)
+
+# Trennen von Infromation und Schlüsselnummer für Städte in Sachsen-Anhalt & Thüringen an :
+data1 <- data1 %>%
+  tidyr::separate(b, c("b", "d"), sep = ":")
+data1$c <- ifelse(!is.na(data1$d), data1$d, data1$c)
+data1 <- data1 %>% dplyr::select(-d)
 
 data1$bundesland <- zoo::na.locf(data1$bundesland)
 
-
+# Schlüsselnummern in "c" eintragen, falls fehlen
 data1$c <- ifelse(!grepl("[^A-Za-z]", data1$c), data1$b, data1$c)
 data1$b <- ifelse(data1$b == data1$c, NA, data1$b)
 
-colnames(data1)[6] <- "schluesselnummer"
-colnames(data1)[5] <- "zusatz"
+# zwischen gleichnamigen Stadt- und Landkreisen unterscheiden
+## Hilfsvarialbe, die Stadt/Landkreise, die es doppelt gibt, in Hilfs-String schreibt
+help <- data.frame(table(data1$ort))
+help <- help %>% dplyr::filter(Freq != 1)
+
+# für die ausgewählten Fälle (-->%in% help) falls "Stadt" in näherer Bezeichnung in Spalte b vorkommt, Stadt vorschreiben, sonst Landkreis
+data1$ort <- ifelse(data1$ort %in% help$Var1 & grepl("tadt", data1$b) , stringr::str_c("Stadt ", data1$ort), data1$ort)
+data1$ort <- ifelse(data1$ort %in% help$Var1 & !grepl("tadt", data1$b), stringr::str_c("Landkreis ", data1$ort),data1$ort)
+
+# Spezialfall Dillingen ist hier 2. Augsbrug - Name und Schlüsselnummer korrekt in c schreiben:
+data1$ort <- ifelse(data1$c == "von 01.01.1973", stringr::str_c(data1$ort, " ", data1$c), data1$ort)
+data1$c <- ifelse(data1$c == "von 01.01.1973", data1$b, data1$c)
+data1$ort <- ifelse(grepl("von 01.01.1973",data1$ort), "Dillingen a. d. Donau", data1$ort)
+data1$c <- ifelse(grepl("Dillingen",data1$ort), "09773", data1$c)
+data1$b <- ifelse(grepl("Dillingen",data1$ort), NA, data1$b)
+
+# Spezifalfall Oldenburg mit Beschreibung Oldenburg in Klammern, daher nicht erkannt als identisch in Ansatz davor
+data1$ort <- ifelse(data1$ort == "Oldenburg (Oldenburg)", "Stadt Oldenburg", data1$ort)
+data1$ort <- ifelse(data1$ort == "Oldenburg", "Landkreis Oldenburg", data1$ort)
+
+# Spezialfall Eisenach - Leerzeichen vor Schlüsselnummer
+data1$c <- ifelse(data1$ort == "Eisenach", 16056, data1$c)
+
+data1 <- data1 %>%
+  dplyr::rename(
+    schluesselnummer = c,
+    zusatz = b
+  )
 
 data <- data1[,-c(2,3,8:11)] # nun überflüssige Spalten löschen
 
@@ -211,6 +251,45 @@ data <- data[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht"
                 #, "hinweise", "quelle"
 )]
 
+######## Weitere Anpassungen/Berechnungen von Andi ###################################
+
+data <- data %>%
+  dplyr::mutate(wert = ifelse(is.na(wert), 0, wert))
+
+# Calculate Beschäftigte 25-55
+data_alter <- data %>% dplyr::filter(indikator %in% c("Beschäftigte", "Beschäftigte u25", "Beschäftigte ü55"),
+                                                                   geschlecht == "Gesamt")
+
+data_alter <- data_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
+                                                                           landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
+  dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
+  dplyr::mutate(indikator = "Beschäftigte 25-55") %>%
+  dplyr::filter(!is.na(wert)) %>%
+  dplyr::bind_rows(., data_alter)
+
+# Calculate ausländische Beschäftigte 25-55
+data_ausl_alter <- data %>% dplyr::filter(indikator %in% c("ausländische Beschäftigte", "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55"),
+                                                                        geschlecht == "Gesamt")
+
+data_ausl_alter <- data_ausl_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
+                                                                                     landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
+  dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
+  dplyr::mutate(indikator = "ausländische Beschäftigte 25-55") %>%
+  dplyr::filter(!is.na(wert)) %>%
+  dplyr::bind_rows(., data_ausl_alter)
+
+# Calculate males
+data_geschlecht <- data %>% dplyr::filter(!indikator %in% c("Beschäftigte u25", "Beschäftigte ü55",
+                                                                                          "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55")) %>%
+  dplyr::group_by(bereich, kategorie, indikator, fachbereich, bundesland, landkreis,
+                  landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
+  dplyr::summarise(wert = wert - dplyr::lead(wert, 1)) %>%
+  dplyr::mutate(geschlecht = "Männer") %>%
+  dplyr::filter(!is.na(wert)) %>%
+  dplyr::bind_rows(., data)
+
+data_final <- dplyr::bind_rows(data_geschlecht, data_alter, data_ausl_alter) %>%
+  dplyr::distinct()
 
 ######## Arbeitsmarkt detailliert - Azubi-Datensatz #############################
 
@@ -221,10 +300,10 @@ data <- data[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht"
 #                            sheet = "Auswertung2", col_names = F, range = "A12:L4201")
 
 # läuft seit neuem Laptop mit Code drüber nicht mehr druch, daher umgeschrieben (kbr)
-data_a <- readxl::read_excel("BA007_221205_AusbV_MINT.xlsx",
-                             sheet = "Auswertung2", col_names = F, range = "A12:L4201")
-# data_a <- readxl::read_excel("data-raw/BA007_221205_AusbV_MINT.xlsx",
+# data_a <- readxl::read_excel("BA007_221205_AusbV_MINT.xlsx",
 #                              sheet = "Auswertung2", col_names = F, range = "A12:L4201")
+data_a <- readxl::read_excel("data-raw/BA007_221205_AusbV_MINT.xlsx",
+                             sheet = "Auswertung2", col_names = F, range = "A12:L4201")
 
 # Spalten zusammenfassen/löschen
 data_a$...1 <- dplyr::coalesce(data_a$...4, data_a$...3, data_a$...2, data_a$...1) # Regionen in eine Spalte
@@ -235,10 +314,13 @@ data_a1 <- data_a %>%
   dplyr::mutate(bundesland=dplyr::case_when(
     ...1 == "Deutschland" ~ "Deutschland",
     ...1 == "Westdeutschland (o. Berlin)" ~"Westdeutschland (o. Berlin)",
+    ...1 == "Ostdeutschland (einschl. Berlin)" ~ "Ostdeutschland (einschl. Berlin)",
     ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
     ...1 == "Bayern" ~"Bayern",
     ...1 == "Berlin" ~"Berlin",
-    ...1 == "Brandenburg" ~"Bremen",
+    ...1 == "Brandenburg" ~ "Brandenburg",
+    ...1 == "Bremen" ~ "Bremen",
+    ...1 == "Hamburg" ~"Hamburg",
     ...1 == "Hessen" ~"Hessen",
     ...1 == "Mecklenburg-Vorpommern" ~"Mecklenburg-Vorpommern",
     ...1 == "Niedersachsen" ~"Niedersachsen",
@@ -248,19 +330,57 @@ data_a1 <- data_a %>%
     ...1 == "Sachsen-Anhalt" ~"Sachsen-Anhalt",
     ...1 == "Sachsen" ~"Sachsen",
     ...1 == "Schleswig-Holstein" ~"Schleswig-Holstein",
-    ...1 == "Thüringen" ~"Thüringen",
-    ...1 == "Ostdeutschland (einschl. Berlin)" ~"Ostdeutschland (einschl. Berlin)"
+    ...1 == "Thüringen" ~"Thüringen"
   ))%>% tidyr::separate(...4, c("a","b","c"), sep = ",")%>%
   dplyr::rename(ort = a)
 
-data_a1$bundesland <- zoo::na.locf(data_a1$bundesland)
+# für LKs von Sachsen-Anhalt Trennung mit :
+data_a1 <- data_a1 %>%
+  tidyr::separate(ort, c("ort", "d"), sep = ":")
+data_a1$b <- ifelse(!is.na(data_a1$d), data_a1$d, data_a1$b)
+data_a1 <- data_a1 %>% dplyr::select(-d)
 
+# Trennen von Infromation und Schlüsselnummer für Städte in Sachsen-Anhalt & Thüringen an :
+data_a1 <- data_a1 %>%
+  tidyr::separate(b, c("b", "d"), sep = ":")
+data_a1$c <- ifelse(!is.na(data_a1$d), data_a1$d, data_a1$c)
+data_a1 <- data_a1 %>% dplyr::select(-d)
+
+
+data_a1$bundesland <- zoo::na.locf(data_a1$bundesland)
 
 data_a1$c <- ifelse(!grepl("[^A-Za-z]", data_a1$c), data_a1$b, data_a1$c)
 data_a1$b <- ifelse(data_a1$b == data_a1$c, NA, data_a1$b)
 
-colnames(data_a1)[6] <- "schluesselnummer"
-colnames(data_a1)[5] <- "zusatz"
+
+# zwischen gleichnamigen Stadt- und Landkreisen unterscheiden
+## Hilfsvarialbe, die Stadt/Landkreise, die es doppelt gibt, in Hilfs-String schreibt
+help <- data.frame(table(data_a1$ort))
+help <- help %>% dplyr::filter(Freq != 1)
+
+# für die ausgewählten Fälle (-->%in% help) falls "Stadt" in näherer Bezeichnung in Spalte b vorkommt, Stadt vorschreiben, sonst Landkreis
+data_a1$ort <- ifelse(data_a1$ort %in% help$Var1 & grepl("tadt", data_a1$b) , stringr::str_c("Stadt ", data_a1$ort), data_a1$ort)
+data_a1$ort <- ifelse(data_a1$ort %in% help$Var1 & !grepl("tadt", data_a1$b), stringr::str_c("Landkreis ", data_a1$ort),data_a1$ort)
+
+# Spezialfall Augsbrug mit zwei verschiedene Landkreisangaben nähere Erklärung hinzufügen und Schlüsselnummer korrekt in c schreiben:
+data_a1$ort <- ifelse(data_a1$c == "von 01.01.1973", stringr::str_c(data_a1$ort, " ", data_a1$c), data_a1$ort)
+data_a1$c <- ifelse(data_a1$c == "von 01.01.1973", data_a1$b, data_a1$c)
+data_a1$ort <- ifelse(grepl("von 01.01.1973",data_a1$ort), "Dillingen a. d. Donau", data_a1$ort)
+data_a1$c <- ifelse(grepl("Dillingen",data_a1$ort), "09773", data_a1$c)
+data_a1$b <- ifelse(grepl("Dillingen",data_a1$ort), NA, data_a1$b)
+
+# Spezifalfall Oldenburg mit Beschreibung Oldenburg in Klammern, daher nicht erkannt als identisch in Ansatz davor
+data_a1$ort <- ifelse(data_a1$ort == "Oldenburg (Oldenburg)", "Stadt Oldenburg", data_a1$ort)
+data_a1$ort <- ifelse(data_a1$ort == "Oldenburg", "Landkreis Oldenburg", data_a1$ort)
+
+# Spezialfall Eisenach - Leerzeichen vor Schlüsselnummer
+data_a1$c <- ifelse(data_a1$ort == "Eisenach", 16056, data_a1$c)
+
+data_a1 <- data_a1 %>%
+  dplyr::rename(
+    schluesselnummer = c,
+    zusatz = b
+  )
 
 data_a1 <- data_a1[,-c(2,3,8:11)] # nun überflüssige Spalten löschen
 
@@ -303,8 +423,9 @@ data_a$schluesselnummer <- ifelse(data_a$schluesselnummer == data_a$region, NA, 
 #data_a$region <- stats::ave(data_a$region, cumsum(!is.na(data_a$region)), FUN=function(x) x[1])
 
 # Männer entfernen (haben gesamt und frauen)
-data_a <- data_a %>%
-  dplyr::select(-männer)
+# kann man so nicht machen, würde Daten verlieren, da aus Datenschutz manchmal nur Zahlen der Männer und nicht Gesamt/Frauen angegeben sind
+# data_a <- data_a %>%
+#   dplyr::select(-männer)
 
 # ins long-Format bringen
 data_a <- data_a %>%
@@ -337,21 +458,30 @@ data_a <- data_a %>%
 
 data_a$geschlecht[data_a$geschlecht == "frauen"]<-"Frauen"
 data_a$geschlecht[data_a$geschlecht == "gesamt"]<-"Gesamt"
+data_a$geschlecht[data_a$geschlecht == "männer"]<-"Männer"
 
 # Spalten in logische Reihenfolge bringen
 data_a <- data_a[,c("bereich","kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
                     #, "hinweise", "quelle"
 )]
 
+#### Korrektur
+#für Westdeutschland (ohne Berlin) das auch als Bundesland schreiben, nicht DE, sonst entstehen später möglicherweise Fehler beim aggregieren
+data_a$bundesland <- ifelse(data_a$landkreis == "Westdeutschland (ohne Berlin)", "Westdeutschland (ohne Berlin)", data_a$bundesland)
+
 ######## Arbeitsmarkt detailliert - insgesamt ###################################
 
-arbeitsmarkt_detail <- rbind(data, data_a)
+arbeitsmarkt_detail_final <- rbind(data_final, data_a)
 
-arbeitsmarkt_detail$landkreis <- ifelse(arbeitsmarkt_detail$bundesland==arbeitsmarkt_detail$landkreis, "alle Landkreise", arbeitsmarkt_detail$landkreis)
+arbeitsmarkt_detail_final$landkreis <- ifelse(arbeitsmarkt_detail_final$bundesland==arbeitsmarkt_detail_final$landkreis & is.na(arbeitsmarkt_detail_final$landkreis_nummer
+                                                                                                              ), "alle Landkreise", arbeitsmarkt_detail_final$landkreis)
+
+#Wert als numerisch definieren und etwaige Gruppierungen entfernen
+arbeitsmarkt_detail_final <- arbeitsmarkt_detail_final %>% dplyr::ungroup()
+arbeitsmarkt_detail_final$wert <- as.numeric(arbeitsmarkt_detail_final$wert)
 
 
+#### Datensatz speichern
 
-#Wert als numerisch definieren
-arbeitsmarkt_detail$wert <- as.numeric(arbeitsmarkt_detail$wert)
+usethis::use_data(arbeitsmarkt_detail_final, overwrite = T)
 
-usethis::use_data(arbeitsmarkt_detail, overwrite = T)

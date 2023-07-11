@@ -11,14 +11,14 @@ mod_schule_kurse_map_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Jahres :"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_map_gender"),
       label = NULL,
-      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
-      selected = 2020
+      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
+      selected = 2021
     ),
-    p("Auswahl des Fachs:"),
+    p("Fach/Fächergruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_map_gender"),
       choices = c("MINT-Fächer (gesamt)",
@@ -35,6 +35,13 @@ mod_schule_kurse_map_gender_ui <- function(id){
                   "Religion/Ethik",
                   "Sport"),
       selected = "MINT-Fächer (gesamt)"
+    ),
+    p("Kursart:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("kurs_map_gender"),
+      choices = c("Grundkurse",
+                  "Leistungskurse"),
+      selected = "Leistungskurse"
     )
   )
 }
@@ -51,6 +58,10 @@ mod_schule_kurse_map_gender_server <- function(id, r){
 
     observeEvent(input$subject_map_gender, {
       r$subject_map_gender <- input$subject_map_gender
+    })
+
+    observeEvent(input$kurs_map_gender, {
+      r$kurs_map_gender <- input$kurs_map_gender
     })
 
   })

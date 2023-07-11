@@ -10,14 +10,14 @@
 mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl Bundesland:"),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_landkreis_karte"),
       choices = c("Baden-Württemberg",
                   "Bayern",
                   "Berlin",
                   "Brandenburg",
-                  "Bremen",
+                  #"Bremen",
                   "Hamburg",
                   "Hessen",
                   "Mecklenburg-Vorpommern",
@@ -31,10 +31,10 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
                   "Thüringen"
       ),
       multiple = FALSE,
-      selected = c("Hessen")
+      selected = c("Rheinland-Pfalz")
     ),
     hr(),
-    p("Auswahl Darstellung 1:"),
+    p("Indikatoren Darstellung links:"),
     shinyWidgets::pickerInput(
       inputId = ns("kategorie_beruf_arbeitsmarkt_landkreis_karte1"),
       choices = c("Auszubildende",
@@ -64,9 +64,9 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("indikator1_beruf_arbeitsmarkt_landkreis_karte1"),
                        choices = c("Gesamt (alle der Hauptkategorie)" = "Auszubildende",
-                                   "weiblich - männlich" = "Frauen",
-                                   "ausländisch - deutsch" = "ausländische Auszubildende",
-                                   "Auszubildende im 1. Lehrjahr" = "Auszubildende (1. Jahr)"
+                                   "nur weiblich" = "Frauen",
+                                   "nur ausländisch" = "ausländische Auszubildende",
+                                   "nur Auszubildende im 1. Lehrjahr" = "Auszubildende (1. Jahr)"
                                    ),
                        selected = "Gesamt (alle der Hauptkategorie)",
                        multiple = FALSE
@@ -76,17 +76,17 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("indikator2_beruf_arbeitsmarkt_landkreis_karte1"),
                        choices = c("Gesamt (alle der Hauptkategorie)" = "Beschäftigte",
-                                   "weiblich - männlich" = "Frauen",
-                                   "ausländisch - deutsch" = "ausländische Beschäftigte",
-                                   "u25" = "Beschäftigte u25",
-                                   "25-55" = "Beschäftigte 25-55",
-                                   "ü55" =  "Beschäftigte ü55"
+                                   "nur weiblich" = "Frauen",
+                                   "nur ausländisch" = "ausländische Beschäftigte",
+                                   "nur Beschäftigte u25" = "Beschäftigte u25",
+                                   "nur Beschäftigte 25-55" = "Beschäftigte 25-55",
+                                   "nur Beschäftigte ü55" =  "Beschäftigte ü55"
                                    ),
                        selected = "Gesamt (alle der Hauptkategorie)",
                        multiple = FALSE
                      )),
     hr(),
-    p("Auswahl Darstellung 2:"),
+    p("Indikatoren Darstellung rechts:"),
     shinyWidgets::pickerInput(
       inputId = ns("kategorie_beruf_arbeitsmarkt_landkreis_karte2"),
       choices = c("Auszubildende",
@@ -108,7 +108,7 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
                   "im Bereich Technik - Verkehrs-, Sicherheits- und Veranstaltungstechnik" = "Verkehrs-, Sicherheits- u. Veranstaltungstechnik",
                   "im Bereich Technik - Gesundheitstechnik" = "Gesundheitstechnik"
                   ),
-      selected = "Gesamt",
+      selected = "MINT",
       multiple = FALSE
     ),
     conditionalPanel(condition = "input.kategorie_beruf_arbeitsmarkt_landkreis_karte2 == 'Auszubildende'",
@@ -116,11 +116,11 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("indikator1_beruf_arbeitsmarkt_landkreis_karte2"),
                        choices = c("Gesamt (alle der Hauptkategorie)" = "Auszubildende",
-                                   "weiblich - männlich" = "Frauen",
-                                   "ausländisch - deutsch" = "ausländische Auszubildende",
-                                   "Auszubildende im 1. Lehrjahr" = "Auszubildende (1. Jahr)"
+                                   "nur weiblich" = "Frauen",
+                                   "nur ausländisch" = "ausländische Auszubildende",
+                                   "nur Auszubildende im 1. Lehrjahr" = "Auszubildende (1. Jahr)"
                                    ),
-                       selected = "Gesamt (alle der Hauptkategorie)",
+                       selected = "Frauen",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.kategorie_beruf_arbeitsmarkt_landkreis_karte2 == 'Beschäftigte'",
@@ -128,13 +128,13 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("indikator2_beruf_arbeitsmarkt_landkreis_karte2"),
                        choices = c("Gesamt (alle der Hauptkategorie)" = "Beschäftigte",
-                                   "weiblich - männlich" = "Frauen",
-                                   "ausländisch - deutsch" = "ausländische Beschäftigte",
-                                   "u25" = "Beschäftigte u25",
-                                   "25-55" = "Beschäftigte 25-55",
-                                   "ü55" =  "Beschäftigte ü55"
+                                   "nur weiblich" = "Frauen",
+                                   "nur ausländisch" = "ausländische Beschäftigte",
+                                   "nur Beschäftigte u25" = "Beschäftigte u25",
+                                   "nur Beschäftigte 25-55" = "Beschäftigte 25-55",
+                                   "nur Beschäftigte ü55" =  "Beschäftigte ü55"
                        ),
-                       selected = "Gesamt (alle der Hauptkategorie)",
+                       selected = "Frauen",
                        multiple = FALSE
                      )),
   )

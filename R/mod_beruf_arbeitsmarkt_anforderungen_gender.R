@@ -30,14 +30,15 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
 
     # Auswahlform zu Dropdown geändert - alle möglichen neuen Indikatore können einfach hier ergänzt werden
 
-    p("Auswahl der Beschäftigungsform:"),
+    p("Beschäftigungsform:"),
     shinyWidgets::pickerInput(
       inputId = ns("level_arbeitsmarkt_anforderungen_gender"),
-      choices = c("Beschäftigte",
-                  "Auszubildende",
-                  "Auszubildende (1. Jahr)",
-                  "ausländische Beschäftigte",
-                  "ausländische Auszubildende"),
+      choices = c(
+        "Auszubildende",
+        "Auszubildende (1. Jahr)",
+        "Beschäftigte",
+        "ausländische Auszubildende",
+                  "ausländische Beschäftigte"),
       multiple = FALSE,
       selected = "Beschäftigte")
 

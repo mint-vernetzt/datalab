@@ -15,7 +15,7 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        img(src='www/Banner_Hinweise2.jpg',
+        img(src='www/Banner_Hinweise.jpg',
             class = "img-responsive",
             #height = "150px", width = "150px",
             alt = "Banner Quellen",
@@ -24,7 +24,7 @@ mod_quellen_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        width = 10,
+        width = 9,
         title = "Definition MINT",
                 p(style = "text-align: justify; font-size = 16px",
           "MINT ist eine Abkürzung aus den Anfangsbuchstaben bestimmter Schul- und Studienfächer bzw. Berufe.
@@ -47,7 +47,7 @@ mod_quellen_ui <- function(id){
     ),
 
       shinydashboard::box(
-          width = 2,
+          width = 3,
           title = "Unsere Datengeber:innen",
           img(src='www/Logo_BA.png',
               class = "img-responsive",
@@ -117,43 +117,7 @@ mod_quellen_ui <- function(id){
 
 
 
-    tags$footer(style="text-align: justify;background-color:white",
-
-                div(style="display: inline-block;position: relative;padding: 1em;",
-
-                    tags$a(href="https://mint-vernetzt.de/",
-                           img(src='www/MINTv_tranparent.png',
-                               class = "img-responsive",
-                               height = "100px", width = "100px",
-                               alt = "Logo MINT", target="_blank",
-                               style="display: inline-block; margin-left: auto; margin-right:10%;"))),
-
-                div(style="display: inline-block;position: relative;padding: 1em;",
-
-                    p(tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
-                      tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
-                      tags$a("Datenschutz", href="#shiny-tab-datenschutz", "data-toggle"="tab"),HTML('&nbsp;'),HTML('&nbsp;'),
-                      "Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
-
-                div(style="display: inline-block;position: relative;padding: 1em;",
-
-                    tags$a(#href="https://www.bmbf.de/bmbf/de/home/home_node.html",
-                           img(src='www/BMBF-Logo_transp1.png',
-
-                               class = "img-responsive",
-
-                               height = "200px", width = "200px",
-
-                               alt = "Logo BMBF", target="_blank",
-
-                               style="display: inline-block; margin-left: auto; margin-right: auto;"))),
-
-                div(style="display: inline-block;width: 100%;",
-
-                    " ")
-
-
-    ))
+    funct_footer())
 
 }
 

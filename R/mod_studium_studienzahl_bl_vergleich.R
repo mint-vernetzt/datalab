@@ -11,46 +11,105 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
-      inputId = ns("date_studium_studienzahl_bl_vergleich"),
+      inputId = ns("bl_date"),
       label = NULL,
-      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020),
-      selected = 2020
+      choices = c("2018", "2019", "2020", "2021"),
+      selected = "2021"
     ),
-    p("Nur Lehramt anzeigen:"),
-    tags$div(
-      shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_studienzahl_bl_vergleich"), label = "Nein", inline = TRUE),
-      tags$span("Ja"),
-      p("Auswahl der Hochschulform:"),
-      conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_vergleich == false",
-                       ns = ns,
-                       shinyWidgets::pickerInput(
-                         inputId = ns("hochschulform_studium_studienzahl_bl_vergleich1"),
-                         choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
-                       )),
-      conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_vergleich != false",
-                       ns = ns,
-                       shinyWidgets::pickerInput(
-                         inputId = ns("hochschulform_studium_studienzahl_bl_vergleich2"),
-                         choices = "Uni"
-                       )),
-      p("Auswahl des Fachs:"),
+    p("Indikator:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("rank_bl_l"),
+      choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
+                  "Studienanfänger:innen (1. Fachsemester)",
+                  "Studierende",
+                  "Ausländische Studierende",
+                  "Studienanfänger:innen (1. Hochschulsemester)",
+                  "Studierende (Nur Lehramt)"
+      ),
+      selected = "Studierende"),
+
+    #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
+      p("Fach/Fächergruppe:"),
+    conditionalPanel(condition = "input.rank_bl_l == 'Studierende (Nur Lehramt)'",
+                     ns = ns,
       shinyWidgets::pickerInput(
-        inputId = ns("subject_studium_studienzahl_bl_vergleich"),
-        choices = c("MINT-Fächer (gesamt)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
-        selected = "MINT-Fächer (gesamt)"
-      )
-    ),
-    p("Status der Student:innen:"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("level_studium_studienzahl_bl_vergleich"),
-      choices = c("Studienanfänger:innen"="Studienanfänger:innen", "Studierende"),
-      direction = "vertical",
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
-    )
+        inputId = ns("bl_f_lehr"),
+        choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+                    "Biologie",
+                    "Geowissenschaften und Geographie",
+                    "Informatik",
+                    "Maschinenbau/Verfahrenstechnik",
+                    "Nicht MINT",
+                    "MINT",
+                    "Chemie",
+                    "Mathematik",
+                    "Humanmedizin/Gesundheitswissenschaften",
+                    "Geisteswissenschaften",
+                    "Ingenieurwissenschaften inkl. Informatik" = "Ingenieurwissenschaften",
+                    "Ingenieurwissenschaften ohne Informatik",
+                    "Physik, Astronomie",
+                    "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                    "Mathematik, Naturwissenschaften",
+                    "Naturwissenschaften",
+                    "Sport",
+                    "Kunst, Kunstwissenschaft"),
+
+        selected = "MINT"
+      )),
+
+    conditionalPanel(condition = "input.rank_bl_l == 'Auländische Studienanfänger:innen (1. Hochschulsemester)' |
+                     input.rank_bl_l == 'Studienanfänger:innen (1. Fachsemester)' |
+                     input.rank_bl_l == 'Studierende' |
+                     input.rank_bl_l == 'Ausländische Studierende' |
+                     input.rank_bl_l == 'Studienanfänger:innen (1. Hochschulsemester)'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("bl_f_alle"),
+
+                       choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+                                   "Biologie",
+                                   "Geowissenschaften und Geographie",
+                                   "Informatik",
+                                   "Maschinenbau/Verfahrenstechnik",
+                                   "Nicht MINT",
+                                   "MINT",
+                                   "Vermessungswesen",
+                                   "Architektur, Innenarchitektur",
+                                   "Bauingenieurwesen",
+                                   "Chemie",
+                                   "Mathematik",
+                                   "Materialwissenschaft und Werkstofftechnik",
+                                   "Humanmedizin/Gesundheitswissenschaften",
+                                   "Geisteswissenschaften",
+                                   "Ingenieurwissenschaften inkl. Informatik" = "Ingenieurwissenschaften",
+                                   "Ingenieurwissenschaften ohne Informatik",
+                                   "Physik, Astronomie",
+                                   "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                                   "Mathematik, Naturwissenschaften",
+                                   "Naturwissenschaften",
+                                   "Pharmazie",
+                                   "Raumplanung",
+                                   "Sport",
+                                   "Verkehrstechnik, Nautik",
+                                   "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
+                                   "Kunst, Kunstwissenschaft",
+                                   "Elektrotechnik und Informationstechnik"),
+
+                       selected = "MINT"
+                     ))
+
+    # ,
+    # p("Status der Student:innen:"),
+    # shinyWidgets::radioGroupButtons(
+    #   inputId = ns("level_studium_studienzahl_bl_vergleich"),
+    #   choices = c("Studienanfänger:innen"="Studienanfänger:innen", "Studierende"),
+    #   direction = "vertical",
+    #   justified = TRUE,
+    #   checkIcon = list(yes = icon("ok",
+    #                               lib = "glyphicon"))
+    # )
   )
 }
 
@@ -61,29 +120,33 @@ mod_studium_studienzahl_bl_vergleich_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    observeEvent(input$date_studium_studienzahl_bl_vergleich, {
-      r$date_studium_studienzahl_bl_vergleich <- input$date_studium_studienzahl_bl_vergleich
+    observeEvent(input$bl_f_lehr, {
+      r$bl_f_lehr <- input$bl_f_lehr
     })
 
-    observeEvent(input$nurLehramt_studium_studienzahl_bl_vergleich, {
-      r$nurLehramt_studium_studienzahl_bl_vergleich <- input$nurLehramt_studium_studienzahl_bl_vergleich
+    observeEvent(input$bl_f_alle, {
+      r$bl_f_alle <- input$bl_f_alle
     })
 
-    observeEvent(input$hochschulform_studium_studienzahl_bl_vergleich1, {
-      r$hochschulform_studium_studienzahl_bl_vergleich1 <- input$hochschulform_studium_studienzahl_bl_vergleich1
+    observeEvent(input$rank_bl_l, {
+      r$rank_bl_l <- input$rank_bl_l
     })
 
-    observeEvent(input$hochschulform_studium_studienzahl_bl_vergleich2, {
-      r$hochschulform_studium_studienzahl_bl_vergleich2 <- input$hochschulform_studium_studienzahl_bl_vergleich2
+    observeEvent(input$bl_date, {
+      r$bl_date <- input$bl_date
     })
 
-    observeEvent(input$subject_studium_studienzahl_bl_vergleich, {
-      r$subject_studium_studienzahl_bl_vergleich <- input$subject_studium_studienzahl_bl_vergleich
-    })
-
-    observeEvent(input$level_studium_studienzahl_bl_vergleich, {
-      r$level_studium_studienzahl_bl_vergleich <- input$level_studium_studienzahl_bl_vergleich
-    })
+    # observeEvent(input$hochschulform_studium_studienzahl_bl_vergleich2, {
+    #   r$hochschulform_studium_studienzahl_bl_vergleich2 <- input$hochschulform_studium_studienzahl_bl_vergleich2
+    # })
+    #
+    # observeEvent(input$subject_studium_studienzahl_bl_vergleich, {
+    #   r$subject_studium_studienzahl_bl_vergleich <- input$subject_studium_studienzahl_bl_vergleich
+    # })
+    #
+    # observeEvent(input$level_studium_studienzahl_bl_vergleich, {
+    #   r$level_studium_studienzahl_bl_vergleich <- input$level_studium_studienzahl_bl_vergleich
+    # })
 
   })
 }

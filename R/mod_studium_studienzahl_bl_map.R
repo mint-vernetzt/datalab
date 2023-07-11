@@ -10,37 +10,109 @@
 mod_studium_studienzahl_bl_map_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Jahres:"),
+    p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("map_y"),
       label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"),
+      choices = c("2018", "2019", "2020", "2021"),
       selected = "2021"
     ),
-    p("Auswahl der Indikatoren (max. 3):"),
+    p("Indikator:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l"),
-      choices = c("Studienanfänger:innen (1.Fachsemester)",
-                  "Studienanfänger:innen (1.Hochschulsemester)",
-                  "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
-                  "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
-                  "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
-                  "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
-                  "Studienanfänger:innen (Universität, 1.Fachsemester)",
-                  "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
+      choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
+                  "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
-                  "Studierende (Fachhochschulen)",
-                  "Studierende (Lehramt, Universität)",
-                  "Studierende (Universität)"
+                  "Ausländische Studierende",
+                  "Studierende (Nur Lehramt)"
+
       ),
-      selected = c("Studierende"
-                   , "Studienanfänger:innen (1.Fachsemester)"
-      ),
-      multiple = TRUE,
+      selected = c("Studierende")
+      ,
+      multiple = F,
       options =  list(
-        "max-options" = 3,
-        "max-options-text" = "Maximal 3 Indikatoren auswählen")
-    )
+        "max-options" = 2,
+        "max-options-text" = "Maximal 2 Indikatoren auswählen")
+    ),
+    #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
+    p("Fächer/Fächergruppen (max. 2):"),
+    conditionalPanel(condition = "input.map_l == 'Studierende (Nur Lehramt)'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("map_f_lehr"),
+                       choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+                                   "Biologie",
+                                   "Geowissenschaften und Geographie",
+                                   "Informatik",
+                                   "Maschinenbau/Verfahrenstechnik",
+                                   "Nicht MINT",
+                                   "MINT",
+                                   "Chemie",
+                                   "Mathematik",
+                                   "Humanmedizin/Gesundheitswissenschaften",
+                                   "Geisteswissenschaften",
+                                   "Ingenieurwissenschaften inkl. Informatik" = "Ingenieurwissenschaften",
+                                   "Ingenieurwissenschaften ohne Informatik",
+                                   "Physik, Astronomie",
+                                   "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                                   "Mathematik, Naturwissenschaften",
+                                   "Naturwissenschaften",
+                                   "Sport",
+                                   "Kunst, Kunstwissenschaft"),
+
+                       selected = c(
+                         "Informatik", "MINT"),
+                       multiple = TRUE,
+                       options =  list(
+                         "max-options" = 2,
+                         "max-options-text" = "Maximal 2 Indikatoren auswählen")
+                     )),
+
+    conditionalPanel(condition = "input.map_l == 'Auländische Studienanfänger:innen (1. Hochschulsemester)' |
+                     input.map_l == 'Studienanfänger:innen (1. Fachsemester)' |
+                     input.map_l == 'Studierende' |
+                     input.map_l == 'Ausländische Studierende' |
+                     input.map_l == 'Studienanfänger:innen (1. Hochschulsemester)'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("map_f"),
+
+                       choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+                                   "Biologie",
+                                   "Geowissenschaften und Geographie",
+                                   "Informatik",
+                                   "Maschinenbau/Verfahrenstechnik",
+                                   "Nicht MINT",
+                                   "MINT",
+                                   "Vermessungswesen",
+                                   "Architektur, Innenarchitektur",
+                                   "Bauingenieurwesen",
+                                   "Chemie",
+                                   "Mathematik",
+                                   "Materialwissenschaft und Werkstofftechnik",
+                                   "Humanmedizin/Gesundheitswissenschaften",
+                                   "Geisteswissenschaften",
+                                   "Ingenieurwissenschaften inkl. Informatik" = "Ingenieurwissenschaften",
+                                   "Ingenieurwissenschaften ohne Informatik",
+                                   "Physik, Astronomie",
+                                   "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                                   "Mathematik, Naturwissenschaften",
+                                   "Naturwissenschaften",
+                                   "Pharmazie",
+                                   "Raumplanung",
+                                   "Sport",
+                                   "Verkehrstechnik, Nautik",
+                                   "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
+                                   "Kunst, Kunstwissenschaft",
+                                   "Elektrotechnik und Informationstechnik"),
+
+                       selected = c(
+                         "Informatik", "MINT"),
+                       multiple = TRUE,
+                       options =  list(
+                         "max-options" = 2,
+                         "max-options-text" = "Maximal 2 Indikatoren auswählen")
+                     ))
   )
 
 }
@@ -60,10 +132,14 @@ mod_studium_studienzahl_bl_map_server <- function(id, r){
       r$map_l <- input$map_l
     })
 
-    # observeEvent(input$hochschulform_studium_studienzahl_bl_map1, {
-    #   r$hochschulform_studium_studienzahl_bl_map1 <- input$hochschulform_studium_studienzahl_bl_map1
-    # })
-    #
+    observeEvent(input$map_f_lehr, {
+      r$map_f_lehr <- input$map_f_lehr
+    })
+
+    observeEvent(input$map_f, {
+      r$map_f <- input$map_f
+    })
+
     # observeEvent(input$hochschulform_studium_studienzahl_bl_map2, {
     #   r$hochschulform_studium_studienzahl_bl_map2 <- input$hochschulform_studium_studienzahl_bl_map2
     # })

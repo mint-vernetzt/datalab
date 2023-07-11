@@ -43,8 +43,8 @@ mod_datenschutz_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Datenschutzerklärung",
         width = 12,
+        tags$h2("Datenschutzerklärung"),
         column(width = 12,
 
                div(style="text-align:justify", p("
@@ -146,7 +146,28 @@ Darüber hinaus erheben und verarbeiten wir Informationen über die Nutzung des 
 br(),
 br(),
 
-p(tags$b(span("2. Feedbackformular")),
+tags$b(span("2. Analyse durch Matomo")),
+br(),
+
+"Wir nutzen den Webanalyse-Dienst Matomo zur Analyse der Nutzung unserer Webseite und Ausgestaltung unseres Online-Angebots. Matomo ist ein Dienst der InnoCraft Ltd., 150 Willis St, 6011 Wellington, Neuseeland.
+
+Dabei verwenden wir standardmäßig keine Cookies für die Web-Analyse und setzen kein Device-Fingerprinting ein. Durch den Aufruf des Analysescripts sendet der auf Deinem Gerät verwendete Browser automatisch Informationen an unseren Webseiten-Server. Dort werden die folgenden Informationen über Dich temporär in sogenannten Logfiles gespeichert. Hieraus lassen sich u.a. Angaben zur Besucheranzahl, Browser, Geräten und Betriebssystem erzeugen. Deine IP-Adresse wird hierbei anonymisiert.
+
+Die Zulässigkeit der Verarbeitung richtet sich nach Art. 6 Abs. 1 f) DS-GVO (berechtigtes Interesse). Unsere berechtigten Interessen liegen in der Verbesserung und Optimierung unseres Online-Angebots sowie unseres Internetauftritts.
+
+Weitere Informationen zu den Nutzungsbedingungen und den Datenschutzbestimmungen bei Matomo erhältst Du direkt bei Matomo.",
+
+HTML(
+  '<div id="matomo-opt-out"></div>
+  <script src="https://analytics.datalab.mint-vernetzt.de/index.php?module=CoreAdminHome&action=optOutJS&divId=matomo-opt-out&language=auto&showIntro=1"></script>'
+),
+
+
+br(),
+br(),
+
+
+p(tags$b(span("3. Feedbackformular")),
 
 br(),
 
@@ -445,40 +466,5 @@ wir vereinzelt Dienste externer Dienstleister ein. Nachfolgenden haben Sie Mögl
 Datenschutzbestimmungen zum Einsatz und Verwendung der eingesetzten Dienste und Funktionen zu informieren,
 um ggf. auch bei den Dienstleistern Ihre Rechte wahrnehmen zu können. ")))))),
 
-
-tags$footer(style="text-align: justify;background-color:white",
-
-            div(style="display: inline-block;position: relative;padding: 1em;",
-
-                tags$a(href="https://mint-vernetzt.de/",
-                       img(src='www/MINTv_tranparent.png',
-                           class = "img-responsive",
-                           height = "100px", width = "100px",
-                           alt = "Logo MINT", target="_blank",
-                           style="display: inline-block; margin-left: auto; margin-right:10%;"))),
-
-            div(style="display: inline-block;position: relative;padding: 1em;",
-
-                p(tags$a("Impressum", href="#shiny-tab-impressum", "data-toggle" = "tab")," | ",
-                  tags$a("Kontakt", href="#shiny-tab-kontakt", "data-toggle" = "tab")," | ",
-                  tags$a("Datenschutz", href="#shiny-tab-datenschutz", "data-toggle"="tab"),HTML('&nbsp;'),HTML('&nbsp;'),
-                  "Copyright © 2022. Alle Rechte vorbehalten Stifterverband")),
-
-            div(style="display: inline-block;position: relative;padding: 1em;",
-
-                tags$a(#href="https://www.bmbf.de/bmbf/de/home/home_node.html",
-                       img(src='www/BMBF-Logo_transp1.png',
-
-                           class = "img-responsive",
-
-                           height = "200px", width = "200px",
-
-                           alt = "Logo BMBF", target="_blank",
-
-                           style="display: inline-block; margin-left: auto; margin-right: auto;"))),
-
-            div(style="display: inline-block;width: 100%;",
-
-                " ")
-
-))}
+funct_footer()
+)}

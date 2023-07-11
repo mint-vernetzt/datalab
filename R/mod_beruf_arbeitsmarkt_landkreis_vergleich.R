@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl Bundesland:"),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_landkreis_vergleich"),
       choices = c("Baden-Württemberg",
@@ -34,7 +34,7 @@ mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
       selected = c("Hessen")
     ),
     hr(),
-    p("Auswahl:"),
+    p("Indikatoren:"),
     shinyWidgets::pickerInput(
       inputId = ns("kategorie_beruf_arbeitsmarkt_landkreis_vergleich"),
       choices = c("Auszubildende",
@@ -64,9 +64,9 @@ mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("indikator1_beruf_arbeitsmarkt_landkreis_vergleich"),
                        choices = c("Gesamt (alle der Hauptkategorie)" = "Auszubildende",
-                                   "weiblich - männlich" = "Frauen",
-                                   "ausländisch - deutsch" = "ausländische Auszubildende",
-                                   "Auszubildende im 1. Lehrjahr" = "Auszubildende (1. Jahr)"
+                                   "nur weiblich" = "Frauen",
+                                   "nur ausländisch" = "ausländische Auszubildende",
+                                   "nur Auszubildende im 1. Lehrjahr" = "Auszubildende (1. Jahr)"
                        ),
                        selected = "Gesamt (alle der Hauptkategorie)",
                        multiple = FALSE
@@ -76,19 +76,20 @@ mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("indikator2_beruf_arbeitsmarkt_landkreis_vergleich"),
                        choices = c("Gesamt (alle der Hauptkategorie)" = "Beschäftigte",
-                                   "weiblich - männlich" = "Frauen",
-                                   "ausländisch - deutsch" = "ausländische Beschäftigte",
-                                   "u25" = "Beschäftigte u25",
-                                   "25-55" = "Beschäftigte 25-55",
-                                   "ü55" =  "Beschäftigte ü55"
+                                   "nur weiblich" = "Frauen",
+                                   "nur ausländisch" = "ausländische Beschäftigte",
+                                   "nur Beschäftigte u25" = "Beschäftigte u25",
+                                   "nur Beschäftigte 25-55" = "Beschäftigte 25-55",
+                                   "nur Beschäftigte ü55" =  "Beschäftigte ü55"
                        ),
                        selected = "Gesamt (alle der Hauptkategorie)",
                        multiple = FALSE
                      )),
+    hr(),
     p("Form der Darstellung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("darstellung_beruf_arbeitsmarkt_landkreis_vergleich"),
-      choices = c("Relativ", "Absolut"),
+      choices = c("In Prozent", "Anzahl"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))

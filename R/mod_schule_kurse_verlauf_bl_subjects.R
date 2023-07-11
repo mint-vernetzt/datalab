@@ -11,35 +11,22 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Zeitraums:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_verlauf_subject_bl"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020"),
-      selected = c("2015", "2020")
+                  "2018","2019", "2020", "2021"),
+      selected = c("2016", "2021")
     ),
-    p("Form der Kursbelegung:"),
-    shinyWidgets::radioGroupButtons(
+    p("Kursart:"),
+    shinyWidgets::pickerInput(
       inputId = ns("topic_selected_subject_bl"),
       choices = c("Grundkurse", "Leistungskurse"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+      selected = "Grundkurse"
     ),
-    p("Auswahl eines oder mehrerer Fächer:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("subject_selected_bl_sub"),
-      choices = c("MINT-Fächer (gesamt)","Mathematik", "Informatik", "Physik", "Chemie",
-                  "Biologie", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
-                  "Musik/Kunst", "Religion/Ethik", "Sport"),
-      selected = c("MINT-Fächer (gesamt)", "Mathematik"),
-      options = list(`actions-box` = TRUE,
-                     `deselect-all-text` = "Alle abwählen",
-                     `select-all-text` = "Alle auswählen"),
-      multiple = TRUE
-    ),
-    p("Auswahl eines Bundesland:"),
+
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf_subject_bl"),
       choices = c("Deutschland",
@@ -59,13 +46,35 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen"
-                ,
-                "Westen",
-                 "Osten"
-                  ),
-      selected = "Hessen"
+                  ,
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      selected = "Brandenburg"
+    ),
+
+    p("Fächer/Fächergruppen:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("subject_selected_bl_sub"),
+      choices = c("MINT-Fächer (gesamt)","Mathematik", "Informatik", "Physik", "Chemie",
+                  "Biologie", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+                  "Musik/Kunst", "Religion/Ethik", "Sport"),
+      selected = c("MINT-Fächer (gesamt)", "Mathematik"),
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
+      multiple = TRUE
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_kurse_verlauf_subject_bl"),
+      choices = c("In Prozent", "Anzahl"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
+
 }
 
 #' schule_kurse_verlauf_bl_subjects Server Functions
@@ -75,12 +84,16 @@ mod_schule_kurse_verlauf_bl_subjects_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    observeEvent(input$date_kurse_verlauf_subject_bl, {
-      r$date_kurse_verlauf_subject_bl <- input$date_kurse_verlauf_subject_bl
+    observeEvent(input$abs_zahlen_kurse_verlauf_subject_bl, {
+      r$abs_zahlen_kurse_verlauf_subject_bl <- input$abs_zahlen_kurse_verlauf_subject_bl
     })
 
     observeEvent(input$subject_selected_bl_sub, {
       r$subject_selected_bl_sub <- input$subject_selected_bl_sub
+    })
+
+    observeEvent(input$date_kurse_verlauf_subject_bl, {
+      r$date_kurse_verlauf_subject_bl <- input$date_kurse_verlauf_subject_bl
     })
 
     observeEvent(input$states_kurse_verlauf_subject_bl, {

@@ -11,50 +11,64 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Zeitraums:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_verlauf_subject_bl"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020"),
-      selected = c("2015", "2020")
+                  "2018","2019", "2020", "2021"),
+      selected = c("2015", "2021")
     ),
-    p("Nur Lehramt anzeigen:"),
-    tags$div(
-      shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_verlauf_bl_subject"), label = "Nein", inline = TRUE),
-      tags$span("Ja"),
-      p("Auswahl der Hochschulform:"),
-      conditionalPanel(condition = "input.nurLehramt_studierende_verlauf_bl_subject == false",
-                       ns = ns,
-                       shinyWidgets::pickerInput(
-                         inputId = ns("hochschulform_studierende_verlauf_1"),
-                         choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
-                       )),
-      conditionalPanel(condition = "input.nurLehramt_studierende_verlauf_bl_subject != false",
-                       ns = ns,
-                       shinyWidgets::pickerInput(
-                         inputId = ns("hochschulform_studierende_verlauf_2"),
-                         choices = "Uni"
-                       ))
-    ),
-    p("Status der Student:innen:"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("topic_selected_subject_bl"),
-      choices = c("Studienanfänger:innen"="Studienanfänger:innen", "Studierende"),
-      direction = "vertical",
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
-    ),
-    p("Auswahl der Fächer:"),
+    # p("Nur Lehramt anzeigen:"),
+    # tags$div(
+    #   shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_verlauf_bl_subject"), label = "Nein", inline = TRUE),
+    #   tags$span("Ja"),
+    #   p("Auswahl der Hochschulform:"),
+    #   conditionalPanel(condition = "input.nurLehramt_studierende_verlauf_bl_subject == false",
+    #                    ns = ns,
+    #                    shinyWidgets::pickerInput(
+    #                      inputId = ns("hochschulform_studierende_verlauf_1"),
+    #                      choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
+    #                    )),
+    #   conditionalPanel(condition = "input.nurLehramt_studierende_verlauf_bl_subject != false",
+    #                    ns = ns,
+    #                    shinyWidgets::pickerInput(
+    #                      inputId = ns("hochschulform_studierende_verlauf_2"),
+    #                      choices = "Uni"
+    #                    ))
+    # ),
+    p("Indikator:"),
     shinyWidgets::pickerInput(
-      inputId = ns("subject_selected_bl"),
-      choices = c("MINT-Fächer (gesamt)" = "MINT", "Mathematik/Naturwissenschaften" = "Mathematik/Naturwissenschaften",
-                  "Ingenieurwissenschaften" = "Ingenieurwissenschaften"),
-      selected = c("MINT", "Ingenieurwissenschaften"),
-      multiple = TRUE
+      inputId = ns("verl_l"),
+      choices = c("Studienanfänger:innen (1.Fachsemester)",
+                  "Studienanfänger:innen (1.Hochschulsemester)",
+                  "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
+                  "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
+                  "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
+                  "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
+                  "Studienanfänger:innen (Universität, 1.Fachsemester)",
+                  "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
+                  "Studierende",
+                  "Studierende (Fachhochschulen)",
+                  "Studierende (Lehramt, Universität)",
+                  "Studierende (Universität)"
+      ),
+      selected = c("Studierende")
+      ,
+      multiple = F,
+      options =  list(
+        "max-options" = 3,
+        "max-options-text" = "Maximal 3 Indikatoren auswählen")
     ),
-    p("Auswahl des Bundeslands:"),
+    # p("Auswahl der Fächer:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("subject_selected_bl"),
+    #   choices = c("MINT-Fächer (gesamt)" = "MINT", "Mathematik/Naturwissenschaften" = "Mathematik/Naturwissenschaften",
+    #               "Ingenieurwissenschaften" = "Ingenieurwissenschaften"),
+    #   selected = c("MINT", "Ingenieurwissenschaften"),
+    #   multiple = TRUE
+    # ),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_verlauf_subject_bl"),
       choices = c("Deutschland",
@@ -75,11 +89,20 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westen",
-                  "Osten"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
                   ),
-      selected = "Hessen"
+      selected = "Berlin"
 
+    ),
+
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_verlauf_subject_bl"),
+      choices = c("In Prozent", "Anzahl"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
 }
@@ -95,29 +118,33 @@ mod_studium_studienzahl_verlauf_bl_subject_server <- function(id, r){
       r$date_verlauf_subject_bl <- input$date_verlauf_subject_bl
     })
 
-    observeEvent(input$topic_selected_subject_bl, {
-      r$topic_selected_subject_bl <- input$topic_selected_subject_bl
+    observeEvent(input$verl_l, {
+      r$verl_l <- input$verl_l
     })
 
-    observeEvent(input$subject_selected_bl, {
-      r$subject_selected_bl <- input$subject_selected_bl
+    observeEvent(input$abs_zahlen_verlauf_subject_bl, {
+      r$abs_zahlen_verlauf_subject_bl <- input$abs_zahlen_verlauf_subject_bl
     })
+#
+#     observeEvent(input$subject_selected_bl, {
+#       r$subject_selected_bl <- input$subject_selected_bl
+#     })
 
     observeEvent(input$states_verlauf_subject_bl, {
       r$states_verlauf_subject_bl <- input$states_verlauf_subject_bl
     })
 
-    observeEvent(input$nurLehramt_studierende_verlauf_bl_subject, {
-      r$nurLehramt_studierende_verlauf_bl_subject <- input$nurLehramt_studierende_verlauf_bl_subject
-    })
-
-    observeEvent(input$hochschulform_studierende_verlauf_1, {
-      r$hochschulform_studierende_verlauf_1 <- input$hochschulform_studierende_verlauf_1
-    })
-
-    observeEvent(input$hochschulform_studierende_verlauf_2, {
-      r$hochschulform_studierende_verlauf_2 <- input$hochschulform_studierende_verlauf_2
-    })
+    # observeEvent(input$nurLehramt_studierende_verlauf_bl_subject, {
+    #   r$nurLehramt_studierende_verlauf_bl_subject <- input$nurLehramt_studierende_verlauf_bl_subject
+    # })
+    #
+    # observeEvent(input$hochschulform_studierende_verlauf_1, {
+    #   r$hochschulform_studierende_verlauf_1 <- input$hochschulform_studierende_verlauf_1
+    # })
+    #
+    # observeEvent(input$hochschulform_studierende_verlauf_2, {
+    #   r$hochschulform_studierende_verlauf_2 <- input$hochschulform_studierende_verlauf_2
+    # })
 
 
   })

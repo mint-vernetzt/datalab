@@ -11,23 +11,21 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    p("Auswahl des Zeitraums:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_verlauf_multiple"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020"),
-      selected = c("2015", "2020")
+                  "2018","2019", "2020", "2021"),
+      selected = c("2016", "2021")
     ),
-    p("Form der Kursbelegung:"),
-    shinyWidgets::radioGroupButtons(
+    p("Kursart:"),
+    shinyWidgets::pickerInput(
       inputId = ns("topic_selected_multiple"),
       choices = c("Grundkurse", "Leistungskurse"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+      selected = "Leistungskurse"
     ),
-    p("Auswahl des Fachs:"),
+    p("Fach/Fächergruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_multiple"),
       choices = c("MINT-Fächer (gesamt)",
@@ -45,7 +43,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "Sport"),
       selected = "MINT-Fächer (gesamt)",
     ),
-    p("Auswahl eines oder mehrerer Bundesländer:"),
+    p("Regionen:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf_multiple"),
       choices = c("Deutschland",
@@ -66,16 +64,26 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westen",
-                  "Osten"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
                   ),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       selected = c("Hessen", "Hamburg")
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_kurse_verlauf_multiple"),
+      choices = c("In Prozent", "Anzahl"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
+
+
 }
 
 #' schule_kurse_verlauf_multiple Server Functions
@@ -90,6 +98,10 @@ mod_schule_kurse_verlauf_multiple_server <- function(id, r){
 
     observeEvent(input$subject_selected_multiple, {
       r$subject_selected_multiple <- input$subject_selected_multiple
+    })
+
+    observeEvent(input$abs_zahlen_kurse_verlauf_multiple, {
+      r$abs_zahlen_kurse_verlauf_multiple <- input$abs_zahlen_kurse_verlauf_multiple
     })
 
     observeEvent(input$topic_selected_multiple, {

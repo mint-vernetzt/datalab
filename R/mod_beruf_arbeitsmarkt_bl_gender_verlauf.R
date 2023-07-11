@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Zeitraums:"),
+    p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_bl_gender_verlauf"),
       label = NULL,
@@ -18,13 +18,10 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
                   "2018","2019", "2020", "2021"),
       selected = c("2016", "2021")
     ),
-    p("Auswahl der Beschäftigungsform"),
-    shinyWidgets::radioGroupButtons(
+    p("Beschäftigungsform"),
+    shinyWidgets::pickerInput(
       inputId = ns("indikator_beruf_arbeitsmarkt_bl_gender_verlauf"),
       choices = c("Auszubildende", "Beschäftigte"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
     ),
     # p("Auswahl des Anforderungsniveaus:"),
     # shinyWidgets::pickerInput(
@@ -32,7 +29,7 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
     #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"),
     #   selected = "Gesamt"
     # ),
-    p("Auswahl der Bundesländer:"),
+    p("Regionen:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_bl_gender_verlauf"),
       choices = c("Deutschland",
@@ -53,16 +50,26 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westen",
-                  "Osten"
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
                   ),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       selected = c("Hessen", "Hamburg")
+    ),
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf"),
+      choices = c("In Prozent", "Anzahl"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     )
   )
+
+
 }
 
 #' beruf_arbeitsmarkt_bl_gender_verlauf Server Functions
@@ -74,6 +81,11 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_server <- function(id, r){
     observeEvent(input$date_beruf_arbeitsmarkt_bl_gender_verlauf, {
       r$date_beruf_arbeitsmarkt_bl_gender_verlauf <- input$date_beruf_arbeitsmarkt_bl_gender_verlauf
     })
+
+    observeEvent(input$abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf, {
+      r$abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf <- input$abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf
+    })
+
 
     observeEvent(input$indikator_beruf_arbeitsmarkt_bl_gender_verlauf, {
       r$indikator_beruf_arbeitsmarkt_bl_gender_verlauf <- input$indikator_beruf_arbeitsmarkt_bl_gender_verlauf

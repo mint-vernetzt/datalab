@@ -27,6 +27,23 @@
   border-left-color: #195365;
 } */
 
+/* Box Schatten entfernen */
+
+.box{
+    border-top-color: #fff;
+    box-shadow: 0px 0px 0px rgba(0,0,0,0);
+
+}
+
+/*.box.prime{
+  border-bottom-color: #195365;
+  border-left-color:   #195365;
+  border-right-color:  #195365;
+  border-top-color:    #195365;
+}*/
+
+
+
 /* logo */
                                 .skin-blue .main-header .logo {
                                 background-color: #FFFFFF;
@@ -63,6 +80,13 @@
                                 background-color: #154194;
                                 color: #FFFFFF;
                                 }
+
+                                  /* toggle button passive  */
+                                .skin-blue .main-header .navbar .sidebar-toggle{
+                                background-color: #FFFFFF;
+                                color:#154194;
+                                }
+
                                 /* toggle button when hovered  */
                                 .skin-blue .main-header .navbar .sidebar-toggle:hover{
                                 background-color: #154194;
