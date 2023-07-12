@@ -18,6 +18,12 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_ui <- function(id){
     #               "2018","2019", "2020", "2021"),
     #   selected = "2021"
     # )
+
+    shinyBS::bsPopover(id="ih_beruf_mint_3", title="",
+                       content = paste0("Die Darstellung zeigt, dass der MINT-Anteil in der Gruppe der Auszubildenden mit knapp einem Drittel vergleichsweise hoch ist. Am wenigsten groß ist der Anteil an Beschäftigungen in MINT im Minijob."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_3")
+
   )
 }
 

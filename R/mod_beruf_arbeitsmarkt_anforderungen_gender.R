@@ -40,7 +40,14 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
         "ausländische Auszubildende",
                   "ausländische Beschäftigte"),
       multiple = FALSE,
-      selected = "Beschäftigte")
+      selected = "Beschäftigte"),
+    br(),
+
+    shinyBS::bsPopover(id="ih_beruf_mint_4", title="",
+                       content = paste0("Die erste Einstellung zeigt, dass von allen weiblichen Beschäftigten nur 8 % eine MINT-Tätigkeit ausüben. Bei den Männern arbeitet ein weitaus größerer Anteil von rund 35 % in der MINT-Branche. Dabei sind die meisten Männer im Bereich Technik tätig (30 %)."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_4")
+
 
   )
 }

@@ -81,7 +81,7 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
-      selected = c("Ostdeutschland (inkl. Berlin)", "Hamburg")
+      selected = c("Ostdeutschland (inkl. Berlin)", "Nordrhein-Westfalen")
 
     ),
     p("Betrachtung:"),
@@ -91,7 +91,13 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+
+    br(),
+    shinyBS::bsPopover(id="ih_beruf_mint_7", title="",
+                       content = paste0("Die erste Darstellung zeigt z. B., dass sich der Anteil von Beschäftigten in MINT an allen Beschäftigten deutschlandweit in den ostdeutschen Bundesländern und Nordrhein-Westfalen ählich entwickelt. Der Anteil bleibt relativ konstant und nimmt auf 2021 um ca. einen Prozentpunkt ab."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_7")
   )
 
 }
