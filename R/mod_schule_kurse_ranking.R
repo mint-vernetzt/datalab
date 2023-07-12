@@ -41,11 +41,13 @@ mod_schule_kurse_ranking_ui <- function(id){
                   "Ostdeutschland (inkl. Berlin)"
                   ),
        selected = "Mecklenburg-Vorpommern"
-      )
-#     ,
-# br(), br(),
-#     p("Lesehilfe: Hier zeigen wir einen direkten Vergleich zwischen den Anteilen von Mädchen in Grundkursen und Leistungskursen. Die Grafik kann wie ein Balkendigramm gelesen werden. Die Verbindungslinie zwischen den Punkten verdeutlicht lediglich die Diskrepanz zwischen den Werten.")
-   )
+      ),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_frauen_2", title="",
+                       content = paste0("Hier zeigen wir einen direkten Vergleich zwischen den Anteilen von Mädchen in Grundkursen und Leistungskursen. Die erste Einstellung zeigt z. B., dass in Mecklenburg-Vorpommern 2021 der Mädchenanteil in Informatik-Leistungskursen bei unter 20 %, in Informatik-Grundkurse dagegen bei 45 % liegt."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_frauen_2")
+  )
 }
 
 #' schule_kurse_ranking Server Functions

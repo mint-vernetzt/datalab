@@ -45,7 +45,12 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
       multiple = FALSE,
       selected = c("nach Geschlecht")
 
-  )
+  ),
+  br(),
+  shinyBS::bsPopover(id="ih_schule_kompetenz_2", title="",
+                     content = paste0("In der ersten Einstellung ist zu sehen, dass in Brandenburg 2021 die Mathekompetenzen von Jungen im Mittel höher als die von Mädchen sind. Ein möglicher Grund hierfür könnten Genderstereotype sein (weiteres dazu kann auf der MINTverntzt Website gefunden werden)."),
+                     trigger = "hover"),
+  tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_kompetenz_2")
   )
 
 }

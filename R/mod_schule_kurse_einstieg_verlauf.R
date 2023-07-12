@@ -25,7 +25,13 @@ mod_schule_kurse_einstieg_verlauf_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_mint_3", title="",
+                       content = paste0("Die erste Einstellung der Grafik zeigt z. B., dass der Anteil an MINT-Belegungen in der Oberstufe über die Jahre ziemlich konstat ist. Seit 2018 sind die MINT-Leistungskursbelegungen etwas gesunken (2 Prozentpunkte). Dagegen ist der MINT-Anteil der Grundkursbelegungen von 2020 auf 2021 um einen Prozentpunkt gestiegen."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_3")
+
   )
 
 
