@@ -498,8 +498,8 @@ mod_studium_studienzahl_ui <- function(id){
 #' studium_studienzahl Server Functions
 #'
 #' @noRd
-mod_studium_studienzahl_server <- function(id, data_studierende_neu,
-                                           data_studierende_faecher3,
+mod_studium_studienzahl_server <- function(id, data_studierende,
+                                           data_studierende_detailliert,
                                            r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -508,11 +508,11 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
 
     # Box 2
     output$plot_einstieg_pie <- renderUI({
-      studienzahl_einstieg_pie(data_studierende_neu,r)
+      studienzahl_einstieg_pie(data_studierende,r)
     })
 
     output$plot_einstieg_verlauf <- highcharter::renderHighchart({
-      studienzahl_verlauf_single(data_studierende_neu,r)
+      studienzahl_verlauf_single(data_studierende,r)
     })
 
     # all_mint_23_react <- reactive({
@@ -522,12 +522,12 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
 
 
     output$plot_einstieg_comparison <- highcharter::renderHighchart({
-      studienzahl_einstieg_comparison(data_studierende_neu,r)
+      studienzahl_einstieg_comparison(data_studierende,r)
     })
 
-    data_table_einstieg_react <- reactive({
-      data_einstieg(data_studierende, r)
-    })
+    # data_table_einstieg_react <- reactive({
+    #   data_einstieg(data_studierende, r)
+    # })
 
     # output$data_table_einstieg <- DT::renderDT({
     #   data_table_einstieg_react()
@@ -535,33 +535,33 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
 
     # Box 3
     output$plot_einstieg_pie_gender <- renderUI({
-      studienzahl_einstieg_pie_gender(data_studierende2,r)
+      studienzahl_einstieg_pie_gender(data_studierende,r)
     })
 
     output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
-      studienzahl_verlauf_single_gender(data_studierende2,r)
+      studienzahl_verlauf_single_gender(data_studierende,r)
     })
 
     output$plot_einstieg_comparison_gender <- highcharter::renderHighchart({
-      studienzahl_einstieg_comparison_gender(studierende_faecher_alle_indi,r)
+      studienzahl_einstieg_comparison_gender(data_studierende_detailliert,r)
     })
 
     output$plot_verlauf_studienzahl_bl_subject1 <- highcharter::renderHighchart({
-      ranking_bl_subject(studierende_faecher_alle_indi,r)
+      ranking_bl_subject(data_studierende_detailliert,r)
     })
 
 
-    output$plot_verlauf_studienzahl_bl1 <- highcharter::renderHighchart({
-      ranking_bl_subject(data_studierende,r)
-    })
+    # output$plot_verlauf_studienzahl_bl1 <- highcharter::renderHighchart({
+    #   ranking_bl_subject(data_studierende,r)
+    # })
 
     output$test <- renderUI({
-      studienzahl_test(data_studierende_neu, r)
+      studienzahl_test(data_studierende, r)
     })
 
     # Box 4
     plot_waffle_react <- reactive({
-      studienzahl_waffle_mint(data_studierende_neu,r)
+      studienzahl_waffle_mint(data_studierende,r)
     })
 
     output$plot_waffle <- renderPlot({
@@ -569,16 +569,16 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
     })
 
     output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
-      studienzahl_verlauf_bl_subject(data_studierende_neu,r)
+      studienzahl_verlauf_bl_subject(data_studierende,r)
     })
 
-    output$plot_ranking_bl_subject <- renderPlot({
-      ranking_bl_subject(data_studierende,r)
-    })
+    # output$plot_ranking_bl_subject <- renderPlot({
+    #   ranking_bl_subject(data_studierende,r)
+    # })
 
     # Box 5
     plot_waffle_choice_gender_react <- reactive({
-      studienzahl_waffle_choice_gender(data_studierende_neu,r)
+      studienzahl_waffle_choice_gender(data_studierende,r)
     })
 
     output$plot_waffle_choice_gender <- renderPlot({
@@ -586,72 +586,72 @@ mod_studium_studienzahl_server <- function(id, data_studierende_neu,
     })
 
     output$plot_verlauf_studienzahl_bl_subject_gender <- highcharter::renderHighchart({
-      studierende_verlauf_single_bl_gender(data_studierende_neu,r)
+      studierende_verlauf_single_bl_gender(data_studierende,r)
     })
 
-    plot_ranking_studienzahl_bl_subject_gender_react <- reactive({
-      studienfaecher_ranking(data_studierende2, r, type="other")
-    })
+    # plot_ranking_studienzahl_bl_subject_gender_react <- reactive({
+    #   studienfaecher_ranking(data_studierende2, r, type="other")
+    # })
 
-    output$plot_ranking_studienzahl_bl_subject_gender <- renderPlot({
-      plot_ranking_studienzahl_bl_subject_gender_react()
-    })
+    # output$plot_ranking_studienzahl_bl_subject_gender <- renderPlot({
+    #   plot_ranking_studienzahl_bl_subject_gender_react()
+    # })
 
-    output$plot_ranking_studienzahl_bl_subject_gender1 <- highcharter::renderHighchart({
-      plot_ranking_studienzahl_bl_subject_gender_react(data_studierende,r)
-    })
+    # output$plot_ranking_studienzahl_bl_subject_gender1 <- highcharter::renderHighchart({
+    #   plot_ranking_studienzahl_bl_subject_gender_react(data_studierende,r)
+    # })
 
 
 
     # Box 6
     output$plot_studienzahl_map <- renderUI({
-      studierende_map(studierende_faecher3,r)
+      studierende_map(data_studierende_detailliert,r)
     })
 
     output$plot_studienzahl_bl_verlauf <- highcharter::renderHighchart({
-      studierende_verlauf_multiple_bl(data_studierende_neu,r)
+      studierende_verlauf_multiple_bl(data_studierende,r)
     })
 
 
-     output$plot_vergleich_bl <-  renderPlot({
-      studierende_mint_vergleich_bl(data_studierende,r)
-    })
+    #  output$plot_vergleich_bl <-  renderPlot({
+    #   studierende_mint_vergleich_bl(data_studierende,r)
+    # })
 
      output$plot_vergleich_bl1 <- highcharter::renderHighchart({
-       studierende_mint_vergleich_bl(studierende_faecher3,r)
+       studierende_mint_vergleich_bl(data_studierende_detailliert,r)
      })
 
 
     # Box 7
-    output$plot_studienzahl_map_gender <- renderUI({
-      studierende_map_gender(data_studierende,r)
-    })
+    # output$plot_studienzahl_map_gender <- renderUI({
+    #   studierende_map_gender(data_studierende,r)
+    # })
 
-    output$plot_studienzahl_bl_verlauf_gender <- highcharter::renderHighchart({
-      studierende_verlauf_multiple_bl_gender(data_studierende,r)
-    })
+    # output$plot_studienzahl_bl_verlauf_gender <- highcharter::renderHighchart({
+    #   studierende_verlauf_multiple_bl_gender(data_studierende,r)
+    # })
 
-    plot_ranking_studienzahl_bl_vergleich_gender_react <- reactive({
-      bundeslaender_ranking(data_studierende, r, type="other")
-    })
+    # plot_ranking_studienzahl_bl_vergleich_gender_react <- reactive({
+    #   bundeslaender_ranking(data_studierende, r, type="other")
+    # })
 
-    output$plot_ranking_studienzahl_bl_vergleich_gender <- renderPlot({
-      plot_ranking_studienzahl_bl_vergleich_gender_react()
-    })
+    # output$plot_ranking_studienzahl_bl_vergleich_gender <- renderPlot({
+    #   plot_ranking_studienzahl_bl_vergleich_gender_react()
+    # })
 
     # Box 8
     output$plot_top_faecher <-  renderUI({
-      plot_ranking_top_faecher(data_studierende_faecher3, r)
+      plot_ranking_top_faecher(data_studierende_detailliert, r)
     })
 
     # Box Ausländer
 
     output$plot_auslaender_test <-  highcharter::renderHighchart({
-      plot_auslaender_mint(studierende_faecher_alle_indi, r)
+      plot_auslaender_mint(data_studierende_detailliert, r)
     })
 
     output$plot_auslaender_zeit <-  highcharter::renderHighchart({
-      plot_auslaender_mint_zeit(studierende_faecher_alle_indi, r)
+      plot_auslaender_mint_zeit(data_studierende_detailliert, r)
     })
 
 
