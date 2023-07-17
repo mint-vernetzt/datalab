@@ -94,6 +94,12 @@ mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     ),
+    br(),
+    shinyBS::bsPopover(id="ih_beruf_regional_2", title="",
+                       content = paste0("In der ertsen Darstellung sieht man, welche Landkreise in Hessen eine Anteil an MINT-Beschäftigten haben, die über oder unter dem Durschnitt des Bundeslands liegen. Frankfurt am Main hat beispielsweise einen weniger hohen Anteil an MINT-Beschäftigten als die meisten anderen Kreise und kreisfreie Städte in Hessen. "),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_regional_2")
   )
 }
 

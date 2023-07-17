@@ -17,7 +17,21 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
       choices = c("2013", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020", "2021"),
       selected = "2021"
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="dh_beruf_frauen_1", title = "",
+                       content = paste0("Falls die Grafik abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_beruf_frauen_1"),
+
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_beruf_frauen_1", title="",
+                       content = paste0("Der Anteil von Frauen an MINT-Auszubildenden in Deutschland beträgt 13 % im Jahr 2021. Bei den MINT-Beschäftigten beträgt dieser Anteil 17 %. Dagegen machen Frauen in anderen, Nicht-MINT-Berufen mehr als die Hälfte aller Auszubildenden und Beschäftigten aus (56 bzw. 55 %)."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_frauen_1")
+
+
   )
 }
 

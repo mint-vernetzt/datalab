@@ -4063,6 +4063,12 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
   höhe <- c(10, 20, 3, 6, 3, 3, 8, 5, 11, 11, 10, 4, 6, 6, 6, 7)
   plt.add <- data.frame(länder, höhe)
 
+  # shinyBS::bsPopover(id = "h_beruf_regional_2", title = "",
+  #                    content = paste0("Manche Landkreise sind grau dargestellt oder fehlen in der Darstellung. Das liegt daran, dass die zugrundeliegenden Karten vereinzelt alte oder falsche Landkreiszuordnungen (in Niedersachen, Sachsen-Anhalt) enthalten oder einzelne Bundesländer/Landkreise/Städte gar nicht enthalten (Bremen, in Sachsen).", "<br> <br> Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+  #                    placement = "top",
+  #                    trigger = "hover")
+  # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_regional_2")
+
  # plt.add$subtitle <- "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen."
 
   # create plot
@@ -4075,7 +4081,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
       colors = ifelse(df_compare$landkreis == "alle Landkreise", "#b16fab", "#154194")
     )) %>%
     highcharter::hc_size(height = 80*plt.add$höhe[plt.add$länder == states]) %>%
-    highcharter::hc_title(text = paste0(titel, "<br><br><br>"),
+    highcharter::hc_title(text = paste0(titel, "<br><br>"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -4083,6 +4089,8 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+
+
   # %>%
   #   highcharter::hc_exporting(enabled = TRUE, #button erscheint
   #                             buttons = list(contextButton = list(
