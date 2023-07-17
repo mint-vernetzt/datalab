@@ -28,7 +28,7 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                   "Informatik",
                   "Maschinenbau/Verfahrenstechnik",
                   "Nicht MINT",
-                  "MINT",
+                  "MINT (Gesamt)",
                   "Vermessungswesen",
                   "Architektur, Innenarchitektur",
                   "Bauingenieurwesen",

@@ -1654,15 +1654,15 @@ kurse_map <- function(df,r) {
 kurse_map_gender <- function(df,r) {
 
   # load UI inputs from reactive value
-  timerange <- r$date_map_gender
+  timerange <<- r$date_map_gender
 
-  subjects <- r$subject_map_gender
+  subjects <<- r$subject_map_gender
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr == timerange)
+  df <<- df %>% dplyr::filter(jahr == timerange)
 
   # remove
-  df <- df %>% dplyr::filter(region != "Deutschland")
+  df <<- df %>% dplyr::filter(region != "Deutschland")
 
   df_gesamt <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen",
                                     fachbereich == "Alle Fächer") %>%
@@ -1672,21 +1672,21 @@ kurse_map_gender <- function(df,r) {
   #df <- df %>% dplyr::filter(fachbereich != "Alle Fächer")
 
   # aggregate to MINT
-  df_sub <- share_mint_kurse(df)
+  df_sub <<- share_mint_kurse(df)
 
-  df_sub <- df_sub[,colnames(df)]
+  df_sub <<- df_sub[,colnames(df)]
 
   df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
-  df <- rbind(df, df_sub)
+  df <<- rbind(df, df_sub)
 
-  df <- df %>% dplyr::filter(fachbereich == subjects)
+  df <<- df %>% dplyr::filter(fachbereich == subjects)
 
-  df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
+  df <<- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
 
-  df <- df %>% dplyr::left_join(df_gesamt, by=c("jahr", "region", "indikator",
+  df2 <<- df %>% dplyr::left_join(df_gesamt, by=c("jahr", "region", "indikator",
                                           "bereich", "anzeige_geschlecht")) %>%
     dplyr::rename(fachbereich = "fachbereich.x") %>%
     dplyr::select(-fachbereich.y) %>%
@@ -1696,18 +1696,19 @@ kurse_map_gender <- function(df,r) {
   help_title <- ifelse(help_title == "andere Fächer (gesamt)", "anderen Fächern (gesamt)", help_title)
 
   #Extra gerundeten Proportions-Wert erstellen, für Anzeige in Hover
-  df$prop <- df$proportion
-  df$prop <- round(df$prop, 0)
+  df2$prop <- df2$proportion
+  df2$prop <- round(df2$prop, 0)
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".")
+  df2$wert <- prettyNum(df2$wert, big.mark = ".")
 
   highcharter::hw_grid(
     # plot
     highcharter::hcmap(
       "countries/de/de-all",
-      data = df[df$indikator == "Grundkurse",],
+      data = df2[df2$indikator == "Grundkurse",],
       value = "proportion",
+      download_map_data = FALSE,
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
       #name = paste0("Anteil ", subjects),

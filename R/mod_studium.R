@@ -21,14 +21,14 @@ mod_studium_ui <- function(id){
 #' studium Server Functions
 #'
 #' @noRd
-mod_studium_server <- function(id, data_studierende_neu,
-                               data_studierende_faecher3,
+mod_studium_server <- function(id, data_studierende,
+                               data_studierende_detailliert,
                                r){
   r <- reactiveValues()
 
   # Studienzahl
-  mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1", data_studierende_neu,
-                                 data_studierende_faecher3,
+  mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1", data_studierende,
+                                 data_studierende_detailliert,
                                  r)
 
   # Box 2

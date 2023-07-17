@@ -20,10 +20,10 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
     p("Indikator:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l"),
-      choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
+      choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
                   "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
-                  "Ausländische Studierende",
+                  "Internationale Studierende",
                   "Studierende (Nur Lehramt)"
 
       ),
@@ -45,8 +45,8 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                   "Ingenieurwissenschaften ohne Informatik",
                   "Maschinenbau/Verfahrenstechnik",
                   "Mathematik",
-                  "Alle MINT-Fächer",
-                  "Alle Nicht MINT-Fächer",
+                  "MINT (Gesamt)",
+                  "Nicht MINT",
                   "Physik, Astronomie",
                   "Rechts-, Wirtschafts- und Sozialwissenschaften",
                   "Vermessungswesen",
