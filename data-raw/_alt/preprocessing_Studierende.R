@@ -225,7 +225,7 @@ data_studi_neu1$hinweise <- NA
 ## Export
 setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
-usethis::use_data(studierende, overwrite = T)
+#usethis::use_data(studierende, overwrite = T)
 
 
 # Studierende_detailiert ----

@@ -178,7 +178,7 @@ studierende_neu <-data_studi_neu4
 ## Export
 setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
-usethis::use_data(Studierende, overwrite = T)
+usethis::use_data(studierende_neu, overwrite = T)
 
 
 # Studierende_feacher ----
@@ -361,7 +361,7 @@ studierende_faecher3 <- studierende_faecher2%>%
 
 setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
-usethis::use_data(Studierende_detailliert, overwrite = T)
+usethis::use_data(studierende_faecher3, overwrite = T)
 
 ## Preprocessing ---
 
