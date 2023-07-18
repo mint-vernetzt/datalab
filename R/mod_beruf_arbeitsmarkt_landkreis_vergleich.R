@@ -99,7 +99,14 @@ mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
                        content = paste0("In der ertsen Darstellung sieht man, welche Landkreise in Hessen eine Anteil an MINT-Beschäftigten haben, die über oder unter dem Durschnitt des Bundeslands liegen. Frankfurt am Main hat beispielsweise einen weniger hohen Anteil an MINT-Beschäftigten als die meisten anderen Kreise und kreisfreie Städte in Hessen. "),
                        placement = "top",
                        trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_regional_2")
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_regional_2"),
+    br(),
+    br(),
+    shinyBS::bsPopover(id = "h_beruf_regional_2", title = "",
+                       content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_regional_2")
   )
 }
 
