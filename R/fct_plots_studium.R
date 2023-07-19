@@ -5012,8 +5012,9 @@ highcharter::hw_grid(
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      #,
+      #download_map_data = FALSE
     )
     %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
@@ -5075,8 +5076,9 @@ highcharter::hw_grid(
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      #,
+      #download_map_data = FALSE
     )
     %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
@@ -5113,8 +5115,9 @@ highcharter::hw_grid(
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      #,
+      #download_map_data = FALSE
     )
     %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
@@ -5159,8 +5162,9 @@ highcharter::hw_grid(
         tooltip = list(
           valueDecimals = 0,
           valueSuffix = "%"
-        ),
-        download_map_data = FALSE
+        )
+        #,
+        #download_map_data = FALSE
       )
       # %>%
       #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
@@ -5601,8 +5605,9 @@ studierende_map_gender <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      #,
+      #download_map_data = FALSE
     ) %>%
       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
@@ -5633,8 +5638,9 @@ studierende_map_gender <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      #,
+      #download_map_data = FALSE
     ) %>%
       highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(

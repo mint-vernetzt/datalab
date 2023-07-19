@@ -1598,9 +1598,10 @@ kurse_map <- function(df,r) {
   #Trennpunkte für lange Zahlen ergänzen
   df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
-  highcharter::hw_grid(
-  # plot
-    highcharter::hcmap(
+  # plots
+
+
+   map1<- highcharter::hcmap(
       "countries/de/de-all",
       data = df[df$indikator == "Grundkurse",],
       value = "proportion",
@@ -1612,8 +1613,9 @@ kurse_map <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+     # ,
+     #download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
@@ -1631,10 +1633,10 @@ kurse_map <- function(df,r) {
       ) %>% highcharter::hc_size(600, 550) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
       highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom"),
+                             verticalAlign = "bottom")
 
     # Leistungskurs läuft
-    highcharter::hcmap(
+   map2 <-highcharter::hcmap(
       "countries/de/de-all",
       data = df[df$indikator == "Leistungskurse",],
       value = "proportion",
@@ -1646,8 +1648,9 @@ kurse_map <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+     # ,
+     # download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
@@ -1664,9 +1667,11 @@ kurse_map <- function(df,r) {
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom"),
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
 
-
+   highcharter::hw_grid(
+     map1,
+     map2,
     ncol = 2,
     browsable = TRUE
   )
@@ -1761,8 +1766,9 @@ kurse_map_gender <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      #,
+      #download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#154194", labels = list(format = "{text}%")) %>%
@@ -1772,9 +1778,9 @@ kurse_map_gender <- function(df,r) {
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-      highcharter::hc_caption(
-        text = "...",  style = list(color="white",fontSize = "12px")
-      ) %>%
+      # highcharter::hc_caption(
+      #   text = "...",  style = list(color="white",fontSize = "12px")
+      # ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
@@ -1794,8 +1800,9 @@ kurse_map_gender <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      #,
+      #download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
             highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#154194", labels = list(format = "{text}%")) %>%

@@ -34,7 +34,7 @@ mod_beruf_arbeitsmarkt_bl_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="dh_beruf_fach_1", title = "",
-                       content = paste0("Falls die Grafiken nicht direkt angezeit werden, bitte einmal zwischen zwei Auswahloptionen des Berufsfelds (z. B. zwischen Technik und MINT) hin und her wechseln.<br> <br> Ein Verkleinern und wieder Maximieren des Ansichtsfensters hilft außerdem dabei, dass sich die Darstellungen korrekt an die Fenstergröße anpassen."),
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                        trigger = "hover"),
     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_beruf_fach_1"),
 
