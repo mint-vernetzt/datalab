@@ -574,7 +574,7 @@ mod_schule_kurse_ui <- function(id){
                                       "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen."),
                                     br(),
                                     shinyBS::bsPopover(id="h_schule_ausserschulisch_2", title = "",
-                                                       content = paste0("Die Teilnehmendenzahlen sind auf 1.000er-Stellen gerundet."),
+                                                       content = paste0("Die Teilnehmendenzahlen sind von der SKf geschätzt und auf 1.000er-Stellen gerundet."),
                                                        placement = "top",
                                                        trigger = "hover"),
                                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_ausserschulisch_2")
