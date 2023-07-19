@@ -1663,7 +1663,6 @@ data_einstieg <- function(df,r) {
 
 studienzahl_waffle_mint <- function(df,r) {
 
-browser()
 
   # load UI inputs from reactive value
   timerange <<- r$waffle_y
@@ -2894,7 +2893,7 @@ studienzahl_verlauf_bl <- function(df,r) {
 
 studienzahl_verlauf_bl_subject <- function(df,r) {
 
-  browser()
+
 
   absolut_selector <<- r$abs_zahlen_verlauf_subject_bl
 
@@ -3324,7 +3323,7 @@ highcharter::hchart(df77, 'bar', highcharter::hcaes(y=proportion, x= fach)) %>%
 
 studienzahl_waffle_choice_gender <- function(df,r) {
 
-  browser()
+
   # load UI inputs from reactive value
   timerange <<- r$choice_y
 
@@ -3527,24 +3526,23 @@ studienzahl_waffle_choice_gender <- function(df,r) {
 
 studierende_verlauf_single_bl_gender <- function(df,r) {
 
-browser()
 
   # load UI inputs from reactive value
-  timerange <- r$choice_V_y
+  timerange <<- r$choice_V_y
 
 
-  v_lab <- r$choice_l_v
+  v_lab <<- r$choice_l_v
 
-  absolut_selector <- r$abs_zahlen_l_v
+  absolut_selector <<- r$abs_zahlen_l_v
 
   subjects_select <<- r$choice_v_f
 
-  states <- r$choice_states
+  states <<- r$choice_states
 
 
-  df <- df %>% dplyr::filter(region != "Bayern")
-
-  df <- df %>% dplyr::filter(region != "Baden-Württemberg")
+  # df <- df %>% dplyr::filter(region != "Bayern")
+  #
+  # df <- df %>% dplyr::filter(region != "Baden-Württemberg")
 
 
   dfer <<- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
@@ -3568,7 +3566,7 @@ browser()
 
 
 
-  dfgg <- dfff %>%
+  dfgg <<- dfff %>%
     dplyr::filter(region==states)%>%
     dplyr::filter(fach==subjects_select)
 
@@ -3728,7 +3726,7 @@ if (absolut_selector=="In Prozent"){
 
 
       dfggi <- dfgg%>%
-        dplyr::filter(label==v_lab)
+        dplyr::filter(indikator==v_lab)
 
       dfggi <- dfggi %>%
         dplyr::mutate(jahr= as.numeric(.$jahr))
@@ -3740,7 +3738,7 @@ if (absolut_selector=="In Prozent"){
 
 
 
-      highcharter::hchart(dfggi, 'line', highcharter::hcaes(x = jahr, y = wert,group=label))%>%
+      highcharter::hchart(dfggi, 'line', highcharter::hcaes(x = jahr, y = wert,group=indikator))%>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
@@ -3764,7 +3762,7 @@ if (absolut_selector=="In Prozent"){
     } else if(length(v_lab)==2){
 
       dfggk <- dfgg%>%
-        dplyr::filter(label==v_lab[1]|label==v_lab[2])
+        dplyr::filter(indikator==v_lab[1]|indikator==v_lab[2])
 
       dfggk <- dfggk %>%
         dplyr::mutate(jahr= as.numeric(.$jahr))
@@ -3777,7 +3775,7 @@ if (absolut_selector=="In Prozent"){
 
 
 
-      highcharter::hchart(dfggk, 'line', highcharter::hcaes(x = jahr, y = wert,group=label))%>%
+      highcharter::hchart(dfggk, 'line', highcharter::hcaes(x = jahr, y = wert,group=indikator))%>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
@@ -3810,7 +3808,7 @@ if (absolut_selector=="In Prozent"){
 
 
       dfggü <- dfgg%>%
-        dplyr::filter(label==v_lab[1]|label==v_lab[2]|label==v_lab[3])
+        dplyr::filter(indikator==v_lab[1]|indikator==v_lab[2]|indikator==v_lab[3])
 
       dfggü <- dfggü %>%
         dplyr::mutate(jahr= as.numeric(.$jahr))
@@ -3824,7 +3822,7 @@ if (absolut_selector=="In Prozent"){
 
 
 
-      highcharter::hchart(dfggü, 'line', highcharter::hcaes(x = jahr, y = wert, group=label))%>%
+      highcharter::hchart(dfggü, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
@@ -4020,13 +4018,13 @@ studienfaecher_ranking <- function(df,r, type) {
     dplyr::mutate(dplyr::across(c(5,8,7,9), ~ round(./Alle*100)))%>%
     tidyr::pivot_longer(c(5:9), names_to = "fach", values_to= "proportion")%>%
     dplyr::filter(geschlecht=="frauen")%>%
-    dplyr::filter(label == "Studierende" | label=="Studienanfänger:innen (1.Fachsemester)")%>%
+    dplyr::filter(indikator == "Studierende" | indikator=="Studienanfänger:innen (1.Fachsemester)")%>%
     dplyr::filter(fach!= "Alle")
 
     dffn <- df89 %>% dplyr::filter(region == bl_choice)
 
 
-    df2 <- dffn %>% tidyr::pivot_wider(names_from=label,values_from = proportion)
+    df2 <- dffn %>% tidyr::pivot_wider(names_from=indikator,values_from = proportion)
 
 
  # dffn <- df89 %>% dplyr::filter(label == label_choice)
@@ -4035,7 +4033,7 @@ studienfaecher_ranking <- function(df,r, type) {
 
   ggplot2::ggplot(df2,
                   ggplot2::aes(y = fach)) +
-    ggplot2::geom_point(data = dffn, ggplot2::aes(x = proportion, color = label), size = 5) +
+    ggplot2::geom_point(data = dffn, ggplot2::aes(x = proportion, color = indikator), size = 5) +
     ggalt::geom_dumbbell(
       ggplot2::aes(x = `Studienanfänger:innen (1.Fachsemester)`, xend = `Studierende`),
       size = 0.5,
@@ -4354,9 +4352,9 @@ studierende_map <- function(df,r) {
   # hochschulform_select_2 <- r$hochschulform_studium_studienzahl_bl_map2
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr == timerange)
+  dfs <<- df %>% dplyr::filter(jahr == timerange)
 
-  df <- df %>% dplyr::filter(region != "Deutschland")
+  dfss <<- dfs %>% dplyr::filter(region != "Deutschland")
 
  # df <- df %>% dplyr::filter(region != "Bayern")
 
@@ -4364,7 +4362,7 @@ studierende_map <- function(df,r) {
 
 
 
-df_insp <<- df
+df_insp <<- dfss
 
   df_insp1 <<- df_insp %>%
     dplyr::select(-fachbereich,- mint_select, -typ )%>%
@@ -5767,7 +5765,6 @@ bundeslaender_ranking <- function(df,r, type) {
 plot_ranking_top_faecher <- function(df, r, type) {
 
 
-
   # load UI inputs from reactive value
   timerange <<- r$date_top_faecher
 
@@ -5781,13 +5778,13 @@ plot_ranking_top_faecher <- function(df, r, type) {
   df3 <<- df %>% dplyr::filter(jahr == timerange) %>%
     dplyr::filter(indikator == "Studierende",
                   jahr == timerange)
-  df4 <- df3 %>%
+  df4 <<- df3 %>%
     dplyr::filter(!fach %in% c(
                                "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
                                "Weitere ingenieurwissenschaftliche Fächer",
                                "Weitere naturwissenschaftliche und mathematische Fächer"
                                ))
-  df <- df4
+  #df <- df4
 
 
   # # Calculate male numbers
@@ -5809,13 +5806,13 @@ plot_ranking_top_faecher <- function(df, r, type) {
   #   dplyr::select(-c("wert.y", "anzeige_geschlecht.y", "indikator.y")) %>%
   #   dplyr::filter(anzeige_geschlecht != "Gesamt")
 
-  df_props <- df4 %>%
+  df_props <<- df4 %>%
     tidyr::pivot_wider(values_from = wert, names_from=geschlecht)%>%
     dplyr::mutate(dplyr::across(c("Männer", "Frauen"), ~round(./Gesamt*100,1)))%>%
     dplyr::select(-Gesamt)%>%
     tidyr::pivot_longer(c("Männer", "Frauen"), names_to="geschlecht", values_to = "prop")
 
-  df5 <- df4 %>%
+  df5 <<- df4 %>%
     dplyr::filter(geschlecht!="Gesamt")%>%
     dplyr::left_join(df_props)
 
@@ -5837,7 +5834,12 @@ plot_ranking_top_faecher <- function(df, r, type) {
 
 
 
-  }
+  }else {
+
+    dfk <- df5 %>% dplyr::filter(typ == "Aggregat"& fach != "Alle Fächer")%>%
+      dplyr::filter(region == states)
+
+    }
 
   # Split dataframe by gender and create plots
   if(abs_rel == "In Prozent"){
