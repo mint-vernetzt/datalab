@@ -1418,7 +1418,7 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
     tidyr::pivot_longer(c("Männer", "Frauen"), names_to = "geschlecht", values_to  = "proportion")%>%
     dplyr::filter(indikator !="Internationale Studienanfänger:innen (1. Hochschulsemester)"&indikator!= "Internationale Studierende"  )
 
-  df_io <- dfu %>%
+  df_io <<- dfu %>%
     dplyr::select(-Gesamt)%>%
     tidyr::pivot_longer(c("Männer", "Frauen"), values_to = "wert", names_to = "geschlecht")%>%
     dplyr::right_join(dfä)%>%
@@ -1429,10 +1429,10 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
 
 
     #Trennpunkte für lange Zahlen ergänzen
-    df_io$wert <- prettyNum(df_io$wert, big.mark = ".")
+    df_io$wert <<- prettyNum(df_io$wert, big.mark = ".")
 
 
-    df_io1 <- df_io %>%
+    df_io1 <<- df_io %>%
       dplyr::filter(region==sel_bl)%>%
       dplyr::filter(fach==sel_f)
 
@@ -4335,7 +4335,7 @@ studienfaecher_ranking <- function(df,r, type) {
 
 studierende_map <- function(df,r) {
 
-
+browser()
   # load UI inputs from reactive value
   timerange <- r$map_y
 
@@ -4367,7 +4367,7 @@ df_insp <<- dfss
   df_insp1 <<- df_insp %>%
     dplyr::select(-fachbereich,- mint_select, -typ )%>%
     tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-    dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,0)))%>%
+    dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,2)))%>%
     tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
     dplyr::right_join(df_insp)
 

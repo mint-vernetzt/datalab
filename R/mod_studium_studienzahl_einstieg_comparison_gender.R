@@ -37,7 +37,7 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                   "Materialwissenschaft und Werkstofftechnik",
                   "Humanmedizin/Gesundheitswissenschaften",
                   "Geisteswissenschaften",
-                  "Ingenieurwissenschaften",
+                  "Ingenieurwissenschaften (inkl. Informatik)",
                   "Ingenieurwissenschaften ohne Informatik",
                   "Physik, Astronomie",
                   "Rechts-, Wirtschafts- und Sozialwissenschaften",

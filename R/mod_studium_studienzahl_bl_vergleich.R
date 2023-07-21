@@ -24,9 +24,9 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
       choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
                   "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
-                  "Ausländische Studierende",
+                  "Internationale Studierende",
                   "Studienanfänger:innen (1. Hochschulsemester)",
-                  "Studierende (Nur Lehramt)"
+                  "Studierende (Lehramt)"
       ),
       selected = "Studierende"),
     # p("Nur Lehramt anzeigen:"),

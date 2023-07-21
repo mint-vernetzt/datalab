@@ -24,7 +24,7 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                   "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
                   "Internationale Studierende",
-                  "Studierende (Nur Lehramt)"
+                  "Studierende (Lehramt)"
 
       ),
       selected = c("Studierende")
