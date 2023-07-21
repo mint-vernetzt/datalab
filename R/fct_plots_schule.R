@@ -3013,11 +3013,10 @@ iqb_standard_zeitverlauf <- function(df, r){
   # reactive values übergeben
   kl_select <- r$klasse_iqb_standard_zeitverlauf
   if(kl_select == "4. Klasse"){
-    bl_select <- r$land_iqb_standard_zeitverlauf_
+    bl_select <- r$land_iqb_standard_zeitverlauf_4
   }else{
-    bl_select <- r$land_iqb_standard_zeitverlauf
+    bl_select <- r$land_iqb_standard_zeitverlauf_9
   }
-
 
   # Region und Klasse filtern
   df <- df %>% dplyr::filter(region %in% bl_select)
@@ -3036,6 +3035,10 @@ iqb_standard_zeitverlauf <- function(df, r){
     title_help <- paste0(bl_select[1], ", ", bl_select[2], " & ", bl_select[3])
   }
 
+  color <- dplyr::case_when(
+    kl_select == "4. Klasse" ~ c("#efe8e6","#D0A9CD", "#b16fab"),
+    kl_select == "9. Klasse" ~ "#b16fab"
+  )
 
     highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = region, group=jahr))%>%
       highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -3043,8 +3046,8 @@ iqb_standard_zeitverlauf <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), pointsWidth=100) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#efe8e6","#D0A9CD",
-                               "#b16fab")) %>%
+      #highcharter::hc_colors(c("#efe8e6","#D0A9CD", "#b16fab")) %>%
+      highcharter::hc_colors(color) %>%
       highcharter::hc_title(text = paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard
                                           in Mathematik nicht erreichen"),
       margin = 45,

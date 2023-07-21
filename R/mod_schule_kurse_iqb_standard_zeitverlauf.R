@@ -15,7 +15,10 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
     shinyWidgets::radioGroupButtons(
       inputId = ns("klasse_iqb_standard_zeitverlauf"),
       choices = c("4. Klasse",
-                  "9. Klasse")
+                  "9. Klasse"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     ),
 
     p("Region:"),
