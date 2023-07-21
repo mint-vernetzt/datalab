@@ -37,6 +37,7 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
         "Auszubildende",
         "Auszubildende (1. Jahr)",
         "Beschäftigte",
+        "ausländische Auszubildende",
                   "ausländische Beschäftigte"),
       multiple = FALSE,
       selected = "Beschäftigte")

@@ -34,10 +34,53 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
         "max-options" = 2,
         "max-options-text" = "Maximal 2 Indikatoren auswählen")
     ),
+    #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
     p("Fächer/Fächergruppen (max. 2):"),
-    shinyWidgets::pickerInput(
-      inputId = ns("map_f"),
-      choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+
+
+    conditionalPanel(condition = "input.map_l == 'Studierende (Nur Lehramt)'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("map_f_lehr"),
+                       choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+                                   "Biologie",
+                                   "Geowissenschaften und Geographie",
+                                   "Informatik",
+                                   "Maschinenbau/Verfahrenstechnik",
+                                   "Alle Nicht MINT-Fächer",
+                                   "Alle MINT-Fächer",
+                                   "Chemie",
+                                   "Mathematik",
+                                   "Humanmedizin/Gesundheitswissenschaften",
+                                   "Geisteswissenschaften",
+                                   "Ingenieurwissenschaften inkl. Informatik" = "Ingenieurwissenschaften",
+                                   "Ingenieurwissenschaften ohne Informatik",
+                                   "Physik, Astronomie",
+                                   "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                                   "Mathematik, Naturwissenschaften",
+                                   "Naturwissenschaften",
+                                   "Sport",
+                                   "Kunst, Kunstwissenschaft"),
+
+
+                       selected = c(
+                         "Informatik", "Alle MINT-Fächer"),
+                       multiple = TRUE,
+                       options =  list(
+                         "max-options" = 2,
+                         "max-options-text" = "Maximal 2 Indikatoren auswählen")
+                     )),
+
+    conditionalPanel(condition = "input.map_l == 'Auländische Studienanfänger:innen (1. Hochschulsemester)' |
+                     input.map_l == 'Studienanfänger:innen (1. Fachsemester)' |
+                     input.map_l == 'Studierende' |
+                     input.map_l == 'Ausländische Studierende' |
+                     input.map_l == 'Studienanfänger:innen (1. Hochschulsemester)'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("map_f"),
+
+                       choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
                   "Biologie",
                   "Elektrotechnik und Informationstechnik",
                   "Geowissenschaften und Geographie",
@@ -63,16 +106,15 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                   "Pharmazie",
                   "Sport",
                   "Verkehrstechnik, Nautik",
-                  "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt"
-      ),
-      selected = c(
-                   "Informatik", "MINT"),
-      multiple = TRUE,
-      options =  list(
-        "max-options" = 2,
-        "max-options-text" = "Maximal 2 Indikatoren auswählen")
-    )
+                  "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt"),
 
+                       selected = c(
+                         "Informatik", "Alle MINT-Fächer"),
+                       multiple = TRUE,
+                       options =  list(
+                         "max-options" = 2,
+                         "max-options-text" = "Maximal 2 Indikatoren auswählen")
+                     ))
   )
 
 }
@@ -90,6 +132,10 @@ mod_studium_studienzahl_bl_map_server <- function(id, r){
 
     observeEvent(input$map_l, {
       r$map_l <- input$map_l
+    })
+
+    observeEvent(input$map_f_lehr, {
+      r$map_f_lehr <- input$map_f_lehr
     })
 
     observeEvent(input$map_f, {

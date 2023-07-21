@@ -97,7 +97,7 @@ mod_betaversion_ui <- function(id){
           tags$b(span("Fragen oder Feedback?", style = "color:#154194"))),
 
         p(style = "text-align: justify; font-size = 16px",
-          span("Wir freuen uns immer über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          span("Wir freuen uns immer über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
                tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!")
           )
       ),

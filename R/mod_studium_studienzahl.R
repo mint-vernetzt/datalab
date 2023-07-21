@@ -44,18 +44,18 @@ mod_studium_studienzahl_ui <- function(id){
         title = "Übersicht Fragestellungen",
         width = 3,
         p(
-        style = "text-align: left; font-size = 16px",tags$a(href="#jump1c",
+        style = "text-align: left; font-size = 16px",tags$a(href="#studium_mint",
         span(tags$b(span("Fächerwahl MINT:")))), "Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
         ),
 
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump2c",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_fach",
           span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
 
           ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump3c",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_frauen",
           span(tags$b(span("Frauen in MINT:")))), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
           ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#jump4c",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_international",
           span(tags$b(span("Internationale Studierende in MINT:")))), "Wie hoch ist der Anteil von internationalen Studierenden in den MINT-Fächern?"
         )
         ),
@@ -72,14 +72,14 @@ mod_studium_studienzahl_ui <- function(id){
         title = "Fragen oder Feedback?",
         width = 3,
         p(style = "text-align: left; font-size = 16px",
-          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         )))
     ,
 
   # Box 1
 
-    fluidRow( id="jump1c",
+    fluidRow( id="studium_mint",
       shinydashboard::box(
         title = "Fächerwahl MINT: Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?",
         width = 12,
@@ -243,7 +243,7 @@ mod_studium_studienzahl_ui <- function(id){
 
     # Box 2
 
-  fluidRow( id="jump2c",
+  fluidRow( id="studium_fach",
       shinydashboard::box(
         title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
         width = 12,
@@ -286,6 +286,9 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 9,
                                htmlOutput(ns("plot_studienzahl_map")),
                                p(style="font-size:12px;color:grey",
+                                 "Hinweis: In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert.
+                                 In diesen Fällen werden die betroffenen Bundesländer als grau schattiert angezeigt."),
+                               p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
@@ -315,13 +318,17 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_vergleich_bl1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
-                               #plotOutput(ns("plot_vergleich_bl")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                               highcharter::highchartOutput(ns("plot_vergleich_bl1")),
+                               p(style="font-size:12px;color:grey",
+                                 "Hinweis: In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert.
+                                 In diesen Fällen werden nur die Bundesländer angezeigt, welche die betrachtete Studienfachgruppe aufweisen."),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+
                              )
                     )
         ))),
 
-    fluidRow(id="jump3c",
+    fluidRow(id="studium_frauen",
       shinydashboard::box(
         title = "Frauen in MINT: Wie hoch ist der Anteil von Frauen in den MINT-Fächern?",
         width = 12,
@@ -371,11 +378,16 @@ mod_studium_studienzahl_ui <- function(id){
                              mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1")),
                            shiny::mainPanel(
                              width = 9,
-                             highcharter::highchartOutput(ns("plot_einstieg_comparison_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                             highcharter::highchartOutput(ns("plot_einstieg_comparison_gender")),
+                             p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                             p(style="font-size:12px;color:grey", "Hinweis: Studierende auf Lehramt werden für Fächergruppen, die nicht oder nur von einer
+                               sehr geringen Anzahlen an Lehramtstudierenden deutschlandweit als Hauptfach studiert werden, nicht in der Übersicht angezeigt.
+                               In einzelnen Bundesländern kann es für spezfisiche Fächergruppen zu keinen oder sehr geringen Leharamtstudierendenzahlen kommen.
+                               Achten Sie hierbei auf die absoluten Zahlenangaben zur Anzahl der Studierenden."))
                   )
         ))),
 
-  fluidRow(id="jump4c",
+  fluidRow(id="studium_international",
            shinydashboard::box(
              title = "Internationale Studierende in MINT: Wie hoch ist der Anteil internationaler Studierender in den MINT-Fächern?",
              width = 12,

@@ -4,7 +4,7 @@ setwd( "C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
 zentral_read <-
   readxl::read_xlsx(
-    system.file(package = "datalab", "data-raw/Zentraler_Datensatz_alt_27_02_23.xlsx")
+    system.file(package = "datalab", "raw/Zentraler_Datensatz_alt_27_02_23.xlsx")
   ) %>%
   janitor::clean_names() %>%
   janitor::remove_empty()
@@ -37,7 +37,7 @@ usethis::use_data(zentral_alt, overwrite = T)
 setwd( "C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
 zentral_read_2 <-
-  readxl::read_xlsx("Zentraler_Datensatz_neu_27_02_23.xlsx")%>%
+  readxl::read_xlsx("raw/Zentraler_Datensatz_neu_27_02_23.xlsx")%>%
   janitor::clean_names() %>%
   janitor::remove_empty()
 
