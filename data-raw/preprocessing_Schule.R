@@ -260,7 +260,7 @@ usethis::use_data(kurse, overwrite = T)
 
 
 
-# Erstellt "iqb_standard" -------------------------------------------------
+# Erstellt "iqb" -------------------------------------------------
 
 #
 # Data Lab
@@ -270,12 +270,17 @@ usethis::use_data(kurse, overwrite = T)
 
 library(dplyr)
 
-## Rohdatensatz einlesen ------------------------------------------------------
+
+## iqb_standard Teil -------------------------------------------------------
+
+
+#### Rohdatensatz einlesen ------------------------------------------------------
 
 wd <- getwd()
 setwd(wd)
 #setwd("C:/Users/kab/Downloads/datalab/datalab")
 
+## 4. Klasse
 # Sheet 2 für alle drei Jahre auswählen
 data <- readxl::read_excel("data-raw/raw/IQB015_Abb3.17&3.19 (S.71&75)_2021.xlsx", sheet = "Abb3.19")
 
@@ -283,9 +288,17 @@ data <- readxl::read_excel("data-raw/raw/IQB015_Abb3.17&3.19 (S.71&75)_2021.xlsx
 data <- data %>%
   dplyr::select("...3", "...4", "perc_2011", "perc_2016", "perc_2021")
 
+# standard nach geschlecht
+data_gen <- readxl::read_excel("data-raw/raw/IQB021_Tab6.1,6.2&6.6 (S.128,133&146)_2021.xlsx", sheet = "Tab6.2")
 
-## Datensatz aufbereiten ---------------------------------------------------
+## 9. Klasse
+# Einlesen
+d9 <- read.csv("data-raw/raw/IQB001_Vergleich_Mathe 2018.csv")
 
+
+#### Datensatz aufbereiten ---------------------------------------------------
+
+## 4. Klasse
 # Spalten umbenennen und BULA-Namen korrigieren
 data <- data %>%
   dplyr::rename(region = ...3,
@@ -311,33 +324,94 @@ data <- stats::na.omit(data)
 # 3 Werte-Spalten in eine Spalte und Jahr als Spalte ergänzen
 data <- tidyr::pivot_longer(data, "2011":"2021", names_to = "jahr", values_to = "wert")
 
+# klassenstufe ergänzen
+data$klasse <- "4. Klasse"
 
-## Datensatz abspeichern ---------------------------------------------------
+## 4. Klasse nach Gender
+# passende spalten/zeilen auswählen
+data_gen <- data_gen %>%
+  dplyr::select(...1, ...2, ...3, ...7, ...8, ...12, ...13) %>%
+  dplyr::rename(
+    fach = ...1,
+    ms_nicht_j = ...2,
+    ms_nicht_m = ...3,
+    regels_j = ...7,
+    regels_m = ...8,
+    optimals_j = ...12,
+    optimals_m = ...13
+  ) %>%
+  dplyr::filter(fach == "Globalskala")
 
-iqb_standard <- data
+# long format und umbennen
+data_gen <- tidyr::pivot_longer(data_gen, "ms_nicht_j":"optimals_m", names_to = "indikator",
+                                values_to = "wert")
+data_gen <- data_gen %>%
+  dplyr::mutate(geschlecht = dplyr::case_when(
+    grepl("_j", indikator) ~ "Männer",
+    grepl("_m", indikator) ~ "Frauen"
+  ),
+  indikator = dplyr::case_when(
+    grepl("ms_nicht", indikator) ~ "Mindeststandard nicht erreicht",
+    grepl("regel", indikator) ~ "Regelstandards erreicht",
+    grepl("optim", indikator) ~ "Optimalstandard erreicht"
+  ),
+  jahr = 2021,
+  fach = "Mathematik",
+  klasse = "4. Klasse",
+  typ = "standard",
+  bereich = "Schule",
+  region = "Deutschland")
+
+## 9. Klasse
+# umnennen
+d9 <- d9 %>%
+  dplyr::rename(
+    region = X.1,
+    "Mindeststandard nicht erreicht" = Wie.viele.Schüler.unter.dem.Mindeststandard.bleiben,
+    "Regelstandard erreicht" = Wie.viele.Schüler.mindestens.den.Regelstandard.erreichen
+  )
+
+# in long formt bringen und spalten ergänzen
+d9 <- tidyr::pivot_longer(d9, "Mindeststandard nicht erreicht":"Regelstandard erreicht",
+                          names_to = "indikator", values_to = "wert")
+d9$jahr <- "2018"
+d9$klasse <- "9. Klasse"
+
+#### Jahre zusammenfügen und Struktur ----------------------------------------
+
+iqb_standard <- rbind(data, d9)
+
+# Spalten ergänzen/angleichen, um zusammenführen zu können
+iqb_standard$bereich <- "Schule"
+iqb_standard$typ <- "standard"
+iqb_standard$geschlecht <- "gesamt"
+iqb_standard$fach <- "Mathematik"
+
+iqb_standard <- rbind(iqb_standard, data_gen)
+
+# Spalten sortieren
+# Spalten in gleiche Reihenfolge bringen
+iqb_standard <- iqb_standard[,c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht", "region", "jahr", "wert")]
+
+# jahr/wert als numeric
 iqb_standard$wert <- as.numeric(iqb_standard$wert)
+iqb_standard$jahr <- as.numeric(iqb_standard$jahr)
 
-usethis::use_data(iqb_standard, overwrite = T)
+## iqb_score Teil ----------------------------------------------------
 
-
-
-
-# Erstellt "iqb_score" ----------------------------------------------------
-
-
-#
 # Data Lab
 # Vorbereitung Datensatz: IQB Daten 4. Klasse (2011, 2016, 2021) und 9. Klasse (2012, 2018)
 # Author: Katharina Brunner, April 2023
-#
-
 
 library(dplyr)
 
-## Rohdatensatz einlesen ------------------------------------------------------
 
-wd <- getwd()
-setwd(wd)
+### 4. Klasse ---------------------------------------------------------------
+
+#### Rohdatensatz einlesen ------------------------------------------------------
+
+# wd <- getwd()
+# setwd(wd)
 
 #setwd("C:/Users/kab/Downloads/datalab/datalab")
 
@@ -362,7 +436,7 @@ d_m_bildung <- readxl::read_excel("data-raw/raw/IQB018_Abb7.11 (S.172)_2021.xlsx
 d_m_migra <- readxl::read_excel("data-raw/raw/IQB019_Abb8.9 (S.200)_2021.xlsx", sheet = "Abb_8.9")
 
 
-## Datensätze aufbereiten --------------------------------
+#### Datensätze aufbereiten --------------------------------
 
 ## Mathe Mittel ings. nur DE
 # nötige Spalten auswählen
@@ -519,14 +593,315 @@ d_m_migra$wert <- as.numeric(d_m_migra$wert)
 d_m_migra$region[d_m_migra$region == "Baden-Wuerttemberg"] <- "Baden-Württemberg"
 d_m_migra$region[d_m_migra$region == "Thueringen"] <- "Thüringen"
 
-
-## Datensätze zusammenfügen  -----------------------------------------------
+#### Datensätze zusammenfügen  -----------------------------------------------
 
 #Zusammenfügen
 iqb_score <- rbind(d_m_ges, d_m_gen_2021, d_m_gen_2011_16, d_m_bildung, d_m_migra)
 
+
+### 9. Klasse ---------------------------------------------------------------
+
+#### Rohdatensatz einlesen ------------------------------------------------------
+
+# wd <- getwd()
+# setwd(wd)
+
+#setwd("C:/Users/kab/Downloads/datalab/datalab")
+
+# Mathe Mittel ings. DE & BULAs, 2012, 2018
+d_m_ges <- readxl::read_excel("data-raw/raw/IQB009_Abb6.4 (S.207).xlsx")
+
+# Fachkenntnisse nach Gender
+# Mathe Mittel
+d_m_gen <- readxl::read_excel("data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx", sheet = "Abb 7.9_Mathe_GL")
+# Bio
+d_b_gen <- readxl::read_excel("data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx", sheet = "Abb 7.10_BF")
+# Chemie
+d_c_gen <- readxl::read_excel("data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx", sheet = "Abb 7.12_CF")
+# Physik
+d_p_gen <- readxl::read_excel("data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx", sheet = "Abb 7.14_PF")
+
+# Fachkenntnisse nach Status
+# Mathe
+d_m_stat <- readxl::read_excel("data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx", sheet = "Abb8.17_GL")
+# Bio
+d_b_stat <- readxl::read_excel("data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx", sheet = "Abb8.18_BF")
+# Chemie
+d_c_stat <- readxl::read_excel("data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx", sheet = "Abb8.20_CF")
+# Physik
+d_p_stat <- readxl::read_excel("data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx", sheet = "Abb8.22_PF")
+
+# Fachkenntnisse nach Zuwanderungsgeschichte
+# Mathe
+d_m_migra <- readxl::read_excel("data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx", sheet = "Abb 9.2 GL")
+# Bio
+d_b_migra <- readxl::read_excel("data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx", sheet = "Abb 9.3 BF")
+# Chemie
+d_c_migra <- readxl::read_excel("data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx", sheet = "Abb 9.5 CF")
+# Physik
+d_p_migra <- readxl::read_excel("data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx", sheet = "Abb 9.7 PF")
+
+
+#### Datensatz aufbereiten ---------------------------------------------------
+
+## Mathe Mittel ings. DE & BULAs, 2012, 2018
+
+# benötigte Spalten auswählen
+d_m_ges <- d_m_ges %>%
+  dplyr::select(...1, "2012", "2018")
+
+# Missings löschen
+d_m_ges <- na.omit(d_m_ges)
+
+# Umbennenen und Spalten ergänzen
+d_m_ges <- d_m_ges %>%
+  dplyr::rename(
+    region = ...1
+  ) %>%
+  dplyr::mutate(
+    geschlecht = "gesamt",
+    indikator = "Alle",
+    fach = "Mathematik"
+  )
+
+# in long Format bringen
+d_m_ges <- tidyr::pivot_longer(d_m_ges, "2012":"2018", values_to = "wert", names_to = "jahr")
+
+## Fachkenntnisse nach Gender
+aufbereitung_gen <- function(df, fach){
+  df <- df %>%
+    dplyr::select(...1, "Jungen", ...5, "Mädchen", ...14) %>%
+    dplyr::rename(
+      region = ...1,
+      "2012_j" = Jungen,
+      "2018_j" = ...5,
+      "2012_m" = Mädchen,
+      "2018_m" = ...14
+    ) %>%
+    dplyr::mutate(
+      indikator = "Alle"
+    )
+
+  # missings löschen
+  df <- na.omit(df)
+
+  # in long Format bringen und spalten zuweisen
+  df <- tidyr::pivot_longer(df, "2012_j":"2018_m", names_to = "jahr", values_to = "wert")
+  df <- df %>%
+    dplyr::mutate(geschlecht = dplyr::case_when(
+      grepl("_j", jahr) ~ "Männer",
+      grepl("_m", jahr) ~ "Frauen"
+    ),
+    jahr = dplyr::case_when(
+      grepl("12", jahr) ~ 2012,
+      grepl("18", jahr) ~ 2018
+    ),
+    fach = fach
+    )
+  return(df)
+}
+
+d_m_gen <- aufbereitung_gen(d_m_gen, "Mathematik")
+d_b_gen <- aufbereitung_gen(d_b_gen, "Biologie")
+d_c_gen <- aufbereitung_gen(d_c_gen, "Chemie")
+d_p_gen <- aufbereitung_gen(d_p_gen, "Physik")
+
+## Fachkenntnisse nach Status
+aufbereitung_stat <- function(df, fach){
+  df <- df %>%
+    dplyr::select(...1, "2012", "2018") %>%
+    dplyr::rename(
+      region = ...1
+    )
+
+  # Labels auf alle Zeilen übertragen
+  df$region <- stats::ave(df$region, cumsum(!is.na(df$region)), FUN=function(x) x[1])
+
+  # zweite Zeile mit niedrigem Status kennzeichnen
+  for(x in 2:length(df$region)){
+    if(df$region[x] == df$region[x-1]) df$region[x] <- paste0(df$region[x], "low")
+  }
+
+  # missings löschen
+  df <- na.omit(df)
+
+  # in long Format bringen und spalten zuweisen
+  df <- tidyr::pivot_longer(df, "2012":"2018", names_to = "jahr", values_to = "wert")
+
+  # Indikator-Spalte erstellen und Beschriftungen anpassen
+  df$indikator <- df$region
+  df <- df %>%
+    dplyr::mutate(indikator = dplyr::case_when(
+      grepl("low", indikator) ~ "niedriger Status",
+      TRUE ~ "hoher Status"
+    ),
+    region = stringr::str_remove(region, "low"),
+    region = gsub("[0-9]+", "", region),
+    region = gsub(",", "", region),
+    fach = fach,
+    geschlecht = "gesamt"
+    ) %>%
+    dplyr::filter(region != "Land")
+  return(df)
+}
+
+d_m_stat <- aufbereitung_stat(d_m_stat, "Mathematik")
+d_b_stat <- aufbereitung_stat(d_b_stat, "Biologie")
+d_c_stat <- aufbereitung_stat(d_c_stat, "Chemie")
+d_p_stat <- aufbereitung_stat(d_p_stat, "Physik")
+
+## Fachkenntnisse nach Zuwanderungsgeschichte
+aufbereitung_migra <- function(df, fach){
+  df <- df %>%
+    dplyr::select(...1, ...6, ...14) %>%
+    dplyr::rename(
+      region = ...1,
+      "2012" = ...6,
+      "2018" = ...14
+    )
+
+  # Labels auf alle Zeilen übertragen
+  df$region <- stats::ave(df$region, cumsum(!is.na(df$region)), FUN=function(x) x[1])
+
+  # missings löschen
+  df <- na.omit(df)
+
+  # zweite Zeile mit niedrigem Status kennzeichnen
+  for(x in 2:length(df$region)){
+    if(df$region[x] == df$region[x-1]) df$region[x] <- paste0(df$region[x], "mit1")
+  }
+  for(x in 3:length(df$region)){
+    if(df$region[x] == df$region[x-2]) df$region[x] <- paste0(df$region[x], "mit2")
+  }
+
+  # in long Format bringen und spalten zuweisen
+  df <- tidyr::pivot_longer(df, "2012":"2018", names_to = "jahr", values_to = "wert")
+
+  # Indikator-Spalte erstellen und Beschriftungen anpassen
+  df$indikator <- df$region
+  df <- df %>%
+    dplyr::mutate(indikator = dplyr::case_when(
+      grepl("mit1", indikator) ~ "mit Zuwanderungsgeschichte (ein Elternteil)",
+      grepl("mit2", indikator) ~ "mit Zuwanderungsgeschichte (beide Elternteile)",
+      TRUE ~ "ohne Zuwanderungsgeschichte"
+    ),
+    region = gsub("mit1", "", region),
+    region = gsub("mit2", "", region),
+    region = gsub("[0-9]+", "", region),
+    region = gsub(",", "", region),
+    fach = "Mathe",
+    geschlecht = "gesamt",
+    region = dplyr::case_when(
+      grepl("Baden", region) ~ "Baden-Württemberg",
+      TRUE ~region
+    )
+    ) %>%
+    dplyr::filter(region != "Land")
+
+  return(df)
+}
+
+d_m_migra <- aufbereitung_migra(d_m_migra, "Mathematik")
+d_b_migra <- aufbereitung_migra(d_b_migra, "Biologie")
+d_c_migra <- aufbereitung_migra(d_c_migra, "Chemie")
+d_p_migra <- aufbereitung_migra(d_p_migra, "Physik")
+
+### 9. Klasse Daten zusammenfügen
+iqb_score_9 <- rbind(d_m_ges, d_m_gen, d_b_gen, d_c_gen, d_p_gen, d_m_stat, d_b_stat, d_c_stat, d_p_stat,
+                     d_m_migra, d_b_migra, d_c_migra, d_p_migra)
+
+# Jahre zusammenfügen und Struktur ----------------------------------------
+
+# Spalten ergänzen/angleichen, um zusammenführen zu können
+iqb_score$fach <- "Mathematik"
+iqb_score$bereich <- "Schule"
+iqb_score_9$bereich <- "Schule"
+iqb_score$typ <- "score"
+iqb_score_9$typ <- "score"
+iqb_score$klasse <- "4. Klasse"
+iqb_score_9$klasse <- "9. Klasse"
+
+
 #Spalten sortieren
-iqb_score <- iqb_ges[,c("indikator", "geschlecht", "region", "jahr", "wert")]
+iqb_score <- iqb_score[,c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                          "region", "jahr", "wert")]
+iqb_score_9 <- iqb_score_9[,c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht",
+                          "region", "jahr", "wert")]
 
-usethis::use_data(iqb_score, overwrite = T)
+iqb_score_ges <- rbind(iqb_score, iqb_score_9)
 
+# Numerisch und Kommas rein
+iqb_score_ges$wert <- as.numeric(iqb_score_ges$wert)
+iqb_score_ges$jahr <- as.numeric(iqb_score_ges$jahr)
+
+
+## iqb_fragen Teil -----------------------------------------------------------
+
+# Data Lab
+# Vorbereitung Datensatz: IQB Daten 4. Klasse (2016, 2021) Befragung Selbstwert/Interesse
+# Author: Katharina Brunner, Juli 2023
+
+#### Rohdatensatz einlesen ---------------------------------------------------
+
+# wd <- getwd()
+# setwd(wd)
+
+# Einlesen
+data <- readxl::read_excel("data-raw/raw/IQB020_Abb9.3 (S.227)_2021.xlsx")
+
+#### Datensatz aufbereiten ---------------------------------------------------
+
+# Labels auf alle Zeilen übertragen
+data$...1 <- stats::ave(data$...1, cumsum(!is.na(data$...1)), FUN=function(x) x[1])
+
+# Zeilen auswählen
+data <- data %>%
+  dplyr::select(...1, ...2, "2016", "2021") %>%
+  dplyr::rename(
+    indikator = ...1,
+    geschlecht = ...2
+  )
+
+# Fach zuordnen
+data$indikator[4:9] <- paste0(data$indikator[4:9], "_Deutsch")
+data$indikator[11:17] <- paste0(data$indikator[11:17], "_Mathe")
+
+#missings entfernen
+data <- na.omit(data)
+
+# ins long-Format bringen
+data <- data %>%
+  tidyr::pivot_longer(cols = "2016":"2021", names_to = "jahr", values_to = "wert")
+
+# Fach extra speichern
+data <- data %>%
+  dplyr::mutate(fach = dplyr::case_when(
+    grepl("Deu", indikator) ~ "Deutsch",
+    grepl("Math", indikator) ~ "Mathematik"
+  ),
+  indikator = gsub("_Deutsch", "", indikator),
+  indikator = gsub("_Mathe", "", indikator),
+  )
+
+# jahr/wert als numerisch speichern
+data$jahr <- as.numeric(data$jahr)
+data$wert <- as.numeric(data$wert)
+
+# Spalten ergänzen zum Zusammenfügen
+data$bereich <- "Schule"
+data$typ <- "fragen"
+data$region <- "Deutschland"
+data$klasse <- "4. Klasse"
+
+# Reihenfolge der Spalten anpassen und bennenen
+iqb_fragen <- data[, c("bereich", "typ", "klasse", "fach", "indikator", "geschlecht", "region", "jahr", "wert")]
+
+# Komma anstatt Punkt
+iqb_fragen$wert <- as.numeric(iqb_fragen$wert)
+iqb_fragen$jahr <- as.numeric(iqb_fragen$jahr)
+
+
+# iqb zusammenfassen und speichern ----------------------------------------
+iqb <- rbind(iqb_standard, iqb_score_ges, iqb_fragen)
+
+usethis::use_data(iqb, overwrite = T)
