@@ -24,9 +24,9 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
       choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
                   "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
-                  "Ausländische Studierende",
+                  "Internationale Studierende",
                   "Studienanfänger:innen (1. Hochschulsemester)",
-                  "Studierende (Nur Lehramt)"
+                  "Studierende (Lehramt)"
       ),
       selected = "Studierende"),
 
@@ -41,8 +41,11 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                     "Geowissenschaften und Geographie",
                     "Informatik",
                     "Maschinenbau/Verfahrenstechnik",
-                    "Nicht MINT",
-                    "MINT",
+                    "Alle Nicht MINT-Fächer",
+                    "Alle MINT-Fächer",
+                    "Vermessungswesen",
+                    "Architektur, Innenarchitektur",
+                    "Bauingenieurwesen",
                     "Chemie",
                     "Mathematik",
                     "Humanmedizin/Gesundheitswissenschaften",
@@ -56,7 +59,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                     "Sport",
                     "Kunst, Kunstwissenschaft"),
 
-        selected = "MINT"
+        selected = "Alle MINT-Fächer"
       )),
 
     conditionalPanel(condition = "input.rank_bl_l == 'Auländische Studienanfänger:innen (1. Hochschulsemester)' |
