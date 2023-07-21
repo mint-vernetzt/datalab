@@ -12,7 +12,7 @@ library(purrr)
 
 # Studierende ----
 
-setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
+setwd("C:/Users/kbr/Downloads/datalab/datalab/data-raw/raw")
 
 get_data <- function(file_list, fach_list){
 
@@ -263,7 +263,7 @@ duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht))
 
 ## Creating and Cleaning ----
 
-setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
+#setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
 
 
 # Funktion zur Extrahierung von Rohdatensätzen
@@ -291,10 +291,10 @@ clean_des <- function (dat,year){
 
 # Creating master
 
-raw2018 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES060_Kroeger_Stud_Land_FG_STB_2018.xlsx", year="2018")
-raw2019 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES061_Kroeger_Stud_Land_FG_STB_2019.xlsx", year="2019")
-raw2020 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES062_Kroeger_Stud_Land_FG_STB_2020.xlsx", year="2020")
-raw2021 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES063_Kroeger_Stud_Land_FG_STB_2021.xlsx", year="2021")
+raw2018 <- clean_des(dat= "C:\\Users\\kbr\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES060_Kroeger_Stud_Land_FG_STB_2018.xlsx", year="2018")
+raw2019 <- clean_des(dat= "C:\\Users\\kbr\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES061_Kroeger_Stud_Land_FG_STB_2019.xlsx", year="2019")
+raw2020 <- clean_des(dat= "C:\\Users\\kbr\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES062_Kroeger_Stud_Land_FG_STB_2020.xlsx", year="2020")
+raw2021 <- clean_des(dat= "C:\\Users\\kbr\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES063_Kroeger_Stud_Land_FG_STB_2021.xlsx", year="2021")
 
 master <- bind_rows(raw2018,raw2019,raw2020, raw2021)
 
@@ -434,7 +434,7 @@ studierende_detailliert <- studierende_faecher2%>%
 
 # export(master_faecher_output2, "data_raw/studierende_faecher_08_06_23.xlsx")
 
-setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
+# setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
 
 
