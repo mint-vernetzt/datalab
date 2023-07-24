@@ -33,7 +33,7 @@ studienzahl_test <- function(df,r){
  df3 <<- df2 %>%
    tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
    dplyr::mutate(dplyr::across(c("MINT (Gesamt)", "Nicht MINT"), ~./Alle))%>%
-   dplyr::mutate(dplyr::across(c("Nicht MINT", "MINT (Gesamt)"), ~ round(.*100,0)))%>%
+   dplyr::mutate(dplyr::across(c("Nicht MINT", "MINT (Gesamt)"), ~ round(.*100,1)))%>%
    dplyr::select(- Alle)%>%
    tidyr::pivot_longer(c("MINT (Gesamt)", "Nicht MINT"), names_to = "fachbereich", values_to = "proportion")
 
@@ -357,7 +357,7 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   # calculation props
   dfg <- dfh %>%
     tidyr::pivot_wider(values_from=wert, names_from=geschlecht)%>%
-    dplyr::mutate(across(c("Männer", "Frauen"), ~round(./Gesamt*100,0)))%>%
+    dplyr::mutate(across(c("Männer", "Frauen"), ~round(./Gesamt*100,1)))%>%
     dplyr::select(-Gesamt)%>%
     tidyr::pivot_longer(c("Männer", "Frauen"), names_to = "geschlecht", values_to = "proportion")
 
@@ -740,7 +740,7 @@ studienzahl_verlauf_single <- function(df,r) {
 
 
   df5$wert <- df5$wert *100
-  df5$wert <- round(df5$wert)
+  df5$wert <- round(df5$wert,1)
 
   df5 <- df5[with(df5, order( jahr, decreasing = FALSE)), ]
 
@@ -1019,7 +1019,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
   # calculation props
   dfg <<- dfh %>%
     tidyr::pivot_wider(values_from=wert, names_from=geschlecht)%>%
-    dplyr::mutate(across(c("Männer", "Frauen"), ~round(./Gesamt*100,0)))%>%
+    dplyr::mutate(across(c("Männer", "Frauen"), ~round(./Gesamt*100,1)))%>%
     dplyr::select(-Gesamt,- Männer)%>%
     tidyr::pivot_longer( "Frauen", names_to = "geschlecht", values_to = "proportion")
 
@@ -1357,7 +1357,7 @@ studienzahl_einstieg_comparison <- function(df,r) {
 # Calculating props
 
   df_props <<- df4 %>%
-    dplyr::mutate(dplyr::across(c("MINT (Gesamt)", "Nicht MINT"), ~round(./Alle * 100)))%>%
+    dplyr::mutate(dplyr::across(c("MINT (Gesamt)", "Nicht MINT"), ~round(./Alle * 100,1)))%>%
     dplyr::select(-Alle)%>%
     tidyr::pivot_longer(c("MINT (Gesamt)", "Nicht MINT"), values_to="prop", names_to = "proportion")
 
@@ -1433,7 +1433,7 @@ studienzahl_einstieg_comparison <- function(df,r) {
 
 studienzahl_einstieg_comparison_gender <- function(df,r) {
 
-browser()
+
 
   # load UI inputs from reactive value
   timerange <<- r$gen_f_y
@@ -1659,7 +1659,7 @@ studienzahl_waffle_mint <- function(df,r) {
     label_w <- überschrift_label(label_w)
     title_1 <- as.character(label_w)
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <- round(data_1 * 100,0)
+    data_1 <- round(data_1 * 100,1)
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     data_k <- data_1
@@ -1704,14 +1704,14 @@ studienzahl_waffle_mint <- function(df,r) {
     waf_1[1,1] <- überschrift_label(waf_1[1,1])
     title_1 <- as.character(as.vector(waf_1[1,1]))
     data_1 <<- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <<- round(data_1 * 100,0)
+    data_1 <<- round(data_1 * 100,1)
 
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     waf_2[1,1] <- überschrift_label(waf_2[1,1])
     title_2 <- as.character(as.vector(waf_2[1,1]))
     data_2 <<- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
-    data_2 <<- round(data_2 * 100,0)
+    data_2 <<- round(data_2 * 100,1)
 
     names(data_2) <- colnames(waf_2[2:ncol(waf_2)])
 
@@ -1780,19 +1780,19 @@ studienzahl_waffle_mint <- function(df,r) {
     waf_1[1,1] <- überschrift_label(waf_1[1,1])
     title_1 <- as.character(as.vector(waf_1[1,1]))
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <- round(data_1 * 100)
+    data_1 <- round(data_1 * 100,1)
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     waf_2[1,1] <- überschrift_label(waf_2[1,1])
     title_2 <- as.character(as.vector(waf_2[1,1]))
     data_2 <- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
-    data_2 <- round(data_2 * 100)
+    data_2 <- round(data_2 * 100,1)
     names(data_2) <- colnames(waf_2[2:ncol(waf_2)])
 
     waf_3[1,1] <- überschrift_label(waf_3[1,1])
     title_3 <- as.character(as.vector(waf_3[1,1]))
     data_3 <- as.numeric(as.vector(waf_3[1,2:ncol(waf_3)]))
-    data_3 <- round(data_3 * 100)
+    data_3 <- round(data_3 * 100,1)
     names(data_3) <- colnames(waf_3[2:ncol(waf_3)])
 
 
@@ -2572,7 +2572,7 @@ studienzahl_verlauf <- function(df,r) {
   values <- values %>% dplyr::filter(region %in% states)
 
   # plot
-  highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(props), group = region)) %>%
+  highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(props,1), group = region)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Bundesland: {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
@@ -2706,7 +2706,7 @@ data_verlauf_studium <- function(df,r) {
   # order years for plot
   values <- values[with(values, order(region, jahr, decreasing = FALSE)), ]
 
-  values$wert <- round(values$wert * 100)
+  values$wert <- round(values$wert * 100,1)
 
   values$wert <- paste0(values$wert,"%")
 
@@ -2828,7 +2828,7 @@ studienzahl_verlauf_bl <- function(df,r) {
   values$anzeige_geschlecht <- paste0(values$anzeige_geschlecht, " (", values$indikator, ")")
 
   # plot
-  highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = anzeige_geschlecht)) %>%
+  highcharter::hchart(values, 'line', highcharter::hcaes(x = jahr, y = round(proportion,1), group = anzeige_geschlecht)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil {point.anzeige_geschlecht} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
@@ -2908,7 +2908,7 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
     dplyr::filter(selector=="In Prozent")
 
   df4$wert <- df4$wert *100
-  df4$wert <- round(df4$wert, 0)
+  df4$wert <- round(df4$wert, 1)
 
   df5 <- df4 %>% dplyr::filter(indikator==label_select)
 
@@ -3073,7 +3073,7 @@ ranking_bl_subject <- function(df,r, type) {
       ~ "Ingenieurwissenschaften",
       T~.$fach
     ))%>%
-    dplyr::mutate(proportion= round(wert*100,2))%>%
+    dplyr::mutate(proportion= round(wert*100,1))%>%
     dplyr::filter(fach !="total")
 
 
@@ -3328,7 +3328,7 @@ studienzahl_waffle_choice_gender <- function(df,r) {
     dplyr::filter(region=="Deutschland")%>%
     dplyr::filter(geschlecht %in% c("Frauen", "Männer"))%>%
     tidyr::pivot_wider(names_from = fachbereich, values_from=wert )%>%
-    dplyr::mutate(dplyr::across(c(`Mathematik, Naturwissenschaften`, `Ingenieurwissenschaften` , `Nicht MINT`), ~ round(./Alle *100,)))%>%
+    dplyr::mutate(dplyr::across(c(`Mathematik, Naturwissenschaften`, `Ingenieurwissenschaften` , `Nicht MINT`), ~ round(./Alle *100,1)))%>%
     dplyr::rename("andere Studiengänge" = `Nicht MINT`)%>%
     dplyr::filter(indikator==lab_cho)%>%
     dplyr::select(-Alle,-`MINT (Gesamt)`)
@@ -4014,7 +4014,7 @@ studienfaecher_ranking <- function(df,r, type) {
     tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
     dplyr::rename("Mathematik/Naturwissenschaften"=Mathematik_Naturwissenschaften)%>%
     dplyr::mutate(MINT=`Mathematik/Naturwissenschaften`+Ingenieurwissenschaften)%>%
-    dplyr::mutate(dplyr::across(c(5,8,7,9), ~ round(./Alle*100)))%>%
+    dplyr::mutate(dplyr::across(c(5,8,7,9), ~ round(./Alle*100,1)))%>%
     tidyr::pivot_longer(c(5:9), names_to = "fach", values_to= "proportion")%>%
     dplyr::filter(geschlecht=="frauen")%>%
     dplyr::filter(indikator == "Studierende" | indikator=="Studienanfänger:innen (1.Fachsemester)")%>%
@@ -4369,7 +4369,7 @@ df_insp <<- dfss
   df_insp1 <<- df_insp %>%
     dplyr::select(-fachbereich,- mint_select, -typ )%>%
     tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-    dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,2)))%>%
+    dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
     tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
     dplyr::right_join(df_insp)
 
@@ -5122,7 +5122,7 @@ studierende_verlauf_multiple_bl <- function(df,r) {
      dplyr::select(-Alle)%>%
      dplyr::mutate(
        dplyr::across(
-         c(Ingenieurwissenschaften_p, `Mathematik, Naturwissenschaften_p`, `MINT (Gesamt)_p`),  ~round(.*100,0)))%>%
+         c(Ingenieurwissenschaften_p, `Mathematik, Naturwissenschaften_p`, `MINT (Gesamt)_p`),  ~round(.*100,1)))%>%
      dplyr::select(-`Nicht MINT`)%>%
      tidyr::pivot_longer(c(4:9), values_to ="wert", names_to="fach")%>%
      dplyr::mutate(selector = dplyr::case_when(
@@ -5477,7 +5477,7 @@ studierende_verlauf_multiple_bl_gender <- function(df,r) {
   df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
   # plot
-  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion), group = region)) %>%
+  highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(proportion,1), group = region)) %>%
     highcharter::hc_tooltip(pointFormat = "Anteil {point.region} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = "Wert"), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -5537,7 +5537,7 @@ studierende_mint_vergleich_bl <- function(df,r) {
   df_insp1 <<- df_insp %>%
     dplyr::select(-fachbereich,- mint_select, -typ )%>%
     tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-    dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,2)))%>%
+    dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
     tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
     dplyr::right_join(df_insp)%>%
     dplyr::filter(geschlecht=="Gesamt")%>%
@@ -6119,7 +6119,7 @@ if(betr_ebene=="Fachbereiche"){
 
       dfhh1 <<- df_aus_3 %>%
         dplyr::filter(selector == "In Prozent")%>%
-        dplyr::mutate(wert = round(wert*100, 2))
+        dplyr::mutate(wert = round(wert*100, 1))
 
 
 
@@ -6193,7 +6193,7 @@ if(betr_ebene=="Fachbereiche"){
 
         dfhh <<- df_aus_4 %>%
           dplyr::filter(selector == "In Prozent")%>%
-          dplyr::mutate(wert = round(wert*100, 2))
+          dplyr::mutate(wert = round(wert*100, 1))
 
 
 
@@ -6406,7 +6406,7 @@ browser()
 
     dfk <- df_aus_2 %>%
       dplyr::filter(selector == absolut_selector)%>%
-      dplyr::mutate(dplyr::across(wert, ~round(.*100, 2)))
+      dplyr::mutate(dplyr::across(wert, ~round(.*100, 1)))
 
 
 
