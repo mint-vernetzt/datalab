@@ -3016,13 +3016,19 @@ df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 iqb_standard_zeitverlauf <- function(df, r){
 
   # reactive values übergeben
-  bl_select <- r$land_iqb_standard_zeitverlauf
-dfg <- df
-  # Region filtern
-  df1 <- dfg %>% dplyr::filter(region %in% bl_select)
+  kl_select <- r$klasse_iqb_standard_zeitverlauf
+  if(kl_select == "4. Klasse"){
+    bl_select <- r$land_iqb_standard_zeitverlauf_4
+  }else{
+    bl_select <- r$land_iqb_standard_zeitverlauf_9
+  }
+
+  # Region und Klasse filtern
+  df <- df %>% dplyr::filter(region %in% bl_select)
+  df <- df %>% dplyr::filter(klasse == kl_select)
 
   # Anforderungen, die wir nicht betrachten, ausfiltern
-  dfk <- df1 %>% dplyr::filter(indikator == "Mindeststandard nicht erreicht")
+  df <- df %>% dplyr::filter(indikator == "Mindeststandard nicht erreicht")
 
   # title helper
 
@@ -3034,15 +3040,19 @@ dfg <- df
     title_help <- paste0(bl_select[1], ", ", bl_select[2], " & ", bl_select[3])
   }
 
+  color <- dplyr::case_when(
+    kl_select == "4. Klasse" ~ c("#efe8e6","#D0A9CD", "#b16fab"),
+    kl_select == "9. Klasse" ~ "#b16fab"
+  )
 
-    highcharter::hchart(dfk, 'column', highcharter::hcaes(y = wert, x = region, group=jahr))%>%
+    highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = region, group=jahr))%>%
       highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
       highcharter::hc_tooltip(pointFormat = "{point.jahr} <br> {point.y} % leistungsschwach")%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), pointsWidth=100) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#efe8e6","#D0A9CD",
-                               "#b16fab")) %>%
+      #highcharter::hc_colors(c("#efe8e6","#D0A9CD", "#b16fab")) %>%
+      highcharter::hc_colors(color) %>%
       highcharter::hc_title(text = paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard
                                           in Mathematik nicht erreichen"),
       margin = 45,
@@ -3106,8 +3116,8 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
 
       # Für Grafik als Faktor speichern
       df$indikator<- as.factor(df$indikator)
-      df$indikator <- factor(df$indikator, levels = c("Gesamt", "mit Zuwanderungsgeschichte",
-                                                      "ohne Zuwanderungsgeschichte" ))
+      df$indikator <- factor(df$indikator, levels = c("Gesamt", "ohne Zuwanderungsgeschichte",
+                                                      "mit Zuwanderungsgeschichte"))
       # Alle als Gesamtgruppe ausfiltern
       df <- df %>%
         dplyr::filter(indikator!="Alle")
