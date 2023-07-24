@@ -52,7 +52,12 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_mint_3", title="",
+                       content = paste0("Der Zeitverlauf zeigt, dass der Anteil von MINT-Studierenden an allen Studierenden sowie die absolute Anzahl der Studierenden in MINT bis zuletzt über die Jahre relativ konstant bleibt."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_3")
     )
 
 

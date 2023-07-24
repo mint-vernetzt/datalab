@@ -91,20 +91,17 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_studium_studienzahl_test_ui("mod_studium_studienzahl_test_ui_1"),
-                               p(style="font-size:12px;color:grey",
-                               "Hinweis zur Darstellung: Falls die Karte abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal
-                                 minimieren und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                               p(style="font-size:12px;color:grey",
-                                 "Interpretationshilfe: In der ersten Einstellung ist zu sehen, dass in Deutschland 38 %
-                                 der Studienanfänger:innen (1. FS) ein MINT-Fach wählen, bei den Studierenden ist dieser Anteil
-                                 mit 37 % in 2021 etwas geringer, was bedeutet, dass die Abbruchsquote in MINT höher liegt als
-                                 in anderen Fachbereichen.")
+                               mod_studium_studienzahl_test_ui("mod_studium_studienzahl_test_ui_1")
                                ),
                              shiny::mainPanel(width = 9,
                                htmlOutput(ns("test")),
                                p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_studium_mint_1", title = "",
+                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Fach aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, welche bereits studiert haben und in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_1")
                         )),
                     tabPanel("Vergleich Anteil MINT nach Studierendengruppen II", br(),
 
@@ -116,8 +113,14 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                plotOutput(ns("plot_waffle")),
+                               p(),
                                p(style="font-size:12px;color:grey",
-                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_studium_mint_2", title = "",
+                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Fach aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, welche bereits studiert haben und in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_2"))
                     ),
 
                     tabPanel("Vergleich Anteil MINT nach Studierendengruppen im Zeitverlauf", br(),
@@ -131,7 +134,12 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_verlauf")),
                                p(style="font-size:12px;color:grey",
-                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_studium_mint_3", title = "",
+                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Fach aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, welche bereits studiert haben und in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_3"))
 
                     ),
 
@@ -146,7 +154,12 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject"))
                                ,p(style="font-size:12px;color:grey",
-                                  "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                                  "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_studium_mint_4", title = "",
+                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Fach aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, welche bereits studiert haben und in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br> <br> Seit dem Jahr 2015 zählt Informatik zu den Ingenieurwissenschaften und nicht mehr zu den Naturwissenschaften."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_4")
 
                              )
                     ),
@@ -161,7 +174,12 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf")),
                                p(style="font-size:12px;color:grey",
-                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_studium_mint_5", title = "",
+                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Fach aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, welche bereits studiert haben und in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br> <br> Seit dem Jahr 2015 zählt Informatik zu den Ingenieurwissenschaften und nicht mehr zu den Naturwissenschaften."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_5")
                              )
                     ),
                     tabPanel("Alle Studierendengruppen auf einen Blick", br(),
@@ -175,7 +193,12 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_einstieg_comparison")),
                                p(style="font-size:12px;color:grey",
-                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_studium_mint_6", title = "",
+                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Fach aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, welche bereits studiert haben und in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_6"))
                     ),
 
 
@@ -189,7 +212,13 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               plotOutput(ns("plot_waffle_choice_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                               plotOutput(ns("plot_waffle_choice_gender")),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_studium_mint_7", title = "",
+                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Fach aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, welche bereits studiert haben und in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_7")
                              )
                     ),
 
@@ -203,7 +232,13 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_studium_mint_8", title = "",
+                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Fach aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, welche bereits studiert haben und in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_8")
                              )
                     ),
                     # tabPanel("Überblick Frauen und Männer", br(),
@@ -260,18 +295,24 @@ mod_studium_studienzahl_ui <- function(id){
                        #      .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                       shiny::sidebarPanel(
                         width = 3,
-                        mod_studium_top_faecher_ui("mod_studium_top_faecher"),
-                        p(style = "font-size:12px;color:grey",
-                          "Interpretationshilfe: In der ersten Einstellung sind die TOP-10-Fächer in Bayern in MINT bezogen auf den Frauen- bzw.
-                          Männeranteil zu sehen. Die Fächer mit dem höchsten Frauenanteil in MINT sind Pharmazie (74 % Frauen) und Biologie (65 % Frauen).
-                          Die Fächer mit dem höchsten Männeranteil
-                          in MINT sind dagegen Verkehrstechnik / Nautik mit 86 % Männern und Elektrotechnik und Informationstechnik mit 84 %.")
-                        ),
+                        mod_studium_top_faecher_ui("mod_studium_top_faecher")),
+                        # p(style = "font-size:12px;color:grey",
+                        #   "Interpretationshilfe: In der ersten Einstellung sind die TOP-10-Fächer in Bayern in MINT bezogen auf den Frauen- bzw.
+                        #   Männeranteil zu sehen. Die Fächer mit dem höchsten Frauenanteil in MINT sind Pharmazie (74 % Frauen) und Biologie (65 % Frauen).
+                        #   Die Fächer mit dem höchsten Männeranteil
+                        #   in MINT sind dagegen Verkehrstechnik / Nautik mit 86 % Männern und Elektrotechnik und Informationstechnik mit 84 %.")
+                        # ),
                       shiny::mainPanel(
                         width = 9,
                         htmlOutput(ns("plot_top_faecher")),
                         p(style = "font-size:12px;color:grey",
-                          "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."))
+                          "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                        br(),
+                        shinyBS::bsPopover(id="h_studium_fach_1", title="",
+                                           content = paste0("In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                           placement = "top",
+                                           trigger = "hover"),
+                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_1"))
                     ),
 
                     tabPanel("Vergleich Fächer (Karte)", br(),
@@ -279,17 +320,19 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_studium_studienzahl_bl_map_ui("mod_studium_studienzahl_bl_map"),
-                               p(style="font-size:12px;color:grey",
-                                 "Hinweis zur Darstellung: Falls die Karten abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+
                              ),
                              shiny::mainPanel(
                                width = 9,
                                htmlOutput(ns("plot_studienzahl_map")),
                                p(style="font-size:12px;color:grey",
-                                 "Hinweis: In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert.
-                                 In diesen Fällen werden die betroffenen Bundesländer als grau schattiert angezeigt."),
-                               p(style="font-size:12px;color:grey",
-                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                                 "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+
+                               shinyBS::bsPopover(id="h_studium_fach_2", title="",
+                                                  content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden die betroffenen Bundesländer als grau schattiert angezeigt."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_2")
                              )
                     ),
 
@@ -319,10 +362,12 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_vergleich_bl1")),
-                               p(style="font-size:12px;color:grey",
-                                 "Hinweis: In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert.
-                                 In diesen Fällen werden nur die Bundesländer angezeigt, welche die betrachtete Studienfachgruppe aufweisen."),
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
+                               shinyBS::bsPopover(id="h_studium_fach_3", title="",
+                                                  content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die Bundesländer angezeigt, welche die betrachtete Studienfachgruppe aufweisen."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_3")
 
                              )
                     )
