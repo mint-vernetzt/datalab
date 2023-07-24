@@ -108,9 +108,10 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                                    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik",
                                    "Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft",
                                    "Geowissenschaften und Geographie",
-                                   "Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+                                   "Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle Nicht MINT-Fächer",
+                                   "Alle MINT-Fächer"
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.gen_states == 'Brandenburg'",
