@@ -475,7 +475,13 @@ d_m_gen_2021 <- na.omit(d_m_gen_2021)
 d_m_gen_2021 <- tidyr::pivot_longer(d_m_gen_2021, "Jungen":"Mädchen", names_to = "geschlecht", values_to = "wert")
 
 # nötige Spalten ergänzen/löschen
-d_m_gen_2021 <- d_m_gen_2021 %>% dplyr::select(-...2)
+d_m_gen_2021 <- d_m_gen_2021 %>%
+  dplyr::select(-...2) %>%
+  dplyr::mutate(geschlecht = dplyr::case_when(
+    grepl("Jung", geschlecht) ~ "Männer",
+    grepl("Mädc", geschlecht) ~ "Frauen",
+    TRUE ~ geschlecht
+  ))
 d_m_gen_2021$jahr <- 2021
 d_m_gen_2021$indikator <- "Alle"
 
@@ -510,8 +516,8 @@ d_m_gen_2011_16 <- d_m_gen_2011_16 %>%
     stringr::str_detect(geschlecht, "2016") ~ 2016
   ),
   geschlecht = dplyr::case_when(
-    stringr::str_detect(geschlecht, "Mädc") ~"Mädchen",
-    stringr::str_detect(geschlecht, "Jung") ~ "Jungen"
+    stringr::str_detect(geschlecht, "Mädc") ~"Frauen",
+    stringr::str_detect(geschlecht, "Jung") ~ "Männer"
   ))
 
 d_m_gen_2011_16$region <- "Deutschland"
@@ -789,10 +795,15 @@ aufbereitung_migra <- function(df, fach){
     region = gsub("mit2", "", region),
     region = gsub("[0-9]+", "", region),
     region = gsub(",", "", region),
-    fach = "Mathe",
+    fach = fach,
     geschlecht = "gesamt",
     region = dplyr::case_when(
       grepl("Baden", region) ~ "Baden-Württemberg",
+      grepl("Meck", region) ~ "Mecklenburg-Vorpommern",
+      grepl("Anhal", region) ~ "Sachsen-Anhalt",
+      grepl("Schles", region) ~ "Schleswig-Holstein",
+      grepl("Nord", region) ~ "Nordrhein-Westfalen",
+      grepl("Pfal", region) ~ "Rheinland-Pfalz",
       TRUE ~region
     )
     ) %>%

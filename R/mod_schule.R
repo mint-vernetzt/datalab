@@ -22,12 +22,12 @@ mod_schule_ui <- function(id){
 #'
 #' @noRd
 
-mod_schule_server <- function(id, data_kurse, data_iqb, data_iqb_standard, data_iqb_score, data_skf, r){
+mod_schule_server <- function(id, data_kurse, data_iqb, data_skf, r){
 
   r <- reactiveValues()
 
   # Kurse
-  mod_schule_kurse_server("mod_schule_kurse_ui_1", data_kurse, data_iqb, data_iqb_standard, data_iqb_score, data_skf, r)
+  mod_schule_kurse_server("mod_schule_kurse_ui_1", data_kurse, data_iqb, data_skf, r)
 
   # Box 2
   mod_schule_kurse_einstieg_server("mod_schule_kurse_einstieg_ui_1", r)
@@ -62,6 +62,7 @@ mod_schule_server <- function(id, data_kurse, data_iqb, data_iqb_standard, data_
   # Box IQB
   mod_schule_kurse_iqb_standard_zeitverlauf_server("mod_schule_kurse_iqb_standard_zeitverlauf_ui_1", r)
   mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_server("mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui_1", r)
+  mod_schule_kurse_iqb_fragen_server("mod_schule_kurse_iqb_fragen_ui_1", r)
 
   #Box SKf
   mod_ausserschulisch_skf_einrichtungen_server("mod_ausserschulisch_skf_einrichtungen_ui_1", r)
