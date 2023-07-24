@@ -1337,6 +1337,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
 
 studienzahl_einstieg_comparison <- function(df,r) {
 
+  browser()
 
   # load UI inputs from reactive value
   timerange <<- r$date_kurse_einstieg_comparison
@@ -1369,7 +1370,7 @@ studienzahl_einstieg_comparison <- function(df,r) {
 
   #Trennpunkte für lange Zahlen ergänzen
 
-  df4$wert <- prettyNum(df4$wert, big.mark = ".", decimal.mark = ",")
+  df6$wert <- prettyNum(df6$wert, big.mark = ".", decimal.mark = ",")
 
 
   df6$indikator <<-factor(df6$indikator,levels= c("Studierende",
@@ -4446,17 +4447,17 @@ studienfaecher_ranking <- function(df,r, type) {
 #' @noRd
 
 studierende_map <- function(df,r) {
-
+browser()
 
   # load UI inputs from reactive value
-  timerange <- r$map_y
+  timerange <<- r$map_y
 
-  label_m <- r$map_l
+  label_m <<- r$map_l
 
 
   # Fach abhängig von Lehramt ja/nein zuweisen
-  if(label_m == "Studierende (Nur Lehramt)")  fach_m <- r$map_f_lehr
-  if(label_m != "Studierende (Nur Lehramt)")  fach_m <- r$map_f
+  if(label_m == "Studierende (Nur Lehramt)")  fach_m <<- r$map_f_lehr
+  if(label_m != "Studierende (Nur Lehramt)")  fach_m <<- r$map_f
 
 
 
@@ -4489,7 +4490,7 @@ df_insp <<- dfss
 
 
   #Trennpunkte für lange Zahlen ergänzen
-  df_insp1$wert <- prettyNum(df_insp1$wert, big.mark = ".")
+  #df_insp1$wert <- prettyNum(df_insp1$wert, big.mark = ".")
 
   df7 <<- df_insp1 %>%
     dplyr::select(indikator, region, jahr, fach, proportion, wert)%>%
@@ -4538,7 +4539,7 @@ highcharter::hw_grid(
         valueDecimals = 0,
         valueSuffix = "%"
       ),
-      download_map_data = FALSE
+      download_map_data = T
     )
     %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display} % <br> Anzahl: {point.wert}") %>%
@@ -5627,118 +5628,23 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
 
 
-  df23<-df
 
 
   # load UI inputs from reactive value
 
-  timerange <- r$bl_date
+  timerange <<- r$bl_date
 
-  r_lab <- r$rank_bl_l
+  r_lab <<- r$rank_bl_l
 
  # Fach abhängig von Lehramt ja/nein zuweisen
-  if(r_lab == "Studierende (Nur Lehramt)")  fach_bl <- r$bl_f_lehr
-  if(r_lab != "Studierende (Nur Lehramt)")  fach_bl <- r$bl_f_alle
+  if(r_lab == "Studierende (Lehramt)")  fach_bl <- r$bl_f_lehr
+  if(r_lab != "Studierende (Lehramt)")  fach_bl <- r$bl_f_alle
 
   # Aggregate Natwi und Ingen ohne Info abspeichern vor Fitler
-  dfni <- df %>% dplyr::filter(fach %in% c("Naturwissenschaften", "Ingenieurwissenschaften ohne Informatik"))
+  #dfni <- df %>% dplyr::filter(fach %in% c("Naturwissenschaften", "Ingenieurwissenschaften ohne Informatik"))
 
 
- #  df2 <- df %>% dplyr::filter(jahr == timerange)
- #  df2a <- df2 %>% dplyr::filter(!(fach %in% c("Naturwissenschaften", "Ingenieurwissenschaften ohne Informatik")))
- #  df2a <- df2a %>% dplyr::filter(mint_select== "MINT")%>%
- #    dplyr::filter(anzeige_geschlecht== "Gesamt")%>%
- #    dplyr::select(-fachbereich)%>%
- #    tidyr::pivot_wider(names_from = fach, values_from = wert) %>%
- #    dplyr::mutate(MINT=rowSums(dplyr::select(., c(6:23)),na.rm = T))%>%
- #    tidyr::pivot_longer(c(6:ncol(.)), names_to= "fach", values_to="wert")
- #
- #  df2b <- df2 %>% dplyr::filter(mint_select== "NIcht MINT")%>%
- #    dplyr::filter(anzeige_geschlecht== "Gesamt")%>%
- #    dplyr::select(-fachbereich)%>%
- #    tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
- #    dplyr::mutate("Nicht MINT"=rowSums(dplyr::select(., c(6:ncol(.))),na.rm = T))%>%
- #    tidyr::pivot_longer(c(6:ncol(.)), names_to= "fach", values_to="wert")
- #
- #
- #  #Absolute Zahlen speichern vor weiteren Berechnungen
- #  df_wert <- dplyr::bind_rows(df2a, df2b) %>%
- #    dplyr::select(-mint_select)%>%
- #    tidyr::pivot_wider(names_from = fach, values_from=wert)%>%
- #    dplyr::mutate(total = `MINT` + `Nicht MINT`,
- #                  Ingenieurwissenschaften= rowSums(dplyr::select(.,`Weitere ingenieurwissenschaftliche Fächer`,
- #                                                                 `Maschinenbau/Verfahrenstechnik`,
- #                                                                 `Elektrotechnik und Informationstechnik`,
- #                                                                 `Verkehrstechnik, Nautik`,
- #                                                                 `Architektur, Innenarchitektur`,
- #                                                                 `Raumplanung`,
- #                                                                 `Bauingenieurwesen`,
- #                                                                 `Vermessungswesen`,
- #                                                                 `Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt`,
- #                                                                 `Informatik`,
- #                                                                 `Materialwissenschaft und Werkstofftechnik`),na.rm = T),
- #                  `Mathematik, Naturwissenschaften`= rowSums(dplyr::select(.,
- #                                                                           `Weitere naturwissenschaftliche und mathematische Fächer`,
- #                                                                           `Mathematik`,
- #                                                                           `Physik, Astronomie`,
- #                                                                           `Chemie`,
- #                                                                           `Pharmazie`,
- #                                                                           `Biologie`,
- #                                                                           `Geowissenschaften und Geographie`),na.rm = T ))%>%
- #    tidyr::pivot_longer(c(5:ncol(.)), names_to = "fach", values_to = "wert")%>%
- #    dplyr::mutate(fachbereich=dplyr::case_when(
- #      fach=="Weitere naturwissenschaftliche und mathematische Fächer" |
- #        fach=="Mathematik" | fach== "Physik, Astronomie" | fach == "Chemie" |
- #        fach== "Pharmazie" | fach == "Biologie" | fach== "Geowissenschaften und Geographie"
- #      ~ "Mathematik, Naturwissenschaften",
- #      fach == "Weitere ingenieurwissenschaftliche Fächer" | fach== "Maschinenbau/Verfahrenstechnik"|
- #        fach=="Elektrotechnik und Informationstechnik" |fach== "Verkehrstechnik, Nautik" | fach== "Architektur, Innenarchitektur" |
- #        fach== "Raumplanung" | fach=="Bauingenieurwesen" |fach== "Vermessungswesen" | fach== "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt"|
- #        fach=="Informatik" | fach == "Materialwissenschaft und Werkstofftechnik"
- #      ~ "Ingenieurwissenschaften",
- #      T~.$fach
- #    ))
- #
- # #Anteile berechnen
- #
- #  df_io <<- dplyr::bind_rows(df2a, df2b) %>%
- #    dplyr::select(-mint_select)%>%
- #    tidyr::pivot_wider(names_from = fach, values_from=wert)%>%
- #    dplyr::mutate(total = `MINT` + `Nicht MINT`,
- #                  Ingenieurwissenschaften= rowSums(dplyr::select(.,`Weitere ingenieurwissenschaftliche Fächer`,
- #                                                                 `Maschinenbau/Verfahrenstechnik`,
- #                                                                 `Elektrotechnik und Informationstechnik`,
- #                                                                 `Verkehrstechnik, Nautik`,
- #                                                                 `Architektur, Innenarchitektur`,
- #                                                                 `Raumplanung`,
- #                                                                 `Bauingenieurwesen`,
- #                                                                 `Vermessungswesen`,
- #                                                                 `Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt`,
- #                                                                 `Informatik`,
- #                                                                 `Materialwissenschaft und Werkstofftechnik`),na.rm = T),
- #                  `Mathematik, Naturwissenschaften`= rowSums(dplyr::select(.,
- #                                                                           `Weitere naturwissenschaftliche und mathematische Fächer`,
- #                                                                           `Mathematik`,
- #                                                                           `Physik, Astronomie`,
- #                                                                           `Chemie`,
- #                                                                           `Pharmazie`,
- #                                                                           `Biologie`,
- #                                                                           `Geowissenschaften und Geographie`),na.rm = T ))%>%
- #    dplyr::mutate(dplyr::across(c(5:ncol(.)), ~ ./total))%>% #note to self: Warum braucht man hier ~?
- #    tidyr::pivot_longer(c(5:ncol(.)), names_to = "fach", values_to = "prop")%>%
- #    dplyr::mutate(fachbereich=dplyr::case_when(
- #      fach=="Weitere naturwissenschaftliche und mathematische Fächer" |
- #        fach=="Mathematik" | fach== "Physik, Astronomie" | fach == "Chemie" |
- #        fach== "Pharmazie" | fach == "Biologie" | fach== "Geowissenschaften und Geographie"
- #      ~ "Mathematik, Naturwissenschaften",
- #      fach == "Weitere ingenieurwissenschaftliche Fächer" | fach== "Maschinenbau/Verfahrenstechnik"|
- #        fach=="Elektrotechnik und Informationstechnik" |fach== "Verkehrstechnik, Nautik" | fach== "Architektur, Innenarchitektur" |
- #        fach== "Raumplanung" | fach=="Bauingenieurwesen" |fach== "Vermessungswesen" | fach== "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt"|
- #        fach=="Informatik" | fach == "Materialwissenschaft und Werkstofftechnik"
- #      ~ "Ingenieurwissenschaften",
- #      T~.$fach
- #    ))%>%
- #    dplyr::mutate(proportion= round(prop*100,2))
+
 
   df_insp <<- df
 
@@ -5756,35 +5662,34 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
   #Trennpunkte für lange Zahlen ergänzen
 
-  df_insp1$wert <- prettyNum(df_io$wert, big.mark = ".", decimal.mark = ",")
+  #df_insp1$wert <- prettyNum(df_io$wert, big.mark = ".", decimal.mark = ",")
 
   df7 <<- df_insp1 %>%
     dplyr::select(indikator, region, jahr, fach, proportion, wert)
 
 
   df77<<- df7 %>%dplyr::filter(indikator == r_lab )%>%
-
     dplyr::filter(fach==fach_bl)
 
   # NA aus fach entfernen für BULAs mit weniger Studienfachgruppen
-  df77 <- stats::na.omit(df77)
+  df77 <<- stats::na.omit(df77)
 
   # Vorbereitung Überschrift
-  help_s <- fach_bl
+  help_s <<- fach_bl
   help_s <- ifelse(help_s == "Alle Nicht MINT-Fächer", "allen Fächern außer MINT", help_s)
 
 
-  r_lab <- ifelse(r_lab == "Studierende", paste0(r_lab, "n"), r_lab)
-  r_lab <- ifelse(r_lab == "Internationale Studierende", "internationalen Studierenden", r_lab)
-  r_lab <- ifelse(grepl("Lehr", r_lab), "Studierenden (Lehramt)", r_lab)
-  r_lab <- ifelse(r_lab == "Internationale Studienanfänger:innen (1. Hochschulsemester)",
+  r_lab <<- ifelse(r_lab == "Studierende", paste0(r_lab, "n"), r_lab)
+  r_lab <<- ifelse(r_lab == "Internationale Studierende", "internationalen Studierenden", r_lab)
+  r_lab <<- ifelse(grepl("Lehr", r_lab), "Studierenden (Lehramt)", r_lab)
+  r_lab <<- ifelse(r_lab == "Internationale Studienanfänger:innen (1. Hochschulsemester)",
                   "internationalenen Studienanfänger:innen (1. Hochschulsemester)", r_lab)
-  help <- "Studierenden"
+  help <<- "Studierenden"
   help <- ifelse(grepl("Studienanfänger:innen",r_lab), "Studienanfänger:innen", help)
 
 
   # Plot
-  highcharter::hchart(df77, 'bar', highcharter::hcaes(x= region, y = proportion)) %>%
+  highcharter::hchart(df77, 'bar', highcharter::hcaes(x= region, y = proportion))
     highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
     highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
     highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
@@ -5985,7 +5890,7 @@ plot_ranking_top_faecher <- function(df, r, type) {
 
   # Calculate proportion
 
- 
+
 
   df_props <<- df4 %>%
     tidyr::pivot_wider(values_from = wert, names_from=geschlecht)%>%
@@ -6490,7 +6395,7 @@ if(betr_ebene=="Fachbereiche"){
 
 plot_auslaender_mint_zeit <- function(df, r){
 
-
+browser()
 
 
   bl_select <<- r$states_studium_studienzahl_ausl_zeit
