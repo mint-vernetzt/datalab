@@ -19,9 +19,9 @@ app_server <- function(input, output, session) {
 
   load(file=system.file(package = "datalab", "data/iqb.rda"))
 
-  load(file=system.file(package="datalab", "data/iqb_standard.rda"))
-
-  load(file=system.file(package="datalab", "data/iqb_score.rda"))
+  # load(file=system.file(package="datalab", "data/iqb_standard.rda"))
+  #
+  # load(file=system.file(package="datalab", "data/iqb_score.rda"))
 
   load(file=system.file(package="datalab", "data/ausserschulisch_skf.rda"))
 
