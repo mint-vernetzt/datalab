@@ -480,7 +480,7 @@ mod_schule_kurse_ui <- function(id){
                                     p(style="font-size:12px;color:grey", br(),
                                       "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen."),
                                     shinyBS::bsPopover(id="h_schule_kompetenz_1", title = "",
-                                                       content = paste0("Für Mecklenburg-Vorpommern liegen keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
+                                                       content = paste0("Für Mecklenburg-Vorpommern liegen keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2018: 1.462 Schulen mit N = 44.941 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2012: 1.326 Schulen mit N = 44.584 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
                                                        placement = "top",
                                                        trigger = "hover"),
                                     tags$a(paste0("Hinweis zu den Daten und Stichprobengröße"), icon("info-circle"), id = "h_schule_kompetenz_1")
@@ -504,14 +504,14 @@ mod_schule_kurse_ui <- function(id){
                                     p(style="font-size:12px;color:grey",br(),
                                       "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen."),
                                     shinyBS::bsPopover(id="def_schule_kompetenz_2", title = "",
-                                                       content = paste0("Mit Zuwanderungsgeschichte = Kinder, deren beider Eltern nach Deutschland zugewandert sind. Zuwanderungsgeschichten 1. Generation (auch Kind ist nach Deutschalnd zugewandert) und 2. Generation (Kind ist in Deutschland geboren) werden zusammengefasst. <br> Ohne Zuwanderungsgeschichte = Kinder, deren beider Eltern in Deutschland geboren wurden.", "<br> <br> Bildungskapital = Ressourcen, Kinder durch (kulturelle) Bildung zu fördern und Indikator für den sozialen Status der Eltern"),
+                                                       content = paste0("Mit Zuwanderungsgeschichte = Kinder, deren beider Eltern nach Deutschland zugewandert sind. Zuwanderungsgeschichten 1. Generation (auch Kind ist nach Deutschalnd zugewandert) und 2. Generation (Kind ist in Deutschland geboren) werden zusammengefasst. <br> Ohne Zuwanderungsgeschichte = Kinder, deren beider Eltern in Deutschland geboren wurden.", "<br> <br> Bildungskapital = Ressourcen, Kinder durch (kulturelle) Bildung zu fördern und Indikator für den sozialen Status der Eltern", "<br><br>sozialer Status = die soziale Position der Eltern. Hier wurden Status und Anforderungen der Berufe betrachtet."),
                                                        placement = "top",
                                                        trigger = "hover"),
                                     tags$a(paste0("Definition der Begriffe"), icon("info-circle"), id = "def_schule_kompetenz_2"),
                                     br(),
                                     br(),
                                     shinyBS::bsPopover(id="h_schule_kompetenz_2", title = "",
-                                                       content = paste0("Für Mecklenburg-Vorpommern liegen keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
+                                                       content = paste0("Für Mecklenburg-Vorpommern liegen keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2018: 1.462 Schulen mit N = 44.941 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2012: 1.326 Schulen mit N = 44.584 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
                                                        placement = "top",
                                                        trigger = "hover"),
                                     tags$a(paste0("Hinweis zu den Daten und Stichprobengröße"), icon("info-circle"), id = "h_schule_kompetenz_2")
@@ -531,7 +531,12 @@ mod_schule_kurse_ui <- function(id){
                                     highcharter::highchartOutput(ns("plot_iqb_fragebogen"))
                                     ,
                                     p(style="font-size:12px;color:grey",br(),
-                                      "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen.")
+                                      "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen."),
+                                    shinyBS::bsPopover(id="h_schule_kompetenz_3", title = "",
+                                                       content = paste0("Das Interesse und die Einschätzung der eigenen Fähigkeiten (fachspezifisches Selbstkonzept) wurden durch mehrere Fragen in einem Fragebogen erfasst, auf einer Skala von 1 bis 4.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
+                                                       placement = "top",
+                                                       trigger = "hover"),
+                                    tags$a(paste0("Hinweis zu den Daten und Stichprobengröße"), icon("info-circle"), id = "h_schule_kompetenz_3")
                                   )
                          )
              ))),
