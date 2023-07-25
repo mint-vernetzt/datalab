@@ -21,12 +21,12 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
     p("Indikator:"),
     shinyWidgets::pickerInput(
       inputId = ns("rank_bl_l"),
-      choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
+      choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
                   "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
-                  "Ausländische Studierende",
+                  "Internationale Studierende",
                   "Studienanfänger:innen (1. Hochschulsemester)",
-                  "Studierende (Nur Lehramt)"
+                  "Studierende (Lehramt)"
       ),
       selected = "Studierende"),
 
@@ -41,8 +41,11 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                     "Geowissenschaften und Geographie",
                     "Informatik",
                     "Maschinenbau/Verfahrenstechnik",
-                    "Nicht MINT",
-                    "MINT",
+                    "Alle Nicht MINT-Fächer",
+                    "Alle MINT-Fächer",
+                    "Vermessungswesen",
+                    "Architektur, Innenarchitektur",
+                    "Bauingenieurwesen",
                     "Chemie",
                     "Mathematik",
                     "Humanmedizin/Gesundheitswissenschaften",
@@ -56,13 +59,13 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                     "Sport",
                     "Kunst, Kunstwissenschaft"),
 
-        selected = "MINT"
+        selected = "Alle MINT-Fächer"
       )),
 
-    conditionalPanel(condition = "input.rank_bl_l == 'Auländische Studienanfänger:innen (1. Hochschulsemester)' |
+    conditionalPanel(condition = "input.rank_bl_l == 'Internationale Studienanfänger:innen (1. Hochschulsemester)' |
                      input.rank_bl_l == 'Studienanfänger:innen (1. Fachsemester)' |
                      input.rank_bl_l == 'Studierende' |
-                     input.rank_bl_l == 'Ausländische Studierende' |
+                     input.rank_bl_l == 'Internationale Studierende' |
                      input.rank_bl_l == 'Studienanfänger:innen (1. Hochschulsemester)'",
                      ns = ns,
                      shinyWidgets::pickerInput(
@@ -73,8 +76,8 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                                    "Geowissenschaften und Geographie",
                                    "Informatik",
                                    "Maschinenbau/Verfahrenstechnik",
-                                   "Nicht MINT",
-                                   "MINT",
+                                   "Alle Nicht MINT-Fächer",
+                                   "Alle MINT-Fächer",
                                    "Vermessungswesen",
                                    "Architektur, Innenarchitektur",
                                    "Bauingenieurwesen",
@@ -97,7 +100,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                                    "Kunst, Kunstwissenschaft",
                                    "Elektrotechnik und Informationstechnik"),
 
-                       selected = "MINT"
+                       selected = "Alle MINT-Fächer"
                      )),
     br(),
     shinyBS::bsPopover(id="ih_studium_fach_3", title="",
@@ -105,6 +108,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_3")
+
 
     # ,
     # p("Status der Student:innen:"),

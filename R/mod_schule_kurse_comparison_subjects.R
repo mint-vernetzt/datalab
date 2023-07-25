@@ -50,7 +50,6 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
                 "Ostdeutschland (inkl. Berlin)"
                   ),
       selected = "Hessen"
-
     ),
     br(),
     shinyBS::bsPopover(id="ih_schule_fach_5", title="",

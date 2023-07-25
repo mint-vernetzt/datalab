@@ -20,11 +20,11 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
     p("Indikator:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l"),
-      choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
+      choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
                   "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
-                  "Ausländische Studierende",
-                  "Studierende (Nur Lehramt)"
+                  "Internationale Studierende",
+                  "Studierende (Lehramt)"
 
       ),
       selected = c("Studierende")
@@ -36,6 +36,8 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
     ),
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
     p("Fächer/Fächergruppen (max. 2):"),
+
+
     conditionalPanel(condition = "input.map_l == 'Studierende (Nur Lehramt)'",
                      ns = ns,
                      shinyWidgets::pickerInput(
@@ -45,8 +47,8 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                                    "Geowissenschaften und Geographie",
                                    "Informatik",
                                    "Maschinenbau/Verfahrenstechnik",
-                                   "Nicht MINT",
-                                   "MINT",
+                                   "Alle Nicht MINT-Fächer",
+                                   "Alle MINT-Fächer",
                                    "Chemie",
                                    "Mathematik",
                                    "Humanmedizin/Gesundheitswissenschaften",
@@ -60,8 +62,9 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                                    "Sport",
                                    "Kunst, Kunstwissenschaft"),
 
+
                        selected = c(
-                         "Informatik", "MINT"),
+                         "Informatik", "Alle MINT-Fächer"),
                        multiple = TRUE,
                        options =  list(
                          "max-options" = 2,
@@ -78,36 +81,35 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                        inputId = ns("map_f"),
 
                        choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
-                                   "Biologie",
-                                   "Geowissenschaften und Geographie",
-                                   "Informatik",
-                                   "Maschinenbau/Verfahrenstechnik",
-                                   "Nicht MINT",
-                                   "MINT",
-                                   "Vermessungswesen",
-                                   "Architektur, Innenarchitektur",
-                                   "Bauingenieurwesen",
-                                   "Chemie",
-                                   "Mathematik",
-                                   "Materialwissenschaft und Werkstofftechnik",
-                                   "Humanmedizin/Gesundheitswissenschaften",
-                                   "Geisteswissenschaften",
-                                   "Ingenieurwissenschaften inkl. Informatik" = "Ingenieurwissenschaften",
-                                   "Ingenieurwissenschaften ohne Informatik",
-                                   "Physik, Astronomie",
-                                   "Rechts-, Wirtschafts- und Sozialwissenschaften",
-                                   "Mathematik, Naturwissenschaften",
-                                   "Naturwissenschaften",
-                                   "Pharmazie",
-                                   "Raumplanung",
-                                   "Sport",
-                                   "Verkehrstechnik, Nautik",
-                                   "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
-                                   "Kunst, Kunstwissenschaft",
-                                   "Elektrotechnik und Informationstechnik"),
+                  "Biologie",
+                  "Elektrotechnik und Informationstechnik",
+                  "Geowissenschaften und Geographie",
+                  "Informatik",
+                  "Ingenieurwissenschaften ohne Informatik",
+                  "Maschinenbau/Verfahrenstechnik",
+                  "Mathematik",
+                  "Alle MINT-Fächer",
+                  "Alle Nicht MINT-Fächer",
+                  "Physik, Astronomie",
+                  "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                  "Vermessungswesen",
+                  "Architektur, Innenarchitektur",
+                  "Bauingenieurwesen",
+                  "Chemie",
+                  "Geisteswissenschaften",
+                  "Humanmedizin/Gesundheitswissenschaften",
+                  "Ingenieurwissenschaften",
+                  "Kunst, Kunstwissenschaft",
+                  "Materialwissenschaft und Werkstofftechnik",
+                  "Mathematik, Naturwissenschaften",
+                  "Naturwissenschaften",
+                  "Pharmazie",
+                  "Sport",
+                  "Verkehrstechnik, Nautik",
+                  "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt"),
 
                        selected = c(
-                         "Informatik", "MINT"),
+                         "Informatik", "Alle MINT-Fächer"),
                        multiple = TRUE,
                        options =  list(
                          "max-options" = 2,

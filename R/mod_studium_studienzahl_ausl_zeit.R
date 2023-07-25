@@ -51,54 +51,66 @@ mod_studium_studienzahl_ausl_zeit_ui <- function(id){
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("fach1_studium_studienzahl_ausl_zeit"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Vermessungswesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+
+                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Vermessungswesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Außerhalb der Studienbereichsgliederung/Sonstige Fächer","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle MINT-Fächer","Alle Nicht MINT-Fächer"
+
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.states_studium_studienzahl_ausl_zeit == 'Brandenburg'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("fach2_studium_studienzahl_ausl_zeit"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Kunst, Kunstwissenschaft","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+
+                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Kunst, Kunstwissenschaft","Außerhalb der Studienbereichsgliederung/Sonstige Fächer","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle MINT-Fächer","Alle Nicht MINT-Fächer"
+
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.states_studium_studienzahl_ausl_zeit == 'Bremen'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("fach3_studium_studienzahl_ausl_zeit"),
-                       choices = c("Geisteswissenschaften","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft", "Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+
+                       choices = c("Geisteswissenschaften","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Außerhalb der Studienbereichsgliederung/Sonstige Fächer","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle MINT-Fächer","Alle Nicht MINT-Fächer"
+
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.states_studium_studienzahl_ausl_zeit == 'Mecklenburg-Vorpommern'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("fach4_studium_studienzahl_ausl_zeit"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Vermessungswesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Kunst, Kunstwissenschaft", "Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+
+                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Vermessungswesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Kunst, Kunstwissenschaft","Außerhalb der Studienbereichsgliederung/Sonstige Fächer","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle MINT-Fächer","Alle Nicht MINT-Fächer"
+
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.states_studium_studienzahl_ausl_zeit == 'Niedersachsen'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("fach5_studium_studienzahl_ausl_zeit"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Bauingenieurwesen","Vermessungswesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+
+                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Bauingenieurwesen","Vermessungswesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Außerhalb der Studienbereichsgliederung/Sonstige Fächer","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle MINT-Fächer","Alle Nicht MINT-Fächer"
+
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.states_studium_studienzahl_ausl_zeit == 'Saarland'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("fach6_studium_studienzahl_ausl_zeit"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Bauingenieurwesen","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+
+                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Bauingenieurwesen","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Außerhalb der Studienbereichsgliederung/Sonstige Fächer","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle MINT-Fächer","Alle Nicht MINT-Fächer"
+
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
 
@@ -107,27 +119,33 @@ mod_studium_studienzahl_ausl_zeit_ui <- function(id){
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("fach7_studium_studienzahl_ausl_zeit"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Architektur, Innenarchitektur","Bauingenieurwesen","Vermessungswesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+
+                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Architektur, Innenarchitektur","Bauingenieurwesen","Vermessungswesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Außerhalb der Studienbereichsgliederung/Sonstige Fächer","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle MINT-Fächer","Alle Nicht MINT-Fächer"
+
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.states_studium_studienzahl_ausl_zeit == 'Schleswig-Holstein'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("fach8_studium_studienzahl_ausl_zeit"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+
+                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Außerhalb der Studienbereichsgliederung/Sonstige Fächer","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle MINT-Fächer","Alle Nicht MINT-Fächer"
+
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.states_studium_studienzahl_ausl_zeit == 'Thüringen'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("fach9_studium_studienzahl_ausl_zeit"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+
+                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie","Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften","Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin","Weitere ingenieurwissenschaftliche Fächer","Maschinenbau/Verfahrenstechnik","Elektrotechnik und Informationstechnik","Verkehrstechnik, Nautik","Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft","Außerhalb der Studienbereichsgliederung/Sonstige Fächer","Geowissenschaften und Geographie","Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle MINT-Fächer","Alle Nicht MINT-Fächer"
+
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
 

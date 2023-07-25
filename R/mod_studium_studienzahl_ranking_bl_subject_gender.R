@@ -60,8 +60,8 @@ mod_studium_studienzahl_ranking_bl_subject_gender_ui <- function(id){
                   "Schleswig-Holstein",
                   "Thüringen"
                   ,
-                  "Westdeutschland",
-                  "Ostdeutschland"
+                  "Ostdeutschland (inkl. Berlin)",
+                  "Westdeutschland (o. Berlin)"
                   ),
       selected = "Nordrhein-Westfalen"
     )

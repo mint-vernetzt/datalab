@@ -39,8 +39,8 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
       p("Fächergruppe:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_verlauf"),
-        choices = c("MINT-Fächer (gesamt)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
-        selected = "MINT-Fächer (gesamt)"
+        choices = c("MINT (Gesamt)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
+        selected = "MINT (Gesamt)"
       )
     ,
     p("Indikator:"),

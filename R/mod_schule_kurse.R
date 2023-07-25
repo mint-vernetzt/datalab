@@ -449,14 +449,12 @@ mod_schule_kurse_ui <- function(id){
 
       fluidRow(id="schule_kompetenz",
            shinydashboard::box(
-             title = "MINT-Kompetenzen in der 4. Klasse",
+             title = "MINT-Kompetenzen in der 4. und 9. Klasse",
              width = 12,
              p("Diese interaktiven Diagramme geben einen ersten Einblick in die Mathe-Kompetenzen von Schüler:innen der 4. Klassen.
              Die Daten stammen aus der Befragung des Instituts zur Qualitätsentwicklung im Bildungswesen e.V. (IQB), das in regelmäßigen Abständen
              die Leistung von Schüler:innen in verschiedenen Fächern testet. Dafür werden deutschlandweit mehr als 1.300 Schulen und
                über 26.000 Schüler:innen befragt."),
-             p(),
-             p("Zeitnah werden weitere Darstellungen der Daten aus den IQB-Befragungen in den 4. und 9. Klassen folgen!"),
              p(),
              shinyBS::bsPopover(id="i_schule_kompetenz_1", title = "",
                                 content = paste0("Im Bericht des IQB-Bildungstrends 2021 kann man weitere Informationen und eine Einordnung der dargestellten Daten finden. <br> <a>https://www.iqb.hu-berlin.de/bt/BT2021/Bericht/</a> <br><br> Weitere Informationen zum Thema Diversität und soziale Herkunft in der Bildungsweld können in der Diversitätsstudie von MINTvernetzt nachgelesen werden. <br> <a> https://mint-vernetzt.de/data/daten-fakten#mint-studie-diversitaet </a>"),
@@ -518,6 +516,23 @@ mod_schule_kurse_ui <- function(id){
                                                        trigger = "hover"),
                                     tags$a(paste0("Hinweis zu den Daten und Stichprobengröße"), icon("info-circle"), id = "h_schule_kompetenz_2")
                                      )
+                         ),
+                         tabPanel("Interesse und Selbsteinschätzung", br(),
+
+                                  tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    mod_schule_kurse_iqb_fragen_ui("mod_schule_kurse_iqb_fragen_ui_1"),
+                                  ),
+
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    highcharter::highchartOutput(ns("plot_iqb_fragebogen"))
+                                    ,
+                                    p(style="font-size:12px;color:grey",br(),
+                                      "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen.")
+                                  )
                          )
              ))),
 
@@ -591,7 +606,7 @@ mod_schule_kurse_ui <- function(id){
 #' schule_kurse Server Functions
 #'
 #' @noRd
-mod_schule_kurse_server <- function(id, data_kurse, data_iqb_standard, data_iqb_score, data_skf, r){
+mod_schule_kurse_server <- function(id, data_kurse, data_iqb, data_skf, r){
 
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -697,11 +712,15 @@ mod_schule_kurse_server <- function(id, data_kurse, data_iqb_standard, data_iqb_
     # Box Kompetenzdaten / IQB
 
     output$plot_iqb_standard_zeitverlauf <- highcharter::renderHighchart({
-      iqb_standard_zeitverlauf(data_iqb_standard,r)
+      iqb_standard_zeitverlauf(data_iqb,r)
     })
 
     output$plot_iqb_mathe_mittel_zeitverlauf <- highcharter::renderHighchart({
-      iqb_mathe_mittel_zeitverlauf(data_iqb_score,r)
+      iqb_mathe_mittel_zeitverlauf(data_iqb,r)
+    })
+
+    output$plot_iqb_fragebogen <- highcharter::renderHighchart({
+      iqb_fragebogen(data_iqb,r)
     })
 
     # Box außerschulisch  / SKf

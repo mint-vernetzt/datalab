@@ -18,7 +18,44 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
       choices = c("2018", "2019", "2020", "2021"),
       selected = "2021"
     ),
-     p("Region:"),
+
+    p("Fach/Fächergruppe:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("gen_f"),
+
+      choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+                  "Biologie",
+                  "Geowissenschaften und Geographie",
+                  "Informatik",
+                  "Maschinenbau/Verfahrenstechnik",
+                  "Alle Nicht MINT-Fächer",
+                  "Alle MINT-Fächer",
+                  "Vermessungswesen",
+                  "Architektur, Innenarchitektur",
+                  "Bauingenieurwesen",
+                  "Chemie",
+                  "Mathematik",
+                  "Materialwissenschaft und Werkstofftechnik",
+                  "Humanmedizin/Gesundheitswissenschaften",
+                  "Geisteswissenschaften",
+                  "Ingenieurwissenschaften (inkl. Informatik)",
+                  "Ingenieurwissenschaften ohne Informatik",
+                  "Physik, Astronomie",
+                  "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                  "Mathematik, Naturwissenschaften",
+                  "Naturwissenschaften",
+                  "Pharmazie",
+                  "Raumplanung",
+                  "Sport",
+                  "Verkehrstechnik, Nautik",
+                  "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
+                  "Kunst, Kunstwissenschaft",
+                  "Elektrotechnik und Informationstechnik"),
+
+      selected = "Alle MINT-Fächer"
+    ),
+    p("Region:"),
+
     shinyWidgets::pickerInput(
       inputId = ns("gen_states"),
       choices = c("Deutschland",
@@ -71,9 +108,10 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                                    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik",
                                    "Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft",
                                    "Geowissenschaften und Geographie",
-                                   "Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+                                   "Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle Nicht MINT-Fächer",
+                                   "Alle MINT-Fächer"
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.gen_states == 'Brandenburg'",

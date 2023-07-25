@@ -38,8 +38,8 @@ mod_studium_studienzahl_bl_vergleich_gender_ui <- function(id){
       p("Auswahl des Fachs:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_gender_vergleich"),
-        choices = c("MINT (aggregiert)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
-        selected = "MINT (aggregiert)"
+        choices = c("MINT (Gesamt)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
+        selected = "MINT (Gesamt)"
       )
     )
   )
