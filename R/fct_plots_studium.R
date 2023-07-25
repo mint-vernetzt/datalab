@@ -7225,7 +7225,7 @@ if(absolut_selector=="In Prozent"){
   highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
   highcharter::hc_plotOptions(column = list(pointWidth = 70))%>%
   highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-  highcharter::hc_title(text = paste0("Anteil internationaler ", help, " in ", fach_select , " an allen ", help2, " in ", bl_select ),
+  highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_select , " in ", bl_select ),
                         align = "center",
                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
   highcharter::hc_chart(

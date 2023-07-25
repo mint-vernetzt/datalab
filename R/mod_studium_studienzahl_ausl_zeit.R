@@ -147,7 +147,13 @@ mod_studium_studienzahl_ausl_zeit_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
 
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_international_2", title="",
+                       content = paste0("Die erste Einstellung der Grafik zeigt z. B., dass der Anteil an internationalen Studierenden an allen Studierenden in MINT in Nordrhein-Westfalen in den letzten 4 Jahren um fast 5 Prozentpunkte angestiegen ist. Betrachtet man die &quotAnzahl&quot zeigt sich, dass die Anzahl internationaler Studierender von knapp 87.000 in 2018 auf knapp 99.000 in 2021 angestiegen ist."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_international_2")
   )
 }
 

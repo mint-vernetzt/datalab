@@ -70,7 +70,14 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+
+    br(),
+    shinyBS::bsPopover(id="ih_studium_frauen_2", title="",
+                       content = paste0("Die erste Einstellung der interaktiven Grafik zeigt, dass sowohl unter Studienanfänger:innen als auch Studierenden der Frauenanteil über die Jahre gewachsen ist. Waren 2015 deutschlandweit nur 29 % der Studierenden in MINT Frauen, sind es 2021 32 %."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_frauen_2")
   )
 
 }
