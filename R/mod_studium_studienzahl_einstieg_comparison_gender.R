@@ -263,7 +263,13 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                        ),
                        selected = "MINT",
                        multiple = FALSE
-                     ))
+                     )),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_frauen_3", title="",
+                       content = paste0("In der ersten Einstellung ist zu sehen, dass in Hamburg 2021 der Frauenanteil von Lehramtstudierenden mit einem Hauptfach in MINT mit 54 % über der Hälfte liegt. Dagegen sind nur ein Drittel der allgemeinen MINT-Studierenden in Hambrug weiblich."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_frauen_3")
     )
 
 

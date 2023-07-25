@@ -22,7 +22,12 @@ mod_schule_kurse_multiple_ui <- function(id){
       inputId = ns("indikator_kurse_gender"),
       choices = c("Grundkurse", "Leistungskurse"),
       selected = "Grundkurse"
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_mint_4", title="",
+                       content = paste0("In der Grafik ist zu lesen, dass 2021 deutschlandweit sowohl für Mädchen wie Jungen 24 von 100 Grundkursbelegungen in einem MINT-Fach sind. Unterschiede sieht man in den Leistungskursen. 29 von 100 Leistungskursbelegungen von Mädchen, aber 38 % der Leistungskursbelegungen von Jungen sind in einem MINT-Fach."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_4")
   )
 }
 

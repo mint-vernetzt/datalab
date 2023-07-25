@@ -7,6 +7,8 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+
+
 mod_home_start_einstieg_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -22,7 +24,20 @@ mod_home_start_einstieg_ui <- function(id){
         "max-options" = 3,
         "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
       )
-    )
+    ),
+    br(),
+
+    shinyBS::bsPopover(id="dh", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh"),
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_alle_mint_1", title="",
+                       content = paste0("Wenn man beispielsweise Auszubildende und Beschäftigte betrachtet, sieht man, dass sich von allen Auszubildenden deutschlandweit im Jahr 2021 31 % in einer Ausbildung in einem MINT-Beruf befinden. Bei den Beschäftigten in Deutschland ist dieser Anteil ein wenig geringer. Im Jahr 2021 arbeiten 23 % der Beschäftigten in einem MINT-Beruf."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_alle_mint_1")
+
   )
 }
 

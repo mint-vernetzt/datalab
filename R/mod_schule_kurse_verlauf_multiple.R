@@ -80,7 +80,13 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_fach_2", title="",
+                       content = paste0("Diese erste Einstellung zeigt, dass der Anteil an Leitungskursbelegungen in MINT-Fächern in Hessen höher als in Hamburg ist. Das muss nicht am Interesse der Schüler*innen an MINT liegen, sondern könnte auch auf Unterschiede in den Vorschriften zur Oberstufe-Kursbelegung zurückgehen."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_2")
   )
 
 

@@ -464,8 +464,9 @@ arbeitsmarkt_bl_gender <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      #,
+      #download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
@@ -497,8 +498,9 @@ arbeitsmarkt_bl_gender <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      #,
+      #download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
@@ -1485,8 +1487,9 @@ arbeitsmarkt_bl <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      #,
+      #download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
@@ -1519,8 +1522,9 @@ arbeitsmarkt_bl <- function(df,r) {
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      #,
+      #download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
@@ -3917,8 +3921,9 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     tooltip = list(
       valueDecimals = 0,
       valueSuffix = "%"
-    ),
-    download_map_data = FALSE
+    )
+    #,
+   # download_map_data = FALSE
   ) %>%
     highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
@@ -3955,8 +3960,9 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
     tooltip = list(
       valueDecimals = 0,
       valueSuffix = "%"
-    ),
-    download_map_data = FALSE
+    )
+   #,
+   # download_map_data = FALSE
   ) %>%
     highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
@@ -4063,6 +4069,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
   höhe <- c(10, 20, 3, 6, 3, 3, 8, 5, 11, 11, 10, 4, 6, 6, 6, 7)
   plt.add <- data.frame(länder, höhe)
 
+
  # plt.add$subtitle <- "Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen."
 
   # create plot
@@ -4075,7 +4082,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
       colors = ifelse(df_compare$landkreis == "alle Landkreise", "#b16fab", "#154194")
     )) %>%
     highcharter::hc_size(height = 80*plt.add$höhe[plt.add$länder == states]) %>%
-    highcharter::hc_title(text = paste0(titel, "<br><br><br>"),
+    highcharter::hc_title(text = paste0(titel, "<br><br>"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -4083,6 +4090,8 @@ arbeitsmarkt_lk_detail_vergleich <- function(df, r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+
+
   # %>%
   #   highcharter::hc_exporting(enabled = TRUE, #button erscheint
   #                             buttons = list(contextButton = list(

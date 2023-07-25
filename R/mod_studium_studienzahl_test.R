@@ -40,7 +40,18 @@ mod_studium_studienzahl_test_ui <- function(id){
       options =  list(
         "max-options" = 3,
         "max-options-text" = "Maximal 3 Indikatoren auswählen")
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="dh_studium_mint_1", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_mint_1"),
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_mint_1", title="",
+                       content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland 38 % der Studienanfänger:innen (1. FS) ein MINT-Fach wählen, bei den Studierenden ist dieser Anteil mit 37 % in 2021 etwas geringer, was bedeutet, dass die Abbruchsquote in MINT höher liegt als in anderen Fachbereichen."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_1")
     )
 
 }

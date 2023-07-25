@@ -72,7 +72,13 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_fach_3", title="",
+                       content = paste0("Wählt man für die Grafik beispielsweise die einzelnen MINT-Fächer und als Kursart &quotLeistungskurs&quot, sieht man, dass in Brandenbrug Mathe und Biologie den Großteil der Leistungskursbelegungen in MINT ausmachen. Seit 2018 gingen die Leistungskursbelegungen in Mathe allerdings um 6 Prozentpunkte zurück."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_3")
   )
 
 }

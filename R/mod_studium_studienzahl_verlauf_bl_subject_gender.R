@@ -83,7 +83,13 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_mint_8", title="",
+                       content = paste0("Die erste Einstellung zeigt u.a., dass der Anteil an MINT-Studierenden unter den weiblichen Studienanfänger*innen im ersten Fachsemester in Sachsen im Mittel höher liegt als unter den weiblichen Studierenden. Das deutet darauf hin, dass weibliche Studierende MINT-Studiengänge häufiger wieder abbrechen als andere Studiengänge."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_8")
   )
 
 }

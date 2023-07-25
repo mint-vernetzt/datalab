@@ -40,7 +40,12 @@ mod_studium_studienzahl_choice_1_ui <- function(id){
       options =  list(
         "max-options" = 2,
         "max-options-text" = "Maximal 2 Indikatoren auswählen")
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_mint_2", title="",
+                       content = paste0("In der ersten Darstellung zeigt die rechte Grafik: 37 % der Studierenden lernen eine MINT-Disziplin. Der Großteil der MINT-Studierenden (26 %) studiert dabei eine Ingenieurwissenschaft, wozu auch ein Informatik-Studium zählt."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_2")
   )
 
 }

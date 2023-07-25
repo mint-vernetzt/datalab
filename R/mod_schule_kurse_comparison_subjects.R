@@ -50,8 +50,12 @@ mod_schule_kurse_comparison_subjects_ui <- function(id){
                 "Ostdeutschland (inkl. Berlin)"
                   ),
       selected = "Hessen"
-
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_fach_5", title="",
+                       content = paste0("Diese Grafik zeigt, wie sich &quotMINT&quot und &quotnicht MINT&quot auf einzelne Fächer aufteilen. In Hessen macht beispielweise Biologie knapp vor Mathe den größten Anteil an Leistungskursbelegungen in MINT aus. Für die anderen Fächer sind Fremdsprachen Spitzenreiter."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_5")
 
   )
 }

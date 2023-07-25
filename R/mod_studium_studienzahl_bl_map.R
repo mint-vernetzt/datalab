@@ -114,7 +114,20 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                        options =  list(
                          "max-options" = 2,
                          "max-options-text" = "Maximal 2 Indikatoren auswählen")
-                     ))
+                     )),
+    br(),
+    shinyBS::bsPopover(id="dh_studium_fach_2", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_fach_2"),
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_fach_2", title="",
+                       content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_2")
   )
 
 }

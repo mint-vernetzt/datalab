@@ -31,7 +31,19 @@ mod_beruf_arbeitsmarkt_bl_ui <- function(id){
                    "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"
                     ),
       selected = "Technik (gesamt)"
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="dh_beruf_fach_1", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_beruf_fach_1"),
+
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_beruf_fach_1", title="",
+                       content = paste0("Die Karten in der ersten Einstellung zeigen beispielsweise, dass 2021 der Anteil an Auszubildenden und Beschäftigten in Technik von allen Bundesländern in Berlin am geringsten ausfällt. In Thüringen lernt dagegen rund ein Drittel der Auszubildenden im Bereich Technik. Den höchsten Anteil an Beschäftigten in Technik weist noch knapp vor Thüringen Baden-Württemberg auf (21,9 %)."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_1")
 
 
 

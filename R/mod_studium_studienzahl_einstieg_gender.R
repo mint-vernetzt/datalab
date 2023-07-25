@@ -38,7 +38,18 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
       options =  list(
         "max-options" = 3,
         "max-options-text" = "Maximal 3 Indikatoren auswählen")
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="dh_studium_frauen_1", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_frauen_1"),
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_frauen_1", title="",
+                       content = paste0("In der ersten interaktiven Grafik ist zu sehen, dass deutschlandweit 2021 der Anteil von Frauen unter den Studienanfänger:innen in MINT-Fächern 34 % ausmacht. Unter den Studierenden liegt der Frauenanteil in MINT-Fächern bei 32 % etwas darunter. Dies deutet darauf hin, dass bei weiblichen Studierenden die Abbruchquote in MINT höher ist als bei männlichen Studierenden."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_frauen_1")
   )
 
 }

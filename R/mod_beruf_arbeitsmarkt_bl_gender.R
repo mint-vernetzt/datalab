@@ -37,7 +37,19 @@ mod_beruf_arbeitsmarkt_bl_gender_ui <- function(id){
                   "Technik (gesamt)",
                   "Alle Berufsfelder außer MINT" = "Andere Berufsgruppen"),
       multiple = FALSE,
-      selected = "MINT")
+      selected = "MINT"),
+    br(),
+    shinyBS::bsPopover(id="dh_beruf_mint_5", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_beruf_mint_5"),
+
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_beruf_mint_5", title="",
+                       content = paste0("Vergleicht man die Legenden der Karten sieht man, dass das der Anteil von Frauen, die in MINT-Berufen arbeiten, weitaus geringer ist als der von Männern. In Rheinland-Pfalz arbeiten beispielsweise nur 6 % aller berufstätigen Frauen in MINT, dagegen aber 35 % der Männer."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_5")
 
     # ,
     # p("Auswahl des Anforderungsniveaus:"),

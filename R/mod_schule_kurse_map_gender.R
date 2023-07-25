@@ -42,7 +42,19 @@ mod_schule_kurse_map_gender_ui <- function(id){
       choices = c("Grundkurse",
                   "Leistungskurse"),
       selected = "Leistungskurse"
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="dh_schule_mint_5", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_schule_mint_5"),
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_mint_5", title="",
+                       content = paste0("Betrachtet man die Karten für Leistungskurse sieht man, dass 2021 über alle Bundesländer hinweg eher Jungen als Mädchen MINT-Leistungskurse wählen. Beispielsweise sind in Sachsen 54 % aller Leistungskursbelegungen von Jungen in MINT. Dagegen entfallen nur 33 % aller Belegungen von Mädchen auf ein MINT-Fach."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_5")
+
   )
 }
 
