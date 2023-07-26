@@ -3356,35 +3356,68 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
                                   verticalAlign = 'bottom',
                                   theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
       }else{
-        df$wert <- round(df$wert,0)
+        if(bl_select %in% c("Berlin", "Bremen", "Saarland")){
+          df <- df %>% dplyr::filter(jahr == "2018")
+          df$wert <- round(df$wert,0)
 
-        highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
-          highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.group} Durchschnittliche Punktzahl: {point.y}")%>%
-          highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
-          # highcharter::hc_xAxis(title = list(text = ""), categories = c("2012",
-          #                                                               "2018")) %>%
-          #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-          #highcharter::hc_colors(c("#efe8e6", "#AFF3E0", "#66cbaf")
+          highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
+            highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
+            highcharter::hc_tooltip(pointFormat = "{point.group} Durchschnittliche Punktzahl: {point.y}")%>%
+            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
+            highcharter::hc_xAxis(title = list(text = "")) %>%
+            #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
+            #highcharter::hc_colors(c("#efe8e6", "#AFF3E0", "#66cbaf")
 
-                                   #"#154194",
-          highcharter::hc_colors(color) %>%
-          highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select),
-                                margin = 45,
-                                align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-          ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-          highcharter::hc_exporting(enabled = FALSE,
-                                    buttons = list(contextButton = list(
-                                      symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                      onclick = highcharter::JS("function () {
+            #"#154194",
+            highcharter::hc_colors(color) %>%
+            highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select),
+                                  margin = 45,
+                                  align = "center",
+                                  style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+            highcharter::hc_chart(
+              style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+            ) %>%
+            highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+            highcharter::hc_exporting(enabled = FALSE,
+                                      buttons = list(contextButton = list(
+                                        symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                        onclick = highcharter::JS("function () {
                                                             this.exportChart({ type: 'image/png' }); }"),
-                                      align = 'right',
-                                      verticalAlign = 'bottom',
-                                      theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+                                        align = 'right',
+                                        verticalAlign = 'bottom',
+                                        theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+        }else{
+          df$wert <- round(df$wert,0)
+
+          highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
+            highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
+            highcharter::hc_tooltip(pointFormat = "{point.group} Durchschnittliche Punktzahl: {point.y}")%>%
+            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
+            highcharter::hc_xAxis(title = list(text = ""), categories = c("2012",
+                                                                          "2018")) %>%
+            #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
+            #highcharter::hc_colors(c("#efe8e6", "#AFF3E0", "#66cbaf")
+
+            #"#154194",
+            highcharter::hc_colors(color) %>%
+            highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select),
+                                  margin = 45,
+                                  align = "center",
+                                  style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+            highcharter::hc_chart(
+              style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+            ) %>%
+            highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+            highcharter::hc_exporting(enabled = FALSE,
+                                      buttons = list(contextButton = list(
+                                        symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                        onclick = highcharter::JS("function () {
+                                                            this.exportChart({ type: 'image/png' }); }"),
+                                        align = 'right',
+                                        verticalAlign = 'bottom',
+                                        theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+        }
+
     }}
   }
 
