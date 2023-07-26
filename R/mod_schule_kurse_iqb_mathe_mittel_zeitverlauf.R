@@ -175,7 +175,14 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
                    ))
                    ),
 
-    br(),
+  br(),
+  shinyBS::bsPopover(id="dh_schule_kompetenz_2", title = "",
+                     content = paste0("Falls die Grafiken nicht dargestellt werden, bitte wechseln Sie in den Auswahlmöglichkeitne der Darstellung zu &quot4. Klasse&quot und die Region &quotDeutschland&quot zurück. Wählen Sie jetzt &quotTest-Punktzahl&quot als Leistungsindikator aus. Da uns dieser Indikator nur für die 4. Klassen deutschlandweit vorliegt, lässt sich diese Einstellung nicht auf andere Auswahloptionen übertragen."),
+                     placement = "top",
+                     trigger = "hover"),
+  tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_schule_kompetenz_2"),
+  br(),
+  br(),
   shinyBS::bsPopover(id="ih_schule_kompetenz_2", title="",
                      content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland 2011 bis 2021 die Mathekompetenzen von Jungen im Mittel höher als die von Mädchen sind. Ein möglicher Grund hierfür könnten Genderstereotype sein (weiteres dazu ist in der Darstellung im nächsten Tab und in der Info-Box über den Grafiken zu finden.)."),
                      placement = "top",

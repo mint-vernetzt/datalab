@@ -17,20 +17,20 @@ studienzahl_test <- function(df,r){
 
 
 
-  df1 <<- df
+  df1 <- df
 
  # ui inputs
- testy1 <<- r$testy
- testl1 <<- r$testl
+ testy1 <- r$testy
+ testl1 <- r$testl
 
  # filtering
- df2 <<- df1 %>% dplyr::filter(jahr==testy1)%>%
+ df2 <- df1 %>% dplyr::filter(jahr==testy1)%>%
    dplyr::filter(geschlecht == "Gesamt")%>%
    dplyr::filter(region == "Deutschland")%>%
    dplyr::filter(fachbereich %in% c("Nicht MINT", "MINT (Gesamt)", "Alle" ))
 
  # calculating proportions
- df3 <<- df2 %>%
+ df3 <- df2 %>%
    tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
    dplyr::mutate(dplyr::across(c("MINT (Gesamt)", "Nicht MINT"), ~./Alle))%>%
    dplyr::mutate(dplyr::across(c("Nicht MINT", "MINT (Gesamt)"), ~ round(.*100,1)))%>%
@@ -38,7 +38,7 @@ studienzahl_test <- function(df,r){
    tidyr::pivot_longer(c("MINT (Gesamt)", "Nicht MINT"), names_to = "fachbereich", values_to = "proportion")
 
  # joining wert and prportion
- df4 <<- df2%>%
+ df4 <- df2%>%
    dplyr::filter(fachbereich != "Alle")%>%
    dplyr::left_join(df3)
 
@@ -49,7 +49,7 @@ studienzahl_test <- function(df,r){
 
 
  # Ordering
- df4 <<- within(df4, fachbereich <- factor(fachbereich, levels=c("Nicht MINT", "MINT (Gesamt)")))
+ df4 <- within(df4, fachbereich <- factor(fachbereich, levels=c("Nicht MINT", "MINT (Gesamt)")))
 
 
 
@@ -340,12 +340,12 @@ studienzahl_einstieg_pie_gender <- function(df,r) {
   # dfj <- dfj %>%
   #   filter(order== "gender")
 
-  geny <<- r$gen_y
-  genl <<- r$gen_l
+  geny <- r$gen_y
+  genl <- r$gen_l
 
-  dfx <<- dfj %>% dplyr::filter(jahr==geny & region=="Deutschland")
+  dfx <- dfj %>% dplyr::filter(jahr==geny & region=="Deutschland")
 
-  dfh <<- dfx %>%
+  dfh <- dfx %>%
     dplyr::filter(!fachbereich %in% c("MINT (Gesamt)", "Nicht MINT"))%>%
     tidyr::pivot_wider(names_from= fachbereich, values_from = wert)%>%
     dplyr::mutate("MINT (Gesamt)" = Ingenieurwissenschaften + `Mathematik, Naturwissenschaften` )%>%
@@ -405,9 +405,9 @@ dfh <-dfh %>%
 
     # filter for UI input and ensure proportions sum to 1
 
-    df_1_pie <<- dfh %>% dplyr::filter(indikator == genl[1])
+    df_1_pie <- dfh %>% dplyr::filter(indikator == genl[1])
 
-    df_2_pie <<- dfh %>% dplyr::filter(indikator == genl[2])
+    df_2_pie <- dfh %>% dplyr::filter(indikator == genl[2])
 
 
     highcharter::hw_grid(
@@ -697,8 +697,8 @@ studienzahl_verlauf_single <- function(df,r) {
 
 
 
-  indi_selct <<- r$studienzahl_einstieg_verlauf_indi
-  timerange <<- r$date_studienzahl_einstieg_verlauf
+  indi_selct <- r$studienzahl_einstieg_verlauf_indi
+  timerange <- r$date_studienzahl_einstieg_verlauf
 
   abs_zahlen_selector <- r$abs_zahlen_einstieg_verlauf_indi
 
@@ -719,7 +719,7 @@ studienzahl_verlauf_single <- function(df,r) {
   # df <- df %>% dplyr::filter(region == "Deutschland")
 
 
-  df4 <<- df2 %>% dplyr::filter(geschlecht == "Gesamt")%>%
+  df4 <- df2 %>% dplyr::filter(geschlecht == "Gesamt")%>%
 
     dplyr::filter(region== "Deutschland")%>%
     dplyr::select( -region)%>%
@@ -991,7 +991,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
   # load UI inputs from reactive value
 
 
-  absolut_selector <<- r$abs_zahlen
+  absolut_selector <- r$abs_zahlen
 
   timerange <- r$genz_date
 
@@ -1006,18 +1006,18 @@ studienzahl_verlauf_single_gender <- function(df,r) {
 
 
   # filter dataset based on UI inputs
-  dfj <<- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+  dfj <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
 
 
 
-  dfx <<- dfj %>% dplyr::filter(region=="Deutschland")
+  dfx <- dfj %>% dplyr::filter(region=="Deutschland")
 
-  dfh <<- dfx %>%
+  dfh <- dfx %>%
     dplyr::filter(fachbereich %in% c("MINT (Gesamt)", "Nicht MINT"))
 
   # calculation props
-  dfg <<- dfh %>%
+  dfg <- dfh %>%
     tidyr::pivot_wider(values_from=wert, names_from=geschlecht)%>%
     dplyr::mutate(across(c("Männer", "Frauen"), ~round(./Gesamt*100,1)))%>%
     dplyr::select(-Gesamt,- Männer)%>%
@@ -1043,7 +1043,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
   if(length(label_sel) == 1) {
 
 
-    df9 <<- dfü %>% dplyr::filter(indikator== label_sel)
+    df9 <- dfü %>% dplyr::filter(indikator== label_sel)
 
 
     highcharter::hchart(df9, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
@@ -1071,7 +1071,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
   } else if(length(label_sel)==2){
 
 
-    df9 <<- dfü %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2])
+    df9 <- dfü %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2])
 
 
     highcharter::hchart(df9, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
@@ -1099,7 +1099,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
   } else if(length(label_sel == 3)){
 
 
-    df9<<- dfü %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3])
+    df9<- dfü %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3])
 
 
 
@@ -1166,7 +1166,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
     } else if(length(label_sel)==2){
 
 
-      df9 <<- dfü %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2])
+      df9 <- dfü %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2])
 
 
       highcharter::hchart(df9, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
@@ -1194,7 +1194,7 @@ studienzahl_verlauf_single_gender <- function(df,r) {
     } else if(length(label_sel == 3)){
 
 
-      df9<<- dfü %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3])
+      df9<- dfü %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3])
 
 
 
@@ -1340,15 +1340,15 @@ studienzahl_einstieg_comparison <- function(df,r) {
 
 
   # load UI inputs from reactive value
-  timerange <<- r$date_kurse_einstieg_comparison
+  timerange <- r$date_kurse_einstieg_comparison
 
   # filter dataset based on UI inputs
-  dfh <<- df %>% dplyr::filter(jahr == timerange)
+  dfh <- df %>% dplyr::filter(jahr == timerange)
 
   # remove
   # df <- df %>% dplyr::filter(region == "Deutschland")
 
-  df4 <<- dfh %>% dplyr::filter(geschlecht == "Gesamt")%>%
+  df4 <- dfh %>% dplyr::filter(geschlecht == "Gesamt")%>%
     dplyr::filter(region== "Deutschland")%>%
     tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
     #dplyr::rename("MINT (gesamt)" = MINT)%>%
@@ -1356,13 +1356,13 @@ studienzahl_einstieg_comparison <- function(df,r) {
 
 # Calculating props
 
-  df_props <<- df4 %>%
+  df_props <- df4 %>%
     dplyr::mutate(dplyr::across(c("MINT (Gesamt)", "Nicht MINT"), ~round(./Alle * 100,1)))%>%
     dplyr::select(-Alle)%>%
     tidyr::pivot_longer(c("MINT (Gesamt)", "Nicht MINT"), values_to="prop", names_to = "proportion")
 
 # joining props and wert
-  df6 <<- df4%>%
+  df6 <- df4%>%
     dplyr::select(-Alle )%>%
     tidyr::pivot_longer(c("MINT (Gesamt)", "Nicht MINT"), values_to="wert", names_to = "proportion")%>%
     dplyr::left_join(df_props)
@@ -1373,7 +1373,7 @@ studienzahl_einstieg_comparison <- function(df,r) {
   df6$wert <- prettyNum(df6$wert, big.mark = ".", decimal.mark = ",")
 
 
-  df6$indikator <<-factor(df6$indikator,levels= c("Studierende",
+  df6$indikator <-factor(df6$indikator,levels= c("Studierende",
                                      "Studierende (Fachhochschulen)",
                                      "Studierende (Lehramt, Universität)",
                                      "Studierende (Universität)",
@@ -1393,7 +1393,7 @@ studienzahl_einstieg_comparison <- function(df,r) {
   # plot
 
 
-  df6 <<- within(df6, proportion <- factor(proportion, levels=c("Nicht MINT", "MINT (Gesamt)")))
+  df6 <- within(df6, proportion <- factor(proportion, levels=c("Nicht MINT", "MINT (Gesamt)")))
 
 
   highcharter::hchart(df6, 'bar', highcharter::hcaes(y = prop, x = indikator, group = forcats::fct_rev(proportion)))%>%
@@ -1436,9 +1436,9 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
 
 
   # load UI inputs from reactive value
-  timerange <<- r$gen_f_y
+  timerange <- r$gen_f_y
 
-  sel_bl1 <<- r$gen_states
+  sel_bl1 <- r$gen_states
 
   # Zuweisung von r zu sel_f in abhängigkeit der Bundesländer
 
@@ -1453,7 +1453,7 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
                       "Sachsen",
                       "Westdeutschland (o. Berlin)",
                       "Ostdeutschland (inkl. Berlin)")) {
-    sel_f1 <<- r$gen1_f
+    sel_f1 <- r$gen1_f
   }
   else {
     if(sel_bl1 == "Brandenburg") sel_f1 <- r$gen2_f
@@ -1468,16 +1468,16 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
 
   # filter dataset based on UI inputs
 
-  dfu <<- df %>% dplyr::filter(jahr %in% timerange)%>%
+  dfu <- df %>% dplyr::filter(jahr %in% timerange)%>%
     tidyr::pivot_wider(names_from = geschlecht, values_from = wert)
 
-  dfä <<- dfu %>%
+  dfä <- dfu %>%
     dplyr::mutate(across(c("Männer", "Frauen"), ~ round(./Gesamt*100,1)))%>%
     dplyr::select(-Gesamt)%>%
     tidyr::pivot_longer(c("Männer", "Frauen"), names_to = "geschlecht", values_to  = "proportion")%>%
     dplyr::filter(indikator !="Internationale Studienanfänger:innen (1. Hochschulsemester)"&indikator!= "Internationale Studierende"  )
 
-  df_io <<- dfu %>%
+  df_io <- dfu %>%
     dplyr::select(-Gesamt)%>%
     tidyr::pivot_longer(c("Männer", "Frauen"), values_to = "wert", names_to = "geschlecht")%>%
     dplyr::right_join(dfä)%>%
@@ -1492,7 +1492,7 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
 
 
 
-    df_io1 <<- df_io %>%
+    df_io1 <- df_io %>%
       dplyr::filter(region==sel_bl1)%>%
       dplyr::filter(fach==sel_f1)
 
@@ -1517,8 +1517,8 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
     ) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-    highcharter::hc_title(text = ifelse(sel_f == "Nicht MINT", paste0("Frauenanteil in allen Studienfachgruppen außer MINT in ", sel_bl, " (", timerange, ")",
-                                        "<br><br><br>"), paste0("Frauenanteil in der Studienfachgruppe ", sel_f, " in ", sel_bl, " (", timerange, ")",
+    highcharter::hc_title(text = ifelse(sel_f1 == "Nicht MINT", paste0("Frauenanteil in allen Studienfachgruppen außer MINT in ", sel_bl1, " (", timerange, ")",
+                                        "<br><br><br>"), paste0("Frauenanteil in der Studienfachgruppe ", sel_f1, " in ", sel_bl1, " (", timerange, ")",
                                                                 "<br><br><br>")),
                           margin = 25,
                           align = "center",
@@ -1615,9 +1615,9 @@ studienzahl_waffle_mint <- function(df,r) {
 
 
   # load UI inputs from reactive value
-  timerange <<- r$waffle_y
+  timerange <- r$waffle_y
 
-  label_w <<- r$waffle_l
+  label_w <- r$waffle_l
 
 
 
@@ -1703,15 +1703,15 @@ studienzahl_waffle_mint <- function(df,r) {
 
     waf_1[1,1] <- überschrift_label(waf_1[1,1])
     title_1 <- as.character(as.vector(waf_1[1,1]))
-    data_1 <<- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <<- round(data_1 * 100,1)
+    data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
+    data_1 <- round(data_1 * 100,1)
 
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     waf_2[1,1] <- überschrift_label(waf_2[1,1])
     title_2 <- as.character(as.vector(waf_2[1,1]))
-    data_2 <<- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
-    data_2 <<- round(data_2 * 100,1)
+    data_2 <- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
+    data_2 <- round(data_2 * 100,1)
 
     names(data_2) <- colnames(waf_2[2:ncol(waf_2)])
 
@@ -2867,22 +2867,22 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
 
 
 
-  absolut_selector <<- r$abs_zahlen_verlauf_subject_bl
+  absolut_selector <- r$abs_zahlen_verlauf_subject_bl
 
   # load UI inputs from reactive value
-  timerange <<- r$date_verlauf_subject_bl
+  timerange <- r$date_verlauf_subject_bl
 
   # lehramt <- r$nurLehramt_studierende_verlauf_bl_subject
 
-  states <<- r$states_verlauf_subject_bl
+  states <- r$states_verlauf_subject_bl
 
   label_select <- r$verl_l
 
-  df1 <<- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+  df1 <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
-  df2<<- df1 %>% dplyr::filter(geschlecht=="Gesamt")
+  df2<- df1 %>% dplyr::filter(geschlecht=="Gesamt")
 
-  df4 <<- df2 %>% dplyr::filter(geschlecht == "Gesamt")%>%
+  df4 <- df2 %>% dplyr::filter(geschlecht == "Gesamt")%>%
     #dplyr::select(- quelle, -bereich)%>%
     tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
     #dplyr::rename("MINT (gesamt)" = MINT)%>%
@@ -3339,14 +3339,14 @@ studienzahl_waffle_choice_gender <- function(df,r) {
 
 
 
-  data_fr <<- df_both %>%
+  data_fr <- df_both %>%
     dplyr::filter(geschlecht=="Frauen")
 
   df_fr <- as.numeric(as.vector(data_fr[1,5:ncol(data_fr)]))
   names(df_fr) <- colnames(data_fr[5:ncol(data_fr)])
 
 
-  data_ma <<-df_both %>%
+  data_ma <-df_both %>%
     dplyr::filter(geschlecht=="Männer")
 
   df_ma<- as.numeric(as.vector(data_ma[1,5:ncol(data_ma)]))
@@ -3520,16 +3520,16 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
 
   # load UI inputs from reactive value
-  timerange <<- r$choice_V_y
+  timerange <- r$choice_V_y
 
 
-  v_lab <<- r$choice_l_v
+  v_lab <- r$choice_l_v
 
-  absolut_selector <<- r$abs_zahlen_l_v
+  absolut_selector <- r$abs_zahlen_l_v
 
   subjects_select <- r$choice_v_f
 
-  states <<- r$choice_states
+  states <- r$choice_states
 
 
   # df <- df %>% dplyr::filter(region != "Bayern")
@@ -3542,7 +3542,7 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
 
 
-  dfff <<- dfer %>%
+  dfff <- dfer %>%
     #dplyr::select(-quelle, -bereich)%>%
     tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
     #dplyr::rename("MINT (Gesamt)" = MINT)%>%
@@ -3559,7 +3559,7 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
 
 
 
-  dfgg <<- dfff %>%
+  dfgg <- dfff %>%
     dplyr::filter(region==states)%>%
     dplyr::filter(fach==subjects_select)
 
@@ -4336,14 +4336,14 @@ studierende_map <- function(df,r) {
 
 
   # load UI inputs from reactive value
-  timerange <<- r$map_y
+  timerange <- r$map_y
 
-  label_m <<- r$map_l
+  label_m <- r$map_l
 
 
   # Fach abhängig von Lehramt ja/nein zuweisen
-  if(label_m == "Studierende (Nur Lehramt)")  fach_m <<- r$map_f_lehr
-  if(label_m != "Studierende (Nur Lehramt)")  fach_m <<- r$map_f
+  if(label_m == "Studierende (Nur Lehramt)")  fach_m <- r$map_f_lehr
+  if(label_m != "Studierende (Nur Lehramt)")  fach_m <- r$map_f
 
 
 
@@ -4354,9 +4354,9 @@ studierende_map <- function(df,r) {
   # hochschulform_select_2 <- r$hochschulform_studium_studienzahl_bl_map2
 
   # filter dataset based on UI inputs
-  dfs <<- df %>% dplyr::filter(jahr == timerange)
+  dfs <- df %>% dplyr::filter(jahr == timerange)
 
-  dfss <<- dfs %>% dplyr::filter(region != "Deutschland")
+  dfss <- dfs %>% dplyr::filter(region != "Deutschland")
 
  # df <- df %>% dplyr::filter(region != "Bayern")
 
@@ -4364,9 +4364,9 @@ studierende_map <- function(df,r) {
 
 
 
-df_insp <<- dfss
+df_insp <- dfss
 
-  df_insp1 <<- df_insp %>%
+  df_insp1 <- df_insp %>%
     dplyr::select(-fachbereich,- mint_select, -typ )%>%
     tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
     dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
@@ -4378,7 +4378,7 @@ df_insp <<- dfss
   #Trennpunkte für lange Zahlen ergänzen
   #df_insp1$wert <- prettyNum(df_insp1$wert, big.mark = ".")
 
-  df7 <<- df_insp1 %>%
+  df7 <- df_insp1 %>%
     dplyr::select(indikator, region, jahr, fach, proportion, wert)%>%
     dplyr::filter(indikator== label_m)
 
@@ -4404,7 +4404,7 @@ if (length(fach_m)==1)
   help_l <- "Studierenden"
   help_l <- ifelse(grepl("anfänger", label_m), "Studienanfänger:innen", help_l)
 
-  data_map_1 <<- df7 %>% dplyr::filter(fach == fach_m)%>%
+  data_map_1 <- df7 %>% dplyr::filter(fach == fach_m)%>%
     dplyr::mutate(display = as.character(proportion))
   #title_map_1 <-
 
@@ -5095,20 +5095,20 @@ studierende_verlauf_multiple_bl <- function(df,r) {
 
 
   # load UI inputs from reactive value
-  timerange <<- r$date_studium_studienzahl_bl_verlauf
+  timerange <- r$date_studium_studienzahl_bl_verlauf
 
-  absolut_selector <<- r$abs_zahlen_studium_studienzahl_bl_verlauf
+  absolut_selector <- r$abs_zahlen_studium_studienzahl_bl_verlauf
 
-  subjects_select <<- r$subject_studium_studienzahl_bl_verlauf
+  subjects_select <- r$subject_studium_studienzahl_bl_verlauf
 
-  bl_label <<- r$verl_bl_l
+  bl_label <- r$verl_bl_l
 
 
 
-  states <<- r$states_studium_studienzahl_bl_verlauf
+  states <- r$states_studium_studienzahl_bl_verlauf
 
   # filter dataset based on UI inputs
-  df_new <<- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+  df_new <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
 
   #damit alle selbe Form haben:
@@ -5116,7 +5116,7 @@ studierende_verlauf_multiple_bl <- function(df,r) {
 
 
 
-   df12 <<- df_new1 %>%
+   df12 <- df_new1 %>%
      dplyr::select(-geschlecht)%>%
      dplyr::filter(!is.na(wert))%>%
 
@@ -5138,11 +5138,11 @@ studierende_verlauf_multiple_bl <- function(df,r) {
 
    df12$fach <- gsub("_p", "", df12$fach)
 
-   df13 <<- df12 %>% dplyr::filter(indikator==bl_label)
+   df13 <- df12 %>% dplyr::filter(indikator==bl_label)
 
 
 
-   df13 <<- df13 %>% dplyr::filter(fach %in% subjects_select)
+   df13 <- df13 %>% dplyr::filter(fach %in% subjects_select)
 
    df14 <- df13[with(df13, order(region, jahr, decreasing = FALSE)), ]
 
@@ -5524,13 +5524,13 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
   # load UI inputs from reactive value
 
-  timerange <<- r$bl_date
+  timerange <- r$bl_date
 
-  r_lab1 <<- r$rank_bl_l
+  r_lab1 <- r$rank_bl_l
 
  # Fach abhängig von Lehramt ja/nein zuweisen
-  if(r_lab1 == "Studierende (Lehramt)")  fach_bl <<- r$bl_f_lehr
-  if(r_lab1 != "Studierende (Lehramt)")  fach_bl <<- r$bl_f_alle
+  if(r_lab1 == "Studierende (Lehramt)")  fach_bl <- r$bl_f_lehr
+  if(r_lab1 != "Studierende (Lehramt)")  fach_bl <- r$bl_f_alle
 
   # Aggregate Natwi und Ingen ohne Info abspeichern vor Fitler
   #dfni <- df %>% dplyr::filter(fach %in% c("Naturwissenschaften", "Ingenieurwissenschaften ohne Informatik"))
@@ -5538,9 +5538,9 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
 
 
-  df_insp <<- df
+  df_insp <- df
 
-  df_insp1 <<- df_insp %>%
+  df_insp1 <- df_insp %>%
     dplyr::select(-fachbereich,- mint_select, -typ )%>%
     tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
     dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
@@ -5556,28 +5556,28 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
   #df_insp1$wert <- prettyNum(df_io$wert, big.mark = ".", decimal.mark = ",")
 
-  df7 <<- df_insp1 %>%
+  df7 <- df_insp1 %>%
     dplyr::select(indikator, region, jahr, fach, proportion, wert)
 
 
-  df77<<- df7 %>%dplyr::filter(indikator == r_lab1 )%>%
+  df77<- df7 %>%dplyr::filter(indikator == r_lab1 )%>%
     dplyr::filter(fach==fach_bl)
 
   # NA aus fach entfernen für BULAs mit weniger Studienfachgruppen
-  df77 <<- stats::na.omit(df77)
+  df77 <- stats::na.omit(df77)
 
   # Vorbereitung Überschrift
-  help_s <<- fach_bl
+  help_s <- fach_bl
   help_s <- ifelse(help_s == "Alle Nicht MINT-Fächer", "allen Fächern außer MINT", help_s)
 
 
-  r_lab <<- ifelse(r_lab == "Studierende", paste0(r_lab, "n"), r_lab)
-  r_lab <<- ifelse(r_lab == "Internationale Studierende", "internationalen Studierenden", r_lab)
-  r_lab <<- ifelse(grepl("Lehr", r_lab), "Studierenden (Lehramt)", r_lab)
-  r_lab <<- ifelse(r_lab == "Internationale Studienanfänger:innen (1. Hochschulsemester)",
-                  "internationalenen Studienanfänger:innen (1. Hochschulsemester)", r_lab)
-  help <<- "Studierenden"
-  help <- ifelse(grepl("Studienanfänger:innen",r_lab), "Studienanfänger:innen", help)
+  r_lab1 <- ifelse(r_lab1 == "Studierende", paste0(r_lab1, "n"), r_lab1)
+  r_lab1 <- ifelse(r_lab1 == "Internationale Studierende", "internationalen Studierenden", r_lab1)
+  r_lab1 <- ifelse(grepl("Lehr", r_lab1), "Studierenden (Lehramt)", r_lab1)
+  r_lab1 <- ifelse(r_lab1 == "Internationale Studienanfänger:innen (1. Hochschulsemester)",
+                  "internationalenen Studienanfänger:innen (1. Hochschulsemester)", r_lab1)
+  help <- "Studierenden"
+  help <- ifelse(grepl("Studienanfänger:innen",r_lab1), "Studienanfänger:innen", help)
 
 
   # Plot
@@ -5586,7 +5586,7 @@ studierende_mint_vergleich_bl <- function(df,r) {
     highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
     highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
     highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
-    highcharter::hc_title(text = paste0( "Anteil von ", r_lab ," in ", help_s," an allen ", help,  " (", timerange, ")",
+    highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")",
                                                                           "<br><br><br>"),
                           margin = 25,
                           align = "center",
@@ -5754,19 +5754,19 @@ plot_ranking_top_faecher <- function(df, r, type) {
 
 
   # load UI inputs from reactive value
-  timerange <<- r$date_top_faecher
+  timerange <- r$date_top_faecher
 
   states <- r$states_top_faecher
 
-  subject <<- r$subject_top_faecher
+  subject <- r$subject_top_faecher
 
-  abs_rel <<- r$subject_abs_rel
+  abs_rel <- r$subject_abs_rel
 
   # filter dataset based on UI inputs
-  df3 <<- df %>% dplyr::filter(jahr == timerange) %>%
+  df3 <- df %>% dplyr::filter(jahr == timerange) %>%
     dplyr::filter(indikator == "Studierende",
                   jahr == timerange)
-  df4 <<- df3 %>%
+  df4 <- df3 %>%
     dplyr::filter(!fach %in% c(
                                "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
                                "Weitere ingenieurwissenschaftliche Fächer",
@@ -5784,13 +5784,13 @@ plot_ranking_top_faecher <- function(df, r, type) {
 
 
 
-  df_props <<- df4 %>%
+  df_props <- df4 %>%
     tidyr::pivot_wider(values_from = wert, names_from=geschlecht)%>%
     dplyr::mutate(dplyr::across(c("Männer", "Frauen"), ~round(./Gesamt*100,1)))%>%
     dplyr::select(-Gesamt)%>%
     tidyr::pivot_longer(c("Männer", "Frauen"), names_to="geschlecht", values_to = "prop")
 
-  df5 <<- df4 %>%
+  df5 <- df4 %>%
     dplyr::filter(geschlecht!="Gesamt")%>%
     dplyr::left_join(df_props)
 
@@ -5985,38 +5985,38 @@ plot_auslaender_mint <- function(df,r){
 
 
 
-  bl_select <<- r$states_studium_studienzahl_ausl
+  bl_select <- r$states_studium_studienzahl_ausl
 
-  year_select <<- r$date_studium_studienzahl_ausl
+  year_select <- r$date_studium_studienzahl_ausl
 
-  absolut_selector <<- r$abs_zahlen_studium_studienzahl_ausl
+  absolut_selector <- r$abs_zahlen_studium_studienzahl_ausl
 
-  status_select <<- r$status_ausl
+  status_select <- r$status_ausl
 
-  betr_ebene <<- r$ebene_ausl
+  betr_ebene <- r$ebene_ausl
 
 
-  df_aus <<- df
+  df_aus <- df
 
-  df_aus_0 <<- df_aus
+  df_aus_0 <- df_aus
 
-  marker_mint <<- df_aus_0%>%
+  marker_mint <- df_aus_0%>%
     dplyr::filter(mint_select=="MINT")%>%
     dplyr::select(fach)%>%
     unique()
 
-  marker_mint1 <<- as.vector(unlist(marker_mint))
+  marker_mint1 <- as.vector(unlist(marker_mint))
 
 
-  marker_nicht_mint <<- df_aus_0%>%
+  marker_nicht_mint <- df_aus_0%>%
     dplyr::filter(mint_select=="Nicht MINT")%>%
 
     dplyr::select(fach)%>%
     unique()
 
-  marker_mint2 <<- as.vector(unlist(marker_nicht_mint))
+  marker_mint2 <- as.vector(unlist(marker_nicht_mint))
 
-  df_aus_1 <<- df_aus_0 %>%
+  df_aus_1 <- df_aus_0 %>%
     dplyr::filter(indikator %in% c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
                                "Internationale Studierende",
                                "Studienanfänger:innen (1. Hochschulsemester)",
@@ -6069,7 +6069,7 @@ plot_auslaender_mint <- function(df,r){
 
   df_aus_1$ausl_detect  <- factor(df_aus_1$ausl_detect, levels=c("Deutsch", "International"))
 
-  df_aus_2 <<- df_aus_1 %>%
+  df_aus_2 <- df_aus_1 %>%
     dplyr::filter(region==bl_select) %>%
     dplyr::filter(jahr ==year_select )%>%
     dplyr::filter(indikator==status_select)
@@ -6101,13 +6101,13 @@ plot_auslaender_mint <- function(df,r){
                                "MINT"))
 
   #Faktor für Höhe des Grafens berechnen
-  ebene <<- c("Fachbereiche", "MINT-Fächer")
-  höhe <<- c(8, 11)
-  plt.add <<- data.frame(ebene, höhe)
+  ebene <- c("Fachbereiche", "MINT-Fächer")
+  höhe <- c(8, 11)
+  plt.add <- data.frame(ebene, höhe)
 
   # NA aus fach entfernen für BULAs mit weniger Studienfachgruppen
-  df_aus_3 <<- stats::na.omit(df_aus_3)
-  df_aus_4 <<- stats::na.omit(df_aus_4)
+  df_aus_3 <- stats::na.omit(df_aus_3)
+  df_aus_4 <- stats::na.omit(df_aus_4)
 
 
   # Vorbereitung Überschrift
@@ -6123,7 +6123,7 @@ if(betr_ebene=="Fachbereiche"){
 
     if(absolut_selector=="In Prozent"){
 
-      dfhh1 <<- df_aus_3 %>%
+      dfhh1 <- df_aus_3 %>%
         dplyr::filter(selector == "In Prozent")%>%
         dplyr::mutate(wert = round(wert*100, 1))
 
@@ -6164,7 +6164,7 @@ if(betr_ebene=="Fachbereiche"){
       hcoptslang$thousandsSep <- "."
       options(highcharter.lang = hcoptslang)
 
-      dfh <<- df_aus_3 %>%
+      dfh <- df_aus_3 %>%
         dplyr::filter(selector == "Anzahl")
 
 
@@ -6197,7 +6197,7 @@ if(betr_ebene=="Fachbereiche"){
       if(absolut_selector=="In Prozent"){
 
 
-        dfhh <<- df_aus_4 %>%
+        dfhh <- df_aus_4 %>%
           dplyr::filter(selector == "In Prozent")%>%
           dplyr::mutate(wert = round(wert*100, 1))
 
@@ -6290,11 +6290,11 @@ plot_auslaender_mint_zeit <- function(df, r){
 browser()
 
 
-  bl_select <<- r$states_studium_studienzahl_ausl_zeit
+  bl_select <- r$states_studium_studienzahl_ausl_zeit
 
-  absolut_selector <<- r$abs_zahlen_studium_studienzahl_ausl_zeit
+  absolut_selector <- r$abs_zahlen_studium_studienzahl_ausl_zeit
 
-  status_select <<- r$status_ausl_zeit
+  status_select <- r$status_ausl_zeit
 
   if(bl_select %in% c("Deutschland",
                       "Baden-Württemberg",
@@ -6307,7 +6307,7 @@ browser()
                       "Sachsen",
                       "Westdeutschland (o. Berlin)",
                       "Ostdeutschland (inkl. Berlin)")) {
-    fach_select <<- r$fach1_studium_studienzahl_ausl_zeit
+    fach_select <- r$fach1_studium_studienzahl_ausl_zeit
   }
   else {
     if(bl_select == "Brandenburg")fach_select <- r$fach2_studium_studienzahl_ausl_zeit
@@ -6320,27 +6320,27 @@ browser()
     if(bl_select == "Thüringen")fach_select <- r$fach9_studium_studienzahl_ausl_zeit
   }
 
-  df_aus <<- df
+  df_aus <- df
 
-  df_aus_0 <<- df_aus
+  df_aus_0 <- df_aus
 
-  marker_mint <<- df_aus_0%>%
+  marker_mint <- df_aus_0%>%
     dplyr::filter(mint_select=="MINT")%>%
     dplyr::select(fach)%>%
     unique()
 
-  marker_mint1 <<- as.vector(unlist(marker_mint))
+  marker_mint1 <- as.vector(unlist(marker_mint))
 
 
-  marker_nicht_mint <<- df_aus_0%>%
+  marker_nicht_mint <- df_aus_0%>%
     dplyr::filter(mint_select=="Nicht MINT")%>%
 
     dplyr::select(fach)%>%
     unique()
 
-  marker_mint2 <<- as.vector(unlist(marker_nicht_mint))
+  marker_mint2 <- as.vector(unlist(marker_nicht_mint))
 
-  df_aus_1 <<- df_aus_0 %>%
+  df_aus_1 <- df_aus_0 %>%
     dplyr::filter(indikator %in% c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
                                "Internationale Studierende",
                                "Studienanfänger:innen (1. Hochschulsemester)",
@@ -6389,7 +6389,7 @@ browser()
 
   df_aus_1$ausl_detect  <- factor(df_aus_1$ausl_detect, levels=c("Deutsch", "International"))
 
-  df_aus_2 <<- df_aus_1 %>%
+  df_aus_2 <- df_aus_1 %>%
     dplyr::filter(region==bl_select) %>%
     dplyr::filter(fach ==fach_select )%>%
     dplyr::filter(indikator==status_select)

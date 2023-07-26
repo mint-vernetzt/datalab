@@ -1692,33 +1692,33 @@ kurse_map <- function(df,r) {
 kurse_map_gender <- function(df,r) {
 
   # load UI inputs from reactive value
-  timerange <<- r$date_map_gender
+  timerange <- r$date_map_gender
 
-  subjects <<- r$subject_map_gender
+  subjects <- r$subject_map_gender
 
   kurs_select <- r$kurs_map_gender
 
   # filter dataset based on UI inputs
-  df <<- df %>% dplyr::filter(jahr == timerange)
+  df <- df %>% dplyr::filter(jahr == timerange)
 
   # remove
-  df <<- df %>% dplyr::filter(region != "Deutschland")
+  df <- df %>% dplyr::filter(region != "Deutschland")
 
   df_gesamt <- df %>% dplyr::filter(fachbereich == "Alle Fächer") %>%
     dplyr::rename(wert_sum = "wert")
 
   # aggregate to MINT
-  df_sub <<- share_mint_kurse(df)
+  df_sub <- share_mint_kurse(df)
 
-  df_sub <<- df_sub[,colnames(df)]
+  df_sub <- df_sub[,colnames(df)]
 
   df_sub[df_sub$fachbereich == "MINT", "fachbereich"] <- "MINT-Fächer (gesamt)"
 
   df_sub[df_sub$fachbereich == "andere Fächer", "fachbereich"] <- "andere Fächer (gesamt)"
 
-  df <<- rbind(df, df_sub)
+  df <- rbind(df, df_sub)
 
-  df <<- df %>% dplyr::filter(fachbereich == subjects)
+  df <- df %>% dplyr::filter(fachbereich == subjects)
 
 
   df_f <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
@@ -1762,7 +1762,6 @@ kurse_map_gender <- function(df,r) {
 
       data = df_f[df_f$indikator == kurs_select,],
       value = "proportion",
-      download_map_data = FALSE,
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
       name = paste0(subjects),
