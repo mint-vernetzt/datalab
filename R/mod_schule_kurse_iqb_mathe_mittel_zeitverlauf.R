@@ -69,7 +69,7 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
                                  "Schleswig-Holstein",
                                  "Thüringen"),
                      multiple = FALSE,
-                     selected = c("Brandenburg")
+                     selected = c("Deutschland")
                    )
   ),
   conditionalPanel(condition = "input.klasse_iqb_mathe_mittel_zeitverlauf == '9. Klasse' &
@@ -160,9 +160,25 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
                      multiple = FALSE,
                      selected = "Mathematik"
                    )),
+
+  conditionalPanel(condition = "input.klasse_iqb_mathe_mittel_zeitverlauf == '4. Klasse' &
+                   input.land_iqb_mathe_mittel_zeitverlauf_4 == 'Deutschland' &
+                   input.indi_iqb_mathe_mittel_zeitverlauf_4 == 'nach Geschlecht'",
+                   ns = ns,
+                   p("Leistungsindikator:"),
+                   shinyWidgets::radioGroupButtons(
+                     inputId =  ns("score_iqb_mathe_mittel_zeitverlauf"),
+                     choices = c("Test-Punktzahl", "Mindeststandard"),
+                     justified = TRUE,
+                     checkIcon = list(yes = icon("ok",
+                                                 lib = "glyphicon")
+                   ))
+                   ),
+
     br(),
   shinyBS::bsPopover(id="ih_schule_kompetenz_2", title="",
-                     content = paste0("In der ersten Einstellung ist zu sehen, dass in Brandenburg 2021 die Mathekompetenzen von Jungen im Mittel höher als die von Mädchen sind. Ein möglicher Grund hierfür könnten Genderstereotype sein (weiteres dazu kann auf der MINTverntzt Website gefunden werden)."),
+                     content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland 2011 bis 2021 die Mathekompetenzen von Jungen im Mittel höher als die von Mädchen sind. Ein möglicher Grund hierfür könnten Genderstereotype sein (weiteres dazu ist in der Darstellung im nächsten Tab und in der Info-Box über den Grafiken zu finden.)."),
+                     placement = "top",
                      trigger = "hover"),
   tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_kompetenz_2")
 
@@ -206,6 +222,10 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_server <- function(id, r){
 
     observeEvent(input$fach_iqb_mathe_mittel_zeitverlauf, {
       r$fach_iqb_mathe_mittel_zeitverlauf <- input$fach_iqb_mathe_mittel_zeitverlauf
+    })
+
+    observeEvent(input$score_iqb_mathe_mittel_zeitverlauf, {
+      r$score_iqb_mathe_mittel_zeitverlauf <- input$score_iqb_mathe_mittel_zeitverlauf
     })
 
   })

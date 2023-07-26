@@ -3030,9 +3030,10 @@ iqb_standard_zeitverlauf <- function(df, r){
     bl_select <- r$land_iqb_standard_zeitverlauf_9
   }
 
-  # Region und Klasse filtern
+  # Region, Geschlecht und Klasse filtern
   df <- df %>% dplyr::filter(region %in% bl_select)
   df <- df %>% dplyr::filter(klasse == kl_select)
+  df <- df %>% dplyr::filter(geschlecht == "gesamt")
 
   # Anforderungen, die wir nicht betrachten, ausfiltern
   df <- df %>% dplyr::filter(indikator == "Mindeststandard nicht erreicht")
@@ -3087,6 +3088,7 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
   # reactive values übergeben
   klasse_select <- r$klasse_iqb_mathe_mittel_zeitverlauf
   fach_select <- r$fach_iqb_mathe_mittel_zeitverlauf
+  score_select <- r$score_iqb_mathe_mittel_zeitverlauf
 
   if(klasse_select == "4. Klasse"){
     indikator_select <- r$indi_iqb_mathe_mittel_zeitverlauf_4
@@ -3121,16 +3123,25 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
 
   # Datensatzaufbereitung bei Auswahl Geschlecht
   if (indikator_select == "nach Geschlecht") {
-    df <- df %>% dplyr::filter(indikator == "Alle")
-
-    df$geschlecht <- as.factor(df$geschlecht)
-    df$geschlecht <- factor(df$geschlecht, levels = c("gesamt", "Frauen", "Männer"))
+    if(score_select == "Mindeststandard") {
+      df <- df %>% dplyr::filter(indikator == "Mindeststandard nicht erreicht")
+    }else{
+      df <- df %>% dplyr::filter(indikator == "Alle")
+    }
 
     df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
       geschlecht=="gesamt" ~ "Gesamt",
       T~df$geschlecht
     ))%>%
       dplyr::filter(geschlecht != "Gesamt")
+
+    df$geschlecht[df$geschlecht == "Frauen"] <- "Mädchen"
+    df$geschlecht[df$geschlecht == "Männer"] <- "Jungen"
+    df$geschlecht <- as.factor(df$geschlecht)
+    df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
+
+
+
   }
 
   # Datensatzaufbereitung bei Auswahl Zuwanderungsgeschichte
@@ -3204,44 +3215,79 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
     color <- c("#efe8e6", "#66cbaf")
   }
 
+
   # Plot
 
   if(indikator_select == "nach Geschlecht" & klasse_select == "4. Klasse"){
+    if(score_select == "Mindeststandard"){
 
-    df$wert <- round(df$wert,0)
+      highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
+        highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
+        highcharter::hc_tooltip(pointFormat = "{point.geschlecht} <br> Anteil Mindeststandard nicht erreicht: {point.y} %")%>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %")) %>%
+        highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
+                                                                      "2016",
+                                                                      "2021")
+        ) %>%
+        #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
+        highcharter::hc_colors(c("#154194",
+                                 "#efe8e6"
 
-    highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
-      highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.group} Durchschnittliche Punktzahl: {point.y}")%>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),
-                            min=300) %>%
-      highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
-                                                                    "2016",
-                                                                    "2021")
-      ) %>%
-      #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#154194",
-                               "#efe8e6"
-
-                               #"#154194",
-      )) %>%
-      highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht in " , bl_select),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
+                                 #"#154194",
+        )) %>%
+        highcharter::hc_title(text = paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen, nach Geschlecht in " , bl_select),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_exporting(enabled = FALSE,
+                                  buttons = list(contextButton = list(
+                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                    onclick = highcharter::JS("function () {
                                                             this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+                                    align = 'right',
+                                    verticalAlign = 'bottom',
+                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    } else{
+      df$wert <- round(df$wert,0)
+
+      highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
+        highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
+        highcharter::hc_tooltip(pointFormat = "{point.geschlecht} <br> Durchschnittliche Punktzahl: {point.y}")%>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),
+                              min=300) %>%
+        highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
+                                                                      "2016",
+                                                                      "2021")
+        ) %>%
+        #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
+        highcharter::hc_colors(c("#154194",
+                                 "#efe8e6"
+
+                                 #"#154194",
+        )) %>%
+        highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht in " , bl_select),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_exporting(enabled = FALSE,
+                                  buttons = list(contextButton = list(
+                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                    onclick = highcharter::JS("function () {
+                                                            this.exportChart({ type: 'image/png' }); }"),
+                                    align = 'right',
+                                    verticalAlign = 'bottom',
+                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    }
   }
+
   else{
     if(indikator_select == "nach Geschlecht" & klasse_select == "9. Klasse") {
       df$wert <- round(df$wert,0)
@@ -3316,8 +3362,8 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
           highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
           highcharter::hc_tooltip(pointFormat = "{point.group} Durchschnittliche Punktzahl: {point.y}")%>%
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"),min=300) %>%
-          highcharter::hc_xAxis(title = list(text = ""), categories = c("2012",
-                                                                        "2018")) %>%
+          # highcharter::hc_xAxis(title = list(text = ""), categories = c("2012",
+          #                                                               "2018")) %>%
           #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
           #highcharter::hc_colors(c("#efe8e6", "#AFF3E0", "#66cbaf")
 
