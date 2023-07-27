@@ -2284,12 +2284,16 @@ kurse_einstieg_comparison <- function(df,r) {
   #Trennpunkte für lange Zahlen ergänzen
   df$wert_new <- prettyNum(df$wert_new, big.mark = ".", decimal.mark = ",")
 
+  #als Faktor für Darstellung
+  df$fachbereich <- as.factor(df$fachbereich)
+  df$fachbereich <- factor(df$fachbereich, levels = c("MINT", "andere Fächer"))
+
   # order years for plot
   dfü <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
   # plot
 
-  highcharter::hchart(dfü, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = "fachbereich")) %>%
+  highcharter::hchart(dfü, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = forcats::fct_rev(fachbereich))) %>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert_new}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
