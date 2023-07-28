@@ -3563,6 +3563,9 @@ studierende_verlauf_single_bl_gender <- function(df,r) {
     dplyr::filter(region==states)%>%
     dplyr::filter(fach==subjects_select)
 
+  fach_label <- subjects_select
+  fach_label <- ifelse(fach_label == "MINT (Gesamt)", "MINT", fach_label)
+
 if (absolut_selector=="In Prozent"){
 
   dfgg <- dfgg %>%
@@ -3596,7 +3599,7 @@ if (absolut_selector=="In Prozent"){
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-    highcharter::hc_title(text = paste0("Anteil von weiblichen Studierenden, die ein Studium in ", subjects_select, " gewählt haben, an allen weiblichen Studierenden in ", states),
+    highcharter::hc_title(text = paste0("Anteil von weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, an allen weiblichen Studierenden in ", states),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3634,7 +3637,7 @@ if (absolut_selector=="In Prozent"){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Anteil von weiblichen Studierenden, die ein Studium in ", subjects_select, " gewählt haben, an allen weiblichen Studierenden in ", states),
+      highcharter::hc_title(text = paste0("Anteil von weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, an allen weiblichen Studierenden in ", states),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3682,7 +3685,7 @@ if (absolut_selector=="In Prozent"){
       highcharter::hc_yAxis(title = list(text = ""),  labels = list(format = "{value}%")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Anteil von weiblichen Studierenden, die ein Studium in ", subjects_select, " gewählt haben, an allen weiblichen Studierenden in ", states),
+      highcharter::hc_title(text = paste0("Anteil von weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, an allen weiblichen Studierenden in ", states),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3739,7 +3742,7 @@ if (absolut_selector=="In Prozent"){
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-        highcharter::hc_title(text = paste0("Anzahl an weiblichen Studierenden, die ein Studium in ", subjects_select, " gewählt haben, in ", states),
+        highcharter::hc_title(text = paste0("Anzahl an weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, in ", states),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3777,7 +3780,7 @@ if (absolut_selector=="In Prozent"){
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-        highcharter::hc_title(text = paste0("Anzahl an weiblichen Studierenden, die ein Studium in ", subjects_select, " gewählt haben, in ", states),
+        highcharter::hc_title(text = paste0("Anzahl an weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, in ", states),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3825,7 +3828,7 @@ if (absolut_selector=="In Prozent"){
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-        highcharter::hc_title(text = paste0("Anzahl an weiblichen Studierenden, die ein Studium in ", subjects_select, " gewählt haben, in ", states),
+        highcharter::hc_title(text = paste0("Anzahl an weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, in ", states),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -4387,19 +4390,19 @@ df_insp <- dfss
   # df7$prop <- df7$proportion
   # df7$prop <- round(df7$prop, 0)
 
-
   # Plot
 
 if (length(fach_m)==1)
 {
   # Vorbereitung Überschrift
   help_fach <- fach_m
-  help_fach <- ifelse(help_fach == "Nicht-MINT", "allen Fächern außer MINT", help_fach)
+  help_fach <- ifelse(help_fach == "Alle Nicht MINT-Fächer", "allen Fächern außer MINT", help_fach)
+  help_fach <- ifelse(help_fach == "Alle MINT-Fächer", "MINT", help_fach)
 
   label_m <- ifelse(label_m == "Studierende", paste0(label_m, "n"), label_m)
-  label_m <- ifelse(label_m == "Ausländische Studierende", "ausländischen Studierenden", label_m)
+  label_m <- ifelse(label_m == "Internationale Studierende", "internationalen Studierenden", label_m)
   label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
-  label_m <- ifelse(grepl("dische Stud", label_m), "ausländischen Studierenden", label_m)
+  label_m <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
 
   help_l <- "Studierenden"
   help_l <- ifelse(grepl("anfänger", label_m), "Studienanfänger:innen", help_l)
@@ -4456,14 +4459,16 @@ highcharter::hw_grid(
 
   # Vorbereitung Überschrift
   help_fach <- fach_m[1]
-  help_fach <- ifelse(help_fach == "Nicht MINT", "allen Fächern außer MINT", help_fach)
+  help_fach <- ifelse(help_fach == "Alle Nicht MINT-Fächer", "allen Fächern außer MINT", help_fach)
+  help_fach <- ifelse(help_fach == "Alle MINT-Fächer", "MINT", help_fach)
   help_fach2 <- fach_m[2]
-  help_fach2 <- ifelse(help_fach2 == "Nicht MINT", "allen Fächern außer MINT", help_fach2)
+  help_fach2 <- ifelse(help_fach2 == "Alle Nicht MINT-Fächer", "allen Fächern außer MINT", help_fach2)
+  help_fach2 <- ifelse(help_fach2 == "Alle MINT-Fächer", "MINT", help_fach2)
 
   label_m <- ifelse(label_m == "Studierende", paste0(label_m, "n"), label_m)
-  label_m <- ifelse(label_m == "Ausländische Studierende", "ausländischen Studierenden", label_m)
+  label_m <- ifelse(label_m == "Internationale Studierende", "internationalen Studierenden", label_m)
   label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
-  label_m <- ifelse(grepl("1. Hoch", label_m), "ausländischen Studienanfänger:innen (1. Hochschulsemester)", label_m)
+  label_m <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
 
 
   help_l <- "Studierenden"
@@ -5158,6 +5163,9 @@ studierende_verlauf_multiple_bl <- function(df,r) {
    help <- "Studierenden"
    help <- ifelse(grepl("Studienanfänger:innen",bl_label), "Studienanfänger:innen", help)
 
+   fach_label <- subjects_select
+   fach_label<- ifelse(fach_label == "MINT (Gesamt)", "MINT", fach_label)
+
    # Plot
 
    if (absolut_selector=="In Prozent"){
@@ -5170,7 +5178,7 @@ studierende_verlauf_multiple_bl <- function(df,r) {
      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
      #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-     highcharter::hc_title(text = paste0("Anteil von ", bl_label, " in ", subjects_select, " an allen ", help),
+     highcharter::hc_title(text = paste0("Anteil von ", bl_label, " in ", fach_label, " an allen ", help),
                            margin = 45,
                            align = "center",
                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
