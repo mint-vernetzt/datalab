@@ -6287,7 +6287,6 @@ if(betr_ebene=="Fachbereiche"){
 
 plot_auslaender_mint_zeit <- function(df, r){
 
-
   bl_select <- r$states_studium_studienzahl_ausl_zeit
 
   absolut_selector <- r$abs_zahlen_studium_studienzahl_ausl_zeit
