@@ -4334,16 +4334,16 @@ studienfaecher_ranking <- function(df,r, type) {
 
 studierende_map <- function(df,r) {
 
-
+browser()
   # load UI inputs from reactive value
-  timerange <- r$map_y
+  timerange <<- r$map_y
 
-  label_m <- r$map_l
+  label_m <<- r$map_l
 
 
   # Fach abhängig von Lehramt ja/nein zuweisen
-  if(label_m == "Studierende (Nur Lehramt)")  fach_m <- r$map_f_lehr
-  if(label_m != "Studierende (Nur Lehramt)")  fach_m <- r$map_f
+  if(label_m == "Studierende (Nur Lehramt)")  fach_m <<- r$map_f_lehr
+  if(label_m != "Studierende (Nur Lehramt)")  fach_m <<- r$map_f
 
 
 
@@ -4354,9 +4354,9 @@ studierende_map <- function(df,r) {
   # hochschulform_select_2 <- r$hochschulform_studium_studienzahl_bl_map2
 
   # filter dataset based on UI inputs
-  dfs <- df %>% dplyr::filter(jahr == timerange)
+  dfs <<- df %>% dplyr::filter(jahr == timerange)
 
-  dfss <- dfs %>% dplyr::filter(region != "Deutschland")
+  dfss <<- dfs %>% dplyr::filter(region != "Deutschland")
 
  # df <- df %>% dplyr::filter(region != "Bayern")
 
@@ -4364,9 +4364,9 @@ studierende_map <- function(df,r) {
 
 
 
-df_insp <- dfss
+df_insp <<- dfss
 
-  df_insp1 <- df_insp %>%
+  df_insp1 <<- df_insp %>%
     dplyr::select(-fachbereich,- mint_select, -typ )%>%
     tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
     dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
@@ -4378,7 +4378,7 @@ df_insp <- dfss
   #Trennpunkte für lange Zahlen ergänzen
   #df_insp1$wert <- prettyNum(df_insp1$wert, big.mark = ".")
 
-  df7 <- df_insp1 %>%
+  df7 <<- df_insp1 %>%
     dplyr::select(indikator, region, jahr, fach, proportion, wert)%>%
     dplyr::filter(indikator== label_m)
 
