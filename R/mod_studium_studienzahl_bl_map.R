@@ -71,10 +71,10 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                          "max-options-text" = "Maximal 2 Indikatoren auswählen")
                      )),
 
-    conditionalPanel(condition = "input.map_l == 'Auländische Studienanfänger:innen (1. Hochschulsemester)' |
+    conditionalPanel(condition = "input.map_l == 'Internationale Studienanfänger:innen (1. Hochschulsemester)' |
                      input.map_l == 'Studienanfänger:innen (1. Fachsemester)' |
                      input.map_l == 'Studierende' |
-                     input.map_l == 'Ausländische Studierende' |
+                     input.map_l == 'Internationale Studierende' |
                      input.map_l == 'Studienanfänger:innen (1. Hochschulsemester)'",
                      ns = ns,
                      shinyWidgets::pickerInput(
