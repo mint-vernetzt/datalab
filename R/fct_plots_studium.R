@@ -1484,13 +1484,12 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
     dplyr::filter(!is.nan(proportion))
 
 
-
-
-
     #Trennpunkte für lange Zahlen ergänzen
-    df_io$wert <- prettyNum(df_io$wert, big.mark = ".")
+    df_io$wert <- prettyNum(df_io$wert, big.mark = ".", decimal.mark = ",")
 
-
+    #überschrift vorbereiten
+    fach_label <- sel_f1
+    fach_label <- ifelse(fach_label == "Alle MINT-Fächer", "MINT", fach_label)
 
     df_io1 <- df_io %>%
       dplyr::filter(region==sel_bl1)%>%
@@ -1517,8 +1516,8 @@ studienzahl_einstieg_comparison_gender <- function(df,r) {
     ) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-    highcharter::hc_title(text = ifelse(sel_f1 == "Nicht MINT", paste0("Frauenanteil in allen Studienfachgruppen außer MINT in ", sel_bl1, " (", timerange, ")",
-                                        "<br><br><br>"), paste0("Frauenanteil in der Studienfachgruppe ", sel_f1, " in ", sel_bl1, " (", timerange, ")",
+    highcharter::hc_title(text = ifelse(sel_f1 == "Alle Nicht MINT-Fächer", paste0("Frauenanteil in allen Studienfachgruppen außer MINT in ", sel_bl1, " (", timerange, ")",
+                                        "<br><br><br>"), paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " in ", sel_bl1, " (", timerange, ")",
                                                                 "<br><br><br>")),
                           margin = 25,
                           align = "center",
@@ -4379,7 +4378,7 @@ df_insp <<- dfss
 
 
   #Trennpunkte für lange Zahlen ergänzen
-  #df_insp1$wert <- prettyNum(df_insp1$wert, big.mark = ".")
+  df_insp1$wert <- prettyNum(df_insp1$wert, big.mark = ".", decimal.mark = ",")
 
   df7 <<- df_insp1 %>%
     dplyr::select(indikator, region, jahr, fach, proportion, wert)%>%
@@ -4435,7 +4434,7 @@ highcharter::hw_grid(
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display} % <br> Anzahl: {point.wert}") %>%
             highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
+        text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", label_m, " (", timerange, ")"),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -4471,8 +4470,9 @@ highcharter::hw_grid(
   label_m <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
 
 
-  help_l <- "Studierenden"
-  help_l <- ifelse(grepl("anfänger", label_m), "Studienanfänger:innen", help_l)
+  help_l <- label_m
+  help_l <- ifelse(grepl("anfänger", label_m), "internationalen Studienanfänger:innen", help_l)
+
 
  data_map_1 <- df7 %>% dplyr::filter(fach == fach_m[1])%>%
     dplyr::mutate(display = as.character(proportion))
@@ -5561,8 +5561,7 @@ studierende_mint_vergleich_bl <- function(df,r) {
 
 
   #Trennpunkte für lange Zahlen ergänzen
-
-  #df_insp1$wert <- prettyNum(df_io$wert, big.mark = ".", decimal.mark = ",")
+  df_insp1$wert <- prettyNum(df_insp1$wert, big.mark = ".", decimal.mark = ",")
 
   df7 <- df_insp1 %>%
     dplyr::select(indikator, region, jahr, fach, proportion, wert)
@@ -5577,6 +5576,7 @@ studierende_mint_vergleich_bl <- function(df,r) {
   # Vorbereitung Überschrift
   help_s <- fach_bl
   help_s <- ifelse(help_s == "Alle Nicht MINT-Fächer", "allen Fächern außer MINT", help_s)
+  help_s <- ifelse(help_s == "Alle MINT-Fächer", "MINT", help_s)
 
 
   r_lab1 <- ifelse(r_lab1 == "Studierende", paste0(r_lab1, "n"), r_lab1)
@@ -5584,8 +5584,8 @@ studierende_mint_vergleich_bl <- function(df,r) {
   r_lab1 <- ifelse(grepl("Lehr", r_lab1), "Studierenden (Lehramt)", r_lab1)
   r_lab1 <- ifelse(r_lab1 == "Internationale Studienanfänger:innen (1. Hochschulsemester)",
                   "internationalenen Studienanfänger:innen (1. Hochschulsemester)", r_lab1)
-  help <- "Studierenden"
-  help <- ifelse(grepl("Studienanfänger:innen",r_lab1), "Studienanfänger:innen", help)
+  help <- r_lab1
+  help <- ifelse(grepl("Studienanfänger:innen",help), "internationale Studienanfänger:innen", help)
 
 
   # Plot
@@ -5805,11 +5805,7 @@ plot_ranking_top_faecher <- function(df, r, type) {
 
 
   #Trennpunkte für lange Zahlen ergänzen
-  #dfk$wert <- prettyNum(dfk$wert, big.mark = ".", decimal.mark = ",")
-  #dfk$wert <- as.numeric(dfk$wert)
-
-
-
+  df5$wert <- prettyNum(df5$wert, big.mark = ".", decimal.mark = ",")
 
   if(subject == "MINT-Fächer"){
 
@@ -6411,6 +6407,9 @@ plot_auslaender_mint_zeit <- function(df, r){
   help2 <- "Studierenden"
   help2 <- ifelse(grepl("anfänger", status_select), "Studienanfänger:innen", help2)
 
+  fach_help <- fach_select
+  fach_help <- ifelse(fach_help == "Alle MINT-Fächer", "MINT", fach_help)
+
   # Plot
 
   if(absolut_selector=="In Prozent"){
@@ -6431,7 +6430,7 @@ plot_auslaender_mint_zeit <- function(df, r){
   highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
   highcharter::hc_plotOptions(column = list(pointWidth = 70))%>%
   highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-  highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_select , " in ", bl_select ),
+  highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select ),
                         align = "center",
                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
   highcharter::hc_chart(
@@ -6468,7 +6467,7 @@ plot_auslaender_mint_zeit <- function(df, r){
     highcharter::hc_xAxis(title = list(text = "")) %>%
     #highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-    highcharter::hc_title(text =  paste0("Anzahl internationaler ", help, " in ", fach_select, " in ", bl_select),
+    highcharter::hc_title(text =  paste0("Anzahl internationaler ", help, " in ", fach_help, " in ", bl_select),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
