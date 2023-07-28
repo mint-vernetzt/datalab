@@ -18,42 +18,42 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
       choices = c("2018", "2019", "2020", "2021"),
       selected = "2021"
     ),
-
-    p("Fach/Fächergruppe:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("gen_f"),
-
-      choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
-                  "Biologie",
-                  "Geowissenschaften und Geographie",
-                  "Informatik",
-                  "Maschinenbau/Verfahrenstechnik",
-                  "Alle Nicht MINT-Fächer",
-                  "Alle MINT-Fächer",
-                  "Vermessungswesen",
-                  "Architektur, Innenarchitektur",
-                  "Bauingenieurwesen",
-                  "Chemie",
-                  "Mathematik",
-                  "Materialwissenschaft und Werkstofftechnik",
-                  "Humanmedizin/Gesundheitswissenschaften",
-                  "Geisteswissenschaften",
-                  "Ingenieurwissenschaften (inkl. Informatik)",
-                  "Ingenieurwissenschaften ohne Informatik",
-                  "Physik, Astronomie",
-                  "Rechts-, Wirtschafts- und Sozialwissenschaften",
-                  "Mathematik, Naturwissenschaften",
-                  "Naturwissenschaften",
-                  "Pharmazie",
-                  "Raumplanung",
-                  "Sport",
-                  "Verkehrstechnik, Nautik",
-                  "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
-                  "Kunst, Kunstwissenschaft",
-                  "Elektrotechnik und Informationstechnik"),
-
-      selected = "Alle MINT-Fächer"
-    ),
+#
+#     p("Fach/Fächergruppe:"),
+#     shinyWidgets::pickerInput(
+#       inputId = ns("gen_f"),
+#
+#       choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+#                   "Biologie",
+#                   "Geowissenschaften und Geographie",
+#                   "Informatik",
+#                   "Maschinenbau/Verfahrenstechnik",
+#                   "Alle Nicht MINT-Fächer",
+#                   "Alle MINT-Fächer",
+#                   "Vermessungswesen",
+#                   "Architektur, Innenarchitektur",
+#                   "Bauingenieurwesen",
+#                   "Chemie",
+#                   "Mathematik",
+#                   "Materialwissenschaft und Werkstofftechnik",
+#                   "Humanmedizin/Gesundheitswissenschaften",
+#                   "Geisteswissenschaften",
+#                   "Ingenieurwissenschaften (inkl. Informatik)",
+#                   "Ingenieurwissenschaften ohne Informatik",
+#                   "Physik, Astronomie",
+#                   "Rechts-, Wirtschafts- und Sozialwissenschaften",
+#                   "Mathematik, Naturwissenschaften",
+#                   "Naturwissenschaften",
+#                   "Pharmazie",
+#                   "Raumplanung",
+#                   "Sport",
+#                   "Verkehrstechnik, Nautik",
+#                   "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
+#                   "Kunst, Kunstwissenschaft",
+#                   "Elektrotechnik und Informationstechnik"),
+#
+#       selected = "Alle MINT-Fächer"
+#     ),
     p("Region:"),
 
     shinyWidgets::pickerInput(
@@ -98,7 +98,9 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("gen1_f"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
+
+                       choices = c("Alle MINT-Fächer",
+                                   "Alle Nicht MINT-Fächer","Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
                                    "Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie",
                                    "Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften",
                                    "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
@@ -108,8 +110,9 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                                    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik",
                                    "Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft",
                                    "Geowissenschaften und Geographie",
-                                   "Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","Alle Nicht MINT-Fächer",
-                                   "Alle MINT-Fächer"
+                                   "Naturwissenschaften",  "Ingenieurwissenschaften (inkl. Informatik)", "Ingenieurwissenschaften ohne Informatik"
+
+
                        ),
                        selected = "Alle MINT-Fächer",
                        multiple = FALSE
@@ -118,7 +121,8 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("gen2_f"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","
+                       choices = c("Alle MINT-Fächer",
+                                   "Alle Nicht MINT-Fächer","Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften","
                                    Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie",
                                    "Chemie","Biologie","Humanmedizin/Gesundheitswissenschaften",
                                    "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
@@ -127,16 +131,17 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                                    "Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen",
                                    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
                                    "Informatik","Kunst, Kunstwissenschaft","Geowissenschaften und Geographie",
-                                   "Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+                                   "Naturwissenschaften", "Ingenieurwissenschaften (inkl. Informatik)", "Ingenieurwissenschaften ohne Informatik"
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.gen_states == 'Bremen'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("gen3_f"),
-                       choices = c("Geisteswissenschaften","Rechts-, Wirtschafts- und Sozialwissenschaften",
+                       choices = c("Alle MINT-Fächer",
+                                   "Alle Nicht MINT-Fächer","Geisteswissenschaften","Rechts-, Wirtschafts- und Sozialwissenschaften",
                                    "Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie",
                                    "Chemie","Biologie","Humanmedizin/Gesundheitswissenschaften",
                                    "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
@@ -145,17 +150,18 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                                    "Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen",
                                    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik",
                                    "Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft",
-                                   "Geowissenschaften und Geographie","Naturwissenschaften",
-                                   "Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+                                   "Geowissenschaften und Geographie","Naturwissenschaften",  "Ingenieurwissenschaften (inkl. Informatik)",
+                                   "Ingenieurwissenschaften ohne Informatik"
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.gen_states == 'Mecklenburg-Vorpommern'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("gen4_f"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
+                       choices = c("Alle MINT-Fächer",
+                                   "Alle Nicht MINT-Fächer","Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
                                    "Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie",
                                    "Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften",
                                    "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
@@ -164,16 +170,18 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                                    "Architektur, Innenarchitektur","Raumplanung","Bauingenieurwesen","Vermessungswesen",
                                    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik",
                                    "Kunst, Kunstwissenschaft","Geowissenschaften und Geographie","Naturwissenschaften",
-                                   "Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+                                   "Ingenieurwissenschaften (inkl. Informatik)",
+                                   "Ingenieurwissenschaften ohne Informatik"
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.gen_states == 'Niedersachsen'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("gen5_f"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
+                       choices = c("Alle MINT-Fächer",
+                                   "Alle Nicht MINT-Fächer","Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
                                    "Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie",
                                    "Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften",
                                    "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
@@ -183,16 +191,18 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                                    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik",
                                    "Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft",
                                    "Geowissenschaften und Geographie","Naturwissenschaften",
-                                   "Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+                                   "Ingenieurwissenschaften (inkl. Informatik)",
+                                   "Ingenieurwissenschaften ohne Informatik"
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.gen_states == 'Saarland'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("gen6_f"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
+                       choices = c("Alle MINT-Fächer",
+                                   "Alle Nicht MINT-Fächer","Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
                                    "Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie",
                                    "Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften",
                                    "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
@@ -201,9 +211,10 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                                    "Architektur, Innenarchitektur","Bauingenieurwesen","Informatik",
                                    "Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft"
                                    ,"Geowissenschaften und Geographie","Naturwissenschaften",
-                                   "Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+                                   "Ingenieurwissenschaften (inkl. Informatik)",
+                                   "Ingenieurwissenschaften ohne Informatik"
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
 
@@ -212,7 +223,8 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("gen7_f"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
+                       choices = c("Alle MINT-Fächer",
+                                   "Alle Nicht MINT-Fächer","Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
                                    "Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie",
                                    "Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften",
                                    "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
@@ -221,16 +233,18 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                                    "Vermessungswesen","Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
                                    "Informatik","Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft",
                                    "Geowissenschaften und Geographie","Naturwissenschaften",
-                                   "Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+                                   "Ingenieurwissenschaften (inkl. Informatik)",
+                                   "Ingenieurwissenschaften ohne Informatik"
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.gen_states == 'Schleswig-Holstein'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("gen8_f"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
+                       choices = c("Alle MINT-Fächer",
+                                   "Alle Nicht MINT-Fächer","Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
                                    "Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie",
                                    "Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften",
                                    "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
@@ -240,16 +254,18 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                                    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik",
                                    "Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft",
                                    "Geowissenschaften und Geographie","Naturwissenschaften",
-                                   "Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+                                   "Ingenieurwissenschaften (inkl. Informatik)",
+                                   "Ingenieurwissenschaften ohne Informatik"
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.gen_states == 'Thüringen'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("gen9_f"),
-                       choices = c("Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
+                       choices = c("Alle MINT-Fächer",
+                                   "Alle Nicht MINT-Fächer","Geisteswissenschaften","Sport","Rechts-, Wirtschafts- und Sozialwissenschaften",
                                    "Weitere naturwissenschaftliche und mathematische Fächer","Mathematik","Physik, Astronomie",
                                    "Chemie","Pharmazie","Biologie","Humanmedizin/Gesundheitswissenschaften",
                                    "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
@@ -259,9 +275,11 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
                                    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt","Informatik",
                                    "Materialwissenschaft und Werkstofftechnik","Kunst, Kunstwissenschaft",
                                    "Geowissenschaften und Geographie",
-                                   "Naturwissenschaften","Ingenieurwissenschaften ohne Informatik","MINT","Nicht MINT"
+                                   "Naturwissenschaften",
+                                   "Ingenieurwissenschaften (inkl. Informatik)",
+                                   "Ingenieurwissenschaften ohne Informatik"
                        ),
-                       selected = "MINT",
+                       selected = "Alle MINT-Fächer",
                        multiple = FALSE
                      )),
     br(),

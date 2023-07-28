@@ -16,7 +16,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       inputId = ns("choice_V_y"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017", "2018","2019", "2020", "2021"),
-      selected = c("2015","2020")
+      selected = c("2016","2021")
     ),
     p("Indikatoren:"),
     shinyWidgets::pickerInput(
@@ -56,6 +56,8 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("choice_states"),
       choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
                   "Berlin",
                   "Brandenburg",
                   "Bremen",
