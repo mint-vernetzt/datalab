@@ -166,13 +166,12 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
                    input.indi_iqb_mathe_mittel_zeitverlauf_4 == 'nach Geschlecht'",
                    ns = ns,
                    p("Leistungsindikator:"),
-                   shinyWidgets::radioGroupButtons(
+                   shinyWidgets::pickerInput(
                      inputId =  ns("score_iqb_mathe_mittel_zeitverlauf"),
                      choices = c("Test-Punktzahl", "Mindeststandard"),
-                     justified = TRUE,
-                     checkIcon = list(yes = icon("ok",
-                                                 lib = "glyphicon")
-                   ))
+                     multiple = FALSE,
+                     selected = "Test-Punktzahl"
+                   )
                    ),
 
   br(),
