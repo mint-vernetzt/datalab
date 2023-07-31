@@ -20,11 +20,11 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
     p("Indikator:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l"),
-      choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
+      choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
                   "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
-                  "Ausländische Studierende",
-                  "Studierende (Nur Lehramt)"
+                  "Internationale Studierende",
+                  "Studierende (Lehramt)"
 
       ),
       selected = c("Studierende")
@@ -36,6 +36,8 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
     ),
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
     p("Fächer/Fächergruppen (max. 2):"),
+
+
     conditionalPanel(condition = "input.map_l == 'Studierende (Nur Lehramt)'",
                      ns = ns,
                      shinyWidgets::pickerInput(
@@ -45,13 +47,13 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                                    "Geowissenschaften und Geographie",
                                    "Informatik",
                                    "Maschinenbau/Verfahrenstechnik",
-                                   "Nicht MINT",
-                                   "MINT",
+                                   "Alle Nicht MINT-Fächer",
+                                   "Alle MINT-Fächer",
                                    "Chemie",
                                    "Mathematik",
                                    "Humanmedizin/Gesundheitswissenschaften",
                                    "Geisteswissenschaften",
-                                   "Ingenieurwissenschaften inkl. Informatik" = "Ingenieurwissenschaften",
+                                   "Ingenieurwissenschaften (inkl. Informatik)",
                                    "Ingenieurwissenschaften ohne Informatik",
                                    "Physik, Astronomie",
                                    "Rechts-, Wirtschafts- und Sozialwissenschaften",
@@ -60,59 +62,73 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                                    "Sport",
                                    "Kunst, Kunstwissenschaft"),
 
+
                        selected = c(
-                         "Informatik", "MINT"),
+                         "Informatik", "Alle MINT-Fächer"),
                        multiple = TRUE,
                        options =  list(
                          "max-options" = 2,
                          "max-options-text" = "Maximal 2 Indikatoren auswählen")
                      )),
 
-    conditionalPanel(condition = "input.map_l == 'Auländische Studienanfänger:innen (1. Hochschulsemester)' |
+    conditionalPanel(condition = "input.map_l == 'Internationale Studienanfänger:innen (1. Hochschulsemester)' |
                      input.map_l == 'Studienanfänger:innen (1. Fachsemester)' |
                      input.map_l == 'Studierende' |
-                     input.map_l == 'Ausländische Studierende' |
+                     input.map_l == 'Internationale Studierende' |
                      input.map_l == 'Studienanfänger:innen (1. Hochschulsemester)'",
                      ns = ns,
                      shinyWidgets::pickerInput(
                        inputId = ns("map_f"),
 
                        choices = c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
-                                   "Biologie",
-                                   "Geowissenschaften und Geographie",
-                                   "Informatik",
-                                   "Maschinenbau/Verfahrenstechnik",
-                                   "Nicht MINT",
-                                   "MINT",
-                                   "Vermessungswesen",
-                                   "Architektur, Innenarchitektur",
-                                   "Bauingenieurwesen",
-                                   "Chemie",
-                                   "Mathematik",
-                                   "Materialwissenschaft und Werkstofftechnik",
-                                   "Humanmedizin/Gesundheitswissenschaften",
-                                   "Geisteswissenschaften",
-                                   "Ingenieurwissenschaften inkl. Informatik" = "Ingenieurwissenschaften",
-                                   "Ingenieurwissenschaften ohne Informatik",
-                                   "Physik, Astronomie",
-                                   "Rechts-, Wirtschafts- und Sozialwissenschaften",
-                                   "Mathematik, Naturwissenschaften",
-                                   "Naturwissenschaften",
-                                   "Pharmazie",
-                                   "Raumplanung",
-                                   "Sport",
-                                   "Verkehrstechnik, Nautik",
-                                   "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
-                                   "Kunst, Kunstwissenschaft",
-                                   "Elektrotechnik und Informationstechnik"),
+                  "Biologie",
+                  "Elektrotechnik und Informationstechnik",
+                  "Geowissenschaften und Geographie",
+                  "Informatik",
+                  "Ingenieurwissenschaften ohne Informatik",
+                  "Ingenieurwissenschaften (inkl. Informatik)",
+                  "Maschinenbau/Verfahrenstechnik",
+                  "Mathematik",
+                  "Alle MINT-Fächer",
+                  "Alle Nicht MINT-Fächer",
+                  "Physik, Astronomie",
+                  "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                  "Vermessungswesen",
+                  "Architektur, Innenarchitektur",
+                  "Bauingenieurwesen",
+                  "Chemie",
+                  "Geisteswissenschaften",
+                  "Humanmedizin/Gesundheitswissenschaften",
+                  "Ingenieurwissenschaften",
+                  "Kunst, Kunstwissenschaft",
+                  "Materialwissenschaft und Werkstofftechnik",
+                  "Mathematik, Naturwissenschaften",
+                  "Naturwissenschaften",
+                  "Pharmazie",
+                  "Sport",
+                  "Verkehrstechnik, Nautik",
+                  "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt"),
 
                        selected = c(
-                         "Informatik", "MINT"),
+                         "Informatik", "Alle MINT-Fächer"),
                        multiple = TRUE,
                        options =  list(
                          "max-options" = 2,
                          "max-options-text" = "Maximal 2 Indikatoren auswählen")
-                     ))
+                     )),
+    br(),
+    shinyBS::bsPopover(id="dh_studium_fach_2", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_fach_2"),
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_fach_2", title="",
+                       content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_2")
   )
 
 }

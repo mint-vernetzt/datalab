@@ -52,7 +52,12 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
       # checkIcon = list(yes = icon("ok",
       #                             lib = "glyphicon")),
       selected="Informatik"
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_beruf_fach_3", title="",
+                       content = paste0("Diese Darstellung gibt einen Überblick darürber, wie hoch der Anteil von MINT-Beschäftigten in den Bundesländern ist. Beispielsweise sind 3,3 % der Beschäftigten in Bayern in der Informatik tätig. Damit liegt Bayern etwas über dem gesamtdeutschen Durchschnitt von 2,8 %."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_3")
     # p("Auswahl des Anforderungsniveaus:"),
     # shinyWidgets::pickerInput(
     #   inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich"),

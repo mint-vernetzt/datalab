@@ -16,7 +16,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       inputId = ns("choice_V_y"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017", "2018","2019", "2020", "2021"),
-      selected = c("2015","2020")
+      selected = c("2016","2021")
     ),
     p("Indikatoren:"),
     shinyWidgets::pickerInput(
@@ -48,14 +48,16 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("choice_v_f"),
 
-      choices = c("MINT","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
+      choices = c("MINT (Gesamt)","Mathematik, Naturwissenschaften", "Ingenieurwissenschaften"),
 
-      selected = "MINT"
+      selected = "MINT (Gesamt)"
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("choice_states"),
       choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
                   "Berlin",
                   "Brandenburg",
                   "Bremen",
@@ -83,7 +85,13 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_mint_8", title="",
+                       content = paste0("Die erste Einstellung zeigt u.a., dass der Anteil an MINT-Studierenden unter den weiblichen Studienanfänger*innen im ersten Fachsemester in Sachsen im Mittel höher liegt als unter den weiblichen Studierenden. Das deutet darauf hin, dass weibliche Studierende MINT-Studiengänge häufiger wieder abbrechen als andere Studiengänge."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_8")
   )
 
 }

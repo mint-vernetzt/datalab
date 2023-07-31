@@ -11,35 +11,83 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
   ns <- NS(id)
 
   tagList(
+    p("Klassenstufe:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("klasse_iqb_standard_zeitverlauf"),
+      choices = c("4. Klasse",
+                  "9. Klasse"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
+    ),
 
     p("Region:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("land_iqb_standard_zeitverlauf"),
-      choices = c("Deutschland",
-                  "Baden-Württemberg",
-                  "Bayern",
-                  "Berlin",
-                  "Brandenburg",
-                  "Bremen",
-                  "Hamburg",
-                  "Hessen",
-                 # "Mecklenburg-Vorpommern",
-                  "Niedersachsen",
-                  "Nordrhein-Westfalen",
-                  "Rheinland-Pfalz",
-                  "Saarland",
-                  "Sachsen",
-                  "Sachsen-Anhalt",
-                  "Schleswig-Holstein",
-                  "Thüringen"),
+    conditionalPanel(condition = "input.klasse_iqb_standard_zeitverlauf == '4. Klasse'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("land_iqb_standard_zeitverlauf_4"),
+                       choices = c("Deutschland",
+                                   "Baden-Württemberg",
+                                   "Bayern",
+                                   "Berlin",
+                                   "Brandenburg",
+                                   "Bremen",
+                                   "Hamburg",
+                                   "Hessen",
+                                   # "Mecklenburg-Vorpommern",
+                                   "Niedersachsen",
+                                   "Nordrhein-Westfalen",
+                                   "Rheinland-Pfalz",
+                                   "Saarland",
+                                   "Sachsen",
+                                   "Sachsen-Anhalt",
+                                   "Schleswig-Holstein",
+                                   "Thüringen"),
 
-    selected = c("Deutschland",
-                 "Bayern","Bremen"),
-      multiple = TRUE,
-      options =  list(
-        "max-options" = 3,
-        "max-options-text" = "Maximal 3 Bundesländer auswählen")
-    )
+                       selected = c("Deutschland",
+                                    "Bayern","Bremen"),
+                       multiple = TRUE,
+                       options =  list(
+                         "max-options" = 3,
+                         "max-options-text" = "Maximal 3 Bundesländer auswählen")
+                     )
+                ),
+    conditionalPanel(condition = "input.klasse_iqb_standard_zeitverlauf == '9. Klasse'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("land_iqb_standard_zeitverlauf_9"),
+                       choices = c("Deutschland",
+                                   "Baden-Württemberg",
+                                   "Bayern",
+                                   "Berlin",
+                                   "Brandenburg",
+                                   "Bremen",
+                                   "Hamburg",
+                                   "Hessen",
+                                   "Mecklenburg-Vorpommern",
+                                   "Niedersachsen",
+                                   "Nordrhein-Westfalen",
+                                   "Rheinland-Pfalz",
+                                   "Saarland",
+                                   "Sachsen",
+                                   "Sachsen-Anhalt",
+                                   "Schleswig-Holstein",
+                                   "Thüringen"),
+
+                       selected = c("Deutschland",
+                                    "Bayern","Bremen"),
+                       multiple = TRUE,
+                       options =  list(
+                         "max-options" = 3,
+                         "max-options-text" = "Maximal 3 Bundesländer auswählen")
+                     )
+    ),
+      br(),
+    shinyBS::bsPopover(id="ih_schule_kompetenzen_1", title="",
+                       content = paste0("Betrachtet man Deutschland zeigt sich: Während 2011 noch 11.9 % der Schüler:innen die Mindestanforderung im Mathematik-Kompetenztest nicht erfüllen, hat 2021 ein fast doppelt so großer Anteil an Schüler:innen wichtige Grundkenntnisse in Mathe nicht mehr (21.8 % Mindesstandard nicht erreicht)."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_kompetenzen_1")
+
   )
 
 }
@@ -50,8 +98,14 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
 mod_schule_kurse_iqb_standard_zeitverlauf_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$land_iqb_standard_zeitverlauf, {
-      r$land_iqb_standard_zeitverlauf <- input$land_iqb_standard_zeitverlauf
+    observeEvent(input$klasse_iqb_standard_zeitverlauf, {
+      r$klasse_iqb_standard_zeitverlauf <- input$klasse_iqb_standard_zeitverlauf
+    })
+    observeEvent(input$land_iqb_standard_zeitverlauf_4, {
+      r$land_iqb_standard_zeitverlauf_4 <- input$land_iqb_standard_zeitverlauf_4
+    })
+    observeEvent(input$land_iqb_standard_zeitverlauf_9, {
+      r$land_iqb_standard_zeitverlauf_9 <- input$land_iqb_standard_zeitverlauf_9
     })
 
   })

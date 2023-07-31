@@ -59,7 +59,15 @@ mod_schule_kurse_comparison_bl_ui <- function(id){
                                     "Fremdsprachen",
                                     "Gesellschaftswissenschaften",
                                     "Musik/Kunst",
-                                    "Sport"))))
+                                    "Sport"))),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_fach_6", title="",
+                       content = paste0("Betrachtet man die Grundkursbelegungen sieht man, dass der Anteil von MINT-Fächern über alle Bundesländer hinweg zwischen 19 - 29 % liegt. Für die Leistungskursbelegungen in MINT ist der Unterschied zwischen den Bundesländern deutlicher: In Hamburg machen MINT-Fächer 24 %, in Sachsen-Anhalt 50 % aller Leistungskursbelegungen aus."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_6")
+
+    )
 
 }
 

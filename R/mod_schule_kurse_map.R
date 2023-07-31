@@ -34,7 +34,19 @@ mod_schule_kurse_map_ui <- function(id){
                   "Religion/Ethik",
                   "Sport"),
       selected = "MINT-Fächer (gesamt)"
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="dh_schule_fach_1", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_schule_fach_1"),
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_fach_1", title="",
+                       content = paste0("In der ersten Einstellung ist zu sehen, dass der Anteil von MINT-Fächern an den Grundkursbelegung mit 29 % in Sachsen deutschlandweit am höchsten ist. Bei den Leistungskursen ist der Anteil der MINT-Fächer in Sachsen-Anhalt mit 50 % am höchsten. Die Vergleiche zwischen den Bundesländern sind jedoch schwierig, da die Regelungen für die Wahl der Kurse in den Bundesländern sehr unterschiedlich sind."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_1")
+
   )
 }
 

@@ -16,7 +16,12 @@ mod_schule_kurse_comparison_gender_ui <- function(id){
       label = NULL,
       choices = c("2013","2014","2015","2016","2017", "2018", "2019", "2020", "2021"),
       selected = "2021"
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_frauen_1", title="",
+                       content = paste0("Die erste Darstellung zeigt, dass der Anteil von Mädchen bzw. Frauen in allen MINT-Grundkursen in Deutschland 2021 53 % beträgt. In den MINT-Leistungskursen beträgt dieser Anteil 48 %. In den Nicht-MINT-Fächern ist der Anteil an Mädchen bzw. Frauen etwas höher: In Grundkursen machen Frauen 54 % aus, in Leistungskursen sogar 58 %."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_frauen_1")
   )
 }
 

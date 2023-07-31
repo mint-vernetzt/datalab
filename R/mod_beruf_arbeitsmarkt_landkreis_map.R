@@ -137,6 +137,20 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
                        selected = "Frauen",
                        multiple = FALSE
                      )),
+    br(),
+    shinyBS::bsPopover(id="dh_beruf_regional_1", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_beruf_regional_1"),
+
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_beruf_regional_1", title="",
+                       content = paste0("Die linke Karte in der ersten Einstellung zeigt beispielsweise, dass in Ludwigshafen am Rhein mit 37 % der größte Anteil an MINT-Beschäftigten in Rheinland-Pfalz arbeitet. Die rechte Karte zeigt, dass der Frauenanteil in MINT-Berufen vor allem in und um Mainz höher als in anderen Kreisen des Bundeslands ist."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_regional_1")
   )
 }
 

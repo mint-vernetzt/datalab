@@ -35,7 +35,12 @@ mod_schule_kurse_ranking_gender_ui <- function(id){
                   "Religion/Ethik",
                   "Sport"),
       selected = "MINT-Fächer (gesamt)"
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_fach_4", title="",
+                       content = paste0("Dieser Plot zeigt, wie sich die Oberstufenbelegungen aller Mädchen auf verschiedene Fächer verteilen. Sammelt man etwa die Leistungskursbelegungen aller Mädchen in Sachsen, würden knapp 33 % davon Belegungen von MINT-Leistungskursen sein."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_4")
 
   )
 }

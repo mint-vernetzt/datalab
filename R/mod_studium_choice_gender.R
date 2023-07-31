@@ -39,7 +39,12 @@ mod_studium_choice_gender_ui <- function(id){
       options =  list(
         "max-options" = 2,
         "max-options-text" = "Maximal 3 Indikatoren auswählen")
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_mint_7", title="",
+                       content = paste0("Von allen Frauen, die studieren, studieren nur 24 % ein MINT-Fach im Hauptfach. Unter männlichen Studierenden ist MINT und insbesondere Ingenieurwissenschaften verbreiteter: Etwas über die Hälfte aller studierender Männer studieren in MINT."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_7")
     # ,
     # p("Nur Lehramt anzeigen:"),
     # tags$div(
@@ -68,6 +73,7 @@ mod_studium_choice_gender_ui <- function(id){
     #   checkIcon = list(yes = icon("ok",
     #                               lib = "glyphicon"))
     # )
+
   )
 }
 

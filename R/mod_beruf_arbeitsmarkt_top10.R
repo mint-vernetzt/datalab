@@ -65,7 +65,13 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_beruf_fach_4", title="",
+                       content = paste0("Die erste Ansicht zeigt, dass in Bayern 2022 ausschließlich Frauen eine Ausbildung zur Textillaborantin begonnen haben. Wechselt man in der Betrachtung auf &quotAnzahl&quot ist zu erkennen, dass sich neue weilbliche Auszubildende in Bayern am häufigsten für eine Lehre als KfZ-Mechatronikerin oder Bauzeichnerin entscheiden."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_4")
   )
 }
 

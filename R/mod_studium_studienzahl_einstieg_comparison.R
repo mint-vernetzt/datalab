@@ -17,7 +17,12 @@ mod_studium_studienzahl_einstieg_comparison_ui <- function(id){
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
       selected = 2021
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_mint_6", title="",
+                       content = paste0("Über die Studierendengruppen hinweg liegt der Anteil an MINT-Studierenden in Deutschland 2021 zwischen 35 % - 39 %. Die einzige Ausnahme hierbei sind Lehramtstudierende: Weniger als ein Drittel der Lehramtstudierenden deutschlandweit belegen ein MINT-Fach als Hauptfach."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_6")
 
   )
 }

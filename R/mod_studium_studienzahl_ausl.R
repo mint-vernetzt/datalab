@@ -64,17 +64,13 @@ mod_studium_studienzahl_ausl_ui <- function(id){
                   "Fachbereiche (inkl. Nicht-MINT)" = "Fachbereiche"
       ),
       selected = "Fachbereiche (inkl. Nicht-MINT)"
-    )
-    # ,
-    # p("Betrachtung:"),
-    # shinyWidgets::radioGroupButtons(
-    #   inputId = ns("abs_zahlen_studium_studienzahl_ausl"),
-    #   choices = c("In Prozent", "Anzahl"),
-    #   justified = TRUE,
-    #   checkIcon = list(yes = icon("ok",
-    #                               lib = "glyphicon"))
-    #
-    # )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_international_1", title="",
+                       content = paste0("Diese Grafik zeigt z. B., dass im Jahr 2020 in Ostdeutschland ca. 39 % der Elektortechnik- und Informationstechnik-Studierenden internationale Studierende waren. Wählt man als Betrachtung die Anzahl der Studierenden, sieht man das diese 39 % 5.391 internationale Studierende in Elektrotechnik und Informationstechnik ausmachen."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_international_1")
   )
 }
 

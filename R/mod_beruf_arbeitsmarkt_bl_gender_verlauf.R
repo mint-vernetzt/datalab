@@ -57,7 +57,7 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
-      selected = c("Hessen", "Hamburg")
+      selected = c("Deutschland", "Niedersachsen")
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
@@ -66,7 +66,13 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+
+    br(),
+    shinyBS::bsPopover(id="ih_beruf_mint_6", title="",
+                       content = paste0("Die erste Einstellung zeigt beispielsweise, dass in Niedersachsen im Vergleich zu Deutschland der Anteil an Frauen, die eine MINT-Tätigkeit ergreifen, um ein bis zwei Prozentpunkte höher liegt."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_6")
   )
 
 

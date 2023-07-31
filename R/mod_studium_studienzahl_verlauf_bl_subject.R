@@ -103,7 +103,13 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_mint_4", title="",
+                       content = paste0("Die Grafik der ersten Einstellung zeigt, dass sich der Anteil an MINT-Studierenden in Berlin seit 2015 minimal (um 2 Prozentpunkte) verringert hat. Eine Betrachtung der Anzahl an MINT-Studierenden zeigt dagegen, dass es über die Jahre in Berlin stetig mehr Studierende in MINT gibt. Das weist darauf hin, dass die Studierendenzahlen in Berlin insgesamt steigen."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_4")
   )
 }
 

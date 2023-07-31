@@ -39,8 +39,8 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
       p("Fächergruppe:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_verlauf"),
-        choices = c("MINT-Fächer (gesamt)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
-        selected = "MINT-Fächer (gesamt)"
+        choices = c("MINT (Gesamt)","Mathematik/Naturwissenschaften", "Ingenieurwissenschaften"),
+        selected = "MINT (Gesamt)"
       )
     ,
     p("Indikator:"),
@@ -103,7 +103,13 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_mint_5", title="",
+                       content = paste0("Die erste Ansicht zeigt, dass in Baden-Württember im Vergleich zu Hamburg ein größerer Anteil an Studierenden MINT-Fächer studiert. In beiden Bundesländern bleibt der Anteil an MINT-Studierenden über die Jahre relativ konstat und sinkt in den letzten Jahren leicht ab."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_5")
   )
 
 

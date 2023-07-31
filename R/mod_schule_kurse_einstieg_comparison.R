@@ -16,7 +16,12 @@ mod_schule_kurse_einstieg_comparison_ui <- function(id){
       label = NULL,
       choices = c("2013","2014","2015","2016","2017", "2018", "2019", "2020", "2021"),
       selected = "2021"
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_schule_mint_2", title="",
+                       content = paste0("In der ersten Einstellung ist zu sehen, dass im Jahr 2021 in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2021 bei 33 %."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_2")
   )
 }
 
