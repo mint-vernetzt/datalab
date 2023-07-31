@@ -46,7 +46,7 @@ mod_studium_top_faecher_ui <- function(id){
     p("Fachbereich:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("subject_top_faecher"),
-      choices = c("MINT-Fächer", "Alle Fächer"),
+      choices = c("MINT-Fächer", "Alle Fachbereiche"= "Alle Fächer"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
