@@ -329,7 +329,7 @@ mod_studium_studienzahl_ui <- function(id){
                                  "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
 
                                shinyBS::bsPopover(id="h_studium_fach_2", title="",
-                                                  content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden die betroffenen Bundesländer als grau schattiert angezeigt.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
+                                                  content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden die betroffenen Bundesländer als grau schattiert angezeigt.", "<br> <br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                   placement = "top",
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_2")
@@ -364,7 +364,7 @@ mod_studium_studienzahl_ui <- function(id){
                                highcharter::highchartOutput(ns("plot_vergleich_bl1")),
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
                                shinyBS::bsPopover(id="h_studium_fach_3", title="",
-                                                  content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die Bundesländer angezeigt, welche die betrachtete Studienfachgruppe aufweisen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
+                                                  content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die Bundesländer angezeigt, welche die betrachtete Studienfachgruppe aufweisen.", "<br><br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                   placement = "top",
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_3")

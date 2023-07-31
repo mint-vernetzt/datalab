@@ -4409,7 +4409,8 @@ if (length(fach_m)==1)
   label_m <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
 
   help_l <- "Studierenden"
-  help_l <- ifelse(grepl("anfänger", label_m), "Studienanfänger:innen", help_l)
+  help_l <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen", help_l)
+  help_l <- ifelse(grepl("1. Fach", label_m), "Studienanfänger:innen", help_l)
 
   data_map_1 <- df7 %>% dplyr::filter(fach == fach_m)%>%
     dplyr::mutate(display = as.character(proportion))
@@ -4439,7 +4440,7 @@ highcharter::hw_grid(
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display} % <br> Anzahl: {point.wert}") %>%
             highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", label_m, " (", timerange, ")"),
+        text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -4476,7 +4477,8 @@ highcharter::hw_grid(
 
 
   help_l <- label_m
-  help_l <- ifelse(grepl("anfänger", label_m), "internationalen Studienanfänger:innen", help_l)
+  help_l <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen", help_l)
+  help_l <- ifelse(grepl("1. Fach", label_m), "Studienanfänger:innen", help_l)
 
 
  data_map_1 <- df7 %>% dplyr::filter(fach == fach_m[1])%>%
@@ -5590,7 +5592,9 @@ studierende_mint_vergleich_bl <- function(df,r) {
   r_lab1 <- ifelse(r_lab1 == "Internationale Studienanfänger:innen (1. Hochschulsemester)",
                   "internationalenen Studienanfänger:innen (1. Hochschulsemester)", r_lab1)
   help <- r_lab1
-  help <- ifelse(grepl("Studienanfänger:innen",help), "internationale Studienanfänger:innen", help)
+  help <- ifelse(help == "internationalenen Studienanfänger:innen (1. Hochschulsemester)", "internationalen Studienanfänger:innen", help)
+  help <- ifelse(help == "Studienanfänger:innen (1. Fachsemester)" |
+                   help == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help)
 
 
   # Plot
