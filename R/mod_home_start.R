@@ -30,17 +30,25 @@ mod_home_start_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         title = "Auf dieser Seite",
-        width = 3,
+        width = 7,
         p(style = "text-align: left; font-size = 16px",
            "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")),
+      shinydashboard::box(
+        title = "Fragen oder Feedback?",
+        width = 5,
+        p(style = "text-align: left; font-size = 16px",
+          "Sind alle Zahlen und Grafiken verständlich?", br(),
+          "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+        ))
+    ),
 
-
-
+    fluidRow(
       shinydashboard::box(
         title = "Übersicht Fragestellungen",
-        width = 3,
+        width = 7,
         p(style = "text-align: left; font-size = 16px",tags$a(href="#alle_mint",
         span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
         ),
@@ -52,22 +60,14 @@ mod_home_start_ui <- function(id){
 
       shinydashboard::box(
         title = "Datenquellen",
-        width = 3,
+        width = 5,
         p(style = "text-align: left; font-size = 16px",
           "Studierendenzahlen: Destatis 2022, auf Anfrage"),
          p("Schüler:innenzahlen: KMK 2022, auf Anfrage"),
           p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2022, auf Anfrage")
-        ),
+        )
 
-   shinydashboard::box(
-     title = "Fragen oder Feedback?",
-     width = 3,
-     p(style = "text-align: left; font-size = 16px",
-       "Sind alle Zahlen und Grafiken verständlich?", br(),
-       "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
-            tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-       )))
-      ,
+   ),
 
    # Box 1
 

@@ -28,7 +28,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       fluidRow(
         shinydashboard::box(
           title = "Auf dieser Seite",
-          width = 3,
+          width = 7,
           p(style = "text-align: left; font-size = 16px",
             "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
            Dabei unterscheiden wir zwischen Auszubildenden und (sozialversicherungspflichtigen) Beschäftigten.  Die Kategorisierung in MINT entspricht der Klassifikation durch die Bundesagentur für Arbeit.
@@ -36,8 +36,18 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ),
 
         shinydashboard::box(
+          title = "Fragen oder Feedback?",
+          width = 5,
+          p(style = "text-align: left; font-size = 16px",
+            "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+            tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+          ))
+      ),
+
+      fluidRow(
+        shinydashboard::box(
           title = "Übersicht Fragestellungen",
-          width = 3,
+          width = 7,
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_mint",
             span(tags$b(span("Berufswahl MINT:")))),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten in MINT?"
             ),
@@ -54,19 +64,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
         shinydashboard::box(
           title = "Datenquellen",
-          width = 3,
+          width = 5,
           p(style = "text-align: left; font-size = 16px",
             "Auszubildenden- und Beschäftigenzahlen in Deutschland: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.")
 
-        ),
-
-        shinydashboard::box(
-          title = "Fragen oder Feedback?",
-          width = 3,
-          p(style = "text-align: left; font-size = 16px",
-            "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
-            tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-          ))
+        )
       ),
 
 

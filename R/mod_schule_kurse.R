@@ -29,7 +29,7 @@ mod_schule_kurse_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         title = "Auf dieser Seite",
-        width = 3,
+        width = 7,
         p(style = "text-align: left; font-size = 16px",
           "Auf dieser Seite zeigen wir, wie hoch der Anteil von MINT-Fächern an allen Schulfächern - gemessen an allen gewählten Grund- und Leistungskursen - ist.
           Je nach Bundesland wählen alle Oberstufen-Schülerinnen und -Schüler mehrere Grund- und Leistungskurse.
@@ -44,45 +44,50 @@ mod_schule_kurse_ui <- function(id){
       ),
 
       shinydashboard::box(
+        title = "Fragen oder Feedback?",
+        width = 5,
+        p(style = "text-align: left; font-size = 16px",
+          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+        ))
+
+
+    ),
+
+    fluidRow(
+      shinydashboard::box(
         title = "Übersicht Fragestellungen",
-        width = 3,
+        width = 7,
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_mint",
-        span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
-          ),
+                                                              span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
+        ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_fach",
-         span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
+                                                              span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
 
-          ),
+        ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_frauen",
-        span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
+                                                              span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_kompetenz",
-        span(tags$b(span("MINT-Kompetenzen in der 4. Klasse:")))),"Wie hoch ist der Anteil leistungsschwacher Schüler:innen und wie entwickelt sich die MINT-Kompetenz?"),
+                                                              span(tags$b(span("MINT-Kompetenzen in der 4. und 9. Klasse:")))),"Wie entwickelt sich die MINT-Kompetenz und das Interesse in MINT?"),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_ausserschulisch",
                                                               span(tags$b(span("Außerschulische, frühkindliche MINT-Bildung:")))),"Wie hoch ist die Beteiligung in außerschulische, frühkindliche MINT-Bildung?"),
 
-        ),
-
+      ),
       shinydashboard::box(
         title = "Datenquellen",
-        width = 3,
+        width = 5,
         p(style = "text-align: left; font-size = 16px",
           "Schüler:innenzahlen der Oberstufe: Kulturministerkonferenz (KMK) 2022, auf Anfrage"),
         p(style = "text-align: left; font-size = 16px",
           "Kompetenzdaten: Institut zur Qualitätsentwicklung im Bildungswesen (IQB), 2022, auf Anfrage, eigene Berechnungen."),
         p(style = "text-align: left; font-size = 16px",
           "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.")
-        ),
+        )
 
-      shinydashboard::box(
-        title = "Fragen oder Feedback?",
-        width = 3,
-        p(style = "text-align: left; font-size = 16px",
-          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
-          tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-        ))),
+      ),
 
   # Box 1
 
