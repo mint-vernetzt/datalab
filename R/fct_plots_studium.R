@@ -3014,19 +3014,19 @@ studienzahl_verlauf_bl_subject <- function(df,r) {
 
 ranking_bl_subject <- function(df,r, type) {
 
-browser()
+
   # load UI inputs from reactive value
 
-  timerange <<- r$rank_y
+  timerange <- r$rank_y
 
-  states <<- r$rank_states
+  states <- r$rank_states
 
-  r_lab <<- r$rank_l
+  r_lab <- r$rank_l
 
 
-  df1 <<- df %>% dplyr::filter(jahr == timerange)
+  df1 <- df %>% dplyr::filter(jahr == timerange)
 
-  df2 <<- df1 %>%
+  df2 <- df1 %>%
     dplyr::filter(mint_select == "MINT" | fach %in% c("Alle MINT-Fächer",
                                                       "Alle Fächer",
                                                       "Alle Nicht MINT-Fächer"))%>%
@@ -3035,66 +3035,86 @@ browser()
 
 
 
-  df3 <<- df2 %>% dplyr::filter(fach == "Alle Fächer")%>%
+  df3 <- df2 %>% dplyr::filter(fach == "Alle Fächer")%>%
     tidyr::pivot_wider(names_from=fach, values_from = wert)%>%
     dplyr::select(indikator, jahr, region, `Alle Fächer`)
 
-  df4 <<- df2 %>%
+  df4 <- df2 %>%
     dplyr::select(indikator, jahr, region, fach, wert)%>%
     dplyr::filter(fach != "Alle Fächer")%>%
     dplyr::left_join(df3 , by=c("indikator", "jahr", "region"))
 
-  df5 <<- df4 %>%
+  df5 <- df4 %>%
     dplyr::mutate(prop = round(wert /`Alle Fächer` *100, 1 ))
 
-  df6 <<- df5 %>%
-    dplyr::filter(region == states)%>%
-    dplyr::filter(indikator == r_lab)
 
-  df7 <<- df6 %>%
+
+  df6 <- df5 %>%
+    dplyr::filter(region == states)%>%
+    dplyr::filter(indikator == r_lab)%>%
+    dplyr::filter(!is.na(wert))%>%
+    dplyr::filter(prop != 0)
+
+
+    ticks <- c("Alle MINT-Fächer",
+                             "Mathematik, Naturwissenschaften",
+                             "Mathematik",
+                             "Naturwissenschaften",
+                             "Biologie",
+                             "Chemie",
+                             "Physik, Astronomie",
+                             "Ingenieurwissenschaften (inkl. Informatik)",
+                             "Informatik",
+                             "Ingenieurwissenschaften ohne Informatik",
+                             "Pharmazie",
+                             "Maschinenbau/Verfahrenstechnik" ,
+                             "Elektrotechnik und Informationstechnik",
+                             "Verkehrstechnik, Nautik",
+                             "Architektur, Innenarchitektur",
+                             "Raumplanung",
+                             "Bauingenieurwesen",
+                             "Vermessungswesen",
+                             "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
+                             "Materialwissenschaft und Werkstofftechnik",
+                             "Bergbau, Hüttenwesen",
+                             "Geowissenschaften und Geographie",
+                             "Alle Nicht MINT-Fächer"
+                             )
+
+
+
+  df7 <- df6 %>%
     dplyr::select(fach)%>%
+    unique()%>%
     as.vector()%>%
     unlist()%>%
     unname()
 
+ ticks1 <- ticks[ticks %in% df7]
 
-highcharter::hchart(df6, 'bar', highcharter::hcaes(y=prop, x= fach))
-  # highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} %") %>% #Inhalt für Hover-Box
-  # highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
-  # highcharter::hc_xAxis(title= list(text=""),
-  #                       categories = list(
-  #                         "Alle MINT-Fächer",
-  #                         "Mathematik, Naturwissenschaften",
-  #                         "Naturwissenschaften",
-  #                         "Mathematik",
-  #                         "Physik, Astronomie",
-  #                         "Chemie",
-  #                         "Pharmazie",
-  #                         "Biologie",
-  #                         "Maschinenbau/Verfahrenstechnik",
-  #                         "Elektrotechnik und Informationstechnik",
-  #                         "Verkehrstechnik, Nautik",
-  #                         "Architektur, Innenarchitektur",
-  #                         "Raumplanung",
-  #                         "Bauingenieurwesen",
-  #                         "Vermessungswesen",
-  #                         "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
-  #                         "Informatik",
-  #                         "Materialwissenschaft und Werkstofftechnik",
-  #                         "Ingenieurwissenschaften (inkl. Informatik)",
-  #                         "Bergbau, Hüttenwesen",
-  #                         "Geowissenschaften und Geographie",
-  #                         "Ingenieurwissenschaften ohne Informatik",
-  #                         "Alle Nicht MINT-Fächer",
-  #                     ),  tickInterval = 1, step=50) %>%
-  # highcharter::hc_size(height = 800)%>%
-  # highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
-  # highcharter::hc_title(text = paste0( "Anteil einzelner Fächer in ",states, " (", r_lab, ")",
-  #                                      br(), timerange,
-  #                                      "<br><br><br>"),
-  #                       margin = 45,
-  #                       align = "center",
-  #                       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+ df6$wert <- prettyNum(df6$wert, big.mark = ".", decimal.mark = ",")
+
+highcharter::hchart(df6, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
+  highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
+  highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
+  highcharter::hc_xAxis(title= list(text=""),
+                        categories = ticks1
+                      ) %>%
+  #highcharter::hc_size(height = 800)%>%
+  highcharter::hc_plotOptions(bar = list(
+    colorByPoint = TRUE,
+    colors = ifelse(df6$fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer",
+                                           "Ingenieurwissenschaften ohne Informatik",
+                                           "Ingenieurwissenschaften (inkl. Informatik)",
+                                           "Naturwissenschaften",
+                                    "Mathematik, Naturwissenschaften"
+                                           ), "#b16fab", "#d0a9cd")))%>%#balken lila für MINT
+  highcharter::hc_title(text = paste0( "Anteil einzelner Fächer an allen Fächern ", "(", r_lab, ")" , " in ",states,
+                                       br(), timerange,
+                                       "<br><br><br>"),
+                        margin = 45,
+                        align = "center",
+                        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
 
 
 }
@@ -6301,31 +6321,30 @@ mint_anteile <- function(df,r) {
 
 
 
-  timerange <<- r$anteile_year
 
-  states <<- r$anteile_states
+  states <- r$anteile_states
 
-  indi <<- r$anteile_indi
+  indi <- r$anteile_indi
 
-  ordering <<- r$anteile_order
+  ordering <- r$anteile_order
 
-  dff1 <<- df
+  dff1 <- df
 
-  dff2 <<- dff1 %>%
+  dff2 <- dff1 %>%
     dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer")%>%
     dplyr::filter(geschlecht == "Gesamt")
 
-  dff3 <<- dff2 %>% dplyr::filter(fach == "Alle MINT-Fächer")%>%
+  dff3 <- dff2 %>% dplyr::filter(fach == "Alle MINT-Fächer")%>%
     tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
     dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
 
-  dff4 <<- dff2 %>%
+  dff4 <- dff2 %>%
     dplyr::select(indikator, region, jahr, fach, wert)%>%
     dplyr::left_join(dff3 , by=c("indikator", "region", "jahr"))%>%
     dplyr::filter(fach != "Alle MINT-Fächer")%>%
     dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
 
-  dff5 <<- dff4 %>%
+  dff5 <- dff4 %>%
     dplyr::filter(indikator == indi)%>%
     dplyr::filter(region == states)
 
@@ -6344,41 +6363,43 @@ mint_anteile <- function(df,r) {
 
 }
 
-  year <<- dff1 %>%
+  year_vec <- dff1 %>%
     dplyr::select(jahr)%>%
     unique()%>%
     as.vector%>%
     unlist()%>%
     unname()
 
-  dff6 <<- purrr::map(.f=get_all_years, .x =year_vec)%>%
+  dff6 <- purrr::map(.f=get_all_years, .x =year_vec)%>%
     purrr::list_rbind()
 
-  dff7 <<- dff5 %>%
+  dff7 <- dff5 %>%
     dplyr::bind_rows(dff6)
 
 
 
-  dff2a <<- dff1 %>%
+  dff2a <- dff1 %>%
     dplyr::filter(fach=="Informatik" | fach == "Ingenieurwissenschaften ohne Informatik"|
                   fach == "Mathematik, Naturwissenschaften" | fach == "Alle MINT-Fächer")%>%
     dplyr::filter(geschlecht == "Gesamt")
 
-  dff3a <<- dff2a %>% dplyr::filter(fach == "Alle MINT-Fächer")%>%
+  dff3a <- dff2a %>% dplyr::filter(fach == "Alle MINT-Fächer")%>%
     tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
     dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
 
-  dff4a <<- dff2a %>%
+  dff4a <- dff2a %>%
     dplyr::select(indikator, region, jahr, fach, wert)%>%
     dplyr::left_join(dff3 , by=c("indikator", "region", "jahr"))%>%
     dplyr::filter(fach != "Alle MINT-Fächer")%>%
     dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
 
-  dff5a <<- dff4a %>%
+  dff5a <- dff4a %>%
     dplyr::filter(indikator == indi)%>%
     dplyr::filter(region == states)
 
+  dff5a$wert <- prettyNum(dff5a$wert, big.mark = ".", decimal.mark = ",")
 
+  dff7$wert <- prettyNum(dff7$wert, big.mark = ".", decimal.mark = ",")
 
 if(ordering=="MINT-Fächer"){
 
@@ -6389,7 +6410,9 @@ if(ordering=="MINT-Fächer"){
     highcharter::hc_yAxis(title = list(text = "")
                           , labels = list(format = "{value} %")) %>%
     highcharter::hc_xAxis(title = list(text = ""))%>%
-    highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
+    highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24",
+                             "#AFF3E0","#2D6BE1",
+                             "#FFFBEB","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                              "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f"))
     # highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
     #
