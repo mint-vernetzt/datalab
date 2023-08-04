@@ -992,12 +992,12 @@ beruf_verlauf_single <- function(df,r) {
 #' @noRd
 
 beruf_einstieg_vergleich <- function(df,r) {
-# gibt nur 2021, daher keine Auswahl hier
+
   # load UI inputs from reactive value
- # timerange <- r$date_arbeitsmarkt_einstieg_vergleich
+ timerange <- r$date_arbeitsmarkt_einstieg_vergleich
 
   # filter dataset based on UI inputs
- # df <- df %>% dplyr::filter(jahr == timerange)
+  df <- df %>% dplyr::filter(jahr == timerange)
 
   # filtern auch nach DE - neuer DF enthält das wieder
   df <- df %>% dplyr::filter(landkreis == "alle Landkreise")
@@ -1046,9 +1046,9 @@ beruf_einstieg_vergleich <- function(df,r) {
     #Trennpunkte für lange Zahlen ergänzen
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
-
-  # Auswahl Indikatoren
-  df <- df %>% dplyr::filter(indikator %in% c("Auszubildende",
+  if(timerange == 2021) {
+    # Auswahl Indikatoren
+    df <- df %>% dplyr::filter(indikator %in% c("Auszubildende",
                                                 "Auszubildende (1. Jahr)",
                                                 "ausländische Auszubildende",
                                                 "Beschäftigte",
@@ -1057,6 +1057,38 @@ beruf_einstieg_vergleich <- function(df,r) {
                                                 "Beschäftigte 25-55",
                                                 "Beschäftigte ü55",
                                                 "in Minijobs"))
+    indi <- c("Auszubildende",
+              "Auszubildende (1. Jahr)",
+              "ausländische Auszubildende",
+              "Beschäftigte",
+              "ausländische Beschäftigte",
+              "Beschäftigte u25",
+              "Beschäftigte 25-55",
+              "Beschäftigte ü55",
+              "in Minijobs")
+  }else{
+    if(timerange == 2022){
+      df <- df %>% dplyr::filter(indikator %in% c("Auszubildende",
+                                                 # "Auszubildende (1. Jahr)",
+                                                  "ausländische Auszubildende",
+                                                  "Beschäftigte",
+                                                  "ausländische Beschäftigte",
+                                                  "Beschäftigte u25",
+                                                  "Beschäftigte 25-55",
+                                                  "Beschäftigte ü55",
+                                                  "in Minijobs"))
+      indi <- c("Auszubildende",
+                # "Auszubildende (1. Jahr)",
+                "ausländische Auszubildende",
+                "Beschäftigte",
+                "ausländische Beschäftigte",
+                "Beschäftigte u25",
+                "Beschäftigte 25-55",
+                "Beschäftigte ü55",
+                "in Minijobs")
+    }
+  }
+
 
   # df$indikator <- factor(df$indikator, levels = c("Auszubildende",
   #                                                 "Auszubildende (1. Jahr)",
@@ -1072,19 +1104,10 @@ beruf_einstieg_vergleich <- function(df,r) {
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = "fachbereich")) %>%
     highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-    highcharter::hc_xAxis(title = list(text = ""), categories = c("Auszubildende",
-                                                                  "Auszubildende (1. Jahr)",
-                                                                  "ausländische Auszubildende",
-                                                                  "Beschäftigte",
-                                                                  "ausländische Beschäftigte",
-                                                                  "Beschäftigte u25",
-                                                                  "Beschäftigte 25-55",
-                                                                  "Beschäftigte ü55",
-                                                                  "in Minijobs"
-                                                                  )) %>%
+    highcharter::hc_xAxis(title = list(text = ""), categories = indi) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten/Auszubildenden"),
+    highcharter::hc_title(text = paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten/Auszubildenden (", timerange, ")"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1220,6 +1243,8 @@ arbeitsmarkt_bl_gender_verlauf <- function(df,r) {
 
 
   }else if(absolut_selector=="Anzahl"){
+
+    title_help <- paste0(indikator_choice, "r")
 
     hcoptslang <- getOption("highcharter.lang")
     hcoptslang$thousandsSep <- "."
@@ -2440,12 +2465,13 @@ arbeitsmarkt_anforderungen_vergleich_gender <- function(df, r) {
 
 arbeitsmarkt_anforderungen <- function(df,r) {
 
-  #timerange <- r$date_arbeitsmarkt_anforderungen
+  timerange <- 2022
 
   indikator_choice <- r$indikator_arbeitsmarkt_anforderungen
 
   # filter dataset based on UI inputs
- # df <- df %>% dplyr::filter(jahr == timerange)
+  df <- df %>% dplyr::filter(jahr == timerange)
+
 
   df <- df %>% dplyr::filter(bundesland == "Deutschland")
 
@@ -2524,7 +2550,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
      waffle <- waffle::waffle(df, keep = FALSE) +
         ggplot2::labs(
           fill = "",
-          title = paste0("<span style='color:black;'>", "Berufsfelder von ", df_t$titel_help, " (2021) <br>")) +
+          title = paste0("<span style='color:black;'>", "Berufsfelder von ", df_t$titel_help, " (", timerange, ") <br>")) +
         ggplot2::theme(plot.title = ggtext::element_markdown(),
                        plot.subtitle = ggtext::element_markdown(),
                        text = ggplot2::element_text(size = 14),
@@ -2584,7 +2610,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
       waffle_1 <- waffle::waffle(df_1, keep = FALSE) +
         ggplot2::labs(
           fill = "",
-          title = paste0("<span style='color:black;'>", "Berufsfelder von ", df_t1$titel_help, " (2021) <br>")) +
+          title = paste0("<span style='color:black;'>", "Berufsfelder von ", df_t1$titel_help, " (", timerange, ") <br>")) +
         ggplot2::theme(plot.title = ggtext::element_markdown(),
                        plot.subtitle = ggtext::element_markdown(),
                        text = ggplot2::element_text(size = 14),
@@ -2613,7 +2639,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
       waffle_2 <- waffle::waffle(df_2, keep = FALSE) +
         ggplot2::labs(
           fill = "",
-          title = paste0("<span style='color:black;'>", "Berufsfelder von ", df_t2$titel_help , " (2021) <br>")) +
+          title = paste0("<span style='color:black;'>", "Berufsfelder von ", df_t2$titel_help , " (", timerange, ") <br>")) +
         ggplot2::theme(plot.title = ggtext::element_markdown(),
                        plot.subtitle = ggtext::element_markdown(),
                        text = ggplot2::element_text(size = 14),
