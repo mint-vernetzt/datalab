@@ -23,12 +23,12 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
     p("Auswahl des Indikators:"),
     shinyWidgets::pickerInput(
       inputId = ns("rank_l"),
-      choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
+      choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
                   "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
-                  "Ausländische Studierende",
+                  "Internationale Studierende",
                   "Studienanfänger:innen (1. Hochschulsemester)",
-                  "Studierende (Nur Lehramt)"
+                  "Studierende (Lehramt)"
       ),
       selected = "Studierende"),
     # p("Nur Lehramt azeigen:"),
@@ -82,7 +82,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
                   "Ostdeutschland (inkl. Berlin)",
                   "Westdeutschland (o. Berlin)"
                   ),
-      selected = "Hessen"
+      selected = "Rheinland-Pfalz"
     ))
 
 }
