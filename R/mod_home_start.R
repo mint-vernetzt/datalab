@@ -30,17 +30,25 @@ mod_home_start_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         title = "Auf dieser Seite",
-        width = 3,
+        width = 7,
         p(style = "text-align: left; font-size = 16px",
            "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")),
+      shinydashboard::box(
+        title = "Fragen oder Feedback?",
+        width = 5,
+        p(style = "text-align: left; font-size = 16px",
+          "Sind alle Zahlen und Grafiken verständlich?", br(),
+          "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
+        ))
+    ),
 
-
-
+    fluidRow(
       shinydashboard::box(
         title = "Übersicht Fragestellungen",
-        width = 3,
+        width = 7,
         p(style = "text-align: left; font-size = 16px",tags$a(href="#alle_mint",
         span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
         ),
@@ -52,22 +60,14 @@ mod_home_start_ui <- function(id){
 
       shinydashboard::box(
         title = "Datenquellen",
-        width = 3,
+        width = 5,
         p(style = "text-align: left; font-size = 16px",
           "Studierendenzahlen: Destatis 2022, auf Anfrage"),
          p("Schüler:innenzahlen: KMK 2022, auf Anfrage"),
           p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2022, auf Anfrage")
-        ),
+        )
 
-   shinydashboard::box(
-     title = "Fragen oder Feedback?",
-     width = 3,
-     p(style = "text-align: left; font-size = 16px",
-       "Sind alle Zahlen und Grafiken verständlich?", br(),
-       "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
-            tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-       )))
-      ,
+   ),
 
    # Box 1
 
@@ -89,7 +89,7 @@ mod_home_start_ui <- function(id){
                         htmlOutput(ns("plot_mint_rest_einstieg_1")),
                         br(),
                         p(style="font-size:12px;color:grey",
-                             "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                             "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
                         shinyBS::bsPopover(id="h_alle_mint_1", title = "",
                                            content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
@@ -106,7 +106,7 @@ mod_home_start_ui <- function(id){
                           width = 9,
                           highcharter::highchartOutput(ns("plot_mint_1")),
                           br(),
-                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_mint_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
                                              placement = "top",
@@ -125,7 +125,7 @@ mod_home_start_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_comparison_mint")),
                                br(),
-                               p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                               p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_mint_3", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
                                                   placement = "top",
@@ -155,7 +155,7 @@ mod_home_start_ui <- function(id){
                                width = 9,
                                htmlOutput(ns("plot_pie_mint_gender")),
                                p(style="font-size:12px;color:grey",
-                                  "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                                  "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_frauen_1", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                                   placement = "top",
@@ -171,7 +171,7 @@ mod_home_start_ui <- function(id){
                         shiny::mainPanel(
                           width = 9,
                           highcharter::highchartOutput(ns("plot_verlauf_mint"))
-                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_frauen_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                              placement = "top",
@@ -186,7 +186,7 @@ mod_home_start_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_comparison_gender"))
-                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen."),
+                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_frauen_3", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                                   placement = "top",
