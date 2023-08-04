@@ -70,6 +70,10 @@ mod_studium_server <- function(id, data_studierende,
   mod_studium_studienzahl_ausl_server("mod_studium_studienzahl_ausl_ui",  r)
   mod_studium_studienzahl_ausl_zeit_server("mod_studium_studienzahl_ausl_zeit_ui", r)
 
+
+  # neu
+  mod_studium_studienzahl_mint_anteile_server("mod_studium_studienzahl_mint_anteile_ui",  r)
+
 }
 
 ## To be copied in the UI
