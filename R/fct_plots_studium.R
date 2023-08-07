@@ -1405,10 +1405,10 @@ studienzahl_einstieg_comparison <- function(df,r) {
 
   highcharter::hchart(df6, 'bar', highcharter::hcaes(y = prop, x = indikator, group = forcats::fct_rev(proportion)))%>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.proportion} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  F) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-    highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+    highcharter::hc_colors(c( "#b16fab","#efe8e6")) %>%
     highcharter::hc_title(text = paste0("Anteil von Studierenden in MINT an allen Studierenden", "(", timerange, ")"),
                           margin = 45,
                           align = "center",
@@ -1416,7 +1416,7 @@ studienzahl_einstieg_comparison <- function(df,r) {
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
     highcharter::hc_exporting(enabled = FALSE,
                               buttons = list(contextButton = list(
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
@@ -3065,10 +3065,11 @@ ranking_bl_subject <- function(df,r, type) {
                              "Biologie",
                              "Chemie",
                              "Physik, Astronomie",
+                             "Pharmazie",
+                             "Geowissenschaften und Geographie",
                              "Ingenieurwissenschaften (inkl. Informatik)",
                              "Informatik",
                              "Ingenieurwissenschaften ohne Informatik",
-                             "Pharmazie",
                              "Maschinenbau/Verfahrenstechnik" ,
                              "Elektrotechnik und Informationstechnik",
                              "Verkehrstechnik, Nautik",
@@ -3079,7 +3080,7 @@ ranking_bl_subject <- function(df,r, type) {
                              "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
                              "Materialwissenschaft und Werkstofftechnik",
                              "Bergbau, Hüttenwesen",
-                             "Geowissenschaften und Geographie",
+
                              "Alle Nicht MINT-Fächer"
                              )
 
@@ -4174,8 +4175,8 @@ studierende_map <- function(df,r) {
 
 
   # Fach abhängig von Lehramt ja/nein zuweisen
-  if(label_m == "Studierende (Nur Lehramt)")  fach_m <- r$map_f_lehr
-  if(label_m != "Studierende (Nur Lehramt)")  fach_m <- r$map_f
+  if(label_m == "Studierende (Lehramt)")  fach_m <- r$map_f_lehr
+  if(label_m != "Studierende (Lehramt)")  fach_m <- r$map_f
 
 
 
@@ -5639,7 +5640,7 @@ plot_ranking_top_faecher <- function(df, r, type) {
 
 
   #Trennpunkte für lange Zahlen ergänzen
-  df5$wert <- prettyNum(df5$wert, big.mark = ".", decimal.mark = ",")
+
 
   if(subject == "MINT-Fächer"){
 
@@ -5660,6 +5661,8 @@ plot_ranking_top_faecher <- function(df, r, type) {
 
   # Split dataframe by gender and create plots
   if(abs_rel == "In Prozent"){
+
+    dfk$wert <- prettyNum(dfk$wert, big.mark = ".", decimal.mark = ",")
 
     # female
     studierende_faecher_frauen <- dfk %>%
@@ -5921,9 +5924,9 @@ plot_auslaender_mint <- function(df,r){
                               "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
                               "Sport",
                               "Kunst, Kunstwissenschaft",
-                              "MINT",
-                              "Nicht MINT",
-                              "Ingenieurwissenschaften und Informatik"))
+                              "Alle MINT-Fächer",
+                              "Alle Nicht MINT-Fächer",
+                              "Ingenieurwissenschaften (inkl. Informatik)"))
 
 
   df_aus_4 <- df_aus_2 %>%
@@ -5934,9 +5937,9 @@ plot_auslaender_mint <- function(df,r){
                                "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
                                "Sport",
                                "Kunst, Kunstwissenschaft",
-                               "Ingenieurwissenschaften und Informatik",
-                               "Nicht MINT",
-                               "MINT"))
+                               "Ingenieurwissenschaften (inkl. Informatik)",
+                               "Alle Nicht MINT-Fächer",
+                               "Alle MINT-Fächer"))
 
   #Faktor für Höhe des Grafens berechnen
   ebene <- c("Fachbereiche", "MINT-Fächer")
@@ -6006,7 +6009,7 @@ if(betr_ebene=="Fachbereiche"){
         dplyr::filter(selector == "Anzahl")
 
 
-  highcharter::hchart(df, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
+  highcharter::hchart(dfh, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
     highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.y}")%>%
     highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%

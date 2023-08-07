@@ -12,7 +12,7 @@ library(purrr)
 
 # Studierende ----
 
-setwd("C:/Users/kbr/Downloads/datalab/datalab/data-raw/raw")
+setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
 
 get_data <- function(file_list, fach_list){
 
@@ -249,7 +249,7 @@ studierende <- data_studi_neu2 %>%
 
 
 
-usethis::use_data(studierende, overwrite = T)
+#usethis::use_data(studierende, overwrite = T)
 
 
 duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht))
@@ -291,10 +291,10 @@ clean_des <- function (dat,year){
 
 # Creating master
 
-raw2018 <- clean_des(dat= "C:\\Users\\kbr\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES060_Kroeger_Stud_Land_FG_STB_2018.xlsx", year="2018")
-raw2019 <- clean_des(dat= "C:\\Users\\kbr\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES061_Kroeger_Stud_Land_FG_STB_2019.xlsx", year="2019")
-raw2020 <- clean_des(dat= "C:\\Users\\kbr\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES062_Kroeger_Stud_Land_FG_STB_2020.xlsx", year="2020")
-raw2021 <- clean_des(dat= "C:\\Users\\kbr\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES063_Kroeger_Stud_Land_FG_STB_2021.xlsx", year="2021")
+raw2018 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES060_Kroeger_Stud_Land_FG_STB_2018.xlsx", year="2018")
+raw2019 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES061_Kroeger_Stud_Land_FG_STB_2019.xlsx", year="2019")
+raw2020 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES062_Kroeger_Stud_Land_FG_STB_2020.xlsx", year="2020")
+raw2021 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES063_Kroeger_Stud_Land_FG_STB_2021.xlsx", year="2021")
 
 master <- bind_rows(raw2018,raw2019,raw2020, raw2021)
 
@@ -332,15 +332,17 @@ master_tada_long_1 <- master_tada_long %>%
   mutate(`Mathematik, Naturwissenschaften_Geowissenschaften und Geographie` =
            `Mathematik, Naturwissenschaften_Geowissenschaften (ohne Geographie)`+
            `Mathematik, Naturwissenschaften_Geographie`,
-         `Mathematik, Naturwissenschaften_Naturwissenschaften` =
-           `Mathematik, Naturwissenschaften_Physik, Astronomie`+
-           `Mathematik, Naturwissenschaften_Chemie`+
-           `Mathematik, Naturwissenschaften_Biologie`,
          `Ingenieurwissenschaften_Ingenieurwissenschaften ohne Informatik`=
            `Ingenieurwissenschaften_Zusammen`-
            `Ingenieurwissenschaften_Informatik`,
          MINT_MINT = `Ingenieurwissenschaften_Zusammen` +
            `Mathematik, Naturwissenschaften_Zusammen`)%>%
+  mutate(`Mathematik, Naturwissenschaften_Naturwissenschaften` =
+           `Mathematik, Naturwissenschaften_Physik, Astronomie`+
+           `Mathematik, Naturwissenschaften_Chemie`+
+           `Mathematik, Naturwissenschaften_Biologie`+
+           `Mathematik, Naturwissenschaften_Geowissenschaften und Geographie`+
+           `Mathematik, Naturwissenschaften_Pharmazie`)%>%
   mutate("Nicht MINT_Nicht MINT" = Zusammen_Zusammen - MINT_MINT)%>%
   select(-`Mathematik, Naturwissenschaften_Geowissenschaften (ohne Geographie)`,
          -`Mathematik, Naturwissenschaften_Geographie`)%>%
@@ -404,6 +406,7 @@ master_faecher_output1 <- master_faecher_output %>%
   mutate(mint_select=case_when(
     fachbereich== "Mathematik, Naturwissenschaften" ~"MINT",
     fachbereich== "Ingenieurwissenschaften" ~ "MINT",
+  #warum nicht "Alle MINT-Fächer"?
     T~ "Nicht MINT"
   ))%>%
   mutate(typ=case_when(fach %in% c("Alle Fächer", "Naturwissenschaften", "Ingenieurwissenschaften ohne Informatik",
