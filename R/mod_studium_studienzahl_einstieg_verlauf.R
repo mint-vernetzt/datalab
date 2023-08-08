@@ -18,7 +18,7 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020,2021),
       selected = c(2015,2021)
     ),
-    p("Indikatoren (max. 3):"),
+    p("Indikatoren:"),
     shinyWidgets::pickerInput(
       inputId = ns("studienzahl_einstieg_verlauf_indi"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -39,7 +39,6 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
       ),
       multiple = TRUE,
       options =  list(
-        "max-options" = 3,
         "max-options-text" = "Maximal 3 Indikatoren auswählen")
       # options = list(`actions-box` = TRUE,
       #                `deselect-all-text` = "Alle abwählen",

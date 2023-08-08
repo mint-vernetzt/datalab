@@ -217,3 +217,62 @@ share_pie_neu <- function(df) {
 
   return(df)
 }
+
+# funktion zur ordnung der fachauswahl für studierende_detailliert
+studi_det_ui_faecher <-function(spezif_i, spezif_r){
+
+  require(magrittr)
+
+  load("data/studierende_detailliert.rda")
+
+
+  if(missing(spezif_i)&missing(spezif_r)){
+
+    df1 <- studierende_detailliert %>%
+      dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))
+
+    df1 <- df1 %>%dplyr::select(fach)%>%
+      unique()%>%
+      as.vector()%>%
+      unlist()%>%
+      unname()
+
+    df1 <- sort(df1)
+
+  } else if (missing(spezif_i)){
+
+    df1 <- studierende_detailliert %>%
+      dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
+      dplyr::filter(region %in%  spezif_r)
+
+    df1 <- df1 %>%dplyr::select(fach)%>%
+      unique()%>%
+      as.vector()%>%
+      unlist()%>%
+      unname()
+
+    df1 <- sort(df1)
+
+  } else if(missing(spezif_r)){
+
+    df1 <- studierende_detailliert %>%
+      dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
+      dplyr::filter(indikator %in%  spezif_i)
+
+    df1 <- df1 %>%dplyr::select(fach)%>%
+      unique()%>%
+      as.vector()%>%
+      unlist()%>%
+      unname()
+
+    df1 <- sort(df1)
+
+  }
+
+
+
+
+
+
+}
+

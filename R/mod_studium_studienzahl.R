@@ -341,19 +341,35 @@ mod_studium_studienzahl_ui <- function(id){
 
                     # Fehler in der Boxgrösse, muss noch behoben werden
 
-                   # tabPanel("Alle Fächer auf einen Blick", br(),
-                   #
-                   #           tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                   #           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                   #           shiny::sidebarPanel(
-                   #             width = 3,
-                   #             mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
-                   #           shiny::mainPanel(
-                   #             width = 9,
-                   #             highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
-                   #             #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
-                   #           )
-                   #  ),
+
+                   tabPanel("Alle Fächer auf einen Blick", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
+                             shiny::mainPanel(
+                               width = 9,
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "650px"),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                               #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                             )
+                    ),
+
+                   tabPanel("MINT-Anteile im Zeitverlauf", br(),
+
+                            tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                            shiny::sidebarPanel(
+                              width = 3,
+                              mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui")),
+                            shiny::mainPanel(
+                              width = 9,
+                              highcharter::highchartOutput(ns("mint_anteil")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                              #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                            )
+                   ),
+
 
                     tabPanel("Vergleich nach Bundesländern", br(),
 
@@ -742,6 +758,15 @@ mod_studium_studienzahl_server <- function(id, data_studierende,
     output$plot_auslaender_zeit <-  highcharter::renderHighchart({
       plot_auslaender_mint_zeit(data_studierende_detailliert, r)
     })
+
+    #neu
+
+    output$mint_anteil <-  highcharter::renderHighchart({
+      mint_anteile(data_studierende_detailliert, r)
+    })
+
+
+
 
 
     # downloader
