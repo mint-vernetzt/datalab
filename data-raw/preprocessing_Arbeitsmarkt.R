@@ -810,6 +810,9 @@ arbeitsmarkt_detail_final <- rbind(data_final, data_a)
 
 arbeitsmarkt_detail_final$landkreis <- ifelse(arbeitsmarkt_detail_final$bundesland==arbeitsmarkt_detail_final$landkreis & is.na(arbeitsmarkt_detail_final$landkreis_nummer
 ), "alle Landkreise", arbeitsmarkt_detail_final$landkreis)
+# zusätzlich für 2022 weil bula und lk unterschiedlich benannt bei West und Ost
+arbeitsmarkt_detail_final$landkreis <- ifelse(arbeitsmarkt_detail_final$landkreis == "Westdeutschland" | arbeitsmarkt_detail_final$landkreis == "Ostdeutschland",
+                                              "alle Landkreise", arbeitsmarkt_detail_final$landkreis)
 
 #Wert als numerisch definieren und etwaige Gruppierungen entfernen
 arbeitsmarkt_detail_final <- arbeitsmarkt_detail_final %>% dplyr::ungroup()
