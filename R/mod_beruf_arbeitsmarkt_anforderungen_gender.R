@@ -10,15 +10,14 @@
 mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    # Zeit rausgenommen, da in detailliertem Datensatz  nur 2021 vorliegt
 
-    # p("Auswahl des Jahres:"),
-    # shinyWidgets::sliderTextInput(
-    #   inputId = ns("date_arbeitsmarkt_anforderungen_gender"),
-    #   label = NULL,
-    #   choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
-    #   selected = 2021
-    # ),
+    p("Auswahl des Jahres:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("date_arbeitsmarkt_anforderungen_gender"),
+      label = NULL,
+      choices = c(2021, 2022),
+      selected = 2022
+    ),
     # p("Auswahl der Beschäftigungsform:"),
     # shinyWidgets::radioGroupButtons(
     #   inputId = ns("level_arbeitsmarkt_anforderungen_gender"),
@@ -31,16 +30,30 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
     # Auswahlform zu Dropdown geändert - alle möglichen neuen Indikatore können einfach hier ergänzt werden
 
     p("Beschäftigungsform:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("level_arbeitsmarkt_anforderungen_gender"),
-      choices = c(
-        "Auszubildende",
-        "Auszubildende (1. Jahr)",
-        "Beschäftigte",
-        "ausländische Auszubildende",
-                  "ausländische Beschäftigte"),
-      multiple = FALSE,
-      selected = "Beschäftigte"),
+    conditionalPanel(condition = "input.date_arbeitsmarkt_anforderungen_gender == '2022'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("level_arbeitsmarkt_anforderungen_gender_22"),
+                       choices = c("Beschäftigte",
+                                   "Auszubildende",
+                                   # "Auszubildende (1. Jahr)", #auskommentiert bis für 2022 auch da
+                                   "ausländische Beschäftigte",
+                                   "ausländische Auszubildende"),
+                       selected = "Beschäftigte",
+                       multiple = FALSE
+                       )),
+    conditionalPanel(condition = "input.date_arbeitsmarkt_anforderungen_gender == '2021'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("level_arbeitsmarkt_anforderungen_gender_21"),
+                       choices = c("Beschäftigte",
+                                   "Auszubildende",
+                                   "Auszubildende (1. Jahr)",
+                                   "ausländische Beschäftigte",
+                                   "ausländische Auszubildende"),
+                       selected = "Beschäftigte",
+                       multiple = FALSE)),
+
     br(),
 
     shinyBS::bsPopover(id="ih_beruf_mint_4", title="",
@@ -58,12 +71,16 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
 mod_beruf_arbeitsmarkt_anforderungen_gender_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    # observeEvent(input$date_arbeitsmarkt_anforderungen_gender, {
-    #   r$date_arbeitsmarkt_anforderungen_gender <- input$date_arbeitsmarkt_anforderungen_gender
-    # })
+    observeEvent(input$date_arbeitsmarkt_anforderungen_gender, {
+      r$date_arbeitsmarkt_anforderungen_gender <- input$date_arbeitsmarkt_anforderungen_gender
+    })
 
-    observeEvent(input$level_arbeitsmarkt_anforderungen_gender, {
-      r$level_arbeitsmarkt_anforderungen_gender <- input$level_arbeitsmarkt_anforderungen_gender
+    observeEvent(input$level_arbeitsmarkt_anforderungen_gender_21, {
+      r$level_arbeitsmarkt_anforderungen_gender_21 <- input$level_arbeitsmarkt_anforderungen_gender_21
+    })
+
+    observeEvent(input$level_arbeitsmarkt_anforderungen_gender_22, {
+      r$level_arbeitsmarkt_anforderungen_gender_22 <- input$level_arbeitsmarkt_anforderungen_gender_22
     })
 
   })

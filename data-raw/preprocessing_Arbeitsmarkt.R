@@ -2,7 +2,7 @@
 #
 # Data Lab
 # Vorbereitung Datensatz: Arbeitsmarkt Zeitreihe (Beschäftigte und Auszubildende)
-# Author: Katharina Brunner, Januar 2023
+# Author: Katharina Brunner, Juli 2023
 # Quelle: C:\Users\kbr\OneDrive - Stifterverband\MINTvernetzt (SV)\MINTv_SV_AP7 MINT-DataLab\02 Datenmaterial\02_Prozess\Datenaufbereitung 2023\Arbeitsmarkt
 #
 ################################################################################
@@ -22,13 +22,27 @@ data_z <- readxl::read_excel("data-raw/raw/Arbeitsmarkt.xlsx", col_names = T)
 #                                        "data-raw/BA006_221123_Besch_MINT.xlsx"),
 #                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
 
-data <- readxl::read_excel("data-raw/BA006_221123_Besch_MINT.xlsx",
+data <- readxl::read_excel("data-raw/raw/BA006_221123_Besch_MINT.xlsx",
                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
 
-# Spalten zusammenfassen/löschen
+data_n <- readxl::read_excel("data-raw/raw/BA009_230717_EA_344636_SvB_Azubi_MINT.xlsx",
+                             sheet = "Auswertung", col_names = F, range = "A16:AH7521")
+
+# Spalten zusammenfassen/löschen für 2022
 data$...1 <- dplyr::coalesce(data$...4, data$...3, data$...2, data$...1) # Regionen in eine Spalte
 data$...5 <- dplyr::coalesce(data$...8, data$...7, data$...6, data$...5) # MINT/Niveau in eine Spalte
 data <- data[,-c(2,3,4,6,7,8,9)] # nun überflüssige Spalten löschen
+
+# Spalten zusammenfassen/löschen für 2023
+data_n$...2 <- dplyr::coalesce(data_n$...5, data_n$...4, data_n$...3, data_n$...2) # MINT/Niveau in eine Spalte
+data_n <- data_n[,-c(3,4,5,6)] # nun überflüssige Spalten löschen
+
+
+## data von 2021 und data_n von 2022 haben selbe Form
+## funktion für Aufbereitung
+
+
+zeitreihe_aufbereitung <- function(data, jahr){
 
 # Header ergänzen
 header <- c("region", "fachbereich",
@@ -109,7 +123,7 @@ data <- data %>%
     # quelle = "Bundesagentur für Arbeit, 2022: Auf Anfrage (Auftragsnummer 335970)",
     # hinweise = "eigene Berechnungen durch MINTvernetzt",
     bereich = "Arbeitsmarkt",
-    jahr = 2021,
+    jahr = jahr,
     geschlecht = dplyr::case_when(
       stringr::str_detect(data$name, "weiblich")~"Frauen",
       TRUE ~ "Gesamt"
@@ -144,6 +158,10 @@ data <- data[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht"
                 #, "hinweise", "quelle"
 )]
 
+}
+
+data <- zeitreihe_aufbereitung(data = data, jahr = 2021)
+data_n <- zeitreihe_aufbereitung(data = data_n, jahr = 2022)
 
 ## Datensätze zu zusammenlegen vorbereiten ---------------------------------
 
@@ -164,6 +182,10 @@ data_z[data_z$anforderung == "gesamt", "anforderung"] <- "Gesamt"
 
 #neue Daten an alten Datensatz angelichen
 data_k <- data
+data_kn <- data_n
+
+zeitreihe_angleichen <- function(data_k){
+
 data_k <- data_k %>%
   dplyr::mutate(indikator = dplyr::case_when(
     indikator == "Beschäftigte" ~ "Beschäftigte",
@@ -182,6 +204,11 @@ data_k <- na.omit(data_k)
 data_k <- data_k %>%
   dplyr::select(-kategorie)
 
+}
+
+data_k <- zeitreihe_angleichen(data_k = data_k)
+data_kn <- zeitreihe_angleichen(data_k = data_kn)
+
 # Spalten in gleiche Reihenfolge bringen
 data_z <- data_z[,c("bereich", "indikator", "fachbereich", "geschlecht", "region", "jahr", "anforderung", "wert"
                     #, "hinweise", "quelle"
@@ -190,7 +217,7 @@ data_z <- data_z[,c("bereich", "indikator", "fachbereich", "geschlecht", "region
 
 ## Datensatz in data speichern  ------------------------------------------------------
 
-arbeitsmarkt <- rbind(data_z, data_k)
+arbeitsmarkt <- rbind(data_z, data_k, data_kn)
 arbeitsmarkt$wert <- as.numeric(arbeitsmarkt$wert)
 
 usethis::use_data(arbeitsmarkt, overwrite = T)
@@ -218,11 +245,18 @@ library(magrittr)
 data <- readxl::read_excel("data-raw/raw/BA006_221123_Besch_MINT.xlsx",
                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
 
+data_n <- readxl::read_excel("data-raw/raw/BA009_230717_EA_344636_SvB_Azubi_MINT.xlsx",
+                             sheet = "Auswertung", col_names = F, range = "A16:AH7521")
+
 # Spalten zusammenfassen/löschen
 data$...1 <- dplyr::coalesce(data$...4, data$...3, data$...2, data$...1) # Regionen in eine Spalte
 data$...5 <- dplyr::coalesce(data$...8, data$...7, data$...6, data$...5) # Hilfspalte für MINT/Niveau gesamt, wird später getrennt
 
-# region formattieren (kab)
+# Spalten zusammenfassen/löschen für 2023
+data_n$...2 <- dplyr::coalesce(data_n$...5, data_n$...4, data_n$...3, data_n$...2) # MINT/Niveau in eine Spalte
+#data_n <- data_n[,-c(3,4,5,6)] # nun überflüssige Spalten löschen
+
+## Daten von 2021 region formatieren (kab)
 
 data1 <- data %>%
   dplyr::mutate(bundesland=dplyr::case_when(
@@ -297,8 +331,59 @@ data1 <- data1 %>%
 
 data <- data1[,-c(2,3,8:11)] # nun überflüssige Spalten löschen
 
+## Daten von 2022 region formatieren
+data_n1 <- data_n
+data_n1$...3 <- data_n1$...1
+data_n1 <- data_n1 %>%
+  dplyr::mutate(bundesland=dplyr::case_when(
+    ...1 == "Deutschland" ~ "Deutschland",
+    ...1 == "Westdeutschland" ~"Westdeutschland (o. Berlin)",
+    ...1 == "Ostdeutschland" ~ "Ostdeutschland (einschl. Berlin)",
+    ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
+    ...1 == "Bayern" ~"Bayern",
+    ...1 == "Berlin" ~"Berlin",
+    ...1 == "Brandenburg" ~ "Brandenburg",
+    ...1 == "Bremen" ~ "Bremen",
+    ...1 == "Hamburg" ~"Hamburg",
+    ...1 == "Hessen" ~"Hessen",
+    ...1 == "Mecklenburg-Vorpommern" ~"Mecklenburg-Vorpommern",
+    ...1 == "Niedersachsen" ~"Niedersachsen",
+    ...1 == "Nordrhein-Westfalen" ~"Nordrhein-Westfalen",
+    ...1 == "Rheinland-Pfalz" ~"Rheinland-Pfalz",
+    ...1 == "Saarland" ~"Saarland",
+    ...1 == "Sachsen-Anhalt" ~"Sachsen-Anhalt",
+    ...1 == "Sachsen" ~"Sachsen",
+    ...1 == "Schleswig-Holstein" ~"Schleswig-Holstein",
+    ...1 == "Thüringen" ~"Thüringen"
+  ))%>% tidyr::separate(...3, c("a","b"), sep = ",")%>% #reicht nicht ganz, müsste auch nach : separieren für Sachsen-Anhalt Kreise
+  dplyr::rename(ort = a)
 
-# Header ergänzen
+  #schlüsselnummer nur mit Leerzeichen getrennt
+  data_n1$...4 <- stringr::str_extract(data_n1$ort, "[[:digit:]]+")
+  data_n1$ort <- gsub("[[:digit:]]", "", data_n1$ort)
+
+  # zwischen gleichnamigen Stadt- und Landkreisen unterscheiden
+  ## Hilfsvarialbe, die Stadt/Landkreise, die es doppelt gibt, in Hilfs-String schreibt
+  help <- data.frame(table(data_n1$ort))
+  help <- help %>% dplyr::filter(Freq != 1)
+
+  # für die ausgewählten Fälle (-->%in% help) falls "Stadt" in näherer Bezeichnung in Spalte b vorkommt, Stadt vorschreiben, sonst Landkreis
+  data_n1$ort <- ifelse(data_n1$ort %in% help$Var1 & grepl("tadt", data_n1$b) , stringr::str_c("Stadt ", data_n1$ort), data_n1$ort)
+  data_n1$ort <- ifelse(data_n1$ort %in% help$Var1 & !grepl("tadt", data_n1$b), stringr::str_c("Landkreis ", data_n1$ort),data_n1$ort)
+
+  # Spezifalfall Oldenburg mit Beschreibung Oldenburg in Klammern, daher nicht erkannt als identisch in Ansatz davor
+  data_n1$ort <- ifelse(grepl("Olde", data_n1$ort), "Stadt Oldenbrug", data_n1$ort)
+  data_n1$ort <- ifelse(grepl("Olde", data_n1$ort) & is.na(data_n1$b), "Landkreis Oldenbrug", data_n1$ort)
+
+  data_n <- data_n1 %>%
+    dplyr::rename(
+      schluesselnummer = ...4,
+      zusatz = b
+    )
+
+  data_n <- data_n[,-c(6,7)]
+
+# Header ergänzen daten von 2021
 header <- c("region", "ort", "zusatz", "schluesselnummer", "fachbereich",
             #
             "Beschäftigte",
@@ -339,9 +424,53 @@ header <- c("region", "ort", "zusatz", "schluesselnummer", "fachbereich",
 )
 colnames(data) <- header
 
+# Header ergänzen daten von 2022
+header <- c("region", "fachbereich", "ort", "zusatz", "schluesselnummer",
+            #
+            "Beschäftigte",
+            "weibliche Beschäftigte",
+            "Beschäftigte u25",
+            "Beschäftigte ü55",
+            #
+            "Beschäftigte (nur SVB)",
+            "weibliche Beschäftigte (nur SVB)",
+            "Beschäftigte u25 (nur SVB)",
+            "Beschäftigte ü55 (nur SVB)",
+            "Auszubildende",
+            "weibliche Auszubildende",
+            #
+            "Beschäftigte (nur GFB)",
+            "weibliche Beschäftigte (nur GFB)",
+            "Beschäftigte u25 (nur GFB)",
+            "Beschäftigte ü55 (nur GFB)",
+            #
+            "ausländische Beschäftigte",
+            "ausländische weibliche Beschäftigte",
+            "ausländische Beschäftigte u25",
+            "ausländische Beschäftigte ü55",
+            #
+            "ausländische Beschäftigte (nur SVB)",
+            "ausländische weibliche Beschäftigte (nur SVB)",
+            "ausländische Beschäftigte u25 (nur SVB)",
+            "ausländische Beschäftigte ü55 (nur SVB)",
+            "ausländische Auszubildende",
+            "ausländische weibliche Auszubildende",
+            #
+            "ausländische Beschäftigte (nur GFB)",
+            "ausländische weibliche Beschäftigte (nur GFB)",
+            "ausländische Beschäftigte u25 (nur GFB)",
+            "ausländische Beschäftigte ü55 (nur GFB)",
+
+            "bundesland"
+)
+colnames(data_n) <- header
+
+# bundesland füllen
+data_n$bundesland <- stats::ave(data_n$bundesland, cumsum(!is.na(data_n$bundesland)), FUN=function(x) x[1])
 
 ## Aufbereiten in gewünschte DF-Struktur ---------------------------------
 
+detailliert_aufbereiten <- function(data, jahr){
 
 # Anpassungen (kab)
 
@@ -407,7 +536,7 @@ data <- data %>%
     # quelle = "Bundesagentur für Arbeit, 2022: Auf Anfrage (Auftragsnummer 335970)",
     # hinweise = "eigene Berechnungen durch MINTvernetzt",
     bereich = "Arbeitsmarkt",
-    jahr = 2021,
+    jahr = jahr,
     geschlecht = dplyr::case_when(
       stringr::str_detect(data$name, "weiblich")~"Frauen",
       TRUE ~ "Gesamt"
@@ -488,7 +617,9 @@ data_geschlecht <- data %>% dplyr::filter(!indikator %in% c("Beschäftigte u25",
 
 data_final <- dplyr::bind_rows(data_geschlecht, data_alter, data_ausl_alter) %>%
   dplyr::distinct()
-
+}
+data <- detailliert_aufbereiten(data = data, jahr = 2021)
+data_n <- detailliert_aufbereiten(data = data_n, jahr = 2022)
 
 ## Azubi-Datensatz ---------------------------------------------------------
 
@@ -513,7 +644,7 @@ data_a$...5 <- dplyr::coalesce(data_a$...8, data_a$...7, data_a$...6, data_a$...
 data_a1 <- data_a %>%
   dplyr::mutate(bundesland=dplyr::case_when(
     ...1 == "Deutschland" ~ "Deutschland",
-    ...1 == "Westdeutschland (o. Berlin)" ~"Westdeutschland (o. Berlin)",
+    ...1 == "Westdeutschland (ohne Berlin)" ~"Westdeutschland (o. Berlin)",
     ...1 == "Ostdeutschland (einschl. Berlin)" ~ "Ostdeutschland (einschl. Berlin)",
     ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
     ...1 == "Bayern" ~"Bayern",
@@ -665,10 +796,12 @@ data_a <- data_a[,c("bereich","kategorie", "indikator", "fachbereich", "geschlec
                     #, "hinweise", "quelle"
 )]
 
-#### Korrektur
-#für Westdeutschland (ohne Berlin) das auch als Bundesland schreiben, nicht DE, sonst entstehen später möglicherweise Fehler beim aggregieren
-data_a$bundesland <- ifelse(data_a$landkreis == "Westdeutschland (ohne Berlin)", "Westdeutschland (ohne Berlin)", data_a$bundesland)
+# nach Andis anpassungen nochmal sortieren und 2021 und 2022 zusammenpacken
+data_final <- rbind(data, data_n)
 
+data_final <- data_final[,c("bereich","kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
+                    #, "hinweise", "quelle"
+)]
 
 ## arbeitsmarkt detailliert zusammenführen ---------------------------------
 
@@ -677,6 +810,9 @@ arbeitsmarkt_detail_final <- rbind(data_final, data_a)
 
 arbeitsmarkt_detail_final$landkreis <- ifelse(arbeitsmarkt_detail_final$bundesland==arbeitsmarkt_detail_final$landkreis & is.na(arbeitsmarkt_detail_final$landkreis_nummer
 ), "alle Landkreise", arbeitsmarkt_detail_final$landkreis)
+# zusätzlich für 2022 weil bula und lk unterschiedlich benannt bei West und Ost
+arbeitsmarkt_detail_final$landkreis <- ifelse(arbeitsmarkt_detail_final$landkreis == "Westdeutschland" | arbeitsmarkt_detail_final$landkreis == "Ostdeutschland",
+                                              "alle Landkreise", arbeitsmarkt_detail_final$landkreis)
 
 #Wert als numerisch definieren und etwaige Gruppierungen entfernen
 arbeitsmarkt_detail_final <- arbeitsmarkt_detail_final %>% dplyr::ungroup()

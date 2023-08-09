@@ -10,6 +10,13 @@
 mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
+    p("Auswahl des Jahres:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("date_beruf_arbeitsmarkt_landkreis_vergleich"),
+      label = NULL,
+      choices = c(2021, 2022),
+      selected = 2022
+    ),
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_landkreis_vergleich"),
@@ -116,6 +123,10 @@ mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
 mod_beruf_arbeitsmarkt_landkreis_vergleich_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+    observeEvent(input$date_beruf_arbeitsmarkt_landkreis_vergleich, {
+      r$date_beruf_arbeitsmarkt_landkreis_vergleich <- input$date_beruf_arbeitsmarkt_landkreis_vergleich
+    })
 
     observeEvent(input$states_beruf_arbeitsmarkt_landkreis_vergleich, {
       r$states_beruf_arbeitsmarkt_landkreis_vergleich <- input$states_beruf_arbeitsmarkt_landkreis_vergleich

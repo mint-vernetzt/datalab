@@ -15,8 +15,8 @@ mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui <- function(id){
       inputId = ns("date_beruf_arbeitsmarkt_bl_gender_verlauf"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021"),
-      selected = c("2016", "2021")
+                  "2018","2019", "2020", "2021", "2022"),
+      selected = c("2017", "2022")
     ),
     p("Beschäftigungsform"),
     shinyWidgets::pickerInput(

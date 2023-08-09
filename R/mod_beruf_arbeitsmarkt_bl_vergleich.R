@@ -11,33 +11,47 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    # p("Auswahl des Jahres:"),
-    # shinyWidgets::sliderTextInput(
-    #   inputId = ns("date_beruf_arbeitsmarkt_bl_vergleich"),
-    #   label = NULL,
-    #   choices = c("2013", "2014", "2015", "2016", "2017",
-    #               "2018","2019", "2020", "2021"),
-    #   selected = "2021"
-    # ),
-    p("Beschäftigungsform:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("indikator"),
-      choices = c( "Auszubildende",
-                   "Auszubildende (1. Jahr)",
-                   "Beschäftigte",
-                   "ausländische Auszubildende",
-                   "ausländische Beschäftigte",
-                   "Beschäftigte 25-55",
-                   "Beschäftigte u25",
-                   "Beschäftigte ü55"),
-      # justified = TRUE,
-      # checkIcon = list(yes = icon("ok",
-      #                             lib = "glyphicon")),
-      selected="Beschäftigte"
+    p("Auswahl des Jahres:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("date_bl_vergl"),
+      label = NULL,
+      choices = c( "2021", "2022"),
+      selected = "2022"
     ),
+    p("Beschäftigungsform:"),
+    conditionalPanel(condition = "input.date_bl_vergl == '2022'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("indikator_bl_vergl_22"),
+                       choices = c("Auszubildende",
+                                   #"Auszubildende (1. Jahr)",
+                                   "Beschäftigte",
+                                   "ausländische Auszubildende",
+                                   "ausländische Beschäftigte",
+                                   "Beschäftigte 25-55",
+                                   "Beschäftigte u25",
+                                   "Beschäftigte ü55"),
+                       selected = "Beschäftigte",
+                       multiple = FALSE
+                     )),
+    conditionalPanel(condition = "input.date_bl_vergl == '2021'",
+                     ns = ns,
+                     shinyWidgets::pickerInput(
+                       inputId = ns("indikator_bl_vergl_21"),
+                       choices = c("Auszubildende",
+                                   "Auszubildende (1. Jahr)",
+                                   "Beschäftigte",
+                                   "ausländische Auszubildende",
+                                   "ausländische Beschäftigte",
+                                   "Beschäftigte 25-55",
+                                   "Beschäftigte u25",
+                                   "Beschäftigte ü55"),
+                       selected = "Beschäftigte",
+                       multiple = FALSE)),
+
     p("Berufsfeld:"),
     shinyWidgets::pickerInput(
-      inputId = ns("states"),
+      inputId = ns("feld_bl_vergl"),
       choices = c(
         "MINT",
         "Mathematik/ Naturwissenschaften" = "Mathematik, Naturwissenschaften",
@@ -73,12 +87,20 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
 mod_beruf_arbeitsmarkt_bl_vergleich_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$states, {
-      r$states <- input$states
+    observeEvent(input$feld_bl_vergl, {
+      r$feld_bl_vergl <- input$feld_bl_vergl
     })
 
-    observeEvent(input$indikator, {
-      r$indikator <- input$indikator
+    observeEvent(input$indikator_bl_vergl_21, {
+      r$indikator_bl_vergl_21 <- input$indikator_bl_vergl_21
+    })
+
+    observeEvent(input$indikator_bl_vergl_22, {
+      r$indikator_bl_vergl_22 <- input$indikator_bl_vergl_22
+    })
+
+    observeEvent(input$date_bl_vergl, {
+      r$date_bl_vergl <- input$date_bl_vergl
     })
 
     # observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_vergleich, {

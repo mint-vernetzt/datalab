@@ -10,6 +10,13 @@
 mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
   ns <- NS(id)
   tagList(
+    p("Auswahl des Jahres:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("date_beruf_arbeitsmarkt_landkreis_karte"),
+      label = NULL,
+      choices = c(2021, 2022),
+      selected = 2022
+    ),
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_landkreis_karte"),
@@ -163,6 +170,10 @@ mod_beruf_arbeitsmarkt_landkreis_map_server <- function(id, r){
 
     observeEvent(input$states_beruf_arbeitsmarkt_landkreis_karte, {
       r$states_beruf_arbeitsmarkt_landkreis_karte <- input$states_beruf_arbeitsmarkt_landkreis_karte
+    })
+
+    observeEvent(input$date_beruf_arbeitsmarkt_landkreis_karte, {
+      r$date_beruf_arbeitsmarkt_landkreis_karte <- input$date_beruf_arbeitsmarkt_landkreis_karte
     })
 
     # first map
