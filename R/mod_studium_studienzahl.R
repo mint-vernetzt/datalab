@@ -351,7 +351,12 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "650px"),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen." )
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "650px"),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen." ),
+                               shinyBS::bsPopover(id="h_studium_fach_5", title="",
+                                                  content = paste0("Durch Rundung kann es dazu kommen, dass einige Fächer für bestimmte Indikatoren oder Regionen wegfallen"),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_5")
                                #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
@@ -365,12 +370,13 @@ mod_studium_studienzahl_ui <- function(id){
                               mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui")),
                             shiny::mainPanel(
                               width = 9,
-                              highcharter::highchartOutput(ns("mint_anteil")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen."),
-                              shinyBS::bsPopover(id="h_studium_fach_5", title="",
-                                                 content = paste0("Durch Rundung kann es dazu kommen, dass einige Fächer für bestimmte Indikatoren oder Regionen wegfallen"),
-                                                 placement = "top",
-                                                 trigger = "hover"),
-                              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_5")
+                              highcharter::highchartOutput(ns("mint_anteil")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
+                              # ,
+                              # shinyBS::bsPopover(id="h_studium_fach_5", title="",
+                              #                    content = paste0("Durch Rundung kann es dazu kommen, dass einige Fächer für bestimmte Indikatoren oder Regionen wegfallen"),
+                              #                    placement = "top",
+                              #                    trigger = "hover"),
+                              # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_5")
                               #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
                             )
                    ),
