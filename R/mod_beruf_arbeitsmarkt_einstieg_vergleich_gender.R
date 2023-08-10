@@ -59,7 +59,7 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
       selected = "Niedersachsen"),
     br(),
     shinyBS::bsPopover(id="ih_beruf_frauen_3", title="",
-                       content = paste0("In der ersten Einstellung sieht man beispielsweise im oberen Teil der Grafik, dass in Niedersachsen 2021 Frauen nur 14 % der Auszubildenden in MINT ausmachen. Um einen Prozentpunkt höher ist der Frauenanteil, wenn man nur die Auszubildenden in ihrem ersten Lehrjahr betrachtet. Dagegen machen Frauen in anderen Ausbildungen die Mehrheit aus."),
+                       content = paste0("In der ersten Einstellung sieht man beispielsweise im oberen Teil der Grafik, dass in Niedersachsen 2022 Frauen nur 14 % der Auszubildenden in MINT ausmachen. Dagegen sind Frauen in allen anderen Ausbildungen zusammen betrachtet in der Mehrheit."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_frauen_3")
 

@@ -78,7 +78,7 @@ mod_beruf_arbeitsmarkt_überblick_fächer_ui <- function(id){
 
     br(),
     shinyBS::bsPopover(id="ih_beruf_fach_2", title="",
-                       content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Sachsen-Anhalt 21,1 % der Beschäftigten in MINT arbeiten. Den größten Anteil machen dabei die ca. 143.000 Beschäftigten im Berufsfeld Technik aus."),
+                       content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Sachsen-Anhalt im Jahr 2022 21 % der Beschäftigten in MINT arbeiten. Den größten Anteil machen dabei die ca. 142.000 Beschäftigten im Berufsfeld Technik aus."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_2")
     )

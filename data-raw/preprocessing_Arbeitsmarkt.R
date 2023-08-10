@@ -361,6 +361,7 @@ data_n1 <- data_n1 %>%
   #schlüsselnummer nur mit Leerzeichen getrennt
   data_n1$...4 <- stringr::str_extract(data_n1$ort, "[[:digit:]]+")
   data_n1$ort <- gsub("[[:digit:]]", "", data_n1$ort)
+  data_n1$ort <- stringr::str_trim(data_n1$ort)
 
   # zwischen gleichnamigen Stadt- und Landkreisen unterscheiden
   ## Hilfsvarialbe, die Stadt/Landkreise, die es doppelt gibt, in Hilfs-String schreibt
@@ -797,6 +798,17 @@ data_a <- data_a[,c("bereich","kategorie", "indikator", "fachbereich", "geschlec
 )]
 
 # nach Andis anpassungen nochmal sortieren und 2021 und 2022 zusammenpacken
+## Hambrug und Berlin mit Lk Nummer ergänzen
+data_hh <- data_n[data_n$bundesland == "Hamburg",]
+data_hh$landkreis_nummer <- "02000"
+data_hh$landkreis_zusatz <-"Freie und Hansestadt"
+
+data_b <- data_n[data_n$bundesland == "Berlin",]
+data_b$landkreis_nummer <- "11000"
+data_b$landkreis_zusatz <-"Stadt"
+
+data_n <- rbind(data_n, data_hh, data_b)
+
 data_final <- rbind(data, data_n)
 
 data_final <- data_final[,c("bereich","kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"

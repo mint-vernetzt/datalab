@@ -66,7 +66,7 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
 
     br(),
     shinyBS::bsPopover(id="ih_beruf_mint_1", title="",
-                       content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland im Jahr 2021 23 % der Beschäftigten in MINT beschäftigt waren (2 + 3 + 18 = 23 %). Bei den Auszubildenden waren dies 30 % bzw. 31 % (je nach Rundung)."),
+                       content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland im Jahr 2022 23 % der Beschäftigten in MINT beschäftigt waren (2 + 3 + 18 = 23 %). Bei den Auszubildenden waren dies 30 %."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_1")
 

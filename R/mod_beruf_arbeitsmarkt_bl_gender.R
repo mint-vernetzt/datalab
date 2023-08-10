@@ -61,7 +61,7 @@ mod_beruf_arbeitsmarkt_bl_gender_ui <- function(id){
     br(),
     br(),
     shinyBS::bsPopover(id="ih_beruf_mint_5", title="",
-                       content = paste0("Vergleicht man die Legenden der Karten sieht man, dass das der Anteil von Frauen, die in MINT-Berufen arbeiten, weitaus geringer ist als der von Männern. In Rheinland-Pfalz arbeiten beispielsweise nur 6 % aller berufstätigen Frauen in MINT, dagegen aber 35 % der Männer."),
+                       content = paste0("Vergleicht man die Legenden der Karten sieht man, dass der Anteil von Frauen, die in MINT-Berufen arbeiten, weitaus geringer ist als der von Männern. In Rheinland-Pfalz arbeiten beispielsweise 2022 nur 7 % aller berufstätigen Frauen in MINT, dagegen aber 35 % der Männer."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_5")
 
