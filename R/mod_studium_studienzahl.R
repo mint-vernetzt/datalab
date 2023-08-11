@@ -351,12 +351,13 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "650px"),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen." ),
-                               shinyBS::bsPopover(id="h_studium_fach_5", title="",
-                                                  content = paste0("Durch Rundung kann es dazu kommen, dass einige Fächer für bestimmte Indikatoren oder Regionen wegfallen"),
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "650px"),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt." ),
+                               shinyBS::bsPopover(id="h_studium_fach_3", title="",
+                                                  content = paste0("Durch Rundung kann es dazu kommen, dass einzelne Studienfachgruppen für bestimmte Indikatoren oder Regionen nicht in der Darstellung angezeigt werden.", "<br> <br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                   placement = "top",
                                                   trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_5")
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_3")
                                #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
@@ -370,13 +371,14 @@ mod_studium_studienzahl_ui <- function(id){
                               mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui")),
                             shiny::mainPanel(
                               width = 9,
-                              highcharter::highchartOutput(ns("mint_anteil")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
-                              # ,
-                              # shinyBS::bsPopover(id="h_studium_fach_5", title="",
-                              #                    content = paste0("Durch Rundung kann es dazu kommen, dass einige Fächer für bestimmte Indikatoren oder Regionen wegfallen"),
-                              #                    placement = "top",
-                              #                    trigger = "hover"),
-                              # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_5")
+                              highcharter::highchartOutput(ns("mint_anteil")),
+                              p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
+                               ,
+                              shinyBS::bsPopover(id="h_studium_fach_4", title="",
+                                                 content = paste0("Durch Rundung kann es dazu kommen, dass einzelne Studienfachgruppen für bestimmte Indikatoren oder Regionen nicht in der Darstellung angezeigt werden.", "<br> <br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
+                                                 placement = "top",
+                                                 trigger = "hover"),
+                              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_4")
                               #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen.")
                             )
                    ),
@@ -392,11 +394,11 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_vergleich_bl1")),
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id="h_studium_fach_3", title="",
+                               shinyBS::bsPopover(id="h_studium_fach_5", title="",
                                                   content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die Bundesländer angezeigt, welche die betrachtete Studienfachgruppe aufweisen.", "<br><br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                   placement = "top",
                                                   trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_3")
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_5")
 
                              )
                     )

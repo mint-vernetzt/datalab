@@ -83,7 +83,14 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
                   "Westdeutschland (o. Berlin)"
                   ),
       selected = "Rheinland-Pfalz"
-    ))
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_fach_3", title="",
+                       content = paste0("Die Darstellung zeigt, wie groß der Anteil Studierender in einzelnen MINT-Fächern an allen Studierenden ist. In der ersten Einstellung sieht man beispielsweise, 2021 studieren in Rheinland-Pfalz 9.085 Personen (7,5 %) Informatik."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_3")
+    )
 
 }
 

@@ -59,11 +59,11 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                        selected = "Alle MINT-Fächer"
                      )),
     br(),
-    shinyBS::bsPopover(id="ih_studium_fach_3", title="",
+    shinyBS::bsPopover(id="ih_studium_fach_5", title="",
                        content = paste0("Die Übersicht zeigt, dass der Anteil von Studierenden in MINT an allen Studierenden zwischen den Bundesländern zwischen 24 % (Thüringen, Saarland) und 42 % (Sachsen) liegt."),
                        placement = "top",
                        trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_3")
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_5")
 
 
     # ,

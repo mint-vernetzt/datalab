@@ -3061,7 +3061,7 @@ ranking_bl_subject <- function(df,r, type) {
     ticks <- c("Alle MINT-Fächer",
                              "Mathematik, Naturwissenschaften",
                              "Mathematik",
-                             "Naturwissenschaften",
+                            # "Naturwissenschaften",
                              "Biologie",
                              "Chemie",
                              "Physik, Astronomie",
@@ -3069,7 +3069,7 @@ ranking_bl_subject <- function(df,r, type) {
                              "Geowissenschaften und Geographie",
                              "Ingenieurwissenschaften (inkl. Informatik)",
                              "Informatik",
-                             "Ingenieurwissenschaften ohne Informatik",
+                             #"Ingenieurwissenschaften ohne Informatik",
                              "Maschinenbau/Verfahrenstechnik" ,
                              "Elektrotechnik und Informationstechnik",
                              "Verkehrstechnik, Nautik",
@@ -6413,6 +6413,28 @@ mint_anteile <- function(df,r) {
 
 if(ordering=="MINT-Fächer"){
 
+  #Reihenfolge sortieren
+  dff7$fach <- as.factor(dff7$fach)
+  dff7$fach <- factor(dff7$fach, levels = c(
+                                                       "Mathematik",
+                                                       "Biologie",
+                                                       "Chemie",
+                                                       "Physik, Astronomie",
+                                                       "Pharmazie",
+                                                       "Geowissenschaften und Geographie",
+                                                       "Informatik",
+                                                       "Maschinenbau/Verfahrenstechnik" ,
+                                                       "Elektrotechnik und Informationstechnik",
+                                                       "Verkehrstechnik, Nautik",
+                                                       "Architektur, Innenarchitektur",
+                                                       "Raumplanung",
+                                                       "Bauingenieurwesen",
+                                                       "Vermessungswesen",
+                                                       "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
+                                                       "Materialwissenschaft und Werkstofftechnik",
+                                                       "Bergbau, Hüttenwesen",
+                                                       "Andere MINT-Fächer"))
+
   #plotting
   highcharter::hchart(dff7, 'bar', highcharter::hcaes(y = prop, x = jahr, group = fach))%>%
     highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}")%>%
@@ -6420,12 +6442,15 @@ if(ordering=="MINT-Fächer"){
     highcharter::hc_yAxis(title = list(text = "")
                           , labels = list(format = "{value} %")) %>%
     highcharter::hc_xAxis(title = list(text = ""))%>%
-    highcharter::hc_colors(c("#b16fab", "#262D38", "#00A87A", "#70809D", "#D4C1BB",
-                             "#725249", "#091D43", "#007655", "#154194", "#4B2848",
-                             "#D0A9CD", "#2D6BE1", "#66CBAF", "#BFC6D3", "#9D7265",
-                             "#ECDBEA", "#BBD1FC", "#DDFFF6", "#F4F5F6", "#392925"
+    highcharter::hc_colors(c("#b16fab","#DCBED9","#D0A9CD","#BE88BA", "#ECDBEA","#F1EBEA",
+                             "#66CBAF", "#BBD1FC", "#5F94F9", "#1B54C0", "#2D6BE1", "#EDF3FF",
+                             "#DDFFF6", "#AFF3E0", "#35BD97", "#F4EFEE",
+                             "#EFE8E6", "#D4C1BB"
                              ))
-    # highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
+  # %>%
+  #   highcharter::hc_legend(itemDistance=10)
+
+    # %>%
     #
     # highcharter::hc_plotOptions(column = list(pointWidth = 70))%>%
     # highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
