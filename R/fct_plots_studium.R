@@ -6420,10 +6420,11 @@ if(ordering=="MINT-Fächer"){
     highcharter::hc_yAxis(title = list(text = "")
                           , labels = list(format = "{value} %")) %>%
     highcharter::hc_xAxis(title = list(text = ""))%>%
-    highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24",
-                             "#AFF3E0","#2D6BE1",
-                             "#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
-                             "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f"))
+    highcharter::hc_colors(c("#b16fab", "#262D38", "#00A87A", "#70809D", "#D4C1BB",
+                             "#725249", "#091D43", "#007655", "#154194", "#4B2848",
+                             "#D0A9CD", "#2D6BE1", "#66CBAF", "#BFC6D3", "#9D7265",
+                             "#ECDBEA", "#BBD1FC", "#DDFFF6", "#F4F5F6", "#392925"
+                             ))
     # highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
     #
     # highcharter::hc_plotOptions(column = list(pointWidth = 70))%>%
