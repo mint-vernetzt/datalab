@@ -15,8 +15,8 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
       inputId = ns("date_arbeitsmarkt_einstieg_gender"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021"),
-      selected = "2021"
+                  "2018","2019", "2020", "2021", "2022"),
+      selected = "2022"
     ),
     br(),
     shinyBS::bsPopover(id="dh_beruf_frauen_1", title = "",
@@ -27,7 +27,7 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
     br(),
     br(),
     shinyBS::bsPopover(id="ih_beruf_frauen_1", title="",
-                       content = paste0("Der Anteil von Frauen an MINT-Auszubildenden in Deutschland beträgt 13 % im Jahr 2021. Bei den MINT-Beschäftigten beträgt dieser Anteil 17 %. Dagegen machen Frauen in anderen, Nicht-MINT-Berufen mehr als die Hälfte aller Auszubildenden und Beschäftigten aus (56 bzw. 55 %)."),
+                       content = paste0("Der Anteil von Frauen an MINT-Auszubildenden in Deutschland beträgt 13 % im Jahr 2022. Bei den MINT-Beschäftigten beträgt dieser Anteil 17 %. Dagegen machen Frauen in anderen, Nicht-MINT-Berufen mehr als die Hälfte aller Auszubildenden und Beschäftigten aus (56 bzw. 55 %)."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_frauen_1")
 

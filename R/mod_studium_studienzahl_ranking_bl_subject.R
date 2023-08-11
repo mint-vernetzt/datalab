@@ -23,12 +23,12 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
     p("Auswahl des Indikators:"),
     shinyWidgets::pickerInput(
       inputId = ns("rank_l"),
-      choices = c("Auländische Studienanfänger:innen (1. Hochschulsemester)",
+      choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
                   "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
-                  "Ausländische Studierende",
+                  "Internationale Studierende",
                   "Studienanfänger:innen (1. Hochschulsemester)",
-                  "Studierende (Nur Lehramt)"
+                  "Studierende (Lehramt)"
       ),
       selected = "Studierende"),
     # p("Nur Lehramt azeigen:"),
@@ -82,8 +82,15 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
                   "Ostdeutschland (inkl. Berlin)",
                   "Westdeutschland (o. Berlin)"
                   ),
-      selected = "Hessen"
-    ))
+      selected = "Rheinland-Pfalz"
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_studium_fach_3", title="",
+                       content = paste0("Die Darstellung zeigt, wie groß der Anteil Studierender in einzelnen MINT-Fächern an allen Studierenden ist. In der ersten Einstellung sieht man beispielsweise, 2021 studieren in Rheinland-Pfalz 9.085 Personen (7,5 %) Informatik."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_3")
+    )
 
 }
 

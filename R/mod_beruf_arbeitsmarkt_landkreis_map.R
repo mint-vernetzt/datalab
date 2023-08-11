@@ -10,6 +10,13 @@
 mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
   ns <- NS(id)
   tagList(
+    p("Auswahl des Jahres:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("date_beruf_arbeitsmarkt_landkreis_karte"),
+      label = NULL,
+      choices = c(2021, 2022),
+      selected = 2022
+    ),
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_landkreis_karte"),
@@ -147,7 +154,7 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
     br(),
     br(),
     shinyBS::bsPopover(id="ih_beruf_regional_1", title="",
-                       content = paste0("Die linke Karte in der ersten Einstellung zeigt beispielsweise, dass in Ludwigshafen am Rhein mit 37 % der größte Anteil an MINT-Beschäftigten in Rheinland-Pfalz arbeitet. Die rechte Karte zeigt, dass der Frauenanteil in MINT-Berufen vor allem in und um Mainz höher als in anderen Kreisen des Bundeslands ist."),
+                       content = paste0("Die linke Karte in der ersten Einstellung zeigt beispielsweise, dass 2022 in Ludwigshafen am Rhein mit 37 % der größte Anteil an MINT-Beschäftigten in Rheinland-Pfalz arbeitet. Die rechte Karte zeigt, dass der Frauenanteil in MINT-Berufen vor allem in und um Mainz höher als in anderen Kreisen des Bundeslands ist."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_regional_1")
@@ -163,6 +170,10 @@ mod_beruf_arbeitsmarkt_landkreis_map_server <- function(id, r){
 
     observeEvent(input$states_beruf_arbeitsmarkt_landkreis_karte, {
       r$states_beruf_arbeitsmarkt_landkreis_karte <- input$states_beruf_arbeitsmarkt_landkreis_karte
+    })
+
+    observeEvent(input$date_beruf_arbeitsmarkt_landkreis_karte, {
+      r$date_beruf_arbeitsmarkt_landkreis_karte <- input$date_beruf_arbeitsmarkt_landkreis_karte
     })
 
     # first map

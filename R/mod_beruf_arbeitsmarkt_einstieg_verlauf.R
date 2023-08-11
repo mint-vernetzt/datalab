@@ -15,8 +15,8 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_ui <- function(id){
       inputId = ns("date_arbeitsmarkt_einstieg_verlauf"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021"),
-      selected = c("2016", "2021")
+                  "2018","2019", "2020", "2021", "2022"),
+      selected = c("2017", "2022")
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
@@ -28,7 +28,7 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_beruf_mint_2", title="",
-                       content = paste0("In der ersten Einstellung ist zu sehen, dass der Anteil an Beschäftigten und Auszubildenden in MINT in den letzten Jahren leicht sinkt. Betrachtet man die absolute Anzahl, sieht man, dass es deutschlandweit 2021 ca. 30.000 Auszubildende und 600.000 Beschäftigte weniger in MINT gibt als noch 2020."),
+                       content = paste0("In der ersten Einstellung ist zu sehen, dass der Anteil an Auszubildenden in MINT von 2020 auf 2021 leicht sinkt. Betrachtet man die absolute Anzahl, sieht man, dass es deutschlandweit 2022 ca. 50.000 Auszubildende weniger in MINT gibt als noch 2020."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_2")
   )

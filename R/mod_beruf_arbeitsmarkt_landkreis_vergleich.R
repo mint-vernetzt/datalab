@@ -10,6 +10,13 @@
 mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
+    p("Auswahl des Jahres:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("date_beruf_arbeitsmarkt_landkreis_vergleich"),
+      label = NULL,
+      choices = c(2021, 2022),
+      selected = 2022
+    ),
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_beruf_arbeitsmarkt_landkreis_vergleich"),
@@ -96,7 +103,7 @@ mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_beruf_regional_2", title="",
-                       content = paste0("In der ertsen Darstellung sieht man, welche Landkreise in Hessen eine Anteil an MINT-Beschäftigten haben, die über oder unter dem Durschnitt des Bundeslands liegen. Frankfurt am Main hat beispielsweise einen weniger hohen Anteil an MINT-Beschäftigten als die meisten anderen Kreise und kreisfreie Städte in Hessen. "),
+                       content = paste0("In der ertsen Darstellung sieht man, welche Landkreise in Hessen 2022 eine Anteil an MINT-Beschäftigten haben, der über oder unter dem Durschnitt des Bundeslands liegt. Frankfurt am Main hat beispielsweise einen weniger hohen Anteil an MINT-Beschäftigten als die meisten anderen Kreise und kreisfreie Städte in Hessen. "),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_regional_2"),
@@ -116,6 +123,10 @@ mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
 mod_beruf_arbeitsmarkt_landkreis_vergleich_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+    observeEvent(input$date_beruf_arbeitsmarkt_landkreis_vergleich, {
+      r$date_beruf_arbeitsmarkt_landkreis_vergleich <- input$date_beruf_arbeitsmarkt_landkreis_vergleich
+    })
 
     observeEvent(input$states_beruf_arbeitsmarkt_landkreis_vergleich, {
       r$states_beruf_arbeitsmarkt_landkreis_vergleich <- input$states_beruf_arbeitsmarkt_landkreis_vergleich

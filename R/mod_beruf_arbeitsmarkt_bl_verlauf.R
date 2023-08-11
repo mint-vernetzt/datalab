@@ -16,8 +16,8 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
       inputId = ns("date_beruf_arbeitsmarkt_bl_verlauf"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021"),
-      selected = c("2016", "2021")
+                  "2018","2019", "2020", "2021", "2022"),
+      selected = c("2017", "2022")
     ),
     p("Beschäftigungsform"),
     shinyWidgets::pickerInput(
@@ -95,7 +95,7 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
 
     br(),
     shinyBS::bsPopover(id="ih_beruf_mint_7", title="",
-                       content = paste0("Die erste Darstellung zeigt z. B., dass sich der Anteil von Beschäftigten in MINT an allen Beschäftigten deutschlandweit in den ostdeutschen Bundesländern und Nordrhein-Westfalen ählich entwickelt. Der Anteil bleibt relativ konstant und nimmt auf 2021 um ca. einen Prozentpunkt ab."),
+                       content = paste0("Die erste Darstellung zeigt z. B., dass sich der Anteil von Beschäftigten in MINT an allen Beschäftigten deutschlandweit in den ostdeutschen Bundesländern und Nordrhein-Westfalen ählich entwickelt. Der Anteil bleibt relativ konstant und nimmt von 2020 auf 2021 um ca. einen Prozentpunkt ab."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_7")
   )

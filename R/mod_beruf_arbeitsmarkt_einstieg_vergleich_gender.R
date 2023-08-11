@@ -10,6 +10,14 @@
 mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
+    p("Auswahl des Jahres:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("date_arbeitsmarkt_einstieg_vergleich_gender"),
+      label = NULL,
+      choices = c(2021, 2022),
+      selected = 2022
+    ),
+
     p("Berufsfeld:"),
     shinyWidgets::pickerInput(
       inputId = ns("fach_arbeitsmarkt_einstieg_vergleich_gender"),
@@ -21,7 +29,7 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
         multiple = FALSE,
         selected = "MINT")
 
-    #Auswahl des LAnds grad immer leer übergeben
+
     ,
 
     p("Region:"),
@@ -51,19 +59,11 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
       selected = "Niedersachsen"),
     br(),
     shinyBS::bsPopover(id="ih_beruf_frauen_3", title="",
-                       content = paste0("In der ersten Einstellung sieht man beispielsweise im oberen Teil der Grafik, dass in Niedersachsen 2021 Frauen nur 14 % der Auszubildenden in MINT ausmachen. Um einen Prozentpunkt höher ist der Frauenanteil, wenn man nur die Auszubildenden in ihrem ersten Lehrjahr betrachtet. Dagegen machen Frauen in anderen Ausbildungen die Mehrheit aus."),
+                       content = paste0("In der ersten Einstellung sieht man beispielsweise im oberen Teil der Grafik, dass in Niedersachsen 2022 Frauen nur 14 % der Auszubildenden in MINT ausmachen. Dagegen sind Frauen in allen anderen Ausbildungen zusammen betrachtet in der Mehrheit."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_frauen_3")
 
 
-    # p("Auswahl des Jahres:"),
-    # shinyWidgets::sliderTextInput(
-    #   inputId = ns("date_arbeitsmarkt_einstieg_vergleich_gender"),
-    #   label = NULL,
-    #   choices = c("2013", "2014", "2015", "2016", "2017",
-    #               "2018","2019", "2020", "2021"),
-    #   selected = "2021"
-    # )
   )
 }
 
@@ -73,15 +73,13 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui <- function(id){
 mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    # observeEvent(input$date_arbeitsmarkt_einstieg_vergleich_gender, {
-    #   r$date_arbeitsmarkt_einstieg_vergleich_gender <- input$date_arbeitsmarkt_einstieg_vergleich_gender
-    # })
+    observeEvent(input$date_arbeitsmarkt_einstieg_vergleich_gender, {
+      r$date_arbeitsmarkt_einstieg_vergleich_gender <- input$date_arbeitsmarkt_einstieg_vergleich_gender
+    })
 
     observeEvent(input$fach_arbeitsmarkt_einstieg_vergleich_gender, {
       r$fach_arbeitsmarkt_einstieg_vergleich_gender <- input$fach_arbeitsmarkt_einstieg_vergleich_gender
     })
-
-    # Auswahl Land aktuell immer leer übergeben
 
     observeEvent(input$BULA_arbeitsmarkt_einstieg_vergleich_gender, {
       r$BULA_arbeitsmarkt_einstieg_vergleich_gender <- input$BULA_arbeitsmarkt_einstieg_vergleich_gender

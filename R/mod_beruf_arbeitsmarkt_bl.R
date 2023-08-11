@@ -10,13 +10,13 @@
 mod_beruf_arbeitsmarkt_bl_ui <- function(id){
   ns <- NS(id)
   tagList(
-    # p("Auswahl des Jahres:"),
-    # shinyWidgets::sliderTextInput(
-    #   inputId = ns("date_arbeitsmarkt_bl"),
-    #   label = NULL,
-    #   choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021),
-    #   selected = 2021
-    # ),
+    p("Auswahl des Jahres:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("date_arbeitsmarkt_bl"),
+      label = NULL,
+      choices = c(2021, 2022),
+      selected = 2022
+    ),
     p("Berufsfeld:"),
     shinyWidgets::pickerInput(
       inputId = ns("pick_i"),
@@ -41,7 +41,7 @@ mod_beruf_arbeitsmarkt_bl_ui <- function(id){
     br(),
     br(),
     shinyBS::bsPopover(id="ih_beruf_fach_1", title="",
-                       content = paste0("Die Karten in der ersten Einstellung zeigen beispielsweise, dass 2021 der Anteil an Auszubildenden und Beschäftigten in Technik von allen Bundesländern in Berlin am geringsten ausfällt. In Thüringen lernt dagegen rund ein Drittel der Auszubildenden im Bereich Technik. Den höchsten Anteil an Beschäftigten in Technik weist noch knapp vor Thüringen Baden-Württemberg auf (21,9 %)."),
+                       content = paste0("Die Karten in der ersten Einstellung zeigen beispielsweise, dass 2022 der Anteil an Auszubildenden und Beschäftigten in Technik von allen Bundesländern in Berlin am geringsten ausfällt. In Thüringen lernt dagegen rund ein Drittel der Auszubildenden im Bereich Technik. Den höchsten Anteil an Beschäftigten in Technik weist noch knapp vor Thüringen Baden-Württemberg auf (21,7 %)."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_1")
 
