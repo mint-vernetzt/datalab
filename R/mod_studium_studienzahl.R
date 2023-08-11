@@ -351,7 +351,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "650px"),
+                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "550px"),
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt." ),
                                shinyBS::bsPopover(id="h_studium_fach_3", title="",
                                                   content = paste0("Durch Rundung kann es dazu kommen, dass einzelne Studienfachgruppen für bestimmte Indikatoren oder Regionen nicht in der Darstellung angezeigt werden.", "<br> <br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),

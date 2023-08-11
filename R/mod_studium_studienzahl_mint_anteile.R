@@ -40,12 +40,11 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
       selected = "Nordrhein-Westfalen"
     ),
     p("Betrachtung:"),
-    shinyWidgets::radioGroupButtons(
+    shinyWidgets::pickerInput(
       inputId = ns("anteile_order"),
       choices = c("MINT-Fächer", "MINT-Aggregate"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+      multiple = FALSE,
+      selected = "MINT-Fächer"
     ),
     br(),
     shinyBS::bsPopover(id="ih_studium_fach_4", title="",
