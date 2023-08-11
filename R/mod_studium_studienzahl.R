@@ -341,7 +341,6 @@ mod_studium_studienzahl_ui <- function(id){
 
                     # Fehler in der Boxgrösse, muss noch behoben werden
 
-
                    tabPanel("Alle Fächer auf einen Blick", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -383,7 +382,6 @@ mod_studium_studienzahl_ui <- function(id){
                             )
                    ),
 
-
                     tabPanel("Vergleich nach Bundesländern", br(),
 
                              shiny::sidebarPanel(
@@ -394,6 +392,7 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_vergleich_bl1")),
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+
                                shinyBS::bsPopover(id="h_studium_fach_5", title="",
                                                   content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die Bundesländer angezeigt, welche die betrachtete Studienfachgruppe aufweisen.", "<br><br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                   placement = "top",
