@@ -10,6 +10,12 @@ library(readxl)
 library(janitor)
 library(purrr)
 
+# für Einlese-Pfad aus Onedrive
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+
 # Studierende ----
 
 setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
@@ -172,18 +178,18 @@ get_data <- function(file_list, fach_list){
 }
 
 # Bei neuen Datensätzen, hier einfügen:
-file_list <- rep(c("DES064_bmbfstu1_2021.xlsx",
-                   "DES050_bmbfstu1_2020.xlsx",
-                   "DES049_bmbfstu1_2019.xlsx",
-                   "DES048_bmbfstu1_2018.xlsx",
-                   "DES047_bmbfstu1_2017.xlsx",
-                   "DES046_bmbfstu1_2016.xlsx",
-                   "DES045_bmbfstu1_2015.xlsx",
-                   "DES044_bmbfstu1_2014.xlsx",
-                   "DES043_bmbfstu1_2013.xlsx",
-                   "DES042_bmbfstu1_2012.xlsx",
-                   "DES041_bmbfstu1_2011.xlsx",
-                   "DES040_bmbfstu1_2010.xlsx"),each=3)
+file_list <- rep(c(paste0(pfad, "DES064_bmbfstu1_2021.xlsx"),
+                   paste0(pfad, "DES050_bmbfstu1_2020.xlsx"),
+                   paste0(pfad, "DES049_bmbfstu1_2019.xlsx"),
+                   paste0(pfad, "DES048_bmbfstu1_2018.xlsx"),
+                   paste0(pfad, "DES047_bmbfstu1_2017.xlsx"),
+                   paste0(pfad, "DES046_bmbfstu1_2016.xlsx"),
+                   paste0(pfad, "DES045_bmbfstu1_2015.xlsx"),
+                   paste0(pfad, "DES044_bmbfstu1_2014.xlsx"),
+                  paste0(pfad, "DES043_bmbfstu1_2013.xlsx"),
+                  paste0(pfad, "DES042_bmbfstu1_2012.xlsx"),
+                  paste0(pfad, "DES041_bmbfstu1_2011.xlsx"),
+                  paste0(pfad,  "DES040_bmbfstu1_2010.xlsx")),each=3)
 
 # Hier je neuer hinzugefügter datei, counter um 3 erhöhen
 fach_list<- rep(c("Insgesamt", "Mathe", "Ingenieur"), times= 12)
@@ -291,10 +297,10 @@ clean_des <- function (dat,year){
 
 # Creating master
 
-raw2018 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES060_Kroeger_Stud_Land_FG_STB_2018.xlsx", year="2018")
-raw2019 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES061_Kroeger_Stud_Land_FG_STB_2019.xlsx", year="2019")
-raw2020 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES062_Kroeger_Stud_Land_FG_STB_2020.xlsx", year="2020")
-raw2021 <- clean_des(dat= "C:\\Users\\kab\\Downloads\\datalab\\datalab\\data-raw\\raw\\DES063_Kroeger_Stud_Land_FG_STB_2021.xlsx", year="2021")
+raw2018 <- clean_des(dat= paste0(pfad, "DES060_Kroeger_Stud_Land_FG_STB_2018.xlsx"), year="2018")
+raw2019 <- clean_des(dat= paste0(pfad, "DES061_Kroeger_Stud_Land_FG_STB_2019.xlsx"), year="2019")
+raw2020 <- clean_des(dat= paste0(pfad, "DES062_Kroeger_Stud_Land_FG_STB_2020.xlsx"), year="2020")
+raw2021 <- clean_des(dat= paste0(pfad, "DES063_Kroeger_Stud_Land_FG_STB_2021.xlsx"), year="2021")
 
 master <- bind_rows(raw2018,raw2019,raw2020, raw2021)
 

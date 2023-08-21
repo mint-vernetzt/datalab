@@ -7,6 +7,11 @@
 #
 ################################################################################
 
+# für Pfad zum Einlesen aus Onedrive
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
 
 # Erstellt "arbeitsmarkt" -------------------------------------------------
 
@@ -22,10 +27,11 @@ data_z <- readxl::read_excel("data-raw/raw/Arbeitsmarkt.xlsx", col_names = T)
 #                                        "data-raw/BA006_221123_Besch_MINT.xlsx"),
 #                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
 
-data <- readxl::read_excel("data-raw/raw/BA006_221123_Besch_MINT.xlsx",
+
+data <- readxl::read_excel(paste0(pfad, "BA006_221123_Besch_MINT.xlsx"),
                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
 
-data_n <- readxl::read_excel("data-raw/raw/BA009_230717_EA_344636_SvB_Azubi_MINT.xlsx",
+data_n <- readxl::read_excel(paste0(pfad, "BA009_230717_EA_344636_SvB_Azubi_MINT.xlsx"),
                              sheet = "Auswertung", col_names = F, range = "A16:AH7521")
 
 # Spalten zusammenfassen/löschen für 2022
@@ -242,10 +248,10 @@ library(magrittr)
 # data <- readxl::read_excel("BA006_221123_Besch_MINT.xlsx",
 #                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
 #
-data <- readxl::read_excel("data-raw/raw/BA006_221123_Besch_MINT.xlsx",
+data <- readxl::read_excel(paste0(pfad, "BA006_221123_Besch_MINT.xlsx"),
                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
 
-data_n <- readxl::read_excel("data-raw/raw/BA009_230717_EA_344636_SvB_Azubi_MINT.xlsx",
+data_n <- readxl::read_excel(paste0(pfad, "BA009_230717_EA_344636_SvB_Azubi_MINT.xlsx"),
                              sheet = "Auswertung", col_names = F, range = "A16:AH7521")
 
 # Spalten zusammenfassen/löschen
@@ -634,7 +640,7 @@ data_n <- detailliert_aufbereiten(data = data_n, jahr = 2022)
 # läuft seit neuem Laptop mit Code drüber nicht mehr druch, daher umgeschrieben (kbr)
 # data_a <- readxl::read_excel("BA007_221205_AusbV_MINT.xlsx",
 #                              sheet = "Auswertung2", col_names = F, range = "A12:L4201")
-data_a <- readxl::read_excel("data-raw/raw/BA007_221205_AusbV_MINT.xlsx",
+data_a <- readxl::read_excel(paste0(pfad, "BA007_221205_AusbV_MINT.xlsx"),
                              sheet = "Auswertung2", col_names = F, range = "A12:L4201")
 
 # Spalten zusammenfassen/löschen
@@ -853,10 +859,10 @@ usethis::use_data(arbeitsmarkt_detail, overwrite = T)
 #                                sheet  = "Verträge_Daten", range = "TA4:AMS238") #alles aus 2022, auch Regionen
 
 # läuft mit neuem Laptop oben nicht mehr durch, deshalb umgeschrieben (kbr)
-data_naa_a <- readxl::read_excel("data-raw/raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx",
+data_naa_a <- readxl::read_excel(paste0(pfad, "BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx"),
                                  sheet  = "Verträge_Daten", range = "A4:D238") #nur Spalten von Anfang
 
-data_naa <- readxl::read_excel("data-raw/raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx",
+data_naa <- readxl::read_excel(paste0(pfad, "BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx"),
                                sheet  = "Verträge_Daten", range = "TA4:AMS238") #alles aus 2022, auch Regionen
 
 data_naa <- cbind(data_naa_a, data_naa)
@@ -973,7 +979,7 @@ rm(data_naa_a, data_naa_insgesamt, data_naa_maennlich, data_naa_weiblich)
 #                                 sheet  = "Verträge_Daten", range = "A4:SW238") #alle Daten aus 2017 incl Regionen
 
 # funktioniert drüber seit neuem Laptop nicht mehr, deshalb umgeschrieben (kbr)
-data_naa <- readxl::read_excel("data-raw/raw/BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx",
+data_naa <- readxl::read_excel(paste0(pfad, "BA008_Ausbildungsmarkt-MINT-Frauenanteil-2022.xlsx"),
                                sheet  = "Verträge_Daten", range = "A4:SW238") #alle Daten aus 2017 incl Regionen
 
 
@@ -1092,9 +1098,9 @@ data_naa_17 <- data_naa
 #                                 sheet  = "Vertraege_Daten", range = "TA4:AMV218")
 
 # funktioniert seit neuem Laptop nicht mehr so, deshalb umgeschrieben (kbr)
-data_naa_a <- readxlsb::read_xlsb("data-raw/raw/BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb",
+data_naa_a <- readxlsb::read_xlsb(paste0(pfad, "BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb"),
                                   sheet  = "Vertraege_Daten", range = "A4:D218")
-data_naa <- readxlsb::read_xlsb("data-raw/raw/BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb",
+data_naa <- readxlsb::read_xlsb(paste0(pfad, "BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb"),
                                 sheet  = "Vertraege_Daten", range = "TA4:AMV218")
 
 data_naa <- cbind(data_naa_a, data_naa)
