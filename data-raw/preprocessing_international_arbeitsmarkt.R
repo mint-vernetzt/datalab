@@ -9,7 +9,7 @@
 
 # Rohdaten einlesen -------------------------------------------------------
 
-data <- read.csv("data-raw/raw/OCED001_employment_per_field.csv", header = TRUE,
+data <- read.csv("data-raw/raw/OECD001_employment_per_field.csv", header = TRUE,
                  sep = ",", dec = ".")
 
 
@@ -70,7 +70,7 @@ data <- data %>%
     ),
     anforderung = dplyr::case_when(
       anforderung == "Short-cycle tertiary education" ~ "kurzzeitige terziäre Bildung",
-      anforderung == "Tertiary education" ~ "gesamt",
+      anforderung == "Tertiary education" ~ "Gesamt",
       anforderung == "Master’s, Doctoral or equivalent education" ~ "Master, Doktor",
       anforderung == "Bachelor’s or equivalent education" ~ "Bachelor",
       T ~ anforderung
@@ -78,12 +78,13 @@ data <- data %>%
     geschlecht = dplyr::case_when(
       geschlecht == "Men" ~ "Männer",
       geschlecht == "Women" ~ "Frauen",
-      geschlecht == "Total" ~ "gesamt",
+      geschlecht == "Total" ~ "Gesamt",
       T ~ geschlecht
     ),
     indikator = dplyr::case_when(
       indikator == "Employment rate" ~ "Beschäftigungsquote",
-      indikator == "Inactivity rate" ~ "Erwerbslosenquote",
+      indikator == "Inactivity rate" ~ "Nichterwerbsquote",
+      indikator == "Unemployment rate" ~ "Erwerbslosenquote",
       indikator == "Share of population by field of study" ~ "Anteil an Bevölkerung nach Studienbereich",
       T ~ indikator
     ),
@@ -119,7 +120,29 @@ data <- data %>%
 }
 data <- übersetzen(data)
 
-# Filtern - welche fachbereiche machen Sinn - da müssten Zwischensummen mit drin sein
+# Filtern - welche fachbereiche machen Sinn - verschiedene Kombi-Aggregate raus
+data <- data %>% filter(!(fachbereich %in% c("Geisteswissenschaften (außer Sprachen) & Sozialwissenschaften, Journalismus und Informationswissenschaften",
+                                             "Kunst",
+                                             "Kunst, Geisteswissenschaften, Sozialwissenschaften, Journalismus und Informationswissenschaft",
+                                             "Geisteswissenschaften (außer Sprachen)")))
+# Altersgruppen mit Indikator kombinieren
+data <- data %>%
+  dplyr::filter(ag %in% c("25-64 years", "55-64 years")) %>%
+  dplyr::mutate(indikator = dplyr::case_when(
+    ag == "25-64 years" ~ indikator,
+    ag == "55-64 years" ~ paste0(indikator, " ü55"),
+    T ~ indikator
+  )) %>%
+  dplyr::select(-ag)
 
+# missings ausfiltern
+data <- na.omit(data)
 
+# bereich ergänzen und sortieren
+data$bereich <- "Arbeitsmarkt"
 
+# Spalten in logische Reihenfolge bringen
+data<- data[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "wert")]
+
+# umbenennen
+oecd1 <- data

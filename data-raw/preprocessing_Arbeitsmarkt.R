@@ -1238,4 +1238,71 @@ data_naa <- rbind(data_naa_17, data_naa_20, data_naa_22)
 
 usethis::use_data(data_naa, overwrite = T)
 
+################################################################################
+#
+# Data Lab
+# Vorbereitung Datensatz: Arbeitsmarkt international
+# Author: Katharina Brunner, August 2023
+#
+################################################################################
+
+
+# Internationale Daten ----------------------------------------------------
+
+## OECD 1 -----------------------------------------------------------------
+
+### Rohdaten einlesen -------------------------------------------------------
+akro <- "kbr"
+data <- read.csv(paste0("C:/Users/", akro,
+                        "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD001_employment_per_field.csv"),
+                 header = TRUE, sep = ",", dec = ".")
+
+
+### Datensatz in passende Form bringen --------------------------------------
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(dplyr, googleLanguageR)
+
+data <- data %>% dplyr::filter(Measure == "Value") #SE ausfiltern
+
+data <- data %>%
+  dplyr::select(Country, ISCED.2011.A.education.level, Gender, Age, Field,
+                INDICATOR.1, Reference.year, Value) %>%
+  dplyr::rename(land = Country,
+                anforderung = ISCED.2011.A.education.level,
+                geschlecht = Gender,
+                ag = Age,
+                fachbereich = Field,
+                indikator = INDICATOR.1,
+                jahr = Reference.year,
+                wert = Value)
+
+# ins Deutsche übersetzten - als Fkt für weitere intern. Datensätze - ausbauen
+data <- übersetzen(data)
+
+# Filtern - welche fachbereiche machen Sinn - verschiedene Kombi-Aggregate raus
+data <- data %>% filter(!(fachbereich %in% c("Geisteswissenschaften (außer Sprachen) & Sozialwissenschaften, Journalismus und Informationswissenschaften",
+                                             "Kunst",
+                                             "Kunst, Geisteswissenschaften, Sozialwissenschaften, Journalismus und Informationswissenschaft",
+                                             "Geisteswissenschaften (außer Sprachen)")))
+# Altersgruppen mit Indikator kombinieren
+data <- data %>%
+  dplyr::filter(ag %in% c("25-64 years", "55-64 years")) %>%
+  dplyr::mutate(indikator = dplyr::case_when(
+    ag == "25-64 years" ~ indikator,
+    ag == "55-64 years" ~ paste0(indikator, " ü55"),
+    T ~ indikator
+  )) %>%
+  dplyr::select(-ag)
+
+# missings ausfiltern
+data <- na.omit(data)
+
+# bereich ergänzen und sortieren
+data$bereich <- "Arbeitsmarkt"
+
+# Spalten in logische Reihenfolge bringen
+data<- data[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "wert")]
+
+# umbenennen
+oecd1 <- data
 
