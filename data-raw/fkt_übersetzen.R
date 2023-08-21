@@ -11,59 +11,14 @@
 übersetzen <- function(df){
   df <- df %>%
   dplyr::mutate(
-    land = dplyr::case_when(
-      land == "Australia" ~ "Australien",
-      land == "Austria" ~ "Östereich",
-      land == "Belgium" ~ "Belgien",
-      land == "Czech Republic" ~ "Tschechien",
-      land == "Denmark" ~ "Dänemark",
-      land == "Estonia" ~ "Estland",
-      land == "European Union 23 members in OECD" ~ "OECD-Mitglieder aus der EU",
-      land == "Finland" ~ "Finnland",
-      land == "France" ~ "Frankreich",
-      land == "Germany" ~ "Deutschland",
-      land == "Greece" ~ "Griechenland",
-      land == "Hungary" ~ "Ungarn",
-      land == "Iceland" ~ "Island",
-      land == "Italy" ~ "Italien",
-      land == "Latvia" ~ "Lettland",
-      land == "Lithuania" ~ "Litauen",
-      land == "Luxembourg" ~ "Luxenburg",
-      land == "Mexico" ~ "Mexiko",
-      land == "Netherlands" ~ "Niederlande",
-      land == "Norway" ~ "Norwegen",
-      land == "OECD - Average" ~ "OECD",
-      land == "Poland" ~ "Polen",
-      land == "Slovak Republic" ~ "Slovakei",
-      land == "Slovenia" ~ "Slowenien",
-      land == "Spain" ~ "Spanien",
-      land == "Sweden" ~ "Schweden",
-      land == "Switzerland" ~ "Schweiz",
-      land == "Türkiye" ~ "Türkei",
-      land == "United Kingdom" ~ "Vereinigtes Königreich (UK)",
-      land == "United States" ~ "USA",
-      T ~ land
-    ),
-    anforderung = dplyr::case_when(
-      anforderung == "Short-cycle tertiary education" ~ "kurzzeitige terziäre Bildung",
-      anforderung == "Tertiary education" ~ "Gesamt",
-      anforderung == "Master’s, Doctoral or equivalent education" ~ "Master, Doktor",
-      anforderung == "Bachelor’s or equivalent education" ~ "Bachelor",
-      T ~ anforderung
-    ),
+
     geschlecht = dplyr::case_when(
       geschlecht == "Men" ~ "Männer",
       geschlecht == "Women" ~ "Frauen",
       geschlecht == "Total" ~ "Gesamt",
       T ~ geschlecht
     ),
-    indikator = dplyr::case_when(
-      indikator == "Employment rate" ~ "Beschäftigungsquote",
-      indikator == "Inactivity rate" ~ "Nichterwerbsquote",
-      indikator == "Unemployment rate" ~ "Erwerbslosenquote",
-      indikator == "Share of population by field of study" ~ "Anteil an Bevölkerung nach Studienbereich",
-      T ~ indikator
-    ),
+
     fachbereich = dplyr::case_when(
       fachbereich == "Agriculture, forestry,fisheries and veterinary" ~
         "Landwirtschaft, Forstwirtschaft, Fischerei und Veterinärwesen",
@@ -89,8 +44,22 @@
       fachbereich == "Science, technology, engineering, and mathematics (STEM)" ~
         "Naturwissenschaft, Technologie, Ingenieurwesen und Mathematik (MINT)",
       fachbereich == "Services" ~ "Dienstleistungen",
-      fachbereich == "Social sciences, journalism and information" ~ "Sozialwissenschaften, Journalismus und Informationswissenschaften"
+      fachbereich == "Social sciences, journalism and information" ~ "Sozialwissenschaften, Journalismus und Informationswissenschaften",
+      T ~ fachbereich
 
     )
   )
+
+  if(!(is.null(df$indikator))){
+    df <- df %>% dplyr::mutate(
+      indikator = dplyr::case_when(
+        indikator == "Employment rate" ~ "Beschäftigungsquote",
+        indikator == "Inactivity rate" ~ "Nichterwerbsquote",
+        indikator == "Unemployment rate" ~ "Erwerbslosenquote",
+        indikator == "Share of population by field of study" ~ "Anteil an Bevölkerung nach Studienbereich",
+        T ~ indikator
+      )
+    )
+  }
+
 }
