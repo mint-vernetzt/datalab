@@ -10,6 +10,7 @@ library(readxl)
 library(janitor)
 library(purrr)
 library(readr)
+library(countrycode)
 
 akro <- "kab"
 
@@ -463,8 +464,63 @@ dat1 <- dat %>%
   select("iscedf13", "sex", "geo",
          "TIME_PERIOD", "OBS_VALUE")%>%
   rename(fach = iscedf13, geschlecht = sex, land = geo, jahr= TIME_PERIOD, wert = OBS_VALUE)%>%
-  mutate(indikator = "Studierende")
+  mutate(indikator = "Studierende",
+         typ= "In Prozent")
+
+dat1$land <- countrycode(dat1$land, origin = "eurostat", destination="country.name.de", custom_match = c("EU28" = "EU (28)", "EU27_2020" = "EU (27), seit 2020"))
+
+dat2 <- dat1 %>%
+  mutate(geschlecht= case_when(geschlecht == "F" ~ "Frauen",
+                   geschlecht == "M" ~ "Männer",
+                   T ~ "Gesamt"))%>%
+  mutate(fachbereich = case_when(str_ends("F00", .$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
+                                 str_ends("F01", .$fach)~ "Pädagogik",
+                                 str_ends("F02", .$fach) ~ "Geisteswissenschaften und Künste",
+                                 str_ends("F03", .$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+                                 str_ends("F04", .$fach) ~ "Wirtschaft, Verwaltung und Recht",
+                                 str_ends("F05", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+                                 str_ends("F06", .$fach) ~ "Informatik & Kommunikationstechnologie",
+                                 str_ends("F07", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                 str_ends("F08", .$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+                                 str_ends("F09", .$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+                                 str_ends("F10", .$fach) ~ "Dienstleistungen",
+                                 str_detect("Total", .$fach) ~ "Insgesamt",
+                                 str_ends("UNK", .$fach) ~ "Unbekannt"))%>%
+  mutate(fach = case_when(str_ends("F00", .$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
+                          str_ends("F01", .$fach)~ "Pädagogik",
+                          str_ends("F02", .$fach) ~ "Geisteswissenschaften und Künste",
+                          str_ends("F03", .$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+                          str_ends("F04", .$fach) ~ "Wirtschaft, Verwaltung und Recht",
+                          str_ends("F05", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+                          str_ends("F06", .$fach) ~ "Informatik & Kommunikationstechnologie",
+                          str_ends("F07", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                          str_ends("F08", .$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+                          str_ends("F09", .$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+                          str_ends("F10", .$fach) ~ "Dienstleistungen",
+                          str_ends("F50", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht näher definiert",
+                          str_ends("F51", .$fach) ~ "Biologie und verwandte Wissenschaften",
+                          str_ends("F52", .$fach) ~ "Umwelt",
+                          str_ends("F53", .$fach) ~ "Exakte Naturwissenschaften",
+                          str_ends("F54", .$fach) ~ "Mathematik und Statistik",
+                          str_ends("F58", .$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
+Mathematik und Statistik",
+                          str_ends("F59", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
+                          str_ends("F70", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
+                          str_ends("F71", .$fach) ~ "Ingenieurwesen und Technische Berufe",
+                          str_ends("F72", .$fach) ~ "Verarbeitendes Gewerbe und Bergbau",
+                          str_ends("F73", .$fach) ~ "Verarbeitendes Gewerbe und Bergbau",
+                          str_ends("F78", .$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
+ verarbeitendes Gewerbe und Baugewerbe",
+                          str_ends("F79", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert",
+                          str_detect("Total", .$fach) ~ "Insgesamt",
+                          str_ends("UNK", .$fach) ~ "Unbekannt"
+                             ))%>%
+  arrange(fach, fachbereich)
+
+# warum hat fach bitte NAs????
 
 
+  dat2$fachbereich <- zoo::na.locf(dat2$fachbereich)
 
-
+dat3 <- dat2 %>%
+  pivot_wider(names_from = fach, values_from = wert)
