@@ -6481,7 +6481,7 @@ if(ordering=="MINT-Fächer"){
     highcharter::hc_yAxis(title = list(text = "")
                           , labels = list(format = "{value} %")) %>%
     highcharter::hc_xAxis(title = list(text = ""))%>%
-    highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf"))
+    highcharter::hc_colors(c("#66cbaf", "#154194", "#b16fab" ))
 
 
 
