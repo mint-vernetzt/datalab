@@ -9,8 +9,13 @@ library(stringr)
 library(readxl)
 library(janitor)
 library(purrr)
+library(readr)
 
-# Studierende ----
+akro <- "kab"
+
+# Studierende Domestisch ----
+
+## Studierende ----
 
 setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
 
@@ -254,14 +259,14 @@ studierende <- data_studi_neu2 %>%
 
 duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht))
 
-# Studierende detailliert ----
+## Studierende detailliert ----
 
 
 #-----------------------------------------------------------------------------------------------------------------#
 # Ein Datensatz, der nur die Datensätze für mit mit Fächerunterscheidung beinhaltet für alle Indikatoren          #
 #-----------------------------------------------------------------------------------------------------------------#
 
-## Creating and Cleaning ----
+### Creating and Cleaning ----
 
 #setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
 
@@ -446,403 +451,20 @@ studierende_detailliert <- studierende_faecher2%>%
 usethis::use_data(studierende_detailliert, overwrite = T)
 
 
-# cleaning facher, creating master ---------------
+# Studierende Weltweit ----
 
-# clean_des <- function (dat,year){
-#
-# raw <- read_excel(dat, col_types = "text")
-#
-# raw <- raw[-c(1:6),-c(1,3,5)]
-#
-# colnames(raw) <- c("region", "fachgruppe", "fach", "gesamt", "weiblich",
-#                      "auslaender", "lehramt", "lehramt_weiblich",
-#                      "gesamt_1hs", "weiblich_1hs", "auslaender_1hs", "gesamt_1fs",
-#                    "weiblich_1fs")
-#
-# raw$jahr <- year
-# raw$bereich <- "hochschule"
-# raw$hinweise <- NA
-# raw$quelle <- "Statistisches Bundesamt (Destatis), 2022: Auf Anfrage"
-#
-# return(raw)
-#
-# }
-#
-# raw2018 <- clean_des(dat= "DES60_Kroeger_Stud_Land_FG_STB_2018.xlsx", year="2018")
-# raw2019 <- clean_des(dat= "DES61_Kroeger_Stud_Land_FG_STB_2019.xlsx", year="2019")
-# raw2020 <- clean_des(dat= "DES62_Kroeger_Stud_Land_FG_STB_2020.xlsx", year="2020")
-# raw2021 <- clean_des(dat= "DES63_Kroeger_Stud_Land_FG_STB_2021.xlsx", year="2021")
+## EUROSTAT - Tertiatry Education Data (Anteil Studi nach Fach nach Gender)
 
-# creating master
-# master <- bind_rows(raw2018,raw2019,raw2020, raw2021)
+file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
-# in altes format bringen für append
+dat <- read_csv("EUROSTAT001_custom_Studi_Fach_Gender_original.csv.gz")
 
-#  master_altes_format <- master %>%
-#    pivot_longer(c(4:13), values_to="wert", names_to="dummy") %>%
-#    mutate(
-#      nur_lehramt=case_when(
-#      str_detect(.$dummy, "lehramt") ~ "Ja",
-#      T ~ "Nein"),
-#      anzeige_geschlecht=case_when(
-#        str_detect(.$dummy, "weiblich") ~ "frauen", T ~ "gesamt"),
-#      typ=case_when(
-# str_detect(.$dummy, "1hs") ~ "studienanfänger", T ~ "studierende"
-#     ))
-#
-#  master_altes_format$typ2 <- ifelse(grepl("auslaender", master_altes_format$dummy),"auslaender",NA)
-#
-#  master_altes_format_2 <- master_altes_format%>%unite("indikator", 12:13,na.rm = TRUE)%>%
-# select(-dummy)
-#
-# master_altes_format_2$indikator <- gsub("Studienanfänger", "studienanfänger:innen", master_altes_format_2$indikator)
-#
-# master_append <- master_altes_format_2
-
-# export
-#export(master_fn, "Studierende_inkl_auslaendern.xlsx")
+dat1 <- dat %>%
+  select("iscedf13", "sex", "geo",
+         "TIME_PERIOD", "OBS_VALUE")%>%
+  rename(fach = iscedf13, geschlecht = sex, land = geo, jahr= TIME_PERIOD, wert = OBS_VALUE)%>%
+  mutate(indikator = "Studierende")
 
 
 
 
-
-
-
-# Neuer Datensatz frische Struktur-------
-
-
-# if(master$fachgruppe == "Geisteswissenschaften"){
-#   master_tada <- filter(master, fachgruppe == "Geisteswissenschaften" & fach == "Zusammen" )
-# }
-
-# master_tada <- master %>%
-#   group_by(fachgruppe) %>%
-#   filter(fach == "Zusammen"|fach == "Mathematik, Naturwissenschaften allgemein"| fach =="Mathematik"
-#          |fach =="Physik, Astronomie"
-#          |fach =="Chemie"
-#          |fach =="Pharmazie"
-#          |fach =="Biologie"
-#          |fach =="Geowissenschaften (ohne Geographie)"
-#          |fach =="Geographie"
-#          |fach =="Ingenieurwesen allgemein"
-#          |fach =="Maschinenbau/Verfahrenstechnik"
-#          |fach =="Elektrotechnik und Informationstechnik"
-#          |fach =="Verkehrstechnik, Nautik"
-#          |fach =="Architektur, Innenarchitektur"
-#          |fach =="Raumplanung"
-#          |fach =="Bauingenieurwesen"
-#          |fach =="Vermessungswesen"
-#          |fach =="Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt"
-#          |fach =="Informatik"
-#          |fach =="Materialwissenschaft und Werkstofftechnik"
-#          )
-#
-# master_tada_long <- master_tada %>%
-#   pivot_longer(c(4:13), names_to = "indikator", values_to = "wert")%>%
-#   unite(dummy,2:3, sep="_")%>%
-#   pivot_wider(names_from = dummy, values_from = wert)
-#
-# colnames(master_tada_long)[10] <- "Mathematik, Naturwissenschaften_Weitere naturwissenschaftliche und mathematische Fächer"
-# colnames(master_tada_long)[21] <- "Ingenieurwissenschaft_Weitere ingenieurwissenschaftliche Fächer"
-#
-#
-# master_tada_long[,c(7:35)] <- purrr::map_dfr(.x = master_tada_long[,c(7:35)], .f =as.numeric )
-#
-# master_tada_long_1 <- master_tada_long %>%
-#   mutate(`Mathematik, Naturwissenschaften_Geowissenschaften und Geographie` =
-#            `Mathematik, Naturwissenschaften_Geowissenschaften (ohne Geographie)`+
-#            `Mathematik, Naturwissenschaften_Geographie`,
-#          `Mathematik, Naturwissenschaften_Naturwissenschaften` =
-#            `Mathematik, Naturwissenschaften_Physik, Astronomie`+
-#            `Mathematik, Naturwissenschaften_Chemie`+
-#            `Mathematik, Naturwissenschaften_Biologie`,
-#          `Ingenieurwissenschaften_Ingenieurwissenschaften ohne Informatik`=
-#            `Ingenieurwissenschaften_Zusammen`-
-#            `Ingenieurwissenschaften_Informatik`,
-#          MINT_MINT = `Ingenieurwissenschaften_Zusammen` +
-#            `Mathematik, Naturwissenschaften_Zusammen`)%>%
-#   select(-`Mathematik, Naturwissenschaften_Geowissenschaften (ohne Geographie)`,
-#          -`Mathematik, Naturwissenschaften_Geographie`)%>%
-#   pivot_longer(c(7:37), names_to = "dummy", values_to ="wert")%>%
-#   separate(dummy, c("fachbereich", "fach"), sep="_")
-#
-# master_faecher_output <- master_tada_long_1 %>%
-#   select(bereich, indikator, region, jahr, fachbereich, fach, wert, quelle, hinweise)
-#
-#
-# master_faecher_output$fach <- gsub("Zusammen", "Alle Fächer", master_faecher_output$fach )
-# master_faecher_output$fach <- gsub("MINT", "Alle MINT-Fächer", master_faecher_output$fach )
-#
-#
-# master_faecher_output <- master_faecher_output %>%
-#   mutate(
-#     geschlecht = case_when(
-#     str_detect(.$indikator, "weiblich") ~ "Frauen",
-#     T ~ "Gesamt"),
-#     dummy_indi=case_when(
-#     str_detect(.$indikator, "1hs")~ "Studienanfänger:innen_1hs",
-#     str_detect(.$indikator, "1fs")~ "Studienanfänger:innen_1fs",
-#     T~ "Studierende")
-#     # ,
-#     # lehramt = case_when(
-#     #   str_detect(.$indikator, "lehramt")~ "Ja",
-#     #   T ~ "Nein")
-#     )
-#
-# master_faecher_output$dummy_indi <- ifelse(grepl("lehramt", master_faecher_output$indikator),
-#                                            paste0(master_faecher_output$dummy_indi, "_Lehramt"),
-#                                            master_faecher_output$dummy_indi)
-#
-# master_faecher_output$dummy_indi <- ifelse(grepl("auslaender", master_faecher_output$indikator),
-#                                            paste0(master_faecher_output$dummy_indi, "_Ausländisch"),
-#                                            master_faecher_output$dummy_indi)
-#
-#
-# master_faecher_output1 <- master_faecher_output %>%
-#   select(bereich, dummy_indi,  region, jahr, fachbereich, fach, geschlecht, wert, quelle, hinweise
-#   )%>%
-#   rename(indikator=dummy_indi)%>%
-#   mutate(label=case_when(
-#     indikator=="Studienanfänger:innen_1fs" ~ "Studienanfänger:innen (1. Fachsemester)",
-#     indikator=="Studienanfänger:innen_1hs" ~ "Studienanfänger:innen (1. Hochschulsemester)",
-#     indikator=="Studienanfänger:innen_1hs_Ausländisch"~ "Auländische Studienanfänger:innen (1. Hochschulsemester)",
-#     indikator=="Studierende" ~ "Studierende",
-#     indikator=="Studierende_Ausländisch" ~ "Ausländische Studierende",
-#     indikator=="Studierende_Lehramt" ~ "Studierende (Nur Lehramt)"
-#   ))%>%
-# select(- hinweise, -quelle)%>%
-#   mutate(fachbereich =case_when (
-#     fachbereich== "Ingenieurwissenschaft"~ "Ingenieurwissenschaften",
-#     T~.$fachbereich
-#   ))%>%
-#   mutate(mint_select=case_when(
-#     fachbereich== "Mathematik, Naturwissenschaften" ~"MINT",
-#     fachbereich== "Ingenieurwissenschaften" ~ "MINT",
-#     T~ "NIcht MINT"
-#   ))
-#
-#
-# #export(master_faecher_output1, "output/studierende_faecher.xlsx")
-#
-#
-# #
-# #
-# #
-# # Alte Daten aktualiseren---------------
-#
-# studi_alt <- import("Studierende_alt_13_01.xlsx")
-#
-# createdata <- function(data, Jahr, Fachbereich) {
-#
-#   # add headlines
-#   header <- c("region", "insgesamt_stud","insgesamt_1hs", "insgesamt_1fs", "uni_stud", "uni_1hs", "uni_1fs",
-#               "lehramt_stud","lehramt_1hs", "lehramt_1fs", "fh_stud", "fh_1hs" , "fh_1fs")
-#   colnames(data) <- header
-#
-#   # create columns/variables
-#
-#   ### Anzeige
-#   data$anzeige_geschlecht <- "gesamt"
-#   data$index <- 1:nrow(data)
-#   data$anzeige_geschlecht[data$index >20] <- "frauen"
-#   # überflüssiges löschen:
-#   data <- data[-c(1,19, 20, 36,37),]
-#   data <- data %>%
-#     select(-index)
-#
-#   # ins long-Format bringen
-#   data <- data %>%
-#     pivot_longer(cols = insgesamt_stud:fh_1fs, values_to = "wert")
-#
-#   ### indikator, lehramt, hochschulform
-#   data <- data %>%
-#     mutate(indikator=case_when(
-#       str_detect(data$name, "stud") ~ "Studierende",
-#       str_detect(data$name, "1hs") ~ "Studienanfänger_1hs",
-#       str_detect(data$name, "1fs") ~ "Studienanfänger_1fs"),
-#       nur_lehramt=case_when(
-#         str_detect(data$name, "lehramt") ~ "Ja",
-#         T ~ "Nein"),
-#       hochschulform=case_when(
-#         str_detect(data$name, "insgesamt") ~ "insgesamt",
-#         str_detect(data$name, "fh_") ~ "FH",
-#         T ~ "Uni")
-#     )
-#
-#   ### fachbereich
-#   data$fachbereich <- Fachbereich
-#   data$Jahr <- Jahr
-#   data$quelle <- "Statistisches Bundesamt (Destatis), 2021: Auf Anfrage"
-#   data$hinweise <- "Studienanfänger im ersten Hochschulsemester"
-#
-#   ### bereich (für alle gleich)
-#   data$bereich <- "Hochschule"
-#
-#   # überflüssige Spalte "name" entfernen
-#   data <- data %>%
-#     select(-name)
-#
-#   return(data)
-#
-# }
-
-
-
-
-
-
-# stu2021_alleFG <- read_excel("DES064_bmbfstu1_2021.xlsx", sheet = "Insgesamt", col_names = F)[c(14:33,36:52), c(1:4,5:7, 11:13, 14:16)]
-# stu2021_Mathe <-  read_excel("DES064_bmbfstu1_2021.xlsx", sheet = "Mathe", col_names = F)[c(14:33,36:52), c(1:4,5:7, 11:13, 14:16)]
-# stu2021_Ing <-    read_excel("DES064_bmbfstu1_2021.xlsx", sheet = "Ingenieur", col_names = F)[c(14:33,36:52), c(1:4,5:7, 11:13, 14:16)]
-#
-# stu2021_alleFG <- createdata(stu2021_alleFG, "2021", "Alle")
-# stu2021_Mathe <- createdata(stu2021_Mathe, "2021", "Mathe")
-# stu2021_Ing <- createdata(stu2021_Ing, "2021", "Ingenieur")
-#
-# data_studi_neu <- bind_rows(stu2021_Ing,stu2021_Mathe,stu2021_alleFG
-#                             , studi_alt
-#                             )
-#
-# data_studi_neu$indikator <- gsub("Studienanfänger", "Studienanfänger:innen", data_studi_neu$indikator)
-#
-# data_studi_neu <- data_studi_neu %>%
-#   # mutate(indikator=case_when(
-#   #   .$indikator == "Studienanfänger:innen:innen"~ "Studienanfänger:innen",
-#   #   T ~ .$indikator
-#   # ))%>%
-#   mutate(indikator= case_when(
-#     str_detect(.$nur_lehramt, "Ja") ~ paste0(.$indikator, "_lehramt"),
-#     T ~ .$indikator
-#   )) %>%
-#  select(-nur_lehramt)
-#
-#
-#
-#
-# data_studi_neu$fachbereich <- gsub("Ingenieur", "Ingenieurwissenschaften", data_studi_neu$fachbereich)
-# data_studi_neu$fachbereich <- gsub("Mathe", "Mathematik_Naturwissenschaften", data_studi_neu$fachbereich)
-# data_studi_neu$region <- gsub("	Deutschland ...", "Deutschland", data_studi_neu$region)
-#
-# colnames(data_studi_neu)[2] <- "geschlecht"
-#
-#
-#
-# data_studi_neu1 <- data_studi_neu %>%
-#   mutate(indikator = case_when(hochschulform == "Uni" ~ paste0(.$indikator, "_Uni"),
-#                                hochschulform == "FH" ~ paste0(.$indikator, "_FH"),
-#                                T ~ .$indikator))%>%
-#   mutate(
-#          label= case_when(.$indikator == "Studienanfänger:innen_1fs" ~ "Studienanfänger:innen (1.Fachsemester)"
-#                           ,.$indikator == "Studienanfänger:innen_1fs_FH" ~ "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)"
-#                           ,.$indikator == "Studienanfänger:innen_1fs_Uni" ~ "Studienanfänger:innen (Universität, 1.Fachsemester)",
-#
-#
-#                           .$indikator == "Studienanfänger:innen_1fs_lehramt_Uni" ~ "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
-#
-#                           .$indikator == "Studienanfänger:innen_1hs" ~ "Studienanfänger:innen (1.Hochschulsemester)",
-#                           .$indikator == "Studienanfänger:innen_1hs_FH" ~ "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
-#                           .$indikator == "Studienanfänger:innen_1hs_lehramt_Uni" ~ "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
-#
-#                           .$indikator == "Studienanfänger:innen_1hs_Uni" ~ "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
-#                           .$indikator == "Studierende" ~ "Studierende",
-#                           .$indikator == "Studierende_FH" ~ "Studierende (Fachhochschulen)",
-#                           .$indikator == "Studierende_lehramt_Uni" ~ "Studierende (Lehramt, Universität)",
-#                           .$indikator == "Studierende_Uni" ~ "Studierende (Universität)",
-#                           ))
-#
-# data_studi_neu1$hinweise <- NA
-
-
-
-#export(data_studi_neu1, "output/Studierende_2023.xlsx")
-
-#
-#
-#
-# Hybrid: Studi + alle fächer ab 2018---------------
-# colnames(data_studi_neu1) [7] <- "jahr"
-#
-# data_studi_neu1$wert <- as.numeric(data_studi_neu1$wert)
-# master_faecher_output1$wert <- as.numeric(master_faecher_output1$wert)
-#
-# master_faecher_output2 <- master_faecher_output1 %>%
-#   filter(fach!= "Alle Fächer")%>%
-#   select(-fachbereich)%>%
-#   rename(fachbereich = fach)
-#
-# master_faecher_output2$fachbereich <- gsub("Ingenieurwissenschaft","Ingenieurwissenschaften",
-#                                            master_faecher_output2$fachbereich)
-#
-#
-#
-#
-# lele <- bind_rows(data_studi_neu1, master_faecher_output2)
-
-
-#export(lele, "output/studierende_und_alle_fächer.xlsx")
-
-
-# # Studierende.xlsx Appendix 2021 alte daten + Fächer---------
-#
-# stud_appendix <- master_append %>%
-#   filter(fach=="Zusammen")%>%
-#   select(-fach,-hinweise,-quelle,-bereich)%>%
-#   rename(fachbereich= fachgruppe)
-#
-# stud_appendix$fachbereich <- ifelse(grepl("Zusammen", stud_appendix$fachbereich),"alle",stud_appendix$fachbereich)
-#
-# stud_appendix_1 <- stud_appendix %>%
-#    filter(fachbereich==
-#             "alle"| fachbereich=="Mathematik, Naturwissenschaften"
-#           | fachbereich=="Ingenieurwissenschaften")
-#
-#
-# stud_appendix_1$fachbereich <- gsub("Ingenieurwissenschaften", "ingenieur",stud_appendix_1$fachbereich)
-# stud_appendix_1$fachbereich <- gsub("Mathematik, Naturwissenschaften", "mathe",stud_appendix_1$fachbereich)
-#
-# studi_appendix_fn <- stud_appendix_1
-#
-# studi_appendix_fn$indikator <- gsub("studienanfänger", "Studienanfänger:innen", studi_appendix_fn$indikator)
-# studi_appendix_fn$indikator <- gsub("ausländer", "Ausländer:innen", studi_appendix_fn$indikator)
-# studi_appendix_fn$indikator <- gsub("studierende", "Studierende", studi_appendix_fn$indikator)
-#
-# studi_appendix_fn$indikator <- gsub("Mathe", "Mathematik und Naturwissenschaften", studi_appendix_fn$indikator)
-# studi_appendix_fn$indikator <- gsub("Ingenieur", "Ingenieurwissenschaften", studi_appendix_fn$indikator)
-#
-#
-#
-# # alte daten to append to
-#
-# studi_alt <- import("Studierende_alt_13_01.xlsx")
-# #
-# studi_alt <- studi_alt %>%
-#   filter (hochschulform!="Uni", hochschulform != "FH")%>%
-#   select(-hochschulform)%>%
-#   rename(jahr=Jahr)
-#
-# studi_2021 <- bind_rows(studi_alt, studi_appendix_fn)
-#
-#
-#
-# # Ausländer noch herausnehmen???
-# # Groß-/Kleinschreibung beachten
-#
-# studi_2021$bereich <- "Hochschule"
-#
-# studi_2021$indikator <- stringr::str_replace(studi_2021$indikator, "([[:alpha:]])", toupper)
-#
-# studi_2021 <- studi_2021 %>%
-#   select(bereich, indikator,region,  jahr, fachbereich, anzeige_geschlecht, nur_lehramt, wert )
-#
-# studi_2021$fachbereich <- gsub("mathe", "Mathematik und Naturwissenschaften", studi_2021$fachbereich)
-#
-# studi_2021$fachbereich <- gsub("ingenieur", "Ingenieurwissenschaften", studi_2021$fachbereich)
-#
-# studi_2021$fachbereich <- gsub("alle", "Alle", studi_2021$fachbereich)
-#
-# colnames(studi_2021) [6] <- "geschlecht"
-#
-# colnames(studi_2021) [7] <- "lehramt"
-
-
-# export(studi_2021, "output/Studierende_2023.xlsx")
