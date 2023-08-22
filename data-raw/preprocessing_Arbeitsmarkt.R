@@ -1346,9 +1346,10 @@ data <- na.omit(data)
 
 # bereich ergänzen und sortieren
 data$bereich <- "Arbeitsmarkt"
+data$einheit <- "Anteil"
 
 # Spalten in logische Reihenfolge bringen
-data<- data[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "wert")]
+data<- data[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
 
 # umbenennen
 oecd1 <- data
@@ -1410,14 +1411,15 @@ dat <- na.omit(dat)
 # bereich ergänze und in Reihenfolge bringen
 dat$bereich <- "Arbeitsmarkt"
 dat$indikator <- "Alle"
+dat$einheit <- "Anzahl Absolvent*innen"
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "wert")]
+dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
 
 # umbenennen
 oecd2 <- dat
 
-## OECD 3 - Anteil Feld an allen Absolvent*innen-----------------------------
+## OECD 3 - Anteil Feld /Frauen von Absolvent*innen--------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
 akro <- "kbr"
@@ -1496,10 +1498,311 @@ dat <- na.omit(dat)
 
 # bereich ergänze und in Reihenfolge bringen
 dat$bereich <- "Arbeitsmarkt"
-dat$indikator <- "Alle"
+dat$einheit <- "Anteil"
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "wert")]
+dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
 
 # umbenennen
-oecd2 <- dat
+oecd3 <- dat
+
+
+## OECD 4 - Anteil Feld an allen Absolvent*innen-----------------------------
+
+### Rohdaten einlesen -------------------------------------------------------
+akro <- "kbr"
+dat <- read.csv(paste0("C:/Users/", akro,
+                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD004_Frauenatneil_nach_Beruf_OECD.csv"),
+                header = TRUE, sep = ",", dec = ".")
+
+### Datensatz in passende Form bringen --------------------------------------
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(dplyr, countrycode)
+
+dat <- dat %>%
+  dplyr::select(COUNTRY, Country, EDUCATION_LEV, Gender, EDUCATION_FIELD,
+                Year, Value) %>%
+  dplyr::rename(land_code = COUNTRY,
+                land = Country,
+                anforderung = EDUCATION_LEV,
+                geschlecht = Gender,
+                fachbereich = EDUCATION_FIELD,
+                jahr = Year,
+                wert = Value)
+
+# Land zuweisen / übersetzen
+dat_agg <- dat %>%
+  dplyr::filter(land_code %in% c("E22", "OAVG")) %>%
+  dplyr::mutate(land = dplyr::case_when(
+    land_code == "E22" ~ "OECD-Mitglieder aus der EU",
+    land_code == "OAVG" ~ "OECD"
+  ))
+dat <- dat %>% dplyr::filter(!(land_code %in% c("E22", "OAVG")))
+dat$land <- countrycode::countryname(dat$land, destination = "country.name.de")
+
+dat <- rbind(dat, dat_agg)
+
+# Anforderungsniveau zuweisen
+dat <- dat %>%
+  dplyr::mutate(anforderung = dplyr::case_when(
+    anforderung ==  "ISCED11_35" ~ "Erstausbildung",
+    anforderung ==  "ISCED11_45" ~ "Ausbildung",
+    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm",
+    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar",
+    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar",
+    anforderung ==  "ISCED11_8" ~ "Promotion",
+    anforderung == "ISCED11_5T8" ~ "tertiäre Bildung (gesamt)"
+  ))
+
+# Fachbereich zuweisen - mit Kekelis Funktion
+
+# Filtern, welche Fachbereiche Sinnmachen / Aggregieren
+
+# übersetzen
+dat <- dat %>%
+  dplyr::mutate(
+    geschlecht = dplyr::case_when(
+      geschlecht == "Male" ~ "Männer",
+      geschlecht == "Female" ~ "Frauen",
+      geschlecht == "Total" ~ "Gesamt",
+      T ~ geschlecht
+    )
+  )
+
+# missings ausfiltern
+dat <- na.omit(dat)
+
+# bereich ergänze und in Reihenfolge bringen
+dat$bereich <- "Arbeitsmarkt"
+dat$indikator <- "Alle"
+dat$einheit <- "Anteil"
+
+# Spalten in logische Reihenfolge bringen
+dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
+
+# umbenennen
+oecd4 <- dat
+
+
+## OECD 5 - Anzahl Azubis / Studis nach Feld & Gender------------------------
+
+### Rohdaten einlesen -------------------------------------------------------
+akro <- "kbr"
+dat <- read.csv(paste0("C:/Users/", akro,
+                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD005_Studi_Azubi_nach_Feld_Gender.csv"),
+                header = TRUE, sep = ",", dec = ".")
+
+### Datensatz in passende Form bringen --------------------------------------
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(dplyr, countrycode)
+
+dat <- dat %>% dplyr::filter(Country.of.citizenship == "Total")
+
+dat <- dat %>%
+  dplyr::select(COUNTRY, Country, EDUCATION_LEV, Gender, EDUCATION_FIELD,
+                Year, Value) %>%
+  dplyr::rename(land_code = COUNTRY,
+                land = Country,
+                anforderung = EDUCATION_LEV,
+                geschlecht = Gender,
+                fachbereich = EDUCATION_FIELD,
+                jahr = Year,
+                wert = Value)
+
+# Land zuweisen / übersetzen
+
+dat$land <- countrycode::countryname(dat$land, destination = "country.name.de")
+
+
+# Anforderungsniveau zuweisen
+dat <- dat %>%
+  dplyr::mutate(anforderung = dplyr::case_when(
+    anforderung ==  "ISCED11_35" ~ "Erstausbildung",
+    anforderung ==  "ISCED11_45" ~ "Ausbildung",
+    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm",
+    anforderung ==  "ISCED11_54" ~ "kurzes tertiäres Bildungsprogramm (allgemeinbildend)",
+    anforderung ==  "ISCED11_55" ~ "kurzes tertiäres Bildungsprogramm (berufsorientiert)",
+    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar",
+    anforderung ==  "ISCED11_64" ~ "Bachelor oder vergleichbar (akademisch)",
+    anforderung ==  "ISCED11_65" ~ "Bachelor oder vergleichbar (berufsorientiert)",
+    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar",
+    anforderung ==  "ISCED11_74" ~ "Master oder vergleichbar (akademisch)",
+    anforderung ==  "ISCED11_75" ~ "Master oder vergleichbar (berufsorientiert)",
+    anforderung ==  "ISCED11_8" ~ "Promotion",
+    anforderung == "ISCED11_5T8" ~ "tertiäre Bildung (gesamt)",
+    T ~ anforderung
+  ))
+
+# Fachbereich zuweisen - mit Kekelis Funktion
+
+# Filtern, welche Fachbereiche Sinnmachen / Aggregieren
+
+# übersetzen
+dat <- dat %>%
+  dplyr::mutate(
+    geschlecht = dplyr::case_when(
+      geschlecht == "Male" ~ "Männer",
+      geschlecht == "Female" ~ "Frauen",
+      geschlecht == "Total" ~ "Gesamt",
+      T ~ geschlecht
+    )
+  )
+
+# indikator nach akademisch vs. berufsorientiert ergänzen
+dat$indikator <- ifelse(grepl("berufsorientiert", dat$anforderung) |
+                          grepl("usbildung", dat$anforderung), "berufsorientiert", "akademisch")
+
+dat$indikator <- ifelse(dat$anforderung == "kurzes tertiäres Bildungsprogramm" |
+                          dat$anforderung == "Bachelor oder vergleichbar" |
+                          dat$anforderung == "Master oder vergleichbar" |
+                          dat$anforderung == "tertiäre Bildung (gesamt)", "Alle", dat$indikator)
+
+
+
+# missings ausfiltern
+dat <- na.omit(dat)
+
+# bereich ergänze und in Reihenfolge bringen
+dat$bereich <- "Arbeitsmarkt"
+dat$einheit <- "Anzahl Absolvent*innen"
+
+# Spalten in logische Reihenfolge bringen
+dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
+
+# umbenennen
+oecd5 <- dat
+
+
+## EUROSTAT1 - Anzahl Beschäftigte nach Branche -----------------------------
+
+### Rohdaten einlesen -------------------------------------------------------
+akro <- "kbr"
+dat <- read.csv(paste0("C:/Users/", akro,
+                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/EUROSTAT002_custom_Labor_nach_Berufsfeld.csv.gz"),
+                header = TRUE, sep = ",", dec = ".")
+
+### Datensatz in passende Form bringen --------------------------------------
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(dplyr, countrycode)
+
+dat <- dat %>%
+  dplyr::select(nace_r2, OBS_VALUE, geo, TIME_PERIOD) %>%
+  dplyr::rename(land = geo,
+                jahr = TIME_PERIOD,
+                branche = nace_r2,
+                wert = OBS_VALUE)
+
+# Land zuweisen / übersetzen
+dat$land <- countrycode::countrycode(dat$land, origin = "eurostat", destination = "country.name.de")
+
+# Branchen zuweisen
+dat <- dat %>%
+  dplyr::mutate(branche = dplyr::case_when(
+    branche ==  "B" ~ "Bergbau und Gewinnung von Steinen und Erden",
+    branche ==  "C" ~ "Verarbeitendes Gewerbe/Herstellung von Waren",
+    branche ==  "D" ~ "Energieversorgung",
+    branche ==  "E" ~ "Wasserversorgung; Abwasser- und Abfallentsorgung und Beseitigung von Umweltverschmutzungen",
+    branche ==  "F" ~ "Baugewerbe/Bau",
+    branche ==  "G" ~ "Handel; Instandhaltung und Reparatur von Kraftfahrzeugen",
+    branche ==  "H" ~ "Verkehr und Lagerei",
+    branche ==  "I" ~ "Gastgewerbe/Beherbergung und Gastronomie",
+    branche ==  "J" ~ "Information und Kommunikation",
+    branche ==  "L" ~ "Grundstücks- und Wohnungswesen",
+    branche ==  "M" ~ "Erbringung von freiberuflichen, wissenschaftlichen und technischen Dienstleistungen",
+    branche ==  "N" ~ "Erbringung von sonstigen wirtschaftlichen Dienstleistungen",
+    T ~ branche
+  ))
+
+
+# missings ausfiltern
+dat <- na.omit(dat)
+
+# bereich ergänze und in Reihenfolge bringen
+dat$bereich <- "Arbeitsmarkt"
+dat$indikator <- "Alle"
+dat$geschlecht <- "Gesamt"
+dat$anforderung <- "Gesamt"
+dat$einheit <- "Anzahl"
+dat <- dat %>% dplyr::rename(fachbereich = anforderung)
+
+# Spalten in logische Reihenfolge bringen
+dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
+
+# umbenennen
+eurostat1 <- dat
+
+
+## EUROSTAT2 - Anzahl Ingenieure & Wissenschaftler---------------------------
+
+### Rohdaten einlesen -------------------------------------------------------
+akro <- "kbr"
+dat <- read.csv(paste0("C:/Users/", akro,
+                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/EUROSTAT003_custom_Labor_Tech_and_Scie.csv.gz"),
+                header = TRUE, sep = ",", dec = ".")
+
+### Datensatz in passende Form bringen --------------------------------------
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(dplyr, countrycode)
+
+dat <- dat %>%
+  dplyr::select(category, sex, geo, TIME_PERIOD, unit, OBS_VALUE) %>%
+  dplyr::rename(land = geo,
+                indikator = category,
+                jahr = TIME_PERIOD,
+                einheit = unit,
+                geschlecht = sex,
+                wert = OBS_VALUE)
+
+# Land zuweisen / übersetzen
+dat$land <- countrycode::countrycode(dat$land, origin = "eurostat", destination = "country.name.de")
+
+# Indikator & Einheit zuweisen
+dat <- dat %>%
+  dplyr::mutate(
+    indikator = dplyr::case_when(
+    indikator ==  "HRST" ~ "Ausgebildete und/oder Beschäftite",
+    indikator ==  "HRSTE" ~ "Ausgebildete",
+    indikator ==  "HRSTO" ~ "Beschäftigte",
+    indikator ==  "EHRSTC" ~ "Ausgebildet und Beschäftigt",
+    indikator ==  "SE" ~ "Naturwissenschaftler*innen und Ingenieur*innen",
+    T ~ indikator
+    ),
+    einheit = dplyr::case_when(
+      einheit == "THS_PER" ~ "Anzahl in Tsd.",
+      einheit == "PC_POP" ~ "Anteil an Gesamtbevölkerung",
+      einheit == "PC_ACT" ~ "Anteil an arbeitender Bevölkerung"
+    ),
+    geschlecht = dplyr::case_when(
+      geschlecht == "F" ~ "Frauen",
+      geschlecht == "M" ~ "Männer",
+      geschlecht == "T" ~ "Gesamt"
+    )
+  )
+
+
+# missings ausfiltern
+dat <- na.omit(dat)
+
+# bereich ergänze und in Reihenfolge bringen
+dat$bereich <- "Arbeitsmarkt"
+dat$anforderung <- "Gesamt"
+dat$fachbereich <- "MINT"
+
+# Spalten in logische Reihenfolge bringen
+dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
+
+# umbenennen
+eurostat2 <- dat
+
+
+## internationale Daten zusammenbringen ------------------------------------
+
+# brauchen Filtervariable nach Regionalität - EU, Welt, OECD
+# brauchen Filtervariable für Art der Daten - will ich Absolute Daten? Usw
+# wie ggf auch über Quellen Hinweg zusammen kategorisieren? Ist das bei diesen
+# heterogenen Daten überhaupt möglich?
+
+# Erst mal nur vorauswahl aus dem allen, mit was wir wirklich weiterabeiten wollen
+## vllt Eurostat1 raus - Branchen lassen nicht auch MINT schließen
+## welche Indikatoren / Vars wollen wir bei OECD?
+
