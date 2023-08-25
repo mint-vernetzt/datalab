@@ -1259,9 +1259,6 @@ data <- read.csv(paste0("C:/Users/", akro,
 
 
 ### Datensatz in passende Form bringen --------------------------------------
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(dplyr, countrycode)
-
 
 data <- data %>% dplyr::filter(Measure == "Value") #SE ausfiltern
 
@@ -1274,7 +1271,7 @@ data <- data %>%
                 geschlecht = Gender,
                 ag = Age,
                 fachbereich = FIELD,
-                indikator = INDICATOR.1,
+                variable = INDICATOR.1,
                 jahr = Reference.year,
                 wert = Value)
 
@@ -1298,9 +1295,9 @@ data <- rbind(data, data_agg)
 # Anforderungsniveau zuweisen
 data <- data %>%
   dplyr::mutate(anforderung = dplyr::case_when(
-    anforderung ==  "L5" ~ "kurzes tertiäres Bildungsprogramm",
-    anforderung ==  "L6" ~ "Bachelor oder vergleichbar",
-    anforderung ==  "L7T8" ~ "Master, Promotion oder vergleichbar",
+    anforderung ==  "L5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
+    anforderung ==  "L6" ~ "Bachelor oder vergleichbar (ISCED 6)",
+    anforderung ==  "L7T8" ~ "Master, Promotion oder vergleichbar (ISCED 7, 8)",
     anforderung ==  "L5T8" ~ "Gesamt"
   ))
 
@@ -1314,12 +1311,12 @@ data <- data %>%
       geschlecht == "Total" ~ "Gesamt",
       T ~ geschlecht
     ),
-    indikator = dplyr::case_when(
-      indikator == "Employment rate" ~ "Beschäftigungsquote",
-      indikator == "Inactivity rate" ~ "Nichterwerbsquote",
-      indikator == "Unemployment rate" ~ "Erwerbslosenquote",
-      indikator == "Share of population by field of study" ~ "Anteil an Bevölkerung nach Studienbereich",
-      T ~ indikator
+    variable = dplyr::case_when(
+      variable == "Employment rate" ~ "Erwerbstätigenquote",
+      variable == "Inactivity rate" ~ "Nichterwerbsquote",
+      variable == "Unemployment rate" ~ "Arbeitslosenquote",
+      variable == "Share of population by field of study" ~ "Anteil an Bevölkerung nach Studienbereich",
+      T ~ variable
     )
   )
 
@@ -1333,23 +1330,26 @@ data <- data %>%
 
 # Altersgruppen mit Indikator kombinieren
 data <- data %>%
-  dplyr::filter(ag %in% c("25-64 years", "55-64 years")) %>%
+  dplyr::rename(indikator = ag) %>%
+  dplyr::filter(indikator %in% c("25-64 years", "55-64 years")) %>%
   dplyr::mutate(indikator = dplyr::case_when(
-    ag == "25-64 years" ~ indikator,
-    ag == "55-64 years" ~ paste0(indikator, " ü55"),
+    indikator == "25-64 years" ~ "Beschäftigte",
+    indikator == "55-64 years" ~ "Beschäftigte ü55",
     T ~ indikator
-  )) %>%
-  dplyr::select(-ag)
+  ))
 
 # missings ausfiltern
 data <- na.omit(data)
 
 # bereich ergänzen und sortieren
 data$bereich <- "Arbeitsmarkt"
-data$einheit <- "Anteil"
+data$quelle <- "OECD"
+data$typ <- "In Prozent"
+data$population <- "OECD"
+
 
 # Spalten in logische Reihenfolge bringen
-data<- data[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
+data<- data[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich", "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 
 # umbenennen
 oecd1 <- data
@@ -1364,8 +1364,6 @@ dat <- read.csv(paste0("C:/Users/", akro,
                  header = TRUE, sep = ",", dec = ".")
 
 ### Datensatz in passende Form bringen --------------------------------------
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(dplyr, countrycode)
 
 dat <- dat %>%
   dplyr::select(COUNTRY, Country, EDUCATION_LEV, Gender, EDUCATION_FIELD, Year, Value) %>%
@@ -1383,12 +1381,12 @@ dat$land <- countrycode::countryname(dat$land, destination = "country.name.de")
 # Anforderungsniveau zuweisen
 dat <- dat %>%
   dplyr::mutate(anforderung = dplyr::case_when(
-    anforderung ==  "ISCED11_35" ~ "Erstausbildung",
-    anforderung ==  "ISCED11_45" ~ "Ausbildung",
-    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm",
-    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar",
-    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar",
-    anforderung ==  "ISCED11_8" ~ "Promotion"
+    anforderung ==  "ISCED11_35" ~ "Erstausbildung (ISCED 35)",
+    anforderung ==  "ISCED11_45" ~ "Ausbildung (ISCED 45)",
+    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
+    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar (ISCED 6)",
+    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar (ISCED 7)",
+    anforderung ==  "ISCED11_8" ~ "Promotion (ISCED 8)"
   ))
 
 # Fachbereich zuweisen - mit Kekelis Funktion
@@ -1410,12 +1408,15 @@ dat <- na.omit(dat)
 
 # bereich ergänze und in Reihenfolge bringen
 dat$bereich <- "Arbeitsmarkt"
+dat$quelle <- "OECD"
+dat$variable <- "Anzahl Absolvent*innen"
 dat$indikator <- "Alle"
-dat$einheit <- "Anzahl Absolvent*innen"
+dat$typ <- "Anzahl"
+dat$population <- "OECD"
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
-
+dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
+               "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 # umbenennen
 oecd2 <- dat
 
@@ -1428,8 +1429,6 @@ dat <- read.csv(paste0("C:/Users/", akro,
                 header = TRUE, sep = ",", dec = ".")
 
 ### Datensatz in passende Form bringen --------------------------------------
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(dplyr, countrycode)
 
 dat <- dat %>%
   dplyr::select(COUNTRY, Country, Indicator, EDUCATION_LEV, Gender, EDUCATION_FIELD,
@@ -1439,7 +1438,7 @@ dat <- dat %>%
                 anforderung = EDUCATION_LEV,
                 geschlecht = Gender,
                 fachbereich = EDUCATION_FIELD,
-                indikator = Indicator,
+                variable = Indicator,
                 jahr = Year,
                 wert = Value)
 
@@ -1458,12 +1457,12 @@ dat <- rbind(dat, dat_agg)
 # Anforderungsniveau zuweisen
 dat <- dat %>%
   dplyr::mutate(anforderung = dplyr::case_when(
-    anforderung ==  "ISCED11_35" ~ "Erstausbildung",
-    anforderung ==  "ISCED11_45" ~ "Ausbildung",
-    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm",
-    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar",
-    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar",
-    anforderung ==  "ISCED11_8" ~ "Promotion",
+    anforderung ==  "ISCED11_35" ~ "Erstausbildung (ISCED 35)",
+    anforderung ==  "ISCED11_45" ~ "Ausbildung (ISCED 45)",
+    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
+    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar (ISCED 6)",
+    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar (ISCED 7)",
+    anforderung ==  "ISCED11_8" ~ "Promotion (ISCED 8)",
     anforderung == "ISCED11_5T8" ~ "tertiäre Bildung (gesamt)"
   ))
 
@@ -1480,16 +1479,16 @@ dat <- dat %>%
       geschlecht == "Total" ~ "Gesamt",
       T ~ geschlecht
     ),
-    indikator = dplyr::case_when(
-      indikator == "Distribution of new entrants by field of education" ~
-        "Verteilung Ausbildungs-/Studiumsanfänger*innen",
-      indikator == "Share of graduates by field" ~
-        "Anteil Absolvent*innen nach Fachbereich",
-      indikator == "Share of graduates by gender in fields of education" ~
-        "Anteil Absolvent*innen nach Geschlecht in Fachbereichen",
-      indikator == "Share of new entrants for each field of education by gender" ~
-        "Anteil Ausbildungs-/Studiumsanfänger*innen nach Geschlecht in Fachbereichen",
-      T ~ indikator
+    variable = dplyr::case_when(
+      variable == "Distribution of new entrants by field of education" ~
+        "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern",
+      variable == "Share of graduates by field" ~
+        "Anteil Absolvent*innen nach Fach an allen Fächern",
+      variable == "Share of graduates by gender in fields of education" ~
+        "Frauenanteil Absolvent*innen nach Fachbereichen",
+      variable == "Share of new entrants for each field of education by gender" ~
+        "Frauenanteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen",
+      T ~ variable
     )
   )
 
@@ -1498,14 +1497,17 @@ dat <- na.omit(dat)
 
 # bereich ergänze und in Reihenfolge bringen
 dat$bereich <- "Arbeitsmarkt"
-dat$einheit <- "Anteil"
+dat$typ <- "In Prozent"
+dat$quelle <- "OECD"
+dat$population <- "OECD"
+dat$indikator <- "Alle"
+
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
-
+dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
+             "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 # umbenennen
 oecd3 <- dat
-
 
 ## OECD 4 - Anteil Feld an allen Absolvent*innen-----------------------------
 
@@ -1516,8 +1518,6 @@ dat <- read.csv(paste0("C:/Users/", akro,
                 header = TRUE, sep = ",", dec = ".")
 
 ### Datensatz in passende Form bringen --------------------------------------
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(dplyr, countrycode)
 
 dat <- dat %>%
   dplyr::select(COUNTRY, Country, EDUCATION_LEV, Gender, EDUCATION_FIELD,
@@ -1545,12 +1545,12 @@ dat <- rbind(dat, dat_agg)
 # Anforderungsniveau zuweisen
 dat <- dat %>%
   dplyr::mutate(anforderung = dplyr::case_when(
-    anforderung ==  "ISCED11_35" ~ "Erstausbildung",
-    anforderung ==  "ISCED11_45" ~ "Ausbildung",
-    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm",
-    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar",
-    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar",
-    anforderung ==  "ISCED11_8" ~ "Promotion",
+    anforderung ==  "ISCED11_35" ~ "Erstausbildung (ISCED 35)",
+    anforderung ==  "ISCED11_45" ~ "Ausbildung (ISCED 45)",
+    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
+    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar (ISCED 6)",
+    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar (ISCED 7)",
+    anforderung ==  "ISCED11_8" ~ "Promotion (ISCED 8)",
     anforderung == "ISCED11_5T8" ~ "tertiäre Bildung (gesamt)"
   ))
 
@@ -1575,11 +1575,14 @@ dat <- na.omit(dat)
 # bereich ergänze und in Reihenfolge bringen
 dat$bereich <- "Arbeitsmarkt"
 dat$indikator <- "Alle"
-dat$einheit <- "Anteil"
+dat$typ <- "In Prozent"
+dat$quelle <- "OECD"
+dat$population <- "OECD"
+dat$variable <- "Frauenanteil Beschäftigte nach Fachbereich"
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
-
+dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
+             "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 # umbenennen
 oecd4 <- dat
 
@@ -1589,14 +1592,11 @@ oecd4 <- dat
 ### Rohdaten einlesen -------------------------------------------------------
 akro <- "kbr"
 dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD005_Studi_Azubi_nach_Feld_Gender.csv"),
+                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
                 header = TRUE, sep = ",", dec = ".")
 
-### Datensatz in passende Form bringen --------------------------------------
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(dplyr, countrycode)
 
-dat <- dat %>% dplyr::filter(Country.of.citizenship == "Total")
+### Datensatz in passende Form bringen --------------------------------------
 
 dat <- dat %>%
   dplyr::select(COUNTRY, Country, EDUCATION_LEV, Gender, EDUCATION_FIELD,
@@ -1617,18 +1617,18 @@ dat$land <- countrycode::countryname(dat$land, destination = "country.name.de")
 # Anforderungsniveau zuweisen
 dat <- dat %>%
   dplyr::mutate(anforderung = dplyr::case_when(
-    anforderung ==  "ISCED11_35" ~ "Erstausbildung",
-    anforderung ==  "ISCED11_45" ~ "Ausbildung",
-    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm",
+    anforderung ==  "ISCED11_35" ~ "Erstausbildung (ISCED 35)",
+    anforderung ==  "ISCED11_45" ~ "Ausbildung (ISCED 45)",
+    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
     anforderung ==  "ISCED11_54" ~ "kurzes tertiäres Bildungsprogramm (allgemeinbildend)",
     anforderung ==  "ISCED11_55" ~ "kurzes tertiäres Bildungsprogramm (berufsorientiert)",
-    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar",
+    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar (ISCED 6)",
     anforderung ==  "ISCED11_64" ~ "Bachelor oder vergleichbar (akademisch)",
     anforderung ==  "ISCED11_65" ~ "Bachelor oder vergleichbar (berufsorientiert)",
-    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar",
+    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar (ISCED 7)",
     anforderung ==  "ISCED11_74" ~ "Master oder vergleichbar (akademisch)",
     anforderung ==  "ISCED11_75" ~ "Master oder vergleichbar (berufsorientiert)",
-    anforderung ==  "ISCED11_8" ~ "Promotion",
+    anforderung ==  "ISCED11_8" ~ "Promotion (ISCED 8)",
     anforderung == "ISCED11_5T8" ~ "tertiäre Bildung (gesamt)",
     T ~ anforderung
   ))
@@ -1652,9 +1652,9 @@ dat <- dat %>%
 dat$indikator <- ifelse(grepl("berufsorientiert", dat$anforderung) |
                           grepl("usbildung", dat$anforderung), "berufsorientiert", "akademisch")
 
-dat$indikator <- ifelse(dat$anforderung == "kurzes tertiäres Bildungsprogramm" |
-                          dat$anforderung == "Bachelor oder vergleichbar" |
-                          dat$anforderung == "Master oder vergleichbar" |
+dat$indikator <- ifelse(dat$anforderung == "kurzes tertiäres Bildungsprogramm (ISCED 5)" |
+                          dat$anforderung == "Bachelor oder vergleichbar (ISCED 6)" |
+                          dat$anforderung == "Master oder vergleichbar (ISCED 7)" |
                           dat$anforderung == "tertiäre Bildung (gesamt)", "Alle", dat$indikator)
 
 
@@ -1664,92 +1664,96 @@ dat <- na.omit(dat)
 
 # bereich ergänze und in Reihenfolge bringen
 dat$bereich <- "Arbeitsmarkt"
-dat$einheit <- "Anzahl Absolvent*innen"
+dat$variable <- "Anzahl Studierende/Auszubildende"
+dat$quelle <- "OECD"
+dat$population <- "OECD"
+dat$typ <- "Anzahl"
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
-
+dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
+             "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 # umbenennen
 oecd5 <- dat
 
+# aus irgendeinem Grund sind hinter den absoluten Anzhalen an Studis Kommastellen teils - auch schon in Rohdaten
+# Bei Abgleich mit Tabellen der Datenbank - Zahlen Stimmen, wenn man die Kommastellen rundet (also auch aufrundet)
+# mach ich hier:
+oecd5$wert <- round(oecd5$wert)
 
-## EUROSTAT1 - Anzahl Beschäftigte nach Branche -----------------------------
+
+## EUROSTAT0 - Anzahl Beschäftigte nach Branche -----------------------------
+# macht keinen Sinn für uns - finden kein MINT hier
+# ### Rohdaten einlesen -------------------------------------------------------
+# akro <- "kbr"
+# dat <- read.csv(paste0("C:/Users/", akro,
+#                        "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/EUROSTAT002_custom_Labor_nach_Berufsfeld.csv.gz"),
+#                 header = TRUE, sep = ",", dec = ".")
+#
+# ### Datensatz in passende Form bringen --------------------------------------
+#
+# dat <- dat %>%
+#   dplyr::select(nace_r2, OBS_VALUE, geo, TIME_PERIOD) %>%
+#   dplyr::rename(land = geo,
+#                 jahr = TIME_PERIOD,
+#                 branche = nace_r2,
+#                 wert = OBS_VALUE)
+#
+# # Land zuweisen / übersetzen
+# dat$land <- countrycode::countrycode(dat$land, origin = "eurostat", destination = "country.name.de")
+#
+# # Branchen zuweisen
+# dat <- dat %>%
+#   dplyr::mutate(branche = dplyr::case_when(
+#     branche ==  "B" ~ "Bergbau und Gewinnung von Steinen und Erden",
+#     branche ==  "C" ~ "Verarbeitendes Gewerbe/Herstellung von Waren",
+#     branche ==  "D" ~ "Energieversorgung",
+#     branche ==  "E" ~ "Wasserversorgung; Abwasser- und Abfallentsorgung und Beseitigung von Umweltverschmutzungen",
+#     branche ==  "F" ~ "Baugewerbe/Bau",
+#     branche ==  "G" ~ "Handel; Instandhaltung und Reparatur von Kraftfahrzeugen",
+#     branche ==  "H" ~ "Verkehr und Lagerei",
+#     branche ==  "I" ~ "Gastgewerbe/Beherbergung und Gastronomie",
+#     branche ==  "J" ~ "Information und Kommunikation",
+#     branche ==  "L" ~ "Grundstücks- und Wohnungswesen",
+#     branche ==  "M" ~ "Erbringung von freiberuflichen, wissenschaftlichen und technischen Dienstleistungen",
+#     branche ==  "N" ~ "Erbringung von sonstigen wirtschaftlichen Dienstleistungen",
+#     T ~ branche
+#   ))
+#
+#
+# # missings ausfiltern
+# dat <- na.omit(dat)
+#
+# # bereich ergänze und in Reihenfolge bringen
+# dat$bereich <- "Arbeitsmarkt"
+# dat$indikator <- "Alle"
+# dat$geschlecht <- "Gesamt"
+# dat$anforderung <- "Gesamt"
+# dat$einheit <- "Anzahl"
+# dat <- dat %>% dplyr::rename(fachbereich = anforderung)
+#
+# # Spalten in logische Reihenfolge bringen
+# dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
+#
+# # umbenennen
+# eurostat1 <- dat
+
+
+## EUROSTAT1 - Anzahl Ingenieure & Wissenschaftler---------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
 akro <- "kbr"
 dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/EUROSTAT002_custom_Labor_nach_Berufsfeld.csv.gz"),
+                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/EUROSTAT002_custom_Labor_Tech_and_Scie.csv.gz"),
                 header = TRUE, sep = ",", dec = ".")
 
 ### Datensatz in passende Form bringen --------------------------------------
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(dplyr, countrycode)
-
-dat <- dat %>%
-  dplyr::select(nace_r2, OBS_VALUE, geo, TIME_PERIOD) %>%
-  dplyr::rename(land = geo,
-                jahr = TIME_PERIOD,
-                branche = nace_r2,
-                wert = OBS_VALUE)
-
-# Land zuweisen / übersetzen
-dat$land <- countrycode::countrycode(dat$land, origin = "eurostat", destination = "country.name.de")
-
-# Branchen zuweisen
-dat <- dat %>%
-  dplyr::mutate(branche = dplyr::case_when(
-    branche ==  "B" ~ "Bergbau und Gewinnung von Steinen und Erden",
-    branche ==  "C" ~ "Verarbeitendes Gewerbe/Herstellung von Waren",
-    branche ==  "D" ~ "Energieversorgung",
-    branche ==  "E" ~ "Wasserversorgung; Abwasser- und Abfallentsorgung und Beseitigung von Umweltverschmutzungen",
-    branche ==  "F" ~ "Baugewerbe/Bau",
-    branche ==  "G" ~ "Handel; Instandhaltung und Reparatur von Kraftfahrzeugen",
-    branche ==  "H" ~ "Verkehr und Lagerei",
-    branche ==  "I" ~ "Gastgewerbe/Beherbergung und Gastronomie",
-    branche ==  "J" ~ "Information und Kommunikation",
-    branche ==  "L" ~ "Grundstücks- und Wohnungswesen",
-    branche ==  "M" ~ "Erbringung von freiberuflichen, wissenschaftlichen und technischen Dienstleistungen",
-    branche ==  "N" ~ "Erbringung von sonstigen wirtschaftlichen Dienstleistungen",
-    T ~ branche
-  ))
-
-
-# missings ausfiltern
-dat <- na.omit(dat)
-
-# bereich ergänze und in Reihenfolge bringen
-dat$bereich <- "Arbeitsmarkt"
-dat$indikator <- "Alle"
-dat$geschlecht <- "Gesamt"
-dat$anforderung <- "Gesamt"
-dat$einheit <- "Anzahl"
-dat <- dat %>% dplyr::rename(fachbereich = anforderung)
-
-# Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
-
-# umbenennen
-eurostat1 <- dat
-
-
-## EUROSTAT2 - Anzahl Ingenieure & Wissenschaftler---------------------------
-
-### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/EUROSTAT003_custom_Labor_Tech_and_Scie.csv.gz"),
-                header = TRUE, sep = ",", dec = ".")
-
-### Datensatz in passende Form bringen --------------------------------------
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(dplyr, countrycode)
 
 dat <- dat %>%
   dplyr::select(category, sex, geo, TIME_PERIOD, unit, OBS_VALUE) %>%
   dplyr::rename(land = geo,
                 indikator = category,
                 jahr = TIME_PERIOD,
-                einheit = unit,
+                variable = unit,
                 geschlecht = sex,
                 wert = OBS_VALUE)
 
@@ -1763,14 +1767,14 @@ dat <- dat %>%
     indikator ==  "HRST" ~ "Ausgebildete und/oder Beschäftite",
     indikator ==  "HRSTE" ~ "Ausgebildete",
     indikator ==  "HRSTO" ~ "Beschäftigte",
-    indikator ==  "EHRSTC" ~ "Ausgebildet und Beschäftigt",
+    indikator ==  "HRSTC" ~ "Ausgebildet und Beschäftigt",
     indikator ==  "SE" ~ "Naturwissenschaftler*innen und Ingenieur*innen",
     T ~ indikator
     ),
-    einheit = dplyr::case_when(
-      einheit == "THS_PER" ~ "Anzahl in Tsd.",
-      einheit == "PC_POP" ~ "Anteil an Gesamtbevölkerung",
-      einheit == "PC_ACT" ~ "Anteil an arbeitender Bevölkerung"
+    variable = dplyr::case_when(
+      variable == "THS_PER" ~ "Anzahl in Tsd.",
+      variable == "PC_POP" ~ "Anteil an Gesamtbevölkerung",
+      variable == "PC_ACT" ~ "Anteil an arbeitender Bevölkerung"
     ),
     geschlecht = dplyr::case_when(
       geschlecht == "F" ~ "Frauen",
@@ -1787,22 +1791,213 @@ dat <- na.omit(dat)
 dat$bereich <- "Arbeitsmarkt"
 dat$anforderung <- "Gesamt"
 dat$fachbereich <- "MINT"
+dat$quelle <- "EUROSTAT"
+dat$population <- "EU"
+dat$typ <- ifelse(grepl("Anzah", dat$variable), "Anzahl", "In Prozent")
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "indikator", "fachbereich", "geschlecht", "land", "jahr", "anforderung", "einheit", "wert")]
-
+dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
+             "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 # umbenennen
-eurostat2 <- dat
+eurostat1 <- dat
 
 
 ## internationale Daten zusammenbringen ------------------------------------
+arbeitsmarkt_international <- rbind(eurostat1, oecd1, oecd2, oecd3, oecd4, oecd5)
 
-# brauchen Filtervariable nach Regionalität - EU, Welt, OECD
-# brauchen Filtervariable für Art der Daten - will ich Absolute Daten? Usw
-# wie ggf auch über Quellen Hinweg zusammen kategorisieren? Ist das bei diesen
-# heterogenen Daten überhaupt möglich?
+# in shinyapp:
+usethis::use_data(arbeitsmarkt_international, overwrite = T)
 
-# Erst mal nur vorauswahl aus dem allen, mit was wir wirklich weiterabeiten wollen
-## vllt Eurostat1 raus - Branchen lassen nicht auch MINT schließen
-## welche Indikatoren / Vars wollen wir bei OECD?
+
+# Daten Fachkräftemangel --------------------------------------------------
+
+##  Engpassanalyse -------------------------------------------------------
+
+### BULA Vergleich ####
+
+#### Rohdaten einlesen -------------------------------------------------------
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+epa_einlesen <- function(name, sheet_s){
+  df <- readxl::read_excel(paste0(pfad, name),
+                           sheet = sheet_s,
+                           range = "A10:O160")
+  return(df)
+}
+
+sheets <- c("Fachkräfte", "Spezialisten", "Experten")
+name <- c("BA014_EPA_2020_Länderergebnisse.xlsx",
+          "BA015_2021_Länderergebnisse.xlsx",
+          "BA016_2022_Länderergebnisse.xlsx")
+
+epa20_f <- epa_einlesen(name[1], sheets[1])
+epa20_s <- epa_einlesen(name[1], sheets[2])
+epa20_e <- epa_einlesen(name[1], sheets[3])
+
+epa21_f <- epa_einlesen(name[1], sheets[1])
+epa21_s <- epa_einlesen(name[1], sheets[2])
+epa21_e <- epa_einlesen(name[1], sheets[3])
+
+epa22_f <- epa_einlesen(name[1], sheets[1])
+epa22_s <- epa_einlesen(name[1], sheets[2])
+epa22_e <- epa_einlesen(name[1], sheets[3])
+
+#### Datensatz in passende Form aufbereiten ----------------------------------
+
+# fehlende Spalte benennen
+epa20_f <- epa20_f %>%
+  dplyr::rename(beruf = `...1`)
+epa20_s <- epa20_s %>%
+  dplyr::rename(beruf = `...1`)
+epa20_e <- epa20_e %>%
+  dplyr::rename(beruf = `...1`)
+
+epa21_f <- epa21_f %>%
+  dplyr::rename(beruf = `...1`)
+epa21_s <- epa21_s %>%
+  dplyr::rename(beruf = `...1`)
+epa21_e <- epa21_e %>%
+  dplyr::rename(beruf = `...1`)
+
+epa22_f <- epa22_f %>%
+  dplyr::rename(beruf = `...1`)
+epa22_s <- epa22_s %>%
+  dplyr::rename(beruf = `...1`)
+epa22_e <- epa22_e %>%
+  dplyr::rename(beruf = `...1`)
+
+# ins Long Format bringen
+epa20_f <- tidyr::pivot_longer(epa20_f, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+epa20_e <- tidyr::pivot_longer(epa20_e, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+epa20_s <- tidyr::pivot_longer(epa20_s, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+
+epa21_f <- tidyr::pivot_longer(epa21_f, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+epa21_e <- tidyr::pivot_longer(epa21_e, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+epa21_s <- tidyr::pivot_longer(epa21_s, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+
+epa22_f <- tidyr::pivot_longer(epa22_f, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+epa22_e <- tidyr::pivot_longer(epa22_e, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+epa22_s <- tidyr::pivot_longer(epa22_s, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
+
+
+# missings entfernen
+epa20_f <- na.omit(epa20_f)
+epa20_e <- na.omit(epa20_e)
+epa20_s <- na.omit(epa20_s)
+
+epa21_f <- na.omit(epa21_f)
+epa21_e <- na.omit(epa21_e)
+epa21_s <- na.omit(epa21_s)
+
+epa22_f <- na.omit(epa22_f)
+epa22_e <- na.omit(epa22_e)
+epa22_s <- na.omit(epa22_s)
+
+# zusammenfügen
+epa20_f$anforderung <- "Fachkräfte"
+epa20_e$anforderung <- "Expert*innen"
+epa20_s$anforderung <- "Spezialist*innen"
+epa20 <- rbind(epa20_f, epa20_e, epa20_s)
+
+epa21_f$anforderung <- "Fachkräfte"
+epa21_e$anforderung <- "Expert*innen"
+epa21_s$anforderung <- "Spezialist*innen"
+epa21 <- rbind(epa21_f, epa21_e, epa21_s)
+
+epa22_f$anforderung <- "Fachkräfte"
+epa22_e$anforderung <- "Expert*innen"
+epa22_s$anforderung <- "Spezialist*innen"
+epa22 <- rbind(epa22_f, epa22_e, epa22_s)
+
+
+# Spalten ergänzen
+epa20$bereich <- "Arbeitsmarkt"
+epa20$jahr <- 2020
+epa21$bereich <- "Arbeitsmarkt"
+epa21$jahr <- 2021
+epa22$bereich <- "Arbeitsmarkt"
+epa22$jahr <- 2022
+
+# alles zusammen
+epa <- rbind(epa20, epa21, epa22)
+
+# Bezeichnungen von Berufen in Text und Code trennen
+epa$beruf_schlüssel <- stringr::str_extract(epa$beruf, "[[:digit:]]+") #zahlen übertragen
+epa$beruf <- gsub("[[:digit:]]", " ", epa$beruf) #zahlen entfernen
+epa$beruf <- stringr::str_trim(epa$beruf) #Leerzeichen entfernen
+
+# Spalten sortieren
+epa <- epa[, c("bereich", "beruf", "beruf_schlüssel", "region", "anforderung", "jahr", "wert")]
+
+# wert numerisch speichern
+epa$wert <- as.numeric(epa$wert)
+
+
+
+### Detaillierte Daten für DE ####
+
+
+#### Rohdaten einlesen -------------------------------------------------------
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+epa_einlesen <- function(name, sheet_s){
+  df <- readxl::read_excel(paste0(pfad, name),
+                           sheet = sheet_s,
+                           range = "A9:X707")
+  return(df)
+}
+
+sheets <- c("Fachkräfte", "Spezialisten", "Experten")
+name <- c("BA010_2019_Anhang.xlsx", "BA011_EPA_2020_Ergebnisse_Bund_detailliert.xlsx",
+          "BA012_Ergebnisse_Engpassanalyse_2021_Deutschland_detailliert.xlsx",
+          "BA013_EPA_DE_detailliert_2022.xlsx")
+
+epa_de19_f <- epa_einlesen(name = name[1], sheets[1])
+epa_de19_s <- epa_einlesen(name = name[1], sheets[2])
+epa_de19_e <- epa_einlesen(name = name[1], sheets[3])
+
+epa_de20_f <- epa_einlesen(name = name[2], sheets[1])
+epa_de20_s <- epa_einlesen(name = name[2], sheets[2])
+epa_de20_e <- epa_einlesen(name = name[2], sheets[3])
+
+epa_de21_f <- epa_einlesen(name = name[3], sheets[1])
+epa_de21_s <- epa_einlesen(name = name[3], sheets[2])
+epa_de21_e <- epa_einlesen(name = name[3], sheets[3])
+
+epa_de22_f <- epa_einlesen(name = name[4], sheets[1])
+epa_de22_s <- epa_einlesen(name = name[4], sheets[2])
+epa_de22_e <- epa_einlesen(name = name[4], sheets[3])
+
+
+#### Datensatz in passende Form aufbereiten ----------------------------------
+
+df <- epa_de19_f
+
+df <- df %>%
+  rename(
+    "beruf" = `...1`,
+    "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2020)",
+    "Enpassindikator Vakanzzeit" = "Vakanzzeit",
+    "Enpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
+    "Enpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
+    "Enpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
+    "Enpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit",
+    "Enpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte",
+    "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...10",
+    "wert_EPA" = "Durchschnittliche Punktezahl...11",
+    "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)",
+    "Risikoindikator Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen" = "Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen",
+    "Risikoindikator Absolventen-Beschäftigten-Relation" = "Absolventen-Beschäftigten-Relation",
+    "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
+    "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...17",
+    "wert_Risiko" = "Durchschnittliche Punktezahl...19",
+    "Ergänzungsindikatoren Berufliche Mobilität" = "Berufliche Mobilität",
+    "Ergänzungsindikatoren Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote",
+    "Ergänzungsindikatoren Teilzeitquote" = "Teilzeitquote"
+  )
+
 
