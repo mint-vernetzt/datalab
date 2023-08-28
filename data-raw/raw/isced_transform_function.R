@@ -1,19 +1,19 @@
 # Aug 23
 # kab
 
-# Funktion zur Aufbereitung der ISCED F 13 Schlüssel 
+# Funktion zur Aufbereitung der ISCED F 13 Schlüssel
 
 
 iscedf13_transform <- function(data_in) {
-  
-  # spalte mit den codes muss bereits fach heißen 
-  # spalte mit werten muss wert heißen 
-  
+
+  # spalte mit den codes muss bereits fach heißen
+  # spalte mit werten muss wert heißen
+
   require(magrittr)
   require(dplyr)
-  
+
   # fächer benennen
-  
+
   dat1 <- data_in%>%
     mutate(fach = case_when(str_ends("F00", .$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
                             str_ends("F01", .$fach)~ "Pädagogik",
@@ -36,6 +36,7 @@ Mathematik und Statistik",
                             str_ends("F059", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
                             str_ends("F070", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
                             str_ends("F071", .$fach) ~ "Ingenieurwesen und Technische Berufe",
+                            str_ends("F05T07", .$fach) ~ "MINT",
                             str_ends("F072", .$fach) ~ "Verarbeitendes Gewerbe und Bergbau",
                             str_ends("F073", .$fach) ~ "Architektur und Baugewerbe",
                             str_ends("F078", .$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
@@ -43,13 +44,13 @@ Mathematik und Statistik",
                             str_ends("F079", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert",
                             str_detect("TOTAL", .$fach) ~ "Insgesamt",
                             str_ends("UNK", .$fach) ~ "Unbekannt"))
-  
-  
+
+
   # aggregate erstellen
-  
-  
+
+
   ## hier noch pivot_longer verbesseren
-  
+
   dat2 <- dat1 %>%
     pivot_wider(names_from = fach, values_from = wert)%>%
     mutate("Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe" = `Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert`+
@@ -59,16 +60,7 @@ Mathematik und Statistik",
     mutate("Alle MINT-Fächer" =rowSums( select(.,c(`Naturwissenschaften, Mathematik und Statistik`,
                                                    `Informatik & Kommunikationstechnologie`,
                                                    `Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe`,
-                                                   `Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe`,
-                                                   `Weitere Naturwissenschaften, Mathematik und Statistik`,
-                                                   `Biologie und verwandte Wissenschaften`,
-                                                   `Umwelt`,
-                                                   `Exakte Naturwissenschaften`,
-                                                   `Mathematik und Statistik`,
-                                                   `Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,\nMathematik und Statistik`, `Ingenieurwesen und Technische Berufe`,
-                                                   `Verarbeitendes Gewerbe und Bergbau`,
-                                                   `Architektur und Baugewerbe`,
-                                                   `Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,\n verarbeitendes Gewerbe und Baugewerbe`)),na.rm = T))%>%
+                                                   )),na.rm = T))%>%
     mutate("Alle Nicht MINT-Fächer" = Insgesamt - `Alle MINT-Fächer`)%>%
     select(-c("Naturwissenschaften, Mathematik und Statistik nicht näher definiert",
               "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
@@ -100,11 +92,11 @@ Mathematik und Statistik",
                    "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe",
                    "Weitere Naturwissenschaften, Mathematik und Statistik"
                    ), values_to = "wert", names_to="fach")
-  
-  
+
+
   # ebenen und mint-selektor
-  
-  
+
+
   dat3 <- dat2 %>%
   mutate(mint_select= case_when(fach %in% c("Naturwissenschaften, Mathematik und Statistik",
                                             "Informatik & Kommunikationstechnologie",
@@ -139,10 +131,10 @@ Mathematik und Statistik","Ingenieurwesen und Technische Berufe",
                                         "Alle MINT-Fächer",
                                         "Alle Nicht MINT-Fächer")~ "1",
                             T~"2"))%>%
-    
-    
-  # fachbereich und fach diffenrenzieren 
-    
+
+
+  # fachbereich und fach diffenrenzieren
+
   dat4 <- dat3 %>%
     mutate(fachbereich = case_when(fach %in% c("Allgemeine Bildungsgänge und Qualifikationen",
                                                "Pädagogik",
@@ -170,11 +162,11 @@ Mathematik und Statistik","Ingenieurwesen und Technische Berufe",
                                    fach == "Verarbeitendes Gewerbe und Bergbau" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                                    fach == "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                                    fach == "Weitere Naturwissenschaften, Mathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik"))
-           
-    
-    
-           
-           
-                            
-  
+
+
+
+    return(dat4)
+
+
+
 }
