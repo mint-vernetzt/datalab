@@ -12,9 +12,13 @@ library(dplyr)
 
 wd <- getwd()
 setwd(wd)
-#setwd("C:/Users/kab/Downloads/datalab/datalab")
 
-data <- readxl::read_excel("data-raw/raw/SKF001_230130.xlsx", sheet = "Datentabelle", col_names = FALSE)
+# Akronym für Onedrive-Pfad einsetzten
+akro <- "kbr"
+
+data <- readxl::read_excel(paste0("C:/Users/", akro,
+                                  "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/SKF001_230130.xlsx"),
+                           sheet = "Datentabelle", col_names = FALSE)
 
 
 # Datensatz ins passende Format bringen --------------------------------------

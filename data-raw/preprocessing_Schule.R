@@ -1,3 +1,6 @@
+# Akronym übergeben für Datensatz-Pfad in Onedrive
+akro <- "kbr"
+
 ################################################################################
 #
 # Data Lab
@@ -58,41 +61,44 @@ read_data <- function(file, BL, year, course_level) {
 wd2 <- paste0(wd, "/raw")
 setwd(wd2)
 
-data_LK_D  <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "D" , 2021, "Leistungskurse")
-data_LK_BW <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "BW", 2021, "Leistungskurse")
-data_LK_BY <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "BY", 2021, "Leistungskurse")
-data_LK_BE <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "BE", 2021, "Leistungskurse")
-data_LK_BB <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "BB", 2021, "Leistungskurse")
-data_LK_HB <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "HB", 2021, "Leistungskurse")
-data_LK_HH <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "HH", 2021, "Leistungskurse")
-data_LK_HE <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "HE", 2021, "Leistungskurse")
-data_LK_MV <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "MV", 2021, "Leistungskurse")
-data_LK_NI <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "NI", 2021, "Leistungskurse")
-data_LK_NW <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "NW", 2021, "Leistungskurse")
-data_LK_RP <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "RP", 2021, "Leistungskurse")
-data_LK_SL <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "SL", 2021, "Leistungskurse")
-data_LK_SN <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "SN", 2021, "Leistungskurse")
-data_LK_ST <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "ST", 2021, "Leistungskurse")
-data_LK_SH <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "SH", 2021, "Leistungskurse")
-data_LK_TH <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "TH", 2021, "Leistungskurse")
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
-data_GK_D  <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "D" , 2021, "Grundkurse")
-data_GK_BW <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "BW", 2021, "Grundkurse")
-data_GK_BY <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "BY", 2021, "Grundkurse")
-data_GK_BE <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "BE", 2021, "Grundkurse")
-data_GK_BB <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "BB", 2021, "Grundkurse")
-data_GK_HB <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "HB", 2021, "Grundkurse")
-data_GK_HH <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "HH", 2021, "Grundkurse")
-data_GK_HE <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "HE", 2021, "Grundkurse")
-data_GK_MV <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "MV", 2021, "Grundkurse")
-data_GK_NI <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "NI", 2021, "Grundkurse")
-data_GK_NW <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "NW", 2021, "Grundkurse")
-data_GK_RP <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "RP", 2021, "Grundkurse")
-data_GK_SL <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "SL", 2021, "Grundkurse")
-data_GK_SN <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "SN", 2021, "Grundkurse")
-data_GK_ST <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "ST", 2021, "Grundkurse")
-data_GK_SH <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "SH", 2021, "Grundkurse")
-data_GK_TH <- read_data("KMK023_Aus_Kurse_2021_Werte.xlsx", "TH", 2021, "Grundkurse")
+data_LK_D  <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "D" , 2021, "Leistungskurse")
+data_LK_BW <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BW", 2021, "Leistungskurse")
+data_LK_BY <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BY", 2021, "Leistungskurse")
+data_LK_BE <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BE", 2021, "Leistungskurse")
+data_LK_BB <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BB", 2021, "Leistungskurse")
+data_LK_HB <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "HB", 2021, "Leistungskurse")
+data_LK_HH <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "HH", 2021, "Leistungskurse")
+data_LK_HE <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "HE", 2021, "Leistungskurse")
+data_LK_MV <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "MV", 2021, "Leistungskurse")
+data_LK_NI <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "NI", 2021, "Leistungskurse")
+data_LK_NW <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "NW", 2021, "Leistungskurse")
+data_LK_RP <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "RP", 2021, "Leistungskurse")
+data_LK_SL <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "SL", 2021, "Leistungskurse")
+data_LK_SN <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "SN", 2021, "Leistungskurse")
+data_LK_ST <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "ST", 2021, "Leistungskurse")
+data_LK_SH <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "SH", 2021, "Leistungskurse")
+data_LK_TH <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "TH", 2021, "Leistungskurse")
+
+data_GK_D  <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "D" , 2021, "Grundkurse")
+data_GK_BW <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "BW", 2021, "Grundkurse")
+data_GK_BY <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "BY", 2021, "Grundkurse")
+data_GK_BE <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "BE", 2021, "Grundkurse")
+data_GK_BB <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "BB", 2021, "Grundkurse")
+data_GK_HB <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "HB", 2021, "Grundkurse")
+data_GK_HH <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "HH", 2021, "Grundkurse")
+data_GK_HE <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "HE", 2021, "Grundkurse")
+data_GK_MV <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "MV", 2021, "Grundkurse")
+data_GK_NI <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "NI", 2021, "Grundkurse")
+data_GK_NW <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "NW", 2021, "Grundkurse")
+data_GK_RP <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "RP", 2021, "Grundkurse")
+data_GK_SL <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "SL", 2021, "Grundkurse")
+data_GK_SN <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "SN", 2021, "Grundkurse")
+data_GK_ST <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "ST", 2021, "Grundkurse")
+data_GK_SH <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "SH", 2021, "Grundkurse")
+data_GK_TH <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "TH", 2021, "Grundkurse")
 
 
 # Zwischen-DFs zusammenfassen
@@ -282,18 +288,18 @@ setwd(wd)
 
 ## 4. Klasse
 # Sheet 2 für alle drei Jahre auswählen
-data <- readxl::read_excel("data-raw/raw/IQB015_Abb3.17&3.19 (S.71&75)_2021.xlsx", sheet = "Abb3.19")
+data <- readxl::read_excel(paste0(pfad, "IQB015_Abb3.17&3.19 (S.71&75)_2021.xlsx"), sheet = "Abb3.19")
 
 # Nur Spalten mit Land, Standard, und Werten auswählen
 data <- data %>%
   dplyr::select("...3", "...4", "perc_2011", "perc_2016", "perc_2021")
 
 # standard nach geschlecht
-data_gen <- readxl::read_excel("data-raw/raw/IQB021_Tab6.1,6.2&6.6 (S.128,133&146)_2021.xlsx", sheet = "Tab6.2")
+data_gen <- readxl::read_excel(paste0(pfad, "IQB021_Tab6.1,6.2&6.6 (S.128,133&146)_2021.xlsx"), sheet = "Tab6.2")
 
 ## 9. Klasse
 # Einlesen
-d9 <- read.csv("data-raw/raw/IQB001_Vergleich_Mathe 2018.csv")
+d9 <- read.csv(paste0(pfad, "IQB001_Vergleich_Mathe 2018.csv"))
 
 
 #### Datensatz aufbereiten ---------------------------------------------------
@@ -417,23 +423,23 @@ library(dplyr)
 
 # Mathe Mittel ings. nur DE 2021
 # einlesen IQB016 - sheet "Abb4.7"
-d_m_ges <- readxl::read_excel("data-raw/raw/IQB016_Abb4.7&4.14 (S.94&107)_2021.xlsx", sheet = "Abb4.7")
+d_m_ges <- readxl::read_excel(paste0(pfad, "IQB016_Abb4.7&4.14 (S.94&107)_2021.xlsx"), sheet = "Abb4.7")
 
 #Mathe Mittel M und J 2021 inkl. Bundesländer
 # einlesen IQB017 - sheet "Abb6.2"
-d_m_gen_2021 <- readxl::read_excel("data-raw/raw/IQB017_Abb6.1&6.2 (S.131&135)_2021.xlsx", sheet = "Abb6.2")
+d_m_gen_2021 <- readxl::read_excel(paste0(pfad, "IQB017_Abb6.1&6.2 (S.131&135)_2021.xlsx"), sheet = "Abb6.2")
 
 #Mathe Mittel M und J 2011, 2016 nur DE verfügbar
 # einlesen IQB021 - sheet "Tab6.1"
-d_m_gen_2011_16 <- readxl::read_excel("data-raw/raw/IQB021_Tab6.1,6.2&6.6 (S.128,133&146)_2021.xlsx", sheet = "Tab6.1")
+d_m_gen_2011_16 <- readxl::read_excel(paste0(pfad, "IQB021_Tab6.1,6.2&6.6 (S.128,133&146)_2021.xlsx"), sheet = "Tab6.1")
 
 # Mathe Mittel Bildung hoch/niedrig, alle Jahre, alle BULA
 # einlesen IQB018 - sheet "Abb_7.11"
-d_m_bildung <- readxl::read_excel("data-raw/raw/IQB018_Abb7.11 (S.172)_2021.xlsx", sheet = "Abb_7.11")
+d_m_bildung <- readxl::read_excel(paste0(pfad, "IQB018_Abb7.11 (S.172)_2021.xlsx"), sheet = "Abb_7.11")
 
 # Mathe Mittel Einwanderung, alle Jahre, alle BULA
 # einlesen IQB019 - sheet "Abb_8.9"
-d_m_migra <- readxl::read_excel("data-raw/raw/IQB019_Abb8.9 (S.200)_2021.xlsx", sheet = "Abb_8.9")
+d_m_migra <- readxl::read_excel(paste0(pfad, "IQB019_Abb8.9 (S.200)_2021.xlsx"), sheet = "Abb_8.9")
 
 
 #### Datensätze aufbereiten --------------------------------
@@ -615,37 +621,37 @@ iqb_score <- rbind(d_m_ges, d_m_gen_2021, d_m_gen_2011_16, d_m_bildung, d_m_migr
 #setwd("C:/Users/kab/Downloads/datalab/datalab")
 
 # Mathe Mittel ings. DE & BULAs, 2012, 2018
-d_m_ges <- readxl::read_excel("data-raw/raw/IQB009_Abb6.4 (S.207).xlsx")
+d_m_ges <- readxl::read_excel(paste0(pfad, "IQB009_Abb6.4 (S.207).xlsx"))
 
 # Fachkenntnisse nach Gender
 # Mathe Mittel
-d_m_gen <- readxl::read_excel("data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx", sheet = "Abb 7.9_Mathe_GL")
+d_m_gen <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.9_Mathe_GL")
 # Bio
-d_b_gen <- readxl::read_excel("data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx", sheet = "Abb 7.10_BF")
+d_b_gen <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.10_BF")
 # Chemie
-d_c_gen <- readxl::read_excel("data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx", sheet = "Abb 7.12_CF")
+d_c_gen <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.12_CF")
 # Physik
-d_p_gen <- readxl::read_excel("data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx", sheet = "Abb 7.14_PF")
+d_p_gen <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.14_PF")
 
 # Fachkenntnisse nach Status
 # Mathe
-d_m_stat <- readxl::read_excel("data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx", sheet = "Abb8.17_GL")
+d_m_stat <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.17_GL")
 # Bio
-d_b_stat <- readxl::read_excel("data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx", sheet = "Abb8.18_BF")
+d_b_stat <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.18_BF")
 # Chemie
-d_c_stat <- readxl::read_excel("data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx", sheet = "Abb8.20_CF")
+d_c_stat <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.20_CF")
 # Physik
-d_p_stat <- readxl::read_excel("data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx", sheet = "Abb8.22_PF")
+d_p_stat <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.22_PF")
 
 # Fachkenntnisse nach Zuwanderungsgeschichte
 # Mathe
-d_m_migra <- readxl::read_excel("data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx", sheet = "Abb 9.2 GL")
+d_m_migra <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.2 GL")
 # Bio
-d_b_migra <- readxl::read_excel("data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx", sheet = "Abb 9.3 BF")
+d_b_migra <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.3 BF")
 # Chemie
-d_c_migra <- readxl::read_excel("data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx", sheet = "Abb 9.5 CF")
+d_c_migra <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.5 CF")
 # Physik
-d_p_migra <- readxl::read_excel("data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx", sheet = "Abb 9.7 PF")
+d_p_migra <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.7 PF")
 
 
 #### Datensatz aufbereiten ---------------------------------------------------
@@ -858,7 +864,7 @@ iqb_score_ges$jahr <- as.numeric(iqb_score_ges$jahr)
 # setwd(wd)
 
 # Einlesen
-data <- readxl::read_excel("data-raw/raw/IQB020_Abb9.3 (S.227)_2021.xlsx")
+data <- readxl::read_excel(paste0(pfad, "IQB020_Abb9.3 (S.227)_2021.xlsx"))
 
 #### Datensatz aufbereiten ---------------------------------------------------
 
