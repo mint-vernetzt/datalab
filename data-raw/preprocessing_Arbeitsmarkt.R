@@ -1249,9 +1249,85 @@ usethis::use_data(data_naa, overwrite = T)
 
 # Internationale Daten ----------------------------------------------------
 
+## Vorbereitung - Packages und Funktionen
+library(dplyr)
+
+iscedf13_transform_lang <- function(dat) {
+
+  # fächer benennen
+
+  dat <- dat %>%
+    dplyr::mutate(fach = dplyr::case_when(stringr::str_ends("F00", dat$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
+                            stringr::str_ends("F01", dat$fach)~ "Pädagogik",
+                            stringr::str_ends("F02", dat$fach) ~ "Geisteswissenschaften und Künste",
+                            stringr::str_ends("F03", dat$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+                            stringr::str_ends("F04", dat$fach) ~ "Wirtschaft, Verwaltung und Recht",
+                            stringr::str_ends("F05", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+                            stringr::str_ends("F06", dat$fach) ~ "Informatik & Kommunikationstechnologie",
+                            stringr::str_ends("F07", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                            stringr::str_ends("F08", dat$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+                            stringr::str_ends("F09", dat$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+                            stringr::str_ends("F10", dat$fach) ~ "Dienstleistungen",
+                            stringr::str_ends("F050", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht näher definiert",
+                            stringr::str_ends("F051", dat$fach) ~ "Biologie und verwandte Wissenschaften",
+                            stringr::str_ends("F052", dat$fach) ~ "Umwelt",
+                            stringr::str_ends("F053", dat$fach) ~ "Exakte Naturwissenschaften",
+                            stringr::str_ends("F054", dat$fach) ~ "Mathematik und Statistik",
+                            stringr::str_ends("F058", dat$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
+Mathematik und Statistik",
+                            stringr::str_ends("F059", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
+                            stringr::str_ends("F070", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
+                            stringr::str_ends("F071", dat$fach) ~ "Ingenieurwesen und Technische Berufe",
+                            stringr::str_ends("F072", dat$fach) ~ "Verarbeitendes Gewerbe und Bergbau",
+                            stringr::str_ends("F073", dat$fach) ~ "Architektur und Baugewerbe",
+                            stringr::str_ends("F078", dat$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
+ verarbeitendes Gewerbe und Baugewerbe",
+                            stringr::str_ends("F079", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert",
+
+                            stringr::str_ends("F05T07", dat$fach) ~ "MINT",
+                            stringr::str_ends("F050_59", dat$fach) ~ "Weitere Naturwissenschaften, Mathematik und Statistik",
+                            stringr::str_ends("F070_79", dat$fach) ~ "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe",
+
+                            stringr::str_detect("TOTAL", dat$fach) ~ "Alle",
+                            stringr::str_detect("_T", dat$fach) ~ "Alle",
+                            stringr::str_ends("UNK", dat$fach) ~ "Unbekannt",
+                            stringr::str_ends("F99", dat$fach) ~ "Unbekannt",
+                            T ~ dat$fach))
+
+  return(dat)
+}
+
+iscedf13_transform_kurz <- function(dat) {
+
+  # fächer benennen
+
+  dat <- dat %>%
+    mutate(fach = case_when(stringr::str_ends("F00", dat$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
+                            stringr::str_ends("F01", dat$fach)~ "Pädagogik",
+                            stringr::str_ends("F02", dat$fach) ~ "Geisteswissenschaften und Künste",
+                            stringr::str_ends("F03", dat$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+                            stringr::str_ends("F04", dat$fach) ~ "Wirtschaft, Verwaltung und Recht",
+                            stringr::str_ends("F05", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+                            stringr::str_ends("F06", dat$fach) ~ "Informatik & Kommunikationstechnologie",
+                            stringr::str_ends("F07", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                            stringr::str_ends("F08", dat$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+                            stringr::str_ends("F09", dat$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+                            stringr::str_ends("F10", dat$fach) ~ "Dienstleistungen",
+
+                            stringr::str_ends("F05T07", dat$fach) ~ "MINT",
+                            stringr::str_detect("TOTAL", dat$fach) ~ "Alle",
+                            stringr::str_detect("_T", dat$fach) ~ "Alle",
+                            stringr::str_ends("UNK", dat$fach) ~ "Unbekannt",
+                            stringr::str_ends("F99", dat$fach) ~ "Unbekannt",
+                            T ~ dat$fach))
+
+  return(dat)
+}
+
 ## OECD 1 - Anteile Beschäftigung------------------------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
+
 akro <- "kbr"
 data <- read.csv(paste0("C:/Users/", akro,
                         "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD001_employment_per_field.csv"),
@@ -1270,7 +1346,7 @@ data <- data %>%
                 anforderung = ISC11A,
                 geschlecht = Gender,
                 ag = Age,
-                fachbereich = FIELD,
+                fach = FIELD,
                 variable = INDICATOR.1,
                 jahr = Reference.year,
                 wert = Value)
@@ -1322,11 +1398,8 @@ data <- data %>%
 
 # Fachbereiche mit Kekelis Funktion zuweisen
 
-# Filtern - welche fachbereiche machen Sinn - verschiedene Kombi-Aggregate raus
-# data <- data %>% filter(!(fachbereich %in% c("Geisteswissenschaften (außer Sprachen) & Sozialwissenschaften, Journalismus und Informationswissenschaften",
-#                                              "Kunst",
-#                                              "Kunst, Geisteswissenschaften, Sozialwissenschaften, Journalismus und Informationswissenschaft",
-#                                              "Geisteswissenschaften (außer Sprachen)")))
+data <- iscedf13_transform_kurz(data)
+data <- subset(data, !(is.na(data$fach)))
 
 # Altersgruppen mit Indikator kombinieren
 data <- data %>%
@@ -1349,7 +1422,8 @@ data$population <- "OECD"
 
 
 # Spalten in logische Reihenfolge bringen
-data<- data[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich", "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
+data<- data[,c("bereich", "quelle", "variable", "typ", "indikator", "fach", "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
+colnames(data)[6] <- "fachbereich"
 
 # umbenennen
 oecd1 <- data
@@ -1371,7 +1445,7 @@ dat <- dat %>%
                 land = Country,
                 anforderung = EDUCATION_LEV,
                 geschlecht = Gender,
-                fachbereich = EDUCATION_FIELD,
+                fach = EDUCATION_FIELD,
                 jahr = Year,
                 wert = Value)
 
@@ -1390,8 +1464,40 @@ dat <- dat %>%
   ))
 
 # Fachbereich zuweisen - mit Kekelis Funktion
+## MINT aggregieren
+dat_mint <- dat %>%
+  dplyr::filter(fach %in% c("F05", "F06", "F07")) %>%
+  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
+  dplyr::summarise(wert = sum(wert)) %>%
+  dplyr::ungroup()
+dat_mint$fach <- "F05T07"
+## Gesamt berechnen
+dat_ges <- dat %>%
+  dplyr::filter(fach %in% c("F00", "F01", "F02", "F3","F04","F05","F06","F07","F08","F09","F10", "F99")) %>%
+  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
+  dplyr::summarise(wert = sum(wert)) %>%
+  dplyr::ungroup()
+dat_ges$fach <- "TOTAL"
+## weitere Naturwissenschaften/Ingen-Wissenschaften berechnen
+dat_nw <- dat %>%
+  dplyr::filter(fach %in% c("F050", "F059")) %>%
+  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
+  dplyr::summarise(wert = sum(wert)) %>%
+  dplyr::ungroup()
+dat_nw$fach <- "F050_59"
+dat_iw <- dat %>%
+  dplyr::filter(fach %in% c("F070", "F079")) %>%
+  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
+  dplyr::summarise(wert = sum(wert)) %>%
+  dplyr::ungroup()
+dat_iw$fach <- "F070_79"
+## einzelnen löschen
+dat <- dat %>% filter(!(fach %in% c("F050", "F059", "F070", "F079")))
 
-# Filtern, welche Fachbereiche Sinnmachen / Aggregieren
+dat <- rbind(dat_mint, dat, dat_iw, dat_nw, dat_ges)
+
+## Labels übertragen
+dat <- iscedf13_transform_lang(dat)
 
 # übersetzen
 dat <- dat %>%
@@ -1415,8 +1521,9 @@ dat$typ <- "Anzahl"
 dat$population <- "OECD"
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
+dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fach",
                "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
+colnames(dat)[6] <- "fachbereich"
 # umbenennen
 oecd2 <- dat
 
@@ -1437,7 +1544,7 @@ dat <- dat %>%
                 land = Country,
                 anforderung = EDUCATION_LEV,
                 geschlecht = Gender,
-                fachbereich = EDUCATION_FIELD,
+                fach = EDUCATION_FIELD,
                 variable = Indicator,
                 jahr = Year,
                 wert = Value)
@@ -1467,8 +1574,7 @@ dat <- dat %>%
   ))
 
 # Fachbereich zuweisen - mit Kekelis Funktion
-
-# Filtern, welche Fachbereiche Sinnmachen / Aggregieren
+dat <- iscedf13_transform_kurz(dat)
 
 # übersetzen
 dat <- dat %>%
@@ -1485,9 +1591,9 @@ dat <- dat %>%
       variable == "Share of graduates by field" ~
         "Anteil Absolvent*innen nach Fach an allen Fächern",
       variable == "Share of graduates by gender in fields of education" ~
-        "Frauenanteil Absolvent*innen nach Fachbereichen",
+        "Frauen-/Männeranteil Absolvent*innen nach Fachbereichen",
       variable == "Share of new entrants for each field of education by gender" ~
-        "Frauenanteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen",
+        "Frauen-/Männeranteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen",
       T ~ variable
     )
   )
@@ -1504,87 +1610,89 @@ dat$indikator <- "Alle"
 
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
+dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fach",
              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
+colnames(dat)[6] <- "fachbereich"
 # umbenennen
 oecd3 <- dat
 
-## OECD 4 - Anteil Feld an allen Absolvent*innen-----------------------------
+## OECD 4 - Frauenanteil Absolvent*innen nach Feld -----------------------------
+# ACHTUNG - SCHON ENTHALTEN IN OECD3
 
-### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD004_Frauenatneil_nach_Beruf_OECD.csv"),
-                header = TRUE, sep = ",", dec = ".")
-
-### Datensatz in passende Form bringen --------------------------------------
-
-dat <- dat %>%
-  dplyr::select(COUNTRY, Country, EDUCATION_LEV, Gender, EDUCATION_FIELD,
-                Year, Value) %>%
-  dplyr::rename(land_code = COUNTRY,
-                land = Country,
-                anforderung = EDUCATION_LEV,
-                geschlecht = Gender,
-                fachbereich = EDUCATION_FIELD,
-                jahr = Year,
-                wert = Value)
-
-# Land zuweisen / übersetzen
-dat_agg <- dat %>%
-  dplyr::filter(land_code %in% c("E22", "OAVG")) %>%
-  dplyr::mutate(land = dplyr::case_when(
-    land_code == "E22" ~ "OECD-Mitglieder aus der EU",
-    land_code == "OAVG" ~ "OECD"
-  ))
-dat <- dat %>% dplyr::filter(!(land_code %in% c("E22", "OAVG")))
-dat$land <- countrycode::countryname(dat$land, destination = "country.name.de")
-
-dat <- rbind(dat, dat_agg)
-
-# Anforderungsniveau zuweisen
-dat <- dat %>%
-  dplyr::mutate(anforderung = dplyr::case_when(
-    anforderung ==  "ISCED11_35" ~ "Erstausbildung (ISCED 35)",
-    anforderung ==  "ISCED11_45" ~ "Ausbildung (ISCED 45)",
-    anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
-    anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar (ISCED 6)",
-    anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar (ISCED 7)",
-    anforderung ==  "ISCED11_8" ~ "Promotion (ISCED 8)",
-    anforderung == "ISCED11_5T8" ~ "tertiäre Bildung (gesamt)"
-  ))
-
-# Fachbereich zuweisen - mit Kekelis Funktion
-
-# Filtern, welche Fachbereiche Sinnmachen / Aggregieren
-
-# übersetzen
-dat <- dat %>%
-  dplyr::mutate(
-    geschlecht = dplyr::case_when(
-      geschlecht == "Male" ~ "Männer",
-      geschlecht == "Female" ~ "Frauen",
-      geschlecht == "Total" ~ "Gesamt",
-      T ~ geschlecht
-    )
-  )
-
-# missings ausfiltern
-dat <- na.omit(dat)
-
-# bereich ergänze und in Reihenfolge bringen
-dat$bereich <- "Arbeitsmarkt"
-dat$indikator <- "Alle"
-dat$typ <- "In Prozent"
-dat$quelle <- "OECD"
-dat$population <- "OECD"
-dat$variable <- "Frauenanteil Beschäftigte nach Fachbereich"
-
-# Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
-             "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
-# umbenennen
-oecd4 <- dat
+# ### Rohdaten einlesen -------------------------------------------------------
+# akro <- "kbr"
+# dat <- read.csv(paste0("C:/Users/", akro,
+#                        "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD004_Frauenatneil_nach_Beruf_OECD.csv"),
+#                 header = TRUE, sep = ",", dec = ".")
+#
+# ### Datensatz in passende Form bringen --------------------------------------
+#
+# dat <- dat %>%
+#   dplyr::select(COUNTRY, Country, EDUCATION_LEV, Gender, EDUCATION_FIELD,
+#                 Year, Value) %>%
+#   dplyr::rename(land_code = COUNTRY,
+#                 land = Country,
+#                 anforderung = EDUCATION_LEV,
+#                 geschlecht = Gender,
+#                 fach = EDUCATION_FIELD,
+#                 jahr = Year,
+#                 wert = Value)
+#
+# # Land zuweisen / übersetzen
+# dat_agg <- dat %>%
+#   dplyr::filter(land_code %in% c("E22", "OAVG")) %>%
+#   dplyr::mutate(land = dplyr::case_when(
+#     land_code == "E22" ~ "OECD-Mitglieder aus der EU",
+#     land_code == "OAVG" ~ "OECD"
+#   ))
+# dat <- dat %>% dplyr::filter(!(land_code %in% c("E22", "OAVG")))
+# dat$land <- countrycode::countryname(dat$land, destination = "country.name.de")
+#
+# dat <- rbind(dat, dat_agg)
+#
+# # Anforderungsniveau zuweisen
+# dat <- dat %>%
+#   dplyr::mutate(anforderung = dplyr::case_when(
+#     anforderung ==  "ISCED11_35" ~ "Erstausbildung (ISCED 35)",
+#     anforderung ==  "ISCED11_45" ~ "Ausbildung (ISCED 45)",
+#     anforderung ==  "ISCED11_5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
+#     anforderung ==  "ISCED11_6" ~ "Bachelor oder vergleichbar (ISCED 6)",
+#     anforderung ==  "ISCED11_7" ~ "Master oder vergleichbar (ISCED 7)",
+#     anforderung ==  "ISCED11_8" ~ "Promotion (ISCED 8)",
+#     anforderung == "ISCED11_5T8" ~ "tertiäre Bildung (gesamt)"
+#   ))
+#
+# # Fachbereich zuweisen - mit Kekelis Funktion
+# dat <- iscedf13_transform_kurz(dat)
+#
+# # übersetzen
+# dat <- dat %>%
+#   dplyr::mutate(
+#     geschlecht = dplyr::case_when(
+#       geschlecht == "Male" ~ "Männer",
+#       geschlecht == "Female" ~ "Frauen",
+#       geschlecht == "Total" ~ "Gesamt",
+#       T ~ geschlecht
+#     )
+#   )
+#
+# # missings ausfiltern
+# dat <- na.omit(dat)
+#
+# # bereich ergänze und in Reihenfolge bringen
+# dat$bereich <- "Arbeitsmarkt"
+# dat$indikator <- "Alle"
+# dat$typ <- "In Prozent"
+# dat$quelle <- "OECD"
+# dat$population <- "OECD"
+# dat$variable <- "Frauenanteil Beschäftigte nach Fachbereich"
+#
+# # Spalten in logische Reihenfolge bringen
+# dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fach",
+#              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
+# colnames(dat)[6] <- "fachbereich"
+# # umbenennen
+# oecd4 <- dat
 
 
 ## OECD 5 - Anzahl Azubis / Studis nach Feld & Gender------------------------
@@ -1605,7 +1713,7 @@ dat <- dat %>%
                 land = Country,
                 anforderung = EDUCATION_LEV,
                 geschlecht = Gender,
-                fachbereich = EDUCATION_FIELD,
+                fach = EDUCATION_FIELD,
                 jahr = Year,
                 wert = Value)
 
@@ -1634,8 +1742,25 @@ dat <- dat %>%
   ))
 
 # Fachbereich zuweisen - mit Kekelis Funktion
+## weitere Naturwissenschaften/Ingen-Wissenschaften berechnen
+dat_nw <- dat %>%
+  dplyr::filter(fach %in% c("F050", "F059")) %>%
+  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
+  dplyr::summarise(wert = sum(wert)) %>%
+  dplyr::ungroup()
+dat_nw$fach <- "F050_59"
+dat_iw <- dat %>%
+  dplyr::filter(fach %in% c("F070", "F079")) %>%
+  dplyr::group_by(land_code, land, anforderung, geschlecht, jahr) %>%
+  dplyr::summarise(wert = sum(wert)) %>%
+  dplyr::ungroup()
+dat_iw$fach <- "F070_79"
+## einzelnen löschen
+dat <- dat %>% filter(!(fach %in% c("F050", "F059", "F070", "F079")))
 
-# Filtern, welche Fachbereiche Sinnmachen / Aggregieren
+dat <- rbind(dat, dat_iw, dat_nw)
+
+dat <- iscedf13_transform_lang(dat)
 
 # übersetzen
 dat <- dat %>%
@@ -1670,8 +1795,9 @@ dat$population <- "OECD"
 dat$typ <- "Anzahl"
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
+dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fach",
              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
+colnames(dat)[6] <- "fachbereich"
 # umbenennen
 oecd5 <- dat
 
@@ -1803,14 +1929,14 @@ eurostat1 <- dat
 
 
 ## internationale Daten zusammenbringen ------------------------------------
-arbeitsmarkt_international <- rbind(eurostat1, oecd1, oecd2, oecd3, oecd4, oecd5)
+arbeitsmarkt_international <- rbind(eurostat1, oecd1, oecd2, oecd3, oecd5)
 
 # in shinyapp:
 usethis::use_data(arbeitsmarkt_international, overwrite = T)
 
 
 # Daten Fachkräftemangel --------------------------------------------------
-
+library(dplyr)
 ##  Engpassanalyse -------------------------------------------------------
 
 ### BULA Vergleich ####
@@ -1988,70 +2114,376 @@ epa_de22_s$jahr <- 2022
 
 df <- epa_de19_f
 
-epa_aufbereiten <- function(df){
+epa_aufbereiten_19 <- function(df){
 
   # anforderungsniveau und jahr zuweisen
   if(grepl("_f", deparse(substitute(df)))) df$anforderung <- "Fachkräfte"
-  if(grepl("_e", deparse(substitute(df)))) df$anforderung <- "Expert*innen"
-  if(grepl("_s", deparse(substitute(df)))) df$anforderung <- "Spezialist*innen"
+  if(ncol(df) == 26){
+
+  }else{
+    if(grepl("_e", deparse(substitute(df)))) df$anforderung <- "Expert*innen"
+    if(ncol(df) == 26){
+
+    }else{
+      if(grepl("_s", deparse(substitute(df)))) df$anforderung <- "Spezialist*innen"
+    }
+  }
 
   # leere spalten löschen
-  if(df$anforderung == "Fachkärfte") {
+  if(df$anforderung[1] == "Fachkräfte") {
     df <- df %>% dplyr::select(-`...24`)
   }else{
     df <- df %>% dplyr::select(-c(`...21`, `...22`, `...23`, `...24`))
   }
 
-  df <- df %>%
-    rename(
-      "beruf" = `...1`,
-      "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2019)",
-      "Engpassindikator Vakanzzeit" = "Vakanzzeit",
-      "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
-      "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
-      "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
-      "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit",
-      "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte",
-      "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...10",
-      "wert_EPA" = "Durchschnittliche Punktezahl...12",
-      "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)",
-      "Risikoindikator Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen" = "Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen",
-      "Risikoindikator Absolventen-Beschäftigten-Relation" = "Absolventen-Beschäftigten-Relation",
-      "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
-      "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...17",
-      "wert_Risiko" = "Durchschnittliche Punktezahl...19",
-      "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität",
-      "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote",
-      "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote",
-      "Ergänzungsindikator Selbständigenanteil" = "Selbständigenanteil" )
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      rename(
+        "beruf" = `...1`,
+        "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2019)",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit",
+        "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte",
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...10",
+        "wert_EPA" = "Durchschnittliche Punktezahl...12",
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)",
+        "Risikoindikator Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen" = "Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen",
+        "Risikoindikator Absolventen-Beschäftigten-Relation" = "Absolventen-Beschäftigten-Relation",
+        "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...17",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...19",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote",
+        "Ergänzungsindikator Selbständigenanteil" = "Selbständigenanteil" )
+
+  }else{
+    df <- df %>%
+      rename(
+        "beruf" = `...1`,
+        "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2019)",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit",
+        "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte",
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...9",
+        "wert_EPA" = "Durchschnittliche Punktezahl...11",
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)",
+        "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...14",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...16",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote",
+        "Ergänzungsindikator Selbständigenanteil" = "Selbständigenanteil" )
+  }
 
   # als numerisch speichern für pivote_longer
-  if(df$anforderung == "Fachkräfte") {
+  if(df$anforderung[1] == "Fachkräfte") {
     df[,c(2, 4:23)] <- sapply(df[,c(2, 4:23)], as.numeric)
   }else{
     df[,c(2:20)] <- sapply(df[,c(2:20)], as.numeric)
   }
 
   # nicht interessante Spalten noch raus
-  if(df$anforderung == "Fachkräfte") {
-    df <- df %>% dplyr::select(-c(Punktzahl...11, Punktzahl...18))
+  if(df$anforderung[1] == "Fachkräfte") {
+    df <- df %>% dplyr::select(-c("Punktezahl...11", "Punktezahl...18"))
   }else{
-    df <- df %>% dplyr::select(-c(Punktzahl...10, Punktzahl...15))
+    df <- df %>% dplyr::select(-c("Punktezahl...10", "Punktezahl...15"))
   }
 
   # in long-format bringen
   df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Selbständigenanteil"),
-                            values_to = "wert", names_to = "kategorie")
+                            values_to = "wert", names_to = "indikator")
   # indikator ergänzen
   df <- df %>%
-    dplyr::mutate(indikator = dplyr::case_when(
-      grepl("Engpass", df$kategorie) ~ "Engpassanalyse",
-      grepl("EPA", df$kategorie) ~ "Engpassanalyse",
-      grepl("Risiko", df$kategorie) ~ "Risikoanalyse",
-      grepl("Ergän", df$kategorie) ~ "Ergänzungsindikatoren"
+    dplyr::mutate(kategorie = dplyr::case_when(
+      grepl("Engpass", df$indikator) ~ "Engpassanalyse",
+      grepl("EPA", df$indikator) ~ "Engpassanalyse",
+      grepl("Risiko", df$indikator) ~ "Risikoanalyse",
+      grepl("Ergän", df$indikator) ~ "Ergänzungsindikatoren"
     )
     )
+
+  # indikator kürzen
+  df$indikator <- gsub(pattern = "Engpassindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Risikoindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Ergänzungsindikator ", "", df$indikator)
+
+  # gesamtwert wieder als extra Spalte - logischer zum weiterarbeiten damit
+  df_ges <- df %>%
+    dplyr::filter(indikator %in% c("wert_EPA", "wert_Risiko")) %>%
+    dplyr::rename(gesamtwert = wert) %>%
+    dplyr::select(-indikator)
+
+  df <- df %>%
+    dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                    "kategorie"),
+                     relationship = "many-to-many")
+
+  df <- df %>% dplyr::filter(!(indikator %in% c("wert_EPA", "wert_Risiko")))
+
   return(df)
 }
 
-test <- epa_aufbereiten(epa_de19_s)
+epa_de19_f <- epa_aufbereiten_19(epa_de19_f)
+epa_de19_s <- epa_aufbereiten_19(epa_de19_s)
+epa_de19_e <- epa_aufbereiten_19(epa_de19_e)
+
+epa_aufbereiten_20 <- function(df){
+
+  # anforderungsniveau und jahr zuweisen
+  if(grepl("_f", deparse(substitute(df)))) df$anforderung <- "Fachkräfte"
+  if(ncol(df) == 26){
+
+  }else{
+    if(grepl("_e", deparse(substitute(df)))) df$anforderung <- "Expert*innen"
+    if(ncol(df) == 26){
+
+    }else{
+      if(grepl("_s", deparse(substitute(df)))) df$anforderung <- "Spezialist*innen"
+    }
+  }
+
+  # leere spalten löschen
+  if(df$anforderung[1] == "Fachkräfte") {
+    df <- df %>% dplyr::select(-`...24`)
+  }else{
+    df <- df %>% dplyr::select(-c(`...21`, `...22`, `...23`, `...24`))
+  }
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      rename(
+        "beruf" = `...1`,
+        "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2020)",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit",
+        "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte",
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...10",
+        "wert_EPA" = "Durchschnittliche Punktezahl...12",
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)",
+        "Risikoindikator Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen" = "Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen",
+        "Risikoindikator Absolventen-Beschäftigten-Relation" = "Absolventen-Beschäftigten-Relation",
+        "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...17",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...19",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote",
+        "Ergänzungsindikator Selbständigenanteil" = "Selbständigenanteil" )
+
+  }else{
+    df <- df %>%
+      rename(
+        "beruf" = `...1`,
+        "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2020)",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit",
+        "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte",
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...9",
+        "wert_EPA" = "Durchschnittliche Punktezahl...11",
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)",
+        "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...14",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...16",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote",
+        "Ergänzungsindikator Selbständigenanteil" = "Selbständigenanteil" )
+  }
+
+  # als numerisch speichern für pivote_longer
+  if(df$anforderung[1] == "Fachkräfte") {
+    df[,c(2, 4:23)] <- sapply(df[,c(2, 4:23)], as.numeric)
+  }else{
+    df[,c(2:20)] <- sapply(df[,c(2:20)], as.numeric)
+  }
+
+  # nicht interessante Spalten noch raus
+  if(df$anforderung[1] == "Fachkräfte") {
+    df <- df %>% dplyr::select(-c("Punktezahl...11", "Punktezahl...18"))
+  }else{
+    df <- df %>% dplyr::select(-c("Punktezahl...10", "Punktezahl...15"))
+  }
+
+  # in long-format bringen
+  df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Selbständigenanteil"),
+                            values_to = "wert", names_to = "indikator")
+  # indikator ergänzen
+  df <- df %>%
+    dplyr::mutate(kategorie = dplyr::case_when(
+      grepl("Engpass", df$indikator) ~ "Engpassanalyse",
+      grepl("EPA", df$indikator) ~ "Engpassanalyse",
+      grepl("Risiko", df$indikator) ~ "Risikoanalyse",
+      grepl("Ergän", df$indikator) ~ "Ergänzungsindikatoren"
+    )
+    )
+
+  # indikator kürzen
+  df$indikator <- gsub(pattern = "Engpassindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Risikoindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Ergänzungsindikator ", "", df$indikator)
+
+  # gesamtwert wieder als extra Spalte - logischer zum weiterarbeiten damit
+  df_ges <- df %>%
+    dplyr::filter(indikator %in% c("wert_EPA", "wert_Risiko")) %>%
+    dplyr::rename(gesamtwert = wert) %>%
+    dplyr::select(-indikator)
+
+  df <- df %>%
+    dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                    "kategorie"),
+                     relationship = "many-to-many")
+
+  df <- df %>% dplyr::filter(!(indikator %in% c("wert_EPA", "wert_Risiko")))
+
+  return(df)
+}
+
+epa_de20_f <- epa_aufbereiten_20(epa_de20_f)
+epa_de20_s <- epa_aufbereiten_20(epa_de20_s)
+epa_de20_e <- epa_aufbereiten_20(epa_de20_e)
+
+#hier weiter!
+epa_aufbereiten_21 <- function(df){
+
+  # anforderungsniveau und jahr zuweisen
+  if(grepl("_f", deparse(substitute(df)))) df$anforderung <- "Fachkräfte"
+  if(ncol(df) == 26){
+
+  }else{
+    if(grepl("_e", deparse(substitute(df)))) df$anforderung <- "Expert*innen"
+    if(ncol(df) == 26){
+
+    }else{
+      if(grepl("_s", deparse(substitute(df)))) df$anforderung <- "Spezialist*innen"
+    }
+  }
+
+  # leere spalten löschen
+  if(df$anforderung[1] == "Fachkräfte") {
+    df <- df %>% dplyr::select(-`...24`)
+  }else{
+    df <- df %>% dplyr::select(-c(`...21`, `...22`, `...23`, `...24`))
+  }
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      rename(
+        "beruf" = `...1`,
+        "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2021)",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit",
+        "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte",
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...10",
+        "wert_EPA" = "Durchschnittliche Punktezahl...12",
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)",
+        "Risikoindikator Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen" = "Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen",
+        "Risikoindikator Absolventen-Beschäftigten-Relation" = "Absolventen-Beschäftigten-Relation",
+        "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...17",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...19",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote",
+        "Ergänzungsindikator Selbständigenanteil" = "Selbständigenanteil" )
+
+  }else{
+    df <- df %>%
+      rename(
+        "beruf" = `...1`,
+        "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2021)",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit",
+        "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte",
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...9",
+        "wert_EPA" = "Durchschnittliche Punktezahl...11",
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)",
+        "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...14",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...16",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote",
+        "Ergänzungsindikator Selbständigenanteil" = "Selbständigenanteil" )
+  }
+
+  # als numerisch speichern für pivote_longer
+  if(df$anforderung[1] == "Fachkräfte") {
+    df[,c(2, 4:23)] <- sapply(df[,c(2, 4:23)], as.numeric)
+  }else{
+    df[,c(2:20)] <- sapply(df[,c(2:20)], as.numeric)
+  }
+
+  # nicht interessante Spalten noch raus
+  if(df$anforderung[1] == "Fachkräfte") {
+    df <- df %>% dplyr::select(-c("Punktezahl...11", "Punktezahl...18"))
+  }else{
+    df <- df %>% dplyr::select(-c("Punktezahl...10", "Punktezahl...15"))
+  }
+
+  # in long-format bringen
+  df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Selbständigenanteil"),
+                            values_to = "wert", names_to = "indikator")
+  # indikator ergänzen
+  df <- df %>%
+    dplyr::mutate(kategorie = dplyr::case_when(
+      grepl("Engpass", df$indikator) ~ "Engpassanalyse",
+      grepl("EPA", df$indikator) ~ "Engpassanalyse",
+      grepl("Risiko", df$indikator) ~ "Risikoanalyse",
+      grepl("Ergän", df$indikator) ~ "Ergänzungsindikatoren"
+    )
+    )
+
+  # indikator kürzen
+  df$indikator <- gsub(pattern = "Engpassindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Risikoindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Ergänzungsindikator ", "", df$indikator)
+
+  # gesamtwert wieder als extra Spalte - logischer zum weiterarbeiten damit
+  df_ges <- df %>%
+    dplyr::filter(indikator %in% c("wert_EPA", "wert_Risiko")) %>%
+    dplyr::rename(gesamtwert = wert) %>%
+    dplyr::select(-indikator)
+
+  df <- df %>%
+    dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                    "kategorie"),
+                     relationship = "many-to-many")
+
+  df <- df %>% dplyr::filter(!(indikator %in% c("wert_EPA", "wert_Risiko")))
+
+  return(df)
+}
+
+
+epa_de21_f <- epa_aufbereiten_21(epa_de21_f)
+epa_de21_s <- epa_aufbereiten_21(epa_de21_s)
+epa_de21_e <- epa_aufbereiten_21(epa_de21_e)
+
+epa_de22_f <- epa_aufbereiten(epa_de22_f)
+epa_de22_s <- epa_aufbereiten(epa_de22_s)
+epa_de22_e <- epa_aufbereiten(epa_de22_e)
+
+
+
+
+
