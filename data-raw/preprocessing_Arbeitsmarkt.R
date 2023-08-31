@@ -2085,23 +2085,23 @@ name <- c("BA010_2019_Anhang.xlsx", "BA011_EPA_2020_Ergebnisse_Bund_detailliert.
 epa_de19_f <- epa_einlesen(name = name[1], sheets[1])
 epa_de19_s <- epa_einlesen(name = name[1], sheets[2])
 epa_de19_e <- epa_einlesen(name = name[1], sheets[3])
-epa_de19_f$jahr <- 2022
-epa_de19_e$jahr <- 2022
-epa_de19_s$jahr <- 2022
+epa_de19_f$jahr <- 2019
+epa_de19_e$jahr <- 2019
+epa_de19_s$jahr <- 2019
 
 epa_de20_f <- epa_einlesen(name = name[2], sheets[1])
 epa_de20_s <- epa_einlesen(name = name[2], sheets[2])
 epa_de20_e <- epa_einlesen(name = name[2], sheets[3])
-epa_de20_f$jahr <- 2022
-epa_de20_e$jahr <- 2022
-epa_de20_s$jahr <- 2022
+epa_de20_f$jahr <- 2020
+epa_de20_e$jahr <- 2020
+epa_de20_s$jahr <- 2020
 
 epa_de21_f <- epa_einlesen(name = name[3], sheets[1])
 epa_de21_s <- epa_einlesen(name = name[3], sheets[2])
 epa_de21_e <- epa_einlesen(name = name[3], sheets[3])
-epa_de21_f$jahr <- 2022
-epa_de21_e$jahr <- 2022
-epa_de21_s$jahr <- 2022
+epa_de21_f$jahr <- 2021
+epa_de21_e$jahr <- 2021
+epa_de21_s$jahr <- 2021
 
 epa_de22_f <- epa_einlesen(name = name[4], sheets[1])
 epa_de22_s <- epa_einlesen(name = name[4], sheets[2])
@@ -2111,8 +2111,6 @@ epa_de22_e$jahr <- 2022
 epa_de22_s$jahr <- 2022
 
 #### Datensatz in passende Form aufbereiten ----------------------------------
-
-df <- epa_de19_f
 
 epa_aufbereiten_19 <- function(df){
 
@@ -2356,7 +2354,6 @@ epa_de20_f <- epa_aufbereiten_20(epa_de20_f)
 epa_de20_s <- epa_aufbereiten_20(epa_de20_s)
 epa_de20_e <- epa_aufbereiten_20(epa_de20_e)
 
-#hier weiter!
 epa_aufbereiten_21 <- function(df){
 
   # anforderungsniveau und jahr zuweisen
@@ -2374,7 +2371,7 @@ epa_aufbereiten_21 <- function(df){
 
   # leere spalten löschen
   if(df$anforderung[1] == "Fachkräfte") {
-    df <- df %>% dplyr::select(-`...24`)
+    df <- df %>% dplyr::select(-c(`...2`, `...3`))
   }else{
     df <- df %>% dplyr::select(-c(`...21`, `...22`, `...23`, `...24`))
   }
@@ -2384,31 +2381,30 @@ epa_aufbereiten_21 <- function(df){
       rename(
         "beruf" = `...1`,
         "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2021)",
-        "Engpassindikator Vakanzzeit" = "Vakanzzeit",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit (Median)",
         "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
         "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
         "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
         "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit",
         "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte",
-        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...10",
-        "wert_EPA" = "Durchschnittliche Punktezahl...12",
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...12",
+        "wert_EPA" = "Durchschnittliche Punktezahl...14",
         "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)",
         "Risikoindikator Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen" = "Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen",
         "Risikoindikator Absolventen-Beschäftigten-Relation" = "Absolventen-Beschäftigten-Relation",
         "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
-        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...17",
-        "wert_Risiko" = "Durchschnittliche Punktezahl...19",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...19",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...21",
         "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität",
         "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote",
-        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote",
-        "Ergänzungsindikator Selbständigenanteil" = "Selbständigenanteil" )
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote")
 
   }else{
     df <- df %>%
       rename(
         "beruf" = `...1`,
         "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2021)",
-        "Engpassindikator Vakanzzeit" = "Vakanzzeit",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit (Median)",
         "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
         "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
         "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
@@ -2435,14 +2431,19 @@ epa_aufbereiten_21 <- function(df){
 
   # nicht interessante Spalten noch raus
   if(df$anforderung[1] == "Fachkräfte") {
-    df <- df %>% dplyr::select(-c("Punktezahl...11", "Punktezahl...18"))
+    df <- df %>% dplyr::select(-c("Punktezahl...13", "Punktezahl...20"))
   }else{
     df <- df %>% dplyr::select(-c("Punktezahl...10", "Punktezahl...15"))
   }
 
   # in long-format bringen
-  df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Selbständigenanteil"),
-                            values_to = "wert", names_to = "indikator")
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Teilzeitquote"),
+                              values_to = "wert", names_to = "indikator")
+  }else{
+    df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Selbständigenanteil"),
+                              values_to = "wert", names_to = "indikator")
+  }
   # indikator ergänzen
   df <- df %>%
     dplyr::mutate(kategorie = dplyr::case_when(
@@ -2474,16 +2475,150 @@ epa_aufbereiten_21 <- function(df){
   return(df)
 }
 
-
 epa_de21_f <- epa_aufbereiten_21(epa_de21_f)
 epa_de21_s <- epa_aufbereiten_21(epa_de21_s)
 epa_de21_e <- epa_aufbereiten_21(epa_de21_e)
 
-epa_de22_f <- epa_aufbereiten(epa_de22_f)
-epa_de22_s <- epa_aufbereiten(epa_de22_s)
-epa_de22_e <- epa_aufbereiten(epa_de22_e)
+epa_aufbereiten_22 <- function(df){
+
+  # anforderungsniveau und jahr zuweisen
+  if(grepl("_f", deparse(substitute(df)))) df$anforderung <- "Fachkräfte"
+  if(ncol(df) == 26){
+
+  }else{
+    if(grepl("_e", deparse(substitute(df)))) df$anforderung <- "Expert*innen"
+    if(ncol(df) == 26){
+
+    }else{
+      if(grepl("_s", deparse(substitute(df)))) df$anforderung <- "Spezialist*innen"
+    }
+  }
+
+  # leere spalten löschen
+  if(df$anforderung[1] == "Fachkräfte") {
+    df <- df %>% dplyr::select(-c(`...2`, `...3`))
+  }else{
+    df <- df %>% dplyr::select(-c(`...21`, `...22`, `...23`, `...24`))
+  }
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      rename(
+        "beruf" = `...1`,
+        "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2022)",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit (Median)",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit",
+        "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte",
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...12",
+        "wert_EPA" = "Durchschnittliche Punktezahl...14",
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)",
+        "Risikoindikator Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen" = "Anteil unb. Ausbildungsstellen an allen gem. Ausbildungsstellen",
+        "Risikoindikator Absolventen-Beschäftigten-Relation" = "Absolventen-Beschäftigten-Relation",
+        "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...19",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...21",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote" )
+
+  }else{
+    df <- df %>%
+      rename(
+        "beruf" = `...1`,
+        "Anzahl Beschäftigte" = "sozialversicherungspflichtig Beschäftigte; ohne Arbeitnehmerüberlassung und Azubis (Juni 2022)",
+        "Engpassindikator Vakanzzeit" = "Vakanzzeit (Median)",
+        "Engpassindikator Arbeitsuchenden-Stellen-Relation" = "Arbeitsuchenden-Stellen-Relation",
+        "Engpassindikator Berufssp. Arbeitslosenquote" = "Berufssp. Arbeitslosenquote",
+        "Engpassindikator Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern" = "Veränderung des Anteils s.v. pfl. Beschäftigung von Ausländern",
+        "Engpassindikator Abgangsrate aus Arbeitslosigkeit" = "Abgangsrate aus Arbeitslosigkeit",
+        "Engpassindikator Entwicklung der mittleren Entgelte" = "Entwicklung der mittleren Entgelte",
+        "Anzahl Indikatoren Engpassanalyse" = "Anzahl der bewerteten Indikatoren...9",
+        "wert_EPA" = "Durchschnittliche Punktezahl...11",
+        "Risikoindikator Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)" = "Veränderung des Anteils älterer Beschäftigter (60 Jahre und älter)",
+        "Risikoindikator Substituierbarkeitspotenzial" = "Substituierbarkeitspotenzial",
+        "Anzahl Indikatoren Risikoanalyse" = "Anzahl der bewerteten Indikatoren...14",
+        "wert_Risiko" = "Durchschnittliche Punktezahl...16",
+        "Ergänzungsindikator Berufliche Mobilität" = "Berufliche Mobilität",
+        "Ergänzungsindikator Arbeitsstellenbestandsquote" = "Arbeitsstellenbestandsquote",
+        "Ergänzungsindikator Teilzeitquote" = "Teilzeitquote",
+        "Ergänzungsindikator Selbständigenanteil" = "Selbständigenanteil" )
+  }
+
+  # als numerisch speichern für pivote_longer
+  if(df$anforderung[1] == "Fachkräfte") {
+    df[,c(2, 4:23)] <- sapply(df[,c(2, 4:23)], as.numeric)
+  }else{
+    df[,c(2:20)] <- sapply(df[,c(2:20)], as.numeric)
+  }
+
+  # nicht interessante Spalten noch raus
+  if(df$anforderung[1] == "Fachkräfte") {
+    df <- df %>% dplyr::select(-c("Punktezahl...13", "Punktezahl...20"))
+  }else{
+    df <- df %>% dplyr::select(-c("Punktezahl...10", "Punktezahl...15"))
+  }
+
+  # in long-format bringen
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Teilzeitquote"),
+                              values_to = "wert", names_to = "indikator")
+  }else{
+    df <- tidyr::pivot_longer(df, cols = c("Engpassindikator Vakanzzeit":"Ergänzungsindikator Selbständigenanteil"),
+                              values_to = "wert", names_to = "indikator")
+  }
+
+  # indikator ergänzen
+  df <- df %>%
+    dplyr::mutate(kategorie = dplyr::case_when(
+      grepl("Engpass", df$indikator) ~ "Engpassanalyse",
+      grepl("EPA", df$indikator) ~ "Engpassanalyse",
+      grepl("Risiko", df$indikator) ~ "Risikoanalyse",
+      grepl("Ergän", df$indikator) ~ "Ergänzungsindikatoren"
+    )
+    )
+
+  # indikator kürzen
+  df$indikator <- gsub(pattern = "Engpassindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Risikoindikator ", "", df$indikator)
+  df$indikator <- gsub(pattern = "Ergänzungsindikator ", "", df$indikator)
+
+  # gesamtwert wieder als extra Spalte - logischer zum weiterarbeiten damit
+  df_ges <- df %>%
+    dplyr::filter(indikator %in% c("wert_EPA", "wert_Risiko")) %>%
+    dplyr::rename(gesamtwert = wert) %>%
+    dplyr::select(-indikator)
+
+  df <- df %>%
+    dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                    "kategorie"),
+                     relationship = "many-to-many")
+
+  df <- df %>% dplyr::filter(!(indikator %in% c("wert_EPA", "wert_Risiko")))
+
+  return(df)
+}
+
+epa_de22_f <- epa_aufbereiten_22(epa_de22_f)
+epa_de22_s <- epa_aufbereiten_22(epa_de22_s)
+epa_de22_e <- epa_aufbereiten_22(epa_de22_e)
 
 
+# alles zusammenfügen und sortieren
+## Spalten angleichen (Fachkräfte unterschiedlich)
+
+
+## Zusammenbringen
+epa_detail <- rbind(epa_de19_e, epa_de19_f, epa_de19_s,
+                    epa_de20_e, epa_de20_f, epa_de20_s,
+                    epa_de21_e, epa_de21_f, epa_de21_s,
+                    epa_de22_e, epa_de22_f, epa_de22_s)
+
+## Sortieren
+
+##Zusammen mit epa
 
 
 
