@@ -2219,12 +2219,39 @@ epa_aufbereiten_19 <- function(df){
     dplyr::rename(gesamtwert = wert) %>%
     dplyr::select(-indikator)
 
-  df <- df %>%
-    dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
-                                    "kategorie"),
-                     relationship = "many-to-many")
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "Geregelte Berufsausbildung", "jahr", "anforderung",
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }
 
   df <- df %>% dplyr::filter(!(indikator %in% c("wert_EPA", "wert_Risiko")))
+
+  # Anzahl vorliegender Indikatoren als extra Spalte - logischer zum weiterarbeiten damit
+  df_anz <- df %>%
+    dplyr::filter(grepl("Anzahl", indikator)) %>%
+    dplyr::rename(indikator_anzahl = wert) %>%
+    dplyr::select(-indikator)
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "Geregelte Berufsausbildung", "jahr", "anforderung",
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }
+
+  df <- df %>% dplyr::filter(!(grepl("Anzahl", indikator)))
 
   return(df)
 }
@@ -2340,12 +2367,39 @@ epa_aufbereiten_20 <- function(df){
     dplyr::rename(gesamtwert = wert) %>%
     dplyr::select(-indikator)
 
-  df <- df %>%
-    dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
-                                    "kategorie"),
-                     relationship = "many-to-many")
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "Geregelte Berufsausbildung", "jahr", "anforderung",
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }
 
   df <- df %>% dplyr::filter(!(indikator %in% c("wert_EPA", "wert_Risiko")))
+
+  # Anzahl vorliegender Indikatoren als extra Spalte - logischer zum weiterarbeiten damit
+  df_anz <- df %>%
+    dplyr::filter(grepl("Anzahl", indikator)) %>%
+    dplyr::rename(indikator_anzahl = wert) %>%
+    dplyr::select(-indikator)
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "Geregelte Berufsausbildung", "jahr", "anforderung",
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }
+
+  df <- df %>% dplyr::filter(!(grepl("Anzahl", indikator)))
 
   return(df)
 }
@@ -2465,12 +2519,39 @@ epa_aufbereiten_21 <- function(df){
     dplyr::rename(gesamtwert = wert) %>%
     dplyr::select(-indikator)
 
-  df <- df %>%
-    dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
-                                    "kategorie"),
-                     relationship = "many-to-many")
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "Geregelte Berufsausbildung", "jahr", "anforderung",
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }
 
   df <- df %>% dplyr::filter(!(indikator %in% c("wert_EPA", "wert_Risiko")))
+
+  # Anzahl vorliegender Indikatoren als extra Spalte - logischer zum weiterarbeiten damit
+  df_anz <- df %>%
+    dplyr::filter(grepl("Anzahl", indikator)) %>%
+    dplyr::rename(indikator_anzahl = wert) %>%
+    dplyr::select(-indikator)
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "Geregelte Berufsausbildung", "jahr", "anforderung",
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }
+
+  df <- df %>% dplyr::filter(!(grepl("Anzahl", indikator)))
 
   return(df)
 }
@@ -2591,12 +2672,39 @@ epa_aufbereiten_22 <- function(df){
     dplyr::rename(gesamtwert = wert) %>%
     dplyr::select(-indikator)
 
-  df <- df %>%
-    dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
-                                    "kategorie"),
-                     relationship = "many-to-many")
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "Geregelte Berufsausbildung", "jahr", "anforderung",
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_ges, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie"),
+                       relationship = "many-to-many")
+  }
 
   df <- df %>% dplyr::filter(!(indikator %in% c("wert_EPA", "wert_Risiko")))
+
+  # Anzahl vorliegender Indikatoren als extra Spalte - logischer zum weiterarbeiten damit
+  df_anz <- df %>%
+    dplyr::filter(grepl("Anzahl", indikator)) %>%
+    dplyr::rename(indikator_anzahl = wert) %>%
+    dplyr::select(-indikator)
+
+  if(df$anforderung[1] == "Fachkräfte"){
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "Geregelte Berufsausbildung", "jahr", "anforderung",
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }else{
+    df <- df %>%
+      dplyr::left_join(df_anz, by = c("beruf", "Anzahl Beschäftigte", "jahr", "anforderung",
+                                      "kategorie", "gesamtwert"),
+                       relationship = "many-to-many")
+  }
+
+  df <- df %>% dplyr::filter(!(grepl("Anzahl", indikator)))
 
   return(df)
 }
@@ -2607,8 +2715,32 @@ epa_de22_e <- epa_aufbereiten_22(epa_de22_e)
 
 
 # alles zusammenfügen und sortieren
-## Spalten angleichen (Fachkräfte unterschiedlich)
+## Spalten angleichen
+sp_anhängen <- function(df){
+  if(df$anforderung[1] != "Fachkräfte"){
+    df$geregelte_ausbildung <- "ja"
+  }else{
+    df <- df %>%
+      dplyr::rename(geregelte_ausbildung = `Geregelte Berufsausbildung`)
+  }
+  return(df)
+}
 
+epa_de19_f <- sp_anhängen(epa_de19_f)
+epa_de19_s <- sp_anhängen(epa_de19_s)
+epa_de19_e <- sp_anhängen(epa_de19_e)
+
+epa_de20_f <- sp_anhängen(epa_de20_f)
+epa_de20_s <- sp_anhängen(epa_de20_s)
+epa_de20_e <- sp_anhängen(epa_de20_e)
+
+epa_de21_f <- sp_anhängen(epa_de21_f)
+epa_de21_s <- sp_anhängen(epa_de21_s)
+epa_de21_e <- sp_anhängen(epa_de21_e)
+
+epa_de22_f <- sp_anhängen(epa_de22_f)
+epa_de22_s <- sp_anhängen(epa_de22_s)
+epa_de22_e <- sp_anhängen(epa_de22_e)
 
 ## Zusammenbringen
 epa_detail <- rbind(epa_de19_e, epa_de19_f, epa_de19_s,
@@ -2616,9 +2748,41 @@ epa_detail <- rbind(epa_de19_e, epa_de19_f, epa_de19_s,
                     epa_de21_e, epa_de21_f, epa_de21_s,
                     epa_de22_e, epa_de22_f, epa_de22_s)
 
-## Sortieren
+# Bezeichnungen von Berufen in Text und Code trennen
+epa_detail$beruf_schlüssel <- stringr::str_extract(epa_detail$beruf, "[[:digit:]]+") #zahlen übertragen
+epa_detail$beruf <- gsub("[[:digit:]]", " ", epa_detail$beruf) #zahlen entfernen
+epa_detail$beruf <- stringr::str_trim(epa_detail$beruf) #Leerzeichen entfernen
 
+#übergeordnete Berufsgruppen ergänzen
+epa_detail$berufsgruppe_schlüssel <- substr(epa_detail$beruf_schlüssel, 1, 3)
+fachgruppen <- epa[,c("beruf", "beruf_schlüssel")]
+fachgruppen <- fachgruppen %>% dplyr::rename(berufsgruppe_schlüssel = beruf_schlüssel,
+                                             berufsgruppe = beruf)
+epa_detail <- epa_detail %>%
+  dplyr::left_join(fachgruppen, by = "berufsgruppe_schlüssel",
+                   relationship = "many-to-many")
+
+## Sortieren
+epa_detail$bereich <- "Arbeitsmarkt"
+epa_detail$region <- "Deutschland"
+epa_detail <- epa_detail[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf",
+                             "beruf_schlüssel", "region", "anforderung", "jahr",
+                             "Anzahl Beschäftigte", "geregelte_ausbildung", "kategorie",
+                             "indikator_anzahl", "indikator", "wert", "gesamtwert"
+                             )]
 ##Zusammen mit epa
+#davor noch filtern nach genug indikatoren in Berufen?
+epa_detail <- epa_detail %>%
+  dplyr::group_by(berufsgruppe, berufsgruppe_schlüssel, jahr, region, anforderung,
+                  geregelte_ausbildung, kategorie, indikator) %>%
+  dplyr::summarise(gesamtwert = mean(gesamtwert, na.rm = TRUE),
+                   wert = mean(wert, na.rm = TRUE),
+                   `Anzahl Beschäftigte` = sum(`Anzahl Beschäftigte`, na.rm = TRUE),
+                   indikator_anzahl = mean(indikator_anzahl), na.rm = TRUE)
+
+
+test$gesamtwert <- stats::ave(test$gesamtwert, as.factor(epa_detail$berufsgruppe), FUN = mean)
+# epa_detail ist zu groß, macht so keinen Sinn - zukünftig noch reduzieren auf übergruppen
 
 
 
