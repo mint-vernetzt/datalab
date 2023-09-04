@@ -1,5 +1,5 @@
 # Akronym übergeben für Datensatz-Pfad in Onedrive
-akro <- "kbr"
+akro <- "kab"
 
 ################################################################################
 #
@@ -16,6 +16,8 @@ akro <- "kbr"
 ## Rohdatensatz einlesen ------------------------------------------------------
 library(dplyr)
 library(tidyr)
+library(readxl)
+library(stringr)
 
 wd <- getwd()
 setwd(wd)
@@ -262,7 +264,7 @@ kurse[kurse$anzeige_geschlecht == "gesamt", "anzeige_geschlecht"] <- "Gesamt"
 kurse[kurse$anzeige_geschlecht == "männer", "anzeige_geschlecht"] <- "Männer"
 
 
-usethis::use_data(kurse, overwrite = T)
+#usethis::use_data(kurse, overwrite = T)
 
 
 
@@ -921,4 +923,177 @@ iqb_fragen$jahr <- as.numeric(iqb_fragen$jahr)
 # iqb zusammenfassen und speichern ----------------------------------------
 iqb <- rbind(iqb_standard, iqb_score_ges, iqb_fragen)
 
-usethis::use_data(iqb, overwrite = T)
+#usethis::use_data(iqb, overwrite = T)
+
+
+# PISA Int'l. ----
+
+## PISA001_Länderscore_Insgesamt_Gender ----
+
+file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+
+
+# dat_pisa_g <- read_xls(paste0(file_path, "/", "PISA001_Länderscore_Insgesamt_Gender.xls"), sheet = 3)
+#
+# sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
+# sub_pisa_g <- dat_pisa_g[,sub_cindex]
+# sub_pisa_g <- sub_pisa_g %>%
+#   stringr::str_extract(., "mathematics|science")
+#
+# coln_cindex <- which(stringr::str_detect(dat_pisa_g [,everything(dat_pisa_g )], "Year/Study"))
+#
+# coln_rindex <- which(dat_pisa_g[,coln_cindex]=="Year/Study")
+#
+# dat_pisa_g1 <- dat_pisa_g%>%
+#   slice((coln_rindex-1):nrow(.))
+#
+# coln_annex <- dat_pisa_g1%>%
+#   slice(1)%>%
+#   as.vector()%>%
+#   unname()%>%
+#   unlist()%>%
+#   zoo::na.locf(na.rm = F)
+#
+# colnames(dat_pisa_g1) <-paste0(dat_pisa_g1[2,], "_", coln_annex)
+# colnames(dat_pisa_g1) <- gsub("_NA", "", colnames(dat_pisa_g1))
+#
+# dat_pisa_g2<- dat_pisa_g1[-c(1:2),]
+#
+# dat_pisa_g3 <- dat_pisa_g2 %>%
+#   mutate(across(`Year/Study`, ~ zoo::na.locf(.)))
+#
+# dat_pisa_g4 <- dat_pisa_g3 %>%
+#   tidyr::pivot_longer(c("Average_All students", "Standard Error_All students"),
+#                       names_to ="platzhalter", values_to = "wert")%>%
+#   tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
+#   mutate(fach=sub_pisa_g)
+#
+#
+# dat_pisa_g4$Jurisdiction <- countrycode::countrycode(dat_pisa_g4$Jurisdiction, origin = 'country.name',destination = 'country.name', custom_match = c("International Average (OECD)" = "OECD Durchschnitt"))
+
+
+pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
+
+  dat_pisa_g <- read_xls(paste0(file_path, "/",pisa_list_dat ), sheet = pisa_list_sheeet)
+
+  sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
+  sub_pisa_g <- dat_pisa_g[,sub_cindex]
+  sub_pisa_g <- sub_pisa_g %>%
+    stringr::str_extract(., "mathematics|science")
+
+  coln_cindex <- which(stringr::str_detect(dat_pisa_g [,everything(dat_pisa_g )], "Year/Study"))
+
+  coln_rindex <- which(dat_pisa_g[,coln_cindex]=="Year/Study")
+
+  dat_pisa_g1 <- dat_pisa_g%>%
+    slice((coln_rindex-1):nrow(.))
+
+  coln_annex <- dat_pisa_g1%>%
+    slice(1)%>%
+    as.vector()%>%
+    unname()%>%
+    unlist()%>%
+    zoo::na.locf(na.rm = F)
+
+  colnames(dat_pisa_g1) <-paste0(dat_pisa_g1[2,], "_", coln_annex)
+  colnames(dat_pisa_g1) <- gsub("_NA", "", colnames(dat_pisa_g1))
+
+  dat_pisa_g2<- dat_pisa_g1[-c(1:2),]
+
+  dat_pisa_g3 <- dat_pisa_g2 %>%
+    mutate(across(`Year/Study`, ~ zoo::na.locf(.)))
+
+  dat_pisa_g4 <- dat_pisa_g3 %>%
+    tidyr::pivot_longer(-c("Jurisdiction", "Year/Study"),
+                        names_to ="platzhalter", values_to = "wert")%>%
+    tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
+    mutate(fach=sub_pisa_g)%>%
+    mutate(fach=case_when(fach=="mathematics" ~ "Mathematik",
+                          fach== "science" ~ "Naturwissenschaften",
+                          T ~ .$fach)) %>%
+    rename(jahr = "Year/Study", land = Jurisdiction)
+
+
+  dat_pisa_g4$land <- countrycode::countrycode(dat_pisa_g4$land, origin = 'country.name',destination = 'country.name.de', custom_match = c("International Average (OECD)" = "OECD Durchschnitt"))
+
+  dat_pisa_g4$source <- pisa_list_dat
+
+  dat_pisa_g5 <- dat_pisa_g4 %>%
+    filter(jahr %in% c("2000", "2003", "2006", "2009", "2012", "2015","2018"))
+
+  return(dat_pisa_g5)
+
+}
+
+
+pisa_list_dat <- c("PISA001_Länderscore_Insgesamt_Gender.xls",
+                   "PISA001_Länderscore_Insgesamt_Gender.xls",
+                   "PISA001_Länderscore_Insgesamt_Gender.xls",
+                   "PISA001_Länderscore_Insgesamt_Gender.xls",
+                   "PISA002_Länderscores_Edu_Parents.xls",
+                   "PISA002_Länderscores_Edu_Parents.xls",
+                   "PISA003_Länderscores_Immigration_Books.xls",
+                   "PISA003_Länderscores_Immigration_Books.xls",
+                   "PISA003_Länderscores_Immigration_Books.xls",
+                   "PISA003_Länderscores_Immigration_Books.xls",
+                   "PISA004_Länderscores_Income_Computer.xls",
+                   "PISA004_Länderscores_Income_Computer.xls",
+                   "PISA004_Länderscores_Income_Computer.xls",
+                   "PISA004_Länderscores_Income_Computer.xls")
+
+
+pisa_list_sheeet <- c(3,4,5,6,2,3,3,4,5,6,3,4,5,6)
+
+pisa_list_output <- purrr::map2(.x = pisa_list_dat, .y =pisa_list_sheeet, .f=pisa_extract )
+
+pisa_list_output <- purrr::list_rbind(pisa_list_output)
+
+pisa_list_output1 <- pisa_list_output %>%
+  filter(!wert %in% c("†"))%>%
+  mutate(wert = as.numeric(wert),
+         typ= case_when(typ == "Average" ~ "Druchschnitt",
+                        typ =="Standard Error" ~ "Standardfehler",
+                        T ~ .$typ))%>%
+  mutate(ordnung = case_when(
+    indikator %in% c("101-200 books" , "0-10 books" ,
+      "11-25 books" , "201-500 books" , "26-100 books",
+      "More than 500 books", "None") ~ "Bücher im Haushalt",
+    indikator %in% c( "Less than [$A]",
+                      "[$A] or more but less than [$B]",
+                      "[$B] or more but less than [$C]",
+                      "[$C] or more but less than [$D]",
+                      "[$D] or more but less than [$E]",
+                      "[$E] or more") ~ "Haushaltseinkommen",
+    indikator %in% c("All students", "Female", "Male")~ "Ländermittel",
+    indikator %in% c("First-Generation", "Second-Generation", "Native") ~ "Migrationshintergund",
+    indikator %in% c("ISCED 1", "ISCED 3A, ISCED 4", "ISCED 5A, 6",
+                     "ISCED 2", "ISCED 3B, C", "ISCED 5B") ~ "Bildungshintergrund",
+    indikator %in% c("Yes", "No") ~ "Computerverfügbarkeit"
+  ))
+
+pisa_list_output2 <- pisa_list_output1%>%
+  select(-source)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
