@@ -1948,8 +1948,7 @@ pfad <- paste0("C:/Users/", akro,
 
 epa_einlesen <- function(name, sheet_s){
   df <- readxl::read_excel(paste0(pfad, name),
-                           sheet = sheet_s,
-                           range = "A10:O160")
+                           sheet = sheet_s)
   return(df)
 }
 
@@ -1972,27 +1971,28 @@ epa22_e <- epa_einlesen(name[1], sheets[3])
 
 #### Datensatz in passende Form aufbereiten ----------------------------------
 
-# fehlende Spalte benennen
-epa20_f <- epa20_f %>%
-  dplyr::rename(beruf = `...1`)
-epa20_s <- epa20_s %>%
-  dplyr::rename(beruf = `...1`)
-epa20_e <- epa20_e %>%
-  dplyr::rename(beruf = `...1`)
+# überflüssige Zeilen/Spalten entfernen
+epa_zuschneiden <- function(df){
+  header <- as.character(df[5,])
+  header[1] <- "beruf"
+  colnames(df) <- header
+  df <- na.omit(df)
 
-epa21_f <- epa21_f %>%
-  dplyr::rename(beruf = `...1`)
-epa21_s <- epa21_s %>%
-  dplyr::rename(beruf = `...1`)
-epa21_e <- epa21_e %>%
-  dplyr::rename(beruf = `...1`)
+  return(df)
+}
 
-epa22_f <- epa22_f %>%
-  dplyr::rename(beruf = `...1`)
-epa22_s <- epa22_s %>%
-  dplyr::rename(beruf = `...1`)
-epa22_e <- epa22_e %>%
-  dplyr::rename(beruf = `...1`)
+epa20_f <- epa_zuschneiden(epa20_f)
+epa20_s <- epa_zuschneiden(epa20_s)
+epa20_e <- epa_zuschneiden(epa20_e)
+
+epa21_f <- epa_zuschneiden(epa21_f)
+epa21_s <- epa_zuschneiden(epa21_s)
+epa21_e <- epa_zuschneiden(epa21_e)
+
+epa22_f <- epa_zuschneiden(epa22_f)
+epa22_s <- epa_zuschneiden(epa22_s)
+epa22_e <- epa_zuschneiden(epa22_e)
+
 
 # ins Long Format bringen
 epa20_f <- tidyr::pivot_longer(epa20_f, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
@@ -2007,19 +2007,6 @@ epa22_f <- tidyr::pivot_longer(epa22_f, cols = "Deutschland":"Sachsen", values_t
 epa22_e <- tidyr::pivot_longer(epa22_e, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
 epa22_s <- tidyr::pivot_longer(epa22_s, cols = "Deutschland":"Sachsen", values_to = "wert", names_to = "region")
 
-
-# missings entfernen
-epa20_f <- na.omit(epa20_f)
-epa20_e <- na.omit(epa20_e)
-epa20_s <- na.omit(epa20_s)
-
-epa21_f <- na.omit(epa21_f)
-epa21_e <- na.omit(epa21_e)
-epa21_s <- na.omit(epa21_s)
-
-epa22_f <- na.omit(epa22_f)
-epa22_e <- na.omit(epa22_e)
-epa22_s <- na.omit(epa22_s)
 
 # zusammenfügen
 epa20_f$anforderung <- "Fachkräfte"
@@ -2872,4 +2859,5 @@ epa_detail <- subset(epa_detail, epa_detail$geregelte_ausbildung == "ja")
 epa_detail <- epa_detail %>%
   dplyr::select(-delete, -geregelte_ausbildung) %>%
   dplyr::rename(anzahl_beschäftigte = `Anzahl Beschäftigte`)
+
 
