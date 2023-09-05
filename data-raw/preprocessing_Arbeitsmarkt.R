@@ -2060,6 +2060,39 @@ epa <- epa[, c("bereich", "beruf", "beruf_schlüssel", "region", "anforderung", 
 # wert numerisch speichern
 epa$wert <- as.numeric(epa$wert)
 
+# MINT Aggregat zuweisen/berechnen
+mint_f <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Fachkräfte", col_names = TRUE)
+mint_s <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Spezialisten", col_names = TRUE)
+mint_e <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Experten", col_names = TRUE)
+mint <- rbind(mint_f, mint_s, mint_e)
+mint <- na.omit(mint)
+mint$indikator <- mint$Code
+mint$indikator <- ifelse(grepl("[[:digit:]]", mint$indikator), NA, mint$indikator)
+mint$Code <- ifelse(grepl("[[:digit:]]", mint$Code), mint$Code, NA)
+mint$indikator <- stats::ave(mint$indikator, cumsum(!is.na(mint$indikator)), FUN=function(x) x[1])
+mint <- mint %>%
+  dplyr::mutate(indikator = dplyr::case_when(
+    indikator == "MN" ~ "Mathematik, Naturwissenschaften",
+    indikator == "I" ~ "Informatik",
+    indikator == "LT" ~ "Landtechnik",
+    indikator == "PT" ~ "Prdokuktionstechnik",
+    indikator == "BT" ~ "Bau- und Gebäudetechnik",
+    indikator == "VT" ~ "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+    indikator == "GT" ~ "Gesundheitstechnik",
+    T ~ indikator
+  ))
+mint <- na.omit(mint)
+mint$Code <- substr(mint$Code, 1, 4)
+
+
+mint_grob <- mint
+mint_grob$Code <- substr(mint_grob$Code, 1, 3)
+mint_grob <- mint_grob %>% dplyr::select(-`MINT-Tätigkeiten`)
+mint_grob <- unique(mint_grob)
+
+epa <- epa %>%
+  dplyr::left_join(mint_grob, by = join_by(beruf_schlüssel == Code), relationship = "many-to-many")
+epa$indikator <- ifelse(is.na(epa$indikator), "Nicht MINT", epa$indikator)
 
 
 ### Detaillierte Daten für DE ####
@@ -2747,42 +2780,96 @@ epa_detail <- rbind(epa_de19_e, epa_de19_f, epa_de19_s,
                     epa_de20_e, epa_de20_f, epa_de20_s,
                     epa_de21_e, epa_de21_f, epa_de21_s,
                     epa_de22_e, epa_de22_f, epa_de22_s)
+epa_detail <- subset(epa_detail, !(is.na(epa_detail$beruf)))
 
 # Bezeichnungen von Berufen in Text und Code trennen
 epa_detail$beruf_schlüssel <- stringr::str_extract(epa_detail$beruf, "[[:digit:]]+") #zahlen übertragen
 epa_detail$beruf <- gsub("[[:digit:]]", " ", epa_detail$beruf) #zahlen entfernen
 epa_detail$beruf <- stringr::str_trim(epa_detail$beruf) #Leerzeichen entfernen
 
-#übergeordnete Berufsgruppen ergänzen
+# übergeordnete Berufsgruppen ergänzen
 epa_detail$berufsgruppe_schlüssel <- substr(epa_detail$beruf_schlüssel, 1, 3)
 fachgruppen <- epa[,c("beruf", "beruf_schlüssel")]
 fachgruppen <- fachgruppen %>% dplyr::rename(berufsgruppe_schlüssel = beruf_schlüssel,
                                              berufsgruppe = beruf)
+fachgruppen <- unique(fachgruppen)
 epa_detail <- epa_detail %>%
   dplyr::left_join(fachgruppen, by = "berufsgruppe_schlüssel",
                    relationship = "many-to-many")
+
+# MINT ergänzen
+mint <- mint %>%
+  dplyr::select(-`MINT-Tätigkeiten`) %>%
+  dplyr::rename(mint_select = indikator)
+mint <- unique(mint)
+epa_detail <- epa_detail %>%
+  dplyr::left_join(mint, by = join_by(beruf_schlüssel == Code), relationship = "many-to-many")
+epa_detail$mint_select <- ifelse(is.na(epa_detail$mint_select), "Nicht MINT", epa_detail$mint_select)
 
 ## Sortieren
 epa_detail$bereich <- "Arbeitsmarkt"
 epa_detail$region <- "Deutschland"
 epa_detail <- epa_detail[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf",
-                             "beruf_schlüssel", "region", "anforderung", "jahr",
-                             "Anzahl Beschäftigte", "geregelte_ausbildung", "kategorie",
+                             "beruf_schlüssel", "geregelte_ausbildung", "Anzahl Beschäftigte",
+                             "mint_select", "region", "anforderung", "jahr",  "kategorie",
                              "indikator_anzahl", "indikator", "wert", "gesamtwert"
                              )]
-##Zusammen mit epa
-#davor noch filtern nach genug indikatoren in Berufen?
-epa_detail <- epa_detail %>%
-  dplyr::group_by(berufsgruppe, berufsgruppe_schlüssel, jahr, region, anforderung,
-                  geregelte_ausbildung, kategorie, indikator) %>%
+
+## Aggregate Berechnen
+# Alle Berufe
+alle <- epa_detail %>%
+  dplyr::group_by(bereich, jahr, region, anforderung, kategorie, indikator) %>%
+  dplyr::summarise(gesamtwert = mean(gesamtwert, na.rm = TRUE),
+                   wert = mean(wert, na.rm = TRUE),
+                   `Anzahl Beschäftigte` = sum(`Anzahl Beschäftigte`, na.rm = TRUE),
+                   indikator_anzahl = mean(indikator_anzahl), na.rm = TRUE)
+alle$beruf <- "Gesamt"
+alle$beruf_schlüssel <- NA
+alle$berufsgruppe <- "Gesamt"
+alle$berufsgruppe_schlüssel <- NA
+alle$mint_select <- "Gesamt"
+
+# MINT Unterarten
+t <- epa_detail %>%
+  dplyr::group_by(bereich, mint_select, jahr, region, anforderung, kategorie, indikator) %>%
   dplyr::summarise(gesamtwert = mean(gesamtwert, na.rm = TRUE),
                    wert = mean(wert, na.rm = TRUE),
                    `Anzahl Beschäftigte` = sum(`Anzahl Beschäftigte`, na.rm = TRUE),
                    indikator_anzahl = mean(indikator_anzahl), na.rm = TRUE)
 
+# MINT Berufe
+m <- t
+m$mint_select <- ifelse(m$mint_select == "Nicht MINT", "Nicht MINT", "MINT")
+m <- m %>%
+  dplyr::group_by(bereich, mint_select, jahr, region, anforderung, kategorie, indikator) %>%
+  dplyr::summarise(gesamtwert = mean(gesamtwert, na.rm = TRUE),
+                   wert = mean(wert, na.rm = TRUE),
+                   `Anzahl Beschäftigte` = sum(`Anzahl Beschäftigte`, na.rm = TRUE),
+                   indikator_anzahl = mean(indikator_anzahl), na.rm = TRUE)
 
-test$gesamtwert <- stats::ave(test$gesamtwert, as.factor(epa_detail$berufsgruppe), FUN = mean)
-# epa_detail ist zu groß, macht so keinen Sinn - zukünftig noch reduzieren auf übergruppen
+t$beruf <- "Gesamt"
+t$beruf_schlüssel <- NA
+t$berufsgruppe <- "Gesamt"
+t$berufsgruppe_schlüssel <- NA
+t$mint_select <- "Gesamt"
+t$geregelte_ausbildung <- "Gesamt"
+t <- t %>% dplyr::select(-na.rm)
 
+m$beruf <- "Gesamt"
+m$beruf_schlüssel <- NA
+m$berufsgruppe <- "Gesamt"
+m$berufsgruppe_schlüssel <- NA
+m$mint_select <- "Gesamt"
+m$geregelte_ausbildung <- "Gesamt"
+m <- m %>% dplyr::select(-na.rm)
 
+##Zusammenfügen
+epa_detail <- subset(epa_detail, epa_detail$`Anzahl Beschäftigte`>=500)
+epa_detail$delete <- ifelse(epa_detail$kategorie == "Engpassanalyse" &
+                              epa_detail$indikator_anzahl < 4, TRUE, FALSE)
+epa_detail <- subset(epa_detail, epa_detail$delete == FALSE)
+epa_detail <- subset(epa_detail, epa_detail$geregelte_ausbildung == "ja")
+epa_detail <- epa_detail %>%
+  dplyr::select(-delete, -geregelte_ausbildung) %>%
+  dplyr::rename(anzahl_beschäftigte = `Anzahl Beschäftigte`)
 
