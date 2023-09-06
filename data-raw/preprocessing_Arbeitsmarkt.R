@@ -2047,39 +2047,16 @@ epa <- epa[, c("bereich", "beruf", "beruf_schlüssel", "region", "anforderung", 
 # wert numerisch speichern
 epa$wert <- as.numeric(epa$wert)
 
-# MINT Aggregat zuweisen/berechnen
-mint_f <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Fachkräfte", col_names = TRUE)
-mint_s <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Spezialisten", col_names = TRUE)
-mint_e <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Experten", col_names = TRUE)
-mint <- rbind(mint_f, mint_s, mint_e)
-mint <- na.omit(mint)
-mint$indikator <- mint$Code
-mint$indikator <- ifelse(grepl("[[:digit:]]", mint$indikator), NA, mint$indikator)
-mint$Code <- ifelse(grepl("[[:digit:]]", mint$Code), mint$Code, NA)
-mint$indikator <- stats::ave(mint$indikator, cumsum(!is.na(mint$indikator)), FUN=function(x) x[1])
-mint <- mint %>%
-  dplyr::mutate(indikator = dplyr::case_when(
-    indikator == "MN" ~ "Mathematik, Naturwissenschaften",
-    indikator == "I" ~ "Informatik",
-    indikator == "LT" ~ "Landtechnik",
-    indikator == "PT" ~ "Prdokuktionstechnik",
-    indikator == "BT" ~ "Bau- und Gebäudetechnik",
-    indikator == "VT" ~ "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
-    indikator == "GT" ~ "Gesundheitstechnik",
-    T ~ indikator
-  ))
-mint <- na.omit(mint)
-mint$Code <- substr(mint$Code, 1, 4)
-
-
-mint_grob <- mint
-mint_grob$Code <- substr(mint_grob$Code, 1, 3)
-mint_grob <- mint_grob %>% dplyr::select(-`MINT-Tätigkeiten`)
-mint_grob <- unique(mint_grob)
-
+# Kategorie-Variable für Engpassrisiko erstellen
 epa <- epa %>%
-  dplyr::left_join(mint_grob, by = join_by(beruf_schlüssel == Code), relationship = "many-to-many")
-epa$indikator <- ifelse(is.na(epa$indikator), "Nicht MINT", epa$indikator)
+  dplyr::mutate(epa_kat = dplyr::case_when(
+    wert >= 2.0 ~ "Engpassberuf",
+    wert < 2.0 & wert >= 1.5 ~ "Anzeichen eines Engpassberufs",
+    wert < 1.5 ~ "kein Engpassberuf"
+  ))
+
+# in shinyapp:
+usethis::use_data(epa, overwrite = T)
 
 
 ### Detaillierte Daten für DE ####
@@ -2784,7 +2761,31 @@ epa_detail <- epa_detail %>%
   dplyr::left_join(fachgruppen, by = "berufsgruppe_schlüssel",
                    relationship = "many-to-many")
 
-# MINT ergänzen
+
+# MINT Aggregat zuweisen/berechnen
+mint_f <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Fachkräfte", col_names = TRUE)
+mint_s <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Spezialisten", col_names = TRUE)
+mint_e <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Experten", col_names = TRUE)
+mint <- rbind(mint_f, mint_s, mint_e)
+mint <- na.omit(mint)
+mint$indikator <- mint$Code
+mint$indikator <- ifelse(grepl("[[:digit:]]", mint$indikator), NA, mint$indikator)
+mint$Code <- ifelse(grepl("[[:digit:]]", mint$Code), mint$Code, NA)
+mint$indikator <- stats::ave(mint$indikator, cumsum(!is.na(mint$indikator)), FUN=function(x) x[1])
+mint <- mint %>%
+  dplyr::mutate(indikator = dplyr::case_when(
+    indikator == "MN" ~ "Mathematik, Naturwissenschaften",
+    indikator == "I" ~ "Informatik",
+    indikator == "LT" ~ "Landtechnik",
+    indikator == "PT" ~ "Prdokuktionstechnik",
+    indikator == "BT" ~ "Bau- und Gebäudetechnik",
+    indikator == "VT" ~ "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+    indikator == "GT" ~ "Gesundheitstechnik",
+    T ~ indikator
+  ))
+mint <- na.omit(mint)
+mint$Code <- substr(mint$Code, 1, 4)
+
 mint <- mint %>%
   dplyr::select(-`MINT-Tätigkeiten`) %>%
   dplyr::rename(mint_select = indikator)
@@ -2850,7 +2851,7 @@ m$mint_select <- "Gesamt"
 m$geregelte_ausbildung <- "Gesamt"
 m <- m %>% dplyr::select(-na.rm)
 
-##Zusammenfügen
+## Filtern
 epa_detail <- subset(epa_detail, epa_detail$`Anzahl Beschäftigte`>=500)
 epa_detail$delete <- ifelse(epa_detail$kategorie == "Engpassanalyse" &
                               epa_detail$indikator_anzahl < 4, TRUE, FALSE)
@@ -2860,4 +2861,19 @@ epa_detail <- epa_detail %>%
   dplyr::select(-delete, -geregelte_ausbildung) %>%
   dplyr::rename(anzahl_beschäftigte = `Anzahl Beschäftigte`)
 
+## Kategorie-Variable für Engpassrisiko erstellen
+epa_detail <- epa_detail %>%
+  dplyr::mutate(epa_kat = dplyr::case_when(
+    kategorie == "Engpassanalyse" & gesamtwert >= 2.0 ~ "Engpassberuf",
+    kategorie == "Engpassanalyse" & gesamtwert < 2.0 & gesamtwert >= 1.5 ~ "Anzeichen eines Engpassberufs",
+    kategorie == "Engpassanalyse" & gesamtwert < 1.5 ~ "kein Engpassberuf"
+  ))
+# epa_detail <- epa_detail %>%
+#   dplyr::mutate(risiko_kat = dplyr::case_when(
+#     kategorie == "Risikoanalyse" & gesamtwert >= 2.0 ~ "hohes Risiko",
+#     kategorie == "Risikoanalyse" & gesamtwert < 2.0 & gesamtwert >= 1.5 ~ "mittleres Risiko",
+#     kategorie == "Risikoanalyse" & gesamtwert < 1.5 ~ "geringes/kein Risiko"
+#   ))
 
+# in shinyapp:
+usethis::use_data(epa_detail, overwrite = T)
