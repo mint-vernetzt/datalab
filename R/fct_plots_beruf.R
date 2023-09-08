@@ -3706,7 +3706,7 @@ arbeitsmarkt_top10 <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), min = 0, max = 100, tickInterval = 10) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("MINT-Ausbildungsberufe mit dem höchsten Frauenanteil ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("MINT-Berufe mit dem höchsten Frauenanteil unter den neuen Auszubilndenden ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3736,7 +3736,7 @@ arbeitsmarkt_top10 <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), min = 0, max = 100, tickInterval = 10) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("MINT-Ausbildungsberufe mit dem höchsten Männeranteil ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("MINT-Berufe mit dem höchsten Männeranteil unter den neuen Auszubildenden ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3779,7 +3779,7 @@ arbeitsmarkt_top10 <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(berufe_frauen$wert), 500, f = ceiling), tickInterval = 1000) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von Frauen ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubilndenden ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3809,7 +3809,7 @@ arbeitsmarkt_top10 <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(berufe_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von Männern ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%

@@ -73,7 +73,7 @@ mod_beruf_arbeitsmarkt_landkreis_vergleich_ui <- function(id){
                        choices = c("Gesamt (alle der Hauptkategorie)" = "Auszubildende",
                                    "nur weiblich" = "Frauen",
                                    "nur ausländisch" = "ausländische Auszubildende",
-                                   "nur Auszubildende im 1. Lehrjahr" = "Auszubildende (1. Jahr)"
+                                   "nur Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)"
                        ),
                        selected = "Gesamt (alle der Hauptkategorie)",
                        multiple = FALSE
