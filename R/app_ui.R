@@ -14,7 +14,7 @@ app_ui <- function(request) {
       #title="MINTvernetzt - DataLab",
 
       header = shinydashboard::dashboardHeader(
-        title = div(
+          title = div(
           img(
             src = "www/MINTvernetztLogo_klein.png",
             height = 45
@@ -94,6 +94,9 @@ app_ui <- function(request) {
     </script>"
 
         )),
+        tags$script(HTML(
+          "$('body').addClass('fixed');"
+          )),
 
           shinydashboard::tabItems(
           shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
