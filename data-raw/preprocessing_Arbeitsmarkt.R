@@ -1099,9 +1099,9 @@ data_naa_17 <- data_naa
 
 # funktioniert seit neuem Laptop nicht mehr so, deshalb umgeschrieben (kbr)
 data_naa_a <- readxlsb::read_xlsb(paste0(pfad, "BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb"),
-                                  sheet  = "Vertraege_Daten", range = "A4:D218")
+                                  sheet  = "Verträge_Daten", range = "A4:D218")
 data_naa <- readxlsb::read_xlsb(paste0(pfad, "BA002_Ausbildungsmarkt-MINT-Frauenanteil-2020.xlsb"),
-                                sheet  = "Vertraege_Daten", range = "TA4:AMV218")
+                                sheet  = "Verträge_Daten", range = "TA4:AMV218")
 
 data_naa <- cbind(data_naa_a, data_naa)
 
