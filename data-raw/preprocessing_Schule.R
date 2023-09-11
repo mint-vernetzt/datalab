@@ -928,7 +928,10 @@ iqb <- rbind(iqb_standard, iqb_score_ges, iqb_fragen)
 
 # PISA Int'l. ----
 
-## PISA001_Länderscore_Insgesamt_Gender ----
+# kab
+# Aug23
+
+## Alle ----
 
 file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
@@ -1074,26 +1077,430 @@ pisa_list_output1 <- pisa_list_output %>%
 pisa_list_output2 <- pisa_list_output1%>%
   select(-source)
 
+pisa1 <- pisa_list_output2 %>%
+  filter(ordnung == "Ländermittel")%>%
+  rename(geschlecht = indikator, indikator = ordnung)%>%
+  mutate(geschlecht = case_when(geschlecht=="All students" ~ "Insgesamt",
+                                geschlecht=="Female" ~ "Weiblich",
+                                geschlecht=="Male" ~ "Männlich"))%>%
+  mutate(ausprägung = geschlecht)
+
+pisa2  <- pisa_list_output2 %>%
+  filter(ordnung != "Ländermittel")%>%
+  mutate(geschlecht = "Insgesamt")%>%
+  rename(ausprägung = indikator, indikator = ordnung)%>%
+  mutate(ausprägung = case_when( ausprägung =="0-10 books" ~ "0-10",
+                                 ausprägung =="101-200 books" ~ "101-200",
+                                 ausprägung =="11-25 books" ~ "11-25",
+                                 ausprägung =="201-500 books" ~ "201-500",
+                                 ausprägung =="26-100 books" ~ "26-100",
+                                 ausprägung =="First-Generation" ~ "Erste Generation",
+                                 ausprägung =="ISCED 1" ~ "Primarbereich" ,
+                                 ausprägung =="ISCED 2" ~  "Sekundarbereich I",
+                                 ausprägung =="ISCED 3A, ISCED 4" ~ "Sekundarbereich II (Allgemeinbildend), Postsekundäre Bildung",
+                                 ausprägung =="ISCED 3B, C" ~ "Sekundarbereich II (Berufsgebunden), Sekundarbereich II (Nicht Weiterführend)",
+                                 ausprägung =="ISCED 5A, 6"~ "Tertiärbereich (Erste Stufe, außer Praxisgebunden), Tertiärbereich (Forschungsqualifikation)",
+                                 ausprägung =="ISCED 5B" ~ "Teriärbereich (Erste Stufe, Praxisgebunden)",
+                                 ausprägung =="More than 500 books" ~ "Mehr als 500",
+                                 ausprägung =="Native" ~ "Keiner",
+                                 ausprägung =="Yes" ~ "Verfügbar",
+                                 ausprägung =="No" ~ "Nicht Verfügbar",
+                                 ausprägung =="Second-Generation" ~ "Zwiete Generation",
+                                 ausprägung =="None" ~ "Keine",
+                                 ausprägung =="or more" ~ "Mehr",
+                                 T ~ .$ausprägung))
+
+
+pisa <- bind_rows(pisa1, pisa2)%>%
+  mutate(alter_n = "15 Jahre")
+
+usethis::use_data(pisa, overwrite = T)
+
+
+# TIMSS ----
+
+# kab
+# Aug23
+
+## TIMSS Acheivement----
+
+### Gender ----
+file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+
+# timss_g <- read_xlsx(paste0(file_path, "/", "TIMSS002_achievement-gender-trends-M4.xlsx"))
+#
+# timss_g_sub<- colnames(timss_g)[1]
+#
+# timss_g_sub<- stringr::str_extract(timss_g_sub, "Mathematics|Science")
+#
+# timss_g1<- timss_g %>%
+#   slice(1:which(timss_g[1]==	"Benchmarking Participants")-1)%>%
+#   select(-c(1,2,4))
+#
+# timss_g_colanmes <- timss_g1%>%
+#   slice(which(timss_g1[1]==	"Country"))%>%
+#   as.vector()%>%
+#   unlist()%>%
+#   unname()%>%
+#   zoo::na.locf()
+#
+# timss_g_colanmes2<-timss_g1%>%
+#   filter(if_any(everything(), ~ .=="Girls"))%>%
+#   as.vector()%>%
+#   unlist()%>%
+#   unname()%>%
+#   zoo::na.locf(na.rm = F)
+#
+# timss_g_colanmes3 <-timss_g1%>%
+#   filter(if_any(everything(), ~ .=="Girls"))%>%
+#   mutate(across(everything(), ~case_when(
+#     is.na(.)~"signifikanz",
+#     )))%>%
+#   unlist()%>%
+#   unname()
+#
+# k <- paste0(timss_g_colanmes, "_", timss_g_colanmes2, "_", timss_g_colanmes3)
+#
+# k <- str_remove_all(k, "_NA")
+#
+# colnames(timss_g1) <- k
+#
+# colnames(timss_g1)[1] <- "land"
+#
+# timss_g2 <- timss_g1%>%
+#   slice(which(if_any(everything(), ~. == "Girls"))+1 : nrow(.))%>%
+#   pivot_longer(-"land", values_to = "wert", names_to = "indikator")%>%
+#   separate(indikator, c ("jahr", "geschlecht", "indikator"), sep = "_")%>%
+#   mutate(indikator = case_when(is.na(indikator)~ "Achievement",
+#                                T~.$indikator))
+#
+# timss_g2$land <- countrycode::countrycode(timss_g2$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England',
+#                                                                                                                                     "Northern Ireland" = "Nordirland") )
+
+# funktion
+timss_gender_transform <- function(dat){
+
+  timss_g <- read_xlsx(paste0(file_path, "/", dat))
+
+  timss_g_sub<- colnames(timss_g)[1]
+
+  timss_g_sub<- stringr::str_extract(timss_g_sub, "Mathematics|Science")
+
+  timss_g1<- timss_g %>%
+    slice(1:which(timss_g[1]==	"Benchmarking Participants")-1)%>%
+    select(-c(1,2,4))
+
+  timss_g_colanmes <- timss_g1%>%
+    slice(which(timss_g1[1]==	"Country"))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()%>%
+    zoo::na.locf()
+
+  timss_g_colanmes2<-timss_g1%>%
+    filter(if_any(everything(), ~ .=="Girls"))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()%>%
+    zoo::na.locf(na.rm = F)
+
+  timss_g_colanmes3 <-timss_g1%>%
+    filter(if_any(everything(), ~ .=="Girls"))%>%
+    mutate(across(everything(), ~case_when(
+      is.na(.)~"signifikanz",
+    )))%>%
+  as.vector()%>%
+    unlist()%>%
+    unname()
+
+
+  k <- paste0(timss_g_colanmes, "_", timss_g_colanmes2, "_", timss_g_colanmes3)
+
+  k <- str_remove_all(k, "_NA")
+
+  colnames(timss_g1) <- k
+
+  colnames(timss_g1)[1] <- "land"
+
+  timss_g2 <- timss_g1%>%
+    slice(which(if_any(everything(), ~. == "Girls"))+1 : nrow(.))%>%
+    pivot_longer(-"land", values_to = "wert", names_to = "indikator")%>%
+    separate(indikator, c ("jahr", "geschlecht", "indikator"), sep = "_")%>%
+    mutate(indikator = case_when(is.na(indikator)~ "Achievement",
+                                 T~.$indikator))
+
+  timss_g2$land <- countrycode::countrycode(timss_g2$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England',
+                                                                                                                                      "Northern Ireland" = "Nordirland") )
+  return(timss_g2)
+}
+
+l <- timss_gender_transform("TIMSS002_achievement-gender-trends-M4.xlsx")
+k <- timss_gender_transform("TIMSS005_achievement-gender-trends-S4.xlsx")
+
+timss_gender <- bind_rows(l,k)
+
+### Insgesamt----
+
+file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+
+dat1 <- read_excel(paste0(file_path, "/", "TIMSS001_achievement-trends-M4.xlsx"))
+
+timss_a_sub<- colnames(dat1)[1]
+
+timss_a_sub<- stringr::str_extract(timss_a_sub, "Mathematics|Science")
+
+timss_a1<- dat1 %>%
+  slice(1:which(dat1[1]==	"Benchmarking Participants")-1)%>%
+  select(-c(1,2,4))
+
+timss_a_colnames1 <- timss_a1 %>%
+  slice(which(if_any(everything(), ~ .=="Country")))%>%
+  as.vector()%>%
+  unlist()%>%
+  unname()%>%
+  zoo::na.locf()
+
+
+timss_a_colnames2 <- timss_a1 %>%
+  slice(which(if_any(everything(), ~ .=="Country")))%>%
+  mutate(across(everything(), ~case_when(
+    is.na(.)~"Standardfehler"
+  )))%>%
+  as.vector()%>%
+  unlist()%>%
+  unname()
+
+timss_a_colnames_fn <- paste0(timss_a_colnames1, "_", timss_a_colnames2)%>%
+  str_remove_all(., "_NA")
+
+colnames(timss_a1) <- timss_a_colnames_fn
+
+timss_a2 <- timss_a1 %>%
+  filter(!is.na(Country))%>%
+  filter(Country != "Country")%>%
+  pivot_longer(-c(`Country`), names_to="indikator", values_to="wert")%>%
+  separate_wider_delim(indikator, delim = "_", names=c("jahr", "indikator"), too_few = "align_start")%>%
+  mutate(indikator=case_when(is.na(indikator)~"Achievment",
+         T~.$indikator))%>%
+  mutate(geschlecht="Insgesamt")
+
+colnames(timss_a2)[1]<- "land"
+
+timss_a2$land <- countrycode::countrycode(timss_a2$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England',
+                                                                                                                                    "Northern Ireland" = "Nordirland") )
+# funktion
+
+timss_achv_extract<-function(dat){
+  dat1 <- read_excel(paste0(file_path, "/", dat))
+
+  timss_a_sub<- colnames(dat1)[1]
+
+  timss_a_sub<- stringr::str_extract(timss_a_sub, "Mathematics|Science")
+
+  timss_a1<- dat1 %>%
+    slice(1:which(dat1[1]==	"Benchmarking Participants")-1)%>%
+    select(-c(1,2,4))
+
+  timss_a_colnames1 <- timss_a1 %>%
+    slice(which(if_any(everything(), ~ .=="Country")))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()%>%
+    zoo::na.locf()
+
+
+  timss_a_colnames2 <- timss_a1 %>%
+    slice(which(if_any(everything(), ~ .=="Country")))%>%
+    mutate(across(everything(), ~case_when(
+      is.na(.)~"Standardfehler"
+    )))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()
+
+  timss_a_colnames_fn <- paste0(timss_a_colnames1, "_", timss_a_colnames2)%>%
+    str_remove_all(., "_NA")
+
+  colnames(timss_a1) <- timss_a_colnames_fn
+
+  timss_a2 <- timss_a1 %>%
+    filter(!is.na(Country))%>%
+    filter(Country != "Country")%>%
+    pivot_longer(-c(`Country`), names_to="indikator", values_to="wert")%>%
+    separate_wider_delim(indikator, delim = "_", names=c("jahr", "indikator"), too_few = "align_start")%>%
+    mutate(indikator=case_when(is.na(indikator)~"Achievment",
+                               T~.$indikator))%>%
+    mutate(geschlecht="Insgesamt")
+
+  colnames(timss_a2)[1]<- "land"
+
+  timss_a2$land <- countrycode::countrycode(timss_a2$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England',
+                                                                                                                                      "Northern Ireland" = "Nordirland") )
+  return(timss_a2)
+
+}
+
+j <- timss_achv_extract("TIMSS001_achievement-trends-M4.xlsx")
+h <- timss_achv_extract("TIMSS004_achievement-trends-S4.xlsx")
+
+timss_acievement <- bind_rows(j,h)
+
+### Home resources ----
+file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+
+dat2 <- read_excel(paste0(file_path, "/", "TIMSS007_home-resources-M4.xlsx"))
+
+timss_res_sub<- colnames(dat2)[1]
+
+timss_res_sub<- stringr::str_extract(timss_res_sub, "Mathematics|Science")
+
+timss_res<- dat2 %>%
+  slice(1:which(dat1[1]==	"Benchmarking Participants")-1)%>%
+  select(-c(1,2,4))%>%
+  janitor::remove_empty()
+
+timss_res_coln <- timss_res %>%
+  filter(if_any(everything(),~ . =="Country"))%>%
+  as.vector()%>%
+  unlist()%>%
+  unname()
 
 
 
+bem <- which(str_detect(timss_res_coln, "Country"))
+
+timss_res_coln[bem+1]<- "bemerkung"
+
+timss_res_coln1 <- zoo::na.locf(timss_res_coln)
+
+timss_res_coln2 <- timss_res %>%
+  slice(which(if_any(everything(),~. =="Percent of Students")))%>%
+  as.vector()%>%
+  unlist()%>%
+  unname()%>%
+  zoo::na.locf(na.rm = F)
+
+timss_res_coln2 <- rev(timss_res_coln2)
+
+timss_res_coln1 <- rev(timss_res_coln1)
+
+timss_res_coln2[1:2] <- timss_res_coln1[1:2]
+
+timss_res_coln2 <- rev(timss_res_coln2)
+
+timss_res_coln1 <- rev(timss_res_coln1)
+
+
+timss_res_coln3 <- timss_res %>%
+  slice(which(if_any(everything(),~. =="Percent of Students")))%>%
+  mutate(across(-c("...3", "...5","...25"),~case_when(
+    is.na(.)~"Standardfehler"
+  )))%>%
+  as.vector()%>%
+  unlist()%>%
+  unname()
+
+
+timss_res_coln_fn <- paste0(timss_res_coln1,"_",timss_res_coln2, "_" ,timss_res_coln3)
+
+colnames(timss_res) <-timss_res_coln_fn
+
+timss_res2 <- timss_res %>%
+  filter(!if_any(everything(), ~ .%in%c("Percent of Students", "Country")))
+
+colnames(timss_res2) <- str_remove(colnames(timss_res2), "_NA")
+colnames(timss_res2) <- str_remove(colnames(timss_res2), "_NA")
+
+timss_res3 <- timss_res2 %>%
+  rename(land = Country)%>%
+  pivot_longer(-c(land, bemerkung), values_to = "wert", names_to="indikator")%>%
+  separate(indikator, sep="_", into=c("indikator", "indikator1", "indikator2"))%>%
+  mutate(indikator2 = case_when(
+    is.na(indikator2) & .$indikator!="Average  Scale Score"~ "Achievement",
+    is.na(indikator2) & .$indikator=="Average  Scale Score"~ "Average  Scale Score",
+    T~.$indikator))
+
+# funtion
+
+timss_res_extract <- function(dat3){
+
+  dat2 <- read_excel(paste0(file_path, "/", dat3))
+
+  timss_res_sub<- colnames(dat2)[1]
+
+  timss_res_sub<- stringr::str_extract(timss_res_sub, "Mathematics|Science")
+
+  timss_res<- dat2 %>%
+    slice(1:which(dat1[1]==	"Benchmarking Participants")-1)%>%
+    select(-c(1,2,4))%>%
+    janitor::remove_empty()
+
+  timss_res_coln <- timss_res %>%
+    filter(if_any(everything(),~ . =="Country"))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()
 
 
 
+  bem <- which(str_detect(timss_res_coln, "Country"))
+
+  timss_res_coln[bem+1]<- "bemerkung"
+
+  timss_res_coln1 <- zoo::na.locf(timss_res_coln)
+
+  timss_res_coln2 <- timss_res %>%
+    slice(which(if_any(everything(),~. =="Percent of Students")))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()%>%
+    zoo::na.locf(na.rm = F)
+
+  timss_res_coln2 <- rev(timss_res_coln2)
+
+  timss_res_coln1 <- rev(timss_res_coln1)
+
+  timss_res_coln2[1:2] <- timss_res_coln1[1:2]
+
+  timss_res_coln2 <- rev(timss_res_coln2)
+
+  timss_res_coln1 <- rev(timss_res_coln1)
 
 
+  timss_res_coln3 <- timss_res %>%
+    slice(which(if_any(everything(),~. =="Percent of Students")))%>%
+    mutate(across(-c("...3", "...5","...25"),~case_when(
+      is.na(.)~"Standardfehler"
+    )))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()
 
 
+  timss_res_coln_fn <- paste0(timss_res_coln1,"_",timss_res_coln2, "_" ,timss_res_coln3)
+
+  colnames(timss_res) <-timss_res_coln_fn
+
+  timss_res2 <- timss_res %>%
+    filter(!if_any(everything(), ~ .%in%c("Percent of Students", "Country")))
+
+  colnames(timss_res2) <- str_remove(colnames(timss_res2), "_NA")
+  colnames(timss_res2) <- str_remove(colnames(timss_res2), "_NA")
+
+  timss_res3 <- timss_res2 %>%
+    rename(land = Country)%>%
+    pivot_longer(-c(land, bemerkung), values_to = "wert", names_to="indikator")%>%
+    separate(indikator, sep="_", into=c("indikator", "indikator1", "indikator2"))%>%
+    mutate(indikator2 = case_when(
+      is.na(indikator2) & .$indikator!="Average  Scale Score"~ "Achievement",
+      is.na(indikator2) & .$indikator=="Average  Scale Score"~ "Average  Scale Score",
+      T~.$indikator))
+
+  return(timss_res3)
+}
+
+o <- timss_res_extract("TIMSS007_home-resources-M4.xlsx")
+p <- timss_res_extract("TIMSS008_home-resources-S4.xlsx")
 
 
-
-
-
-
-
-
-
-
-
-
-
+timss_res_dat <- bind_rows(o,p)
