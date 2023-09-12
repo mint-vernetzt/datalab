@@ -13,14 +13,16 @@ library(readr)
 library(countrycode)
 
 
-akro <- "kab"
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 # Studierende Domestisch ----
 
 ## Studierende ----
 
 
-setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
+#setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
 
 get_data <- function(file_list, fach_list){
 
@@ -255,6 +257,38 @@ studierende <- data_studi_neu2 %>%
                  "Deutschland"), values_to = "wert", names_to = "region")
 
 
+## 2022 anhängen - geht so nicht, müssen anderen Datensatz anfragen
+
+# clean_des <- function (dat,year){
+#
+#   raw <- readxl::read_excel(dat, col_types = "text")
+#
+#   # Indexe prüfen!
+#   raw <- raw[-c(1:6),-c(1,3,5)]
+#
+#   colnames(raw) <- c("region", "fachgruppe", "fach", "gesamt", "weiblich",
+#                      "auslaender", "lehramt", "lehramt_weiblich",
+#                      "gesamt_1hs", "weiblich_1hs", "auslaender_1hs", "gesamt_1fs",
+#                      "weiblich_1fs")
+#
+#   raw$jahr <- year
+#   raw$bereich <- "hochschule"
+#   raw$hinweise <- NA
+#   raw$quelle <- ifelse(raw$jahr == 2022, "Statistisches Bundesamt (Destatis), 2023: Auf Anfrage", "Statistisches Bundesamt (Destatis), 2022: Auf Anfrage")
+#
+#   return(raw)
+#
+# }
+#
+# master <- clean_des(dat= paste0(pfad, "DES065_Brunner_Stud_Land_FG_STB_2022.xlsx"), year="2022")
+#
+# # Dann folgenden Teil des Codes ab #Cleaning bis ## Export laufen lassen
+#
+# # umbenennen und kürzen
+# z2022 <- studierende_detailliert
+# z2022 <- z2022 %>%
+#   select(-c("bereich", "fach", "mint_select", "typ")) %>%
+#   filter()
 
 
 #usethis::use_data(studierende, overwrite = T)
@@ -272,13 +306,15 @@ duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht))
 ### Creating and Cleaning ----
 
 #setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
-
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 # Funktion zur Extrahierung von Rohdatensätzen
 
 clean_des <- function (dat,year){
 
-  raw <- read_excel(dat, col_types = "text")
+  raw <- readxl::read_excel(dat, col_types = "text")
 
 # Indexe prüfen!
   raw <- raw[-c(1:6),-c(1,3,5)]
@@ -291,7 +327,7 @@ clean_des <- function (dat,year){
   raw$jahr <- year
   raw$bereich <- "hochschule"
   raw$hinweise <- NA
-  raw$quelle <- "Statistisches Bundesamt (Destatis), 2022: Auf Anfrage"
+  raw$quelle <- ifelse(raw$jahr == 2022, "Statistisches Bundesamt (Destatis), 2023: Auf Anfrage", "Statistisches Bundesamt (Destatis), 2022: Auf Anfrage")
 
   return(raw)
 
@@ -303,13 +339,14 @@ raw2018 <- clean_des(dat= paste0(pfad, "DES060_Kroeger_Stud_Land_FG_STB_2018.xls
 raw2019 <- clean_des(dat= paste0(pfad, "DES061_Kroeger_Stud_Land_FG_STB_2019.xlsx"), year="2019")
 raw2020 <- clean_des(dat= paste0(pfad, "DES062_Kroeger_Stud_Land_FG_STB_2020.xlsx"), year="2020")
 raw2021 <- clean_des(dat= paste0(pfad, "DES063_Kroeger_Stud_Land_FG_STB_2021.xlsx"), year="2021")
+raw2022 <- clean_des(dat= paste0(pfad, "DES065_Brunner_Stud_Land_FG_STB_2022.xlsx"), year="2022")
 
-master <- bind_rows(raw2018,raw2019,raw2020, raw2021)
-
+master <- dplyr::bind_rows(raw2018,raw2019,raw2020, raw2021, raw2022)
 
 
 # Cleaning
-
+library(dplyr)
+library(tidyr)
 ## Filtering relevant subjects
 
 master_natwi_ing_unique <- master %>%  filter(fachgruppe =="Ingenieurwissenschaften" |
@@ -373,11 +410,11 @@ master_faecher_output$fach <- gsub("Nicht Alle MINT-Fächer", "Alle Nicht MINT-F
 master_faecher_output <- master_faecher_output %>%
   mutate(
     geschlecht = case_when(
-      str_detect(.$indikator, "weiblich") ~ "Frauen",
+      stringr::str_detect(.$indikator, "weiblich") ~ "Frauen",
       T ~ "Gesamt"),
     dummy_indi=case_when(
-      str_detect(.$indikator, "1hs")~ "Studienanfänger:innen_1hs",
-      str_detect(.$indikator, "1fs")~ "Studienanfänger:innen_1fs",
+      stringr::str_detect(.$indikator, "1hs")~ "Studienanfänger:innen_1hs",
+      stringr::str_detect(.$indikator, "1fs")~ "Studienanfänger:innen_1fs",
       T~ "Studierende")
     # ,
     # lehramt = case_when(
@@ -443,15 +480,11 @@ studierende_detailliert <- studierende_faecher2%>%
 
 ## Export
 
-# export(master_faecher_output2, "data_raw/studierende_faecher_08_06_23.xlsx")
+ rio::export(studierende_detailliert, paste0(pfad, "studierende_detailliert.xlsx"))
 
 # setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
-
-
-
-
-#usethis::use_data(studierende_detailliert, overwrite = T)
+usethis::use_data(studierende_detailliert, overwrite = T)
 
 
 # Studierende Int'l. ----
