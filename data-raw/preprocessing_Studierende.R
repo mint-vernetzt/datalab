@@ -624,11 +624,6 @@ Mathematik und Statistik","Ingenieurwesen und Technische Berufe",
                                  fach == "Weitere Naturwissenschaften, Mathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik"))%>%
   dplyr::mutate(population = "Europäische Union+")
 
-# Anteil Fach speichern
-eu_af <- dat4 %>%
-  dplyr::filter(geschlecht == "Gesamt") %>%
-  dplyr::mutate(indikator = "Anteil Fächer")
-
 # Anteil nach Geschlecht berechnen
 ## ausfilter, da wo es kein "Gesamt" zur berechnung gibt
 f <- dat4 %>%
@@ -641,20 +636,54 @@ eu_gat_e1 <- eu_gat_e1 %>%
   dplyr::left_join(f, by = c("fach", "land", "jahr")) %>%
   dplyr::filter(n == 3)
 
-### dann berechnung- klappt noch nicht
+### dann berechnung - unelegant, nächste lösung wäre auch hier schöner (Selbstkritik kbr)
 
-eu_gat_e1 <- eu_gat_e1 %>%
+ eu_gat_e1_f <- eu_gat_e1 %>%
   dplyr::group_by(fach, land, jahr) %>%
-  dplyr::mutate((wert[geschlecht == "Frauen"] == wert[geschlecht == "Frauen"]/wert[geschlecht == "Gesamt"]*100),
-                (wert[geschlecht == "Männer"] == wert[geschlecht == "Männer"]/wert[geschlecht == "Gesamt"]*100),
-                (wert[geschlecht == "Gesamt"] == wert[geschlecht == "Gesamt"]/wert[geschlecht == "Gesamt"]*100),
-                indikator = "Frauen-/Männeranteil")
+  dplyr::mutate((FA = wert[geschlecht == "Frauen"]/wert[geschlecht == "Gesamt"]*100),
+                indikator = "Frauen-/Männeranteil") %>%
+  dplyr::filter(geschlecht == "Frauen") %>%
+   dplyr::select(-c(n, wert)) %>%
+   dplyr::rename("wert" = "(...)")
 
+ eu_gat_e1_m <- eu_gat_e1 %>%
+  dplyr::group_by(fach, land, jahr) %>%
+  dplyr::mutate(Männer =wert[geschlecht == "Männer"]/wert[geschlecht == "Gesamt"]*100,
+                indikator = "Frauen-/Männeranteil") %>%
+  dplyr::filter(geschlecht == "Männer") %>%
+  dplyr::select(-c(n, wert)) %>%
+  dplyr::rename("wert" = "Männer")
+
+  eu_gat_e1 <- eu_gat_e1 %>%
+    dplyr::group_by(fach, land, jahr) %>%
+    dplyr::mutate(Gesamt = wert[geschlecht == "Gesamt"]/wert[geschlecht == "Gesamt"]*100,
+                  indikator = "Frauen-/Männeranteil") %>%
+    dplyr::filter(geschlecht == "Gesamt") %>%
+    dplyr::select(-c(n, wert)) %>%
+    dplyr::rename("wert" = "Gesamt")
+
+  eu_gat_e1 <- rbind(eu_gat_e1, eu_gat_e1_f, eu_gat_e1_m)
 
 # Anteil wer wählt was berechnen
 
+  eu_ges <- dat4 %>%
+    dplyr::filter(fach == "Insgesamt")
 
-studierende_europa <- dat4
+  eu_ww <- dat4 %>%
+    dplyr::left_join(eu_ges, by =c("geschlecht", "land", "jahr", "indikator", "typ",
+                                    "bereich", "quelle",
+                                    "population" )) %>%
+    dplyr::mutate(wert = wert.x / wert.y * 100) %>%
+    dplyr::select(-c(fach.y, fachbereich.y, wert.x, wert.y, mint_select.y, ebene.y)) %>%
+    dplyr::rename(fach = fach.x,
+                  fachbereich = fachbereich.x,
+                  ebene = ebene.x,
+                  mint_select = mint_select.x) %>%
+    dplyr::mutate(indikator = "Fächerwahl")
+
+# Zusammenfassen
+
+studierende_europa <- rbind(eu_ww, eu_gat_e1)
 
 # ordnen
 studierende_europa <- studierende_europa[,c("bereich", "quelle", "population", "typ",
@@ -696,7 +725,7 @@ studierende_absolventen_weltweit <- studierende_absolventen_weltweit[,c("bereich
                                             "indikator", "mint_select", "fach",
                                             "geschlecht", "land", "jahr", "wert")]
 
-#usethis::use_data(studierende_absolventen_weltweit, overwrite = T)
+usethis::use_data(studierende_absolventen_weltweit, overwrite = T)
 
 
 
@@ -822,7 +851,11 @@ intern_studierende_oecd <- intern_studierende_oecd[,c("population", "typ",
                                                       "anforderung",
                                                       "geschlecht", "land", "jahr", "wert")]
 
-## OECD_Mobile by gender ----
+
+# speichern
+usethis::use_data(intern_studierende_oecd, overwrite = T)
+
+## OECD_Mobile by gender ---
 
 # Raus warum?
 # file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
@@ -1057,3 +1090,6 @@ dat<- dat[,c("bereich", "quelle", "typ", "indikator", "mint_select",
              "ebene", "fachbereich", "fach",
              "geschlecht", "population", "land_code", "land", "jahr", "anforderung", "wert")]
 anzahl_studis_oecd <- dat
+
+# speichern
+usethis::use_data(anzahl_studis_oecd, overwrite = T)
