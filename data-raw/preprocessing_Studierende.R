@@ -843,17 +843,17 @@ dat_oecd4 <- dat_oecd4 %>%
     T ~ mint_select
   ))
 
-intern_studierende_oecd <- dat_oecd4
+studierende_intern_oecd <- dat_oecd4
 
 # ordnen
-intern_studierende_oecd <- intern_studierende_oecd[,c("population", "typ",
+studierende_intern_oecd  <- studierende_intern_oecd[,c("population", "typ",
                                                       "indikator", "mint_select", "fachbereich",
                                                       "anforderung",
                                                       "geschlecht", "land", "jahr", "wert")]
 
 
 # speichern
-usethis::use_data(intern_studierende_oecd, overwrite = T)
+usethis::use_data(studierende_intern_oecd, overwrite = T)
 
 ## OECD_Mobile by gender ---
 
@@ -1089,7 +1089,7 @@ dat$typ <- "Anzahl"
 dat<- dat[,c("bereich", "quelle", "typ", "indikator", "mint_select",
              "ebene", "fachbereich", "fach",
              "geschlecht", "population", "land_code", "land", "jahr", "anforderung", "wert")]
-anzahl_studis_oecd <- dat
+studierende_anzahl_oecd <- dat
 
 # speichern
-usethis::use_data(anzahl_studis_oecd, overwrite = T)
+usethis::use_data(studierende_anzahl_oecd, overwrite = T)
