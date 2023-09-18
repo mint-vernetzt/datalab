@@ -1432,7 +1432,10 @@ data<- data[,c("bereich", "quelle", "variable", "typ", "indikator", "fach", "ges
 colnames(data)[6] <- "fachbereich"
 
 # umbenennen
-oecd1 <- data
+arbeitsmarkt_fachkräfte_oecd <- data
+
+# speichern
+usethis::use_data(arbeitsmarkt_fachkräfte_oecd, overwrite = T)
 
 
 ## OECD 2 - Anzahl Absolvent*innen ------------------------------------------
@@ -1521,17 +1524,20 @@ dat <- na.omit(dat)
 # bereich ergänze und in Reihenfolge bringen
 dat$bereich <- "Arbeitsmarkt"
 dat$quelle <- "OECD"
-dat$variable <- "Anzahl Absolvent*innen"
-dat$indikator <- "Alle"
 dat$typ <- "Anzahl"
 dat$population <- "OECD"
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fach",
+dat<- dat[,c("bereich", "quelle", "typ", "fach",
                "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 colnames(dat)[6] <- "fachbereich"
+
+
 # umbenennen
-oecd2 <- dat
+arbeitsmarkt_absolvent_oecd <- dat
+
+# speichern
+usethis::use_data(arbeitsmarkt_absolvent_oecd, overwrite = T)
 
 ## OECD 3 - Anteil Feld /Frauen von Absolvent*innen--------------------------
 
@@ -1612,15 +1618,18 @@ dat$bereich <- "Arbeitsmarkt"
 dat$typ <- "In Prozent"
 dat$quelle <- "OECD"
 dat$population <- "OECD"
-dat$indikator <- "Alle"
+# dat$indikator <- "Alle"
 
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fach",
+dat<- dat[,c("bereich", "quelle", "variable", "typ", "fach",
              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 colnames(dat)[6] <- "fachbereich"
 # umbenennen
-oecd3 <- dat
+arbeitsmarkt_anfänger_absolv_oecd <- dat
+
+# speichern
+usethis::use_data(arbeitsmarkt_anfänger_absolv_oecd, overwrite = T)
 
 ## OECD 4 - Frauenanteil Absolvent*innen nach Feld -----------------------------
 # ACHTUNG - SCHON ENTHALTEN IN OECD3
@@ -1795,22 +1804,26 @@ dat <- na.omit(dat)
 
 # bereich ergänze und in Reihenfolge bringen
 dat$bereich <- "Arbeitsmarkt"
-dat$variable <- "Anzahl Studierende/Auszubildende"
+#dat$variable <- "Anzahl Studierende/Auszubildende"
 dat$quelle <- "OECD"
 dat$population <- "OECD"
 dat$typ <- "Anzahl"
 
 # Spalten in logische Reihenfolge bringen
-dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fach",
+dat<- dat[,c("bereich", "quelle", "typ", "indikator", "fach",
              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 colnames(dat)[6] <- "fachbereich"
-# umbenennen
-oecd5 <- dat
 
 # aus irgendeinem Grund sind hinter den absoluten Anzhalen an Studis Kommastellen teils - auch schon in Rohdaten
 # Bei Abgleich mit Tabellen der Datenbank - Zahlen Stimmen, wenn man die Kommastellen rundet (also auch aufrundet)
 # mach ich hier:
-oecd5$wert <- round(oecd5$wert)
+dat$wert <- round(dat$wert)
+
+# umbenennen
+arbeitsmarkt_anzahl_azubis_oecd <- dat
+
+# speichern
+usethis::use_data(arbeitsmarkt_anzahl_azubis_oecd, overwrite = T)
 
 
 ## EUROSTAT0 - Anzahl Beschäftigte nach Branche -----------------------------
@@ -1931,15 +1944,22 @@ dat$typ <- ifelse(grepl("Anzah", dat$variable), "Anzahl", "In Prozent")
 dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 # umbenennen
-eurostat1 <- dat
+arbeitsmarkt_beschäftigte_eu <- dat
+
+# speichern:
+usethis::use_data(arbeitsmarkt_beschäftigte_eu , overwrite = T)
 
 
 ## internationale Daten zusammenbringen ------------------------------------
-arbeitsmarkt_international <- rbind(eurostat1, oecd1, oecd2, oecd3, oecd5)
+#arbeitsmarkt_international <- rbind(eurostat1, oecd1, oecd2, oecd3, oecd5)
 
 # in shinyapp:
-usethis::use_data(arbeitsmarkt_international, overwrite = T)
+#usethis::use_data(arbeitsmarkt_international, overwrite = T)
 
+
+
+
+############################################################################
 
 # Daten Fachkräftemangel --------------------------------------------------
 library(dplyr)
