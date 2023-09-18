@@ -264,7 +264,7 @@ kurse[kurse$anzeige_geschlecht == "gesamt", "anzeige_geschlecht"] <- "Gesamt"
 kurse[kurse$anzeige_geschlecht == "männer", "anzeige_geschlecht"] <- "Männer"
 
 
-#usethis::use_data(kurse, overwrite = T)
+usethis::use_data(kurse, overwrite = T)
 
 
 
@@ -923,7 +923,7 @@ iqb_fragen$jahr <- as.numeric(iqb_fragen$jahr)
 # iqb zusammenfassen und speichern ----------------------------------------
 iqb <- rbind(iqb_standard, iqb_score_ges, iqb_fragen)
 
-#usethis::use_data(iqb, overwrite = T)
+usethis::use_data(iqb, overwrite = T)
 
 
 # PISA Int'l. ----
@@ -936,40 +936,50 @@ iqb <- rbind(iqb_standard, iqb_score_ges, iqb_fragen)
 file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
-# dat_pisa_g <- read_xls(paste0(file_path, "/", "PISA001_Länderscore_Insgesamt_Gender.xls"), sheet = 3)
-#
-# sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
-# sub_pisa_g <- dat_pisa_g[,sub_cindex]
-# sub_pisa_g <- sub_pisa_g %>%
-#   stringr::str_extract(., "mathematics|science")
-#
-# coln_cindex <- which(stringr::str_detect(dat_pisa_g [,everything(dat_pisa_g )], "Year/Study"))
-#
-# coln_rindex <- which(dat_pisa_g[,coln_cindex]=="Year/Study")
-#
-# dat_pisa_g1 <- dat_pisa_g%>%
-#   slice((coln_rindex-1):nrow(.))
-#
-# coln_annex <- dat_pisa_g1%>%
-#   slice(1)%>%
-#   as.vector()%>%
-#   unname()%>%
-#   unlist()%>%
-#   zoo::na.locf(na.rm = F)
-#
-# colnames(dat_pisa_g1) <-paste0(dat_pisa_g1[2,], "_", coln_annex)
-# colnames(dat_pisa_g1) <- gsub("_NA", "", colnames(dat_pisa_g1))
-#
-# dat_pisa_g2<- dat_pisa_g1[-c(1:2),]
-#
-# dat_pisa_g3 <- dat_pisa_g2 %>%
-#   mutate(across(`Year/Study`, ~ zoo::na.locf(.)))
-#
-# dat_pisa_g4 <- dat_pisa_g3 %>%
-#   tidyr::pivot_longer(c("Average_All students", "Standard Error_All students"),
-#                       names_to ="platzhalter", values_to = "wert")%>%
-#   tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
-#   mutate(fach=sub_pisa_g)
+dat_pisa_g <- read_xls(paste0(file_path, "/", "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
+
+sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
+sub_pisa_g <- dat_pisa_g[,sub_cindex]
+sub_pisa_g <- sub_pisa_g %>%
+  stringr::str_extract(., "mathematics|science")
+
+coln_cindex <- which(stringr::str_detect(dat_pisa_g [,everything(dat_pisa_g )], "Year/Study"))
+
+coln_rindex <- which(dat_pisa_g[,coln_cindex]=="Year/Study")
+
+dat_pisa_g1 <- dat_pisa_g%>%
+  slice((coln_rindex-1):nrow(.))
+
+coln_annex <- dat_pisa_g1%>%
+  slice(1)%>%
+  as.vector()%>%
+  unname()%>%
+  unlist()%>%
+  zoo::na.locf(na.rm = F)
+
+colnames(dat_pisa_g1) <-paste0(dat_pisa_g1[2,], "_", coln_annex)
+colnames(dat_pisa_g1) <- gsub("_NA", "", colnames(dat_pisa_g1))
+
+dat_pisa_g2<- dat_pisa_g1[-c(1:2),]
+
+dat_pisa_g3 <- dat_pisa_g2 %>%
+  mutate(across(`Year/Study`, ~ zoo::na.locf(.)))
+
+dat_pisa_g4 <- dat_pisa_g3 %>%
+  tidyr::pivot_longer(-c("Jurisdiction", "Year/Study"),
+                      names_to ="platzhalter", values_to = "wert")%>%
+  tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
+  mutate(fach=sub_pisa_g)%>%
+  mutate(fach=case_when(fach=="mathematics" ~ "Mathematik",
+                        fach== "science" ~ "Naturwissenschaften",
+                        T ~ .$fach)) %>%
+  rename(jahr = "Year/Study", land = Jurisdiction)
+
+dat_pisa_g4 <- dat_pisa_g3 %>%
+  tidyr::pivot_longer(c("Average_All students", "Standard Error_All students"),
+                      names_to ="platzhalter", values_to = "wert")%>%
+  tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
+  mutate(fach=sub_pisa_g)
 #
 #
 # dat_pisa_g4$Jurisdiction <- countrycode::countrycode(dat_pisa_g4$Jurisdiction, origin = 'country.name',destination = 'country.name', custom_match = c("International Average (OECD)" = "OECD Durchschnitt"))
@@ -977,8 +987,11 @@ file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-Data
 
 pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
 
+  # setting path
+
   dat_pisa_g <- read_xls(paste0(file_path, "/",pisa_list_dat ), sheet = pisa_list_sheeet)
 
+  # fach auslesen
   sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
   sub_pisa_g <- dat_pisa_g[,sub_cindex]
   sub_pisa_g <- sub_pisa_g %>%
@@ -1005,6 +1018,10 @@ pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
 
   dat_pisa_g3 <- dat_pisa_g2 %>%
     mutate(across(`Year/Study`, ~ zoo::na.locf(.)))
+  # %>%
+  #   mutate(across(-c(`Year/Study`, `Jurisdiction`),~ stringr::str_remove(., "\\footnotesize")))
+
+  # Hier versuchen Zeug rauszunehmen ^
 
   dat_pisa_g4 <- dat_pisa_g3 %>%
     tidyr::pivot_longer(-c("Jurisdiction", "Year/Study"),
@@ -1085,6 +1102,9 @@ pisa1 <- pisa_list_output2 %>%
                                 geschlecht=="Male" ~ "Männlich"))%>%
   mutate(ausprägung = geschlecht)
 
+pisa1d <- pisa1 %>%
+  janitor::get_dupes(-wert)
+
 pisa2  <- pisa_list_output2 %>%
   filter(ordnung != "Ländermittel")%>%
   mutate(geschlecht = "Insgesamt")%>%
@@ -1105,7 +1125,7 @@ pisa2  <- pisa_list_output2 %>%
                                  ausprägung =="Native" ~ "Keiner",
                                  ausprägung =="Yes" ~ "Verfügbar",
                                  ausprägung =="No" ~ "Nicht Verfügbar",
-                                 ausprägung =="Second-Generation" ~ "Zwiete Generation",
+                                 ausprägung =="Second-Generation" ~ "Zweite Generation",
                                  ausprägung =="None" ~ "Keine",
                                  ausprägung =="or more" ~ "Mehr",
                                  T ~ .$ausprägung))
@@ -1134,55 +1154,6 @@ usethis::use_data(pisa, overwrite = T)
 ### Gender ----
 file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
-# timss_g <- read_xlsx(paste0(file_path, "/", "TIMSS002_achievement-gender-trends-M4.xlsx"))
-#
-# timss_g_sub<- colnames(timss_g)[1]
-#
-# timss_g_sub<- stringr::str_extract(timss_g_sub, "Mathematics|Science")
-#
-# timss_g1<- timss_g %>%
-#   slice(1:which(timss_g[1]==	"Benchmarking Participants")-1)%>%
-#   select(-c(1,2,4))
-#
-# timss_g_colanmes <- timss_g1%>%
-#   slice(which(timss_g1[1]==	"Country"))%>%
-#   as.vector()%>%
-#   unlist()%>%
-#   unname()%>%
-#   zoo::na.locf()
-#
-# timss_g_colanmes2<-timss_g1%>%
-#   filter(if_any(everything(), ~ .=="Girls"))%>%
-#   as.vector()%>%
-#   unlist()%>%
-#   unname()%>%
-#   zoo::na.locf(na.rm = F)
-#
-# timss_g_colanmes3 <-timss_g1%>%
-#   filter(if_any(everything(), ~ .=="Girls"))%>%
-#   mutate(across(everything(), ~case_when(
-#     is.na(.)~"signifikanz",
-#     )))%>%
-#   unlist()%>%
-#   unname()
-#
-# k <- paste0(timss_g_colanmes, "_", timss_g_colanmes2, "_", timss_g_colanmes3)
-#
-# k <- str_remove_all(k, "_NA")
-#
-# colnames(timss_g1) <- k
-#
-# colnames(timss_g1)[1] <- "land"
-#
-# timss_g2 <- timss_g1%>%
-#   slice(which(if_any(everything(), ~. == "Girls"))+1 : nrow(.))%>%
-#   pivot_longer(-"land", values_to = "wert", names_to = "indikator")%>%
-#   separate(indikator, c ("jahr", "geschlecht", "indikator"), sep = "_")%>%
-#   mutate(indikator = case_when(is.na(indikator)~ "Achievement",
-#                                T~.$indikator))
-#
-# timss_g2$land <- countrycode::countrycode(timss_g2$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England',
-#                                                                                                                                     "Northern Ireland" = "Nordirland") )
 
 # funktion
 timss_gender_transform <- function(dat){
@@ -1452,7 +1423,7 @@ timss_res_extract <- function(dat3, jahr, fach){
 }
 
 o <- timss_res_extract("TIMSS007_home-resources-M4.xlsx", "2019", "Mathematik")
-p <- timss_res_extract("TIMSS008_home-resources-S4.xlsx" ,"2019", "Natutwissenschaften")
+p <- timss_res_extract("TIMSS008_home-resources-S4.xlsx" ,"2019", "Naturwissenschaften")
 
 
 timss_res_dat <- bind_rows(o,p)
@@ -1585,7 +1556,6 @@ timss <- bind_rows(
 )
 
 usethis::use_data(timss, overwrite=T)
-
 
 
 
