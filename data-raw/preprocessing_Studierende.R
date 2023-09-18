@@ -843,6 +843,7 @@ dat_oecd4 <- dat_oecd4 %>%
     T ~ mint_select
   ))
 
+dat_oecd4$geschlecht[dat_oecd4$geschlecht == "Insgesamt"] <- "Gesamt"
 studierende_intern_oecd <- dat_oecd4
 
 # ordnen
@@ -936,6 +937,8 @@ dat <- dat %>%
                                         stringr::str_ends("F04", dat$fach) ~ "Wirtschaft, Verwaltung und Recht",
                                         stringr::str_ends("F05", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
                                         stringr::str_ends("F06", dat$fach) ~ "Informatik & Kommunikationstechnologie",
+                                        stringr::str_ends("F061", dat$fach) ~ "Informatik & Kommunikationstechnologie allgemein",
+                                        stringr::str_ends("F068", dat$fach) ~ "Interdisziplinäre Programme mit Schwerpunkt Informatik & Kommunikationstechnologie",
                                         stringr::str_ends("F07", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                                         stringr::str_ends("F08", dat$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
                                         stringr::str_ends("F09", dat$fach) ~ "Gesundheit, Medizin und Sozialwesen",
@@ -973,6 +976,8 @@ Mathematik und Statistik",
                                         stringr::str_ends("F04", dat$fach) ~ "Wirtschaft, Verwaltung und Recht",
                                         stringr::str_ends("F05", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
                                         stringr::str_ends("F06", dat$fach) ~ "Informatik & Kommunikationstechnologie",
+                                        stringr::str_ends("F061", dat$fach) ~ "Informatik & Kommunikationstechnologie",
+                                        stringr::str_ends("F068", dat$fach) ~ "Informatik & Kommunikationstechnologie",
                                         stringr::str_ends("F07", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                                         stringr::str_ends("F08", dat$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
                                         stringr::str_ends("F09", dat$fach) ~ "Gesundheit, Medizin und Sozialwesen",
@@ -1015,6 +1020,9 @@ dat <- dat %>%
 Mathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik",
     fach == "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert" ~ "Naturwissenschaften, Mathematik und Statistik",
 
+    fach ==  "Informatik & Kommunikationstechnologie allgemein" ~ "Informatik & Kommunikationstechnologie",
+    fach == "Interdisziplinäre Programme mit Schwerpunkt Informatik & Kommunikationstechnologie" ~ "Informatik & Kommunikationstechnologie",
+
     fach == "Ingenieurwesen und Technische Berufe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
     fach == "Verarbeitendes Gewerbe und Bergbau" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
     fach == "Architektur und Baugewerbe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
@@ -1031,20 +1039,26 @@ dat$mint_select <- "nicht mint"
 dat <- dat %>%
   dplyr::mutate(mint_select = dplyr::case_when(
     fachbereich == "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" |
-      fachbereich == "Naturwissenschaften, Mathematik und Statistik" ~ "mint",
+      fachbereich == "Naturwissenschaften, Mathematik und Statistik" |
+      fachbereich == "Informatik & Kommunikationstechnologie" ~ "mint",
     T ~ mint_select
   ),
   ebene = dplyr::case_when(
     fachbereich %in% c("Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                      "Naturwissenschaften, Mathematik und Statistik") &
+                      "Naturwissenschaften, Mathematik und Statistik",
+                      "Informatik & Kommunikationstechnologie") &
       !(fach %in% c("Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                    "Naturwissenschaften, Mathematik und Statistik")) ~ 2,
+                    "Naturwissenschaften, Mathematik und Statistik",
+                    "Informatik & Kommunikationstechnologie")) ~ 2,
     fachbereich %in% c("Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                      "Naturwissenschaften, Mathematik und Statistik") &
+                      "Naturwissenschaften, Mathematik und Statistik",
+                      "Informatik & Kommunikationstechnologie") &
       fach %in% c("Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                    "Naturwissenschaften, Mathematik und Statistik") ~ 1,
+                    "Naturwissenschaften, Mathematik und Statistik",
+                  "Informatik & Kommunikationstechnologie") ~ 1,
     !(fachbereich %in% c("Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                         "Naturwissenschaften, Mathematik und Statistik")) ~ 1
+                         "Naturwissenschaften, Mathematik und Statistik",
+                         "Informatik & Kommunikationstechnologie")) ~ 1
   ))
 
 
