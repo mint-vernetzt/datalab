@@ -1624,7 +1624,31 @@ dat$population <- "OECD"
 # Spalten in logische Reihenfolge bringen
 dat<- dat[,c("bereich", "quelle", "variable", "typ", "fach",
              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
-colnames(dat)[6] <- "fachbereich"
+colnames(dat)[5] <- "fachbereich"
+
+# mint berechnen
+mint <- dat %>%
+  dplyr::filter(!(grepl("Frauen-/Männ", variable))) %>%
+  dplyr::filter(fachbereich %in% c("Naturwissenschaften, Mathematik und Statistik",
+                                   "Informatik & Kommunikationstechnologie",
+                                   "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe")) %>%
+  dplyr::group_by(bereich, quelle, variable, typ, geschlecht, population, land, jahr, anforderung) %>%
+  dplyr::summarise(wert = sum(wert)) %>%
+  dplyr::mutate(fachbereich = "MINT") %>%
+  dplyr::ungroup()
+nicht_mint <- dat %>%
+  dplyr::filter(!(grepl("Frauen-/Männ", variable))) %>%
+  dplyr::filter(!(fachbereich %in% c("Naturwissenschaften, Mathematik und Statistik",
+                                   "Informatik & Kommunikationstechnologie",
+                                   "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                   "Alle"))) %>%
+  dplyr::group_by(bereich, quelle, variable, typ, geschlecht, population, land, jahr, anforderung) %>%
+  dplyr::summarise(wert = sum(wert)) %>%
+  dplyr::mutate(fachbereich = "Alle Bereiche außer MINT") %>%
+  dplyr::ungroup()
+
+dat <- rbind(dat, mint, nicht_mint)
+
 # umbenennen
 arbeitsmarkt_anfänger_absolv_oecd <- dat
 
@@ -2903,3 +2927,24 @@ epa_detail <- epa_detail %>%
 
 # in shinyapp:
 usethis::use_data(epa_detail, overwrite = T)
+
+
+
+## Arbeitslosten-Stellen-Relation + Vakanzzeit -----------------------------
+
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+# evtl einzeln oder in for-Schleife aber wie df benennen?
+sheets <- c("Deutschland", "01 Schleswig-Holstein", "02 Hamburg", "03 Niedersachsen",
+            "04 Bremen", "05 NRW", "06 Hessen", "07 Rheinland-Pfalz", "08 Baden-Württemberg",
+            "09 Bayern", "10 Saarland", "11 Berlin", "12 Brandenburg", "13 Mecklenburg-Vorpommern",
+            "14 Sachsen", "15 Sachsen-Anhalt", "16 Thüringen")
+
+for(i in 1:length(sheets)){
+  dat <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[1])
+  as.name(dat)<-paste0(sheets[1])
+}
+
+
