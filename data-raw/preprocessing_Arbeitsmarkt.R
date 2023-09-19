@@ -2936,15 +2936,172 @@ akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
-# evtl einzeln oder in for-Schleife aber wie df benennen?
+## Daten einlesen
 sheets <- c("Deutschland", "01 Schleswig-Holstein", "02 Hamburg", "03 Niedersachsen",
             "04 Bremen", "05 NRW", "06 Hessen", "07 Rheinland-Pfalz", "08 Baden-Württemberg",
             "09 Bayern", "10 Saarland", "11 Berlin", "12 Brandenburg", "13 Mecklenburg-Vorpommern",
             "14 Sachsen", "15 Sachsen-Anhalt", "16 Thüringen")
 
-for(i in 1:length(sheets)){
-  dat <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[1])
-  as.name(dat)<-paste0(sheets[1])
+de <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[1])
+sh <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[2])
+ha <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[3])
+ni <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[4])
+br <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[5])
+nr <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[6])
+he <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[7])
+rp <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[8])
+bw <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[9])
+by <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[10])
+sr <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[11])
+be <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[12])
+ba <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[13])
+mv <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[14])
+sa <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[15])
+sn <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[16])
+th <- readxl::read_excel(paste0(pfad, "BA017_EA_346135_MINT_Berufe_ALO_ZR.xlsx"), sheet = sheets[17])
+
+## Daten zusammenfügen und region ergänzen
+
+de$region <- "Deutschland"
+sh$region <- "Schleswig-Holstein"
+ha$region <- "Hamburg"
+ni$region <- "Niedersachsen"
+br$region <- "Bremen"
+nr$region <- "Nordrhein-Westfalen"
+he$region <- "Hessen"
+rp$region <- "Rheinland-Pfalz"
+bw$region <- "Baden-Württemberg"
+by$region <- "Bayern"
+sr$region <- "Saarland"
+be$region <- "Berlin"
+ba$region <- "Brandenburg"
+mv$region <- "Mecklenburg-Vorpommern"
+sa$region <- "Sachsen"
+sn$region <- "Sachsen-Anhalt"
+th$region <- "Thüringen"
+
+bulas_aufbereiten <- function(dat){
+  dat <- dat[-c(1:5, 511:517),]
+  header <- c("Gemeldete Arbeitslose", "Gemeldete Stellen", "Arbeitslosen-Stellen-Relation",
+              "Abgang (Jahressumme)", "Abgeschlossene Vakanzzeit")
+  header_jahr <- 2013:2020
+  header_ges <- character(length = 40)
+  j <- 1
+  k <- 5
+  for(i in 2013:2020){
+    h <- paste0(header, "_", i)
+    header_ges[j:k] <- h
+    j <- j + 5
+    k <- k + 5
+  }
+
+  colnames(dat) <-  c("fachbereich", header_ges, "region")
+
+
+  dat <- dat[-c(1:4),]
+
+  dat <- tidyr::pivot_longer(dat, cols = "Gemeldete Arbeitslose_2013":"Abgeschlossene Vakanzzeit_2020",
+                             values_to = "wert", names_to = "indikator")
+
+  dat$beruf <- dat$fachbereich
+
+  dat <- dat %>%
+    dplyr::mutate(
+      jahr = dplyr::case_when(
+      grepl("2013", indikator) ~ 2013,
+      grepl("2014", indikator) ~ 2014,
+      grepl("2015", indikator) ~ 2015,
+      grepl("2016", indikator) ~ 2016,
+      grepl("2017", indikator) ~ 2017,
+      grepl("2018", indikator) ~ 2018,
+      grepl("2019", indikator) ~ 2019,
+      grepl("2020", indikator) ~ 2020
+    ),
+    bereich = "Arbeitsmarkt",
+    anforderung = "Gesamt",
+    anforderung = dplyr::case_when(
+      grepl("Fachk", fachbereich) ~ "Fachkräfte",
+      grepl("Aufsic", fachbereich) ~ "Spezialist*innen",
+      grepl("Spezialis", fachbereich) ~ "Spezialist*innen",
+      grepl("Expert", fachbereich) ~ "Expert*innen",
+      grepl("Führung", fachbereich) ~ "Expert*innen",
+      T ~ anforderung
+    ),
+    fachbereich = dplyr::case_when(
+      grepl("[[:digit:]]", fachbereich) ~ NA,
+      T ~ fachbereich
+    ))
+
+  dat$fachbereich <- stats::ave(dat$fachbereich, cumsum(!is.na(dat$fachbereich)), FUN = function(x) x[1])
+  dat$fachbereich <- gsub(pattern = " - Experten", "", dat$fachbereich)
+  dat$fachbereich <- gsub(pattern = " - Fachkräfte", "", dat$fachbereich)
+  dat$fachbereich <- gsub(pattern = " - Spezialisten", "", dat$fachbereich)
+
+  dat$beruf <- gsub(pattern = " - Experten", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " - Fachkräfte", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " - Spezialisten", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " - Experte", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " - Fachkraft", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " - Spezialist", "", dat$beruf)
+  dat$beruf <- gsub(pattern = "-Experte", "", dat$beruf)
+  dat$beruf <- gsub(pattern = "-Fachkraft", "", dat$beruf)
+  dat$beruf <- gsub(pattern = "-Spezialist", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " -Experte", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " -Fachkraft", "", dat$beruf)
+  dat$beruf <- gsub(pattern = " -Spezialist", "", dat$beruf)
+  dat$beruf <- gsub("[[:digit:]] ", "", dat$beruf)
+  dat$beruf <- gsub("[[:digit:]]", "", dat$beruf)
+
+  dat$indikator <- gsub("[[:digit:]]", "", dat$indikator)
+  dat$indikator <- gsub("_", "", dat$indikator)
+
+  dat <- dat %>%
+    dplyr::mutate(beruf = dplyr::case_when(
+      beruf == "MINT-Berufe" ~ "MINT-Berufe (gesamt)",
+      beruf == "Mathematik, Naturwissenschaften" ~ "Mathematik, Naturwissenschaften (gesamt)",
+      beruf == "Bau- und Gebäudetechnik" ~ "Bau- und Gebäudetechnik (gesamt)",
+      beruf == "Gesundheitstechnik" ~ "Gesundheitstechnik (gesamt)",
+      beruf == "Informatik" ~ "Informatik (gesamt)",
+      beruf == "Keine MINT-Berufe" ~ "Keine MINT-Berufe (gesamt)",
+      beruf == "Landtechnik" ~ "Landtechnik (gesamt)",
+      beruf == "Produktionstechnik" ~ "Produktionstechnik (gesamt)",
+      beruf == "Verkehrs-, Sicherheits- und Veranstaltungstechnik" ~ "Verkehrs-, Sicherheits- und Veranstaltungstechnik (gesamt)",
+      T ~ beruf
+    ))
+
+  return(dat)
+
 }
+
+
+de <- bulas_aufbereiten(de)
+sh <- bulas_aufbereiten(sh)
+ha <- bulas_aufbereiten(ha)
+ni <- bulas_aufbereiten(ni)
+br <- bulas_aufbereiten(br)
+nr <- bulas_aufbereiten(nr)
+he <- bulas_aufbereiten(he)
+rp <- bulas_aufbereiten(rp)
+bw <- bulas_aufbereiten(bw)
+by <- bulas_aufbereiten(by)
+sr <- bulas_aufbereiten(sr)
+be <- bulas_aufbereiten(be)
+ba <- bulas_aufbereiten(ba)
+mv <- bulas_aufbereiten(mv)
+sa <- bulas_aufbereiten(sa)
+sn <- bulas_aufbereiten(sn)
+th <- bulas_aufbereiten(th)
+
+dat <- rbind(de, sh, ha, ni, br, nr, he, rp, bw, by, sr, be, ba, mv, sa, sn, th)
+
+## Spalten sortieren
+dat <- dat[, c("bereich", "indikator", "fachbereich", "beruf", "anforderung",
+               "region", "jahr", "wert")]
+
+dat$wert <- as.numeric(dat$wert)
+
+## speichern
+arbeitsmarkt_fachkräfte <- dat
+usethis::use_data(arbeitsmarkt_fachkräfte , overwrite = T)
 
 
