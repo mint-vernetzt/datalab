@@ -13,18 +13,24 @@ library(readr)
 library(countrycode)
 
 
-akro <- "kab"
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+path_kek <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+pfad <- path_kek
 
 # Studierende Domestisch ----
 
 ## Studierende ----
 
 
-setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
+#setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
 
 get_data <- function(file_list, fach_list){
 
-  test<-  read_excel(file_list, sheet =fach_list, col_names = F)%>%
+  test<-  read_excel( file_list, sheet =fach_list, col_names = F)%>%
     data.table::transpose()
 
   jahreszahl1 <-str_extract_all(test$V1, "\\d+")[[1]]
@@ -180,7 +186,9 @@ get_data <- function(file_list, fach_list){
 }
 
 # Bei neuen Datensätzen, hier einfügen:
-file_list <- rep(c(paste0(pfad, "DES064_bmbfstu1_2021.xlsx"),
+file_list <- rep(c(
+                   paste0(pfad, "DES066_bmbfstu1_2022.xlsx"),
+                   paste0(pfad, "DES064_bmbfstu1_2021.xlsx"),
                    paste0(pfad, "DES050_bmbfstu1_2020.xlsx"),
                    paste0(pfad, "DES049_bmbfstu1_2019.xlsx"),
                    paste0(pfad, "DES048_bmbfstu1_2018.xlsx"),
@@ -188,13 +196,13 @@ file_list <- rep(c(paste0(pfad, "DES064_bmbfstu1_2021.xlsx"),
                    paste0(pfad, "DES046_bmbfstu1_2016.xlsx"),
                    paste0(pfad, "DES045_bmbfstu1_2015.xlsx"),
                    paste0(pfad, "DES044_bmbfstu1_2014.xlsx"),
-                  paste0(pfad, "DES043_bmbfstu1_2013.xlsx"),
-                  paste0(pfad, "DES042_bmbfstu1_2012.xlsx"),
-                  paste0(pfad, "DES041_bmbfstu1_2011.xlsx"),
-                  paste0(pfad,  "DES040_bmbfstu1_2010.xlsx")),each=3)
+                   paste0(pfad, "DES043_bmbfstu1_2013.xlsx"),
+                   paste0(pfad, "DES042_bmbfstu1_2012.xlsx"),
+                   paste0(pfad, "DES041_bmbfstu1_2011.xlsx"),
+                   paste0(pfad,  "DES040_bmbfstu1_2010.xlsx")),each=3)
 
-# Hier je neuer hinzugefügter datei, counter um 3 erhöhen
-fach_list<- rep(c("Insgesamt", "Mathe", "Ingenieur"), times= 12)
+# Hier je neuer hinzugefügter datei, counter um 1 erhöhen
+fach_list<- rep(c("Insgesamt", "Mathe", "Ingenieur"), times= 13)
 
 
 # Lese-Loop
@@ -257,10 +265,10 @@ studierende <- data_studi_neu2 %>%
 
 
 
-#usethis::use_data(studierende, overwrite = T)
+usethis::use_data(studierende, overwrite = T)
 
 
-duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht))
+duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht, jahr, region, fachbereich))
 
 ## Studierende detailliert ----
 
@@ -272,13 +280,15 @@ duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht))
 ### Creating and Cleaning ----
 
 #setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
-
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 # Funktion zur Extrahierung von Rohdatensätzen
 
 clean_des <- function (dat,year){
 
-  raw <- read_excel(dat, col_types = "text")
+  raw <- readxl::read_excel(dat, col_types = "text")
 
 # Indexe prüfen!
   raw <- raw[-c(1:6),-c(1,3,5)]
@@ -291,7 +301,7 @@ clean_des <- function (dat,year){
   raw$jahr <- year
   raw$bereich <- "hochschule"
   raw$hinweise <- NA
-  raw$quelle <- "Statistisches Bundesamt (Destatis), 2022: Auf Anfrage"
+  raw$quelle <- ifelse(raw$jahr == 2022, "Statistisches Bundesamt (Destatis), 2023: Auf Anfrage", "Statistisches Bundesamt (Destatis), 2022: Auf Anfrage")
 
   return(raw)
 
@@ -303,13 +313,14 @@ raw2018 <- clean_des(dat= paste0(pfad, "DES060_Kroeger_Stud_Land_FG_STB_2018.xls
 raw2019 <- clean_des(dat= paste0(pfad, "DES061_Kroeger_Stud_Land_FG_STB_2019.xlsx"), year="2019")
 raw2020 <- clean_des(dat= paste0(pfad, "DES062_Kroeger_Stud_Land_FG_STB_2020.xlsx"), year="2020")
 raw2021 <- clean_des(dat= paste0(pfad, "DES063_Kroeger_Stud_Land_FG_STB_2021.xlsx"), year="2021")
+raw2022 <- clean_des(dat= paste0(pfad, "DES065_Brunner_Stud_Land_FG_STB_2022.xlsx"), year="2022")
 
-master <- bind_rows(raw2018,raw2019,raw2020, raw2021)
-
+master <- dplyr::bind_rows(raw2018,raw2019,raw2020, raw2021, raw2022)
 
 
 # Cleaning
-
+library(dplyr)
+library(tidyr)
 ## Filtering relevant subjects
 
 master_natwi_ing_unique <- master %>%  filter(fachgruppe =="Ingenieurwissenschaften" |
@@ -373,11 +384,11 @@ master_faecher_output$fach <- gsub("Nicht Alle MINT-Fächer", "Alle Nicht MINT-F
 master_faecher_output <- master_faecher_output %>%
   mutate(
     geschlecht = case_when(
-      str_detect(.$indikator, "weiblich") ~ "Frauen",
+      stringr::str_detect(.$indikator, "weiblich") ~ "Frauen",
       T ~ "Gesamt"),
     dummy_indi=case_when(
-      str_detect(.$indikator, "1hs")~ "Studienanfänger:innen_1hs",
-      str_detect(.$indikator, "1fs")~ "Studienanfänger:innen_1fs",
+      stringr::str_detect(.$indikator, "1hs")~ "Studienanfänger:innen_1hs",
+      stringr::str_detect(.$indikator, "1fs")~ "Studienanfänger:innen_1fs",
       T~ "Studierende")
     # ,
     # lehramt = case_when(
@@ -443,15 +454,11 @@ studierende_detailliert <- studierende_faecher2%>%
 
 ## Export
 
-# export(master_faecher_output2, "data_raw/studierende_faecher_08_06_23.xlsx")
+ # rio::export(studierende_detailliert, paste0(pfad, "studierende_detailliert.xlsx"))
 
 # setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
-
-
-
-
-#usethis::use_data(studierende_detailliert, overwrite = T)
+usethis::use_data(studierende_detailliert, overwrite = T)
 
 
 # Studierende Int'l. ----
