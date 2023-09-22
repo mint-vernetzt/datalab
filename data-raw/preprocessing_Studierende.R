@@ -284,6 +284,7 @@ akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
+pfad <- path_kek
 # Funktion zur Extrahierung von Rohdatensätzen
 
 clean_des <- function (dat,year){
@@ -467,7 +468,7 @@ usethis::use_data(studierende_detailliert, overwrite = T)
 akro <- "kbr"
 file_path <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
-
+pfad <- path_kek
 file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 dat <- readr::read_csv(paste0(file_path, "/", "EUROSTAT001_custom_Studi_Fach_Gender_original.csv.gz"))
@@ -709,7 +710,7 @@ file_path <- paste0("C:/Users/", akro,
 
 
 file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
-
+pfad <- path_kek
 dat_unc <- readr::read_csv(paste0(file_path, "/", "UNESCO001_anteil_MINT_absolv_weltweit.csv"))
 
 dat_unc_1<- dat_unc %>%
@@ -878,7 +879,7 @@ akro <- "kbr"
 dat <- read.csv(paste0("C:/Users/", akro,
                        "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
                 header = TRUE, sep = ",", dec = ".")
-
+pfad <- path_kek
 
 ### Datensatz in passende Form bringen --------------------------------------
 

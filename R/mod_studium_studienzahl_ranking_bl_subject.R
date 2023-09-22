@@ -16,8 +16,8 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
       inputId = ns("rank_y"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021"),
-      selected = c( "2021")
+                  "2018","2019", "2020", "2021", "2022"),
+      selected = c( "2022")
 
     ),
     p("Auswahl des Indikators:"),

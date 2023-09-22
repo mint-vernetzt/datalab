@@ -630,7 +630,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende,
 
     output$plot_einstieg_verlauf <- highcharter::renderHighchart({
       studienzahl_verlauf_single(data_studierende,r)
-    })
+    })#
 
     # all_mint_23_react <- reactive({
     #   studienzahl_all_mint_23(data_studierende2, r)
@@ -639,7 +639,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende,
 
 
     output$plot_einstieg_comparison <- highcharter::renderHighchart({
-      studienzahl_einstieg_comparison(data_studierende,r)
+      studienzahl_einstieg_comparison(data_studierende,r)#
     })
 
     # data_table_einstieg_react <- reactive({
@@ -652,11 +652,11 @@ mod_studium_studienzahl_server <- function(id, data_studierende,
 
     # Box 3
     output$plot_einstieg_pie_gender <- renderUI({
-      studienzahl_einstieg_pie_gender(data_studierende,r)
+      studienzahl_einstieg_pie_gender(data_studierende,r)#
     })
 
     output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
-      studienzahl_verlauf_single_gender(data_studierende,r)
+      studienzahl_verlauf_single_gender(data_studierende,r)#
     })
 
     output$plot_einstieg_comparison_gender <- highcharter::renderHighchart({
@@ -673,20 +673,20 @@ mod_studium_studienzahl_server <- function(id, data_studierende,
     # })
 
     output$test <- renderUI({
-      studienzahl_test(data_studierende, r)
+      studienzahl_test(data_studierende, r)#
     })
 
     # Box 4
     plot_waffle_react <- reactive({
-      studienzahl_waffle_mint(data_studierende,r)
+      studienzahl_waffle_mint(data_studierende,r)#
     })
 
     output$plot_waffle <- renderPlot({
-      plot_waffle_react()
+      plot_waffle_react()#
     })
 
     output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
-      studienzahl_verlauf_bl_subject(data_studierende,r)
+      studienzahl_verlauf_bl_subject(data_studierende,r)#
     })
 
     # output$plot_ranking_bl_subject <- renderPlot({
@@ -703,7 +703,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende,
     })
 
     output$plot_verlauf_studienzahl_bl_subject_gender <- highcharter::renderHighchart({
-      studierende_verlauf_single_bl_gender(data_studierende,r)
+      studierende_verlauf_single_bl_gender(data_studierende,r)#
     })
 
     # plot_ranking_studienzahl_bl_subject_gender_react <- reactive({
@@ -726,7 +726,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende,
     })
 
     output$plot_studienzahl_bl_verlauf <- highcharter::renderHighchart({
-      studierende_verlauf_multiple_bl(data_studierende,r)
+      studierende_verlauf_multiple_bl(data_studierende,r)#
     })
 
 

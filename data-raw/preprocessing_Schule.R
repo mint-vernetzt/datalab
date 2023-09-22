@@ -264,7 +264,7 @@ kurse[kurse$anzeige_geschlecht == "gesamt", "anzeige_geschlecht"] <- "Gesamt"
 kurse[kurse$anzeige_geschlecht == "männer", "anzeige_geschlecht"] <- "Männer"
 
 
-usethis::use_data(kurse, overwrite = T)
+#usethis::use_data(kurse, overwrite = T)
 
 
 
@@ -923,7 +923,7 @@ iqb_fragen$jahr <- as.numeric(iqb_fragen$jahr)
 # iqb zusammenfassen und speichern ----------------------------------------
 iqb <- rbind(iqb_standard, iqb_score_ges, iqb_fragen)
 
-usethis::use_data(iqb, overwrite = T)
+#usethis::use_data(iqb, overwrite = T)
 
 
 # PISA Int'l. ----
