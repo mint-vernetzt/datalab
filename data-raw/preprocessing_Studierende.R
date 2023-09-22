@@ -454,7 +454,7 @@ studierende_detailliert <- studierende_faecher2%>%
 
 ## Export
 
- rio::export(studierende_detailliert, paste0(pfad, "studierende_detailliert.xlsx"))
+ # rio::export(studierende_detailliert, paste0(pfad, "studierende_detailliert.xlsx"))
 
 # setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
