@@ -17,6 +17,10 @@ akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
+path_kek <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+pfad <- path_kek
+
 # Studierende Domestisch ----
 
 ## Studierende ----
@@ -26,7 +30,7 @@ pfad <- paste0("C:/Users/", akro,
 
 get_data <- function(file_list, fach_list){
 
-  test<-  read_excel(file_list, sheet =fach_list, col_names = F)%>%
+  test<-  read_excel( file_list, sheet =fach_list, col_names = F)%>%
     data.table::transpose()
 
   jahreszahl1 <-str_extract_all(test$V1, "\\d+")[[1]]
@@ -182,7 +186,9 @@ get_data <- function(file_list, fach_list){
 }
 
 # Bei neuen Datensätzen, hier einfügen:
-file_list <- rep(c(paste0(pfad, "DES064_bmbfstu1_2021.xlsx"),
+file_list <- rep(c(
+                   paste0(pfad, "DES066_bmbfstu1_2022.xlsx"),
+                   paste0(pfad, "DES064_bmbfstu1_2021.xlsx"),
                    paste0(pfad, "DES050_bmbfstu1_2020.xlsx"),
                    paste0(pfad, "DES049_bmbfstu1_2019.xlsx"),
                    paste0(pfad, "DES048_bmbfstu1_2018.xlsx"),
@@ -190,13 +196,13 @@ file_list <- rep(c(paste0(pfad, "DES064_bmbfstu1_2021.xlsx"),
                    paste0(pfad, "DES046_bmbfstu1_2016.xlsx"),
                    paste0(pfad, "DES045_bmbfstu1_2015.xlsx"),
                    paste0(pfad, "DES044_bmbfstu1_2014.xlsx"),
-                  paste0(pfad, "DES043_bmbfstu1_2013.xlsx"),
-                  paste0(pfad, "DES042_bmbfstu1_2012.xlsx"),
-                  paste0(pfad, "DES041_bmbfstu1_2011.xlsx"),
-                  paste0(pfad,  "DES040_bmbfstu1_2010.xlsx")),each=3)
+                   paste0(pfad, "DES043_bmbfstu1_2013.xlsx"),
+                   paste0(pfad, "DES042_bmbfstu1_2012.xlsx"),
+                   paste0(pfad, "DES041_bmbfstu1_2011.xlsx"),
+                   paste0(pfad,  "DES040_bmbfstu1_2010.xlsx")),each=3)
 
-# Hier je neuer hinzugefügter datei, counter um 3 erhöhen
-fach_list<- rep(c("Insgesamt", "Mathe", "Ingenieur"), times= 12)
+# Hier je neuer hinzugefügter datei, counter um 1 erhöhen
+fach_list<- rep(c("Insgesamt", "Mathe", "Ingenieur"), times= 13)
 
 
 # Lese-Loop
@@ -257,44 +263,12 @@ studierende <- data_studi_neu2 %>%
                  "Deutschland"), values_to = "wert", names_to = "region")
 
 
-## 2022 anhängen - geht so nicht, müssen anderen Datensatz anfragen
-
-# clean_des <- function (dat,year){
-#
-#   raw <- readxl::read_excel(dat, col_types = "text")
-#
-#   # Indexe prüfen!
-#   raw <- raw[-c(1:6),-c(1,3,5)]
-#
-#   colnames(raw) <- c("region", "fachgruppe", "fach", "gesamt", "weiblich",
-#                      "auslaender", "lehramt", "lehramt_weiblich",
-#                      "gesamt_1hs", "weiblich_1hs", "auslaender_1hs", "gesamt_1fs",
-#                      "weiblich_1fs")
-#
-#   raw$jahr <- year
-#   raw$bereich <- "hochschule"
-#   raw$hinweise <- NA
-#   raw$quelle <- ifelse(raw$jahr == 2022, "Statistisches Bundesamt (Destatis), 2023: Auf Anfrage", "Statistisches Bundesamt (Destatis), 2022: Auf Anfrage")
-#
-#   return(raw)
-#
-# }
-#
-# master <- clean_des(dat= paste0(pfad, "DES065_Brunner_Stud_Land_FG_STB_2022.xlsx"), year="2022")
-#
-# # Dann folgenden Teil des Codes ab #Cleaning bis ## Export laufen lassen
-#
-# # umbenennen und kürzen
-# z2022 <- studierende_detailliert
-# z2022 <- z2022 %>%
-#   select(-c("bereich", "fach", "mint_select", "typ")) %>%
-#   filter()
 
 
-#usethis::use_data(studierende, overwrite = T)
+usethis::use_data(studierende, overwrite = T)
 
 
-duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht))
+duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht, jahr, region, fachbereich))
 
 ## Studierende detailliert ----
 
