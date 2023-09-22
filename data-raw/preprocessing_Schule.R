@@ -936,50 +936,53 @@ usethis::use_data(iqb, overwrite = T)
 file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
-dat_pisa_g <- read_xls(paste0(file_path, "/", "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
-
-sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
-sub_pisa_g <- dat_pisa_g[,sub_cindex]
-sub_pisa_g <- sub_pisa_g %>%
-  stringr::str_extract(., "mathematics|science")
-
-coln_cindex <- which(stringr::str_detect(dat_pisa_g [,everything(dat_pisa_g )], "Year/Study"))
-
-coln_rindex <- which(dat_pisa_g[,coln_cindex]=="Year/Study")
-
-dat_pisa_g1 <- dat_pisa_g%>%
-  slice((coln_rindex-1):nrow(.))
-
-coln_annex <- dat_pisa_g1%>%
-  slice(1)%>%
-  as.vector()%>%
-  unname()%>%
-  unlist()%>%
-  zoo::na.locf(na.rm = F)
-
-colnames(dat_pisa_g1) <-paste0(dat_pisa_g1[2,], "_", coln_annex)
-colnames(dat_pisa_g1) <- gsub("_NA", "", colnames(dat_pisa_g1))
-
-dat_pisa_g2<- dat_pisa_g1[-c(1:2),]
-
-dat_pisa_g3 <- dat_pisa_g2 %>%
-  mutate(across(`Year/Study`, ~ zoo::na.locf(.)))
-
-dat_pisa_g4 <- dat_pisa_g3 %>%
-  tidyr::pivot_longer(-c("Jurisdiction", "Year/Study"),
-                      names_to ="platzhalter", values_to = "wert")%>%
-  tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
-  mutate(fach=sub_pisa_g)%>%
-  mutate(fach=case_when(fach=="mathematics" ~ "Mathematik",
-                        fach== "science" ~ "Naturwissenschaften",
-                        T ~ .$fach)) %>%
-  rename(jahr = "Year/Study", land = Jurisdiction)
-
-dat_pisa_g4 <- dat_pisa_g3 %>%
-  tidyr::pivot_longer(c("Average_All students", "Standard Error_All students"),
-                      names_to ="platzhalter", values_to = "wert")%>%
-  tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
-  mutate(fach=sub_pisa_g)
+# dat_pisa_g <- read_xls(paste0(file_path, "/", "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
+#
+# sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
+# sub_pisa_g <- dat_pisa_g[,sub_cindex]
+# sub_pisa_g <- sub_pisa_g %>%
+#   stringr::str_extract(., "mathematics|science")
+#
+# coln_cindex <- which(stringr::str_detect(dat_pisa_g [,everything(dat_pisa_g )], "Year/Study"))
+#
+# coln_rindex <- which(dat_pisa_g[,coln_cindex]=="Year/Study")
+#
+# dat_pisa_g1 <- dat_pisa_g%>%
+#   slice((coln_rindex-1):nrow(.))
+#
+# coln_annex <- dat_pisa_g1%>%
+#   slice(1)%>%
+#   as.vector()%>%
+#   unname()%>%
+#   unlist()%>%
+#   zoo::na.locf(na.rm = F)
+#
+# colnames(dat_pisa_g1) <-paste0(dat_pisa_g1[2,], "_", coln_annex)
+# colnames(dat_pisa_g1) <- gsub("_NA", "", colnames(dat_pisa_g1))
+#
+# dat_pisa_g2<- dat_pisa_g1[-c(1:2),]
+#
+# dat_pisa_g3 <- dat_pisa_g2 %>%
+#   mutate(across(`Year/Study`, ~ zoo::na.locf(.)))%>%
+#   mutate(across(everything(), ~ str_remove_all(.,"¹|²|³|⁴|⁵|⁶|⁷|⁸|⁹|⁰")))
+#
+# dat_pisa_g3[3] <- gsub("/\p{No}/gu/", "", dat_pisa_g3[3])
+#
+# dat_pisa_g4 <- dat_pisa_g3 %>%
+#   tidyr::pivot_longer(-c("Jurisdiction", "Year/Study"),
+#                       names_to ="platzhalter", values_to = "wert")%>%
+#   tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
+#   mutate(fach=sub_pisa_g)%>%
+#   mutate(fach=case_when(fach=="mathematics" ~ "Mathematik",
+#                         fach== "science" ~ "Naturwissenschaften",
+#                         T ~ .$fach)) %>%
+#   rename(jahr = "Year/Study", land = Jurisdiction)
+#
+# dat_pisa_g4 <- dat_pisa_g3 %>%
+#   tidyr::pivot_longer(c("Average_All students", "Standard Error_All students"),
+#                       names_to ="platzhalter", values_to = "wert")%>%
+#   tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
+#   mutate(fach=sub_pisa_g)
 #
 #
 # dat_pisa_g4$Jurisdiction <- countrycode::countrycode(dat_pisa_g4$Jurisdiction, origin = 'country.name',destination = 'country.name', custom_match = c("International Average (OECD)" = "OECD Durchschnitt"))
@@ -1017,11 +1020,9 @@ pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
   dat_pisa_g2<- dat_pisa_g1[-c(1:2),]
 
   dat_pisa_g3 <- dat_pisa_g2 %>%
-    mutate(across(`Year/Study`, ~ zoo::na.locf(.)))
-  # %>%
-  #   mutate(across(-c(`Year/Study`, `Jurisdiction`),~ stringr::str_remove(., "\\footnotesize")))
+    mutate(across(`Year/Study`, ~ zoo::na.locf(.)))%>%
+    mutate(across(everything(), ~ str_remove_all(.,"¹|²|³|⁴|⁵|⁶|⁷|⁸|⁹|⁰")))
 
-  # Hier versuchen Zeug rauszunehmen ^
 
   dat_pisa_g4 <- dat_pisa_g3 %>%
     tidyr::pivot_longer(-c("Jurisdiction", "Year/Study"),
