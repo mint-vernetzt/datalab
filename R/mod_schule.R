@@ -24,6 +24,7 @@ mod_schule_ui <- function(id){
 
 mod_schule_server <- function(id, data_kurse, data_iqb, data_skf, r){
 
+  logger::log_debug("Setup Seiten-Module: SCHULE")
   r <- reactiveValues()
 
   # Kurse
@@ -68,7 +69,7 @@ mod_schule_server <- function(id, data_kurse, data_iqb, data_skf, r){
   mod_ausserschulisch_skf_einrichtungen_server("mod_ausserschulisch_skf_einrichtungen_ui_1", r)
   mod_ausserschulisch_skf_personal_server("mod_ausserschulisch_skf_personal_ui_1", r)
 
-
+  logger::log_debug("Seiten-Module SCHULE done")
 }
 
 ## To be copied in the UI

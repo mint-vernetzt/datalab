@@ -23,7 +23,7 @@ mod_ausbildung_ui <- function(id){
 #' @noRd
 mod_ausbildung_server <- function(id, data_ausbildungsvertraege, r){
 
-
+  logger::log_debug("Setup Seiten-Module: AUSBILDUNG")
   r <- reactiveValues(indikator_ausbildungsvertraege = NULL,
                       date_ausbildungsvertraege = NULL,
                       indikator_ausbildung_verlauf = NULL,
@@ -37,7 +37,7 @@ mod_ausbildung_server <- function(id, data_ausbildungsvertraege, r){
 
 
 
-
+  logger::log_debug("Seiten-Module AUSBILDUNG done")
 
 }
 

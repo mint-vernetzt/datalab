@@ -1,0 +1,2 @@
+# set logging level for development
+LOG_LEVEL = "DEBUG"

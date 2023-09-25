@@ -270,9 +270,66 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
   }
 
 
+}
 
 
+# Funktion zur Fachauswahl bei international Daten
+international_ui_faecher <- function(region = "EU") {
 
+  # names(studierende_europa)
+  # names(studierende_anzahl_oecd)
+  # names(studierende_absolventen_weltweit)
+
+  # region <- "OECD"
+  # weltweit kommt nicht vor, da es keine tiefere Unterteilung gibt
+  # if (region == "Weltweit") {
+  #
+  #   df <- studierende_absolventen_weltweit  %>%
+  #     dplyr::filter(fach == "Alle MINT-Fächer")
+  # }
+  selection <- NULL
+  if (region == "OECD") {
+    selection <- studierende_anzahl_oecd %>%
+      dplyr::filter(geschlecht == "Gesamt") %>%
+      dplyr::pull(fachbereich) %>%
+      unique()
+  }
+
+  if (region == "EU") {
+    selection <- studierende_europa %>%
+      dplyr::filter(geschlecht == "Gesamt"  &
+                      mint_select == "mint" &
+                      indikator == "Fächerwahl") %>%
+      dplyr::pull(fach) %>%
+      unique() %>%
+      # extra hinzufügen da es sonst mit filter mint_select = FALSE wäre
+      c(., "Alle MINT-Fächer")
+  }
+
+  return(selection)
 
 }
 
+# Funktion zur Jahresauswahl bei internationalen Daten
+international_ui_years <- function(region = "EU") {
+  selection <- NULL
+  if (region == "OECD") {
+    selection <- studierende_anzahl_oecd %>%
+      dplyr::filter(geschlecht == "Gesamt") %>%
+      dplyr::pull(jahr) %>%
+      unique() %>%
+      sort()
+  }
+
+  if (region == "EU") {
+    selection <- studierende_europa %>%
+      dplyr::filter(geschlecht == "Gesamt"  &
+                      mint_select == "mint" &
+                      indikator == "Fächerwahl") %>%
+      dplyr::pull(jahr) %>%
+      unique() %>%
+      sort()
+  }
+
+  return(selection)
+}

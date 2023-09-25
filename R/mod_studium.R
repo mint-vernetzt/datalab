@@ -24,6 +24,8 @@ mod_studium_ui <- function(id){
 mod_studium_server <- function(id, data_studierende,
                                data_studierende_detailliert,
                                r){
+
+  logger::log_debug("Setup Seiten-Module: STUDIUM")
   r <- reactiveValues()
 
   # Studienzahl
@@ -74,6 +76,8 @@ mod_studium_server <- function(id, data_studierende,
   # neu
   mod_studium_studienzahl_mint_anteile_server("mod_studium_studienzahl_mint_anteile_ui",  r)
 
+
+  logger::log_debug("Seiten-Module STUDIUM done")
 }
 
 ## To be copied in the UI

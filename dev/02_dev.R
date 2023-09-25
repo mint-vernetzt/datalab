@@ -82,6 +82,12 @@ golem::add_module(name = "schule_kurse_verlauf_bl", with_test = TRUE) # Name of 
 golem::add_module(name = "schule_kurse_verlauf_bl_subjects", with_test = TRUE) # Name of the module
 
 
+## Internationale Daten
+golem::add_module(name = "international", with_test = TRUE)
+golem::add_module(name = "international_start", with_test = TRUE)
+golem::add_module(name = "international_map", with_test = TRUE)
+
+
 ### Home
 golem::add_module(name = "home_start", with_test = TRUE) # Name of the module
 golem::add_module(name = "home_start_comparison", with_test = TRUE) # Name of the module
@@ -127,6 +133,9 @@ golem::add_fct(name = "valueBoxes_home", module = NULL,with_test = TRUE)
 
 # Ausbildung
 golem::add_fct(name = "plots_ausbildung", module = NULL,with_test = TRUE)
+
+# International
+golem::add_fct(name = "plots_international", module = NULL,with_test = TRUE)
 
 
 golem::add_utils("ui_body", with_test = FALSE)

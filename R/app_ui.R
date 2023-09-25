@@ -3,11 +3,13 @@
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @import shiny.info
 #' @noRd
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+
     # Your application UI logic
     shinydashboard::dashboardPage(
       skin = "blue",
@@ -57,17 +59,27 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Studium",  tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
+          shinydashboard::menuItem("International",  tabName = "international"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen"),
-          shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION")
+          shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION"),
           #shinydashboard::menuItem("Impressum",  tabName = "impressum")
           #shinydashboard::menuItem("Datenschutz", tabName = "datenschutz")
-
+          tags$li(class = "dropdown",
+                  tags$li(
+                    class = "dropdown",
+                    shiny::uiOutput("debug")
+                  )
+          )
 
         )
       ),
 
       # Show the appropriate tab's content in the main body of our dashboard when we select it
       body = shinydashboard::dashboardBody(
+        # display shiny version
+        shiny.info::version(ver = "1.0.0",
+                            position = "bottom left"),
+
         # Matomo einbinden
         tags$head(HTML(
           "<script>
@@ -104,6 +116,7 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="schule", mod_schule_ui("schule_ui_1")),
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
           # shinydashboard::tabItem(tabName ="ausbildung", mod_ausbildung_ui("ausbildung_ui_1")),
+          shinydashboard::tabItem(tabName ="international", mod_international_ui("international_ui_1")),
           shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
           shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
 

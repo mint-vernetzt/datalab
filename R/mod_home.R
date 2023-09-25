@@ -23,7 +23,7 @@ mod_home_ui <- function(id){
 #' @noRd
 mod_home_server <- function(id, data_zentral, data_zentral_alt, data_zentral_neu, data_ausbildungsvertraege, r){
 
-
+  logger::log_debug("Setup Seiten-Module: HOME")
   r <- reactiveValues()
 
   # Home
@@ -38,7 +38,7 @@ mod_home_server <- function(id, data_zentral, data_zentral_alt, data_zentral_neu
   mod_home_start_einstieg_gender_server("mod_home_start_einstieg_gender_ui_1", r)
   mod_home_start_comparison_server("mod_home_start_comparison_ui_1", r)
   mod_home_start_comparison_mint_gender_server("mod_home_start_comparison_mint_gender_ui_1", r)
-
+  logger::log_debug("Seiten-Module HOME done")
 }
 
 
