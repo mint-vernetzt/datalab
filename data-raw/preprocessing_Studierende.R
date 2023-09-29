@@ -698,6 +698,9 @@ studierende_europa <- studierende_europa[,c("bereich", "quelle", "population", "
                                             "indikator", "ebene", "mint_select", "fachbereich", "fach",
                                             "geschlecht", "land", "jahr", "wert")]
 
+# Anpassung mint_select
+studierende_europa$mint_select <- ifelse(studierende_europa$fachbereich == "Alle MINT-Fächer", "mint", studierende_europa$mint_select)
+
 usethis::use_data(studierende_europa, overwrite = T)
 
 
@@ -847,7 +850,8 @@ dat_oecd4$mint_select <- "nicht mint"
 dat_oecd4 <- dat_oecd4 %>%
   dplyr::mutate(mint_select = dplyr::case_when(
     fachbereich == "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" |
-      fachbereich == "Naturwissenschaften, Mathematik und Statistik" ~ "mint",
+      fachbereich == "Naturwissenschaften, Mathematik und Statistik" |
+      fachbereich == "Alle MINT-Fächer" ~ "mint",
     T ~ mint_select
   ))
 
@@ -1048,7 +1052,8 @@ dat <- dat %>%
   dplyr::mutate(mint_select = dplyr::case_when(
     fachbereich == "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" |
       fachbereich == "Naturwissenschaften, Mathematik und Statistik" |
-      fachbereich == "Informatik & Kommunikationstechnologie" ~ "mint",
+      fachbereich == "Informatik & Kommunikationstechnologie" |
+      fachbereich == "MINT" ~ "mint",
     T ~ mint_select
   ),
   ebene = dplyr::case_when(

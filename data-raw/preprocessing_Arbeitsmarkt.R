@@ -1836,7 +1836,7 @@ dat$typ <- "Anzahl"
 # Spalten in logische Reihenfolge bringen
 dat<- dat[,c("bereich", "quelle", "typ", "indikator", "fach",
              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
-colnames(dat)[6] <- "fachbereich"
+
 
 # aus irgendeinem Grund sind hinter den absoluten Anzhalen an Studis Kommastellen teils - auch schon in Rohdaten
 # Bei Abgleich mit Tabellen der Datenbank - Zahlen Stimmen, wenn man die Kommastellen rundet (also auch aufrundet)
@@ -2866,6 +2866,9 @@ alle$beruf_schlüssel <- NA
 alle$berufsgruppe <- "Gesamt"
 alle$berufsgruppe_schlüssel <- NA
 alle$mint_select <- "Gesamt"
+alle$geregelte_ausbildung <- "Gesamt"
+alle <- alle %>% dplyr::select(-na.rm)
+
 
 # MINT Unterarten
 t <- epa_detail %>%
@@ -2885,21 +2888,39 @@ m <- m %>%
                    `Anzahl Beschäftigte` = sum(`Anzahl Beschäftigte`, na.rm = TRUE),
                    indikator_anzahl = mean(indikator_anzahl), na.rm = TRUE)
 
-t$beruf <- "Gesamt"
+t$beruf <- t$mint_select
 t$beruf_schlüssel <- NA
-t$berufsgruppe <- "Gesamt"
+t$berufsgruppe <- t$mint_select
 t$berufsgruppe_schlüssel <- NA
-t$mint_select <- "Gesamt"
 t$geregelte_ausbildung <- "Gesamt"
+t$mint_select <- "Gesamt"
 t <- t %>% dplyr::select(-na.rm)
 
-m$beruf <- "Gesamt"
+m$beruf <- m$mint_select
 m$beruf_schlüssel <- NA
-m$berufsgruppe <- "Gesamt"
+m$berufsgruppe <- m$mint_select
 m$berufsgruppe_schlüssel <- NA
-m$mint_select <- "Gesamt"
 m$geregelte_ausbildung <- "Gesamt"
 m <- m %>% dplyr::select(-na.rm)
+m <- m %>% dplyr::filter(mint_select == "MINT")
+m$mint_select <- "Gesamt"
+
+## Aggregate anhängen
+alle <- alle[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf",
+                             "beruf_schlüssel", "geregelte_ausbildung", "Anzahl Beschäftigte",
+                             "mint_select", "region", "anforderung", "jahr",  "kategorie",
+                             "indikator_anzahl", "indikator", "wert", "gesamtwert"
+)]
+t <- t[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf",
+                             "beruf_schlüssel", "geregelte_ausbildung", "Anzahl Beschäftigte",
+                             "mint_select", "region", "anforderung", "jahr",  "kategorie",
+                             "indikator_anzahl", "indikator", "wert", "gesamtwert"
+)]
+m <- m[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf",
+           "beruf_schlüssel", "geregelte_ausbildung", "Anzahl Beschäftigte",
+           "mint_select", "region", "anforderung", "jahr",  "kategorie",
+           "indikator_anzahl", "indikator", "wert", "gesamtwert"
+)]
 
 ## Filtern
 epa_detail <- subset(epa_detail, epa_detail$`Anzahl Beschäftigte`>=500)
@@ -2910,6 +2931,19 @@ epa_detail <- subset(epa_detail, epa_detail$geregelte_ausbildung == "ja")
 epa_detail <- epa_detail %>%
   dplyr::select(-delete, -geregelte_ausbildung) %>%
   dplyr::rename(anzahl_beschäftigte = `Anzahl Beschäftigte`)
+
+## anhängen
+alle <- alle %>%
+  dplyr::rename(anzahl_beschäftigte = `Anzahl Beschäftigte`) %>%
+  dplyr::select(-geregelte_ausbildung)
+t <- t %>%
+  dplyr::rename(anzahl_beschäftigte = `Anzahl Beschäftigte`) %>%
+  dplyr::select(-geregelte_ausbildung)
+m <- m %>%
+  dplyr::rename(anzahl_beschäftigte = `Anzahl Beschäftigte`) %>%
+  dplyr::select(-geregelte_ausbildung)
+
+epa_detail <- rbind(epa_detail, alle, t, m)
 
 ## Kategorie-Variable für Engpassrisiko erstellen
 epa_detail <- epa_detail %>%
@@ -2925,8 +2959,12 @@ epa_detail <- epa_detail %>%
 #     kategorie == "Risikoanalyse" & gesamtwert < 1.5 ~ "geringes/kein Risiko"
 #   ))
 
+## umbennenung mint_select
+colnames(epa_detail)[7]<-"mint_zuordnung"
+
 # in shinyapp:
-usethis::use_data(epa_detail, overwrite = T)
+arbeitsmarkt_epa_detail <- epa_detail
+usethis::use_data(arbeitsmarkt_epa_detail, overwrite = T)
 
 
 
