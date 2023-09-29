@@ -3185,8 +3185,8 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
       df <- df %>% dplyr::filter(indikator %in% c("Alle", "kapital_hoch", "kapital_niedrig"))
       df <- df %>% dplyr::filter(geschlecht == "gesamt")%>%
         dplyr::mutate(indikator=dplyr::case_when(indikator == "Alle" ~"Gesamt",
-                                                 indikator == "kapital_hoch" ~ "hohes Bildungskapital (mehr als 100 Bücher zuhause)",
-                                                 indikator == "kapital_niedrig" ~ "niedriges Bildungskapital (100 Bücher oder weniger zuhause)"))
+                                                 indikator == "kapital_hoch" ~ "hohes Bildungskapital",
+                                                 indikator == "kapital_niedrig" ~ "niedriges Bildungskapital"))
 
       df <- df %>% dplyr::mutate(geschlecht=dplyr::case_when(
         geschlecht=="gesamt" ~ "Gesamt",
@@ -3194,7 +3194,7 @@ iqb_mathe_mittel_zeitverlauf <- function(df, r){
       ))
       # Für Grafik als Faktor speichern
       df$indikator<- as.factor(df$indikator)
-      df$indikator <- factor(df$indikator, levels = c("hohes Bildungskapital (mehr als 100 Bücher zuhause)", "niedriges Bildungskapital (100 Bücher oder weniger zuhause)" ))
+      df$indikator <- factor(df$indikator, levels = c("hohes Bildungskapital", "niedriges Bildungskapital" ))
 
       # Alle als Gesamtgruppe ausfiltern
       df <- df %>%

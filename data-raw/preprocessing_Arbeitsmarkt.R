@@ -817,6 +817,10 @@ data_n <- rbind(data_n, data_hh, data_b)
 
 data_final <- rbind(data, data_n)
 
+#Korrektur Bremen 2022
+data_final$landkreis <- ifelse(data_final$landkreis == "Landkreis Bremen", "Bremen", data_final$landkreis)
+data_final$landkreis_nummer <- ifelse(data_final$landkreis_nummer == "Bremen", NA, data_final$landkreis_nummer)
+
 data_final <- data_final[,c("bereich","kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
                     #, "hinweise", "quelle"
 )]
