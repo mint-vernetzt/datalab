@@ -58,14 +58,14 @@ mod_international_top10_mint_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("map_f_oecd"),
                        choices = international_ui_faecher(region = "OECD"),
-                       selected = c("Alle"),
+                       selected = c("MINT"),
                        multiple = FALSE#,
                        # options =  list(
                        #   "max-options" = 2,
                        #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
                      )),
 
-    p("Betrachtung:"),
+    p("Durchschnitt anzeigen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("show_avg_top10_mint_line"),
       choices = c("Ja", "Nein"),

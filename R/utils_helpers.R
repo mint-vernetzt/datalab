@@ -293,7 +293,8 @@ international_ui_faecher <- function(region = "EU") {
     load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
     selection <- studierende_anzahl_oecd %>%
-      dplyr::filter(geschlecht == "Gesamt") %>%
+      dplyr::filter(geschlecht == "Gesamt" & 
+                      fachbereich != "Alle") %>%
       dplyr::pull(fachbereich) %>%
       unique()
   }

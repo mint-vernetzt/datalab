@@ -8,6 +8,55 @@
 #' @noRd
 
 
+get_top10_hc_plot_options <- function(hc,
+                                      hc_title = "",
+                                      hc_tooltip = "",
+                                      max_percent_used = 100) {
+  out <- hc %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        boderWidth = 0,
+        dataLabels = list(enabled = TRUE, format = "{point.wert} %")
+      )) %>%
+    highcharter::hc_tooltip(pointFormat = hc_tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = ""),
+                          labels = list(format = "{value} %"),
+                          min = 0,
+                          max = max_percent_used,
+                          tickInterval = 10) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_colors(c("#154194")) %>%
+    highcharter::hc_title(text = hc_title,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black",
+                                       useHTML = TRUE,
+                                       fontFamily = "SourceSans3-Regular",
+                                       fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+  
+  return(out)
+}
+
+add_avg_to_hc <- function(hc, hc_mean) {
+  out <- hc %>% 
+    highcharter::hc_yAxis(
+    plotLines = list(
+      list(
+        value = hc_mean,
+        color = "#FF0000",
+        width = 3,
+        zIndex = 4
+      )
+    )
+  )
+  
+  return(out)
+}
+
 plot_international_map <- function(r) {
 
   #r <- list(map_y = "2019", map_l = "OECD", map_f = "Umwelt")
@@ -180,7 +229,7 @@ if (label_m == "OECD") {
 
 
 plot_international_top10 <- function(r) {
-  #r <- list(map_y = "2019", map_l = "OECD", map_f = "Umwelt")
+  #r <- list(map_y = "2019", map_l = "OECD", map_f = "MINT")
   # load UI inputs from reactive value
 
   timerange <- r$map_y
@@ -230,6 +279,7 @@ plot_international_top10 <- function(r) {
       dplyr::ungroup() %>%
       dplyr::select(land, wert) %>%
       dplyr::left_join(this_df_alle, by = "land") %>%
+      dplyr::mutate(wert_absolut = wert) %>%
       dplyr::mutate(wert = round(wert / total * 100, 1))
 
   }
@@ -250,95 +300,35 @@ plot_international_top10 <- function(r) {
   # Grenze soll immer in 10er Schritten gehen
   max_percent_used <- ceiling(min(c(100, max(df$wert) * 1.2)) / 10) * 10
 
-  # Create female plot
+  
+  
+  
+  # Create top 10 plot
   plot_top <- highcharter::hchart(
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
-    highcharter::hc_plotOptions(
-      series = list(
-        boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert} %")
-      )) %>%
-    #highcharter::hc_tooltip(pointFormat = "Land: {point.land} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
-    highcharter::hc_yAxis(title = list(text = ""),
-                          labels = list(format = "{value} %"),
-                          min = 0,
-                          max = max_percent_used,
-                          tickInterval = 10) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(c("#154194")) %>%
-    highcharter::hc_title(text = paste0("Länder mit dem größten Anteil an '", fach_m, "' in ", timerange),
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    get_top10_hc_plot_options(
+      hc_title = paste0("Länder mit dem größten Anteil an '", fach_m, "' in ", timerange),
+      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}",
+      max_percent_used = max_percent_used)
 
-
-  # Create male plot
+  # Create bottom 10 plot
   plot_bottom <- highcharter::hchart(
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
-    highcharter::hc_plotOptions(
-      series = list(
-        boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert} %")
-      )) %>%
-    #highcharter::hc_tooltip(pointFormat = "Land: {point.land} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
-    highcharter::hc_yAxis(title = list(text = ""),
-                          labels = list(format = "{value} %"),
-                          min = 0,
-                          max = max_percent_used,
-                          tickInterval = 10) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(c("#154194")) %>%
-    highcharter::hc_title(text = paste0("Länder mit dem niedrigsten Anteil an '", fach_m, "' in ", timerange),
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-
+    get_top10_hc_plot_options(
+      hc_title = paste0("Länder mit dem niedrigsten Anteil an '", fach_m, "' in ", timerange),
+      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}",
+      max_percent_used = max_percent_used)
+  
+  
   if (show_avg == "Ja") {
     plot_top <- plot_top %>%
-      highcharter::hc_yAxis(
-        # title = list(text = "Cdays"),
-        plotLines = list(
-          list(
-            value = mean(df$wert, na.rm = TRUE),
-            color = "#FF0000",
-            width = 3,
-            zIndex = 4#,
-            # label = list(
-            #   text = "mean",
-            #   style = list(color = "#FF0000")
-            # )
-          )
-        )
-      )
+      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE))
     plot_bottom <- plot_bottom %>%
-      highcharter::hc_yAxis(
-        # title = list(text = "Cdays"),
-        plotLines = list(
-          list(
-            value = mean(df$wert, na.rm = TRUE),
-            color = "#FF0000",
-            width = 3,
-            zIndex = 4#,
-            # label = list(
-            #   text = "mean",
-            #   style = list(color = "#FF0000")
-            # )
-          )
-        )
-      )
-
+      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE))
   }
 
   highcharter::hw_grid(
@@ -348,4 +338,165 @@ plot_international_top10 <- function(r) {
 
 
 
+}
+
+
+plot_international_top10_gender <- function(r) {
+  #r <- list(map_y = "2019", map_l = "OECD", map_f = "MINT",show_avg_top10_mint_line = "Ja", art = "höchster Frauenanteil in MINT")
+  # load UI inputs from reactive value
+  
+  timerange <- r$map_y
+  label_m <- r$map_l
+  fach_m <- r$map_f
+  show_avg <- r$show_avg
+  # höchster Frauenanteil in MINT vs meiste Frauen wählen MINT
+  # AA vs BB
+  art <- r$art
+  
+  
+  
+  if (is.null(fach_m)) { fach_m <- ""}
+  if (is.null(art)) { art <- ""}
+  
+  logger::log_debug("Plotting international map for:")
+  logger::log_debug("Time: ", timerange,
+                    " | Label: ", label_m,
+                    " | Fach: ", fach_m,
+                    " | Avg.: ", show_avg,
+                    " | Type: ", art)
+  
+  
+  if (label_m == "OECD" & art == "meisten Frauen wählen MINT") {
+    # meiste Frauen wählen MINT
+    
+    # filter for selection
+    df_filtered <- studierende_anzahl_oecd %>%
+      dplyr::filter(geschlecht == "Frauen" &
+                      jahr == timerange &
+                      ebene == 1 &
+                      anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
+                                         "Master oder vergleichbar (akademisch)"))
+    
+    # calculate total amount by land
+    this_df_alle <- df_filtered %>%
+      dplyr::filter(fachbereich == "Alle") %>%
+      dplyr::group_by(land) %>%
+      dplyr::summarise(total = sum(wert, na.rm = TRUE)) %>%
+      dplyr::ungroup()
+    
+    # calculate percentage values by land
+    df <- df_filtered %>%
+      dplyr::filter(fachbereich == fach_m) %>%
+      dplyr::group_by(land) %>%
+      dplyr::summarise(wert = sum(wert, na.rm = TRUE)) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(land, wert) %>%
+      dplyr::left_join(this_df_alle, by = "land") %>%
+      dplyr::mutate(wert_absolut = wert) %>%
+      dplyr::mutate(wert = round(wert / total * 100, 1))
+    
+  }
+  if (label_m == "OECD" & art == "höchster Frauenanteil in MINT") {
+    # höchster Frauenanteil
+    
+    # filter for selection
+    df_filtered <- studierende_anzahl_oecd %>%
+      dplyr::filter(fachbereich == fach_m &
+                      jahr == timerange &
+                      ebene == 1 &
+                      anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
+                                         "Master oder vergleichbar (akademisch)"))
+    
+    # calculate total amount by land
+    this_df_alle <- df_filtered %>%
+      dplyr::filter(geschlecht == "Gesamt") %>%
+      dplyr::group_by(land) %>%
+      dplyr::summarise(total = sum(wert, na.rm = TRUE)) %>%
+      dplyr::ungroup()
+    
+    # calculate percentage values by land
+    df <- df_filtered %>%
+      dplyr::filter(geschlecht == "Frauen") %>%
+      dplyr::group_by(land) %>%
+      dplyr::summarise(wert = sum(wert, na.rm = TRUE)) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(land, wert) %>%
+      dplyr::left_join(this_df_alle, by = "land") %>%
+      dplyr::mutate(wert_absolut = wert) %>%
+      dplyr::mutate(wert = round(wert / total * 100, 1))
+    
+  }
+  
+  
+  if (label_m == "EU" & art == "höchster Frauenanteil in MINT") {
+    # höchster Frauenanteil
+    
+    df <- studierende_europa %>%
+      dplyr::filter(geschlecht == "Frauen" &
+                      jahr == timerange &
+                      (mint_select == "mint" |
+                         (mint_select == "nicht mint" &
+                            fach_m == "Alle MINT-Fächer")) &
+                      fach == fach_m &
+                      indikator == "Frauen-/Männeranteil") %>%
+      dplyr::select(land, wert)
+  }
+  if (label_m == "EU" & art == "meisten Frauen wählen MINT") {
+    # meiste Frauen wählen MINT
+    
+    df <- studierende_europa %>%
+      dplyr::filter(geschlecht == "Frauen" &
+                      jahr == timerange &
+                      (mint_select == "mint" |
+                         (mint_select == "nicht mint" &
+                            fach_m == "Alle MINT-Fächer")) &
+                      fach == fach_m &
+                      indikator == "Fächerwahl") %>%
+      dplyr::select(land, wert)
+  }
+  
+  # Grenze für die X-Achse ist immer etwas größer als der maximale wert
+  # aber nie größer als 100%
+  # Grenze soll immer in 10er Schritten gehen
+  max_percent_used <- ceiling(min(c(100, max(df$wert) * 1.2)) / 10) * 10
+  
+  df$wert <- round(df$wert, 1)
+  
+  
+  # Create top 10 plot
+  plot_top <- highcharter::hchart(
+    df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
+    'bar',
+    highcharter::hcaes(y = wert, x = land)) %>%
+    get_top10_hc_plot_options(
+      hc_title = paste0("Länder mit dem größten Anteil an '", fach_m, "' in ", timerange),
+      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}",
+      max_percent_used = max_percent_used)
+  
+  
+  # Create bottom 10 plot
+  plot_bottom <- highcharter::hchart(
+    df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
+    'bar',
+    highcharter::hcaes(y = wert, x = land)) %>%
+    get_top10_hc_plot_options(
+      hc_title = paste0("Länder mit dem niedrigsten Anteil an '", fach_m, "' in ", timerange),
+      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}",
+      max_percent_used = max_percent_used)
+  
+  
+  if (show_avg == "Ja") {
+    plot_top <- plot_top %>%
+      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE))
+    plot_bottom <- plot_bottom %>%
+      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE))
+  }
+  
+  highcharter::hw_grid(
+    plot_top,
+    plot_bottom,
+    ncol = 2)
+  
+  
+  
 }
