@@ -276,6 +276,7 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
 # Funktion zur Fachauswahl bei international Daten
 international_ui_faecher <- function(region = "EU") {
 
+  logger::log_debug("set internatial ui selection for faecher")
   # names(studierende_europa)
   # names(studierende_anzahl_oecd)
   # names(studierende_absolventen_weltweit)
@@ -289,6 +290,8 @@ international_ui_faecher <- function(region = "EU") {
   # }
   selection <- NULL
   if (region == "OECD") {
+    load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
+
     selection <- studierende_anzahl_oecd %>%
       dplyr::filter(geschlecht == "Gesamt") %>%
       dplyr::pull(fachbereich) %>%
@@ -296,6 +299,8 @@ international_ui_faecher <- function(region = "EU") {
   }
 
   if (region == "EU") {
+    load(file = system.file(package="datalab","data/studierende_europa.rda"))
+
     selection <- studierende_europa %>%
       dplyr::filter(geschlecht == "Gesamt"  &
                       mint_select == "mint" &
@@ -312,8 +317,12 @@ international_ui_faecher <- function(region = "EU") {
 
 # Funktion zur Jahresauswahl bei internationalen Daten
 international_ui_years <- function(region = "EU") {
+
+  logger::log_debug("set internatial ui selection for years")
   selection <- NULL
   if (region == "OECD") {
+    load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
+
     selection <- studierende_anzahl_oecd %>%
       dplyr::filter(geschlecht == "Gesamt") %>%
       dplyr::pull(jahr) %>%
@@ -322,6 +331,8 @@ international_ui_years <- function(region = "EU") {
   }
 
   if (region == "EU") {
+    load(file = system.file(package="datalab","data/studierende_europa.rda"))
+
     selection <- studierende_europa %>%
       dplyr::filter(geschlecht == "Gesamt"  &
                       mint_select == "mint" &

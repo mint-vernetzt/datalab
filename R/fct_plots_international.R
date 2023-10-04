@@ -30,11 +30,34 @@ plot_international_map <- function(r) {
     df <- studierende_absolventen_weltweit  %>%
       dplyr::filter(fach == "Alle MINT-Fächer")
   }
-  if (label_m == "OECD") {
+if (label_m == "OECD") {
     map_selection <- "custom/world"
-    df <- studierende_anzahl_oecd %>%
-      dplyr::filter(geschlecht == "Gesamt") %>%
-      dplyr::filter(fachbereich == fach_m)
+    
+    # filter for selection
+    df_filtered <- studierende_anzahl_oecd %>%
+      dplyr::filter(geschlecht == "Gesamt" &
+                      jahr == timerange &
+                      ebene == 1 &
+                      anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
+                                         "Master oder vergleichbar (akademisch)"))
+    
+    # calculate total amount by land
+    this_df_alle <- df_filtered %>%
+      dplyr::filter(fachbereich == "Alle") %>%
+      dplyr::group_by(land, jahr, fach) %>%
+      dplyr::summarise(total = sum(wert, na.rm = TRUE)) %>%
+      dplyr::ungroup()
+    
+    # calculate percentage values by land
+    df <- df_filtered %>%
+      dplyr::filter(fachbereich == fach_m) %>%
+      dplyr::group_by(land, jahr, fach) %>%
+      dplyr::summarise(wert = sum(wert, na.rm = TRUE)) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(land, wert) %>%
+      dplyr::left_join(this_df_alle, by = "land") %>%
+      dplyr::mutate(wert = round(wert / total * 100, 1))
+    
 
   }
   if (label_m == "EU") {
@@ -43,7 +66,7 @@ plot_international_map <- function(r) {
       dplyr::filter(geschlecht == "Gesamt"  &
                       (mint_select == "mint" |
                          (mint_select == "nicht mint" &
-                          fach_m == "Alle MINT-Fächer")) &
+                            fach_m == "Alle MINT-Fächer")) &
                       fach == fach_m &
                       indikator == "Fächerwahl")
   }
@@ -110,8 +133,8 @@ plot_international_map <- function(r) {
   help_l <- ifelse(grepl("1. Fach", label_m), "Studienanfänger:innen", help_l)
 
   data_map_1 <- df7 #%>%
-    #dplyr::filter(fach == fach_m)%>%
-    #dplyr::mutate(display = as.character(proportion))
+  #dplyr::filter(fach == fach_m)%>%
+  #dplyr::mutate(display = as.character(proportion))
   #title_map_1 <-
 
   highcharter::hw_grid(
@@ -151,6 +174,178 @@ plot_international_map <- function(r) {
       highcharter::hc_credits(enabled = FALSE) %>%
       highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                              verticalAlign = "bottom")
-    )
+  )
+
+}
+
+
+plot_international_top10 <- function(r) {
+  #r <- list(map_y = "2019", map_l = "OECD", map_f = "Umwelt")
+  # load UI inputs from reactive value
+
+  timerange <- r$map_y
+  label_m <- r$map_l
+  fach_m <- r$map_f
+  show_avg <- r$show_avg_top10_mint_line
+
+
+  if (is.null(fach_m)) { fach_m <- ""}
+  logger::log_debug("Plotting international map for:")
+  logger::log_debug("Time: ", timerange,
+                    " | Label: ", label_m,
+                    " | Fach: ", fach_m,
+                    " | Avg.: ", show_avg)
+
+
+  if (label_m == "Weltweit") {
+    fach_m <- "Alle MINT-Fächer"
+    df <- studierende_absolventen_weltweit  %>%
+      dplyr::filter(fach == "Alle MINT-Fächer" &
+                      jahr == timerange) %>%
+      dplyr::mutate(wert = round(wert, 2)) %>%
+      dplyr::select(land, wert)
+  }
+  if (label_m == "OECD") {
+
+    # filter for selection
+    df_filtered <- studierende_anzahl_oecd %>%
+      dplyr::filter(geschlecht == "Gesamt" &
+                      jahr == timerange &
+                      ebene == 1 &
+                      anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
+                                         "Master oder vergleichbar (akademisch)"))
+
+    # calculate total amount by land
+    this_df_alle <- df_filtered %>%
+      dplyr::filter(fachbereich == "Alle") %>%
+      dplyr::group_by(land) %>%
+      dplyr::summarise(total = sum(wert, na.rm = TRUE)) %>%
+      dplyr::ungroup()
+
+    # calculate percentage values by land
+    df <- df_filtered %>%
+      dplyr::filter(fachbereich == fach_m) %>%
+      dplyr::group_by(land) %>%
+      dplyr::summarise(wert = sum(wert, na.rm = TRUE)) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(land, wert) %>%
+      dplyr::left_join(this_df_alle, by = "land") %>%
+      dplyr::mutate(wert = round(wert / total * 100, 1))
+
+  }
+  if (label_m == "EU") {
+    df <- studierende_europa %>%
+      dplyr::filter(geschlecht == "Gesamt" &
+                      jahr == timerange &
+                      (mint_select == "mint" |
+                         (mint_select == "nicht mint" &
+                            fach_m == "Alle MINT-Fächer")) &
+                      fach == fach_m &
+                      indikator == "Fächerwahl") %>%
+      dplyr::select(land, wert)
+  }
+
+  # Grenze für die X-Achse ist immer etwas größer als der maximale wert
+  # aber nie größer als 100%
+  # Grenze soll immer in 10er Schritten gehen
+  max_percent_used <- ceiling(min(c(100, max(df$wert) * 1.2)) / 10) * 10
+
+  # Create female plot
+  plot_top <- highcharter::hchart(
+    df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
+    'bar',
+    highcharter::hcaes(y = wert, x = land)) %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        boderWidth = 0,
+        dataLabels = list(enabled = TRUE, format = "{point.wert} %")
+      )) %>%
+    #highcharter::hc_tooltip(pointFormat = "Land: {point.land} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
+    highcharter::hc_yAxis(title = list(text = ""),
+                          labels = list(format = "{value} %"),
+                          min = 0,
+                          max = max_percent_used,
+                          tickInterval = 10) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_colors(c("#154194")) %>%
+    highcharter::hc_title(text = paste0("Länder mit dem größten Anteil an '", fach_m, "' in ", timerange),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+
+
+  # Create male plot
+  plot_bottom <- highcharter::hchart(
+    df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
+    'bar',
+    highcharter::hcaes(y = wert, x = land)) %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        boderWidth = 0,
+        dataLabels = list(enabled = TRUE, format = "{point.wert} %")
+      )) %>%
+    #highcharter::hc_tooltip(pointFormat = "Land: {point.land} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
+    highcharter::hc_yAxis(title = list(text = ""),
+                          labels = list(format = "{value} %"),
+                          min = 0,
+                          max = max_percent_used,
+                          tickInterval = 10) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_colors(c("#154194")) %>%
+    highcharter::hc_title(text = paste0("Länder mit dem niedrigsten Anteil an '", fach_m, "' in ", timerange),
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+
+  if (show_avg == "Ja") {
+    plot_top <- plot_top %>%
+      highcharter::hc_yAxis(
+        # title = list(text = "Cdays"),
+        plotLines = list(
+          list(
+            value = mean(df$wert, na.rm = TRUE),
+            color = "#FF0000",
+            width = 3,
+            zIndex = 4#,
+            # label = list(
+            #   text = "mean",
+            #   style = list(color = "#FF0000")
+            # )
+          )
+        )
+      )
+    plot_bottom <- plot_bottom %>%
+      highcharter::hc_yAxis(
+        # title = list(text = "Cdays"),
+        plotLines = list(
+          list(
+            value = mean(df$wert, na.rm = TRUE),
+            color = "#FF0000",
+            width = 3,
+            zIndex = 4#,
+            # label = list(
+            #   text = "mean",
+            #   style = list(color = "#FF0000")
+            # )
+          )
+        )
+      )
+
+  }
+
+  highcharter::hw_grid(
+    plot_top,
+    plot_bottom,
+    ncol = 2)
+
+
 
 }

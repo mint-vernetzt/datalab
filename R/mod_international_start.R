@@ -113,12 +113,12 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       p("LOREM"),
-                                      mod_international_top10_ui("mod_international_top10_ui_1")
+                                      mod_international_top10_mint_ui("international_top10_mint_1")
 
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      htmlOutput(ns("plot_international_studienzahl_map_1")),
+                                      htmlOutput(ns("plot_international_top10_mint_1")),
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
@@ -126,7 +126,7 @@ mod_international_start_ui <- function(id){
                                                          content = paste0("POPUP INFO TEXT HERE"),
                                                          placement = "top",
                                                          trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_1")
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
                                     )
                            )
 
@@ -141,12 +141,15 @@ mod_international_start_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    print("mod_international_start_server")
-
     # Box 1
     output$plot_international_studienzahl_map_1 <- renderUI({
       plot_international_map(r)
     })
+
+    output$plot_international_top10_mint_1 <- renderUI({
+      plot_international_top10(r)
+    })
+
 
   })
 }

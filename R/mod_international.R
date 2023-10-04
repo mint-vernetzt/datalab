@@ -34,10 +34,10 @@ mod_international_server <- function(id,
   logger::log_debug("Setup Seiten-Module: INTERNATIONAL")
   r <- reactiveValues()
 
-  print("mod_international_server")
   # Box 1
   mod_international_start_server("mod_international_start_ui_1", r)
   mod_international_map_server("mod_international_map_ui_1", r)
+  mod_international_top10_mint_server("international_top10_mint_1", r)
 
   logger::log_debug("Seiten-Module INTERNATIONAL done")
 }

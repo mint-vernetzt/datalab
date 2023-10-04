@@ -86,6 +86,8 @@ golem::add_module(name = "schule_kurse_verlauf_bl_subjects", with_test = TRUE) #
 golem::add_module(name = "international", with_test = TRUE)
 golem::add_module(name = "international_start", with_test = TRUE)
 golem::add_module(name = "international_map", with_test = TRUE)
+golem::add_module(name = "international_top10_mint", with_test = TRUE)
+golem::add_module(name = "international_top10_mint_gender", with_test = TRUE)
 
 
 ### Home
