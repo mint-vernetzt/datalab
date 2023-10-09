@@ -1502,7 +1502,6 @@ arbeitsmarkt_bl <- function(df,r) {
   #
   # }
 
-
   highcharter::hw_grid(
     # plot
     highcharter::hcmap(

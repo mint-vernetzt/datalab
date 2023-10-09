@@ -934,6 +934,9 @@ iqb <- rbind(iqb_standard, iqb_score_ges, iqb_fragen)
 ## Alle ----
 
 file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+# akro <- "kbr"
+# file_path <- paste0("C:/Users/", akro,
+#                     "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 
 # dat_pisa_g <- read_xls(paste0(file_path, "/", "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
@@ -1099,8 +1102,8 @@ pisa1 <- pisa_list_output2 %>%
   filter(ordnung == "Ländermittel")%>%
   rename(geschlecht = indikator, indikator = ordnung)%>%
   mutate(geschlecht = case_when(geschlecht=="All students" ~ "Insgesamt",
-                                geschlecht=="Female" ~ "Weiblich",
-                                geschlecht=="Male" ~ "Männlich"))%>%
+                                geschlecht=="Female" ~ "Mädchen",
+                                geschlecht=="Male" ~ "Jungen"))%>%
   mutate(ausprägung = geschlecht)
 
 pisa1d <- pisa1 %>%
@@ -1141,8 +1144,8 @@ pisa <- bind_rows(pisa1, pisa2)%>%
   mutate(typ = "Durchschnitt")
 
 
-
-usethis::use_data(pisa, overwrite = T)
+schule_pisa <- pisa
+usethis::use_data(schule_pisa, overwrite = T)
 
 
 # TIMSS ----
@@ -1154,6 +1157,9 @@ usethis::use_data(pisa, overwrite = T)
 
 ### Gender ----
 file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+# akro <- "kbr"
+# file_path <- paste0("C:/Users/", akro,
+#                     "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 
 # funktion
@@ -1327,7 +1333,10 @@ timss_achievement <- bind_rows(j,h)
 
 timss_res_extract <- function(dat3, jahr, fach){
 
-  file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+  #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+  akro <- "kbr"
+  file_path <- paste0("C:/Users/", akro,
+                      "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 
   dat2 <- read_excel(paste0(file_path, "/", dat3))
@@ -1435,7 +1444,10 @@ timss_res_dat <- bind_rows(o,p)
 # funktion
 
 timss_benchmarks_extract <- function(dat7){
-  file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+  #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+  akro <- "kbr"
+  file_path <- paste0("C:/Users/", akro,
+                      "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 
   dat8 <- read_excel(paste0(file_path, "/", dat7))
@@ -1556,7 +1568,12 @@ timss <- bind_rows(
   timss_gender %>% mutate(across(wert,~ as.numeric(.)))
 )
 
-usethis::use_data(timss, overwrite=T)
+# finale Anpassungen
+schule_timss <- timss
+colnames(schule_timss)[12] <- "geschlecht_diff"
+schule_timss$geschlecht_diff <- ifelse(is.na(schule_timss$geschlecht_diff), "Nein", schule_timss$geschlecht_diff)
+
+usethis::use_data(schule_timss, overwrite=T)
 
 
 
