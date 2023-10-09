@@ -3159,9 +3159,18 @@ studienzahl_waffle_choice_gender <- function(df,r) {
     dplyr::select(-Alle,-`MINT (Gesamt)`)
 
 
-
-
-
+  # Überschriften vorbereiten
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (1.Fachsemester)", "Studienanfänger:innen <br> (1. Fachsemester)", lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (1.Hochschulsemester)", "Studienanfänger:innen <br> (1. Hochschulsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)", "Studienanfänger:innen <br> (Fachhochschule, 1. Fachsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Fachhochschule, 1. Hochschulsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)", "Studienanfänger:innen <br> (Lehramt, Universität, 1. Fachsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Lehramt, Universität, 1. Hochschulsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Universität, 1.Fachsemester)", "Studienanfänger:innen <br> (Universität, 1. Fachsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Universität, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Universität, 1. Hochschulsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studierende (Fachhochschulen)", "Studierende <br> (Fachhochschulen)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studierende (Lehramt, Universität)", "Studierende <br> (Lehramt, Universität)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studierende (Universität)", "Studierende <br> (Universität)" , lab_cho)
 
 
   data_fr <- df_both %>%
