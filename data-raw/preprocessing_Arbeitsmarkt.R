@@ -1272,7 +1272,7 @@ dat_aanf <- raw %>%
   slice(which(if_any(everything(),~.=="Region")):which(if_any(everything(),~str_detect(., "Erstellungsdatum")))-1)
 
 
-  index_fach <- which(str_detect(dat_aanf[,everything(dat_aanf)],"Tätigkeitsfelder|MINT-Berufe|Informatik|Landtechnik"))
+index_fach <- which(str_detect(dat_aanf[,everything(dat_aanf)],"Tätigkeitsfelder|MINT-Berufe|Informatik|Landtechnik"))
 
 
 dat_aanf2 <- dat_aanf %>%
@@ -1314,6 +1314,28 @@ dat_aanf3 <- dat_aanf2 %>%
   rename(landkreis = kab)
 
 
+
+bundesl <-c( "Deutschland",
+             "Westdeutschland",
+             "Ostdeutschland",
+             "Schleswig-Holstein",
+             "Hamburg",
+             "Niedersachsen",
+             "Bremen",
+             "Nordrhein-Westfalen",
+             "Hessen",
+             "Rheinland-Pfalz",
+             "Baden-Württemberg",
+             "Saarland",
+             "Berlin",
+             "Brandenburg",
+             "Mecklenburg-Vorpommern",
+             "Sachsen",
+             "Sachsen-Anhalt",
+             "Sachsen-Anhalt",
+             "Thüringen")
+
+
 dat_aanf4 <- dat_aanf3 %>%
   mutate(landkreis_zusatz=case_when(is.na(landkreis_zusatz)&!is.na(bundesland)~bundesland,
                                     T~landkreis_zusatz))%>%
@@ -1324,68 +1346,32 @@ dat_aanf4 <- dat_aanf3 %>%
   mutate(across(c(insgesamt, männer, frauen),~as.numeric(.)))%>%
   mutate(across(where(is.character),~str_trim(.)))%>%
   mutate(landkreis=case_when(landkreis=="Oldenburg"~"Landkreis Oldenburg",
-         T~.$landkreis))
+                             T~.$landkreis))%>%
+  mutate(landkreis_zusatz=case_when(
+    landkreis %in% bundesl ~ NA,
+    T~ landkreis_zusatz))%>%
+  mutate(landkreis_nummer=case_when(
+    landkreis %in% bundesl ~ NA,
+    T~ landkreis_nummer))
+
+
 
 dat_aanf5 <- dat_aanf4%>%
   mutate(indikator="Auszubildende (1. Jahr)",
          kategorie= "Auszubildende",
-         bereich="Arbeitsmarkt")
+         bereich="Arbeitsmarkt",
+         anforderung = "Gesamt",
+         jahr = "2022")%>%
+  rename(Gesamt = insgesamt,
+         Männer = männer,
+         Frauen = frauen)%>%
+  pivot_longer(c(Gesamt, Männer, Frauen), names_to = "geschlecht", values_to = "wert")
 
 
 
+dat_aanf6 <- dat_aanf5 %>%
 
-# firstc <-str_split_fixed(dat_aanf2$region,",",3)%>%
-#   data.frame()%>%
-#   mutate(code = str_extract_all(.$X1, "[0-9]*"))
-#
-#
-# secondc <- as.numeric(gsub("\\D", "", firstc$x2))
-#
-# dat_aanf2$region <- na.locf(dat_aanf2$region)
-#
-#
-# dat_aanf3 <- dat_aanf2 %>% tidyr::separate(region, into = c("code", "region"),
-#                                          sep = "(?<=[0-9])(?=\\s?[A-Z])", remove = FALSE)
-#
-# dat_aanf3$region <- ifelse(grepl("[A-Za-z]", dat_aanf3$code), dat_aanf3$code, dat_aanf3$region)
-# dat_aanf3$code <- ifelse(grepl("[A-Za-z]", dat_aanf3$code), NA, dat_aanf3$code)
-#
-#
-# dat_aanf4 <- dat_aanf3 %>%
-#   mutate(bundesland=case_when(region == "Deutschland" ~ "Deutschland",
-#                               region == "Westdeutschland" ~ "Westdeutschland",
-#                               region == "Ostdeutschland" ~ "Ostdeutschland",
-#                               region == "Schleswig-Holstein" ~  "Schleswig-Holstein",
-#                               region == "Hamburg" ~ "Hamburg",
-#                               region == "Niedersachsen" ~ "Niedersachsen",
-#                               region ==  "Bremen" ~  "Bremen",
-#                               region == "Nordrhein-Westfalen" ~ "Nordrhein-Westfalen",
-#                               region ==  "Hessen" ~  "Hessen",
-#                               region == "Rheinland-Pfalz" ~ "Rheinland-Pfalz",
-#                               region == "Baden-Württemberg" ~ "Baden-Württemberg",
-#                               region == "Saarland" ~ "Saarland",
-#                               region == "Berlin" ~ "Berlin",
-#                               region == "Brandenburg" ~ "Brandenburg",
-#                               region == "Mecklenburg-Vorpommern" ~ "Mecklenburg-Vorpommern",
-#                               region == "Sachsen" ~ "Sachsen",
-#                               region == "Sachsen-Anhalt" ~ "Sachsen-Anhalt",
-#                               region == "Sachsen-Anhalt" ~ "Sachsen-Anhalt",
-#                               region == "Thüringen" ~ "Thüringen" ))
-
-
-
-
-#dat_aanf4$landkreis <- na.locf(dat_aanf4$landkreis)
-
-
-dat_aan5 <- dat_aanf4 %>%
-  rename(landkreis_nummer = code)
-
-
-dat_aanf5 <- dat_aanf4 %>%
-  bind_cols(str_split_fixed(dat_aanf4$region,",",2))%>%
-  rename(landkreis_zusatz = ncol(.))
-
+  filter(bundesland %in% bundesl)
 
 
 
