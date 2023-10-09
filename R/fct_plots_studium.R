@@ -1619,7 +1619,7 @@ data_einstieg <- function(df,r) {
 
 studienzahl_waffle_mint <- function(df,r) {
 
-
+browser()
   # load UI inputs from reactive value
   timerange <- r$waffle_y
 
@@ -1631,7 +1631,7 @@ studienzahl_waffle_mint <- function(df,r) {
 
 
 
-  df2 <- df %>% dplyr::filter(jahr == timerange) %>%
+  df2 <<- df %>% dplyr::filter(jahr == timerange) %>%
     dplyr::filter(region== "Deutschland")%>%
     dplyr::filter(geschlecht== "Gesamt")%>%
     dplyr::select(-region, -geschlecht, - jahr)%>%
@@ -1659,13 +1659,13 @@ studienzahl_waffle_mint <- function(df,r) {
 
   if(length(label_w)==1){
 
-    waf_1 <- df2 %>%
+    waf_1 <<- df2 %>%
       dplyr::filter(indikator==label_w)
 
     label_w <- überschrift_label(label_w)
     title_1 <- as.character(label_w)
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <- round(data_1 * 100,1)
+    data_1 <- round(data_1 * 100,0)
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     data_k <- data_1
@@ -1710,14 +1710,14 @@ studienzahl_waffle_mint <- function(df,r) {
     waf_1[1,1] <- überschrift_label(waf_1[1,1])
     title_1 <- as.character(as.vector(waf_1[1,1]))
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <- round(data_1 * 100,1)
+    data_1 <- round(data_1 * 100,0)
 
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     waf_2[1,1] <- überschrift_label(waf_2[1,1])
     title_2 <- as.character(as.vector(waf_2[1,1]))
     data_2 <- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
-    data_2 <- round(data_2 * 100,1)
+    data_2 <- round(data_2 * 100,0)
 
     names(data_2) <- colnames(waf_2[2:ncol(waf_2)])
 
@@ -1786,19 +1786,19 @@ studienzahl_waffle_mint <- function(df,r) {
     waf_1[1,1] <- überschrift_label(waf_1[1,1])
     title_1 <- as.character(as.vector(waf_1[1,1]))
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <- round(data_1 * 100,1)
+    data_1 <- round(data_1 * 100,0)
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     waf_2[1,1] <- überschrift_label(waf_2[1,1])
     title_2 <- as.character(as.vector(waf_2[1,1]))
     data_2 <- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
-    data_2 <- round(data_2 * 100,1)
+    data_2 <- round(data_2 * 100,0)
     names(data_2) <- colnames(waf_2[2:ncol(waf_2)])
 
     waf_3[1,1] <- überschrift_label(waf_3[1,1])
     title_3 <- as.character(as.vector(waf_3[1,1]))
     data_3 <- as.numeric(as.vector(waf_3[1,2:ncol(waf_3)]))
-    data_3 <- round(data_3 * 100,1)
+    data_3 <- round(data_3 * 100,0)
     names(data_3) <- colnames(waf_3[2:ncol(waf_3)])
 
 

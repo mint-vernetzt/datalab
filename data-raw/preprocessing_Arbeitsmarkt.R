@@ -1244,6 +1244,131 @@ data_naa <- rbind(data_naa_17, data_naa_20, data_naa_22)
 
 usethis::use_data(data_naa, overwrite = T)
 
+
+
+# Azubis unter 1 Jahr BA019_230823_EA_SvB_Azub_MINT.xlsx -----
+# kab, Okt 23
+
+library(dplyr)
+library(readxl)
+library(magrittr)
+library(stringr)
+library(tidyr)
+library(zoo)
+
+
+
+file_path <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten"
+
+raw <- readxl::read_excel(paste0(file_path, "/", "BA019_230823_EA_SvB_Azub_MINT.xlsx"), sheet = "Auswertung")
+
+dat_aanf <- raw %>%
+  slice(which(if_any(everything(),~.=="Region")):which(if_any(everything(),~str_detect(., "Erstellungsdatum")))-1)
+
+
+  index_fach <- which(str_detect(dat_aanf[,everything(dat_aanf)],"Tätigkeitsfelder|MINT-Berufe|Informatik|Landtechnik"))
+
+
+dat_aanf2 <- dat_aanf %>%
+  unite("fachbereich", index_fach)%>%
+  rename(region = 1, insgesamt = 4, männer = 5, frauen = 6)%>%
+  select(region, fachbereich , insgesamt , männer , frauen )%>%
+  slice(which(if_any(everything(),~.=="Deutschland")):nrow(.))%>%
+  mutate(across(fachbereich, ~ str_remove_all(.,"_NA|NA_")))%>%
+  mutate(bundesland=case_when(region == "Deutschland" ~ "Deutschland",
+                              region == "Westdeutschland" ~ "Westdeutschland",
+                              region == "Ostdeutschland" ~ "Ostdeutschland",
+                              region == "Schleswig-Holstein" ~  "Schleswig-Holstein",
+                              region == "Hamburg" ~ "Hamburg",
+                              region == "Niedersachsen" ~ "Niedersachsen",
+                              region ==  "Bremen" ~  "Bremen",
+                              region == "Nordrhein-Westfalen" ~ "Nordrhein-Westfalen",
+                              region ==  "Hessen" ~  "Hessen",
+                              region == "Rheinland-Pfalz" ~ "Rheinland-Pfalz",
+                              region == "Baden-Württemberg" ~ "Baden-Württemberg",
+                              region == "Saarland" ~ "Saarland",
+                              region == "Berlin" ~ "Berlin",
+                              region == "Brandenburg" ~ "Brandenburg",
+                              region == "Mecklenburg-Vorpommern" ~ "Mecklenburg-Vorpommern",
+                              region == "Sachsen" ~ "Sachsen",
+                              region == "Sachsen-Anhalt" ~ "Sachsen-Anhalt",
+                              region == "Sachsen-Anhalt" ~ "Sachsen-Anhalt",
+                              region == "Thüringen" ~ "Thüringen" ))
+
+
+dat_aanf3 <- dat_aanf2 %>%
+  mutate(landkreis = region)%>%
+  separate(region, into = c("landkreis_nummer", "region"),
+           sep = "(?<=[0-9])(?=\\s?[A-Z])", remove = FALSE)%>%
+  mutate(across(landkreis_nummer, ~ str_remove_all(.,"[A-Za-z]")))%>%
+  separate(region, c("kab", "bak"), sep =",")%>%
+  mutate(landkreis_zusatz=case_when(is.na(.$bak)&!is.na(.$kab)~paste0(kab,",",landkreis_nummer),
+                                    T~bak))%>%
+  select(-bak,-landkreis)%>%
+  rename(landkreis = kab)
+
+
+
+
+firstc <-str_split_fixed(dat_aanf2$region,",",3)%>%
+  data.frame()%>%
+  mutate(code = str_extract_all(.$X1, "[0-9]*"))
+
+
+secondc <- as.numeric(gsub("\\D", "", firstc$x2))
+
+dat_aanf2$region <- na.locf(dat_aanf2$region)
+
+
+dat_aanf3 <- dat_aanf2 %>% tidyr::separate(region, into = c("code", "region"),
+                                         sep = "(?<=[0-9])(?=\\s?[A-Z])", remove = FALSE)
+
+dat_aanf3$region <- ifelse(grepl("[A-Za-z]", dat_aanf3$code), dat_aanf3$code, dat_aanf3$region)
+dat_aanf3$code <- ifelse(grepl("[A-Za-z]", dat_aanf3$code), NA, dat_aanf3$code)
+
+
+dat_aanf4 <- dat_aanf3 %>%
+  mutate(bundesland=case_when(region == "Deutschland" ~ "Deutschland",
+                              region == "Westdeutschland" ~ "Westdeutschland",
+                              region == "Ostdeutschland" ~ "Ostdeutschland",
+                              region == "Schleswig-Holstein" ~  "Schleswig-Holstein",
+                              region == "Hamburg" ~ "Hamburg",
+                              region == "Niedersachsen" ~ "Niedersachsen",
+                              region ==  "Bremen" ~  "Bremen",
+                              region == "Nordrhein-Westfalen" ~ "Nordrhein-Westfalen",
+                              region ==  "Hessen" ~  "Hessen",
+                              region == "Rheinland-Pfalz" ~ "Rheinland-Pfalz",
+                              region == "Baden-Württemberg" ~ "Baden-Württemberg",
+                              region == "Saarland" ~ "Saarland",
+                              region == "Berlin" ~ "Berlin",
+                              region == "Brandenburg" ~ "Brandenburg",
+                              region == "Mecklenburg-Vorpommern" ~ "Mecklenburg-Vorpommern",
+                              region == "Sachsen" ~ "Sachsen",
+                              region == "Sachsen-Anhalt" ~ "Sachsen-Anhalt",
+                              region == "Sachsen-Anhalt" ~ "Sachsen-Anhalt",
+                              region == "Thüringen" ~ "Thüringen" ))
+
+dat_aanf4$bundesland <- na.locf(dat_aanf4$bundesland)
+dat_aanf4$bundesland <- na.locf(dat_aanf4$bundesland)
+
+
+#dat_aanf4$landkreis <- na.locf(dat_aanf4$landkreis)
+
+
+dat_aan5 <- dat_aanf4 %>%
+  rename(landkreis_nummer = code)
+
+
+dat_aanf5 <- dat_aanf4 %>%
+  bind_cols(str_split_fixed(dat_aanf4$region,",",2))%>%
+  rename(landkreis_zusatz = ncol(.))
+
+
+
+
+
+
+
 ################################################################################
 #
 # Data Lab
