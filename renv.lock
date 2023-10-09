@@ -1111,6 +1111,18 @@
       ],
       "Hash": "03533b1c875028233598f848fda44c4c"
     },
+    "git2r": {
+      "Package": "git2r",
+      "Version": "0.32.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "graphics",
+        "utils"
+      ],
+      "Hash": "1882d7a76fd8c14b2322865f74c9a348"
+    },
     "gitcreds": {
       "Package": "gitcreds",
       "Version": "0.1.2",
@@ -1571,6 +1583,16 @@
         "utils"
       ],
       "Hash": "73ed88b282d27d4cf3d89b744aa21217"
+    },
+    "logger": {
+      "Package": "logger",
+      "Version": "0.2.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "utils"
+      ],
+      "Hash": "c269b06beb2bbadb0d058c0e6fa4ec3d"
     },
     "lubridate": {
       "Package": "lubridate",
@@ -2532,6 +2554,18 @@
         "xtable"
       ],
       "Hash": "438b99792adbe82a8329ad8697d45afe"
+    },
+    "shiny.info": {
+      "Package": "shiny.info",
+      "Version": "0.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "git2r",
+        "glue",
+        "shiny"
+      ],
+      "Hash": "4e4c89eee16316032d34a3a821fdea69"
     },
     "shinyBS": {
       "Package": "shinyBS",
