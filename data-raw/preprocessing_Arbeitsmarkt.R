@@ -12,9 +12,10 @@
 # pfad <- paste0("C:/Users/", akro,
 #                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
+library(magrittr)
 
 # paf kbr
-pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+# pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 # pfad kab
 pfad <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
@@ -25,7 +26,7 @@ pfad <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmateria
 # Alternative:
 # data_z <- readxl::read_excel(system.file(package="datalab", "data-raw/Arbeitsmarkt.xlsx"), col_names = T)
 
-data_z <- readxl::read_excel("data-raw/raw/Arbeitsmarkt.xlsx", col_names = T)
+data_z <- readxl::read_excel("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw/Arbeitsmarkt.xlsx", col_names = T)
 
 # Alternative:
 # data <- readxl::read_excel(system.file(package="datalab",
@@ -774,7 +775,7 @@ data_a$schluesselnummer <- ifelse(data_a$schluesselnummer == data_a$region, NA, 
 data_a <- data_a %>%
   tidyr::pivot_longer(cols = "gesamt":"frauen")
 
-# Azubis unter 1 Jahr BA019_230823_EA_SvB_Azub_MINT.xlsx -----
+## Azubis unter 1 Jahr BA019_230823_EA_SvB_Azub_MINT.xlsx -----
 # kab, Okt 23
 
 library(dplyr)
@@ -821,7 +822,8 @@ dat_aanf2 <- dat_aanf %>%
                               region == "Sachsen" ~ "Sachsen",
                               region == "Sachsen-Anhalt" ~ "Sachsen-Anhalt",
                               region == "Sachsen-Anhalt" ~ "Sachsen-Anhalt",
-                              region == "Thüringen" ~ "Thüringen" ))
+                              region == "Thüringen" ~ "Thüringen",
+                              region == "Bayern" ~ "Bayern"))
 
 
 dat_aanf3 <- dat_aanf2 %>%
@@ -857,7 +859,8 @@ bundesl <-c( "Deutschland",
              "Sachsen",
              "Sachsen-Anhalt",
              "Sachsen-Anhalt",
-             "Thüringen")
+             "Thüringen",
+             "Bayern")
 
 
 dat_aanf4 <- dat_aanf3 %>%
@@ -872,13 +875,22 @@ dat_aanf4 <- dat_aanf3 %>%
   mutate(landkreis=case_when(landkreis=="Oldenburg"~"Landkreis Oldenburg",
                              landkreis=="Oldenburg (Oldenburg)" ~ "Stadt Oldenburg",
                              T~.$landkreis))%>%
-  mutate(across(landkreis_nummer,~ as.numeric(.)))%>%
+  mutate(across(landkreis_nummer,~ str_remove_all(., "[[:punct:]]")))%>%
+  mutate(across(landkreis_nummer,~ str_trim(.)))%>%
+  mutate(across(landkreis_nummer,~ trimws(.)))%>%
+  mutate(across(landkreis_nummer,~ case_when(landkreis_nummer=="" ~ NA_character_,
+                                                T~landkreis_nummer)))%>%
   mutate(landkreis_zusatz=case_when(
     landkreis %in% bundesl & is.na(landkreis_nummer) ~ NA,
     T~ landkreis_zusatz))%>%
   mutate(landkreis_nummer=case_when(
     landkreis %in% bundesl & is.na(landkreis_nummer) ~ NA,
-    T~ landkreis_nummer))
+    T~ landkreis_nummer))%>%
+  mutate(landkreis_nummer=case_when(landkreis_nummer=="ü"~NA_character_,
+                                    T ~landkreis_nummer))%>%
+  mutate(landkreis_zusatz= case_when(landkreis == "Baden-Württemberg"~ NA_character_,
+                                     landkreis == "Thüringen"~ NA_character_,
+                                     T~landkreis_zusatz))
 
 
 
@@ -896,7 +908,7 @@ dat_aanf5 <- dat_aanf4%>%
 
 
 dat_aanf6 <- dat_aanf5 %>%
-  filter(landkreis%in% bundesl & is.na(landkreis_nummer))%>%
+  filter(landkreis%in% bundesl & is.na(landkreis_zusatz))%>%
   mutate(landkreis_zusatz=case_when(
     landkreis %in% bundesl ~ NA,
     T~ landkreis_zusatz))%>%
@@ -905,7 +917,7 @@ dat_aanf6 <- dat_aanf5 %>%
     T~ landkreis_nummer))%>%
   select(-anforderung, -indikator,-bereich,-kategorie,-bundesland)%>%
   pivot_wider(names_from = landkreis, values_from = wert)%>%
-  select(-Ostdeutschland, -Westdeutschland)%>%
+  mutate(across(bundesl, ~ as.numeric(.)))%>%
   mutate("Westdeutschland (o. Berlin)" = rowSums(select(., "Schleswig-Holstein",
                                                         "Hamburg",
                                                         "Niedersachsen",
@@ -922,6 +934,7 @@ dat_aanf6 <- dat_aanf5 %>%
                                                              "Sachsen-Anhalt",
                                                              "Sachsen-Anhalt",
                                                              "Thüringen")))%>%
+  select(-Ostdeutschland,- Westdeutschland)%>%
   pivot_longer(-c(`landkreis_nummer`, `geschlecht`, `fachbereich`,
                   `landkreis_zusatz`, `jahr` ), names_to = "landkreis", values_to = "wert" )%>%
   filter(landkreis %in% c( "Westdeutschland (o. Berlin)", "Ostdeutschland (einschl. Berlin)"))
@@ -1103,7 +1116,7 @@ arbeitsmarkt_detail_final$wert <- as.numeric(arbeitsmarkt_detail_final$wert)
 arbeitsmarkt_detail <- arbeitsmarkt_detail_final
 usethis::use_data(arbeitsmarkt_detail, overwrite = T)
 
-data_a
+
 # Erstellt "data_naa" -----------------------------------------------------
 
 ## Datensatz für Top Berufe
@@ -1599,9 +1612,8 @@ iscedf13_transform_kurz <- function(dat) {
 
 ### Rohdaten einlesen -------------------------------------------------------
 
-akro <- "kbr"
-data <- read.csv(paste0("C:/Users/", akro,
-                        "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD001_employment_per_field.csv"),
+# akro <- "kbr"
+data <- read.csv(paste0(pfad, "OECD001_employment_per_field.csv"),
                  header = TRUE, sep = ",", dec = ".")
 
 
@@ -1706,9 +1718,8 @@ usethis::use_data(arbeitsmarkt_fachkräfte_oecd, overwrite = T)
 ## OECD 2 - Anzahl Absolvent*innen ------------------------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                        "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD002_Anzahl_Absolv_nach_Feld_OECD.csv"),
+# akro <- "kbr"
+dat <- read.csv(paste0(pfad,"OECD002_Anzahl_Absolv_nach_Feld_OECD.csv"),
                  header = TRUE, sep = ",", dec = ".")
 
 ### Datensatz in passende Form bringen --------------------------------------
@@ -1807,9 +1818,8 @@ usethis::use_data(arbeitsmarkt_absolvent_oecd, overwrite = T)
 ## OECD 3 - Anteil Feld /Frauen von Absolvent*innen--------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD003_Anteil_Absol_nach_Feld_an_allen_Feldern_OECD.csv"),
+# akro <- "kbr"
+dat <- read.csv(paste0(pfad,"OECD003_Anteil_Absol_nach_Feld_an_allen_Feldern_OECD.csv"),
                 header = TRUE, sep = ",", dec = ".")
 
 ### Datensatz in passende Form bringen --------------------------------------
@@ -2002,9 +2012,8 @@ usethis::use_data(arbeitsmarkt_anfänger_absolv_oecd, overwrite = T)
 ## OECD 5 - Anzahl Azubis / Studis nach Feld & Gender------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
+# akro <- "kbr"
+dat <- read.csv(paste0(pfad,"OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
                 header = TRUE, sep = ",", dec = ".")
 
 
@@ -2175,9 +2184,8 @@ usethis::use_data(arbeitsmarkt_anzahl_azubis_oecd, overwrite = T)
 ## EUROSTAT1 - Anzahl Ingenieure & Wissenschaftler---------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/EUROSTAT002_custom_Labor_Tech_and_Scie.csv.gz"),
+# akro <- "kbr"
+dat <- read.csv(paste0(pfad, "EUROSTAT002_custom_Labor_Tech_and_Scie.csv.gz"),
                 header = TRUE, sep = ",", dec = ".")
 
 ### Datensatz in passende Form bringen --------------------------------------
@@ -2257,9 +2265,9 @@ library(dplyr)
 ### BULA Vergleich ####
 
 #### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-pfad <- paste0("C:/Users/", akro,
-               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+# akro <- "kbr"
+# pfad <- paste0("C:/Users/", akro,
+#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 epa_einlesen <- function(name, sheet_s){
   df <- readxl::read_excel(paste0(pfad, name),
@@ -2378,9 +2386,9 @@ usethis::use_data(epa, overwrite = T)
 
 
 #### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-pfad <- paste0("C:/Users/", akro,
-               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+# akro <- "kbr"
+# pfad <- paste0("C:/Users/", akro,
+#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 epa_einlesen <- function(name, sheet_s){
   df <- readxl::read_excel(paste0(pfad, name),
@@ -3235,9 +3243,9 @@ usethis::use_data(arbeitsmarkt_epa_detail, overwrite = T)
 
 ## Arbeitslosten-Stellen-Relation + Vakanzzeit -----------------------------
 
-akro <- "kbr"
-pfad <- paste0("C:/Users/", akro,
-               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+# akro <- "kbr"
+# pfad <- paste0("C:/Users/", akro,
+#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 ## Daten einlesen
 sheets <- c("Deutschland", "01 Schleswig-Holstein", "02 Hamburg", "03 Niedersachsen",
