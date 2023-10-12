@@ -89,6 +89,7 @@ golem::add_module(name = "international_map", with_test = TRUE)
 golem::add_module(name = "international_top10_mint", with_test = TRUE)
 golem::add_module(name = "international_top10_mint_gender", with_test = TRUE)
 
+golem::add_module(name = "international_schule_map", with_test = TRUE)
 
 ### Home
 golem::add_module(name = "home_start", with_test = TRUE) # Name of the module
