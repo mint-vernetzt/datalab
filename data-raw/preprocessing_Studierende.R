@@ -762,11 +762,19 @@ Mathematik und Statistik",
     anforderung ==  "ED8" ~ "Promotion (ISCED 8)",
     anforderung == "ED5-8" ~ "Tertiäre Bildung (gesamt)",
     T ~ anforderung
-  ))
+  ))%>%
+  mutate(kommentar=case_when(kommentar == "b" ~ "break in time series",
+                             kommentar == "e" ~ "estimated",
+                             kommentar == "d" ~ "definition differs (see metadata)",
+                             kommentar == "z" ~ "not applicable",
+                             T ~ kommentar))%>%
+  mutate(bereich = "hochschule",
+         indikator = "Ausländische mobile Studierende")
 
 
+ausländisch_mobil <- dat_eust1
 
-
+usethis::use_data(ausländisch_mobil, overwrite = T)
 
 
 ## UNESCO001_anteil_MINT_absolv_weltweit ----
