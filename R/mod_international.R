@@ -8,6 +8,9 @@
 #'
 #' @importFrom shiny NS tagList
 mod_international_ui <- function(id){
+
+  logger::log_debug("start mod_international_ui")
+
   ns <- NS(id)
 
   tagList(
@@ -39,7 +42,12 @@ mod_international_server <- function(id,
   mod_international_map_server("mod_international_map_ui_1", r)
   mod_international_top10_mint_server("international_top10_mint_1", r)
   mod_international_top10_mint_gender_server("international_top10_mint_gender_1", r)
-  
+
+  # Box 2
+  mod_international_schule_map_server("international_schule_map_1", r)
+  mod_international_schule_item_server("international_schule_item_1", r)
+  mod_international_schule_migration_server("international_schule_migration_1", r)
+
 
   logger::log_debug("Seiten-Module INTERNATIONAL done")
 }

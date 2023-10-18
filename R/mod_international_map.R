@@ -9,11 +9,13 @@
 #' @importFrom shiny NS tagList
 mod_international_map_ui <- function(id) {
 
+  logger::log_debug("start mod_international_map_ui")
+
   ns <- NS(id)
   tagList(
     p("Region:"),
     shinyWidgets::pickerInput(
-      inputId = ns("map_l"),
+      inputId = ns("map_l_int_studium"),
       choices = c("EU", "OECD", "Weltweit"),
       selected = "EU",
       multiple = FALSE#,
@@ -24,7 +26,7 @@ mod_international_map_ui <- function(id) {
 
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
 
-    conditionalPanel(condition = "input.map_l == 'EU'",
+    conditionalPanel(condition = "input.map_l_int_studium == 'EU'",
                      ns = ns,
                      p("Jahr:"),
                      shinyWidgets::sliderTextInput(
@@ -44,7 +46,7 @@ mod_international_map_ui <- function(id) {
                        #   "max-options" = 2,
                        #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
                      )),
-    conditionalPanel(condition = "input.map_l == 'OECD' ",
+    conditionalPanel(condition = "input.map_l_int_studium == 'OECD' ",
                      ns = ns,
                      p("Jahr:"),
                      shinyWidgets::sliderTextInput(
@@ -89,39 +91,42 @@ mod_international_map_ui <- function(id) {
 #'
 #' @noRd
 mod_international_map_server <- function(id, r){
+
+  logger::log_debug("start mod_international_map_server")
+
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
     # region change updates respective sub inputs, which will otherwise
     # still be the last values.
-    observeEvent(input$map_l, {
-      r$map_l <- input$map_l
-      if (input$map_l == "EU") {
-        r$map_y <- input$map_y_eu
-        r$map_f <- input$map_f_eu
+    observeEvent(input$map_l_int_studium, {
+      r$map_l_int_studium <- input$map_l_int_studium
+      if (input$map_l_int_studium == "EU") {
+        r$map_y_int_studium <- input$map_y_eu
+        r$map_f_int_studium <- input$map_f_eu
       }
-      if (input$map_l == "OECD") {
-        r$map_y <- input$map_y_oecd
-        r$map_f <- input$map_f_oecd
+      if (input$map_l_int_studium == "OECD") {
+        r$map_y_int_studium <- input$map_y_oecd
+        r$map_f_int_studium <- input$map_f_oecd
       }
     })
 
     observeEvent(input$map_y_oecd, {
-      r$map_y <- input$map_y_oecd
+      r$map_y_int_studium <- input$map_y_oecd
     })
 
     observeEvent(input$map_f_oecd, {
-      r$map_f <- input$map_f_oecd
+      r$map_f_int_studium <- input$map_f_oecd
     })
 
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
     observeEvent(input$map_y_eu, {
-      r$map_y <- input$map_y_eu
+      r$map_y_int_studium <- input$map_y_eu
     })
 
     observeEvent(input$map_f_eu, {
-      r$map_f <- input$map_f_eu
+      r$map_f_int_studium <- input$map_f_eu
     })
 
 

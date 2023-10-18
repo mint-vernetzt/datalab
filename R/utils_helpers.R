@@ -290,17 +290,17 @@ international_ui_faecher <- function(region = "EU") {
   # }
   selection <- NULL
   if (region == "OECD") {
-    load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
+    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
     selection <- studierende_anzahl_oecd %>%
-      dplyr::filter(geschlecht == "Gesamt" & 
+      dplyr::filter(geschlecht == "Gesamt" &
                       fachbereich != "Alle") %>%
       dplyr::pull(fachbereich) %>%
       unique()
   }
 
   if (region == "EU") {
-    load(file = system.file(package="datalab","data/studierende_europa.rda"))
+    #load(file = system.file(package="datalab","data/studierende_europa.rda"))
 
     selection <- studierende_europa %>%
       dplyr::filter(geschlecht == "Gesamt"  &
@@ -321,8 +321,10 @@ international_ui_years <- function(region = "EU") {
 
   logger::log_debug("set internatial ui selection for years")
   selection <- NULL
+
+  # for studium international
   if (region == "OECD") {
-    load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
+    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
     selection <- studierende_anzahl_oecd %>%
       dplyr::filter(geschlecht == "Gesamt") %>%
@@ -332,12 +334,39 @@ international_ui_years <- function(region = "EU") {
   }
 
   if (region == "EU") {
-    load(file = system.file(package="datalab","data/studierende_europa.rda"))
+    #load(file = system.file(package="datalab","data/studierende_europa.rda"))
 
     selection <- studierende_europa %>%
       dplyr::filter(geschlecht == "Gesamt"  &
                       mint_select == "mint" &
                       indikator == "Fächerwahl") %>%
+      dplyr::pull(jahr) %>%
+      unique() %>%
+      sort()
+  }
+
+  # for schule international
+  if (region == "TIMSS") {
+    #load(file = system.file(package="datalab","data/schule_timss.rda"))
+
+    selection <- schule_timss %>%
+      dplyr::filter(ordnung %in% c("Achievement",
+                                 "Benchmarks") &
+                      indikator %in% c("Mittlerer int'l. Maßstab (475)",
+                                     "Insgesamt")
+                    ) %>%
+      dplyr::pull(jahr) %>%
+      unique() %>%
+      sort()
+  }
+
+  if (region == "PISA") {
+    #load(file = system.file(package="datalab","data/schule_pisa.rda"))
+
+    selection <- schule_pisa %>%
+      dplyr::filter(bereich == "Ländermittel" &
+                       indikator == "Insgesamt" &
+                      !is.na(wert)) %>%
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
