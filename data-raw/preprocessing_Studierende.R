@@ -465,13 +465,13 @@ usethis::use_data(studierende_detailliert, overwrite = T)
 # Studierende Int'l. ----
 
 ## EUROSTAT - Tertiatry Education Data (Anteil Studi nach Fach nach Gender) ----
-akro <- "kbr"
-file_path <- paste0("C:/Users/", akro,
-               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+# akro <- "kbr"
+# file_path <- paste0("C:/Users/", akro,
+#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 pfad <- path_kek
-file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+# file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
-dat <- readr::read_csv(paste0(file_path, "/", "EUROSTAT001_custom_Studi_Fach_Gender_original.csv.gz"))
+dat <- readr::read_csv(paste0(pfad, "EUROSTAT001_custom_Studi_Fach_Gender_original.csv.gz"))
 
 dat1 <- dat %>%
   dplyr::select("iscedf13", "sex", "geo",
@@ -786,7 +786,7 @@ file_path <- paste0("C:/Users/", akro,
 
 file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 pfad <- path_kek
-dat_unc <- readr::read_csv(paste0(file_path, "/", "UNESCO001_anteil_MINT_absolv_weltweit.csv"))
+dat_unc <- readr::read_csv(paste0(pfad, "UNESCO001_anteil_MINT_absolv_weltweit.csv"))
 
 dat_unc_1<- dat_unc %>%
   dplyr::select(Indicator, Value, Country, Time)%>%
@@ -816,7 +816,7 @@ usethis::use_data(studierende_absolventen_weltweit, overwrite = T)
 
 file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
-dat_oecd <- readr::read_csv(paste0(file_path, "/", "OECD006_Anteil_intern_Studis_in_Fach_2.csv"))
+dat_oecd <- readr::read_csv(paste0(pfad, "OECD006_Anteil_intern_Studis_in_Fach_2.csv"))
 
 
 dat_oecd1 <- dat_oecd %>%
@@ -952,8 +952,8 @@ usethis::use_data(studierende_intern_oecd, overwrite = T)
 
 ### Rohdaten einlesen -------------------------------------------------------
 akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
+dat <- read.csv(paste0(pfad,
+                       "OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
                 header = TRUE, sep = ",", dec = ".")
 pfad <- path_kek
 
