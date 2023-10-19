@@ -724,7 +724,7 @@ plot_international_schule_item <- function(r) {
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>%
-    #highcharter::hc_size(600, 450) %>%
+    highcharter::hc_size(600, 450) %>%
     highcharter::hc_credits(enabled = FALSE) #%>%
   # highcharter::hc_legend(layout = "horizontal", floating = FALSE,
   #                        verticalAlign = "bottom")
@@ -767,11 +767,16 @@ plot_international_schule_migration <- function(r) {
                                  "Einige Ressourcen",
                                  "Wenige Ressourcen")
     )
+    this_typ <- switch(
+      leistungsindikator_m,
+      "nach Geschlecht" = "Test-Punktzahl",
+      "nach sozialem Status" = "Gemittelte Test-Punktzahl"
+    )
 
     df <- schule_timss %>%
       dplyr::filter(ordnung == this_ordnung &
                       indikator %in% this_indikator &
-                      typ == "Test-Punktzahl")
+                      typ == this_typ)
 
     help_l <- "4. Klasse"
   }
