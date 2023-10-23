@@ -7,32 +7,32 @@
 app_server <- function(input, output, session) {
   # Your application server logic
 
-  # Alle Bereiche / home
-  load(file = system.file(package="datalab","data/zentral.rda"))
-
-  load(file = system.file(package="datalab","data/zentral_alt.rda"))
-
-  load(file = system.file(package="datalab","data/zentral_neu.rda"))
-
-  # Schule
-  load(file = system.file(package="datalab","data/kurse.rda"))
-
-  load(file=system.file(package = "datalab", "data/iqb.rda"))
-
-  load(file=system.file(package="datalab", "data/ausserschulisch_skf.rda"))
-
-  # Studium
-  load(file = system.file(package="datalab","data/studierende.rda"))
-
-  load(file = system.file(package="datalab","data/studierende_detailliert.rda"))
-
-
-  # Arbeitsmarkt
-  load(file = system.file(package="datalab","data/arbeitsmarkt.rda"))
-
-  load(file = system.file(package="datalab","data/arbeitsmarkt_detail.rda"))
-
-  load(file = system.file(package="datalab","data/data_naa.rda"))
+  # # Alle Bereiche / home
+  # load(file = system.file(package="datalab","data/zentral.rda"))
+  #
+  # load(file = system.file(package="datalab","data/zentral_alt.rda"))
+  #
+  # load(file = system.file(package="datalab","data/zentral_neu.rda"))
+  #
+  # # Schule
+  # load(file = system.file(package="datalab","data/kurse.rda"))
+  #
+  # load(file=system.file(package = "datalab", "data/iqb.rda"))
+  #
+  # load(file=system.file(package="datalab", "data/ausserschulisch_skf.rda"))
+  #
+  # # Studium
+  # load(file = system.file(package="datalab","data/studierende.rda"))
+  #
+  # load(file = system.file(package="datalab","data/studierende_detailliert.rda"))
+  #
+  #
+  # # Arbeitsmarkt
+  # load(file = system.file(package="datalab","data/arbeitsmarkt.rda"))
+  #
+  # load(file = system.file(package="datalab","data/arbeitsmarkt_detail.rda"))
+  #
+  # load(file = system.file(package="datalab","data/data_naa.rda"))
 
 
 
