@@ -13,11 +13,13 @@ library(dplyr)
 wd <- getwd()
 setwd(wd)
 
-# Akronym für Onedrive-Pfad einsetzten
-akro <- "kbr"
+# pfad analgen
 
-data <- readxl::read_excel(paste0("C:/Users/", akro,
-                                  "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/SKF001_230130.xlsx"),
+pfad_kab <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+pfad <- pfad_kab
+
+data <- readxl::read_excel(paste0(pfad,"SKF001_230130.xlsx"),
                            sheet = "Datentabelle", col_names = FALSE)
 
 
