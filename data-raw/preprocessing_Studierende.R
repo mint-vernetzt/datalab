@@ -13,6 +13,8 @@ library(readr)
 library(countrycode)
 
 
+# hier pathen
+
 akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
@@ -769,23 +771,85 @@ Mathematik und Statistik",
                              kommentar == "z" ~ "not applicable",
                              T ~ kommentar))%>%
   mutate(bereich = "hochschule",
-         indikator = "Ausländische mobile Studierende")
+         indikator = "Ausländische mobile Studierende",
+         typ = "Anzahl")
 
+# warum ist der kleinste wert < 0 ???
 
 ausländisch_mobil <- dat_eust1
 
 usethis::use_data(ausländisch_mobil, overwrite = T)
 
+## EUROSTAT004_educ_uoe_mobs04__custom_7800531_linear.csv.gz----
+
+dat_euro4 <- readr::read_csv(paste0(pfad, "EUROSTAT004_educ_uoe_mobs04__custom_7800531_linear.csv.gz"))
+
+dat_euro4_1 <- dat_euro4 %>%
+  dplyr::select(- c("DATAFLOW", "freq"  , "LAST UPDATE", "unit"))%>%
+  dplyr::rename(geschlecht = sex, land = geo, jahr = TIME_PERIOD, wert = OBS_VALUE,
+         kommentar = OBS_FLAG, fach = iscedf13, anforderung = isced11)%>%
+  mutate(across(land, ~ countrycode(., origin = "eurostat", destination="country.name.de", custom_match = c("EU28" = "EU (28)", "EU27_2020" = "EU (27), seit 2020"))))%>%
+  mutate(geschlecht=case_when(geschlecht == "M"~ "Männlich",
+                              geschlecht == "F" ~ "Weiblich",
+                              T ~ "Gesamt"))%>%
+  dplyr::mutate(fach = dplyr::case_when(
+    stringr::str_ends("F00", .$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
+    stringr::str_ends("F01", .$fach)~ "Pädagogik",
+    stringr::str_ends("F02", .$fach) ~ "Geisteswissenschaften und Künste",
+    stringr::str_ends("F03", .$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+    stringr::str_ends("F04", .$fach) ~ "Wirtschaft, Verwaltung und Recht",
+    stringr::str_ends("F05", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+    stringr::str_ends("F06", .$fach) ~ "Informatik & Kommunikationstechnologie",
+    stringr::str_ends("F07", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+    stringr::str_ends("F08", .$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+    stringr::str_ends("F09", .$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+    stringr::str_ends("F10", .$fach) ~ "Dienstleistungen",
+    stringr::str_ends("F050", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht näher definiert",
+    stringr::str_ends("F051", .$fach) ~ "Biologie und verwandte Wissenschaften",
+    stringr::str_ends("F052", .$fach) ~ "Umwelt",
+    stringr::str_ends("F053", .$fach) ~ "Exakte Naturwissenschaften",
+    stringr::str_ends("F054", .$fach) ~ "Mathematik und Statistik",
+    stringr::str_ends("F058", .$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
+Mathematik und Statistik",
+    stringr::str_ends("F059", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
+    stringr::str_ends("F070", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
+    stringr::str_ends("F071", .$fach) ~ "Ingenieurwesen und Technische Berufe",
+    stringr::str_ends("F072", .$fach) ~ "Verarbeitendes Gewerbe und Bergbau",
+    stringr::str_ends("F073", .$fach) ~ "Architektur und Baugewerbe",
+    stringr::str_ends("F078", .$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
+ verarbeitendes Gewerbe und Baugewerbe",
+    stringr::str_ends("F079", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert",
+    stringr::str_detect("TOTAL", .$fach) ~ "Insgesamt",
+    stringr::str_ends("UNK", .$fach) ~ "Unbekannt",
+    T~.$fach))%>%
+  mutate(anforderung = dplyr::case_when(anforderung ==  "ED5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
+                                        anforderung ==  "ED6" ~ "Bachelor oder vergleichbar (ISCED 6)",
+                                        anforderung ==  "ED7" ~ "Master oder vergleichbar (ISCED 7)",
+                                        anforderung ==  "ED8" ~ "Promotion (ISCED 8)",
+                                        anforderung == "ED5-8" ~ "Tertiäre Bildung (gesamt)",
+                                        T ~ anforderung
+  ))%>%
+  mutate(kommentar=case_when(kommentar == "b" ~ "break in time series",
+                             kommentar == "e" ~ "estimated",
+                             kommentar == "d" ~ "definition differs (see metadata)",
+                             kommentar == "z" ~ "not applicable",
+                             T ~ kommentar))%>%
+  mutate(bereich = "hochschule",
+         indikator = "Ausländische mobile Studierende",
+         typ = "Anteil")
+
+
+ausländisch_mobil_share <- dat_euro4_1
+
+# warum ist der kleinste wert < 0 ???
+
+usethis::use_data(ausländisch_mobil_share, overwrite = T)
 
 ## UNESCO001_anteil_MINT_absolv_weltweit ----
 # kbr bei mir ist der Pfad leicht anders ... unpraktisch
-akro <- "kbr"
-file_path <- paste0("C:/Users/", akro,
-                    "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
-
-file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 pfad <- path_kek
+
 dat_unc <- readr::read_csv(paste0(pfad, "UNESCO001_anteil_MINT_absolv_weltweit.csv"))
 
 dat_unc_1<- dat_unc %>%
