@@ -78,7 +78,9 @@ app_server <- function(input, output, session) {
                            data_studierende_absolventen_weltweit = studierende_absolventen_weltweit,
                            data_studierende_anzahl_oecd = studierende_anzahl_oecd,
                            data_studierende_europa = studierende_europa,
-                           data_countries_names = countries_names)
+                           data_countries_names = countries_names
+                           #data_studierende_intern_oecd = studierende_intern_oecd
+                           )
 
   logger::log_debug("Seiten-Module fertig")
 

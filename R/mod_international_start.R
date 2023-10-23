@@ -105,6 +105,31 @@ mod_international_start_ui <- function(id){
                                     )
                            ),
 
+                           tabPanel("Vergleich Frauenanteil (Karte)", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      p("LOREM"),
+                                      mod_international_map_fem_ui("international_map_fem_ui_1")
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_map_fem_1")),
+                                      # p(style="font-size:12px;color:grey",
+                                      #   "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                      #
+                                      # shinyBS::bsPopover(id="h_international_1", title="",
+                                      #                    content = paste0("POPUP INFO TEXT HERE"),
+                                      #                    placement = "top",
+                                      #                    trigger = "hover"),
+                                      # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_1")
+                                    )
+                           ),
+
                            tabPanel("Vergleiche Top 10", br(),
 
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -129,24 +154,24 @@ mod_international_start_ui <- function(id){
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
                                     )
                            ),
-                           
+
                            tabPanel("Vergleiche Top 10 (Frauen)", br(),
-                                    
+
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                     # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                                    
+
                                     shiny::sidebarPanel(
                                       width = 3,
                                       p("LOREM"),
                                       mod_international_top10_mint_gender_ui("international_top10_mint_gender_1")
-                                      
+
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
                                       htmlOutput(ns("plot_international_top10_mint_gender_1")),
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                                      
+
                                       shinyBS::bsPopover(id="h_international_1", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
                                                          placement = "top",
@@ -154,7 +179,7 @@ mod_international_start_ui <- function(id){
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
                                     )
                            )
-                           
+
 
                )))
   )
@@ -175,9 +200,13 @@ mod_international_start_server <- function(id, r){
     output$plot_international_top10_mint_1 <- renderUI({
       plot_international_top10(r)
     })
-    
+
     output$plot_international_top10_mint_gender_1 <- renderUI({
       plot_international_top10_gender(r)
+    })
+
+    output$plot_international_map_fem_1 <- renderUI({
+    plot_international_map_fem(r)
     })
 
 
