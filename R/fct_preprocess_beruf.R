@@ -293,14 +293,14 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
 
       titel_sub <- paste0(indikator_azubi)
       titel_sub <- ifelse(grepl("ausl", indikator_azubi), "ausländischer Auszubildender", titel_sub)
-      titel_sub <- ifelse(grepl("(1.Jahr)", indikator_besch), "Auszubildender im 1. Lehrjahr", titel_sub)
+      titel_sub <- ifelse(grepl("(1. Jahr)", indikator_azubi), "Auszubildender mit neuem Lehrvertrag", titel_sub)
       titel_sub2 <- paste0(indikator_azubi, "n")
       titel_sub2 <- ifelse(grepl("ausl", indikator_azubi), "ausländischen Auszubildenden", titel_sub2)
-      titel_sub2 <- ifelse(grepl("(1.Jahr)", indikator_besch), "Auszubildenden im 1. Lehrjahr", titel_sub2)
+      titel_sub2 <- ifelse(grepl("(1. Jahr)", indikator_azubi), "Auszubildenden mit neuem Lehrvertrag", titel_sub2)
       # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
       titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
       titel_gesamt_2 <- ifelse(titel_sub %in% c("ausländischer Auszubildender",
-                                                "Auszubildender im 1. Lehrjahr"), paste0("Auszubildenden in ", domain), "Auszubildenden")
+                                                "Auszubildender mit neuem Lehrvertrag"), paste0("Auszubildenden in ", domain), "Auszubildenden")
 
 
 
@@ -324,7 +324,6 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
                             "kategorie",
                             "bundesland",
                             "landkreis",
-                            "landkreis_zusatz",
                             "landkreis_nummer",
                             "jahr",
                             "anforderung"))
