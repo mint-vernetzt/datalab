@@ -3449,7 +3449,7 @@ iqb_fragebogen <- function(df, r){
     dplyr::mutate(
       indikator = dplyr::case_when(
         indikator == "Selbstkonzept" ~ "Selbsteinschätzung der eigenen Fähigkeiten",
-        indikator == "Interesse" ~ "Interesse in das Fach"
+        indikator == "Interesse" ~ "Interesse für das Fach"
       )
     )
   df$geschlecht <- as.factor(df$geschlecht)
