@@ -728,6 +728,10 @@ dat_eust1 <- dat_eust %>%
   mutate(geschlecht=case_when(geschlecht == "M"~ "Männlich",
                               geschlecht == "F" ~ "Weiblich",
                               T ~ "Gesamt"))%>%
+  dplyr::mutate(ebene= dplyr::case_when(stringr::str_ends(.$fach,"F00|F01|F02|F03|F04|F05|F06|F07|F08|F09|F10|TOTAL") ~ 1,
+                                        T ~2))%>%
+  dplyr::mutate(mint_select= dplyr::case_when(stringr::str_detect(.$fach,"F05|F07") ~ "mint",
+                                              T ~"nicht mint"))%>%
   dplyr::mutate(fach = dplyr::case_when(
     stringr::str_ends("F00", .$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
     stringr::str_ends("F01", .$fach)~ "Pädagogik",
@@ -774,15 +778,30 @@ Mathematik und Statistik",
          indikator = "Ausländische mobile Studierende",
          typ = "Anzahl")
 
+dat_eust1_1<- dat_eust1 %>%
+  dplyr::filter( ebene == 1)%>%
+  dplyr::group_by(land, anforderung, jahr, geschlecht, mint_select)%>%
+  dplyr::summarise(land, anforderung, jahr, geschlecht, ebene, mint_select, bereich, indikator, wert= sum(wert, na.rm=T))%>%
+  dplyr::ungroup()%>%
+  unique()%>%
+  dplyr::mutate(fach = case_when(mint_select == "mint" ~ "MINT",
+                           T ~ "Nicht MINT",
+                           ),typ= "Anzahl")
+
+
+dat_eust1_2 <- dat_eust1 %>%
+  bind_rows(dat_eust1_1)
+
+
 # warum ist der kleinste wert < 0 ???
 
-ausländisch_mobil <- dat_eust1
+studierende_mobil_eu_absolut <- dat_eust1_2
 
 usethis::use_data(ausländisch_mobil, overwrite = T)
 
-## EUROSTAT004_educ_uoe_mobs04__custom_7800531_linear.csv.gz----
+## EUROSTAT004_educ_uoe_mobs04__custom_8027463_linear.csv.gz----
 
-dat_euro4 <- readr::read_csv(paste0(pfad, "EUROSTAT004_educ_uoe_mobs04__custom_7800531_linear.csv.gz"))
+dat_euro4 <- readr::read_csv(paste0(pfad, "EUROSTAT004_educ_uoe_mobs04__custom_8027463_linear.csv.gz"))
 
 dat_euro4_1 <- dat_euro4 %>%
   dplyr::select(- c("DATAFLOW", "freq"  , "LAST UPDATE", "unit"))%>%
@@ -792,6 +811,10 @@ dat_euro4_1 <- dat_euro4 %>%
   mutate(geschlecht=case_when(geschlecht == "M"~ "Männlich",
                               geschlecht == "F" ~ "Weiblich",
                               T ~ "Gesamt"))%>%
+  dplyr::mutate(ebene= dplyr::case_when(stringr::str_ends(.$fach,"F00|F01|F02|F03|F04|F05|F06|F07|F08|F09|F10|TOTAL") ~ 1,
+                                        T ~2))%>%
+  dplyr::mutate(mint_select= dplyr::case_when(stringr::str_detect(.$fach,"F05|F07") ~ "mint",
+                                        T ~"nicht mint"))%>%
   dplyr::mutate(fach = dplyr::case_when(
     stringr::str_ends("F00", .$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
     stringr::str_ends("F01", .$fach)~ "Pädagogik",
@@ -838,8 +861,22 @@ Mathematik und Statistik",
          indikator = "Ausländische mobile Studierende",
          typ = "Anteil")
 
+dat_euro4_2 <- dat_euro4_1 %>%
+  dplyr::filter(mint_select == "mint" & ebene == 1)%>%
+  dplyr::group_by(land, anforderung, jahr, geschlecht)%>%
+  dplyr::summarise(land, anforderung, jahr, geschlecht, ebene, mint_select, bereich, indikator, MINT= sum(wert, na.rm=T))%>%
+  dplyr::ungroup()%>%
+  dplyr::mutate("Nicht MINT" = 100 - MINT,
+                typ= "Anteil")%>%
+  tidyr::pivot_longer(c("MINT", "Nicht MINT"), names_to = "fach", values_to = "wert" )%>%
+  unique()
 
-ausländisch_mobil_share <- dat_euro4_1
+dat_euro4_3 <- dat_euro4_1 %>%
+  dplyr::bind_rows(dat_euro4_2)
+
+
+
+studierende_mobil_eu_share <- dat_euro4_3
 
 # warum ist der kleinste wert < 0 ???
 
