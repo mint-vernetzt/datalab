@@ -15,8 +15,8 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("bl_date"),
       label = NULL,
-      choices = c("2018", "2019", "2020", "2021"),
-      selected = "2021"
+      choices = c("2018", "2019", "2020", "2021", "2022"),
+      selected = "2022"
     ),
     p("Indikator:"),
     shinyWidgets::pickerInput(

@@ -41,7 +41,7 @@ mod_quellen_ui <- function(id){
         br(),
         tags$a(href="https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bildung-Forschung-Kultur/Hochschulen/Tabellen/studierende-mint-faechern.html", "Mehr Infos zur Definition MINT-Studienfächer", target = "_blank"),
         br(),
-        tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Statistiken/Themen-im-Fokus/Berufe/Generische-Publikationen/Broschuere-MINT.pdf?__blob=publicationFile", "Mehr Infos zur Definition der MINT-Berufe", target = "_blank"), br(),
+        tags$a(href="https://web.arbeitsagentur.de/berufenet/ergebnisseite/mint-berufe?mint=alle-mint&page=0", "Mehr Infos zur Definition der MINT-Berufe", target = "_blank"), br(),
         tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Grundlagen/Methodik-Qualitaet/Methodenberichte/Uebergreifend/Generische-Publikationen/Hintergrundinfo-Anpassung-Berufsaggregat-MINT-Berufe.pdf?__blob=publicationFile", "Aktuelle Infos zur Anpassung der Definition der MINT-Berufe", target ="_blank"),
 
     ),

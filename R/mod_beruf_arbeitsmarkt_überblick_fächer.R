@@ -50,7 +50,7 @@ mod_beruf_arbeitsmarkt_überblick_fächer_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("indikator_arbeitsmarkt_überblick_fächer_22"),
                        choices = c("Auszubildende",
-                                   #"Auszubildende (1. Jahr)", vorerst raus fehlt noch
+                                   "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
                                    "Beschäftigte",
                                    "ausländische Beschäftigte",
                                    "ausländische Auszubildende",
@@ -66,7 +66,7 @@ mod_beruf_arbeitsmarkt_überblick_fächer_ui <- function(id){
                        inputId = ns("indikator_arbeitsmarkt_überblick_fächer_21"),
                        choices = c(
                                    "Auszubildende",
-                                   "Auszubildende (1. Jahr)",
+                                   "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
                                    "Beschäftigte",
                                    "ausländische Beschäftigte",
                                    "ausländische Auszubildende",

@@ -1619,7 +1619,6 @@ data_einstieg <- function(df,r) {
 
 studienzahl_waffle_mint <- function(df,r) {
 
-
   # load UI inputs from reactive value
   timerange <- r$waffle_y
 
@@ -1631,7 +1630,7 @@ studienzahl_waffle_mint <- function(df,r) {
 
 
 
-  df2 <- df %>% dplyr::filter(jahr == timerange) %>%
+  df2 <<- df %>% dplyr::filter(jahr == timerange) %>%
     dplyr::filter(region== "Deutschland")%>%
     dplyr::filter(geschlecht== "Gesamt")%>%
     dplyr::select(-region, -geschlecht, - jahr)%>%
@@ -1659,13 +1658,13 @@ studienzahl_waffle_mint <- function(df,r) {
 
   if(length(label_w)==1){
 
-    waf_1 <- df2 %>%
+    waf_1 <<- df2 %>%
       dplyr::filter(indikator==label_w)
 
     label_w <- überschrift_label(label_w)
     title_1 <- as.character(label_w)
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <- round(data_1 * 100,1)
+    data_1 <- round(data_1 * 100,0)
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     data_k <- data_1
@@ -1710,14 +1709,14 @@ studienzahl_waffle_mint <- function(df,r) {
     waf_1[1,1] <- überschrift_label(waf_1[1,1])
     title_1 <- as.character(as.vector(waf_1[1,1]))
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <- round(data_1 * 100,1)
+    data_1 <- round(data_1 * 100,0)
 
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     waf_2[1,1] <- überschrift_label(waf_2[1,1])
     title_2 <- as.character(as.vector(waf_2[1,1]))
     data_2 <- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
-    data_2 <- round(data_2 * 100,1)
+    data_2 <- round(data_2 * 100,0)
 
     names(data_2) <- colnames(waf_2[2:ncol(waf_2)])
 
@@ -1786,19 +1785,19 @@ studienzahl_waffle_mint <- function(df,r) {
     waf_1[1,1] <- überschrift_label(waf_1[1,1])
     title_1 <- as.character(as.vector(waf_1[1,1]))
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <- round(data_1 * 100,1)
+    data_1 <- round(data_1 * 100,0)
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     waf_2[1,1] <- überschrift_label(waf_2[1,1])
     title_2 <- as.character(as.vector(waf_2[1,1]))
     data_2 <- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
-    data_2 <- round(data_2 * 100,1)
+    data_2 <- round(data_2 * 100,0)
     names(data_2) <- colnames(waf_2[2:ncol(waf_2)])
 
     waf_3[1,1] <- überschrift_label(waf_3[1,1])
     title_3 <- as.character(as.vector(waf_3[1,1]))
     data_3 <- as.numeric(as.vector(waf_3[1,2:ncol(waf_3)]))
-    data_3 <- round(data_3 * 100,1)
+    data_3 <- round(data_3 * 100,0)
     names(data_3) <- colnames(waf_3[2:ncol(waf_3)])
 
 
@@ -3159,9 +3158,18 @@ studienzahl_waffle_choice_gender <- function(df,r) {
     dplyr::select(-Alle,-`MINT (Gesamt)`)
 
 
-
-
-
+  # Überschriften vorbereiten
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (1.Fachsemester)", "Studienanfänger:innen <br> (1. Fachsemester)", lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (1.Hochschulsemester)", "Studienanfänger:innen <br> (1. Hochschulsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)", "Studienanfänger:innen <br> (Fachhochschule, 1. Fachsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Fachhochschule, 1. Hochschulsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)", "Studienanfänger:innen <br> (Lehramt, Universität, 1. Fachsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Lehramt, Universität, 1. Hochschulsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Universität, 1.Fachsemester)", "Studienanfänger:innen <br> (Universität, 1. Fachsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Universität, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Universität, 1. Hochschulsemester)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studierende (Fachhochschulen)", "Studierende <br> (Fachhochschulen)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studierende (Lehramt, Universität)", "Studierende <br> (Lehramt, Universität)" , lab_cho)
+    lab_cho <- ifelse(lab_cho == "Studierende (Universität)", "Studierende <br> (Universität)" , lab_cho)
 
 
   data_fr <- df_both %>%
@@ -3177,13 +3185,10 @@ studienzahl_waffle_choice_gender <- function(df,r) {
   df_ma<- as.numeric(as.vector(data_ma[1,5:ncol(data_ma)]))
   names(df_ma ) <- colnames(data_ma[5:ncol(data_ma)])
 
-
-
-
   waffle_frauen <- waffle::waffle(df_fr, keep = FALSE)+
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Studienfachwahl von Frauen </span><br>(", lab_cho, ", ", timerange, ")<br>"))+
+      title = paste0("<span style='color:black;'>", "Studienfachwahl von Frauen </span><br>(", lab_cho, ", <br>", timerange, ")<br>"))+
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -3208,7 +3213,7 @@ studienzahl_waffle_choice_gender <- function(df,r) {
   waffle_maenner <- waffle::waffle(df_ma, keep = FALSE)+
     ggplot2::labs(
       fill = "",
-      title = paste0("<span style='color:black;'>", "Studienfachwahl von Männern </span><br>(", lab_cho, ", ", timerange, ")<br>")) +
+      title = paste0("<span style='color:black;'>", "Studienfachwahl von Männern </span><br>(", lab_cho, ", <br>", timerange, ")<br>")) +
     ggplot2::theme(plot.title = ggtext::element_markdown(),
                    plot.subtitle = ggtext::element_markdown(),
                    text = ggplot2::element_text(size = 14),
@@ -3422,7 +3427,7 @@ if (absolut_selector=="In Prozent"){
   highcharter::hchart(dfggi, 'line', highcharter::hcaes(x = jahr, y = wert,group=indikator))%>%
     highcharter::hc_tooltip(pointFormat = "Anteil {point.label} <br> Wert: {point.y} %") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= F, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = paste0("Anteil von weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, an allen weiblichen Studierenden in ", states),
                           margin = 45,
@@ -6481,7 +6486,7 @@ if(ordering=="MINT-Fächer"){
     highcharter::hc_yAxis(title = list(text = "")
                           , labels = list(format = "{value} %")) %>%
     highcharter::hc_xAxis(title = list(text = ""))%>%
-    highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf"))
+    highcharter::hc_colors(c("#66cbaf", "#154194", "#b16fab" ))
 
 
 

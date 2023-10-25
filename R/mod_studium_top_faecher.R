@@ -14,8 +14,8 @@ mod_studium_top_faecher_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_top_faecher"),
       label = NULL,
-      choices = c(2018, 2019, 2020, 2021),
-      selected = 2021
+      choices = c(2018, 2019, 2020, 2021, 2022),
+      selected = 2022
     ),
     # Region
     p("Region:"),
@@ -44,12 +44,11 @@ mod_studium_top_faecher_ui <- function(id){
       selected = "Bayern"
     ),
     p("Fachbereich:"),
-    shinyWidgets::radioGroupButtons(
+    shinyWidgets::pickerInput(
       inputId = ns("subject_top_faecher"),
       choices = c("MINT-Fächer", "Alle Fachbereiche"= "Alle Fächer"),
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
+      selected = "MINT-Fächer",
+      multiple = FALSE
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(

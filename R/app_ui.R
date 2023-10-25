@@ -14,7 +14,7 @@ app_ui <- function(request) {
       #title="MINTvernetzt - DataLab",
 
       header = shinydashboard::dashboardHeader(
-        title = div(
+          title = div(
           img(
             src = "www/MINTvernetztLogo_klein.png",
             height = 45
@@ -49,6 +49,7 @@ app_ui <- function(request) {
       sidebar = shinydashboard::dashboardSidebar(
         shinydashboard::sidebarMenu(
           # Setting id makes input$tabs give the tabName of currently-selected tab
+          style = "position: fixed;",
           id = "tabs",
           shinydashboard::menuItem("Startseite",  tabName = "startseite"),
           shinydashboard::menuItem("Alle Bildungsbereiche",  tabName = "home"),
@@ -67,6 +68,7 @@ app_ui <- function(request) {
 
       # Show the appropriate tab's content in the main body of our dashboard when we select it
       body = shinydashboard::dashboardBody(
+        # Matomo einbinden
         tags$head(HTML(
           "<script>
       var _paq = _paq || [];
@@ -92,6 +94,9 @@ app_ui <- function(request) {
     </script>"
 
         )),
+        tags$script(HTML(
+          "$('body').addClass('fixed');"
+          )),
 
           shinydashboard::tabItems(
           shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),

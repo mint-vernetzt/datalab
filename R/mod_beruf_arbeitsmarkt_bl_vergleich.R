@@ -24,7 +24,7 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("indikator_bl_vergl_22"),
                        choices = c("Auszubildende",
-                                   #"Auszubildende (1. Jahr)",
+                                   "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
                                    "Beschäftigte",
                                    "ausländische Auszubildende",
                                    "ausländische Beschäftigte",
@@ -39,7 +39,7 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("indikator_bl_vergl_21"),
                        choices = c("Auszubildende",
-                                   "Auszubildende (1. Jahr)",
+                                   "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
                                    "Beschäftigte",
                                    "ausländische Auszubildende",
                                    "ausländische Beschäftigte",

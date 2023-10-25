@@ -15,8 +15,8 @@ mod_studium_studienzahl_einstieg_comparison_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("gen_f_y"),
       label = NULL,
-      choices = c("2018", "2019", "2020", "2021"),
-      selected = "2021"
+      choices = c("2018", "2019", "2020", "2021", "2022"),
+      selected = "2022"
     ),
 #
 #     p("Fach/Fächergruppe:"),

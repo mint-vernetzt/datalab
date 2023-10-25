@@ -440,7 +440,7 @@ arbeitsmarkt_bl_gender <- function(df,r) {
   title_help <- paste0(indikator_choice, "r")
   title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischer Beschäftigter", title_help)
   title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischer Auszubildender", title_help)
-  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildender im 1. Jahr", title_help)
+  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildender mit neuem Lehrvertrag", title_help)
   # title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
   # title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
   # title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
@@ -1048,8 +1048,7 @@ beruf_einstieg_vergleich <- function(df,r) {
     #Trennpunkte für lange Zahlen ergänzen
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
-  if(timerange == 2021) {
-    # Auswahl Indikatoren
+
     df <- df %>% dplyr::filter(indikator %in% c("Auszubildende",
                                                 "Auszubildende (1. Jahr)",
                                                 "ausländische Auszubildende",
@@ -1059,8 +1058,9 @@ beruf_einstieg_vergleich <- function(df,r) {
                                                 "Beschäftigte 25-55",
                                                 "Beschäftigte ü55",
                                                 "in Minijobs"))
+    df$indikator[df$indikator == "Auszubildende (1. Jahr)"] <- "Auszubildende mit neuem Lehrvertrag"
     indi <- c("Auszubildende",
-              "Auszubildende (1. Jahr)",
+              "Auszubildende mit neuem Lehrvertrag",
               "ausländische Auszubildende",
               "Beschäftigte",
               "ausländische Beschäftigte",
@@ -1068,28 +1068,6 @@ beruf_einstieg_vergleich <- function(df,r) {
               "Beschäftigte 25-55",
               "Beschäftigte ü55",
               "in Minijobs")
-  }else{
-    if(timerange == 2022){
-      df <- df %>% dplyr::filter(indikator %in% c("Auszubildende",
-                                                 # "Auszubildende (1. Jahr)",
-                                                  "ausländische Auszubildende",
-                                                  "Beschäftigte",
-                                                  "ausländische Beschäftigte",
-                                                  "Beschäftigte u25",
-                                                  "Beschäftigte 25-55",
-                                                  "Beschäftigte ü55",
-                                                  "in Minijobs"))
-      indi <- c("Auszubildende",
-                # "Auszubildende (1. Jahr)",
-                "ausländische Auszubildende",
-                "Beschäftigte",
-                "ausländische Beschäftigte",
-                "Beschäftigte u25",
-                "Beschäftigte 25-55",
-                "Beschäftigte ü55",
-                "in Minijobs")
-    }
-  }
 
 
   # df$indikator <- factor(df$indikator, levels = c("Auszubildende",
@@ -1502,7 +1480,6 @@ arbeitsmarkt_bl <- function(df,r) {
   #
   # }
 
-
   highcharter::hw_grid(
     # plot
     highcharter::hcmap(
@@ -1874,13 +1851,20 @@ arbeitsmarkt_bl_vergleich <- function(df,r) {
   title_help <- paste0(indikator_choice, "n")
   title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen Beschäftigten", title_help)
   title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischen Auszubildenden", title_help)
-  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden im 1. Jahr", title_help)
+  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden im ersten Lehrjahr", title_help)
   title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
   title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
   title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
 
 
   title_h2 <- ifelse(grepl("Auszu", title_help), "Auszubildenden", "Beschäftigten")
+  title_h2 <- ifelse(grepl("25 Jahr", title_help), "Beschäftigten U25", title_h2)
+  title_h2 <- ifelse(grepl("25 und 55", title_help), "Beschäftigten zwischen 25 und 55 Jahren", title_h2)
+  title_h2 <- ifelse(grepl("über 55", title_help), "Beschäftigten Ü55", title_h2)
+  title_h2 <- ifelse(grepl("jahr", title_help), "Auszubildenden im ersten Lehrjahr", title_h2)
+  title_h2 <- ifelse(grepl("ausländischen Auszu", title_help), "ausländischen Auszubildenden", title_h2)
+  title_h2 <- ifelse(grepl("ländischen B", title_help), "ausländischen Beschäftigten", title_h2)
+
 
   # plot
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(prop, 2), x = bundesland)) %>%
@@ -2048,7 +2032,7 @@ arbeitsmarkt_anforderungen_gender <- function(df,r) {
   title_help <- paste0(indikator_choice, "n <br>")
   title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen <br> Beschäftigten", title_help)
   title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischen <br> Auszubildenden", title_help)
-  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden im <br> ersten Jahr", title_help)
+  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden <br> mit neuem Lehrvertrag <br>", title_help)
   # title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
   # title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
   # title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
@@ -2522,7 +2506,7 @@ arbeitsmarkt_anforderungen <- function(df,r) {
 
     df_t <- df
     df_t$titel_help <- paste0(df_t$indikator, "n <br>")
-    df_t$titel_help <- ifelse(df_t$indikator == "Auszubildende (1. Jahr)", "Auszubildenden <br> im ersten Jahr", df_t$titel_help)
+    df_t$titel_help <- ifelse(df_t$indikator == "Auszubildende (1. Jahr)", "Auszubildenden <br>mit neuem Lehrvertrag", df_t$titel_help)
     df_t$titel_help <- ifelse(df_t$indikator == "ausländische Auszubildende", "ausländischen <br> Auszubildenden", df_t$titel_help)
     df_t$titel_help <- ifelse(df_t$indikator == "ausländische Beschäftigte", "ausländischen <br> Beschäftigten", df_t$titel_help)
 
@@ -3582,15 +3566,17 @@ arbeitsmarkt_überblick_fächer <- function(df, r) {
   title_help <- paste0(indikator_choice, "n")
   title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen Beschäftigten", title_help)
   title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischen Auszubildenden", title_help)
-  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden im 1. Jahr", title_help)
+  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden mit neuem Lehrvertrag", title_help)
   title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
   title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
   title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
 
+  hover <- "Anteil an allen Berufsfeldern: {point.y} % <br> Anzahl {point.indikator}: {point.wert}"
+  if(indikator_choice == "Auszubildende (1. Jahr)") hover <- "Anteil an allen Berufsfeldern: {point.y} % <br> Anzahl Auszubildende mit neuem Lehrvertrag: {point.wert}"
 
   # plot
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(prop,1), x = fachbereich)) %>%
-    highcharter::hc_tooltip(pointFormat = "Anteil an allen Berufsfeldern: {point.y} % <br> Anzahl {point.indikator}: {point.wert}") %>%
+    highcharter::hc_tooltip(pointFormat = hover) %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = ""), categories =c("Alle Berufsfelder außer MINT (gesamt)",
                                                                  "MINT-Berufsfelder (gesamt)",
@@ -3706,7 +3692,7 @@ arbeitsmarkt_top10 <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), min = 0, max = 100, tickInterval = 10) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("MINT-Ausbildungsberufe mit dem höchsten Frauenanteil ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("MINT-Berufe mit dem höchsten Frauenanteil unter den neuen Auszubilndenden ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3736,7 +3722,7 @@ arbeitsmarkt_top10 <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), min = 0, max = 100, tickInterval = 10) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("MINT-Ausbildungsberufe mit dem höchsten Männeranteil ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("MINT-Berufe mit dem höchsten Männeranteil unter den neuen Auszubildenden ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3779,7 +3765,7 @@ arbeitsmarkt_top10 <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(berufe_frauen$wert), 500, f = ceiling), tickInterval = 1000) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von Frauen ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubilndenden ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3809,7 +3795,7 @@ arbeitsmarkt_top10 <- function(df, r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(berufe_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von Männern ", "(", time, ")"),
+      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden ", "(", time, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3960,9 +3946,12 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
   df2_map <- df2_map %>% dplyr::mutate(
     landkreis_nummer = paste0("de-", state_code, "-", landkreis_nummer, "000"))
 
-  #Trennpunkte für lange Zahlen ergänzen in Absolute Zahlen für Hover
+  #Trennpunkte für lange Zahlen ergänzen in Absolute Zahlen für Hover + Text für Hover
   df1_map$wert <- prettyNum(df1_map$wert, big.mark = ".", decimal.mark = ",")
   df2_map$wert <- prettyNum(df2_map$wert, big.mark = ".", decimal.mark = ",")
+  domain_1 <- ifelse(domain_1 == "Alle", "alle Berufsbereiche", domain_1)
+  domain_2 <- ifelse(domain_2 == "Alle", "alle Berufsbereiche", domain_2)
+
 
   # create plots
   map1 <- highcharter::hcmap(

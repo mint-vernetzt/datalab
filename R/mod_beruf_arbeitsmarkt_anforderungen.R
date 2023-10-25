@@ -39,7 +39,7 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
       inputId = ns("indikator_arbeitsmarkt_anforderungen_22"),
       choices = c("Beschäftigte",
                   "Auszubildende",
-                 # "Auszubildende (1. Jahr)", #auskommentiert bis für 2022 auch da
+                  "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
                   "ausländische Beschäftigte",
                   "ausländische Auszubildende"),
       selected = c("Beschäftigte", "Auszubildende"),
@@ -54,7 +54,7 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                        inputId = ns("indikator_arbeitsmarkt_anforderungen_21"),
                        choices = c("Beschäftigte",
                                    "Auszubildende",
-                                   "Auszubildende (1. Jahr)",
+                                   "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
                                    "ausländische Beschäftigte",
                                    "ausländische Auszubildende"),
                        selected = c("Beschäftigte", "Auszubildende"),

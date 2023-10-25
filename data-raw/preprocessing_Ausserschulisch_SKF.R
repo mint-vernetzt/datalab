@@ -12,9 +12,15 @@ library(dplyr)
 
 wd <- getwd()
 setwd(wd)
-#setwd("C:/Users/kab/Downloads/datalab/datalab")
 
-data <- readxl::read_excel("data-raw/raw/SKF001_230130.xlsx", sheet = "Datentabelle", col_names = FALSE)
+# pfad analgen
+
+pfad_kab <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+pfad <- pfad_kab
+
+data <- readxl::read_excel(paste0(pfad,"SKF001_230130.xlsx"),
+                           sheet = "Datentabelle", col_names = FALSE)
 
 
 # Datensatz ins passende Format bringen --------------------------------------

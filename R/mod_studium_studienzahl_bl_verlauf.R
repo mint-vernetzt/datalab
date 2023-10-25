@@ -16,8 +16,8 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
       inputId = ns("date_studium_studienzahl_bl_verlauf"),
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021"),
-      selected = c("2015", "2021")
+                  "2018","2019", "2020", "2021", "2022"),
+      selected = c("2015", "2022")
     ),
     # p("Nur Lehramt anzeigen:"),
     # tags$div(

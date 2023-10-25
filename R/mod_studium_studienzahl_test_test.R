@@ -1,4 +1,4 @@
-#' studium_studienzahl_all_23 UI Function
+#' studium_studienzahl_test UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -33,7 +33,9 @@ mod_studium_studienzahl_test_ui <- function(id){
                   "Studierende (Lehramt, Universität)",
                   "Studierende (Universität)"
       ),
-      selected = c("Studierende", "Studienanfänger:innen (1.Fachsemester)"),
+      selected = c("Studierende"
+                   , "Studienanfänger:innen (1.Fachsemester)"
+                   ),
       multiple = TRUE,
       options =  list(
         "max-options" = 3,
@@ -57,7 +59,7 @@ mod_studium_studienzahl_test_ui <- function(id){
 #' studium_choice_gender Server Functions
 #'
 #' @noRd
-mod_studium_studienzahl_all_23_server <- function(id, r){
+mod_studium_studienzahl_test_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
     observeEvent(input$testy, {
