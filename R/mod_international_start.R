@@ -178,6 +178,30 @@ mod_international_start_ui <- function(id){
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
                                     )
+                           ),
+                           tabPanel("Vergleiche Top 10 - Internationale in MINT", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      p("LOREM"),
+                                      mod_international_top10_mint_gender_ui("international_top10_mint_gender_1")
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_top10_mint_gender_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+
+                                      shinyBS::bsPopover(id="h_international_1", title="",
+                                                         content = paste0("POPUP INFO TEXT HERE"),
+                                                         placement = "top",
+                                                         trigger = "hover"),
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
+                                    )
                            )
 
 
