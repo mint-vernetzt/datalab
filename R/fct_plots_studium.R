@@ -1619,7 +1619,6 @@ data_einstieg <- function(df,r) {
 
 studienzahl_waffle_mint <- function(df,r) {
 
-browser()
   # load UI inputs from reactive value
   timerange <- r$waffle_y
 
