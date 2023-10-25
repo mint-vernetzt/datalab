@@ -265,7 +265,7 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
                                                 "Beschäftigter unter 25 Jahren",
                                                 "Beschäftigter zwischen 25 und 55 Jahren",
                                                 "Beschäftigter über 55 Jahren"), paste0("Beschäftigten in ", domain), "Beschäftigten")
-
+      titel_gesamt_2 <- ifelse(domain == "Alle", "Beschäftigten in allen Berufsbereichen", titel_gesamt_2)
 
 
     } else if(indikator_besch == "Frauen"){
@@ -278,6 +278,7 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
       # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
       titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
       titel_gesamt_2 <- paste0("Beschäftigten in ", domain)
+      titel_gesamt_2 <- ifelse(domain == "Alle", "Beschäftigten in allen Berufsbereichen", titel_gesamt_2)
 
 
     }
@@ -301,7 +302,7 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
       titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
       titel_gesamt_2 <- ifelse(titel_sub %in% c("ausländischer Auszubildender",
                                                 "Auszubildender mit neuem Lehrvertrag"), paste0("Auszubildenden in ", domain), "Auszubildenden")
-
+      titel_gesamt_2 <- ifelse(domain == "Alle", "Auszubildende in allen Berufsbereichen", titel_gesamt_2)
 
 
 
@@ -314,6 +315,7 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
       # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
       titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
       titel_gesamt_2 <- paste0("Auszubildenden in ", domain)
+      titel_gesamt_2 <- ifelse(domain == "Alle", "Auszubildende in allen Berufsbereichen", titel_gesamt_2)
     }
   }
 

@@ -3946,9 +3946,12 @@ arbeitsmarkt_lk_detail_map <- function(df,r) {
   df2_map <- df2_map %>% dplyr::mutate(
     landkreis_nummer = paste0("de-", state_code, "-", landkreis_nummer, "000"))
 
-  #Trennpunkte für lange Zahlen ergänzen in Absolute Zahlen für Hover
+  #Trennpunkte für lange Zahlen ergänzen in Absolute Zahlen für Hover + Text für Hover
   df1_map$wert <- prettyNum(df1_map$wert, big.mark = ".", decimal.mark = ",")
   df2_map$wert <- prettyNum(df2_map$wert, big.mark = ".", decimal.mark = ",")
+  domain_1 <- ifelse(domain_1 == "Alle", "alle Berufsbereiche", domain_1)
+  domain_2 <- ifelse(domain_2 == "Alle", "alle Berufsbereiche", domain_2)
+
 
   # create plots
   map1 <- highcharter::hcmap(
