@@ -470,7 +470,7 @@ usethis::use_data(studierende_detailliert, overwrite = T)
 # akro <- "kbr"
 # file_path <- paste0("C:/Users/", akro,
 #                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
-pfad <- path_kek
+# pfad <- path_kek
 # file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 dat <- readr::read_csv(paste0(pfad, "EUROSTAT001_custom_Studi_Fach_Gender_original.csv.gz"))
@@ -795,9 +795,9 @@ dat_eust1_2 <- dat_eust1 %>%
 
 # warum ist der kleinste wert < 0 ???
 
-studierende_mobil_eu_absolut <- dat_eust1_2
+c <- dat_eust1_2
 
-usethis::use_data(ausländisch_mobil, overwrite = T)
+usethis::use_data(studierende_mobil_eu_absolut, overwrite = T)
 
 ## EUROSTAT004_educ_uoe_mobs04__custom_8027463_linear.csv.gz----
 
@@ -880,12 +880,12 @@ studierende_mobil_eu_share <- dat_euro4_3
 
 # warum ist der kleinste wert < 0 ???
 
-usethis::use_data(ausländisch_mobil_share, overwrite = T)
+usethis::use_data(studierende_mobil_eu_share, overwrite = T)
 
 ## UNESCO001_anteil_MINT_absolv_weltweit ----
 # kbr bei mir ist der Pfad leicht anders ... unpraktisch
 
-pfad <- path_kek
+# pfad <- path_kek
 
 dat_unc <- readr::read_csv(paste0(pfad, "UNESCO001_anteil_MINT_absolv_weltweit.csv"))
 
@@ -915,7 +915,7 @@ usethis::use_data(studierende_absolventen_weltweit, overwrite = T)
 
 ## OECD Anteil internationaler Studis an allen Studis in Fach ----
 
-file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+#file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 dat_oecd <- readr::read_csv(paste0(pfad, "OECD006_Anteil_intern_Studis_in_Fach_2.csv"))
 
@@ -1052,11 +1052,11 @@ usethis::use_data(studierende_intern_oecd, overwrite = T)
 ## OECD - Anzahl Azubis / Studis nach Feld & Gender------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
+
 dat <- read.csv(paste0(pfad,
                        "OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
                 header = TRUE, sep = ",", dec = ".")
-pfad <- path_kek
+
 
 ### Datensatz in passende Form bringen --------------------------------------
 
