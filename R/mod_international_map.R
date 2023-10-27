@@ -39,11 +39,7 @@ mod_international_map_ui <- function(id) {
                      p("Fachbereich:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_f_eu"),
-                       #choices = international_ui_faecher(region = "EU"),
-                       choices = c("Alle MINT-Fächer",
-                                   "Naturwissenschaften, Mathematik und Statistik",
-                                   "Informatik & Kommunikationstechnologie",
-                                   "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"),
+                       choices = international_ui_faecher(region = "EU"),
                        selected = c("Alle MINT-Fächer"),
                        multiple = FALSE#,
                        # options =  list(

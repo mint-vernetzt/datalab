@@ -298,9 +298,9 @@ international_ui_faecher <- function(region = "EU") {
     #   dplyr::pull(fachbereich) %>%
     #   unique()
     selection <- c("Alle MINT-Fächer" = "MINT",
-                   "Naturwissenschaften, Mathematik und Statistik",
-                   "Informatik & Kommunikationstechnologie",
-                   "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                   "--- Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik",
+                   "--- Informatik & Kommunikationstechnologie" = "Informatik & Kommunikationstechnologie",
+                   "--- Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" = "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                    "Pädagogik",
                    "Geisteswissenschaften und Künste",
                    "Sozialwissenschaften, Journalismus und Informationswesen",
@@ -321,9 +321,10 @@ international_ui_faecher <- function(region = "EU") {
     #   # extra hinzufügen da es sonst mit filter mint_select = FALSE wäre
     #   c(., "Alle MINT-Fächer")
     selection <- c("Alle MINT-Fächer",
-                  "Naturwissenschaften, Mathematik und Statistik",
-                  "Informatik & Kommunikationstechnologie",
-                  "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe")
+                   "--- Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik",
+                   "--- Informatik & Kommunikationstechnologie" = "Informatik & Kommunikationstechnologie",
+                   "--- Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" = "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"
+                   )
   }
 
   return(selection)
