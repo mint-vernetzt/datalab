@@ -234,6 +234,11 @@ mod_international_start_server <- function(id, r){
     })
 
 
+    output$plot_international_mint_top_10 <- reederUI({
+      plot_international_mint_top_10(r)
+    })
+
+
   })
 }
 
