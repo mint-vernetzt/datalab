@@ -78,7 +78,8 @@ plot_international_map <- function(r) {
     map_selection <- golem::get_golem_options("world_map")
     fach_m <- "Alle MINT-Fächer"
     df <- studierende_absolventen_weltweit  %>%
-      dplyr::filter(fach == "Alle MINT-Fächer")
+      dplyr::filter(fach == "Alle MINT-Fächer") %>%
+      dplyr::filter(land != "San Marino")
   } else if (label_m == "OECD") {
     map_selection <- golem::get_golem_options("world_map")
 
@@ -143,18 +144,19 @@ plot_international_map <- function(r) {
   # Plot
 
   # Vorbereitung Überschrift
-  help_fach <- fach_m
-  help_fach <- ifelse(help_fach == "Alle Nicht MINT-Fächer", "allen Fächern außer MINT", help_fach)
-  help_fach <- ifelse(help_fach == "Alle MINT-Fächer", "MINT", help_fach)
-
-  label_m <- ifelse(label_m == "Studierende", paste0(label_m, "n"), label_m)
-  label_m <- ifelse(label_m == "Internationale Studierende", "internationalen Studierenden", label_m)
-  label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
-  label_m <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
-
-  help_l <- "Studierenden"
-  help_l <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen", help_l)
-  help_l <- ifelse(grepl("1. Fach", label_m), "Studienanfänger:innen", help_l)
+  fach_help <- fach_m
+  fach_help <- ifelse(fach_m == "Alle MINT-Fächer", "MINT", fach_help)
+  if(label_m == "Weltweit"){
+    title_m <- paste0("Anteil von Studienabsolvent*innen in ", fach_help, " an allen Studienabsolvent*innen ",
+                      timerange, " weltweit (Daten: UNESCO)")
+  }else{if(label_m == "OECD"){
+    title_m <- paste0("Anteil von Studierenden in ", fach_help, " an allen Studierenden ",
+                      timerange, " der OECD-Staaten")
+  }else{
+    title_m <- paste0("Anteil von Studierenden in ", fach_help, " an allen Studierenden ",
+                      timerange, " in Europa")
+  }
+    }
 
   data_map_1 <- df7
 
@@ -174,7 +176,7 @@ plot_international_map <- function(r) {
     highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_wert} %") %>%
     highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
     highcharter::hc_title(
-      text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
+      text = title_m,
       margin = 10,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")

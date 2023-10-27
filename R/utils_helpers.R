@@ -345,6 +345,14 @@ international_ui_years <- function(region = "EU") {
       sort()
   }
 
+  if (region == "Weltweit"){
+    selection <- studierende_absolventen_weltweit %>%
+      dplyr::filter(geschlecht == "Insgesamt") %>%
+      dplyr::pull(jahr) %>%
+      unique() %>%
+      sort()
+  }
+
   # for schule international
   if (region == "TIMSS") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))

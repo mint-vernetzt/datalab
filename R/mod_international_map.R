@@ -24,7 +24,7 @@ mod_international_map_ui <- function(id) {
       #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
     ),
 
-    #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
+    #Conditional Panel
 
     conditionalPanel(condition = "input.map_l_int_studium == 'EU'",
                      ns = ns,
@@ -39,7 +39,11 @@ mod_international_map_ui <- function(id) {
                      p("Fachbereich:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_f_eu"),
-                       choices = international_ui_faecher(region = "EU"),
+                       #choices = international_ui_faecher(region = "EU"),
+                       choices = c("Alle MINT-Fächer",
+                                   "Naturwissenschaften, Mathematik und Statistik",
+                                   "Informatik & Kommunikationstechnologie",
+                                   "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"),
                        selected = c("Alle MINT-Fächer"),
                        multiple = FALSE#,
                        # options =  list(
@@ -65,6 +69,15 @@ mod_international_map_ui <- function(id) {
                        # options =  list(
                        #   "max-options" = 2,
                        #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+                     )),
+    conditionalPanel(condition = "input.map_l_int_studium == 'Weltweit' ",
+                     ns = ns,
+                     p("Jahr:"),
+                     shinyWidgets::sliderTextInput(
+                       inputId = ns("map_y_ww"),
+                       label = NULL,
+                       choices = international_ui_years(region = "Weltweit"),
+                       selected = "2020"
                      )),
 
     br(),
@@ -109,6 +122,9 @@ mod_international_map_server <- function(id, r){
         r$map_y_int_studium <- input$map_y_oecd
         r$map_f_int_studium <- input$map_f_oecd
       }
+      if (input$map_l_int_studium == "Weltweit"){
+        r$map_y_int_studium <- input$map_y_ww
+      }
     })
 
     observeEvent(input$map_y_oecd, {
@@ -128,6 +144,11 @@ mod_international_map_server <- function(id, r){
     observeEvent(input$map_f_eu, {
       r$map_f_int_studium <- input$map_f_eu
     })
+
+    observeEvent(input$map_y_ww, {
+      r$map_y_int_studium <- input$map_y_ww
+    })
+
 
 
   })
