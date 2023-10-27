@@ -135,6 +135,10 @@ mod_international_map_server <- function(id, r){
       r$map_f_int_studium <- input$map_f_oecd
     })
 
+    observeEvent(input$map_y_ww, {
+      r$map_y_int_studium <- input$map_y_ww
+    })
+
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
     observeEvent(input$map_y_eu, {
@@ -144,12 +148,6 @@ mod_international_map_server <- function(id, r){
     observeEvent(input$map_f_eu, {
       r$map_f_int_studium <- input$map_f_eu
     })
-
-    observeEvent(input$map_y_ww, {
-      r$map_y_int_studium <- input$map_y_ww
-    })
-
-
 
   })
 }

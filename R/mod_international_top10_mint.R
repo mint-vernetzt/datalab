@@ -66,6 +66,15 @@ mod_international_top10_mint_ui <- function(id){
                        #   "max-options" = 2,
                        #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
                      )),
+    conditionalPanel(condition = "input.map_l_int_top10 == 'Weltweit' ",
+                     ns = ns,
+                     p("Jahr:"),
+                     shinyWidgets::sliderTextInput(
+                       inputId = ns("map_y_ww_int_top10"),
+                       label = NULL,
+                       choices = international_ui_years(region = "Weltweit"),
+                       selected = "2020"
+                     )),
 
     p("Durchschnitt anzeigen:"),
     shinyWidgets::radioGroupButtons(
@@ -121,6 +130,9 @@ mod_international_top10_mint_server <- function(id, r){
         r$map_y_int_top10 <- input$map_y_oecd_int_top10
         r$map_f_int_top10 <- input$map_f_oecd_int_top10
       }
+      if (input$map_l_int_top10 == "Weltweit"){
+        r$map_y_int_top10 <- input$map_y_ww_int_top10
+      }
     })
 
     observeEvent(input$map_y_oecd_int_top10, {
@@ -129,6 +141,10 @@ mod_international_top10_mint_server <- function(id, r){
 
     observeEvent(input$map_f_oecd_int_top10, {
       r$map_f_int_top10 <- input$map_f_oecd_int_top10
+    })
+
+    observeEvent(input$map_y_ww_int_top10, {
+      r$map_y_int_top10 <- input$map_y_ww_int_top10
     })
 
     # eu check should be after oecd check, since it is the default and will

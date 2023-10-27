@@ -79,7 +79,10 @@ plot_international_map <- function(r) {
     fach_m <- "Alle MINT-Fächer"
     df <- studierende_absolventen_weltweit  %>%
       dplyr::filter(fach == "Alle MINT-Fächer") %>%
-      dplyr::filter(land != "San Marino")
+      dplyr::filter(land != "San Marino") %>%
+      dplyr::filter(jahr != "2022") %>%
+      dplyr::mutate(wert = round(wert, 1))
+
   } else if (label_m == "OECD") {
     map_selection <- golem::get_golem_options("world_map")
 
@@ -89,7 +92,14 @@ plot_international_map <- function(r) {
                       jahr == timerange &
                       ebene == 1 &
                       anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
-                                         "Master oder vergleichbar (akademisch)"))
+                                         "Master oder vergleichbar (akademisch)",
+                                         "Promotion (ISCED 8)"))
+
+    # filtern - nur Länder, für die alle Studi-Anforderungsniveaus vorliegend sind
+    df_filtered <- df_filtered %>%
+      dplyr::group_by(fach, geschlecht, jahr, land) %>%
+      dplyr::filter(dplyr::n_distinct(anforderung) == 3) %>%
+      dplyr::ungroup()
 
     # calculate total amount by land
     this_df_alle <- df_filtered %>%
@@ -106,6 +116,7 @@ plot_international_map <- function(r) {
       dplyr::ungroup() %>%
       dplyr::select(land, wert) %>%
       dplyr::left_join(this_df_alle, by = "land") %>%
+      dplyr::mutate(wert_absolut = wert) %>%
       dplyr::mutate(wert = round(wert / total * 100, 1))
 
 
@@ -133,22 +144,38 @@ plot_international_map <- function(r) {
   #countries_names <-  read.csv(file = "data/countries_de.csv")
   #save(countries_names, file = "data/countries_names.rda")
 
-  #Trennpunkte für lange Zahlen ergänzen
+  # Hover vorbereiten
   df_insp1$display_wert <- prettyNum(df_insp1$wert, big.mark = ".", decimal.mark = ",")
+  hover <- "{point.land} <br> Anteil: {point.display_wert} %"
 
-  df7 <- df_insp1 %>%
-    dplyr::select(land, jahr, fach, wert, display_wert) %>%
-    dplyr::inner_join(countries_names, by = "land") %>%
-    dplyr::mutate(alpha2 = toupper(alpha2))
+  if(label_m == "OECD"){
+    df_insp1$wert_absolut_display <- prettyNum(df_insp1$wert_absolut, big.mark = ".", decimal.mark = ",")
+    hover <- "{point.land} <br> Anteil: {point.display_wert} % <br> Anzahl: {point.wert_absolut_display}"
+  }
+
+  if(label_m == "OECD"){
+    df7 <- df_insp1 %>%
+      dplyr::select(land, jahr, fach, wert, display_wert, wert_absolut_display) %>%
+      dplyr::inner_join(countries_names, by = "land") %>%
+      dplyr::mutate(alpha2 = toupper(alpha2))
+  }else{
+    df7 <- df_insp1 %>%
+      dplyr::select(land, jahr, fach, wert, display_wert) %>%
+      dplyr::inner_join(countries_names, by = "land") %>%
+      dplyr::mutate(alpha2 = toupper(alpha2))
+  }
+
 
   # Plot
 
   # Vorbereitung Überschrift
   fach_help <- fach_m
   fach_help <- ifelse(fach_m == "Alle MINT-Fächer", "MINT", fach_help)
+  fach_help <- ifelse(fach_help == "Dienstleistungen", "Fächern aus dem Bereich 'Dienstleistungen'", fach_help)
+
   if(label_m == "Weltweit"){
     title_m <- paste0("Anteil von Studienabsolvent*innen in ", fach_help, " an allen Studienabsolvent*innen ",
-                      timerange, " weltweit (Daten: UNESCO)")
+                      timerange, " weltweit (UNESCO)")
   }else{if(label_m == "OECD"){
     title_m <- paste0("Anteil von Studierenden in ", fach_help, " an allen Studierenden ",
                       timerange, " der OECD-Staaten")
@@ -171,10 +198,10 @@ plot_international_map <- function(r) {
       name = paste0(fach_m),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
-      tooltip = list(valueDecimals = 0, valueSuffix = "%")
+      tooltip = list(valueDecimals = 1, valueSuffix = "%")
     ) %>%
-    highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_wert} %") %>%
-    highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+    highcharter::hc_tooltip(pointFormat = hover) %>%
+    highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text} %")) %>%
     highcharter::hc_title(
       text = title_m,
       margin = 10,
@@ -224,8 +251,9 @@ plot_international_top10 <- function(r) {
     fach_m <- "Alle MINT-Fächer"
     df <- studierende_absolventen_weltweit  %>%
       dplyr::filter(fach == "Alle MINT-Fächer" &
-                      jahr == timerange) %>%
-      dplyr::mutate(wert = round(wert, 2)) %>%
+                      jahr == timerange &
+                      land != "San Marino") %>%
+      dplyr::mutate(wert = round(wert, 1)) %>%
       dplyr::select(land, wert)
   }
   if (label_m == "OECD") {
@@ -236,7 +264,14 @@ plot_international_top10 <- function(r) {
                       jahr == timerange &
                       ebene == 1 &
                       anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
-                                         "Master oder vergleichbar (akademisch)"))
+                                         "Master oder vergleichbar (akademisch)",
+                                         "Promotion (ISCED 8)"))
+
+    # filtern - nur Länder, für die alle Studi-Anforderungsniveaus vorliegend sind
+    df_filtered <- df_filtered %>%
+      dplyr::group_by(fach, geschlecht, jahr, land) %>%
+      dplyr::filter(dplyr::n_distinct(anforderung) == 3) %>%
+      dplyr::ungroup()
 
     # calculate total amount by land
     this_df_alle <- df_filtered %>%
@@ -254,7 +289,7 @@ plot_international_top10 <- function(r) {
       dplyr::select(land, wert) %>%
       dplyr::left_join(this_df_alle, by = "land") %>%
       dplyr::mutate(wert_absolut = wert) %>%
-      dplyr::mutate(wert = round(wert / total * 100, 2))
+      dplyr::mutate(wert = round(wert / total * 100, 1))
 
   }
   if (label_m == "EU") {
@@ -266,7 +301,7 @@ plot_international_top10 <- function(r) {
                             fach_m == "Alle MINT-Fächer")) &
                       fach == fach_m &
                       indikator == "Fächerwahl") %>%
-      dplyr::mutate(wert = round(wert, 2)) %>%
+      dplyr::mutate(wert = round(wert, 1)) %>%
       dplyr::select(land, wert)
   }
 
@@ -279,6 +314,26 @@ plot_international_top10 <- function(r) {
   # Grenze soll immer in 10er Schritten gehen
   max_percent_used <- ceiling(min(c(100, max(df$wert) * 1.2)) / 10) * 10
 
+  # Hover vorbereiten
+  df$wert_display <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  hover <- "Anteil: {point.wert_display} %"
+  if(label_m == "OECD"){
+    df$wert_absolut_display <- prettyNum(df$wert_absolut, big.mark = ".", decimal.mark = ",")
+    hover <- "Anteil: {point.wert_display} % <br> Anzahl: {point.wert_absolut_display}"
+  }
+
+  # Überschrift vorbereiten
+  t_gruppe <- "Studierenden in "
+  t_gruppe <- ifelse(label_m == "Weltweit", "Studienabsolvent*innen in ", t_gruppe)
+  t_fach <- fach_m
+  t_fach <- ifelse(t_fach %in% c("MINT", "Alle MINT-Fächer"), "MINT-Fächern", t_fach)
+  t_fach <- ifelse(t_fach == "Dienstleistungen", "Fächern aus dem Bereich 'Dienstleistungen'", t_fach)
+  t_quelle <- ""
+  t_quelle <- ifelse(label_m == "Weltweit", " (UNESCO)", t_quelle)
+  t_quelle1 <- ""
+  t_quelle1 <- ifelse(label_m == "OECD", "OECD-", t_quelle1)
+  t_quelle1 <- ifelse(label_m == "EU", "EU-", t_quelle1)
+
 
   # Create top 10 plot
   plot_top <- highcharter::hchart(
@@ -286,8 +341,8 @@ plot_international_top10 <- function(r) {
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
     get_top10_hc_plot_options(
-      hc_title = paste0("Länder mit dem größten Anteil an '", fach_m, "' in ", timerange),
-      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}",
+      hc_title = paste0(t_quelle1, "Länder mit dem größten Anteil an ", t_gruppe, t_fach, " in ", timerange, t_quelle),
+      hc_tooltip = hover,
       max_percent_used = max_percent_used)
 
   # Create bottom 10 plot
@@ -296,8 +351,8 @@ plot_international_top10 <- function(r) {
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
     get_top10_hc_plot_options(
-      hc_title = paste0("Länder mit dem niedrigsten Anteil an '", fach_m, "' in ", timerange),
-      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}",
+      hc_title = paste0(t_quelle1, "Länder mit dem niedrigsten Anteil an ", t_gruppe, t_fach, " in ", timerange, t_quelle),
+      hc_tooltip = hover,
       max_percent_used = max_percent_used)
 
 
@@ -322,13 +377,13 @@ plot_international_top10_gender <- function(r) {
   #r <- list(map_y_int_studium_gender = "2021", map_l_int_studium_gender = "EU", map_f_int_studium_gender = "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,\n verarbeitendes Gewerbe und Baugewerbe",show_avg_top10_mint_line = "Ja", show_avg_int_studium_gender = "meisten Frauen wählen MINT")
   # load UI inputs from reactive value
 
-  timerange <- r$map_y_int_studium_gender
-  label_m <- r$map_l_int_studium_gender
-  fach_m <- r$map_f_int_studium_gender
+  timerange <- r$top10_y_int_studium_gender
+  label_m <- r$top10_l_int_studium_gender
+  fach_m <- r$top10_f_int_studium_gender
   show_avg <- r$show_avg_int_studium_gender
   # höchster Frauenanteil in MINT vs meiste Frauen wählen MINT
   # AA vs BB
-  art <- r$art_int_studium_gender
+  art <- r$top10_art_int_studium_gender
 
   if (is.null(fach_m)) { fach_m <- ""}
   if (is.null(art)) { art <- ""}
@@ -350,7 +405,14 @@ plot_international_top10_gender <- function(r) {
                       jahr == timerange &
                       ebene == 1 &
                       anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
-                                         "Master oder vergleichbar (akademisch)"))
+                                         "Master oder vergleichbar (akademisch)",
+                                         "Promotion (ISCED 8)"))
+
+    # filtern - nur Länder, für die alle Studi-Anforderungsniveaus vorliegend sind
+    df_filtered <- df_filtered %>%
+      dplyr::group_by(fach, geschlecht, jahr, land) %>%
+      dplyr::filter(dplyr::n_distinct(anforderung) == 3) %>%
+      dplyr::ungroup()
 
     # calculate total amount by land
     this_df_alle <- df_filtered %>%
@@ -380,7 +442,14 @@ plot_international_top10_gender <- function(r) {
                       jahr == timerange &
                       ebene == 1 &
                       anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
-                                         "Master oder vergleichbar (akademisch)"))
+                                         "Master oder vergleichbar (akademisch)",
+                                         "Promotion (ISCED 8)"))
+
+    # filtern - nur Länder, für die alle Studi-Anforderungsniveaus vorliegend sind
+    df_filtered <- df_filtered %>%
+      dplyr::group_by(fach, geschlecht, jahr, land) %>%
+      dplyr::filter(dplyr::n_distinct(anforderung) == 3) %>%
+      dplyr::ungroup()
 
     # calculate total amount by land
     this_df_alle <- df_filtered %>%
@@ -413,8 +482,10 @@ plot_international_top10_gender <- function(r) {
                          (mint_select == "nicht mint" &
                             fach_m == "Alle MINT-Fächer")) &
                       fach == fach_m &
-                      indikator == "Frauen-/Männeranteil") %>%
+                      indikator == "Frauen-/Männeranteil" &
+                      land != "EU (27), seit 2020") %>%
       dplyr::select(land, wert)
+
   }
   if (label_m == "EU" & art == "meisten Frauen wählen MINT") {
     # meiste Frauen wählen MINT
@@ -426,7 +497,8 @@ plot_international_top10_gender <- function(r) {
                          (mint_select == "nicht mint" &
                             fach_m == "Alle MINT-Fächer")) &
                       fach == fach_m &
-                      indikator == "Fächerwahl") %>%
+                      indikator == "Fächerwahl"&
+                      land != "EU (27), seit 2020") %>%
       dplyr::select(land, wert)
   }
 
@@ -440,14 +512,29 @@ plot_international_top10_gender <- function(r) {
     dplyr::filter(!is.na(wert)) %>%
     dplyr::mutate(wert = round(wert, 1))
 
+  # Hover vorbereiten
+  df$wert_display <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  hover <- "Anteil: {point.wert_display} %"
+  if(label_m == "OECD"){
+    df$wert_absolut_display <- prettyNum(df$wert_absolut, big.mark = ".", decimal.mark = ",")
+    hover <- "Anteil: {point.wert_display} % <br> Anzahl: {point.wert_absolut_display}"
+  }
+
+  # Überschrift vorbereiten
+  t_quelle1 <- "OECD-"
+  t_quelle1 <- ifelse(label_m == "EU", "EU-", t_quelle1)
+  t_fach <- fach_m
+  t_fach <- ifelse(t_fach %in% c("MINT", "Alle MINT-Fächer"), "MINT-Fächern", t_fach)
+  t_fach <- ifelse(t_fach == "Dienstleistungen", "Fächern aus dem Bereich 'Dienstleistungen'", t_fach)
+
   # Create top 10 plot
   plot_top <- highcharter::hchart(
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
     get_top10_hc_plot_options(
-      hc_title = paste0("Länder mit dem größten Anteil an '", fach_m, "' in ", timerange),
-      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}",
+      hc_title = paste0(t_quelle1, "Länder mit dem größten Frauenanteil an Studierenden in ", t_fach, " in ", timerange),
+      hc_tooltip = hover,
       max_percent_used = max_percent_used)
 
 

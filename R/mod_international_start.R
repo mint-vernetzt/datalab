@@ -123,7 +123,7 @@ mod_international_start_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_top10_mint_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; als Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_1", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
@@ -147,7 +147,7 @@ mod_international_start_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_top10_mint_gender_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; als Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_1", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
