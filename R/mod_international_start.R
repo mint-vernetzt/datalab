@@ -8,6 +8,9 @@
 #'
 #' @importFrom shiny NS tagList
 mod_international_start_ui <- function(id){
+
+  logger::log_debug("start mod_international_start_ui")
+
   ns <- NS(id)
   tagList(
 
@@ -72,18 +75,18 @@ mod_international_start_ui <- function(id){
     ),
 
 
-    # Box 1
+    # Box 1 - Studium
 
     fluidRow(id="international_maps",
              shinydashboard::box(
-               title = "LOREM IPSUM MAPS",
+               title = "INTERNATIONAL - STUDIUM",
                width = 12,
                p("LOREM IPSUM INFO"),
                tabsetPanel(type = "tabs",
                            tabPanel("Vergleich Fächer (Karte)", br(),
 
-                             #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
                                     shiny::sidebarPanel(
                                       width = 3,
@@ -95,7 +98,7 @@ mod_international_start_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_studienzahl_map_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; als Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_1", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
@@ -120,7 +123,7 @@ mod_international_start_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_top10_mint_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; als Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_1", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
@@ -129,34 +132,118 @@ mod_international_start_ui <- function(id){
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
                                     )
                            ),
-                           
+
                            tabPanel("Vergleiche Top 10 (Frauen)", br(),
-                                    
+
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                     # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                                    
+
                                     shiny::sidebarPanel(
                                       width = 3,
                                       p("LOREM"),
                                       mod_international_top10_mint_gender_ui("international_top10_mint_gender_1")
-                                      
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
                                       htmlOutput(ns("plot_international_top10_mint_gender_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                                      
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; als Download, eigene Berechnungen durch MINTvernetzt."),
+
                                       shinyBS::bsPopover(id="h_international_1", title="",
+                                                         content = paste0("POPUP INFO TEXT HERE"),
+                                                         placement = "top",
+                                                         trigger = "hover"),
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_1")
+                                    )
+                           )
+               )
+             )
+    ),
+
+    # Box 2 - Schule
+    fluidRow(id="international_schule",
+             shinydashboard::box(
+               title = "INTERNATIONAL - SCHULE",
+               width = 12,
+               p("LOREM IPSUM INFO"),
+               tabsetPanel(type = "tabs",
+                           tabPanel("Vergleich Länder (Karte)", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      p("LOREM"),
+                                      mod_international_schule_map_ui("international_schule_map_1")
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_schule_map_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                      shinyBS::bsPopover(id="h_international_2", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
                                                          placement = "top",
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
                                     )
-                           )
-                           
+                           ),
 
-               )))
+                           tabPanel("Ländervergleich Item", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      p("LOREM"),
+                                      mod_international_schule_item_ui("international_schule_item_1")
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_schule_item_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: IEA, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                      shinyBS::bsPopover(id="h_international_3", title="",
+                                                         content = paste0("POPUP INFO TEXT HERE"),
+                                                         placement = "top",
+                                                         trigger = "hover"),
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_3")
+                                    )
+                           ),
+
+                           tabPanel("alle Länder im Vergleich", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      p("LOREM"),
+                                      mod_international_schule_migration_ui("international_schule_migration_1")
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_schule_migration_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                      shinyBS::bsPopover(id="h_international_4", title="",
+                                                         content = paste0("POPUP INFO TEXT HERE"),
+                                                         placement = "top",
+                                                         trigger = "hover"),
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_4")
+                                    )
+                           )
+               )
+             )
+    )
   )
 }
 
@@ -164,22 +251,43 @@ mod_international_start_ui <- function(id){
 #'
 #' @noRd
 mod_international_start_server <- function(id, r){
+
+  logger::log_debug("start mod_international_start_server")
+
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # Box 1
+    # Box 1 - Studium
     output$plot_international_studienzahl_map_1 <- renderUI({
+      logger::log_debug("plot_international_map")
       plot_international_map(r)
     })
 
     output$plot_international_top10_mint_1 <- renderUI({
+      logger::log_debug("plot_international_top10")
       plot_international_top10(r)
     })
-    
+
     output$plot_international_top10_mint_gender_1 <- renderUI({
+      logger::log_debug("plot_international_top10_gender")
       plot_international_top10_gender(r)
     })
 
+    # Box 2 - Schule
+    output$plot_international_schule_map_1 <- renderUI({
+      logger::log_debug("plot_international_schule_map")
+      plot_international_schule_map(r)
+    })
+
+    output$plot_international_schule_item_1 <- renderUI({
+      logger::log_debug("plot_international_schule_item")
+      plot_international_schule_item(r)
+    })
+
+    output$plot_international_schule_migration_1 <- renderUI({
+      logger::log_debug("plot_international_schule_migration")
+      plot_international_schule_migration(r)
+    })
 
   })
 }

@@ -6,6 +6,9 @@
 #' @import shiny.info
 #' @noRd
 app_ui <- function(request) {
+  logger::log_info("Start APP UI")
+  logger::log_threshold(level = Sys.getenv("LOG_LEVEL", "INFO"))
+
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
@@ -77,7 +80,7 @@ app_ui <- function(request) {
       # Show the appropriate tab's content in the main body of our dashboard when we select it
       body = shinydashboard::dashboardBody(
         # display shiny version
-        shiny.info::version(ver = "1.0.0:9001",
+        shiny.info::version(ver = "1.0.0:9002",
                             position = "bottom left"),
 
         # Matomo einbinden
@@ -125,9 +128,10 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
           shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),
           shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))
-        )
+          )
       )
-))
+    )
+  )
 }
 
 #' Add external Resources to the Application
