@@ -3399,6 +3399,11 @@ epa_detail <- epa_detail %>%
 ## umbennenung mint_select
 colnames(epa_detail)[7]<-"mint_zuordnung"
 
+
+# gesamtwert als wert-Zeile ergänzen
+epa_ges <- epa_detail
+
+
 # in shinyapp:
 arbeitsmarkt_epa_detail <- epa_detail
 usethis::use_data(arbeitsmarkt_epa_detail, overwrite = T)
