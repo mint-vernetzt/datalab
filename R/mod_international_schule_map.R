@@ -47,7 +47,8 @@ mod_international_schule_map_ui <- function(id){
                      p("Leistungsindikator"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_li_timss_int_schule"),
-                       choices = c("Test-Punktzahl", "Mittlerer Standard erreicht"),
+                       choices = c("Test-Punktzahl",
+                                   "Anteil Schüler*innen, die mittleren Standard erreicht" =  "Mittlerer Standard erreicht"),
                        selected = c("Test-Punktzahl"),
                        multiple = FALSE
                      )),
@@ -70,13 +71,14 @@ mod_international_schule_map_ui <- function(id){
                        multiple = FALSE
                      ),
 
-                     p("Leistungsindikator"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("map_li_pisa_int_schule"),
-                       choices = c("Test-Punktzahl"),
-                       selected = c("Test-Punktzahl"),
-                       multiple = FALSE
-                     )),
+                     # p("Leistungsindikator"),
+                     # shinyWidgets::pickerInput(
+                     #   inputId = ns("map_li_pisa_int_schule"),
+                     #   choices = c("Test-Punktzahl"),
+                     #   selected = c("Test-Punktzahl"),
+                     #   multiple = FALSE
+                     # )
+                     ),
 
     br(),
 
@@ -119,7 +121,7 @@ mod_international_schule_map_server <- function(id, r){
       if (input$map_l_int_schule == "PISA") {
         r$map_y_int_schule <- input$map_y_pisa_int_schule
         r$map_f_int_schule <- input$map_f_pisa_int_schule
-        r$map_li_int_schule <- input$map_li_pisa_int_schule
+        # r$map_li_int_schule <- input$map_li_pisa_int_schule
       }
     })
 
@@ -131,9 +133,9 @@ mod_international_schule_map_server <- function(id, r){
       r$map_f_int_schule <- input$map_f_pisa_int_schule
     })
 
-    observeEvent(input$map_li_pisa_int_schule, {
-      r$map_li_int_schule <- input$map_li_pisa_int_schule
-    })
+    # observeEvent(input$map_li_pisa_int_schule, {
+    #   r$map_li_int_schule <- input$map_li_pisa_int_schule
+    # })
 
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up

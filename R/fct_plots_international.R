@@ -609,7 +609,7 @@ plot_international_schule_map <- function(r) {
       dplyr::filter(bereich == "Ländermittel" &
                       indikator == "Insgesamt")
 
-    help_l <- "9./10. Klasse"
+    help_l <- "9. & 10. Klasse"
   }
 
 
@@ -620,19 +620,32 @@ plot_international_schule_map <- function(r) {
                     !is.na(wert))
 
 
-  #Trennpunkte für lange Zahlen ergänzen
-  dfs$display_wert <- prettyNum(round(dfs$wert, 2),
+  # Hover & Titel vorbereiten
+  titel <- paste0("Durschnittliche Leistung von Schüler:innen der ", help_l,
+         " im ", fach_m, "-Kompetenztest von ",
+         label_m, " ", timerange)
+
+  dfs$display_wert <- prettyNum(round(dfs$wert, 0),
                                 big.mark = ".",
                                 decimal.mark = ",")
 
   if (leistungsindikator_m == "Test-Punktzahl") {
-    tooltip_prefix <- "Punkte"
+    tooltip_prefix <- "Punktzahl"
     tooltip_scale <- ""
   }
   if (leistungsindikator_m == "Mittlerer Standard erreicht") {
     tooltip_prefix <- "Anteil"
     tooltip_scale <- "%"
+    titel <- paste0("Anteil an Schüler:innen der ", help_l,
+                    " die im ", fach_m, "-Kompetenztest von ",
+                    label_m, " den mittleren internationalen Standard erreichen ", timerange)
   }
+
+  # Skalen-Minimum/-Maximum anpassen
+  s_min <- ifelse(label_m == "PISA", 300, 200)
+  s_min <- ifelse(label_m == "TIMSS" & leistungsindikator_m == "Mittlerer Standard erreicht", 0, s_min)
+  s_max <- ifelse(label_m == "PISA", 600, 650)
+  s_max <- ifelse(label_m == "TIMSS" & leistungsindikator_m == "Mittlerer Standard erreicht", 100, s_max)
 
   data_map_1 <- dfs %>%
     dplyr::select(land, jahr, fach, wert, display_wert) %>%
@@ -641,7 +654,6 @@ plot_international_schule_map <- function(r) {
 
 
   map_selection <- golem::get_golem_options("world_map")
-
 
   # plot
   highcharter::highchart(type = "map") %>%
@@ -661,13 +673,12 @@ plot_international_schule_map <- function(r) {
     highcharter::hc_tooltip(
       pointFormat = paste0("{point.land} <br> ", tooltip_prefix,
                            ": {point.display_wert} ", tooltip_scale)) %>%
-    highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6",
+    highcharter::hc_colorAxis(min=s_min, max=s_max,
+                              minColor= "#f4f5f6",
                               maxColor="#b16fab",
                               labels = list(format = paste0("{text}", tooltip_scale))) %>%
     highcharter::hc_title(
-      text = paste0("Durschnittliche Leistung von Schüler:innen der ", help_l,
-                    " im ", fach_m, "-Kompetenztest von ",
-                    label_m, " ", timerange),
+      text = titel,
       margin = 10,
       align = "center",
       style = list(color = "black",
@@ -727,11 +738,11 @@ plot_international_schule_item <- function(r) {
     # diff <- c("Ja", "Ja")
 
     if (all(diff == "Nein") | all(diff == "Ja")) {
-      out <- "kein Unterschied"
+      out <- "kein signifikanter Unterschied"
     } else if (diff[gender == "Jungen"] == "Ja") {
-      out <- "Jungen besser"
+      out <- "Jungen signifikant besser"
     } else if (diff[gender == "Mädchen"] == "Ja") {
-      out <- "Mädchen besser"
+      out <- "Mädchen signifikant besser"
     }
 
     return(out)
@@ -739,11 +750,11 @@ plot_international_schule_item <- function(r) {
 
   # enthält den Text für den plot
   group_col_dt <- data.frame(
-    group = c("kein Unterschied", "Jungen besser", "Mädchen besser"),
-    group_text = c(" mit keinem Unterschied zwischen Jungen und Mädchen",
-                   ", in denen Jungen besser abschneiden als Mädchen",
-                   ", in denen Mädchen besser abscheniden als Jungen"),
-    group_col = c("#EFE8E8", "#D0A9CD", "#B16FAB")
+    group = c("kein signifikanter Unterschied", "Jungen signifikant besser", "Mädchen signifikant besser"),
+    group_text = c(" mit keinem signifikaten Unterschied zwischen Jungen und Mädchen",
+                   ", in denen Jungen signifikant besser abschneiden als Mädchen",
+                   ", in denen Mädchen signifikant besser abscheniden als Jungen"),
+    group_col = c("#35bd97", "#FBBF24", "#154194")
   )
 
   # reshape long to wide for later merge
@@ -774,10 +785,11 @@ plot_international_schule_item <- function(r) {
     )) %>%
     dplyr::filter(!is.na(count))
 
-
   # Farbe für Deutschland
-  # TODO anpassen fpr verschiede Gruppen
-  plot_data$group_col[plot_data$land == "Deutschland"] <- "#66CBAF"
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#FEF3C7", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#5f94f9", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "kein signifikanter Unterschied", "#AFF3E0", plot_data$group_col )
+
 
   out <- highcharter::hchart(
     plot_data,
@@ -800,9 +812,9 @@ plot_international_schule_item <- function(r) {
                            " Jungen: {point.wert_Jungen}<br>",
                            " Mädchen: {point.wert_Mädchen}")) %>%
     highcharter::hc_title(
-      text = paste0("Ländervergleich von Geschlechtsunterschieden im ",
+      text = paste0("Geschlechtsunterschiede der 4.-Klässler:innen im ",
                     fach_m, "-Kompetenztest von ",
-                    label_m, " der 4. Klasse (", timerange, ")"),
+                    label_m, " im Ländervergleich (", timerange, ")"),
       margin = 10,
       align = "center",
       style = list(color = "black",
@@ -814,7 +826,8 @@ plot_international_schule_item <- function(r) {
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>%
     highcharter::hc_size(600, 450) %>%
-    highcharter::hc_credits(enabled = FALSE) #%>%
+    highcharter::hc_credits(enabled = FALSE)
+  #%>%
   # highcharter::hc_legend(layout = "horizontal", floating = FALSE,
   #                        verticalAlign = "bottom")
 
@@ -868,6 +881,13 @@ plot_international_schule_migration <- function(r) {
                       typ == this_typ)
 
     help_l <- "4. Klasse"
+
+    # Labels anpassen
+
+    df$indikator[df$indikator == "Viele Ressourcen"] <- "hoher sozialer Status"
+    df$indikator[df$indikator == "Einige Ressourcen"] <- "mittlerer sozialer Status"
+    df$indikator[df$indikator == "Wenige Ressourcen"] <- "niedriger sozialer Status"
+
   }
   if (label_m == "PISA") {
 
@@ -884,15 +904,22 @@ plot_international_schule_migration <- function(r) {
       "nach Zuwanderungsgeschichte" = c("Keiner",
                                         "Zweite Generation",
                                         "Erste Generation"),
-      "nach Bildungskapital" = c("Keine", "26-100", "Mehr als 500")
+      "nach Bildungskapital" = c("0-10", "26-100", "Mehr als 500")
     )
 
     df <- schule_pisa %>%
       dplyr::filter(bereich == this_bereich &
                       indikator %in% this_indikator)
 
+    # Labels anpassen
+    df$indikator[df$indikator == "Keiner"] <- "ohne Zuwanderungsgeschichte"
+    df$indikator[df$indikator == "Zweite Generation"] <- "Eltern zugewandert"
+    df$indikator[df$indikator == "Erste Generation"] <- "Kind selbst zugewandert"
+    df$indikator[df$indikator == "0-10"] <- "sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)"
+    df$indikator[df$indikator == "26-100"] <- "niedriges Bildungskapital (bis zu 100 Bücher zuhause)"
+    df$indikator[df$indikator == "Mehr als 500"] <- "hohes Bildungskapital (über 500 Bücher zuhause)"
 
-    help_l <- "9./10. Klasse"
+    help_l <- "9. & 10. Klasse"
   }
 
 
@@ -911,14 +938,14 @@ plot_international_schule_migration <- function(r) {
 
 
   #Trennpunkte für lange Zahlen ergänzen
-  dfs$display_wert <- prettyNum(round(dfs$wert, 2),
+  dfs$display_wert <- prettyNum(round(dfs$wert, 0),
                                 big.mark = ".",
                                 decimal.mark = ",")
+
 
   data_line <- dfs %>%
     dplyr::select(land, wert, display_wert, indikator)
 
-  # TODO adjust colors
   line_colors <- c("#B16FAB", "#154194", "#35BD97",
                    "#8893A7", "#FBBF24", "#9D7265")
   color <- line_colors[seq_along(this_indikator)]
@@ -930,15 +957,15 @@ plot_international_schule_migration <- function(r) {
     highcharter::hcaes(y = wert, x = land, group = indikator)
   ) %>%
     highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-    highcharter::hc_tooltip(pointFormat = "{point.land} <br> {point.display_wert} Pkt")%>%
+    highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> {point.display_wert} Pkt")%>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth=100) %>%
     highcharter::hc_xAxis(title = list(text = ""), labels = list(rotation = 270)) %>%
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
     #highcharter::hc_colors(c("#efe8e6","#D0A9CD", "#b16fab")) %>%
     highcharter::hc_colors(color) %>%
     highcharter::hc_title(
-      text = paste0("Durchschnittliche Leistung von ", help_l,
-                    " Schüler:innen im ", fach_m, "-Kompetenztest von ",label_m, " ",
+      text = paste0("Durchschnittliche Leistung von Schüler:innen der ", help_l,
+                    " im ", fach_m, "-Kompetenztest von ",label_m, " ",
                     leistungsindikator_m, " (", timerange, ")"),
       margin = 45,
       align = "center",

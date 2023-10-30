@@ -130,7 +130,7 @@ mod_international_top10_mint_gender_server <- function(id, r){
       r$top10_y_int_studium_gender <- input$top10_y_oecd_gender
     })
 
-    observeEvent(input$top10_f_oecd, {
+    observeEvent(input$top10_f_oecd_gender, {
       r$top10_f_int_studium_gender <- input$top10_f_oecd_gender
     })
 
@@ -144,8 +144,8 @@ mod_international_top10_mint_gender_server <- function(id, r){
       r$top10_f_int_studium_gender <- input$top10_f_eu_gender
     })
 
-    observeEvent(input$art_gender, {
-      r$art_int_studium_gender <- input$art_gender
+    observeEvent(input$top10_art_gender, {
+      r$top10_art_int_studium_gender <- input$top10_art_gender
     })
 
 

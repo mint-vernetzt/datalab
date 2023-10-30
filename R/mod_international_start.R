@@ -182,7 +182,7 @@ mod_international_start_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_schule_map_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_2", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
@@ -207,7 +207,7 @@ mod_international_start_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_schule_item_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: IEA, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_3", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
@@ -232,7 +232,7 @@ mod_international_start_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_schule_migration_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_4", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
