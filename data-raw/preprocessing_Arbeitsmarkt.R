@@ -2554,6 +2554,13 @@ usethis::use_data(epa, overwrite = T)
 # pfad <- paste0("C:/Users/", akro,
 #                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
+
+
+## WICHTIG - man muss hier immer die Aufbereitung "Engpassanalyse" zuvor laufen lassen
+##          oder man läd epa.rda - baut aufeinander auf
+library(dplyr)
+
+
 epa_einlesen <- function(name, sheet_s){
   df <- readxl::read_excel(paste0(pfad, name),
                            sheet = sheet_s,
@@ -3401,7 +3408,20 @@ colnames(epa_detail)[7]<-"mint_zuordnung"
 
 
 # gesamtwert als wert-Zeile ergänzen
-epa_ges <- epa_detail
+epa_ges <- epa_detail %>%
+  dplyr::select(-c(wert, indikator))
+epa_ges <- unique(epa_ges)
+epa_ges$wert <- epa_ges$gesamtwert
+epa_ges$indikator <- "Engpassindikator"
+epa_ges$indikator <- ifelse(epa_ges$kategorie == "Risikoanalyse", "Risikoindikator", epa_ges$indikator)
+epa_ges$indikator <- ifelse(epa_ges$kategorie == "Ergänzungsindikatoren", NA, epa_ges$indikator)
+
+epa_detail <- rbind(epa_detail, epa_ges)
+
+epa_detail <- epa_detail %>%
+  dplyr::select(-gesamtwert)
+
+epa_detail$epa_kat <- ifelse(epa_detail$indikator == "Engpassindikator", epa_detail$epa_kat, NA)
 
 
 # in shinyapp:
