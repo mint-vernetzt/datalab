@@ -15,7 +15,7 @@ mod_international_map_fem_ui <- function(id) {
     shinyWidgets::pickerInput(
       inputId = ns("map_l_f"),
       choices = c("EU", "OECD"),
-      selected = "OECD",
+      selected = "EU",
       multiple = FALSE#,
       # options =  list(
       #   "max-options" = 2,
@@ -57,15 +57,15 @@ mod_international_map_fem_ui <- function(id) {
                        choices = international_ui_faecher(region = "OECD"),
                        selected = c("MINT"),
                        multiple = FALSE
-                     ),
-                     p("Anforderungsniveau:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("map_lev_oecd_f"),
-                       choices = c("Bachelor oder vergleichbar (akademisch)",
-                                   "Master oder vergleichbar (akademisch)",
-                                   "Promotion (ISCED 8)"),
-                       selected = c("Promotion (ISCED 8)"),
-                       multiple = FALSE)
+                     )#,
+                     # p("Anforderungsniveau:"),
+                     # shinyWidgets::pickerInput(
+                     #   inputId = ns("map_lev_oecd_f"),
+                     #   choices = c("Bachelor oder vergleichbar (akademisch)",
+                     #               "Master oder vergleichbar (akademisch)",
+                     #               "Promotion (ISCED 8)"),
+                     #   selected = c("Promotion (ISCED 8)"),
+                     #   multiple = FALSE)
     ))
 
 
@@ -90,8 +90,26 @@ mod_international_map_fem_server <- function(id, r){
       if (input$map_l_f == "OECD") {
         r$map_y_f <- input$map_y_oecd_f
         r$map_f_f <- input$map_f_oecd_f
-        r$map_le_f <- input$map_lev_oecd_f
+        #r$map_le_f <- input$map_lev_oecd_f
       }
+    })
+
+    observeEvent(input$map_y_oecd_f, {
+      r$map_y_f <- input$map_y_oecd_f
+    })
+
+    observeEvent(input$map_f_oecd_f, {
+      r$map_f_f <- input$map_f_oecd_f
+    })
+
+    # eu check should be after oecd check, since it is the default and will
+    # otherwise be overwritten on initial load up
+    observeEvent(input$map_y_eu_f, {
+      r$map_y_f <- input$map_y_eu_f
+    })
+
+    observeEvent(input$map_f_eu_f, {
+      r$map_f_f <- input$map_f_eu_f
     })
 
 

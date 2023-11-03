@@ -102,38 +102,38 @@ mod_international_top10_mint_server <- function(id, r){
     ns <- session$ns
 
     observeEvent(input$show_avg_top10_mint_line, {
-      r$show_avg_top10_mint_line <- input$show_avg_top10_mint_line
+      r$show_avg_top10_mint_line_m <- input$show_avg_top10_mint_line
     })
 
     observeEvent(input$map_l, {
-      r$map_l <- input$map_l
+      r$map_l_m <- input$map_l
       r$show_avg_top10_mint_line <- input$show_avg_top10_mint_line
       if (input$map_l == "EU") {
-        r$map_y <- input$map_y_eu
-        r$map_f <- input$map_f_eu
+        r$map_y_m <- input$map_y_eu
+        r$map_f_m <- input$map_f_eu
       }
       if (input$map_l == "OECD") {
-        r$map_y <- input$map_y_oecd
-        r$map_f <- input$map_f_oecd
+        r$map_y_m <- input$map_y_oecd
+        r$map_f_m <- input$map_f_oecd
       }
     })
 
     observeEvent(input$map_y_oecd, {
-      r$map_y <- input$map_y_oecd
+      r$map_y_m <- input$map_y_oecd
     })
 
     observeEvent(input$map_f_oecd, {
-      r$map_f <- input$map_f_oecd
+      r$map_f_m <- input$map_f_oecd
     })
 
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
     observeEvent(input$map_y_eu, {
-      r$map_y <- input$map_y_eu
+      r$map_y_m <- input$map_y_eu
     })
 
     observeEvent(input$map_f_eu, {
-      r$map_f <- input$map_f_eu
+      r$map_f_m <- input$map_f_eu
     })
 
   })

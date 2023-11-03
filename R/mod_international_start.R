@@ -76,11 +76,11 @@ mod_international_start_ui <- function(id){
 
     fluidRow(id="international_maps",
              shinydashboard::box(
-               title = "LOREM IPSUM MAPS",
+               title = "Studium International",
                width = 12,
                p("LOREM IPSUM INFO"),
                tabsetPanel(type = "tabs",
-                           tabPanel("Vergleich Fächer (Karte)", br(),
+                           tabPanel("Vergleich MINT-Anteil (Karte)", br(),
 
                              #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -105,7 +105,7 @@ mod_international_start_ui <- function(id){
                                     )
                            ),
 
-                           tabPanel("Vergleich Frauenanteil (Karte)", br(),
+                           tabPanel("Vergleich Frauen in MINT (Karte)", br(),
 
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                     # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -187,14 +187,13 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       p("LOREM"),
-                                      mod_international_top10_mint_gender_ui("international_top10_mint_gender_1")
+                                      mod_international_top10_mint_intl_ui("mod_international_top10_mint_intl_ui_1")
 
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      htmlOutput(ns("plot_international_top10_mint_gender_1")),
-                                      p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                      htmlOutput(ns("plot_international_map_arb_gender_1")),
+
 
                                       shinyBS::bsPopover(id="h_international_1", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
@@ -205,7 +204,59 @@ mod_international_start_ui <- function(id){
                            )
 
 
-               )))
+               ))),
+
+
+  # Box 2
+
+  fluidRow(id="arb_placeholder",
+           shinydashboard::box(
+             title = "Arbeitsmarkt International",
+             width = 12,
+             p("LOREM IPSUM INFO"),
+             tabsetPanel(type = "tabs",
+                         tabPanel("Vergleich MINT-Anteil (Karte)", br(),
+
+                                  #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                  # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    p("LOREM"),
+                                    mod_international_map_arb_ui("mod_international_map_arb_ui_1")
+
+
+
+                                  ),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    htmlOutput(ns("plot_international_studienzahl_map_arb_1")),
+
+                                  )
+                         ),
+                         tabPanel("Vergleich Frauen in MINT (Karte)", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      p("LOREM"),
+                                      mod_international_map_arb_gender_ui("mod_international_map_arb_gender_ui_1")
+
+
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_studienzahl_map_arb_1")),
+
+                                    )
+                         )
+
+
+             )))
+
   )
 }
 
@@ -233,10 +284,19 @@ mod_international_start_server <- function(id, r){
     plot_international_map_fem(r)
     })
 
-
-    output$plot_international_mint_top_10 <- reederUI({
+    output$plot_international_mint_top_10_1 <- renderUI({
       plot_international_mint_top_10(r)
     })
+
+    # Box 2
+    output$plot_international_studienzahl_map_arb_1 <- renderUI({
+      plot_international_map_arb(r)
+    })
+
+    output$plot_international_map_arb_gender_1 <- renderUI({
+      plot_international_map_arb_gender(r)
+    })
+
 
 
   })
