@@ -61,9 +61,9 @@ mod_studium_studienzahl_ausl_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("ebene_ausl"),
       choices = c("MINT-Fächer",
-                  "Fachbereiche (inkl. Nicht-MINT)" = "Fachbereiche"
+                  "Fachbereiche"
       ),
-      selected = "Fachbereiche (inkl. Nicht-MINT)"
+      selected = "Fachbereiche"
     ),
     br(),
     shinyBS::bsPopover(id="ih_studium_international_1", title="",

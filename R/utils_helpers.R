@@ -221,9 +221,9 @@ share_pie_neu <- function(df) {
 # funktion zur ordnung der fachauswahl für studierende_detailliert
 studi_det_ui_faecher <-function(spezif_i, spezif_r){
 
-  require(magrittr)
-
-  load("data/studierende_detailliert.rda")
+  # require(magrittr)
+  #
+  # load("data/studierende_detailliert.rda")
 
 
   if(missing(spezif_i)&missing(spezif_r)){

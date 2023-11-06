@@ -3054,7 +3054,8 @@ ranking_bl_subject <- function(df,r, type) {
     dplyr::filter(region == states)%>%
     dplyr::filter(indikator == r_lab)%>%
     dplyr::filter(!is.na(wert))%>%
-    dplyr::filter(prop != 0)
+    dplyr::filter(prop != 0,
+                  fach != "Naturwissenschaften")
 
 
     ticks <- c("Alle MINT-Fächer",
@@ -3106,9 +3107,7 @@ highcharter::hchart(df6, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
   highcharter::hc_plotOptions(bar = list(
     colorByPoint = TRUE,
     colors = ifelse(df6$fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer",
-                                           "Ingenieurwissenschaften ohne Informatik",
                                            "Ingenieurwissenschaften (inkl. Informatik)",
-                                           "Naturwissenschaften",
                                     "Mathematik, Naturwissenschaften"
                                            ), "#b16fab", "#d0a9cd")))%>%#balken lila für MINT
   highcharter::hc_title(text = paste0( "Anteil einzelner Fächer an allen Fächern ", "(", r_lab, ")" , " in ",states,
@@ -5923,12 +5922,13 @@ plot_auslaender_mint <- function(df,r){
 
   df_aus_3 <- df_aus_2 %>%
     dplyr::filter(fach %in% c("Geisteswissenschaften",
-                              "Naturwissenschaften",
+                              "Mathematik, Naturwissenschaften",
                               "Rechts-, Wirtschafts- und Sozialwissenschaften",
                               "Humanmedizin/Gesundheitswissenschaften",
                               "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
                               "Sport",
                               "Kunst, Kunstwissenschaft",
+                              "Alle Fächer",
                               "Alle MINT-Fächer",
                               "Alle Nicht MINT-Fächer",
                               "Ingenieurwissenschaften (inkl. Informatik)"))
@@ -5936,15 +5936,19 @@ plot_auslaender_mint <- function(df,r){
 
   df_aus_4 <- df_aus_2 %>%
     dplyr::filter(!fach %in% c("Geisteswissenschaften",
-                               "Naturwissenschaften",
+                               "Mathematik, Naturwissenschaften",
                                "Rechts-, Wirtschafts- und Sozialwissenschaften",
                                "Humanmedizin/Gesundheitswissenschaften",
                                "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
                                "Sport",
                                "Kunst, Kunstwissenschaft",
-                               "Ingenieurwissenschaften (inkl. Informatik)",
+                               "Ingenieurwissenschaften ohne Informatik",
                                "Alle Nicht MINT-Fächer",
-                               "Alle MINT-Fächer"))
+                               "Alle MINT-Fächer",
+                               "Alle Fächer",
+                               "Mathematik, Naturwissenschaften",
+                               "Ingenieurwissenschaften (inkl. Informatik)"))
+  df_aus_4$fach <- as.factor(df_aus_4$fach)
 
   #Faktor für Höhe des Grafens berechnen
   ebene <- c("Fachbereiche", "MINT-Fächer")
@@ -5953,7 +5957,11 @@ plot_auslaender_mint <- function(df,r){
 
   # NA aus fach entfernen für BULAs mit weniger Studienfachgruppen
   df_aus_3 <- stats::na.omit(df_aus_3)
+  df_aus_3 <- df_aus_3 %>%
+    dplyr::arrange(wert)
   df_aus_4 <- stats::na.omit(df_aus_4)
+  df_aus_4 <- df_aus_4 %>%
+    dplyr::arrange(wert)
 
 
   # Vorbereitung Überschrift
@@ -5962,6 +5970,7 @@ plot_auslaender_mint <- function(df,r){
 
   help2 <- "Studierenden"
   help2 <- ifelse(grepl("anfänger", status_select), "Studienanfänger:innen", help2)
+
 
 if(betr_ebene=="Fachbereiche"){
 
@@ -5980,7 +5989,18 @@ if(betr_ebene=="Fachbereiche"){
     highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.y} %")%>%
     highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_xAxis(title = list(text = ""), categories = c("Alle Fächer",
+                                                                  "Alle MINT-Fächer",
+                                                                  "Alle Nicht MINT-Fächer",
+                                                                  "",
+                                                                  "Ingenieurwissenschaften (inkl. Informatik)",
+                                                                  "Kunst, Kunstwissenschaft",
+                                                                  "Mathematik, Naturwissenschaften",
+                                                                  "Geisteswissenschaften",
+                                                                  "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                                                                  "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+                                                                  "Humanmedizin/Gesundheitswissenschaften",
+                                                                  "Sport")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
     highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", bl_select,  " (",year_select, ")" ),
@@ -6014,11 +6034,24 @@ if(betr_ebene=="Fachbereiche"){
         dplyr::filter(selector == "Anzahl")
 
 
+
+
   highcharter::hchart(dfh, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
     highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.y}")%>%
     highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_xAxis(title = list(text = ""), categories = c("Alle Fächer",
+                                                                  "Alle MINT-Fächer",
+                                                                  "Alle Nicht MINT-Fächer",
+                                                                  "",
+                                                                  "Ingenieurwissenschaften (inkl. Informatik)",
+                                                                  "Rechts-, Wirtschafts- und Sozialwissenschaften",
+                                                                  "Mathematik, Naturwissenschaften",
+                                                                  "Geisteswissenschaften",
+                                                                  "Kunst, Kunstwissenschaft",
+                                                                  "Humanmedizin/Gesundheitswissenschaften",
+                                                                  "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin",
+                                                                  "Sport")) %>%
     #highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
     highcharter::hc_title(text = paste0("Anzahl internationaler ", help, " in ", bl_select,  " (",year_select, ")" ),
@@ -6045,18 +6078,39 @@ if(betr_ebene=="Fachbereiche"){
 
         dfhh <- df_aus_4 %>%
           dplyr::filter(selector == "In Prozent")%>%
-          dplyr::mutate(wert = round(wert*100, 1))
-
-
+          dplyr::mutate(wert = round(wert*100, 1)) %>%
+          dplyr::arrange(wert)
 
 
     highcharter::hchart(dfhh, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
       highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.y} %")%>%
       highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_xAxis(title = list(text = "")
+        #                     , categories = c(
+        # "Mathematik, Naturwissenschaften",
+        # "Mathematik",
+        # "Physik, Astronomie",
+        # "Chemie",
+        # "Biologie",
+        # "Pharmazie",
+        # "Ingenieurwissenschaften (inkl. Informatik)",
+        # "Informatik",
+        # "Maschinenbau/Verfahrenstechnik",
+        # "Elektortechnik und Informationstechnik",
+        # "Verkerhtstechnik,Nautik",
+        # "Architektur, Innenarchitektur",
+        # "Raumplanung",
+        # "Buingenieurwesen",
+        # "Vermessungswesen",
+        # "Wirtschaftingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt",
+        # "Materialwissenschaft und Werkstofftechnik",
+        # "Berbau, Hüttenwesen",
+        # "Geowissenschaften und Geographie")
+        ) %>%
       highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
       highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
+
       highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", bl_select,  " (",year_select, ")" ),
                             margin = 45,
                             align = "center",
@@ -6085,7 +6139,10 @@ if(betr_ebene=="Fachbereiche"){
     options(highcharter.lang = hcoptslang)
 
     df <- df_aus_4 %>%
-      dplyr::filter(selector == "Anzahl")
+      dplyr::filter(selector == "Anzahl") %>%
+      dplyr::arrange(wert)
+
+    df <- df[order(-df$wert),]
 
     highcharter::hchart(df, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
       highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.y}")%>%
