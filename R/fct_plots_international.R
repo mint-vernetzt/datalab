@@ -1452,7 +1452,7 @@ plot_international_top10_mint_arb <- function(r) {
 
     } else {
 
-      inpy <<- r$map_y_oecd2_top10_mint_arb
+      inpy <<- r$map_y_top10_mint_arb_gender
       inpf <<- r$map_f_oecd2_top10_mint_arb
 
       data1 <- oecd_azub %>%
