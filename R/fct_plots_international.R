@@ -89,7 +89,7 @@ if (label_m == "OECD") {
                       ebene == 1 &
                       anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
                                          "Master oder vergleichbar (akademisch)"))
-browser()
+
     # calculate total amount by land
     this_df_alle <<- df_filtered %>%
       dplyr::filter(fachbereich == "Alle") %>%
@@ -1070,14 +1070,13 @@ plot_international_map_arb <- function(r) {
 
 plot_international_map_arb_gender <- function(r) {
 
-
   oecd_abs_anfänger <<- arbeitsmarkt_anfänger_absolv_oecd  # Anteil
   oecd_azub <<- arbeitsmarkt_anzahl_azubis_oecd
   eu_besch <<- arbeitsmarkt_beschäftigte_eu
 
-  map_l <<- r$map_l_arb_gender
+  inpl <<- r$map_l_arb_gender
 
-  if(map_l== "EU"){
+  if(inpl== "EU"){
 
     inpy <<- r$map_y_arb_gender
     inpp <<- r$map_pers_arb_gender
@@ -1088,15 +1087,16 @@ plot_international_map_arb_gender <- function(r) {
       dplyr::filter(geschlecht %in% c("Gesamt", "Frauen")&
                       jahr == inpy &
                       indikator == inpp &
-                      variable == "Anteil an arbeitender Bevölkerung")
-      tidyr::pivot_wider(names_from = geschlecht, values_from = wert)
-      dplyr::rename(wert="Anteil an arbeitender Bevölkerung")
+                      variable == "Anteil an arbeitender Bevölkerung")%>%
+      tidyr::pivot_wider(names_from = geschlecht, values_from = wert)%>%
+      dplyr::rename(wert="Frauen")%>%
+      dplyr::select(-Gesamt)
 
     data1$display_rel <- prettyNum(data1$wert, big.mark = ".", decimal.mark = ",")
 
 
     data2 <<- eu_besch %>%
-      dplyr::filter(geschlecht == "Gesamt"&
+      dplyr::filter(geschlecht == "Frauen"&
                       jahr == inpy &
                       indikator == inpp&
                       variable == "Anzahl in Tsd.")%>%
@@ -1117,7 +1117,7 @@ plot_international_map_arb_gender <- function(r) {
   }
 
 
-  else if (map_l== "OECD"){
+  else if (inpl== "OECD"){
 
     map_selection <- "custom/world"
 
@@ -1152,6 +1152,9 @@ plot_international_map_arb_gender <- function(r) {
           dplyr::mutate(alpha2 = toupper(alpha2))
 
 
+        data_map$display_rel <- prettyNum(round(data_map$wert,1), big.mark = ".", decimal.mark = ",")
+
+
       } else if (inpp == "Anfänger*innen Erstausbildung (ISCED 35)"){
 
         data_map <- data1 %>%
@@ -1160,6 +1163,8 @@ plot_international_map_arb_gender <- function(r) {
                           fachbereich == inpf)%>%
           dplyr::inner_join(countries_names, by = "land") %>%
           dplyr::mutate(alpha2 = toupper(alpha2))
+
+        data_map$display_rel <- prettyNum(round(data_map$wert,1), big.mark = ".", decimal.mark = ",")
 
       } else if (inpp == "Absolvent*innen Ausbildung (ISCED 45)"){
 
@@ -1170,6 +1175,8 @@ plot_international_map_arb_gender <- function(r) {
           dplyr::inner_join(countries_names, by = "land") %>%
           dplyr::mutate(alpha2 = toupper(alpha2))
 
+        data_map$display_rel <- prettyNum(round(data_map$wert,1), big.mark = ".", decimal.mark = ",")
+
       } else if (inpp == "Absolvent*innen Erstausbildung (ISCED 35)"){
 
         data_map <- data1 %>%
@@ -1179,12 +1186,14 @@ plot_international_map_arb_gender <- function(r) {
           dplyr::inner_join(countries_names, by = "land") %>%
           dplyr::mutate(alpha2 = toupper(alpha2))
 
+        data_map$display_rel <- prettyNum(round(data_map$wert,1), big.mark = ".", decimal.mark = ",")
+
       }
 
 
     } else {
 
-      inpbe <<- r$map_betr_oecd_gender
+      inpbe <<- r$map_betr_oecd_arb_gender
 
       data_fva <- oecd_azub %>%
         dplyr::filter(geschlecht %in% c("Gesamt", "Frauen") &
@@ -1327,3 +1336,737 @@ plot_international_map_arb_gender <- function(r) {
 
 
 }
+
+plot_international_top10_mint_arb <- function(r) {
+  oecd_abs_anfänger <<- arbeitsmarkt_anfänger_absolv_oecd  # Anteil
+  oecd_azub <<- arbeitsmarkt_anzahl_azubis_oecd
+  eu_besch <<- arbeitsmarkt_beschäftigte_eu
+
+  map_l <<- r$map_l_top10_mint_arb
+
+  if(map_l== "EU"){
+
+    inpy <<- r$map_y_eu_top10_mint_arb
+    inpp <<- r$map_pers_eu_top10_mint_arb
+
+    map_selection <- "custom/europe"
+
+    data1 <<- eu_besch %>%
+      dplyr::filter(geschlecht == "Gesamt"&
+                      jahr == inpy &
+                      indikator == inpp &
+                      variable == "Anteil an arbeitender Bevölkerung")%>%
+      tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
+      dplyr::rename(wert="Anteil an arbeitender Bevölkerung")
+
+    data1$display_rel <- prettyNum(data1$wert, big.mark = ".", decimal.mark = ",")
+
+
+    data2 <<- eu_besch %>%
+      dplyr::filter(geschlecht == "Gesamt"&
+                      jahr == inpy &
+                      indikator == inpp&
+                      variable == "Anzahl in Tsd.")%>%
+      tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
+      dplyr::mutate(across(`Anzahl in Tsd.`, ~ as.numeric(.)*1000))%>%
+      dplyr::rename(display_total = "Anzahl in Tsd." )%>%
+      dplyr::select(display_total, land)%>%
+      dplyr::mutate(across(display_total, ~ prettyNum(., big.mark = ".", decimal.mark = ",")))
+
+    data_fn <- data1 %>%
+      dplyr::left_join(data2,by=c("land"))%>%
+      dplyr::left_join(countries_names %>%
+                         dplyr::mutate(land=dplyr::case_when(land == "Tschechien" ~ "Tschechische Republik",
+                                                             T ~ .$land)), by= "land")%>%
+      dplyr::mutate(alpha2= toupper(alpha2))
+
+
+  }
+
+
+  else if (map_l== "OECD"){
+
+    map_selection <- "custom/world"
+
+    inpp <<- r$map_pers_oecd_top10_mint_arb
+
+
+
+    if(inpp %in%  c("Anfänger*innen Ausbildung (ISCED 45)",
+                    "Anfänger*innen Erstausbildung (ISCED 35)",
+                    "Absolvent*innen Ausbildung (ISCED 45)",
+                    "Absolvent*innen Erstausbildung (ISCED 35)")){
+
+      inpy <<- r$map_y_oecd_top10_mint_arb
+      inpf <<- r$map_f_oecd_top10_mint_arb
+
+
+      data1 <- oecd_abs_anfänger%>%
+        dplyr::filter(jahr == inpy &
+                        fachbereich %in% c("MINT",
+                                           "Informatik & Kommunikationstechnologie",
+                                           "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                           "Naturwissenschaften, Mathematik und Statistik",
+                                           "Alle")&
+                        geschlecht == "Gesamt")
+
+      if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
+
+        data_fn <- data1 %>%
+          dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
+                          variable == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern" &
+                          fachbereich == inpf)%>%
+          dplyr::inner_join(countries_names, by = "land") %>%
+          dplyr::mutate(alpha2 = toupper(alpha2))
+
+
+      } else if (inpp == "Anfänger*innen Erstausbildung (ISCED 35)"){
+
+        data_fn <- data1 %>%
+          dplyr::filter(anforderung == "Erstausbildung (ISCED 35)" &
+                          variable == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern"&
+                          fachbereich == inpf)%>%
+          dplyr::inner_join(countries_names, by = "land") %>%
+          dplyr::mutate(alpha2 = toupper(alpha2))
+
+      } else if (inpp == "Absolvent*innen Ausbildung (ISCED 45)"){
+
+        data_fn <- data1 %>%
+          dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
+                          variable == "Anteil Absolvent*innen nach Fach an allen Fächern"&
+                          fachbereich == inpf)%>%
+          dplyr::inner_join(countries_names, by = "land") %>%
+          dplyr::mutate(alpha2 = toupper(alpha2))
+
+      } else if (inpp == "Absolvent*innen Erstausbildung (ISCED 35)"){
+
+        data_fn <- data1 %>%
+          dplyr::filter(anforderung == "Erstausbildung (ISCED 35)" &
+                          variable == "Anteil Absolvent*innen nach Fach an allen Fächern"&
+                          fachbereich == inpf)%>%
+          dplyr::inner_join(countries_names, by = "land") %>%
+          dplyr::mutate(alpha2 = toupper(alpha2))
+
+      }
+
+
+    } else {
+
+      inpy <<- r$map_y_oecd2_top10_mint_arb
+      inpf <<- r$map_f_oecd2_top10_mint_arb
+
+      data1 <- oecd_azub %>%
+        dplyr::filter(geschlecht == "Gesamt" &
+                        indikator == "berufsorientiert" &
+                        jahr == inpy &
+                        fach %in% c("MINT",
+                                    "Informatik & Kommunikationstechnologie",
+                                    "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                    "Naturwissenschaften, Mathematik und Statistik",
+                                    "Alle"))%>%
+        tidyr::pivot_wider(values_from = wert, names_from = fach)%>%
+        dplyr::mutate(across(c("MINT",
+                               "Informatik & Kommunikationstechnologie",
+                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                               "Naturwissenschaften, Mathematik und Statistik"), ~ round(./Alle*100,1)))%>%
+        dplyr::select(-Alle)%>%
+        tidyr::pivot_longer(c("MINT",
+                              "Informatik & Kommunikationstechnologie",
+                              "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                              "Naturwissenschaften, Mathematik und Statistik"), values_to = "wert",
+                            names_to = "fach") %>%
+        dplyr::mutate(display_rel= prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
+
+      data2 <- oecd_azub %>%
+        dplyr::filter(geschlecht == "Gesamt" &
+                        indikator == "berufsorientiert" &
+                        jahr == inpy &
+                        fach %in% c("MINT",
+                                    "Informatik & Kommunikationstechnologie",
+                                    "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                    "Naturwissenschaften, Mathematik und Statistik",
+                                    "Alle"))%>%
+        dplyr::rename(display_total = wert)%>%
+        dplyr::mutate(display_total= prettyNum(.$display_total, big.mark = ".", decimal.mark = ","))%>%
+        dplyr::select(land, jahr, display_total, fach, anforderung)
+
+      data3 <- data1 %>%
+        dplyr::left_join(data2, by=c("land", "jahr", "fach", "anforderung"))%>%
+        dplyr::inner_join(countries_names, by = "land") %>%
+        dplyr::mutate(alpha2 = toupper(alpha2))
+
+
+      if (inpp == "Auszubildende (ISCED 45)"){
+
+        data_fn <- data3 %>%
+          dplyr::filter(anforderung=="Ausbildung (ISCED 45)"&
+                          fach == inpf)
+
+
+
+      } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
+
+        data_fn <- data3 %>%
+          dplyr::filter(anforderung=="Erstausbildung (ISCED 35)"&
+                          fach == inpf)
+
+      } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)") {
+
+        data_fn <- data3 %>%
+          dplyr::filter(anforderung=="kurzes tertiäres Bildungsprogramm (berufsorientiert)"&
+                          fach == inpf)
+
+      } else if(inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
+
+        data_fn <- data3 %>%
+          dplyr::filter(anforderung== "Bachelor oder vergleichbar (berufsorientiert)"&
+                          fach == inpf)
+
+      }
+    }}
+
+    avg_line <<- r$show_ave
+
+  # Create top 10 plot
+    if (avg_line == "Ja"){
+
+      data_avg <<- round(mean(data_fn$wert, na.rm = T),0)
+
+      plot_top <- highcharter::hchart(
+        data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
+        'bar',
+        highcharter::hcaes(y = wert, x = land))%>%
+        highcharter::hc_plotOptions(
+          series = list(
+            boderWidth = 0,
+            dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          )) %>%
+        highcharter::hc_tooltip(pointFormat = "") %>%
+        highcharter::hc_yAxis(plotLines = list(
+          list(
+            value = data_avg,
+            color = "#FF0000",
+            width = 3,
+            zIndex = 4
+          )
+        ),title = list(text = ""),
+        labels = list(format = "{value}"),
+        min = 0,
+        max = max(data1$wert)*1.2)%>%
+        highcharter::hc_xAxis(title = list(text = " ")) %>%
+        highcharter::hc_colors(c("#154194")) %>%
+        highcharter::hc_title(text = "title_dyn_top",
+                              margin = 10,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+        ) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE)%>%
+        highcharter::hc_caption(
+          text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
+
+      plot_bottom <- highcharter::hchart(
+        data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
+        'bar',
+        highcharter::hcaes(y = wert, x = land))%>%
+        highcharter::hc_plotOptions(
+          series = list(
+            boderWidth = 0,
+            dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          )) %>%
+        highcharter::hc_tooltip(pointFormat = "") %>%
+        highcharter::hc_yAxis(
+          plotLines = list(
+            list(
+              value = data_avg,
+              color = "#FF0000",
+              width = 3,
+              zIndex = 4
+            )
+          ),title = list(text = ""),
+          labels = list(format = "{value}"),
+          min = 0,
+          max = max(data1$wert)*1.2)%>%
+        highcharter::hc_xAxis(title = list(text = " ")) %>%
+        highcharter::hc_colors(c("#154194")) %>%
+        highcharter::hc_title(text =  "title_dyn_bot",
+                              margin = 10,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+        ) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE)%>%
+        highcharter::hc_caption(
+          text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
+
+
+
+      highcharter::hw_grid(
+        plot_top,
+        plot_bottom,
+        ncol = 2)
+
+    } else if (avg_line == "Nein"){
+
+
+
+      plot_top <- highcharter::hchart(
+        data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
+        'bar',
+        highcharter::hcaes(y = wert, x = land))%>%
+        highcharter::hc_plotOptions(
+          series = list(
+            boderWidth = 0,
+            dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          )) %>%
+        highcharter::hc_tooltip(pointFormat = "") %>%
+        highcharter::hc_yAxis(title = list(text = ""),
+                              labels = list(format = "{value}"),
+                              min = 0,
+                              max = max(data1$wert)*1.2) %>%
+        highcharter::hc_xAxis(title = list(text = " ")) %>%
+        highcharter::hc_colors(c("#154194")) %>%
+        highcharter::hc_title(text = "title_dyn_top",
+                              margin = 10,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+        ) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE)%>%
+        highcharter::hc_caption(
+          text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
+
+
+
+      plot_bottom <- highcharter::hchart(
+        data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
+        'bar',
+        highcharter::hcaes(y = wert, x = land))%>%
+        highcharter::hc_plotOptions(
+          series = list(
+            boderWidth = 0,
+            dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          )) %>%
+        highcharter::hc_tooltip(pointFormat = "") %>%
+        highcharter::hc_yAxis(title = list(text = ""),
+                              labels = list(format = "{value}"),
+                              min = 0,
+                              max = max(data1$wert)*1.2) %>%
+        highcharter::hc_xAxis(title = list(text = "")) %>%
+        highcharter::hc_colors(c("#154194")) %>%
+        highcharter::hc_title(text =  "title_dyn_bot",
+                              margin = 10,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+        ) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE)%>%
+        highcharter::hc_caption(
+          text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
+
+
+      highcharter::hw_grid(
+        plot_top,
+        plot_bottom,
+        ncol = 2)
+
+
+    }
+
+
+}
+
+
+plot_international_top10_mint_arb_gender <- function(r) {
+
+
+  oecd_abs_anfänger <<- arbeitsmarkt_anfänger_absolv_oecd  # Anteil
+  oecd_azub <<- arbeitsmarkt_anzahl_azubis_oecd
+  eu_besch <<- arbeitsmarkt_beschäftigte_eu
+
+  inpl <<- r$map_l_top10_mint_arb_gender
+
+
+  if(inpl== "EU"){
+
+    inpy <<- r$map_y_top10_mint_arb_gender
+    inpp <<- r$map_pers_top10_mint_arb_gender
+
+    map_selection <- "custom/europe"
+
+    data1 <<- eu_besch %>%
+      dplyr::filter(geschlecht %in% c("Gesamt", "Frauen")&
+                      jahr == inpy &
+                      indikator == inpp &
+                      variable == "Anteil an arbeitender Bevölkerung")%>%
+      tidyr::pivot_wider(names_from = geschlecht, values_from = wert)%>%
+      dplyr::rename(wert="Frauen")%>%
+      dplyr::select(-Gesamt)
+
+    data1$display_rel <- prettyNum(data1$wert, big.mark = ".", decimal.mark = ",")
+
+
+    data2 <<- eu_besch %>%
+      dplyr::filter(geschlecht == "Frauen"&
+                      jahr == inpy &
+                      indikator == inpp&
+                      variable == "Anzahl in Tsd.")%>%
+      tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
+      dplyr::mutate(across(`Anzahl in Tsd.`, ~ as.numeric(.)*1000))%>%
+      dplyr::rename(display_total = "Anzahl in Tsd." )%>%
+      dplyr::select(display_total, land)%>%
+      dplyr::mutate(across(display_total, ~ prettyNum(., big.mark = ".", decimal.mark = ",")))
+
+    data1 <- data1 %>%
+      dplyr::left_join(data2,by=c("land"))%>%
+      dplyr::left_join(countries_names %>%
+                         dplyr::mutate(land=dplyr::case_when(land == "Tschechien" ~ "Tschechische Republik",
+                                                             T ~ .$land)), by= "land")%>%
+      dplyr::mutate(alpha2= toupper(alpha2))
+
+
+  }
+
+
+  else if (inpl== "OECD"){
+
+    map_selection <- "custom/world"
+
+    inpp <<- r$map_pers_top10_mint_arb_gender
+    inpy <<- r$map_y_top10_mint_arb_gender
+    inpf <<- r$map_f_top10_mint_arb_gender
+
+
+
+    if(inpp %in%  c("Anfänger*innen Ausbildung (ISCED 45)",
+                    "Anfänger*innen Erstausbildung (ISCED 35)",
+                    "Absolvent*innen Ausbildung (ISCED 45)",
+                    "Absolvent*innen Erstausbildung (ISCED 35)")){
+
+
+      data1 <- oecd_abs_anfänger%>%
+        dplyr::filter(jahr == inpy &
+                        fachbereich %in% c("MINT",
+                                           "Informatik & Kommunikationstechnologie",
+                                           "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                           "Naturwissenschaften, Mathematik und Statistik",
+                                           "Alle")&
+                        geschlecht =="Frauen")
+
+      if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
+
+        data1 <- data1 %>%
+          dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
+                          variable == "Frauen-/Männeranteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen" &
+                          fachbereich == inpf)%>%
+          dplyr::inner_join(countries_names, by = "land") %>%
+          dplyr::mutate(alpha2 = toupper(alpha2))
+
+
+        data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
+
+
+      } else if (inpp == "Anfänger*innen Erstausbildung (ISCED 35)"){
+
+        data1 <- data1 %>%
+          dplyr::filter(anforderung == "Erstausbildung (ISCED 35)" &
+                          variable == "Frauen-/Männeranteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen"&
+                          fachbereich == inpf)%>%
+          dplyr::inner_join(countries_names, by = "land") %>%
+          dplyr::mutate(alpha2 = toupper(alpha2))
+
+        data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
+
+      } else if (inpp == "Absolvent*innen Ausbildung (ISCED 45)"){
+
+        data1 <- data1 %>%
+          dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
+                          variable == "Frauen-/Männeranteil Absolvent*innen nach Fachbereichen"&
+                          fachbereich == inpf)%>%
+          dplyr::inner_join(countries_names, by = "land") %>%
+          dplyr::mutate(alpha2 = toupper(alpha2))
+
+        data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
+
+      } else if (inpp == "Absolvent*innen Erstausbildung (ISCED 35)"){
+
+        data1 <- data1 %>%
+          dplyr::filter(anforderung == "Erstausbildung (ISCED 35)" &
+                          variable == "Frauen-/Männeranteil Absolvent*innen nach Fachbereichen"&
+                          fachbereich == inpf)%>%
+          dplyr::inner_join(countries_names, by = "land") %>%
+          dplyr::mutate(alpha2 = toupper(alpha2))
+
+        data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
+
+      }
+
+
+    } else {
+
+      inpbe <<- r$map_betr_oecd_top10_mint_arb_gender
+
+      data_fva <- oecd_azub %>%
+        dplyr::filter(geschlecht %in% c("Gesamt", "Frauen") &
+                        indikator == "berufsorientiert" &
+                        jahr == inpy &
+                        fach %in% c("MINT",
+                                    "Informatik & Kommunikationstechnologie",
+                                    "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                    "Naturwissenschaften, Mathematik und Statistik",
+                                    "Alle"))%>%
+        tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
+        dplyr::mutate(wert= round(Frauen/Gesamt *100,1))%>%
+        dplyr::mutate(display_rel= prettyNum(.$wert, big.mark = ".", decimal.mark = ","),
+                      display_total= prettyNum(.$Frauen, big.mark = ".", decimal.mark = ","))%>%
+        dplyr::select(-Gesamt, - Frauen)%>%
+        dplyr::inner_join(countries_names, by = "land") %>%
+        dplyr::mutate(alpha2 = toupper(alpha2))
+
+
+
+      data_fvf1 <- oecd_azub %>%
+        dplyr::filter(geschlecht == "Frauen" &
+                        indikator == "berufsorientiert" &
+                        jahr == inpy &
+                        fach %in% c("MINT",
+                                    "Informatik & Kommunikationstechnologie",
+                                    "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                    "Naturwissenschaften, Mathematik und Statistik",
+                                    "Alle"))%>%
+        tidyr::pivot_wider(values_from = wert, names_from = fach)%>%
+        dplyr::mutate(across(c("MINT",
+                               "Informatik & Kommunikationstechnologie",
+                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                               "Naturwissenschaften, Mathematik und Statistik"), ~ round(./Alle*100,1)))%>%
+        dplyr::select(-Alle)%>%
+        tidyr::pivot_longer(c("MINT",
+                              "Informatik & Kommunikationstechnologie",
+                              "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                              "Naturwissenschaften, Mathematik und Statistik"), values_to = "wert",
+                            names_to = "fach") %>%
+        dplyr::mutate(display_rel= prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
+
+
+      data_fvf2 <- oecd_azub %>%
+        dplyr::filter(geschlecht == "Frauen" &
+                        indikator == "berufsorientiert" &
+                        jahr == inpy &
+                        fach %in% c("MINT",
+                                    "Informatik & Kommunikationstechnologie",
+                                    "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                    "Naturwissenschaften, Mathematik und Statistik",
+                                    "Alle"))%>%
+        dplyr::rename(display_total = wert)%>%
+        dplyr::mutate(display_total= prettyNum(.$display_total, big.mark = ".", decimal.mark = ","))%>%
+        dplyr::select(land, jahr, display_total, fach, anforderung)
+
+      data_fvf3 <- data_fvf1 %>%
+        dplyr::left_join(data_fvf2, by=c("land", "jahr", "fach", "anforderung"))%>%
+        dplyr::inner_join(countries_names, by = "land") %>%
+        dplyr::mutate(alpha2 = toupper(alpha2))
+
+
+      if (inpbe == "Anteil von Frauen an Allen"){
+        data1 <- data_fva
+      }else if(inpbe == "Anteil an Frauen von Frauen"){
+        data1 <- data_fvf3
+      }
+
+
+      if (inpp == "Auszubildende (ISCED 45)"){
+
+        data1 <- data1 %>%
+          dplyr::filter(anforderung=="Ausbildung (ISCED 45)"&
+                          fach == inpf)
+
+
+      } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
+
+        data1 <- data1 %>%
+          dplyr::filter(anforderung=="Erstausbildung (ISCED 35)"&
+                          fach == inpf)
+
+      } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)") {
+
+        data1 <- data1 %>%
+          dplyr::filter(anforderung=="kurzes tertiäres Bildungsprogramm (berufsorientiert)"&
+                          fach == inpf)
+
+      } else if(inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
+
+        data1 <- data1 %>%
+          dplyr::filter(anforderung== "Bachelor oder vergleichbar (berufsorientiert)"&
+                          fach == inpf)
+
+      }
+    }
+
+  }
+
+  avg_line <<- r$show_ave
+
+  # Create top 10 plot
+  if (avg_line == "Ja"){
+
+    data_avg <<- round(mean(data1$wert, na.rm = T),0)
+
+    plot_top <- highcharter::hchart(
+      data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
+      'bar',
+      highcharter::hcaes(y = wert, x = land))%>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "") %>%
+      highcharter::hc_yAxis(plotLines = list(
+        list(
+          value = data_avg,
+          color = "#FF0000",
+          width = 3,
+          zIndex = 4
+        )
+      ),title = list(text = ""),
+      labels = list(format = "{value}"),
+      min = 0,
+      max = max(data1$wert)*1.2)%>%
+      highcharter::hc_xAxis(title = list(text = " ")) %>%
+      highcharter::hc_colors(c("#154194")) %>%
+      highcharter::hc_title(text = "title_dyn_top",
+                            margin = 10,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)%>%
+      highcharter::hc_caption(
+        text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
+
+    plot_bottom <- highcharter::hchart(
+      data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
+      'bar',
+      highcharter::hcaes(y = wert, x = land))%>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "") %>%
+      highcharter::hc_yAxis(
+        plotLines = list(
+          list(
+            value = data_avg,
+            color = "#FF0000",
+            width = 3,
+            zIndex = 4
+          )
+        ),title = list(text = ""),
+        labels = list(format = "{value}"),
+        min = 0,
+        max = max(data1$wert)*1.2)%>%
+      highcharter::hc_xAxis(title = list(text = " ")) %>%
+      highcharter::hc_colors(c("#154194")) %>%
+      highcharter::hc_title(text =  "title_dyn_bot",
+                            margin = 10,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)%>%
+      highcharter::hc_caption(
+        text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
+
+
+
+    highcharter::hw_grid(
+      plot_top,
+      plot_bottom,
+      ncol = 2)
+
+  } else if (avg_line == "Nein"){
+
+
+
+    plot_top <- highcharter::hchart(
+      data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
+      'bar',
+      highcharter::hcaes(y = wert, x = land))%>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "") %>%
+      highcharter::hc_yAxis(title = list(text = ""),
+                            labels = list(format = "{value}"),
+                            min = 0,
+                            max = max(data1$wert)*1.2) %>%
+      highcharter::hc_xAxis(title = list(text = " ")) %>%
+      highcharter::hc_colors(c("#154194")) %>%
+      highcharter::hc_title(text = "title_dyn_top",
+                            margin = 10,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)%>%
+      highcharter::hc_caption(
+        text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
+
+
+
+    plot_bottom <- highcharter::hchart(
+      data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
+      'bar',
+      highcharter::hcaes(y = wert, x = land))%>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "") %>%
+      highcharter::hc_yAxis(title = list(text = ""),
+                            labels = list(format = "{value}"),
+                            min = 0,
+                            max = max(data1$wert)*1.2) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(c("#154194")) %>%
+      highcharter::hc_title(text =  "title_dyn_bot",
+                            margin = 10,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)%>%
+      highcharter::hc_caption(
+        text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
+
+
+    highcharter::hw_grid(
+      plot_top,
+      plot_bottom,
+      ncol = 2)
+
+
+  }
+
+  }
+

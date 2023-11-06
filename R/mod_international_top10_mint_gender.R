@@ -13,7 +13,7 @@ mod_international_top10_mint_gender_ui <- function(id){
   tagList(
     p("Region:"),
     shinyWidgets::pickerInput(
-      inputId = ns("map_l"),
+      inputId = ns("map_l_top10_mint_gender_ui"),
       choices = c("EU", "OECD"),
       selected = "EU",
       multiple = FALSE#,
@@ -24,11 +24,11 @@ mod_international_top10_mint_gender_ui <- function(id){
 
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
 
-    conditionalPanel(condition = "input.map_l == 'EU'",
+    conditionalPanel(condition = "input.map_l_top10_mint_gender_ui == 'EU'",
                      ns = ns,
                      p("Jahr:"),
                      shinyWidgets::sliderTextInput(
-                       inputId = ns("map_y_eu"),
+                       inputId = ns("map_y_eu_top10_mint_gender_ui"),
                        label = NULL,
                        choices = international_ui_years(region = "EU"),
                        selected = "2021"
@@ -36,16 +36,16 @@ mod_international_top10_mint_gender_ui <- function(id){
 
                      p("Fachbereich:"),
                      shinyWidgets::pickerInput(
-                       inputId = ns("map_f_eu"),
+                       inputId = ns("map_f_eu_top10_mint_gender_ui"),
                        choices = international_ui_faecher(region = "EU"),
                        selected = c("Alle MINT-Fächer"),
                        multiple = FALSE
                      )),
-    conditionalPanel(condition = "input.map_l == 'OECD' ",
+    conditionalPanel(condition = "input.map_l_top10_mint_gender_ui == 'OECD' ",
                      ns = ns,
                      p("Jahr:"),
                      shinyWidgets::sliderTextInput(
-                       inputId = ns("map_y_oecd"),
+                       inputId = ns("map_y_oecd_top10_mint_gender_ui"),
                        label = NULL,
                        choices = international_ui_years(region = "OECD"),
                        selected = "2020"
@@ -53,7 +53,7 @@ mod_international_top10_mint_gender_ui <- function(id){
 
                      p("Fachbereich:"),
                      shinyWidgets::pickerInput(
-                       inputId = ns("map_f_oecd"),
+                       inputId = ns("map_f_oecd_top10_mint_gender_ui"),
                        choices = international_ui_faecher(region = "OECD"),
                        selected = c("MINT"),
                        multiple = FALSE
@@ -107,36 +107,36 @@ mod_international_top10_mint_gender_server <- function(id, r){
       r$show_avg_g <- input$show_avg_top10_mint_gender_line
     })
 
-    observeEvent(input$map_l, {
-      r$map_l_g <- input$map_l
+    observeEvent(input$map_l_top10_mint_gender_ui, {
+      r$map_l_g <- input$map_l_top10_mint_gender_ui
       r$show_avg_g <- input$show_avg_top10_mint_gender_line
       r$art_g <- input$art
-      if (input$map_l == "EU") {
-        r$map_y_g <- input$map_y_eu
-        r$map_f_g <- input$map_f_eu
+      if (input$map_l_top10_mint_gender_ui == "EU") {
+        r$map_y_g <- input$map_y_eu_top10_mint_gender_ui
+        r$map_f_g <- input$map_f_eu_top10_mint_gender_ui
       }
-      if (input$map_l == "OECD") {
-        r$map_y_g <- input$map_y_oecd
-        r$map_f_g <- input$map_f_oecd
+      if (input$map_l_top10_mint_gender_ui == "OECD") {
+        r$map_y_g <- input$map_y_oecd_top10_mint_gender_ui
+        r$map_f_g <- input$map_f_oecd_top10_mint_gender_ui
       }
     })
 
-    observeEvent(input$map_y_oecd, {
-      r$map_y_g <- input$map_y_oecd
+    observeEvent(input$map_y_oecd_top10_mint_gender_ui, {
+      r$map_y_g <- input$map_y_oecd_top10_mint_gender_ui
     })
 
-    observeEvent(input$map_f_oecd, {
-      r$map_f_g <- input$map_f_oecd
+    observeEvent(input$map_f_oecd_top10_mint_gender_ui, {
+      r$map_f_g <- input$map_f_oecd_top10_mint_gender_ui
     })
 
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
-    observeEvent(input$map_y_eu, {
-      r$map_y_g <- input$map_y_eu
+    observeEvent(input$map_y_eu_top10_mint_gender_ui, {
+      r$map_y_g <- input$map_y_eu_top10_mint_gender_ui
     })
 
-    observeEvent(input$map_f_eu, {
-      r$map_f_g <- input$map_f_eu
+    observeEvent(input$map_f_eu_top10_mint_gender_ui, {
+      r$map_f_g <- input$map_f_eu_top10_mint_gender_ui
     })
 
     observeEvent(input$art, {

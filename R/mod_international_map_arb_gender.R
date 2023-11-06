@@ -50,7 +50,7 @@ mod_international_map_arb_gender_ui <- function(id) {
                      ns = ns,
                      p("Personengruppe:"),
                      shinyWidgets::pickerInput(
-                       inputId = ns("map_pers_oecd_gender"),
+                       inputId = ns("map_pers_oecd_arb_gender"),
                        choices = c("Anfänger*innen Ausbildung (ISCED 45)",
                                    "Anfänger*innen Erstausbildung (ISCED 35)",
                                    "Absolvent*innen Ausbildung (ISCED 45)",

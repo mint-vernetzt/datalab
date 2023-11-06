@@ -192,7 +192,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      htmlOutput(ns("plot_international_map_arb_gender_1")),
+                                      htmlOutput(ns("plot_international_mint_top_10_1")),
 
 
                                       shinyBS::bsPopover(id="h_international_1", title="",
@@ -204,7 +204,7 @@ mod_international_start_ui <- function(id){
                            )
 
 
-               ))),
+               )),
 
 
   # Box 2
@@ -249,15 +249,51 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      htmlOutput(ns("plot_international_studienzahl_map_arb_1")),
+                                      htmlOutput(ns("plot_international_map_arb_gender_1")),
+
+                                    )
+                         ),tabPanel("Top 10 MINT-Länder", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      p("LOREM"),
+                                      mod_international_top10_mint_arb_ui("mod_international_top10_mint_arb_ui_1")
+
+
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_top10_mint_arb_1")),
+
+                                    )
+                         ),tabPanel("Top 10 Länder Frauen in MINT", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      p("LOREM"),
+                                      mod_international_top10_mint_arb_gender_ui("mod_international_top10_mint_arb_gender_ui_1")
+
+
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_top10_mint_arb_gender_1")),
 
                                     )
                          )
 
 
-             )))
+             )))))
 
-  )
+
 }
 
 #' international_start Server Functions
@@ -297,6 +333,13 @@ mod_international_start_server <- function(id, r){
       plot_international_map_arb_gender(r)
     })
 
+    output$plot_international_top10_mint_arb_1 <- renderUI({
+      plot_international_top10_mint_arb(r)
+    })
+
+    output$plot_international_top10_mint_arb_gender_1 <- renderUI({
+    plot_international_top10_mint_arb_gender(r)
+    })
 
 
   })

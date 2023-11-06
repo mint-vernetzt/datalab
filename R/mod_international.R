@@ -47,10 +47,13 @@ mod_international_server <- function(id,
   mod_international_map_fem_server("international_map_fem_ui_1", r)
   mod_international_top10_mint_intl_server("mod_international_top10_mint_intl_ui_1", r)
 
+
   # Box 2
   #mod_international_start_server("mod_international_start_ui_1", r)
   mod_international_map_arb_server("mod_international_map_arb_ui_1",r)
   mod_international_map_arb_gender_server("mod_international_map_arb_gender_ui_1",r)
+  mod_international_top10_mint_arb_server("mod_international_top10_mint_arb_ui_1", r)
+  mod_international_top10_mint_arb_gender_server("mod_international_top10_mint_arb_gender_ui_1", r)
 
 
   logger::log_debug("Seiten-Module INTERNATIONAL done")
