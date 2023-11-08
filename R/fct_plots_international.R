@@ -61,7 +61,7 @@ add_avg_to_hc <- function(hc, hc_mean) {
 # studium
 plot_international_map <- function(r) {
 
-  #r <- list(map_y = "2019", map_l = "OECD", map_f = "Umwelt")
+  #r <- list(map_y_int_studium = "2019", map_l_int_studium = "OECD", map_f_int_studium = "Umwelt")
   # load UI inputs from reactive value
   timerange <- r$map_y_int_studium
   label_m <- r$map_l_int_studium
@@ -139,10 +139,6 @@ plot_international_map <- function(r) {
   df_insp1 <- df %>% dplyr::filter(jahr == timerange &
                                      !is.na(wert))
 
-  # englische Namen der Länder
-  # https://github.com/stefangabos/world_countries/blob/master/data/countries/de/countries.csv
-  #countries_names <-  read.csv(file = "data/countries_de.csv")
-  #save(countries_names, file = "data/countries_names.rda")
 
   # Hover vorbereiten
   df_insp1$display_wert <- prettyNum(df_insp1$wert, big.mark = ".", decimal.mark = ",")
@@ -183,7 +179,7 @@ plot_international_map <- function(r) {
     title_m <- paste0("Anteil von Studierenden in ", fach_help, " an allen Studierenden ",
                       timerange, " in Europa")
   }
-    }
+  }
 
   data_map_1 <- df7
 
@@ -577,7 +573,6 @@ plot_international_schule_map <- function(r) {
   fach_m <- r$map_f_int_schule
   leistungsindikator_m <- r$map_li_int_schule
 
-
   if (is.null(fach_m)) { fach_m <- ""}
   logger::log_debug("Plotting international schule map for:")
   logger::log_debug("Time: ", timerange,
@@ -622,8 +617,8 @@ plot_international_schule_map <- function(r) {
 
   # Hover & Titel vorbereiten
   titel <- paste0("Durschnittliche Leistung von Schüler:innen der ", help_l,
-         " im ", fach_m, "-Kompetenztest von ",
-         label_m, " ", timerange)
+                  " im ", fach_m, "-Kompetenztest von ",
+                  label_m, " ", timerange)
 
   dfs$display_wert <- prettyNum(round(dfs$wert, 0),
                                 big.mark = ".",
@@ -849,7 +844,7 @@ plot_international_schule_migration <- function(r) {
 
 
   if (is.null(fach_m)) { fach_m <- ""}
-  logger::log_debug("Plotting international schule map for:")
+  logger::log_debug("Plotting international schule migration for:")
   logger::log_debug("Time: ", timerange,
                     " | Label: ", label_m,
                     " | Indikator: ", leistungsindikator_m,
@@ -989,4 +984,92 @@ plot_international_schule_migration <- function(r) {
 
 
 }
+
+## arbeitsmarkt
+plot_international_arbeitsmarkt_map <- function(r) {}
+plot_international_arbeitsmakrt_top10 <- function(r) {}
+plot_international_arbeitsmarkt_vergleiche <- function(r) {
+
+  #r <- list(vergleich_y_int_arbeitsmarkt = 2020,vergleich_l_int_arbeitsmarkt = c("Australien", "Portugal", "Deutschland"),vergleich_f_int_arbeitsmarkt = "MINT")
+  # load UI inputs from reactive value
+
+  timerange <- r$vergleich_y_int_arbeitsmarkt
+  land_m <- r$vergleich_l_int_arbeitsmarkt
+  fach_m <- r$vergleich_f_int_arbeitsmarkt
+
+  tmp_df <-  arbeitsmarkt_anfänger_absolv_oecd %>%
+    dplyr::filter(geschlecht == "Gesamt" &
+                    jahr == timerange &
+                    land %in% land_m &
+                    fachbereich == fach_m &
+                    variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+                                    "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+    ) %>%
+    dplyr::group_by(land, variable) %>%
+    dplyr::summarise(wert = sum(wert))
+
+
+  tooltip_data <- tmp_df %>%
+    tidyr::pivot_wider(names_from = variable,
+                       id_cols = land,
+                       values_from = wert) %>%
+    dplyr::mutate(
+      Difference = round(
+        x = `Anteil Absolvent*innen nach Fach an allen Fächern` -
+          `Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern`,
+        digits = 0),
+      max = pmax(
+        `Anteil Absolvent*innen nach Fach an allen Fächern`,
+        `Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern`,
+        na.rm = TRUE)
+    ) %>%
+    dplyr::select(land, Difference, max) %>%
+    dplyr::distinct()
+
+  annotation_data <- lapply(seq_len(nrow(tooltip_data)), function(x){
+    list(point = list(x = x -1,
+                      y = tooltip_data$max[x],
+                      xAxis = 0,
+                      yAxis = 0),
+         text = as.character(tooltip_data$Difference[x]))
+  })
+
+  # Create the plot
+  highcharter::hchart(object = tmp_df,
+                      type = "column",
+                      mapping = highcharter::hcaes(x = land, y = wert, group = variable))  %>%
+    #hc_xAxis(categories = tmp_df$land) %>%
+    #hc_yAxis(title = list(text = "THIS TITLE")) %>%
+    highcharter::hc_plotOptions(series = list(dataLabels = list(enabled = FALSE))) %>%
+    highcharter::hc_colors(c("#B16FAB", "#66CBAF")) %>%
+    highcharter::hc_title(
+      text = paste0(
+        "Anteil der Ausbildungs-/Studiums-Anfänger*innen und Absolvent*innen in ",
+        fach_m, " in ", timerange)
+    ) %>%
+    #hc_subtitle(text = "Each bar represents a type of fruit") %>%
+    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_exporting(enabled = FALSE) %>%
+    highcharter::hc_tooltip(
+      pointFormat = paste0(
+        '<span style="color:{point.color}">\u25CF</span>',
+        '{series.name}: ','<b>{point.y}</b><br/>'),
+      shared = TRUE,
+      useHTML = TRUE) %>%
+    highcharter::hc_annotations(
+      list(
+        labels = annotation_data,
+        labelOptions = list(
+          style = list(color = 'black'),
+          backgroundColor = 'none', # Remove background color
+          borderWidth = 0#, # Remove box
+          #shadow = FALSE,
+        )
+      )
+    )
+
+
+
+}
+
 

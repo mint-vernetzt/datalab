@@ -100,11 +100,11 @@ mod_international_start_ui <- function(id){
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; als Download, eigene Berechnungen durch MINTvernetzt."),
 
-                                      shinyBS::bsPopover(id="h_international_1", title="",
+                                      shinyBS::bsPopover(id="h_international_studium_1", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
                                                          placement = "top",
                                                          trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_1")
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_studium_1")
                                     )
                            ),
 
@@ -125,11 +125,11 @@ mod_international_start_ui <- function(id){
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; als Download, eigene Berechnungen durch MINTvernetzt."),
 
-                                      shinyBS::bsPopover(id="h_international_1", title="",
+                                      shinyBS::bsPopover(id="h_international_studium_2", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
                                                          placement = "top",
                                                          trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_studium_2")
                                     )
                            ),
 
@@ -149,11 +149,11 @@ mod_international_start_ui <- function(id){
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: Eurostat, 2023; OECD, 2023; als Download, eigene Berechnungen durch MINTvernetzt."),
 
-                                      shinyBS::bsPopover(id="h_international_1", title="",
+                                      shinyBS::bsPopover(id="h_international_studium_3", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
                                                          placement = "top",
                                                          trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_1")
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_studium_3")
                                     )
                            )
                )
@@ -184,11 +184,11 @@ mod_international_start_ui <- function(id){
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
 
-                                      shinyBS::bsPopover(id="h_international_2", title="",
+                                      shinyBS::bsPopover(id="h_international_schule_1", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
                                                          placement = "top",
                                                          trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_1")
                                     )
                            ),
 
@@ -209,11 +209,11 @@ mod_international_start_ui <- function(id){
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: IEA, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
 
-                                      shinyBS::bsPopover(id="h_international_3", title="",
+                                      shinyBS::bsPopover(id="h_international_schule_2", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
                                                          placement = "top",
                                                          trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_3")
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_2")
                                     )
                            ),
 
@@ -234,16 +234,102 @@ mod_international_start_ui <- function(id){
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
 
-                                      shinyBS::bsPopover(id="h_international_4", title="",
+                                      shinyBS::bsPopover(id="h_international_schule_3", title="",
                                                          content = paste0("POPUP INFO TEXT HERE"),
                                                          placement = "top",
                                                          trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_4")
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_3")
+                                    )
+                           )
+               )
+             )
+    ),
+
+    # Box 3 - Arbeitsmakrt
+    fluidRow(id="international_arbeitsmarkt",
+             shinydashboard::box(
+               title = "INTERNATIONAL - ARBEITSMARKT",
+               width = 12,
+               p("LOREM IPSUM INFO"),
+               tabsetPanel(type = "tabs",
+                           tabPanel("Vergleich Länder (Karte)", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      p("LOREM"),
+                                      mod_international_arbeitsmarkt_map_ui("international_arbeitsmarkt_map_1")
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_arbeitsmarkt_map_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                      shinyBS::bsPopover(id="h_international_arbeit_1", title="",
+                                                         content = paste0("POPUP INFO TEXT HERE"),
+                                                         placement = "top",
+                                                         trigger = "hover"),
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_arbeit_1")
+                                    )
+                           ),
+
+                           tabPanel("Vergleich Top 10", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      p("LOREM"),
+                                      mod_international_arbeitsmarkt_top10_ui("international_arbeitsmarkt_top10_1")
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_arbeitsmakrt_top10_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: IEA, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                      shinyBS::bsPopover(id="h_international_arbeit_2", title="",
+                                                         content = paste0("POPUP INFO TEXT HERE"),
+                                                         placement = "top",
+                                                         trigger = "hover"),
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_arbeit_2")
+                                    )
+                           ),
+
+                           tabPanel("Vergleiche", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      p("LOREM"),
+                                      mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1")
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_arbeitsmarkt_vergleiche_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                      shinyBS::bsPopover(id="h_international_arbeit_3", title="",
+                                                         content = paste0("POPUP INFO TEXT HERE"),
+                                                         placement = "top",
+                                                         trigger = "hover"),
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_arbeit_3")
                                     )
                            )
                )
              )
     )
+
   )
 }
 
@@ -287,6 +373,23 @@ mod_international_start_server <- function(id, r){
     output$plot_international_schule_migration_1 <- renderUI({
       logger::log_debug("plot_international_schule_migration")
       plot_international_schule_migration(r)
+    })
+
+
+    # Box 3 - Arbeitsmarkt
+    output$plot_international_arbeitsmarkt_map_1 <- renderUI({
+      logger::log_debug("plot_international_arbeitsmarkt_map_1")
+      plot_international_arbeitsmarkt_map(r)
+    })
+
+    output$plot_international_arbeitsmakrt_top10_1 <- renderUI({
+      logger::log_debug("plot_international_arbeitsmakrt_top10_1")
+      plot_international_arbeitsmakrt_top10(r)
+    })
+
+    output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
+      logger::log_debug("plot_international_arbeitsmarkt_vergleiche_1")
+      plot_international_arbeitsmarkt_vergleiche(r)
     })
 
   })

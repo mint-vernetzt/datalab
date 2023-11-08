@@ -93,6 +93,12 @@ golem::add_module(name = "international_schule_map", with_test = TRUE)
 golem::add_module(name = "international_schule_item", with_test = TRUE)
 golem::add_module(name = "international_schule_migration", with_test = FALSE)
 
+golem::add_module(name = "international_arbeitsmarkt_map", with_test = FALSE)
+golem::add_module(name = "international_arbeitsmarkt_top10", with_test = FALSE)
+golem::add_module(name = "international_arbeitsmarkt_vergleich", with_test = FALSE)
+
+
+
 ### Home
 golem::add_module(name = "home_start", with_test = TRUE) # Name of the module
 golem::add_module(name = "home_start_comparison", with_test = TRUE) # Name of the module

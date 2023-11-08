@@ -327,6 +327,20 @@ international_ui_faecher <- function(region = "EU") {
                    )
   }
 
+  # for arbeitsmarkt international
+  if (region == "arbeit") {
+    #load(file = system.file(package="datalab","data/schule_timss.rda"))
+
+    selection <- arbeitsmarkt_anfänger_absolv_oecd %>%
+      dplyr::filter(geschlecht == "Gesamt" &
+                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+      ) %>%
+      dplyr::pull(fachbereich) %>%
+      unique() %>%
+      sort()
+  }
+
   return(selection)
 
 }
@@ -396,5 +410,58 @@ international_ui_years <- function(region = "EU") {
       sort()
   }
 
+  # for arbeitsmarkt international
+  if (region == "arbeit") {
+    #load(file = system.file(package="datalab","data/schule_timss.rda"))
+
+    selection <- arbeitsmarkt_anfänger_absolv_oecd %>%
+      dplyr::filter(geschlecht == "Gesamt" &
+                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+                                   "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+      ) %>%
+      dplyr::pull(jahr) %>%
+      unique() %>%
+      sort()
+  }
+
   return(selection)
+}
+
+# Funktion zur Länderauswahl bei internationalen Daten
+international_ui_country <- function(type = "arbeit", n = NA) {
+  logger::log_debug("set internatial ui selection for countries")
+  selection <- NULL
+
+  year <- max(arbeitsmarkt_anfänger_absolv_oecd$jahr)
+
+  # for studium international
+  if (type == "arbeit") {
+    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
+
+    tmp_df <-  arbeitsmarkt_anfänger_absolv_oecd %>%
+      dplyr::filter(geschlecht == "Gesamt" &
+                      jahr == year &
+                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+      )
+
+
+
+    if (!is.na(n)) {
+      tmp_df <- tmp_df %>%
+        dplyr::filter(
+          fachbereich == "MINT" &
+            variable == "Anteil Absolvent*innen nach Fach an allen Fächern") %>%
+        dplyr::group_by(land) %>%
+        dplyr::summarise(wert = sum(wert)) %>%
+        dplyr::arrange(desc(wert)) %>%
+        head(n = 10)
+    }
+
+    selection <- tmp_df %>%
+      dplyr::pull(land) %>%
+      unique() %>%
+      sort()
+  }
+
 }
