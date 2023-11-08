@@ -93,6 +93,8 @@ app_server <- function(input, output, session) {
                            data_studierende_europa = studierende_europa,
                            data_countries_names = countries_names)
 
+  mod_fachkraft_server("fachkraft_1")
+
   logger::log_debug("Seiten-Module fertig")
 
   output$debug <- shiny::renderUI({

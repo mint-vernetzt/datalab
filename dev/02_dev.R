@@ -85,6 +85,7 @@ golem::add_module(name = "schule_kurse_verlauf_bl_subjects", with_test = TRUE) #
 ## Internationale Daten
 golem::add_module(name = "international", with_test = TRUE)
 golem::add_module(name = "international_start", with_test = TRUE)
+
 golem::add_module(name = "international_map", with_test = TRUE)
 golem::add_module(name = "international_top10_mint", with_test = TRUE)
 golem::add_module(name = "international_top10_mint_gender", with_test = TRUE)
@@ -97,6 +98,13 @@ golem::add_module(name = "international_arbeitsmarkt_map", with_test = FALSE)
 golem::add_module(name = "international_arbeitsmarkt_top10", with_test = FALSE)
 golem::add_module(name = "international_arbeitsmarkt_vergleich", with_test = FALSE)
 
+
+## Fachkraft Daten
+golem::add_module(name = "fachkraft", with_test = FALSE)
+golem::add_module(name = "fachkraft_start", with_test = FALSE)
+golem::add_module(name = "fachkraft_item_epa", with_test = FALSE)
+golem::add_module(name = "fachkraft_item_mint", with_test = FALSE)
+golem::add_module(name = "fachkraft_item_detail", with_test = FALSE)
 
 
 ### Home
