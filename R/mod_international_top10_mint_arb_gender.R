@@ -163,6 +163,8 @@ mod_international_top10_mint_arb_gender_server <- function(id, r){
       if (input$map_l_top10_mint_arb_gender == "EU") {
         r$map_y_top10_mint_arb_gender <- input$map_y_eu_top10_mint_arb_gender
         r$map_pers_top10_mint_arb_gender <- input$map_pers_eu_top10_mint_arb_gender
+        r$show_avg_top10_mint_arb_gender <- input$show_avg_top10_mint_arb_gender
+
         #r$map_f_arb <- input$map_f_eu
       }
       if (input$map_l_top10_mint_arb_gender == "OECD") {
@@ -175,6 +177,7 @@ mod_international_top10_mint_arb_gender_server <- function(id, r){
 
           r$map_y_top10_mint_arb_gender <- input$map_y_oecd_top10_mint_arb_gender
           r$map_f_top10_mint_arb_gender<- input$map_f_oecd_top10_mint_arb_gender
+          r$show_avg_top10_mint_arb_gender <- input$show_avg_top10_mint_arb_gender
 
         }else if(input$map_pers_oecd_top10_mint_arb_gender %in% c("Auszubildende (ISCED 45)",
                                                        "Auszubildende in Erstausbildung (ISCED 35)",
@@ -184,6 +187,7 @@ mod_international_top10_mint_arb_gender_server <- function(id, r){
           r$map_y_top10_mint_arb_gender <- input$map_y_oecd2_top10_mint_arb_gender
           r$map_f_top10_mint_arb_gender <- input$map_f_oecd2_top10_mint_arb_gender
           r$map_betr_oecd_top10_mint_arb_gender <- input$map_betr_oecd_top10_mint_arb_gender
+          r$show_avg_top10_mint_arb_gender <- input$show_avg_top10_mint_arb_gender
 
         }
 

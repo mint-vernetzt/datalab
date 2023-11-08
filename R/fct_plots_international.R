@@ -515,8 +515,8 @@ plot_international_map_fem <- function(r){
     timerange <<- r$map_y_f
     fach_m <<- r$map_f_f
 
-
     df1 <<- studierende_europa%>%
+      dplyr::filter(!is.na(.$wert))%>%
       dplyr::filter(ebene == 1 &
                       indikator == "Frauen-/Männeranteil")%>%
       tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
@@ -530,7 +530,7 @@ plot_international_map_fem <- function(r){
       janitor::get_dupes(-wert)
 
 
-    df1$display_wert <- prettyNum( df1$wert, big.mark = ".", decimal.mark = ",")
+    df1$display_rel <- prettyNum( df1$wert, big.mark = ".", decimal.mark = ",")
 
     map_data_1 <<- df1 %>%
       dplyr::left_join(countries_names, by = "land") %>%
@@ -538,6 +538,8 @@ plot_international_map_fem <- function(r){
 
     studierende_europa1 <<- map_data_1 %>%
       janitor::get_dupes(-wert)
+
+    hoverplot <- "{point.land} <br> Anteil: {point.display_rel}%"
 
     title_dyn <- paste("Frauenanteil in", fach_m, "im Jahr", timerange)
     capt_dyn  <- paste("Quelle der Daten: Eurostat, 2022, eigene Berechnungen durch MINTvernetzt")
@@ -555,9 +557,10 @@ plot_international_map_fem <- function(r){
     timerange <<- r$map_y_f
     fach_m <<- r$map_f_f
 
-
+    studierende_anzahl_oecd
 
     df_filtered <<- studierende_anzahl_oecd %>%
+      dplyr::filter(!is.na(.$wert))%>%
       dplyr::filter(geschlecht %in% c("Frauen", "Gesamt") &
                       jahr == timerange &
                       ebene == 1 &
@@ -575,23 +578,30 @@ plot_international_map_fem <- function(r){
       dplyr::ungroup()%>%
       tidyr::pivot_wider(names_from = geschlecht, values_from = wert)%>%
       dplyr::mutate(wert = round(Frauen/Gesamt*100,1))%>%
-      dplyr::select(-Frauen,-Gesamt)%>%
-      dplyr::mutate(display_wert = wert)%>%
+      dplyr::mutate(display_rel = prettyNum(.$wert, big.mark = ".", decimal.mark = ","),
+                    display_total = prettyNum(.$Frauen, big.mark = ".", decimal.mark = ","))%>%
+      dplyr::select(-Gesamt, -Frauen)%>%
       dplyr::filter(jahr == timerange &
                       fach == fach_m # &
                       #anforderung == level_m
                     )
 
-    df_share_fem$display_wert <- prettyNum(df_share_fem$wert, big.mark = ".", decimal.mark = ",")
+
 
 
     map_data_1 <- df_share_fem %>%
-      dplyr::select(land, jahr, fach, wert, display_wert) %>%
+      dplyr::select(land, jahr, fach, wert, display_rel, display_total) %>%
       dplyr::inner_join(countries_names, by = "land") %>%
       dplyr::mutate(alpha2 = toupper(alpha2))
 
+
+    hoverplot <- "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+
     title_dyn <- paste("Frauenanteil in", fach_m,  "im Jahr", timerange)
     capt_dyn  <- paste("Quelle der Daten: OECD, 2022, eigene Berechnungen durch MINTvernetzt")
+
+
+
 
   }
 
@@ -615,7 +625,7 @@ plot_international_map_fem <- function(r){
       #download_map_data = FALSE
     )
     %>%
-      highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_wert} %") %>%
+      highcharter::hc_tooltip(pointFormat = hoverplot) %>%
       highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = title_dyn,
@@ -658,7 +668,8 @@ avg_line <<- r$show_avg_ti
     dplyr::filter(geschlecht=="Gesamt" &
                     anforderung %in% c("Bachelor oder vergleichbar (ISCED 6)",
                                        "Master oder vergleichbar (ISCED 7)",
-                                       "Promotion (ISCED 8)"))%>%
+                                       "Promotion (ISCED 8)") &
+                    !is.na(.$wert))%>%
     dplyr::group_by(fach,geschlecht,
                     land,jahr,
                     kommentar,ebene,mint_select,
@@ -671,10 +682,13 @@ avg_line <<- r$show_avg_ti
     dplyr::ungroup()%>%
     dplyr::filter(jahr == inpy &
                     fach == inpf
- )%>%
-    dplyr::mutate(wert=dplyr::case_when(wert == 0 ~ NA,
-                                        T ~ wert))%>%
-    dplyr::filter(!is.na(.$wert)) ### Doppelung Deutschland!
+ )%>% dplyr::mutate(display_total = prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
+
+
+
+    # dplyr::mutate(wert=dplyr::case_when(wert == 0 ~ NA,
+    #                                     T ~ wert))%>%
+    # dplyr::filter(!is.na(.$wert)) ### Doppelung Deutschland!
 ### Hnweis ergänzen keine 0s
 
 
@@ -693,9 +707,9 @@ if (avg_line == "Ja"){
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_total}")
         )) %>%
-      highcharter::hc_tooltip(pointFormat = "") %>%
+      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
       highcharter::hc_yAxis(plotLines = list(
         list(
           value = data_avg,
@@ -721,6 +735,9 @@ if (avg_line == "Ja"){
       highcharter::hc_caption(
         text = capt_dyn,  style = list(color= "grey", fontSize = "12px"))
 
+
+
+
     plot_bottom <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
       'bar',
@@ -728,9 +745,9 @@ if (avg_line == "Ja"){
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_total}")
         )) %>%
-      highcharter::hc_tooltip(pointFormat = "") %>%
+      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
       highcharter::hc_yAxis(
                             plotLines = list(
                               list(
@@ -773,9 +790,9 @@ if (avg_line == "Ja"){
     highcharter::hc_plotOptions(
       series = list(
         boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert}")
+        dataLabels = list(enabled = TRUE, format = "{point.display_total}")
       )) %>%
-    highcharter::hc_tooltip(pointFormat = "") %>%
+    highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
     highcharter::hc_yAxis(title = list(text = ""),
                           labels = list(format = "{value}"),
                           min = 0,
@@ -803,9 +820,9 @@ if (avg_line == "Ja"){
     highcharter::hc_plotOptions(
       series = list(
         boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert}")
+        dataLabels = list(enabled = TRUE, format = "{point.display_total}")
       )) %>%
-    highcharter::hc_tooltip(pointFormat = "") %>%
+    highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_total}") %>%
     highcharter::hc_yAxis(title = list(text = ""),
                           labels = list(format = "{value}"),
                           min = 0,
@@ -838,11 +855,14 @@ if (avg_line == "Ja"){
 
 plot_international_map_arb <- function(r) {
 
+  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <<-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
-  #oecd_absv_zahl <<- arbeitsmarkt_absolvent_oecd  # Anzahl
-  oecd_abs_anfänger <<- arbeitsmarkt_anfänger_absolv_oecd  # Anteil
-  oecd_azub <<- arbeitsmarkt_anzahl_azubis_oecd
-  eu_besch <<- arbeitsmarkt_beschäftigte_eu
+  oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
+  oecd_azub <<- oecd_azub%>% dplyr::filter(!is.na(.$wert))
+
+  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch <<- eu_besch%>% dplyr::filter(!is.na(.$wert))
 
   map_l <<- r$map_l_arb
 
@@ -861,7 +881,7 @@ plot_international_map_arb <- function(r) {
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
       dplyr::rename(wert="Anteil an arbeitender Bevölkerung")
 
-    data1$display_rel <- prettyNum(data1$wert, big.mark = ".", decimal.mark = ",")
+    data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
 
 
     data2 <<- eu_besch %>%
@@ -883,6 +903,44 @@ plot_international_map_arb <- function(r) {
       dplyr::mutate(alpha2= toupper(alpha2))
 
 
+    highcharter::hw_grid(
+      # plot
+      highcharter::hcmap(
+        #"countries/de/de-all",
+        map = map_selection,
+        data = data_map,
+        value = "wert",
+        joinBy = c("hc-a2", "alpha2"),
+        borderColor = "#FAFAFA",
+        name = paste0(inpp),
+        borderWidth = 0.1,
+        nullColor = "#A9A9A9",
+        tooltip = list(
+          valueDecimals = 0,
+          valueSuffix = "%"
+        )
+        ,
+        download_map_data = T
+      )
+      %>%
+        highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
+        highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+        # highcharter::hc_title(
+        #   text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
+        #   margin = 10,
+        #   align = "center",
+        #   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+        # ) %>%
+        # highcharter::hc_caption(
+        #   text = "...",  style = list(color= "white", fontSize = "12px")
+        # ) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular")
+        ) %>% highcharter::hc_size(600, 550) %>%
+        highcharter::hc_credits(enabled = FALSE) %>%
+        highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                               verticalAlign = "bottom")
+    )
   }
 
 
@@ -908,11 +966,12 @@ plot_international_map_arb <- function(r) {
                                          "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                                          "Naturwissenschaften, Mathematik und Statistik",
                                          "Alle")&
-                        geschlecht == "Gesamt")
+                        geschlecht == "Gesamt")%>%
+        dplyr::mutate(display_rel= prettyNum(round(.$wert, 1), big.mark = ".", decimal.mark = ","))
 
       if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
 
-        data_map <- data1 %>%
+        data_map <<- data1 %>%
           dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
                           variable == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern" &
                           fachbereich == inpf)%>%
@@ -948,6 +1007,45 @@ plot_international_map_arb <- function(r) {
           dplyr::mutate(alpha2 = toupper(alpha2))
 
       }
+
+      highcharter::hw_grid(
+        # plot
+        highcharter::hcmap(
+          #"countries/de/de-all",
+          map = map_selection,
+          data = data_map,
+          value = "wert",
+          joinBy = c("hc-a2", "alpha2"),
+          borderColor = "#FAFAFA",
+          name = paste0(inpp),
+          borderWidth = 0.1,
+          nullColor = "#A9A9A9",
+          tooltip = list(
+            valueDecimals = 0,
+            valueSuffix = "%"
+          )
+          ,
+          download_map_data = T
+        )
+        %>%
+          highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}%") %>%
+          highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+          # highcharter::hc_title(
+          #   text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
+          #   margin = 10,
+          #   align = "center",
+          #   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+          # ) %>%
+          # highcharter::hc_caption(
+          #   text = "...",  style = list(color= "white", fontSize = "12px")
+          # ) %>%
+          highcharter::hc_chart(
+            style = list(fontFamily = "SourceSans3-Regular")
+          ) %>% highcharter::hc_size(600, 550) %>%
+          highcharter::hc_credits(enabled = FALSE) %>%
+          highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                                 verticalAlign = "bottom")
+      )
 
 
     } else {
@@ -1020,49 +1118,55 @@ plot_international_map_arb <- function(r) {
                           fach == inpf)
 
       }
-  }
 
 
 
-  }
-  highcharter::hw_grid(
-    # plot
-    highcharter::hcmap(
-      #"countries/de/de-all",
-      map = map_selection,
-      data = data_map,
-      value = "wert",
-      joinBy = c("hc-a2", "alpha2"),
-      borderColor = "#FAFAFA",
-      name = paste0(inpp),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
+      highcharter::hw_grid(
+        # plot
+        highcharter::hcmap(
+          #"countries/de/de-all",
+          map = map_selection,
+          data = data_map,
+          value = "wert",
+          joinBy = c("hc-a2", "alpha2"),
+          borderColor = "#FAFAFA",
+          name = paste0(inpp),
+          borderWidth = 0.1,
+          nullColor = "#A9A9A9",
+          tooltip = list(
+            valueDecimals = 0,
+            valueSuffix = "%"
+          )
+          ,
+          download_map_data = T
+        )
+        %>%
+          highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
+          highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+          # highcharter::hc_title(
+          #   text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
+          #   margin = 10,
+          #   align = "center",
+          #   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+          # ) %>%
+          # highcharter::hc_caption(
+          #   text = "...",  style = list(color= "white", fontSize = "12px")
+          # ) %>%
+          highcharter::hc_chart(
+            style = list(fontFamily = "SourceSans3-Regular")
+          ) %>% highcharter::hc_size(600, 550) %>%
+          highcharter::hc_credits(enabled = FALSE) %>%
+          highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                                 verticalAlign = "bottom")
       )
-      ,
-      download_map_data = T
-    )
-    %>%
-      highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
-      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-      # highcharter::hc_title(
-      #   text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
-      #   margin = 10,
-      #   align = "center",
-      #   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      # ) %>%
-      # highcharter::hc_caption(
-      #   text = "...",  style = list(color= "white", fontSize = "12px")
-      # ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
-  )
+
+
+      }
+
+
+
+  }
+
 
 
 
@@ -1070,9 +1174,14 @@ plot_international_map_arb <- function(r) {
 
 plot_international_map_arb_gender <- function(r) {
 
-  oecd_abs_anfänger <<- arbeitsmarkt_anfänger_absolv_oecd  # Anteil
-  oecd_azub <<- arbeitsmarkt_anzahl_azubis_oecd
-  eu_besch <<- arbeitsmarkt_beschäftigte_eu
+  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <<-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
+
+  oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
+  oecd_azub <<- oecd_azub%>% dplyr::filter(!is.na(.$wert))
+
+  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch <<- eu_besch%>% dplyr::filter(!is.na(.$wert))
 
   inpl <<- r$map_l_arb_gender
 
@@ -1114,6 +1223,46 @@ plot_international_map_arb_gender <- function(r) {
       dplyr::mutate(alpha2= toupper(alpha2))
 
 
+    highcharter::hw_grid(
+      # plot
+      highcharter::hcmap(
+        #"countries/de/de-all",
+        map = map_selection,
+        data = data_map,
+        value = "wert",
+        joinBy = c("hc-a2", "alpha2"),
+        borderColor = "#FAFAFA",
+        name = paste0(inpp),
+        borderWidth = 0.1,
+        nullColor = "#A9A9A9",
+        tooltip = list(
+          valueDecimals = 0,
+          valueSuffix = "%"
+        )
+        ,
+        download_map_data = T
+      )
+      %>%
+        highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
+        highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+        # highcharter::hc_title(
+        #   text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
+        #   margin = 10,
+        #   align = "center",
+        #   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+        # ) %>%
+        # highcharter::hc_caption(
+        #   text = "...",  style = list(color= "white", fontSize = "12px")
+        # ) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular")
+        ) %>% highcharter::hc_size(600, 550) %>%
+        highcharter::hc_credits(enabled = FALSE) %>%
+        highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                               verticalAlign = "bottom")
+    )
+
+
   }
 
 
@@ -1140,7 +1289,8 @@ plot_international_map_arb_gender <- function(r) {
                                            "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                                            "Naturwissenschaften, Mathematik und Statistik",
                                            "Alle")&
-                        geschlecht =="Frauen")
+                        geschlecht =="Frauen")%>%
+        dplyr::mutate(display_rel= prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
 
       if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
 
@@ -1189,6 +1339,46 @@ plot_international_map_arb_gender <- function(r) {
         data_map$display_rel <- prettyNum(round(data_map$wert,1), big.mark = ".", decimal.mark = ",")
 
       }
+
+
+      highcharter::hw_grid(
+        # plot
+        highcharter::hcmap(
+          #"countries/de/de-all",
+          map = map_selection,
+          data = data_map,
+          value = "wert",
+          joinBy = c("hc-a2", "alpha2"),
+          borderColor = "#FAFAFA",
+          name = paste0(inpp),
+          borderWidth = 0.1,
+          nullColor = "#A9A9A9",
+          tooltip = list(
+            valueDecimals = 0,
+            valueSuffix = "%"
+          )
+          ,
+          download_map_data = T
+        )
+        %>%
+          highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}%") %>%
+          highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+          # highcharter::hc_title(
+          #   text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
+          #   margin = 10,
+          #   align = "center",
+          #   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+          # ) %>%
+          # highcharter::hc_caption(
+          #   text = "...",  style = list(color= "white", fontSize = "12px")
+          # ) %>%
+          highcharter::hc_chart(
+            style = list(fontFamily = "SourceSans3-Regular")
+          ) %>% highcharter::hc_size(600, 550) %>%
+          highcharter::hc_credits(enabled = FALSE) %>%
+          highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                                 verticalAlign = "bottom")
+      )
 
 
     } else {
@@ -1289,58 +1479,68 @@ plot_international_map_arb_gender <- function(r) {
                           fach == inpf)
 
       }
+
+      highcharter::hw_grid(
+        # plot
+        highcharter::hcmap(
+          #"countries/de/de-all",
+          map = map_selection,
+          data = data_map,
+          value = "wert",
+          joinBy = c("hc-a2", "alpha2"),
+          borderColor = "#FAFAFA",
+          name = paste0(inpp),
+          borderWidth = 0.1,
+          nullColor = "#A9A9A9",
+          tooltip = list(
+            valueDecimals = 0,
+            valueSuffix = "%"
+          )
+          ,
+          download_map_data = T
+        )
+        %>%
+          highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
+          highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+          # highcharter::hc_title(
+          #   text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
+          #   margin = 10,
+          #   align = "center",
+          #   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+          # ) %>%
+          # highcharter::hc_caption(
+          #   text = "...",  style = list(color= "white", fontSize = "12px")
+          # ) %>%
+          highcharter::hc_chart(
+            style = list(fontFamily = "SourceSans3-Regular")
+          ) %>% highcharter::hc_size(600, 550) %>%
+          highcharter::hc_credits(enabled = FALSE) %>%
+          highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                                 verticalAlign = "bottom")
+      )
+
     }
 
 
 
   }
-  highcharter::hw_grid(
-    # plot
-    highcharter::hcmap(
-      #"countries/de/de-all",
-      map = map_selection,
-      data = data_map,
-      value = "wert",
-      joinBy = c("hc-a2", "alpha2"),
-      borderColor = "#FAFAFA",
-      name = paste0(inpp),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      ,
-      download_map_data = T
-    )
-    %>%
-      highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
-      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-      # highcharter::hc_title(
-      #   text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
-      #   margin = 10,
-      #   align = "center",
-      #   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      # ) %>%
-      # highcharter::hc_caption(
-      #   text = "...",  style = list(color= "white", fontSize = "12px")
-      # ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
-  )
+
 
 
 
 }
 
 plot_international_top10_mint_arb <- function(r) {
-  oecd_abs_anfänger <<- arbeitsmarkt_anfänger_absolv_oecd  # Anteil
-  oecd_azub <<- arbeitsmarkt_anzahl_azubis_oecd
-  eu_besch <<- arbeitsmarkt_beschäftigte_eu
+
+  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <<-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
+
+  oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
+  oecd_azub <<- oecd_azub%>% dplyr::filter(!is.na(.$wert))
+
+  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch <<- eu_besch%>% dplyr::filter(!is.na(.$wert))
+
 
   map_l <<- r$map_l_top10_mint_arb
 
@@ -1357,9 +1557,9 @@ plot_international_top10_mint_arb <- function(r) {
                       indikator == inpp &
                       variable == "Anteil an arbeitender Bevölkerung")%>%
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
-      dplyr::rename(wert="Anteil an arbeitender Bevölkerung")
+      dplyr::rename(wert="Anteil an arbeitender Bevölkerung")%>%
+      dplyr::mutate(display_rel=prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
 
-    data1$display_rel <- prettyNum(data1$wert, big.mark = ".", decimal.mark = ",")
 
 
     data2 <<- eu_besch %>%
@@ -1379,6 +1579,9 @@ plot_international_top10_mint_arb <- function(r) {
                          dplyr::mutate(land=dplyr::case_when(land == "Tschechien" ~ "Tschechische Republik",
                                                              T ~ .$land)), by= "land")%>%
       dplyr::mutate(alpha2= toupper(alpha2))
+
+    plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+
 
 
   }
@@ -1400,19 +1603,24 @@ plot_international_top10_mint_arb <- function(r) {
       inpy <<- r$map_y_oecd_top10_mint_arb
       inpf <<- r$map_f_oecd_top10_mint_arb
 
+      plotopshov <- "Anteil: {point.display_rel}%"
 
-      data1 <- oecd_abs_anfänger%>%
+
+      data1 <<- oecd_abs_anfänger%>%
         dplyr::filter(jahr == inpy &
                         fachbereich %in% c("MINT",
                                            "Informatik & Kommunikationstechnologie",
                                            "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                                            "Naturwissenschaften, Mathematik und Statistik",
                                            "Alle")&
-                        geschlecht == "Gesamt")
+                        geschlecht == "Gesamt")%>%
+        dplyr::mutate(display_rel=prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ","))
+
+
 
       if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
 
-        data_fn <- data1 %>%
+        data_fn <<- data1 %>%
           dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
                           variable == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern" &
                           fachbereich == inpf)%>%
@@ -1455,6 +1663,8 @@ plot_international_top10_mint_arb <- function(r) {
       inpy <<- r$map_y_top10_mint_arb_gender
       inpf <<- r$map_f_oecd2_top10_mint_arb
 
+      plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+
       data1 <- oecd_azub %>%
         dplyr::filter(geschlecht == "Gesamt" &
                         indikator == "berufsorientiert" &
@@ -1484,8 +1694,7 @@ plot_international_top10_mint_arb <- function(r) {
                         fach %in% c("MINT",
                                     "Informatik & Kommunikationstechnologie",
                                     "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                    "Naturwissenschaften, Mathematik und Statistik",
-                                    "Alle"))%>%
+                                    "Naturwissenschaften, Mathematik und Statistik"))%>%
         dplyr::rename(display_total = wert)%>%
         dplyr::mutate(display_total= prettyNum(.$display_total, big.mark = ".", decimal.mark = ","))%>%
         dplyr::select(land, jahr, display_total, fach, anforderung)
@@ -1525,7 +1734,7 @@ plot_international_top10_mint_arb <- function(r) {
       }
     }}
 
-    avg_line <<- r$show_ave
+  avg_line <<- r$show_ave
 
   # Create top 10 plot
     if (avg_line == "Ja"){
@@ -1539,9 +1748,9 @@ plot_international_top10_mint_arb <- function(r) {
         highcharter::hc_plotOptions(
           series = list(
             boderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.wert}")
+            dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
           )) %>%
-        highcharter::hc_tooltip(pointFormat = "") %>%
+        highcharter::hc_tooltip(pointFormat = plotopshov )%>%
         highcharter::hc_yAxis(plotLines = list(
           list(
             value = data_avg,
@@ -1550,9 +1759,9 @@ plot_international_top10_mint_arb <- function(r) {
             zIndex = 4
           )
         ),title = list(text = ""),
-        labels = list(format = "{value}"),
+        labels = list(format = "{value}%"),
         min = 0,
-        max = max(data1$wert)*1.2)%>%
+        max = max(data_fn$wert, na.rm = T)*1.2)%>%
         highcharter::hc_xAxis(title = list(text = " ")) %>%
         highcharter::hc_colors(c("#154194")) %>%
         highcharter::hc_title(text = "title_dyn_top",
@@ -1574,9 +1783,9 @@ plot_international_top10_mint_arb <- function(r) {
         highcharter::hc_plotOptions(
           series = list(
             boderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.wert}")
+            dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
           )) %>%
-        highcharter::hc_tooltip(pointFormat = "") %>%
+        highcharter::hc_tooltip(pointFormat = plotopshov)%>%
         highcharter::hc_yAxis(
           plotLines = list(
             list(
@@ -1586,9 +1795,9 @@ plot_international_top10_mint_arb <- function(r) {
               zIndex = 4
             )
           ),title = list(text = ""),
-          labels = list(format = "{value}"),
+          labels = list(format = "{value}%"),
           min = 0,
-          max = max(data1$wert)*1.2)%>%
+          max = max(data_fn$wert, na.rm = T)*1.2)%>%
         highcharter::hc_xAxis(title = list(text = " ")) %>%
         highcharter::hc_colors(c("#154194")) %>%
         highcharter::hc_title(text =  "title_dyn_bot",
@@ -1615,19 +1824,19 @@ plot_international_top10_mint_arb <- function(r) {
 
 
       plot_top <- highcharter::hchart(
-        data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
+        data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
         'bar',
         highcharter::hcaes(y = wert, x = land))%>%
         highcharter::hc_plotOptions(
           series = list(
             boderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.wert}")
+            dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
           )) %>%
-        highcharter::hc_tooltip(pointFormat = "") %>%
+        highcharter::hc_tooltip(pointFormat = plotopshov)%>%
         highcharter::hc_yAxis(title = list(text = ""),
-                              labels = list(format = "{value}"),
+                              labels = list(format = "{value}%"),
                               min = 0,
-                              max = max(data1$wert)*1.2) %>%
+                              max = max(data_fn$wert, na.rm = T)*1.2)%>%
         highcharter::hc_xAxis(title = list(text = " ")) %>%
         highcharter::hc_colors(c("#154194")) %>%
         highcharter::hc_title(text = "title_dyn_top",
@@ -1645,19 +1854,19 @@ plot_international_top10_mint_arb <- function(r) {
 
 
       plot_bottom <- highcharter::hchart(
-        data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
+        data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
         'bar',
         highcharter::hcaes(y = wert, x = land))%>%
         highcharter::hc_plotOptions(
           series = list(
             boderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.wert}")
+            dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
           )) %>%
-        highcharter::hc_tooltip(pointFormat = "") %>%
+        highcharter::hc_tooltip(pointFormat = plotopshov)%>%
         highcharter::hc_yAxis(title = list(text = ""),
-                              labels = list(format = "{value}"),
+                              labels = list(format = "{value}%"),
                               min = 0,
-                              max = max(data1$wert)*1.2) %>%
+                              max = max(data_fn$wert, na.rm = T)*1.2)%>%
         highcharter::hc_xAxis(title = list(text = "")) %>%
         highcharter::hc_colors(c("#154194")) %>%
         highcharter::hc_title(text =  "title_dyn_bot",
@@ -1688,9 +1897,15 @@ plot_international_top10_mint_arb <- function(r) {
 plot_international_top10_mint_arb_gender <- function(r) {
 
 
-  oecd_abs_anfänger <<- arbeitsmarkt_anfänger_absolv_oecd  # Anteil
-  oecd_azub <<- arbeitsmarkt_anzahl_azubis_oecd
-  eu_besch <<- arbeitsmarkt_beschäftigte_eu
+  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <<-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
+
+
+  oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
+  oecd_azub <<- oecd_azub%>% dplyr::filter(!is.na(.$wert))
+
+  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch1 <<- eu_besch %>% dplyr::filter(!is.na(.$wert))
 
   inpl <<- r$map_l_top10_mint_arb_gender
 
@@ -1711,7 +1926,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       dplyr::rename(wert="Frauen")%>%
       dplyr::select(-Gesamt)
 
-    data1$display_rel <- prettyNum(data1$wert, big.mark = ".", decimal.mark = ",")
+    data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
 
 
     data2 <<- eu_besch %>%
@@ -1732,7 +1947,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
                                                              T ~ .$land)), by= "land")%>%
       dplyr::mutate(alpha2= toupper(alpha2))
 
-
+    plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
   }
 
 
@@ -1750,6 +1965,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
                     "Anfänger*innen Erstausbildung (ISCED 35)",
                     "Absolvent*innen Ausbildung (ISCED 45)",
                     "Absolvent*innen Erstausbildung (ISCED 35)")){
+
+      plotopshov <- "Anteil: {point.display_rel}%"
 
 
       data1 <- oecd_abs_anfänger%>%
@@ -1814,6 +2031,9 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       inpbe <<- r$map_betr_oecd_top10_mint_arb_gender
 
+      plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+
+
       data_fva <- oecd_azub %>%
         dplyr::filter(geschlecht %in% c("Gesamt", "Frauen") &
                         indikator == "berufsorientiert" &
@@ -1825,7 +2045,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
                                     "Alle"))%>%
         tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
         dplyr::mutate(wert= round(Frauen/Gesamt *100,1))%>%
-        dplyr::mutate(display_rel= prettyNum(.$wert, big.mark = ".", decimal.mark = ","),
+        dplyr::mutate(display_rel= prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ","),
                       display_total= prettyNum(.$Frauen, big.mark = ".", decimal.mark = ","))%>%
         dplyr::select(-Gesamt, - Frauen)%>%
         dplyr::inner_join(countries_names, by = "land") %>%
@@ -1853,7 +2073,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                               "Naturwissenschaften, Mathematik und Statistik"), values_to = "wert",
                             names_to = "fach") %>%
-        dplyr::mutate(display_rel= prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
+        dplyr::mutate(display_rel= prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ","))
 
 
       data_fvf2 <- oecd_azub %>%
@@ -1912,7 +2132,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
   }
 
-  avg_line <<- r$show_ave
+  avg_line <<- r$show_avg_top10_mint_arb_gender
 
   # Create top 10 plot
   if (avg_line == "Ja"){
@@ -1926,9 +2146,9 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
         )) %>%
-      highcharter::hc_tooltip(pointFormat = "") %>%
+      highcharter::hc_tooltip(pointFormat = plotopshov) %>%
       highcharter::hc_yAxis(plotLines = list(
         list(
           value = data_avg,
@@ -1937,9 +2157,9 @@ plot_international_top10_mint_arb_gender <- function(r) {
           zIndex = 4
         )
       ),title = list(text = ""),
-      labels = list(format = "{value}"),
+      labels = list(format = "{value}%"),
       min = 0,
-      max = max(data1$wert)*1.2)%>%
+      max = max(data1$wert, na.rm = T)*1.2)%>%
       highcharter::hc_xAxis(title = list(text = " ")) %>%
       highcharter::hc_colors(c("#154194")) %>%
       highcharter::hc_title(text = "title_dyn_top",
@@ -1961,9 +2181,9 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
         )) %>%
-      highcharter::hc_tooltip(pointFormat = "") %>%
+      highcharter::hc_tooltip(pointFormat = plotopshov) %>%
       highcharter::hc_yAxis(
         plotLines = list(
           list(
@@ -1973,9 +2193,9 @@ plot_international_top10_mint_arb_gender <- function(r) {
             zIndex = 4
           )
         ),title = list(text = ""),
-        labels = list(format = "{value}"),
+        labels = list(format = "{value}%"),
         min = 0,
-        max = max(data1$wert)*1.2)%>%
+        max = max(data1$wert, na.rm = T)*1.2)%>%
       highcharter::hc_xAxis(title = list(text = " ")) %>%
       highcharter::hc_colors(c("#154194")) %>%
       highcharter::hc_title(text =  "title_dyn_bot",
@@ -2008,13 +2228,13 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
         )) %>%
-      highcharter::hc_tooltip(pointFormat = "") %>%
+      highcharter::hc_tooltip(pointFormat = plotopshov) %>%
       highcharter::hc_yAxis(title = list(text = ""),
-                            labels = list(format = "{value}"),
+                            labels = list(format = "{value}%"),
                             min = 0,
-                            max = max(data1$wert)*1.2) %>%
+                            max = max(data1$wert, na.rm = T)*1.2) %>%
       highcharter::hc_xAxis(title = list(text = " ")) %>%
       highcharter::hc_colors(c("#154194")) %>%
       highcharter::hc_title(text = "title_dyn_top",
@@ -2038,13 +2258,13 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
         )) %>%
-      highcharter::hc_tooltip(pointFormat = "") %>%
+      highcharter::hc_tooltip(pointFormat = plotopshov) %>%
       highcharter::hc_yAxis(title = list(text = ""),
-                            labels = list(format = "{value}"),
+                            labels = list(format = "{value}%"),
                             min = 0,
-                            max = max(data1$wert)*1.2) %>%
+                            max = max(data1$wert, na.rm = T)*1.2) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
       highcharter::hc_title(text =  "title_dyn_bot",
