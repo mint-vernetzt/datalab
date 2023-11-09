@@ -415,9 +415,12 @@ international_ui_years <- function(region = "EU") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
     selection <- arbeitsmarkt_anfänger_absolv_oecd %>%
-      dplyr::filter(geschlecht == "Gesamt" &
-                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                                   "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+      dplyr::filter(
+        geschlecht == "Gesamt" &
+          # filter year, since before there are not all infos available
+          jahr >= 2013 &
+          variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+                          "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
       ) %>%
       dplyr::pull(jahr) %>%
       unique() %>%

@@ -990,23 +990,30 @@ plot_international_arbeitsmarkt_map <- function(r) {}
 plot_international_arbeitsmakrt_top10 <- function(r) {}
 plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
-  #r <- list(vergleich_y_int_arbeitsmarkt = 2020,vergleich_l_int_arbeitsmarkt = c("Australien", "Portugal", "Deutschland"),vergleich_f_int_arbeitsmarkt = "MINT")
+  #r <- list(vergleich_y_int_arbeitsmarkt = 2012,vergleich_l_int_arbeitsmarkt = c("Australien", "Ungarn", "Deutschland"),vergleich_f_int_arbeitsmarkt = "MINT")
   # load UI inputs from reactive value
 
   timerange <- r$vergleich_y_int_arbeitsmarkt
   land_m <- r$vergleich_l_int_arbeitsmarkt
   fach_m <- r$vergleich_f_int_arbeitsmarkt
 
+  variable_set <- c("Anteil Absolvent*innen nach Fach an allen Fächern",
+                    "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+
   tmp_df <-  arbeitsmarkt_anfänger_absolv_oecd %>%
     dplyr::filter(geschlecht == "Gesamt" &
                     jahr == timerange &
                     land %in% land_m &
-                    fachbereich == fach_m &
-                    variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                                    "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-    ) %>%
-    dplyr::group_by(land, variable) %>%
-    dplyr::summarise(wert = sum(wert))
+                    #fachbereich == fach_m &
+                    anforderung == "tertiäre Bildung (gesamt)" &
+                    variable %in% variable_set
+    )
+
+  # check if variables are present
+  if (!all(variable_set %in% unique(tmp_df$variable))) {
+    logger::log_debug("not all needed variable in this combination")
+    return("Für diese Kombination an Filtereinstellungen sind leider keine Daten vorhanden.")
+  }
 
 
   tooltip_data <- tmp_df %>%
@@ -1026,16 +1033,23 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
     dplyr::select(land, Difference, max) %>%
     dplyr::distinct()
 
+
   annotation_data <- lapply(seq_len(nrow(tooltip_data)), function(x){
-    list(point = list(x = x -1,
-                      y = tooltip_data$max[x],
-                      xAxis = 0,
-                      yAxis = 0),
-         text = as.character(tooltip_data$Difference[x]))
+    # create annotation only if there is a difference
+    if (is.na(tooltip_data$Difference[x])) {
+      out <- NULL
+    } else {
+      out <- list(point = list(x = x -1,
+                        y = tooltip_data$max[x],
+                        xAxis = 0,
+                        yAxis = 0),
+           text = as.character(tooltip_data$Difference[x]))
+    }
+    return(out)
   })
 
   # Create the plot
-  highcharter::hchart(object = tmp_df,
+  plot <- highcharter::hchart(object = tmp_df,
                       type = "column",
                       mapping = highcharter::hcaes(x = land, y = wert, group = variable))  %>%
     #hc_xAxis(categories = tmp_df$land) %>%
@@ -1069,7 +1083,7 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
     )
 
 
-
+  return(plot)
 }
 
 
