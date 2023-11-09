@@ -465,3 +465,75 @@ international_ui_country <- function(type = "arbeit", n = NA) {
   }
 
 }
+
+# Funktion zur Jahresauswahl bei Fachkraft Daten
+fachkraft_ui_years <- function() {
+
+  logger::log_debug("set fachkräfte ui selection for years")
+  selection <- NULL
+
+
+  selection <- arbeitsmarkt_epa_detail %>%
+    dplyr::filter(indikator == "Engpassindikator") %>%
+    dplyr::pull(jahr) %>%
+    unique() %>%
+    sort()
+
+
+  return(selection)
+}
+
+# Funktion zur Fachauswahl bei Fachkraft Daten
+fachkraft_ui_faecher <- function() {
+
+  logger::log_debug("set fachkraft ui selection for faecher")
+
+  selection <- NULL
+
+  # selection <- arbeitsmarkt_epa_detail %>%
+  #   dplyr::filter(indikator == "Engpassindikator") %>%
+  #   dplyr::pull(mint_zuordnung) %>%
+  #   unique() %>%
+  #   append("MINT")
+
+  # manual selection to have correct order and naming
+  selection <- c(
+    "Alle Berufe", #"Gesamt"
+    "MINT gesamt", #"MINT",
+    "Informatik",
+    "Landtechnik",
+    "Prdokuktionstechnik",
+    "Bau- und Gebäudetechnik",
+    "Mathematik, Naturwissenschaften",
+    "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+    "Gesundheitstechnik",
+    "Nicht MINT"
+  )
+
+
+  return(selection)
+
+}
+
+# Funktion zur Berufslevelauswahl bei Fachkraft Daten
+fachkraft_ui_berufslevel <- function() {
+  logger::log_debug("set fachkraft ui selection for berufslevel")
+
+  selection <- NULL
+
+  # selection <- arbeitsmarkt_epa_detail %>%
+  #   dplyr::filter(indikator == "Engpassindikator") %>%
+  #   dplyr::pull(anforderung) %>%
+  #   unique() %>%
+  #   append("Gesamt")
+  # manual selection to have correct order and adding "gesamt"
+  selection <- c(
+    "Gesamt",
+    "Fachkräfte",
+    "Spezialist*innen",
+    "Expert*innen"
+  )
+
+
+  return(selection)
+}

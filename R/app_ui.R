@@ -81,7 +81,7 @@ app_ui <- function(request) {
       # Show the appropriate tab's content in the main body of our dashboard when we select it
       body = shinydashboard::dashboardBody(
         # display shiny version
-        shiny.info::version(ver = "1.0.0:9002",
+        shiny.info::version(ver = "1.0.0:9003",
                             position = "bottom left"),
 
         # Matomo einbinden

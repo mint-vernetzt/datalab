@@ -156,6 +156,9 @@ golem::add_fct(name = "plots_ausbildung", module = NULL,with_test = TRUE)
 # International
 golem::add_fct(name = "plots_international", module = NULL,with_test = TRUE)
 
+# Fachkraft
+golem::add_fct(name = "plots_fachkraft", module = NULL,with_test = FALSE)
+
 
 golem::add_utils("ui_body", with_test = FALSE)
 golem::add_utils(name = "helpers")

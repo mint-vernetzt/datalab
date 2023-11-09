@@ -91,12 +91,14 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       p("LOREM"),
-                                      mod_international_map_ui("mod_international_map_ui_1")
+                                      mod_international_map_ui("mod_international_map_ui_1"),
+                                      mod_fachkraft_item_epa_ui("fachkraft_item_epa_2")
 
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
                                       htmlOutput(ns("plot_international_studienzahl_map_1")),
+                                      htmlOutput(ns("plot_fachkraft_epa_item_2")),
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; als Download, eigene Berechnungen durch MINTvernetzt."),
 
@@ -343,6 +345,10 @@ mod_international_start_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    output$plot_fachkraft_epa_item_2 <- renderUI({
+      plot_fachkraft_epa_item(r)
+    })
+
     # Box 1 - Studium
     output$plot_international_studienzahl_map_1 <- renderUI({
       logger::log_debug("plot_international_map")
@@ -391,6 +397,7 @@ mod_international_start_server <- function(id, r){
       logger::log_debug("plot_international_arbeitsmarkt_vergleiche_1")
       plot_international_arbeitsmarkt_vergleiche(r)
     })
+
 
   })
 }

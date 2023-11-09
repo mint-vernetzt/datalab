@@ -10,7 +10,51 @@
 mod_fachkraft_item_epa_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("COMING SOON - mod_fachkraft_item_epa_ui")
+
+    p("Jahr:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("map_y_fachkraft_arbeit_epa"),
+      label = NULL,
+      choices = fachkraft_ui_years(),
+      selected = "2022"
+    ),
+
+    p("Fachbereich:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("map_f_fachkraft_arbeit_epa"),
+      choices = fachkraft_ui_faecher(),
+      selected = c("MINT gesamt", "Nicht MINT"),
+      multiple = TRUE,
+      options =  list(
+        "max-options" = 2,
+        "max-options-text" = "Maximal 2 Indikatoren auswählen")
+    ),
+
+    p("Berufslevel:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("map_bl_fachkraft_arbeit_epa"),
+      choices = fachkraft_ui_berufslevel(),
+      selected = c("Gesamt"),
+      multiple = FALSE
+      ),
+
+    br(),
+
+    # TODO extract into own module, since this is repeated on a lot of modules
+
+    shinyBS::bsPopover(id="dh_fachkraft_epa", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_fachkraft_epa"),
+    br(),
+    br(),
+    shinyBS::bsPopover(id="ih_fachkraft_epa", title="",
+                       content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_epa")
+
   )
 }
 
@@ -20,6 +64,20 @@ mod_fachkraft_item_epa_ui <- function(id){
 mod_fachkraft_item_epa_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+
+    observeEvent(input$map_y_fachkraft_arbeit_epa, {
+      browser()
+      r$map_y_fachkraft_arbeit_epa <- input$map_y_fachkraft_arbeit_epa
+    })
+
+    observeEvent(input$map_f_fachkraft_arbeit_epa, {
+      r$map_f_fachkraft_arbeit_epa <- input$map_f_fachkraft_arbeit_epa
+    })
+
+    observeEvent(input$map_bl_fachkraft_arbeit_epa, {
+      r$map_bl_fachkraft_arbeit_epa <- input$map_bl_fachkraft_arbeit_epa
+    })
 
   })
 }
