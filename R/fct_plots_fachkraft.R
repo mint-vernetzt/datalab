@@ -39,7 +39,7 @@ plot_fachkraft_epa_item <- function(r) {
       # TODO ist indikator der richtige Filter?
       # TODO was ist mit berufsgruppe?
       dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
-      rbind(arbeitsmarkt_epa_detail)
+      rbind(plot_data_raw)
   }
 
 
