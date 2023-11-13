@@ -67,7 +67,6 @@ mod_fachkraft_item_epa_server <- function(id, r){
 
 
     observeEvent(input$map_y_fachkraft_arbeit_epa, {
-      browser()
       r$map_y_fachkraft_arbeit_epa <- input$map_y_fachkraft_arbeit_epa
     })
 

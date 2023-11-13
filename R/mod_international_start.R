@@ -91,14 +91,11 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       p("LOREM"),
-                                      mod_international_map_ui("mod_international_map_ui_1"),
-                                      mod_fachkraft_item_epa_ui("fachkraft_item_epa_2")
-
+                                      mod_international_map_ui("mod_international_map_ui_1")
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
                                       htmlOutput(ns("plot_international_studienzahl_map_1")),
-                                      htmlOutput(ns("plot_fachkraft_epa_item_2")),
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; als Download, eigene Berechnungen durch MINTvernetzt."),
 
@@ -330,6 +327,39 @@ mod_international_start_ui <- function(id){
                            )
                )
              )
+    ),
+
+    # Box 4 - Fachkräfte because it does not work in an extra page...?!?
+    fluidRow(id="fachkraft_plots",
+             shinydashboard::box(
+               title = "FACHKRAFT - EPA",
+               width = 12,
+               p("LOREM IPSUM INFO"),
+               tabsetPanel(type = "tabs",
+                           tabPanel("EPA nach MINT", br(),
+
+                                    # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      mod_fachkraft_item_epa_ui("fachkraft_item_epa_1")
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_fachkraft_epa_item_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "hier Quellen"),
+                                      shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_1", title="",
+                                                         content = paste0("POPUP INFO TEXT HERE"),
+                                                         placement = "top",
+                                                         trigger = "hover"),
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_1")
+                                    )
+                           )
+               )
+             )
     )
 
   )
@@ -344,10 +374,6 @@ mod_international_start_server <- function(id, r){
 
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-
-    output$plot_fachkraft_epa_item_2 <- renderUI({
-      plot_fachkraft_epa_item(r)
-    })
 
     # Box 1 - Studium
     output$plot_international_studienzahl_map_1 <- renderUI({
@@ -398,6 +424,10 @@ mod_international_start_server <- function(id, r){
       plot_international_arbeitsmarkt_vergleiche(r)
     })
 
+    # Box 4 - Fachkraft
+    output$plot_fachkraft_epa_item_1 <- renderUI({
+      plot_fachkraft_epa_item(r)
+    })
 
   })
 }

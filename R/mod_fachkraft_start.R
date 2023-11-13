@@ -80,28 +80,28 @@ mod_fachkraft_start_ui <- function(id){
                width = 12,
                p("LOREM IPSUM INFO"),
                tabsetPanel(type = "tabs",
-                           tabPanel("EPA nach MINT", br(),
-
-                                    # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                    shiny::sidebarPanel(
-                                      width = 3,
-                                      mod_fachkraft_item_epa_ui("fachkraft_item_epa_1")
-
-                                    ),
-                                    shiny::mainPanel(
-                                      width = 9,
-                                      htmlOutput(ns("plot_fachkraft_epa_item_1")),
-                                      p(style="font-size:12px;color:grey",
-                                        "hier Quellen"),
-                                      shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_1", title="",
-                                                         content = paste0("POPUP INFO TEXT HERE"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_1")
-                                    )
-                           ),
+                           # tabPanel("EPA nach MINT", br(),
+                           #
+                           #          # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                           #          # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                           #
+                           #          shiny::sidebarPanel(
+                           #            width = 4,
+                           #            mod_fachkraft_item_epa_ui("fachkraft_item_epa_1")
+                           #
+                           #          ),
+                           #          shiny::mainPanel(
+                           #            width = 8,
+                           #            htmlOutput(ns("plot_fachkraft_epa_item_1")),
+                           #            p(style="font-size:12px;color:grey",
+                           #              "hier Quellen"),
+                           #            shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_1", title="",
+                           #                               content = paste0("POPUP INFO TEXT HERE"),
+                           #                               placement = "top",
+                           #                               trigger = "hover"),
+                           #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_1")
+                           #          )
+                           # ),
 
                            tabPanel("MINT nach EPA", br(),
 
@@ -165,9 +165,9 @@ mod_fachkraft_start_server <- function(id, r){
     ns <- session$ns
 
     # Box 1 - Arbeitsmarkt
-    output$plot_fachkraft_epa_item_1 <- renderUI({
-      plot_fachkraft_epa_item(r)
-    })
+    # output$plot_fachkraft_epa_item_1 <- renderUI({
+    #   plot_fachkraft_epa_item(r)
+    # })
 
     output$plot_fachkraft_mint_item_1 <- renderUI({
       plot_fachkraft_mint_item(r)

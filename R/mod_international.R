@@ -53,6 +53,9 @@ mod_international_server <- function(id,
   mod_international_arbeitsmarkt_top10_server("international_arbeitsmarkt_top10_1", r)
   mod_international_arbeitsmarkt_vergleich_server("international_arbeitsmarkt_vergleich_1", r)
 
+  # box 4 fachkräfte
+  mod_fachkraft_item_epa_server("fachkraft_item_epa_1", r)
+
 
   logger::log_debug("Seiten-Module INTERNATIONAL done")
 }
