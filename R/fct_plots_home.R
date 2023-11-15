@@ -7,88 +7,68 @@
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-home_einstieg_pie <- function(df,r) {
+home_einstieg_pie <- function(r) {
 
-  dfj <- df
   # load UI inputs from reactive value
-  timerange <- "2021"
-
   indikator_choice_1 <- r$indikator_start_einstieg_1
-
-
 
   # filter dataset based on UI input
 
-  dfk <- dfj %>% dplyr::filter(region == "Deutschland")
+  df <- dplyr::tbl(con, from = "zentral_alt") %>%
+    dplyr::filter(jahr == "2021",
+                  region == "Deutschland",
+                  geschlecht=="Gesamt") %>%
+   # dplyr::select(bereich, region, indikator, geschlecht, fachbereich, jahr, wert) %>%
+    dplyr::select(bereich, indikator, fachbereich, wert) %>%
+    dplyr::collect()
 
-  dfk1 <- dfk %>% dplyr::filter(jahr== timerange)
-
-
-  # call function to calculate the share of MINT for every "bereich"
-  # df <- share_MINT(df)
-  #
-  # df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
-  #
-  #
-  # df <- df %>% dplyr::filter(indikator %in% indikator_choice_1)
-  #
-  # # calculate proportions
-  # df <- df %>% dplyr::group_by(indikator, jahr) %>%
-  #   dplyr::mutate(props = sum(wert))
-  #
-  #
-  # df <- df %>% dplyr::group_by(indikator, jahr,fachbereich) %>%
-  #   dplyr::summarize(proportion = wert/props)
-  #
-  # df$proportion <- df$proportion * 100
-
-  # dfü <- df %>% dplyr::filter(jahr == timerange)
-
-  # dfk <- dfü %>% dplyr::filter(region == "Deutschland")
-
-  dfk21 <- dfk1 %>% dplyr::filter(geschlecht=="Gesamt")%>%
-    dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften")
-
-  dfk2a1 <- dfk21 %>% dplyr::filter(bereich == "Hochschule")%>%
+  df_hs <- df %>% dplyr::filter(bereich == "Hochschule")%>%
+    dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|
+                    fachbereich == "Ingenieurwissenschaften" |
+                    fachbereich == "Mathematik_Naturwissenschaften") %>%
     tidyr::pivot_wider(names_from=fachbereich, values_from=wert)%>%
     dplyr::mutate(MINT=Ingenieurwissenschaften+Mathematik_Naturwissenschaften )%>%
     dplyr::select(-Ingenieurwissenschaften, -Mathematik_Naturwissenschaften)%>%
     tidyr::pivot_longer(c( "Alle", "MINT"), names_to = "fachbereich", values_to="wert")
 
 
-  dfk2c1 <- dfk1 %>% dplyr::filter(bereich == "Schule")%>%
+  df_s <- df %>% dplyr::filter(bereich == "Schule")%>%
     dplyr::filter(fachbereich== "MINT" | fachbereich == "Alle Fächer")%>%
     dplyr::mutate(indikator= paste0("Schüler:innen ", .$indikator ))
 
-  dfk2c1$fachbereich <- ifelse(grepl("Alle Fächer", dfk2c1$fachbereich), "Alle", dfk2c1$fachbereich)
+  df_s$fachbereich <- ifelse(grepl("Alle Fächer", df_s$fachbereich), "Alle", df_s$fachbereich)
 
-  dfk2b1 <- dfk21 %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
+  df_ab <- df %>%
+    dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|
+                      fachbereich == "Ingenieurwissenschaften" |
+                      fachbereich == "Mathematik_Naturwissenschaften",
+                  bereich != "Hochschule" & bereich != "Schule")%>%
     unique()
 
 
-  dfk2_fn1 <- dplyr::bind_rows(dfk2b1, dfk2a1, dfk2c1)%>%
+  df <- dplyr::bind_rows(df_s, df_hs, df_ab)%>%
     dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle")%>%
     tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
     dplyr::mutate("Nicht MINT" = Alle - MINT)
 
   #Tennen für Anzeige absoluter Werte
   ##neuen Df erstellen ohne weitere Berechnungen
-  dfk2_wert1 <- dfk2_fn1
+  dfk2_wert1 <- df
   dfk2_wert1 <- dfk2_wert1 %>%
-    dplyr::filter(geschlecht=="Gesamt")%>%
+  #  dplyr::filter(geschlecht=="Gesamt")%>%
     dplyr::select(- Alle)%>%
     tidyr::pivot_longer(c(MINT, `Nicht MINT`), names_to = "fachbereich", values_to = "wert")
 
   #Anteil berechnen
-  dfk2_fn1 <- dfk2_fn1 %>%
+  df <- df %>%
     dplyr::mutate(dplyr::across(c(MINT, `Nicht MINT`), ~./Alle*100)) %>%
-    dplyr::filter(geschlecht=="Gesamt")%>%
+  #  dplyr::filter(geschlecht=="Gesamt")%>%
     dplyr::select(- Alle)%>%
     tidyr::pivot_longer(c(MINT, `Nicht MINT`), names_to = "fachbereich", values_to = "proportion")
 
   #absolute Werte an DF mit Proportionen anhängen
   wert <- dfk2_wert1$wert
-  dfk2_fn <- cbind(dfk2_fn1, wert)
+  dfk2_fn <- cbind(df, wert)
 
   #Trennpunkte für lange Zahlen ergänzen
   dfk2_fn$wert <- prettyNum(dfk2_fn$wert, big.mark = ".", decimal.mark = ",")
@@ -96,7 +76,8 @@ home_einstieg_pie <- function(df,r) {
 
   dfk2_fn$proportion <- round_preserve_sum(as.numeric(dfk2_fn$proportion),0)
 
-  dfk2_fn <- dfk2_fn[with(dfk2_fn, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+#  dfk2_fn <- dfk2_fn[with(dfk2_fn, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+   dfk2_fn <- dfk2_fn[with(dfk2_fn, order( fachbereich, decreasing = TRUE)), ]
 
   #here only MINT
   dft <- dfk2_fn %>% dplyr::filter(fachbereich == "MINT")
@@ -487,7 +468,7 @@ home_einstieg_pie <- function(df,r) {
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-home_einstieg_pie_gender <- function(df, df_naa, r) {
+home_einstieg_pie_gender <- function(r) {
 
 
 
@@ -497,17 +478,13 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
   indikator_choice_1_gender <- r$indikator_start_einstieg_1_gender
 
 
-  dfj4 <- df
-  # load UI inputs from reactive value
-
-
-
-
   # filter dataset based on UI input
 
-  dfk4 <- dfj4 %>% dplyr::filter(region == "Deutschland")
-
-  dfk4 <- dfk4 %>% dplyr::filter(jahr== timerange)
+  df <- dplyr::tbl(con, from = "zentral_alt") %>%
+    dplyr::filter(region == "Deutschland",
+                  jahr == timerange) %>%
+    dplyr::select(bereich, indikator, geschlecht, fachbereich, wert) %>%
+    dplyr::collect()
 
 
   # call function to calculate the share of MINT for every "bereich"
@@ -532,7 +509,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 
   # dfk <- dfü %>% dplyr::filter(region == "Deutschland")
 
-  dfk24 <- dfk4 %>%
+  dfk24 <- df %>%
     dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften"
                   |fachbereich == "Alle Fächer")%>%
     dplyr::filter(indikator %in% c("Leistungskurse",
@@ -549,7 +526,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
     tidyr::pivot_longer(c("Männer", "Gesamt", "Frauen"), values_to = "wert", names_to="geschlecht")
 
 
-  dfk2c4 <- dfk4 %>% dplyr::filter(bereich == "Schule")%>%
+  dfk2c4 <- df %>% dplyr::filter(bereich == "Schule")%>%
     dplyr::filter(fachbereich== "MINT" | fachbereich == "Alle Fächer")%>%
     dplyr::mutate(indikator= paste0("Schüler:innen ", .$indikator ))%>%
     tidyr::pivot_wider(names_from=geschlecht, values_from = wert)%>%
@@ -597,7 +574,7 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
   dfk2_fn4$wert <- prettyNum(dfk2_fn4$wert, big.mark = ".", decimal.mark = ",")
 
   #sortieren
-  dfk2_fn4 <- dfk2_fn4[with(dfk2_fn4, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+  dfk2_fn4 <- dfk2_fn4[with(dfk2_fn4, order(fachbereich, decreasing = TRUE)), ]
 
   #Titel erstellen
   dfk2_fn4$titel_help <- "Schüler:innen in MINT-Leistungskursen"
@@ -1300,24 +1277,25 @@ home_einstieg_pie_gender <- function(df, df_naa, r) {
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-home_stacked_comparison_gender <- function(df, df_naa, r) {
+home_stacked_comparison_gender <- function(r) {
 
   # load UI inputs from reactive value
   timerange <- r$date_start_comparison_mint_gender
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(region == "Deutschland")
-  df6 <- df %>% dplyr::filter(jahr == timerange)
-
-
-  df6 <- df6 %>%
-    dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften"
-                  |fachbereich == "Alle Fächer")%>%
-    dplyr::filter(indikator %in% c("Leistungskurse",
+  df <- dplyr::tbl(con, from = "zentral_alt") %>%
+    dplyr::filter(region == "Deutschland",
+                  jahr == timerange,
+                  fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften"
+                  |fachbereich == "Alle Fächer",
+                  indikator %in% c("Leistungskurse",
                                    "Studierende",
-                                   "Auszubildende", "Beschäftigte"))
+                                   "Auszubildende", "Beschäftigte")) %>%
+    dplyr::select(bereich, indikator, geschlecht, fachbereich, wert) %>%
+    dplyr::collect()
 
-  df6a <- df6 %>% dplyr::filter(bereich == "Hochschule")%>%
+
+  df6a <- df %>% dplyr::filter(bereich == "Hochschule")%>%
     tidyr::pivot_wider(names_from=fachbereich, values_from=wert)%>%
     dplyr::mutate(MINT=Ingenieurwissenschaften+Mathematik_Naturwissenschaften )%>%
     dplyr::select(-Ingenieurwissenschaften, -Mathematik_Naturwissenschaften)%>%
@@ -1327,7 +1305,7 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
     tidyr::pivot_longer(c("Männer", "Gesamt", "Frauen"), values_to = "wert", names_to="geschlecht")
 
 
-  df6c <- df6 %>% dplyr::filter(bereich == "Schule")%>%
+  df6c <- df %>% dplyr::filter(bereich == "Schule")%>%
     dplyr::filter(fachbereich== "MINT" | fachbereich == "Alle Fächer")%>%
     dplyr::mutate(indikator= paste0("Schülerinnen ", .$indikator ))%>%
     tidyr::pivot_wider(names_from=geschlecht, values_from = wert)%>%
@@ -1336,7 +1314,7 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
 
   df6c$fachbereich <- ifelse(grepl("Alle Fächer", df6c$fachbereich), "Alle", df6c$fachbereich)
 
-  df6b <- df6 %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
+  df6b <- df %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
     unique()%>%
     tidyr::pivot_wider(names_from=geschlecht, values_from=wert)%>%
     dplyr::mutate(Männer=Gesamt-Frauen)%>%
@@ -1364,14 +1342,14 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
     tidyr::pivot_longer(c(Männer, Frauen), names_to = "geschlecht", values_to = "proportion")
 
   #Wert anhängen
-  df6_fn <- df6_fn %>% dplyr::left_join(df_wert, by = c("bereich","indikator", "jahr",   "region",  "fachbereich", "geschlecht"))
+  df6_fn <- df6_fn %>% dplyr::left_join(df_wert, by = c("bereich","indikator",  "fachbereich", "geschlecht"))
 
   #Trennpunkte für lange Zahlen ergänzen
   df6_fn$wert <- prettyNum(df6_fn$wert, big.mark = ".", decimal.mark = ",")
 
 
   #sortieren
-  df6_fn <- df6_fn[with(df6_fn, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+  df6_fn <- df6_fn[with(df6_fn, order(fachbereich, decreasing = TRUE)), ]
 
   #gewählte Indikatoren ausfiltern
   df6_fn <- df6_fn %>% dplyr::filter(indikator %in% c("Schülerinnen Leistungskurse", "Studierende",
@@ -1436,16 +1414,21 @@ home_stacked_comparison_gender <- function(df, df_naa, r) {
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-home_stacked_comparison_mint <- function(df, r) {
+home_stacked_comparison_mint <- function(r) {
 
   # load UI inputs from reactive value
   timerange <- r$date_start_comparison_mint
 
 
   # filter dataset based on UI inputs
-  df3 <- df %>% dplyr::filter(jahr == timerange)
-
-  dfk3 <- df3 %>% dplyr::filter(region == "Deutschland")
+  df <- dplyr::tbl(con, from = "zentral_alt") %>%
+    dplyr::filter(jahr == timerange,
+                  region == "Deutschland",
+                  geschlecht=="Gesamt",
+                  fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften"
+                  |fachbereich == "Alle Fächer") %>%
+    dplyr::select(bereich, indikator, fachbereich, wert) %>%
+    dplyr::collect()
 
 
   # call function to calculate the share of MINT for every "bereich"
@@ -1470,25 +1453,23 @@ home_stacked_comparison_mint <- function(df, r) {
 
   # dfk <- dfü %>% dplyr::filter(region == "Deutschland")
 
-  dfk23 <- dfk3 %>% dplyr::filter(geschlecht=="Gesamt")%>%
-    dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften"
-                  |fachbereich == "Alle Fächer")
 
-  dfk2a3 <- dfk23 %>% dplyr::filter(bereich == "Hochschule")%>%
+
+  dfk2a3 <- df %>% dplyr::filter(bereich == "Hochschule")%>%
     tidyr::pivot_wider(names_from=fachbereich, values_from=wert)%>%
     dplyr::mutate(MINT=Ingenieurwissenschaften+Mathematik_Naturwissenschaften )%>%
     dplyr::select(-Ingenieurwissenschaften, -Mathematik_Naturwissenschaften)%>%
     tidyr::pivot_longer(c( "Alle", "MINT"), names_to = "fachbereich", values_to="wert")
 
 
-  dfk2c3 <- dfk23 %>% dplyr::filter(bereich == "Schule")%>%
+  dfk2c3 <- df %>% dplyr::filter(bereich == "Schule")%>%
     dplyr::filter(fachbereich== "MINT" | fachbereich == "Alle Fächer")%>%
     dplyr::mutate(indikator= paste0("Schüler:innen ", .$indikator ))
 
 
   dfk2c3$fachbereich <- ifelse(grepl("Alle Fächer", dfk2c3$fachbereich), "Alle", dfk2c3$fachbereich)
 
-  dfk2b3 <- dfk23 %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
+  dfk2b3 <- df %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
     unique()
 
 
@@ -1499,7 +1480,7 @@ home_stacked_comparison_mint <- function(df, r) {
     dplyr::mutate("Nicht MINT" = Alle - MINT)%>%
     dplyr::mutate(MINT_p= MINT/Alle*100)%>%
     dplyr::mutate("Nicht MINT_p" = `Nicht MINT`/Alle*100)%>%
-    dplyr::filter(geschlecht=="Gesamt")%>%
+   # dplyr::filter(geschlecht=="Gesamt")%>%
     dplyr::select(- Alle)%>%
     tidyr::pivot_longer(c(MINT, `Nicht MINT`, `Nicht MINT_p`, `MINT_p`), names_to = "fachbereich", values_to = "wert")%>%
     dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$fachbereich, "_p") ~ "In Prozent",
@@ -1534,7 +1515,7 @@ home_stacked_comparison_mint <- function(df, r) {
     ))%>% dplyr::mutate(wert = round(.$wert,0))
 
   #Ansoluten Wert anhägnge
-  dfd3 <- dfd3 %>% dplyr::left_join(df_wert, by = c("bereich","indikator","geschlecht","jahr","region","fachbereich"))
+  dfd3 <- dfd3 %>% dplyr::left_join(df_wert, by = c("bereich","indikator", "fachbereich"))
 
   #Trennpunkte für lange Zahlen ergänzen
   dfd3$wert_abs <- prettyNum(dfd3$wert_abs, big.mark = ".", decimal.mark = ",")
@@ -1574,28 +1555,29 @@ home_stacked_comparison_mint <- function(df, r) {
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-home_comparison_line <- function(df,r) {
+home_comparison_line <- function(r) {
 
   # load UI inputs from reactive value
   timerange <- r$date_start_comparison
+  t<- as.character(timerange[1]:timerange[2])
 
   indikator_choice <- r$indikator_start_comparison
 
   abs_selector <- r$abs_zahlen_start_comparison
 
   # filter dataset based on UI inputs
-  df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
-
-  df5 <- df %>% dplyr::filter(region == "Deutschland")
-
-  df5 <- df5 %>%
-    dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften"
-                  |fachbereich == "Alle Fächer")%>%
-    dplyr::filter(indikator %in% c("Leistungskurse",
+  df <- dplyr::tbl(con, from = "zentral_alt") %>%
+    dplyr::filter(jahr %in% t,
+                  region == "Deutschland",
+                  fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften"
+                  |fachbereich == "Alle Fächer",
+                  indikator %in% c("Leistungskurse",
                                    "Studierende",
-                                   "Auszubildende", "Beschäftigte"))
+                                   "Auszubildende", "Beschäftigte")) %>%
+    dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
+    dplyr::collect()
 
-  dfa5 <- df5 %>% dplyr::filter(bereich == "Hochschule")%>%
+  dfa5 <- df %>% dplyr::filter(bereich == "Hochschule")%>%
     tidyr::pivot_wider(names_from=fachbereich, values_from=wert)%>%
     dplyr::mutate(MINT=Ingenieurwissenschaften+Mathematik_Naturwissenschaften )%>%
     dplyr::select(-Ingenieurwissenschaften, -Mathematik_Naturwissenschaften)%>%
@@ -1605,7 +1587,7 @@ home_comparison_line <- function(df,r) {
     tidyr::pivot_longer(c("Männer", "Gesamt", "Frauen"), values_to = "wert", names_to="geschlecht")
 
 
-  dfc5 <- df5 %>% dplyr::filter(bereich == "Schule")%>%
+  dfc5 <- df %>% dplyr::filter(bereich == "Schule")%>%
     dplyr::filter(fachbereich== "MINT" | fachbereich == "Alle Fächer")%>%
     dplyr::mutate(indikator= paste0("Schülerinnen ", .$indikator ))%>%
     tidyr::pivot_wider(names_from=geschlecht, values_from = wert)%>%
@@ -1614,7 +1596,7 @@ home_comparison_line <- function(df,r) {
 
   dfc5$fachbereich <- ifelse(grepl("Alle Fächer", dfc5$fachbereich), "Alle", dfc5$fachbereich)
 
-  dfb5 <- df5 %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
+  dfb5 <- df %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
     unique()%>%
     tidyr::pivot_wider(names_from=geschlecht, values_from=wert)%>%
     dplyr::mutate(Männer=Gesamt-Frauen)%>%
@@ -1646,7 +1628,7 @@ home_comparison_line <- function(df,r) {
 
   df_fn51 <- dplyr::bind_rows(df_fn5_wert, df_fn5_prop)
 
-  df_fn51 <- df_fn51[with(df_fn51, order(region, fachbereich, jahr, decreasing = TRUE)), ]
+  df_fn51 <- df_fn51[with(df_fn51, order(fachbereich, decreasing = TRUE)), ]
 
 
   #Trennpunkte für lange Zahlen ergänzen
@@ -1741,24 +1723,30 @@ home_comparison_line <- function(df,r) {
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-home_rest_mint_verlauf <- function(df,r) {
+home_rest_mint_verlauf <- function(r) {
 
-
-
-
-  dfh <-df
   # load UI inputs from reactive value
   timerange <- r$date_start_multiple
+  t <- as.character(timerange[1]:timerange[2])
 
   absolut_selector <- r$abs_zahlen_start_multiple
 
   indikator_choice_1 <- r$indikator_start_multiple_1
 
   # filter dataset based on UI inputs
-  dfj <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
+  df <- dplyr::tbl(con, from = "zentral_alt") %>%
+    dplyr::filter(
+      #jahr >= timerange[1] & jahr <= timerange[2],
+                  jahr %in% t,
+                  region == "Deutschland",
+                  geschlecht=="Gesamt",
+                  fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften"
+                  |fachbereich == "Alle Fächer") %>%
+    dplyr::select(bereich, indikator, fachbereich, jahr, wert) %>%
+    dplyr::collect()
 
-  dfk <- dfj %>% dplyr::filter(region == "Deutschland")
-
+  # %>%
+  #   dplyr::collect()
 
   # call function to calculate the share of MINT for every "bereich"
   # df <- share_MINT(df)
@@ -1782,25 +1770,23 @@ home_rest_mint_verlauf <- function(df,r) {
 
   # dfk <- dfü %>% dplyr::filter(region == "Deutschland")
 
-  dfk22 <- dfk %>% dplyr::filter(geschlecht=="Gesamt")%>%
-    dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften"
-                  |fachbereich == "Alle Fächer")
 
-  dfk2a2 <- dfk22 %>% dplyr::filter(bereich == "Hochschule")%>%
+
+  dfk2a2 <- df %>% dplyr::filter(bereich == "Hochschule")%>%
     tidyr::pivot_wider(names_from=fachbereich, values_from=wert)%>%
     dplyr::mutate(MINT=Ingenieurwissenschaften+Mathematik_Naturwissenschaften )%>%
     dplyr::select(-Ingenieurwissenschaften, -Mathematik_Naturwissenschaften)%>%
     tidyr::pivot_longer(c( "Alle", "MINT"), names_to = "fachbereich", values_to="wert")
 
 
-  dfk2c2 <- dfk22 %>% dplyr::filter(bereich == "Schule")%>%
+  dfk2c2 <- df %>% dplyr::filter(bereich == "Schule")%>%
     dplyr::filter(fachbereich== "MINT" | fachbereich == "Alle Fächer")%>%
     dplyr::mutate(indikator= paste0("Schüler:innen ", .$indikator ))
 
 
   dfk2c2$fachbereich <- ifelse(grepl("Alle Fächer", dfk2c2$fachbereich), "Alle", dfk2c2$fachbereich)
 
-  dfk2b2 <- dfk22 %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
+  dfk2b2 <- df %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
     unique()
 
 
@@ -1811,7 +1797,7 @@ home_rest_mint_verlauf <- function(df,r) {
     dplyr::mutate("Nicht MINT" = Alle - MINT)%>%
     dplyr::mutate(MINT_p= MINT/Alle*100)%>%
     dplyr::mutate("Nicht MINT_p" = `Nicht MINT`/Alle*100)%>%
-    dplyr::filter(geschlecht=="Gesamt")%>%
+   # dplyr::filter(geschlecht=="Gesamt")%>%
     dplyr::select(- Alle)%>%
     tidyr::pivot_longer(c(MINT, `Nicht MINT`, `Nicht MINT_p`, `MINT_p`), names_to = "fachbereich", values_to = "wert")%>%
     dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$fachbereich, "_p") ~ "In Prozent",
@@ -1834,7 +1820,7 @@ home_rest_mint_verlauf <- function(df,r) {
     df <- dfk2_fn2 %>%
       dplyr::filter(selector=="In Prozent")
 
-  df <- df[with(df, order(region, fachbereich, jahr, decreasing = FALSE)), ]
+  df <- df[with(df, order(fachbereich, decreasing = FALSE)), ]
 
   #here only MINT
   df <- df %>% dplyr::filter(fachbereich == "MINT")

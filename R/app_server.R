@@ -40,7 +40,7 @@ app_server <- function(input, output, session) {
   # example_data <- mod_load_data_server("beispieldatensatz", path=system.file(package="datalab", "data-raw/beispieldatensatz.xlsx"))
 
   # callModule(mod_home_server, "home_ui_1", data=example_data)
-  mod_home_server("home_ui_1", data_zentral = zentral,  data_zentral_alt = zentral_alt, data_zentral_neu = zentral_neu, data_ausbildungsvertraege = data_naa)
+  mod_home_server("home_ui_1")
 
   # callModule(mod_schule_server, "schule_ui_1", data=example_data, filter_name="schule")
   mod_schule_server("schule_ui_1", data_kurse = kurse, data_iqb = iqb, data_skf = ausserschulisch_skf)
