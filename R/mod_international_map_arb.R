@@ -76,8 +76,11 @@ mod_international_map_arb_ui <- function(id) {
                      p("Fachbereich:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_f_oecd_arb"),
-                       choices = c( "MINT", "Informatik & Kommunikationstechnologie", "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe", "Naturwissenschaften, Mathematik und Statistik"),
-                       selected = c("Informatik & Kommunikationstechnologie"),
+                       choices = c( "MINT",
+                                    "---Informatik & Kommunikationstechnologie"="Informatik & Kommunikationstechnologie",
+                                    "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                    "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
+                       selected = c("MINT"),
                        multiple = FALSE#,
                        # options =  list(
                        #   "max-options" = 2,
@@ -96,8 +99,11 @@ mod_international_map_arb_ui <- function(id) {
                                       p("Fachbereich:"),
                                       shinyWidgets::pickerInput(
                                         inputId = ns("map_f_oecd2_arb"),
-                                        choices = c( "MINT", "Informatik & Kommunikationstechnologie", "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe", "Naturwissenschaften, Mathematik und Statistik"),
-                                        selected = c("Informatik & Kommunikationstechnologie"),
+                                        choices = c( "MINT",
+                                                     "---Informatik & Kommunikationstechnologie"="Informatik & Kommunikationstechnologie",
+                                                     "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                                     "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
+                                        selected = c("MINT"),
                                         multiple = FALSE#,
                                         # options =  list(
                                         #   "max-options" = 2,

@@ -81,8 +81,11 @@ mod_international_top10_mint_arb_gender_ui <- function(id){
                                       p("Fachbereich:"),
                                       shinyWidgets::pickerInput(
                                         inputId = ns("map_f_oecd_top10_mint_arb_gender"),
-                                        choices = c( "MINT", "Informatik & Kommunikationstechnologie", "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe", "Naturwissenschaften, Mathematik und Statistik"),
-                                        selected = c("Informatik & Kommunikationstechnologie"),
+                                        choices = c( "MINT",
+                                                     "---Informatik & Kommunikationstechnologie"="Informatik & Kommunikationstechnologie",
+                                                     "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                                     "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
+                                        selected = c("MINT"),
                                         multiple = FALSE#,
                                         # options =  list(
                                         #   "max-options" = 2,
@@ -104,8 +107,11 @@ mod_international_top10_mint_arb_gender_ui <- function(id){
                                       p("Fachbereich:"),
                                       shinyWidgets::pickerInput(
                                         inputId = ns("map_f_oecd2_top10_mint_arb_gender"),
-                                        choices = c( "MINT", "Informatik & Kommunikationstechnologie", "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe", "Naturwissenschaften, Mathematik und Statistik"),
-                                        selected = c("Informatik & Kommunikationstechnologie"),
+                                        choices = c( "MINT",
+                                                     "---Informatik & Kommunikationstechnologie"="Informatik & Kommunikationstechnologie",
+                                                     "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                                     "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
+                                        selected = c("MINT"),
                                         multiple = FALSE#,
                                         # options =  list(
                                         #   "max-options" = 2,
@@ -161,7 +167,7 @@ mod_international_top10_mint_arb_gender_server <- function(id, r){
     observeEvent(input$map_l_top10_mint_arb_gender, {
       r$map_l_top10_mint_arb_gender <- input$map_l_top10_mint_arb_gender
       if (input$map_l_top10_mint_arb_gender == "EU") {
-        r$map_y_top10_mint_arb_gender <- input$map_y_eu_top10_mint_arb_gender
+        r$map_y_eu_top10_mint_arb_gender <- input$map_y_eu_top10_mint_arb_gender
         r$map_pers_top10_mint_arb_gender <- input$map_pers_eu_top10_mint_arb_gender
         r$show_avg_top10_mint_arb_gender <- input$show_avg_top10_mint_arb_gender
 
@@ -200,7 +206,7 @@ mod_international_top10_mint_arb_gender_server <- function(id, r){
     })
 
     observeEvent(input$map_y_oecd_top10_mint_arb_gender, {
-      r$map_y_top10_mint_arb_gender <- input$map_y_oecd__top10_mint_arb_gender
+      r$map_y_top10_mint_arb_gender <- input$map_y_oecd_top10_mint_arb_gender
     })
 
     observeEvent(input$map_f_oecd_top10_mint_arb_gender, {
@@ -219,6 +225,10 @@ mod_international_top10_mint_arb_gender_server <- function(id, r){
       r$map_betr_oecd_top10_mint_arb_gender <- input$map_betr_oecd_top10_mint_arb_gender
     })
 
+    observeEvent(input$input$map_y_eu_top10_mint_arb_gender, {
+      r$map_y_eu_top10_mint_arb_gender <- input$map_y_eu_top10_mint_arb_gender
+    })
+
 
 
 
@@ -226,8 +236,10 @@ mod_international_top10_mint_arb_gender_server <- function(id, r){
 
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
+
+
     observeEvent(input$map_y_eu_top10_mint_arb_gender, {
-      r$map_y_arb_gender <- input$map_y_eu_top10_mint_arb_gender
+      r$map_y_eu_top10_mint_arb_gender <- input$map_y_eu_top10_mint_arb_gender
     })
 
     observeEvent(input$map_pers_eu_top10_mint_arb_gender, {

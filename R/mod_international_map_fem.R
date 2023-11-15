@@ -37,7 +37,10 @@ mod_international_map_fem_ui <- function(id) {
                      p("Fachbereich:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_f_eu_f"),
-                       choices = international_ui_faecher(region = "EU"),
+                       choices = c("MINT" = "Alle MINT-Fächer",
+                                   "---Informatik & Kommunikationstechnologie"="Informatik & Kommunikationstechnologie",
+                                   "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                   "---Naturwissenschaften, Mathematik und Statistik"="Naturwissenschaften, Mathematik und Statistik"),
                        selected = c("Alle MINT-Fächer"),
                        multiple = FALSE
                      )),
@@ -54,10 +57,14 @@ mod_international_map_fem_ui <- function(id) {
                      p("Fachbereich:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_f_oecd_f"),
-                       choices = international_ui_faecher(region = "OECD"),
+                       choices = c("MINT",
+                                   "---Informatik & Kommunikationstechnologie" = "Informatik & Kommunikationstechnologie",
+                                   "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" = "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                   "---Naturwissenschaften, Mathematik und Statistik"= "Naturwissenschaften, Mathematik und Statistik"),
                        selected = c("MINT"),
                        multiple = FALSE
-                     )#,
+                     ),
+
                      # p("Anforderungsniveau:"),
                      # shinyWidgets::pickerInput(
                      #   inputId = ns("map_lev_oecd_f"),
@@ -65,7 +72,15 @@ mod_international_map_fem_ui <- function(id) {
                      #               "Master oder vergleichbar (akademisch)",
                      #               "Promotion (ISCED 8)"),
                      #   selected = c("Promotion (ISCED 8)"),
-                     #   multiple = FALSE)
+                     #   multiple = FALSE),
+
+                     p("Betrachtung:"),
+                     shinyWidgets::pickerInput(
+                       inputId = ns("map_betr_oecd_f"),
+                       choices = c("Anteil von Frauen an Allen", "Anteil an Frauen von Frauen"),
+                       selected = c("Anteil von Frauen an Allen"),
+                       multiple = FALSE
+                     )
     ))
 
 
@@ -90,7 +105,8 @@ mod_international_map_fem_server <- function(id, r){
       if (input$map_l_f == "OECD") {
         r$map_y_f <- input$map_y_oecd_f
         r$map_f_f <- input$map_f_oecd_f
-        #r$map_le_f <- input$map_lev_oecd_f
+        r$map_le_f <- input$map_lev_oecd_f
+        r$map_le_betr <- input$map_betr_oecd_f
       }
     })
 
@@ -112,6 +128,13 @@ mod_international_map_fem_server <- function(id, r){
       r$map_f_f <- input$map_f_eu_f
     })
 
+    observeEvent(input$map_lev_oecd_f, {
+      r$map_le_f <- input$map_lev_oecd_f
+    })
+
+    observeEvent(input$map_betr_oecd_f, {
+      r$map_le_betr <- input$map_betr_oecd_f
+    })
 
   })
 }

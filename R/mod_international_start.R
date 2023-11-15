@@ -95,13 +95,13 @@ mod_international_start_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_studienzahl_map_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; eigene Berechnungen durch MINTvernetzt."),
 
-                                      shinyBS::bsPopover(id="h_international_1", title="",
-                                                         content = paste0("POPUP INFO TEXT HERE"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_1")
+                                      # shinyBS::bsPopover(id="h_international_1", title="",
+                                      #                    content = paste0("POPUP INFO TEXT HERE"),
+                                      #                    placement = "top",
+                                      #                    trigger = "hover"),
+                                      # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_1")
                                     )
                            ),
 
@@ -119,14 +119,8 @@ mod_international_start_ui <- function(id){
                                     shiny::mainPanel(
                                       width = 9,
                                       htmlOutput(ns("plot_international_map_fem_1")),
-                                      # p(style="font-size:12px;color:grey",
-                                      #   "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                                      #
-                                      # shinyBS::bsPopover(id="h_international_1", title="",
-                                      #                    content = paste0("POPUP INFO TEXT HERE"),
-                                      #                    placement = "top",
-                                      #                    trigger = "hover"),
-                                      # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_1")
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
                                     )
                            ),
 
@@ -145,13 +139,13 @@ mod_international_start_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_top10_mint_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; eigene Berechnungen durch MINTvernetzt."),
 
-                                      shinyBS::bsPopover(id="h_international_1", title="",
-                                                         content = paste0("POPUP INFO TEXT HERE"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
+                                      # shinyBS::bsPopover(id="h_international_1", title="",
+                                      #                    content = paste0("POPUP INFO TEXT HERE"),
+                                      #                    placement = "top",
+                                      #                    trigger = "hover"),
+                                      # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
                                     )
                            ),
 
@@ -170,13 +164,13 @@ mod_international_start_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_top10_mint_gender_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Destatis, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
 
-                                      shinyBS::bsPopover(id="h_international_1", title="",
-                                                         content = paste0("POPUP INFO TEXT HERE"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
+                                      # shinyBS::bsPopover(id="h_international_1", title="",
+                                      #                    content = paste0("POPUP INFO TEXT HERE"),
+                                      #                    placement = "top",
+                                      #                    trigger = "hover"),
+                                      # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
                                     )
                            ),
                            tabPanel("Vergleiche Top 10 - Internationale in MINT", br(),
@@ -193,13 +187,15 @@ mod_international_start_ui <- function(id){
                                     shiny::mainPanel(
                                       width = 9,
                                       htmlOutput(ns("plot_international_mint_top_10_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: Eurostat, 2023; eigene Berechnungen durch MINTvernetzt."),
 
 
-                                      shinyBS::bsPopover(id="h_international_1", title="",
-                                                         content = paste0("POPUP INFO TEXT HERE"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
+                                      # shinyBS::bsPopover(id="h_international_1", title="",
+                                      #                    content = paste0("POPUP INFO TEXT HERE"),
+                                      #                    placement = "top",
+                                      #                    trigger = "hover"),
+                                      # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
                                     )
                            )
 
@@ -207,13 +203,13 @@ mod_international_start_ui <- function(id){
                )),
 
 
-  # Box 2
+  # Box 3
 
-  fluidRow(id="arb_placeholder",
+  fluidRow(id="Arbeitsmarkt_International",
            shinydashboard::box(
-             title = "Arbeitsmarkt International",
+             title = "AUSBILDUNG UND BERUF: MINT-Auszubildende und -Beschäftigte im Ländervergleich",
              width = 12,
-             p("LOREM IPSUM INFO"),
+             p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich des Arbeitsmarkts für den internationalen Vergleich. Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU und die OECD gesammelt wurden. Zum einen zeigen wir, wie groß der Anteil von MINT-Auszubildenden und Beschäftigten in verschiedenen Ländern ist. Außerdem ist zu sehen, in welchen Ländern der Frauenanteil besonders groß oder klein ist. Darüber hinaus werfen wir einen Blick auf Studiums- bzw. Ausbildungs-Anfänger*innen und Absolvent*innen in MINT im Ländervergleich."),
              tabsetPanel(type = "tabs",
                          tabPanel("Vergleich MINT-Anteil (Karte)", br(),
 
@@ -231,6 +227,9 @@ mod_international_start_ui <- function(id){
                                   shiny::mainPanel(
                                     width = 9,
                                     htmlOutput(ns("plot_international_studienzahl_map_arb_1")),
+                                    p(style="font-size:12px;color:grey",
+                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
+
 
                                   )
                          ),
@@ -250,6 +249,9 @@ mod_international_start_ui <- function(id){
                                     shiny::mainPanel(
                                       width = 9,
                                       htmlOutput(ns("plot_international_map_arb_gender_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
+
 
                                     )
                          ),tabPanel("Top 10 MINT-Länder", br(),
@@ -268,6 +270,9 @@ mod_international_start_ui <- function(id){
                                     shiny::mainPanel(
                                       width = 9,
                                       htmlOutput(ns("plot_international_top10_mint_arb_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
+
 
                                     )
                          ),tabPanel("Top 10 Länder Frauen in MINT", br(),
@@ -286,6 +291,9 @@ mod_international_start_ui <- function(id){
                                     shiny::mainPanel(
                                       width = 9,
                                       htmlOutput(ns("plot_international_top10_mint_arb_gender_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
+
 
                                     )
                          )

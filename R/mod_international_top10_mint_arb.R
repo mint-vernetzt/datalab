@@ -78,8 +78,11 @@ mod_international_top10_mint_arb_ui <- function(id){
                                       p("Fachbereich:"),
                                       shinyWidgets::pickerInput(
                                         inputId = ns("map_f_oecd_top10_mint_arb"),
-                                        choices = c( "MINT", "Informatik & Kommunikationstechnologie", "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe", "Naturwissenschaften, Mathematik und Statistik"),
-                                        selected = c("Informatik & Kommunikationstechnologie"),
+                                        choices = c( "MINT",
+                                                     "---Informatik & Kommunikationstechnologie"="Informatik & Kommunikationstechnologie",
+                                                     "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                                     "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
+                                        selected = c("MINT"),
                                         multiple = FALSE#,
                                         # options =  list(
                                         #   "max-options" = 2,
@@ -92,7 +95,7 @@ mod_international_top10_mint_arb_ui <- function(id){
                                       ns = ns,
                                       p("Jahr:"),
                                       shinyWidgets::sliderTextInput(
-                                        inputId = ns("map_y_oecd2_arb_gender"),
+                                        inputId = ns("map_y_oecd2_top10_mint_arb"),
                                         label = NULL,
                                         choices = c("2015", "2016", "2017", "2018", "2019", "2020"),
                                         selected = "2020"
@@ -101,8 +104,11 @@ mod_international_top10_mint_arb_ui <- function(id){
                                       p("Fachbereich:"),
                                       shinyWidgets::pickerInput(
                                         inputId = ns("map_f_oecd2_top10_mint_arb"),
-                                        choices = c( "MINT", "Informatik & Kommunikationstechnologie", "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe", "Naturwissenschaften, Mathematik und Statistik"),
-                                        selected = c("Informatik & Kommunikationstechnologie"),
+                                        choices = c( "MINT",
+                                                     "---Informatik & Kommunikationstechnologie"="Informatik & Kommunikationstechnologie",
+                                                     "---Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                                     "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
+                                        selected = c("MINT"),
                                         multiple = FALSE#,
                                         # options =  list(
                                         #   "max-options" = 2,
