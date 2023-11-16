@@ -616,145 +616,172 @@ mod_schule_kurse_ui <- function(id){
 #' schule_kurse Server Functions
 #'
 #' @noRd
-mod_schule_kurse_server <- function(id, data_kurse, data_iqb, data_skf, r){
+mod_schule_kurse_server <- function(id, r){
 
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # Box 2
-    output$plot_einstieg_pie <- renderUI({
-      kurse_einstieg_pie(data_kurse,r)
-    })
-
-    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
-      kurse_verlauf_single(data_kurse,r)
-    })
-
-    output$plot_einstieg_comparison <- highcharter::renderHighchart({
-      kurse_einstieg_comparison(data_kurse,r)
-    })
-
-    # data_table_einstieg_react <- reactive({
-    #   data_einstieg_kurse(data_kurse, r)
-    # })
-
-    output$data_table_einstieg <- DT::renderDT({
-      data_table_einstieg_react()
-    })
-
-    # Box 3
-    output$plot_pie_gender <- renderUI({
-      kurse_einstieg_pie_gender(data_kurse,r)
-    })
-
-    output$plot_verlauf_gender <- highcharter::renderHighchart({
-      kurse_verlauf_gender(data_kurse,r)
-    })
-
-    output$plot_comparison_gender <- highcharter::renderHighchart({
-      kurse_comparison_gender(data_kurse,r)
-    })
-
-    # Box 4
+    # Box 1 - Wer wählt MINT
+    ## Waffle
     output$plot_waffle_mint <- renderPlot({
-      kurse_waffle_mint(data_kurse,r)
+      kurse_waffle_mint(r)
     })
 
-    output$plot_verlauf_kurse_bl_subjects <- highcharter::renderHighchart({
-      kurse_verlauf_subjects_bl(data_kurse,r)
+    ## Balkendiagramm
+    output$plot_einstieg_comparison <- highcharter::renderHighchart({
+      kurse_einstieg_comparison(r)
     })
 
-    output$plot_comparison_subjects <- highcharter::renderHighchart({
-      kurse_mint_comparison(data_kurse,r)
+    ## Zeitverlauf
+    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
+      kurse_verlauf_single(r)
     })
 
-    # Box 5
+    ## Waffle Geschlecht
     plot_waffle_react <- reactive({
-      kurse_waffle(data_kurse,r)
+      kurse_waffle(r)
     })
 
     output$plot_waffle <- renderPlot({
       plot_waffle_react()
     })
 
-    output$plot_verlauf_kurse_bl <- highcharter::renderHighchart({
-      kurse_verlauf_single_bl(data_kurse,r)
+    ## Karte Gender
+    output$plot_map_kurse_gender <- renderUI({
+      kurse_map_gender(r)
     })
 
-    plot_ranking_react <- reactive({
-      kurse_ranking(data_kurse,r, type="other")
+
+    # Box 2 -  M-I-N-T
+
+    ## Karte Fächer
+    output$plot_map_kurse <- renderUI({
+      kurse_map(r)
     })
 
+    ## Verlauf nach BuLas
+    output$plot_verlauf_multiple <- highcharter::renderHighchart({
+      kurse_verlauf_multiple_bl(r)
+    })
+
+    ## Zeitverlauf Fächer
+    output$plot_verlauf_kurse_bl_subjects <- highcharter::renderHighchart({
+      kurse_verlauf_subjects_bl(r)
+    })
+
+    ## Dumbbell-Plot Mädchen
+    output$plot_ranking_gender <- renderPlot({
+      kurse_ranking_gender(r)
+    })
+
+    ## Balken Übersicht Fächer
+    output$plot_comparison_subjects <- highcharter::renderHighchart({
+      kurse_mint_comparison(r)
+    })
+
+    ## Balken Übersicht BuLas
+    output$plot_comparison_bl <- highcharter::renderHighchart({
+      kurse_mint_comparison_bl(r)
+    })
+
+
+    # Box 3 - Frauen
+
+    ## Balken Frauen
+    output$plot_comparison_gender <- highcharter::renderHighchart({
+      kurse_comparison_gender(r)
+    })
+
+    ## Dumbbell Frauen
     output$plot_ranking_2 <- renderPlot({
       plot_ranking_react()
     })
-
-    # Box 6
-    output$plot_map_kurse <- renderUI({
-      kurse_map(data_kurse,r)
+    plot_ranking_react <- reactive({
+      kurse_ranking(r) # type = "other"
     })
 
-    output$plot_verlauf_multiple <- highcharter::renderHighchart({
-      kurse_verlauf_multiple_bl(data_kurse,r)
+
+    # Box 4  Kompetenzdaten / IQB
+
+    output$plot_iqb_standard_zeitverlauf <- highcharter::renderHighchart({
+      iqb_standard_zeitverlauf(r)
     })
 
-    output$plot_comparison_bl <- highcharter::renderHighchart({
-      kurse_mint_comparison_bl(data_kurse,r)
+    output$plot_iqb_mathe_mittel_zeitverlauf <- highcharter::renderHighchart({
+      iqb_mathe_mittel_zeitverlauf(r)
     })
+
+    output$plot_iqb_fragebogen <- highcharter::renderHighchart({
+      iqb_fragebogen(r)
+    })
+
+
+    # Box außerschulisch  / SKf
+
+    output$plot_skf_einrichtungen <- highcharter::renderHighchart({
+      skf_einrichtungen(r)
+    })
+
+    output$plot_skf_personal <- highcharter::renderHighchart({
+      skf_personal(r)
+    })
+
+
+
+
+    ### Rest
+#
+#     output$plot_einstieg_pie <- renderUI({
+#       kurse_einstieg_pie(data_kurse,r)
+#     })
+
+
+    # data_table_einstieg_react <- reactive({
+    #   data_einstieg_kurse(data_kurse, r)
+    # })
+
+    # output$data_table_einstieg <- DT::renderDT({
+    #   data_table_einstieg_react()
+    # })
+    #
+    # # Box 3
+    # output$plot_pie_gender <- renderUI({
+    #   kurse_einstieg_pie_gender(data_kurse,r)
+    # })
+    #
+    # output$plot_verlauf_gender <- highcharter::renderHighchart({
+    #   kurse_verlauf_gender(data_kurse,r)
+    # })
+    #
+    #
+    # output$plot_verlauf_kurse_bl <- highcharter::renderHighchart({
+    #   kurse_verlauf_single_bl(data_kurse,r)
+    # })
+
 
     # output$plot_comparison_bl <- renderPlot({
     #   kurse_mint_comparison_bl(data_kurse,r)
     # })
 
     # Box 7
-    output$plot_map_kurse_gender <- renderUI({
-      kurse_map_gender(data_kurse,r)
-    })
-
-    output$plot_verlauf_kurse <- highcharter::renderHighchart({
-      kurse_verlauf(data_kurse,r)
-    })
-
-    output$plot_ranking_gender <- renderPlot({
-      kurse_ranking_gender(data_kurse,r)
-    })
-
-    # Box Kompetenzdaten / IQB
-
-    output$plot_iqb_standard_zeitverlauf <- highcharter::renderHighchart({
-      iqb_standard_zeitverlauf(data_iqb,r)
-    })
-
-    output$plot_iqb_mathe_mittel_zeitverlauf <- highcharter::renderHighchart({
-      iqb_mathe_mittel_zeitverlauf(data_iqb,r)
-    })
-
-    output$plot_iqb_fragebogen <- highcharter::renderHighchart({
-      iqb_fragebogen(data_iqb,r)
-    })
-
-    # Box außerschulisch  / SKf
-
-    output$plot_skf_einrichtungen <- highcharter::renderHighchart({
-      skf_einrichtungen(data_skf,r)
-    })
-
-    output$plot_skf_personal <- highcharter::renderHighchart({
-      skf_personal(data_skf,r)
-    })
+#
+#     output$plot_verlauf_kurse <- highcharter::renderHighchart({
+#       kurse_verlauf(data_kurse,r)
+#     })
 
 
-
-    # downloader
-    output$download_data_box1 <- shiny::downloadHandler(
-      filename = function() {
-        paste("data_kurse", "csv", sep = ".")
-      },
-      content = function(file){
-        write.csv(data_table_einstieg_react(), file)
-      }
-    )
-
+#
+#
+#     # downloader
+#     output$download_data_box1 <- shiny::downloadHandler(
+#       filename = function() {
+#         paste("data_kurse", "csv", sep = ".")
+#       },
+#       content = function(file){
+#         write.csv(data_table_einstieg_react(), file)
+#       }
+#     )
+#
   })
 }
 

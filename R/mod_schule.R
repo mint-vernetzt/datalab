@@ -22,12 +22,12 @@ mod_schule_ui <- function(id){
 #'
 #' @noRd
 
-mod_schule_server <- function(id, data_kurse, data_iqb, data_skf, r){
+mod_schule_server <- function(id, r){
 
   r <- reactiveValues()
 
   # Kurse
-  mod_schule_kurse_server("mod_schule_kurse_ui_1", data_kurse, data_iqb, data_skf, r)
+  mod_schule_kurse_server("mod_schule_kurse_ui_1", r)
 
   # Box 2
   mod_schule_kurse_einstieg_server("mod_schule_kurse_einstieg_ui_1", r)
