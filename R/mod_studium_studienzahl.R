@@ -621,6 +621,28 @@ mod_studium_studienzahl_server <- function(id, data_studierende,
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    # Box 1 - Wer Wählt MINT
+
+    ## Pies MINT
+    output$test <- renderUI({
+      studienzahl_test( r)
+    })
+
+    ## Waffle
+    plot_waffle_react <- reactive({
+      studienzahl_waffle_mint(r)#
+    })
+    output$plot_waffle <- renderPlot({
+      plot_waffle_react()#
+    })
+
+    ## Zeitverlauf
+    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
+      studienzahl_verlauf_single(r)
+    })
+
+    # REST
+
 
 
     # Box 2
@@ -628,9 +650,7 @@ mod_studium_studienzahl_server <- function(id, data_studierende,
       studienzahl_einstieg_pie(data_studierende,r)
     })
 
-    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
-      studienzahl_verlauf_single(data_studierende,r)
-    })#
+
 
     # all_mint_23_react <- reactive({
     #   studienzahl_all_mint_23(data_studierende2, r)
@@ -672,18 +692,9 @@ mod_studium_studienzahl_server <- function(id, data_studierende,
     #   ranking_bl_subject(data_studierende,r)
     # })
 
-    output$test <- renderUI({
-      studienzahl_test(data_studierende, r)#
-    })
+
 
     # Box 4
-    plot_waffle_react <- reactive({
-      studienzahl_waffle_mint(data_studierende,r)#
-    })
-
-    output$plot_waffle <- renderPlot({
-      plot_waffle_react()#
-    })
 
     output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
       studienzahl_verlauf_bl_subject(data_studierende,r)#
