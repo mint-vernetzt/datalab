@@ -504,7 +504,6 @@ plot_international_top10_gender <- function(r) {
 plot_international_map_fem <- function(r){
 
 
-
   label_m <<- r$map_l_f
 
   #level_m <<- r$map_le_f
@@ -514,9 +513,12 @@ plot_international_map_fem <- function(r){
 
     timerange <<- r$map_y_f
     fach_m <<- r$map_f_f
+    betr <<- r$map_le_betr
 
     # test <- studierende_europa %>%
     #   dplyr::filter(land == "Deutschland" & jahr == 2021)
+
+    if(betr == "Anteil von Frauen an Allen"){
 
     df1 <<- studierende_europa%>%
       dplyr::filter(!is.na(.$wert))%>%
@@ -539,8 +541,8 @@ plot_international_map_fem <- function(r){
       dplyr::left_join(countries_names, by = "land") %>%
       dplyr::mutate(alpha2 = toupper(alpha2))
 
-    studierende_europa1 <<- map_data_1 %>%
-      janitor::get_dupes(-wert)
+    # studierende_europa1 <<- map_data_1 %>%
+    #   janitor::get_dupes(-wert)
 
     hoverplot <- "{point.land} <br> Anteil: {point.display_rel}%"
 
@@ -554,7 +556,45 @@ plot_international_map_fem <- function(r){
     } else {
 
       paste("Anteil von weiblichen Studierenden an allen Studierenden in ", fach_m, " " , timerange)
-      }
+    }
+
+
+
+
+  } else if(betr=="Anteil an Frauen von Frauen"){
+
+    df1 <<- studierende_europa%>%
+      dplyr::filter(!is.na(.$wert))%>%
+      dplyr::filter(ebene == 1 &
+                      indikator == "Fächerwahl"&
+                      mint_select == "mint" &
+                      geschlecht == "Frauen")%>%
+      dplyr::filter(fach == fach_m &
+                       jahr == timerange)%>%
+      dplyr::mutate(display_rel = prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ","))
+
+    map_data_1 <<- df1 %>%
+      dplyr::left_join(countries_names, by = "land") %>%
+      dplyr::mutate(alpha2 = toupper(alpha2))
+
+    hoverplot <- "{point.land} <br> Anteil: {point.display_rel}%"
+
+
+
+    title_dyn <- if(fach_m=="Alle MINT-Fächer"){
+      paste("Anteil von Studierenden in allen MINT-Fächern an allen weiblichnen Studierenden " , timerange)
+
+    } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
+
+      paste("Anteil von Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe an allen weiblichen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe " , timerange)
+
+    } else {
+
+      paste("Anteil von Studierenden in ", fach_m, " an allen weiblichen Studierenden ", timerange)
+    }
+
+
+    }
 
 
     #capt_dyn  <- paste("Quelle der Daten: Eurostat, 2022, eigene Berechnungen durch MINTvernetzt")
@@ -2258,7 +2298,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
   if(inpl== "EU"){
 
 
-    browser()
+
     inpy <<- r$map_y_eu_top10_mint_arb_gender
     inpp <<- r$map_pers_top10_mint_arb_gender
 
@@ -2316,7 +2356,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
   else if (inpl== "OECD"){
 
-    browser()
 
 
     map_selection <- "custom/world"
@@ -2521,7 +2560,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
       if (inpbe == "Anteil von Frauen an Allen"){
 
 
-        data1 <<- data_fva
+        data1 <<- data_fva%>%
+          dplyr::filter(!is.na(.$wert))
 
 
         title_top <- if (inpp == "Auszubildende (ISCED 45)"){
@@ -2557,7 +2597,9 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
       }else if(inpbe == "Anteil an Frauen von Frauen"){
-        data1 <<- data_fvf3
+
+        data1 <<- data_fvf3%>%
+          dplyr::filter(!is.na(.$wert))
 
 
 

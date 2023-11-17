@@ -43,6 +43,13 @@ mod_international_map_fem_ui <- function(id) {
                                    "---Naturwissenschaften, Mathematik und Statistik"="Naturwissenschaften, Mathematik und Statistik"),
                        selected = c("Alle MINT-Fächer"),
                        multiple = FALSE
+                     ),
+                     p("Betrachtung:"),
+                     shinyWidgets::pickerInput(
+                       inputId = ns("map_betr_eu_f"),
+                       choices = c("Anteil von Frauen an Allen", "Anteil an Frauen von Frauen"),
+                       selected = c("Anteil von Frauen an Allen"),
+                       multiple = FALSE
                      )),
     conditionalPanel(condition = "input.map_l_f == 'OECD' ",
                      ns = ns,
@@ -100,6 +107,7 @@ mod_international_map_fem_server <- function(id, r){
       if (input$map_l_f == "EU") {
         r$map_y_f <- input$map_y_eu_f
         r$map_f_f <- input$map_f_eu_f
+        r$map_le_betr <- input$map_betr_eu_f
 
       }
       if (input$map_l_f == "OECD") {
@@ -118,6 +126,14 @@ mod_international_map_fem_server <- function(id, r){
       r$map_f_f <- input$map_f_oecd_f
     })
 
+    observeEvent(input$map_lev_oecd_f, {
+      r$map_le_f <- input$map_lev_oecd_f
+    })
+
+    observeEvent(input$map_betr_oecd_f, {
+      r$map_le_betr <- input$map_betr_oecd_f
+    })
+
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
     observeEvent(input$map_y_eu_f, {
@@ -128,13 +144,11 @@ mod_international_map_fem_server <- function(id, r){
       r$map_f_f <- input$map_f_eu_f
     })
 
-    observeEvent(input$map_lev_oecd_f, {
-      r$map_le_f <- input$map_lev_oecd_f
+    observeEvent(input$map_betr_eu_f, {
+      r$map_le_betr <- input$map_betr_eu_f
     })
 
-    observeEvent(input$map_betr_oecd_f, {
-      r$map_le_betr <- input$map_betr_oecd_f
-    })
+
 
   })
 }
