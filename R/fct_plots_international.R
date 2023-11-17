@@ -1873,7 +1873,8 @@ plot_international_top10_mint_arb <- function(r) {
       dplyr::left_join(countries_names %>%
                          dplyr::mutate(land=dplyr::case_when(land == "Tschechien" ~ "Tschechische Republik",
                                                              T ~ .$land)), by= "land")%>%
-      dplyr::mutate(alpha2= toupper(alpha2))
+      dplyr::mutate(alpha2= toupper(alpha2))%>%
+      dplyr::filter(!is.na(.$wert) & wert!=0)
 
     plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
 
@@ -1921,7 +1922,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
                                            "Naturwissenschaften, Mathematik und Statistik",
                                            "Alle")&
                         geschlecht == "Gesamt")%>%
-        dplyr::mutate(display_rel=prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ","))
+        dplyr::mutate(display_rel=prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ","))%>%
+        dplyr::filter(!is.na(.$wert) & wert!=0)
 
 
 
@@ -2054,7 +2056,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
       data3 <- data1 %>%
         dplyr::left_join(data2, by=c("land", "jahr", "fach", "anforderung"))%>%
         dplyr::inner_join(countries_names, by = "land") %>%
-        dplyr::mutate(alpha2 = toupper(alpha2))
+        dplyr::mutate(alpha2 = toupper(alpha2))%>%
+        dplyr::filter(!is.na(.$wert) & wert!=0)
 
 
       if (inpp == "Auszubildende (ISCED 45)"){
@@ -2342,7 +2345,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
       dplyr::left_join(countries_names %>%
                          dplyr::mutate(land=dplyr::case_when(land == "Tschechien" ~ "Tschechische Republik",
                                                              T ~ .$land)), by= "land")%>%
-      dplyr::mutate(alpha2= toupper(alpha2))
+      dplyr::mutate(alpha2= toupper(alpha2))%>%
+      dplyr::filter(!is.na(.$wert) & wert!=0)
 
     plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
 
@@ -2398,7 +2402,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
                                "Informatik & Kommunikationstechnologie",
                                "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                                "Naturwissenschaften, Mathematik und Statistik",
-                               "Alle"), values_to = "wert", names_to = "fachbereich")
+                               "Alle"), values_to = "wert", names_to = "fachbereich")%>%
+        dplyr::filter(!is.na(.$wert) & wert!=0)
 
       if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
 
@@ -2561,7 +2566,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
         data1 <<- data_fva%>%
-          dplyr::filter(!is.na(.$wert))
+          dplyr::filter(!is.na(.$wert) & wert!=0)
 
 
         title_top <- if (inpp == "Auszubildende (ISCED 45)"){
@@ -2599,7 +2604,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       }else if(inpbe == "Anteil an Frauen von Frauen"){
 
         data1 <<- data_fvf3%>%
-          dplyr::filter(!is.na(.$wert))
+          dplyr::filter(!is.na(.$wert) & wert!=0)
 
 
 
