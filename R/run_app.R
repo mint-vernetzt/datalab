@@ -9,7 +9,7 @@
 #' @importFrom golem with_golem_options
 run_app <- function(
   onStart =  function() {
-    con <<- DBI::dbConnect(RSQLite::SQLite(), "data/mint_db.sqlite")
+    con <<- DBI::dbConnect(RSQLite::SQLite(), "data/mint_db.sqlite", encoding = "UTF-8")
   },
   options = list(),
   enableBookmarking = NULL,
