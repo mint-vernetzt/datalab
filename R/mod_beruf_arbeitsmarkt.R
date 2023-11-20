@@ -271,6 +271,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
 
 
+    # Box 2
 
     fluidRow(id="beruf_fach",
       shinydashboard::box(
@@ -356,6 +357,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     )
                     #
         ))),
+
+    # Box 3
+
     fluidRow(id="beruf_frauen",
       shinydashboard::box(
         title = "Frauen in MINT: Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?",
@@ -567,7 +571,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 #' beruf_arbeitsmarkt Server Functions
 #'
 #' @noRd
-mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, data_naa, r){
+mod_beruf_arbeitsmarkt_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -607,41 +611,41 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
 
     # Box 2
     output$plot_arbeitsmarkt_bl <- renderUI({
-      arbeitsmarkt_bl(data_arbeitsmarkt_detail,r)
+      arbeitsmarkt_bl(r)
     })
 
     output$plot_arbeitsmarkt_überblick_fächer <- highcharter::renderHighchart({
-      arbeitsmarkt_überblick_fächer(data_arbeitsmarkt_detail, r)
+      arbeitsmarkt_überblick_fächer(r)
     })
 
     output$plot_arbeitsmarkt_bl_vergleich <- highcharter::renderHighchart({
-      arbeitsmarkt_bl_vergleich(data_arbeitsmarkt_detail,r)
+      arbeitsmarkt_bl_vergleich(r)
     })
 
     output$plot_arbeitsmarkt_top10 <- renderUI({
-      arbeitsmarkt_top10(data_naa, r)
+      arbeitsmarkt_top10(r)
     })
 
     # Box3
     output$plot_einstieg_pie_gender <- renderUI({
-      arbeitsmarkt_einstieg_pie_gender(data_arbeitsmarkt,r)
+      arbeitsmarkt_einstieg_pie_gender(r)
     })
 
     output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
-      arbeitsmarkt_einstieg_verlauf_gender(data_arbeitsmarkt, r)
+      arbeitsmarkt_einstieg_verlauf_gender( r)
     })
 
     output$plot_einstieg_vergleich_gender <- highcharter::renderHighchart({
-      arbeitsmarkt_einstieg_vergleich_gender(data_arbeitsmarkt_detail,r)
+      arbeitsmarkt_einstieg_vergleich_gender(r)
     })
 
     # Box4
     output$plot_arbeitsmarkt_detail_map <- renderUI({
-      arbeitsmarkt_lk_detail_map(data_arbeitsmarkt_detail, r)
+      arbeitsmarkt_lk_detail_map(r)
     })
 
     output$plot_arbeitsmarkt_detail_vergleich <- highcharter::renderHighchart({
-      arbeitsmarkt_lk_detail_vergleich(data_arbeitsmarkt_detail, r)
+      arbeitsmarkt_lk_detail_vergleich(r)
 
     })
 
