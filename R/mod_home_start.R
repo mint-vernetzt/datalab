@@ -209,33 +209,33 @@ funct_footer())
 #' home_start Server Functions
 #'
 #' @noRd
-mod_home_start_server <- function(id, data_zentral, data_zentral_neu, data_zentral_alt,data_ausbildungsvertraege ,r){
+mod_home_start_server <- function(id,r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
 
     output$plot_verlauf_mint <- highcharter::renderHighchart({
-      home_comparison_line(data_zentral_alt,r)
+      home_comparison_line(r)
     })
 
     output$plot_mint_rest_einstieg_1 <- renderUI({
-      home_einstieg_pie(data_zentral_alt,r)
+      home_einstieg_pie(r)
     })
 
     output$plot_comparison_gender <- highcharter::renderHighchart({
-      home_stacked_comparison_gender(data_zentral_alt, data_ausbildungsvertraege, r)
+      home_stacked_comparison_gender(r)
     })
 
     output$plot_mint_1 <- highcharter::renderHighchart({
-      home_rest_mint_verlauf(data_zentral_alt, r)
+      home_rest_mint_verlauf(r)
     })
 
     output$plot_comparison_mint <- highcharter::renderHighchart({
-      home_stacked_comparison_mint(data_zentral_alt, r)
+      home_stacked_comparison_mint( r)
     })
 
     output$plot_pie_mint_gender <- renderUI({
-      home_einstieg_pie_gender(data_zentral_alt, data_ausbildungsvertraege, r)
+      home_einstieg_pie_gender( r)
     })
 
 

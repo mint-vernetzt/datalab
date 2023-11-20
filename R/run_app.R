@@ -8,7 +8,9 @@
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
 run_app <- function(
-  onStart = NULL,
+  onStart =  function() {
+    con <<- DBI::dbConnect(RSQLite::SQLite(), "data/mint_db.sqlite")
+  },
   options = list(),
   enableBookmarking = NULL,
   uiPattern = "/",

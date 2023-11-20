@@ -322,7 +322,7 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
   # merge dataframes and compute prob
   df_compare <- df_sub %>%
     dplyr::left_join(df_gesamt,
-                     by = c("bereich",
+                     by = c(
                             "kategorie",
                             "bundesland",
                             "landkreis",

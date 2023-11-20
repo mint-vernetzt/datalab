@@ -271,6 +271,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         ))),
 
 
+    # Box 2
 
     fluidRow(id="beruf_fach",
       shinydashboard::box(
@@ -356,6 +357,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     )
                     #
         ))),
+
+    # Box 3
+
     fluidRow(id="beruf_frauen",
       shinydashboard::box(
         title = "Frauen in MINT: Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?",
@@ -567,29 +571,94 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 #' beruf_arbeitsmarkt Server Functions
 #'
 #' @noRd
-mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmarkt_detail, data_naa, r){
+mod_beruf_arbeitsmarkt_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # Box 2
-    plot_einstieg_pie_react <- reactive({
-      arbeitsmarkt_einstieg_pie(data_arbeitsmarkt,r)
-
+    # Box 1
+    plot_arbeitsmarkt_waffle_react <- reactive({
+      arbeitsmarkt_anforderungen(r)
     })
 
-    output$plot_einstieg_pie <- renderUI({
-      plot_einstieg_pie_react()
-
+    output$plot_arbeitsmarkt_waffle <- renderPlot({
+      plot_arbeitsmarkt_waffle_react()
     })
 
     output$plot_einstieg_verlauf <- highcharter::renderHighchart({
-      beruf_verlauf_single(data_arbeitsmarkt,r)
+      beruf_verlauf_single(r)
     })
 
     output$plot_einstieg_vergleich <- highcharter::renderHighchart({
-      beruf_einstieg_vergleich(data_arbeitsmarkt_detail,r)
+      beruf_einstieg_vergleich(r)
     })
 
+    output$plot_arbeitsmarkt_waffle_gender <- renderPlot({
+      arbeitsmarkt_anforderungen_gender(r)
+    })
+
+    output$plot_arbeitsmarkt_bl_gender <- renderUI({
+      arbeitsmarkt_bl_gender(r)
+    })
+
+    output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- highcharter::renderHighchart({
+      arbeitsmarkt_bl_gender_verlauf(r)
+    })
+
+    output$plot_beruf_arbeitsmarkt_bl_verlauf <- highcharter::renderHighchart({
+      arbeitsmarkt_bl_verlauf(r)
+    })
+
+
+    # Box 2
+    output$plot_arbeitsmarkt_bl <- renderUI({
+      arbeitsmarkt_bl(r)
+    })
+
+    output$plot_arbeitsmarkt_überblick_fächer <- highcharter::renderHighchart({
+      arbeitsmarkt_überblick_fächer(r)
+    })
+
+    output$plot_arbeitsmarkt_bl_vergleich <- highcharter::renderHighchart({
+      arbeitsmarkt_bl_vergleich(r)
+    })
+
+    output$plot_arbeitsmarkt_top10 <- renderUI({
+      arbeitsmarkt_top10(r)
+    })
+
+    # Box3
+    output$plot_einstieg_pie_gender <- renderUI({
+      arbeitsmarkt_einstieg_pie_gender(r)
+    })
+
+    output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
+      arbeitsmarkt_einstieg_verlauf_gender( r)
+    })
+
+    output$plot_einstieg_vergleich_gender <- highcharter::renderHighchart({
+      arbeitsmarkt_einstieg_vergleich_gender(r)
+    })
+
+    # Box4
+    output$plot_arbeitsmarkt_detail_map <- renderUI({
+      arbeitsmarkt_lk_detail_map(r)
+    })
+
+    output$plot_arbeitsmarkt_detail_vergleich <- highcharter::renderHighchart({
+      arbeitsmarkt_lk_detail_vergleich(r)
+
+    })
+
+
+    # Rest
+    # plot_einstieg_pie_react <- reactive({
+    #   arbeitsmarkt_einstieg_pie(data_arbeitsmarkt,r)
+    # })
+    #
+    # output$plot_einstieg_pie <- renderUI({
+    #   plot_einstieg_pie_react()
+    # })
+    #
     # data_table_einstieg_react <- reactive({
     #   data_einstieg_beruf(data_arbeitsmarkt, r)
     # })
@@ -597,135 +666,54 @@ mod_beruf_arbeitsmarkt_server <- function(id, data_arbeitsmarkt, data_arbeitsmar
     # output$data_table_einstieg <- DT::renderDT({
     #   data_table_einstieg_react()
     # })
-
-    # Box 3
-    output$plot_einstieg_pie_gender <- renderUI({
-      arbeitsmarkt_einstieg_pie_gender(data_arbeitsmarkt,r)
-    })
-
-    output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
-      arbeitsmarkt_einstieg_verlauf_gender(data_arbeitsmarkt, r)
-    })
-
-    output$plot_einstieg_vergleich_gender <- highcharter::renderHighchart({
-      arbeitsmarkt_einstieg_vergleich_gender(data_arbeitsmarkt_detail,r)
-    })
-
-    # Box 4
-    plot_arbeitsmarkt_waffle_react <- reactive({
-      arbeitsmarkt_anforderungen(data_arbeitsmarkt_detail, r)
-    })
-
-    output$plot_arbeitsmarkt_waffle <- renderPlot({
-      plot_arbeitsmarkt_waffle_react()
-    })
-
-    output$plot_arbeitsmarkt_verlauf <- highcharter::renderHighchart({
-      arbeitsmarkt_anforderungen_verlauf(data_arbeitsmarkt, r)
-    })
-
-    output$plot_arbeitsmarkt_vergleich <- renderPlot({
-      arbeitsmarkt_anforderungen_vergleich(data_arbeitsmarkt, r)
-    })
-
-    output$plot_arbeitsmarkt_überblick_fächer <- highcharter::renderHighchart({
-      arbeitsmarkt_überblick_fächer(data_arbeitsmarkt_detail, r)
-    })
-
-    # Box 5
-    output$plot_arbeitsmarkt_waffle_gender <- renderPlot({
-      arbeitsmarkt_anforderungen_gender(data_arbeitsmarkt_detail, r)
-    })
-
-    output$plot_arbeitsmarkt_verlauf_gender <- highcharter::renderHighchart({
-      arbeitsmarkt_anforderungen_verlauf_gender(data_arbeitsmarkt, r)
-    })
-
-    output$plot_arbeitsmarkt_vergleich_gender <- renderPlot({
-      arbeitsmarkt_anforderungen_vergleich_gender(data_arbeitsmarkt, r)
-    })
-
-    # Box 6
-    output$plot_arbeitsmarkt_bl <- renderUI({
-      arbeitsmarkt_bl(data_arbeitsmarkt_detail,r)
-    })
-
-    output$plot_beruf_arbeitsmarkt_bl_verlauf <- highcharter::renderHighchart({
-      arbeitsmarkt_bl_verlauf(data_arbeitsmarkt,r)
-    })
-
-    output$plot_arbeitsmarkt_bl_vergleich <- highcharter::renderHighchart({
-      arbeitsmarkt_bl_vergleich(data_arbeitsmarkt_detail,r)
-    })
-
-    # Box 7
-    output$plot_arbeitsmarkt_bl_gender <- renderUI({
-      arbeitsmarkt_bl_gender(data_arbeitsmarkt_detail,r)
-    })
-
-    output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- highcharter::renderHighchart({
-      arbeitsmarkt_bl_gender_verlauf(data_arbeitsmarkt,r)
-    })
-
-    output$plot_arbeitsmarkt_bl_gender_vergleich <- renderPlot({
-      arbeitsmarkt_bl_gender_vergleich(data_arbeitsmarkt,r)
-    })
-
-    output$plot_arbeitsmarkt_top10 <- renderUI({
-      arbeitsmarkt_top10(data_naa, r)
-    })
-
-    # Box 8
-    output$plot_arbeitsmarkt_detail_map <- renderUI({
-      arbeitsmarkt_lk_detail_map(data_arbeitsmarkt_detail, r)
-    })
-
-    output$plot_arbeitsmarkt_detail_vergleich <- highcharter::renderHighchart({
-      arbeitsmarkt_lk_detail_vergleich(data_arbeitsmarkt_detail, r)
-    })
-
-    var1 <- data_arbeitsmarkt_detail[1,]
-
-    observeEvent(input$insertBtn, {
-
-      btn <- sum(input$insertBtn, 1)
-
-      insertUI(
-        selector = "h5",
-        where = "beforeEnd",
-        ui = tagList(
-          mod_beruf_arbeitsmarkt_landkreis_table_lk_analysis_ui(ns(paste0("var", btn)))
-        )
-      )
-    })
-
-
-    table_lk_analysis_react <- reactive({
-      arbeitsmarkt_lk_detail_table(data_arbeitsmarkt_detail, input, r)
-    })
-
-    observeEvent(input$runBtn, {
-      output$table_lk_analysis <- DT::renderDT({
-        DT::datatable(isolate(table_lk_analysis_react()),
-                      style = "bootstrap",
-                      selection = "none",
-                      rownames = FALSE,
-                      options = list(dom = 't',
-                                     columnDefs = list(list(className = "dt-center", targets = "_all"))),
-                      escape = FALSE
-                      )
-        })
-    })
-
-    # downloader
-    output$download_data_box1 <- shiny::downloadHandler(
-      filename = function() {
-        paste("data_kurse", "csv", sep = ".")
-      },
-      content = function(file){
-        write.csv(data_table_einstieg_react(), file)
-      }
-    )
+    #
+    # output$plot_arbeitsmarkt_verlauf <- highcharter::renderHighchart({
+    #   arbeitsmarkt_anforderungen_verlauf(data_arbeitsmarkt, r)
+    # })
+    #
+    # output$plot_arbeitsmarkt_vergleich <- renderPlot({
+    #   arbeitsmarkt_anforderungen_vergleich(data_arbeitsmarkt, r)
+    # })
+    #
+    # output$plot_arbeitsmarkt_verlauf_gender <- highcharter::renderHighchart({
+    #   arbeitsmarkt_anforderungen_verlauf_gender(data_arbeitsmarkt, r)
+    # })
+    #
+    # output$plot_arbeitsmarkt_vergleich_gender <- renderPlot({
+    #   arbeitsmarkt_anforderungen_vergleich_gender(data_arbeitsmarkt, r)
+    # })
+    #
+    # output$plot_arbeitsmarkt_bl_gender_vergleich <- renderPlot({
+    #   arbeitsmarkt_bl_gender_vergleich(data_arbeitsmarkt,r)
+    # })
+    #
+    #
+    # table_lk_analysis_react <- reactive({
+    #   arbeitsmarkt_lk_detail_table(data_arbeitsmarkt_detail, input, r)
+    # })
+    #
+    # observeEvent(input$runBtn, {
+    #   output$table_lk_analysis <- DT::renderDT({
+    #     DT::datatable(isolate(table_lk_analysis_react()),
+    #                   style = "bootstrap",
+    #                   selection = "none",
+    #                   rownames = FALSE,
+    #                   options = list(dom = 't',
+    #                                  columnDefs = list(list(className = "dt-center", targets = "_all"))),
+    #                   escape = FALSE
+    #                   )
+    #     })
+    # })
+    #
+    # # downloader
+    # output$download_data_box1 <- shiny::downloadHandler(
+    #   filename = function() {
+    #     paste("data_kurse", "csv", sep = ".")
+    #   },
+    #   content = function(file){
+    #     write.csv(data_table_einstieg_react(), file)
+    #   }
+    # )
   })
 }
 

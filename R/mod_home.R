@@ -21,13 +21,13 @@ mod_home_ui <- function(id){
 #' home Server Functions
 #'
 #' @noRd
-mod_home_server <- function(id, data_zentral, data_zentral_alt, data_zentral_neu, data_ausbildungsvertraege, r){
+mod_home_server <- function(id, r){
 
 
   r <- reactiveValues()
 
   # Home
-  mod_home_start_server("mod_home_start_ui_1", data_zentral, data_zentral_alt, data_zentral_neu,  data_ausbildungsvertraege, r)
+  mod_home_start_server("mod_home_start_ui_1",r)
 
   # Box 2
   mod_home_start_einstieg_server("mod_home_start_einstieg_ui_1", r)
