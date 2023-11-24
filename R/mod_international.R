@@ -8,6 +8,9 @@
 #'
 #' @importFrom shiny NS tagList
 mod_international_ui <- function(id){
+
+  logger::log_debug("start mod_international_ui")
+
   ns <- NS(id)
 
   tagList(
@@ -39,21 +42,30 @@ mod_international_server <- function(id,
   logger::log_debug("Setup Seiten-Module: INTERNATIONAL")
   r <- reactiveValues()
 
-  # Box 1
+  # Box 1 - Studium
   mod_international_start_server("mod_international_start_ui_1", r)
   mod_international_map_server("mod_international_map_ui_1", r)
   mod_international_top10_mint_server("international_top10_mint_1", r)
   mod_international_top10_mint_gender_server("international_top10_mint_gender_1", r)
   mod_international_map_fem_server("international_map_fem_ui_1", r)
   mod_international_top10_mint_intl_server("mod_international_top10_mint_intl_ui_1", r)
+  
+  # Box 2 - Schule
+  mod_international_schule_map_server("international_schule_map_1", r)
+  mod_international_schule_item_server("international_schule_item_1", r)
+  mod_international_schule_migration_server("international_schule_migration_1", r)
 
 
-  # Box 2
+  # Box 3
   #mod_international_start_server("mod_international_start_ui_1", r)
   mod_international_map_arb_server("mod_international_map_arb_ui_1",r)
   mod_international_map_arb_gender_server("mod_international_map_arb_gender_ui_1",r)
   mod_international_top10_mint_arb_server("mod_international_top10_mint_arb_ui_1", r)
   mod_international_top10_mint_arb_gender_server("mod_international_top10_mint_arb_gender_ui_1", r)
+  mod_international_arbeitsmarkt_vergleich_server("international_arbeitsmarkt_vergleich_1", r)
+
+
+ 
 
 
   logger::log_debug("Seiten-Module INTERNATIONAL done")

@@ -2,9 +2,9 @@
 # To deploy, run: rsconnect::deployApp()
 # Or use the blue button on top of this file
 
+logger::log_info("load package")
 pkgload::load_all(export_all = FALSE,helpers = FALSE,attach_testthat = FALSE)
 options( "golem.app.prod" = TRUE)
-
 
 logger::log_info("Laden von Karte: Start")
 world_map <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)

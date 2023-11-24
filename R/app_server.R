@@ -6,7 +6,7 @@
 #' @noRd
 app_server <- function(input, output, session) {
   # Your application server logic
-  require(logger)
+  logger::log_info("Start APP SERVER")
   VERSION <- packageVersion("datalab")
   LOG_LEVEL <- Sys.getenv("LOG_LEVEL", "INFO")
   logger::log_threshold(level = LOG_LEVEL)
@@ -15,42 +15,54 @@ app_server <- function(input, output, session) {
 
 
   logger::log_debug("Starte initiale Daten Laden")
-  # Alle Bereiche / home
-  load(file = system.file(package="datalab","data/zentral.rda"))
+  # Brauchen wir nicht, da es durch das Laden des pkg schon vorhanden ist!
+  # ALles was im /data Ordner steckt wird durch das pacakge zur Verfügung gestellt
 
-  load(file = system.file(package="datalab","data/zentral_alt.rda"))
+  # # Alle Bereiche / home
+  # load(file = system.file(package="datalab","data/zentral.rda"))
+  #
+  # load(file = system.file(package="datalab","data/zentral_alt.rda"))
+  #
+  # load(file = system.file(package="datalab","data/zentral_neu.rda"))
+  #
+  # # Schule
+  # load(file = system.file(package="datalab","data/kurse.rda"))
+  #
+  # load(file = system.file(package = "datalab", "data/iqb.rda"))
+  #
+  # load(file = system.file(package="datalab", "data/ausserschulisch_skf.rda"))
+  #
+  # # Studium
+  # load(file = system.file(package="datalab","data/studierende.rda"))
+  #
+  # load(file = system.file(package="datalab","data/studierende_detailliert.rda"))
+  #
+  #
+  # # Arbeitsmarkt
+  # load(file = system.file(package="datalab","data/arbeitsmarkt.rda"))
+  #
+  # load(file = system.file(package="datalab","data/arbeitsmarkt_detail.rda"))
+  #
+  # load(file = system.file(package="datalab","data/data_naa.rda"))
+  #
+  #
+  # # International
+  # #load(file = system.file(package="datalab","data/countries_names.rda"))
+  #
+  # load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
+  #
+  # load(file = system.file(package="datalab","data/studierende_europa.rda"))
+  #
+  # load(file = system.file(package="datalab","data/studierende_absolventen_weltweit.rda"))
+  #
+  # temp_rds_comp <- readRDS(system.file(package="datalab","data/studierende_anzahl_oecd_comp.rds"))
+  # temp_rds_no_comp <- readRDS(system.file(package="datalab","data/studierende_anzahl_oecd_no_comp.rds"))
 
-  load(file = system.file(package="datalab","data/zentral_neu.rda"))
 
-  # Schule
-  load(file = system.file(package="datalab","data/kurse.rda"))
-
-  load(file = system.file(package = "datalab", "data/iqb.rda"))
-
-  load(file = system.file(package="datalab", "data/ausserschulisch_skf.rda"))
-
-  # Studium
-  load(file = system.file(package="datalab","data/studierende.rda"))
-
-  load(file = system.file(package="datalab","data/studierende_detailliert.rda"))
+  ## int schule
+  #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
 
-  # Arbeitsmarkt
-  load(file = system.file(package="datalab","data/arbeitsmarkt.rda"))
-
-  load(file = system.file(package="datalab","data/arbeitsmarkt_detail.rda"))
-
-  load(file = system.file(package="datalab","data/data_naa.rda"))
-
-
-  # International
-  load(file = system.file(package="datalab","data/countries_names.rda"))
-
-  load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
-
-  load(file = system.file(package="datalab","data/studierende_europa.rda"))
-
-  load(file = system.file(package="datalab","data/studierende_absolventen_weltweit.rda"))
 
   # International Arbeitsmarkt
 
@@ -63,6 +75,7 @@ app_server <- function(input, output, session) {
   load(file = system.file(package="datalab","data/arbeitsmarkt_beschäftigte_eu.rda"))
 
   logger::log_debug("Daten laden fertig")
+
 
 
   # example_data <- mod_load_data_server("beispieldatensatz", path=system.file(package="datalab", "data-raw/beispieldatensatz.xlsx"))
@@ -110,5 +123,5 @@ app_server <- function(input, output, session) {
   })
 
   shiny::observeEvent(input$debug, browser())
-
+  logger::log_info("END APP SERVER")
 }
