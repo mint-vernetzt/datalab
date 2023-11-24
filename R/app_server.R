@@ -101,7 +101,9 @@ app_server <- function(input, output, session) {
                            data_studierende_absolventen_weltweit = studierende_absolventen_weltweit,
                            data_studierende_anzahl_oecd = studierende_anzahl_oecd,
                            data_studierende_europa = studierende_europa,
+                           data_studierende_mobil_eu_absolut= studierende_mobil_eu_absolut,
                            data_countries_names = countries_names,
+
                            #data_studierende_intern_oecd = studierende_intern_oecd
                            #
                            data_arbeitsmarkt_absolvent_oecd = arbeitsmarkt_absolvent_oecd, # Anzahl

@@ -31,6 +31,7 @@ mod_international_server <- function(id,
                                      data_studierende_absolventen_weltweit,
                                      data_studierende_anzahl_oecd,
                                      data_studierende_europa,
+                                     data_studierende_mobil_eu_absolut,
                                      data_countries_names,
                                      data_arbeitsmarkt_absolvent_oecd,
                                      data_arbeitsmarkt_anfänger_absolv_oecd,
@@ -49,7 +50,7 @@ mod_international_server <- function(id,
   mod_international_top10_mint_gender_server("international_top10_mint_gender_1", r)
   mod_international_map_fem_server("international_map_fem_ui_1", r)
   mod_international_top10_mint_intl_server("mod_international_top10_mint_intl_ui_1", r)
-  
+
   # Box 2 - Schule
   mod_international_schule_map_server("international_schule_map_1", r)
   mod_international_schule_item_server("international_schule_item_1", r)
@@ -65,7 +66,7 @@ mod_international_server <- function(id,
   mod_international_arbeitsmarkt_vergleich_server("international_arbeitsmarkt_vergleich_1", r)
 
 
- 
+
 
 
   logger::log_debug("Seiten-Module INTERNATIONAL done")

@@ -83,9 +83,9 @@ plot_international_map <- function(r) {
       dplyr::filter(land != "San Marino") %>%
       dplyr::filter(jahr != "2022") %>%
       dplyr::mutate(wert = round(wert, 1))
-    
 
-    
+
+
 
   } else if (label_m == "OECD") {
     #map_selection <- golem::get_golem_options("world_map")
@@ -234,6 +234,295 @@ plot_international_map <- function(r) {
 }
 
 
+plot_international_map_fem <- function(r){
+
+
+  label_m <<- r$map_l_f
+
+  #level_m <<- r$map_le_f
+
+  if(label_m == "EU"){
+    map_selection <- "custom/europe"
+
+    timerange <<- r$map_y_f
+    fach_m <<- r$map_f_f
+    betr <<- r$map_le_betr
+
+    # test <- studierende_europa %>%
+    #   dplyr::filter(land == "Deutschland" & jahr == 2021)
+
+    if(betr == "Anteil von Frauen an Allen"){
+
+      df1 <<- studierende_europa%>%
+        dplyr::filter(!is.na(.$wert))%>%
+        dplyr::filter(ebene == 1 &
+                        indikator == "Frauen-/Männeranteil"&
+                        mint_select == "mint")%>%
+        tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
+        dplyr::select(-Männer, - Gesamt)%>%
+        dplyr::rename(wert = Frauen)%>%
+        dplyr::mutate(across(wert, ~ round(.,1)))%>%
+        dplyr::filter( fach == fach_m&
+                         jahr == timerange)
+
+
+
+
+      df1$display_rel <- prettyNum( df1$wert, big.mark = ".", decimal.mark = ",")
+
+      map_data_1 <<- df1 %>%
+        dplyr::left_join(countries_names, by = "land") %>%
+        dplyr::mutate(alpha2 = toupper(alpha2))
+
+      # studierende_europa1 <<- map_data_1 %>%
+      #   janitor::get_dupes(-wert)
+
+      hoverplot <- "{point.land} <br> Anteil: {point.display_rel}%"
+
+      title_dyn <- if(fach_m=="Alle MINT-Fächer"){
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in allen MINT-Fächern " , timerange)
+
+      } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
+
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe " , timerange)
+
+      } else {
+
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in ", fach_m, " " , timerange)
+      }
+
+
+
+
+    } else if(betr=="Anteil an Frauen von Frauen"){
+
+      df1 <<- studierende_europa%>%
+        dplyr::filter(!is.na(.$wert))%>%
+        dplyr::filter(ebene == 1 &
+                        indikator == "Fächerwahl"&
+                        mint_select == "mint" &
+                        geschlecht == "Frauen")%>%
+        dplyr::filter(fach == fach_m &
+                        jahr == timerange)%>%
+        dplyr::mutate(display_rel = prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ","))
+
+      map_data_1 <<- df1 %>%
+        dplyr::left_join(countries_names, by = "land") %>%
+        dplyr::mutate(alpha2 = toupper(alpha2))
+
+      hoverplot <- "{point.land} <br> Anteil: {point.display_rel}%"
+
+
+
+      title_dyn <- if(fach_m=="Alle MINT-Fächer"){
+        paste("Anteil von Studierenden in allen MINT-Fächern an allen weiblichnen Studierenden " , timerange)
+
+      } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
+
+        paste("Anteil von Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe an allen weiblichen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe " , timerange)
+
+      } else {
+
+        paste("Anteil von Studierenden in ", fach_m, " an allen weiblichen Studierenden ", timerange)
+      }
+
+
+    }
+
+
+    #capt_dyn  <- paste("Quelle der Daten: Eurostat, 2022, eigene Berechnungen durch MINTvernetzt")
+
+
+
+  }
+
+  if (label_m == "OECD"){
+
+
+    level <<- r$map_le_f
+    betr <<- r$map_le_betr
+
+
+    map_selection <- "custom/world"
+
+
+    timerange <<- r$map_y_f
+    fach_m <<- r$map_f_f
+
+    # test <- studierende_anzahl_oecd %>%
+    #   dplyr::filter(land== "Kanada" &
+    #                   jahr == 2017)%>%
+    #   tidyr::pivot_wider(values_from=wert, names_from = anforderung)%>%
+    #   dplyr::mutate(testo = rowSums(dplyr::select(., "Master oder vergleichbar (akademisch)",
+    #                                "Promotion (ISCED 8)",
+    #                                "Bachelor oder vergleichbar (akademisch)"), na.rm=T))%>%
+    #   dplyr::select(-c("Master oder vergleichbar (akademisch)",
+    #                                "Promotion (ISCED 8)",
+    #                                "Bachelor oder vergleichbar (akademisch)"))
+
+    df_filtered <<- studierende_anzahl_oecd %>%
+      dplyr::filter(!is.na(.$wert))%>%
+      dplyr::filter(geschlecht %in% c("Frauen", "Gesamt") &
+                      jahr == timerange &
+                      ebene == 1 &
+                      anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
+                                         "Master oder vergleichbar (akademisch)",
+                                         "Promotion (ISCED 8)")
+      )%>%
+      tidyr::pivot_wider(names_from = anforderung, values_from = wert)%>%
+      dplyr::mutate(wert = rowSums(dplyr::select(., "Bachelor oder vergleichbar (akademisch)",
+                                                 "Master oder vergleichbar (akademisch)",
+                                                 "Promotion (ISCED 8)"), na.rm= T ))%>%
+      dplyr::select(- c("Bachelor oder vergleichbar (akademisch)",
+                        "Master oder vergleichbar (akademisch)",
+                        "Promotion (ISCED 8)"))
+
+
+
+    df_share_fem <<- df_filtered %>%
+      dplyr::select(-fachbereich)%>%
+      dplyr::filter(mint_select== "mint" |
+                      fach=="Alle")%>%
+      tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
+      dplyr::mutate(fva = Frauen/Gesamt*100)%>%
+      dplyr::select(- Gesamt)%>%
+      dplyr::mutate(display_rel = prettyNum(round(.$fva,1), big.mark = ".", decimal.mark = ","))%>%
+      dplyr::mutate(display_total = prettyNum(.$Frauen, big.mark = ".", decimal.mark = ","))%>%
+      dplyr::rename(wert = fva)
+
+
+    df_share_fem2 <<- df_filtered %>%
+      dplyr::select(-fachbereich)%>%
+      dplyr::filter(mint_select== "mint" & geschlecht == "Frauen" |
+                      fach=="Alle" & geschlecht == "Frauen")%>%
+      dplyr::select(-mint_select)
+
+    df_share_fem3 <<- df_filtered %>%
+      dplyr::select(-fachbereich)%>%
+      dplyr::filter(mint_select== "mint" & geschlecht == "Frauen" |
+                      fach=="Alle" & geschlecht == "Frauen") %>%
+      dplyr::filter(fach== "Alle")%>%
+      dplyr::rename(Alle = wert)%>%
+      dplyr::select(-fach,-mint_select)
+
+    df_share_fem4 <<- df_share_fem2 %>%
+      dplyr::full_join(df_share_fem3, by=c("bereich",
+                                           "quelle",
+                                           "typ",
+                                           "indikator",
+                                           "ebene",
+                                           "geschlecht",
+                                           "population",
+                                           "land_code",
+                                           "land",
+                                           "jahr"
+      ))%>%
+      dplyr::mutate(fvf = wert/Alle*100)%>%
+      dplyr::select(-Alle)%>%
+      dplyr::mutate(display_rel = prettyNum(round(.$fvf,1), big.mark = ".", decimal.mark = ","))%>%
+      dplyr::mutate(display_total = prettyNum(.$wert, big.mark = ".", decimal.mark = ","))%>%
+      dplyr::select(-wert)%>%
+      dplyr::rename(wert = fvf)
+
+
+    if(betr =="Anteil von Frauen an Allen"){
+
+      map_data_1 <- df_share_fem %>%
+        dplyr::select(land, jahr, fach, wert, display_rel, display_total) %>%
+        dplyr::inner_join(countries_names, by = "land") %>%
+        dplyr::mutate(alpha2 = toupper(alpha2))%>%
+        dplyr::filter(fach == fach_m)
+
+      title_dyn <- if(fach_m=="MINT"){
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in allen MINT-Fächern " , timerange)
+
+      } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
+
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe " , timerange)
+
+      } else {
+
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in ", fach_m, " " , timerange)
+      }
+
+
+    } else if(betr=="Anteil an Frauen von Frauen") {
+      map_data_1 <- df_share_fem4 %>%
+        dplyr::select(land, jahr, fach, wert, display_rel, display_total) %>%
+        dplyr::inner_join(countries_names, by = "land") %>%
+        dplyr::mutate(alpha2 = toupper(alpha2))%>%
+        dplyr::filter(fach == fach_m)
+
+
+      title_dyn <- if(fach_m=="MINT"){
+        paste("Anteil von Studierenden in allen MINT-Fächern an weiblichen Studierenden " , timerange, " (weltweit, OECD)")
+
+      } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
+
+        paste("Anteil von Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe an weiblichen Studierenden " , timerange, " (weltweit, OECD)")
+
+      } else {
+
+        paste("Anteil von Studierenden in ", fach_m,  " an weiblichen Studierenden " , timerange, " (weltweit, OECD)")
+      }
+
+    }
+
+
+    hoverplot <- "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+
+
+
+
+
+
+  }
+
+  highcharter::hw_grid(
+    # plot
+    highcharter::hcmap(
+      #"countries/de/de-all",
+      map = map_selection,
+      data = map_data_1,
+      value = "wert",
+      joinBy = c("hc-a2", "alpha2"),
+      borderColor = "#FAFAFA",
+      name = paste0(fach_m),
+      borderWidth = 0.1,
+      nullColor = "#A9A9A9",
+      tooltip = list(
+        valueDecimals = 0,
+        valueSuffix = "%"
+      )
+      #,
+      #download_map_data = FALSE
+    )
+    %>%
+      highcharter::hc_tooltip(pointFormat = hoverplot) %>%
+      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+      highcharter::hc_title(
+        text = title_dyn,
+        margin = 10,
+        align = "center",
+        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      ) %>%
+      # highcharter::hc_caption(
+      #   text = capt_dyn,  style = list(color= "grey", fontSize = "12px")
+      # ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular")
+      ) %>% highcharter::hc_size(600, 550) %>%
+      highcharter::hc_credits(enabled = FALSE) %>%
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                             verticalAlign = "bottom")
+  )
+
+
+
+
+}
+
+
 plot_international_top10 <- function(r) {
   #r <- list(map_y = "2019", map_l = "OECD", map_f = "MINT")
   # load UI inputs from reactive value
@@ -255,15 +544,16 @@ plot_international_top10 <- function(r) {
 
 
   if (label_m == "Weltweit") {
-    fach_m <- "Alle MINT-Fächer"
-    df <- studierende_absolventen_weltweit  %>%
+    #fach_m <- "Alle MINT-Fächer"
+
+    df1 <- studierende_absolventen_weltweit  %>%
       dplyr::filter(fach == "Alle MINT-Fächer" &
                       jahr == timerange &
                       land != "San Marino") %>%
       dplyr::mutate(wert = round(wert, 1)) %>%
       dplyr::select(land, wert)
   }
-  if (label_m == "OECD") {
+  else if (label_m == "OECD") {
 
     # filter for selection
     df_filtered <- studierende_anzahl_oecd %>%
@@ -385,6 +675,7 @@ plot_international_top10 <- function(r) {
 plot_international_top10_gender <- function(r) {
   #r <- list(map_y_int_studium_gender = "2021", map_l_int_studium_gender = "EU", map_f_int_studium_gender = "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,\n verarbeitendes Gewerbe und Baugewerbe",show_avg_top10_mint_line = "Ja", show_avg_int_studium_gender = "meisten Frauen wählen MINT")
   # load UI inputs from reactive value
+
 
 
   timerange <- r$map_y_g
@@ -530,6 +821,7 @@ plot_international_top10_gender <- function(r) {
     dplyr::filter(!is.na(wert)) %>%
     dplyr::mutate(wert = round(wert, 1))
 
+
   # Hover vorbereiten
   df$wert_display <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
   hover <- "Anteil: {point.wert_display} %"
@@ -553,8 +845,10 @@ plot_international_top10_gender <- function(r) {
     highcharter::hcaes(y = wert, x = land)) %>%
     get_top10_hc_plot_options(
       hc_title = paste0(t_quelle1, "Länder mit dem größten Frauenanteil an Studierenden in ", t_fach, " in ", timerange),
-      hc_tooltip = hover,
-      max_percent_used = max_percent_used)
+      hc_tooltip = hover
+      # ,
+      # max_percent_used = max_percent_used
+      )
 
 
   # Create bottom 10 plot
@@ -564,8 +858,10 @@ plot_international_top10_gender <- function(r) {
     highcharter::hcaes(y = wert, x = land)) %>%
     get_top10_hc_plot_options(
       hc_title = paste0("Länder mit dem niedrigsten Anteil an '", fach_m, "' in ", timerange),
-      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}",
-      max_percent_used = max_percent_used)
+      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}"
+      # ,
+      # max_percent_used = max_percent_used
+      )
 
 
   if (show_avg == "Ja") {
@@ -584,295 +880,10 @@ plot_international_top10_gender <- function(r) {
 
 }
 
-plot_international_map_fem <- function(r){
 
-
-  label_m <<- r$map_l_f
-
-  #level_m <<- r$map_le_f
-
-  if(label_m == "EU"){
-    map_selection <- "custom/europe"
-
-    timerange <<- r$map_y_f
-    fach_m <<- r$map_f_f
-    betr <<- r$map_le_betr
-
-    # test <- studierende_europa %>%
-    #   dplyr::filter(land == "Deutschland" & jahr == 2021)
-
-    if(betr == "Anteil von Frauen an Allen"){
-
-    df1 <<- studierende_europa%>%
-      dplyr::filter(!is.na(.$wert))%>%
-      dplyr::filter(ebene == 1 &
-                      indikator == "Frauen-/Männeranteil"&
-                      mint_select == "mint")%>%
-      tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
-      dplyr::select(-Männer, - Gesamt)%>%
-      dplyr::rename(wert = Frauen)%>%
-      dplyr::mutate(across(wert, ~ round(.,1)))%>%
-      dplyr::filter( fach == fach_m&
-                      jahr == timerange)
-
-
-
-
-    df1$display_rel <- prettyNum( df1$wert, big.mark = ".", decimal.mark = ",")
-
-    map_data_1 <<- df1 %>%
-      dplyr::left_join(countries_names, by = "land") %>%
-      dplyr::mutate(alpha2 = toupper(alpha2))
-
-    # studierende_europa1 <<- map_data_1 %>%
-    #   janitor::get_dupes(-wert)
-
-    hoverplot <- "{point.land} <br> Anteil: {point.display_rel}%"
-
-    title_dyn <- if(fach_m=="Alle MINT-Fächer"){
-      paste("Anteil von weiblichen Studierenden an allen Studierenden in allen MINT-Fächern " , timerange)
-
-    } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
-
-      paste("Anteil von weiblichen Studierenden an allen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe " , timerange)
-
-    } else {
-
-      paste("Anteil von weiblichen Studierenden an allen Studierenden in ", fach_m, " " , timerange)
-    }
-
-
-
-
-  } else if(betr=="Anteil an Frauen von Frauen"){
-
-    df1 <<- studierende_europa%>%
-      dplyr::filter(!is.na(.$wert))%>%
-      dplyr::filter(ebene == 1 &
-                      indikator == "Fächerwahl"&
-                      mint_select == "mint" &
-                      geschlecht == "Frauen")%>%
-      dplyr::filter(fach == fach_m &
-                       jahr == timerange)%>%
-      dplyr::mutate(display_rel = prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ","))
-
-    map_data_1 <<- df1 %>%
-      dplyr::left_join(countries_names, by = "land") %>%
-      dplyr::mutate(alpha2 = toupper(alpha2))
-
-    hoverplot <- "{point.land} <br> Anteil: {point.display_rel}%"
-
-
-
-    title_dyn <- if(fach_m=="Alle MINT-Fächer"){
-      paste("Anteil von Studierenden in allen MINT-Fächern an allen weiblichnen Studierenden " , timerange)
-
-    } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
-
-      paste("Anteil von Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe an allen weiblichen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe " , timerange)
-
-    } else {
-
-      paste("Anteil von Studierenden in ", fach_m, " an allen weiblichen Studierenden ", timerange)
-    }
-
-
-    }
-
-
-    #capt_dyn  <- paste("Quelle der Daten: Eurostat, 2022, eigene Berechnungen durch MINTvernetzt")
-
-
-
-  }
-
-  if (label_m == "OECD"){
-
-
-    level <<- r$map_le_f
-    betr <<- r$map_le_betr
-
-
-    map_selection <- "custom/world"
-
-
-    timerange <<- r$map_y_f
-    fach_m <<- r$map_f_f
-
-    # test <- studierende_anzahl_oecd %>%
-    #   dplyr::filter(land== "Kanada" &
-    #                   jahr == 2017)%>%
-    #   tidyr::pivot_wider(values_from=wert, names_from = anforderung)%>%
-    #   dplyr::mutate(testo = rowSums(dplyr::select(., "Master oder vergleichbar (akademisch)",
-    #                                "Promotion (ISCED 8)",
-    #                                "Bachelor oder vergleichbar (akademisch)"), na.rm=T))%>%
-    #   dplyr::select(-c("Master oder vergleichbar (akademisch)",
-    #                                "Promotion (ISCED 8)",
-    #                                "Bachelor oder vergleichbar (akademisch)"))
-
-    df_filtered <<- studierende_anzahl_oecd %>%
-      dplyr::filter(!is.na(.$wert))%>%
-      dplyr::filter(geschlecht %in% c("Frauen", "Gesamt") &
-                      jahr == timerange &
-                      ebene == 1 &
-                      anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
-                                         "Master oder vergleichbar (akademisch)",
-                                         "Promotion (ISCED 8)")
-                    )%>%
-      tidyr::pivot_wider(names_from = anforderung, values_from = wert)%>%
-      dplyr::mutate(wert = rowSums(dplyr::select(., "Bachelor oder vergleichbar (akademisch)",
-                                                           "Master oder vergleichbar (akademisch)",
-                                                           "Promotion (ISCED 8)"), na.rm= T ))%>%
-      dplyr::select(- c("Bachelor oder vergleichbar (akademisch)",
-                       "Master oder vergleichbar (akademisch)",
-                       "Promotion (ISCED 8)"))
-
-
-
-    df_share_fem <<- df_filtered %>%
-      dplyr::select(-fachbereich)%>%
-      dplyr::filter(mint_select== "mint" |
-                      fach=="Alle")%>%
-      tidyr::pivot_wider(values_from = wert, names_from = geschlecht)%>%
-      dplyr::mutate(fva = Frauen/Gesamt*100)%>%
-      dplyr::select(- Gesamt)%>%
-      dplyr::mutate(display_rel = prettyNum(round(.$fva,1), big.mark = ".", decimal.mark = ","))%>%
-      dplyr::mutate(display_total = prettyNum(.$Frauen, big.mark = ".", decimal.mark = ","))%>%
-      dplyr::rename(wert = fva)
-
-
-    df_share_fem2 <<- df_filtered %>%
-      dplyr::select(-fachbereich)%>%
-      dplyr::filter(mint_select== "mint" & geschlecht == "Frauen" |
-                      fach=="Alle" & geschlecht == "Frauen")%>%
-      dplyr::select(-mint_select)
-
-    df_share_fem3 <<- df_filtered %>%
-      dplyr::select(-fachbereich)%>%
-      dplyr::filter(mint_select== "mint" & geschlecht == "Frauen" |
-                      fach=="Alle" & geschlecht == "Frauen") %>%
-      dplyr::filter(fach== "Alle")%>%
-      dplyr::rename(Alle = wert)%>%
-      dplyr::select(-fach,-mint_select)
-
-    df_share_fem4 <<- df_share_fem2 %>%
-      dplyr::full_join(df_share_fem3, by=c("bereich",
-                                    "quelle",
-                                    "typ",
-                                    "indikator",
-                                    "ebene",
-                                    "geschlecht",
-                                    "population",
-                                    "land_code",
-                                    "land",
-                                    "jahr"
-                                ))%>%
-      dplyr::mutate(fvf = wert/Alle*100)%>%
-      dplyr::select(-Alle)%>%
-      dplyr::mutate(display_rel = prettyNum(round(.$fvf,1), big.mark = ".", decimal.mark = ","))%>%
-      dplyr::mutate(display_total = prettyNum(.$wert, big.mark = ".", decimal.mark = ","))%>%
-      dplyr::select(-wert)%>%
-      dplyr::rename(wert = fvf)
-
-
-if(betr =="Anteil von Frauen an Allen"){
-
-map_data_1 <- df_share_fem %>%
-      dplyr::select(land, jahr, fach, wert, display_rel, display_total) %>%
-      dplyr::inner_join(countries_names, by = "land") %>%
-      dplyr::mutate(alpha2 = toupper(alpha2))%>%
-  dplyr::filter(fach == fach_m)
-
-title_dyn <- if(fach_m=="MINT"){
-  paste("Anteil von weiblichen Studierenden an allen Studierenden in allen MINT-Fächern " , timerange)
-
-} else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
-
-  paste("Anteil von weiblichen Studierenden an allen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe " , timerange)
-
-} else {
-
-  paste("Anteil von weiblichen Studierenden an allen Studierenden in ", fach_m, " " , timerange)
-}
-
-
-} else if(betr=="Anteil an Frauen von Frauen") {
-  map_data_1 <- df_share_fem4 %>%
-          dplyr::select(land, jahr, fach, wert, display_rel, display_total) %>%
-          dplyr::inner_join(countries_names, by = "land") %>%
-          dplyr::mutate(alpha2 = toupper(alpha2))%>%
-    dplyr::filter(fach == fach_m)
-
-
-  title_dyn <- if(fach_m=="MINT"){
-    paste("Anteil von Studierenden in allen MINT-Fächern an weiblichen Studierenden " , timerange, " (weltweit, OECD)")
-
-  } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
-
-    paste("Anteil von Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe an weiblichen Studierenden " , timerange, " (weltweit, OECD)")
-
-  } else {
-
-    paste("Anteil von Studierenden in ", fach_m,  " an weiblichen Studierenden " , timerange, " (weltweit, OECD)")
-  }
-
-  }
-
-
-    hoverplot <- "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
-
-
-
-
-
-
-  }
-
-  highcharter::hw_grid(
-    # plot
-    highcharter::hcmap(
-      #"countries/de/de-all",
-      map = map_selection,
-      data = map_data_1,
-      value = "wert",
-      joinBy = c("hc-a2", "alpha2"),
-      borderColor = "#FAFAFA",
-      name = paste0(fach_m),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      #,
-      #download_map_data = FALSE
-    )
-    %>%
-      highcharter::hc_tooltip(pointFormat = hoverplot) %>%
-      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = title_dyn,
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      # highcharter::hc_caption(
-      #   text = capt_dyn,  style = list(color= "grey", fontSize = "12px")
-      # ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
-  )
-
-
-
-
-}
 
 plot_international_mint_top_10 <- function(r){
+
 
 # Überschriften anpassen, einheitlich mit anderen plots
 
@@ -3339,12 +3350,12 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
   }
 
-}
 
 
 
 
-## arbeitsmarkt2 ---
+
+## arbeitsmarkt (Jakob) ----
 plot_international_arbeitsmarkt_map <- function(r) {}
 plot_international_arbeitsmakrt_top10 <- function(r) {}
 plot_international_arbeitsmarkt_vergleiche <- function(r) {

@@ -190,8 +190,12 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       p("LOREM"),
-                                    mod_international_top10_mint_intl_ui("mod_international_top10_mint_intl_ui_1"),
-                                           htmlOutput(ns("plot_international_mint_top_10_1")),
+                                    mod_international_top10_mint_intl_ui("mod_international_top10_mint_intl_ui_1")),
+
+
+                                    shiny::mainPanel(
+                                    width = 9,
+                                    htmlOutput(ns("plot_international_mint_top_10_1")),
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: Eurostat, 2023; eigene Berechnungen durch MINTvernetzt."),
 
@@ -207,7 +211,7 @@ mod_international_start_ui <- function(id){
 
                )),
 
-                             
+
 
     # Box 2 - Schule
     fluidRow(id="international_schule",
@@ -458,7 +462,7 @@ mod_international_start_server <- function(id, r){
       plot_international_mint_top_10(r)
     })
 
-    # Box 2
+    # Box 3
     output$plot_international_studienzahl_map_arb_1 <- renderUI({
       plot_international_map_arb(r)
     })
