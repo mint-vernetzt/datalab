@@ -26,7 +26,7 @@ mod_international_start_ui <- function(id){
         ))),
 
 
-    # Info-Texte
+    # Info-Texte ----
 
     fluidRow(
       shinydashboard::box(
@@ -74,16 +74,110 @@ mod_international_start_ui <- function(id){
       )
     ),
 
+    # Box 2 - Schule ----
+    fluidRow(id="international_schule",
+             shinydashboard::box(
+               title = "SCHULE: MINT-Kompetenzen von Schüler*innen im internationalen Vergleich",
+               width = 12,
+               p("In dieser Box blicken wir auf die Kompetenzdaten der Pisa-Studie und der TIMSS-Erhebung.
+               Bei beiden Erhebungen werden unter anderem Kompetenztests in Mathematik und Naturwissenschaften in 4. und 9. Klassen weltweit durchgeführt.
+               X Schüler*innen haben in der letzten Befragung teilgenommen. Außerdem betrachten die Grafiken Kompetenz-Unterschiede zwischen Jungen und Mädchen und Unterschiede
+                 in Abhängigkeit der Herkunft der Kinder."),
+               tabsetPanel(type = "tabs",
+                           tabPanel("MINT-Kompetenz im Ländervergleich", br(),
 
-    # Box 1 - Studium
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      #p("LOREM"),
+                                      mod_international_schule_map_ui("international_schule_map_1")
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_schule_map_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                      shinyBS::bsPopover(id="h_international_schule_1", title="",
+                                                         content = paste0("POPUP INFO TEXT HERE"),
+                                                         placement = "top",
+                                                         trigger = "hover"),
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_1")
+                                    )
+                           ),
+
+                           tabPanel("MINT-Kompetenz von Jungen und Mädchen", br(),
+
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      #p("LOREM"),
+
+                                      mod_international_schule_item_ui("international_schule_item_1")
+
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_schule_item_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: IEA, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                      shinyBS::bsPopover(id="h_international_schule_2", title="",
+                                                         content = paste0("POPUP INFO TEXT HERE"),
+                                                         placement = "top",
+                                                         trigger = "hover"),
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_2")
+                                    )
+                           ),
+
+                           tabPanel("MINT-Kompetenz im Gruppenvergleich", br(),
+
+                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                    shiny::sidebarPanel(
+                                      width = 3,
+                                      #p("LOREM"),
+                                      mod_international_schule_migration_ui("international_schule_migration_1")
+
+                                    ),
+                                    shiny::mainPanel(
+                                      width = 9,
+                                      htmlOutput(ns("plot_international_schule_migration_1")),
+                                      p(style="font-size:12px;color:grey",
+                                        "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                      shinyBS::bsPopover(id="h_international_schule_3", title="",
+                                                         content = paste0("POPUP INFO TEXT HERE"),
+                                                         placement = "top",
+                                                         trigger = "hover"),
+                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_3")
+                                    )
+                           )
+               )
+             )
+    ),
+
+
+    # Box 1 - Studium ----
 
     fluidRow(id="international_maps",
              shinydashboard::box(
 
-               title = "Studium International",
+               title = "STUDIUM: MINT-Studium im internationalen Vergleich",
 
                width = 12,
-               p("LOREM IPSUM INFO"),
+               p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich Studium für den internationalen Vergleich.
+               Die Grafiken basieren auf öffentlichen Statistiken,die durch die EU, die OECD und die UNESCO gesammelt wurden.
+                 Zum einen zeigen wir, wie groß der Anteil von MINT-Studierenden an allen Studierenden in verschiedenen Ländern ist. Außerdem ist zu sehen,
+                 in welchen Ländern der Frauenanteil oder der Anteil an internationalen Studierenden in MINT-Studiengängen besonders groß oder klein ist."),
                tabsetPanel(type = "tabs",
                            tabPanel("Vergleich MINT-Anteil (Karte)", br(),
 
@@ -92,7 +186,7 @@ mod_international_start_ui <- function(id){
 
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      p("LOREM"),
+                                      #p("LOREM"),
                                       mod_international_map_ui("mod_international_map_ui_1")
 
                                     ),
@@ -118,7 +212,7 @@ mod_international_start_ui <- function(id){
 
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      p("LOREM"),
+                                      #p("LOREM"),
                                       mod_international_map_fem_ui("international_map_fem_ui_1")
 
                                     ),
@@ -131,14 +225,14 @@ mod_international_start_ui <- function(id){
                                     )
                            ),
 
-                           tabPanel("Vergleiche Top 10", br(),
+                           tabPanel("Top 10 MINT-Länder", br(),
 
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                     # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      p("LOREM"),
+                                      #p("LOREM"),
                                       mod_international_top10_mint_ui("international_top10_mint_1")
 
                                     ),
@@ -158,14 +252,14 @@ mod_international_start_ui <- function(id){
                                     )
                            ),
 
-                           tabPanel("Vergleiche Top 10 (Frauen)", br(),
+                           tabPanel("Top 10 Länder Frauen in MINT", br(),
 
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                     # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      p("LOREM"),
+                                      #p("LOREM"),
                                       mod_international_top10_mint_gender_ui("international_top10_mint_gender_1")
 
                                     ),
@@ -183,13 +277,13 @@ mod_international_start_ui <- function(id){
                                       # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
                                     )
                            ),
-                           tabPanel("Vergleiche Top 10 - Internationale in MINT", br(),
+                           tabPanel("Vergleich internationale Studierede", br(),
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                     # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      p("LOREM"),
+                                      #p("LOREM"),
                                     mod_international_top10_mint_intl_ui("mod_international_top10_mint_intl_ui_1")),
 
 
@@ -213,93 +307,7 @@ mod_international_start_ui <- function(id){
 
 
 
-    # Box 2 - Schule
-    fluidRow(id="international_schule",
-             shinydashboard::box(
-               title = "INTERNATIONAL - SCHULE",
-               width = 12,
-               p("LOREM IPSUM INFO"),
-               tabsetPanel(type = "tabs",
-                           tabPanel("Vergleich Länder (Karte)", br(),
 
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                    shiny::sidebarPanel(
-                                      width = 3,
-                                      p("LOREM"),
-                                      mod_international_schule_map_ui("international_schule_map_1")
-
-                                    ),
-                                    shiny::mainPanel(
-                                      width = 9,
-                                      htmlOutput(ns("plot_international_schule_map_1")),
-                                      p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
-
-                                      shinyBS::bsPopover(id="h_international_schule_1", title="",
-                                                         content = paste0("POPUP INFO TEXT HERE"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_1")
-                                    )
-                           ),
-
-                           tabPanel("Ländervergleich Item", br(),
-
-
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                    shiny::sidebarPanel(
-                                      width = 3,
-                                      p("LOREM"),
-
-                                      mod_international_schule_item_ui("international_schule_item_1")
-
-
-                                    ),
-                                    shiny::mainPanel(
-                                      width = 9,
-                                                      htmlOutput(ns("plot_international_schule_item_1")),
-                                      p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: IEA, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
-
-                                      shinyBS::bsPopover(id="h_international_schule_2", title="",
-                                                         content = paste0("POPUP INFO TEXT HERE"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_2")
-                                    )
-                           ),
-
-                           tabPanel("alle Länder im Vergleich", br(),
-
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                    shiny::sidebarPanel(
-                                      width = 3,
-                                      p("LOREM"),
-                                      mod_international_schule_migration_ui("international_schule_migration_1")
-
-                                    ),
-                                    shiny::mainPanel(
-                                      width = 9,
-                                      htmlOutput(ns("plot_international_schule_migration_1")),
-                                      p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
-
-                                      shinyBS::bsPopover(id="h_international_schule_3", title="",
-                                                         content = paste0("POPUP INFO TEXT HERE"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_3")
-                                    )
-                           )
-               )
-             )
-    ),
 
 
 
@@ -319,7 +327,7 @@ mod_international_start_ui <- function(id){
 
                                   shiny::sidebarPanel(
                                     width = 3,
-                                    p("LOREM"),
+                                    #p("LOREM"),
                                     mod_international_map_arb_ui("mod_international_map_arb_ui_1")
 
 
@@ -341,7 +349,7 @@ mod_international_start_ui <- function(id){
 
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      p("LOREM"),
+                                      #p("LOREM"),
                                       mod_international_map_arb_gender_ui("mod_international_map_arb_gender_ui_1")
 
 
@@ -362,7 +370,7 @@ mod_international_start_ui <- function(id){
 
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      p("LOREM"),
+                                      #p("LOREM"),
                                       mod_international_top10_mint_arb_ui("mod_international_top10_mint_arb_ui_1")
 
 
@@ -383,7 +391,7 @@ mod_international_start_ui <- function(id){
 
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      p("LOREM"),
+                                      #p("LOREM"),
                                       mod_international_top10_mint_arb_gender_ui("mod_international_top10_mint_arb_gender_ui_1")
 
 
@@ -404,7 +412,7 @@ mod_international_start_ui <- function(id){
 
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      p("LOREM"),
+                                      #p("LOREM"),
                                       mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1")
 
                                     ),

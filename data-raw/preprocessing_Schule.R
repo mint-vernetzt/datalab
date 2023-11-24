@@ -935,6 +935,9 @@ usethis::use_data(iqb, overwrite = T)
 
 file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
+pat_kek <- "C:/Users/kab/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten"
+
+file_path <- path_kek
 
 dat_pisa_g <- read_xls(paste0(file_path, "/", "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
 
@@ -975,11 +978,11 @@ dat_pisa_g4 <- dat_pisa_g3 %>%
                         T ~ .$fach)) %>%
   rename(jahr = "Year/Study", land = Jurisdiction)
 
-dat_pisa_g4 <- dat_pisa_g3 %>%
-  tidyr::pivot_longer(c("Average_All students", "Standard Error_All students"),
-                      names_to ="platzhalter", values_to = "wert")%>%
-  tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
-  mutate(fach=sub_pisa_g)
+# dat_pisa_g4 <- dat_pisa_g3 %>%
+#   tidyr::pivot_longer(c("Average_All students", "Standard Error_All students"),
+#                       names_to ="platzhalter", values_to = "wert")%>%
+#   tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
+#   mutate(fach=sub_pisa_g)
 #
 #
 # dat_pisa_g4$Jurisdiction <- countrycode::countrycode(dat_pisa_g4$Jurisdiction, origin = 'country.name',destination = 'country.name', custom_match = c("International Average (OECD)" = "OECD Durchschnitt"))
@@ -1085,7 +1088,7 @@ pisa_list_output1 <- pisa_list_output %>%
                       "[$D] or more but less than [$E]",
                       "[$E] or more") ~ "Haushaltseinkommen",
     indikator %in% c("All students", "Female", "Male")~ "Ländermittel",
-    indikator %in% c("First-Generation", "Second-Generation", "Native") ~ "Migrationshintergund",
+    indikator %in% c("First-Generation", "Second-Generation", "Native") ~ "Migrationshintergrund",
     indikator %in% c("ISCED 1", "ISCED 3A, ISCED 4", "ISCED 5A, 6",
                      "ISCED 2", "ISCED 3B, C", "ISCED 5B") ~ "Bildungshintergrund",
     indikator %in% c("Yes", "No") ~ "Computerverfügbarkeit"
