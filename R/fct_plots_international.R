@@ -110,7 +110,7 @@ plot_international_map <- function(r) {
 
 
     # calculate total amount by land
-    this_df_alle <<- df_filtered %>%
+    this_df_alle <- df_filtered %>%
       dplyr::filter(fachbereich == "Alle") %>%
       dplyr::group_by(land, jahr, fach)
       dplyr::summarise(total = sum(wert, na.rm = TRUE)) %>%
@@ -237,23 +237,23 @@ plot_international_map <- function(r) {
 plot_international_map_fem <- function(r){
 
 
-  label_m <<- r$map_l_f
+  label_m <- r$map_l_f
 
-  #level_m <<- r$map_le_f
+  #level_m <- r$map_le_f
 
   if(label_m == "EU"){
     map_selection <- "custom/europe"
 
-    timerange <<- r$map_y_f
-    fach_m <<- r$map_f_f
-    betr <<- r$map_le_betr
+    timerange <- r$map_y_f
+    fach_m <- r$map_f_f
+    betr <- r$map_le_betr
 
     # test <- studierende_europa %>%
     #   dplyr::filter(land == "Deutschland" & jahr == 2021)
 
     if(betr == "Anteil von Frauen an Allen"){
 
-      df1 <<- studierende_europa%>%
+      df1 <- studierende_europa%>%
         dplyr::filter(!is.na(.$wert))%>%
         dplyr::filter(ebene == 1 &
                         indikator == "Frauen-/Männeranteil"&
@@ -270,11 +270,11 @@ plot_international_map_fem <- function(r){
 
       df1$display_rel <- prettyNum( df1$wert, big.mark = ".", decimal.mark = ",")
 
-      map_data_1 <<- df1 %>%
+      map_data_1 <- df1 %>%
         dplyr::left_join(countries_names, by = "land") %>%
         dplyr::mutate(alpha2 = toupper(alpha2))
 
-      # studierende_europa1 <<- map_data_1 %>%
+      # studierende_europa1 <- map_data_1 %>%
       #   janitor::get_dupes(-wert)
 
       hoverplot <- "{point.land} <br> Anteil: {point.display_rel}%"
@@ -296,7 +296,7 @@ plot_international_map_fem <- function(r){
 
     } else if(betr=="Anteil an Frauen von Frauen"){
 
-      df1 <<- studierende_europa%>%
+      df1 <- studierende_europa%>%
         dplyr::filter(!is.na(.$wert))%>%
         dplyr::filter(ebene == 1 &
                         indikator == "Fächerwahl"&
@@ -306,7 +306,7 @@ plot_international_map_fem <- function(r){
                         jahr == timerange)%>%
         dplyr::mutate(display_rel = prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ","))
 
-      map_data_1 <<- df1 %>%
+      map_data_1 <- df1 %>%
         dplyr::left_join(countries_names, by = "land") %>%
         dplyr::mutate(alpha2 = toupper(alpha2))
 
@@ -339,15 +339,15 @@ plot_international_map_fem <- function(r){
   if (label_m == "OECD"){
 
 
-    level <<- r$map_le_f
-    betr <<- r$map_le_betr
+    level <- r$map_le_f
+    betr <- r$map_le_betr
 
 
     map_selection <- "custom/world"
 
 
-    timerange <<- r$map_y_f
-    fach_m <<- r$map_f_f
+    timerange <- r$map_y_f
+    fach_m <- r$map_f_f
 
     # test <- studierende_anzahl_oecd %>%
     #   dplyr::filter(land== "Kanada" &
@@ -360,7 +360,7 @@ plot_international_map_fem <- function(r){
     #                                "Promotion (ISCED 8)",
     #                                "Bachelor oder vergleichbar (akademisch)"))
 
-    df_filtered <<- studierende_anzahl_oecd %>%
+    df_filtered <- studierende_anzahl_oecd %>%
       dplyr::filter(!is.na(.$wert))%>%
       dplyr::filter(geschlecht %in% c("Frauen", "Gesamt") &
                       jahr == timerange &
@@ -379,7 +379,7 @@ plot_international_map_fem <- function(r){
 
 
 
-    df_share_fem <<- df_filtered %>%
+    df_share_fem <- df_filtered %>%
       dplyr::select(-fachbereich)%>%
       dplyr::filter(mint_select== "mint" |
                       fach=="Alle")%>%
@@ -391,13 +391,13 @@ plot_international_map_fem <- function(r){
       dplyr::rename(wert = fva)
 
 
-    df_share_fem2 <<- df_filtered %>%
+    df_share_fem2 <- df_filtered %>%
       dplyr::select(-fachbereich)%>%
       dplyr::filter(mint_select== "mint" & geschlecht == "Frauen" |
                       fach=="Alle" & geschlecht == "Frauen")%>%
       dplyr::select(-mint_select)
 
-    df_share_fem3 <<- df_filtered %>%
+    df_share_fem3 <- df_filtered %>%
       dplyr::select(-fachbereich)%>%
       dplyr::filter(mint_select== "mint" & geschlecht == "Frauen" |
                       fach=="Alle" & geschlecht == "Frauen") %>%
@@ -405,7 +405,7 @@ plot_international_map_fem <- function(r){
       dplyr::rename(Alle = wert)%>%
       dplyr::select(-fach,-mint_select)
 
-    df_share_fem4 <<- df_share_fem2 %>%
+    df_share_fem4 <- df_share_fem2 %>%
       dplyr::full_join(df_share_fem3, by=c("bereich",
                                            "quelle",
                                            "typ",
@@ -887,14 +887,14 @@ plot_international_mint_top_10 <- function(r){
 
 # Überschriften anpassen, einheitlich mit anderen plots
 
-data_eu_abs <<- studierende_mobil_eu_absolut
+data_eu_abs <- studierende_mobil_eu_absolut
 
 
-avg_line <<- r$show_avg_ti
+avg_line <- r$show_avg_ti
 
 
-  inpy <<- r$map_y_ti
-  # inpf <<- r$map_f_ti
+  inpy <- r$map_y_ti
+  # inpf <- r$map_f_ti
 #
 #   test <- data_eu_abs%>%
 #     dplyr::filter(geschlecht=="Gesamt" &
@@ -910,7 +910,7 @@ avg_line <<- r$show_avg_ti
 #                        "Promotion (ISCED 8)"))
 
 
-  data1 <<- data_eu_abs%>%
+  data1 <- data_eu_abs%>%
     dplyr::filter(geschlecht=="Gesamt" &
                     anforderung %in% c("Bachelor oder vergleichbar (ISCED 6)",
                                        "Master oder vergleichbar (ISCED 7)",
@@ -945,7 +945,7 @@ avg_line <<- r$show_avg_ti
 
 if (avg_line == "Ja"){
 
-  data_avg <<- round(mean(data1$wert, na.rm = T),0)
+  data_avg <- round(mean(data1$wert, na.rm = T),0)
 
     plot_top <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
@@ -1531,20 +1531,20 @@ plot_international_schule_migration <- function(r) {
 plot_international_map_arb <- function(r) {
 
   oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
-  oecd_abs_anfänger <<-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
+  oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
-  oecd_azub <<- oecd_azub%>% dplyr::filter(!is.na(.$wert))
+  oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
   eu_besch <- arbeitsmarkt_beschäftigte_eu
-  eu_besch <<- eu_besch%>% dplyr::filter(!is.na(.$wert))
+  eu_besch <- eu_besch%>% dplyr::filter(!is.na(.$wert))
 
-  map_l <<- r$map_l_arb
+  map_l <- r$map_l_arb
 
   if(map_l== "EU"){
 
-    inpy <<- r$map_y_arb
-    inpp <<- r$map_pers_arb
+    inpy <- r$map_y_arb
+    inpp <- r$map_pers_arb
 
     map_selection <- "custom/europe"
 
@@ -1552,7 +1552,7 @@ plot_international_map_arb <- function(r) {
     #   dplyr::filter(geschlecht == "Gesamt"&
     #                   variable == "Anteil an arbeitender Bevölkerung")
 
-    data1 <<- eu_besch %>%
+    data1 <- eu_besch %>%
       dplyr::filter(geschlecht == "Gesamt"&
                       jahr == inpy &
                       indikator == inpp&
@@ -1563,7 +1563,7 @@ plot_international_map_arb <- function(r) {
     data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
 
 
-    data2 <<- eu_besch %>%
+    data2 <- eu_besch %>%
       dplyr::filter(geschlecht == "Gesamt"&
                       jahr == inpy &
                       indikator == inpp&
@@ -1633,9 +1633,9 @@ plot_international_map_arb <- function(r) {
 
     map_selection <- "custom/world"
 
-    inpp <<- r$map_pers_arb
-    inpy <<- r$map_y_arb
-    inpf <<- r$map_f_arb
+    inpp <- r$map_pers_arb
+    inpy <- r$map_y_arb
+    inpf <- r$map_f_arb
 
 
     if(inpp %in%  c("Anfänger*innen Ausbildung (ISCED 45)",
@@ -1665,7 +1665,7 @@ plot_international_map_arb <- function(r) {
 
       if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
 
-        data_map <<- data1 %>%
+        data_map <- data1 %>%
           dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
                           variable == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern" &
                           fachbereich == inpf)%>%
@@ -1904,30 +1904,30 @@ plot_international_map_arb <- function(r) {
 plot_international_map_arb_gender <- function(r) {
 
   oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
-  oecd_abs_anfänger <<-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
+  oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
-  oecd_azub <<- oecd_azub%>% dplyr::filter(!is.na(.$wert))
+  oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
   eu_besch <- arbeitsmarkt_beschäftigte_eu
-  eu_besch <<- eu_besch%>% dplyr::filter(!is.na(.$wert))
+  eu_besch <- eu_besch%>% dplyr::filter(!is.na(.$wert))
 
-  inpl <<- r$map_l_arb_gender
+  inpl <- r$map_l_arb_gender
 
   if(inpl== "EU"){
 
-    inpy <<- r$map_y_arb_gender
-    inpp <<- r$map_pers_arb_gender
+    inpy <- r$map_y_arb_gender
+    inpp <- r$map_pers_arb_gender
 
     map_selection <- "custom/europe"
 
-    # test <<- eu_besch %>%
+    # test <- eu_besch %>%
     #   dplyr::filter(geschlecht %in% c("Gesamt", "Frauen")&
     #                   # jahr == inpy &
     #                   # indikator == inpp &
     #                   variable == "Anteil an arbeitender Bevölkerung")
 
-    data1 <<- eu_besch %>%
+    data1 <- eu_besch %>%
       dplyr::filter(geschlecht %in% c("Gesamt", "Frauen")&
                       jahr == inpy &
                       indikator == inpp &
@@ -1939,7 +1939,7 @@ plot_international_map_arb_gender <- function(r) {
     data1$display_rel <- prettyNum(data1$wert, big.mark = ".", decimal.mark = ",")
 
 
-    data2 <<- eu_besch %>%
+    data2 <- eu_besch %>%
       dplyr::filter(geschlecht == "Frauen"&
                       jahr == inpy &
                       indikator == inpp &
@@ -2006,9 +2006,9 @@ plot_international_map_arb_gender <- function(r) {
 
     map_selection <- "custom/world"
 
-    inpp <<- r$map_pers_arb_gender
-    inpy <<- r$map_y_arb_gender
-    inpf <<- r$map_f_arb_gender
+    inpp <- r$map_pers_arb_gender
+    inpy <- r$map_y_arb_gender
+    inpf <- r$map_f_arb_gender
 
 
 
@@ -2019,7 +2019,7 @@ plot_international_map_arb_gender <- function(r) {
 
 
 
-      # test <<- oecd_abs_anfänger %>%
+      # test <- oecd_abs_anfänger %>%
       #   dplyr::filter(
       #                   fachbereich %in% c("MINT",
       #                                      "Informatik & Kommunikationstechnologie",
@@ -2030,7 +2030,7 @@ plot_international_map_arb_gender <- function(r) {
 
 
 
-      data1 <<- oecd_abs_anfänger %>%
+      data1 <- oecd_abs_anfänger %>%
         dplyr::filter(jahr == inpy &
                         fachbereich %in% c("MINT",
                                            "Informatik & Kommunikationstechnologie",
@@ -2151,7 +2151,7 @@ plot_international_map_arb_gender <- function(r) {
 
     } else {
 
-      inpbe <<- r$map_betr_oecd_arb_gender
+      inpbe <- r$map_betr_oecd_arb_gender
 
 
       # test <- oecd_azub %>%
@@ -2340,27 +2340,27 @@ plot_international_map_arb_gender <- function(r) {
 plot_international_top10_mint_arb <- function(r) {
 
   oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
-  oecd_abs_anfänger <<-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
+  oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
-  oecd_azub <<- oecd_azub%>% dplyr::filter(!is.na(.$wert))
+  oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
   eu_besch <- arbeitsmarkt_beschäftigte_eu
-  eu_besch <<- eu_besch%>% dplyr::filter(!is.na(.$wert))
+  eu_besch <- eu_besch%>% dplyr::filter(!is.na(.$wert))
 
 
-  map_l <<- r$map_l_top10_mint_arb
+  map_l <- r$map_l_top10_mint_arb
 
   if(map_l== "EU"){
 
-    inpy <<- r$map_y_eu_top10_mint_arb
-    inpp <<- r$map_pers_eu_top10_mint_arb
+    inpy <- r$map_y_eu_top10_mint_arb
+    inpp <- r$map_pers_eu_top10_mint_arb
 
     map_selection <- "custom/europe"
 
 
 
-    # test <<- eu_besch %>%
+    # test <- eu_besch %>%
     #   dplyr::filter(geschlecht == "Gesamt"&
     #                   # jahr == inpy &
     #                   # indikator == inpp &
@@ -2368,7 +2368,7 @@ plot_international_top10_mint_arb <- function(r) {
 
 
 
-    data1 <<- eu_besch %>%
+    data1 <- eu_besch %>%
       dplyr::filter(geschlecht == "Gesamt"&
                       jahr == inpy &
                       indikator == inpp &
@@ -2379,7 +2379,7 @@ plot_international_top10_mint_arb <- function(r) {
 
 
 
-    data2 <<- eu_besch %>%
+    data2 <- eu_besch %>%
       dplyr::filter(geschlecht == "Gesamt"&
                       jahr == inpy &
                       indikator == inpp&
@@ -2410,7 +2410,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
     map_selection <- "custom/world"
 
-    inpp <<- r$map_pers_oecd_top10_mint_arb
+    inpp <- r$map_pers_oecd_top10_mint_arb
 
 
 
@@ -2419,13 +2419,13 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
                     "Absolvent*innen Ausbildung (ISCED 45)",
                     "Absolvent*innen Erstausbildung (ISCED 35)")){
 
-      inpy <<- r$map_y_oecd_top10_mint_arb
-      inpf <<- r$map_f_oecd_top10_mint_arb
+      inpy <- r$map_y_oecd_top10_mint_arb
+      inpf <- r$map_f_oecd_top10_mint_arb
 
       plotopshov <- "Anteil: {point.display_rel}%"
 
 
-      # test <<- oecd_abs_anfänger%>%
+      # test <- oecd_abs_anfänger%>%
       #   dplyr::filter(
       #                   fachbereich %in% c("MINT",
       #                                      "Informatik & Kommunikationstechnologie",
@@ -2436,7 +2436,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
 
 
-      data1 <<- oecd_abs_anfänger%>%
+      data1 <- oecd_abs_anfänger%>%
         dplyr::filter(jahr == inpy &
                         fachbereich %in% c("MINT",
                                            "Informatik & Kommunikationstechnologie",
@@ -2451,7 +2451,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
       if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
 
-        data_fn <<- data1 %>%
+        data_fn <- data1 %>%
           dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
                           variable == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern" &
                           fachbereich == inpf)%>%
@@ -2522,8 +2522,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
     } else {
 
-      inpy <<- r$map_y_oecd2_top10_mint_arb
-      inpf <<- r$map_f_oecd2_top10_mint_arb
+      inpy <- r$map_y_oecd2_top10_mint_arb
+      inpf <- r$map_f_oecd2_top10_mint_arb
 
 
 
@@ -2643,12 +2643,12 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 }
     }
 
-  avg_line <<- r$show_ave
+  avg_line <- r$show_ave
 
   # Create top 10 plot
     if (avg_line == "Ja"){
 
-      data_avg <<- round(mean(data_fn$wert, na.rm = T),0)
+      data_avg <- round(mean(data_fn$wert, na.rm = T),0)
 
       plot_top <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
@@ -2808,30 +2808,30 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
   oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
-  oecd_abs_anfänger <<-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
+  oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
-  oecd_azub <<- oecd_azub%>% dplyr::filter(!is.na(.$wert))
+  oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
   eu_besch <- arbeitsmarkt_beschäftigte_eu
-  eu_besch1 <<- eu_besch %>% dplyr::filter(!is.na(.$wert))
+  eu_besch1 <- eu_besch %>% dplyr::filter(!is.na(.$wert))
 
-  inpl <<- r$map_l_top10_mint_arb_gender
+  inpl <- r$map_l_top10_mint_arb_gender
 
 
   if(inpl== "EU"){
 
 
 
-    inpy <<- r$map_y_eu_top10_mint_arb_gender
-    inpp <<- r$map_pers_top10_mint_arb_gender
+    inpy <- r$map_y_eu_top10_mint_arb_gender
+    inpp <- r$map_pers_top10_mint_arb_gender
 
 
 
     map_selection <- "custom/europe"
 
-    # test <<- eu_besch %>%
+    # test <- eu_besch %>%
     #   dplyr::filter(geschlecht %in% c("Gesamt", "Frauen")&
     #                   # jahr == inpy &
     #                   # indikator == inpp &
@@ -2839,7 +2839,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
 
-    data1 <<- eu_besch %>%
+    data1 <- eu_besch %>%
       dplyr::filter(geschlecht %in% c("Gesamt", "Frauen")&
                       jahr == inpy &
                       indikator == inpp &
@@ -2851,7 +2851,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
     data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
 
 
-    data2 <<- eu_besch %>%
+    data2 <- eu_besch %>%
       dplyr::filter(geschlecht == "Frauen"&
                       jahr == inpy &
                       indikator == inpp&
@@ -2886,9 +2886,9 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
     map_selection <- "custom/world"
 
-    inpp <<- r$map_pers_top10_mint_arb_gender
-    inpy <<- r$map_y_top10_mint_arb_gender
-    inpf <<- r$map_f_top10_mint_arb_gender
+    inpp <- r$map_pers_top10_mint_arb_gender
+    inpy <- r$map_y_top10_mint_arb_gender
+    inpf <- r$map_f_top10_mint_arb_gender
 
 
 
@@ -2899,7 +2899,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       plotopshov <- "Anteil: {point.display_rel}%"
 
-      # test <<- oecd_abs_anfänger %>%
+      # test <- oecd_abs_anfänger %>%
       #   dplyr::filter(
       #                   fachbereich %in% c("MINT",
       #                                      "Informatik & Kommunikationstechnologie",
@@ -2908,7 +2908,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       #                                      "Alle"))
 
 
-      data1 <<- oecd_abs_anfänger %>%
+      data1 <- oecd_abs_anfänger %>%
         dplyr::filter(jahr == inpy &
                         fachbereich %in% c("MINT",
                                            "Informatik & Kommunikationstechnologie",
@@ -2929,7 +2929,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       if(inpp == "Anfänger*innen Ausbildung (ISCED 45)"){
 
-        data1 <<- data1 %>%
+        data1 <- data1 %>%
           dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
                         variable == "Frauen-/Männeranteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen" &
                         fachbereich == inpf
@@ -2943,7 +2943,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       } else if (inpp == "Anfänger*innen Erstausbildung (ISCED 35)"){
 
-        data1 <<- data1 %>%
+        data1 <- data1 %>%
           dplyr::filter(anforderung == "Erstausbildung (ISCED 35)" &
                           variable == "Frauen-/Männeranteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen"&
                           fachbereich == inpf)%>%
@@ -2954,7 +2954,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       } else if (inpp == "Absolvent*innen Ausbildung (ISCED 45)"){
 
-        data1 <<- data1 %>%
+        data1 <- data1 %>%
           dplyr::filter(anforderung == "Ausbildung (ISCED 45)" &
                           variable == "Frauen-/Männeranteil Absolvent*innen nach Fachbereichen"&
                           fachbereich == inpf)%>%
@@ -2965,7 +2965,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       } else if (inpp == "Absolvent*innen Erstausbildung (ISCED 35)"){
 
-        data1 <<- data1 %>%
+        data1 <- data1 %>%
           dplyr::filter(anforderung == "Erstausbildung (ISCED 35)" &
                           variable == "Frauen-/Männeranteil Absolvent*innen nach Fachbereichen"&
                           fachbereich == inpf)
@@ -3007,13 +3007,13 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
     } else {
 
-      inpbe <<- r$map_betr_oecd_top10_mint_arb_gender
+      inpbe <- r$map_betr_oecd_top10_mint_arb_gender
 
       plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
 
 
 
-      # test <<- oecd_azub %>%
+      # test <- oecd_azub %>%
       #   dplyr::filter(geschlecht %in% c("Gesamt", "Frauen") &
       #                   indikator == "berufsorientiert" &
       #                   #jahr == inpy &
@@ -3023,7 +3023,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       #                               "Naturwissenschaften, Mathematik und Statistik",
       #                               "Alle"))
 
-      data_fva <<- oecd_azub %>%
+      data_fva <- oecd_azub %>%
         dplyr::filter(geschlecht %in% c("Gesamt", "Frauen") &
                         indikator == "berufsorientiert" &
                         jahr == inpy &
@@ -3042,7 +3042,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
 
-      data_fvf1 <<- oecd_azub %>%
+      data_fvf1 <- oecd_azub %>%
         dplyr::filter(geschlecht == "Frauen" &
                         indikator == "berufsorientiert" &
                         jahr == inpy &
@@ -3065,7 +3065,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
         dplyr::mutate(display_rel= prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ","))
 
 
-      data_fvf2 <<- oecd_azub %>%
+      data_fvf2 <- oecd_azub %>%
         dplyr::filter(geschlecht == "Frauen" &
                         indikator == "berufsorientiert" &
                         jahr == inpy &
@@ -3078,7 +3078,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
         dplyr::mutate(display_total= prettyNum(.$display_total, big.mark = ".", decimal.mark = ","))%>%
         dplyr::select(land, jahr, display_total, fach, anforderung)
 
-      data_fvf3 <<- data_fvf1 %>%
+      data_fvf3 <- data_fvf1 %>%
         dplyr::left_join(data_fvf2, by=c("land", "jahr", "fach", "anforderung"))%>%
         dplyr::inner_join(countries_names, by = "land") %>%
         dplyr::mutate(alpha2 = toupper(alpha2))
@@ -3087,7 +3087,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       if (inpbe == "Anteil von Frauen an Allen"){
 
 
-        data1 <<- data_fva%>%
+        data1 <- data_fva%>%
           dplyr::filter(!is.na(.$wert) & wert!=0)
 
 
@@ -3125,7 +3125,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       }else if(inpbe == "Anteil an Frauen von Frauen"){
 
-        data1 <<- data_fvf3%>%
+        data1 <- data_fvf3%>%
           dplyr::filter(!is.na(.$wert) & wert!=0)
 
 
@@ -3166,26 +3166,26 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       if (inpp == "Auszubildende (ISCED 45)"){
 
-        data1 <<- data1 %>%
+        data1 <- data1 %>%
           dplyr::filter(anforderung=="Ausbildung (ISCED 45)"&
                           fach == inpf)
 
 
       } else if(inpp == "Auszubildende in Erstausbildung (ISCED 35)"){
 
-        data1 <<- data1 %>%
+        data1 <- data1 %>%
           dplyr::filter(anforderung=="Erstausbildung (ISCED 35)"&
                           fach == inpf)
 
       } else if(inpp == "In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)") {
 
-        data1 <<- data1 %>%
+        data1 <- data1 %>%
           dplyr::filter(anforderung=="kurzes tertiäres Bildungsprogramm (berufsorientiert)"&
                           fach == inpf)
 
       } else if(inpp == "In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)"){
 
-        data1 <<- data1 %>%
+        data1 <- data1 %>%
           dplyr::filter(anforderung== "Bachelor oder vergleichbar (berufsorientiert)"&
                           fach == inpf)
 
@@ -3194,12 +3194,12 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
   }
 
-  avg_line <<- r$show_avg_top10_mint_arb_gender
+  avg_line <- r$show_avg_top10_mint_arb_gender
 
   # Create top 10 plot
   if (avg_line == "Ja"){
 
-    data_avg <<- round(mean(data1$wert, na.rm = T),0)
+    data_avg <- round(mean(data1$wert, na.rm = T),0)
 
     plot_top <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
