@@ -13,18 +13,26 @@ library(readr)
 library(countrycode)
 
 
-akro <- "kab"
+# hier pathen
+
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+path_kek <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+pfad <- path_kek
 
 # Studierende Domestisch ----
 
 ## Studierende ----
 
 
-setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
+#setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
 
 get_data <- function(file_list, fach_list){
 
-  test<-  read_excel(file_list, sheet =fach_list, col_names = F)%>%
+  test<-  read_excel( file_list, sheet =fach_list, col_names = F)%>%
     data.table::transpose()
 
   jahreszahl1 <-str_extract_all(test$V1, "\\d+")[[1]]
@@ -180,21 +188,23 @@ get_data <- function(file_list, fach_list){
 }
 
 # Bei neuen Datensätzen, hier einfügen:
-file_list <- rep(c(paste0(pfad, "DES064_bmbfstu1_2021.xlsx"),
-                   paste0(pfad, "DES050_bmbfstu1_2020.xlsx"),
-                   paste0(pfad, "DES049_bmbfstu1_2019.xlsx"),
-                   paste0(pfad, "DES048_bmbfstu1_2018.xlsx"),
-                   paste0(pfad, "DES047_bmbfstu1_2017.xlsx"),
-                   paste0(pfad, "DES046_bmbfstu1_2016.xlsx"),
-                   paste0(pfad, "DES045_bmbfstu1_2015.xlsx"),
-                   paste0(pfad, "DES044_bmbfstu1_2014.xlsx"),
-                  paste0(pfad, "DES043_bmbfstu1_2013.xlsx"),
-                  paste0(pfad, "DES042_bmbfstu1_2012.xlsx"),
-                  paste0(pfad, "DES041_bmbfstu1_2011.xlsx"),
-                  paste0(pfad,  "DES040_bmbfstu1_2010.xlsx")),each=3)
+file_list <- rep(c(
+  paste0(pfad, "DES066_bmbfstu1_2022.xlsx"),
+  paste0(pfad, "DES064_bmbfstu1_2021.xlsx"),
+  paste0(pfad, "DES050_bmbfstu1_2020.xlsx"),
+  paste0(pfad, "DES049_bmbfstu1_2019.xlsx"),
+  paste0(pfad, "DES048_bmbfstu1_2018.xlsx"),
+  paste0(pfad, "DES047_bmbfstu1_2017.xlsx"),
+  paste0(pfad, "DES046_bmbfstu1_2016.xlsx"),
+  paste0(pfad, "DES045_bmbfstu1_2015.xlsx"),
+  paste0(pfad, "DES044_bmbfstu1_2014.xlsx"),
+  paste0(pfad, "DES043_bmbfstu1_2013.xlsx"),
+  paste0(pfad, "DES042_bmbfstu1_2012.xlsx"),
+  paste0(pfad, "DES041_bmbfstu1_2011.xlsx"),
+  paste0(pfad,  "DES040_bmbfstu1_2010.xlsx")),each=3)
 
-# Hier je neuer hinzugefügter datei, counter um 3 erhöhen
-fach_list<- rep(c("Insgesamt", "Mathe", "Ingenieur"), times= 12)
+# Hier je neuer hinzugefügter datei, counter um 1 erhöhen
+fach_list<- rep(c("Insgesamt", "Mathe", "Ingenieur"), times= 13)
 
 
 # Lese-Loop
@@ -257,10 +267,10 @@ studierende <- data_studi_neu2 %>%
 
 
 
-#usethis::use_data(studierende, overwrite = T)
+usethis::use_data(studierende, overwrite = T)
 
 
-duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht))
+duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht, jahr, region, fachbereich))
 
 ## Studierende detailliert ----
 
@@ -272,15 +282,18 @@ duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht))
 ### Creating and Cleaning ----
 
 #setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
-
+pfad <- path_kek
 # Funktion zur Extrahierung von Rohdatensätzen
 
 clean_des <- function (dat,year){
 
-  raw <- read_excel(dat, col_types = "text")
+  raw <- readxl::read_excel(dat, col_types = "text")
 
-# Indexe prüfen!
+  # Indexe prüfen!
   raw <- raw[-c(1:6),-c(1,3,5)]
 
   colnames(raw) <- c("region", "fachgruppe", "fach", "gesamt", "weiblich",
@@ -291,7 +304,7 @@ clean_des <- function (dat,year){
   raw$jahr <- year
   raw$bereich <- "hochschule"
   raw$hinweise <- NA
-  raw$quelle <- "Statistisches Bundesamt (Destatis), 2022: Auf Anfrage"
+  raw$quelle <- ifelse(raw$jahr == 2022, "Statistisches Bundesamt (Destatis), 2023: Auf Anfrage", "Statistisches Bundesamt (Destatis), 2022: Auf Anfrage")
 
   return(raw)
 
@@ -303,13 +316,14 @@ raw2018 <- clean_des(dat= paste0(pfad, "DES060_Kroeger_Stud_Land_FG_STB_2018.xls
 raw2019 <- clean_des(dat= paste0(pfad, "DES061_Kroeger_Stud_Land_FG_STB_2019.xlsx"), year="2019")
 raw2020 <- clean_des(dat= paste0(pfad, "DES062_Kroeger_Stud_Land_FG_STB_2020.xlsx"), year="2020")
 raw2021 <- clean_des(dat= paste0(pfad, "DES063_Kroeger_Stud_Land_FG_STB_2021.xlsx"), year="2021")
+raw2022 <- clean_des(dat= paste0(pfad, "DES065_Brunner_Stud_Land_FG_STB_2022.xlsx"), year="2022")
 
-master <- bind_rows(raw2018,raw2019,raw2020, raw2021)
-
+master <- dplyr::bind_rows(raw2018,raw2019,raw2020, raw2021, raw2022)
 
 
 # Cleaning
-
+library(dplyr)
+library(tidyr)
 ## Filtering relevant subjects
 
 master_natwi_ing_unique <- master %>%  filter(fachgruppe =="Ingenieurwissenschaften" |
@@ -373,11 +387,11 @@ master_faecher_output$fach <- gsub("Nicht Alle MINT-Fächer", "Alle Nicht MINT-F
 master_faecher_output <- master_faecher_output %>%
   mutate(
     geschlecht = case_when(
-      str_detect(.$indikator, "weiblich") ~ "Frauen",
+      stringr::str_detect(.$indikator, "weiblich") ~ "Frauen",
       T ~ "Gesamt"),
     dummy_indi=case_when(
-      str_detect(.$indikator, "1hs")~ "Studienanfänger:innen_1hs",
-      str_detect(.$indikator, "1fs")~ "Studienanfänger:innen_1fs",
+      stringr::str_detect(.$indikator, "1hs")~ "Studienanfänger:innen_1hs",
+      stringr::str_detect(.$indikator, "1fs")~ "Studienanfänger:innen_1fs",
       T~ "Studierende")
     # ,
     # lehramt = case_when(
@@ -414,7 +428,7 @@ master_faecher_output1 <- master_faecher_output %>%
   mutate(mint_select=case_when(
     fachbereich== "Mathematik, Naturwissenschaften" ~"MINT",
     fachbereich== "Ingenieurwissenschaften" ~ "MINT",
-  #warum nicht "Alle MINT-Fächer"?
+    #warum nicht "Alle MINT-Fächer"?
     T~ "Nicht MINT"
   ))%>%
   mutate(typ=case_when(fach %in% c("Alle Fächer", "Naturwissenschaften", "Ingenieurwissenschaften ohne Informatik",
@@ -443,34 +457,30 @@ studierende_detailliert <- studierende_faecher2%>%
 
 ## Export
 
-# export(master_faecher_output2, "data_raw/studierende_faecher_08_06_23.xlsx")
+# rio::export(studierende_detailliert, paste0(pfad, "studierende_detailliert.xlsx"))
 
 # setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
 
-
-
-
-
-#usethis::use_data(studierende_detailliert, overwrite = T)
+usethis::use_data(studierende_detailliert, overwrite = T)
 
 
 # Studierende Int'l. ----
 
-## EUROSTAT - Tertiatry Education Data (Anteil Studi nach Fach nach Gender) ----
-akro <- "kbr"
-file_path <- paste0("C:/Users/", akro,
-               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+## studierende_europa - EUROSTAT - Tertiatry Education Data (Anteil Studi nach Fach nach Gender) ----
+# akro <- "kbr"
+# file_path <- paste0("C:/Users/", akro,
+#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+# pfad <- path_kek
+# file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
-file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
-
-dat <- readr::read_csv(paste0(file_path, "/", "EUROSTAT001_custom_Studi_Fach_Gender_original.csv.gz"))
+dat <- readr::read_csv(paste0(pfad, "EUROSTAT001_custom_Studi_Fach_Gender_original.csv.gz"))
 
 dat1 <- dat %>%
   dplyr::select("iscedf13", "sex", "geo",
-         "TIME_PERIOD", "OBS_VALUE")%>%
+                "TIME_PERIOD", "OBS_VALUE")%>%
   dplyr::rename(fach = iscedf13, geschlecht = sex, land = geo, jahr= TIME_PERIOD, wert = OBS_VALUE)%>%
   dplyr::mutate(indikator = "Studierende",
-         typ= "In Prozent")
+                typ= "In Prozent")
 
 dat_dupes<- dat1 %>%
   janitor::get_dupes()
@@ -479,23 +489,23 @@ dat1$land <- countrycode::countrycode(dat1$land, origin = "eurostat", destinatio
 
 dat2 <- dat1 %>%
   dplyr::mutate(geschlecht= dplyr::case_when(
-                   geschlecht == "F" ~ "Frauen",
-                   geschlecht == "M" ~ "Männer",
-                   T ~ "Gesamt"))%>%
+    geschlecht == "F" ~ "Frauen",
+    geschlecht == "M" ~ "Männer",
+    T ~ "Gesamt"))%>%
   dplyr::mutate(fachbereich = dplyr::case_when(
-                                 stringr::str_ends("F00", .$fach) ~ "Allgemeine Bildungsgänge und Qualifikationen",
-                                 stringr::str_ends("F01", .$fach) ~ "Pädagogik",
-                                 stringr::str_ends("F02", .$fach) ~ "Geisteswissenschaften und Künste",
-                                 stringr::str_ends("F03", .$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
-                                 stringr::str_ends("F04", .$fach) ~ "Wirtschaft, Verwaltung und Recht",
-                                 stringr::str_ends("F05", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
-                                 stringr::str_ends("F06", .$fach) ~ "Informatik & Kommunikationstechnologie",
-                                 stringr::str_ends("F07", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                 stringr::str_ends("F08", .$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
-                                 stringr::str_ends("F09", .$fach) ~ "Gesundheit, Medizin und Sozialwesen",
-                                 stringr::str_ends("F10", .$fach) ~ "Dienstleistungen",
-                                 stringr::str_detect("Total", .$fach) ~ "Insgesamt",
-                                 stringr::str_ends("UNK", .$fach) ~ "Unbekannt"))%>%
+    stringr::str_ends("F00", .$fach) ~ "Allgemeine Bildungsgänge und Qualifikationen",
+    stringr::str_ends("F01", .$fach) ~ "Pädagogik",
+    stringr::str_ends("F02", .$fach) ~ "Geisteswissenschaften und Künste",
+    stringr::str_ends("F03", .$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+    stringr::str_ends("F04", .$fach) ~ "Wirtschaft, Verwaltung und Recht",
+    stringr::str_ends("F05", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+    stringr::str_ends("F06", .$fach) ~ "Informatik & Kommunikationstechnologie",
+    stringr::str_ends("F07", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+    stringr::str_ends("F08", .$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+    stringr::str_ends("F09", .$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+    stringr::str_ends("F10", .$fach) ~ "Dienstleistungen",
+    stringr::str_detect("Total", .$fach) ~ "Insgesamt",
+    stringr::str_ends("UNK", .$fach) ~ "Unbekannt"))%>%
   dplyr::mutate(fach = dplyr::case_when(
     stringr::str_ends("F00", .$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
     stringr::str_ends("F01", .$fach)~ "Pädagogik",
@@ -504,6 +514,8 @@ dat2 <- dat1 %>%
     stringr::str_ends("F04", .$fach) ~ "Wirtschaft, Verwaltung und Recht",
     stringr::str_ends("F05", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
     stringr::str_ends("F06", .$fach) ~ "Informatik & Kommunikationstechnologie",
+    stringr::str_ends("F061", .$fach) ~ "Informatik & Kommunikationstechnologie allgemein",
+    stringr::str_ends("F068", .$fach) ~ "Interdisziplinäre Programme mit Schwerpunkt Informatik & Kommunikationstechnologie",
     stringr::str_ends("F07", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
     stringr::str_ends("F08", .$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
     stringr::str_ends("F09", .$fach) ~ "Gesundheit, Medizin und Sozialwesen",
@@ -526,7 +538,7 @@ Mathematik und Statistik",
     stringr::str_detect("TOTAL", .$fach) ~ "Insgesamt",
     stringr::str_ends("UNK", .$fach) ~ "Unbekannt",
     T~.$fach
-                             ))%>%
+  ))%>%
   dplyr::select(-fachbereich)
 
 
@@ -538,90 +550,90 @@ Mathematik und Statistik",
 #
 #   dat2$fachbereich <- zoo::na.locf(dat2$fachbereich)
 
-  # lel <- is.na(dat2$wert)
+# lel <- is.na(dat2$wert)
 
 dat3 <- dat2 %>%
   tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
   dplyr::mutate(
     "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe" = `Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert`+
-           `Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert`,
+      `Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert`,
     "Weitere Naturwissenschaften, Mathematik und Statistik"= `Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert`+
-           `Naturwissenschaften, Mathematik und Statistik nicht näher definiert`) %>%
+      `Naturwissenschaften, Mathematik und Statistik nicht näher definiert`) %>%
   dplyr::mutate("Alle MINT-Fächer" = rowSums(
     dplyr::select(.,c(`Naturwissenschaften, Mathematik und Statistik`,
                       `Informatik & Kommunikationstechnologie`,
                       `Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe`)), na.rm = T )) %>%
   dplyr::mutate("Alle Nicht MINT-Fächer" = Insgesamt - `Alle MINT-Fächer`) %>%
   dplyr::select(-c("Naturwissenschaften, Mathematik und Statistik nicht näher definiert",
-            "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
-            "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
-            "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert"))%>%
+                   "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
+                   "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
+                   "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert"))%>%
   tidyr::pivot_longer(c("Allgemeine Bildungsgänge und Qualifikationen":ncol(.)), values_to = "wert", names_to="fach")
 
 
 dat4<- dat3 %>%
   dplyr::mutate(bereich = "Studium",
-         quelle = "Eurostat",
-         )%>%
+                quelle = "Eurostat",
+  )%>%
   dplyr::mutate(mint_select= dplyr::case_when(fach %in% c("Naturwissenschaften, Mathematik und Statistik",
-                                 "Informatik & Kommunikationstechnologie",
-                                  "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                  "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe",
-                                  "Weitere Naturwissenschaften, Mathematik und Statistik",
-                                  "Biologie und verwandte Wissenschaften",
-                                  "Umwelt",
-                                  "Exakte Naturwissenschaften",
-                                  "Mathematik und Statistik",
-                                  "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
+                                                          "Informatik & Kommunikationstechnologie",
+                                                          "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                                          "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe",
+                                                          "Weitere Naturwissenschaften, Mathematik und Statistik",
+                                                          "Biologie und verwandte Wissenschaften",
+                                                          "Umwelt",
+                                                          "Exakte Naturwissenschaften",
+                                                          "Mathematik und Statistik",
+                                                          "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
 Mathematik und Statistik","Ingenieurwesen und Technische Berufe",
-                                  "Verarbeitendes Gewerbe und Bergbau",
-                                  "Architektur und Baugewerbe",
-                                  "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
+                                                          "Verarbeitendes Gewerbe und Bergbau",
+                                                          "Architektur und Baugewerbe",
+                                                          "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
  verarbeitendes Gewerbe und Baugewerbe")~ "mint",
-                                T ~ "nicht mint"
-                     ))%>%
+                                              T ~ "nicht mint"
+  ))%>%
   dplyr::mutate(ebene= dplyr::case_when(fach %in% c("Allgemeine Bildungsgänge und Qualifikationen",
-                                      "Pädagogik",
-                                      "Geisteswissenschaften und Künste",
-                                      "Sozialwissenschaften, Journalismus und Informationswesen",
-                                      "Wirtschaft, Verwaltung und Recht",
-                                      "Naturwissenschaften, Mathematik und Statistik",
-                                      "Informatik & Kommunikationstechnologie",
-                                      "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                      "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
-                                      "Gesundheit, Medizin und Sozialwesen",
-                                      "Dienstleistungen",
-                                      "Insgesamt",
-                                      "Unbekannt",
-                                      "Alle MINT-Fächer",
-                                      "Alle Nicht MINT-Fächer")~ "1",
-                          T~"2"))%>%
+                                                    "Pädagogik",
+                                                    "Geisteswissenschaften und Künste",
+                                                    "Sozialwissenschaften, Journalismus und Informationswesen",
+                                                    "Wirtschaft, Verwaltung und Recht",
+                                                    "Naturwissenschaften, Mathematik und Statistik",
+                                                    "Informatik & Kommunikationstechnologie",
+                                                    "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                                    "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+                                                    "Gesundheit, Medizin und Sozialwesen",
+                                                    "Dienstleistungen",
+                                                    "Insgesamt",
+                                                    "Unbekannt",
+                                                    "Alle MINT-Fächer",
+                                                    "Alle Nicht MINT-Fächer")~ "1",
+                                        T~"2"))%>%
   dplyr::mutate(fachbereich = dplyr::case_when(fach %in% c("Allgemeine Bildungsgänge und Qualifikationen",
-                                             "Pädagogik",
-                                             "Geisteswissenschaften und Künste",
-                                             "Sozialwissenschaften, Journalismus und Informationswesen",
-                                             "Wirtschaft, Verwaltung und Recht",
-                                             "Naturwissenschaften, Mathematik und Statistik",
-                                             "Informatik & Kommunikationstechnologie",
-                                             "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                             "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
-                                             "Gesundheit, Medizin und Sozialwesen",
-                                             "Dienstleistungen",
-                                             "Insgesamt",
-                                             "Unbekannt",
-                                             "Alle MINT-Fächer",
-                                             "Alle Nicht MINT-Fächer")~.$fach,
-                                 fach == "Architektur und Baugewerbe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                 fach == "Biologie und verwandte Wissenschaften" ~ "Naturwissenschaften, Mathematik und Statistik",
-                                 fach == "Exakte Naturwissenschaften" ~ "Naturwissenschaften, Mathematik und Statistik",
-                                 fach == "Ingenieurwesen und Technische Berufe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                 fach == "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,\n verarbeitendes Gewerbe und Baugewerbe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                 fach == "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,\nMathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik",
-                                 fach == "Mathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik",
-                                 fach == "Umwelt" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                 fach == "Verarbeitendes Gewerbe und Bergbau" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                 fach == "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                 fach == "Weitere Naturwissenschaften, Mathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik"))%>%
+                                                           "Pädagogik",
+                                                           "Geisteswissenschaften und Künste",
+                                                           "Sozialwissenschaften, Journalismus und Informationswesen",
+                                                           "Wirtschaft, Verwaltung und Recht",
+                                                           "Naturwissenschaften, Mathematik und Statistik",
+                                                           "Informatik & Kommunikationstechnologie",
+                                                           "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                                           "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+                                                           "Gesundheit, Medizin und Sozialwesen",
+                                                           "Dienstleistungen",
+                                                           "Insgesamt",
+                                                           "Unbekannt",
+                                                           "Alle MINT-Fächer",
+                                                           "Alle Nicht MINT-Fächer")~.$fach,
+                                               fach == "Architektur und Baugewerbe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Biologie und verwandte Wissenschaften" ~ "Naturwissenschaften, Mathematik und Statistik",
+                                               fach == "Exakte Naturwissenschaften" ~ "Naturwissenschaften, Mathematik und Statistik",
+                                               fach == "Ingenieurwesen und Technische Berufe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,\n verarbeitendes Gewerbe und Baugewerbe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,\nMathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik",
+                                               fach == "Mathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik",
+                                               fach == "Umwelt" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Verarbeitendes Gewerbe und Bergbau" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe" ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                                               fach == "Weitere Naturwissenschaften, Mathematik und Statistik" ~ "Naturwissenschaften, Mathematik und Statistik"))%>%
   dplyr::mutate(population = "Europäische Union+")
 
 # Anteil nach Geschlecht berechnen
@@ -638,15 +650,15 @@ eu_gat_e1 <- eu_gat_e1 %>%
 
 ### dann berechnung - unelegant, nächste lösung wäre auch hier schöner (Selbstkritik kbr)
 
- eu_gat_e1_f <- eu_gat_e1 %>%
+eu_gat_e1_f <- eu_gat_e1 %>%
   dplyr::group_by(fach, land, jahr) %>%
   dplyr::mutate((FA = wert[geschlecht == "Frauen"]/wert[geschlecht == "Gesamt"]*100),
                 indikator = "Frauen-/Männeranteil") %>%
   dplyr::filter(geschlecht == "Frauen") %>%
-   dplyr::select(-c(n, wert)) %>%
-   dplyr::rename("wert" = "(...)")
+  dplyr::select(-c(n, wert)) %>%
+  dplyr::rename("wert" = "(...)")
 
- eu_gat_e1_m <- eu_gat_e1 %>%
+eu_gat_e1_m <- eu_gat_e1 %>%
   dplyr::group_by(fach, land, jahr) %>%
   dplyr::mutate(Männer =wert[geschlecht == "Männer"]/wert[geschlecht == "Gesamt"]*100,
                 indikator = "Frauen-/Männeranteil") %>%
@@ -654,32 +666,32 @@ eu_gat_e1 <- eu_gat_e1 %>%
   dplyr::select(-c(n, wert)) %>%
   dplyr::rename("wert" = "Männer")
 
-  eu_gat_e1 <- eu_gat_e1 %>%
-    dplyr::group_by(fach, land, jahr) %>%
-    dplyr::mutate(Gesamt = wert[geschlecht == "Gesamt"]/wert[geschlecht == "Gesamt"]*100,
-                  indikator = "Frauen-/Männeranteil") %>%
-    dplyr::filter(geschlecht == "Gesamt") %>%
-    dplyr::select(-c(n, wert)) %>%
-    dplyr::rename("wert" = "Gesamt")
+eu_gat_e1 <- eu_gat_e1 %>%
+  dplyr::group_by(fach, land, jahr) %>%
+  dplyr::mutate(Gesamt = wert[geschlecht == "Gesamt"]/wert[geschlecht == "Gesamt"]*100,
+                indikator = "Frauen-/Männeranteil") %>%
+  dplyr::filter(geschlecht == "Gesamt") %>%
+  dplyr::select(-c(n, wert)) %>%
+  dplyr::rename("wert" = "Gesamt")
 
-  eu_gat_e1 <- rbind(eu_gat_e1, eu_gat_e1_f, eu_gat_e1_m)
+eu_gat_e1 <- rbind(eu_gat_e1, eu_gat_e1_f, eu_gat_e1_m)
 
 # Anteil wer wählt was berechnen
 
-  eu_ges <- dat4 %>%
-    dplyr::filter(fach == "Insgesamt")
+eu_ges <- dat4 %>%
+  dplyr::filter(fach == "Insgesamt")
 
-  eu_ww <- dat4 %>%
-    dplyr::left_join(eu_ges, by =c("geschlecht", "land", "jahr", "indikator", "typ",
-                                    "bereich", "quelle",
-                                    "population" )) %>%
-    dplyr::mutate(wert = wert.x / wert.y * 100) %>%
-    dplyr::select(-c(fach.y, fachbereich.y, wert.x, wert.y, mint_select.y, ebene.y)) %>%
-    dplyr::rename(fach = fach.x,
-                  fachbereich = fachbereich.x,
-                  ebene = ebene.x,
-                  mint_select = mint_select.x) %>%
-    dplyr::mutate(indikator = "Fächerwahl")
+eu_ww <- dat4 %>%
+  dplyr::left_join(eu_ges, by =c("geschlecht", "land", "jahr", "indikator", "typ",
+                                 "bereich", "quelle",
+                                 "population" )) %>%
+  dplyr::mutate(wert = wert.x / wert.y * 100) %>%
+  dplyr::select(-c(fach.y, fachbereich.y, wert.x, wert.y, mint_select.y, ebene.y)) %>%
+  dplyr::rename(fach = fach.x,
+                fachbereich = fachbereich.x,
+                ebene = ebene.x,
+                mint_select = mint_select.x) %>%
+  dplyr::mutate(indikator = "Fächerwahl")
 
 # Zusammenfassen
 
@@ -690,29 +702,225 @@ studierende_europa <- studierende_europa[,c("bereich", "quelle", "population", "
                                             "indikator", "ebene", "mint_select", "fachbereich", "fach",
                                             "geschlecht", "land", "jahr", "wert")]
 
+# Anpassung mint_select
+studierende_europa$mint_select <- ifelse(studierende_europa$fachbereich == "Alle MINT-Fächer", "mint", studierende_europa$mint_select)
+
 usethis::use_data(studierende_europa, overwrite = T)
 
+## studierende_mobil_eu_absolut - EUROSTAT003_custom_intern_studis_educ_uoe_mobs01__custom_7521082_linear.csv ----
+library(rio)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(stringr)
+library(readxl)
+library(janitor)
+library(purrr)
+library(readr)
+library(countrycode)
 
+dat_eust <- read_csv(paste0(pfad,"EUROSTAT003_custom_intern_studis_educ_uoe_mobs01__custom_7521082_linear.csv.gz"))
+
+
+dat_eust1 <- dat_eust %>%
+  select(-c(1:4))%>%
+  rename(geschlecht = sex, land = geo, jahr = TIME_PERIOD, wert = OBS_VALUE,
+         kommentar = OBS_FLAG, fach = iscedf13, anforderung = isced11)%>%
+  mutate(across(land, ~ countrycode(., origin = "eurostat", destination="country.name.de", custom_match = c("EU28" = "EU (28)", "EU27_2020" = "EU (27), seit 2020"))))%>%
+  mutate(geschlecht=case_when(geschlecht == "M"~ "Männlich",
+                              geschlecht == "F" ~ "Weiblich",
+                              T ~ "Gesamt"))%>%
+  dplyr::mutate(ebene= dplyr::case_when(stringr::str_ends(.$fach,"F00|F01|F02|F03|F04|F05|F06|F07|F08|F09|F10|TOTAL") ~ 1,
+                                        T ~2))%>%
+  dplyr::mutate(mint_select= dplyr::case_when(stringr::str_detect(.$fach,"F05|F07|F06") ~ "mint",
+                                              T ~"nicht mint"))%>%
+  dplyr::mutate(fach = dplyr::case_when(
+    stringr::str_ends("F00", .$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
+    stringr::str_ends("F01", .$fach)~ "Pädagogik",
+    stringr::str_ends("F02", .$fach) ~ "Geisteswissenschaften und Künste",
+    stringr::str_ends("F03", .$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+    stringr::str_ends("F04", .$fach) ~ "Wirtschaft, Verwaltung und Recht",
+    stringr::str_ends("F05", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+    stringr::str_ends("F06", .$fach) ~ "Informatik & Kommunikationstechnologie",
+    stringr::str_ends("F061", .$fach) ~ "Informatik & Kommunikationstechnologie allgemein",
+    stringr::str_ends("F068", .$fach) ~ "Interdisziplinäre Programme mit Schwerpunkt Informatik & Kommunikationstechnologie",
+    stringr::str_ends("F07", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+    stringr::str_ends("F08", .$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+    stringr::str_ends("F09", .$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+    stringr::str_ends("F10", .$fach) ~ "Dienstleistungen",
+    stringr::str_ends("F050", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht näher definiert",
+    stringr::str_ends("F051", .$fach) ~ "Biologie und verwandte Wissenschaften",
+    stringr::str_ends("F052", .$fach) ~ "Umwelt",
+    stringr::str_ends("F053", .$fach) ~ "Exakte Naturwissenschaften",
+    stringr::str_ends("F054", .$fach) ~ "Mathematik und Statistik",
+    stringr::str_ends("F058", .$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
+Mathematik und Statistik",
+    stringr::str_ends("F059", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
+    stringr::str_ends("F070", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
+    stringr::str_ends("F071", .$fach) ~ "Ingenieurwesen und Technische Berufe",
+    stringr::str_ends("F072", .$fach) ~ "Verarbeitendes Gewerbe und Bergbau",
+    stringr::str_ends("F073", .$fach) ~ "Architektur und Baugewerbe",
+    stringr::str_ends("F078", .$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
+ verarbeitendes Gewerbe und Baugewerbe",
+    stringr::str_ends("F079", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert",
+    stringr::str_detect("TOTAL", .$fach) ~ "Insgesamt",
+    stringr::str_ends("UNK", .$fach) ~ "Unbekannt",
+    T~.$fach))%>%
+  mutate(anforderung = dplyr::case_when(anforderung ==  "ED5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
+                                        anforderung ==  "ED6" ~ "Bachelor oder vergleichbar (ISCED 6)",
+                                        anforderung ==  "ED7" ~ "Master oder vergleichbar (ISCED 7)",
+                                        anforderung ==  "ED8" ~ "Promotion (ISCED 8)",
+                                        anforderung == "ED5-8" ~ "Tertiäre Bildung (gesamt)",
+                                        T ~ anforderung
+  ))%>%
+  mutate(kommentar=case_when(kommentar == "b" ~ "break in time series",
+                             kommentar == "e" ~ "estimated",
+                             kommentar == "d" ~ "definition differs (see metadata)",
+                             kommentar == "z" ~ "not applicable",
+                             T ~ kommentar))%>%
+  mutate(bereich = "hochschule",
+         indikator = "Ausländische mobile Studierende",
+         typ = "Anzahl")
+
+dat_eust1_1<- dat_eust1 %>%
+  dplyr::filter(ebene == 1)%>%
+  dplyr::group_by(land, anforderung, jahr, geschlecht, mint_select)%>%
+  dplyr::summarise(land, anforderung, jahr, geschlecht, ebene, mint_select, bereich, indikator, wert= sum(wert, na.rm=T))%>%
+  dplyr::ungroup()%>%
+  unique()%>%
+  dplyr::mutate(fach = case_when(mint_select == "mint" ~ "MINT",
+                                 T ~ "Nicht MINT",
+  ),typ= "Anzahl")%>%
+  dplyr::filter(fach != "Nicht MINT" )
+
+
+
+
+dat_eust1_2 <- dat_eust1 %>%
+  filter(fach == "Insgesamt")%>%
+  select(- ebene,- mint_select)%>%
+  full_join(dat_eust1_1 %>% select(- ebene,- mint_select), by=c("anforderung", "fach", "geschlecht", "land",
+                                                                "jahr",  "bereich",
+                                                                "indikator", "typ"))%>%
+  mutate(wert= coalesce(wert.x, wert.y))%>%
+  select(-wert.y, -wert.x)%>%
+  pivot_wider(values_from = wert, names_from = fach)%>%
+  mutate("Nicht MINT" = Insgesamt - MINT)%>%
+  pivot_longer(c(Insgesamt, MINT, `Nicht MINT`), values_to = "wert", names_to = "fach" )%>%
+  mutate(ebene= 1,
+         mint_select = case_when(fach %in% c("Insgesamt", "Nicht MINT")~ "nicht mint",
+                                 T ~ "mint"))
+
+dat_eust1_3 <- dat_eust1 %>%
+  filter(fach != "Insgesamt")%>%
+  bind_rows(dat_eust1_2)
+
+# warum ist der kleinste wert < 0 ???
+
+studierende_mobil_eu_absolut <- dat_eust1_2
+
+usethis::use_data(studierende_mobil_eu_absolut, overwrite = T)
+
+## studierende_mobil_eu_share EUROSTAT004_educ_uoe_mobs04__custom_8027463_linear.csv.gz----
+
+dat_euro4 <- readr::read_csv(paste0(pfad, "EUROSTAT004_educ_uoe_mobs04__custom_8027463_linear.csv.gz"))
+
+dat_euro4_1 <- dat_euro4 %>%
+  dplyr::select(- c("DATAFLOW", "freq"  , "LAST UPDATE", "unit"))%>%
+  dplyr::rename(geschlecht = sex, land = geo, jahr = TIME_PERIOD, wert = OBS_VALUE,
+                kommentar = OBS_FLAG, fach = iscedf13, anforderung = isced11)%>%
+  mutate(across(land, ~ countrycode(., origin = "eurostat", destination="country.name.de", custom_match = c("EU28" = "EU (28)", "EU27_2020" = "EU (27), seit 2020"))))%>%
+  mutate(geschlecht=case_when(geschlecht == "M"~ "Männlich",
+                              geschlecht == "F" ~ "Weiblich",
+                              T ~ "Gesamt"))%>%
+  dplyr::mutate(ebene= dplyr::case_when(stringr::str_ends(.$fach,"F00|F01|F02|F03|F04|F05|F06|F07|F08|F09|F10|TOTAL") ~ 1,
+                                        T ~2))%>%
+  dplyr::mutate(mint_select= dplyr::case_when(stringr::str_detect(.$fach,"F05|F07|F06") ~ "mint",
+                                              T ~"nicht mint"))%>%
+  dplyr::mutate(fach = dplyr::case_when(
+    stringr::str_ends("F00", .$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
+    stringr::str_ends("F01", .$fach)~ "Pädagogik",
+    stringr::str_ends("F02", .$fach) ~ "Geisteswissenschaften und Künste",
+    stringr::str_ends("F03", .$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+    stringr::str_ends("F04", .$fach) ~ "Wirtschaft, Verwaltung und Recht",
+    stringr::str_ends("F05", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+    stringr::str_ends("F06", .$fach) ~ "Informatik & Kommunikationstechnologie",
+    stringr::str_ends("F061", .$fach) ~ "Informatik & Kommunikationstechnologie allgemein",
+    stringr::str_ends("F068", .$fach) ~ "Interdisziplinäre Programme mit Schwerpunkt Informatik & Kommunikationstechnologie",
+    stringr::str_ends("F07", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+    stringr::str_ends("F08", .$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+    stringr::str_ends("F09", .$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+    stringr::str_ends("F10", .$fach) ~ "Dienstleistungen",
+    stringr::str_ends("F050", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht näher definiert",
+    stringr::str_ends("F051", .$fach) ~ "Biologie und verwandte Wissenschaften",
+    stringr::str_ends("F052", .$fach) ~ "Umwelt",
+    stringr::str_ends("F053", .$fach) ~ "Exakte Naturwissenschaften",
+    stringr::str_ends("F054", .$fach) ~ "Mathematik und Statistik",
+    stringr::str_ends("F058", .$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
+Mathematik und Statistik",
+    stringr::str_ends("F059", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
+    stringr::str_ends("F070", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
+    stringr::str_ends("F071", .$fach) ~ "Ingenieurwesen und Technische Berufe",
+    stringr::str_ends("F072", .$fach) ~ "Verarbeitendes Gewerbe und Bergbau",
+    stringr::str_ends("F073", .$fach) ~ "Architektur und Baugewerbe",
+    stringr::str_ends("F078", .$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
+ verarbeitendes Gewerbe und Baugewerbe",
+    stringr::str_ends("F079", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert",
+    stringr::str_detect("TOTAL", .$fach) ~ "Insgesamt",
+    stringr::str_ends("UNK", .$fach) ~ "Unbekannt",
+    T~.$fach))%>%
+  mutate(anforderung = dplyr::case_when(anforderung ==  "ED5" ~ "kurzes tertiäres Bildungsprogramm (ISCED 5)",
+                                        anforderung ==  "ED6" ~ "Bachelor oder vergleichbar (ISCED 6)",
+                                        anforderung ==  "ED7" ~ "Master oder vergleichbar (ISCED 7)",
+                                        anforderung ==  "ED8" ~ "Promotion (ISCED 8)",
+                                        anforderung == "ED5-8" ~ "Tertiäre Bildung (gesamt)",
+                                        T ~ anforderung
+  ))%>%
+  mutate(kommentar=case_when(kommentar == "b" ~ "break in time series",
+                             kommentar == "e" ~ "estimated",
+                             kommentar == "d" ~ "definition differs (see metadata)",
+                             kommentar == "z" ~ "not applicable",
+                             T ~ kommentar))%>%
+  mutate(bereich = "hochschule",
+         indikator = "Ausländische mobile Studierende",
+         typ = "Anteil")
+
+dat_euro4_2 <- dat_euro4_1 %>%
+  dplyr::filter(mint_select == "mint" & ebene == 1)%>%
+  dplyr::group_by(land, anforderung, jahr, geschlecht)%>%
+  dplyr::summarise(land, anforderung, jahr, geschlecht, ebene, mint_select, bereich, indikator, MINT= sum(wert, na.rm=T))%>%
+  dplyr::ungroup()%>%
+  dplyr::mutate("Nicht MINT" = 100 - MINT,
+                typ= "Anteil")%>%
+  tidyr::pivot_longer(c("MINT", "Nicht MINT"), names_to = "fach", values_to = "wert" )%>%
+  unique()
+
+dat_euro4_3 <- dat_euro4_1 %>%
+  dplyr::bind_rows(dat_euro4_2)
+
+
+
+studierende_mobil_eu_share <- dat_euro4_3
+
+# warum ist der kleinste wert < 0 ???
+
+usethis::use_data(studierende_mobil_eu_share, overwrite = T)
 
 ## UNESCO001_anteil_MINT_absolv_weltweit ----
 # kbr bei mir ist der Pfad leicht anders ... unpraktisch
-akro <- "kbr"
-file_path <- paste0("C:/Users/", akro,
-                    "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
+# pfad <- path_kek
 
-file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
-
-dat_unc <- readr::read_csv(paste0(file_path, "/", "UNESCO001_anteil_MINT_absolv_weltweit.csv"))
+dat_unc <- readr::read_csv(paste0(pfad, "UNESCO001_anteil_MINT_absolv_weltweit.csv"))
 
 dat_unc_1<- dat_unc %>%
   dplyr::select(Indicator, Value, Country, Time)%>%
   dplyr::rename( indikator = Indicator, wert = Value, land = Country, jahr = Time)%>%
   dplyr::mutate(typ = "In Prozent", geschlecht = "Insgesamt")%>%
   dplyr::mutate(fach =dplyr:: case_when(stringr::str_detect(.$indikator, "other than") ~ "Alle Nicht MINT-Fächer",
-                          T~"Alle MINT-Fächer" ))%>%
+                                        T~"Alle MINT-Fächer" ))%>%
   dplyr::mutate(mint_select = dplyr::case_when(fach == "Alle MINT-Fächer"~"mint",
-                              T ~ "nicht mint" ))%>%
+                                               T ~ "nicht mint" ))%>%
   dplyr::mutate(indikator = "Abslovent:innen", bereich = "Studium", quelle = "UNESCO", population= "Weltweit")
 
 dat_unc_1$land <- countrycode::countrycode(dat_unc_1$land, origin = 'country.name' , destination = "country.name.de")
@@ -722,8 +930,8 @@ studierende_absolventen_weltweit <- dat_unc_1
 
 # ordnen und speichern
 studierende_absolventen_weltweit <- studierende_absolventen_weltweit[,c("bereich", "quelle", "population", "typ",
-                                            "indikator", "mint_select", "fach",
-                                            "geschlecht", "land", "jahr", "wert")]
+                                                                        "indikator", "mint_select", "fach",
+                                                                        "geschlecht", "land", "jahr", "wert")]
 
 usethis::use_data(studierende_absolventen_weltweit, overwrite = T)
 
@@ -731,9 +939,9 @@ usethis::use_data(studierende_absolventen_weltweit, overwrite = T)
 
 ## OECD Anteil internationaler Studis an allen Studis in Fach ----
 
-file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+#file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
-dat_oecd <- readr::read_csv(paste0(file_path, "/", "OECD006_Anteil_intern_Studis_in_Fach_2.csv"))
+dat_oecd <- readr::read_csv(paste0(pfad, "OECD006_Anteil_intern_Studis_in_Fach_2.csv"))
 
 
 dat_oecd1 <- dat_oecd %>%
@@ -748,10 +956,10 @@ dat_oecd1 <- dat_oecd %>%
                 wert = Value,
                 intl_selector = Mobility,
                 indikator = Indicator
-              )%>%
+  )%>%
   dplyr::mutate(geschlecht = dplyr::case_when(geschlecht== "F" ~ "Frauen",
-                              geschlecht== "M" ~ "Männer",
-                              T ~ "Insgesamt"))
+                                              geschlecht== "M" ~ "Männer",
+                                              T ~ "Insgesamt"))
 
 # share of intl students by field/total= verteilung der intl studis über fächer / distribution of
 
@@ -785,6 +993,8 @@ dat_oecd2 <- dat_oecd1 %>%
     stringr::str_ends("F04", .$fach) ~ "Wirtschaft, Verwaltung und Recht",
     stringr::str_ends("F05", .$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
     stringr::str_ends("F06", .$fach) ~ "Informatik & Kommunikationstechnologie",
+    stringr::str_ends("F061", .$fach) ~ "Informatik & Kommunikationstechnologie allgemein",
+    stringr::str_ends("F068", .$fach) ~ "Interdisziplinäre Programme mit Schwerpunkt Informatik & Kommunikationstechnologie",
     stringr::str_ends("F07", .$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
     stringr::str_ends("F08", .$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
     stringr::str_ends("F09", .$fach) ~ "Gesundheit, Medizin und Sozialwesen",
@@ -812,34 +1022,35 @@ Mathematik und Statistik",
 dat_oecd3 <- dat_oecd2 %>%
   dplyr::filter(indikator == "Share of students enrolled by field")%>%
   dplyr::mutate(indikator = dplyr::case_when( intl_selector=="Total"~ "Studierende",
-                                intl_selector=="Mobile including homecoming nationals" ~ "Internationale Studierende",
-                                T ~ "nicht-internationale Studierende"
-                                ))%>%
+                                              intl_selector=="Mobile including homecoming nationals" ~ "Internationale Studierende",
+                                              T ~ "nicht-internationale Studierende"
+  ))%>%
   dplyr::select(- intl_selector)%>%
   dplyr::mutate(typ = "In Prozent",
-         population= "OECD")
+                population= "OECD")
 
 dat_oecd4 <- dat_oecd3%>%
   tidyr::pivot_wider(names_from=fachbereich, values_from =wert)%>%
   dplyr::mutate("Alle Nicht MINT-Fächer" = 100-`Alle MINT-Fächer`)%>%
   tidyr::pivot_longer(c("Alle Nicht MINT-Fächer", "Alle MINT-Fächer",
-                 "Allgemeine Bildungsgänge und Qualifikationen" ,
-                 "Dienstleistungen",
-                 "Geisteswissenschaften und Künste" ,
-                 "Gesundheit, Medizin und Sozialwesen" ,
-                 "Informatik & Kommunikationstechnologie" ,
-                 "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" ,
-                 "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin" ,
-                 "Naturwissenschaften, Mathematik und Statistik" ,
-                 "Pädagogik" ,
-                 "Sozialwissenschaften, Journalismus und Informationswesen" ,
-                 "Wirtschaft, Verwaltung und Recht" ), values_to = "wert", names_to = "fachbereich")
+                        "Allgemeine Bildungsgänge und Qualifikationen" ,
+                        "Dienstleistungen",
+                        "Geisteswissenschaften und Künste" ,
+                        "Gesundheit, Medizin und Sozialwesen" ,
+                        "Informatik & Kommunikationstechnologie" ,
+                        "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" ,
+                        "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin" ,
+                        "Naturwissenschaften, Mathematik und Statistik" ,
+                        "Pädagogik" ,
+                        "Sozialwissenschaften, Journalismus und Informationswesen" ,
+                        "Wirtschaft, Verwaltung und Recht" ), values_to = "wert", names_to = "fachbereich")
 
 dat_oecd4$mint_select <- "nicht mint"
 dat_oecd4 <- dat_oecd4 %>%
   dplyr::mutate(mint_select = dplyr::case_when(
     fachbereich == "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" |
-      fachbereich == "Naturwissenschaften, Mathematik und Statistik" ~ "mint",
+      fachbereich == "Naturwissenschaften, Mathematik und Statistik" |
+      fachbereich == "Alle MINT-Fächer" ~ "mint",
     T ~ mint_select
   ))
 
@@ -848,9 +1059,9 @@ studierende_intern_oecd <- dat_oecd4
 
 # ordnen
 studierende_intern_oecd  <- studierende_intern_oecd[,c("population", "typ",
-                                                      "indikator", "mint_select", "fachbereich",
-                                                      "anforderung",
-                                                      "geschlecht", "land", "jahr", "wert")]
+                                                       "indikator", "mint_select", "fachbereich",
+                                                       "anforderung",
+                                                       "geschlecht", "land", "jahr", "wert")]
 
 
 # speichern
@@ -867,9 +1078,9 @@ usethis::use_data(studierende_intern_oecd, overwrite = T)
 ## OECD - Anzahl Azubis / Studis nach Feld & Gender------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
+
+dat <- read.csv(paste0(pfad,
+                       "OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
                 header = TRUE, sep = ",", dec = ".")
 
 
@@ -970,42 +1181,42 @@ Mathematik und Statistik",
                                         T ~ dat$fach),
                 fachbereich = dplyr::case_when(
                   stringr::str_ends("F00", dat$fach)~ "Allgemeine Bildungsgänge und Qualifikationen",
-                                        stringr::str_ends("F01", dat$fach)~ "Pädagogik",
-                                        stringr::str_ends("F02", dat$fach) ~ "Geisteswissenschaften und Künste",
-                                        stringr::str_ends("F03", dat$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
-                                        stringr::str_ends("F04", dat$fach) ~ "Wirtschaft, Verwaltung und Recht",
-                                        stringr::str_ends("F05", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
-                                        stringr::str_ends("F06", dat$fach) ~ "Informatik & Kommunikationstechnologie",
-                                        stringr::str_ends("F061", dat$fach) ~ "Informatik & Kommunikationstechnologie",
-                                        stringr::str_ends("F068", dat$fach) ~ "Informatik & Kommunikationstechnologie",
-                                        stringr::str_ends("F07", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                                        stringr::str_ends("F08", dat$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
-                                        stringr::str_ends("F09", dat$fach) ~ "Gesundheit, Medizin und Sozialwesen",
-                                        stringr::str_ends("F10", dat$fach) ~ "Dienstleistungen",
-                                        stringr::str_ends("F050", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht näher definiert",
-                                        stringr::str_ends("F051", dat$fach) ~ "Biologie und verwandte Wissenschaften",
-                                        stringr::str_ends("F052", dat$fach) ~ "Umwelt",
-                                        stringr::str_ends("F053", dat$fach) ~ "Exakte Naturwissenschaften",
-                                        stringr::str_ends("F054", dat$fach) ~ "Mathematik und Statistik",
-                                        stringr::str_ends("F058", dat$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
+                  stringr::str_ends("F01", dat$fach)~ "Pädagogik",
+                  stringr::str_ends("F02", dat$fach) ~ "Geisteswissenschaften und Künste",
+                  stringr::str_ends("F03", dat$fach) ~ "Sozialwissenschaften, Journalismus und Informationswesen",
+                  stringr::str_ends("F04", dat$fach) ~ "Wirtschaft, Verwaltung und Recht",
+                  stringr::str_ends("F05", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik",
+                  stringr::str_ends("F06", dat$fach) ~ "Informatik & Kommunikationstechnologie",
+                  stringr::str_ends("F061", dat$fach) ~ "Informatik & Kommunikationstechnologie",
+                  stringr::str_ends("F068", dat$fach) ~ "Informatik & Kommunikationstechnologie",
+                  stringr::str_ends("F07", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
+                  stringr::str_ends("F08", dat$fach) ~ "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
+                  stringr::str_ends("F09", dat$fach) ~ "Gesundheit, Medizin und Sozialwesen",
+                  stringr::str_ends("F10", dat$fach) ~ "Dienstleistungen",
+                  stringr::str_ends("F050", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht näher definiert",
+                  stringr::str_ends("F051", dat$fach) ~ "Biologie und verwandte Wissenschaften",
+                  stringr::str_ends("F052", dat$fach) ~ "Umwelt",
+                  stringr::str_ends("F053", dat$fach) ~ "Exakte Naturwissenschaften",
+                  stringr::str_ends("F054", dat$fach) ~ "Mathematik und Statistik",
+                  stringr::str_ends("F058", dat$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
 Mathematik und Statistik",
-                                        stringr::str_ends("F059", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
-                                        stringr::str_ends("F070", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
-                                        stringr::str_ends("F071", dat$fach) ~ "Ingenieurwesen und Technische Berufe",
-                                        stringr::str_ends("F072", dat$fach) ~ "Verarbeitendes Gewerbe und Bergbau",
-                                        stringr::str_ends("F073", dat$fach) ~ "Architektur und Baugewerbe",
-                                        stringr::str_ends("F078", dat$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
+                  stringr::str_ends("F059", dat$fach) ~ "Naturwissenschaften, Mathematik und Statistik nicht andernorts klassifiziert",
+                  stringr::str_ends("F070", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht näher definiert",
+                  stringr::str_ends("F071", dat$fach) ~ "Ingenieurwesen und Technische Berufe",
+                  stringr::str_ends("F072", dat$fach) ~ "Verarbeitendes Gewerbe und Bergbau",
+                  stringr::str_ends("F073", dat$fach) ~ "Architektur und Baugewerbe",
+                  stringr::str_ends("F078", dat$fach) ~ "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,
  verarbeitendes Gewerbe und Baugewerbe",
-                                        stringr::str_ends("F079", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert",
+                  stringr::str_ends("F079", dat$fach) ~ "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe nicht andernorts klassifiziert",
 
-                                        stringr::str_ends("F05T07", dat$fach) ~ "MINT",
-                                        stringr::str_ends("F050_59", dat$fach) ~ "Weitere Naturwissenschaften, Mathematik und Statistik",
-                                        stringr::str_ends("F070_79", dat$fach) ~ "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe",
+                  stringr::str_ends("F05T07", dat$fach) ~ "MINT",
+                  stringr::str_ends("F050_59", dat$fach) ~ "Weitere Naturwissenschaften, Mathematik und Statistik",
+                  stringr::str_ends("F070_79", dat$fach) ~ "Weitere Ingenieurwesen, verarbeitendes Gewerbe, Baugewerbe",
 
-                                        stringr::str_detect("TOTAL", dat$fach) ~ "Alle",
-                                        stringr::str_detect("_T", dat$fach) ~ "Alle",
-                                        stringr::str_ends("UNK", dat$fach) ~ "Unbekannt",
-                                        stringr::str_ends("F99", dat$fach) ~ "Unbekannt"
+                  stringr::str_detect("TOTAL", dat$fach) ~ "Alle",
+                  stringr::str_detect("_T", dat$fach) ~ "Alle",
+                  stringr::str_ends("UNK", dat$fach) ~ "Unbekannt",
+                  stringr::str_ends("F99", dat$fach) ~ "Unbekannt"
                 ))
 
 # Fachbereich und mint_select ergänzen
@@ -1040,21 +1251,22 @@ dat <- dat %>%
   dplyr::mutate(mint_select = dplyr::case_when(
     fachbereich == "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" |
       fachbereich == "Naturwissenschaften, Mathematik und Statistik" |
-      fachbereich == "Informatik & Kommunikationstechnologie" ~ "mint",
+      fachbereich == "Informatik & Kommunikationstechnologie" |
+      fachbereich == "MINT" ~ "mint",
     T ~ mint_select
   ),
   ebene = dplyr::case_when(
     fachbereich %in% c("Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                      "Naturwissenschaften, Mathematik und Statistik",
-                      "Informatik & Kommunikationstechnologie") &
+                       "Naturwissenschaften, Mathematik und Statistik",
+                       "Informatik & Kommunikationstechnologie") &
       !(fach %in% c("Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                     "Naturwissenschaften, Mathematik und Statistik",
                     "Informatik & Kommunikationstechnologie")) ~ 2,
     fachbereich %in% c("Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                      "Naturwissenschaften, Mathematik und Statistik",
-                      "Informatik & Kommunikationstechnologie") &
+                       "Naturwissenschaften, Mathematik und Statistik",
+                       "Informatik & Kommunikationstechnologie") &
       fach %in% c("Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                    "Naturwissenschaften, Mathematik und Statistik",
+                  "Naturwissenschaften, Mathematik und Statistik",
                   "Informatik & Kommunikationstechnologie") ~ 1,
     !(fachbereich %in% c("Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
                          "Naturwissenschaften, Mathematik und Statistik",
