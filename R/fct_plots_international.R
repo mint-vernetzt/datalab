@@ -386,7 +386,7 @@ plot_international_map_fem <- function(r){
 
 
     # Frauen von Allen
-    browser()
+
     # Filtern für alle Einzelfächer in MINT
     df_share_fem2 <<- df_filtered %>%
       dplyr::select(-fachbereich)%>%
