@@ -50,20 +50,23 @@ mod_international_start_ui <- function(id){
         title = "Übersicht Fragestellungen",
         width = 7,
         p(
-          style = "text-align: left; font-size = 16px",tags$a(href="#studium_mint",
-                                                              span(tags$b(span("Fächerwahl MINT:")))), "Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
+          style = "text-align: left; font-size = 16px",tags$a(href="#international_schule",
+                                                              span(tags$b(span("Schule:")))), "MINT-Kompetenzen von Schüler*innen im internationalen Vergleich"
         ),
 
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_fach",
-                                                              span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#international_studium",
+                                                              span(tags$b(span("Studium:")))), "MINT-Studium im internationalen Vergleich"
 
         ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_frauen",
-                                                              span(tags$b(span("Frauen in MINT:")))), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#international_arbeitsmarkt",
+                                                              span(tags$b(span("Ausbildung und Beruf:")))), "MINT-Auszubildende und -Beschäftigte im Ländervergleich"
+        )
+        #,
+        # p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_international",
+        #                                                       span(tags$b(span("Internationale Studierende in MINT:")))), "Wie hoch ist der Anteil von internationalen Studierenden in den MINT-Fächern?"
+        #
+        # )
         ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_international",
-                                                              span(tags$b(span("Internationale Studierende in MINT:")))), "Wie hoch ist der Anteil von internationalen Studierenden in den MINT-Fächern?"
-        )),
 
       shinydashboard::box(
         title = "Datenquellen",
@@ -74,7 +77,7 @@ mod_international_start_ui <- function(id){
       )
     ),
 
-    # Box 2 - Schule ----
+    # Box 1 - Schule ----
     fluidRow(id="international_schule",
              shinydashboard::box(
                title = "SCHULE: MINT-Kompetenzen von Schüler*innen im internationalen Vergleich",
@@ -166,9 +169,9 @@ mod_international_start_ui <- function(id){
     ),
 
 
-    # Box 1 - Studium ----
+    # Box 2 - Studium ----
 
-    fluidRow(id="international_maps",
+    fluidRow(id="international_studium",
              shinydashboard::box(
 
                title = "STUDIUM: MINT-Studium im internationalen Vergleich",
@@ -312,9 +315,9 @@ mod_international_start_ui <- function(id){
 
 
 
-  # Box 3
+  # Box 3 - Arbeitsmarkt ----
 
-  fluidRow(id="Arbeitsmarkt_International",
+  fluidRow(id="international_arbeitsmarkt",
            shinydashboard::box(
              title = "AUSBILDUNG UND BERUF: MINT-Auszubildende und -Beschäftigte im Ländervergleich",
              width = 12,
@@ -445,7 +448,23 @@ mod_international_start_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # Box 1 - Studium
+    # Box 1 - Schule
+    output$plot_international_schule_map_1 <- renderUI({
+      logger::log_debug("plot_international_schule_map")
+      plot_international_schule_map(r)
+    })
+
+    output$plot_international_schule_item_1 <- renderUI({
+      logger::log_debug("plot_international_schule_item")
+      plot_international_schule_item(r)
+    })
+
+    output$plot_international_schule_migration_1 <- renderUI({
+      logger::log_debug("plot_international_schule_migration")
+      plot_international_schule_migration(r)
+    })
+
+    # Box 2 - Studium
     output$plot_international_studienzahl_map_1 <- renderUI({
       logger::log_debug("plot_international_map")
       plot_international_map(r)
@@ -461,7 +480,6 @@ mod_international_start_server <- function(id, r){
       plot_international_top10_gender(r)
     })
 
-
     output$plot_international_map_fem_1 <- renderUI({
     plot_international_map_fem(r)
     })
@@ -470,7 +488,7 @@ mod_international_start_server <- function(id, r){
       plot_international_mint_top_10(r)
     })
 
-    # Box 3
+    # Box 3 - Arbeitsmarkt
     output$plot_international_studienzahl_map_arb_1 <- renderUI({
       plot_international_map_arb(r)
     })
@@ -487,34 +505,16 @@ mod_international_start_server <- function(id, r){
     plot_international_top10_mint_arb_gender(r)
     })
 
-
-    # Box 2 - Schule
-    output$plot_international_schule_map_1 <- renderUI({
-      logger::log_debug("plot_international_schule_map")
-      plot_international_schule_map(r)
-    })
-
-    output$plot_international_schule_item_1 <- renderUI({
-      logger::log_debug("plot_international_schule_item")
-      plot_international_schule_item(r)
-    })
-
-    output$plot_international_schule_migration_1 <- renderUI({
-      logger::log_debug("plot_international_schule_migration")
-      plot_international_schule_migration(r)
-    })
-
-
-    # Box 3 - Arbeitsmarkt
-    output$plot_international_arbeitsmarkt_map_1 <- renderUI({
-      logger::log_debug("plot_international_arbeitsmarkt_map_1")
-      plot_international_arbeitsmarkt_map(r)
-    })
-
-    output$plot_international_arbeitsmakrt_top10_1 <- renderUI({
-      logger::log_debug("plot_international_arbeitsmakrt_top10_1")
-      plot_international_arbeitsmakrt_top10(r)
-    })
+    # Box 3 - Arbeitsmarkt (Jakob)
+    # output$plot_international_arbeitsmarkt_map_1 <- renderUI({
+    #   logger::log_debug("plot_international_arbeitsmarkt_map_1")
+    #   plot_international_arbeitsmarkt_map(r)
+    # })
+    #
+    # output$plot_international_arbeitsmakrt_top10_1 <- renderUI({
+    #   logger::log_debug("plot_international_arbeitsmakrt_top10_1")
+    #   plot_international_arbeitsmakrt_top10(r)
+    # })
 
     output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
       logger::log_debug("plot_international_arbeitsmarkt_vergleiche_1")
