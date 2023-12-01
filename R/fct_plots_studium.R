@@ -1968,7 +1968,7 @@ plot_ranking_top_faecher <- function(r) {
   df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
     dplyr::filter(jahr == timerange,
                   indikator == "Studierende",
-                  jahr == timerange,
+                  region == states,
                   !fach %in% c(
       "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
       "Weitere ingenieurwissenschaftliche Fächer",
