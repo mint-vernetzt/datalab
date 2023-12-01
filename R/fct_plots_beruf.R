@@ -448,7 +448,8 @@ beruf_verlauf_single <- function(r) {
     dplyr::filter(jahr %in% t &
                     region == "Deutschland" &
                     geschlecht == "Gesamt" &
-                    anforderung == "Gesamt"
+                    anforderung == "Gesamt" &
+                    fachbereich != "Alle"
                )%>%
     dplyr::select(indikator, geschlecht, fachbereich, jahr, wert) %>%
     dplyr::collect()
@@ -461,15 +462,14 @@ beruf_verlauf_single <- function(r) {
   # df <- df %>% dplyr::filter(anforderung == "Gesamt")
   # df <- df %>% dplyr::filter(geschlecht == "Gesamt")
 
-  df <- calc_arbeitsmarkt_mint(df)
-  df <- calc_arbeitsmarkt_males(df)
+ # df <- calc_arbeitsmarkt_mint(df)
 
   df <- df %>%
     dplyr::group_by(jahr, indikator) %>%
     dplyr::mutate(sum_wert = sum(wert))
 
   # calcualte proportions
-  dftz <- df %>% dplyr::group_by(jahr, indikator, fachbereich) %>%
+  df <- df %>% dplyr::group_by(jahr, indikator, fachbereich) %>%
     dplyr::summarize(wert, proportion = wert/sum_wert)%>%
     dplyr::rename(Relativ = proportion, Absolut=wert)%>%
     tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
@@ -482,7 +482,7 @@ beruf_verlauf_single <- function(r) {
 
   if (absolut_selector == "In Prozent"){
 
-    df <- dftz %>%
+    df <- df %>%
       dplyr::filter(selector=="In Prozent")
 
     df$wert <- df$wert * 100
@@ -596,9 +596,6 @@ beruf_einstieg_vergleich <- function(r) {
   #   dplyr::group_by(jahr, indikator, fachbereich) %>%
   #   dplyr::summarize(wert = sum(wert))
 
-  # wird nicht korrekt berechnet und Männer schon enthalten
-  #df <- calc_arbeitsmarkt_mint(df)
-  #df <- calc_arbeitsmarkt_males(df)
 
   #Anteil MINT berechnen
   df_new_gesamt <- df %>%
@@ -1256,8 +1253,10 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
 
 
   df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
-    dplyr::filter(jahr %in% t &
-                    indikator == indikator_choice
+    dplyr::filter(jahr %in% t,
+                  indikator == indikator_choice,
+                  region %in% states,
+                  fachbereich != "Alle"
     )%>%
   dplyr::select("bereich",
   "indikator",
@@ -1274,31 +1273,24 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
 
   #df <- df %>% dplyr::filter(indikator == indikator_choice)
 
-  df <- prep_arbeitsmarkt_east_west(df)
+  #df <- prep_arbeitsmarkt_east_west(df)
 
-  df <- df %>%
-    dplyr::mutate(region = dplyr::case_when(
-      region == "Westen" ~ "Westdeutschland (o. Berlin)",
-      region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
-      T ~ .$region
-    ))
-
-  df <- df %>% dplyr::filter(region %in% states)
+  # df <- df %>%
+  #   dplyr::mutate(region = dplyr::case_when(
+  #     region == "Westen" ~ "Westdeutschland (o. Berlin)",
+  #     region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
+  #     T ~ .$region
+  #   ))
 
   df <- df %>% dplyr::filter(anforderung != "Keine Zuordnung möglich")
-
-  df <- calc_arbeitsmarkt_males(df)
 
   df_gesamt <- df %>%
     dplyr::filter(fachbereich == "Alle",
                   anforderung == "Gesamt")
 
-  df <- df %>% dplyr::filter(indikator == indikator_choice)
 
 
-
-
-  dfzu <- df %>%
+  df <- df %>%
     dplyr::left_join(df_gesamt, by = c("region", "jahr", "geschlecht", "indikator", "bereich")) %>%
     dplyr::rename(anforderung = "anforderung.x",
                   fachbereich = "fachbereich.x",
@@ -1318,7 +1310,7 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
 
 
 
-  df <- dfzu %>% dplyr::filter(anforderung %in% "Gesamt")
+  df <- df %>% dplyr::filter(anforderung %in% "Gesamt")
 
   df <- df %>% dplyr::filter(geschlecht == "Frauen")
 

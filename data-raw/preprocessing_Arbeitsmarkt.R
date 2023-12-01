@@ -15,8 +15,8 @@
 library(magrittr)
 library(dplyr)
 
-# paf kbr
-# pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+#pafd kbr
+#pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 # pfad kab
 pfad <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
@@ -27,7 +27,9 @@ pfad <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmateria
 # Alternative:
 # data_z <- readxl::read_excel(system.file(package="datalab", "data-raw/Arbeitsmarkt.xlsx"), col_names = T)
 
-data_z <- readxl::read_excel("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw/Arbeitsmarkt.xlsx", col_names = T)
+#data_z <- readxl::read_excel("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw/Arbeitsmarkt.xlsx", col_names = T)
+
+data_z <- readxl::read_excel(paste0(pfad,"Arbeitsmarkt.xlsx"), col_names = TRUE)
 
 # Alternative:
 # data <- readxl::read_excel(system.file(package="datalab",
@@ -227,10 +229,85 @@ data_z <- data_z[,c("bereich", "indikator", "fachbereich", "geschlecht", "region
                     #, "hinweise", "quelle"
 )]
 
+#alles zusammen
+data <- rbind(data_z, data_k, data_kn)
+
+## Vorbereitende Funktionen ------------------------------------------------
+
+# Berechnung von Ost und West
+  data$wert <- as.numeric(data$wert)
+  df_incl <- data
+  states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Hamburg",
+                                  "Hessen", "Niedersachsen", "Nordrhein-Westfalen",
+                                  "Rheinland-Pfalz", "Saarland", "Schleswig-Holstein"),
+                         east = c("Brandenburg", "Mecklenburg-Vorpommern", "Sachsen",
+                                  "Sachsen-Anhalt", "Thüringen", "Berlin"))
+
+
+  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west & df_incl$region != "Deutschland", "Westen", NA)
+  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$east & df_incl$region != "Deutschland", "Osten", df_incl$dummy_west)
+  df_incl <- na.omit(df_incl) # NA aus ifelse erstellt nochmal DE mit NA als region-Name -->löschen
+
+  # sum values
+  df_incl <- df_incl %>% dplyr::group_by(jahr, geschlecht, indikator, fachbereich, dummy_west,
+                                         anforderung, bereich) %>%
+    dplyr::summarise(wert = sum(wert, na.rm = T))
+
+  names(df_incl)[5] <- "region"
+
+
+  data <- rbind(data, df_incl)
+
+  data <- data %>%
+    dplyr::mutate(region = dplyr::case_when(
+      region == "Westen" ~ "Westdeutschland (o. Berlin)",
+      region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
+      T ~ .$region
+    ))
+
+# Anteil Männer berechnen
+
+
+    help_gesamt <- data %>% dplyr::filter(geschlecht == "Gesamt") %>%
+      dplyr::group_by(jahr, fachbereich)
+
+    help_weiblich <- data %>% dplyr::filter(geschlecht == "Frauen") %>%
+      dplyr::group_by(jahr, fachbereich)
+
+    wert_männlich <- help_gesamt$wert - help_weiblich$wert
+
+    help_männlich <- help_weiblich
+
+    help_männlich$wert <- wert_männlich
+
+    help_männlich$geschlecht <- "Männer"
+
+    data <- rbind(data, help_männlich)
+
+# Andere Berufe Berechnen
+      df_alle <- data %>% dplyr::filter(fachbereich == "Alle") %>%
+        dplyr::select(-fachbereich)
+
+      df_mint <- data %>% dplyr::filter(fachbereich == "MINT") %>%
+        dplyr::rename(wert_mint = wert) %>%
+        dplyr::select(-fachbereich)
+
+      df_andere <- df_alle %>% dplyr::left_join(df_mint) %>%
+        dplyr::mutate(wert = wert-wert_mint) %>%
+        dplyr::mutate(fachbereich = "Andere Berufe") %>%
+        dplyr::select(-wert_mint)
+
+      df_mint <- df_mint %>% dplyr::mutate(fachbereich = "MINT") %>%
+        dplyr::rename(wert = wert_mint)
+
+      df_alle <- data %>% dplyr::filter(fachbereich == "Alle")
+
+      data <- rbind(df_andere, df_mint, df_alle)
+
 
 ## Datensatz in data speichern  ------------------------------------------------------
 
-arbeitsmarkt <- rbind(data_z, data_k, data_kn)
+arbeitsmarkt <- data
 arbeitsmarkt$wert <- as.numeric(arbeitsmarkt$wert)
 
 usethis::use_data(arbeitsmarkt, overwrite = T)
