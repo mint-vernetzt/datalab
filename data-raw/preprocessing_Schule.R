@@ -19,8 +19,8 @@ library(tidyr)
 library(readxl)
 library(stringr)
 
-wd <- getwd()
-setwd(wd)
+# wd <- getwd()
+# setwd(wd)
 #setwd("C:/Users/kab/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 # wd <- getwd() #für Datensatz einlesen später nötig
 
@@ -60,8 +60,8 @@ read_data <- function(file, BL, year, course_level) {
 }
 
 # Datentabellen einlesen
-wd2 <- paste0(wd, "/raw")
-setwd(wd2)
+# wd2 <- paste0(wd, "/raw")
+# setwd(wd2)
 
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
@@ -697,33 +697,33 @@ d_m_ges <- readxl::read_excel(paste0(pfad, "IQB009_Abb6.4 (S.207).xlsx"))
 
 # Fachkenntnisse nach Gender
 # Mathe Mittel
-d_m_gen <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.9_Mathe_GL")
+d_m_gen <- readxl::read_excel(paste0(pfad, "IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.9_Mathe_GL")
 # Bio
-d_b_gen <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.10_BF")
+d_b_gen <- readxl::read_excel(paste0(pfad, "IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.10_BF")
 # Chemie
-d_c_gen <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.12_CF")
+d_c_gen <- readxl::read_excel(paste0(pfad, "IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.12_CF")
 # Physik
-d_p_gen <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.14_PF")
+d_p_gen <- readxl::read_excel(paste0(pfad, "IQB011_Abb7.9-7.15 (S.253-256).xlsx"), sheet = "Abb 7.14_PF")
 
 # Fachkenntnisse nach Status
 # Mathe
-d_m_stat <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.17_GL")
+d_m_stat <- readxl::read_excel(paste0(pfad, "IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.17_GL")
 # Bio
-d_b_stat <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.18_BF")
+d_b_stat <- readxl::read_excel(paste0(pfad, "IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.18_BF")
 # Chemie
-d_c_stat <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.20_CF")
+d_c_stat <- readxl::read_excel(paste0(pfad, "IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.20_CF")
 # Physik
-d_p_stat <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.22_PF")
+d_p_stat <- readxl::read_excel(paste0(pfad, "IQB012_Abb8.17-8.23 (S.284-290).xlsx"), sheet = "Abb8.22_PF")
 
 # Fachkenntnisse nach Zuwanderungsgeschichte
 # Mathe
-d_m_migra <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.2 GL")
+d_m_migra <- readxl::read_excel(paste0(pfad, "IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.2 GL")
 # Bio
-d_b_migra <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.3 BF")
+d_b_migra <- readxl::read_excel(paste0(pfad, "IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.3 BF")
 # Chemie
-d_c_migra <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.5 CF")
+d_c_migra <- readxl::read_excel(paste0(pfad, "IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.5 CF")
 # Physik
-d_p_migra <- readxl::read_excel(paste0(pfad, "data-raw/raw/IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.7 PF")
+d_p_migra <- readxl::read_excel(paste0(pfad, "IQB013_Abb9.2-9.8 (S.305-315).xlsx"), sheet = "Abb 9.7 PF")
 
 
 #### Datensatz aufbereiten ---------------------------------------------------
@@ -1003,13 +1003,13 @@ usethis::use_data(iqb, overwrite = T)
 
 ## Alle ----
 
-file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+# file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+#
+# path_kek <- "C:/Users/kab/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+#
+# file_path <- path_kek
 
-pat_kek <- "C:/Users/kab/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten"
-
-file_path <- path_kek
-
-dat_pisa_g <- read_xls(paste0(file_path, "/", "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
+dat_pisa_g <- read_xls(paste0(pfad, "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
 
 sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
 sub_pisa_g <- dat_pisa_g[,sub_cindex]
@@ -1062,7 +1062,7 @@ pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
 
   # setting path
 
-  dat_pisa_g <- read_xls(paste0(file_path, "/",pisa_list_dat ), sheet = pisa_list_sheeet)
+  dat_pisa_g <- read_xls(paste0(pfad,pisa_list_dat ), sheet = pisa_list_sheeet)
 
   # fach auslesen
   sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
@@ -1225,13 +1225,13 @@ usethis::use_data(pisa, overwrite = T)
 ## TIMSS Acheivement----
 
 ### Gender ----
-file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+#file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
 # funktion
 timss_gender_transform <- function(dat){
 
-  timss_g <- read_xlsx(paste0(file_path, "/", dat))
+  timss_g <- read_xlsx(paste0(pfad, dat))
 
   timss_g_sub<- colnames(timss_g)[1]
 
@@ -1320,7 +1320,7 @@ timss_gender <- bind_rows(l,k)
 # funktion
 
 timss_achv_extract<-function(dat){
-  dat1 <- read_excel(paste0(file_path, "/", dat))
+  dat1 <- read_excel(paste0(pfad, dat))
 
   timss_a_sub<- colnames(dat1)[1]
 
@@ -1402,7 +1402,7 @@ timss_res_extract <- function(dat3, jahr, fach){
   file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
-  dat2 <- read_excel(paste0(file_path, "/", dat3))
+  dat2 <- read_excel(paste0(pfad, dat3))
 
   # timss_res_sub<- colnames(dat2)[1]
   #
@@ -1510,7 +1510,7 @@ timss_benchmarks_extract <- function(dat7){
   file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
-  dat8 <- read_excel(paste0(file_path, "/", dat7))
+  dat8 <- read_excel(paste0(pfad, dat7))
 
   timss_b_sub<- colnames(dat8)[1]
 
