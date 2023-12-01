@@ -318,6 +318,7 @@ names(df_incl)[5] <- "region"
 # share_mint_kurse
   ## Datensatz so anpassen, dass Funktion nicht mehr benötigt wird
 
+# objekt zum filtern, pivoten aller fächer erstellen
 alle_kurse <- kurse %>%
   dplyr::select(fachbereich)%>%
   unique%>%
@@ -325,6 +326,7 @@ alle_kurse <- kurse %>%
   as.vector%>%
   append("MINT")%>%
   append("andere Fächer")
+
 
 kurse <- kurse %>%
   tidyr::pivot_wider(names_from = fachbereich, values_from = wert) %>%
