@@ -18,6 +18,8 @@ arbeitsmarkt_anforderungen <- function(r) {
 
   #t <<- as.character(timerange[1]:timerange[2])
 
+
+  # SQL: DONE
   df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
     dplyr::filter(jahr %in% timerange &
                     bundesland == "Deutschland" &
@@ -460,9 +462,10 @@ beruf_verlauf_single <- function(r) {
   # df <- df %>% dplyr::filter(region == "Deutschland")
   # df <- df %>% dplyr::filter(anforderung == "Gesamt")
   # df <- df %>% dplyr::filter(geschlecht == "Gesamt")
-
-  df <- calc_arbeitsmarkt_mint(df)
-  df <- calc_arbeitsmarkt_males(df)
+# flag----
+  #df <- calc_arbeitsmarkt_mint(df)
+# flag----
+  #df <- calc_arbeitsmarkt_males(df)
 
   df <- df %>%
     dplyr::group_by(jahr, indikator) %>%
@@ -1273,8 +1276,8 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
   #df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   #df <- df %>% dplyr::filter(indikator == indikator_choice)
-
-  df <- prep_arbeitsmarkt_east_west(df)
+# flag ----
+  #df <- prep_arbeitsmarkt_east_west(df)
 
   df <- df %>%
     dplyr::mutate(region = dplyr::case_when(
@@ -1286,8 +1289,8 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
   df <- df %>% dplyr::filter(region %in% states)
 
   df <- df %>% dplyr::filter(anforderung != "Keine Zuordnung möglich")
-
-  df <- calc_arbeitsmarkt_males(df)
+# flag ----
+  #df <- calc_arbeitsmarkt_males(df)
 
   df_gesamt <- df %>%
     dplyr::filter(fachbereich == "Alle",
@@ -2369,9 +2372,9 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
   df <- rbind(df %>% dplyr::filter(anforderung != "Gesamt"), df_new_gesamt)
 
   df <- df %>% dplyr::filter(anforderung == "Gesamt")
-
+  # flag ----
   df <- calc_arbeitsmarkt_mint(df)
-
+  # flag ----
   df <- calc_arbeitsmarkt_males(df)
 
 
@@ -2535,9 +2538,9 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
   df <- rbind(df %>% dplyr::filter(anforderung != "Gesamt"), df_new_gesamt)
 
   df <- df %>% dplyr::filter(anforderung == "Gesamt")
-
+  # flag ----
   df <- calc_arbeitsmarkt_mint(df)
-
+  # flag ----
   df <- calc_arbeitsmarkt_males(df)
 
   df_sub_new_gesamt <- df %>% dplyr::filter(geschlecht == "Gesamt") %>%
@@ -2858,6 +2861,8 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
 
   # calculate comparison map 1
+
+# flag ----
   df1_list <- calculate_landkreis(df, states, category_1, domain_1, indikator_azubi_1, indikator_besch_1)
 
   df1_map <- df1_list[[1]]
@@ -2878,6 +2883,8 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   #
 
   # calculate comparison map 2
+
+# flag ----
   df2_list <- calculate_landkreis(df, states, category_2, domain_2, indikator_azubi_2, indikator_besch_2)
 
   df2_map <- df2_list[[1]]
@@ -3039,6 +3046,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r) {
   display_form <- r$darstellung_beruf_arbeitsmarkt_landkreis_vergleich
 
   # calculate comparison
+#flag ----
   df_compare_list <- calculate_landkreis(df, states, category, domain, indikator_azubi, indikator_besch)
 
   df_compare <- df_compare_list[[1]]
