@@ -307,7 +307,7 @@ data <- rbind(data_z, data_k, data_kn)
 
 ## Doppet gemacht - schon von mir angepasst gewesen
 
-# ## prep funktionen einarbeten -----
+# ## prep funktionen einarbeten
 #
 # # prep_arbeitsmarkt_east_west
 #
@@ -382,38 +382,161 @@ arbeitsmarkt$wert <- as.numeric(arbeitsmarkt$wert)
 usethis::use_data(arbeitsmarkt, overwrite = T)
 
 
-
 # Erstellt "arbeitsmarkt_detail" ------------------------------------------
 
 ## Rohdaten einlesen ---------------------------------------------------
 
-# Einlesen Hauptdatensatz
-# data <- readxl::read_excel(system.file(package="datalab",
-#                                        "data-raw/BA006_221123_Besch_MINT.xlsx"),
-#                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
+library(dplyr)
 
-# läuft seit neuem Laptop mit Code drüber nicht mehr druch, daher umgeschrieben (kbr)
-
-library(magrittr)
-
-# setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
-# path<-"C:/Users/kab/Downloads/datalab/datalab/data-raw/BA006_221123_Besch_MINT.xlsx"
-# data <- readxl::read_excel("BA006_221123_Besch_MINT.xlsx",
-#                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
-#
+# 2021
 data <- readxl::read_excel(paste0(pfad, "BA006_221123_Besch_MINT.xlsx"),
                            sheet = "Auswertung", col_names = F, range = "A17:AK7576")
 
+# 2022
 data_n <- readxl::read_excel(paste0(pfad, "BA009_230717_EA_344636_SvB_Azubi_MINT.xlsx"),
                              sheet = "Auswertung", col_names = F, range = "A16:AH7521")
+
+# 2013 - 2020
+sheet <- 2013:2020
+data_z <- list()
+for(i in 1:length(sheet)){
+  data_temp <- readxl::read_excel(paste0(pfad, "BA020_230915_EA_346733_SvB_MINT_ZR.xlsx"),
+                                  sheet = paste0(sheet[i]), col_names = F, range = "A16:AH7521")
+  list_temp <- list(data_temp)
+  data_z <- append(data_z, list_temp)
+
+}
+rm(list_temp, data_temp)
+names(data_z) <- paste0("data_", 2013:2020)
+
+
+## Data wrangling ----------------------------------------------------------
+
+
+### 2013-2020, 2022 -------------------------------------------------------
+
+wrangling_detailliert <- function(data_n){
+  # Spalten zusammenfassen/löschen für 2023
+  data_n$...2 <- dplyr::coalesce(data_n$...5, data_n$...4, data_n$...3, data_n$...2) # MINT/Niveau in eine Spalte
+
+  ## Daten von 2022 region formatieren
+  data_n1 <- data_n
+  data_n1$...3 <- data_n1$...1
+  data_n1 <- data_n1 %>%
+    dplyr::mutate(bundesland=dplyr::case_when(
+      ...1 == "Deutschland" ~ "Deutschland",
+      ...1 == "Westdeutschland" ~"Westdeutschland (o. Berlin)",
+      ...1 == "Ostdeutschland" ~ "Ostdeutschland (einschl. Berlin)",
+      ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
+      ...1 == "Bayern" ~"Bayern",
+      ...1 == "Berlin" ~"Berlin",
+      ...1 == "Brandenburg" ~ "Brandenburg",
+      ...1 == "Bremen" ~ "Bremen",
+      ...1 == "Hamburg" ~"Hamburg",
+      ...1 == "Hessen" ~"Hessen",
+      ...1 == "Mecklenburg-Vorpommern" ~"Mecklenburg-Vorpommern",
+      ...1 == "Niedersachsen" ~"Niedersachsen",
+      ...1 == "Nordrhein-Westfalen" ~"Nordrhein-Westfalen",
+      ...1 == "Rheinland-Pfalz" ~"Rheinland-Pfalz",
+      ...1 == "Saarland" ~"Saarland",
+      ...1 == "Sachsen-Anhalt" ~"Sachsen-Anhalt",
+      ...1 == "Sachsen" ~"Sachsen",
+      ...1 == "Schleswig-Holstein" ~"Schleswig-Holstein",
+      ...1 == "Thüringen" ~"Thüringen"
+    ))%>% tidyr::separate(...3, c("a","b"), sep = ",")%>% #reicht nicht ganz, müsste auch nach : separieren für Sachsen-Anhalt Kreise
+    dplyr::rename(ort = a)
+
+  #schlüsselnummer nur mit Leerzeichen getrennt
+  data_n1$...4 <- stringr::str_extract(data_n1$ort, "[[:digit:]]+")
+  data_n1$ort <- gsub("[[:digit:]]", "", data_n1$ort)
+  data_n1$ort <- stringr::str_trim(data_n1$ort)
+
+  # zwischen gleichnamigen Stadt- und Landkreisen unterscheiden
+  ## Hilfsvarialbe, die Stadt/Landkreise, die es doppelt gibt, in Hilfs-String schreibt
+  help <- data.frame(table(data_n1$ort))
+  help <- help %>% dplyr::filter(Freq != 1)
+
+  # für die ausgewählten Fälle (-->%in% help) falls "Stadt" in näherer Bezeichnung in Spalte b vorkommt, Stadt vorschreiben, sonst Landkreis
+  data_n1$ort <- ifelse(data_n1$ort %in% help$Var1 & grepl("tadt", data_n1$b) , stringr::str_c("Stadt ", data_n1$ort), data_n1$ort)
+  data_n1$ort <- ifelse(data_n1$ort %in% help$Var1 & !grepl("tadt", data_n1$b), stringr::str_c("Landkreis ", data_n1$ort),data_n1$ort)
+
+  # Spezifalfall Oldenburg mit Beschreibung Oldenburg in Klammern, daher nicht erkannt als identisch in Ansatz davor
+  data_n1$ort <- ifelse(grepl("Olde", data_n1$ort), "Stadt Oldenbrug", data_n1$ort)
+  data_n1$ort <- ifelse(grepl("Olde", data_n1$ort) & is.na(data_n1$b), "Landkreis Oldenbrug", data_n1$ort)
+
+  data_n <- data_n1 %>%
+    dplyr::rename(
+      schluesselnummer = ...4,
+      zusatz = b
+    )
+
+  data_n <- data_n[,-c(6,7)]
+
+
+  # Header ergänzen daten von 2022
+  header <- c("region", "fachbereich", "ort", "zusatz", "schluesselnummer",
+              #
+              "Beschäftigte",
+              "weibliche Beschäftigte",
+              "Beschäftigte u25",
+              "Beschäftigte ü55",
+              #
+              "Beschäftigte (nur SVB)",
+              "weibliche Beschäftigte (nur SVB)",
+              "Beschäftigte u25 (nur SVB)",
+              "Beschäftigte ü55 (nur SVB)",
+              "Auszubildende",
+              "weibliche Auszubildende",
+              #
+              "Beschäftigte (nur GFB)",
+              "weibliche Beschäftigte (nur GFB)",
+              "Beschäftigte u25 (nur GFB)",
+              "Beschäftigte ü55 (nur GFB)",
+              #
+              "ausländische Beschäftigte",
+              "ausländische weibliche Beschäftigte",
+              "ausländische Beschäftigte u25",
+              "ausländische Beschäftigte ü55",
+              #
+              "ausländische Beschäftigte (nur SVB)",
+              "ausländische weibliche Beschäftigte (nur SVB)",
+              "ausländische Beschäftigte u25 (nur SVB)",
+              "ausländische Beschäftigte ü55 (nur SVB)",
+              "ausländische Auszubildende",
+              "ausländische weibliche Auszubildende",
+              #
+              "ausländische Beschäftigte (nur GFB)",
+              "ausländische weibliche Beschäftigte (nur GFB)",
+              "ausländische Beschäftigte u25 (nur GFB)",
+              "ausländische Beschäftigte ü55 (nur GFB)",
+
+              "bundesland"
+  )
+  colnames(data_n) <- header
+
+
+  # bundesland füllen
+  data_n$bundesland <- stats::ave(data_n$bundesland, cumsum(!is.na(data_n$bundesland)), FUN=function(x) x[1])
+
+  return(data_n)
+}
+
+
+data_n <- wrangling_detailliert(data_n)
+
+data_z <- lapply(names(data_z), function(x) wrangling_detailliert(data_z[[x]]))
+#data_z <- lapply(names(data_z) FUN = as.numeric(data_z[[,6:33]]))
+
+
+data_z <- lapply(data_z, function(df) dplyr::mutate_at(df, vars(6:33), as.numeric))
+names(data_z) <- paste0("data_", 2013:2020)
+
+### 2021 --------------------------------------------------------------------
+
 
 # Spalten zusammenfassen/löschen
 data$...1 <- dplyr::coalesce(data$...4, data$...3, data$...2, data$...1) # Regionen in eine Spalte
 data$...5 <- dplyr::coalesce(data$...8, data$...7, data$...6, data$...5) # Hilfspalte für MINT/Niveau gesamt, wird später getrennt
-
-# Spalten zusammenfassen/löschen für 2023
-data_n$...2 <- dplyr::coalesce(data_n$...5, data_n$...4, data_n$...3, data_n$...2) # MINT/Niveau in eine Spalte
-#data_n <- data_n[,-c(3,4,5,6)] # nun überflüssige Spalten löschen
 
 ## Daten von 2021 region formatieren (kab)
 
@@ -490,58 +613,6 @@ data1 <- data1 %>%
 
 data <- data1[,-c(2,3,8:11)] # nun überflüssige Spalten löschen
 
-## Daten von 2022 region formatieren
-data_n1 <- data_n
-data_n1$...3 <- data_n1$...1
-data_n1 <- data_n1 %>%
-  dplyr::mutate(bundesland=dplyr::case_when(
-    ...1 == "Deutschland" ~ "Deutschland",
-    ...1 == "Westdeutschland" ~"Westdeutschland (o. Berlin)",
-    ...1 == "Ostdeutschland" ~ "Ostdeutschland (einschl. Berlin)",
-    ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
-    ...1 == "Bayern" ~"Bayern",
-    ...1 == "Berlin" ~"Berlin",
-    ...1 == "Brandenburg" ~ "Brandenburg",
-    ...1 == "Bremen" ~ "Bremen",
-    ...1 == "Hamburg" ~"Hamburg",
-    ...1 == "Hessen" ~"Hessen",
-    ...1 == "Mecklenburg-Vorpommern" ~"Mecklenburg-Vorpommern",
-    ...1 == "Niedersachsen" ~"Niedersachsen",
-    ...1 == "Nordrhein-Westfalen" ~"Nordrhein-Westfalen",
-    ...1 == "Rheinland-Pfalz" ~"Rheinland-Pfalz",
-    ...1 == "Saarland" ~"Saarland",
-    ...1 == "Sachsen-Anhalt" ~"Sachsen-Anhalt",
-    ...1 == "Sachsen" ~"Sachsen",
-    ...1 == "Schleswig-Holstein" ~"Schleswig-Holstein",
-    ...1 == "Thüringen" ~"Thüringen"
-  ))%>% tidyr::separate(...3, c("a","b"), sep = ",")%>% #reicht nicht ganz, müsste auch nach : separieren für Sachsen-Anhalt Kreise
-  dplyr::rename(ort = a)
-
-  #schlüsselnummer nur mit Leerzeichen getrennt
-  data_n1$...4 <- stringr::str_extract(data_n1$ort, "[[:digit:]]+")
-  data_n1$ort <- gsub("[[:digit:]]", "", data_n1$ort)
-  data_n1$ort <- stringr::str_trim(data_n1$ort)
-
-  # zwischen gleichnamigen Stadt- und Landkreisen unterscheiden
-  ## Hilfsvarialbe, die Stadt/Landkreise, die es doppelt gibt, in Hilfs-String schreibt
-  help <- data.frame(table(data_n1$ort))
-  help <- help %>% dplyr::filter(Freq != 1)
-
-  # für die ausgewählten Fälle (-->%in% help) falls "Stadt" in näherer Bezeichnung in Spalte b vorkommt, Stadt vorschreiben, sonst Landkreis
-  data_n1$ort <- ifelse(data_n1$ort %in% help$Var1 & grepl("tadt", data_n1$b) , stringr::str_c("Stadt ", data_n1$ort), data_n1$ort)
-  data_n1$ort <- ifelse(data_n1$ort %in% help$Var1 & !grepl("tadt", data_n1$b), stringr::str_c("Landkreis ", data_n1$ort),data_n1$ort)
-
-  # Spezifalfall Oldenburg mit Beschreibung Oldenburg in Klammern, daher nicht erkannt als identisch in Ansatz davor
-  data_n1$ort <- ifelse(grepl("Olde", data_n1$ort), "Stadt Oldenbrug", data_n1$ort)
-  data_n1$ort <- ifelse(grepl("Olde", data_n1$ort) & is.na(data_n1$b), "Landkreis Oldenbrug", data_n1$ort)
-
-  data_n <- data_n1 %>%
-    dplyr::rename(
-      schluesselnummer = ...4,
-      zusatz = b
-    )
-
-  data_n <- data_n[,-c(6,7)]
 
 # Header ergänzen daten von 2021
 header <- c("region", "ort", "zusatz", "schluesselnummer", "fachbereich",
@@ -584,204 +655,179 @@ header <- c("region", "ort", "zusatz", "schluesselnummer", "fachbereich",
 )
 colnames(data) <- header
 
-# Header ergänzen daten von 2022
-header <- c("region", "fachbereich", "ort", "zusatz", "schluesselnummer",
-            #
-            "Beschäftigte",
-            "weibliche Beschäftigte",
-            "Beschäftigte u25",
-            "Beschäftigte ü55",
-            #
-            "Beschäftigte (nur SVB)",
-            "weibliche Beschäftigte (nur SVB)",
-            "Beschäftigte u25 (nur SVB)",
-            "Beschäftigte ü55 (nur SVB)",
-            "Auszubildende",
-            "weibliche Auszubildende",
-            #
-            "Beschäftigte (nur GFB)",
-            "weibliche Beschäftigte (nur GFB)",
-            "Beschäftigte u25 (nur GFB)",
-            "Beschäftigte ü55 (nur GFB)",
-            #
-            "ausländische Beschäftigte",
-            "ausländische weibliche Beschäftigte",
-            "ausländische Beschäftigte u25",
-            "ausländische Beschäftigte ü55",
-            #
-            "ausländische Beschäftigte (nur SVB)",
-            "ausländische weibliche Beschäftigte (nur SVB)",
-            "ausländische Beschäftigte u25 (nur SVB)",
-            "ausländische Beschäftigte ü55 (nur SVB)",
-            "ausländische Auszubildende",
-            "ausländische weibliche Auszubildende",
-            #
-            "ausländische Beschäftigte (nur GFB)",
-            "ausländische weibliche Beschäftigte (nur GFB)",
-            "ausländische Beschäftigte u25 (nur GFB)",
-            "ausländische Beschäftigte ü55 (nur GFB)",
-
-            "bundesland"
-)
-colnames(data_n) <- header
-
-# bundesland füllen
-data_n$bundesland <- stats::ave(data_n$bundesland, cumsum(!is.na(data_n$bundesland)), FUN=function(x) x[1])
 
 ## Aufbereiten in gewünschte DF-Struktur ---------------------------------
 
-detailliert_aufbereiten <- function(data, jahr){
+detailliert_aufbereiten <- function(data){
 
-# Anpassungen (kab)
+  # Anpassungen (kab)
 
-#NA definieren anstelle */0
-# data <- data %>%
-#   dplyr::mutate_all(~dplyr::replace(., . %in% c(0, "*"), NA))
+  #NA definieren anstelle */0
+  # data <- data %>%
+  #   dplyr::mutate_all(~dplyr::replace(., . %in% c(0, "*"), NA))
 
-# Orte/Schlüsselnummern trennen
-data <- data %>%
-  dplyr::mutate(dplyr::across(c(6:33), as.numeric))
+  # Orte/Schlüsselnummern trennen
+  data <- data %>%
+    dplyr::mutate(dplyr::across(c(6:33), as.numeric))
 
-data[data == 0] <- NA
+  data[data == 0] <- NA
 
-data$ort <- ifelse(is.na(data$ort), data$region, data$ort)
-data$zusatz <- ifelse(is.na(data$zusatz), data$region, data$zusatz)
-data$schluesselnummer <- ifelse(is.na(data$schluesselnummer), data$region, data$schluesselnummer)
+  data$ort <- ifelse(is.na(data$ort), data$region, data$ort)
+  data$zusatz <- ifelse(is.na(data$zusatz), data$region, data$zusatz)
+  data$schluesselnummer <- ifelse(is.na(data$schluesselnummer), data$region, data$schluesselnummer)
 
-data$ort <- zoo::na.locf(data$ort )
-data$zusatz <- zoo::na.locf(data$zusatz)
-data$schluesselnummer <- zoo::na.locf(data$schluesselnummer)
-
-
-
-data <- data %>%
-  dplyr::filter(!is.na(fachbereich))%>%
-  dplyr::select(-region)%>%
-  dplyr::rename(region = ort)
-
-data$zusatz <- ifelse(data$zusatz == data$region, NA, data$zusatz )
-data$schluesselnummer <- ifelse(data$schluesselnummer == data$region, NA, data$schluesselnummer )
+  data$ort <- zoo::na.locf(data$ort )
+  data$zusatz <- zoo::na.locf(data$zusatz)
+  data$schluesselnummer <- zoo::na.locf(data$schluesselnummer)
 
 
-#Fachbereich und Arbeitslevel trennen
-data$anforderung <- ifelse(data$fachbereich %in% c("Helfer", "Fachkraft", "Spezialist",
-                                                   "Experte", "keine Angabe"), data$fachbereich, "Gesamt")
-data$fachbereich <- ifelse(data$fachbereich %in% c("Helfer", "Fachkraft", "Spezialist",
-                                                   "Experte", "keine Angabe"), NA, data$fachbereich)
 
-data$anforderung[data$anforderung=="keine Angabe"]<-"keine Zuordnung möglich"
-data$fachbereich[data$fachbereich=="Insgesamt"]<-"Alle"
-data$fachbereich[data$fachbereich=="MINT-Berufe"]<-"MINT"
-data$fachbereich[data$fachbereich=="Technik"]<-"Technik (gesamt)"
+  data <- data %>%
+    dplyr::filter(!is.na(fachbereich))%>%
+    dplyr::select(-region)%>%
+    dplyr::rename(region = ort)
 
-# Lücken füllen, die durch Zellverbünde entstanden sind
-# data$region <- stats::ave(data$region, cumsum(!is.na(data$region)), FUN=function(x) x[1])
-data$fachbereich <- stats::ave(data$fachbereich, cumsum(!is.na(data$fachbereich)), FUN=function(x) x[1])
-
-# ins long-Format bringen
-data <- data %>%
-  tidyr::pivot_longer(cols = "Beschäftigte":"ausländische Beschäftigte ü55 (nur GFB)")
+  data$zusatz <- ifelse(data$zusatz == data$region, NA, data$zusatz )
+  data$schluesselnummer <- ifelse(data$schluesselnummer == data$region, NA, data$schluesselnummer )
 
 
-## nötige Variablen auswählen/ergänzen -----------------------------------------------
+  #Fachbereich und Arbeitslevel trennen
+  data$anforderung <- ifelse(data$fachbereich %in% c("Helfer", "Fachkraft", "Spezialist",
+                                                     "Experte", "keine Angabe"), data$fachbereich, "Gesamt")
+  data$fachbereich <- ifelse(data$fachbereich %in% c("Helfer", "Fachkraft", "Spezialist",
+                                                     "Experte", "keine Angabe"), NA, data$fachbereich)
 
-# Entferen von Variablen die (aktuell) nicht analysiert werden
-data <- subset(data, !(name %in% c("Beschäftigte", "weibliche Beschäftigte", "Beschäftigte u25", "Beschäftigte ü55",
-                                   "Beschäftigte u25 (nur GFB)", "Beschäftigte ü55 (nur GFB)",
-                                   "ausländische Beschäftigte", "ausländische weibliche Beschäftigte", "ausländische Beschäftigte u25",
-                                   "ausländische Beschäftigte ü55", "ausländische Beschäftigte u25 (nur GFB)",
-                                   "ausländische Beschäftigte ü55 (nur GFB)")))
-data <- data %>%
-  dplyr::mutate(
-    # quelle = "Bundesagentur für Arbeit, 2022: Auf Anfrage (Auftragsnummer 335970)",
-    # hinweise = "eigene Berechnungen durch MINTvernetzt",
-    bereich = "Arbeitsmarkt",
-    jahr = jahr,
-    geschlecht = dplyr::case_when(
-      stringr::str_detect(data$name, "weiblich")~"Frauen",
-      TRUE ~ "Gesamt"
-    ),
-    kategorie = dplyr::case_when(
-      stringr::str_detect(data$name, "Auszubildende")~"Auszubildende",
-      TRUE ~ "Beschäftigte"
-    ),
-    name = dplyr::case_when(
-      name == "Beschäftigte (nur SVB)"~"Beschäftigte",
-      name == "weibliche Beschäftigte (nur SVB)"~ "Beschäftigte",
-      name == "Beschäftigte u25 (nur SVB)"~"Beschäftigte u25",
-      name == "Beschäftigte ü55 (nur SVB)"~"Beschäftigte ü55",
-      name == "weibliche Auszubildende"~"Auszubildende",
-      name == "Beschäftigte (nur GFB)"~"in Minijobs",
-      name == "weibliche Beschäftigte (nur GFB)"~"in Minijobs",
-      name == "ausländische Beschäftigte (nur SVB)"~"ausländische Beschäftigte",
-      name == "ausländische weibliche Beschäftigte (nur SVB)"~ "ausländische Beschäftigte",
-      name == "ausländische Beschäftigte u25 (nur SVB)"~"ausländische Beschäftigte u25",
-      name == "ausländische Beschäftigte ü55 (nur SVB)"~"ausländische Beschäftigte ü55",
-      name == "ausländische weibliche Auszubildende"~"ausländische Auszubildende",
-      name == "ausländische Beschäftigte (nur GFB)"~"ausländisch in Minijobs",
-      name == "ausländische weibliche Beschäftigte (nur GFB)"~"ausländisch in Minijobs",
-      TRUE ~ name
-    )) %>%
-  dplyr::rename(wert=value,
-                indikator=name)
+  data$anforderung[data$anforderung=="keine Angabe"]<-"keine Zuordnung möglich"
+  data$fachbereich[data$fachbereich=="Insgesamt"]<-"Alle"
+  data$fachbereich[data$fachbereich=="MINT-Berufe"]<-"MINT"
+  data$fachbereich[data$fachbereich=="Technik"]<-"Technik (gesamt)"
 
-data <- data %>%
-  dplyr::rename(
-    landkreis = region,
-    landkreis_zusatz = zusatz,
-    landkreis_nummer = schluesselnummer
-  )
+  # Lücken füllen, die durch Zellverbünde entstanden sind
+  # data$region <- stats::ave(data$region, cumsum(!is.na(data$region)), FUN=function(x) x[1])
+  data$fachbereich <- stats::ave(data$fachbereich, cumsum(!is.na(data$fachbereich)), FUN=function(x) x[1])
+
+  # ins long-Format bringen
+  data <- data %>%
+    tidyr::pivot_longer(cols = "Beschäftigte":"ausländische Beschäftigte ü55 (nur GFB)")
+
+  # Entferen von Variablen die (aktuell) nicht analysiert werden
+  data <- subset(data, !(name %in% c("Beschäftigte", "weibliche Beschäftigte", "Beschäftigte u25", "Beschäftigte ü55",
+                                     "Beschäftigte u25 (nur GFB)", "Beschäftigte ü55 (nur GFB)",
+                                     "ausländische Beschäftigte", "ausländische weibliche Beschäftigte", "ausländische Beschäftigte u25",
+                                     "ausländische Beschäftigte ü55", "ausländische Beschäftigte u25 (nur GFB)",
+                                     "ausländische Beschäftigte ü55 (nur GFB)")))
+  data <- data %>%
+    dplyr::mutate(
+      # quelle = "Bundesagentur für Arbeit, 2022: Auf Anfrage (Auftragsnummer 335970)",
+      # hinweise = "eigene Berechnungen durch MINTvernetzt",
+      bereich = "Arbeitsmarkt",
+      #jahr = jahr,
+      geschlecht = dplyr::case_when(
+        stringr::str_detect(data$name, "weiblich")~"Frauen",
+        TRUE ~ "Gesamt"
+      ),
+      kategorie = dplyr::case_when(
+        stringr::str_detect(data$name, "Auszubildende")~"Auszubildende",
+        TRUE ~ "Beschäftigte"
+      ),
+      name = dplyr::case_when(
+        name == "Beschäftigte (nur SVB)"~"Beschäftigte",
+        name == "weibliche Beschäftigte (nur SVB)"~ "Beschäftigte",
+        name == "Beschäftigte u25 (nur SVB)"~"Beschäftigte u25",
+        name == "Beschäftigte ü55 (nur SVB)"~"Beschäftigte ü55",
+        name == "weibliche Auszubildende"~"Auszubildende",
+        name == "Beschäftigte (nur GFB)"~"in Minijobs",
+        name == "weibliche Beschäftigte (nur GFB)"~"in Minijobs",
+        name == "ausländische Beschäftigte (nur SVB)"~"ausländische Beschäftigte",
+        name == "ausländische weibliche Beschäftigte (nur SVB)"~ "ausländische Beschäftigte",
+        name == "ausländische Beschäftigte u25 (nur SVB)"~"ausländische Beschäftigte u25",
+        name == "ausländische Beschäftigte ü55 (nur SVB)"~"ausländische Beschäftigte ü55",
+        name == "ausländische weibliche Auszubildende"~"ausländische Auszubildende",
+        name == "ausländische Beschäftigte (nur GFB)"~"ausländisch in Minijobs",
+        name == "ausländische weibliche Beschäftigte (nur GFB)"~"ausländisch in Minijobs",
+        TRUE ~ name
+      )) %>%
+    dplyr::rename(wert=value,
+                  indikator=name)
+
+  data <- data %>%
+    dplyr::rename(
+      landkreis = region,
+      landkreis_zusatz = zusatz,
+      landkreis_nummer = schluesselnummer
+    )
 
 
+  ######## Weitere Anpassungen/Berechnungen von Andi
+
+  data <- data %>%
+    dplyr::mutate(wert = ifelse(is.na(wert), 0, wert))
+
+  # Calculate Beschäftigte 25-55
+  data_alter <- data %>% dplyr::filter(indikator %in% c("Beschäftigte", "Beschäftigte u25", "Beschäftigte ü55"),
+                                       geschlecht == "Gesamt")
+
+  data_alter <- data_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
+                                               landkreis_zusatz, landkreis_nummer, anforderung) %>%
+    dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
+    dplyr::mutate(indikator = "Beschäftigte 25-55") %>%
+    dplyr::filter(!is.na(wert)) %>%
+    dplyr::bind_rows(., data_alter)
+
+  # Calculate ausländische Beschäftigte 25-55
+  data_ausl_alter <- data %>% dplyr::filter(indikator %in% c("ausländische Beschäftigte", "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55"),
+                                            geschlecht == "Gesamt")
+
+  data_ausl_alter <- data_ausl_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
+                                                         landkreis_zusatz, landkreis_nummer, anforderung) %>%
+    dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
+    dplyr::mutate(indikator = "ausländische Beschäftigte 25-55") %>%
+    dplyr::filter(!is.na(wert)) %>%
+    dplyr::bind_rows(., data_ausl_alter)
+
+  # Calculate males
+  data_geschlecht <- data %>% dplyr::filter(!indikator %in% c("Beschäftigte u25", "Beschäftigte ü55",
+                                                              "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55")) %>%
+    dplyr::group_by(bereich, kategorie, indikator, fachbereich, bundesland, landkreis,
+                    landkreis_zusatz, landkreis_nummer, anforderung) %>%
+    dplyr::summarise(wert = wert - dplyr::lead(wert, 1)) %>%
+    dplyr::mutate(geschlecht = "Männer") %>%
+    dplyr::filter(!is.na(wert)) %>%
+    dplyr::bind_rows(., data)
+
+  data_final <- dplyr::bind_rows(data_geschlecht, data_alter, data_ausl_alter) %>%
+    dplyr::distinct()
+}
+
+
+
+data <- detailliert_aufbereiten(data = data)
+data$jahr <- 2021
 # Spalten in logische Reihenfolge bringen
 data <- data[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
                 #, "hinweise", "quelle"
 )]
+data_n <- detailliert_aufbereiten(data = data_n)
+data_n$jahr <- 2022
+# Spalten in logische Reihenfolge bringen
+data_n <- data_n[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
+                    #, "hinweise", "quelle"
+)]
 
-######## Weitere Anpassungen/Berechnungen von Andi
+data_z <- lapply(names(data_z), function(x) detailliert_aufbereiten(data_z[[x]]))
+data_z <- lapply(1:length(data_z), function(i) {
+  df <- data_z[[i]]
+  jahr <- 2013 + i - 1
+  df <- df %>% mutate(jahr = jahr)
+  df <- df[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
+              #, "hinweise", "quelle"
+  )]
+  return(df)
+})
+names(data_z) <- paste0("data_", 2013:2020)
 
-data <- data %>%
-  dplyr::mutate(wert = ifelse(is.na(wert), 0, wert))
 
-# Calculate Beschäftigte 25-55
-data_alter <- data %>% dplyr::filter(indikator %in% c("Beschäftigte", "Beschäftigte u25", "Beschäftigte ü55"),
-                                     geschlecht == "Gesamt")
-
-data_alter <- data_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
-                                             landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
-  dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
-  dplyr::mutate(indikator = "Beschäftigte 25-55") %>%
-  dplyr::filter(!is.na(wert)) %>%
-  dplyr::bind_rows(., data_alter)
-
-# Calculate ausländische Beschäftigte 25-55
-data_ausl_alter <- data %>% dplyr::filter(indikator %in% c("ausländische Beschäftigte", "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55"),
-                                          geschlecht == "Gesamt")
-
-data_ausl_alter <- data_ausl_alter %>% dplyr::group_by(bereich, kategorie, fachbereich, geschlecht, bundesland, landkreis,
-                                                       landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
-  dplyr::summarise(wert = wert - dplyr::lead(wert, 1) - dplyr::lead(wert, 2)) %>%
-  dplyr::mutate(indikator = "ausländische Beschäftigte 25-55") %>%
-  dplyr::filter(!is.na(wert)) %>%
-  dplyr::bind_rows(., data_ausl_alter)
-
-# Calculate males
-data_geschlecht <- data %>% dplyr::filter(!indikator %in% c("Beschäftigte u25", "Beschäftigte ü55",
-                                                            "ausländische Beschäftigte u25", "ausländische Beschäftigte ü55")) %>%
-  dplyr::group_by(bereich, kategorie, indikator, fachbereich, bundesland, landkreis,
-                  landkreis_zusatz, landkreis_nummer, jahr, anforderung) %>%
-  dplyr::summarise(wert = wert - dplyr::lead(wert, 1)) %>%
-  dplyr::mutate(geschlecht = "Männer") %>%
-  dplyr::filter(!is.na(wert)) %>%
-  dplyr::bind_rows(., data)
-
-data_final <- dplyr::bind_rows(data_geschlecht, data_alter, data_ausl_alter) %>%
-  dplyr::distinct()
-}
-data <- detailliert_aufbereiten(data = data, jahr = 2021)
-data_n <- detailliert_aufbereiten(data = data_n, jahr = 2022)
-
-## Azubi-Datensatz ---------------------------------------------------------
+## HIER WEITER Azubi-Datensatz ---------------------------------------------------------
 
 
 ### Rohdaten einlesen ---------------------------------------------------
