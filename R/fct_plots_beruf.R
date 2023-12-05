@@ -463,15 +463,9 @@ beruf_verlauf_single <- function(r) {
   # df <- df %>% dplyr::filter(region == "Deutschland")
   # df <- df %>% dplyr::filter(anforderung == "Gesamt")
   # df <- df %>% dplyr::filter(geschlecht == "Gesamt")
-<<<<<<< HEAD
 
  # df <- calc_arbeitsmarkt_mint(df)
-=======
-# flag----
-  #df <- calc_arbeitsmarkt_mint(df)
-# flag----
-  #df <- calc_arbeitsmarkt_males(df)
->>>>>>> e27a6928e9cc26e8ec383c8dcaaf1570a25742e0
+
 
   df <- df %>%
     dplyr::group_by(jahr, indikator) %>%
@@ -1264,8 +1258,7 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
   df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
     dplyr::filter(jahr %in% t,
                   indikator == indikator_choice,
-                  region %in% states,
-                  fachbereich != "Alle"
+                  region %in% states
     )%>%
   dplyr::select("bereich",
   "indikator",
@@ -1281,11 +1274,7 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
   #df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
 
   #df <- df %>% dplyr::filter(indikator == indikator_choice)
-<<<<<<< HEAD
 
-=======
-# flag ----
->>>>>>> e27a6928e9cc26e8ec383c8dcaaf1570a25742e0
   #df <- prep_arbeitsmarkt_east_west(df)
 
   # df <- df %>%
@@ -1296,11 +1285,6 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
   #   ))
 
   df <- df %>% dplyr::filter(anforderung != "Keine Zuordnung möglich")
-<<<<<<< HEAD
-=======
-# flag ----
-  #df <- calc_arbeitsmarkt_males(df)
->>>>>>> e27a6928e9cc26e8ec383c8dcaaf1570a25742e0
 
   df_gesamt <- df %>%
     dplyr::filter(fachbereich == "Alle",
