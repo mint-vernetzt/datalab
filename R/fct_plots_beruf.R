@@ -525,7 +525,7 @@ beruf_verlauf_single <- function(r) {
     options(highcharter.lang = hcoptslang)
 
 
-    df <- dftz %>%
+    df <- df %>%
       dplyr::filter(selector=="Anzahl")
 
 
@@ -1258,7 +1258,10 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
   df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
     dplyr::filter(jahr %in% t,
                   indikator == indikator_choice,
-                  region %in% states
+                  region %in% states,
+                  anforderung %in% "Gesamt",
+                  geschlecht == "Frauen",
+                  fachbereich %in% c("Alle", "MINT")
     )%>%
   dplyr::select("bereich",
   "indikator",
@@ -1310,11 +1313,6 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
       selector == "Absolut" ~ "Anzahl"
     ))
 
-
-
-  df <- df %>% dplyr::filter(anforderung %in% "Gesamt")
-
-  df <- df %>% dplyr::filter(geschlecht == "Frauen")
 
   df <- df %>% dplyr::filter(fachbereich == "MINT")
 
@@ -1436,7 +1434,10 @@ arbeitsmarkt_bl_verlauf <- function(r) {
   df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
     dplyr::filter(jahr %in% t &
                     geschlecht == "Gesamt" &
-                    anforderung == "Gesamt"
+                    anforderung == "Gesamt",
+                  fachbereich %in% c("Alle", "MINT"),
+                  region %in% states,
+                  indikator == aniveau
     )%>%
     dplyr::select(
                   "indikator",
@@ -1449,25 +1450,20 @@ arbeitsmarkt_bl_verlauf <- function(r) {
     dplyr::collect()
 
 
-
-
-
-
-
-
   df <- df%>%
-    tidyr::pivot_wider(names_from= region, values_from=wert)%>%
-    dplyr::mutate("Ostdeutschland (inkl. Berlin)" = rowSums(dplyr::select(., c(Berlin, Brandenburg, `Mecklenburg-Vorpommern`, Sachsen, `Sachsen-Anhalt`, Thüringen)),na.rm = T),
-                  "Westdeutschland (o. Berlin)"= rowSums(dplyr::select(., c(`Baden-Württemberg`, Bayern, Bremen, Hamburg, Hessen, Niedersachsen, `Schleswig-Holstein`, `Nordrhein-Westfalen`,
-                                                                            `Rheinland-Pfalz`, Saarland  )),na.rm = T))%>%
-    tidyr::pivot_longer(c("Deutschland","Ostdeutschland (inkl. Berlin)", "Westdeutschland (o. Berlin)",
-                          "Berlin", "Brandenburg", "Mecklenburg-Vorpommern", "Sachsen",
-                          "Sachsen-Anhalt", "Thüringen",
-                          "Baden-Württemberg", "Bayern", "Bremen", "Hamburg", "Hessen",
-                          "Niedersachsen", "Schleswig-Holstein", "Nordrhein-Westfalen",
-                          "Rheinland-Pfalz", "Saarland"
-                          ),names_to= "region", values_to="wert")%>%
-    tidyr::pivot_wider(values_from=wert, names_from=fachbereich)%>%
+    # tidyr::pivot_wider(names_from= region, values_from=wert)%>%
+    # dplyr::mutate("Ostdeutschland (inkl. Berlin)" = rowSums(dplyr::select(., c(Berlin, Brandenburg, `Mecklenburg-Vorpommern`, Sachsen, `Sachsen-Anhalt`, Thüringen)),na.rm = T),
+    #               "Westdeutschland (o. Berlin)"= rowSums(dplyr::select(., c(`Baden-Württemberg`, Bayern, Bremen, Hamburg, Hessen, Niedersachsen, `Schleswig-Holstein`, `Nordrhein-Westfalen`,
+    #                                                                         `Rheinland-Pfalz`, Saarland  )),na.rm = T))%>%
+
+    # tidyr::pivot_longer(c("Deutschland","Ostdeutschland (inkl. Berlin)", "Westdeutschland (o. Berlin)",
+    #                       "Berlin", "Brandenburg", "Mecklenburg-Vorpommern", "Sachsen",
+    #                       "Sachsen-Anhalt", "Thüringen",
+    #                       "Baden-Württemberg", "Bayern", "Bremen", "Hamburg", "Hessen",
+    #                       "Niedersachsen", "Schleswig-Holstein", "Nordrhein-Westfalen",
+    #                       "Rheinland-Pfalz", "Saarland"
+    #                       ),names_to= "region", values_to="wert")%>%
+     tidyr::pivot_wider(values_from=wert, names_from=fachbereich)%>%
     dplyr::mutate(MINT_p= round(MINT/Alle*100,2))%>%
     dplyr::select(- "Alle")%>%
     dplyr::rename(Absolut = MINT, Relativ = MINT_p)%>%
@@ -1478,10 +1474,10 @@ arbeitsmarkt_bl_verlauf <- function(r) {
     ))
 
 
-  df <- df %>% dplyr::filter(region %in% states)
+ # df <- df %>% dplyr::filter(region %in% states)
 
 
-  df <- df %>% dplyr::filter(indikator == aniveau)
+ # df <- df %>% dplyr::filter(indikator == aniveau)
 
   # Hilfe für Titel
   title_help <- paste0(aniveau, "n")
@@ -2346,34 +2342,20 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
   df <- dplyr::tbl(con, from = "arbeitsmarkt") %>%
     dplyr::filter(
       jahr == timerange &
-        region == "Deutschland" )%>%
+        region == "Deutschland",
+      anforderung == "Gesamt")%>%
     dplyr::select(jahr, indikator, geschlecht, anforderung, wert, fachbereich)%>%
     dplyr::collect()
 
   # remove
   # df <- df %>% dplyr::filter(anforderung != "Helfer")
 
-  # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderung == "Gesamt")
-  # dplyr::group_by(region, fachbereich, indikator, jahr, geschlecht, bereich) %>%      ## kab
-  # dplyr::summarise(wert = sum(wert)) %>%
-  # dplyr::mutate(anforderung = "Gesamt") %>%
-  # dplyr::ungroup()
-
-  df <- rbind(df %>% dplyr::filter(anforderung != "Gesamt"), df_new_gesamt)
-
-  df <- df %>% dplyr::filter(anforderung == "Gesamt")
-  # flag ----
-  df <- calc_arbeitsmarkt_mint(df)
-  # flag ----
-  df <- calc_arbeitsmarkt_males(df)
-
 
   df_sub_new_gesamt <- df %>% dplyr::filter(geschlecht == "Gesamt") %>%
     dplyr::rename(wert_sub_gesamt = "wert") %>%
     dplyr::select(-c("geschlecht", "anforderung"))
 
-  df_new_gesamt <- df_new_gesamt %>%
+  df_new_gesamt <- df %>%
     dplyr::filter(fachbereich == "Alle",
                   geschlecht == "Gesamt") %>%
     dplyr::rename(wert_gesamt = "wert")
@@ -2506,39 +2488,16 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
   df <- dplyr::tbl(con, from = "arbeitsmarkt") %>%
     dplyr::filter(
       jahr %in% t &
-        region == "Deutschland" )%>%
+        region == "Deutschland",
+      anforderung == "Gesamt")%>%
     dplyr::select(jahr, indikator, geschlecht, anforderung, wert, fachbereich)%>%
     dplyr::collect()
-
-
-  # filter dataset based on UI inputs
-  #df <- df %>% dplyr::filter(jahr >= timerange[1] & jahr <= timerange[2])
-
-  #df <- df %>% dplyr::filter(region == "Deutschland")
-
-  # remove
-  # df <- df %>% dplyr::filter(anforderung != "Helfer")
-
-  # calculate new "Gesamt
-  df_new_gesamt <- df %>% dplyr::filter(anforderung == "Gesamt")
-  # dplyr::group_by(region, fachbereich, indikator, jahr, geschlecht, bereich) %>%
-  # dplyr::summarise(wert = sum(wert)) %>%
-  # dplyr::mutate(anforderung = "Gesamt") %>%
-  # dplyr::ungroup()
-
-  df <- rbind(df %>% dplyr::filter(anforderung != "Gesamt"), df_new_gesamt)
-
-  df <- df %>% dplyr::filter(anforderung == "Gesamt")
-  # flag ----
-  df <- calc_arbeitsmarkt_mint(df)
-  # flag ----
-  df <- calc_arbeitsmarkt_males(df)
 
   df_sub_new_gesamt <- df %>% dplyr::filter(geschlecht == "Gesamt") %>%
     dplyr::rename(wert_sub_gesamt = "wert") %>%
     dplyr::select(-c("geschlecht", "anforderung"))
 
-  df_new_gesamt <- df_new_gesamt %>%
+  df_new_gesamt <- df %>%
     dplyr::filter(fachbereich == "Alle",
                   geschlecht == "Gesamt") %>%
     dplyr::rename(wert_gesamt = "wert")
@@ -2853,7 +2812,6 @@ arbeitsmarkt_lk_detail_map <- function(r) {
 
   # calculate comparison map 1
 
-# flag ----
   df1_list <- calculate_landkreis(df, states, category_1, domain_1, indikator_azubi_1, indikator_besch_1)
 
   df1_map <- df1_list[[1]]
@@ -2875,7 +2833,6 @@ arbeitsmarkt_lk_detail_map <- function(r) {
 
   # calculate comparison map 2
 
-# flag ----
   df2_list <- calculate_landkreis(df, states, category_2, domain_2, indikator_azubi_2, indikator_besch_2)
 
   df2_map <- df2_list[[1]]
@@ -3037,7 +2994,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r) {
   display_form <- r$darstellung_beruf_arbeitsmarkt_landkreis_vergleich
 
   # calculate comparison
-#flag ----
+
   df_compare_list <- calculate_landkreis(df, states, category, domain, indikator_azubi, indikator_besch)
 
   df_compare <- df_compare_list[[1]]
