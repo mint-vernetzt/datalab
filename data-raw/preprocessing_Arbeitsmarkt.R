@@ -310,6 +310,73 @@ data <- rbind(data_z, data_k, data_kn)
 arbeitsmarkt <- data
 arbeitsmarkt$wert <- as.numeric(arbeitsmarkt$wert)
 
+## prep funktionen einarbeten -----
+
+# prep_arbeitsmarkt_east_west
+
+states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Hamburg",
+                                  "Hessen", "Niedersachsen", "Nordrhein-Westfalen",
+                                  "Rheinland-Pfalz", "Saarland", "Schleswig-Holstein"),
+                         east = c("Brandenburg", "Mecklenburg-Vorpommern", "Sachsen",
+                                  "Sachsen-Anhalt", "Thüringen", "Berlin"))
+
+df_incl <- arbeitsmarkt
+
+# set dummy variable to indicate "Osten" und "Westen"
+## Falls DE enthalten falsch
+#df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west, "Westen", "Osten")
+
+df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west & df_incl$region != "Deutschland", "Westen", NA)
+df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$east & df_incl$region != "Deutschland", "Osten", df_incl$dummy_west)
+df_incl <- na.omit(df_incl) # NA aus ifelse erstellt nochmal DE mit NA als region-Name -->löschen
+
+# sum values
+df_incl <- df_incl %>% dplyr::group_by(jahr, geschlecht, indikator, fachbereich, dummy_west,
+                                       anforderung, bereich) %>%
+  dplyr::summarise(wert = sum(wert, na.rm = T))
+
+names(df_incl)[5] <- "region"
+
+arbeitsmarkt <- rbind(arbeitsmarkt, df_incl)
+
+# calc_arbeitsmarkt_mint
+
+df_alle <- arbeitsmarkt %>% dplyr::filter(fachbereich == "Alle") %>%
+  dplyr::select(-fachbereich)
+
+df_mint <- arbeitsmarkt %>% dplyr::filter(fachbereich == "MINT") %>%
+  dplyr::rename(wert_mint = wert) %>%
+  dplyr::select(-fachbereich)
+
+df_andere <- df_alle %>% dplyr::left_join(df_mint) %>%
+  dplyr::mutate(wert = wert-wert_mint) %>%
+  dplyr::mutate(fachbereich = "Andere Berufe") %>%
+  dplyr::select(-wert_mint)
+
+df_mint <- df_mint %>% dplyr::mutate(fachbereich = "MINT") %>%
+  dplyr::rename(wert = wert_mint)
+
+arbeitsmarkt <- dplyr::bind_rows(arbeitsmarkt, df_andere, df_mint)
+
+# calc_arbeitsmarkt_males
+
+help_gesamt <- arbeitsmarkt %>% dplyr::filter(geschlecht == "Gesamt") %>%
+  dplyr::group_by(jahr, fachbereich)
+
+help_weiblich <- arbeitsmarkt %>% dplyr::filter(geschlecht == "Frauen") %>%
+  dplyr::group_by(jahr, fachbereich)
+
+wert_männlich <- help_gesamt$wert - help_weiblich$wert
+
+help_männlich <- help_weiblich
+
+help_männlich$wert <- wert_männlich
+
+help_männlich$geschlecht <- "Männer"
+
+arbeitsmarkt <- rbind(arbeitsmarkt, help_männlich)
+
+
 usethis::use_data(arbeitsmarkt, overwrite = T)
 
 
