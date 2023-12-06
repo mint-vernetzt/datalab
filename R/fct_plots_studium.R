@@ -13,6 +13,7 @@
 
 studienzahl_test <- function(r){
 
+  # prettynum flag ----
 
 # Box 1 Pie ab 2023
 
@@ -591,6 +592,8 @@ studienzahl_waffle_mint <- function(r) {
 
 studienzahl_verlauf_single <- function(r) {
 
+  # prettynum flag ----
+
   # load UI inputs from reactive value
   indi_selct <- r$studienzahl_einstieg_verlauf_indi
   timerange <- r$date_studienzahl_einstieg_verlauf
@@ -882,7 +885,7 @@ studienzahl_verlauf_single <- function(r) {
 
 studienzahl_verlauf_bl_subject <- function(r) {
 
-
+  # prettynum flag ----
   absolut_selector <- r$abs_zahlen_verlauf_subject_bl
 
   # load UI inputs from reactive value
@@ -1023,7 +1026,7 @@ studienzahl_verlauf_bl_subject <- function(r) {
 #' @noRd
 
 studierende_verlauf_multiple_bl <- function(r) {
-
+  # prettynum flag ----
 
   # load UI inputs from reactive value
   timerange <- r$date_studium_studienzahl_bl_verlauf
@@ -1307,7 +1310,7 @@ studierende_verlauf_multiple_bl <- function(r) {
 #' @noRd
 
 studienzahl_einstieg_comparison <- function(r) {
-
+  # prettynum flag ----
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg_comparison
 
@@ -1402,7 +1405,7 @@ studienzahl_einstieg_comparison <- function(r) {
 #' @noRd
 
 studienzahl_waffle_choice_gender <- function(r) {
-
+  # prettynum flag ----
 
   # load UI inputs from reactive value
   timerange <- r$choice_y
@@ -1613,7 +1616,7 @@ studienzahl_waffle_choice_gender <- function(r) {
 
 studierende_verlauf_single_bl_gender <- function(r) {
 
-
+  # prettynum flag ----
   # load UI inputs from reactive value
   timerange <- r$choice_V_y
   t <- as.character(timerange[1]:timerange[2])
@@ -1954,7 +1957,7 @@ studierende_verlauf_single_bl_gender <- function(r) {
 
 plot_ranking_top_faecher <- function(r) {
 
-
+  # prettynum flag ----
   # load UI inputs from reactive value
   timerange <- r$date_top_faecher
 
@@ -2189,7 +2192,7 @@ plot_ranking_top_faecher <- function(r) {
 
 studierende_map <- function(r) {
 
-
+  # prettynum flag ----
   # load UI inputs from reactive value
   timerange <- r$map_y
 
@@ -2770,7 +2773,7 @@ studierende_map <- function(r) {
 
 ranking_bl_subject <- function(r) {
 
-
+  # prettynum flag ----
   # load UI inputs from reactive value
 
   timerange <- r$rank_y
@@ -2884,7 +2887,7 @@ ranking_bl_subject <- function(r) {
 
 mint_anteile <- function(r) {
 
-
+  # prettynum flag ----
   states <- r$anteile_states
 
   indi <- r$anteile_indi
@@ -3069,7 +3072,7 @@ mint_anteile <- function(r) {
 #' @noRd
 
 studierende_mint_vergleich_bl <- function(r) {
-
+  # prettynum flag ----
   # load UI inputs from reactive value
 
   timerange <- r$bl_date
@@ -3176,7 +3179,7 @@ studierende_mint_vergleich_bl <- function(r) {
 #' @noRd
 
 studienzahl_einstieg_pie_gender <- function(r) {
-
+  # prettynum flag ----
   timerange <- r$gen_y
   genl <- r$gen_l
 
@@ -3532,7 +3535,7 @@ studienzahl_einstieg_pie_gender <- function(r) {
 #' @noRd
 
 studienzahl_verlauf_single_gender <- function(r) {
-
+  # prettynum flag ----
   # load UI inputs from reactive value
 
 
@@ -3868,7 +3871,7 @@ studienzahl_verlauf_single_gender <- function(r) {
 #' @noRd
 
 studienzahl_einstieg_comparison_gender <- function(r) {
-
+  # prettynum flag ----
   # load UI inputs from reactive value
   timerange <- r$gen_f_y
 
@@ -3985,7 +3988,7 @@ studienzahl_einstieg_comparison_gender <- function(r) {
 
 
 plot_auslaender_mint <- function(r){
-
+  # prettynum flag ----
 
   bl_select <- r$states_studium_studienzahl_ausl
 
@@ -4336,7 +4339,7 @@ plot_auslaender_mint <- function(r){
 # Internationale Studierende im Zeitverlauf
 
 plot_auslaender_mint_zeit <- function(r){
-
+  # prettynum flag ----
   bl_select <- r$states_studium_studienzahl_ausl_zeit
 
   absolut_selector <- r$abs_zahlen_studium_studienzahl_ausl_zeit

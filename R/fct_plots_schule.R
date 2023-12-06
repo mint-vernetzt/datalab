@@ -2161,6 +2161,8 @@ kurse_ranking <- function(r) {
 
 iqb_standard_zeitverlauf <- function(r){
 
+# prettynum flag ----
+
   # reactive values übergeben
   kl_select <- r$klasse_iqb_standard_zeitverlauf
   if(kl_select == "4. Klasse"){
@@ -2234,6 +2236,9 @@ iqb_standard_zeitverlauf <- function(r){
 
 
 iqb_mathe_mittel_zeitverlauf <- function(r){
+
+  # prettynum flag ----
+  # mindeststandard
 
   # reactive values übergeben
   klasse_select <- r$klasse_iqb_mathe_mittel_zeitverlauf
