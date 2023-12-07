@@ -484,7 +484,7 @@ fachkraft_ui_years <- function() {
 }
 
 # Funktion zur Fachauswahl bei Fachkraft Daten
-fachkraft_ui_faecher <- function() {
+fachkraft_ui_faecher <- function(exclude = c()) {
 
   logger::log_debug("set fachkraft ui selection for faecher")
 
@@ -510,6 +510,8 @@ fachkraft_ui_faecher <- function() {
     "Nicht MINT"
   )
 
+  selection <- setdiff(selection, exclude)
+
 
   return(selection)
 
@@ -533,6 +535,21 @@ fachkraft_ui_berufslevel <- function() {
     "Spezialist*innen",
     "Expert*innen"
   )
+
+
+  return(selection)
+}
+
+fachkraft_ui_berufe <- function(level = "Fachkräfte") {
+  logger::log_debug("set fachkraft ui selection for berufe for '", level, "'")
+
+  selection <- NULL
+
+  selection <- arbeitsmarkt_epa_detail %>%
+    dplyr::filter(indikator == "Engpassindikator" &
+                    anforderung == level) %>%
+    dplyr::pull(beruf) %>%
+    unique()
 
 
   return(selection)

@@ -182,18 +182,119 @@ plot_fachkraft_epa_item <- function(r) {
 
 plot_fachkraft_mint_item  <- function(r) {
   logger::log_debug("plot_fachkraft_mint_item")
-  hc <- highchart() %>%
-    hc_chart(type = "bar") %>%
-    hc_add_series(data = c(1, 2, 3, 4, 5))
+  #timerange <- 2022; bf_label <- "Spezialist*innen"
+  #timerange <- 2020; bf_label <- "Gesamt"
+  #timerange <- 2020; bf_label <- "Gesamt"
+  timerange <- r$map_y_fachkraft_arbeit_mint
+  bf_label <- r$map_bl_fachkraft_arbeit_mint
 
-  hc
+  if (bf_label == "Gesamt") {
+    bf <- fachkraft_ui_berufslevel()
+  } else {
+    bf <- bf_label
+  }
+
+
+
+  plot_data_raw <- arbeitsmarkt_epa_detail %>%
+    dplyr::filter(jahr == timerange &
+                    indikator == "Engpassindikator" &
+                    anforderung %in% bf) %>%
+      dplyr::mutate(mint_zuordnung = dplyr::if_else(
+        !mint_zuordnung %in% c("Nicht MINT", "Gesamt"),
+        "MINT gesamt",
+        mint_zuordnung)) %>%
+      dplyr::filter(mint_zuordnung %in% c("Nicht MINT", "MINT gesamt")) %>%
+    dplyr::group_by(mint_zuordnung, epa_kat) %>%
+    dplyr::summarise(berufe = dplyr::n()) %>%
+    dplyr::mutate(mint_epa_kat = paste0(mint_zuordnung, " - ", epa_kat)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(percent_total = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100)) %>%
+    dplyr::group_by(epa_kat) %>%
+    dplyr::mutate(percent_epa = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100)) %>%
+    dplyr::ungroup()
+
+
+
+  # enthält den Text für den plot
+  epa_kat_levels <- c("MINT gesamt - Engpassberuf",
+                      "Nicht MINT - Engpassberuf",
+                      "MINT gesamt - Anzeichen eines Engpassberufs",
+                      "Nicht MINT - Anzeichen eines Engpassberufs",
+                      "MINT gesamt - kein Engpassberuf",
+                      "Nicht MINT - kein Engpassberuf")
+  group_col_dt <- data.frame(
+    mint_epa_kat = factor(x = epa_kat_levels,
+                     levels = epa_kat_levels),
+    epa_group_order = c(1:6),
+    group_col = c("#EE7775", "#ff0000",
+                  "#FBBF24", "#E79004",
+                  "#35BD97", "#339966")
+  )
+
+  plot_data <- plot_data_raw %>%
+    dplyr::right_join(group_col_dt, by = "mint_epa_kat") %>%
+    dplyr::arrange(epa_group_order) %>%
+    dplyr::group_by(mint_epa_kat) %>%
+    dplyr::mutate(berufe = dplyr::if_else(is.na(berufe), 0, berufe),
+                  percent_total = dplyr::if_else(is.na(percent_total), 0, percent_total),
+                  percent_epa = dplyr::if_else(is.na(percent_epa), 0, percent_epa)) %>%
+    dplyr::ungroup()
+
+  # used_colors <- group_col_dt %>%
+  #   dplyr::filter(mint_epa_kat %in% (expanded_dt %>%
+  #                                 dplyr::filter(mint_zuordnung == fach[1]) %>%
+  #                                 dplyr::pull(epa_kat) %>%
+  #                                 unique())) %>%
+  #   dplyr::pull(group_col)
+
+  out <- highcharter::hchart(
+    plot_data,
+    "item",
+    highcharter::hcaes(
+      name = mint_epa_kat,
+      y = berufe,
+      # label = group,
+      color = group_col),
+    # name = "group",
+    showInLegend = TRUE
+  ) %>%
+    # highcharter::hc_caption(
+    #   text = paste0(plot_legend_data$legend_text, collapse = "<br>"),
+    #   useHTML = TRUE
+    # ) %>%
+    highcharter::hc_tooltip(
+      pointFormat = paste0(
+        " {point.berufe} Berufe<br>",
+        " {point.percent_epa}% von {point.epa_kat}<br>",
+        " {point.percent_total}% aller Berufe")) %>%
+    highcharter::hc_title(
+      text = paste0("Anteil von MINT-Berufen in der Verteilung des Engpassrisikos im Berufslevel ",
+                    bf_label, " (", timerange, ")"),
+      margin = 10,
+      align = "center",
+      style = list(color = "black",
+                   useHTML = TRUE,
+                   fontFamily = "SourceSans3-Regular",
+                   fontSize = "20px")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular")
+    ) %>%
+    # highcharter::hc_size(600, 450) %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                           verticalAlign = "bottom")
+
+
+  return(out)
 }
 
 plot_fachkraft_detail_item  <- function(r) {
   logger::log_debug("plot_fachkraft_detail_item")
-  hc <- highchart() %>%
-    hc_chart(type = "bar") %>%
-    hc_add_series(data = rev(c(1, 2, 3, 4, 5)))
+  hc <- highcharter::highchart() %>%
+    highcharter::hc_chart(type = "bar") %>%
+    highcharter::hc_add_series(data = rev(c(1, 2, 3, 4, 5)))
 
   hc
 }

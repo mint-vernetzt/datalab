@@ -103,51 +103,51 @@ mod_fachkraft_start_ui <- function(id){
                            #          )
                            # ),
 
-                           tabPanel("MINT nach EPA", br(),
-
-                                    # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                    shiny::sidebarPanel(
-                                      width = 3,
-                                      mod_fachkraft_item_mint_ui("fachkraft_item_mint_1")
-
-                                    ),
-                                    shiny::mainPanel(
-                                      width = 9,
-                                      htmlOutput(ns("plot_fachkraft_mint_item_1")),
-                                      p(style="font-size:12px;color:grey",
-                                        "hier Quellen"),
-                                      shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_2", title="",
-                                                         content = paste0("POPUP INFO TEXT HERE"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_2")
-                                    )
-                           ),
-
-                           tabPanel("Detailansicht", br(),
-
-                                    # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                    shiny::sidebarPanel(
-                                      width = 3,
-                                      mod_fachkraft_item_detail_ui("fachkraft_item_detail_1")
-                                    ),
-                                    shiny::mainPanel(
-                                      width = 9,
-                                      htmlOutput(ns("plot_fachkraft_detail_item_1")),
-                                      p(style="font-size:12px;color:grey",
-                                        "hier Quellen"),
-
-                                      shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
-                                                         content = paste0("POPUP INFO TEXT HERE"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_3")
-                                    )
-                           )
+                           # tabPanel("MINT nach EPA", br(),
+                           #
+                           #          # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                           #          # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                           #
+                           #          shiny::sidebarPanel(
+                           #            width = 3,
+                           #            mod_fachkraft_item_mint_ui("fachkraft_item_mint_1")
+                           #
+                           #          ),
+                           #          shiny::mainPanel(
+                           #            width = 9,
+                           #            htmlOutput(ns("plot_fachkraft_mint_item_1")),
+                           #            p(style="font-size:12px;color:grey",
+                           #              "hier Quellen"),
+                           #            shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_2", title="",
+                           #                               content = paste0("POPUP INFO TEXT HERE"),
+                           #                               placement = "top",
+                           #                               trigger = "hover"),
+                           #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_2")
+                           #          )
+                           # ),
+                           #
+                           # tabPanel("Detailansicht", br(),
+                           #
+                           #          # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                           #          # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                           #
+                           #          shiny::sidebarPanel(
+                           #            width = 3,
+                           #            mod_fachkraft_item_detail_ui("fachkraft_item_detail_1")
+                           #          ),
+                           #          shiny::mainPanel(
+                           #            width = 9,
+                           #            htmlOutput(ns("plot_fachkraft_detail_item_1")),
+                           #            p(style="font-size:12px;color:grey",
+                           #              "hier Quellen"),
+                           #
+                           #            shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
+                           #                               content = paste0("POPUP INFO TEXT HERE"),
+                           #                               placement = "top",
+                           #                               trigger = "hover"),
+                           #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_3")
+                           #          )
+                           # )
                )
              )
     )
@@ -169,13 +169,13 @@ mod_fachkraft_start_server <- function(id, r){
     #   plot_fachkraft_epa_item(r)
     # })
 
-    output$plot_fachkraft_mint_item_1 <- renderUI({
-      plot_fachkraft_mint_item(r)
-    })
-
-    output$plot_fachkraft_detail_item_1 <- renderUI({
-      plot_fachkraft_detail_item(r)
-    })
+    # output$plot_fachkraft_mint_item_1 <- renderUI({
+    #   plot_fachkraft_mint_item(r)
+    # })
+    #
+    # output$plot_fachkraft_detail_item_1 <- renderUI({
+    #   plot_fachkraft_detail_item(r)
+    # })
 
   })
 }
