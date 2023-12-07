@@ -9,7 +9,7 @@
 
 plot_fachkraft_epa_item <- function(r) {
   logger::log_debug("plot_fachkraft_epa_item")
-  #timerange <- 2020; fach <- c("Nicht MINT", "Gesamt"); bf_label <- "Fachkräfte"
+  #timerange <- 2022; fach <- c("Landtechnik", "Bau- und Gebäudetechnik"); bf_label <- "Spezialist*innen"
   #timerange <- 2020; fach <- c("MINT gesamt", "Informatik"); bf_label <- "Gesamt"
   #timerange <- 2020; fach <- c("Alle Berufe"); bf_label <- "Gesamt"
 
@@ -35,9 +35,6 @@ plot_fachkraft_epa_item <- function(r) {
   if ("MINT gesamt" %in% fach) {
     plot_data_raw <- plot_data_raw %>%
       dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesmat")) %>%
-      # TODO wonach soll hier aggregiert werden?
-      # TODO ist indikator der richtige Filter?
-      # TODO was ist mit berufsgruppe?
       dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
       rbind(plot_data_raw)
   }
@@ -76,6 +73,13 @@ plot_fachkraft_epa_item <- function(r) {
                   epa_kat = factor(x = epa_kat,
                                    levels = epa_kat_levels))
 
+  used_colors <- group_col_dt %>%
+    dplyr::filter(epa_kat %in% (expanded_dt %>%
+                                  dplyr::filter(mint_zuordnung == fach[1]) %>%
+                                  dplyr::pull(epa_kat) %>%
+                                  unique())) %>%
+    dplyr::pull(group_col)
+
   plot_left <- highcharter::hchart(
     object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[1]),
     type = "heatmap",
@@ -84,10 +88,11 @@ plot_fachkraft_epa_item <- function(r) {
                                  value = value,
                                  color = group_col,
                                  group = epa_kat)) %>%
-    highcharter::hc_colorAxis(stops = highcharter::color_stops(colors = group_col_dt$group_col),
-                              showInLegend = FALSE) %>%
+    highcharter::hc_colorAxis(
+      stops = highcharter::color_stops(colors = group_col_dt$group_col),
+      showInLegend = FALSE) %>%
     #hc_legend(enabled = FALSE) %>% # Remove color legend
-    highcharter::hc_colors(group_col_dt$group_col) %>%
+    highcharter::hc_colors(used_colors) %>%
     highcharter::hc_tooltip(
       # headerFormat = '{point.group}',
       pointFormat = 'Berufe: {point.beruf_num}<br/>Anteil: {point.value}%'
@@ -114,7 +119,15 @@ plot_fachkraft_epa_item <- function(r) {
       style = list(fontFamily = "SourceSans3-Regular")
     )
 
+
   if (length(fach) == 2) {
+    used_colors <- group_col_dt %>%
+      dplyr::filter(epa_kat %in% (expanded_dt %>%
+                                    dplyr::filter(mint_zuordnung == fach[2]) %>%
+                                    dplyr::pull(epa_kat) %>%
+                                    unique())) %>%
+      dplyr::pull(group_col)
+
     plot_right <- highcharter::hchart(
       object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[2]),
       type = "heatmap",
@@ -126,7 +139,7 @@ plot_fachkraft_epa_item <- function(r) {
       highcharter::hc_colorAxis(stops = highcharter::color_stops(colors = group_col_dt$group_col),
                                 showInLegend = FALSE) %>%
       #hc_legend(enabled = FALSE) %>% # Remove color legend
-      highcharter::hc_colors(group_col_dt$group_col) %>%
+      highcharter::hc_colors(used_colors) %>%
       highcharter::hc_tooltip(
         # headerFormat = '{point.group}',
         pointFormat = 'Berufe: {point.beruf_num}<br/>Anteil: {point.value}%'
@@ -157,10 +170,11 @@ plot_fachkraft_epa_item <- function(r) {
   }
 
 
-  out <-   highcharter::hw_grid(
-    plot_left,
-    plot_right,
-    ncol = 2)
+  # out <- highcharter::hw_grid(
+  #   plot_left,
+  #   plot_right,
+  #   ncol = 2)
+  out <- list(plot_left, plot_right)
 
   return(out)
 

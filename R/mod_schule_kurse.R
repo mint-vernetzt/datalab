@@ -62,6 +62,10 @@ mod_schule_kurse_ui <- function(id){
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_mint",
                                                               span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
         ),
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#2-Tab",
+                                                              span(tags$b(span("2-Tab:")))),"Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
+        ),
+
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_fach",
                                                               span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
 
@@ -121,7 +125,10 @@ mod_schule_kurse_ui <- function(id){
 
                              )
                     ),
-                    tabPanel("Vergleich Grund- und Leistungskurse, MINT aggregiert", br(),
+                    tabPanel("Vergleich Grund- und Leistungskurse, MINT aggregiert",
+                             div(
+                               id = "2-Tab",
+                             br(),
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_einstieg_comparison_ui("mod_schule_kurse_einstieg_comparison_ui_1")),
@@ -135,7 +142,7 @@ mod_schule_kurse_ui <- function(id){
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_2")
                                )
-
+)
                              ),
 
                     # tabPanel("Vergleich Grund- und Leistungskurse, MINT aggregiert", br(),
