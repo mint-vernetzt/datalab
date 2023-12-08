@@ -1109,18 +1109,19 @@ pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
     rename(jahr = "Year/Study", land = Jurisdiction)
 
 
-  dat_pisa_g4$land <- countrycode::countrycode(dat_pisa_g4$land, origin = 'country.name',destination = 'country.name.de', custom_match = c("International Average (OECD)" = "OECD Durchschnitt"))
+  dat_pisa_g4$land <- countrycode::countrycode(dat_pisa_g4$land, origin = 'country.name',destination = 'country.name.de', custom_match = c("International Average (OECD)" = "OECD Durchschnitt",
+                                                                                                                                           "Selected countries and jurisdictions" = "Ausgewählte Regionen"))
 
   dat_pisa_g4$source <- pisa_list_dat
 
   dat_pisa_g5 <- dat_pisa_g4 %>%
-    filter(jahr %in% c("2000", "2003", "2006", "2009", "2012", "2015","2018"))
+    filter(jahr %in% c("2000", "2003", "2006", "2009", "2012", "2015","2018", "2022"))
 
   return(dat_pisa_g5)
 
 }
 
-
+# Hier Dateiname pro rlevantem Excel Arbeitsblatt einfügen
 pisa_list_dat <- c("PISA001_Länderscore_Insgesamt_Gender.xls",
                    "PISA001_Länderscore_Insgesamt_Gender.xls",
                    "PISA001_Länderscore_Insgesamt_Gender.xls",
@@ -1134,10 +1135,24 @@ pisa_list_dat <- c("PISA001_Länderscore_Insgesamt_Gender.xls",
                    "PISA004_Länderscores_Income_Computer.xls",
                    "PISA004_Länderscores_Income_Computer.xls",
                    "PISA004_Länderscores_Income_Computer.xls",
-                   "PISA004_Länderscores_Income_Computer.xls")
+                   "PISA004_Länderscores_Income_Computer.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls"
+                   )
+
+# Dazu die Indizes der relevanten Sheets einfügen
+pisa_list_sheeet <- c(3,4,5,6,2,3,3,4,5,6,3,4,5,6,
+                      1,2,3,4, # PISA005_Länderscore_Insgesamt_Gender_22.xls
+                      1,2,3,4 # PISA007_Länderscores_Immigration_Books_22.xls
+                      )
 
 
-pisa_list_sheeet <- c(3,4,5,6,2,3,3,4,5,6,3,4,5,6)
 
 pisa_list_output <- purrr::map2(.x = pisa_list_dat, .y =pisa_list_sheeet, .f=pisa_extract )
 
@@ -1152,7 +1167,8 @@ pisa_list_output1 <- pisa_list_output %>%
   mutate(ordnung = case_when(
     indikator %in% c("101-200 books" , "0-10 books" ,
       "11-25 books" , "201-500 books" , "26-100 books",
-      "More than 500 books", "None") ~ "Bücher im Haushalt",
+      "More than 500 books", "None", "1-10 books", "11-25 books",
+      "26-100 books", "101-200 books", "201-500 books", "There are no books.") ~ "Bücher im Haushalt",
     indikator %in% c( "Less than [$A]",
                       "[$A] or more but less than [$B]",
                       "[$B] or more but less than [$C]",
@@ -1212,7 +1228,11 @@ pisa <- bind_rows(pisa1, pisa2)%>%
   select(-geschlecht)%>%
   pivot_wider(names_from = typ, values_from = wert )%>%
   rename(wert = Druchschnitt)%>%
-  mutate(typ = "Durchschnitt")
+  mutate(typ = "Durchschnitt")%>%
+  filter(land !="Ausgewählte Regionen" &
+         !indikator %in% c("Computerverfügbarkeit",
+                           "Bildungshintergrund",
+                           "Haushaltseinkommen"))
 
 
 
