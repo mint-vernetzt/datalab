@@ -1,5 +1,6 @@
 # Akronym übergeben für Datensatz-Pfad in Onedrive
 akro <- "kab"
+#akro <- "kbr"
 
 ################################################################################
 #
