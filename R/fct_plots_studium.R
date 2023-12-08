@@ -2149,7 +2149,7 @@ plot_ranking_top_faecher <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_abs}")
         )) %>%
 
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
@@ -2180,7 +2180,7 @@ plot_ranking_top_faecher <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_abs}")
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Absolut: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(studierende_faecher_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
