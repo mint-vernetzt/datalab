@@ -1305,25 +1305,32 @@ kurse_verlauf_subjects_bl <- function(r) {
 
 
 # Was passiert hier ->
-  df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
-    dplyr::filter(indikator == "Leistungskurse") %>%
-    dplyr::group_by(indikator, jahr) %>%
-    dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"]) %>% dplyr::pull(wert)
-
-  df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Grundkurse"), "wert"] <-  df %>%
-    dplyr::filter(indikator == "Grundkurse") %>%
-    dplyr::group_by(indikator, jahr) %>%
-    dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"]) %>% dplyr::pull(wert)
-
-  df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
+  # df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Leistungskurse"), "wert"] <-  df %>%
+  #   dplyr::filter(indikator == "Leistungskurse") %>%
+  #   dplyr::group_by(indikator, jahr) %>%
+  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"]) %>% dplyr::pull(wert)
+  #
+  # df[(df$anzeige_geschlecht == "Gesamt" & df$indikator == "Grundkurse"), "wert"] <-  df %>%
+  #   dplyr::filter(indikator == "Grundkurse") %>%
+  #   dplyr::group_by(indikator, jahr) %>%
+  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Gesamt"]) %>% dplyr::pull(wert)
+  #
+  # df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
 # <-
+
 
    df <- df %>%
     dplyr::mutate(fachbereich = dplyr::case_when(fachbereich == "MINT"~ "MINT-Fächer (gesamt)",
                                                  fachbereich == "andere Fächer" ~ "andere Fächer (gesamt)",
                                                  T~ fachbereich))%>%
-    dplyr::group_by(indikator, anzeige_geschlecht, region, jahr)%>%
-    dplyr::summarise(fachbereich, indikator, anzeige_geschlecht, region, jahr, wert, sum_props = wert[fachbereich == "Alle Fächer"])%>%
+    tidyr::pivot_wider(names_from = anzeige_geschlecht, values_from = wert)%>%
+    dplyr::mutate(Gesamt = dplyr::case_when(region == "Baden-Württemberg" ~ Gesamt,
+                                            T ~ Männer + Frauen))%>%
+    dplyr::select(- Männer, - Frauen)%>%
+    tidyr::pivot_longer(Gesamt, names_to = "anzeige_geschlecht", values_to = "wert")%>%
+    dplyr::select(-anzeige_geschlecht)%>%
+    dplyr::group_by(indikator, region, jahr)%>%
+    dplyr::summarise(fachbereich, indikator,  region, jahr, wert, sum_props = wert[fachbereich == "Alle Fächer"])%>%
     dplyr::ungroup()%>%
     dplyr::filter(fachbereich != "Alle Fächer")
 
@@ -1338,17 +1345,17 @@ kurse_verlauf_subjects_bl <- function(r) {
   #
   # df_sub <- df_sub[,colnames(df)]
 
-  # calculate the new "Gesamt"
-  # df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
-  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-  #                   wert[anzeige_geschlecht == "Männer"])
-  #
-  # df_sub <- df_sub %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
-  #   dplyr::filter(anzeige_geschlecht != "Gesamt")
-  #
-  # df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
+ # # calculate the new "Gesamt"
+ #  df_sub <-  df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
+ #    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+ #    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+ #                    wert[anzeige_geschlecht == "Männer"])
+ #
+ #  df_sub <- df_sub %>% dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+ #    dplyr::mutate(props = wert[anzeige_geschlecht == "Gesamt"] ) %>%
+ #    dplyr::filter(anzeige_geschlecht != "Gesamt")
+ #
+ #  df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Männer")
 
 
   # aggregate all subjects to calculate proportion later
@@ -1387,9 +1394,9 @@ kurse_verlauf_subjects_bl <- function(r) {
 
   # calculate proportions
 
-  df <- df %>% dplyr::group_by(jahr, region, fachbereich) %>%
-    dplyr::summarize(wert, proportion = wert/sum_props)%>%
-    dplyr::rename(Relativ = proportion, Absolut=wert)%>%
+  df <- df %>%
+    dplyr::mutate(Relativ = round((wert/ sum_props*100),1))%>%
+    dplyr::rename(Absolut = wert)%>%
     tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
     dplyr::mutate(selector= dplyr::case_when(
       selector == "Absolut" ~ "Anzahl",
@@ -1401,6 +1408,9 @@ kurse_verlauf_subjects_bl <- function(r) {
       region == "Westen" ~ "Westdeutschland (o. Berlin)",
       T ~ .$region
     ))
+
+
+
 
 
   # fitler states
@@ -1415,7 +1425,6 @@ kurse_verlauf_subjects_bl <- function(r) {
     df <- df %>%
       dplyr::filter(selector == "In Prozent")
 
-    df$wert <- df$wert * 100
 
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
@@ -1531,6 +1540,9 @@ kurse_ranking_gender <- function(r) {
   # df <- rbind(df, df_sub)
   #
   # df <- df %>% dplyr::filter(fachbereich == subject)
+
+
+
 
   df <- df %>%
     dplyr::mutate(fachbereich = dplyr::case_when(fachbereich == "MINT"~ "MINT-Fächer (gesamt)",
@@ -2099,7 +2111,8 @@ kurse_ranking <- function(r) {
 
   # calcualte propotion
   df <- df %>% dplyr::group_by(fachbereich, anzeige_geschlecht, indikator) %>%
-    dplyr::summarize(proportion = wert/props)
+    dplyr::summarize(proportion = wert/props)%>%
+    dplyr::filter(!fachbereich %in% c("MINT", "andere Fächer" ))
 
   df$proportion <- df$proportion * 100
 
@@ -2161,7 +2174,7 @@ kurse_ranking <- function(r) {
 
 iqb_standard_zeitverlauf <- function(r){
 
-# prettynum flag ----
+
 
   # reactive values übergeben
   kl_select <- r$klasse_iqb_standard_zeitverlauf
@@ -2180,6 +2193,9 @@ iqb_standard_zeitverlauf <- function(r){
     dplyr::select(jahr, indikator, fach, region, wert) %>%
     dplyr::collect()
 
+  df <- df %>%
+    dplyr::mutate(display_rel = prettyNum(df$wert, big.mark = ".", decimal.mark = ","))
+
   # title helper
 
   if (length(bl_select)==1){
@@ -2197,7 +2213,7 @@ iqb_standard_zeitverlauf <- function(r){
 
   highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = region, group=jahr))%>%
     highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-    highcharter::hc_tooltip(pointFormat = "{point.jahr} <br> {point.y} % leistungsschwach")%>%
+    highcharter::hc_tooltip(pointFormat = "{point.jahr} <br> {point.display_rel} % leistungsschwach")%>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), pointsWidth=100) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
@@ -2237,7 +2253,6 @@ iqb_standard_zeitverlauf <- function(r){
 
 iqb_mathe_mittel_zeitverlauf <- function(r){
 
-  # prettynum flag ----
   # mindeststandard
 
   # reactive values übergeben
@@ -2377,9 +2392,12 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
   if(indikator_select == "nach Geschlecht" & klasse_select == "4. Klasse"){
     if(score_select == "Mindeststandard"){
 
+      df <- df %>%
+        dplyr::mutate(display_rel = prettyNum(df$wert, big.mark = ".", decimal.mark = ","))
+
       highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
         highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-        highcharter::hc_tooltip(pointFormat = "{point.geschlecht} <br> Anteil Mindeststandard nicht erreicht: {point.y} %")%>%
+        highcharter::hc_tooltip(pointFormat = "{point.geschlecht} <br> Anteil Mindeststandard nicht erreicht: {point.display_rel} %")%>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %")) %>%
         highcharter::hc_xAxis(title = list(text = ""), categories = c("2011",
                                                                       "2016",
@@ -2610,6 +2628,9 @@ iqb_fragebogen <- function(r){
     dplyr::select(fach, indikator, geschlecht, jahr, wert) %>%
     dplyr::collect()
 
+  df <- df %>%
+    dplyr::mutate(display_rel = prettyNum(round(df$wert,2), big.mark = ".", decimal.mark = ","))
+
 
   df$geschlecht <- as.factor(df$geschlecht)
   df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
@@ -2617,14 +2638,14 @@ iqb_fragebogen <- function(r){
   # plot
   highcharter::hchart(df, 'column', highcharter::hcaes(y = round(wert, 2), x = indikator, group = geschlecht))%>%
     highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-    highcharter::hc_tooltip(pointFormat = "{point.geschlecht} <br> {point.y}")%>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth = 4) %>%
+    highcharter::hc_tooltip(pointFormat = "{point.geschlecht} <br> {point.display_rel}")%>%
+    highcharter::hc_yAxis(title = list(text = "Skalenwert  0 - 4"), labels = list(format = "{value}"), pointsWidth = 4) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
     #highcharter::hc_colors(c("#efe8e6","#D0A9CD", "#b16fab")) %>%
     highcharter::hc_colors(c("#154194",
                              "#efe8e6")) %>%
-    highcharter::hc_title(text = paste0("Interesse und Selbsteinschätzung der eigenen Fähigkeiten in ", fach_select,
+    highcharter::hc_title(text = paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
                                         " von Schüler*innen der 4. Klasse (", jahr_select, ") "
     ),
     margin = 45,
