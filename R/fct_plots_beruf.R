@@ -10,14 +10,10 @@
 
 arbeitsmarkt_anforderungen <- function(r) {
 
-
   timerange <- r$date_arbeitsmarkt_anforderungen
 
   if(timerange == 2021) indikator_choice <- r$indikator_arbeitsmarkt_anforderungen_21
   if(timerange == 2022) indikator_choice <- r$indikator_arbeitsmarkt_anforderungen_22
-
-  #t <<- as.character(timerange[1]:timerange[2])
-
 
   # SQL: DONE
   df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
