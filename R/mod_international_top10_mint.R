@@ -116,45 +116,51 @@ mod_international_top10_mint_server <- function(id, r){
     ns <- session$ns
 
     observeEvent(input$show_avg_top10_mint_line, {
-      r$show_avg_top10_mint_line <- input$show_avg_top10_mint_line
+      r$show_avg_top10_mint_line_m <- input$show_avg_top10_mint_line
     })
+
 
     observeEvent(input$map_l_int_top10, {
-      r$map_l_int_top10 <- input$map_l_int_top10
+      r$map_l_m <- input$map_l_int_top10
       r$show_avg_top10_mint_line <- input$show_avg_top10_mint_line
       if (input$map_l_int_top10 == "EU") {
-        r$map_y_int_top10 <- input$map_y_eu_int_top10
-        r$map_f_int_top10 <- input$map_f_eu_int_top10
+        r$map_y_m <- input$map_y_eu_int_top10
+        r$map_f_m <- input$map_f_eu_int_top10
       }
       if (input$map_l_int_top10 == "OECD") {
-        r$map_y_int_top10 <- input$map_y_oecd_int_top10
-        r$map_f_int_top10 <- input$map_f_oecd_int_top10
+        r$map_y_m <- input$map_y_oecd_int_top10
+        r$map_f_m <- input$map_f_oecd
+
       }
       if (input$map_l_int_top10 == "Weltweit"){
-        r$map_y_int_top10 <- input$map_y_ww_int_top10
+        r$map_y_m <- input$map_y_ww_int_top10
       }
-    })
-
-    observeEvent(input$map_y_oecd_int_top10, {
-      r$map_y_int_top10 <- input$map_y_oecd_int_top10
-    })
-
-    observeEvent(input$map_f_oecd_int_top10, {
-      r$map_f_int_top10 <- input$map_f_oecd_int_top10
     })
 
     observeEvent(input$map_y_ww_int_top10, {
-      r$map_y_int_top10 <- input$map_y_ww_int_top10
+      r$map_y_m <- input$map_y_ww_int_top10
+    })
+
+
+    observeEvent(input$map_y_oecd_int_top10, {
+      r$map_y_m <- input$map_y_oecd_int_top10
+    })
+
+    observeEvent(input$map_f_oecd_int_top10, {
+      r$map_f_m <- input$map_f_oecd_int_top10
+
     })
 
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
+
     observeEvent(input$map_y_eu_int_top10, {
-      r$map_y_int_top10 <- input$map_y_eu_int_top10
+      r$map_y_m <- input$map_y_eu_int_top10
     })
 
     observeEvent(input$map_f_eu_int_top10, {
-      r$map_f_int_top10 <- input$map_f_eu_int_top10
+      r$map_f_m <- input$map_f_eu_int_top10
+
     })
 
   })

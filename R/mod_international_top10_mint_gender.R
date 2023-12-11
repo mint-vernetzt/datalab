@@ -8,13 +8,12 @@
 #'
 #' @importFrom shiny NS tagList
 mod_international_top10_mint_gender_ui <- function(id){
-  logger::log_debug("start mod_international_top10_mint_gender_ui")
 
   ns <- NS(id)
   tagList(
     p("Region:"),
     shinyWidgets::pickerInput(
-      inputId = ns("top10_l_gender"),
+      inputId = ns("map_l_top10_mint_gender_ui"),
       choices = c("EU", "OECD"),
       selected = "EU",
       multiple = FALSE#,
@@ -25,11 +24,11 @@ mod_international_top10_mint_gender_ui <- function(id){
 
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
 
-    conditionalPanel(condition = "input.top10_l_gender == 'EU'",
+    conditionalPanel(condition = "input.map_l_top10_mint_gender_ui == 'EU'",
                      ns = ns,
                      p("Jahr:"),
                      shinyWidgets::sliderTextInput(
-                       inputId = ns("top10_y_eu_gender"),
+                       inputId = ns("map_y_eu_top10_mint_gender_ui"),
                        label = NULL,
                        choices = international_ui_years(region = "EU"),
                        selected = "2021"
@@ -37,16 +36,16 @@ mod_international_top10_mint_gender_ui <- function(id){
 
                      p("Fachbereich:"),
                      shinyWidgets::pickerInput(
-                       inputId = ns("top10_f_eu_gender"),
+                       inputId = ns("map_f_eu_top10_mint_gender_ui"),
                        choices = international_ui_faecher(region = "EU"),
                        selected = c("Alle MINT-Fächer"),
                        multiple = FALSE
                      )),
-    conditionalPanel(condition = "input.top10_l_gender == 'OECD' ",
+    conditionalPanel(condition = "input.map_l_top10_mint_gender_ui == 'OECD' ",
                      ns = ns,
                      p("Jahr:"),
                      shinyWidgets::sliderTextInput(
-                       inputId = ns("top10_y_oecd_gender"),
+                       inputId = ns("map_y_oecd_top10_mint_gender_ui"),
                        label = NULL,
                        choices = international_ui_years(region = "OECD"),
                        selected = "2020"
@@ -54,17 +53,16 @@ mod_international_top10_mint_gender_ui <- function(id){
 
                      p("Fachbereich:"),
                      shinyWidgets::pickerInput(
-                       inputId = ns("top10_f_oecd_gender"),
+                       inputId = ns("map_f_oecd_top10_mint_gender_ui"),
                        choices = international_ui_faecher(region = "OECD"),
-                       selected = c("Alle MINT-Fächer"),
+                       selected = c("MINT"),
                        multiple = FALSE
                      )),
 
     p("Betrachtungsart:"),
     shinyWidgets::pickerInput(
-      inputId = ns("top10_art_gender"),
-      choices = c("Fachbereich mit höchstem Frauenanteil" = "höchster Frauenanteil in MINT",
-                  "Fachbereich, den die meisten Frauen wählen" = "meisten Frauen wählen MINT"),
+      inputId = ns("art"),
+      choices = c("höchster Frauenanteil in MINT", "meisten Frauen wählen MINT"),
       selected = "höchster Frauenanteil in MINT",
       multiple = FALSE
     ),
@@ -102,50 +100,47 @@ mod_international_top10_mint_gender_ui <- function(id){
 #'
 #' @noRd
 mod_international_top10_mint_gender_server <- function(id, r){
-  logger::log_debug("start mod_international_top10_mint_gender_server")
-
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
     observeEvent(input$show_avg_top10_mint_gender_line, {
-      r$show_avg_int_studium_gender <- input$show_avg_top10_mint_gender_line
+      r$show_avg_g <- input$show_avg_top10_mint_gender_line
     })
 
-    observeEvent(input$top10_l_gender, {
-      r$top10_l_int_studium_gender <- input$top10_l_gender
-      r$show_avg_int_studium_gender <- input$show_avg_top10_mint_gender_line
-      r$top10_art_int_studium_gender <- input$top10_art_gender
-
-      if (input$top10_l_gender == "EU") {
-        r$top10_y_int_studium_gender <- input$top10_y_eu_gender
-        r$top10_f_int_studium_gender <- input$top10_f_eu_gender
+    observeEvent(input$map_l_top10_mint_gender_ui, {
+      r$map_l_g <- input$map_l_top10_mint_gender_ui
+      r$show_avg_g <- input$show_avg_top10_mint_gender_line
+      r$art_g <- input$art
+      if (input$map_l_top10_mint_gender_ui == "EU") {
+        r$map_y_g <- input$map_y_eu_top10_mint_gender_ui
+        r$map_f_g <- input$map_f_eu_top10_mint_gender_ui
       }
-      if (input$top10_l_gender == "OECD") {
-        r$top10_y_int_studium_gender <- input$top10_y_oecd_gender
-        r$top10_f_int_studium_gender <- input$top10_f_oecd_gender
+      if (input$map_l_top10_mint_gender_ui == "OECD") {
+        r$map_y_g <- input$map_y_oecd_top10_mint_gender_ui
+        r$map_f_g <- input$map_f_oecd_top10_mint_gender_ui
       }
     })
 
-    observeEvent(input$top10_y_oecd_gender, {
-      r$top10_y_int_studium_gender <- input$top10_y_oecd_gender
+    observeEvent(input$map_y_oecd_top10_mint_gender_ui, {
+      r$map_y_g <- input$map_y_oecd_top10_mint_gender_ui
     })
 
-    observeEvent(input$top10_f_oecd_gender, {
-      r$top10_f_int_studium_gender <- input$top10_f_oecd_gender
+    observeEvent(input$map_f_oecd_top10_mint_gender_ui, {
+      r$map_f_g <- input$map_f_oecd_top10_mint_gender_ui
     })
 
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up
-    observeEvent(input$top10_y_eu_gender, {
-      r$top10_y_int_studium_gender <- input$top10_y_eu_gender
+    observeEvent(input$map_y_eu_top10_mint_gender_ui, {
+      r$map_y_g <- input$map_y_eu_top10_mint_gender_ui
     })
 
-    observeEvent(input$top10_f_eu_gender, {
-      r$top10_f_int_studium_gender <- input$top10_f_eu_gender
+    observeEvent(input$map_f_eu_top10_mint_gender_ui, {
+      r$map_f_g <- input$map_f_eu_top10_mint_gender_ui
     })
 
-    observeEvent(input$top10_art_gender, {
-      r$top10_art_int_studium_gender <- input$top10_art_gender
+    observeEvent(input$art, {
+      r$art_g <- input$art
     })
 
 
