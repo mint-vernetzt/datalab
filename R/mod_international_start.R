@@ -531,9 +531,8 @@ mod_international_start_ui <- function(id){
         )
       )
     )
-
-
-             )))))
+  )
+  )
 
 }
 
