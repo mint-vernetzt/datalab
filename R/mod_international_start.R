@@ -402,7 +402,11 @@ mod_international_start_ui <- function(id){
 
                    shiny::sidebarPanel(
                      width = 3,
-                     mod_fachkraft_item_detail_ui("fachkraft_item_detail_1")
+                     mod_fachkraft_item_detail_ui("fachkraft_item_detail_1"),
+                     downloadButton(
+                       outputId = ns("download_btn_plot_fachkraft_item_detail_1"),
+                       label = "Download",
+                       icon = icon("download"))
                    ),
                    shiny::mainPanel(
                      width = 9,
@@ -511,6 +515,7 @@ mod_international_start_server <- function(id, r){
       filename = function() {r$plot_fachkraft_epa_item_1_left_title},
       content = function(file) {
         # creating the file with the screenshot and prepare it to download
+
         add_caption_and_download(
           hc = r$plot_fachkraft_epa_item_1_left,
           filename =  r$plot_fachkraft_epa_item_1_left_title,
@@ -545,8 +550,39 @@ mod_international_start_server <- function(id, r){
 
     ## Detail Berufe
     output$plot_fachkraft_detail_item_1 <- renderUI({
-      plot_fachkraft_detail_item(r)
+      plot_list <- plot_fachkraft_detail_item(r)
+      r$plot_fachkraft_detail_item_1_left <- plot_list[[1]]
+      r$plot_fachkraft_detail_item_1_right <- plot_list[[2]]
+
+      r$plot_fachkraft_detail_item_1_left_title <- get_plot_title(
+        plot = r$plot_fachkraft_detail_item_1_left
+      )
+      r$plot_fachkraft_detail_item_1_right_title <- get_plot_title(
+        plot = r$plot_fachkraft_detail_item_1_right
+      )
+
+      highcharter::hw_grid(
+        plot_left,
+        plot_right,
+        ncol = 2)
     })
+
+    output$download_btn_plot_fachkraft_item_detail_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_fachkraft_detail_item_1_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_fachkraft_detail_item_1_right,
+          filename =  r$plot_fachkraft_detail_item_1_right_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_fachkraft_detail_item_1_right_title, file)
+        file.remove(r$plot_fachkraft_detail_item_1_right_title)
+      }
+    )
 
   })
 }

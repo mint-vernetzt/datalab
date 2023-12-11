@@ -547,7 +547,8 @@ fachkraft_ui_berufe <- function(level = "Fachkräfte") {
 
   selection <- arbeitsmarkt_epa_detail %>%
     dplyr::filter(indikator == "Engpassindikator" &
-                    anforderung == level) %>%
+                    anforderung == level &
+                    !is.na(wert)) %>%
     dplyr::pull(beruf) %>%
     unique()
 
@@ -614,7 +615,15 @@ add_caption_and_download <- function(
       '</div>'
     ),
     useHTML = TRUE,
-    align = "right")
+    align = "right") %>%
+    # TODO add correct font
+    highcharter::hc_title(
+      # only overwrite needed values
+      style = list(fontFamily = "Calibri")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri")
+    )
 
   if (with_labels) {
     hc_out <- hc_out %>%
