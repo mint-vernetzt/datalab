@@ -694,8 +694,7 @@ mod_international_start_server <- function(id, r){
       )
 
       highcharter::hw_grid(
-        plot_left,
-        plot_right,
+        plot_list,
         ncol = 2)
     })
 
