@@ -388,14 +388,14 @@ plot_international_map_fem <- function(r){
     # Frauen von Allen
 
     # Filtern für alle Einzelfächer in MINT
-    df_share_fem2 <<- df_filtered %>%
+    df_share_fem2 <- df_filtered %>%
       dplyr::select(-fachbereich)%>%
       dplyr::filter(mint_select== "mint" & geschlecht == "Frauen" |
                       fach=="Alle" & geschlecht == "Frauen")%>%
       dplyr::select(-mint_select)
 
     # Filtern für Alle Fächer (insgesamt)
-    df_share_fem3 <<- df_filtered %>%
+    df_share_fem3 <- df_filtered %>%
       dplyr::select(-fachbereich)%>%
       dplyr::filter(mint_select== "mint" & geschlecht == "Frauen" |
                       fach=="Alle" & geschlecht == "Frauen") %>%
@@ -404,7 +404,7 @@ plot_international_map_fem <- function(r){
       dplyr::select(-fach,-mint_select)
 
     # Beide werte zusammenbringen, um rechenoperation zu ermöglichen
-    df_share_fem4 <<- df_share_fem2 %>%
+    df_share_fem4 <- df_share_fem2 %>%
       dplyr::full_join(df_share_fem3, by=c("bereich",
                                            "quelle",
                                            "typ",
@@ -1391,6 +1391,8 @@ plot_international_schule_migration <- function(r) {
       "nach sozialem Status" = "Gemittelte Test-Punktzahl"
     )
 
+
+    browser()
     df <- schule_timss %>%
       dplyr::filter(ordnung == this_ordnung &
                       indikator %in% this_indikator &
@@ -1410,7 +1412,7 @@ plot_international_schule_migration <- function(r) {
     this_bereich <- switch(
       leistungsindikator_m,
       "nach Geschlecht" = "Ländermittel",
-      "nach Zuwanderungsgeschichte" = "Migrationshintergund",
+      "nach Zuwanderungsgeschichte" = "Migrationshintergrund",
       "nach Bildungskapital" = "Bücher im Haushalt"
     )
 
@@ -1420,8 +1422,14 @@ plot_international_schule_migration <- function(r) {
       "nach Zuwanderungsgeschichte" = c("Keiner",
                                         "Zweite Generation",
                                         "Erste Generation"),
-      "nach Bildungskapital" = c("0-10", "26-100", "Mehr als 500")
+      "nach Bildungskapital" = c("0-10", "1-10", "26-100", "Mehr als 500")
     )
+
+
+# this_bereich <<- "Migrationshintergrund"
+# this_indikator <<- c("Keiner",
+#                      "Zweite Generation",
+#                      "Erste Generation")
 
     df <- schule_pisa %>%
       dplyr::filter(bereich == this_bereich &
@@ -1434,6 +1442,7 @@ plot_international_schule_migration <- function(r) {
     df$indikator[df$indikator == "0-10"] <- "sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)"
     df$indikator[df$indikator == "26-100"] <- "niedriges Bildungskapital (bis zu 100 Bücher zuhause)"
     df$indikator[df$indikator == "Mehr als 500"] <- "hohes Bildungskapital (über 500 Bücher zuhause)"
+    df$indikator[df$indikator == "1-10"] <- "sehr niedriges Bildungskapital (1 bis 10 Bücher zuhause)"
 
     help_l <- "9. & 10. Klasse"
   }
@@ -1441,9 +1450,11 @@ plot_international_schule_migration <- function(r) {
 
   # filter dataset based on UI inputs
 
+
   dfs <- df %>%
     dplyr::filter(jahr == timerange &
                     fach == fach_m)
+
   used_lands <- dfs %>%
     dplyr::filter(!is.na(wert)) %>%
     dplyr::pull(land) %>%

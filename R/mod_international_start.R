@@ -280,7 +280,7 @@ mod_international_start_ui <- function(id){
                                       # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
                                     )
                            ),
-                           tabPanel("Vergleich internationale Studierede", br(),
+                           tabPanel("Vergleich internationale Studierende", br(),
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                     # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
@@ -437,6 +437,8 @@ mod_international_start_ui <- function(id){
              )))))
 
 }
+
+  # Server -------
 
 #' international_start Server Functions
 #'

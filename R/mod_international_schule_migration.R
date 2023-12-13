@@ -56,7 +56,7 @@ mod_international_schule_migration_ui <- function(id){
                        inputId = ns("line_y_pisa_int_schule"),
                        label = NULL,
                        choices = international_ui_years(region = "PISA"),
-                       selected = "2018"
+                       selected = "2022"
                      ),
 
                      p("Fachbereich:"),
