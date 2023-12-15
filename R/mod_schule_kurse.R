@@ -457,6 +457,8 @@ mod_schule_kurse_ui <- function(id){
 
                     ))),
 
+  # box 4 -----
+
       fluidRow(id="schule_kompetenz",
            shinydashboard::box(
              title = "MINT-Kompetenzen in der 4. und 9. Klasse",
