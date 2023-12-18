@@ -34,9 +34,9 @@ mod_international_server <- function(id,
                                      data_studierende_mobil_eu_absolut,
                                      data_countries_names,
                                      data_arbeitsmarkt_absolvent_oecd,
-                                     data_arbeitsmarkt_anfänger_absolv_oecd,
+                                     data_arbeitsmarkt_anfaenger_absolv_oecd,
                                      data_arbeitsmarkt_anzahl_azubis_oecd,
-                                     data_arbeitsmarkt_beschäftigte_eu,
+                                     data_arbeitsmarkt_beschaeftigte_eu,
                                      #data_studierende_intern_oecd,
                                      r){
 
