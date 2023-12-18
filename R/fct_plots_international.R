@@ -88,8 +88,8 @@ plot_international_map <- function(r) {
 
 
   } else if (label_m == "OECD") {
-    #map_selection <- golem::get_golem_options("world_map")
-  map_selection <- "custom/world"
+    map_selection <- golem::get_golem_options("world_map")
+  #map_selection <-"custom/world"
 
 
     # filter for selection
@@ -112,7 +112,7 @@ plot_international_map <- function(r) {
     # calculate total amount by land
     this_df_alle <- df_filtered %>%
       dplyr::filter(fachbereich == "Alle") %>%
-      dplyr::group_by(land, jahr, fach)
+      dplyr::group_by(land, jahr, fach)%>%
       dplyr::summarise(total = sum(wert, na.rm = TRUE)) %>%
       dplyr::ungroup()
 
@@ -190,6 +190,7 @@ plot_international_map <- function(r) {
   }
   }
 
+
   data_map_1 <- df7
 
   highcharter::highchart(type = "map") %>%
@@ -204,7 +205,7 @@ plot_international_map <- function(r) {
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(valueDecimals = 1, valueSuffix = "%")
-    ) %>%
+    )%>%
     highcharter::hc_tooltip(pointFormat = hover) %>%
     highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text} %")) %>%
     highcharter::hc_title(
@@ -1392,7 +1393,7 @@ plot_international_schule_migration <- function(r) {
     )
 
 
-    browser()
+
     df <- schule_timss %>%
       dplyr::filter(ordnung == this_ordnung &
                       indikator %in% this_indikator &
