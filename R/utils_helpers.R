@@ -331,7 +331,7 @@ international_ui_faecher <- function(region = "EU") {
   if (region == "arbeit") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- arbeitsmarkt_anfänger_absolv_oecd %>%
+    selection <- arbeitsmarkt_anfaenger_absolv_oecd %>%
       dplyr::filter(geschlecht == "Gesamt" &
                       variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
                                       "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
@@ -414,7 +414,7 @@ international_ui_years <- function(region = "EU") {
   if (region == "arbeit") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- arbeitsmarkt_anfänger_absolv_oecd %>%
+    selection <- arbeitsmarkt_anfaenger_absolv_oecd %>%
       dplyr::filter(
         geschlecht == "Gesamt" &
           # filter year, since before there are not all infos available
@@ -435,13 +435,13 @@ international_ui_country <- function(type = "arbeit", n = NA) {
   logger::log_debug("set internatial ui selection for countries")
   selection <- NULL
 
-  year <- max(arbeitsmarkt_anfänger_absolv_oecd$jahr)
+  year <- max(arbeitsmarkt_anfaenger_absolv_oecd$jahr)
 
   # for studium international
   if (type == "arbeit") {
     #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    tmp_df <-  arbeitsmarkt_anfänger_absolv_oecd %>%
+    tmp_df <-  arbeitsmarkt_anfaenger_absolv_oecd %>%
       dplyr::filter(geschlecht == "Gesamt" &
                       jahr == year &
                       variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",

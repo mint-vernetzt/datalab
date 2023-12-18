@@ -1627,7 +1627,7 @@ dat$population <- "OECD"
 # Spalten in logische Reihenfolge bringen
 dat<- dat[,c("bereich", "quelle", "variable", "typ", "fach",
              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
-colnames(dat)[6] <- "fachbereich"
+#colnames(dat)[6] <- "fachbereich"
 # umbenennen
 arbeitsmarkt_anfaenger_absolv_oecd <- dat
 
@@ -2790,9 +2790,9 @@ epa_detail <- epa_detail %>%
 
 
 # MINT Aggregat zuweisen/berechnen
-mint_f <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Fachkräfte", col_names = TRUE)
-mint_s <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Spezialisten", col_names = TRUE)
-mint_e <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Experten", col_names = TRUE)
+mint_f <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Fachkräfte", col_names = TRUE)
+mint_s <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Spezialisten", col_names = TRUE)
+mint_e <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Experten", col_names = TRUE)
 mint <- rbind(mint_f, mint_s, mint_e)
 mint <- na.omit(mint)
 mint$indikator <- mint$Code
