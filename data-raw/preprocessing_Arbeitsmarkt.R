@@ -1435,7 +1435,7 @@ colnames(data)[6] <- "fachbereich"
 arbeitsmarkt_fachkräfte_oecd <- data
 
 # speichern
-usethis::use_data(arbeitsmarkt_fachkräfte_oecd, overwrite = T)
+usethis::use_data(arbeitsmarkt_fachkraefte_oecd, overwrite = T)
 
 
 ## OECD 2 - Anzahl Absolvent*innen ------------------------------------------
@@ -1629,7 +1629,7 @@ colnames(dat)[6] <- "fachbereich"
 arbeitsmarkt_anfänger_absolv_oecd <- dat
 
 # speichern
-usethis::use_data(arbeitsmarkt_anfänger_absolv_oecd, overwrite = T)
+usethis::use_data(arbeitsmarkt_anfaenger_absolv_oecd, overwrite = T)
 
 ## OECD 4 - Frauenanteil Absolvent*innen nach Feld -----------------------------
 # ACHTUNG - SCHON ENTHALTEN IN OECD3
@@ -1947,7 +1947,7 @@ dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
 arbeitsmarkt_beschäftigte_eu <- dat
 
 # speichern:
-usethis::use_data(arbeitsmarkt_beschäftigte_eu , overwrite = T)
+usethis::use_data(arbeitsmarkt_beschaeftigte_eu , overwrite = T)
 
 
 ## internationale Daten zusammenbringen ------------------------------------
