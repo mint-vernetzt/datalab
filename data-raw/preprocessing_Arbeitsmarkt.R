@@ -1878,10 +1878,10 @@ data<- data[,c("bereich", "quelle", "variable", "typ", "indikator", "fach", "ges
 colnames(data)[6] <- "fachbereich"
 
 # umbenennen
-arbeitsmarkt_fachkräfte_oecd <- data
+arbeitsmarkt_fachkraefte_oecd <- data
 
 # speichern
-usethis::use_data(arbeitsmarkt_fachkräfte_oecd, overwrite = T)
+usethis::use_data(arbeitsmarkt_fachkraefte_oecd, overwrite = T)
 
 
 ## OECD 2 - Anzahl Absolvent*innen ------------------------------------------
@@ -2094,10 +2094,10 @@ nicht_mint <- dat %>%
 dat <- rbind(dat, mint, nicht_mint)
 
 # umbenennen
-arbeitsmarkt_anfänger_absolv_oecd <- dat
+arbeitsmarkt_anfaenger_absolv_oecd <- dat
 
 # speichern
-usethis::use_data(arbeitsmarkt_anfänger_absolv_oecd, overwrite = T)
+usethis::use_data(arbeitsmarkt_anfaenger_absolv_oecd, overwrite = T)
 
 ## OECD 4 - Frauenanteil Absolvent*innen nach Feld -----------------------------
 # ACHTUNG - SCHON ENTHALTEN IN OECD3
@@ -2410,10 +2410,10 @@ dat$typ <- ifelse(grepl("Anzah", dat$variable), "Anzahl", "In Prozent")
 dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 # umbenennen
-arbeitsmarkt_beschäftigte_eu <- dat
+arbeitsmarkt_beschaeftigte_eu <- dat
 
 # speichern:
-usethis::use_data(arbeitsmarkt_beschäftigte_eu , overwrite = T)
+usethis::use_data(arbeitsmarkt_beschaeftigte_eu , overwrite = T)
 
 
 ## internationale Daten zusammenbringen ------------------------------------
@@ -3609,7 +3609,7 @@ dat <- dat[, c("bereich", "indikator", "fachbereich", "beruf", "anforderung",
 dat$wert <- as.numeric(dat$wert)
 
 ## speichern
-arbeitsmarkt_fachkräfte <- dat
-usethis::use_data(arbeitsmarkt_fachkräfte , overwrite = T)
+arbeitsmarkt_fachkraefte <- dat
+usethis::use_data(arbeitsmarkt_fachkraefte , overwrite = T)
 
 
