@@ -1527,13 +1527,13 @@ plot_international_schule_migration <- function(r) {
 plot_international_map_arb <- function(r) {
 
   # Alle relevanten Daten laden
-  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <- arbeitsmarkt_anfaenger_absolv_oecd
   oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
   oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
-  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch <- arbeitsmarkt_beschaeftigte_eu
   eu_besch <- eu_besch%>% dplyr::filter(!is.na(.$wert))
 
   # ui input für Region laden
@@ -1903,13 +1903,13 @@ plot_international_map_arb <- function(r) {
 plot_international_map_arb_gender <- function(r) {
 
   # Daten laden
-  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <- arbeitsmarkt_anfaenger_absolv_oecd
   oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
   oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
-  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch <- arbeitsmarkt_beschaeftigte_eu
   eu_besch <- eu_besch%>% dplyr::filter(!is.na(.$wert))
 
   # ui input für Region laden
@@ -2343,13 +2343,13 @@ plot_international_map_arb_gender <- function(r) {
 plot_international_top10_mint_arb <- function(r) {
 
   # Daten laden
-  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <- arbeitsmarkt_anfaenger_absolv_oecd
   oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
   oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
-  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch <- arbeitsmarkt_beschaeftigte_eu
   eu_besch <- eu_besch%>% dplyr::filter(!is.na(.$wert))
 
   # ui input für Region laden
@@ -2808,13 +2808,13 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
   # Daten laden
 
-  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <- arbeitsmarkt_anfaenger_absolv_oecd
   oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
   oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
-  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch <- arbeitsmarkt_beschaeftigte_eu
   eu_besch1 <- eu_besch %>% dplyr::filter(!is.na(.$wert))
 
   # Input region laden
