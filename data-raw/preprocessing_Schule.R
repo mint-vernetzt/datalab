@@ -1,5 +1,21 @@
+
+# Packages und Pfade ------------------------------------------------------
+
+library(dplyr)
+library(tidyr)
+library(readxl)
+library(stringr)
+
 # Akronym übergeben für Datensatz-Pfad in Onedrive
-akro <- "kab"
+
+# für kbr
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+#für kab
+pfad <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+
 
 ################################################################################
 #
@@ -14,10 +30,6 @@ akro <- "kab"
 # Erstellt "kurse" --------------------------------------------------------
 
 ## Rohdatensatz einlesen ------------------------------------------------------
-library(dplyr)
-library(tidyr)
-library(readxl)
-library(stringr)
 
 # wd <- getwd()
 # setwd(wd)
@@ -934,10 +946,7 @@ usethis::use_data(iqb, overwrite = T)
 ## Alle ----
 
 # file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
-#
- path_kek <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
-#
- pfad <- path_kek
+
 
 dat_pisa_g <- read_xls(paste0(pfad, "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
 
