@@ -3368,10 +3368,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
 
-
-## arbeitsmarkt (Jakob) ----
-plot_international_arbeitsmarkt_map <- function(r) {}
-plot_international_arbeitsmakrt_top10 <- function(r) {}
 plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
   #r <- list(vergleich_y_int_arbeitsmarkt = 2012,vergleich_l_int_arbeitsmarkt = c("Australien", "Ungarn", "Deutschland"),vergleich_f_int_arbeitsmarkt = "MINT")
@@ -3384,7 +3380,7 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
   variable_set <- c("Anteil Absolvent*innen nach Fach an allen Fächern",
                     "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
 
-  tmp_df <-  arbeitsmarkt_anfänger_absolv_oecd %>%
+  tmp_df <-  arbeitsmarkt_anfaenger_absolv_oecd %>%
     dplyr::filter(geschlecht == "Gesamt" &
                     jahr == timerange &
                     land %in% land_m &
