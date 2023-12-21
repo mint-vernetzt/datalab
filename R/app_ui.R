@@ -26,6 +26,13 @@ app_ui <- function(request) {
           ),
           "    MINT-DataLab",
           style = "text-align: justify; color:#154194;"
+        ),
+
+        shiny::tags$li(
+          class = "dropdown",
+          id = "search-input-all",
+          # p("here be dragons")
+          mod_suche_eingabe_ui("suche_eingabe_1")
         )
       ),
 
@@ -65,6 +72,7 @@ app_ui <- function(request) {
           shinydashboard::menuItem("International",  tabName = "international"),
           shinydashboard::menuItem("Fachkräfte",  tabName = "fachkraft"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen"),
+          shinydashboard::menuItem("Suche",  tabName = "suche"),
           shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION"),
           #shinydashboard::menuItem("Impressum",  tabName = "impressum")
           #shinydashboard::menuItem("Datenschutz", tabName = "datenschutz")
@@ -81,7 +89,7 @@ app_ui <- function(request) {
       # Show the appropriate tab's content in the main body of our dashboard when we select it
       body = shinydashboard::dashboardBody(
         # display shiny version
-        shiny.info::version(ver = "1.0.0:9003",
+        shiny.info::version(ver = "1.0.0:9004",
                             position = "bottom left"),
 
         # Matomo einbinden
@@ -113,6 +121,16 @@ app_ui <- function(request) {
         tags$script(HTML(
           "$('body').addClass('fixed');"
           )),
+        tags$script(HTML("
+          Shiny.addCustomMessageHandler('delayedScroll', function(message) {
+            setTimeout(function() {
+              document.getElementById(message.id).scrollIntoView({
+                block: 'start',
+                behavior: 'smooth',
+              });
+            }, message.delay);
+          });
+        ")),
 
           shinydashboard::tabItems(
           shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
@@ -124,6 +142,7 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="fachkraft", mod_fachkraft_ui("fachkraft_1")),
           shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
           shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
+          shinydashboard::tabItem(tabName ="suche", mod_suche_ui("suche_1")),
 
 
           shinydashboard::tabItem(tabName ="BETAVERSION", mod_betaversion_ui("betaversion_ui_1")),

@@ -74,6 +74,8 @@ app_server <- function(input, output, session) {
 
   load(file = system.file(package="datalab","data/arbeitsmarkt_beschäftigte_eu.rda"))
 
+  load(file = system.file(package="datalab","data/suchtabelle.rda"))
+
   logger::log_debug("Daten laden fertig")
 
 
@@ -113,6 +115,12 @@ app_server <- function(input, output, session) {
                            )
 
   mod_fachkraft_server("fachkraft_1")
+
+  react_search <- reactiveValues()
+  mod_suche_server("suche_1", react_search, parent_session = session)
+  mod_suche_eingabe_server("suche_eingabe_1", react_search, parent_session = session)
+  mod_suche_eingabe_server("suche_eingabe_2", react_search, parent_session = session)
+
 
   logger::log_debug("Seiten-Module fertig")
 
