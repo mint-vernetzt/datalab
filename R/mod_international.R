@@ -43,8 +43,8 @@ mod_international_server <- function(id,
   logger::log_debug("Setup Seiten-Module: INTERNATIONAL")
   r <- reactiveValues()
 
-  # Box 1 - Studium
   mod_international_start_server("mod_international_start_ui_1", r)
+  # Box 1 - Studium
   mod_international_map_server("mod_international_map_ui_1", r)
   mod_international_top10_mint_server("international_top10_mint_1", r)
   mod_international_top10_mint_gender_server("international_top10_mint_gender_1", r)
@@ -64,6 +64,11 @@ mod_international_server <- function(id,
   mod_international_top10_mint_arb_server("mod_international_top10_mint_arb_ui_1", r)
   mod_international_top10_mint_arb_gender_server("mod_international_top10_mint_arb_gender_ui_1", r)
   mod_international_arbeitsmarkt_vergleich_server("international_arbeitsmarkt_vergleich_1", r)
+
+  # box 4 fachkräfte
+  mod_fachkraft_item_epa_server("fachkraft_item_epa_1", r)
+  mod_fachkraft_item_mint_server("fachkraft_item_mint_1", r)
+  mod_fachkraft_item_detail_server("fachkraft_item_detail_1", r)
 
 
 

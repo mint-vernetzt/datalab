@@ -66,7 +66,7 @@ dictionary_title_studium_studentenzahl <- list("eingeschrieben" = "die insgesamt
 #' @noRd
 
 dictionary_title_studium <- list("Mathe" = "in Mathematik",
-                                               "Ingenieur" = "am Ingenieurswesen")
+                                 "Ingenieur" = "am Ingenieurswesen")
 
 
 #' helpers
@@ -89,7 +89,7 @@ round_preserve_sum <- function(x, digits = 0) {
 
   y[indices] <- y[indices] + 1
 
-   y <- y / up
+  y <- y / up
 
   return(y)
 }
@@ -117,8 +117,8 @@ colors_mint_vernetzt <- list(general = c("#154194", "#b16fab", "#efe8e6"),
 states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Hamburg",
                                   "Hessen", "Niedersachsen", "Nordrhein-Westfalen",
                                   "Rheinland-Pfalz", "Saarland", "Schleswig-Holstein"),
-                        east = c("Brandenburg", "Mecklenburg-Vorpommern", "Sachsen",
-                                 "Sachsen-Anhalt", "Thüringen", "Berlin"))
+                         east = c("Brandenburg", "Mecklenburg-Vorpommern", "Sachsen",
+                                  "Sachsen-Anhalt", "Thüringen", "Berlin"))
 
 
 #' @description A function to create the value box
@@ -191,8 +191,8 @@ valueBox2 <- function(value, title, subtitle, icon = NULL, color = "aqua", width
 #' @noRd
 
 share_pie <- function(df) {
-    # calculate proportions
-    df$props <- sum(df$wert)
+  # calculate proportions
+  df$props <- sum(df$wert)
 
   df <- df %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
     dplyr::summarize(proportion = wert/props)
@@ -324,7 +324,7 @@ international_ui_faecher <- function(region = "EU") {
                    "--- Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik",
                    "--- Informatik & Kommunikationstechnologie" = "Informatik & Kommunikationstechnologie",
                    "--- Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" = "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"
-                   )
+    )
   }
 
   # for arbeitsmarkt international
@@ -389,10 +389,10 @@ international_ui_years <- function(region = "EU") {
 
     selection <- schule_timss %>%
       dplyr::filter(ordnung %in% c("Achievement",
-                                 "Benchmarks") &
+                                   "Benchmarks") &
                       indikator %in% c("Mittlerer int'l. Maßstab (475)",
-                                     "Insgesamt")
-                    ) %>%
+                                       "Insgesamt")
+      ) %>%
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
@@ -403,7 +403,7 @@ international_ui_years <- function(region = "EU") {
 
     selection <- schule_pisa %>%
       dplyr::filter(bereich == "Ländermittel" &
-                       indikator == "Insgesamt" &
+                      indikator == "Insgesamt" &
                       !is.na(wert)) %>%
       dplyr::pull(jahr) %>%
       unique() %>%
@@ -421,6 +421,7 @@ international_ui_years <- function(region = "EU") {
           jahr >= 2013 &
           variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
                           "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+
       ) %>%
       dplyr::pull(jahr) %>%
       unique() %>%
@@ -468,3 +469,197 @@ international_ui_country <- function(type = "arbeit", n = NA) {
   }
 
 }
+
+# Funktion zur Jahresauswahl bei Fachkraft Daten
+fachkraft_ui_years <- function() {
+
+  logger::log_debug("set fachkräfte ui selection for years")
+  selection <- NULL
+
+
+  selection <- arbeitsmarkt_epa_detail %>%
+    dplyr::filter(indikator == "Engpassindikator") %>%
+    dplyr::pull(jahr) %>%
+    unique() %>%
+    sort()
+
+
+  return(selection)
+}
+
+# Funktion zur Fachauswahl bei Fachkraft Daten
+fachkraft_ui_faecher <- function(exclude = c()) {
+
+  logger::log_debug("set fachkraft ui selection for faecher")
+
+  selection <- NULL
+
+  # selection <- arbeitsmarkt_epa_detail %>%
+  #   dplyr::filter(indikator == "Engpassindikator") %>%
+  #   dplyr::pull(mint_zuordnung) %>%
+  #   unique() %>%
+  #   append("MINT")
+
+  # manual selection to have correct order and naming
+  selection <- c(
+    "Alle Berufe", #"Gesamt"
+    "MINT gesamt", #"MINT",
+    "Informatik",
+    "Landtechnik",
+    "Prdokuktionstechnik",
+    "Bau- und Gebäudetechnik",
+    "Mathematik, Naturwissenschaften",
+    "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+    "Gesundheitstechnik",
+    "Nicht MINT"
+  )
+
+  selection <- setdiff(selection, exclude)
+
+
+  return(selection)
+
+}
+
+# Funktion zur Berufslevelauswahl bei Fachkraft Daten
+fachkraft_ui_berufslevel <- function() {
+  logger::log_debug("set fachkraft ui selection for berufslevel")
+
+  selection <- NULL
+
+  # selection <- arbeitsmarkt_epa_detail %>%
+  #   dplyr::filter(indikator == "Engpassindikator") %>%
+  #   dplyr::pull(anforderung) %>%
+  #   unique() %>%
+  #   append("Gesamt")
+  # manual selection to have correct order and adding "gesamt"
+  selection <- c(
+    "Gesamt",
+    "Fachkräfte",
+    "Spezialist*innen",
+    "Expert*innen"
+  )
+
+
+  return(selection)
+}
+
+fachkraft_ui_berufe <- function(level = "Fachkräfte") {
+  logger::log_debug("set fachkraft ui selection for berufe for '", level, "'")
+
+  selection <- NULL
+
+  selection <- arbeitsmarkt_epa_detail %>%
+    dplyr::filter(indikator == "Engpassindikator" &
+                    anforderung == level &
+                    !is.na(wert)) %>%
+    dplyr::pull(beruf) %>%
+    unique()
+
+
+  return(selection)
+}
+
+# function to extract a plot title from a highcharter object
+get_plot_title <- function(plot, path = ".") {
+
+  shiny::req(highcharter::is.highchart(plot))
+
+  out <- file.path(
+    path,
+    paste0(
+      ifelse(
+        is.null(plot$x$hc_opts$title$text),
+        "MINTvernetzt_PLOT",
+        plot$x$hc_opts$title$text),
+      "_", format(Sys.time(), "%Y%M%d_%H%M"),
+      ".png")
+  )
+  return(out)
+}
+
+
+# function to download plots with added cption and logo
+add_caption_and_download <- function(
+    hc,
+    filename = "plot.png",
+    labelformat = '{point.y}',
+    with_labels = TRUE,
+    width = 450,
+    height = 300) {
+
+  require(highcharter)
+  require(webshot2)
+  require(htmlwidgets)
+
+  # hc <- plot
+  shiny::req(highcharter::is.highchart(hc))
+
+  shiny::showNotification(ui = "Plot wird gespeichert...",
+                          type = "message",
+                          duration = NULL,
+                          id = "download_notification")
+
+  hc_out <- hc %>%
+    # Add the caption to the plot
+    highcharter::hc_size(width = width, height = height) %>%
+    highcharter::hc_caption(text = paste0(
+      '<div style="width: ',width - 10, 'px;',
+      ' display: flex; justify-content: space-between;">',
+      '<span>',
+      'Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022;',
+      ' KMK, 2022, alle auf Anfrage,<br>',
+      ' eigene Berechnungen durch MINTvernetzt</span>',
+      '<span>',
+      #'<img src="https://mint-vernetzt.de/static/e99e5a7a75c99c8651863585408242bb/mintvernetzt_og-img.png"',
+      '<img src="https://raw.githubusercontent.com/mint-vernetzt/datalab/main/inst/app/www/MINTvernetztLogo_klein.png"',
+      #'<img src="www/MINTvernetztLogo_klein.png"',
+      'alt="MINT vernetzt Logo" width="30" height="30">',
+      '</span>',
+      '</div>'
+    ),
+    useHTML = TRUE,
+    align = "right") %>%
+    # TODO add correct font
+    highcharter::hc_title(
+      # only overwrite needed values
+      style = list(fontFamily = "Calibri")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri")
+    )
+
+  if (with_labels) {
+    hc_out <- hc_out %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          # Add value labels
+          dataLabels = list(
+            enabled = TRUE,
+            format = paste(labelformat)
+          )
+        )
+      )
+  }
+
+  #print(hc_out)
+  # Save the plot as a standalone HTML file
+  html_file <- tempfile(fileext = ".html")
+  htmlwidgets::saveWidget(hc_out, file = html_file, selfcontained = TRUE)
+  #print(html_file)
+  # Capture the HTML as a PNG image
+  webshot2::webshot(url = html_file,
+                    file = filename,
+                    delay = 2,
+                    zoom = 2,
+                    vwidth = width,
+                    vheight = height)
+
+  shiny::showNotification(
+    ui = paste0("Gespeichert als '", filename, "'"),
+                          type = "message",
+    id = "download_notification")
+
+  return(NULL)
+}
+

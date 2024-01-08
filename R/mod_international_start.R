@@ -95,8 +95,8 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
+                                      #mod_international_map_ui("mod_international_map_ui_1")
                                       mod_international_schule_map_ui("international_schule_map_1")
-
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -432,9 +432,107 @@ mod_international_start_ui <- function(id){
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_arbeit_3")
                                     )
                            )
+               )
+             )
+    ),
 
+    # Box 4 - Fachkräfte because it does not work in an extra page...?!?
+    fluidRow(
+      id="fachkraft_plots",
+      shinydashboard::box(
+        title = "FACHKRAFT - EPA",
+        width = 12,
+        p("LOREM IPSUM INFO"),
+        tabsetPanel(
+          type = "tabs",
+          tabPanel(
+            title = "EPA nach MINT", br(),
 
-             )))))
+            # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+            # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+            shiny::sidebarPanel(
+              width = 3,
+              mod_fachkraft_item_epa_ui("fachkraft_item_epa_1"),
+              br(),
+              downloadButton(
+                outputId = ns("download_btn_plot_fachkraft_epa_item_1"),
+                label = "Download (links)",
+                icon = icon("download")),
+              downloadButton(
+                outputId = ns("download_btn_plot_fachkraft_epa_item_2"),
+                label = "Download (rechts)",
+                icon = icon("download")),
+            ),
+            shiny::mainPanel(
+              width = 9,
+              htmlOutput(ns("plot_fachkraft_epa_item_1")),
+              p(style="font-size:12px;color:grey",
+                "hier Quellen"),
+              shinyBS::bsPopover(
+                id="h_fachkraft_arbeitsmarkt_1", title="",
+                content = paste0("POPUP INFO TEXT HERE"),
+                placement = "top",
+                trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"),
+                     icon("info-circle"),
+                     id = "h_fachkraft_arbeitsmarkt_1")
+            )
+          ),
+          tabPanel("MINT nach EPA", br(),
+
+                   # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                   # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                   shiny::sidebarPanel(
+                     width = 3,
+                     mod_fachkraft_item_mint_ui("fachkraft_item_mint_1")
+
+                   ),
+                   shiny::mainPanel(
+                     width = 9,
+                     htmlOutput(ns("plot_fachkraft_mint_item_1")),
+                     p(style="font-size:12px;color:grey",
+                       "hier Quellen"),
+                     shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_2", title="",
+                                        content = paste0("POPUP INFO TEXT HERE"),
+                                        placement = "top",
+                                        trigger = "hover"),
+                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_2")
+                   )
+          ),
+
+          tabPanel("Detailansicht", br(),
+
+                   # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                   # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                   shiny::sidebarPanel(
+                     width = 3,
+                     mod_fachkraft_item_detail_ui("fachkraft_item_detail_1"),
+                     downloadButton(
+                       outputId = ns("download_btn_plot_fachkraft_item_detail_1"),
+                       label = "Download",
+                       icon = icon("download"))
+                   ),
+                   shiny::mainPanel(
+                     width = 9,
+                     htmlOutput(ns("plot_fachkraft_detail_item_1")),
+                     p(style="font-size:12px;color:grey",
+                       "hier Quellen"),
+
+                     shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
+                                        content = paste0("POPUP INFO TEXT HERE"),
+                                        placement = "top",
+                                        trigger = "hover"),
+                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_3")
+                   )
+          )
+        )
+      )
+    )
+  )
+  )
 
 }
 
@@ -523,6 +621,101 @@ mod_international_start_server <- function(id, r){
       plot_international_arbeitsmarkt_vergleiche(r)
     })
 
+    # Box 4 - Fachkraft
+
+    ## EPA nach MINT
+    output$plot_fachkraft_epa_item_1 <- renderUI({
+      plot_list <- plot_fachkraft_epa_item(r)
+      r$plot_fachkraft_epa_item_1_left <- plot_list[[1]]
+      r$plot_fachkraft_epa_item_1_right <- plot_list[[2]]
+
+      r$plot_fachkraft_epa_item_1_left_title <- get_plot_title(
+        plot = r$plot_fachkraft_epa_item_1_left
+      )
+      r$plot_fachkraft_epa_item_1_right_title <- get_plot_title(
+        plot = r$plot_fachkraft_epa_item_1_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
+    })
+
+    output$download_btn_plot_fachkraft_epa_item_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_fachkraft_epa_item_1_left_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_fachkraft_epa_item_1_left,
+          filename =  r$plot_fachkraft_epa_item_1_left_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_fachkraft_epa_item_1_left_title, file)
+        file.remove(r$plot_fachkraft_epa_item_1_left_title)
+      }
+    )
+
+    output$download_btn_plot_fachkraft_epa_item_2 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_fachkraft_epa_item_1_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+        add_caption_and_download(
+          hc = r$plot_fachkraft_epa_item_1_right,
+          filename =  r$plot_fachkraft_epa_item_1_right_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_fachkraft_epa_item_1_right_title, file)
+        file.remove(r$plot_fachkraft_epa_item_1_right_title)
+      }
+    )
+
+    ## MINT an EPA
+    output$plot_fachkraft_mint_item_1 <- renderUI({
+      plot_fachkraft_mint_item(r)
+    })
+
+    ## Detail Berufe
+    output$plot_fachkraft_detail_item_1 <- renderUI({
+      plot_list <- plot_fachkraft_detail_item(r)
+      r$plot_fachkraft_detail_item_1_left <- plot_list[[1]]
+      r$plot_fachkraft_detail_item_1_right <- plot_list[[2]]
+
+      r$plot_fachkraft_detail_item_1_left_title <- get_plot_title(
+        plot = r$plot_fachkraft_detail_item_1_left
+      )
+      r$plot_fachkraft_detail_item_1_right_title <- get_plot_title(
+        plot = r$plot_fachkraft_detail_item_1_right
+      )
+
+      highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+    })
+
+    output$download_btn_plot_fachkraft_item_detail_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_fachkraft_detail_item_1_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_fachkraft_detail_item_1_right,
+          filename =  r$plot_fachkraft_detail_item_1_right_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_fachkraft_detail_item_1_right_title, file)
+        file.remove(r$plot_fachkraft_detail_item_1_right_title)
+      }
+    )
 
   })
 }

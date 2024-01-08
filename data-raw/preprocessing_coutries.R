@@ -5,6 +5,25 @@ library(stringdist)
 this_url <-  "https://raw.githubusercontent.com/stefangabos/world_countries/master/data/countries/de/countries.csv"
 countries_raw_en <-  read.csv(file = this_url)
 
+
+# add aditional country codes
+# puerto rico PR
+# Swasiland SZ / Eswatini SZ
+countries_raw_en <- rbind(
+  countries_raw_en,
+  data.frame(
+    id = NA,
+    alpha2 = "PR",
+    alpha3 = NA,
+    name = "Puerto Rico"),
+  data.frame(
+    id = NA,
+    alpha2 = "SZ",
+    alpha3 = NA,
+    name = "Swasiland")
+  )
+
+
 # check existing country names
 data_files <- list.files("data/", pattern = ".rda")
 data_names <- gsub(".rda", "", data_files)
@@ -76,11 +95,11 @@ mapping_dt <- tibble::tribble(
   "Saudi Arabien", "Saudi-Arabien",
   "Kosovo", NA,
   #"Interantionaler Durchschnitt",
-  "Swasiland", NA,
+  #"Swasiland", NA,
   "Kongo", "Kongo, Republik",
   "Gibraltar", NA,
   "Montserrat", NA,
-  "Puerto Rico", NA,
+  #"Puerto Rico", NA,
   "Demokratische Volksrepublik Laos", "Laos",
   "Bermuda", NA,
   "Republik Moldau","Moldau",

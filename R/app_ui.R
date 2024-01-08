@@ -63,6 +63,7 @@ app_ui <- function(request) {
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
           shinydashboard::menuItem("International",  tabName = "international"),
+          shinydashboard::menuItem("Fachkräfte",  tabName = "fachkraft"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen"),
           shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION"),
           #shinydashboard::menuItem("Impressum",  tabName = "impressum")
@@ -80,7 +81,7 @@ app_ui <- function(request) {
       # Show the appropriate tab's content in the main body of our dashboard when we select it
       body = shinydashboard::dashboardBody(
         # display shiny version
-        shiny.info::version(ver = "1.0.0:9002",
+        shiny.info::version(ver = "1.0.0:9003",
                             position = "bottom left"),
 
         # Matomo einbinden
@@ -120,6 +121,7 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
           # shinydashboard::tabItem(tabName ="ausbildung", mod_ausbildung_ui("ausbildung_ui_1")),
           shinydashboard::tabItem(tabName ="international", mod_international_ui("international_ui_1")),
+          shinydashboard::tabItem(tabName ="fachkraft", mod_fachkraft_ui("fachkraft_1")),
           shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
           shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
 
