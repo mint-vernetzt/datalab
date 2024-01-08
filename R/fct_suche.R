@@ -34,7 +34,7 @@ get_search_data <- function(term, session) {
   }
 
   out <- out %>%
-    dplyr::select(menuItem..tabName, Tab.Name, Plotart)
+    dplyr::select(menuItem..tabName, Tab.Name, Plotart, Box..ID)
 
   return(out)
 }
