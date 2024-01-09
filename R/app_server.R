@@ -68,11 +68,11 @@ app_server <- function(input, output, session) {
 
   load(file = system.file(package="datalab","data/arbeitsmarkt_absolvent_oecd.rda"))
 
-  load(file = system.file(package="datalab","data/arbeitsmarkt_anfänger_absolv_oecd.rda"))
+  load(file = system.file(package="datalab","data/arbeitsmarkt_anfaenger_absolv_oecd.rda"))
 
   load(file = system.file(package="datalab","data/arbeitsmarkt_anzahl_azubis_oecd.rda"))
 
-  load(file = system.file(package="datalab","data/arbeitsmarkt_beschäftigte_eu.rda"))
+  load(file = system.file(package="datalab","data/arbeitsmarkt_beschaeftigte_eu.rda"))
 
   load(file = system.file(package="datalab","data/suchtabelle.rda"))
 

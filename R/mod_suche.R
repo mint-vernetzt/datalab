@@ -80,7 +80,7 @@ mod_suche_server <- function(id, react_search, parent_session){
     })
     search_table <- reactive({
       tmp <- react_search$suchtabelle
-      tmp$btn <- shinyInput(
+      tmp$link <- shinyInput(
         actionButton, nrow(react_search$suchtabelle),
         'rowline_',
         label = "Plot",
@@ -94,7 +94,25 @@ mod_suche_server <- function(id, react_search, parent_session){
 
 
     output$search_table <- DT::renderDataTable({
-      return(search_table())
+      target_cols <- which(
+        # select columns to be shown in the table
+        !names(search_table()) %in% c("Bereich", "Tab.Name", "Plotart", "link")
+        # the - 1 is because js uses 0 index instead of 1 like R
+        ) - 1
+
+      DT::datatable(search_table(),
+                # filter = list(position = "top"),
+                rownames = FALSE,
+                escape = FALSE,
+                options = list(
+                  dom = "t",
+                  columnDefs = list(
+                    list(
+                      visible = FALSE,
+                      targets = target_cols)
+                    )
+                )
+      )
     },
     escape = FALSE,
     rownames = FALSE,
