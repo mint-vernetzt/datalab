@@ -79,7 +79,7 @@ mod_studium_studienzahl_ui <- function(id){
     ),
 
 
-  # Box 1
+  # Box 1 -----
 
     fluidRow( id="studium_mint",
       shinydashboard::box(
@@ -278,7 +278,7 @@ mod_studium_studienzahl_ui <- function(id){
                   # )
         ))),
 
-    # Box 2
+    # Box 2 -----
 
   fluidRow( id="studium_fach",
       shinydashboard::box(

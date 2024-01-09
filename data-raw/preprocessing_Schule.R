@@ -1,5 +1,21 @@
+
+# Packages und Pfade ------------------------------------------------------
+
+library(dplyr)
+library(tidyr)
+library(readxl)
+library(stringr)
+
 # Akronym übergeben für Datensatz-Pfad in Onedrive
-akro <- "kab"
+
+# für kbr
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+#für kab
+pfad <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+
+
 
 ################################################################################
 #
@@ -14,13 +30,9 @@ akro <- "kab"
 # Erstellt "kurse" --------------------------------------------------------
 
 ## Rohdatensatz einlesen ------------------------------------------------------
-library(dplyr)
-library(tidyr)
-library(readxl)
-library(stringr)
 
-wd <- getwd()
-setwd(wd)
+# wd <- getwd()
+# setwd(wd)
 #setwd("C:/Users/kab/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 # wd <- getwd() #für Datensatz einlesen später nötig
 
@@ -60,8 +72,8 @@ read_data <- function(file, BL, year, course_level) {
 }
 
 # Datentabellen einlesen
-wd2 <- paste0(wd, "/raw")
-setwd(wd2)
+# wd2 <- paste0(wd, "/raw")
+# setwd(wd2)
 
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
@@ -933,13 +945,10 @@ usethis::use_data(iqb, overwrite = T)
 
 ## Alle ----
 
-file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+# file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
-pat_kek <- "C:/Users/kab/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten"
 
-file_path <- path_kek
-
-dat_pisa_g <- read_xls(paste0(file_path, "/", "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
+dat_pisa_g <- read_xls(paste0(pfad, "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
 
 sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
 sub_pisa_g <- dat_pisa_g[,sub_cindex]
@@ -992,7 +1001,7 @@ pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
 
   # setting path
 
-  dat_pisa_g <- read_xls(paste0(file_path, "/",pisa_list_dat ), sheet = pisa_list_sheeet)
+  dat_pisa_g <- read_xls(paste0(pfad,pisa_list_dat ), sheet = pisa_list_sheeet)
 
   # fach auslesen
   sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
@@ -1037,18 +1046,19 @@ pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
     rename(jahr = "Year/Study", land = Jurisdiction)
 
 
-  dat_pisa_g4$land <- countrycode::countrycode(dat_pisa_g4$land, origin = 'country.name',destination = 'country.name.de', custom_match = c("International Average (OECD)" = "OECD Durchschnitt"))
+  dat_pisa_g4$land <- countrycode::countrycode(dat_pisa_g4$land, origin = 'country.name',destination = 'country.name.de', custom_match = c("International Average (OECD)" = "OECD Durchschnitt",
+                                                                                                                                           "Selected countries and jurisdictions" = "Ausgewählte Regionen"))
 
   dat_pisa_g4$source <- pisa_list_dat
 
   dat_pisa_g5 <- dat_pisa_g4 %>%
-    filter(jahr %in% c("2000", "2003", "2006", "2009", "2012", "2015","2018"))
+    filter(jahr %in% c("2000", "2003", "2006", "2009", "2012", "2015","2018", "2022"))
 
   return(dat_pisa_g5)
 
 }
 
-
+# Hier Dateiname pro rlevantem Excel Arbeitsblatt einfügen
 pisa_list_dat <- c("PISA001_Länderscore_Insgesamt_Gender.xls",
                    "PISA001_Länderscore_Insgesamt_Gender.xls",
                    "PISA001_Länderscore_Insgesamt_Gender.xls",
@@ -1062,14 +1072,40 @@ pisa_list_dat <- c("PISA001_Länderscore_Insgesamt_Gender.xls",
                    "PISA004_Länderscores_Income_Computer.xls",
                    "PISA004_Länderscores_Income_Computer.xls",
                    "PISA004_Länderscores_Income_Computer.xls",
-                   "PISA004_Länderscores_Income_Computer.xls")
+                   "PISA004_Länderscores_Income_Computer.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls"
+)
+
+# Dazu die Indizes der relevanten Sheets einfügen
+pisa_list_sheeet <- c(3,4,5,6,2,3,3,4,5,6,3,4,5,6,
+                      1,2,3,4, # PISA005_Länderscore_Insgesamt_Gender_22.xls
+                      1,2,3,4 # PISA008_Länderscores_Immigration_Books_22.xls
+)
 
 
-pisa_list_sheeet <- c(3,4,5,6,2,3,3,4,5,6,3,4,5,6)
 
 pisa_list_output <- purrr::map2(.x = pisa_list_dat, .y =pisa_list_sheeet, .f=pisa_extract )
 
 pisa_list_output <- purrr::list_rbind(pisa_list_output)
+
+test <- pisa_list_output %>%
+  dplyr::filter(str_detect( .$source, "Books"))
+
+test1 <- test %>%
+  dplyr::filter(jahr == "2022")
+
+test2 <- test %>%
+  dplyr::filter(jahr == "2018")
+
+test4 <- test %>%
+  dplyr::filter(indikator=="None")
 
 pisa_list_output1 <- pisa_list_output %>%
   filter(!wert %in% c("†"))%>%
@@ -1079,8 +1115,9 @@ pisa_list_output1 <- pisa_list_output %>%
                         T ~ .$typ))%>%
   mutate(ordnung = case_when(
     indikator %in% c("101-200 books" , "0-10 books" ,
-      "11-25 books" , "201-500 books" , "26-100 books",
-      "More than 500 books", "None") ~ "Bücher im Haushalt",
+                     "11-25 books" , "201-500 books" , "26-100 books",
+                     "More than 500 books", "1-10 books", "11-25 books",
+                     "26-100 books", "101-200 books", "201-500 books", "There are no books.") ~ "Bücher im Haushalt",
     indikator %in% c( "Less than [$A]",
                       "[$A] or more but less than [$B]",
                       "[$B] or more but less than [$C]",
@@ -1088,7 +1125,10 @@ pisa_list_output1 <- pisa_list_output %>%
                       "[$D] or more but less than [$E]",
                       "[$E] or more") ~ "Haushaltseinkommen",
     indikator %in% c("All students", "Female", "Male")~ "Ländermittel",
-    indikator %in% c("First-Generation", "Second-Generation", "Native") ~ "Migrationshintergrund",
+    indikator %in% c(
+      "First-Generation student", "Second-Generation student",
+      "Native student",
+      "First-Generation", "Second-Generation", "Native") ~ "Migrationshintergrund",
     indikator %in% c("ISCED 1", "ISCED 3A, ISCED 4", "ISCED 5A, 6",
                      "ISCED 2", "ISCED 3B, C", "ISCED 5B") ~ "Bildungshintergrund",
     indikator %in% c("Yes", "No") ~ "Computerverfügbarkeit"
@@ -1101,8 +1141,8 @@ pisa1 <- pisa_list_output2 %>%
   filter(ordnung == "Ländermittel")%>%
   rename(geschlecht = indikator, indikator = ordnung)%>%
   mutate(geschlecht = case_when(geschlecht=="All students" ~ "Insgesamt",
-                                geschlecht=="Female" ~ "Weiblich",
-                                geschlecht=="Male" ~ "Männlich"))%>%
+                                geschlecht=="Female" ~ "Mädchen",
+                                geschlecht=="Male" ~ "Jungen"))%>%
   mutate(ausprägung = geschlecht)
 
 pisa1d <- pisa1 %>%
@@ -1113,11 +1153,13 @@ pisa2  <- pisa_list_output2 %>%
   mutate(geschlecht = "Insgesamt")%>%
   rename(ausprägung = indikator, indikator = ordnung)%>%
   mutate(ausprägung = case_when( ausprägung =="0-10 books" ~ "0-10",
+                                 ausprägung =="1-10 books" ~ "1-10",
                                  ausprägung =="101-200 books" ~ "101-200",
                                  ausprägung =="11-25 books" ~ "11-25",
                                  ausprägung =="201-500 books" ~ "201-500",
                                  ausprägung =="26-100 books" ~ "26-100",
-                                 ausprägung =="First-Generation" ~ "Erste Generation",
+                                 ausprägung =="There are no books." ~ "Keine",
+                                 ausprägung %in% c("First-Generation student", "First-Generation") ~ "Erste Generation",
                                  ausprägung =="ISCED 1" ~ "Primarbereich" ,
                                  ausprägung =="ISCED 2" ~  "Sekundarbereich I",
                                  ausprägung =="ISCED 3A, ISCED 4" ~ "Sekundarbereich II (Allgemeinbildend), Postsekundäre Bildung",
@@ -1125,26 +1167,55 @@ pisa2  <- pisa_list_output2 %>%
                                  ausprägung =="ISCED 5A, 6"~ "Tertiärbereich (Erste Stufe, außer Praxisgebunden), Tertiärbereich (Forschungsqualifikation)",
                                  ausprägung =="ISCED 5B" ~ "Teriärbereich (Erste Stufe, Praxisgebunden)",
                                  ausprägung =="More than 500 books" ~ "Mehr als 500",
-                                 ausprägung =="Native" ~ "Keiner",
+                                 ausprägung %in% c("Native student", "Native") ~ "Keiner",
                                  ausprägung =="Yes" ~ "Verfügbar",
                                  ausprägung =="No" ~ "Nicht Verfügbar",
-                                 ausprägung =="Second-Generation" ~ "Zweite Generation",
+                                 ausprägung %in% c("Second-Generation student","Second-Generation") ~ "Zweite Generation",
                                  ausprägung =="None" ~ "Keine",
                                  ausprägung =="or more" ~ "Mehr",
                                  T ~ .$ausprägung))
 
 
-pisa <- bind_rows(pisa1, pisa2)%>%
+# Anpassungen für Bücher im Haushalt: weitere Dimension in 2022
+# pisa3 <- pisa2 %>%
+#   filter(indikator != "Bücher im Haushalt" | jahr != "2022")
+#
+# pisa4 <- pisa2 %>%
+#   filter(indikator == "Bücher im Haushalt" &
+#            jahr == "2022")%>%
+#   pivot_wider(names_from = ausprägung, values_from = wert)%>%
+#   mutate("0-10" = (Keine+`1-10 books`)/2)%>%
+#   select(-Keine, - `1-10 books`) %>%
+#   pivot_longer(c("11-25",
+#                  "26-100",
+#                  "101-200",
+#                  "201-500",
+#                  "Mehr als 500",
+#                  "0-10"), names_to = "ausprägung", values_to= "wert")
+#
+# pisa2 <-  pisa3 %>%
+#   bind_rows(pisa4)
+
+pisa2 <- pisa2 %>%
+  filter(indikator != "Bücher im Haushalt" | ausprägung != "Keine")
+
+
+schule_pisa <- bind_rows(pisa1, pisa2)%>%
   mutate(alter_n = "15 Jahre")%>%
   rename(bereich = indikator, indikator = ausprägung)%>%
   select(-geschlecht)%>%
   pivot_wider(names_from = typ, values_from = wert )%>%
   rename(wert = Druchschnitt)%>%
-  mutate(typ = "Durchschnitt")
+  mutate(typ = "Durchschnitt")%>%
+  filter(land !="Ausgewählte Regionen" &
+           !indikator %in% c("Computerverfügbarkeit",
+                             "Bildungshintergrund",
+                             "Haushaltseinkommen"))%>%
+  filter(typ!="Standardfehler")
 
 
 
-usethis::use_data(pisa, overwrite = T)
+usethis::use_data(schule_pisa, overwrite = T)
 
 
 # TIMSS ----
