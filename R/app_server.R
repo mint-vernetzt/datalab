@@ -76,8 +76,6 @@ app_server <- function(input, output, session) {
 
   load(file = system.file(package="datalab","data/suchtabelle.rda"))
 
-  statworx-dev
-
   logger::log_debug("Daten laden fertig")
 
 
