@@ -3372,7 +3372,6 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
   #r <- list(vergleich_y_int_arbeitsmarkt = 2012,vergleich_l_int_arbeitsmarkt = c("Australien", "Ungarn", "Deutschland"),vergleich_f_int_arbeitsmarkt = "MINT")
   # load UI inputs from reactive value
-
   timerange <- r$vergleich_y_int_arbeitsmarkt
   land_m <- r$vergleich_l_int_arbeitsmarkt
   fach_m <- r$vergleich_f_int_arbeitsmarkt
@@ -3384,7 +3383,7 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
     dplyr::filter(geschlecht == "Gesamt" &
                     jahr == timerange &
                     land %in% land_m &
-                    #fachbereich == fach_m &
+                    fachbereich == fach_m &
                     anforderung == "tertiäre Bildung (gesamt)" &
                     variable %in% variable_set
     )
