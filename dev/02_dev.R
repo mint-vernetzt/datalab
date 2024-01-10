@@ -122,6 +122,10 @@ golem::add_module(name = "ausbildung_vertraege", with_test = TRUE) # Name of the
 golem::add_module(name = "ausbildung_vertraege_multiple", with_test = TRUE) # Name of the module
 golem::add_module(name = "ausbildung_vertraege_verlauf", with_test = TRUE) # Name of the module
 
+### Suchseite
+golem::add_module(name = "suche", with_test = FALSE) # Name of the module
+golem::add_module(name = "suche_eingabe", with_test = FALSE) # Name of the module
+
 ### Quellen
 golem::add_module(name = "quellen", with_test = TRUE) # Name of the module
 
