@@ -477,3 +477,57 @@ plot_fachkraft_detail_item  <- function(r) {
 
   return(out)
 }
+
+plot_fachkraft_bar_vakanz  <- function(r) {
+  logger::log_debug("plot_fachkraft_bar_vakanz")
+  #this_indikator <- "Abgeschlossene Vakanzzeit"; timerange <- 2021; bf_label <- "Spezialist*innen"; this_region <-"Deutschland"
+  #this_indikator <- "Arbeitslosen-Stellen-Relation"; timerange <- 2022; bf_label <- "Gesamt"; this_region <-"Deutschland"
+
+  this_indikator <- r$map_ind_fachkraft_arbeit_bar
+  timerange <- r$map_y_fachkraft_arbeit_bar
+  this_region <- r$map_reg_fachkraft_arbeit_bar
+  bf_label <- r$map_bl_fachkraft_arbeit_bar
+
+  berufe_order <- c("Insgesamt", "Keine MINT-Berufe", "MINT-Berufe")
+
+  plot_data <- arbeitsmarkt_fachkräfte %>%
+    dplyr::filter(jahr == timerange &
+                    indikator == this_indikator &
+                    anforderung == bf_label &
+                    region == this_region) %>%
+    dplyr::group_by(fachbereich) %>%
+    dplyr::summarise(wert = round(mean(wert, na.rm = TRUE), 2)) %>%
+    na.omit() %>%
+    dplyr::mutate(
+      group_color = dplyr::if_else(
+        fachbereich %in% berufe_order, "#B16FAB", "#D0A9CD"),
+      fachbereich = factor(
+        x = fachbereich,
+        levels = c(berufe_order, sort(setdiff(fachbereich, berufe_order)))
+      )
+    ) %>%
+    dplyr::arrange(fachbereich)
+
+  out <- highcharter::hchart(
+    object = plot_data,
+      type = "bar",
+      mapping = highcharter::hcaes(x = fachbereich, y = wert, color = group_color)
+      ) %>%
+    highcharter::hc_title(
+      text = paste0("Anteil von MINT-Berufen in der Verteilung der ", this_indikator,
+                    " auf dem ", bf_label, "-Level (", timerange, ")"),
+      margin = 10,
+      align = "center",
+      style = list(color = "black",
+                   useHTML = TRUE,
+                   fontFamily = "SourceSans3-Regular",
+                   fontSize = "20px")
+    ) %>%
+    highcharter::hc_tooltip(
+      pointFormat = 'Anteil: {point.wert}%'
+    ) %>%
+    highcharter::hc_yAxis(title = list(text = "")) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+
+  return(out)
+}

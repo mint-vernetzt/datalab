@@ -487,6 +487,7 @@ fachkraft_ui_years <- function() {
   return(selection)
 }
 
+
 # Funktion zur Fachauswahl bei Fachkraft Daten
 fachkraft_ui_faecher <- function(exclude = c()) {
 
@@ -578,6 +579,39 @@ get_plot_title <- function(plot, path = ".") {
   return(out)
 }
 
+# Funktion zur Jahreswahl bei Arbeit-Fachkraft Daten
+arbeit_fachkraft_ui_years <- function() {
+
+  logger::log_debug("set arbeit-fachkräfte ui selection for years")
+  selection <- NULL
+
+
+  selection <- arbeitsmarkt_fachkräfte %>%
+    dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
+                                   "Arbeitslosen-Stellen-Relation")) %>%
+    dplyr::pull(jahr) %>%
+    unique() %>%
+    sort()
+
+
+  return(selection)
+}
+
+# Funktion zur Region bei Arbeit-Fachkraft Daten
+arbeit_fachkraft_ui_region <- function() {
+  logger::log_debug("set arbeit-fachkräfte ui selection for region")
+  selection <- NULL
+
+
+  selection <- arbeitsmarkt_fachkräfte %>%
+    dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
+                                   "Arbeitslosen-Stellen-Relation")) %>%
+    dplyr::pull(region) %>%
+    unique()
+
+
+  return(selection)
+}
 
 # function to download plots with added cption and logo
 add_caption_and_download <- function(

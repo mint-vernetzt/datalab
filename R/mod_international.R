@@ -69,6 +69,7 @@ mod_international_server <- function(id,
   mod_fachkraft_item_epa_server("fachkraft_item_epa_1", r)
   mod_fachkraft_item_mint_server("fachkraft_item_mint_1", r)
   mod_fachkraft_item_detail_server("fachkraft_item_detail_1", r)
+  mod_fachkraft_bar_vakanz_server("fachkraft_bar_vakanz_1", r)
 
 
 
