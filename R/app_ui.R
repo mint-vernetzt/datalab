@@ -31,7 +31,6 @@ app_ui <- function(request) {
         shiny::tags$li(
           class = "dropdown",
           id = "search-input-all",
-          # p("here be dragons")
           mod_suche_eingabe_ui("suche_eingabe_1")
         )
       ),
