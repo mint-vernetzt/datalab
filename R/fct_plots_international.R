@@ -88,8 +88,8 @@ plot_international_map <- function(r) {
 
 
   } else if (label_m == "OECD") {
-    #map_selection <- golem::get_golem_options("world_map")
-  map_selection <- "custom/world"
+    map_selection <- golem::get_golem_options("world_map")
+  #map_selection <-"custom/world"
 
 
     # filter for selection
@@ -112,7 +112,7 @@ plot_international_map <- function(r) {
     # calculate total amount by land
     this_df_alle <- df_filtered %>%
       dplyr::filter(fachbereich == "Alle") %>%
-      dplyr::group_by(land, jahr, fach)
+      dplyr::group_by(land, jahr, fach)%>%
       dplyr::summarise(total = sum(wert, na.rm = TRUE)) %>%
       dplyr::ungroup()
 
@@ -190,6 +190,7 @@ plot_international_map <- function(r) {
   }
   }
 
+
   data_map_1 <- df7
 
   highcharter::highchart(type = "map") %>%
@@ -204,7 +205,7 @@ plot_international_map <- function(r) {
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(valueDecimals = 1, valueSuffix = "%")
-    ) %>%
+    )%>%
     highcharter::hc_tooltip(pointFormat = hover) %>%
     highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text} %")) %>%
     highcharter::hc_title(
@@ -388,14 +389,14 @@ plot_international_map_fem <- function(r){
     # Frauen von Allen
 
     # Filtern für alle Einzelfächer in MINT
-    df_share_fem2 <<- df_filtered %>%
+    df_share_fem2 <- df_filtered %>%
       dplyr::select(-fachbereich)%>%
       dplyr::filter(mint_select== "mint" & geschlecht == "Frauen" |
                       fach=="Alle" & geschlecht == "Frauen")%>%
       dplyr::select(-mint_select)
 
     # Filtern für Alle Fächer (insgesamt)
-    df_share_fem3 <<- df_filtered %>%
+    df_share_fem3 <- df_filtered %>%
       dplyr::select(-fachbereich)%>%
       dplyr::filter(mint_select== "mint" & geschlecht == "Frauen" |
                       fach=="Alle" & geschlecht == "Frauen") %>%
@@ -404,7 +405,7 @@ plot_international_map_fem <- function(r){
       dplyr::select(-fach,-mint_select)
 
     # Beide werte zusammenbringen, um rechenoperation zu ermöglichen
-    df_share_fem4 <<- df_share_fem2 %>%
+    df_share_fem4 <- df_share_fem2 %>%
       dplyr::full_join(df_share_fem3, by=c("bereich",
                                            "quelle",
                                            "typ",
@@ -1391,6 +1392,8 @@ plot_international_schule_migration <- function(r) {
       "nach sozialem Status" = "Gemittelte Test-Punktzahl"
     )
 
+
+
     df <- schule_timss %>%
       dplyr::filter(ordnung == this_ordnung &
                       indikator %in% this_indikator &
@@ -1410,7 +1413,7 @@ plot_international_schule_migration <- function(r) {
     this_bereich <- switch(
       leistungsindikator_m,
       "nach Geschlecht" = "Ländermittel",
-      "nach Zuwanderungsgeschichte" = "Migrationshintergund",
+      "nach Zuwanderungsgeschichte" = "Migrationshintergrund",
       "nach Bildungskapital" = "Bücher im Haushalt"
     )
 
@@ -1420,8 +1423,14 @@ plot_international_schule_migration <- function(r) {
       "nach Zuwanderungsgeschichte" = c("Keiner",
                                         "Zweite Generation",
                                         "Erste Generation"),
-      "nach Bildungskapital" = c("0-10", "26-100", "Mehr als 500")
+      "nach Bildungskapital" = c("0-10", "1-10", "26-100", "Mehr als 500")
     )
+
+
+# this_bereich <<- "Migrationshintergrund"
+# this_indikator <<- c("Keiner",
+#                      "Zweite Generation",
+#                      "Erste Generation")
 
     df <- schule_pisa %>%
       dplyr::filter(bereich == this_bereich &
@@ -1434,6 +1443,7 @@ plot_international_schule_migration <- function(r) {
     df$indikator[df$indikator == "0-10"] <- "sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)"
     df$indikator[df$indikator == "26-100"] <- "niedriges Bildungskapital (bis zu 100 Bücher zuhause)"
     df$indikator[df$indikator == "Mehr als 500"] <- "hohes Bildungskapital (über 500 Bücher zuhause)"
+    df$indikator[df$indikator == "1-10"] <- "sehr niedriges Bildungskapital (1 bis 10 Bücher zuhause)"
 
     help_l <- "9. & 10. Klasse"
   }
@@ -1441,9 +1451,11 @@ plot_international_schule_migration <- function(r) {
 
   # filter dataset based on UI inputs
 
+
   dfs <- df %>%
     dplyr::filter(jahr == timerange &
                     fach == fach_m)
+
   used_lands <- dfs %>%
     dplyr::filter(!is.na(wert)) %>%
     dplyr::pull(land) %>%
@@ -1515,13 +1527,13 @@ plot_international_schule_migration <- function(r) {
 plot_international_map_arb <- function(r) {
 
   # Alle relevanten Daten laden
-  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <- arbeitsmarkt_anfaenger_absolv_oecd
   oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
   oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
-  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch <- arbeitsmarkt_beschaeftigte_eu
   eu_besch <- eu_besch%>% dplyr::filter(!is.na(.$wert))
 
   # ui input für Region laden
@@ -1891,13 +1903,13 @@ plot_international_map_arb <- function(r) {
 plot_international_map_arb_gender <- function(r) {
 
   # Daten laden
-  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <- arbeitsmarkt_anfaenger_absolv_oecd
   oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
   oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
-  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch <- arbeitsmarkt_beschaeftigte_eu
   eu_besch <- eu_besch%>% dplyr::filter(!is.na(.$wert))
 
   # ui input für Region laden
@@ -2331,13 +2343,13 @@ plot_international_map_arb_gender <- function(r) {
 plot_international_top10_mint_arb <- function(r) {
 
   # Daten laden
-  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <- arbeitsmarkt_anfaenger_absolv_oecd
   oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
   oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
-  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch <- arbeitsmarkt_beschaeftigte_eu
   eu_besch <- eu_besch%>% dplyr::filter(!is.na(.$wert))
 
   # ui input für Region laden
@@ -2796,13 +2808,13 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
   # Daten laden
 
-  oecd_abs_anfänger <- arbeitsmarkt_anfänger_absolv_oecd
+  oecd_abs_anfänger <- arbeitsmarkt_anfaenger_absolv_oecd
   oecd_abs_anfänger <-oecd_abs_anfänger%>% dplyr::filter(!is.na(.$wert))
 
   oecd_azub <- arbeitsmarkt_anzahl_azubis_oecd
   oecd_azub <- oecd_azub%>% dplyr::filter(!is.na(.$wert))
 
-  eu_besch <- arbeitsmarkt_beschäftigte_eu
+  eu_besch <- arbeitsmarkt_beschaeftigte_eu
   eu_besch1 <- eu_besch %>% dplyr::filter(!is.na(.$wert))
 
   # Input region laden
@@ -3356,10 +3368,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
 
-
-## arbeitsmarkt (Jakob) ----
-plot_international_arbeitsmarkt_map <- function(r) {}
-plot_international_arbeitsmakrt_top10 <- function(r) {}
 plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
   #r <- list(vergleich_y_int_arbeitsmarkt = 2012,vergleich_l_int_arbeitsmarkt = c("Australien", "Ungarn", "Deutschland"),vergleich_f_int_arbeitsmarkt = "MINT")
@@ -3372,7 +3380,7 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
   variable_set <- c("Anteil Absolvent*innen nach Fach an allen Fächern",
                     "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
 
-  tmp_df <-  arbeitsmarkt_anfänger_absolv_oecd %>%
+  tmp_df <-  arbeitsmarkt_anfaenger_absolv_oecd %>%
     dplyr::filter(geschlecht == "Gesamt" &
                     jahr == timerange &
                     land %in% land_m &

@@ -93,7 +93,7 @@ mod_schule_kurse_ui <- function(id){
 
       ),
 
-  # Box 1
+  # Box 1 -----
 
     fluidRow(id="schule_mint",
       shinydashboard::box(
@@ -246,6 +246,8 @@ mod_schule_kurse_ui <- function(id){
                     #         )
       ))),
 
+  # Box 2 -----
+
     fluidRow(id="schule_fach",
       shinydashboard::box(
         title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
@@ -364,7 +366,10 @@ mod_schule_kurse_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_6")
                                ))
 
+
         ))),
+
+  # Box 3 ----
     fluidRow(id="schule_frauen",
       shinydashboard::box(
         title = "Mädchen in MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?",
@@ -458,6 +463,8 @@ mod_schule_kurse_ui <- function(id){
 
 
                     ))),
+
+  # box 4 -----
 
       fluidRow(id="schule_kompetenz",
            shinydashboard::box(

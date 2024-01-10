@@ -60,7 +60,7 @@ mod_international_schule_map_ui <- function(id){
                        inputId = ns("map_y_pisa_int_schule"),
                        label = NULL,
                        choices = international_ui_years(region = "PISA"),
-                       selected = "2018"
+                       selected = "2022"
                      ),
 
                      p("Fachbereich:"),

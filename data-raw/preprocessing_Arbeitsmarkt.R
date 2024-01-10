@@ -8,11 +8,14 @@
 ################################################################################
 
 # für Pfad zum Einlesen aus Onedrive
-akro <- "kbr"
-pfad <- paste0("C:/Users/", akro,
-               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
+# für kbr
+# akro <- "kbr"
+# pfad <- paste0("C:/Users/", akro,
+#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
+#für kab
+pfad <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 # Erstellt "arbeitsmarkt" -------------------------------------------------
 
 ## Alten/neuen Datensatz einlesen ---------------------------------------------------
@@ -1334,11 +1337,13 @@ iscedf13_transform_kurz <- function(dat) {
 
 ### Rohdaten einlesen -------------------------------------------------------
 
-akro <- "kbr"
-data <- read.csv(paste0("C:/Users/", akro,
-                        "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD001_employment_per_field.csv"),
+
+data <- read.csv(paste0(pfad,"OECD001_employment_per_field.csv"),
                  header = TRUE, sep = ",", dec = ".")
 
+
+
+## OECD 1 - Anteile Beschäftigung
 
 ### Datensatz in passende Form bringen --------------------------------------
 
@@ -1432,18 +1437,17 @@ data<- data[,c("bereich", "quelle", "variable", "typ", "indikator", "fach", "ges
 colnames(data)[6] <- "fachbereich"
 
 # umbenennen
-arbeitsmarkt_fachkräfte_oecd <- data
+arbeitsmarkt_fachkraefte_oecd <- data
 
 # speichern
-usethis::use_data(arbeitsmarkt_fachkräfte_oecd, overwrite = T)
+usethis::use_data(arbeitsmarkt_fachkraefte_oecd, overwrite = T)
 
 
 ## OECD 2 - Anzahl Absolvent*innen ------------------------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                        "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD002_Anzahl_Absolv_nach_Feld_OECD.csv"),
+
+dat <- read.csv(paste0(pfad, "OECD002_Anzahl_Absolv_nach_Feld_OECD.csv"),
                  header = TRUE, sep = ",", dec = ".")
 
 ### Datensatz in passende Form bringen --------------------------------------
@@ -1542,9 +1546,8 @@ usethis::use_data(arbeitsmarkt_absolvent_oecd, overwrite = T)
 ## OECD 3 - Anteil Feld /Frauen von Absolvent*innen--------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD003_Anteil_Absol_nach_Feld_an_allen_Feldern_OECD.csv"),
+
+dat <- read.csv(paste0(pfad,"OECD003_Anteil_Absol_nach_Feld_an_allen_Feldern_OECD.csv"),
                 header = TRUE, sep = ",", dec = ".")
 
 ### Datensatz in passende Form bringen --------------------------------------
@@ -1624,12 +1627,12 @@ dat$population <- "OECD"
 # Spalten in logische Reihenfolge bringen
 dat<- dat[,c("bereich", "quelle", "variable", "typ", "fach",
              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
-colnames(dat)[6] <- "fachbereich"
+#colnames(dat)[6] <- "fachbereich"
 # umbenennen
-arbeitsmarkt_anfänger_absolv_oecd <- dat
+arbeitsmarkt_anfaenger_absolv_oecd <- dat
 
 # speichern
-usethis::use_data(arbeitsmarkt_anfänger_absolv_oecd, overwrite = T)
+usethis::use_data(arbeitsmarkt_anfaenger_absolv_oecd, overwrite = T)
 
 ## OECD 4 - Frauenanteil Absolvent*innen nach Feld -----------------------------
 # ACHTUNG - SCHON ENTHALTEN IN OECD3
@@ -1713,9 +1716,8 @@ usethis::use_data(arbeitsmarkt_anfänger_absolv_oecd, overwrite = T)
 ## OECD 5 - Anzahl Azubis / Studis nach Feld & Gender------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
+
+dat <- read.csv(paste0(pfad, "OECD005_Anzahl_Studi_Azubi_nach_Fach_Sex.csv"),
                 header = TRUE, sep = ",", dec = ".")
 
 
@@ -1886,9 +1888,8 @@ usethis::use_data(arbeitsmarkt_anzahl_azubis_oecd, overwrite = T)
 ## EUROSTAT1 - Anzahl Ingenieure & Wissenschaftler---------------------------
 
 ### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-dat <- read.csv(paste0("C:/Users/", akro,
-                       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/EUROSTAT002_custom_Labor_Tech_and_Scie.csv.gz"),
+
+dat <- read.csv(paste0(pfad,"EUROSTAT002_custom_Labor_Tech_and_Scie.csv.gz"),
                 header = TRUE, sep = ",", dec = ".")
 
 ### Datensatz in passende Form bringen --------------------------------------
@@ -1944,10 +1945,10 @@ dat$typ <- ifelse(grepl("Anzah", dat$variable), "Anzahl", "In Prozent")
 dat<- dat[,c("bereich", "quelle", "variable", "typ", "indikator", "fachbereich",
              "geschlecht", "population", "land", "jahr", "anforderung", "wert")]
 # umbenennen
-arbeitsmarkt_beschäftigte_eu <- dat
+arbeitsmarkt_beschaeftigte_eu <- dat
 
 # speichern:
-usethis::use_data(arbeitsmarkt_beschäftigte_eu , overwrite = T)
+usethis::use_data(arbeitsmarkt_beschaeftigte_eu , overwrite = T)
 
 
 ## internationale Daten zusammenbringen ------------------------------------
@@ -1968,9 +1969,9 @@ library(dplyr)
 ### BULA Vergleich ####
 
 #### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-pfad <- paste0("C:/Users/", akro,
-               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+# akro <- "kbr"
+# pfad <- paste0("C:/Users/", akro,
+#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 epa_einlesen <- function(name, sheet_s){
   df <- readxl::read_excel(paste0(pfad, name),
@@ -2089,9 +2090,9 @@ usethis::use_data(epa, overwrite = T)
 
 
 #### Rohdaten einlesen -------------------------------------------------------
-akro <- "kbr"
-pfad <- paste0("C:/Users/", akro,
-               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+# akro <- "kbr"
+# pfad <- paste0("C:/Users/", akro,
+#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 epa_einlesen <- function(name, sheet_s){
   df <- readxl::read_excel(paste0(pfad, name),
@@ -2789,9 +2790,9 @@ epa_detail <- epa_detail %>%
 
 
 # MINT Aggregat zuweisen/berechnen
-mint_f <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Fachkräfte", col_names = TRUE)
-mint_s <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Spezialisten", col_names = TRUE)
-mint_e <- readxl::read_excel("C:/Users/kbr/Desktop/MINT-Berufe.xlsx", sheet = "Experten", col_names = TRUE)
+mint_f <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Fachkräfte", col_names = TRUE)
+mint_s <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Spezialisten", col_names = TRUE)
+mint_e <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Experten", col_names = TRUE)
 mint <- rbind(mint_f, mint_s, mint_e)
 mint <- na.omit(mint)
 mint$indikator <- mint$Code
