@@ -9,8 +9,6 @@ app_ui <- function(request) {
   logger::log_info("Start APP UI")
   logger::log_threshold(level = Sys.getenv("LOG_LEVEL", "INFO"))
 
-  Sys.setenv(CHROMOTE_CHROME = "C:\\Users\\kbr\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe")
-
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
