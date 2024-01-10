@@ -134,6 +134,6 @@ app_server <- function(input, output, session) {
       style = "border: 0.1px solid #111111; background-color: #111111; color: #ffffff; ")
   })
 
-  shiny::observeEvent(input$debug, browser())
+  #shiny::observeEvent(input$debug, browser())
   logger::log_info("END APP SERVER")
 }
