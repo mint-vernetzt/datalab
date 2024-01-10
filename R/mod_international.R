@@ -71,6 +71,9 @@ mod_international_server <- function(id,
   mod_fachkraft_item_detail_server("fachkraft_item_detail_1", r)
   mod_fachkraft_bar_vakanz_server("fachkraft_bar_vakanz_1", r)
 
+  # box 5 International Table
+  mod_international_table_input_server("international_table_input_1", r)
+
 
 
 

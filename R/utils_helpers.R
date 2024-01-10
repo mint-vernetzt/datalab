@@ -468,6 +468,15 @@ international_ui_country <- function(type = "arbeit", n = NA) {
       sort()
   }
 
+  if (type == "all") {
+    all_int_data <- data.frame(land = c("Deutschland", "Schweiz", "Albanien"))
+    selection <- all_int_data %>%
+      dplyr::pull(land) %>%
+      unique() %>%
+      sort()
+  }
+
+  return(selection)
 }
 
 # Funktion zur Jahresauswahl bei Fachkraft Daten
