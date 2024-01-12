@@ -71,7 +71,7 @@ pfad_kek <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmat
 
 pfad <- pfad_kek
 
-data_LK_D  <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "D" , 2021, "Leistungskurse")
+data_LK_D  <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "D" , 2021, "Leistungskurse")
 data_LK_BW <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BW", 2021, "Leistungskurse")
 data_LK_BY <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BY", 2021, "Leistungskurse")
 data_LK_BE <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BE", 2021, "Leistungskurse")
@@ -107,6 +107,43 @@ data_GK_ST <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "ST", 
 data_GK_SH <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "SH", 2021, "Grundkurse")
 data_GK_TH <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "TH", 2021, "Grundkurse")
 
+# daten für 2022
+
+data22_LK_D  <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "D" , 2022, "Leistungskurse")
+data22_LK_BW <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "BW", 2022, "Leistungskurse")
+data22_LK_BY <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "BY", 2022, "Leistungskurse")
+data22_LK_BE <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "BE", 2022, "Leistungskurse")
+data22_LK_BB <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "BB", 2022, "Leistungskurse")
+data22_LK_HB <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "HB", 2022, "Leistungskurse")
+data22_LK_HH <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "HH", 2022, "Leistungskurse")
+data22_LK_HE <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "HE", 2022, "Leistungskurse")
+data22_LK_MV <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "MV", 2022, "Leistungskurse")
+data22_LK_NI <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "NI", 2022, "Leistungskurse")
+data22_LK_NW <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "NW", 2022, "Leistungskurse")
+data22_LK_RP <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "RP", 2022, "Leistungskurse")
+data22_LK_SL <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "SL", 2022, "Leistungskurse")
+data22_LK_SN <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "SN", 2022, "Leistungskurse")
+data22_LK_ST <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "ST", 2022, "Leistungskurse")
+data22_LK_SH <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "SH", 2022, "Leistungskurse")
+data22_LK_TH <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "TH", 2022, "Leistungskurse")
+
+data22_GK_D  <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "D" , 2022, "Grundkurse")
+data22_GK_BW <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "BW", 2022, "Grundkurse")
+data22_GK_BY <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "BY", 2022, "Grundkurse")
+data22_GK_BE <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "BE", 2022, "Grundkurse")
+data22_GK_BB <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "BB", 2022, "Grundkurse")
+data22_GK_HB <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "HB", 2022, "Grundkurse")
+data22_GK_HH <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "HH", 2022, "Grundkurse")
+data22_GK_HE <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "HE", 2022, "Grundkurse")
+data22_GK_MV <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "MV", 2022, "Grundkurse")
+data22_GK_NI <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "NI", 2022, "Grundkurse")
+data22_GK_NW <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "NW", 2022, "Grundkurse")
+data22_GK_RP <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "RP", 2022, "Grundkurse")
+data22_GK_SL <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "SL", 2022, "Grundkurse")
+data22_GK_SN <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "SN", 2022, "Grundkurse")
+data22_GK_ST <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "ST", 2022, "Grundkurse")
+data22_GK_SH <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "SH", 2022, "Grundkurse")
+data22_GK_TH <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "TH", 2022, "Grundkurse")
 
 # Zwischen-DFs zusammenfassen
 data <- rbind( data_LK_D     ,
@@ -145,6 +182,43 @@ data <- rbind( data_LK_D     ,
                    data_GK_TH
 )
 
+data22 <- rbind(data22_LK_D     ,
+                data22_LK_BW ,
+                data22_LK_BY ,
+                data22_LK_BE ,
+                data22_LK_BB ,
+                data22_LK_HB ,
+                data22_LK_HH ,
+                data22_LK_HE ,
+                data22_LK_MV ,
+                data22_LK_NI ,
+                data22_LK_NW ,
+                data22_LK_RP ,
+                data22_LK_SL ,
+                data22_LK_SN ,
+                data22_LK_ST ,
+                data22_LK_SH ,
+                data22_LK_TH ,
+                data22_GK_D  ,
+                data22_GK_BW ,
+                data22_GK_BY ,
+                data22_GK_BE ,
+                data22_GK_BB ,
+                data22_GK_HB ,
+                data22_GK_HH ,
+                data22_GK_HE ,
+                data22_GK_MV ,
+                data22_GK_NI ,
+                data22_GK_NW ,
+                data22_GK_RP ,
+                data22_GK_SL ,
+                data22_GK_SN ,
+                data22_GK_ST ,
+                data22_GK_SH ,
+                data22_GK_TH)
+
+
+data <- rbind(data, data22)
 
 ## Datensatz in gewünschte From bringe -------------------------------------
 
@@ -336,7 +410,11 @@ kurse <- kurse %>%
   dplyr::mutate("andere Fächer" = `Alle Fächer`- MINT) %>%
   tidyr::pivot_longer(all_of(alle_kurse), values_to = "wert", names_to = "fachbereich")
 
+writexl::write_xlsx(kurse, "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/02_Prozess/Datenaufbereitung 2023/Zentral/kurse_22.xlsx")
 # USE ----
+
+
+
 usethis::use_data(kurse, overwrite = T)
 
 
