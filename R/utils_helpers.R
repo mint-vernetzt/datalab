@@ -586,7 +586,7 @@ arbeit_fachkraft_ui_years <- function() {
   selection <- NULL
 
 
-  selection <- arbeitsmarkt_fachkräfte %>%
+  selection <- arbeitsmarkt_fachkraefte %>%
     dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
                                    "Arbeitslosen-Stellen-Relation")) %>%
     dplyr::pull(jahr) %>%
@@ -603,7 +603,7 @@ arbeit_fachkraft_ui_region <- function() {
   selection <- NULL
 
 
-  selection <- arbeitsmarkt_fachkräfte %>%
+  selection <- arbeitsmarkt_fachkraefte %>%
     dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
                                    "Arbeitslosen-Stellen-Relation")) %>%
     dplyr::pull(region) %>%
@@ -625,6 +625,11 @@ add_caption_and_download <- function(
   require(highcharter)
   require(webshot2)
   require(htmlwidgets)
+
+  # force the use of pagedown to install chrome on shinyapps.io (this is a workaround)
+  require(pagedown)
+  # force the use of curl because chromote needs it (see https://github.com/rstudio/chromote/issues/37)
+  require(curl)
 
   # hc <- plot
   shiny::req(highcharter::is.highchart(hc))
@@ -680,8 +685,8 @@ add_caption_and_download <- function(
   # Save the plot as a standalone HTML file
   html_file <- tempfile(fileext = ".html")
   htmlwidgets::saveWidget(hc_out, file = html_file, selfcontained = TRUE)
-  #print(html_file)
-  # Capture the HTML as a PNG image
+  print(html_file)
+  # # Capture the HTML as a PNG image
   webshot2::webshot(url = html_file,
                     file = filename,
                     delay = 2,

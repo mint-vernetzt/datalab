@@ -1,3 +1,8 @@
+
+
+"C:/Program Files (x86)/Microsoft/Edge/Application"
+
+
 #' The application User-Interface
 #'
 #' @param request Internal parameter for `{shiny}`.
@@ -8,6 +13,8 @@
 app_ui <- function(request) {
   logger::log_info("Start APP UI")
   logger::log_threshold(level = Sys.getenv("LOG_LEVEL", "INFO"))
+
+#Sys.setenv(CHROMOTE_CHROME = "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe")
 
   tagList(
     # Leave this function for adding external resources

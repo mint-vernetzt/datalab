@@ -436,7 +436,7 @@ mod_international_start_ui <- function(id){
              )
     ),
 
-    # Box 4 - Fachkräfte because it does not work in an extra page...?!?
+    # Box 4 - Fachkräfte because it does not work in an extra page...?!? -----
     fluidRow(
       id="fachkraft_plots",
       shinydashboard::box(
