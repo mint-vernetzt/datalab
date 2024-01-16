@@ -604,6 +604,11 @@ mod_international_start_ui <- function(id){
               shiny::mainPanel(
                 width = 12,
                 DT::dataTableOutput(outputId = ns("international_table_1")),
+                br(),
+                downloadButton(
+                  outputId = ns("download_btn_international_table_1"),
+                  label = "Download",
+                  icon = icon("download")),
                 p(style="font-size:12px;color:grey",
                   "hier Quellen"),
                 shinyBS::bsPopover(
@@ -835,21 +840,35 @@ mod_international_start_server <- function(id, r){
     # BOX 5 International Table
 
     output$international_table_1 <- DT::renderDataTable({
-      DT::datatable(iris,
-                    # filter = list(position = "top"),
-                    rownames = FALSE,
-                    escape = FALSE,
-                    options = list(
-                      dom = "t"#,
-                      # columnDefs = list(
-                      #   list(
-                      #     visible = FALSE,
-                      #     targets = target_cols)
-                      # )
-                    )
+      DT::datatable(
+        data = r$int_table,
+        # filter = list(position = "top"),
+        rownames = FALSE,
+        colnames = stringr::str_to_title(names(r$int_table)),
+        escape = FALSE,
+        options = list(
+          dom = "t"#,
+          # columnDefs = list(
+          #   list(
+          #     visible = FALSE,
+          #     targets = target_cols)
+          # )
+        )
       )
     })
 
+    output$download_btn_international_table_1 <- downloadHandler(
+      contentType = "text/csv",
+      filename = function() {"International_data_custom_table.csv"},
+      content = function(file) {
+        logger::log_info("Donwload custom table with international data")
+        write.csv(x = prep_download_data(r$int_table),
+                  file = file,
+                  row.names = FALSE)
+        # file.copy("International_data_custom_table.csv", file)
+        # file.remove("International_data_custom_table.csv")
+      }
+    )
   })
 }
 

@@ -76,6 +76,8 @@ app_server <- function(input, output, session) {
 
   load(file = system.file(package="datalab","data/suchtabelle.rda"))
 
+  load(file = system.file(package="datalab","data/international_zentral.rda"))
+
   logger::log_debug("Daten laden fertig")
 
 
