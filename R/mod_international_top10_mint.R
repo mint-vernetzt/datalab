@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList
 mod_international_top10_mint_ui <- function(id){
 
-  logger::log_debug("start mod_international_top10_mint_ui")
+  # logger::log_debug("start mod_international_top10_mint_ui")
 
   ns <- NS(id)
   tagList(
@@ -110,7 +110,7 @@ mod_international_top10_mint_ui <- function(id){
 #' @noRd
 mod_international_top10_mint_server <- function(id, r){
 
-  logger::log_debug("start mod_international_top10_mint_server")
+  # logger::log_debug("start mod_international_top10_mint_server")
 
   moduleServer( id, function(input, output, session){
     ns <- session$ns

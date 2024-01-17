@@ -542,11 +542,11 @@ plot_international_top10 <- function(r) {
 
 
   if (is.null(fach_m)) { fach_m <- ""}
-  logger::log_debug("Plotting international map for:")
-  logger::log_debug("Time: ", timerange,
-                    " | Label: ", label_m,
-                    " | Fach: ", fach_m,
-                    " | Avg.: ", show_avg)
+  # logger::log_debug("Plotting international map for:")
+  # logger::log_debug("Time: ", timerange,
+  #                   " | Label: ", label_m,
+  #                   " | Fach: ", fach_m,
+  #                   " | Avg.: ", show_avg)
 
 
   if (label_m == "Weltweit") {
@@ -698,12 +698,12 @@ plot_international_top10_gender <- function(r) {
   if (is.null(fach_m)) { fach_m <- ""}
   if (is.null(art)) { art <- ""}
 
-  logger::log_debug("Plotting international map for:")
-  logger::log_debug("Time: ", timerange,
-                    " | Label: ", label_m,
-                    " | Fach: ", fach_m,
-                    " | Avg.: ", show_avg,
-                    " | Type: ", art)
+  # logger::log_debug("Plotting international map for:")
+  # logger::log_debug("Time: ", timerange,
+  #                   " | Label: ", label_m,
+  #                   " | Fach: ", fach_m,
+  #                   " | Avg.: ", show_avg,
+  #                   " | Type: ", art)
 
 
   if (label_m == "OECD" & art == "meisten Frauen wählen MINT") {
@@ -1096,11 +1096,11 @@ plot_international_schule_map <- function(r) {
   leistungsindikator_m <- r$map_li_int_schule
 
   if (is.null(fach_m)) { fach_m <- ""}
-  logger::log_debug("Plotting international schule map for:")
-  logger::log_debug("Time: ", timerange,
-                    " | Label: ", label_m,
-                    " | Indikator: ", leistungsindikator_m,
-                    " | Fach: ", fach_m)
+  # logger::log_debug("Plotting international schule map for:")
+  # logger::log_debug("Time: ", timerange,
+  #                   " | Label: ", label_m,
+  #                   " | Indikator: ", leistungsindikator_m,
+  #                   " | Fach: ", fach_m)
 
   map_selection <- "custom/world"
 
@@ -1234,10 +1234,10 @@ plot_international_schule_item <- function(r) {
   fach_m <- r$item_f_int_schule
 
   if (is.null(fach_m)) { fach_m <- ""}
-  logger::log_debug("Plotting international schule item for:")
-  logger::log_debug("Time: ", timerange,
-                    " | Label: ", label_m,
-                    " | Fach: ", fach_m)
+  # logger::log_debug("Plotting international schule item for:")
+  # logger::log_debug("Time: ", timerange,
+  #                   " | Label: ", label_m,
+  #                   " | Fach: ", fach_m)
 
   # filter dataset based on UI inputs
   df <- schule_timss %>%
@@ -1366,11 +1366,11 @@ plot_international_schule_migration <- function(r) {
 
 
   if (is.null(fach_m)) { fach_m <- ""}
-  logger::log_debug("Plotting international schule migration for:")
-  logger::log_debug("Time: ", timerange,
-                    " | Label: ", label_m,
-                    " | Indikator: ", leistungsindikator_m,
-                    " | Fach: ", fach_m)
+  # logger::log_debug("Plotting international schule migration for:")
+  # logger::log_debug("Time: ", timerange,
+  #                   " | Label: ", label_m,
+  #                   " | Indikator: ", leistungsindikator_m,
+  #                   " | Fach: ", fach_m)
 
 
   if (label_m == "TIMSS") {
@@ -3391,7 +3391,7 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
   # check if variables are present
   if (!all(variable_set %in% unique(tmp_df$variable))) {
-    logger::log_debug("not all needed variable in this combination")
+    # logger::log_debug("not all needed variable in this combination")
     return("Für diese Kombination an Filtereinstellungen sind leider keine Daten vorhanden.")
   }
 

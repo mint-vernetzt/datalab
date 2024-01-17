@@ -877,17 +877,17 @@ mod_studium_studienzahl_server <- function(id, r){
     # Box 5 - Internationaler Vergleich
     # Box 2 - Studium
     output$plot_international_studienzahl_map_1 <- renderUI({
-      logger::log_debug("plot_international_map")
+      # logger::log_debug("plot_international_map")
       plot_international_map(r)
     })
 
     output$plot_international_top10_mint_1 <- renderUI({
-      logger::log_debug("plot_international_top10")
+      # logger::log_debug("plot_international_top10")
       plot_international_top10(r)
     })
 
     output$plot_international_top10_mint_gender_1 <- renderUI({
-      logger::log_debug("plot_international_top10_gender")
+      # logger::log_debug("plot_international_top10_gender")
       plot_international_top10_gender(r)
     })
 

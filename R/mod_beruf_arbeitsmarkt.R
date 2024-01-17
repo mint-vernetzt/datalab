@@ -805,7 +805,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # })
 
     output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
-      logger::log_debug("plot_international_arbeitsmarkt_vergleiche_1")
+      # logger::log_debug("plot_international_arbeitsmarkt_vergleiche_1")
       plot_international_arbeitsmarkt_vergleiche(r)
     })
 
