@@ -549,7 +549,6 @@ plot_international_top10 <- function(r) {
 
   if (is.null(fach_m)) { fach_m <- ""}
 
-
   if (label_m == "Weltweit") {
     #fach_m <- "Alle MINT-Fächer"
 
@@ -1089,6 +1088,7 @@ plot_international_schule_map <- function(r) {
   leistungsindikator_m <- r$map_li_int_schule
 
   if (is.null(fach_m)) { fach_m <- ""}
+
 
   map_selection <- "custom/world"
 
@@ -3385,7 +3385,7 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
   # check if variables are present
   if (!all(variable_set %in% unique(tmp_df$variable))) {
-   # logger::log_debug("not all needed variable in this combination")
+
     return("Für diese Kombination an Filtereinstellungen sind leider keine Daten vorhanden.")
   }
 

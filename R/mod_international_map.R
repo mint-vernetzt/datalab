@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList
 mod_international_map_ui <- function(id) {
 
-  logger::log_debug("start mod_international_map_ui")
+  # logger::log_debug("start mod_international_map_ui")
 
   ns <- NS(id)
   tagList(
@@ -101,7 +101,7 @@ mod_international_map_ui <- function(id) {
 #' @noRd
 mod_international_map_server <- function(id, r){
 
-  logger::log_debug("start mod_international_map_server")
+  # logger::log_debug("start mod_international_map_server")
 
   moduleServer( id, function(input, output, session){
     ns <- session$ns

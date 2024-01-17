@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList
 mod_international_ui <- function(id){
 
-  logger::log_debug("start mod_international_ui")
+  # logger::log_debug("start mod_international_ui")
 
   ns <- NS(id)
 
@@ -40,7 +40,7 @@ mod_international_server <- function(id,
                                      #data_studierende_intern_oecd,
                                      r){
 
-  logger::log_debug("Setup Seiten-Module: INTERNATIONAL")
+  # logger::log_debug("Setup Seiten-Module: INTERNATIONAL")
   r <- reactiveValues()
 
   mod_international_start_server("mod_international_start_ui_1", r)
@@ -75,7 +75,7 @@ mod_international_server <- function(id,
 
 
 
-  logger::log_debug("Seiten-Module INTERNATIONAL done")
+  # logger::log_debug("Seiten-Module INTERNATIONAL done")
 }
 
 ## To be copied in the UI

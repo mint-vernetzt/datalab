@@ -7,6 +7,10 @@
 app_server <- function(input, output, session) {
   # Your application server logic
 
+  #Sys.setlocale(category = "LC_ALL", locale = "German_Germany.utf8")
+
+  con <<- DBI::dbConnect(RSQLite::SQLite(), "data/mint_db.sqlite", encoding = "UTF-8")
+
 
   # callModule(mod_home_server, "home_ui_1", data=example_data)
   mod_home_server("home_ui_1")

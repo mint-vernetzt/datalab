@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList
 mod_international_schule_migration_ui <- function(id){
 
-  logger::log_debug("start mod_international_schule_migration_ui")
+  # logger::log_debug("start mod_international_schule_migration_ui")
 
 
   ns <- NS(id)
@@ -96,7 +96,7 @@ mod_international_schule_migration_ui <- function(id){
 #' @noRd
 mod_international_schule_migration_server <- function(id, r){
 
-  logger::log_debug("start mod_international_schule_migration_server")
+  # logger::log_debug("start mod_international_schule_migration_server")
 
   moduleServer( id, function(input, output, session){
     ns <- session$ns

@@ -820,17 +820,17 @@ mod_schule_kurse_server <- function(id, r){
     # Box internationaler Vergleich PISA/TIMSS
     # Box 1 - Schule
     output$plot_international_schule_map_1 <- renderUI({
-      logger::log_debug("plot_international_schule_map")
+      # logger::log_debug("plot_international_schule_map")
       plot_international_schule_map(r)
     })
 
     output$plot_international_schule_item_1 <- renderUI({
-      logger::log_debug("plot_international_schule_item")
+      # logger::log_debug("plot_international_schule_item")
       plot_international_schule_item(r)
     })
 
     output$plot_international_schule_migration_1 <- renderUI({
-      logger::log_debug("plot_international_schule_migration")
+      # logger::log_debug("plot_international_schule_migration")
       plot_international_schule_migration(r)
     })
 

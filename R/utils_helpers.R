@@ -347,7 +347,6 @@ international_ui_faecher <- function(region = "EU") {
 # Funktion zur Jahresauswahl bei internationalen Daten
 international_ui_years <- function(region = "EU") {
 
-
   selection <- NULL
 
   # for studium international
@@ -491,6 +490,7 @@ fachkraft_ui_years <- function() {
 # Funktion zur Fachauswahl bei Fachkraft Daten
 fachkraft_ui_faecher <- function(exclude = c()) {
 
+
   selection <- NULL
 
   # selection <- arbeitsmarkt_epa_detail %>%
@@ -523,6 +523,7 @@ fachkraft_ui_faecher <- function(exclude = c()) {
 # Funktion zur Berufslevelauswahl bei Fachkraft Daten
 fachkraft_ui_berufslevel <- function() {
 
+
   selection <- NULL
 
   # selection <- arbeitsmarkt_epa_detail %>%
@@ -543,6 +544,7 @@ fachkraft_ui_berufslevel <- function() {
 }
 
 fachkraft_ui_berufe <- function(level = "Fachkräfte") {
+
 
   selection <- NULL
 
@@ -594,7 +596,7 @@ arbeit_fachkraft_ui_years <- function() {
 
 # Funktion zur Region bei Arbeit-Fachkraft Daten
 arbeit_fachkraft_ui_region <- function() {
-  logger::log_debug("set arbeit-fachkräfte ui selection for region")
+  # logger::log_debug("set arbeit-fachkräfte ui selection for region")
   selection <- NULL
 
 

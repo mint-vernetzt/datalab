@@ -7,10 +7,13 @@ Description: PKG_DESC.
 License: MIT + file LICENSE
 Depends: 
     R (>= 2.10),
-    shinyBS
+    shinyBS,
+    DBI,
+    RSQLite
 Imports: 
     config (>= 0.3.1),
     dplyr,
+    dbplyr,
     DT,
     ggplot2,
     golem (>= 0.3.2),
@@ -38,6 +41,6 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Encoding: UTF-8
-Language: en-US
+Language: de
 LazyData: true
 RoxygenNote: 7.2.0
