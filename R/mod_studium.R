@@ -22,11 +22,6 @@ mod_studium_ui <- function(id){
 #'
 #' @noRd
 mod_studium_server <- function(id,
-                               data_studierende_absolventen_weltweit,
-                               data_studierende_anzahl_oecd,
-                               data_studierende_europa,
-                               data_studierende_mobil_eu_absolut,
-                               data_countries_names,
                                r){
   r <- reactiveValues()
 

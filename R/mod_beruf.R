@@ -22,10 +22,6 @@ mod_beruf_ui <- function(id){
 #'
 #' @noRd
 mod_beruf_server <- function(id,
-                             data_arbeitsmarkt_absolvent_oecd,
-                             data_arbeitsmarkt_anfaenger_absolv_oecd,
-                             data_arbeitsmarkt_anzahl_azubis_oecd,
-                             data_arbeitsmarkt_beschaeftigte_eu,
                              r){
 
   r <- reactiveValues()
