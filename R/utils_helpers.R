@@ -276,7 +276,6 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
 # Funktion zur Fachauswahl bei international Daten
 international_ui_faecher <- function(region = "EU") {
 
-  logger::log_debug("set internatial ui selection for faecher")
   # names(studierende_europa)
   # names(studierende_anzahl_oecd)
   # names(studierende_absolventen_weltweit)
@@ -297,7 +296,7 @@ international_ui_faecher <- function(region = "EU") {
     #                   fachbereich != "Alle") %>%
     #   dplyr::pull(fachbereich) %>%
     #   unique()
-    selection <- c("Alle MINT-Fächer" = "MINT",
+    selection <- c("MINT",
                    "--- Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik",
                    "--- Informatik & Kommunikationstechnologie" = "Informatik & Kommunikationstechnologie",
                    "--- Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe" = "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
@@ -331,7 +330,7 @@ international_ui_faecher <- function(region = "EU") {
   if (region == "arbeit") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- arbeitsmarkt_anfaenger_absolv_oecd %>%
+    selection <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
       dplyr::filter(geschlecht == "Gesamt" &
                       variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
                                       "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
@@ -348,14 +347,14 @@ international_ui_faecher <- function(region = "EU") {
 # Funktion zur Jahresauswahl bei internationalen Daten
 international_ui_years <- function(region = "EU") {
 
-  logger::log_debug("set internatial ui selection for years")
+
   selection <- NULL
 
   # for studium international
   if (region == "OECD") {
     #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    selection <- studierende_anzahl_oecd %>%
+    selection <- dplyr::tbl(con, from = "studierende_anzahl_oecd") %>%
       dplyr::filter(geschlecht == "Gesamt") %>%
       dplyr::pull(jahr) %>%
       unique() %>%
@@ -365,7 +364,7 @@ international_ui_years <- function(region = "EU") {
   if (region == "EU") {
     #load(file = system.file(package="datalab","data/studierende_europa.rda"))
 
-    selection <- studierende_europa %>%
+    selection <- dplyr::tbl(con, from = "studierende_europa") %>%
       dplyr::filter(geschlecht == "Gesamt"  &
                       mint_select == "mint" &
                       indikator == "Fächerwahl") %>%
@@ -375,7 +374,7 @@ international_ui_years <- function(region = "EU") {
   }
 
   if (region == "Weltweit"){
-    selection <- studierende_absolventen_weltweit %>%
+    selection <- dplyr::tbl(con, from = "studierende_absolventen_weltweit") %>%
       dplyr::filter(geschlecht == "Insgesamt") %>%
       dplyr::filter(jahr != "2022") %>%
       dplyr::pull(jahr) %>%
@@ -387,7 +386,7 @@ international_ui_years <- function(region = "EU") {
   if (region == "TIMSS") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- schule_timss %>%
+    selection <- dplyr::tbl(con, from = "schule_timss") %>%
       dplyr::filter(ordnung %in% c("Achievement",
                                    "Benchmarks") &
                       indikator %in% c("Mittlerer int'l. Maßstab (475)",
@@ -401,7 +400,7 @@ international_ui_years <- function(region = "EU") {
   if (region == "PISA") {
     #load(file = system.file(package="datalab","data/schule_pisa.rda"))
 
-    selection <- schule_pisa %>%
+    selection <- dplyr::tbl(con, from = "schule_pisa") %>%
       dplyr::filter(bereich == "Ländermittel" &
                       indikator == "Insgesamt" &
                       !is.na(wert)) %>%
@@ -414,7 +413,7 @@ international_ui_years <- function(region = "EU") {
   if (region == "arbeit") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- arbeitsmarkt_anfaenger_absolv_oecd %>%
+    selection <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
       dplyr::filter(
         geschlecht == "Gesamt" &
           # filter year, since before there are not all infos available
@@ -433,7 +432,7 @@ international_ui_years <- function(region = "EU") {
 
 # Funktion zur Länderauswahl bei internationalen Daten
 international_ui_country <- function(type = "arbeit", n = NA) {
-  logger::log_debug("set internatial ui selection for countries")
+
   selection <- NULL
 
   year <- max(arbeitsmarkt_anfaenger_absolv_oecd$jahr)
@@ -442,12 +441,13 @@ international_ui_country <- function(type = "arbeit", n = NA) {
   if (type == "arbeit") {
     #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    tmp_df <-  arbeitsmarkt_anfaenger_absolv_oecd %>%
+    tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
       dplyr::filter(geschlecht == "Gesamt" &
                       jahr == year &
                       variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
                                       "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-      )
+      ) %>%
+      dplyr::collect()
 
 
 
@@ -473,11 +473,11 @@ international_ui_country <- function(type = "arbeit", n = NA) {
 # Funktion zur Jahresauswahl bei Fachkraft Daten
 fachkraft_ui_years <- function() {
 
-  logger::log_debug("set fachkräfte ui selection for years")
+
   selection <- NULL
 
 
-  selection <- arbeitsmarkt_epa_detail %>%
+  selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
     dplyr::filter(indikator == "Engpassindikator") %>%
     dplyr::pull(jahr) %>%
     unique() %>%
@@ -490,8 +490,6 @@ fachkraft_ui_years <- function() {
 
 # Funktion zur Fachauswahl bei Fachkraft Daten
 fachkraft_ui_faecher <- function(exclude = c()) {
-
-  logger::log_debug("set fachkraft ui selection for faecher")
 
   selection <- NULL
 
@@ -524,7 +522,6 @@ fachkraft_ui_faecher <- function(exclude = c()) {
 
 # Funktion zur Berufslevelauswahl bei Fachkraft Daten
 fachkraft_ui_berufslevel <- function() {
-  logger::log_debug("set fachkraft ui selection for berufslevel")
 
   selection <- NULL
 
@@ -546,11 +543,10 @@ fachkraft_ui_berufslevel <- function() {
 }
 
 fachkraft_ui_berufe <- function(level = "Fachkräfte") {
-  logger::log_debug("set fachkraft ui selection for berufe for '", level, "'")
 
   selection <- NULL
 
-  selection <- arbeitsmarkt_epa_detail %>%
+  selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
     dplyr::filter(indikator == "Engpassindikator" &
                     anforderung == level &
                     !is.na(wert)) %>%
@@ -582,11 +578,10 @@ get_plot_title <- function(plot, path = ".") {
 # Funktion zur Jahreswahl bei Arbeit-Fachkraft Daten
 arbeit_fachkraft_ui_years <- function() {
 
-  logger::log_debug("set arbeit-fachkräfte ui selection for years")
   selection <- NULL
 
 
-  selection <- arbeitsmarkt_fachkraefte %>%
+  selection <- dplyr::tbl(con, from = "arbeitsmarkt_fachkraefte") %>%
     dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
                                    "Arbeitslosen-Stellen-Relation")) %>%
     dplyr::pull(jahr) %>%
@@ -603,7 +598,7 @@ arbeit_fachkraft_ui_region <- function() {
   selection <- NULL
 
 
-  selection <- arbeitsmarkt_fachkraefte %>%
+  selection <- dplyr::tbl(con, from = "arbeitsmarkt_fachkraefte") %>%
     dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
                                    "Arbeitslosen-Stellen-Relation")) %>%
     dplyr::pull(region) %>%
