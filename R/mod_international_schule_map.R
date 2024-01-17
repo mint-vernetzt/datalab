@@ -84,18 +84,18 @@ mod_international_schule_map_ui <- function(id){
 
     # TODO extract into own module, since this is repeated on a lot of modules
 
-    shinyBS::bsPopover(id="dh_international_schule_map", title = "",
-                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                       placement = "top",
-                       trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_schule_map"),
-    br(),
-    br(),
+    # shinyBS::bsPopover(id="dh_international_schule_map", title = "",
+    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+    #                    placement = "top",
+    #                    trigger = "hover"),
+    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_schule_map"),
+    # br(),
+    # br(),
     shinyBS::bsPopover(id="ih_international_schule_map", title="",
-                       content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
+                       content = paste0("Die erste Einstellung der Karte zeigt, das Schüler:innen in Deutschland 2019 im Durchschnitt 521 Punkte im Mathematiktest von TIMSS erziehlen. Damit liegen sie z. B. etwas hinter Schüler*innen aus den Niederlande oder den USA."),
                        placement = "top",
                        trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_map")
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_schule_map")
   )
 }
 

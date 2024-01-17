@@ -69,14 +69,18 @@ mod_studium_studienzahl_ui <- function(id){
                                                               span(tags$b(span("Internationale Studierende in MINT:")))), "Wie hoch ist der Anteil von internationalen Studierenden in den MINT-Fächern?"
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_international",
-                                                              span(tags$b(span("MINT-Studium im internationalen Vergleich:")))), "Hier können Sie den Anteil von 'MINT' an deutschen Hochschulen international Vergleichen."
+                                                              span(tags$b(span("MINT-Studierende im internationalen Vergleich:")))), "Hier können Sie den Anteil von 'MINT' an deutschen Hochschulen international Vergleichen."
         )),
 
       shinydashboard::box(
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Studierendenzahlen in Deutschland: Destatis 2023, auf Anfrage")
+          "Studierendenzahlen in Deutschland: Destatis 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+        p(style = "text-align: left; font-size = 16px",
+          "Studierendenzahlen aus Europa: Eurostat 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
+        p(style = "text-align: left; font-size = 16px",
+          "Studierendenzahlen der OECD-Länder: OECD 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
 
       )
     ),
@@ -477,7 +481,7 @@ mod_studium_studienzahl_ui <- function(id){
 
   fluidRow(id="studium_internationale_studis",
            shinydashboard::box(
-             title = "Internationale Studierende in MINT: Wie hoch ist der Anteil internationaler Studierender in den MINT-Fächern?",
+             title = "MINT-Studierende im internationalen Vergleich",
              width = 12,
              p("Diese Darstellungen zeigen, wie hoch der Anteil internationale Studierender an allen Studierenden eines Fachbereichs oder eines Studienfachs ist.
                Außerdem zeigen wir hier, wie viele internationale Studierende in welchen Fächern studieren. Als 'internationale Studierende' fassen wir alle

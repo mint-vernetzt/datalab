@@ -45,7 +45,7 @@ mod_international_schule_migration_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("line_li_timss_int_schule"),
                        choices = c("nach Geschlecht", "nach sozialem Status"),
-                       selected = c("nach Geschlecht"),
+                       selected = c("nach sozialem Status"),
                        multiple = FALSE
                      )),
 
@@ -73,7 +73,7 @@ mod_international_schule_migration_ui <- function(id){
                        choices = c("nach Geschlecht",
                                    "nach Zuwanderungsgeschichte",
                                    "nach Bildungskapital"),
-                       selected = c("nach Geschlecht"),
+                       selected = c("nach Bildungskapital"),
                        multiple = FALSE
                      )),
 
@@ -81,18 +81,12 @@ mod_international_schule_migration_ui <- function(id){
 
     # TODO extract into own module, since this is repeated on a lot of modules
 
-    shinyBS::bsPopover(id="dh_international_schule_migration", title = "",
-                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+
+    shinyBS::bsPopover(id="ih_international_schule_gruppen", title="",
+                       content = paste0("Die erste Darstellung zeigt, dass in allen teilnehmenden Ländern Kinder mit höherem sozialen Status höhere Punktzahlen in den Kompetenztest von TIMSS erreichen. So auch in Deutschland, wo Kinder mit höherem sozialem Status 572 Punkte und Kinder mit niedrigerem sozialem Status 521 Punkte erzielen."),
                        placement = "top",
                        trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_schule_migration"),
-    br(),
-    br(),
-    shinyBS::bsPopover(id="ih_international_schule_migration", title="",
-                       content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
-                       placement = "top",
-                       trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_migration")
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_schule_gruppen")
   )
 
 }

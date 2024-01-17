@@ -70,7 +70,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           title = "Datenquellen",
           width = 5,
           p(style = "text-align: left; font-size = 16px",
-            "Auszubildenden- und Beschäftigenzahlen in Deutschland: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
+            "Auszubildenden- und Beschäftigenzahlen in Deutschland: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+          p(style = "text-align: left; font-size = 16px",
+            "Studierendenzahlen aus Europa: Eurostat 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
+          p(style = "text-align: left; font-size = 16px",
+            "Studierendenzahlen der OECD-Länder: OECD 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
 
         )
       ),
@@ -438,7 +442,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow(id="beruf_international",
              shinydashboard::box(
-               title = "AUSBILDUNG UND BERUF: MINT-Auszubildende und -Beschäftigte im Ländervergleich",
+               title = "MINT-Beschäftigung im internationalen Vergleich",
                width = 12,
                p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich des Arbeitsmarkts für den internationalen Vergleich. Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU und die OECD gesammelt wurden. Zum einen zeigen wir, wie groß der Anteil von MINT-Auszubildenden und Beschäftigten in verschiedenen Ländern ist. Außerdem ist zu sehen, in welchen Ländern der Frauenanteil besonders groß oder klein ist. Darüber hinaus werfen wir einen Blick auf Studiums- bzw. Ausbildungs-Anfänger*innen und Absolvent*innen in MINT im Ländervergleich."),
                tabsetPanel(type = "tabs",

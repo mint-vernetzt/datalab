@@ -69,10 +69,10 @@ plot_international_map <- function(r) {
   fach_m <- r$map_f_int_studium
 
   if (is.null(fach_m)) { fach_m <- ""}
-  logger::log_debug("Plotting international map for:")
-  logger::log_debug("Time: ", timerange,
-                    " | Label: ", label_m,
-                    " | Fach: ", fach_m)
+  # logger::log_debug("Plotting international map for:")
+  # logger::log_debug("Time: ", timerange,
+  #                   " | Label: ", label_m,
+  #                   " | Fach: ", fach_m)
 
 
   if (label_m == "Weltweit") {
@@ -3384,7 +3384,7 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
     dplyr::filter(geschlecht == "Gesamt" &
                     jahr == timerange &
                     land %in% land_m &
-                    #fachbereich == fach_m &
+                    fachbereich == fach_m &
                     anforderung == "tertiäre Bildung (gesamt)" &
                     variable %in% variable_set
     )
