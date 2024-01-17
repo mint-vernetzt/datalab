@@ -22,6 +22,11 @@ mod_studium_ui <- function(id){
 #'
 #' @noRd
 mod_studium_server <- function(id,
+                               data_studierende_absolventen_weltweit,
+                               data_studierende_anzahl_oecd,
+                               data_studierende_europa,
+                               data_studierende_mobil_eu_absolut,
+                               data_countries_names,
                                r){
   r <- reactiveValues()
 
@@ -71,6 +76,13 @@ mod_studium_server <- function(id,
 
   # neu
   mod_studium_studienzahl_mint_anteile_server("mod_studium_studienzahl_mint_anteile_ui",  r)
+
+  # international
+  mod_international_map_server("mod_international_map_ui_1", r)
+  mod_international_top10_mint_server("international_top10_mint_1", r)
+  mod_international_top10_mint_gender_server("international_top10_mint_gender_1", r)
+  mod_international_map_fem_server("international_map_fem_ui_1", r)
+  mod_international_top10_mint_intl_server("mod_international_top10_mint_intl_ui_1", r)
 
 }
 

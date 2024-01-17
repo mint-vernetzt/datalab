@@ -32,9 +32,11 @@ studienzahl_test <- function(r){
  df3 <- df %>%
    tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
    dplyr::mutate(dplyr::across(c("MINT (Gesamt)", "Nicht MINT"), ~./Alle))%>%
-   dplyr::mutate(dplyr::across(c("Nicht MINT", "MINT (Gesamt)"), ~ round(.*100,1)))%>%
+   dplyr::mutate(dplyr::across(c("Nicht MINT", "MINT (Gesamt)"), ~ round(.*100,0)))%>%
    dplyr::select(- Alle)%>%
    tidyr::pivot_longer(c("MINT (Gesamt)", "Nicht MINT"), names_to = "fachbereich", values_to = "proportion")
+
+# Keine Nachkommastellen, richtig?
 
  # joining wert and prportion
  df4 <- df %>%
@@ -45,6 +47,7 @@ studienzahl_test <- function(r){
  #Trennpunkte für lange Zahlen ergänzen
 
  df4$wert <- prettyNum(df4$wert, big.mark = ".", decimal.mark = ",")
+ df4$display_rel <- prettyNum(df4$proportion, big.mark = ".", decimal.mark = ",")
 
 
  # Ordering
@@ -65,10 +68,9 @@ studienzahl_test <- function(r){
       df_pie %>%
         highcharter::hchart(
           "pie", highcharter::hcaes(x = fachbereich , y = proportion)
-        )
-      %>%
+        )%>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}')) %>%
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab" )) %>%
         highcharter::hc_title(text = paste0(testl1[1], " in ", testy1),
                               margin = 45,
@@ -79,7 +81,7 @@ studienzahl_test <- function(r){
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.display_rel}%'), showInLegend = TRUE)),
 
       ncol = 1,
       browsable = TRUE)
@@ -99,7 +101,7 @@ studienzahl_test <- function(r){
 
       %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}')) %>%
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
         highcharter::hc_title(text=paste0(testl1[1], " in ", testy1),
                               margin = 45,
@@ -109,14 +111,14 @@ studienzahl_test <- function(r){
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.display_rel}%'), showInLegend = TRUE)),
 
 
     highcharter:: hchart(df_2_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich , y = proportion))
 
     %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}'))%>%
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}'))%>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
       highcharter::hc_title(text=paste0(testl1[2], " in ", testy1),
                               margin = 45,
@@ -127,7 +129,7 @@ studienzahl_test <- function(r){
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE, format='{point.display_rel}%'), showInLegend = TRUE)),
 
       ncol = 2,
       browsable = TRUE
@@ -149,7 +151,7 @@ studienzahl_test <- function(r){
        highcharter::hchart(df_1_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
       %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}')) %>%
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
         highcharter::hc_title(text=paste0(testl1[1], " in ", testy1),
                               margin = 45,
@@ -159,7 +161,7 @@ studienzahl_test <- function(r){
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.display_rel}%'), showInLegend = TRUE)),
 
 
     highcharter::hchart(df_2_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
@@ -167,7 +169,7 @@ studienzahl_test <- function(r){
 
     %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}')) %>%
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
       highcharter::hc_title(text=paste0(testl1[2], " in ", testy1),
                               margin = 45,
@@ -177,14 +179,14 @@ studienzahl_test <- function(r){
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE, format='{point.display_rel}%'), showInLegend = TRUE)),
 
     highcharter::hchart(df_3_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
 
 
     %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}')) %>%
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
       highcharter::hc_title(text=paste0(testl1[3], " in ", testy1),
                               margin = 45,
@@ -195,7 +197,7 @@ studienzahl_test <- function(r){
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.display_rel}%'), showInLegend = TRUE)),
 
 
 
@@ -591,6 +593,8 @@ studienzahl_waffle_mint <- function(r) {
 
 studienzahl_verlauf_single <- function(r) {
 
+
+
   # load UI inputs from reactive value
   indi_selct <- r$studienzahl_einstieg_verlauf_indi
   timerange <- r$date_studienzahl_einstieg_verlauf
@@ -635,11 +639,15 @@ studienzahl_verlauf_single <- function(r) {
 
 
 
+    #Trennpunkte für lange Zahlen ergänzen
+
+    df$display_rel <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
 
     df <- df %>% dplyr::filter(indikator %in% indi_selct)
 
     highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
-      highcharter::hc_tooltip(pointFormat = "Anteil: {point.y}%") %>%
+      highcharter::hc_tooltip(pointFormat = "Anteil: {point.display_rel}%") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
@@ -727,12 +735,17 @@ studienzahl_verlauf_single <- function(r) {
 
     df <- df[with(df, order( jahr, decreasing = FALSE)), ]
 
+    #Trennpunkte für lange Zahlen ergänzen
+
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
+
     #if(length(indi_selct) == 1) {
 
     df <- df %>% dplyr::filter(indikator %in% indi_selct)
 
     highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
-      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
@@ -913,6 +926,9 @@ studienzahl_verlauf_bl_subject <- function(r) {
 
   df$var <- gsub("_p", "", df$var)
 
+
+
+
   #tidyr::pivot_longer(c(MINT, Ingenieurwissenschaften, `Mathematik/Naturwissenschaften`), names_to = "proportion", values_to = "wert")
 
   if(absolut_selector=="In Prozent"){
@@ -922,6 +938,9 @@ studienzahl_verlauf_bl_subject <- function(r) {
 
     df$wert <- df$wert *100
     df$wert <- round(df$wert, 1)
+
+
+    df$display_rel <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
     #df <- df %>% dplyr::filter(indikator==label_select)
 
@@ -939,7 +958,7 @@ studienzahl_verlauf_bl_subject <- function(r) {
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
     # plot
     highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group= var))%>%
-      highcharter::hc_tooltip(pointFormat = "Anteil {point.proportion} <br> Wert: {point.y} %") %>%
+      highcharter::hc_tooltip(pointFormat = "Anteil {point.display_rel}%") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
@@ -970,6 +989,8 @@ studienzahl_verlauf_bl_subject <- function(r) {
     df <- df %>%
       dplyr::filter(selector=="Anzahl")
 
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
 
     df <- df %>% dplyr::filter(indikator==label_select)
 
@@ -984,7 +1005,7 @@ studienzahl_verlauf_bl_subject <- function(r) {
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
     # plot
     highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group= var))%>%
-      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
@@ -1094,8 +1115,10 @@ studierende_verlauf_multiple_bl <- function(r) {
     df <- df %>%
       dplyr::filter(selector=="In Prozent")
 
+   df$display_rel <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
     highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = region))%>%
-      highcharter::hc_tooltip(pointFormat = "Anteil {point.region} <br> Wert: {point.y} %") %>%
+      highcharter::hc_tooltip(pointFormat = "Anteil {point.region} <br> Wert: {point.display_rel} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
@@ -1129,8 +1152,10 @@ studierende_verlauf_multiple_bl <- function(r) {
     df <- df %>%
       dplyr::filter(selector == "Anzahl")
 
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
     highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = region))%>%
-      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
@@ -1338,7 +1363,9 @@ studienzahl_einstieg_comparison <- function(r) {
 
   #Trennpunkte für lange Zahlen ergänzen
 
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
+
 
 
   df$indikator <-factor(df$indikator,levels= c("Studierende",
@@ -1365,7 +1392,7 @@ studienzahl_einstieg_comparison <- function(r) {
 
 
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = indikator, group = forcats::fct_rev(proportion)))%>%
-    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.proportion} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
+    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.proportion} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  F) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
@@ -1469,9 +1496,9 @@ studienzahl_waffle_choice_gender <- function(r) {
 
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("Ingenieurwissenschaften",", ",df_fr[1], "%"),
-        paste0("Mathematik/Naturwissenschaften",", ",df_fr[2], "%"),
-        paste0("andere Studiengänge",", ",df_fr[3], "%"))) +
+        paste0("Ingenieurwissenschaften",", ",prettyNum(df_fr[1], big.mark = ".", decimal.mark = ","), "%"),
+        paste0("Mathematik/Naturwissenschaften",", ",prettyNum(df_fr[2], big.mark = ".", decimal.mark = ","), "%"),
+        paste0("andere Studiengänge",", ",prettyNum(df_fr[3], big.mark = ".", decimal.mark = ","), "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=3,byrow=TRUE))
 
 
@@ -1494,9 +1521,9 @@ studienzahl_waffle_choice_gender <- function(r) {
 
       guide = ggplot2::guide_legend(reverse = TRUE),
       labels = c(
-        paste0("Ingenieurwissenschaften",", ",df_ma[1], "%"),
-        paste0("Mathematik/Naturwissenschaften",", ",df_ma[2], "%"),
-        paste0("andere Studiengänge",", ",df_ma[3], "%"))) +
+        paste0("Ingenieurwissenschaften",", ",prettyNum(df_ma[1], big.mark = ".", decimal.mark = ","), "%"),
+        paste0("Mathematik/Naturwissenschaften",", ",prettyNum(df_ma[2], big.mark = ".", decimal.mark = ","), "%"),
+        paste0("andere Studiengänge",", ",prettyNum(df_ma[3], big.mark = ".", decimal.mark = ","), "%"))) +
     ggplot2::guides(fill=ggplot2::guide_legend(nrow=3,byrow=TRUE))
 
 
@@ -1613,7 +1640,6 @@ studienzahl_waffle_choice_gender <- function(r) {
 
 studierende_verlauf_single_bl_gender <- function(r) {
 
-
   # load UI inputs from reactive value
   timerange <- r$choice_V_y
   t <- as.character(timerange[1]:timerange[2])
@@ -1675,10 +1701,15 @@ studierende_verlauf_single_bl_gender <- function(r) {
     df <- df %>%
       dplyr::mutate(jahr= as.character(.$jahr))
 
+    #Trennpunkte für lange Zahlen ergänzen
+
+
+    df$display_rel <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
 
 
     highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert,group=indikator))%>%
-      highcharter::hc_tooltip(pointFormat = "Anteil {point.label} <br> Wert: {point.y} %") %>%
+      highcharter::hc_tooltip(pointFormat = "Anteil {point.label} <br> Wert: {point.display_rel} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= F, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
@@ -1821,10 +1852,10 @@ studierende_verlauf_single_bl_gender <- function(r) {
     df <- df %>%
       dplyr::mutate(jahr= as.character(.$jahr))
 
-
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
     highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert,group=indikator))%>%
-      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
@@ -1968,7 +1999,7 @@ plot_ranking_top_faecher <- function(r) {
   df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
     dplyr::filter(jahr == timerange,
                   indikator == "Studierende",
-                  jahr == timerange,
+                  region == states,
                   !fach %in% c(
       "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
       "Weitere ingenieurwissenschaftliche Fächer",
@@ -2020,7 +2051,8 @@ plot_ranking_top_faecher <- function(r) {
   # Split dataframe by gender and create plots
   if(abs_rel == "In Prozent"){
 
-    df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
     # female
     studierende_faecher_frauen <- df %>%
@@ -2039,9 +2071,9 @@ plot_ranking_top_faecher <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.prop} %")
+          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %")
         )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
@@ -2069,7 +2101,7 @@ plot_ranking_top_faecher <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.prop} %")
+          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %")
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), min = 0, max = 100, tickInterval = 5) %>%
@@ -2095,6 +2127,10 @@ plot_ranking_top_faecher <- function(r) {
 
   } else if(abs_rel == "Anzahl"){
 
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
+
+
     # female
     studierende_faecher_frauen <- df %>%
       dplyr::filter(geschlecht == "Frauen") %>%
@@ -2113,10 +2149,10 @@ plot_ranking_top_faecher <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_abs}")
         )) %>%
 
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(studierende_faecher_frauen$wert), 1000, f = ceiling), tickInterval = 1000) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_colors(c("#154194")) %>%
@@ -2144,7 +2180,7 @@ plot_ranking_top_faecher <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.wert}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_abs}")
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Absolut: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), min = 0, max = plyr::round_any(max(studierende_faecher_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
@@ -2214,8 +2250,8 @@ studierende_map <- function(r) {
     tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
     dplyr::right_join(df)
 
-  #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
 
   df <- df %>%
     dplyr::select(indikator, region, jahr, fach, proportion, wert)%>%
@@ -2244,9 +2280,14 @@ studierende_map <- function(r) {
     help_l <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen", help_l)
     help_l <- ifelse(grepl("1. Fach", label_m), "Studienanfänger:innen", help_l)
 
-    data_map_1 <- df %>% dplyr::filter(fach == fach_m)%>%
-      dplyr::mutate(display = as.character(proportion))
-    #title_map_1 <-
+
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
+
+    data_map_1 <- df %>% dplyr::filter(fach == fach_m)
+
+
+
 
     highcharter::hw_grid(
 
@@ -2269,7 +2310,7 @@ studierende_map <- function(r) {
         #download_map_data = FALSE
       )
       %>%
-        highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display} % <br> Anzahl: {point.wert}") %>%
+        highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
         highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
         highcharter::hc_title(
           text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
@@ -2312,12 +2353,13 @@ studierende_map <- function(r) {
     help_l <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen", help_l)
     help_l <- ifelse(grepl("1. Fach", label_m), "Studienanfänger:innen", help_l)
 
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
 
-    data_map_1 <- df %>% dplyr::filter(fach == fach_m[1])%>%
-      dplyr::mutate(display = as.character(proportion))
 
-    data_map_2 <- df %>% dplyr::filter(fach == fach_m[2])%>%
-      dplyr::mutate(display = as.character(proportion))
+    data_map_1 <- df %>% dplyr::filter(fach == fach_m[1])
+
+    data_map_2 <- df %>% dplyr::filter(fach == fach_m[2])
 
 
     highcharter::hw_grid(
@@ -2342,7 +2384,7 @@ studierende_map <- function(r) {
         #download_map_data = FALSE
       )
       %>%
-        highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display} % <br> Anzahl: {point.wert}") %>%
+        highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
         highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
         highcharter::hc_title(
           text = paste0("Anteil von ", label_m, " in ", help_fach, " an allen ", help_l, " (", timerange, ")"),
@@ -2381,7 +2423,7 @@ studierende_map <- function(r) {
         #download_map_data = FALSE
       )
       %>%
-        highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display} % <br> Anzahl: {point.wert}") %>%
+        highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
         highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
         highcharter::hc_title(
           text = paste0("Anteil von ", label_m, " in ", help_fach2, " an allen ", help_l, " (", timerange, ")"),
@@ -2405,6 +2447,10 @@ studierende_map <- function(r) {
       browsable = TRUE)
 
   } else if(length(fach_m)==3){
+
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
+
 
     data_map_1 <- df %>% dplyr::filter(fach == fach_m[1])
     data_map_2 <- df %>% dplyr::filter(fach == fach_m[2])
@@ -2846,10 +2892,11 @@ ranking_bl_subject <- function(r) {
 
   ticks1 <- ticks[ticks %in% df_t]
 
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
   highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
-    highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
+    highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
     highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
     highcharter::hc_xAxis(title= list(text=""),
                           categories = ticks1
@@ -3002,9 +3049,12 @@ mint_anteile <- function(r) {
       "Bergbau, Hüttenwesen",
       "Andere MINT-Fächer"))
 
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
+
     #plotting
     highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = jahr, group = fach))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}")%>%
+      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
       highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
       highcharter::hc_yAxis(title = list(text = "")
                             , labels = list(format = "{value} %")) %>%
@@ -3041,9 +3091,12 @@ mint_anteile <- function(r) {
 
   } else if (ordering=="MINT-Aggregate"){
 
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
+
     #plotting
     highcharter::hchart(df2, 'bar', highcharter::hcaes(y = prop, x = jahr, group = fach))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}")%>%
+      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
       highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
       highcharter::hc_yAxis(title = list(text = "")
                             , labels = list(format = "{value} %")) %>%
@@ -3131,9 +3184,13 @@ studierende_mint_vergleich_bl <- function(r) {
                    help == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help)
 
 
+
+  df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
+
   # Plot
   highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
-    highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
+    highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
     highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
     highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
     highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
@@ -3209,7 +3266,9 @@ studienzahl_einstieg_pie_gender <- function(r) {
 
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
+
 
 
   if(length(genl) == 1) {
@@ -3222,7 +3281,7 @@ studienzahl_einstieg_pie_gender <- function(r) {
 
       %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}'))
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.display_abs}'))
       %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
         highcharter::hc_title(text = paste0("Frauenanteil unter MINT-",genl[1], " in ", timerange),
@@ -3234,7 +3293,7 @@ studienzahl_einstieg_pie_gender <- function(r) {
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)
+                                               dataLabels = list(enabled = TRUE,  format='{point.display_rel}%'), showInLegend = TRUE)
         ),
 
       ncol = 1,
@@ -3255,7 +3314,7 @@ studienzahl_einstieg_pie_gender <- function(r) {
 
       %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}')) %>%
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.display_abs}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
         highcharter::hc_title(text=paste0("Frauenanteil unter MINT-", genl[1], " in ", timerange),
                               margin = 45,
@@ -3265,13 +3324,13 @@ studienzahl_einstieg_pie_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.display_rel}%'), showInLegend = TRUE)),
 
 
       highcharter:: hchart(df_2_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion))
       %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}'))%>%
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.display_abs}'))%>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
         highcharter::hc_title(text=paste0("Frauenanteil unter MINT-",genl[2], " in ", timerange),
                               margin = 45,
@@ -3282,7 +3341,7 @@ studienzahl_einstieg_pie_gender <- function(r) {
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE, format='{point.display_rel}%'), showInLegend = TRUE)),
 
       ncol = 2,
       browsable = TRUE
@@ -3304,7 +3363,7 @@ studienzahl_einstieg_pie_gender <- function(r) {
       highcharter::hchart(df_1_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion))
       %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}')) %>%
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.display_abs}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
         highcharter::hc_title(text=paste0("Frauenanteil unter MINT-",genl[1], " in ", timerange),
                               margin = 45,
@@ -3314,7 +3373,7 @@ studienzahl_einstieg_pie_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.display_rel}%'), showInLegend = TRUE)),
 
 
       highcharter::hchart(df_2_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion))
@@ -3322,7 +3381,7 @@ studienzahl_einstieg_pie_gender <- function(r) {
 
       %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}')) %>%
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.display_abs}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
         highcharter::hc_title(text=paste0("Frauenanteil unter MINT-",genl[2], " in ", timerange),
                               margin = 45,
@@ -3332,14 +3391,14 @@ studienzahl_einstieg_pie_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE, format='{point.display_rel}%'), showInLegend = TRUE)),
 
       highcharter::hchart(df_3_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion))
 
 
       %>%
         highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.percentage}% <br> Anzahl: {point.wert}')) %>%
+          pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.display_abs}')) %>%
         highcharter::hc_colors(c( "#efe8e6", "#154194")) %>%
         highcharter::hc_title(text=paste0("Frauenanteil unter MINT-",genl[3], " in ", timerange),
                               margin = 45,
@@ -3350,7 +3409,7 @@ studienzahl_einstieg_pie_gender <- function(r) {
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.display_rel}%'), showInLegend = TRUE)),
 
 
 
@@ -3567,21 +3626,29 @@ studienzahl_verlauf_single_gender <- function(r) {
       T~"In Prozent"
     ))
 
+  #Trennpunkte für lange Zahlen ergänzen
+
+
+
+
 
   if(absolut_selector=="In Prozent"){
 
     df <- df %>% dplyr::filter(selector=="In Prozent")
 
+    df$display_rel <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
     if(length(label_sel) == 1) {
 
-
       df <- df %>% dplyr::filter(indikator== label_sel)
 
 
+
+
       highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
-        highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.y} %") %>%
+        highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.display_rel} %") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
@@ -3605,11 +3672,12 @@ studienzahl_verlauf_single_gender <- function(r) {
     } else if(length(label_sel)==2){
 
 
+
       df <- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2])
 
 
       highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
-        highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.y} %") %>%
+        highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.display_rel} %") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
@@ -3638,7 +3706,7 @@ studienzahl_verlauf_single_gender <- function(r) {
 
 
       highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
-        highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.y} %") %>%
+        highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.display_rel} %") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
@@ -3668,6 +3736,7 @@ studienzahl_verlauf_single_gender <- function(r) {
 
       df <- df%>%
         dplyr::filter(selector=="Anzahl")
+      df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
@@ -3676,7 +3745,7 @@ studienzahl_verlauf_single_gender <- function(r) {
         df <- df %>% dplyr::filter(label== label_sel)
 
         highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
-          highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+          highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
@@ -3704,7 +3773,7 @@ studienzahl_verlauf_single_gender <- function(r) {
 
 
         highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
-          highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+          highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
@@ -3733,7 +3802,7 @@ studienzahl_verlauf_single_gender <- function(r) {
 
 
         highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
-          highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+          highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
@@ -3923,7 +3992,8 @@ studienzahl_einstieg_comparison_gender <- function(r) {
 
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
 
   #überschrift vorbereiten
   fach_label <- sel_f1
@@ -3932,7 +4002,7 @@ studienzahl_einstieg_comparison_gender <- function(r) {
 
   highcharter::hchart(df, 'bar', highcharter::hcaes(x = indikator, y=proportion, group = geschlecht))%>%
 
-    highcharter::hc_tooltip(pointFormat = "{point.geschlecht}-Anteil: {point.y} % <br> Anzahl: {point.wert}")%>%
+    highcharter::hc_tooltip(pointFormat = "{point.geschlecht}-Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
 
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
     highcharter::hc_xAxis(title = list(text = "")
@@ -4097,7 +4167,7 @@ plot_auslaender_mint <- function(r){
   plt.add <- data.frame(ebene, höhe)
 
   # NA aus fach entfernen für BULAs mit weniger Studienfachgruppen
-  df_fachbreich <- stats::na.omit(df_fachbereich)
+  df_fachbereich <- stats::na.omit(df_fachbereich)
   df_fachbereich <- df_fachbereich %>%
     dplyr::arrange(wert)
   df_faecher <- stats::na.omit(df_faecher)
@@ -4119,15 +4189,18 @@ plot_auslaender_mint <- function(r){
 
     if(absolut_selector=="In Prozent"){
 
+
       df_fachbereich <- df_fachbereich %>%
         dplyr::filter(selector == "In Prozent")%>%
         dplyr::mutate(wert = round(wert*100, 1))
+
+      df_fachbereich$display_rel <- prettyNum(df_fachbereich$wert, big.mark = ".", decimal.mark = ",")
 
 
 
 
       highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-        highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.y} %")%>%
+        highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
         highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
         highcharter::hc_xAxis(title = list(text = ""), categories = c("Alle Fächer",
@@ -4171,6 +4244,8 @@ plot_auslaender_mint <- function(r){
       hcoptslang$thousandsSep <- "."
       options(highcharter.lang = hcoptslang)
 
+      df_fachbereich$display_abs <- prettyNum(df_fachbereich$wert, big.mark = ".", decimal.mark = ",")
+
       df_fachbereich <- df_fachbereich %>%
         dplyr::filter(selector == "Anzahl")
 
@@ -4178,7 +4253,7 @@ plot_auslaender_mint <- function(r){
 
 
       highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-        highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.y}")%>%
+        highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
         highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
         highcharter::hc_xAxis(title = list(text = ""), categories = c("Alle Fächer",
@@ -4222,9 +4297,10 @@ plot_auslaender_mint <- function(r){
           dplyr::mutate(wert = round(wert*100, 1)) %>%
           dplyr::arrange(wert)
 
+        df_faecher$display_rel <- prettyNum(df_faecher$wert, big.mark = ".", decimal.mark = ",")
 
         highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.y} %")%>%
+          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
           highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
           highcharter::hc_xAxis(title = list(text = "")
@@ -4283,10 +4359,12 @@ plot_auslaender_mint <- function(r){
           dplyr::filter(selector == "Anzahl") %>%
           dplyr::arrange(wert)
 
+        df_faecher$display_abs <- prettyNum(df_faecher$wert, big.mark = ".", decimal.mark = ",")
+
         df_faecher <- df_faecher[order(-df_faecher$wert),]
 
         highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
-          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.y}")%>%
+          highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
           highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
           highcharter::hc_xAxis(title = list(text = "")) %>%
@@ -4336,7 +4414,7 @@ plot_auslaender_mint <- function(r){
 # Internationale Studierende im Zeitverlauf
 
 plot_auslaender_mint_zeit <- function(r){
-
+  # prettynum flag ----
   bl_select <- r$states_studium_studienzahl_ausl_zeit
 
   absolut_selector <- r$abs_zahlen_studium_studienzahl_ausl_zeit
@@ -4447,10 +4525,13 @@ plot_auslaender_mint_zeit <- function(r){
       dplyr::filter(selector == absolut_selector)%>%
       dplyr::mutate(dplyr::across(wert, ~round(.*100, 1)))
 
+    df$display_rel <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
+
 
 
     highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.y} %")%>%
+      highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
       # highcharter::hc_size(height = 1000)%>%
       highcharter::hc_yAxis(title = list(text = "")
                             , labels = list(format = "{value} %")
@@ -4486,10 +4567,13 @@ plot_auslaender_mint_zeit <- function(r){
     hcoptslang$thousandsSep <- "."
     options(highcharter.lang = hcoptslang)
 
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
+
 
 
     highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.y}")%>%
+      highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
       # highcharter::hc_size(height = 1000)%>%
       highcharter::hc_yAxis(title = list(text = "")
                             , labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")

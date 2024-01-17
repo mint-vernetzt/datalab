@@ -72,6 +72,9 @@ mod_schule_kurse_ui <- function(id){
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_kompetenz",
                                                               span(tags$b(span("MINT-Kompetenzen in der 4. und 9. Klasse:")))),"Wie entwickelt sich die MINT-Kompetenz und das Interesse in MINT?"),
 
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_international",
+                                                              span(tags$b(span("MINT-Kompetenzen im internationalen Vergleich:")))),"Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests Pisa und TIMSS ab?"),
+
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_ausserschulisch",
                                                               span(tags$b(span("Außerschulische, frühkindliche MINT-Bildung:")))),"Wie hoch ist die Beteiligung in außerschulische, frühkindliche MINT-Bildung?"),
 
@@ -80,9 +83,11 @@ mod_schule_kurse_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Schüler:innenzahlen der Oberstufe: Kulturministerkonferenz (KMK) 2022, auf Anfrage"),
+          "Schüler:innenzahlen der Oberstufe: Kulturministerkonferenz (KMK) 2023, auf Anfrage"),
         p(style = "text-align: left; font-size = 16px",
-          "Kompetenzdaten: Institut zur Qualitätsentwicklung im Bildungswesen (IQB), 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+          "Kompetenzdaten in Deutschland: Institut zur Qualitätsentwicklung im Bildungswesen (IQB), 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+        p(style = "text-align: left; font-size = 16px",
+          "Kompetenzdaten internatinal: OECD, 2023, freier Download; IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
         p(style = "text-align: left; font-size = 16px",
           "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.")
         )
@@ -546,6 +551,103 @@ mod_schule_kurse_ui <- function(id){
                          )
              ))),
 
+  fluidRow(id="schule_international",
+           shinydashboard::box(
+             title = "MINT-Kompetenzen im internationalen Vergleich: Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests Pisa und TIMSS ab?",
+             width = 12,
+             p("In dieser Box blicken wir auf die Kompetenzdaten der PISA-Studie und der TIMSS-Erhebung.
+               Bei beiden Erhebungen werden unter anderem Kompetenztests in Mathematik und Naturwissenschaften in 4. und 9. Klassen weltweit durchgeführt.
+               Außerdem betrachten die Grafiken Kompetenz-Unterschiede zwischen Jungen und Mädchen und Unterschiede in Abhängigkeit der sozialen Herkunft der Kinder."),
+             p(),
+             shinyBS::bsPopover(id="i_schule_international_1", title = "",
+                                content = paste0("Eine Einordnung sowie weitere Ergebnisse der TIMSS-Erhebung finden Sie hier: <br> <a>https://timss2019.org/reports/</a> <br><br> Weitere Informationen zur PISA-Studie und ihren Ergebnissen finden Sie hier:. <br> <a> https://www.oecd.org/pisa/ </a>"),
+                                placement = "right",
+                                trigger = "click"),
+             tags$a(paste0("Um zu den original Ergebnisberichten von TIMSS und PISA zu kommen, klicken Sie hier:"), icon("info-circle"), id = "i_schule_international_1"),
+             p(),
+             tabsetPanel(type = "tabs",
+                         tabPanel("MINT-Kompetenz im Ländervergleich", br(),
+
+                                  #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                  # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    #p("LOREM"),
+                                    #mod_international_map_ui("mod_international_map_ui_1")
+                                    mod_international_schule_map_ui("international_schule_map_1")
+                                  ),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    htmlOutput(ns("plot_international_schule_map_1")),
+                                    p(style="font-size:12px;color:grey",
+                                      "Quelle der Daten: IEA, 2023; OECD, 2023, feier Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                    shinyBS::bsPopover(id="h_international_schule_1", title="",
+                                                       content = paste0("Regionen, die nicht als unabhängige Staaten anerkannt werden (z. B. Taiwan, Hongkong) können aus technischen Gründen nicht in den Karten dargestellt werden. Daten dieser Regionen sind in den weiteren Grafiken enthalten."),
+                                                       placement = "top",
+                                                       trigger = "hover"),
+                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_1")
+                                  )
+                         ),
+
+                         tabPanel("MINT-Kompetenz von Jungen und Mädchen", br(),
+
+
+                                  #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                  # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    #p("LOREM"),
+
+                                    mod_international_schule_item_ui("international_schule_item_1")
+
+
+                                  ),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    htmlOutput(ns("plot_international_schule_item_1")),
+                                    p(style="font-size:12px;color:grey",
+                                      "Quelle der Daten: IEA, 2023; OECD, 2023, feier Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                    shinyBS::bsPopover(id="h_international_schule_2", title="",
+                                                       content = paste0("Test-Leistungen der Schüler:innen werden nur dann als unterschiedlich dargestellt, wenn das mittlere Ergebnis der Mädchen im Vergelich zu den Jungen signifikant unterschiedlich ist.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                                       placement = "top",
+                                                       trigger = "hover"),
+                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_2")
+                                  )
+                         ),
+
+                         tabPanel("MINT-Kompetenz im Gruppenvergleich", br(),
+
+                                  #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                  # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    #p("LOREM"),
+                                    mod_international_schule_migration_ui("international_schule_migration_1")
+
+                                  ),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    htmlOutput(ns("plot_international_schule_migration_1")),
+                                    p(style="font-size:12px;color:grey",
+                                      "Quelle der Daten: IEA, 2023; OECD, 2023, feier Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                    shinyBS::bsPopover(id="h_international_schule_3", title="",
+                                                       content = paste0("Zur einfacheren Darstellung wurde teilweise eine Auswahl aus den vorliegenden Untergruppen getroffen."),
+                                                       placement = "top",
+                                                       trigger = "hover"),
+                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_3")
+                                  )
+                         )
+             )
+           )
+  ),
+
+
   fluidRow(id="schule_ausserschulisch",
            shinydashboard::box(
              title = "Außerschulische, frühkindliche MINT-Bildung",
@@ -713,6 +815,23 @@ mod_schule_kurse_server <- function(id, r){
 
     output$plot_iqb_fragebogen <- highcharter::renderHighchart({
       iqb_fragebogen(r)
+    })
+
+    # Box internationaler Vergleich PISA/TIMSS
+    # Box 1 - Schule
+    output$plot_international_schule_map_1 <- renderUI({
+      logger::log_debug("plot_international_schule_map")
+      plot_international_schule_map(r)
+    })
+
+    output$plot_international_schule_item_1 <- renderUI({
+      logger::log_debug("plot_international_schule_item")
+      plot_international_schule_item(r)
+    })
+
+    output$plot_international_schule_migration_1 <- renderUI({
+      logger::log_debug("plot_international_schule_migration")
+      plot_international_schule_migration(r)
     })
 
 

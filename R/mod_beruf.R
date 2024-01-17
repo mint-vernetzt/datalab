@@ -21,7 +21,12 @@ mod_beruf_ui <- function(id){
 #' beruf Server Functions
 #'
 #' @noRd
-mod_beruf_server <- function(id, r){
+mod_beruf_server <- function(id,
+                             data_arbeitsmarkt_absolvent_oecd,
+                             data_arbeitsmarkt_anfaenger_absolv_oecd,
+                             data_arbeitsmarkt_anzahl_azubis_oecd,
+                             data_arbeitsmarkt_beschaeftigte_eu,
+                             r){
 
   r <- reactiveValues()
 
@@ -69,6 +74,14 @@ mod_beruf_server <- function(id, r){
 
   # was ist das?
   #mod_beruf_arbeitsmarkt_landkreis_table_lk_analysis_server("xxxxxxxxxxx", btn, r)
+
+  # Box international
+  #mod_international_start_server("mod_international_start_ui_1", r)
+  mod_international_map_arb_server("mod_international_map_arb_ui_1",r)
+  mod_international_map_arb_gender_server("mod_international_map_arb_gender_ui_1",r)
+  mod_international_top10_mint_arb_server("mod_international_top10_mint_arb_ui_1", r)
+  mod_international_top10_mint_arb_gender_server("mod_international_top10_mint_arb_gender_ui_1", r)
+  mod_international_arbeitsmarkt_vergleich_server("international_arbeitsmarkt_vergleich_1", r)
 
 
 }

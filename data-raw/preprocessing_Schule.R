@@ -1,9 +1,6 @@
-# pfad setzen
-
-pfad_kab <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
-
-
-pfad <- pfad_kab
+# Akronym übergeben für Datensatz-Pfad in Onedrive
+akro <- "kab"
+#akro <- "kbr"
 
 ################################################################################
 #
@@ -23,8 +20,8 @@ library(tidyr)
 library(readxl)
 library(stringr)
 
-wd <- getwd()
-setwd(wd)
+# wd <- getwd()
+# setwd(wd)
 #setwd("C:/Users/kab/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 # wd <- getwd() #für Datensatz einlesen später nötig
 
@@ -64,11 +61,17 @@ read_data <- function(file, BL, year, course_level) {
 }
 
 # Datentabellen einlesen
+# wd2 <- paste0(wd, "/raw")
+# setwd(wd2)
 
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
-pfad <- pfad
+pfad_kek <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
-data_LK_D  <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "D" , 2021, "Leistungskurse")
+pfad <- pfad_kek
+
+data_LK_D  <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "D" , 2021, "Leistungskurse")
 data_LK_BW <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BW", 2021, "Leistungskurse")
 data_LK_BY <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BY", 2021, "Leistungskurse")
 data_LK_BE <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BE", 2021, "Leistungskurse")
@@ -104,6 +107,43 @@ data_GK_ST <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "ST", 
 data_GK_SH <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "SH", 2021, "Grundkurse")
 data_GK_TH <- read_data(paste0(pfad, "KMK023_Aus_Kurse_2021_Werte.xlsx"), "TH", 2021, "Grundkurse")
 
+# daten für 2022
+
+data22_LK_D  <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "D" , 2022, "Leistungskurse")
+data22_LK_BW <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "BW", 2022, "Leistungskurse")
+data22_LK_BY <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "BY", 2022, "Leistungskurse")
+data22_LK_BE <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "BE", 2022, "Leistungskurse")
+data22_LK_BB <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "BB", 2022, "Leistungskurse")
+data22_LK_HB <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "HB", 2022, "Leistungskurse")
+data22_LK_HH <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "HH", 2022, "Leistungskurse")
+data22_LK_HE <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "HE", 2022, "Leistungskurse")
+data22_LK_MV <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "MV", 2022, "Leistungskurse")
+data22_LK_NI <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "NI", 2022, "Leistungskurse")
+data22_LK_NW <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "NW", 2022, "Leistungskurse")
+data22_LK_RP <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "RP", 2022, "Leistungskurse")
+data22_LK_SL <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "SL", 2022, "Leistungskurse")
+data22_LK_SN <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "SN", 2022, "Leistungskurse")
+data22_LK_ST <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "ST", 2022, "Leistungskurse")
+data22_LK_SH <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "SH", 2022, "Leistungskurse")
+data22_LK_TH <- read_data(paste0(pfad,"KMK024_Aus_Kurse_2022.xlsx"), "TH", 2022, "Leistungskurse")
+
+data22_GK_D  <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "D" , 2022, "Grundkurse")
+data22_GK_BW <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "BW", 2022, "Grundkurse")
+data22_GK_BY <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "BY", 2022, "Grundkurse")
+data22_GK_BE <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "BE", 2022, "Grundkurse")
+data22_GK_BB <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "BB", 2022, "Grundkurse")
+data22_GK_HB <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "HB", 2022, "Grundkurse")
+data22_GK_HH <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "HH", 2022, "Grundkurse")
+data22_GK_HE <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "HE", 2022, "Grundkurse")
+data22_GK_MV <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "MV", 2022, "Grundkurse")
+data22_GK_NI <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "NI", 2022, "Grundkurse")
+data22_GK_NW <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "NW", 2022, "Grundkurse")
+data22_GK_RP <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "RP", 2022, "Grundkurse")
+data22_GK_SL <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "SL", 2022, "Grundkurse")
+data22_GK_SN <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "SN", 2022, "Grundkurse")
+data22_GK_ST <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "ST", 2022, "Grundkurse")
+data22_GK_SH <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "SH", 2022, "Grundkurse")
+data22_GK_TH <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "TH", 2022, "Grundkurse")
 
 # Zwischen-DFs zusammenfassen
 data <- rbind( data_LK_D     ,
@@ -142,6 +182,43 @@ data <- rbind( data_LK_D     ,
                    data_GK_TH
 )
 
+data22 <- rbind(data22_LK_D     ,
+                data22_LK_BW ,
+                data22_LK_BY ,
+                data22_LK_BE ,
+                data22_LK_BB ,
+                data22_LK_HB ,
+                data22_LK_HH ,
+                data22_LK_HE ,
+                data22_LK_MV ,
+                data22_LK_NI ,
+                data22_LK_NW ,
+                data22_LK_RP ,
+                data22_LK_SL ,
+                data22_LK_SN ,
+                data22_LK_ST ,
+                data22_LK_SH ,
+                data22_LK_TH ,
+                data22_GK_D  ,
+                data22_GK_BW ,
+                data22_GK_BY ,
+                data22_GK_BE ,
+                data22_GK_BB ,
+                data22_GK_HB ,
+                data22_GK_HH ,
+                data22_GK_HE ,
+                data22_GK_MV ,
+                data22_GK_NI ,
+                data22_GK_NW ,
+                data22_GK_RP ,
+                data22_GK_SL ,
+                data22_GK_SN ,
+                data22_GK_ST ,
+                data22_GK_SH ,
+                data22_GK_TH)
+
+
+data <- rbind(data, data22)
 
 ## Datensatz in gewünschte From bringe -------------------------------------
 
@@ -265,8 +342,80 @@ kurse[kurse$anzeige_geschlecht == "frauen", "anzeige_geschlecht"] <- "Frauen"
 kurse[kurse$anzeige_geschlecht == "gesamt", "anzeige_geschlecht"] <- "Gesamt"
 kurse[kurse$anzeige_geschlecht == "männer", "anzeige_geschlecht"] <- "Männer"
 
+## prep fuktionen übernehmen ----
 
-#usethis::use_data(kurse, overwrite = T)
+states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Hamburg",
+                                  "Hessen", "Niedersachsen", "Nordrhein-Westfalen",
+                                  "Rheinland-Pfalz", "Saarland", "Schleswig-Holstein"),
+                         east = c("Brandenburg", "Mecklenburg-Vorpommern", "Sachsen",
+                                  "Sachsen-Anhalt", "Thüringen", "Berlin"))
+
+# prep_kurse_east_west
+
+df_incl <- kurse
+
+# create dummy variable to indicate east or west
+df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west & df_incl$region != "Deutschland", "Westen", NA)
+df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$east & df_incl$region != "Deutschland", "Osten", df_incl$dummy_west)
+df_incl <- na.omit(df_incl)# ifelse erstellt nochmal DE mit "NA" als region-Namen -->löschen
+
+# aggregate values
+df_incl <- df_incl %>% dplyr::group_by(jahr, anzeige_geschlecht, indikator, fachbereich, dummy_west, bereich) %>%
+  dplyr::summarise(wert = sum(wert, na.rm = T))
+
+names(df_incl)[5] <- "region"
+
+#if(type == "subjects"){
+
+  # df_incl <-  df_incl %>%
+  #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #                   wert[anzeige_geschlecht == "Männer"])
+
+  df_incl <- df_incl[, colnames(kurse)]
+
+  kurse <- rbind(kurse, df_incl)
+
+# } else {
+#   # # calcualte new "Gesamt"
+#   #  df_incl <-  df_incl %>%
+#   #    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+#   #    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+#   #                    wert[anzeige_geschlecht == "Männer"])
+#
+#   df_incl <- df_incl[, colnames(kurse)]
+#
+#
+#   kurse <- rbind(kurse, df_incl)
+#
+# }
+
+# share_mint_kurse
+  ## Datensatz so anpassen, dass Funktion nicht mehr benötigt wird
+
+# objekt zum filtern, pivoten aller fächer erstellen
+alle_kurse <- kurse %>%
+  dplyr::select(fachbereich)%>%
+  unique%>%
+  unlist() %>%
+  as.vector%>%
+  append("MINT")%>%
+  append("andere Fächer")
+
+
+kurse <- kurse %>%
+  tidyr::pivot_wider(names_from = fachbereich, values_from = wert) %>%
+  dplyr::mutate(MINT = rowSums(select(.,"Mathematik", "Informatik",  "Biologie", "Chemie",
+                                      "Physik", "andere naturwiss.-technische Fächer" ), na.rm =T ))%>%
+  dplyr::mutate("andere Fächer" = `Alle Fächer`- MINT) %>%
+  tidyr::pivot_longer(all_of(alle_kurse), values_to = "wert", names_to = "fachbereich")
+
+writexl::write_xlsx(kurse, "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/02_Prozess/Datenaufbereitung 2023/Zentral/kurse_22.xlsx")
+# USE ----
+
+
+
+usethis::use_data(kurse, overwrite = T)
 
 
 
@@ -925,7 +1074,7 @@ iqb_fragen$jahr <- as.numeric(iqb_fragen$jahr)
 # iqb zusammenfassen und speichern ----------------------------------------
 iqb <- rbind(iqb_standard, iqb_score_ges, iqb_fragen)
 
-#usethis::use_data(iqb, overwrite = T)
+usethis::use_data(iqb, overwrite = T)
 
 
 # PISA Int'l. ----
@@ -935,54 +1084,51 @@ iqb <- rbind(iqb_standard, iqb_score_ges, iqb_fragen)
 
 ## Alle ----
 
-file_path <- pfad
-# akro <- "kbr"
-# file_path <- paste0("C:/Users/", akro,
-#                     "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+# file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+#
+# path_kek <- "C:/Users/kab/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+#
+# file_path <- path_kek
 
+dat_pisa_g <- read_xls(paste0(pfad, "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
 
-# dat_pisa_g <- read_xls(paste0(file_path, "/", "PISA003_Länderscores_Immigration_Books.xls"), sheet = 3)
-#
-# sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
-# sub_pisa_g <- dat_pisa_g[,sub_cindex]
-# sub_pisa_g <- sub_pisa_g %>%
-#   stringr::str_extract(., "mathematics|science")
-#
-# coln_cindex <- which(stringr::str_detect(dat_pisa_g [,everything(dat_pisa_g )], "Year/Study"))
-#
-# coln_rindex <- which(dat_pisa_g[,coln_cindex]=="Year/Study")
-#
-# dat_pisa_g1 <- dat_pisa_g%>%
-#   slice((coln_rindex-1):nrow(.))
-#
-# coln_annex <- dat_pisa_g1%>%
-#   slice(1)%>%
-#   as.vector()%>%
-#   unname()%>%
-#   unlist()%>%
-#   zoo::na.locf(na.rm = F)
-#
-# colnames(dat_pisa_g1) <-paste0(dat_pisa_g1[2,], "_", coln_annex)
-# colnames(dat_pisa_g1) <- gsub("_NA", "", colnames(dat_pisa_g1))
-#
-# dat_pisa_g2<- dat_pisa_g1[-c(1:2),]
-#
-# dat_pisa_g3 <- dat_pisa_g2 %>%
-#   mutate(across(`Year/Study`, ~ zoo::na.locf(.)))%>%
-#   mutate(across(everything(), ~ str_remove_all(.,"¹|²|³|⁴|⁵|⁶|⁷|⁸|⁹|⁰")))
-#
-# dat_pisa_g3[3] <- gsub("/\p{No}/gu/", "", dat_pisa_g3[3])
-#
-# dat_pisa_g4 <- dat_pisa_g3 %>%
-#   tidyr::pivot_longer(-c("Jurisdiction", "Year/Study"),
-#                       names_to ="platzhalter", values_to = "wert")%>%
-#   tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
-#   mutate(fach=sub_pisa_g)%>%
-#   mutate(fach=case_when(fach=="mathematics" ~ "Mathematik",
-#                         fach== "science" ~ "Naturwissenschaften",
-#                         T ~ .$fach)) %>%
-#   rename(jahr = "Year/Study", land = Jurisdiction)
-#
+sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
+sub_pisa_g <- dat_pisa_g[,sub_cindex]
+sub_pisa_g <- sub_pisa_g %>%
+  stringr::str_extract(., "mathematics|science")
+
+coln_cindex <- which(stringr::str_detect(dat_pisa_g [,everything(dat_pisa_g )], "Year/Study"))
+
+coln_rindex <- which(dat_pisa_g[,coln_cindex]=="Year/Study")
+
+dat_pisa_g1 <- dat_pisa_g%>%
+  slice((coln_rindex-1):nrow(.))
+
+coln_annex <- dat_pisa_g1%>%
+  slice(1)%>%
+  as.vector()%>%
+  unname()%>%
+  unlist()%>%
+  zoo::na.locf(na.rm = F)
+
+colnames(dat_pisa_g1) <-paste0(dat_pisa_g1[2,], "_", coln_annex)
+colnames(dat_pisa_g1) <- gsub("_NA", "", colnames(dat_pisa_g1))
+
+dat_pisa_g2<- dat_pisa_g1[-c(1:2),]
+
+dat_pisa_g3 <- dat_pisa_g2 %>%
+  mutate(across(`Year/Study`, ~ zoo::na.locf(.)))
+
+dat_pisa_g4 <- dat_pisa_g3 %>%
+  tidyr::pivot_longer(-c("Jurisdiction", "Year/Study"),
+                      names_to ="platzhalter", values_to = "wert")%>%
+  tidyr::separate_wider_delim(platzhalter, delim="_", names=c("typ","indikator"))%>%
+  mutate(fach=sub_pisa_g)%>%
+  mutate(fach=case_when(fach=="mathematics" ~ "Mathematik",
+                        fach== "science" ~ "Naturwissenschaften",
+                        T ~ .$fach)) %>%
+  rename(jahr = "Year/Study", land = Jurisdiction)
+
 # dat_pisa_g4 <- dat_pisa_g3 %>%
 #   tidyr::pivot_longer(c("Average_All students", "Standard Error_All students"),
 #                       names_to ="platzhalter", values_to = "wert")%>%
@@ -997,7 +1143,7 @@ pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
 
   # setting path
 
-  dat_pisa_g <- read_xls(paste0(file_path, "/",pisa_list_dat ), sheet = pisa_list_sheeet)
+  dat_pisa_g <- read_xls(paste0(pfad,pisa_list_dat ), sheet = pisa_list_sheeet)
 
   # fach auslesen
   sub_cindex <- which(stringr::str_detect(dat_pisa_g[,everything(dat_pisa_g)], "mathematics|science"))
@@ -1025,9 +1171,11 @@ pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
   dat_pisa_g2<- dat_pisa_g1[-c(1:2),]
 
   dat_pisa_g3 <- dat_pisa_g2 %>%
-    mutate(across(`Year/Study`, ~ zoo::na.locf(.)))%>%
-    mutate(across(everything(), ~ str_remove_all(.,"¹|²|³|⁴|⁵|⁶|⁷|⁸|⁹|⁰")))
+    mutate(across(`Year/Study`, ~ zoo::na.locf(.)))
+  # %>%
+  #   mutate(across(-c(`Year/Study`, `Jurisdiction`),~ stringr::str_remove(., "\\footnotesize")))
 
+  # Hier versuchen Zeug rauszunehmen ^
 
   dat_pisa_g4 <- dat_pisa_g3 %>%
     tidyr::pivot_longer(-c("Jurisdiction", "Year/Study"),
@@ -1040,18 +1188,19 @@ pisa_extract <- function(pisa_list_dat, pisa_list_sheeet) {
     rename(jahr = "Year/Study", land = Jurisdiction)
 
 
-  dat_pisa_g4$land <- countrycode::countrycode(dat_pisa_g4$land, origin = 'country.name',destination = 'country.name.de', custom_match = c("International Average (OECD)" = "OECD Durchschnitt"))
+  dat_pisa_g4$land <- countrycode::countrycode(dat_pisa_g4$land, origin = 'country.name',destination = 'country.name.de', custom_match = c("International Average (OECD)" = "OECD Durchschnitt",
+                                                                                                                                           "Selected countries and jurisdictions" = "Ausgewählte Regionen"))
 
   dat_pisa_g4$source <- pisa_list_dat
 
   dat_pisa_g5 <- dat_pisa_g4 %>%
-    filter(jahr %in% c("2000", "2003", "2006", "2009", "2012", "2015","2018"))
+    filter(jahr %in% c("2000", "2003", "2006", "2009", "2012", "2015","2018", "2022"))
 
   return(dat_pisa_g5)
 
 }
 
-
+# Hier Dateiname pro rlevantem Excel Arbeitsblatt einfügen
 pisa_list_dat <- c("PISA001_Länderscore_Insgesamt_Gender.xls",
                    "PISA001_Länderscore_Insgesamt_Gender.xls",
                    "PISA001_Länderscore_Insgesamt_Gender.xls",
@@ -1065,16 +1214,28 @@ pisa_list_dat <- c("PISA001_Länderscore_Insgesamt_Gender.xls",
                    "PISA004_Länderscores_Income_Computer.xls",
                    "PISA004_Länderscores_Income_Computer.xls",
                    "PISA004_Länderscores_Income_Computer.xls",
-                   "PISA004_Länderscores_Income_Computer.xls")
+                   "PISA004_Länderscores_Income_Computer.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA005_Länderscore_Insgesamt_Gender_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls",
+                   "PISA008_Länderscores_Immigration_Books_22.xls"
+                   )
+
+# Dazu die Indizes der relevanten Sheets einfügen
+pisa_list_sheeet <- c(3,4,5,6,2,3,3,4,5,6,3,4,5,6,
+                      1,2,3,4, # PISA005_Länderscore_Insgesamt_Gender_22.xls
+                      1,2,3,4 # PISA007_Länderscores_Immigration_Books_22.xls
+                      )
 
 
-pisa_list_sheeet <- c(3,4,5,6,2,3,3,4,5,6,3,4,5,6)
 
 pisa_list_output <- purrr::map2(.x = pisa_list_dat, .y =pisa_list_sheeet, .f=pisa_extract )
 
 pisa_list_output <- purrr::list_rbind(pisa_list_output)
-
-
 
 pisa_list_output1 <- pisa_list_output %>%
   filter(!wert %in% c("†"))%>%
@@ -1085,7 +1246,8 @@ pisa_list_output1 <- pisa_list_output %>%
   mutate(ordnung = case_when(
     indikator %in% c("101-200 books" , "0-10 books" ,
       "11-25 books" , "201-500 books" , "26-100 books",
-      "More than 500 books", "None") ~ "Bücher im Haushalt",
+      "More than 500 books", "None", "1-10 books", "11-25 books",
+      "26-100 books", "101-200 books", "201-500 books", "There are no books.") ~ "Bücher im Haushalt",
     indikator %in% c( "Less than [$A]",
                       "[$A] or more but less than [$B]",
                       "[$B] or more but less than [$C]",
@@ -1093,7 +1255,7 @@ pisa_list_output1 <- pisa_list_output %>%
                       "[$D] or more but less than [$E]",
                       "[$E] or more") ~ "Haushaltseinkommen",
     indikator %in% c("All students", "Female", "Male")~ "Ländermittel",
-    indikator %in% c("First-Generation", "Second-Generation", "Native") ~ "Migrationshintergund",
+    indikator %in% c("First-Generation", "Second-Generation", "Native") ~ "Migrationshintergrund",
     indikator %in% c("ISCED 1", "ISCED 3A, ISCED 4", "ISCED 5A, 6",
                      "ISCED 2", "ISCED 3B, C", "ISCED 5B") ~ "Bildungshintergrund",
     indikator %in% c("Yes", "No") ~ "Computerverfügbarkeit"
@@ -1106,8 +1268,8 @@ pisa1 <- pisa_list_output2 %>%
   filter(ordnung == "Ländermittel")%>%
   rename(geschlecht = indikator, indikator = ordnung)%>%
   mutate(geschlecht = case_when(geschlecht=="All students" ~ "Insgesamt",
-                                geschlecht=="Female" ~ "Mädchen",
-                                geschlecht=="Male" ~ "Jungen"))%>%
+                                geschlecht=="Female" ~ "Weiblich",
+                                geschlecht=="Male" ~ "Männlich"))%>%
   mutate(ausprägung = geschlecht)
 
 pisa1d <- pisa1 %>%
@@ -1145,11 +1307,15 @@ pisa <- bind_rows(pisa1, pisa2)%>%
   select(-geschlecht)%>%
   pivot_wider(names_from = typ, values_from = wert )%>%
   rename(wert = Druchschnitt)%>%
-  mutate(typ = "Durchschnitt")
+  mutate(typ = "Durchschnitt")%>%
+  filter(land !="Ausgewählte Regionen" &
+         !indikator %in% c("Computerverfügbarkeit",
+                           "Bildungshintergrund",
+                           "Haushaltseinkommen"))
 
 
-schule_pisa <- pisa
-usethis::use_data(schule_pisa, overwrite = T)
+
+usethis::use_data(pisa, overwrite = T)
 
 
 # TIMSS ----
@@ -1160,10 +1326,7 @@ usethis::use_data(schule_pisa, overwrite = T)
 ## TIMSS Acheivement----
 
 ### Gender ----
-file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
-# akro <- "kbr"
-# file_path <- paste0("C:/Users/", akro,
-#                     "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+#file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
 # funktion
@@ -1337,10 +1500,7 @@ timss_achievement <- bind_rows(j,h)
 
 timss_res_extract <- function(dat3, jahr, fach){
 
-  #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
-  # akro <- "kbr"
-  # file_path <- paste0("C:/Users/", akro,
-  #                     "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+  file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
   dat2 <- read_excel(paste0(pfad, dat3))
@@ -1448,10 +1608,7 @@ timss_res_dat <- bind_rows(o,p)
 # funktion
 
 timss_benchmarks_extract <- function(dat7){
-  #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
-  # akro <- "kbr"
-  # file_path <- paste0("C:/Users/", akro,
-  #                     "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+  file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
   dat8 <- read_excel(paste0(pfad, dat7))
@@ -1572,12 +1729,7 @@ timss <- bind_rows(
   timss_gender %>% mutate(across(wert,~ as.numeric(.)))
 )
 
-# finale Anpassungen
-schule_timss <- timss
-colnames(schule_timss)[12] <- "geschlecht_diff"
-schule_timss$geschlecht_diff <- ifelse(is.na(schule_timss$geschlecht_diff), "Nein", schule_timss$geschlecht_diff)
-
-usethis::use_data(schule_timss, overwrite=T)
+usethis::use_data(timss, overwrite=T)
 
 
 
