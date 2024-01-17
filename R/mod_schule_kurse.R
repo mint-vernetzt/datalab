@@ -553,7 +553,7 @@ mod_schule_kurse_ui <- function(id){
 
   fluidRow(id="schule_international",
            shinydashboard::box(
-             title = "MINT-Kompetenzen im internationalen Vergleich",
+             title = "MINT-Kompetenzen im internationalen Vergleich: Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests Pisa und TIMSS ab?",
              width = 12,
              p("In dieser Box blicken wir auf die Kompetenzdaten der PISA-Studie und der TIMSS-Erhebung.
                Bei beiden Erhebungen werden unter anderem Kompetenztests in Mathematik und Naturwissenschaften in 4. und 9. Klassen weltweit durchgeführt.

@@ -517,7 +517,7 @@ plot_international_map_fem <- function(r){
       # ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
+      ) %>% # highcharter::hc_size(600, 550) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
       highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                              verticalAlign = "bottom")
@@ -852,8 +852,8 @@ plot_international_top10_gender <- function(r) {
     get_top10_hc_plot_options(
       hc_title = paste0(t_quelle1, "Länder mit dem größten Frauenanteil an Studierenden in ", t_fach, " in ", timerange),
       hc_tooltip = hover
-      # ,
-      # max_percent_used = max_percent_used
+      ,
+      max_percent_used = max_percent_used
       )
 
 
@@ -865,8 +865,8 @@ plot_international_top10_gender <- function(r) {
     get_top10_hc_plot_options(
       hc_title = paste0("Länder mit dem niedrigsten Anteil an '", fach_m, "' in ", timerange),
       hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}"
-      # ,
-      # max_percent_used = max_percent_used
+      ,
+      max_percent_used = max_percent_used
       )
 
 
@@ -1271,7 +1271,7 @@ plot_international_schule_item <- function(r) {
     group_text = c(" mit keinem signifikaten Unterschied zwischen Jungen und Mädchen",
                    ", in denen Jungen signifikant besser abschneiden als Mädchen",
                    ", in denen Mädchen signifikant besser abscheniden als Jungen"),
-    group_col = c("#35bd97", "#FBBF24", "#154194")
+    group_col = c("#66cbaf", "#fdd670", "#f5adac")
   )
 
   # reshape long to wide for later merge
@@ -1303,9 +1303,9 @@ plot_international_schule_item <- function(r) {
     dplyr::filter(!is.na(count))
 
   # Farbe für Deutschland
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#FEF3C7", plot_data$group_col )
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#5f94f9", plot_data$group_col )
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "kein signifikanter Unterschied", "#AFF3E0", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#fcc433", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#ee7775", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "kein signifikanter Unterschied", "#00a87a", plot_data$group_col )
 
 
   out <- highcharter::hchart(
@@ -1620,7 +1620,7 @@ plot_international_map_arb <- function(r) {
         # ) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular")
-        ) %>% highcharter::hc_size(600, 550) %>%
+        ) %>% #highcharter::hc_size(600, 550) %>%
         highcharter::hc_credits(enabled = FALSE) %>%
         highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                verticalAlign = "bottom")
@@ -1746,7 +1746,7 @@ plot_international_map_arb <- function(r) {
           # ) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular")
-          ) %>% highcharter::hc_size(600, 550) %>%
+          ) %>% #highcharter::hc_size(600, 550) %>%
           highcharter::hc_credits(enabled = FALSE) %>%
           highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                  verticalAlign = "bottom")
@@ -1996,7 +1996,7 @@ plot_international_map_arb_gender <- function(r) {
         # ) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular")
-        ) %>% highcharter::hc_size(600, 550) %>%
+        ) %>% #highcharter::hc_size(600, 550) %>%
         highcharter::hc_credits(enabled = FALSE) %>%
         highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                verticalAlign = "bottom")
@@ -3428,26 +3428,31 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
     return(out)
   })
 
+  tmp_df$wert <- round(tmp_df$wert, 1)
+
+  tmp_df$variable <- factor(tmp_df$variable, levels = c("Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern",
+                                                        "Anteil Absolvent*innen nach Fach an allen Fächern"))
   # Create the plot
   plot <- highcharter::hchart(object = tmp_df,
                       type = "column",
                       mapping = highcharter::hcaes(x = land, y = wert, group = variable))  %>%
     #hc_xAxis(categories = tmp_df$land) %>%
     #hc_yAxis(title = list(text = "THIS TITLE")) %>%
-    highcharter::hc_plotOptions(series = list(dataLabels = list(enabled = FALSE))) %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        dataLabels = list(enabled = FALSE))) %>%
     highcharter::hc_colors(c("#B16FAB", "#66CBAF")) %>%
     highcharter::hc_title(
       text = paste0(
         "Anteil der Ausbildungs-/Studiums-Anfänger*innen und Absolvent*innen in ",
         fach_m, " in ", timerange)
     ) %>%
-    #hc_subtitle(text = "Each bar represents a type of fruit") %>%
     highcharter::hc_legend(enabled = TRUE) %>%
     highcharter::hc_exporting(enabled = FALSE) %>%
     highcharter::hc_tooltip(
       pointFormat = paste0(
         '<span style="color:{point.color}">\u25CF</span>',
-        '{series.name}: ','<b>{point.y}</b><br/>'),
+        '{series.name}: ','<b>{point.y} %</b><br/>'),
       shared = TRUE,
       useHTML = TRUE) %>%
     highcharter::hc_annotations(

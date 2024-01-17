@@ -14,8 +14,8 @@ mod_international_top10_mint_gender_ui <- function(id){
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l_top10_mint_gender_ui"),
-      choices = c("EU", "OECD"),
-      selected = "EU",
+      choices = c("Europa" = "EU", "OECD"),
+      selected = "Europa",
       multiple = FALSE#,
       # options =  list(
       #   "max-options" = 2,
@@ -62,8 +62,9 @@ mod_international_top10_mint_gender_ui <- function(id){
     p("Betrachtungsart:"),
     shinyWidgets::pickerInput(
       inputId = ns("art"),
-      choices = c("höchster Frauenanteil in MINT", "meisten Frauen wählen MINT"),
-      selected = "höchster Frauenanteil in MINT",
+      choices = c("Frauenanteil in MINT" ="höchster Frauenanteil in MINT",
+                  "Anteil MINT-Studierende unter Frauen" ="meisten Frauen wählen MINT"),
+      selected = "Frauenanteil in MINT",
       multiple = FALSE
     ),
 
@@ -79,20 +80,20 @@ mod_international_top10_mint_gender_ui <- function(id){
 
     br(),
 
-    # TODO extract into own module, since this is repeated on a lot of modules
-
-    shinyBS::bsPopover(id="dh_international_map", title = "",
-                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+    # # TODO extract into own module, since this is repeated on a lot of modules
+    #
+    # shinyBS::bsPopover(id="dh_international_map", title = "",
+    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+    #                    placement = "top",
+    #                    trigger = "hover"),
+    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
+    # br(),
+    # br(),
+    shinyBS::bsPopover(id="ih_international_map4", title="",
+                       content = paste0("Hier sieht man, dass Lichtenstein mit über 60 % einen außergewöhnlich hohen Frauenanteil aufweist. Deutschland dagegen hat den neuntkleinsten Frauenanteil in MINT (29 %)."),
                        placement = "top",
                        trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
-    br(),
-    br(),
-    shinyBS::bsPopover(id="ih_international_map", title="",
-                       content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
-                       placement = "top",
-                       trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_map")
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_map4")
   )
 }
 

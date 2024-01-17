@@ -40,8 +40,15 @@ mod_international_arbeitsmarkt_vergleich_ui <- function(id){
       choices = international_ui_faecher(region = "arbeit"),
       selected = "MINT",
       multiple = FALSE
-    )
+    ),
+    br(),
+    shinyBS::bsPopover(id="ih_international_arbeitsmarkt_tap5", title="",
+                       content = paste0("Hier sieht man, dass in Deutschland 2020 der MINT-Anteil bei Absolvent:innen mit rund 36 % 2 Prozentpunkte unter dem MINT-Anteil bei Studiums- und Ausbildungs-Anfänger:innen (rund 38 %) liegt."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_arbeitsmarkt_tap5")
   )
+
 }
 
 #' international_arbeitsmarkt_vergleich Server Functions

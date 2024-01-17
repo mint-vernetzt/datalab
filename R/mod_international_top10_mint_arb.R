@@ -14,8 +14,8 @@ mod_international_top10_mint_arb_ui <- function(id){
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l_top10_mint_arb"),
-      choices = c("EU", "OECD"),
-      selected = "EU",
+      choices = c("Europa" = "EU", "OECD"),
+      selected = "Europa",
       multiple = FALSE
 
     ),
@@ -40,7 +40,7 @@ mod_international_top10_mint_arb_ui <- function(id){
                        label = NULL,
                        choices = c("2013", "2014", "2015", "2016", "2017",
                                    "2018", "2019", "2020", "2021", "2022" ),
-                       selected = "2021"
+                       selected = "2022"
                      )),
 
 
@@ -122,10 +122,24 @@ mod_international_top10_mint_arb_ui <- function(id){
                        justified = TRUE,
                        checkIcon = list(yes = icon("ok",
                                                    lib = "glyphicon"))
-                     )
+                     ),
 
+    br(),
 
-
+    # # TODO extract into own module, since this is repeated on a lot of modules
+    #
+    # shinyBS::bsPopover(id="dh_international_map", title = "",
+    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+    #                    placement = "top",
+    #                    trigger = "hover"),
+    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
+    # br(),
+    # br(),
+    shinyBS::bsPopover(id="ih_international_arbeitsmarkt_tab3", title="",
+                       content = paste0("Aus dieser Darstellung heraus liest sich, dass Deutschland im europäischen Vergleich zu den 10 Ländenr zählt, die den geringsten Anteil an MINT-Ausgebildeten an allen Ausgebildeten aufweisen."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_arbeitsmarkt_tab3")
   )
 
 }

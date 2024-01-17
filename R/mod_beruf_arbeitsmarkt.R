@@ -60,7 +60,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_international",
                                                                 span(tags$b(span("MINT-Beschäftigung im internationalen Vergleich:")))),
-            "Hier können Sie den Anteil von 'MINT' im deutschen Arbeitsmarkt international vergleichen."
+            "Hier können Sie den MINT-Anteil im deutschen Arbeitsmarkt international vergleichen."
           ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_regional",
             span(tags$b(span("Regionaler MINT-Steckbrief:")))),"Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen."
@@ -442,9 +442,15 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow(id="beruf_international",
              shinydashboard::box(
-               title = "MINT-Beschäftigung im internationalen Vergleich",
+               title = "MINT-Beschäftigung im internationalen Vergleich: Hier können Sie den MINT-Anteil im deutschen Arbeitsmarkt international vergleichen.",
                width = 12,
-               p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich des Arbeitsmarkts für den internationalen Vergleich. Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU und die OECD gesammelt wurden. Zum einen zeigen wir, wie groß der Anteil von MINT-Auszubildenden und Beschäftigten in verschiedenen Ländern ist. Außerdem ist zu sehen, in welchen Ländern der Frauenanteil besonders groß oder klein ist. Darüber hinaus werfen wir einen Blick auf Studiums- bzw. Ausbildungs-Anfänger*innen und Absolvent*innen in MINT im Ländervergleich."),
+               p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich des Arbeitsmarkts für den internationalen Vergleich.
+                 Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU und die OECD gesammelt wurden.
+                 Zum einen zeigen wir, wie groß der Anteil von MINT-Auszubildenden und Beschäftigten in verschiedenen Ländern ist.
+                 Außerdem ist zu sehen, in welchen Ländern der Frauenanteil besonders groß oder klein ist.
+                 Darüber hinaus werfen wir einen Blick auf Studiums- bzw. Ausbildungs-Anfänger*innen und Absolvent*innen in MINT
+                 im Ländervergleich."),
+
                tabsetPanel(type = "tabs",
                            tabPanel("Vergleich MINT-Anteil (Karte)", br(),
 
@@ -463,7 +469,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_studienzahl_map_arb_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
 
                                     )
@@ -485,7 +491,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                       width = 9,
                                       htmlOutput(ns("plot_international_map_arb_gender_1")),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
 
                                     )
@@ -506,7 +512,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                         width = 9,
                                         htmlOutput(ns("plot_international_top10_mint_arb_1")),
                                         p(style="font-size:12px;color:grey",
-                                          "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
+                                          "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
 
                                       )
@@ -527,11 +533,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                         width = 9,
                                         htmlOutput(ns("plot_international_top10_mint_arb_gender_1")),
                                         p(style="font-size:12px;color:grey",
-                                          "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
+                                          "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
 
                                       )
-                           ),tabPanel("Vergleiche", br(),
+                           ),tabPanel("MINT-Anfänger:innen und Absolvent:innen", br(),
 
                                       #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                       # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -546,13 +552,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                         width = 9,
                                         htmlOutput(ns("plot_international_arbeitsmarkt_vergleiche_1")),
                                         p(style="font-size:12px;color:grey",
-                                          "Quelle der Daten: IEA, 2023; OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
+                                          "Quelle der Daten: OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
 
-                                        shinyBS::bsPopover(id="h_international_arbeit_3", title="",
-                                                           content = paste0("POPUP INFO TEXT HERE"),
-                                                           placement = "top",
-                                                           trigger = "hover"),
-                                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_arbeit_3")
+                                        # shinyBS::bsPopover(id="h_international_arbeit_3", title="",
+                                        #                    content = paste0("POPUP INFO TEXT HERE"),
+                                        #                    placement = "top",
+                                        #                    trigger = "hover"),
+                                        # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_arbeit_3")
                                       )
                            )
                )

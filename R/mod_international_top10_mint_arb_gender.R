@@ -15,8 +15,8 @@ mod_international_top10_mint_arb_gender_ui <- function(id){
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l_top10_mint_arb_gender"),
-      choices = c("EU", "OECD"),
-      selected = "EU",
+      choices = c("Europa" = "EU", "OECD"),
+      selected = "Europa",
       multiple = FALSE#,
       # options =  list(
       #   "max-options" = 2,
@@ -43,7 +43,7 @@ mod_international_top10_mint_arb_gender_ui <- function(id){
                        label = NULL,
                        choices = c("2013", "2014", "2015", "2016", "2017",
                                    "2018", "2019", "2020", "2021", "2022" ),
-                       selected = "2021"
+                       selected = "2022"
                      )),
 
 
@@ -146,11 +146,11 @@ mod_international_top10_mint_arb_gender_ui <- function(id){
     # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
     # br(),
     # br(),
-    # shinyBS::bsPopover(id="ih_international_map", title="",
-    #                    content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_map")
+    shinyBS::bsPopover(id="ih_international_arbeitsmarkt_tap4", title="",
+                       content = paste0("In der ersten Einstellung ist zu sehen, dass Deutschland mit knapp 31 % einen der niedrigsten Frauenanteile von MINT-Ausgebildeten im europäischen Vergleich aufweist."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_arbeitsmarkt_tap4")
   )
 
 }

@@ -69,7 +69,7 @@ mod_studium_studienzahl_ui <- function(id){
                                                               span(tags$b(span("Internationale Studierende in MINT:")))), "Wie hoch ist der Anteil von internationalen Studierenden in den MINT-Fächern?"
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_international",
-                                                              span(tags$b(span("MINT-Studierende im internationalen Vergleich:")))), "Hier können Sie den Anteil von 'MINT' an deutschen Hochschulen international Vergleichen."
+                                                              span(tags$b(span("MINT-Studierende im internationalen Vergleich:")))), "Hier können Sie den MINT-Anteil an deutschen Hochschulen international vergleichen."
         )),
 
       shinydashboard::box(
@@ -481,7 +481,7 @@ mod_studium_studienzahl_ui <- function(id){
 
   fluidRow(id="studium_internationale_studis",
            shinydashboard::box(
-             title = "MINT-Studierende im internationalen Vergleich",
+             title = "Internationale Studierende in MINT: Wie hoch ist der Anteil internationaler Studierender in den MINT-Fächern?",
              width = 12,
              p("Diese Darstellungen zeigen, wie hoch der Anteil internationale Studierender an allen Studierenden eines Fachbereichs oder eines Studienfachs ist.
                Außerdem zeigen wir hier, wie viele internationale Studierende in welchen Fächern studieren. Als 'internationale Studierende' fassen wir alle
@@ -559,11 +559,11 @@ mod_studium_studienzahl_ui <- function(id){
   fluidRow(id="studium_international",
            shinydashboard::box(
 
-             title = "STUDIUM: MINT-Studium im internationalen Vergleich",
+             title = "MINT-Studierende im internationalen Vergleich: Hier können Sie den MINT-Anteil an deutschen Hochschulen international vergleichen.",
 
              width = 12,
              p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich Studium für den internationalen Vergleich.
-               Die Grafiken basieren auf öffentlichen Statistiken,die durch die EU, die OECD und die UNESCO gesammelt wurden.
+               Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU, die OECD oder die UNESCO gesammelt wurden.
                  Zum einen zeigen wir, wie groß der Anteil von MINT-Studierenden an allen Studierenden in verschiedenen Ländern ist. Außerdem ist zu sehen,
                  in welchen Ländern der Frauenanteil oder der Anteil an internationalen Studierenden in MINT-Studiengängen besonders groß oder klein ist."),
              tabsetPanel(type = "tabs",
@@ -583,7 +583,7 @@ mod_studium_studienzahl_ui <- function(id){
                                     htmlOutput(ns("plot_international_studienzahl_map_1")),
                                     p(style="font-size:12px;color:grey",
 
-                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; eigene Berechnungen durch MINTvernetzt."),
+                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                     # shinyBS::bsPopover(id="h_international_1", title="",
                                     #                    content = paste0("POPUP INFO TEXT HERE"),
@@ -608,7 +608,7 @@ mod_studium_studienzahl_ui <- function(id){
                                     width = 9,
                                     htmlOutput(ns("plot_international_map_fem_1")),
                                     p(style="font-size:12px;color:grey",
-                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
+                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; feier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                   )
                          ),
@@ -629,7 +629,7 @@ mod_studium_studienzahl_ui <- function(id){
                                     htmlOutput(ns("plot_international_top10_mint_1")),
                                     p(style="font-size:12px;color:grey",
 
-                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; eigene Berechnungen durch MINTvernetzt."),
+                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                     # shinyBS::bsPopover(id="h_international_1", title="",
                                     #                    content = paste0("POPUP INFO TEXT HERE"),
@@ -656,7 +656,7 @@ mod_studium_studienzahl_ui <- function(id){
                                     htmlOutput(ns("plot_international_top10_mint_gender_1")),
                                     p(style="font-size:12px;color:grey",
 
-                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
+                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; freies Download, eigene Berechnungen durch MINTvernetzt."),
 
                                     # shinyBS::bsPopover(id="h_international_1", title="",
                                     #                    content = paste0("POPUP INFO TEXT HERE"),
@@ -679,7 +679,7 @@ mod_studium_studienzahl_ui <- function(id){
                                     width = 9,
                                     htmlOutput(ns("plot_international_mint_top_10_1")),
                                     p(style="font-size:12px;color:grey",
-                                      "Quelle der Daten: Eurostat, 2023; eigene Berechnungen durch MINTvernetzt."),
+                                      "Quelle der Daten: Eurostat, 2023; freies Download, eigene Berechnungen durch MINTvernetzt."),
 
 
                                     # shinyBS::bsPopover(id="h_international_1", title="",

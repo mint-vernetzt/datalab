@@ -14,8 +14,8 @@ mod_international_map_fem_ui <- function(id) {
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l_f"),
-      choices = c("EU", "OECD"),
-      selected = "EU",
+      choices = c("Europa" = "EU", "OECD"),
+      selected = "Europa",
       multiple = FALSE#,
       # options =  list(
       #   "max-options" = 2,
@@ -47,8 +47,9 @@ mod_international_map_fem_ui <- function(id) {
                      p("Betrachtung:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_betr_eu_f"),
-                       choices = c("Anteil von Frauen an Allen", "Anteil an Frauen von Frauen"),
-                       selected = c("Anteil von Frauen an Allen"),
+                       choices = c("Frauenanteil in MINT" = "Anteil von Frauen an Allen",
+                                   "Anteil MINT-Studierende unter Frauen" = "Anteil an Frauen von Frauen"),
+                       selected = c("Frauenanteil in MINT"),
                        multiple = FALSE
                      )),
     conditionalPanel(condition = "input.map_l_f == 'OECD' ",
@@ -84,11 +85,28 @@ mod_international_map_fem_ui <- function(id) {
                      p("Betrachtung:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_betr_oecd_f"),
-                       choices = c("Anteil von Frauen an Allen", "Anteil an Frauen von Frauen"),
-                       selected = c("Anteil von Frauen an Allen"),
+                       choices = c("Frauenanteil in MINT" = "Anteil von Frauen an Allen",
+                                   "Anteil MINT-Studierende unter Frauen" = "Anteil an Frauen von Frauen"),
+                       selected = c("Frauenanteil in MINT"),
                        multiple = FALSE
                      )
-    ))
+    ),
+
+    br(),
+
+    # shinyBS::bsPopover(id="dh_international_map", title = "",
+    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+    #                    placement = "top",
+    #                    trigger = "hover"),
+    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
+    # br(),
+    # br(),
+    shinyBS::bsPopover(id="ih_international_map2", title="",
+                       content = paste0("Die Karte zeigt den Frauenanteil unter MINT-Studierenden im Ländervergleich. In der ersten Einstellung sieht man beispielsweise, dass der Frauenanteil in MINT in den baltischen Staaten und Schweden etwas höher liegt als in den Ländern Mitteleuropas."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_map2")
+  )
 
 
 }

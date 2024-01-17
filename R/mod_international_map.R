@@ -16,8 +16,8 @@ mod_international_map_ui <- function(id) {
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l_int_studium"),
-      choices = c("EU", "OECD", "Weltweit"),
-      selected = "EU",
+      choices = c("Europa" = "EU", "OECD", "Weltweit"),
+      selected = "Europa",
       multiple = FALSE#,
       # options =  list(
       #   "max-options" = 2,
@@ -80,18 +80,18 @@ mod_international_map_ui <- function(id) {
 
     # TODO extract into own module, since this is repeated on a lot of modules
 
-    shinyBS::bsPopover(id="dh_international_map", title = "",
-                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+    # shinyBS::bsPopover(id="dh_international_map", title = "",
+    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+    #                    placement = "top",
+    #                    trigger = "hover"),
+    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
+    # br(),
+    # br(),
+    shinyBS::bsPopover(id="ih_international_map1", title="",
+                       content = paste0("Die Karte zeigt, dass Deutschland im Vergleich zu anderen Ländern Europas einen relativ hohen Anteil an MINT-Studierenden aufweist."),
                        placement = "top",
                        trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
-    br(),
-    br(),
-    shinyBS::bsPopover(id="ih_international_map", title="",
-                       content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
-                       placement = "top",
-                       trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_map")
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_map1")
   )
 
 }
