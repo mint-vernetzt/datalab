@@ -12,9 +12,18 @@
 #' @param i_ibnput A numeric or numeric string, that indicates which row index
 #'   is used.
 #' @param ns a session$ns object
+#' @param region A string with the used region (eg "Europa" or "OECD Länder") to
+#'   set the correct initial values for the filters
+#' @param land A vector with the used countries (eg c("Deutschland") ) to set
+#'   the correct initial values for the filters
 #' @noRd
 
-create_filter_row <- function(i_input, ns) {
+create_filter_row <- function(
+    i_input,
+    ns,
+    region = "Europa",
+    land = "Deutschland") {
+
   fluidRow(
     id = paste0("map_int_table_input_row_", i_input),
     # column(
@@ -28,7 +37,7 @@ create_filter_row <- function(i_input, ns) {
         label = NULL,
         choices = international_zentral_get_unique_values(
           var = "bereich",
-          filter = list(region = "Europa")),
+          filter = list(region = region)),
         selected = NULL,
         options = list(title = "Indikator wählen"),
         multiple = FALSE
@@ -51,7 +60,8 @@ create_filter_row <- function(i_input, ns) {
       shinyWidgets::pickerInput(
         inputId = ns(paste0("map_int_table_fachbereich_", i_input)),
         label = NULL,
-        choices = international_zentral_get_unique_values(var = "fach"),
+        #choices = international_zentral_get_unique_values(var = "fach"),
+        choices = c(),
         selected = NULL,
         options = list(title = "Fachbereich wählen"),
         multiple = FALSE
@@ -62,7 +72,9 @@ create_filter_row <- function(i_input, ns) {
       shinyWidgets::pickerInput(
         inputId = ns(paste0("map_int_table_year_", i_input)),
         label = NULL,
-        choices = international_zentral_get_unique_values(var = "jahr"),
+        choices = international_zentral_get_unique_values(
+          var = "jahr",
+          filter = list(land = land, region = region)),
         selected = NULL,
         options = list(title = "Jahr wählen"),
         multiple = FALSE
@@ -158,4 +170,27 @@ prep_download_data <- function(data) {
   # browser()
   out <- data
   return(out)
+}
+
+download_table <- function(table,
+                           filename = "table.png",
+                           width = 450,
+                           height = 300) {
+
+  # Save the table as a standalone HTML file
+  html_file <- tempfile(fileext = ".html")
+  htmlwidgets::saveWidget(table, file = html_file, selfcontained = TRUE)
+
+  # Capture the HTML as a PNG image
+  webshot2::webshot(url = html_file,
+                    file = filename,
+                    delay = 2,
+                    zoom = 2,
+                    vwidth = width,
+                    vheight = height)
+
+  shiny::showNotification(
+    ui = paste0("Gespeichert als '", filename, "'"),
+    type = "message",
+    id = "download_notification")
 }

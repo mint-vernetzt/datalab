@@ -32,8 +32,6 @@ mod_suche_eingabe_server <- function(id, react_search, parent_session){
     ns <- session$ns
 
     observeEvent(input$suche_eingabe_txt, {
-      # browser()
-      print(input$suche_eingabe_txt)
       react_search$suche_eingabe_txt <- input$suche_eingabe_txt
       react_search$suchtabelle <- get_search_data(
         term = input$suche_eingabe_txt,

@@ -609,8 +609,9 @@ mod_international_start_ui <- function(id){
                   outputId = ns("download_btn_international_table_1"),
                   label = "Download",
                   icon = icon("download")),
-                p(style="font-size:12px;color:grey",
-                  "hier Quellen"),
+                # quellen sind schon in der Tabelle enthalten
+                # p(style="font-size:12px;color:grey",
+                #   "hier Quellen"),
                 shinyBS::bsPopover(
                   id="h_fachkraft_arbeitsmarkt_1", title="",
                   content = paste0("POPUP INFO TEXT HERE"),
@@ -840,33 +841,49 @@ mod_international_start_server <- function(id, r){
     # BOX 5 International Table
 
     output$international_table_1 <- DT::renderDataTable({
-      DT::datatable(
+      r$int_table_DT <- DT::datatable(
         data = r$int_table,
         # filter = list(position = "top"),
         rownames = FALSE,
         colnames = stringr::str_to_title(names(r$int_table)),
         escape = FALSE,
         options = list(
-          dom = "t"#,
-          # columnDefs = list(
-          #   list(
-          #     visible = FALSE,
-          #     targets = target_cols)
-          # )
+          dom = "t"),
+        # add logo and source
+        caption = htmltools::tags$caption(
+          style = 'caption-side: bottom; text-align: right;',
+          htmltools::div(
+            style = "display: flex; justify-content: space-between;",
+            htmltools::p(paste0("Quellen: ", r$int_table_source)),
+            htmltools::img(
+              src="https://raw.githubusercontent.com/mint-vernetzt/datalab/main/inst/app/www/MINTvernetztLogo_klein.png",
+              alt="MINT vernetzt Logo",
+              width="30",height="30",
+              style = "align-self: center;"
+            )
+          )
         )
       )
+
+      r$int_table_DT
     })
 
     output$download_btn_international_table_1 <- downloadHandler(
       contentType = "text/csv",
-      filename = function() {"International_data_custom_table.csv"},
+      filename = function() {"International_data_custom_table.png"},
       content = function(file) {
         logger::log_info("Donwload custom table with international data")
-        write.csv(x = prep_download_data(r$int_table),
-                  file = file,
-                  row.names = FALSE)
-        # file.copy("International_data_custom_table.csv", file)
-        # file.remove("International_data_custom_table.csv")
+        download_table(table = r$int_table_DT,
+                       filename = "International_data_custom_table.png",
+                       width = 1000,
+                       height = 300)
+
+        # write.csv(x = prep_download_data(r$int_table),
+        #           file = file,
+        #           row.names = FALSE)
+
+        file.copy("International_data_custom_table.png", file)
+        file.remove("International_data_custom_table.png")
       }
     )
   })

@@ -12,6 +12,7 @@ mod_international_table_input_ui <- function(id){
   tagList(
     p("Eine Änderung der Region setzt alle Eingestellten Filter zurück."),
     p("Eine Änderung des Landes kann zur einer Rücksetzung des Jahresfilters führen."),
+    p("Sollten für bestimmte Kombinationen keine Daten vorhanden sein, liegt es in den meisten Fällen an der Jahreseinstellung"),
     fluidRow(
       column(
         width = 3,
@@ -35,6 +36,7 @@ mod_international_table_input_ui <- function(id){
           selected = "Deutschland",
           multiple = TRUE,
           options =  list(
+            title = "Bis zu 3 Länder wählen",
             "max-options" = 3,
             "max-options-text" = "Bitte nur maximal 3 Länder auswählen"
           )
@@ -94,8 +96,6 @@ mod_international_table_input_server <- function(id, r){
     })
 
     observeEvent(input$int_table_insertBtn, {
-      # all_active_rows <- setdiff(active_rows(), 0)
-      # browser()
       all_active_rows <- active_rows()
       added_row <- setdiff(seq_len(n_obs), all_active_rows)
 
@@ -110,7 +110,10 @@ mod_international_table_input_server <- function(id, r){
         insertUI(
           selector = paste0("#map_int_table_input_row_", dplyr::last(all_active_rows)),
           where = "afterEnd",
-          ui = create_filter_row(i_input = i_input, ns = ns)
+          ui = create_filter_row(i_input = i_input,
+                                 ns = ns,
+                                 region = input$map_int_table_region,
+                                 land = input$map_int_table_land)
         )
       } else {
         # case when all possible rows are present
@@ -157,13 +160,27 @@ mod_international_table_input_server <- function(id, r){
 
 
       # update table with filters
-      r$int_table <-
+      tmp_int_table <-
         international_zentral %>%
         dplyr::filter(region == input$map_int_table_region) %>%
         dplyr::filter(land %in% input[["map_int_table_land"]]) %>%
         dplyr::filter( eval( parse(
           text = paste0("(", paste0(all_filters, collapse = ")|("), ")")))
-        ) %>%
+        )
+      if (nrow(tmp_int_table) == 0) {
+        # case when data filter returned empty data
+        shiny::showNotification(
+          ui = "Keine Daten zu diesen Filtern gefunden. Evlt. liegt es an der Jahreseinstellung",
+          duration = NULL,
+          closeButton = TRUE,
+          type = "warning")
+        shiny::req(FALSE)
+      }
+
+
+      filtered_land <- unique(tmp_int_table$land)
+
+      tmp_int_table <- tmp_int_table %>%
         dplyr::mutate(
           wert = paste0(round(wert_prozent), "%<br>",
                         dplyr::if_else(is.na(wert_absolut),
@@ -171,17 +188,38 @@ mod_international_table_input_server <- function(id, r){
                                        paste0("(", wert_absolut, ")"))
                         )
           ) %>%
-        # transform data into cloumn format for countries
+        # transform data into column format for countries
         dplyr::mutate(gruppe_in_fach = paste0(gruppe, " in ", fach)) %>%
         dplyr::select(gruppe_in_fach, land, wert, jahr, hinweis) %>%
         tidyr::pivot_wider(
           names_from = land,
           values_from = wert,
-          values_fill = "-") %>%
+          values_fill = "-")
+
+      tmp_int_table <- tmp_int_table %>%
         dplyr::relocate(gruppe_in_fach,
-                        input[["map_int_table_land"]],
+                        intersect(filtered_land,
+                                  input[["map_int_table_land"]]),
                         jahr, hinweis)
 
+      missing_land <- setdiff(input[["map_int_table_land"]], filtered_land)
+      if (length(missing_land) > 0) {
+        shiny::showNotification(
+          ui = paste0("Es konnten in dieser Kombination keine Daten für '",
+                     paste0(missing_land, collapse = "', '")
+                     ,"' gefunden werden."),
+          duration = NULL,
+          closeButton = TRUE,
+          type = "warning")
+      }
+
+      r$int_table <- tmp_int_table
+
+      # update source string
+      r$int_table_source <- international_zentral %>%
+        dplyr::filter(region == input$map_int_table_region) %>%
+        dplyr::pull(quelle) %>%
+        dplyr::first()
 
 
 
@@ -197,20 +235,21 @@ mod_international_table_input_server <- function(id, r){
         choices = international_zentral_get_unique_values(
           var = "land",
           filter = list(region = input$map_int_table_region)),
-        selected = "Deutschland"
+        selected = NULL
       )
 
       all_active_rows <- setdiff(active_rows(), 0)
       lapply(all_active_rows, function(i_input) {
-        shinyWidgets::updatePickerInput(
-          session = session,
-          inputId = paste0("map_int_table_indikator_", i_input),
-          choices = international_zentral_get_unique_values(
-            var = "bereich",
-            filter = list(region = input$map_int_table_region)),
-          selected = NULL
-        )
+        # shinyWidgets::updatePickerInput(
+        #   session = session,
+        #   inputId = paste0("map_int_table_indikator_", i_input),
+        #   choices = international_zentral_get_unique_values(
+        #     var = "bereich",
+        #     filter = list(region = input$map_int_table_region)),
+        #   selected = NULL
+        # )
 
+        shinyjs::reset(paste0("map_int_table_indikator_", i_input), asis = FALSE)
         shinyjs::reset(paste0("map_int_table_fachbereich_", i_input), asis = FALSE)
         shinyjs::reset(paste0("map_int_table_gruppe_", i_input), asis = FALSE)
         shinyjs::reset(paste0("map_int_table_year_", i_input), asis = FALSE)
@@ -223,19 +262,30 @@ mod_international_table_input_server <- function(id, r){
 
       })
 
-      active_rows(c(0))
+      # set rows back to one and recreate it
+      active_rows(c(0, 1))
+      insertUI(
+        selector = "#map_int_table_input_row_0",
+        where = "afterEnd",
+        ui = create_filter_row(i_input = 1,
+                               ns = ns,
+                               region = input$map_int_table_region,
+                               land = input$map_int_table_land)
+      )
 
     })
 
     # adjust dropdowns depending on the 'land' inpput
     observeEvent(input$map_int_table_land, {
-      lapply(active_rows(), function(i_input) {
+      all_active_rows <- setdiff(active_rows(), 0)
+      lapply(all_active_rows, function(i_input) {
         shinyWidgets::updatePickerInput(
           session = session,
           inputId = paste0("map_int_table_year_", i_input),
           choices = international_zentral_get_unique_values(
             var = "jahr",
-            filter = list(land = input$map_int_table_land)),
+            filter = list(land = input$map_int_table_land,
+                          region = input$map_int_table_region)),
           selected = input[[paste0("map_int_table_year_", i_input)]]
         )
       })
