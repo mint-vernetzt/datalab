@@ -223,15 +223,17 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
 
   require(magrittr)
 
-  load("data/studierende_detailliert.rda")
+  #load("data/studierende_detailliert.rda")
 
 
   if(missing(spezif_i)&missing(spezif_r)){
 
-    df1 <- studierende_detailliert %>%
-      dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))
+    df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer")) %>%
+      dplyr::select(fach)%>%
+      dplyr::collect()
 
-    df1 <- df1 %>%dplyr::select(fach)%>%
+    df1 <- df1 %>%
       unique()%>%
       as.vector()%>%
       unlist()%>%
@@ -241,9 +243,10 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
 
   } else if (missing(spezif_i)){
 
-    df1 <- studierende_detailliert %>%
+    df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
       dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
-      dplyr::filter(region %in%  spezif_r)
+      dplyr::filter(region %in%  spezif_r) %>%
+      dplyr::collect()
 
     df1 <- df1 %>%dplyr::select(fach)%>%
       unique()%>%
@@ -255,9 +258,10 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
 
   } else if(missing(spezif_r)){
 
-    df1 <- studierende_detailliert %>%
+    df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
       dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
-      dplyr::filter(indikator %in%  spezif_i)
+      dplyr::filter(indikator %in%  spezif_i) %>%
+      dplyr::collect()
 
     df1 <- df1 %>%dplyr::select(fach)%>%
       unique()%>%
@@ -434,7 +438,12 @@ international_ui_country <- function(type = "arbeit", n = NA) {
 
   selection <- NULL
 
-  year <- max(arbeitsmarkt_anfaenger_absolv_oecd$jahr)
+  for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+    dplyr::filter(
+      geschlecht == "Gesamt"
+    ) %>%
+    dplyr::collect()
+  year <- max(for_year$jahr)
 
   # for studium international
   if (type == "arbeit") {

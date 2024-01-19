@@ -6,6 +6,7 @@
 #' @noRd
 app_server <- function(input, output, session) {
   # Your application server logic
+  con <<- DBI::dbConnect(RSQLite::SQLite(), "data/mint_db.sqlite", encoding = "UTF-8")
 
 
   # callModule(mod_home_server, "home_ui_1", data=example_data)
