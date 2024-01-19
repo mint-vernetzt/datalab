@@ -682,11 +682,11 @@ mod_studium_studienzahl_ui <- function(id){
                                       "Quelle der Daten: Eurostat, 2023; freies Download, eigene Berechnungen durch MINTvernetzt."),
 
 
-                                    # shinyBS::bsPopover(id="h_international_1", title="",
+                                    # shinyBS::bsPopover(id="h_international_studium_5", title="",
                                     #                    content = paste0("POPUP INFO TEXT HERE"),
                                     #                    placement = "top",
                                     #                    trigger = "hover"),
-                                    # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
+                                    # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_studium_5")
                                   )
                          )
 

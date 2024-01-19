@@ -121,15 +121,17 @@ mod_international_top10_mint_server <- function(id, r){
 
 
     observeEvent(input$map_l_int_top10, {
+
       r$map_l_m <- input$map_l_int_top10
       r$show_avg_top10_mint_line <- input$show_avg_top10_mint_line
+
       if (input$map_l_int_top10 == "EU") {
         r$map_y_m <- input$map_y_eu_int_top10
         r$map_f_m <- input$map_f_eu_int_top10
       }
       if (input$map_l_int_top10 == "OECD") {
         r$map_y_m <- input$map_y_oecd_int_top10
-        r$map_f_m <- input$map_f_oecd
+        r$map_f_m <- input$map_f_oecd_int_top10
 
       }
       if (input$map_l_int_top10 == "Weltweit"){
