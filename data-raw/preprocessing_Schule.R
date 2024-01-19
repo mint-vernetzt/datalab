@@ -410,7 +410,7 @@ kurse <- kurse %>%
   dplyr::mutate("andere Fächer" = `Alle Fächer`- MINT) %>%
   tidyr::pivot_longer(all_of(alle_kurse), values_to = "wert", names_to = "fachbereich")
 
-writexl::write_xlsx(kurse, "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/02_Prozess/Datenaufbereitung 2023/Zentral/kurse_22.xlsx")
+#writexl::write_xlsx(kurse, "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/02_Prozess/Datenaufbereitung 2023/Zentral/kurse_22.xlsx")
 # USE ----
 
 
