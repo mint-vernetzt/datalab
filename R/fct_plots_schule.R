@@ -233,10 +233,10 @@ kurse_waffle_mint <- function(r) {
 #' @noRd
 
 kurse_einstieg_comparison <- function(r) {
-
+browser()
   ## SQL: DONE
   # load UI inputs from reactive value
-  timerange <- r$date_kurse_einstieg_comparison
+  timerange <<- r$date_kurse_einstieg_comparison
 
   # filter dataset based on UI inputs
   df <- dplyr::tbl(con, from = "kurse") %>%
@@ -274,24 +274,24 @@ kurse_einstieg_comparison <- function(r) {
 
 
   # calculate proportions
-  df <- df %>% dplyr::group_by(indikator, fachbereich) %>%
+  df1 <<- df %>% dplyr::group_by(indikator, fachbereich) %>%
     dplyr::mutate(proportion = wert_new/sum_wert)
 
-  df$proportion <- df$proportion * 100
+  df1$proportion <- df1$proportion * 100
 
   #Trennpunkte für lange Zahlen ergänzen
-  df$wert_new <- prettyNum(df$wert_new, big.mark = ".", decimal.mark = ",")
+  df1$wert_new <- prettyNum(df1$wert_new, big.mark = ".", decimal.mark = ",")
 
   #als Faktor für Darstellung
-  df$fachbereich <- as.factor(df$fachbereich)
-  df$fachbereich <- factor(df$fachbereich, levels = c("MINT", "andere Fächer"))
+  df1$fachbereich <- as.factor(df1$fachbereich)
+  df1$fachbereich <- factor(df1$fachbereich, levels = c("MINT", "andere Fächer"))
 
   # order years for plot
   #dfü <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
   # plot
 
-  highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = forcats::fct_rev(fachbereich))) %>%
+  highcharter::hchart(df1, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = forcats::fct_rev(fachbereich))) %>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert_new}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%

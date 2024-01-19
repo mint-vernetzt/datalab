@@ -12,7 +12,6 @@ run_app <- function(
     # Sys.setlocale(category = "LC_ALL", locale = "German_Germany.utf8")
     #
      con <<- DBI::dbConnect(RSQLite::SQLite(), "data/mint_db.sqlite", encoding = "UTF-8")
-
   },
   options = list(),
   enableBookmarking = NULL,
