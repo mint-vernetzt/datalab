@@ -233,7 +233,7 @@ kurse_waffle_mint <- function(r) {
 #' @noRd
 
 kurse_einstieg_comparison <- function(r) {
-browser()
+
   ## SQL: DONE
   # load UI inputs from reactive value
   timerange <<- r$date_kurse_einstieg_comparison
