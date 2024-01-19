@@ -23,10 +23,10 @@ app_server <- function(input, output, session) {
   #     DBI::dbDisconnect(con)
   #   }
   # })
-  shiny::onStop(function() {
-    if (!is.null(con) && DBI::dbIsValid(con)) {
-      DBI::dbDisconnect(con)
-    }
-  })
+  # shiny::onStop(function() {
+  #   if (!is.null(con) && DBI::dbIsValid(con)) {
+  #     DBI::dbDisconnect(con)
+  #   }
+  # })
 
 }
