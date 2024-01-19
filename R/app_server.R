@@ -18,11 +18,11 @@ app_server <- function(input, output, session) {
 
   mod_beruf_server("beruf_ui_1")
 
-  session$onSessionEnded(function() {
-    if (!is.null(con) && dbIsValid(con)) {
-      DBI::dbDisconnect(con)
-    }
-  })
+  # session$onSessionEnded(function() {
+  #   if (!is.null(con) && DBI::dbIsValid(con)) {
+  #     DBI::dbDisconnect(con)
+  #   }
+  # })
 
 
 }
