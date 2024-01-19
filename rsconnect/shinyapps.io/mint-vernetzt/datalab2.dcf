@@ -1,0 +1,13 @@
+name: datalab2
+title: datalab2
+username:
+account: mint-vernetzt
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 10307439
+bundleId: 7851184
+url: https://mint-vernetzt.shinyapps.io/datalab2/
+when: 1698240506.978
+lastSyncTime: 1698240506.97802
+asMultiple: FALSE
+asStatic: FALSE

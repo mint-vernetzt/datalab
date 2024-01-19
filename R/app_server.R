@@ -18,8 +18,11 @@ app_server <- function(input, output, session) {
 
   mod_beruf_server("beruf_ui_1")
 
-
- # mod_ausbildung_server("ausbildung_ui_1", data_ausbildungsvertraege = data_naa)
+  session$onSessionEnded(function() {
+    if (!is.null(con) && dbIsValid(con)) {
+      DBI::dbDisconnect(con)
+    }
+  })
 
 
 }

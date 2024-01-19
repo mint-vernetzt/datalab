@@ -72,6 +72,13 @@ mod_studium_server <- function(id,
   # neu
   mod_studium_studienzahl_mint_anteile_server("mod_studium_studienzahl_mint_anteile_ui",  r)
 
+  # international
+  mod_international_map_server("mod_international_map_ui_1", r)
+  mod_international_top10_mint_server("international_top10_mint_1", r)
+  mod_international_top10_mint_gender_server("international_top10_mint_gender_1", r)
+  mod_international_map_fem_server("international_map_fem_ui_1", r)
+  mod_international_top10_mint_intl_server("mod_international_top10_mint_intl_ui_1", r)
+
 }
 
 ## To be copied in the UI
