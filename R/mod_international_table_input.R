@@ -13,9 +13,10 @@ mod_international_table_input_ui <- function(id){
     p("Eine Änderung der Region setzt alle Eingestellten Filter zurück."),
     p("Eine Änderung des Landes kann zur einer Rücksetzung des Jahresfilters führen."),
     p("Sollten für bestimmte Kombinationen keine Daten vorhanden sein, liegt es in den meisten Fällen an der Jahreseinstellung"),
+    p("Es können maximal 20 Filterzeilen erstellt werden."),
     fluidRow(
       column(
-        width = 3,
+        width = 2,
         p("Region:"),
         shinyWidgets::pickerInput(
           inputId = ns("map_int_table_region"),
@@ -26,7 +27,7 @@ mod_international_table_input_ui <- function(id){
         )
       ),
       column(
-        width = 3,
+        width = 4,
         p("Land:"),
         shinyWidgets::pickerInput(
           inputId = ns("map_int_table_land"),
@@ -44,10 +45,10 @@ mod_international_table_input_ui <- function(id){
       )
     ),
     fluidRow(
-      column(width = 3, p("Indikator")),
-      column(width = 3, p("Gruppe")),
-      column(width = 3, p("Fachbereich")),
-      column(width = 3, p("Jahr"))
+      column(width = 2, p("Indikator")),
+      column(width = 4, p("Gruppe")),
+      column(width = 4, p("Fachbereich")),
+      column(width = 2, p("Jahr"))
     ),
 
     # add this as a baseline to start when all filters are removed
@@ -72,7 +73,8 @@ mod_international_table_input_ui <- function(id){
 mod_international_table_input_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    n_obs <- nrow(international_zentral)
+    # n_obs <- nrow(international_zentral)
+    n_obs <- 20
     # add 0 as anchor, which can not be removed
     active_rows <- reactiveVal(c(0,1))
 
@@ -160,14 +162,35 @@ mod_international_table_input_server <- function(id, r){
 
 
       # update table with filters
-      tmp_int_table <-
+      tmp_int_table_pre_filtered <-
         international_zentral %>%
         dplyr::filter(region == input$map_int_table_region) %>%
-        dplyr::filter(land %in% input[["map_int_table_land"]]) %>%
-        dplyr::filter( eval( parse(
-          text = paste0("(", paste0(all_filters, collapse = ")|("), ")")))
-        )
-      if (nrow(tmp_int_table) == 0) {
+        dplyr::filter(land %in% input[["map_int_table_land"]])
+
+
+      tmp_int_table_filtered_list <- lapply(
+        X = seq_along(all_filters),
+        FUN = function(i) {
+          this_filter <- all_filters[[i]]
+          out <- tmp_int_table_pre_filtered %>%
+            dplyr::filter(eval(parse(text = this_filter))
+            )
+
+          if (nrow(out) == 0) {
+            # case when data filter returned empty data
+            shiny::showNotification(
+              ui = paste0("Keine Daten zur ", i, ". Filterzeile gefunden."),
+              duration = NULL,
+              closeButton = TRUE,
+              type = "warning")
+          }
+          return(out)
+        })
+
+
+      tmp_int_table_filtered <- data.table::rbindlist(tmp_int_table_filtered_list)
+
+      if (nrow(tmp_int_table_filtered) == 0) {
         # case when data filter returned empty data
         shiny::showNotification(
           ui = "Keine Daten zu diesen Filtern gefunden. Evlt. liegt es an der Jahreseinstellung",
@@ -178,9 +201,10 @@ mod_international_table_input_server <- function(id, r){
       }
 
 
-      filtered_land <- unique(tmp_int_table$land)
 
-      tmp_int_table <- tmp_int_table %>%
+      filtered_land <- unique(tmp_int_table_filtered$land)
+
+      tmp_int_table_display <- tmp_int_table_filtered %>%
         dplyr::mutate(
           wert = paste0(round(wert_prozent), "%<br>",
                         dplyr::if_else(is.na(wert_absolut),
@@ -196,7 +220,7 @@ mod_international_table_input_server <- function(id, r){
           values_from = wert,
           values_fill = "-")
 
-      tmp_int_table <- tmp_int_table %>%
+      tmp_int_table_display <- tmp_int_table_display %>%
         dplyr::relocate(gruppe_in_fach,
                         intersect(filtered_land,
                                   input[["map_int_table_land"]]),
@@ -213,7 +237,10 @@ mod_international_table_input_server <- function(id, r){
           type = "warning")
       }
 
-      r$int_table <- tmp_int_table
+      # table for png and display
+      r$int_table <- tmp_int_table_display
+      # table for csv download
+      r$int_table_csv <- tmp_int_table_filtered
 
       # update source string
       r$int_table_source <- international_zentral %>%

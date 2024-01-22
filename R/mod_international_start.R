@@ -607,8 +607,12 @@ mod_international_start_ui <- function(id){
                 DT::dataTableOutput(outputId = ns("international_table_1")),
                 br(),
                 downloadButton(
-                  outputId = ns("download_btn_international_table_1"),
-                  label = "Download",
+                  outputId = ns("download_btn_png_international_table_1"),
+                  label = "Download Tabelle (png)",
+                  icon = icon("download")),
+                downloadButton(
+                  outputId = ns("download_btn_csv_international_table_1"),
+                  label = "Download Daten (csv)",
                   icon = icon("download")),
                 # quellen sind schon in der Tabelle enthalten
                 # p(style="font-size:12px;color:grey",
@@ -871,22 +875,31 @@ mod_international_start_server <- function(id, r){
       r$int_table_DT
     })
 
-    output$download_btn_international_table_1 <- downloadHandler(
+    output$download_btn_png_international_table_1 <- downloadHandler(
       contentType = "text/csv",
       filename = function() {"International_data_custom_table.png"},
       content = function(file) {
-        logger::log_info("Donwload custom table with international data")
+        logger::log_info("Donwload png custom table with international data")
         download_table(table = r$int_table_DT,
                        filename = "International_data_custom_table.png",
                        width = 1000,
                        height = 300)
 
-        # write.csv(x = prep_download_data(r$int_table),
-        #           file = file,
-        #           row.names = FALSE)
-
         file.copy("International_data_custom_table.png", file)
         file.remove("International_data_custom_table.png")
+      }
+    )
+
+    output$download_btn_csv_international_table_1 <- downloadHandler(
+      contentType = "text/csv",
+      filename = function() {"International_data_custom_table.csv"},
+      content = function(file) {
+        logger::log_info("Donwload csv custom table with international data")
+
+        write.csv2(x = prep_download_data(r$int_table_csv),
+                   file = file,
+                   row.names = FALSE)
+
       }
     )
   })
