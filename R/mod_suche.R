@@ -52,7 +52,7 @@ mod_suche_ui <- function(id){
         p(style = "text-align: left; font-size = 16px",
           "Suchergebnisse"),
 
-        DT::dataTableOutput(outputId = ns("search_table")),
+        DT::dataTableOutput(outputId = ns("search_table"))
       )
     )
   )
@@ -113,14 +113,15 @@ mod_suche_server <- function(id, react_search, parent_session){
                     )
                 )
       )
-    },
-    escape = FALSE,
-    rownames = FALSE,
-    selection = "none",
-    options = list(
-      dom = 'rtSip',
-      searching = FALSE
-    )
+    }
+    # ,
+    # escape = FALSE,
+    # rownames = FALSE,
+    # selection = "none",
+    # options = list(
+    #   dom = 'rtSip',
+    #   searching = FALSE
+    # )
     )
 
 

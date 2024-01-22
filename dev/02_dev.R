@@ -98,6 +98,8 @@ golem::add_module(name = "international_arbeitsmarkt_map", with_test = FALSE)
 golem::add_module(name = "international_arbeitsmarkt_top10", with_test = FALSE)
 golem::add_module(name = "international_arbeitsmarkt_vergleich", with_test = FALSE)
 
+golem::add_module(name = "international_table", with_test = FALSE)
+
 
 ## Fachkraft Daten
 golem::add_module(name = "fachkraft", with_test = FALSE)

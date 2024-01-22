@@ -19,6 +19,7 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+    shinyjs::useShinyjs(),
 
     # Your application UI logic
     shinydashboard::dashboardPage(
