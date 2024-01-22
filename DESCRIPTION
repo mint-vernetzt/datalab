@@ -32,7 +32,11 @@ Imports:
     ggtext,
     ggpubr,
     pkgload,
-    ggalt
+    ggalt,
+    webshot2,
+    htmlwidgets,
+    pagedown,
+    curl
 Suggests: 
     spelling,
     testthat (>= 3.0.0)

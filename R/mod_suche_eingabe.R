@@ -12,13 +12,14 @@ mod_suche_eingabe_ui <- function(id){
   tagList(
     shiny::div(
       id = "search-input-btn",
+      style = "margin: 10px 10px -10px 0px;",
       shinyWidgets::searchInput(
         inputId = ns("suche_eingabe_txt"),
         label = NULL,#"Click search icon to update or hit 'Enter'",
         placeholder = "Ihre Suche...",
         btnSearch = icon("search"),
         btnReset = icon("remove"),
-        width = "100%"
+        width = "400px"
       )
     )
   )

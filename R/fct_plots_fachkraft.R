@@ -490,7 +490,7 @@ plot_fachkraft_bar_vakanz  <- function(r) {
 
   berufe_order <- c("Insgesamt", "Keine MINT-Berufe", "MINT-Berufe")
 
-  plot_data <- arbeitsmarkt_fachkräfte %>%
+  plot_data <- arbeitsmarkt_fachkraefte %>%
     dplyr::filter(jahr == timerange &
                     indikator == this_indikator &
                     anforderung == bf_label &

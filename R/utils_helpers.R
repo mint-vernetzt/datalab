@@ -331,7 +331,7 @@ international_ui_faecher <- function(region = "EU") {
   if (region == "arbeit") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- arbeitsmarkt_anfänger_absolv_oecd %>%
+    selection <- arbeitsmarkt_anfaenger_absolv_oecd %>%
       dplyr::filter(geschlecht == "Gesamt" &
                       variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
                                       "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
@@ -414,7 +414,7 @@ international_ui_years <- function(region = "EU") {
   if (region == "arbeit") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- arbeitsmarkt_anfänger_absolv_oecd %>%
+    selection <- arbeitsmarkt_anfaenger_absolv_oecd %>%
       dplyr::filter(
         geschlecht == "Gesamt" &
           # filter year, since before there are not all infos available
@@ -436,13 +436,13 @@ international_ui_country <- function(type = "arbeit", n = NA) {
   logger::log_debug("set internatial ui selection for countries")
   selection <- NULL
 
-  year <- max(arbeitsmarkt_anfänger_absolv_oecd$jahr)
+  year <- max(arbeitsmarkt_anfaenger_absolv_oecd$jahr)
 
   # for studium international
   if (type == "arbeit") {
     #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    tmp_df <-  arbeitsmarkt_anfänger_absolv_oecd %>%
+    tmp_df <-  arbeitsmarkt_anfaenger_absolv_oecd %>%
       dplyr::filter(geschlecht == "Gesamt" &
                       jahr == year &
                       variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
@@ -595,7 +595,7 @@ arbeit_fachkraft_ui_years <- function() {
   selection <- NULL
 
 
-  selection <- arbeitsmarkt_fachkräfte %>%
+  selection <- arbeitsmarkt_fachkraefte %>%
     dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
                                    "Arbeitslosen-Stellen-Relation")) %>%
     dplyr::pull(jahr) %>%
@@ -612,7 +612,7 @@ arbeit_fachkraft_ui_region <- function() {
   selection <- NULL
 
 
-  selection <- arbeitsmarkt_fachkräfte %>%
+  selection <- arbeitsmarkt_fachkraefte %>%
     dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
                                    "Arbeitslosen-Stellen-Relation")) %>%
     dplyr::pull(region) %>%
@@ -634,6 +634,11 @@ add_caption_and_download <- function(
   require(highcharter)
   require(webshot2)
   require(htmlwidgets)
+
+  # force the use of pagedown to install chrome on shinyapps.io (this is a workaround)
+  require(pagedown)
+  # force the use of curl because chromote needs it (see https://github.com/rstudio/chromote/issues/37)
+  require(curl)
 
   # hc <- plot
   shiny::req(highcharter::is.highchart(hc))
@@ -689,8 +694,8 @@ add_caption_and_download <- function(
   # Save the plot as a standalone HTML file
   html_file <- tempfile(fileext = ".html")
   htmlwidgets::saveWidget(hc_out, file = html_file, selfcontained = TRUE)
-  #print(html_file)
-  # Capture the HTML as a PNG image
+  print(html_file)
+  # # Capture the HTML as a PNG image
   webshot2::webshot(url = html_file,
                     file = filename,
                     delay = 2,

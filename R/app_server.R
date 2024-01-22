@@ -111,9 +111,9 @@ app_server <- function(input, output, session) {
                            #data_studierende_intern_oecd = studierende_intern_oecd
                            #
                            data_arbeitsmarkt_absolvent_oecd = arbeitsmarkt_absolvent_oecd, # Anzahl
-                           data_arbeitsmarkt_anfänger_absolv_oecd = arbeitsmarkt_anfänger_absolv_oecd, # Anteil
+                           data_arbeitsmarkt_anfaenger_absolv_oecd = arbeitsmarkt_anfaenger_absolv_oecd, # Anteil
                            data_arbeitsmarkt_anzahl_azubis_oecd = arbeitsmarkt_anzahl_azubis_oecd,
-                           data_arbeitsmarkt_beschäftigte_eu = arbeitsmarkt_beschäftigte_eu
+                           data_arbeitsmarkt_beschaeftigte_eu = arbeitsmarkt_beschaeftigte_eu
                            )
 
   mod_fachkraft_server("fachkraft_1")
@@ -136,6 +136,6 @@ app_server <- function(input, output, session) {
       style = "border: 0.1px solid #111111; background-color: #111111; color: #ffffff; ")
   })
 
-  shiny::observeEvent(input$debug, browser())
-  logger::log_info("END APP SERVER")
+  # shiny::observeEvent(input$debug, browser())
+  # logger::log_info("END APP SERVER")
 }

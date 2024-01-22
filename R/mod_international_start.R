@@ -268,6 +268,7 @@ mod_international_start_ui <- function(id){
           tabPanel(
             "Top 10 Länder Frauen in MINT", br(),
 
+
             #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
             # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
@@ -427,7 +428,6 @@ mod_international_start_ui <- function(id){
                 p(style="font-size:12px;color:grey",
                   "Quelle der Daten: Eurostat, 2023; OECD, 2023; eigene Berechnungen durch MINTvernetzt."),
 
-
               )
             ),
             tabPanel(
@@ -458,6 +458,7 @@ mod_international_start_ui <- function(id){
           )
         )
       ),
+
 
       # Box 4 - Fachkräfte because it does not work in an extra page...?!?
       fluidRow(
@@ -629,6 +630,8 @@ mod_international_start_ui <- function(id){
   )
 
 }
+
+  # Server -------
 
 #' international_start Server Functions
 #'

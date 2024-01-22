@@ -14,6 +14,8 @@ logger::log_info("Laden von Karte: Done")
 
 
 logger::log_info("Run the application")
-run_app(world_map = world_map,
+run_app(
+  world_map = world_map,
         europa_map = europa_map,
-        germany_map = germany_map)
+        germany_map = germany_map
+  )
