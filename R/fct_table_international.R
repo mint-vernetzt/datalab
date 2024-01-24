@@ -31,7 +31,7 @@ create_filter_row <- function(
     #   p(i_input)
     # ),
     column(
-      width = 3,
+      width = 2,
       shinyWidgets::pickerInput(
         inputId = ns(paste0("map_int_table_indikator_", i_input)),
         label = NULL,
@@ -44,7 +44,7 @@ create_filter_row <- function(
       )
     ),
     column(
-      width = 3,
+      width = 4,
       shinyWidgets::pickerInput(
         inputId = ns(paste0("map_int_table_gruppe_", i_input)),
         label = NULL,
@@ -56,7 +56,7 @@ create_filter_row <- function(
       )
     ),
     column(
-      width = 3,
+      width = 4,
       shinyWidgets::pickerInput(
         inputId = ns(paste0("map_int_table_fachbereich_", i_input)),
         label = NULL,
@@ -68,7 +68,7 @@ create_filter_row <- function(
       )
     ),
     column(
-      width = 2,
+      width = 1,
       shinyWidgets::pickerInput(
         inputId = ns(paste0("map_int_table_year_", i_input)),
         label = NULL,
