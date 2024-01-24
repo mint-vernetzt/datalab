@@ -17,7 +17,7 @@ home_einstieg_pie <- function(r) {
   # filter dataset based on UI input
 
   df <- dplyr::tbl(con, from = "zentral_alt") %>%
-    dplyr::filter(jahr == "2021",
+    dplyr::filter(jahr == "2022",
                   region == "Deutschland",
                   geschlecht=="Gesamt") %>%
    # dplyr::select(bereich, region, indikator, geschlecht, fachbereich, jahr, wert) %>%
@@ -806,7 +806,7 @@ home_einstieg_pie_gender <- function(r) {
 
 
   # load UI inputs from reactive value
-  timerange <- "2021"
+  timerange <- "2022"
 
   indikator_choice_1_gender <- r$indikator_start_einstieg_1_gender
 
