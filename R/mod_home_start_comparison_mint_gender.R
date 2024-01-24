@@ -14,8 +14,8 @@ mod_home_start_comparison_mint_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_comparison_mint_gender"),
       label = NULL,
-      choices = c("2013", "2014","2015","2016","2017", "2018", "2019", "2020", "2021"),
-      selected = "2021"
+      choices = c("2013", "2014","2015","2016","2017", "2018", "2019", "2020", "2021", "2022"),
+      selected = "2022"
     ),
     br(),
     shinyBS::bsPopover(id="ih_alle_frauen_3", title="",
