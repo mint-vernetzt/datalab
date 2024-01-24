@@ -15,7 +15,7 @@ mod_schule_kurse_ranking_gender_ui <- function(id){
       inputId = ns("date_kurse_ranking_gender"),
       label = NULL,
       choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022),
-      selected = 2021
+      selected = 2022
     ),
 
     p("Fach/Fächergruppe:"),

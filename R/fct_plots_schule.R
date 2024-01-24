@@ -233,7 +233,7 @@ kurse_waffle_mint <- function(r) {
 #' @noRd
 
 kurse_einstieg_comparison <- function(r) {
-browser()
+
   ## SQL: DONE
   # load UI inputs from reactive value
   timerange <<- r$date_kurse_einstieg_comparison
@@ -274,7 +274,7 @@ browser()
 
 
   # calculate proportions
-  df1 <<- df %>% dplyr::group_by(indikator, fachbereich) %>%
+  df1 <- df %>% dplyr::group_by(indikator, fachbereich) %>%
     dplyr::mutate(proportion = wert_new/sum_wert)
 
   df1$proportion <- df1$proportion * 100
