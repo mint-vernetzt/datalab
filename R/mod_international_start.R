@@ -460,7 +460,7 @@ mod_international_start_ui <- function(id){
       ),
 
 
-      # Box 4 - Fachkräfte because it does not work in an extra page...?!?
+      # Box 4 - Fachkräfte because it does not work in an extra page...?!? ----
       fluidRow(
         id="fachkraft_plots",
         shinydashboard::box(
@@ -586,7 +586,7 @@ mod_international_start_ui <- function(id){
         )
       ),
 
-      # Box 5 - Table for user selection
+      # Box 5 - Table for user selection ----
       fluidRow(
         id="international_table_box",
         shinydashboard::box(
@@ -617,14 +617,14 @@ mod_international_start_ui <- function(id){
                 # quellen sind schon in der Tabelle enthalten
                 # p(style="font-size:12px;color:grey",
                 #   "hier Quellen"),
-                shinyBS::bsPopover(
-                  id="h_fachkraft_arbeitsmarkt_1", title="",
-                  content = paste0("POPUP INFO TEXT HERE"),
-                  placement = "top",
-                  trigger = "hover"),
-                tags$a(paste0("Hinweis zu den Daten"),
-                       icon("info-circle"),
-                       id = "h_fachkraft_arbeitsmarkt_1")
+                # shinyBS::bsPopover(
+                #   id="h_fachkraft_arbeitsmarkt_1", title="",
+                #   content = paste0("POPUP INFO TEXT HERE"),
+                #   placement = "top",
+                #   trigger = "hover"),
+                # tags$a(paste0("Hinweis zu den Daten"),
+                #        icon("info-circle"),
+                #        id = "h_fachkraft_arbeitsmarkt_1")
               )
             )
           )
