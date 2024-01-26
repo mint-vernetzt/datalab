@@ -3,15 +3,18 @@ library(dplyr)
 
 pfad_kab <- "C:/Users/kab/Downloads/datalab/datalab/data/"
 
-# pfad_kbr <-
+pfad_kbr <- "C:/Users/kbr/Documents/datalab2/data/"
 
 
 pfad <- pfad_kab
+pfad <- pfad_kbr
 
 # daten laden
 load(paste0(pfad,"kurse.rda"))
 load(paste0(pfad,"arbeitsmarkt.rda"))
 load(paste0(pfad,"studierende.rda"))
+
+
 
 # Schule
 data_schule <-kurse %>%
