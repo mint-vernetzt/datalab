@@ -22,7 +22,10 @@ library(stringr)
 
 # wd <- getwd()
 # setwd(wd)
-#setwd("C:/Users/kab/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+# akro <- "kab"
+# akro <- "kbr"
+# setwd(paste0("C:/Users/", akro,
+#       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten"))
 # wd <- getwd() #für Datensatz einlesen später nötig
 
 # Funktion zum Daten einlesen (Quelle: Skript aus 2022 - Spezifische_Kurse_kab)
@@ -63,13 +66,13 @@ read_data <- function(file, BL, year, course_level) {
 # Datentabellen einlesen
 # wd2 <- paste0(wd, "/raw")
 # setwd(wd2)
-
+akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
-pfad_kek <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+#pfad_kek <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
-pfad <- pfad_kek
+#pfad <- pfad_kek
 
 data_LK_D  <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "D" , 2021, "Leistungskurse")
 data_LK_BW <- read_data(paste0(pfad,"KMK023_Aus_Kurse_2021_Werte.xlsx"), "BW", 2021, "Leistungskurse")
@@ -412,7 +415,6 @@ kurse <- kurse %>%
 
 #writexl::write_xlsx(kurse, "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/02_Prozess/Datenaufbereitung 2023/Zentral/kurse_22.xlsx")
 # USE ----
-
 
 
 usethis::use_data(kurse, overwrite = T)

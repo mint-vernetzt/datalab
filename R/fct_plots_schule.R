@@ -274,7 +274,7 @@ kurse_einstieg_comparison <- function(r) {
 
 
   # calculate proportions
-  df1 <<- df %>% dplyr::group_by(indikator, fachbereich) %>%
+  df1 <- df %>% dplyr::group_by(indikator, fachbereich) %>%
     dplyr::mutate(proportion = wert_new/sum_wert)
 
   df1$proportion <- df1$proportion * 100

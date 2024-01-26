@@ -17,7 +17,7 @@ mod_schule_kurse_verlauf_multiple_ui <- function(id){
       label = NULL,
       choices = c("2013", "2014", "2015", "2016", "2017",
                   "2018","2019", "2020", "2021", "2022"),
-      selected = c("2016", "2021")
+      selected = c("2016", "2022")
     ),
     p("Kursart:"),
     shinyWidgets::pickerInput(
