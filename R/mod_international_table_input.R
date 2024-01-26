@@ -187,7 +187,6 @@ mod_international_table_input_server <- function(id, r){
           return(out)
         })
 
-
       tmp_int_table_filtered <- data.table::rbindlist(tmp_int_table_filtered_list)
 
       if (nrow(tmp_int_table_filtered) == 0) {
@@ -206,14 +205,14 @@ mod_international_table_input_server <- function(id, r){
 
       tmp_int_table_display <- tmp_int_table_filtered %>%
         dplyr::mutate(
-          wert = paste0(round(wert_prozent), "%<br>",
+          wert = paste0(round(wert_prozent), " %<br>",
                         dplyr::if_else(is.na(wert_absolut),
                                        "",
                                        paste0("(", wert_absolut, ")"))
                         )
           ) %>%
         # transform data into column format for countries
-        dplyr::mutate(gruppe_in_fach = paste0(gruppe, " in ", fach)) %>%
+        dplyr::mutate(gruppe_in_fach = paste0(gruppe, " in ", fach)) %>% # hier Text in der ersten Spalte anpassen
         dplyr::select(gruppe_in_fach, land, wert, jahr, hinweis) %>%
         tidyr::pivot_wider(
           names_from = land,
@@ -243,6 +242,7 @@ mod_international_table_input_server <- function(id, r){
       r$int_table_csv <- tmp_int_table_filtered
 
       # update source string
+      # TODO hier anpassen, dass Quellen sich kombinieren, wenn mehrere Regionen
       r$int_table_source <- international_zentral %>%
         dplyr::filter(region == input$map_int_table_region) %>%
         dplyr::pull(quelle) %>%
