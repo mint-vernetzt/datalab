@@ -31,7 +31,7 @@ mod_international_map_arb_gender_ui <- function(id) {
                      p("Personengruppe:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_pers_eu_arb_gender"),
-                       choices = c("Ausgebildete", "Beschäftigte"),
+                       choices = c("Ausgebildete", "Naturwissenschaftler*innen und Ingenieur*innen"),
                        selected = c("Ausgebildete" ),
                        multiple = FALSE#,
 

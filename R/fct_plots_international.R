@@ -11,7 +11,8 @@
 get_top10_hc_plot_options <- function(hc,
                                       hc_title = "",
                                       hc_tooltip = "",
-                                      max_percent_used = 100) {
+                                      max_percent_used = 100,
+                                      col = "#B16FAB") {
   out <- hc %>%
     highcharter::hc_plotOptions(
       series = list(
@@ -25,7 +26,7 @@ get_top10_hc_plot_options <- function(hc,
                           max = max_percent_used,
                           tickInterval = 10) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(c("#154194")) %>%
+    highcharter::hc_colors(c(col)) %>%
     highcharter::hc_title(text = hc_title,
                           margin = 45,
                           align = "center",
@@ -511,7 +512,7 @@ plot_international_map_fem <- function(r){
     )
     %>%
       highcharter::hc_tooltip(pointFormat = hoverplot) %>%
-      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#154194",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = title_dyn,
         margin = 10,
@@ -842,9 +843,9 @@ plot_international_top10_gender <- function(r) {
     highcharter::hcaes(y = wert, x = land)) %>%
     get_top10_hc_plot_options(
       hc_title = paste0(t_quelle1, "Länder mit dem größten Frauenanteil an Studierenden in ", t_fach, " in ", timerange),
-      hc_tooltip = hover
-      ,
-      max_percent_used = max_percent_used
+      hc_tooltip = hover,
+      max_percent_used = max_percent_used,
+      col = "#154194"
       )
 
 
@@ -855,9 +856,9 @@ plot_international_top10_gender <- function(r) {
     highcharter::hcaes(y = wert, x = land)) %>%
     get_top10_hc_plot_options(
       hc_title = paste0("Länder mit dem niedrigsten Anteil an '", fach_m, "' in ", timerange),
-      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}"
-      ,
-      max_percent_used = max_percent_used
+      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}" ,
+      max_percent_used = max_percent_used,
+      col = "#154194"
       )
 
 
@@ -948,7 +949,7 @@ if (avg_line == "Ja"){
       min = 0,
       max = max(data1$wert)*1.2)%>%
       highcharter::hc_xAxis(title = list(text = " ")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
+      highcharter::hc_colors(c("#66CBAF")) %>%
       highcharter::hc_title(text = title_dyn_top,
                             margin = 10,
                             align = "center",
@@ -2663,7 +2664,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         min = 0,
         max = max(data_fn$wert, na.rm = T)*1.2)%>%
         highcharter::hc_xAxis(title = list(text = " ")) %>%
-        highcharter::hc_colors(c("#154194")) %>%
+        highcharter::hc_colors(c("#B16FAB")) %>%
         highcharter::hc_title(text = title_top,
                               margin = 10,
                               align = "center",
@@ -2699,7 +2700,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
           min = 0,
           max = max(data_fn$wert, na.rm = T)*1.2)%>%
         highcharter::hc_xAxis(title = list(text = " ")) %>%
-        highcharter::hc_colors(c("#154194")) %>%
+        highcharter::hc_colors(c("#B16FAB")) %>%
         highcharter::hc_title(text =  title_bot,
                               margin = 10,
                               align = "center",
