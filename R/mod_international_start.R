@@ -753,7 +753,8 @@ mod_international_start_server <- function(id, r){
           hc = r$plot_fachkraft_epa_item_1_left,
           filename =  r$plot_fachkraft_epa_item_1_left_title,
           width = 700,
-          height = 400)
+          height = 400,
+          with_labels = FALSE)
 
         file.copy(r$plot_fachkraft_epa_item_1_left_title, file)
         file.remove(r$plot_fachkraft_epa_item_1_left_title)
@@ -769,7 +770,8 @@ mod_international_start_server <- function(id, r){
           hc = r$plot_fachkraft_epa_item_1_right,
           filename =  r$plot_fachkraft_epa_item_1_right_title,
           width = 700,
-          height = 400)
+          height = 400,
+          with_labels = FALSE)
 
         file.copy(r$plot_fachkraft_epa_item_1_right_title, file)
         file.remove(r$plot_fachkraft_epa_item_1_right_title)
