@@ -1,16 +1,6 @@
 library(dplyr)
 require(stringr)
 
-# Studierende
-#studierende_europa
-#studierende_anzahl_oecd
-#studierende_absolventen_weltweit
-#studierende_mobil_eu_absolut
-
-# Arbeitsmarkt
-# arbeitsmarkt_anfaenger_absolv_oecd
-# arbeitsmarkt_beschaeftigte_eu
-
 
 # Studierende Europa
 
@@ -138,6 +128,53 @@ studi_oecd <- studi_oecd[,c("region", "land", "bereich", "fach", "gruppe","jahr"
                         "wert_prozent", "wert_absolut", "hinweis", "quelle")]
 
 
+# arbeitsmarkt_beschaeftigte_eu ----
+arb_eu <- arbeitsmarkt_beschaeftigte_eu %>%
+  filter(variable %in% c("Anteil an arbeitender Bevölkerung", "Anzahl in Tsd."),
+         indikator %in% c("Beschäftigte",
+                          "Ausgebildete")) %>%
+  mutate(quelle = "Eurostat, 2023",
+         region = "Europa",
+         gruppe = paste(indikator, geschlecht),
+         gruppe = case_when(
+           gruppe == "Beschäftigte Gesamt" ~ "MINT-Beschäftigte",
+           gruppe == "Beschäftigte Frauen" ~ "MINT-Beschäftigte unter Frauen", #
+           gruppe == "Beschäftigte Männer" ~ "MINT-Beschäftigte unter Männern",
+           gruppe == "Ausgebildete Gesamt" ~ "MINT-Ausgebildete",
+           gruppe == "Ausgebildete Frauen" ~ "MINT-Ausgebildete unter Frauen",
+           gruppe == "Ausgebildete Männer" ~ "MINT-Ausgebildete unter Männern",
+           T ~ gruppe
+         ),
+         hinweis = case_when(
+           gruppe == "MINT-Beschäftigte" ~ "Anteil von Beschäftigten in MINT an allen Beschäftigten.",
+           gruppe == "MINT-Beschäftigte unter Frauen" ~ "Anteil von weiblichen Beschäftigten in MINT an allen weiblichen Beschäftigten.",
+           gruppe == "MINT-Beschäftigte unter Männern" ~ "Anteil von männlichen Beschäftigten in MINT an allen männlichen Beschäftigten.",
+           gruppe == "MINT-Ausgebildete" ~ "Anteil von Ausgebildeten in MINT an allen Ausgebildeten.",
+           gruppe == "MINT-Ausgebildete unter Frauen" ~ "Anteil von weiblichen Ausgebildeten in MINT an allen weiblichen Ausgebildeten.",
+           gruppe == "MINT-Ausgebildete unter Männern" ~ "Anteil von männlichen Ausgebildeten in MINT an allen männlichen Ausgebildeten.",
+         )) %>%
+  select(-typ) %>%
+  tidyr::pivot_wider(names_from = variable, values_from = wert) %>%
+  rename(wert_prozent = `Anteil an arbeitender Bevölkerung`,
+         wert_absolut = `Anzahl in Tsd.`,
+         fach = fachbereich) %>%
+  select(-population, -indikator, -anforderung, -geschlecht)
+
+# arb_eu_fr_b <- arb_eu %>%
+#   filter(gruppe %in% c("MINT-Beschäftigte unter Frauen"))
+# ges <- arb_eu %>%
+#   filter(gruppe == "MINT-Beschäftigte") %>%
+#   rename(wert_ges = wert_absolut) %>%
+#   select(fach, jahr, land, wert_ges)
+# arb_eu_fr_b <- left_join(arb_eu_fr_b, ges, by = join_by(land, fach, jahr))
+# arb_eu_fr_b$wert_prozent <- arb_eu_fr_b$wert_absolut/arb_eu_fr_b$wert_ges*100
+#
+
+
+arb_eu <- arb_eu[,c("region", "land", "bereich", "fach", "gruppe","jahr",
+                        "wert_prozent", "wert_absolut", "hinweis", "quelle")]
+
+
 # arbeitsmarkt_anfaenger_absolv_oecd -----
 
 arb_aao1 <- arbeitsmarkt_anfaenger_absolv_oecd %>%
@@ -148,7 +185,12 @@ arb_aao1 <- arbeitsmarkt_anfaenger_absolv_oecd %>%
                              ),
          anforderung %in% c("Erstausbildung (ISCED 35)",
                             "Ausbildung (ISCED 45)"
-                            )) %>%
+                            ),
+         geschlecht == "Gesamt",
+         variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+                         "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern"
+         )
+         ) %>%
   rename(fach = fachbereich, wert_prozent = wert)%>%
   mutate(wert_absolut = NA,
          region = "OECD Länder",
@@ -158,54 +200,26 @@ arb_aao1 <- arbeitsmarkt_anfaenger_absolv_oecd %>%
     # männer u männer
     variable  == "Anteil Absolvent*innen nach Fach an allen Fächern" & geschlecht == "Gesamt"
     ~ paste0("MINT-Absolvent*innen " , "(", .$anforderung,")" ), #Annteil MINT
-    variable  == "Anteil Absolvent*innen nach Fach an allen Fächern" & geschlecht == "Männer"
-    ~ paste0("MINT-Absolvent*innen unter Männern " , "(", .$anforderung,")" ),
-    variable  == "Anteil Absolvent*innen nach Fach an allen Fächern" & geschlecht == "Frauen"
-    ~ paste0("MINT-Absolvent*innen unter Frauen " , "(", .$anforderung,")" ),
     #
     # frauen u frauen
     variable  == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern" & geschlecht == "Gesamt"
-    ~ paste0("MINT-Ausbildungs-/Studiumsanfänger*innen " , "(", .$anforderung,")" ),
-    variable  == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern" & geschlecht == "Männer"
-    ~ paste0("MINT-Ausbildungs-/Studiumsanfänger*innen unter Männern " , "(", .$anforderung,")" ),
-    variable  == "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern" & geschlecht == "Frauen"
-    ~ paste0("MINT-Ausbildungs-/Studiumsanfänger*innen unter Frauen " , "(", .$anforderung,")" ),
-    #
-    # männer frauen gegenwert
-    variable  == "Frauen-/Männeranteil Absolvent*innen nach Fachbereichen" & geschlecht == "Männer"
-    ~ paste0("männliche Absolvent*innen " , "(", .$anforderung,")" ),
-    variable  == "Frauen-/Männeranteil Absolvent*innen nach Fachbereichen" & geschlecht == "Frauen"
-    ~ paste0("weibliche Absolvent*innen " , "(", .$anforderung,")" ),
-    #
-    # männer frauen gegenwert
-    variable == "Frauen-/Männeranteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen" & geschlecht == "Männer"
-    ~ paste0("männliche Ausbildungs-/Studiumsanfänger*innen " , "(", .$anforderung,")" ),
-    variable  == "Frauen-/Männeranteil Ausbildungs-/Studiumsanfänger*innen nach Fachbereichen" & geschlecht == "Frauen"
-    ~ paste0("weibliche Ausbildungs-/Studiumsanfänger*innen " , "(", .$anforderung,")" )))%>%
+    ~ paste0("MINT-Ausbildungs-/Studiumsanfänger*innen " , "(", .$anforderung,")" ))) %>%
   select(-c(typ, population, anforderung, geschlecht ))
 
 
 arb_aao2 <- arb_aao1 %>%
   mutate(hinweis = case_when(
     #
-    startsWith(.$gruppe, "MINT-Absolvent*innen") ~ "Anteil aller Absolvent*innen in MINT bzw. Fach and allen Absolvent*innen",
-    startsWith(.$gruppe, "MINT-Absolvent*innen unter Männern" ) ~ "Anteil aller Absolvent*innen in MINT bzw. Fach and allen männlichen Absolvent*innen",
-    startsWith(.$gruppe, "MINT-Absolvent*innen unter Frauen" ) ~ "Anteil aller Absolvent*innen in MINT bzw. Fach and allen weiblichen Absolvent*innen",
-    #
-    startsWith(.$gruppe, "MINT-Ausbildungs-/Studiumsanfänger*innen") ~ "Anteil aller Ausbildungs-/Studiumsanfänger*innen in MINT bzw. Fach and allen Ausbildungs-/Studiumsanfänger*innenn",
-    startsWith(.$gruppe, "MINT-Ausbildungs-/Studiumsanfänger*innen unter Männern" ) ~ "Anteil aller Ausbildungs-/Studiumsanfänger*innen in MINT bzw. Fach and allen männlichen Ausbildungs-/Studiumsanfänger*innenn",
-    startsWith(.$gruppe, "MINT-Ausbildungs-/Studiumsanfänger*innen unter Frauen" ) ~ "Anteil aller Ausbildungs-/Studiumsanfänger*innen in MINT bzw. Fach and allen weiblichen Ausbildungs-/Studiumsanfänger*innenn",
-    #
-    startsWith(.$gruppe, "Männliche MINT-Absolvent*innen" ) ~ "Anteil männlicher Absolvent*innen an allen Absolvent*innen in MINT bzw. Fach",
-    startsWith(.$gruppe, "Weibliche MINT-Absolvent*innen" ) ~ "Anteil weiblicher Absolvent*innen an allen Absolvent*innen in MINT bzw. Fach",
-    #
-    startsWith(.$gruppe, "Männliche MINT-Ausbildungs-/Studiumsanfänger*innen") ~ "Anteil männlicher Ausbildungs-/Studiumsanfänger*innen an allen Ausbildungs-/Studiumsanfänger*innen in MINT bzw. Fach",
-    startsWith(.$gruppe, "Weibliche MINT-Ausbildungs-/Studiumsanfänger*innen" ) ~ "Anteil weiblicher Ausbildungs-/Studiumsanfänger*innen an allen Ausbildungs-/Studiumsanfänger*innen in MINT bzw. Fach"
-  ))%>%
+    startsWith(.$gruppe, "MINT-Absolvent*innen") ~ "Anteil von Absolvent*innen in MINT bzw. in dem MINT-Fach and allen Absolvent*innen",
+    startsWith(.$gruppe, "MINT-Ausbildungs-/Studiumsanfänger*innen") ~ "Anteil von Ausbildungs-/Studiumsanfänger*innen in MINT bzw. in dem MINT-Fach and allen Ausbildungs-/Studiumsanfänger*innenn",
+   ))%>%
   select(-variable)
 
+arb_aao2 <- arb_aao2[,c("region", "land", "bereich", "fach", "gruppe","jahr",
+                            "wert_prozent", "wert_absolut", "hinweis", "quelle")]
 
 
+#
 # abspeichern
 international_zentral <- rbind(studi_eu, studi_oecd, arb_aao2)
 
