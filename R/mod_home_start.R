@@ -69,7 +69,7 @@ mod_home_start_ui <- function(id){
 
    ),
 
-   # Box 1
+   # Box 1 ----
 
     fluidRow(id="alle_mint",
       shinydashboard::box(
@@ -83,7 +83,7 @@ mod_home_start_ui <- function(id){
                       shiny::sidebarPanel(
                         width = 3,
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
-
+                        br(),
                         downloadButton(
                           outputId = ns("download_btn_home_start_einstieg_1"),
                           label = "Download (links)",
@@ -231,7 +231,8 @@ mod_home_start_server <- function(id, data_zentral, data_zentral_neu, data_zentr
     # })
 
     output$plot_mint_rest_einstieg_1 <- renderUI({
-      plot_list <- plot_mint_rest_einstieg(r)
+
+      plot_list <- home_einstieg_pie(data_zentral_alt, r)
       r$plot_mint_rest_einstieg_1_left <-plot_list[[1]]
       r$plot_mint_rest_einstieg_1_right <-plot_list[[2]]
 
@@ -246,9 +247,11 @@ mod_home_start_server <- function(id, data_zentral, data_zentral_neu, data_zentr
         plot_list,
         ncol=2
       )
+
     })
 
-    output$download_btn_plot_mint_rest_einstieg_1 <- downloadHandler(
+
+    output$download_btn_home_start_einstieg_1 <- downloadHandler(
       contentType = "image/png",
       filename = function() {r$plot_mint_rest_einstieg_1_left_title},
       content = function(file) {
@@ -258,15 +261,17 @@ mod_home_start_server <- function(id, data_zentral, data_zentral_neu, data_zentr
           hc = r$plot_mint_rest_einstieg_1_left,
           filename =  r$plot_mint_rest_einstieg_1_left_title,
           width = 700,
-          height = 400,
-          with_labels = FALSE)
+          height = 400
+          # ,
+          # with_labels = FALSE
+          )
 
         file.copy(r$plot_mint_rest_einstieg_1_left_title, file)
         file.remove(r$plot_mint_rest_einstieg_1_left_title)
       }
     )
 
-    output$download_btn_plot_mint_rest_einstieg_1 <- downloadHandler(
+    output$download_btn_home_start_einstieg_2 <- downloadHandler(
       contentType = "image/png",
       filename = function() {r$plot_mint_rest_einstieg_1_right_title},
       content = function(file) {
