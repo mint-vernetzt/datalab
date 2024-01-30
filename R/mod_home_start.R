@@ -69,7 +69,7 @@ mod_home_start_ui <- function(id){
 
    ),
 
-   # Box 1
+   # Box 1 ----
 
     fluidRow(id="alle_mint",
       shinydashboard::box(
@@ -80,16 +80,26 @@ mod_home_start_ui <- function(id){
 
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Bereiche", br(),
-                      shiny::sidebarPanel(
-                        width = 3,
-                        mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
-                        ),
-                      shiny::mainPanel(
-                        width = 9,
-                        htmlOutput(ns("plot_mint_rest_einstieg_1")),
-                        br(),
-                        p(style="font-size:12px;color:grey",
-                             "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
+                               br(),
+
+                               downloadButton(
+                                 outputId = ns("download_btn_home_start_einstieg_1"),
+                                 label = "Download (links)",
+                                 icon = icon("download")),
+                               downloadButton(
+                                 outputId = ns("download_btn_home_start_einstieg_2"),
+                                 label = "Download (rechts)",
+                                 icon = icon("download"))
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               htmlOutput(ns("plot_mint_rest_einstieg_1")),
+                               br(),
+                               p(style="font-size:12px;color:grey",
+                                 "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
                         shinyBS::bsPopover(id="h_alle_mint_1", title = "",
                                            content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
@@ -214,12 +224,72 @@ mod_home_start_server <- function(id,r){
     ns <- session$ns
 
 
-    output$plot_verlauf_mint <- highcharter::renderHighchart({
-      home_comparison_line(r)
-    })
+    # Box 1, Tab1 ----
+
+    # ALT:
+    # output$plot_mint_rest_einstieg_1 <- renderUI({
+    #   home_einstieg_pie(data_zentral_alt,r)
+    # })
 
     output$plot_mint_rest_einstieg_1 <- renderUI({
-      home_einstieg_pie(r)
+      plot_list <- home_einstieg_pie(r)
+      r$plot_mint_rest_einstieg_1_left <-plot_list[[1]]
+      r$plot_mint_rest_einstieg_1_right <-plot_list[[2]]
+
+      r$plot_mint_rest_einstieg_1_left_title <- get_plot_title(
+        plot = r$plot_mint_rest_einstieg_1_left
+      )
+      r$plot_mint_rest_einstieg_1_right_title <- get_plot_title(
+        plot = r$plot_mint_rest_einstieg_1_right
+      )
+
+      highcharter::hw_grid(
+        plot_list,
+        ncol=2
+      )
+    })
+
+    output$download_btn_plot_mint_rest_einstieg_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_mint_rest_einstieg_1_left_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_mint_rest_einstieg_1_left,
+          filename =  r$plot_mint_rest_einstieg_1_left_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_mint_rest_einstieg_1_left_title, file)
+        file.remove(r$plot_mint_rest_einstieg_1_left_title)
+      }
+    )
+
+    output$download_btn_plot_mint_rest_einstieg_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_mint_rest_einstieg_1_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_mint_rest_einstieg_1_right,
+          filename =  r$plot_mint_rest_einstieg_1_right_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_mint_rest_einstieg_1_right_title, file)
+        file.remove(r$plot_mint_rest_einstieg_1_right_title)
+      }
+    )
+
+    # Rest ----
+
+
+    output$plot_verlauf_mint <- highcharter::renderHighchart({
+      home_comparison_line(r)
     })
 
     output$plot_comparison_gender <- highcharter::renderHighchart({
