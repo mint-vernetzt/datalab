@@ -83,9 +83,14 @@ mod_home_start_ui <- function(id){
                       shiny::sidebarPanel(
                         width = 3,
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
+
                         downloadButton(
-                          outputId = ns("download_home_start_einstieg"),
-                          label = "Download",
+                          outputId = ns("download_btn_home_start_einstieg_1"),
+                          label = "Download (links)",
+                          icon = icon("download")),
+                        downloadButton(
+                          outputId = ns("download_btn_home_start_einstieg_2"),
+                          label = "Download (rechts)",
                           icon = icon("download"))
                         ),
                       shiny::mainPanel(
