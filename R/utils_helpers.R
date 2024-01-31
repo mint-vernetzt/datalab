@@ -655,10 +655,12 @@ add_caption_and_download <- function(
       '<div style="width: ',width - 10, 'px;',
       ' display: flex; justify-content: space-between;">',
       '<span>',
+     # '<span style="font-size: 10px;">', # max-width: ', width - 50, 'px;
       'Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022;',
       ' KMK, 2022, alle auf Anfrage,<br>',
-      ' eigene Berechnungen durch MINTvernetzt</span>',
+      ' Eigene Berechnungen durch MINTvernetzt</span>',
       '<span>',
+      '<span style="padding-right: 10px;">',
       #'<img src="https://mint-vernetzt.de/static/e99e5a7a75c99c8651863585408242bb/mintvernetzt_og-img.png"',
       '<img src="https://raw.githubusercontent.com/mint-vernetzt/datalab/main/inst/app/www/MINTvernetztLogo_klein.png"',
       #'<img src="www/MINTvernetztLogo_klein.png"',

@@ -83,7 +83,7 @@ mod_home_start_ui <- function(id){
                       shiny::sidebarPanel(
                         width = 3,
                         mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
-                        br(),
+                        br(),br(),
                         downloadButton(
                           outputId = ns("download_btn_home_start_einstieg_1"),
                           label = "Download (links)",
@@ -92,13 +92,17 @@ mod_home_start_ui <- function(id){
                           outputId = ns("download_btn_home_start_einstieg_2"),
                           label = "Download (rechts)",
                           icon = icon("download"))
+                        # downloadButton(
+                        #   outputId = ns("download_btn_home_start_einstieg"),
+                        #   label = "Download",
+                        #   icon = icon("download"))
                         ),
                       shiny::mainPanel(
                         width = 9,
                         htmlOutput(ns("plot_mint_rest_einstieg_1")),
                         br(),
                         p(style="font-size:12px;color:grey",
-                             "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                             "Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
                         shinyBS::bsPopover(id="h_alle_mint_1", title = "",
                                            content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
@@ -115,7 +119,7 @@ mod_home_start_ui <- function(id){
                           width = 9,
                           highcharter::highchartOutput(ns("plot_mint_1")),
                           br(),
-                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_mint_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
                                              placement = "top",
@@ -134,7 +138,7 @@ mod_home_start_ui <- function(id){
                                width = 9,
                                highcharter::highchartOutput(ns("plot_comparison_mint")),
                                br(),
-                               p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_mint_3", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
                                                   placement = "top",
@@ -164,7 +168,7 @@ mod_home_start_ui <- function(id){
                                width = 9,
                                htmlOutput(ns("plot_pie_mint_gender")),
                                p(style="font-size:12px;color:grey",
-                                  "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                  "Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_frauen_1", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                                   placement = "top",
@@ -180,7 +184,7 @@ mod_home_start_ui <- function(id){
                         shiny::mainPanel(
                           width = 9,
                           highcharter::highchartOutput(ns("plot_verlauf_mint"))
-                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_frauen_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                              placement = "top",
@@ -195,7 +199,7 @@ mod_home_start_ui <- function(id){
                              shiny::mainPanel(
                                width = 9,
                                highcharter::highchartOutput(ns("plot_comparison_gender"))
-                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_frauen_3", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                                   placement = "top",
@@ -233,22 +237,76 @@ mod_home_start_server <- function(id, data_zentral, data_zentral_neu, data_zentr
     output$plot_mint_rest_einstieg_1 <- renderUI({
 
       plot_list <- home_einstieg_pie(data_zentral_alt, r)
-      r$plot_mint_rest_einstieg_1_left <-plot_list[[1]]
-      r$plot_mint_rest_einstieg_1_right <-plot_list[[2]]
 
-      r$plot_mint_rest_einstieg_1_left_title <- get_plot_title(
-        plot = r$plot_mint_rest_einstieg_1_left
-      )
-      r$plot_mint_rest_einstieg_1_right_title <- get_plot_title(
-        plot = r$plot_mint_rest_einstieg_1_right
-      )
+        r$plot_mint_rest_einstieg_1_left <-plot_list[[1]]
+        r$plot_mint_rest_einstieg_1_right <-plot_list[[2]]
 
-      highcharter::hw_grid(
-        plot_list,
-        ncol=2
-      )
+        r$plot_mint_rest_einstieg_1_left_title <- get_plot_title(
+          plot = r$plot_mint_rest_einstieg_1_left
+        )
+        r$plot_mint_rest_einstieg_1_right_title <- get_plot_title(
+          plot = r$plot_mint_rest_einstieg_1_right
+        )
 
+       highcharter::hw_grid(
+          plot_list,
+          ncol=2
+       )
     })
+
+    # output$plot_mint_rest_einstieg_1 <- renderUI({
+    #
+    #   plot_list <- home_einstieg_pie(data_zentral_alt, r)
+    #
+    #   if(length(plot_list) == 1) {
+    #     r$plot_mint_rest_einstieg_1_left <-plot_list[[1]]
+    #
+    #     r$plot_mint_rest_einstieg_1_left_title <- get_plot_title(
+    #       plot = r$plot_mint_rest_einstieg_1_left
+    #     )
+    #
+    #    grid <- plot_list[[1]]
+    #   }
+    #   if(length(plot_list) == 2){
+    #     r$plot_mint_rest_einstieg_1_left <-plot_list[[1]]
+    #     r$plot_mint_rest_einstieg_1_right <-plot_list[[2]]
+    #
+    #     r$plot_mint_rest_einstieg_1_left_title <- get_plot_title(
+    #       plot = r$plot_mint_rest_einstieg_1_left
+    #     )
+    #     r$plot_mint_rest_einstieg_1_right_title <- get_plot_title(
+    #       plot = r$plot_mint_rest_einstieg_1_right
+    #     )
+    #
+    #     grid <- highcharter::hw_grid(
+    #       plot_list,
+    #       ncol=2
+    #     )
+    #   }
+    #   if(length(plot_list) == 3){
+    #     r$plot_mint_rest_einstieg_1_left <-plot_list[[1]]
+    #     r$plot_mint_rest_einstieg_1_right <-plot_list[[2]]
+    #     r$plot_mint_rest_einstieg_1_third <- plot_list[[3]]
+    #
+    #     r$plot_mint_rest_einstieg_1_left_title <- get_plot_title(
+    #       plot = r$plot_mint_rest_einstieg_1_left
+    #     )
+    #     r$plot_mint_rest_einstieg_1_right_title <- get_plot_title(
+    #       plot = r$plot_mint_rest_einstieg_1_right
+    #     )
+    #     r$plot_mint_rest_einstieg_1_third_title <- get_plot_title(
+    #       plot = r$plot_mint_rest_einstieg_1_third
+    #     )
+    #
+    #    grid <- highcharter::hw_grid(
+    #       plot_list,
+    #       ncol=3
+    #     )
+    #   }
+    #
+    #   grid
+    #
+    # })
 
 
     output$download_btn_home_start_einstieg_1 <- downloadHandler(
@@ -260,8 +318,8 @@ mod_home_start_server <- function(id, data_zentral, data_zentral_neu, data_zentr
         add_caption_and_download(
           hc = r$plot_mint_rest_einstieg_1_left,
           filename =  r$plot_mint_rest_einstieg_1_left_title,
-          width = 700,
-          height = 400
+          width = 500,
+          height = 500
           # ,
           # with_labels = FALSE
           )
@@ -280,14 +338,42 @@ mod_home_start_server <- function(id, data_zentral, data_zentral_neu, data_zentr
         add_caption_and_download(
           hc = r$plot_mint_rest_einstieg_1_right,
           filename =  r$plot_mint_rest_einstieg_1_right_title,
-          width = 700,
-          height = 400,
+          width = 500,
+          height = 500,
           with_labels = FALSE)
 
         file.copy(r$plot_mint_rest_einstieg_1_right_title, file)
         file.remove(r$plot_mint_rest_einstieg_1_right_title)
       }
     )
+
+
+    # output$download_btn_home_start_einstieg <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {
+    #     paste("combined_plots_", Sys.Date(), ".zip", sep = "")
+    #   },
+    #   content = function(file) {
+    #     # Hier anstelle der festen Anzahl von Plots können Sie die Liste der Plots und Dateinamen dynamisch aktualisieren
+    #     plot_list <- list(r$plot_mint_rest_einstieg_1_left,
+    #                       r$plot_mint_rest_einstieg_2_right)
+    #     filenames <- c(r$plot_mint_rest_einstieg_1_left_title,
+    #                    r$plot_mint_rest_einstieg_1_left_title) # passende Dateinamen für jeden Plot
+    #
+    #     # Funktion zum Bearbeiten und Herunterladen von Plots aufrufen
+    #     download_multiple_plots(plot_list, filenames)
+    #
+    #     # Zip-Datei erstellen
+    #     zip(file, filenames)
+    #
+    #     # Dateien kopieren und entfernen
+    #     for (f in filenames) {
+    #       file.copy(f, file.path(dirname(file), f))
+    #       file.remove(f)
+    #     }
+    #   }
+    # )
+
 
     # Rest ----
 
