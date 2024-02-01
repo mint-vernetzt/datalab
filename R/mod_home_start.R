@@ -83,16 +83,7 @@ mod_home_start_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
-                               br(),
 
-                               downloadButton(
-                                 outputId = ns("download_btn_home_start_einstieg_1"),
-                                 label = "Download (links)",
-                                 icon = icon("download")),
-                               downloadButton(
-                                 outputId = ns("download_btn_home_start_einstieg_2"),
-                                 label = "Download (rechts)",
-                                 icon = icon("download"))
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -226,64 +217,11 @@ mod_home_start_server <- function(id,r){
 
     # Box 1, Tab1 ----
 
-    # ALT:
-    # output$plot_mint_rest_einstieg_1 <- renderUI({
-    #   home_einstieg_pie(data_zentral_alt,r)
-    # })
 
     output$plot_mint_rest_einstieg_1 <- renderUI({
-      plot_list <- home_einstieg_pie(r)
-      r$plot_mint_rest_einstieg_1_left <-plot_list[[1]]
-      r$plot_mint_rest_einstieg_1_right <-plot_list[[2]]
-
-      r$plot_mint_rest_einstieg_1_left_title <- get_plot_title(
-        plot = r$plot_mint_rest_einstieg_1_left
-      )
-      r$plot_mint_rest_einstieg_1_right_title <- get_plot_title(
-        plot = r$plot_mint_rest_einstieg_1_right
-      )
-
-      highcharter::hw_grid(
-        plot_list,
-        ncol=2
-      )
+      home_einstieg_pie( r)
     })
 
-    output$download_btn_plot_mint_rest_einstieg_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_mint_rest_einstieg_1_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_mint_rest_einstieg_1_left,
-          filename =  r$plot_mint_rest_einstieg_1_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_mint_rest_einstieg_1_left_title, file)
-        file.remove(r$plot_mint_rest_einstieg_1_left_title)
-      }
-    )
-
-    output$download_btn_plot_mint_rest_einstieg_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_mint_rest_einstieg_1_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_mint_rest_einstieg_1_right,
-          filename =  r$plot_mint_rest_einstieg_1_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_mint_rest_einstieg_1_right_title, file)
-        file.remove(r$plot_mint_rest_einstieg_1_right_title)
-      }
-    )
 
     # Rest ----
 
