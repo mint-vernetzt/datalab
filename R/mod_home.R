@@ -26,15 +26,15 @@ mod_home_server <- function(id, r){
 
   r <- reactiveValues()
 
-  # Home
+  # Home gesamt
   mod_home_start_server("mod_home_start_ui_1",r)
 
-  # Box 2
+  # Box 1
   mod_home_start_einstieg_server("mod_home_start_einstieg_ui_1", r)
   mod_home_start_multiple_server("mod_home_start_multiple_ui_1", r)
   mod_home_start_comparison_mint_server("mod_home_start_comparison_mint_ui_1", r)
 
-  # Box 3
+  # Box 2
   mod_home_start_einstieg_gender_server("mod_home_start_einstieg_gender_ui_1", r)
   mod_home_start_comparison_server("mod_home_start_comparison_ui_1", r)
   mod_home_start_comparison_mint_gender_server("mod_home_start_comparison_mint_gender_ui_1", r)

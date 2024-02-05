@@ -73,7 +73,9 @@ plot_international_map <- function(r) {
 
 
   if (label_m == "Weltweit") {
-    map_selection <- golem::get_golem_options("world_map")
+    #map_selection <- golem::get_golem_options("world_map")
+    map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
+
     fach_m <- "Alle MINT-Fächer"
 
     df <- dplyr::tbl(con, from = "studierende_absolventen_weltweit") %>%
@@ -85,9 +87,9 @@ plot_international_map <- function(r) {
 
 
   } else if (label_m == "OECD") {
-    map_selection <- golem::get_golem_options("world_map")
+   # map_selection <- golem::get_golem_options("world_map")
   #map_selection <-"custom/world"
-
+    map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
     # filter for selection
 
@@ -128,7 +130,9 @@ plot_international_map <- function(r) {
 
 
   } else if (label_m == "EU") {
-    map_selection <- golem::get_golem_options("europa_map")
+    # map_selection <- golem::get_golem_options("europa_map")
+    map_selection <- highcharter::download_map_data(url = "custom/europe", showinfo = FALSE)
+
     df <- dplyr::tbl(con, from = "studierende_europa") %>%
       dplyr::filter(geschlecht == "Gesamt"  &
                       (mint_select == "mint" |
@@ -1161,7 +1165,7 @@ plot_international_schule_map <- function(r) {
     dplyr::mutate(alpha2 = toupper(alpha2))
 
 
-  map_selection <- golem::get_golem_options("world_map")
+ map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
   # plot
   highcharter::highchart(type = "map") %>%
