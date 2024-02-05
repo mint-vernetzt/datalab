@@ -1264,7 +1264,7 @@ plot_international_schule_item <- function(r) {
     group_text = c(" mit keinem signifikaten Unterschied zwischen Jungen und Mädchen",
                    ", in denen Jungen signifikant besser abschneiden als Mädchen",
                    ", in denen Mädchen signifikant besser abscheniden als Jungen"),
-    group_col = c("#66cbaf", "#fdd670", "#f5adac")
+    group_col = c("#66cbaf", "#b16fab", "#154194")
   )
 
   # reshape long to wide for later merge
@@ -1296,8 +1296,8 @@ plot_international_schule_item <- function(r) {
     dplyr::filter(!is.na(count))
 
   # Farbe für Deutschland
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#fcc433", plot_data$group_col )
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#ee7775", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#d9a0cd", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#5F94F9", plot_data$group_col )
   plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "kein signifikanter Unterschied", "#00a87a", plot_data$group_col )
 
 
@@ -1332,10 +1332,15 @@ plot_international_schule_item <- function(r) {
                    fontFamily = "SourceSans3-Regular",
                    fontSize = "20px")
     ) %>%
+    highcharter::hc_subtitle(
+      text= paste0("Jeder Punkt repräsentiert ein Land.", br(),
+      "Deutschland ist als etwas blasser hervorgehoben."),
+      align = "left"
+    )%>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>%
-    highcharter::hc_size(600, 450) %>%
+    highcharter::hc_size(580, 450) %>%
     highcharter::hc_credits(enabled = FALSE)
   #%>%
   # highcharter::hc_legend(layout = "horizontal", floating = FALSE,
@@ -1476,7 +1481,11 @@ plot_international_schule_migration <- function(r) {
     highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
     highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> {point.display_wert} Pkt")%>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth=100) %>%
-    highcharter::hc_xAxis(title = list(text = ""), labels = list(rotation = 270)) %>%
+    highcharter::hc_xAxis(title = list(text = ""), labels = list(rotation = 270,
+                                                                 style = list(
+                                                                   fontWeight = ifelse(data_line$land == "Deutschland", "bold", "normal")
+                                                                 )),
+                          categories = data_line$land) %>%
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
     #highcharter::hc_colors(c("#efe8e6","#D0A9CD", "#b16fab")) %>%
     highcharter::hc_colors(color) %>%
