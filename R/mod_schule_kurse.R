@@ -559,11 +559,13 @@ mod_schule_kurse_ui <- function(id){
                Bei beiden Erhebungen werden unter anderem Kompetenztests in Mathematik und Naturwissenschaften in 4. und 9. Klassen weltweit durchgeführt.
                Außerdem betrachten die Grafiken Kompetenz-Unterschiede zwischen Jungen und Mädchen und Unterschiede in Abhängigkeit der sozialen Herkunft der Kinder."),
              p(),
+             p(),
              shinyBS::bsPopover(id="i_schule_international_1", title = "",
                                 content = paste0("Eine Einordnung sowie weitere Ergebnisse der TIMSS-Erhebung finden Sie hier: <br> <a>https://timss2019.org/reports/</a> <br><br> Weitere Informationen zur PISA-Studie und ihren Ergebnissen finden Sie hier:. <br> <a> https://www.oecd.org/pisa/ </a>"),
                                 placement = "right",
                                 trigger = "click"),
              tags$a(paste0("Um zu den original Ergebnisberichten von TIMSS und PISA zu kommen, klicken Sie hier:"), icon("info-circle"), id = "i_schule_international_1"),
+             p(),
              p(),
              tabsetPanel(type = "tabs",
                          tabPanel("MINT-Kompetenz im Ländervergleich", br(),
@@ -608,6 +610,7 @@ mod_schule_kurse_ui <- function(id){
                                   shiny::mainPanel(
                                     width = 9,
                                     htmlOutput(ns("plot_international_schule_item_1")),
+                                    br(),
                                     p(style="font-size:12px;color:grey",
                                       "Quelle der Daten: IEA, 2023; OECD, 2023, feier Download, eigene Berechnungen durch MINTvernetzt."),
 
@@ -637,7 +640,7 @@ mod_schule_kurse_ui <- function(id){
                                       "Quelle der Daten: IEA, 2023; OECD, 2023, feier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                     shinyBS::bsPopover(id="h_international_schule_3", title="",
-                                                       content = paste0("Zur einfacheren Darstellung wurde teilweise eine Auswahl aus den vorliegenden Untergruppen getroffen."),
+                                                       content = paste0("Das Bildungskapital wurde über die Anzahl der Bücher im Zuhause der Kinder operationalisiert. Zur einfacheren Darstellung wird in dieser Abbildung nur eine Auswahl der vorliegenden Untergruppen betrachtet."),
                                                        placement = "top",
                                                        trigger = "hover"),
                                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_3")

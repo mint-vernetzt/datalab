@@ -14,8 +14,6 @@ mod_international_schule_map_ui <- function(id){
   ns <- NS(id)
   tagList(
     p("Erhebung:"),
-
-    p("Durchschnitt anzeigen:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("map_l_int_schule"),
       choices = c("TIMSS", "PISA"),
@@ -44,11 +42,11 @@ mod_international_schule_map_ui <- function(id){
                        multiple = FALSE
                      ),
 
-                     p("Leistungsindikator"),
+                     p("Leistungsindikator:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_li_timss_int_schule"),
                        choices = c("Test-Punktzahl",
-                                   "Anteil Schüler*innen, die mittleren Standard erreicht" =  "Mittlerer Standard erreicht"),
+                                   "Mittlerer internationaler Standard" =  "Mittlerer Standard erreicht"),
                        selected = c("Test-Punktzahl"),
                        multiple = FALSE
                      )),

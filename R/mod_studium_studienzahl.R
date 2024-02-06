@@ -585,12 +585,11 @@ mod_studium_studienzahl_ui <- function(id){
 
                                       "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
-                                    # shinyBS::bsPopover(id="h_international_1", title="",
-                                    #                    content = paste0("POPUP INFO TEXT HERE"),
-                                    #                    placement = "top",
-                                    #                    trigger = "hover"),
-                                    # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_1")
-                                  )
+                                    shinyBS::bsPopover(id="h_international_vergl_1", title="",
+                                                       content = paste0("In den Europa-Daten sowie den &quotweltweit&quot-Daten der UNESCO wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung)."),
+                                                       placement = "top",
+                                                       trigger = "hover"),
+                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_1") )
                          ),
 
                          tabPanel("Vergleich Frauen in MINT (Karte)", br(),
@@ -610,7 +609,12 @@ mod_studium_studienzahl_ui <- function(id){
                                     p(style="font-size:12px;color:grey",
                                       "Quelle der Daten: Eurostat, 2023; OECD, 2023; feier Download, eigene Berechnungen durch MINTvernetzt."),
 
-                                  )
+                                    shinyBS::bsPopover(id="h_international_vergl_2", title="",
+                                                       content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung)."),
+                                                       placement = "top",
+                                                       trigger = "hover"),
+                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_2") )
+
                          ),
 
                          tabPanel("Top 10 MINT-Länder", br(),
@@ -631,11 +635,11 @@ mod_studium_studienzahl_ui <- function(id){
 
                                       "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
-                                    # shinyBS::bsPopover(id="h_international_1", title="",
-                                    #                    content = paste0("POPUP INFO TEXT HERE"),
-                                    #                    placement = "top",
-                                    #                    trigger = "hover"),
-                                    # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
+                                    shinyBS::bsPopover(id="h_international_vergl_3", title="",
+                                                       content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung).", "<br><br>Lichtenstein und San Marino sind in dieser Betrachtung ausgeschlossen, da in beiden Ländern nur eine Hochschule für MINT-Fächer ansässig ist und das die Vergleichbarkeit verzerren könnte."),
+                                                       placement = "top",
+                                                       trigger = "hover"),
+                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_3")
 
                                   )
                          ),
@@ -658,12 +662,11 @@ mod_studium_studienzahl_ui <- function(id){
 
                                       "Quelle der Daten: Eurostat, 2023; OECD, 2023; freies Download, eigene Berechnungen durch MINTvernetzt."),
 
-                                    # shinyBS::bsPopover(id="h_international_1", title="",
-                                    #                    content = paste0("POPUP INFO TEXT HERE"),
-                                    #                    placement = "top",
-                                    #                    trigger = "hover"),
-                                    # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_2")
-                                  )
+                                    shinyBS::bsPopover(id="h_international_vergl_4", title="",
+                                                       content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung).", "<br><br>Lichtenstein und San Marino sind in dieser Betrachtung ausgeschlossen, da in beiden Ländern nur eine Hochschule für MINT-Fächer ansässig ist und das die Vergleichbarkeit verzerren könnte."),
+                                                       placement = "top",
+                                                       trigger = "hover"),
+                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_4") )
                          ),
                          tabPanel("Vergleich internationale Studierende", br(),
                                   #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -682,16 +685,16 @@ mod_studium_studienzahl_ui <- function(id){
                                       "Quelle der Daten: Eurostat, 2023; freies Download, eigene Berechnungen durch MINTvernetzt."),
 
 
-                                    # shinyBS::bsPopover(id="h_international_studium_5", title="",
-                                    #                    content = paste0("POPUP INFO TEXT HERE"),
-                                    #                    placement = "top",
-                                    #                    trigger = "hover"),
-                                    # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_studium_5")
-                                  )
+                                    shinyBS::bsPopover(id="h_international_vergl_5", title="",
+                                                       content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung)."),
+                                                       placement = "top",
+                                                       trigger = "hover"),
+                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_5")
                          )
 
 
              ))
+           )
            ),
 
 
