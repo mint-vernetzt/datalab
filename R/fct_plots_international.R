@@ -11,7 +11,8 @@
 get_top10_hc_plot_options <- function(hc,
                                       hc_title = "",
                                       hc_tooltip = "",
-                                      max_percent_used = 100) {
+                                      max_percent_used = 100,
+                                      col = "#B16FAB") {
   out <- hc %>%
     highcharter::hc_plotOptions(
       series = list(
@@ -25,7 +26,7 @@ get_top10_hc_plot_options <- function(hc,
                           max = max_percent_used,
                           tickInterval = 10) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(c("#154194")) %>%
+    highcharter::hc_colors(c(col)) %>%
     highcharter::hc_title(text = hc_title,
                           margin = 45,
                           align = "center",
@@ -41,19 +42,25 @@ get_top10_hc_plot_options <- function(hc,
   return(out)
 }
 
-add_avg_to_hc <- function(hc, hc_mean) {
+add_avg_to_hc <- function(hc, hc_mean, type) {
+
+  if(type == "MINT"){
+    col <- "#154194"
+  }else if(type == "Frauen"){
+    col <- "#B16FAB"
+  }
+
   out <- hc %>%
     highcharter::hc_yAxis(
       plotLines = list(
         list(
           value = hc_mean,
-          color = "#FF0000",
+          color = col,
           width = 3,
           zIndex = 4
         )
       )
     )
-
 
   return(out)
 }
@@ -72,7 +79,9 @@ plot_international_map <- function(r) {
 
 
   if (label_m == "Weltweit") {
-    map_selection <- golem::get_golem_options("world_map")
+    #map_selection <- golem::get_golem_options("world_map")
+    map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
+
     fach_m <- "Alle MINT-Fächer"
 
     df <- dplyr::tbl(con, from = "studierende_absolventen_weltweit") %>%
@@ -84,9 +93,9 @@ plot_international_map <- function(r) {
 
 
   } else if (label_m == "OECD") {
-    map_selection <- golem::get_golem_options("world_map")
+   # map_selection <- golem::get_golem_options("world_map")
   #map_selection <-"custom/world"
-
+    map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
     # filter for selection
 
@@ -127,7 +136,9 @@ plot_international_map <- function(r) {
 
 
   } else if (label_m == "EU") {
-    map_selection <- golem::get_golem_options("europa_map")
+    # map_selection <- golem::get_golem_options("europa_map")
+    map_selection <- highcharter::download_map_data(url = "custom/europe", showinfo = FALSE)
+
     df <- dplyr::tbl(con, from = "studierende_europa") %>%
       dplyr::filter(geschlecht == "Gesamt"  &
                       (mint_select == "mint" |
@@ -178,15 +189,25 @@ plot_international_map <- function(r) {
   fach_help <- ifelse(fach_help == "Dienstleistungen", "Fächern aus dem Bereich 'Dienstleistungen'", fach_help)
 
   if(label_m == "Weltweit"){
-    title_m <- paste0("Anteil von Studienabsolvent*innen in ", fach_help, " an allen Studienabsolvent*innen ",
+    title_m <- paste0("Anteil von Studienabsolvent:innen in ", fach_help, " an allen Studienabsolvent:innen ",
                       timerange, " weltweit (UNESCO)")
   }else{if(label_m == "OECD"){
     title_m <- paste0("Anteil von Studierenden in ", fach_help, " an allen Studierenden ",
-                      timerange, " der OECD-Staaten")
+                      timerange, " in den OECD-Staaten")
   }else{
     title_m <- paste0("Anteil von Studierenden in ", fach_help, " an allen Studierenden ",
                       timerange, " in Europa")
   }
+  }
+
+  #Europakarte
+  if(label_m == "EU"){
+    size_width <- 800
+    size_hight <- 600
+    #Weltkarte
+  }else if(label_m == "OECD" | label_m == "Weltweit"){
+    size_width <- 1000
+    size_hight <- 600
   }
 
 
@@ -218,7 +239,7 @@ plot_international_map <- function(r) {
     # ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
-    ) %>% #highcharter::hc_size(600, 550) %>%
+    ) %>% highcharter::hc_size(size_width, size_hight) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom") %>%
@@ -286,15 +307,15 @@ plot_international_map_fem <- function(r){
 
       # spezifischen titel vorbereiten
       title_dyn <- if(fach_m=="Alle MINT-Fächer"){
-        paste("Anteil von weiblichen Studierenden an allen Studierenden in allen MINT-Fächern " , timerange)
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in MINT (" , timerange, ")")
 
       } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
 
-        paste("Anteil von weiblichen Studierenden an allen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe " , timerange)
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe (" , timerange, ")")
 
       } else {
 
-        paste("Anteil von weiblichen Studierenden an allen Studierenden in ", fach_m, " " , timerange)
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in ", fach_m, " (" , timerange, ")")
       }
 
 
@@ -311,7 +332,8 @@ plot_international_map_fem <- function(r){
         dplyr::filter(fach == fach_m &
                         jahr == timerange)%>%
         dplyr::collect()
-        dplyr::mutate(display_rel = prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ",")) %>% # hover und titel vorbereiten
+      df1 <- df1 %>%
+        dplyr::mutate(display_rel = prettyNum(round(wert,1), big.mark = ".", decimal.mark = ","))  # hover und titel vorbereiten
 
 
       # mit geo mapping data joinen
@@ -325,15 +347,15 @@ plot_international_map_fem <- function(r){
 
       # spezifischen titel vorbereiten
       title_dyn <- if(fach_m=="Alle MINT-Fächer"){
-        paste("Anteil von Studierenden in allen MINT-Fächern an allen weiblichnen Studierenden " , timerange)
+        paste("Anteil von weiblichen Studierenden in MINT an allen weiblichnen Studierenden (" , timerange, ")")
 
       } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
 
-        paste("Anteil von Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe an allen weiblichen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe " , timerange)
+        paste("Anteil von weiblichen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe an allen Studierenden (" , timerange, ")")
 
       } else {
 
-        paste("Anteil von Studierenden in ", fach_m, " an allen weiblichen Studierenden ", timerange)
+        paste("Anteil von weiblichen Studierenden in ", fach_m, " an allen weiblichen Studierenden (", timerange, ")")
       }
 
     }
@@ -444,11 +466,11 @@ plot_international_map_fem <- function(r){
 
       # hc titel vorbereiten
       title_dyn <- if(fach_m=="MINT"){
-        paste("Anteil von weiblichen Studierenden an allen Studierenden in allen MINT-Fächern " , timerange)
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in MINT (" , timerange, ")")
 
       } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
 
-        paste("Anteil von weiblichen Studierenden an allen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe " , timerange)
+        paste("Anteil von weiblichen Studierenden an allen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe (" , timerange, ")")
 
       } else {
 
@@ -467,15 +489,15 @@ plot_international_map_fem <- function(r){
 
       # hc titel vorbereiten
       title_dyn <- if(fach_m=="MINT"){
-        paste("Anteil von Studierenden in allen MINT-Fächern an weiblichen Studierenden " , timerange, " (weltweit, OECD)")
+        paste("Anteil von weiblichen MINT-Studierenden an allen weiblichen Studierenden (" , timerange, " )")
 
       } else if (fach_m=="Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe"){
 
-        paste("Anteil von Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe an weiblichen Studierenden " , timerange, " (weltweit, OECD)")
+        paste("Anteil von weiblichen Studierenden in Ingenieurwesen, verarbeitendem Gewerbe und Baugewerbe an allen weiblichen Studierenden (" , timerange, ")")
 
       } else {
 
-        paste("Anteil von Studierenden in ", fach_m,  " an weiblichen Studierenden " , timerange, " (weltweit, OECD)")
+        paste("Anteil von weiblichen Studierenden in ", fach_m,  " an allen weiblichen Studierenden (" , timerange, ")")
       }
 
     }
@@ -489,6 +511,16 @@ plot_international_map_fem <- function(r){
 
 
   }
+  #Europakarte
+  if(label_m == "EU"){
+    size_width <- 800
+    size_hight <- 600
+  #Weltkarte
+  }else if(label_m == "OECD" | label_m == "Weltweit"){
+    size_width <- 1000
+    size_hight <- 600
+  }
+
 
   highcharter::hw_grid(
     # plot
@@ -511,7 +543,7 @@ plot_international_map_fem <- function(r){
     )
     %>%
       highcharter::hc_tooltip(pointFormat = hoverplot) %>%
-      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#154194",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
         text = title_dyn,
         margin = 10,
@@ -523,7 +555,7 @@ plot_international_map_fem <- function(r){
       # ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% # highcharter::hc_size(600, 550) %>%
+      ) %>%  highcharter::hc_size(size_width, size_hight) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
       highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                              verticalAlign = "bottom")
@@ -603,7 +635,8 @@ plot_international_top10 <- function(r) {
                          (mint_select == "nicht mint" &
                             fach_m == "Alle MINT-Fächer")) &
                       fach == fach_m &
-                      indikator == "Fächerwahl") %>%
+                      indikator == "Fächerwahl",
+                    land != "Lichtenstein") %>%
       dplyr::mutate(wert = round(wert, 1)) %>%
       dplyr::select(land, wert) %>%
       dplyr::collect()
@@ -637,7 +670,7 @@ plot_international_top10 <- function(r) {
   t_quelle <- ifelse(label_m == "Weltweit", " (UNESCO)", t_quelle)
   t_quelle1 <- ""
   t_quelle1 <- ifelse(label_m == "OECD", "OECD-", t_quelle1)
-  t_quelle1 <- ifelse(label_m == "EU", "EU-", t_quelle1)
+  t_quelle1 <- ifelse(label_m == "EU", "Europäische ", t_quelle1)
 
 
 
@@ -664,9 +697,9 @@ plot_international_top10 <- function(r) {
 
   if (show_avg == "Ja") {
     plot_top <- plot_top %>%
-      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE))
+      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE), type = "MINT")
     plot_bottom <- plot_bottom %>%
-      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE))
+      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE), type = "MINT")
   }
 
   highcharter::hw_grid(
@@ -786,7 +819,8 @@ plot_international_top10_gender <- function(r) {
                             fach_m == "Alle MINT-Fächer")) &
                       fach == fach_m &
                       indikator == "Frauen-/Männeranteil" &
-                      land != "EU (27), seit 2020") %>%
+                      !(land %in% c("EU (27), seit 2020", "Lichtenstein"))
+                    ) %>%
       dplyr::select(land, wert) %>%
       dplyr::collect()
 
@@ -802,7 +836,8 @@ plot_international_top10_gender <- function(r) {
                             fach_m == "Alle MINT-Fächer")) &
                       fach == fach_m &
                       indikator == "Fächerwahl"&
-                      land != "EU (27), seit 2020") %>%
+                      !(land %in% c("EU (27), seit 2020", "Lichtenstein"))
+                    ) %>%
       dplyr::select(land, wert) %>%
       dplyr::collect()
   }
@@ -829,11 +864,21 @@ plot_international_top10_gender <- function(r) {
 
   # Überschrift vorbereiten
   t_quelle1 <- "OECD-"
-  t_quelle1 <- ifelse(label_m == "EU", "EU-", t_quelle1)
+  t_quelle1 <- ifelse(label_m == "EU", "Europäische ", t_quelle1)
   t_fach <- fach_m
-  t_fach <- ifelse(t_fach %in% c("MINT", "Alle MINT-Fächer"), "MINT-Fächern", t_fach)
   t_fach <- ifelse(t_fach == "Dienstleistungen", "Fächern aus dem Bereich 'Dienstleistungen'", t_fach)
 
+  if(art == "meisten Frauen wählen MINT"){
+    titel1 <- paste0(t_quelle1, "Länder, in denen sich der höchste Anteil an Frauen für ein Studium in ",
+                     t_fach, " entscheidet (", timerange, ")")
+    titel2 <- paste0(t_quelle1, "Länder, in denen sich der geringste Anteil an Frauen für ein Studium in ",
+                     t_fach, " entscheidet (", timerange, ")")
+  }else{
+    titel1 <- paste0(t_quelle1, "Länder mit dem größten Frauenanteil unter Studierenden in ",
+                     t_fach, " (", timerange, ")")
+    titel2 <- paste0(t_quelle1, "Länder mit dem niedrigsten Frauenanteil unter Studierenden in ",
+                     t_fach, " (", timerange, ")")
+  }
 
   # Create top 10 plot
   plot_top <- highcharter::hchart(
@@ -841,10 +886,10 @@ plot_international_top10_gender <- function(r) {
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
     get_top10_hc_plot_options(
-      hc_title = paste0(t_quelle1, "Länder mit dem größten Frauenanteil an Studierenden in ", t_fach, " in ", timerange),
-      hc_tooltip = hover
-      ,
-      max_percent_used = max_percent_used
+      hc_title = titel1,
+      hc_tooltip = hover,
+      max_percent_used = max_percent_used,
+      col = "#154194"
       )
 
 
@@ -854,18 +899,18 @@ plot_international_top10_gender <- function(r) {
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
     get_top10_hc_plot_options(
-      hc_title = paste0("Länder mit dem niedrigsten Anteil an '", fach_m, "' in ", timerange),
-      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}"
-      ,
-      max_percent_used = max_percent_used
+      hc_title = titel2,
+      hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}" ,
+      max_percent_used = max_percent_used,
+      col = "#154194"
       )
 
 
   if (show_avg == "Ja") {
     plot_top <- plot_top %>%
-      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE))
+      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE), type = "Frauen")
     plot_bottom <- plot_bottom %>%
-      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE))
+      add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE), type = "Frauen")
   }
 
   highcharter::hw_grid(
@@ -948,7 +993,7 @@ if (avg_line == "Ja"){
       min = 0,
       max = max(data1$wert)*1.2)%>%
       highcharter::hc_xAxis(title = list(text = " ")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
+      highcharter::hc_colors(c("#66CBAF")) %>%
       highcharter::hc_title(text = title_dyn_top,
                             margin = 10,
                             align = "center",
@@ -1143,9 +1188,9 @@ plot_international_schule_map <- function(r) {
   if (leistungsindikator_m == "Mittlerer Standard erreicht") {
     tooltip_prefix <- "Anteil"
     tooltip_scale <- "%"
-    titel <- paste0("Anteil an Schüler:innen der ", help_l,
-                    " die im ", fach_m, "-Kompetenztest von ",
-                    label_m, " den mittleren internationalen Standard erreichen ", timerange)
+    titel <- paste0("Anteil von Schüler:innen der ", help_l,
+                    ", die im ", fach_m, "-Kompetenztest von ",
+                    label_m, " den mittleren internationalen Standard erreichen (", timerange, ")")
   }
 
   # Skalen-Minimum/-Maximum anpassen
@@ -1160,7 +1205,7 @@ plot_international_schule_map <- function(r) {
     dplyr::mutate(alpha2 = toupper(alpha2))
 
 
-  map_selection <- golem::get_golem_options("world_map")
+ map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
   # plot
   highcharter::highchart(type = "map") %>%
@@ -1198,7 +1243,7 @@ plot_international_schule_map <- function(r) {
     # ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
-    ) %>% #highcharter::hc_size(600, 550) %>%
+    ) %>% highcharter::hc_size(1000, 600) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom") %>%
@@ -1212,6 +1257,7 @@ plot_international_schule_map <- function(r) {
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 }
+
 
 plot_international_schule_item <- function(r) {
 
@@ -1259,7 +1305,7 @@ plot_international_schule_item <- function(r) {
     group_text = c(" mit keinem signifikaten Unterschied zwischen Jungen und Mädchen",
                    ", in denen Jungen signifikant besser abschneiden als Mädchen",
                    ", in denen Mädchen signifikant besser abscheniden als Jungen"),
-    group_col = c("#66cbaf", "#fdd670", "#f5adac")
+    group_col = c("#66cbaf", "#b16fab", "#154194")
   )
 
   # reshape long to wide for later merge
@@ -1291,8 +1337,8 @@ plot_international_schule_item <- function(r) {
     dplyr::filter(!is.na(count))
 
   # Farbe für Deutschland
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#fcc433", plot_data$group_col )
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#ee7775", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#d9a0cd", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#5F94F9", plot_data$group_col )
   plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "kein signifikanter Unterschied", "#00a87a", plot_data$group_col )
 
 
@@ -1319,7 +1365,7 @@ plot_international_schule_item <- function(r) {
     highcharter::hc_title(
       text = paste0("Geschlechtsunterschiede der 4.-Klässler:innen im ",
                     fach_m, "-Kompetenztest von ",
-                    label_m, " im Ländervergleich (", timerange, ")"),
+                    label_m, " (", timerange, ")"),
       margin = 10,
       align = "center",
       style = list(color = "black",
@@ -1327,10 +1373,15 @@ plot_international_schule_item <- function(r) {
                    fontFamily = "SourceSans3-Regular",
                    fontSize = "20px")
     ) %>%
+    highcharter::hc_subtitle(
+      text= paste0("Jeder Punkt repräsentiert ein Land.", br(),
+      "Deutschland ist als etwas blasser hervorgehoben."),
+      align = "left"
+    )%>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>%
-    highcharter::hc_size(600, 450) %>%
+    highcharter::hc_size(580, 450) %>%
     highcharter::hc_credits(enabled = FALSE)
   #%>%
   # highcharter::hc_legend(layout = "horizontal", floating = FALSE,
@@ -1422,12 +1473,12 @@ plot_international_schule_migration <- function(r) {
 
     # Labels anpassen
     df$indikator[df$indikator == "Keiner"] <- "ohne Zuwanderungsgeschichte"
-    df$indikator[df$indikator == "Zweite Generation"] <- "Eltern zugewandert"
+    df$indikator[df$indikator == "Zweite Generation"] <- "nur Eltern zugewandert"
     df$indikator[df$indikator == "Erste Generation"] <- "Kind selbst zugewandert"
     df$indikator[df$indikator == "0-10"] <- "sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)"
     df$indikator[df$indikator == "26-100"] <- "niedriges Bildungskapital (bis zu 100 Bücher zuhause)"
     df$indikator[df$indikator == "Mehr als 500"] <- "hohes Bildungskapital (über 500 Bücher zuhause)"
-    df$indikator[df$indikator == "1-10"] <- "sehr niedriges Bildungskapital (1 bis 10 Bücher zuhause)"
+    df$indikator[df$indikator == "1-10"] <- "sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)"
 
     help_l <- "9. & 10. Klasse"
   }
@@ -1448,7 +1499,6 @@ plot_international_schule_migration <- function(r) {
   dfs <- dfs %>%
     dplyr::filter(land %in% used_lands)
 
-
   #Trennpunkte für lange Zahlen ergänzen
   dfs$display_wert <- prettyNum(round(dfs$wert, 0),
                                 big.mark = ".",
@@ -1468,20 +1518,39 @@ plot_international_schule_migration <- function(r) {
     type = 'line',
     highcharter::hcaes(y = wert, x = land, group = indikator)
   ) %>%
-    highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-    highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> {point.display_wert} Pkt")%>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth=100) %>%
-    highcharter::hc_xAxis(title = list(text = ""), labels = list(rotation = 270)) %>%
-    #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-    #highcharter::hc_colors(c("#efe8e6","#D0A9CD", "#b16fab")) %>%
+    highcharter::hc_plotOptions(column = list(pointWidth = 90)) %>%
+    highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> {point.display_wert} Pkt") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth = 100) %>%
+    highcharter::hc_xAxis(
+      title = list(text = ""),
+      labels = list(
+        rotation = 310,
+        formatter = highcharter::JS(
+          "function () {
+          if ('Deutschland' === this.value) {
+            return '<span style=\"font-weight: bold;\">' + this.value + '</span>';
+          } else {
+            return this.value;
+          }
+        }"
+        )
+      ),
+      categories = unique(data_line$land),
+      min = 0,
+      max = 15,
+      scrollbar = list(enabled = TRUE, liveRedraw = TRUE)
+  ) %>%
     highcharter::hc_colors(color) %>%
     highcharter::hc_title(
-      text = paste0("Durchschnittliche Leistung von Schüler:innen der ", help_l,
-                    " im ", fach_m, "-Kompetenztest von ",label_m, " ",
-                    leistungsindikator_m, " (", timerange, ")"),
+      text = paste0(
+        "Durchschnittliche Leistung von Schüler:innen der ", help_l,
+        " im ", fach_m, "-Kompetenztest von ", label_m, " ",
+        leistungsindikator_m, " (", timerange, ")"
+      ),
       margin = 45,
       align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
@@ -1491,13 +1560,53 @@ plot_international_schule_migration <- function(r) {
       buttons = list(contextButton = list(
         symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
         onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
+                                        this.exportChart({ type: 'image/png' }); }"),
         align = 'right',
         verticalAlign = 'bottom',
         theme = list(states = list(hover = list(fill = '#FFFFFF')))
       )
       )
     )
+
+  # highcharter::hchart(
+  #   object = data_line,
+  #   type = 'line',
+  #   highcharter::hcaes(y = wert, x = land, group = indikator)
+  # ) %>%
+  #   highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
+  #   highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> {point.display_wert} Pkt")%>%
+  #   highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth=100) %>%
+  #   highcharter::hc_xAxis(title = list(text = ""), labels = list(rotation = 270,
+  #                                                                style = list(
+  #                                                                  fontWeight = ifelse(data_line$land == "Deutschland", "bold", "normal")
+  #                                                                )),
+  #                         categories = data_line$land) %>%
+  #   #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
+  #   #highcharter::hc_colors(c("#efe8e6","#D0A9CD", "#b16fab")) %>%
+  #   highcharter::hc_colors(color) %>%
+  #   highcharter::hc_title(
+  #     text = paste0("Durchschnittliche Leistung von Schüler:innen der ", help_l,
+  #                   " im ", fach_m, "-Kompetenztest von ",label_m, " ",
+  #                   leistungsindikator_m, " (", timerange, ")"),
+  #     margin = 45,
+  #     align = "center",
+  #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+  #   highcharter::hc_chart(
+  #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+  #   ) %>%
+  #   highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+  #   highcharter::hc_exporting(
+  #     enabled = FALSE,
+  #     buttons = list(contextButton = list(
+  #       symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+  #       onclick = highcharter::JS("function () {
+  #                                                           this.exportChart({ type: 'image/png' }); }"),
+  #       align = 'right',
+  #       verticalAlign = 'bottom',
+  #       theme = list(states = list(hover = list(fill = '#FFFFFF')))
+  #     )
+  #     )
+  #   )
 
 
 }
@@ -1598,7 +1707,7 @@ plot_international_map_arb <- function(r) {
         # ) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular")
-        ) %>% #highcharter::hc_size(600, 550) %>%
+        ) %>% highcharter::hc_size(800, 600) %>%
         highcharter::hc_credits(enabled = FALSE) %>%
         highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                verticalAlign = "bottom")
@@ -1727,7 +1836,7 @@ plot_international_map_arb <- function(r) {
           # ) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular")
-          ) %>% #highcharter::hc_size(600, 550) %>%
+          ) %>% highcharter::hc_size(1000, 600) %>%
           highcharter::hc_credits(enabled = FALSE) %>%
           highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                  verticalAlign = "bottom")
@@ -1866,7 +1975,7 @@ plot_international_map_arb <- function(r) {
           # ) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular")
-          ) %>% highcharter::hc_size(600, 550) %>%
+          ) %>% highcharter::hc_size(1000, 600) %>%
           highcharter::hc_credits(enabled = FALSE) %>%
           highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                  verticalAlign = "bottom")
@@ -1975,7 +2084,7 @@ plot_international_map_arb_gender <- function(r) {
         # ) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular")
-        ) %>% #highcharter::hc_size(600, 550) %>%
+        ) %>% highcharter::hc_size(800, 600) %>%
         highcharter::hc_credits(enabled = FALSE) %>%
         highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                verticalAlign = "bottom")
@@ -2122,7 +2231,7 @@ plot_international_map_arb_gender <- function(r) {
           # ) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular")
-          ) %>% #highcharter::hc_size(600, 550) %>%
+          ) %>% highcharter::hc_size(1000, 600) %>%
           highcharter::hc_credits(enabled = FALSE) %>%
           highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                  verticalAlign = "bottom")
@@ -2311,7 +2420,7 @@ plot_international_map_arb_gender <- function(r) {
           # ) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular")
-          ) %>% highcharter::hc_size(600, 550) %>%
+          ) %>% highcharter::hc_size(1000, 600) %>%
           highcharter::hc_credits(enabled = FALSE) %>%
           highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                  verticalAlign = "bottom")
@@ -2654,7 +2763,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_yAxis(plotLines = list(
           list(
             value = data_avg,
-            color = "#FF0000",
+            color = "#154194",
             width = 3,
             zIndex = 4
           )
@@ -2663,7 +2772,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         min = 0,
         max = max(data_fn$wert, na.rm = T)*1.2)%>%
         highcharter::hc_xAxis(title = list(text = " ")) %>%
-        highcharter::hc_colors(c("#154194")) %>%
+        highcharter::hc_colors(c("#B16FAB")) %>%
         highcharter::hc_title(text = title_top,
                               margin = 10,
                               align = "center",
@@ -2690,7 +2799,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
           plotLines = list(
             list(
               value = data_avg,
-              color = "#FF0000",
+              color = "#154194",
               width = 3,
               zIndex = 4
             )
@@ -2699,7 +2808,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
           min = 0,
           max = max(data_fn$wert, na.rm = T)*1.2)%>%
         highcharter::hc_xAxis(title = list(text = " ")) %>%
-        highcharter::hc_colors(c("#154194")) %>%
+        highcharter::hc_colors(c("#B16FAB")) %>%
         highcharter::hc_title(text =  title_bot,
                               margin = 10,
                               align = "center",
@@ -2738,7 +2847,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
                               min = 0,
                               max = max(data_fn$wert, na.rm = T)*1.2)%>%
         highcharter::hc_xAxis(title = list(text = " ")) %>%
-        highcharter::hc_colors(c("#154194")) %>%
+        highcharter::hc_colors(c("#B16FAB")) %>%
         highcharter::hc_title(text = title_top,
                               margin = 10,
                               align = "center",
@@ -2768,7 +2877,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
                               min = 0,
                               max = max(data_fn$wert, na.rm = T)*1.2)%>%
         highcharter::hc_xAxis(title = list(text = "")) %>%
-        highcharter::hc_colors(c("#154194")) %>%
+        highcharter::hc_colors(c("#B16FAB")) %>%
         highcharter::hc_title(text =  title_bot,
                               margin = 10,
                               align = "center",
@@ -3221,7 +3330,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_yAxis(plotLines = list(
         list(
           value = data_avg,
-          color = "#FF0000",
+          color = "#B16FAB",
           width = 3,
           zIndex = 4
         )
@@ -3255,7 +3364,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
         plotLines = list(
           list(
             value = data_avg,
-            color = "#FF0000",
+            color = "#B16FAB",
             width = 3,
             zIndex = 4
           )

@@ -69,7 +69,7 @@ mod_home_start_ui <- function(id){
 
    ),
 
-   # Box 1
+   # Box 1 ----
 
     fluidRow(id="alle_mint",
       shinydashboard::box(
@@ -80,16 +80,17 @@ mod_home_start_ui <- function(id){
 
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Bereiche", br(),
-                      shiny::sidebarPanel(
-                        width = 3,
-                        mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
-                        ),
-                      shiny::mainPanel(
-                        width = 9,
-                        htmlOutput(ns("plot_mint_rest_einstieg_1")),
-                        br(),
-                        p(style="font-size:12px;color:grey",
-                             "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_home_start_einstieg_ui("mod_home_start_einstieg_ui_1"),
+
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               htmlOutput(ns("plot_mint_rest_einstieg_1")),
+                               br(),
+                               p(style="font-size:12px;color:grey",
+                                 "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
                         shinyBS::bsPopover(id="h_alle_mint_1", title = "",
                                            content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
@@ -214,12 +215,19 @@ mod_home_start_server <- function(id,r){
     ns <- session$ns
 
 
-    output$plot_verlauf_mint <- highcharter::renderHighchart({
-      home_comparison_line(r)
-    })
+    # Box 1, Tab1 ----
+
 
     output$plot_mint_rest_einstieg_1 <- renderUI({
-      home_einstieg_pie(r)
+      home_einstieg_pie( r)
+    })
+
+
+    # Rest ----
+
+
+    output$plot_verlauf_mint <- highcharter::renderHighchart({
+      home_comparison_line(r)
     })
 
     output$plot_comparison_gender <- highcharter::renderHighchart({

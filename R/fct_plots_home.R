@@ -24,7 +24,7 @@ home_einstieg_pie <- function(r) {
     dplyr::select(bereich, indikator, fachbereich, wert) %>%
     dplyr::collect()
 
-  df_hs <<- df %>% dplyr::filter(bereich == "Hochschule")%>%
+  df_hs <- df %>% dplyr::filter(bereich == "Hochschule")%>%
     dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle")
 
 

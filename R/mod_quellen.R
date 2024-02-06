@@ -28,81 +28,113 @@ mod_quellen_ui <- function(id){
         title = "Definition MINT",
                 p(style = "text-align: justify; font-size = 16px",
           "MINT ist eine Abkürzung aus den Anfangsbuchstaben bestimmter Schul- und Studienfächer bzw. Berufe.
-          Es steht als Sammelbegriff für die Felder Mathematik, Informatik, Naturwissenschaften und Technik."
-        ), br(), br(),
-
-        img(src='www/Definition_MINT.jpg',
+          Es steht als Sammelbegriff für die Felder Mathematik, Informatik, Naturwissenschaften und Technik.
+          <br><br>
+          Die genaue Definition davon, was als 'MINT' zählt, und was nicht, variiert vor allem für Beschäftigte.
+          Die folgende Darstellung versucht, eine Übersicht zu geben."
+        ), br(),
+        img(src='www/Definition_MINT_Bild.png',
             class = "img-responsive",
             #height = "150px", width = "150px",
             alt = "Def MINT",
             style="display: block; margin-left: auto; margin-right: auto;"
+        )
+      ),
+      shinydashboard::box(
+        width = 3,
+        title = "Unsere Datengeber:innen",
+        img(src='www/Logo_BA.png',
+            class = "img-responsive",
+            #height = "150px", width = "150px",
+            alt = "Logo BA",
+            style="display: block; margin-left: auto; margin-right: auto;"
         ), br(),
+        tags$a(href="https://statistik.arbeitsagentur.de/DE/Home/home_node.html;jsessionid=B2B7423A23D5B6A5A4C301096D0ABDAB",
+               "Seite der Bundesagentur für Arbeit", target="_blank"), br(),
+        br(),
+        br(),
+        img(src='www/Logo_Destatis.png',
+            class = "img-responsive",
+            #height = "150px", width = "150px",
+            alt = "Logo Destatis",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        ),
+        br(),
+        tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Seite des Statistischen Bundesamtes ", target = "_blank"),
+        br(),
+
+        br(), br(),
+        img(src='www/Logo_KMK.png',
+            class = "img-responsive",
+            #height = "150px", width = "150px",
+            alt = "Logo KMK",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        ),br(),
+        tags$a(href="https://www.kmk.org/", "Seite der Kultusministerkonferenz", target = "_blank"),
+        br(),br()
+        ),
+
+
+
+      shinydashboard::box(
+        width = 9,
+        title = "Links zu den Definitionsangaben",
+        column(4,
         tags$a(href="https://www.kmk.org/themen/allgemeinbildende-schulen/unterrichtsfaecher/mathematik-informatik-naturwissenschaften-technik-mint.html", "Mehr Infos zur Definition MINT-Fächer in der Schule", target = "_blank"),
         br(),
         tags$a(href="https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bildung-Forschung-Kultur/Hochschulen/Tabellen/studierende-mint-faechern.html", "Mehr Infos zur Definition MINT-Studienfächer", target = "_blank"),
         br(),
         tags$a(href="https://web.arbeitsagentur.de/berufenet/ergebnisseite/mint-berufe?mint=alle-mint&page=0", "Mehr Infos zur Definition der MINT-Berufe", target = "_blank"), br(),
+        ),
+        column(4,
         tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Grundlagen/Methodik-Qualitaet/Methodenberichte/Uebergreifend/Generische-Publikationen/Hintergrundinfo-Anpassung-Berufsaggregat-MINT-Berufe.pdf?__blob=publicationFile", "Aktuelle Infos zur Anpassung der Definition der MINT-Berufe", target ="_blank"),
-
+        br(),
+        tags$a(href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=International_Standard_Classification_of_Education_(ISCED)#ISCED_1997_.28fields.29_and_ISCED-F_2013", "Internationale Klassifikation von Ausbidlungen (ISCED-F)", target ="_blank"),
+        br(),
+        tags$a(href="https://ec.europa.eu/eurostat/cache/metadata/Annexes/hrst_esms_an1.pdf", "Eurostat Einteilung von MINT-Beschäftigten", target ="_blank"),
+        )
     ),
 
-      shinydashboard::box(
-          width = 3,
-          title = "Unsere Datengeber:innen",
-          img(src='www/Logo_BA.png',
-              class = "img-responsive",
-              #height = "150px", width = "150px",
-              alt = "Logo BA",
-              style="display: block; margin-left: auto; margin-right: auto;"
-          ), br(),
-          tags$a(href="https://statistik.arbeitsagentur.de/DE/Home/home_node.html;jsessionid=B2B7423A23D5B6A5A4C301096D0ABDAB",
-                 "Seite der Bundesagentur für Arbeit", target="_blank"), br(),
-          br(),
-          br(),
-          img(src='www/Logo_Destatis.png',
-              class = "img-responsive",
-              #height = "150px", width = "150px",
-              alt = "Logo Destatis",
-              style="display: block; margin-left: auto; margin-right: auto;"
-          ),
-          br(),
-          tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Seite des Statistischen Bundesamtes ", target = "_blank"),
-          br(),
+    shinydashboard::box(
+      width = 3,
+      title = "Weitere Datengeber:innen",
+      #tags$b(span("Weitere Datengeber:", style = "color:#154194")),
 
-          br(), br(),
-          img(src='www/Logo_KMK.png',
-              class = "img-responsive",
-              #height = "150px", width = "150px",
-              alt = "Logo KMK",
-              style="display: block; margin-left: auto; margin-right: auto;"
-          ),br(),
-          tags$a(href="https://www.kmk.org/", "Seite der Kultusministerkonferenz", target = "_blank"),
-          br(),br(),
-          img(src='www/Logo_IQB.png',
-              class = "img-responsive",
-              #height = "150px", width = "150px",
-              alt = "Logo IQB",
-              style="display: block; margin-left: auto; margin-right: auto;"
-          ),
+      tags$a(href="https://www.iqb.hu-berlin.de/", "Seite des Institut zur Qualitätsentwicklung im Bildungswesen IQB", target = "_blank"),
+      br(),
+      tags$a(href="https://www.oecd.org/pisa/", "Seite des Pisa-Programms der OECD", target = "_blank"),
+      br(),
+      tags$a(href="https://timss2019.org/reports/", "Seite des TIMSS-Reports 2019 der IEA", target = "_blank"),
+      br(),
+      tags$a(href="https://ec.europa.eu/eurostat/databrowser/explore/all/all_themes?lang=en&display=list&sort=category", "Datenportal von Eurostat", target = "_blank"),
+      br(),
+      tags$a(href="https://www.oecd-ilibrary.org/statistics", "Datenportal der OECD", target = "_blank"),
 
-
-          )
-          ),
+      # img(src='www/Logo_IQB.png',
+      #     class = "img-responsive",
+      #     #height = "150px", width = "150px",
+      #     alt = "Logo IQB",
+      #     style="display: block; margin-left: auto; margin-right: auto;"
+      # ),
+    )
+    ),
 
     fluidRow(
       shinydashboard::box(
-        width = 10,
+        width = 9,
         title = "Datenpool und Quellen",
         p(style = "text-align: justify; font-size = 16px",
           "Ziel dieses Projektes ist es, die vorhandenen Statistiken über MINT in Deutschland in einem Datenpool zu bündeln
-          und über das MINT-DataLab zur weiteren Nutzung zur Verfügung zu stellen. Unser Datenpool besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
-                         Statistischen Bundesamtes und der Kultusministerkonferenz. Weitere Datenquellen werden im Laufe
-                         der Zeit integriert."
+          und über das MINT-DataLab zur weiteren Nutzung zur Verfügung zu stellen. Die Basis unseres Datenpool sind die amtlichen Statistiken aus Deutschland,
+          also die Statistiken der Bundesagentur für Arbeit, des Statistischen Bundesamtes (Destatis) und der Kultusministerkonferenz (KMK).
+          Weitere Datenquellen aus dem internationalen Bereich sind Eurostat, die OECD und die IEA.
+          Im schulisch-/außerschulischen Bereich zeigen wir außerdem Daten des IQB und der Stiftung Kinder forschen.
+          Wir bauen dabei unsere Datengrundlage stetig weiter aus."
         ))),
 
     fluidRow(
       shinydashboard::box(
-        width = 10,
+        width = 9,
         title = "Nutzungsbedingungen der Daten",
         p(style = "text-align: justify; font-size = 16px",
           "Die Nutzungsbedingungen der Datengeber erlauben die Verwendung der Daten und die grafische Aufbereitung

@@ -14,9 +14,8 @@ mod_international_schule_migration_ui <- function(id){
 
   ns <- NS(id)
   tagList(
-    p("Erhebung:"),
 
-    p("Durchschnitt anzeigen:"),
+    p("Erhebung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("line_l_int_schule"),
       choices = c("TIMSS", "PISA"),
@@ -41,7 +40,7 @@ mod_international_schule_migration_ui <- function(id){
                        multiple = FALSE
                      ),
 
-                     p("Indikator"),
+                     p("Indikator:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("line_li_timss_int_schule"),
                        choices = c("nach Geschlecht", "nach sozialem Status"),
