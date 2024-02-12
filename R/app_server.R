@@ -60,14 +60,14 @@ app_server <- function(input, output, session) {
 
   # Disconnect funktioniert nicht wenn implementiert bei publishen??
 
-  # session$onSessionEnded(function() {
-  #   if (!is.null(con) && DBI::dbIsValid(con)) {
-  #     DBI::dbDisconnect(con)
-  #   }
-  # })
+  session$onSessionEnded(function() {
+    if (!is.null(con) && DBI::dbIsValid(con)) {
+      DBI::dbDisconnect(con, shutdown = TRUE)
+    }
+  })
   # shiny::onStop(function() {
   #   if (!is.null(con) && DBI::dbIsValid(con)) {
-  #     DBI::dbDisconnect(con)
+  #     DBI::dbDisconnect(con, shutdown=TRUE)
   #   }
   # })
 
