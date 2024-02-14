@@ -79,6 +79,7 @@ mod_suche_server <- function(id, react_search, parent_session){
       output$suche_txt <- shiny::renderText(react_search$suche_eingabe_txt)
     })
     search_table <- reactive({
+
       tmp <- react_search$suchtabelle
       tmp$link <- shinyInput(
         actionButton, nrow(react_search$suchtabelle),
@@ -105,7 +106,8 @@ mod_suche_server <- function(id, react_search, parent_session){
                 rownames = FALSE,
                 escape = FALSE,
                 options = list(
-                  dom = "t",
+                  pageLength = 10,
+                  dom = "ftp",
                   columnDefs = list(
                     list(
                       visible = FALSE,
@@ -140,6 +142,8 @@ mod_suche_server <- function(id, react_search, parent_session){
         inputId = "tabs",
         selected = selected_row$menuItem..tabName)
 
+
+
       # set delay of 0.5 second to let the target page load
       session$sendCustomMessage(
         type = 'delayedScroll',
@@ -147,6 +151,8 @@ mod_suche_server <- function(id, react_search, parent_session){
           id = selected_row$Box..ID,
           delay = 1000)
       )
+
+
 
     })
 

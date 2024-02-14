@@ -8,7 +8,7 @@
 
 get_search_data <- function(term, session) {
   # lookup table
-  # term <- "LEISTUNGSKUR Pisa"
+  # term <- "International"
   # term <- ""
 
   this_search <- tolower(term)
