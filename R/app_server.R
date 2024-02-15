@@ -62,7 +62,16 @@ app_server <- function(input, output, session) {
 
   # session$onSessionEnded(function() {
   #   if (!is.null(con) && DBI::dbIsValid(con)) {
-  #     DBI::dbDisconnect(con, shutdown = TRUE)
+  #     print("Disconnecting from DuckDB...")
+  #     #DBI::dbDisconnect(con, shutdown = TRUE)
+  #     duckdb::dbDisconnect(con)
+  #   }else {
+  #     print("connection is already invalid or null.")
+  #   }
+  #   if(DBI::dbIsValid(con)){
+  #     print("sollte es nicht mehr sein")
+  #   }else{
+  #     print("gut!")
   #   }
   # })
   # shiny::onStop(function() {
