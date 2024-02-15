@@ -234,9 +234,9 @@ kurse_waffle_mint <- function(r) {
 
 kurse_einstieg_comparison <- function(r) {
 
-  ## SQL: DONE
   # load UI inputs from reactive value
-  timerange <<- r$date_kurse_einstieg_comparison
+  timerange <- r$date_kurse_einstieg_comparison
+
 
   # filter dataset based on UI inputs
   df <- dplyr::tbl(con, from = "kurse") %>%
@@ -331,7 +331,7 @@ kurse_verlauf_single <- function(r) {
   ### SQL: DONE
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg_verlauf
-  t <- as.character(timerange[1]:timerange[2])
+  t <- as.numeric(timerange[1]:timerange[2])
 
   absolut_selector <- r$abs_zahlen_kurse_einstieg_verlauf
 
@@ -1055,7 +1055,7 @@ kurse_verlauf_multiple_bl <- function(r) {
   absolut_selector <- r$abs_zahlen_kurse_verlauf_multiple
 
   timerange <- r$date_kurse_verlauf_multiple
-  t <- as.character(timerange[1]:timerange[2])
+  t <- as.numeric(timerange[1]:timerange[2])
 
   states <- r$states_kurse_verlauf_multiple
 
@@ -1288,7 +1288,7 @@ kurse_verlauf_subjects_bl <- function(r) {
   absolut_selector <- r$abs_zahlen_kurse_verlauf_subject_bl
 
   timerange <- r$date_kurse_verlauf_subject_bl
-  t <- as.character(timerange[1]:timerange[2])
+  t <- as.numeric(timerange[1]:timerange[2])
 
   states <- r$states_kurse_verlauf_subject_bl
 
@@ -2684,7 +2684,7 @@ skf_einrichtungen <- function(r){
 
   # reactive values einlesen
   timerange <- r$date_skf_einrichtungen
-  t <- as.character(timerange[1]:timerange[2])
+  t <- as.numeric(timerange[1]:timerange[2])
 
   ort_select <- r$ort_skf_einrichtungen
 
