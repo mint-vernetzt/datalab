@@ -10,8 +10,12 @@ get_search_data <- function(term, session) {
   # lookup table
   # term <- "International"
   # term <- ""
+browser()
 
-  this_search <- tolower(term)
+
+  this_search <<- tolower(term)
+  this_search <- removeWords(this_search, stopwords("german"))
+  this_searh <- SnowballC::wordStem(this_search, language = "de")
   this_search <- paste0(unlist(strsplit(x = this_search, split = " ")))
   # this_search <- "speed car distance"
   search_text <- tolower(suchtabelle$term)
@@ -21,7 +25,7 @@ get_search_data <- function(term, session) {
   search_idx <- lapply(
     X = this_search,
     FUN = function(term) {
-      grepl(pattern = term, search_text)
+      agrepl(pattern = term, search_text, max.distance = 1)
     }
   )
   # combine searches and only thos with all search terms present are used
