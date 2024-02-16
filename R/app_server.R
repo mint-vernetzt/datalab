@@ -19,6 +19,8 @@ app_server <- function(input, output, session) {
 
   mod_beruf_server("beruf_ui_1")
 
+  mod_international_server("international_ui_1")
+
   # Lazy Loading Logik
 
   # shinyjs::enable("tabs")  # Dies ermöglicht das dynamische Umschalten von Registerkarten mit shinyjs

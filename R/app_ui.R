@@ -57,6 +57,7 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Studium",  tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
+          shinydashboard::menuItem("Fokus: MINT International", tabName = "international"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen"),
           shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION")
           #shinydashboard::menuItem("Impressum",  tabName = "impressum")
@@ -105,10 +106,11 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
           # shinydashboard::tabItem(tabName ="ausbildung", mod_ausbildung_ui("ausbildung_ui_1")),
           shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
+          shinydashboard::tabItem(tabName = "international", mod_international_ui("mod_international_ui_1")),
+
           shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
-
-
           shinydashboard::tabItem(tabName ="BETAVERSION", mod_betaversion_ui("betaversion_ui_1")),
+
           shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
           shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),
           shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))

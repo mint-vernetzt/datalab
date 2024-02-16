@@ -67,10 +67,8 @@ mod_studium_studienzahl_ui <- function(id){
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_internationale_studis",
                                                               span(tags$b(span("Internationale Studierende in MINT:")))), "Wie hoch ist der Anteil von internationalen Studierenden in den MINT-Fächern?"
+        )
         ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_international",
-                                                              span(tags$b(span("MINT-Studierende im internationalen Vergleich:")))), "Hier können Sie den MINT-Anteil an deutschen Hochschulen international vergleichen."
-        )),
 
       shinydashboard::box(
         title = "Datenquellen",
@@ -587,161 +585,6 @@ mod_studium_studienzahl_ui <- function(id){
 
              ))),
 
-  # Internationaler Vergleich
-
-  fluidRow(id="studium_international",
-           shinydashboard::box(
-
-             title = "MINT-Studierende im internationalen Vergleich: Hier können Sie den MINT-Anteil an deutschen Hochschulen international vergleichen.",
-
-             width = 12,
-             p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich Studium für den internationalen Vergleich.
-               Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU, die OECD oder die UNESCO gesammelt wurden.
-                 Zum einen zeigen wir, wie groß der Anteil von MINT-Studierenden an allen Studierenden in verschiedenen Ländern ist. Außerdem ist zu sehen,
-                 in welchen Ländern der Frauenanteil oder der Anteil an internationalen Studierenden in MINT-Studiengängen besonders groß oder klein ist."),
-             tabsetPanel(type = "tabs",
-                         tabPanel("Vergleich MINT-Anteil (Karte)", br(),
-
-                                  #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                  # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                  shiny::sidebarPanel(
-                                    width = 3,
-                                    #p("LOREM"),
-                                    mod_international_map_ui("mod_international_map_ui_1")
-
-                                  ),
-                                  shiny::mainPanel(
-                                    width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_international_studienzahl_map_1")),
-                                                                 color = "#154194"),
-
-                                    p(style="font-size:12px;color:grey",
-
-                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
-
-                                    shinyBS::bsPopover(id="h_international_vergl_1", title="",
-                                                       content = paste0("In den Europa-Daten sowie den &quotweltweit&quot-Daten der UNESCO wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung)."),
-                                                       placement = "top",
-                                                       trigger = "hover"),
-                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_1") )
-                         ),
-
-                         tabPanel("Vergleich Frauen in MINT (Karte)", br(),
-
-                                  #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                  # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                  shiny::sidebarPanel(
-                                    width = 3,
-                                    #p("LOREM"),
-                                    mod_international_map_fem_ui("international_map_fem_ui_1")
-
-                                  ),
-                                  shiny::mainPanel(
-                                    width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_international_map_fem_1")),
-                                                                 color = "#154194"),
-
-                                    p(style="font-size:12px;color:grey",
-                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; feier Download, eigene Berechnungen durch MINTvernetzt."),
-
-                                    shinyBS::bsPopover(id="h_international_vergl_2", title="",
-                                                       content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung)."),
-                                                       placement = "top",
-                                                       trigger = "hover"),
-                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_2") )
-
-                         ),
-
-                         tabPanel("Top 10 MINT-Länder", br(),
-
-                                  #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                  # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                  shiny::sidebarPanel(
-                                    width = 3,
-                                    #p("LOREM"),
-                                    mod_international_top10_mint_ui("international_top10_mint_1")
-
-                                  ),
-                                  shiny::mainPanel(
-                                    width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_international_top10_mint_1")),
-                                                                 color = "#154194"),
-
-                                    p(style="font-size:12px;color:grey",
-
-                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
-
-                                    shinyBS::bsPopover(id="h_international_vergl_3", title="",
-                                                       content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung).", "<br><br>Lichtenstein und San Marino sind in dieser Betrachtung ausgeschlossen, da in beiden Ländern nur eine Hochschule für MINT-Fächer ansässig ist und das die Vergleichbarkeit verzerren könnte."),
-                                                       placement = "top",
-                                                       trigger = "hover"),
-                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_3")
-
-                                  )
-                         ),
-
-                         tabPanel("Top 10 Länder Frauen in MINT", br(),
-
-                                  #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                  # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                  shiny::sidebarPanel(
-                                    width = 3,
-                                    #p("LOREM"),
-                                    mod_international_top10_mint_gender_ui("international_top10_mint_gender_1")
-
-                                  ),
-                                  shiny::mainPanel(
-                                    width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_international_top10_mint_gender_1")),
-                                                                 color = "#154194"),
-
-                                    p(style="font-size:12px;color:grey",
-
-                                      "Quelle der Daten: Eurostat, 2023; OECD, 2023; freies Download, eigene Berechnungen durch MINTvernetzt."),
-
-                                    shinyBS::bsPopover(id="h_international_vergl_4", title="",
-                                                       content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung).", "<br><br>Lichtenstein und San Marino sind in dieser Betrachtung ausgeschlossen, da in beiden Ländern nur eine Hochschule für MINT-Fächer ansässig ist und das die Vergleichbarkeit verzerren könnte."),
-                                                       placement = "top",
-                                                       trigger = "hover"),
-                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_4") )
-                         ),
-                         tabPanel("Vergleich internationale Studierende", br(),
-                                  #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                  # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                  shiny::sidebarPanel(
-                                    width = 3,
-                                    #p("LOREM"),
-                                    mod_international_top10_mint_intl_ui("mod_international_top10_mint_intl_ui_1")),
-
-
-                                  shiny::mainPanel(
-                                    width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_international_mint_top_10_1")),
-                                                                 color = "#154194"),
-
-                                    p(style="font-size:12px;color:grey",
-                                      "Quelle der Daten: Eurostat, 2023; freies Download, eigene Berechnungen durch MINTvernetzt."),
-
-
-                                    shinyBS::bsPopover(id="h_international_vergl_5", title="",
-                                                       content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung)."),
-                                                       placement = "top",
-                                                       trigger = "hover"),
-                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_5")
-                         )
-
-
-             ))
-           )
-           ),
-
-
-
 
     #Footer
   funct_footer()
@@ -920,30 +763,7 @@ mod_studium_studienzahl_server <- function(id, r){
     })
 
 
-    # Box 5 - Internationaler Vergleich
-    # Box 2 - Studium
-    output$plot_international_studienzahl_map_1 <- renderUI({
-      # logger::log_debug("plot_international_map")
-      plot_international_map(r)
-    })
 
-    output$plot_international_top10_mint_1 <- renderUI({
-      # logger::log_debug("plot_international_top10")
-      plot_international_top10(r)
-    })
-
-    output$plot_international_top10_mint_gender_1 <- renderUI({
-      # logger::log_debug("plot_international_top10_gender")
-      plot_international_top10_gender(r)
-    })
-
-    output$plot_international_map_fem_1 <- renderUI({
-      plot_international_map_fem(r)
-    })
-
-    output$plot_international_mint_top_10_1 <- renderUI({
-      plot_international_mint_top_10(r)
-    })
 
     # REST
 

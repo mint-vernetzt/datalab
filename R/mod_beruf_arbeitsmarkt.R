@@ -31,8 +31,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           width = 7,
           p(style = "text-align: left; font-size = 16px",
             "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
-           Dabei unterscheiden wir zwischen Auszubildenden und (sozialversicherungspflichtigen) Beschäftigten.  Die Kategorisierung in MINT entspricht der Klassifikation durch die Bundesagentur für Arbeit.
-            'Hinweise & Datenquellen'.")
+           Dabei unterscheiden wir zwischen Auszubildenden und (sozialversicherungspflichtigen) Beschäftigten.
+           Die Kategorisierung in MINT entspricht der Klassifikation durch die Bundesagentur für Arbeit.
+            Weitere Inforamtionen dazu finden Sie auf der Unterseite \"Hinweise & Datenquellen\".")
         ),
 
         shinydashboard::box(
@@ -58,10 +59,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_frauen",
             span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
             ),
-          p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_international",
-                                                                span(tags$b(span("MINT-Beschäftigung im internationalen Vergleich:")))),
-            "Hier können Sie den MINT-Anteil im deutschen Arbeitsmarkt international vergleichen."
-          ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_regional",
             span(tags$b(span("Regionaler MINT-Steckbrief:")))),"Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen."
             )),
@@ -463,144 +460,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     )
         ))),
 
-    # Box International ----
-
-    fluidRow(id="beruf_international",
-             shinydashboard::box(
-               title = "MINT-Beschäftigung im internationalen Vergleich: Hier können Sie den MINT-Anteil im deutschen Arbeitsmarkt international vergleichen.",
-               width = 12,
-               p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich des Arbeitsmarkts für den internationalen Vergleich.
-                 Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU und die OECD gesammelt wurden.
-                 Zum einen zeigen wir, wie groß der Anteil von MINT-Auszubildenden und Beschäftigten in verschiedenen Ländern ist.
-                 Außerdem ist zu sehen, in welchen Ländern der Frauenanteil besonders groß oder klein ist.
-                 Darüber hinaus werfen wir einen Blick auf Studiums- bzw. Ausbildungs-Anfänger*innen und Absolvent*innen in MINT
-                 im Ländervergleich."),
-
-               tabsetPanel(type = "tabs",
-                           tabPanel("Vergleich MINT-Anteil (Karte)", br(),
-
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                    shiny::sidebarPanel(
-                                      width = 3,
-                                      #p("LOREM"),
-                                      mod_international_map_arb_ui("mod_international_map_arb_ui_1")
-
-                                    ),
-                                    shiny::mainPanel(
-                                      width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_studienzahl_map_arb_1")),
-                                                                   color = "#154194"),
-
-                                      p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
-                                      shinyBS::bsPopover(id = "h_beruf_international_1", title = "",
-                                                         content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler*innen und Ingenieur*innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_1")
-                                    )
-                           ),
-                           tabPanel("Vergleich Frauen in MINT (Karte)", br(),
-
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                    shiny::sidebarPanel(
-                                      width = 3,
-                                      #p("LOREM"),
-                                      mod_international_map_arb_gender_ui("mod_international_map_arb_gender_ui_1")
-                                    ),
-                                    shiny::mainPanel(
-                                      width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_map_arb_gender_1")),
-                                                                   color = "#154194"),
-
-                                      p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
-                                      shinyBS::bsPopover(id = "h_beruf_international_2", title = "",
-                                                         content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler*innen und Ingenieur*innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
-                                                         placement = "top",
-                                                         trigger = "hover"),
-                                      tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_2")
-                                    )
-                           ),tabPanel("Top 10 MINT-Länder", br(),
-
-                                      #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                      # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                      shiny::sidebarPanel(
-                                        width = 3,
-                                        #p("LOREM"),
-                                        mod_international_top10_mint_arb_ui("mod_international_top10_mint_arb_ui_1")
-                                      ),
-                                      shiny::mainPanel(
-                                        width = 9,
-                                        shinycssloaders::withSpinner(htmlOutput(ns("plot_international_top10_mint_arb_1")),
-                                                                     color = "#154194"),
-
-                                        p(style="font-size:12px;color:grey",
-                                          "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
-                                        shinyBS::bsPopover(id = "h_beruf_international_3", title = "",
-                                                           content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler*innen und Ingenieur*innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
-                                                           placement = "top",
-                                                           trigger = "hover"),
-                                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_3")
-                                      )
-                           ),tabPanel("Top 10 Länder Frauen in MINT", br(),
-
-                                      #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                      # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                      shiny::sidebarPanel(
-                                        width = 3,
-                                        #p("LOREM"),
-                                        mod_international_top10_mint_arb_gender_ui("mod_international_top10_mint_arb_gender_ui_1")
-                                      ),
-                                      shiny::mainPanel(
-                                        width = 9,
-                                        shinycssloaders::withSpinner(htmlOutput(ns("plot_international_top10_mint_arb_gender_1")),
-                                                                     color = "#154194"),
-
-                                        p(style="font-size:12px;color:grey",
-                                          "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
-                                        shinyBS::bsPopover(id = "h_beruf_international_4", title = "",
-                                                           content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler*innen und Ingenieur*innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
-                                                           placement = "top",
-                                                           trigger = "hover"),
-                                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_4")
-                                      )
-                           ),tabPanel("MINT-Anfänger:innen und Absolvent:innen", br(),
-
-                                      #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                      # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-                                      shiny::sidebarPanel(
-                                        width = 3,
-                                        #p("LOREM"),
-                                        mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1")
-
-                                      ),
-                                      shiny::mainPanel(
-                                        width = 9,
-                                        shinycssloaders::withSpinner(htmlOutput(ns("plot_international_arbeitsmarkt_vergleiche_1")),
-                                                                     color = "#154194"),
-
-                                        p(style="font-size:12px;color:grey",
-                                          "Quelle der Daten: OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
-
-                                        # shinyBS::bsPopover(id="h_international_arbeit_3", title="",
-                                        #                    content = paste0("POPUP INFO TEXT HERE"),
-                                        #                    placement = "top",
-                                        #                    trigger = "hover"),
-                                        # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_arbeit_3")
-                                      )
-                           )
-               )
-             )
-    ),
-
     # Box Regional ----
 
     fluidRow(id="beruf_regional",
@@ -814,41 +673,8 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
       arbeitsmarkt_einstieg_vergleich_gender(r)
     })
 
-    #Box4
-    output$plot_international_studienzahl_map_arb_1 <- renderUI({
-      plot_international_map_arb(r)
-    })
 
-    output$plot_international_map_arb_gender_1 <- renderUI({
-      plot_international_map_arb_gender(r)
-    })
-
-    output$plot_international_top10_mint_arb_1 <- renderUI({
-      plot_international_top10_mint_arb(r)
-    })
-
-    output$plot_international_top10_mint_arb_gender_1 <- renderUI({
-      plot_international_top10_mint_arb_gender(r)
-    })
-
-    # Box 3 - Arbeitsmarkt (Jakob)
-    # output$plot_international_arbeitsmarkt_map_1 <- renderUI({
-    #   logger::log_debug("plot_international_arbeitsmarkt_map_1")
-    #   plot_international_arbeitsmarkt_map(r)
-    # })
-    #
-    # output$plot_international_arbeitsmakrt_top10_1 <- renderUI({
-    #   logger::log_debug("plot_international_arbeitsmakrt_top10_1")
-    #   plot_international_arbeitsmakrt_top10(r)
-    # })
-
-    output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
-      # logger::log_debug("plot_international_arbeitsmarkt_vergleiche_1")
-      plot_international_arbeitsmarkt_vergleiche(r)
-    })
-
-
-    # Box5
+    # Box4
     output$plot_arbeitsmarkt_detail_map <- renderUI({
       arbeitsmarkt_lk_detail_map(r)
     })
