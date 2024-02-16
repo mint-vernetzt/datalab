@@ -11,8 +11,15 @@ run_app <- function(
   onStart =  function() {
     # Sys.setlocale(category = "LC_ALL", locale = "German_Germany.utf8")
     #
-     con <<- DBI::dbConnect(RSQLite::SQLite(), "data/mint_db.sqlite", encoding = "UTF-8")
-    # con <<- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+
+    # con <<- DBI::dbConnect(RSQLite::SQLite(), "data/mint_db.sqlite", encoding = "UTF-8")
+     con <<- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb", read_only = TRUE)
+
+     onStop(function() {
+       DBI::dbDisconnect(con, shutdown = TRUE)
+
+     })
+
   },
   options = list(),
   enableBookmarking = NULL,

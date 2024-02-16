@@ -570,9 +570,10 @@ beruf_einstieg_vergleich <- function(r) {
 
   # load UI inputs from reactive value
   timerange <- r$date_arbeitsmarkt_einstieg_vergleich
+  timeragne <- as.numeric(timerange)
 
   df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    dplyr::filter(jahr %in% timerange &
+    dplyr::filter(jahr == timerange &
                     landkreis == "alle Landkreise" &
                     bundesland == "Deutschland" &
                     anforderung == "Gesamt" &

@@ -87,7 +87,8 @@ mod_home_start_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               htmlOutput(ns("plot_mint_rest_einstieg_1")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_rest_einstieg_1")),
+                                                            color = "#154194"),
                                br(),
                                p(style="font-size:12px;color:grey",
                                  "Quellen: Statistisches Bundesamt,2022; Bundesagentur für Arbeit,2022; KMK, 2022, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -102,10 +103,12 @@ mod_home_start_ui <- function(id){
                     tabPanel("Zeitverlauf", br(),
                         shiny::sidebarPanel(
                           width = 3,
-                          mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")),
+                          mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")
+                          ),
                         shiny::mainPanel(
                           width = 9,
-                          highcharter::highchartOutput(ns("plot_mint_1")),
+                          shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_mint_1")),
+                                                       color = "#154194"),
                           br(),
                           p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_mint_2", title = "",
@@ -121,10 +124,12 @@ mod_home_start_ui <- function(id){
                     tabPanel("Überblick", br(),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")),
+                               mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")
+                               ),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_comparison_mint")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_comparison_mint")),
+                                                            color = "#154194"),
                                br(),
                                p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_mint_3", title = "",
@@ -154,7 +159,9 @@ mod_home_start_ui <- function(id){
 
                              shiny::mainPanel(
                                width = 9,
-                               htmlOutput(ns("plot_pie_mint_gender")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_pie_mint_gender")),
+                                                            color = "#154194"),
+
                                p(style="font-size:12px;color:grey",
                                   "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_frauen_1", title = "",
@@ -171,8 +178,10 @@ mod_home_start_ui <- function(id){
                           mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
                         shiny::mainPanel(
                           width = 9,
-                          highcharter::highchartOutput(ns("plot_verlauf_mint"))
-                          ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                          shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_mint")),
+                                                       color = "#154194"),
+
+                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_frauen_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                              placement = "top",
@@ -186,8 +195,10 @@ mod_home_start_ui <- function(id){
                                mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_comparison_gender"))
-                                              ,p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_comparison_gender")),
+                                                            color = "#154194"),
+
+                               p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_frauen_3", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                                   placement = "top",

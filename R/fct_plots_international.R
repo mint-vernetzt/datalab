@@ -984,7 +984,7 @@ if (avg_line == "Ja"){
       highcharter::hc_yAxis(plotLines = list(
         list(
           value = data_avg,
-          color = "#FF0000",
+          color = "#B16FAB",
           width = 3,
           zIndex = 4
         )
@@ -1022,7 +1022,7 @@ if (avg_line == "Ja"){
                             plotLines = list(
                               list(
                                 value = data_avg,
-                                color = "#FF0000",
+                                color = "#B16FAB",
                                 width = 3,
                                 zIndex = 4
                               )
