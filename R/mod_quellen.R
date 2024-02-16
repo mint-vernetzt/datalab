@@ -91,7 +91,7 @@ mod_quellen_ui <- function(id){
         br(),
         tags$a(href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=International_Standard_Classification_of_Education_(ISCED)#ISCED_1997_.28fields.29_and_ISCED-F_2013", "Internationale Klassifikation von Ausbidlungen (ISCED-F)", target ="_blank"),
         br(),
-        tags$a(href="https://ec.europa.eu/eurostat/cache/metadata/Annexes/hrst_esms_an1.pdf", "Eurostat Einteilung von MINT-Beschäftigten", target ="_blank"),
+        tags$a(href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:Scientists_and_engineers", "Eurostat Einteilung von Naturwissenschaftler:innen und Ingenieur:innen", target ="_blank"),
         )
     ),
 

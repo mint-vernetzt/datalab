@@ -14,6 +14,7 @@ Depends:
 Imports: 
     config (>= 0.3.1),
     dplyr,
+    shinycssloaders,
     dbplyr,
     DT,
     ggplot2,

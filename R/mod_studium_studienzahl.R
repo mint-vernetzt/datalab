@@ -103,7 +103,9 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_test_ui("mod_studium_studienzahl_test_ui_1")
                                ),
                              shiny::mainPanel(width = 9,
-                               htmlOutput(ns("test")),
+                              shinycssloaders::withSpinner(htmlOutput(ns("test")),
+                                                           color = "#154194"),
+
                                p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_mint_1", title = "",
@@ -121,7 +123,8 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
                              shiny::mainPanel(
                                width = 9,
-                               plotOutput(ns("plot_waffle")),
+                               shinycssloaders::withSpinner(plotOutput(ns("plot_waffle")),
+                                                            color = "#154194"),
                                p(),
                                p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -141,7 +144,9 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_einstieg_verlauf_ui("mod_studium_studienzahl_einstieg_verlauf_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_einstieg_verlauf")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_verlauf")),
+                                                            color = "#154194"),
+
                                p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_mint_3", title = "",
@@ -161,8 +166,10 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_verlauf_bl_subject_ui("mod_studium_studienzahl_verlauf_bl_subject_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject"))
-                               ,p(style="font-size:12px;color:grey",
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject")),
+                                                            color = "#154194"),
+
+                               p(style="font-size:12px;color:grey",
                                   "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_mint_4", title = "",
                                                   content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br> <br> Seit dem Jahr 2015 zählt Informatik zu den Ingenieurwissenschaften und nicht mehr zu den Naturwissenschaften.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
@@ -181,7 +188,9 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf")),
+                                                            color = "#154194"),
+
                                p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_mint_5", title = "",
@@ -200,7 +209,9 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_einstieg_comparison_ui("mod_studium_studienzahl_einstieg_comparison_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_einstieg_comparison")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_comparison")),
+                                                            color = "#154194"),
+
                                p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_mint_6", title = "",
@@ -221,7 +232,9 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               plotOutput(ns("plot_waffle_choice_gender")),
+                               shinycssloaders::withSpinner(plotOutput(ns("plot_waffle_choice_gender")),
+                                                            color = "#154194"),
+
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_mint_7", title = "",
                                                   content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
@@ -241,7 +254,9 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),
+                                                            color = "#154194"),
+
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_mint_8", title = "",
                                                   content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
@@ -313,7 +328,9 @@ mod_studium_studienzahl_ui <- function(id){
                         # ),
                       shiny::mainPanel(
                         width = 9,
-                        htmlOutput(ns("plot_top_faecher")),
+                        shinycssloaders::withSpinner(htmlOutput(ns("plot_top_faecher")),
+                                                     color = "#154194"),
+
                         p(style = "font-size:12px;color:grey",
                           "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                         br(),
@@ -333,7 +350,9 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               htmlOutput(ns("plot_studienzahl_map")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_studienzahl_map")),
+                                                            color = "#154194"),
+
                                p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
@@ -357,7 +376,9 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "550px"),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "550px"),
+                                                            color = "#154194"),
+
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt." ),
                                shinyBS::bsPopover(id="h_studium_fach_3", title="",
                                                   content = paste0("Durch Rundung kann es dazu kommen, dass einzelne Studienfachgruppen für bestimmte Indikatoren oder Regionen nicht in der Darstellung angezeigt werden.", "<br> <br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
@@ -377,7 +398,9 @@ mod_studium_studienzahl_ui <- function(id){
                               mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui")),
                             shiny::mainPanel(
                               width = 9,
-                              highcharter::highchartOutput(ns("mint_anteil")),
+                              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("mint_anteil")),
+                                                           color = "#154194"),
+
                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
                                ,
                               shinyBS::bsPopover(id="h_studium_fach_4", title="",
@@ -397,7 +420,9 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_vergleich_bl1")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_vergleich_bl1")),
+                                                            color = "#154194"),
+
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
                                shinyBS::bsPopover(id="h_studium_fach_5", title="",
@@ -429,7 +454,9 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               htmlOutput(ns("plot_einstieg_pie_gender")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_pie_gender")),
+                                                            color = "#154194"),
+
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_frauen_1", title="",
                                                   content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
@@ -448,7 +475,9 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_einstieg_verlauf_gender_ui("mod_studium_studienzahl_einstieg_verlauf_gender_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender")),
+                                                            color = "#154194"),
+
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_frauen_2", title="",
                                                   content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
@@ -468,7 +497,9 @@ mod_studium_studienzahl_ui <- function(id){
                              mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1")),
                            shiny::mainPanel(
                              width = 9,
-                             highcharter::highchartOutput(ns("plot_einstieg_comparison_gender")),
+                             shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_comparison_gender")),
+                                                          color = "#154194"),
+
                              p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                              shinyBS::bsPopover(id="h_studium_frauen_3", title="",
                                                 content = paste0("In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br> <br> Studierende auf Lehramt werden für Fächergruppen, die nicht oder nur von einer sehr geringen Anzahlen an Lehramtstudierenden deutschlandweit als Hauptfach studiert werden, nicht in der Übersicht angezeigt. In einzelnen Bundesländern kann es für spezfisiche Fächergruppen zu keinen oder sehr geringen Leharamtstudierendenzahlen kommen. Achten Sie hierbei auf die absoluten Zahlenangaben zur Anzahl der Studierenden.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
@@ -497,8 +528,8 @@ mod_studium_studienzahl_ui <- function(id){
                                   shiny::mainPanel(
                                     width = 9,
                                     tags$head(tags$style(HTML(".small-box {height: 400px}"))),
-                                    highcharter::highchartOutput(ns("plot_auslaender_test"), height = "650px"),
-
+                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_auslaender_test"), height = "650px"),
+                                                                 color = "#154194"),
                                     p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                     shinyBS::bsPopover(id="d_studium_international_1", title = "",
                                                        content = paste0("internationale Studierende = Studierende, die in Deutschland studieren aber keine deutsche Staatsbürgerschaft besitzen."),
@@ -523,7 +554,9 @@ mod_studium_studienzahl_ui <- function(id){
                                     mod_studium_studienzahl_ausl_zeit_ui("mod_studium_studienzahl_ausl_zeit_ui")),
                                   shiny::mainPanel(
                                     width = 9,
-                                    highcharter::highchartOutput(ns("plot_auslaender_zeit")),
+                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_auslaender_zeit")),
+                                                                 color = "#154194"),
+
                                     p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                     shinyBS::bsPopover(id="d_studium_international_2", title = "",
                                                        content = paste0("internationale Studierende = Studierende, die in deutschland studieren aber keine deutsche Staatsbürgerschaft besitzen."),
@@ -580,7 +613,9 @@ mod_studium_studienzahl_ui <- function(id){
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    htmlOutput(ns("plot_international_studienzahl_map_1")),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_international_studienzahl_map_1")),
+                                                                 color = "#154194"),
+
                                     p(style="font-size:12px;color:grey",
 
                                       "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
@@ -605,7 +640,9 @@ mod_studium_studienzahl_ui <- function(id){
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    htmlOutput(ns("plot_international_map_fem_1")),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_international_map_fem_1")),
+                                                                 color = "#154194"),
+
                                     p(style="font-size:12px;color:grey",
                                       "Quelle der Daten: Eurostat, 2023; OECD, 2023; feier Download, eigene Berechnungen durch MINTvernetzt."),
 
@@ -630,7 +667,9 @@ mod_studium_studienzahl_ui <- function(id){
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    htmlOutput(ns("plot_international_top10_mint_1")),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_international_top10_mint_1")),
+                                                                 color = "#154194"),
+
                                     p(style="font-size:12px;color:grey",
 
                                       "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
@@ -657,7 +696,9 @@ mod_studium_studienzahl_ui <- function(id){
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    htmlOutput(ns("plot_international_top10_mint_gender_1")),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_international_top10_mint_gender_1")),
+                                                                 color = "#154194"),
+
                                     p(style="font-size:12px;color:grey",
 
                                       "Quelle der Daten: Eurostat, 2023; OECD, 2023; freies Download, eigene Berechnungen durch MINTvernetzt."),
@@ -680,7 +721,9 @@ mod_studium_studienzahl_ui <- function(id){
 
                                   shiny::mainPanel(
                                     width = 9,
-                                    htmlOutput(ns("plot_international_mint_top_10_1")),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_international_mint_top_10_1")),
+                                                                 color = "#154194"),
+
                                     p(style="font-size:12px;color:grey",
                                       "Quelle der Daten: Eurostat, 2023; freies Download, eigene Berechnungen durch MINTvernetzt."),
 
