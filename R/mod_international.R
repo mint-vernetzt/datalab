@@ -1,4 +1,4 @@
-#' international UI Function
+#' Fachkraft-Fokus UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_international_ui <- function(id){
+mod_fachkraft_ui <- function(id){
 
   logger::log_debug("start mod_international_ui")
 
@@ -16,7 +16,7 @@ mod_international_ui <- function(id){
   tagList(
     fluidPage(
       fluidRow(
-        mod_international_start_ui("mod_international_start_ui_1")
+        mod_fachkraft_start_ui("mod_fachkraft_start_ui_1")
       )
     )
   )
@@ -24,10 +24,10 @@ mod_international_ui <- function(id){
 
 }
 
-#' international Server Functions
+#' Fachkraft-Fokus Server Functions
 #'
 #' @noRd
-mod_international_server <- function(id,
+mod_fachkraft_server <- function(id,
                                      data_studierende_absolventen_weltweit,
                                      data_studierende_anzahl_oecd,
                                      data_studierende_europa,
@@ -43,27 +43,7 @@ mod_international_server <- function(id,
   logger::log_debug("Setup Seiten-Module: INTERNATIONAL")
   r <- reactiveValues()
 
-  mod_international_start_server("mod_international_start_ui_1", r)
-  # Box 1 - Studium
-  mod_international_map_server("mod_international_map_ui_1", r)
-  mod_international_top10_mint_server("international_top10_mint_1", r)
-  mod_international_top10_mint_gender_server("international_top10_mint_gender_1", r)
-  mod_international_map_fem_server("international_map_fem_ui_1", r)
-  mod_international_top10_mint_intl_server("mod_international_top10_mint_intl_ui_1", r)
-
-  # Box 2 - Schule
-  mod_international_schule_map_server("international_schule_map_1", r)
-  mod_international_schule_item_server("international_schule_item_1", r)
-  mod_international_schule_migration_server("international_schule_migration_1", r)
-
-
-  # Box 3
-  #mod_international_start_server("mod_international_start_ui_1", r)
-  mod_international_map_arb_server("mod_international_map_arb_ui_1",r)
-  mod_international_map_arb_gender_server("mod_international_map_arb_gender_ui_1",r)
-  mod_international_top10_mint_arb_server("mod_international_top10_mint_arb_ui_1", r)
-  mod_international_top10_mint_arb_gender_server("mod_international_top10_mint_arb_gender_ui_1", r)
-  mod_international_arbeitsmarkt_vergleich_server("international_arbeitsmarkt_vergleich_1", r)
+  mod_fachkraft_start_server("mod_fachkraft_start_ui_1", r)
 
   # box 4 fachkräfte
   mod_fachkraft_item_epa_server("fachkraft_item_epa_1", r)
@@ -72,7 +52,7 @@ mod_international_server <- function(id,
   mod_fachkraft_bar_vakanz_server("fachkraft_bar_vakanz_1", r)
 
   # box 5 International Table
-  mod_international_table_input_server("international_table_input_1", r)
+  # mod_international_table_input_server("international_table_input_1", r)
 
 
 

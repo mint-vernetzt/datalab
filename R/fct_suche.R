@@ -10,11 +10,10 @@ get_search_data <- function(term, session) {
   # lookup table
   # term <- "International"
   # term <- ""
-browser()
 
 
-  this_search <<- tolower(term)
-  this_search <- removeWords(this_search, stopwords("german"))
+  this_search <- tolower(term)
+  this_search <- tm::removeWords(this_search, tm::stopwords("german"))
   this_searh <- SnowballC::wordStem(this_search, language = "de")
   this_search <- paste0(unlist(strsplit(x = this_search, split = " ")))
   # this_search <- "speed car distance"

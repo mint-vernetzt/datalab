@@ -66,17 +66,17 @@ app_server <- function(input, output, session) {
 
   # International Arbeitsmarkt
 
-  load(file = system.file(package="datalab","data/arbeitsmarkt_absolvent_oecd.rda"))
-
-  load(file = system.file(package="datalab","data/arbeitsmarkt_anfaenger_absolv_oecd.rda"))
-
-  load(file = system.file(package="datalab","data/arbeitsmarkt_anzahl_azubis_oecd.rda"))
-
-  load(file = system.file(package="datalab","data/arbeitsmarkt_beschaeftigte_eu.rda"))
-
-  load(file = system.file(package="datalab","data/suchtabelle.rda"))
-
-  load(file = system.file(package="datalab","data/international_zentral.rda"))
+  # load(file = system.file(package="datalab","data/arbeitsmarkt_absolvent_oecd.rda"))
+  #
+  # load(file = system.file(package="datalab","data/arbeitsmarkt_anfaenger_absolv_oecd.rda"))
+  #
+  # load(file = system.file(package="datalab","data/arbeitsmarkt_anzahl_azubis_oecd.rda"))
+  #
+  # load(file = system.file(package="datalab","data/arbeitsmarkt_beschaeftigte_eu.rda"))
+  #
+  # load(file = system.file(package="datalab","data/suchtabelle.rda"))
+  #
+  # load(file = system.file(package="datalab","data/international_zentral.rda"))
 
   logger::log_debug("Daten laden fertig")
 
@@ -101,22 +101,8 @@ app_server <- function(input, output, session) {
 
   mod_ausbildung_server("ausbildung_ui_1", data_ausbildungsvertraege = data_naa)
 
-  mod_international_server("international_ui_1",
-                           data_studierende_absolventen_weltweit = studierende_absolventen_weltweit,
-                           data_studierende_anzahl_oecd = studierende_anzahl_oecd,
-                           data_studierende_europa = studierende_europa,
-                           data_studierende_mobil_eu_absolut= studierende_mobil_eu_absolut,
-                           data_countries_names = countries_names,
+  mod_fachkraft_server("fachkraft_ui_1")
 
-                           #data_studierende_intern_oecd = studierende_intern_oecd
-                           #
-                           data_arbeitsmarkt_absolvent_oecd = arbeitsmarkt_absolvent_oecd, # Anzahl
-                           data_arbeitsmarkt_anfaenger_absolv_oecd = arbeitsmarkt_anfaenger_absolv_oecd, # Anteil
-                           data_arbeitsmarkt_anzahl_azubis_oecd = arbeitsmarkt_anzahl_azubis_oecd,
-                           data_arbeitsmarkt_beschaeftigte_eu = arbeitsmarkt_beschaeftigte_eu
-                           )
-
-  mod_fachkraft_server("fachkraft_1")
 
   react_search <- reactiveValues()
   mod_suche_server("suche_1", react_search, parent_session = session)
