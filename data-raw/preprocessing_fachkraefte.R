@@ -42,9 +42,6 @@ colnames <- c("jahr",
 
 colnames(fkd) <- colnames
 fkd <- fkd[c(-1, -2),]
-t <- fkd %>%
-  dplyr::mutate(dplyr::across(dplyr::starts_with("jahr":"gesamt"), as.numeric),
-                dplyr::across(dplyr::starts_with("szenario"), as.character))
 
 fkd <- fkd %>%
   dplyr::mutate_at(vars("jahr":"gesamt"), as.numeric,
@@ -68,7 +65,7 @@ fkd <- fkd %>%
       szenario == "Migration null" ~ "Stillstand",
       szenario == "Migration niedrig" ~"Verschlechterung",
       szenario == "Migration hoch" ~"Verbesserung",
-      szenario == "Beteiligung Älterer hoch" ~ "Verbesserung",
+      grepl("Ältere", szenario) ~ "Verbesserung",
       szenario == "Maximalszenario" ~ "Verbesserung",
       szenario == "Minimalszenario" ~ "Verschlechterung",
       T ~ NA
@@ -97,14 +94,21 @@ fkd <- fkd %>%
       szenario %in% c("Bildung hoch", "Bildung niedrig") ~ "MINT-Bildung",
       grepl("Fraue", szenario) ~ "Frauen in MINT",
       grepl("Migrat", szenario) ~ "Internationale MINT-Fachkräfte",
-      grepl("Ältere", szenario) ~ "Beteiligung Ältere MINT-Fachkräfte",
-      szenario %in% c("Maximalszenario", "Minimalszenario") ~ "Gesamteffekt"
+      grepl("Ältere", szenario) ~ "Beteiligung älterer MINT-Fachkräfte",
+      szenario %in% c("Maximalszenario", "Minimalszenario") ~ "Gesamteffekt",
+      T ~ NA
     )
   ) %>%
   dplyr::select(-szenario, -wirkungshebel)
 
+fkd <- fkd %>%
+  dplyr::filter(nationalitaet != "Gesamt",
+                geschlecht != "Gesamt",
+                anforderung != "Gesamt")
+
 # nationalität gesamt berechnen
 nat_ges <- fkd %>%
+  dplyr::filter(nationalitaet != "Gesamt") %>%
   dplyr::group_by(indikator, anforderung, geschlecht, wirkhebel, jahr) %>%
   dplyr::summarise(wert = sum(wert)) %>%
   dplyr::mutate(nationalitaet = "Gesamt") %>%
@@ -114,6 +118,7 @@ fkd <- rbind(fkd, nat_ges)
 
 # geschlecht gesamt berechnen
 gen_ges <- fkd %>%
+  dplyr::filter(geschlecht != "Gesamt") %>%
   dplyr::group_by(indikator, anforderung, nationalitaet, wirkhebel, jahr) %>%
   dplyr::summarise(wert = sum(wert)) %>%
   dplyr::mutate(geschlecht = "Gesamt") %>%
@@ -123,12 +128,14 @@ fkd <- rbind(fkd, gen_ges)
 
 # anforderung gesamt berechnen
 anf_ges <- fkd %>%
+  dplyr::filter(anforderung != "Gesamt") %>%
   dplyr::group_by(indikator, geschlecht, nationalitaet, wirkhebel, jahr) %>%
   dplyr::summarise(wert = sum(wert)) %>%
   dplyr::mutate(anforderung = "Gesamt") %>%
   dplyr::ungroup()
 
 fkd <- rbind(fkd, anf_ges)
+
 
 fkd <- fkd[,c("wirkhebel", "indikator", "geschlecht", "nationalitaet", "anforderung", "jahr", "wert")]
 
