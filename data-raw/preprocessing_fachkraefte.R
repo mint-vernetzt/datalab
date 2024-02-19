@@ -139,4 +139,7 @@ fkd <- rbind(fkd, anf_ges)
 
 fkd <- fkd[,c("wirkhebel", "indikator", "geschlecht", "nationalitaet", "anforderung", "jahr", "wert")]
 
-#save(fkd, file = "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/03_Backup_aus_RProjekt/data/fachkraefte_prognose.rda")
+fachkraefte_prognose <- fkd
+usethis::use_data(fachkraefte_prognose, overwrite = T)
+
+#save(fachkraefte_prognose, file = "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/03_Backup_aus_RProjekt/data/fachkraefte_prognose.rda")
