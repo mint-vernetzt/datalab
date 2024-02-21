@@ -570,6 +570,52 @@ fachkraft_ui_berufe <- function(level = "Fachkräfte") {
   return(selection)
 }
 
+fachkraft_ui_wirkhebel <- function() {
+  logger::log_debug("set fachkraft ui selection for wirkhebel")
+
+  selection <- NULL
+
+  selection <- c(
+    "Beteiligung älterer MINT-Fachkräfte",
+    "Frauen in MINT",
+    "Gesamteffekt",
+    "Internationale MINT-Fachkräfte",
+    "MINT-Bildung"
+  )
+
+  return(selection)
+}
+
+fachkraft_ui_scenario <- function(wirkhebel) {
+  logger::log_debug("set fachkraft ui selection for wirkhebel scenario")
+
+  selection <- NULL
+
+  if(wirkhebel %in% c("MINT-Bildung", "Gesamteffekt")){
+    selection <- c(
+      "Verschlechterung",
+      "Verbesserung"
+    )
+  } else if(wirkhebel == "Internationale MINT-Fachkräfte"){
+    selection <- c(
+      "Stillstand",
+      "Verschlechterung",
+      "Verbesserung"
+    )
+  } else if(wirkhebel == "Beteiligung älterer MINT-Fachkräfte"){
+    selection <- c("Verbesserung")
+
+  } else if(wirkhebel == "Frauen in MINT"){
+    selection <- c(
+      "Verbesserung",
+      "starke Verbesserung"
+    )
+  }
+
+  return(selection)
+}
+
+
 # function to extract a plot title from a highcharter object
 get_plot_title <- function(plot, path = ".") {
 

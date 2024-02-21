@@ -224,55 +224,95 @@ mod_fachkraft_start_ui <- function(id){
       shinydashboard::box(
         title = "Zukunftsszenarien der MINT-Fachkräfte",
         width = 12,
-        p("LOREM IOSUM")
+        p("LOREM IOSUM"),
+        tabsetPanel(
+          type = "tabs",
+          tabPanel(
+            title = "Zukünftige Fachkräfte-Entwicklung", br(),
+
+            # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+            # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+            shiny::sidebarPanel(
+              width = 3,
+              mod_fachkraft_item_prog_ui("fachkraft_item_prog_1"),
+              br(),
+              downloadButton(
+                outputId = ns("download_btn_plot_fachkraft_prog_item_1"),
+                label = "Download",
+                icon = icon("download")),
+            ),
+            shiny::mainPanel(
+              width = 9,
+              htmlOutput(ns("plot_fachkraft_prog_item_1")),
+              p(style="font-size:12px;color:grey",
+                "hier Quellen"),
+              shinyBS::bsPopover(
+                id="h_fachkraft_prog_1", title="",
+                content = paste0("POPUP INFO TEXT HERE"),
+                placement = "top",
+                trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"),
+                     icon("info-circle"),
+                     id = "h_fachkraft_prog_1")
+            )
+          ),
+          tabPanel(
+            "Im Detail: Zukünftige Fachkräfte-Entwicklung", br(),
+
+            # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+            # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+            shiny::sidebarPanel(
+              width = 3,
+              mod_fachkraft_item_mint_ui("fachkraft_item_prog_detail_1") # TODO
+
+            ),
+            shiny::mainPanel(
+              width = 9,
+              htmlOutput(ns("plot_fachkraft_prog_detail_item_1")),
+              p(style="font-size:12px;color:grey",
+                "hier Quellen"),
+              shinyBS::bsPopover(id="h_fachkraft_prog_2", title="",
+                                 content = paste0("POPUP INFO TEXT HERE"),
+                                 placement = "top",
+                                 trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_2")
+            )
+          ),
+
+          tabPanel(
+            "Übersicht Wirkhebel", br(),
+
+            # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+            # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+            shiny::sidebarPanel(
+              width = 3,
+              mod_fachkraft_item_detail_ui("fachkraft_item_wirkhebel_1"), # TODO
+              downloadButton(
+                outputId = ns("download_btn_plot_fachkraft_item_wirkhebel_1"),
+                label = "Download",
+                icon = icon("download"))
+            ),
+            shiny::mainPanel(
+              width = 9,
+              htmlOutput(ns("plot_fachkraft_wirkhebel_1")),
+              p(style="font-size:12px;color:grey",
+                "hier Quellen"),
+
+              shinyBS::bsPopover(id="h_fachkraft_prog_3", title="",
+                                 content = paste0("POPUP INFO TEXT HERE"),
+                                 placement = "top",
+                                 trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_3")
+            )
+          ),
+        )
+
 
       )
     ),
-
-      # Box 4 - UMPLATZIEREN - INTERNATIONALE TABELLE ----
-      # fluidRow(
-      #   id="international_table_box",
-      #   shinydashboard::box(
-      #     title = "INTERNATIONAL - TABLLE",
-      #     width = 12,
-      #     p("LOREM IPSUM INFO"),
-      #     tabsetPanel(
-      #       type = "tabs",
-      #       tabPanel(
-      #         title = "Tabelle", br(),
-      #
-      #         shiny::sidebarPanel(
-      #           width = 12,
-      #           mod_international_table_input_ui("international_table_input_1"),
-      #         ),
-      #         shiny::mainPanel(
-      #           width = 12,
-      #           DT::dataTableOutput(outputId = ns("international_table_1")),
-      #           br(),
-      #           downloadButton(
-      #             outputId = ns("download_btn_png_international_table_1"),
-      #             label = "Download Tabelle (png)",
-      #             icon = icon("download")),
-      #           downloadButton(
-      #             outputId = ns("download_btn_csv_international_table_1"),
-      #             label = "Download Daten (csv)",
-      #             icon = icon("download")),
-      #           # quellen sind schon in der Tabelle enthalten
-      #           # p(style="font-size:12px;color:grey",
-      #           #   "hier Quellen"),
-      #           # shinyBS::bsPopover(
-      #           #   id="h_fachkraft_arbeitsmarkt_1", title="",
-      #           #   content = paste0("POPUP INFO TEXT HERE"),
-      #           #   placement = "top",
-      #           #   trigger = "hover"),
-      #           # tags$a(paste0("Hinweis zu den Daten"),
-      #           #        icon("info-circle"),
-      #           #        id = "h_fachkraft_arbeitsmarkt_1")
-      #         )
-      #       )
-      #     )
-      #   )
-      # ),
 
   # Footer
   funct_footer()
@@ -418,6 +458,36 @@ mod_fachkraft_start_server <- function(id, r){
         file.remove(r$plot_fachkraft_bar_vakanz_1_title)
       }
     )
+
+    output$plot_fachkraft_prog_item_1 <- renderUI({
+      plot_list <- plot_fachkraft_prognose(r)
+      r$plot_fachkraft_prog_item_1 <- plot_list
+
+      r$plot_fachkraft_prog_item_1_title <- get_plot_title(
+        plot = r$plot_fachkraft_prog_item_1
+      )
+
+      plot_list
+    })
+
+    output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_fachkraft_prog_item_1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_fachkraft_prog_item_1,
+          filename =  r$plot_fachkraft_prog_item_1_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_fachkraft_prog_item_1_title, file)
+        file.remove(r$plot_fachkraft_prog_item_1_title)
+      }
+    )
+
+
 
     # # BOX 5 International Table
     #

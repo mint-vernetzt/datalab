@@ -531,3 +531,58 @@ plot_fachkraft_bar_vakanz  <- function(r) {
 
   return(out)
 }
+
+
+plot_fachkraft_prognose  <- function(r) {
+  logger::log_debug("plot_fachkraft_prog")
+
+  filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_wirkhebel)
+  filter_indikator <- c("Status-quo",r$fachkraft_item_prog_wirkhebel_scenario)
+  filter_berufslevel <- r$fachkraft_item_prog_berufslevel
+
+  plot_data <- fachkraefte_prognose %>%
+    dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
+    dplyr::filter(indikator %in% filter_indikator) %>%
+    dplyr::filter(anforderung == filter_berufslevel) %>%
+    dplyr::filter(geschlecht == "Gesamt") %>%
+    dplyr::filter(nationalitaet == "Gesamt") %>%
+    dplyr::filter(jahr <= 2037) %>%
+    dplyr::mutate(display_color = ifelse(indikator == "Status-quo", "#D0A9CD", "#B16FAB"))
+
+  data_list <- split(plot_data, plot_data$wirkhebel)
+
+  hc <- highcharter::highchart() %>%
+    highcharter::hc_chart(type = "areaspline") %>%
+    highcharter::hc_title(text = "TODO Title Prognose", align = "left") %>%
+    highcharter::hc_subtitle(text = "TODO Sub-title Prognose", align = "left") %>%
+    highcharter::hc_legend(
+      layout = "horizontal",
+      align = "center",
+      verticalAlign = "bottom"
+    ) %>%
+    highcharter::hc_xAxis(plotBands = list(
+      list(
+        from = 2022,
+        to = 2037,
+        color = "#EFE8E6"
+      )
+    )) %>%
+    highcharter::hc_yAxis(title = list(text = "TODO Title y-axis")) %>%
+    highcharter::hc_tooltip(shared = TRUE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_plotOptions(
+      series = list(pointStart = 2012),
+      areaspline = list(fillOpacity = 0.5)
+    )
+
+  for(d in data_list) {
+    hc <- hc %>% highcharter::hc_add_series(
+      name = unique(d$wirkhebel),
+      data = d$wert,
+      color = unique(d$display_color)
+    )
+  }
+
+  return(hc)
+}
+
