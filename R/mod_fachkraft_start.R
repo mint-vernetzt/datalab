@@ -265,7 +265,7 @@ mod_fachkraft_start_ui <- function(id){
 
             shiny::sidebarPanel(
               width = 3,
-              mod_fachkraft_item_mint_ui("fachkraft_item_prog_detail_1") # TODO
+              mod_fachkraft_item_prog_detail_ui("fachkraft_item_prog_detail_1") # TODO
 
             ),
             shiny::mainPanel(
@@ -486,6 +486,19 @@ mod_fachkraft_start_server <- function(id, r){
         file.remove(r$plot_fachkraft_prog_item_1_title)
       }
     )
+
+    output$plot_fachkraft_prog_detail_item_1 <- renderUI({
+
+      plot_list <- plot_fachkraft_prognose_detail(r)
+      r$plot_fachkraft_prog_detail_item_1 <- plot_list
+
+      r$plot_fachkraft_prog_detail_item_1_title <- get_plot_title(
+        plot = r$plot_fachkraft_prog_detail_item_1
+      )
+
+      plot_list
+    })
+
 
 
 

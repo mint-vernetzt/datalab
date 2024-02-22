@@ -610,7 +610,25 @@ fachkraft_ui_scenario <- function(wirkhebel) {
       "Verbesserung",
       "starke Verbesserung"
     )
+  } else if(wirkhebel == "Basis-Szenario"){
+    selection <- c(
+      "Status-quo"
+    )
   }
+
+  return(selection)
+}
+
+fachkraft_ui_prognose_gruppen <- function() {
+  logger::log_debug("set fachkraft ui selection for progrnose gruppen")
+
+  selection <- NULL
+
+  selection <- c(
+    "Berufslevel",
+    "Geschlecht",
+    "Nationalität"
+  )
 
   return(selection)
 }

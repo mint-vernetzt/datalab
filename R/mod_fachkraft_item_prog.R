@@ -19,7 +19,14 @@ mod_fachkraft_item_prog_ui <- function(id){
     ),
 
     p("Szenario:"),
-    uiOutput(ns("prog_scenario_picker_ui")),
+    shinyWidgets::pickerInput(
+      inputId = ns("fachkraft_item_prog_scenario"),
+      choices = NULL,
+      # selected = "MINT-Bildung",
+      multiple = FALSE
+    ),
+
+    # uiOutput(ns("prog_scenario_picker_ui")),
 
     p("Berufslevel:"),
     shinyWidgets::pickerInput(
@@ -61,7 +68,7 @@ mod_fachkraft_item_prog_server <- function(id, r){
     })
 
     observeEvent(input$fachkraft_item_prog_scenario, {
-      r$fachkraft_item_prog_wirkhebel_scenario <- input$fachkraft_item_prog_scenario
+      r$fachkraft_item_prog_scenario <- input$fachkraft_item_prog_scenario
     })
 
     observeEvent(input$fachkraft_item_prog_berufslevel, {
@@ -72,16 +79,25 @@ mod_fachkraft_item_prog_server <- function(id, r){
       input$fachkraft_item_prog_wirkhebel
     })
 
-    output$prog_scenario_picker_ui <- renderUI({
-      second_choices <- NULL # Hier könnten Sie Ihre Logik einbauen, um die Choices anzupassen
-      # Erstellen eines neuen pickerInput basierend auf dem ausgewählten Wert des ersten Pickers
-      shinyWidgets::pickerInput(
-        inputId = ns("fachkraft_item_prog_scenario"),
-        choices = fachkraft_ui_scenario(wirkhebel = selected_prog_wirkhebel()),
-        selected = c("Verbesserung"),
-        multiple = FALSE
-      )
+    # output$prog_scenario_picker_ui <- renderUI({
+    #
+    #   shinyWidgets::pickerInput(
+    #     inputId = ns("fachkraft_item_prog_scenario"),
+    #     choices = fachkraft_ui_scenario(wirkhebel = selected_prog_wirkhebel()),
+    #     selected = c("Verbesserung"),
+    #     multiple = FALSE
+    #   )
+    # })
+
+    observeEvent(input$fachkraft_item_prog_wirkhebel, {
+        shinyWidgets::updatePickerInput(
+          session,
+          inputId = "fachkraft_item_prog_scenario",
+          choices = fachkraft_ui_scenario(wirkhebel = selected_prog_wirkhebel()),
+          selected = "Verbesserung",
+        )
     })
+
 
 
   })

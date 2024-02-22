@@ -109,6 +109,7 @@ golem::add_module(name = "fachkraft_item_mint", with_test = FALSE)
 golem::add_module(name = "fachkraft_item_detail", with_test = FALSE)
 golem::add_module(name = "fachkraft_bar_vakanz", with_test = FALSE)
 golem::add_module(name = "fachkraft_item_prog", with_test = FALSE)
+golem::add_module(name = "fachkraft_item_prog_detail", with_test = FALSE)
 
 
 ### Home
