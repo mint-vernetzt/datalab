@@ -268,6 +268,11 @@ plot_fachkraft_mint_item  <- function(r) {
   #                                 unique())) %>%
   #   dplyr::pull(group_col)
 
+  plot_data$mint_zuordnung <- ifelse(
+    plot_data$mint_zuordnung == "MINT gesamt",
+    "MINT-Berufe", "Nicht-MINT-Berufe"
+  )
+
   plot <- highcharter::hchart(
     plot_data,
     "item",
@@ -285,9 +290,11 @@ plot_fachkraft_mint_item  <- function(r) {
     # ) %>%
     highcharter::hc_tooltip(
       pointFormat = paste0(
-        " {point.berufe} Berufe<br>",
-        " {point.percent_epa}% von {point.epa_kat}<br>",
-        " {point.percent_total}% aller Berufe")) %>%
+
+        " {point.percent_epa}% der {point.epa_kat}<br>",
+        " sind Berufe in {point.mint_zuordnung}<br>",
+        " Anzahl: {point.berufe}<br>"
+        )) %>%
     highcharter::hc_title(
       text = paste0("Anteil von MINT-Berufen in der Verteilung des Engpassrisikos im Berufslevel ",
                     bf_label, " (", timerange, ")"),
