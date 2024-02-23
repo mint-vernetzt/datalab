@@ -14,7 +14,7 @@ mod_suche_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        img(src='www/Banner_Hinweise.jpg',
+        img(src='www/Banner_Suche.jpg',
             class = "img-responsive",
             #height = "150px", width = "150px",
             alt = "Banner Quellen",

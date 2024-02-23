@@ -16,7 +16,7 @@ mod_home_start_ui <- function(id){
        fluidRow(
          shinydashboard::box(
            width = 12,
-           img(src='www/Banner_alle.jpg',
+           img(src='www/Banner_Alle_Bereiche.jpg',
                class = "img-responsive",
                #height = "300px",
                #width = "150px",
