@@ -24,11 +24,13 @@ mod_suche_ui <- function(id){
     # Info-Texte ----
     fluidRow(
       shinydashboard::box(
-        title = "Auf dieser Seite",
+        title = "BETA: Suche",
         width = 7,
-        p(style = "text-align: left; font-size = 16px",
-          "Sucheingabe:"),
-        mod_suche_eingabe_ui("suche_eingabe_2")
+        p("Auf dieser Seite werden die Ergebnisse des Suchfeldes angezeigt. Bei der vorläufgen Suchfunktion handelt es sich noch um eine BETA-Version, die nicht abschließend optimiert ist.", br(), "Zum Aufrufen einer Grafik dient der Link in der Ergebnistabelle.
+          Dieser Link führt entsprechenden Unterseite und der richtgien Box. Von dort aus kann die gewünschte Registerkarte aufgerufen werden.")
+        # p(style = "text-align: left; font-size = 16px",
+        #   "Sucheingabe:"),
+        # mod_suche_eingabe_ui("suche_eingabe_2")
       ),
 
       shinydashboard::box(
@@ -42,15 +44,12 @@ mod_suche_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Suche",
+        title = "",
         width = 12,
-        p(style = "text-align: left; font-size = 16px",
-          span("Die aktuelle Sucheingabe lautete:",
-               shiny::textOutput(ns("suche_txt"))
-               )
-          ),
-        p(style = "text-align: left; font-size = 16px",
-          "Suchergebnisse"),
+        p(tags$b(span("Suchergebnisse für:"))),
+        p(shiny::textOutput(ns("suche_txt"))),br(),
+        # p(style = "text-align: left; font-size = 16px",
+        #   "Suchergebnisse"),
 
         DT::dataTableOutput(outputId = ns("search_table"))
       )
@@ -78,10 +77,16 @@ mod_suche_server <- function(id, react_search, parent_session){
     shiny::observeEvent(react_search$suchtabelle, {
       output$suche_txt <- shiny::renderText(react_search$suche_eingabe_txt)
     })
+
+    # shiny::observeEvent(react_search$suchtabelle, {
+    #   output$suche_txt <- shiny::renderText(react_search$suche_eingabe_txt)
+    # })
+
+
     search_table <- reactive({
 
       tmp <- react_search$suchtabelle
-      tmp$link <- shinyInput(
+      tmp$Link <- shinyInput(
         actionButton, nrow(react_search$suchtabelle),
         'rowline_',
         label = "Plot",
@@ -97,7 +102,7 @@ mod_suche_server <- function(id, react_search, parent_session){
     output$search_table <- DT::renderDataTable({
       target_cols <- which(
         # select columns to be shown in the table
-        !names(search_table()) %in% c("Bereich", "Tab.Name", "Plotart", "link")
+        !names(search_table()) %in% c("Bereich", "Registerkarte", "Plotart", "Link")
         # the - 1 is because js uses 0 index instead of 1 like R
         ) - 1
 
@@ -107,7 +112,7 @@ mod_suche_server <- function(id, react_search, parent_session){
                 escape = FALSE,
                 options = list(
                   pageLength = 10,
-                  dom = "ftp",
+                  dom = "tp",
                   columnDefs = list(
                     list(
                       visible = FALSE,
