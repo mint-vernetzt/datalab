@@ -5,12 +5,13 @@ library(tm)
 library(stringr)
 library(dplyr)
 # library(tidytext)
-library(tokenizers)
+#library(tokenizers)
 
 # pfad ändern
 pfad_kab <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/04_Input_Suchfunktion/"
+pfad_kbr <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/04_Input_Suchfunktion/"
 
-pfad <- pfad_kab
+pfad <- pfad_kbr
 
 suchtabelle <- read.csv2(paste0(pfad, "Suchtabelle.csv"))
 
@@ -51,9 +52,9 @@ suchtabelle <- suchtabelle %>%
 
 
   # satzzeichen aus search term raus
-  l <- quanteda::tokens(suchtabelle$comb, remove_punct = TRUE)
+   l <- quanteda::tokens(suchtabelle$comb, remove_punct = TRUE)
   # stemming
-  l <- quanteda::tokens_wordstem(l, language = "de")
+   l <- quanteda::tokens_wordstem(l, language = "de")
 
   # tokes object in separaten dataframe überführen
   term <- data.frame(
