@@ -98,26 +98,3 @@
                                 }
 
 
-/* Beispiel-CSS für Anpassung des Popovers */
-
-/* Ändern Sie die Hintergrundfarbe der Popover-Box */
-.popover {
-    background-color: #ffffff; /* Beispiel: Blaue Hintergrundfarbe */
-}
-
-/* Ändern Sie die Textfarbe innerhalb der Popover-Box */
-.popover-content {
-    color: #154194; /* Beispiel: Weiße Textfarbe */
-}
-
-/* Ändern Sie die Schriftart und Größe innerhalb der Popover-Box */
-.popover-content {
-    font-family: SourceSans3-Regular; /* Beispiel: Arial oder eine andere Schriftart */
-    font-size: 14px; /* Beispiel: Schriftgröße 14 Pixel */
-}
-
-/* Weite */
-.popover {
-  width: 300px;
-  max-width: 300px;
-}
