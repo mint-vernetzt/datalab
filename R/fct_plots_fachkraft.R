@@ -579,7 +579,12 @@ plot_fachkraft_prognose  <- function(r) {
     hc <- hc %>% highcharter::hc_add_series(
       name = unique(d$wirkhebel),
       data = d$wert,
-      color = unique(d$display_color)
+      color = unique(d$display_color),
+      zoneAxis = 'x',
+      zones = list(
+        list(value = 2022),
+        list(dashStyle = 'dot')
+      )
     )
   }
 
@@ -590,7 +595,6 @@ plot_fachkraft_prognose  <- function(r) {
 plot_fachkraft_prognose_detail  <- function(r) {
   logger::log_debug("plot_fachkraft_prog_detail")
 
-  # browser()
   filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_detail_wirkhebel)
   filter_indikator <- c("Status-quo", ifelse(r$fachkraft_item_prog_detail_wirkhebel == "Basis-Szenario",
                              "Status-quo",
@@ -659,10 +663,57 @@ plot_fachkraft_prognose_detail  <- function(r) {
         data = data_list[[i]] %>%
           dplyr::filter(wirkhebel == j) %>%
           dplyr::pull(wert),
-        color = color_palette[i]
+        color = color_palette[i],
+        zoneAxis = 'x',
+        zones = list(
+          list(value = 2022),
+          list(dashStyle = 'dot')
+        )
       )
     }
   }
+
+  return(hc)
+}
+
+plot_fachkraft_wirkhebel_analyse  <- function(r) {
+  logger::log_debug("plot_fachkraft_wirkhebel_analyse")
+
+  year_filter <- r$fachkraft_item_wirkhebel_analyse
+
+  basis_wert <- fachkraefte_prognose %>%
+    dplyr::filter(wirkhebel == "Basis-Szenario") %>%
+    dplyr::filter(geschlecht == "Gesamt") %>%
+    dplyr::filter(nationalitaet == "Gesamt") %>%
+    dplyr::filter(anforderung == "Gesamt") %>%
+    dplyr::filter(jahr == year_filter) %>%
+    dplyr::pull(wert)
+
+  uebersicht_data <- fachkraefte_prognose %>%
+    dplyr::filter(jahr == year_filter) %>%
+    dplyr::filter(indikator %in% c("Verbesserung", "starke Verbesserung")) %>%
+    dplyr::filter(!(wirkhebel == "Frauen in MINT" & indikator == "Verbesserung")) %>%
+    dplyr::filter(geschlecht == "Gesamt") %>%
+    dplyr::filter(nationalitaet == "Gesamt") %>%
+    dplyr::filter(anforderung == "Gesamt") %>%
+    dplyr::mutate(basis_wert = basis_wert) %>%
+    dplyr::select(wirkhebel, basis_wert, wert)
+
+  row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
+
+  uebersicht_data <- uebersicht_data %>%
+    dplyr::slice(-row_to_move) %>% # Entfernt die Zeile
+    dplyr::bind_rows(uebersicht_data[row_to_move, ])
+
+
+  hc <- highcharter::highchart() %>%
+    highcharter::hc_chart(type = 'dumbbell', inverted = TRUE) %>%
+    highcharter::hc_title(text = "TODO Title") %>%
+    highcharter::hc_subtitle(text = "TODO Subtitle") %>%
+    highcharter::hc_xAxis(type = 'category') %>%
+    highcharter::hc_yAxis(title = list(text = "Verbesserung")) %>%
+    highcharter::hc_tooltip(shared = TRUE) %>%
+    highcharter::hc_add_series(name = "Verbesserung", data = highcharter::list_parse2(uebersicht_data))
 
   return(hc)
 }

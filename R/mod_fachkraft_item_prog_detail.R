@@ -100,19 +100,6 @@ mod_fachkraft_item_prog_detail_server <- function(id, r){
       input$fachkraft_item_prog_detail_wirkhebel
     })
 
-    # output$prog_detail_scenario_picker_ui <- renderUI({
-    #
-    #   shinyWidgets::pickerInput(
-    #     inputId = ns("fachkraft_item_prog_detail_scenario"),
-    #     choices = fachkraft_ui_scenario(wirkhebel = selected_prog_detail_wirkhebel()),
-    #     selected = ifelse(
-    #       selected_prog_detail_wirkhebel() == "Basis-Szenario",
-    #       "Status-quo",
-    #       "Verbesserung"),
-    #     multiple = FALSE
-    #   )
-    # })
-
   })
 }
 
