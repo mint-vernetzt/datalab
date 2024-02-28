@@ -175,15 +175,15 @@ mod_fachkraft_start_ui <- function(id){
                 width = 9,
                 htmlOutput(ns("plot_fachkraft_epa_item_1")),
                 p(style="font-size:12px;color:grey",
-                  "hier Quellen"),
+                  "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                 shinyBS::bsPopover(
-                  id="h_fachkraft_arbeitsmarkt_1", title="",
-                  content = paste0("Es werden nur sozialversicherungspflichitge Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+                  id="h_fachkraft-berufsgruppen_1", title="",
+                  content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
                   placement = "top",
                   trigger = "hover"),
                 tags$a(paste0("Hinweis zu den Daten"),
                        icon("info-circle"),
-                       id = "h_fachkraft_arbeitsmarkt_1")
+                       id = "h_fachkraft-berufsgruppen_1")
               )
             ),
             tabPanel(
@@ -201,12 +201,12 @@ mod_fachkraft_start_ui <- function(id){
                 width = 9,
                 htmlOutput(ns("plot_fachkraft_mint_item_1")),
                 p(style="font-size:12px;color:grey",
-                  "hier Quellen"),
-                shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_2", title="",
-                                   content = paste0("POPUP INFO TEXT HERE"),
+                  "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",
+                                   content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
                                    placement = "top",
                                    trigger = "hover"),
-                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_2")
+                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft-berufsgruppen_2")
               )
             ),
 

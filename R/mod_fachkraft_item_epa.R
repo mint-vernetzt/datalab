@@ -40,11 +40,11 @@ mod_fachkraft_item_epa_ui <- function(id){
 
     br(),
 
-    shinyBS::bsPopover(id="ih_fachkraft_epa", title="",
-                       content = paste0("In der ersten Einstellung ist zu sehen, dass 44 % der MINT-Berufe als Engpassberufe gezählt werden. <br>Dagegen liegt nur in 33 % der \"Nicht-MINT-Berufe\" ein Fachkräfteengpass vor."),
+    shinyBS::bsPopover(id="ih_fachkraft-berufsgruppen_1", title="",
+                       content = paste0("In der ersten Einstellung ist zu sehen, dass 47% der MINT-Berufe als Engpassberufe gezählt werden. <br>Dagegen liegt nur in 33% der \"Nicht-MINT-Berufe\" ein Fachkräfteengpass vor."),
                        placement = "top",
                        trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_epa")
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft-berufsgruppen_1")
 
   )
 }

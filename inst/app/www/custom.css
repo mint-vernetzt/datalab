@@ -97,4 +97,26 @@
                                 background-color: #FFFFFF;
                                 }
 
+/* Anpassung des Popovers */
+
+.popover {
+  background-color: #ffffff;
+}
+
+.popover-content {
+  color: #154194;
+}
+
+.popover-content {
+    font-family: SourceSans3-Regular;
+    font-size: 14px;
+}
+
+.popover {
+  width: 300px;
+  max-width: 300px;
+}
+
+
+
 

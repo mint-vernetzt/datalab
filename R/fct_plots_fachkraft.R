@@ -8,10 +8,6 @@
 
 
 plot_fachkraft_epa_item <- function(r) {
-  logger::log_debug("plot_fachkraft_epa_item")
-  #timerange <- 2022; fach <- c("Landtechnik", "Bau- und Gebäudetechnik"); bf_label <- "Spezialist*innen"
-  #timerange <- 2020; fach <- c("MINT gesamt", "Informatik"); bf_label <- "Gesamt"
-  #timerange <- 2020; fach <- c("Alle Berufe"); bf_label <- "Gesamt"
 
   timerange <- r$map_y_fachkraft_arbeit_epa
   fach <- r$map_f_fachkraft_arbeit_epa
@@ -53,6 +49,23 @@ plot_fachkraft_epa_item <- function(r) {
     group_col = c("#EE7775", "#FBBF24", "#35BD97")
   )
 
+ # Aggregate rausfiltern
+  plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
+                                             c("Gesamt",
+                                               "MINT",
+                                               "Informatik",
+                                               "Landtechnik",
+                                               "Produktionstechnik",
+                                               "Bau- und Gebäudetechnik",
+                                               "Mathematik, Naturwissenschaften",
+                                               "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                                               "Gesundheitstechnik",
+                                               "Nicht MINT"
+                                             ))
+                          )
+
+ # plot_data_raw <- subset(plot_data_raw, !is.na(plot_data_raw$berufsgruppe_schlüssel))
+
   plot_data <- plot_data_raw %>%
     dplyr::filter(mint_zuordnung %in% fach &
                     !is.na(epa_kat)) %>%
@@ -62,6 +75,7 @@ plot_fachkraft_epa_item <- function(r) {
     dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100)) %>%
     dplyr::left_join(group_col_dt, by = "epa_kat") %>%
     dplyr::arrange(epa_group_order)
+
 
   # expand data for heatmap
   expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
@@ -304,6 +318,12 @@ plot_fachkraft_mint_item  <- function(r) {
                    useHTML = TRUE,
                    fontFamily = "SourceSans3-Regular",
                    fontSize = "20px")
+    ) %>%
+    highcharter::hc_subtitle(
+      text = "Hier sieht man die Berufsgruppen nach Engpassrisiko verteilt.
+      Die dunkleren Punkte sind Berufsgruppen im Bereich \"MINT\", die helleren Punkte sind Berufsgruppen,
+      die nicht in den MINT-Bereich zählen.",
+      align = "left"
     ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
