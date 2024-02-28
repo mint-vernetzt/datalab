@@ -8,23 +8,29 @@
 
 get_search_data <- function(term, session) {
   # lookup table
-  # term <- "International"
+  # term <- "test"
   # term <- ""
 
-
+  # term zu lower case
   this_search <- tolower(term)
+  # stopwords raus, satzzeichen raus, stemming
   this_search <- tm::removeWords(this_search, tm::stopwords("german"))
-  this_searh <- SnowballC::wordStem(this_search, language = "de")
-  this_search <- paste0(unlist(strsplit(x = this_search, split = " ")))
+  this_search <- quanteda::tokens(this_search, remove_punct = TRUE)
+  this_search <- quanteda::tokens_wordstem(this_search, language = "de")
+  this_search <- paste(this_search)
+
+
+  # this_search <- SnowballC::wordStem(this_search, language = "de")
+  # this_search <- paste0(unlist(strsplit(x = this_search, split = " ")))
   # this_search <- "speed car distance"
-  search_text <- tolower(suchtabelle$term)
-
-
+  search_text <- suchtabelle$term
   # search for each term and then return any findings
   search_idx <- lapply(
     X = this_search,
     FUN = function(term) {
-      agrepl(pattern = term, search_text, max.distance = 1)
+      grepl(pattern = term, search_text
+            #, max.distance = 2
+            )
     }
   )
   # combine searches and only thos with all search terms present are used
@@ -37,7 +43,9 @@ get_search_data <- function(term, session) {
   }
 
   out <- out %>%
-    dplyr::select(Bereich, Tab.Name, Plotart, menuItem..tabName, Box..ID)
+    dplyr::select(Bereich, Registerkarte, Plotart, menuItem..tabName, Box..ID)%>%
+    dplyr::mutate(Plotart = stringr::str_to_title(Plotart))
 
   return(out)
 }
+

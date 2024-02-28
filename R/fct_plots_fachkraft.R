@@ -8,10 +8,6 @@
 
 
 plot_fachkraft_epa_item <- function(r) {
-  logger::log_debug("plot_fachkraft_epa_item")
-  #timerange <- 2022; fach <- c("Landtechnik", "Bau- und Gebäudetechnik"); bf_label <- "Spezialist*innen"
-  #timerange <- 2020; fach <- c("MINT gesamt", "Informatik"); bf_label <- "Gesamt"
-  #timerange <- 2020; fach <- c("Alle Berufe"); bf_label <- "Gesamt"
 
   timerange <- r$map_y_fachkraft_arbeit_epa
   fach <- r$map_f_fachkraft_arbeit_epa
@@ -22,7 +18,6 @@ plot_fachkraft_epa_item <- function(r) {
   } else {
     bf <- bf_label
   }
-
 
   plot_data_raw <- arbeitsmarkt_epa_detail %>%
     dplyr::filter(jahr == timerange &
@@ -54,6 +49,23 @@ plot_fachkraft_epa_item <- function(r) {
     group_col = c("#EE7775", "#FBBF24", "#35BD97")
   )
 
+ # Aggregate rausfiltern
+  plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
+                                             c("Gesamt",
+                                               "MINT",
+                                               "Informatik",
+                                               "Landtechnik",
+                                               "Produktionstechnik",
+                                               "Bau- und Gebäudetechnik",
+                                               "Mathematik, Naturwissenschaften",
+                                               "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                                               "Gesundheitstechnik",
+                                               "Nicht MINT"
+                                             ))
+                          )
+
+ # plot_data_raw <- subset(plot_data_raw, !is.na(plot_data_raw$berufsgruppe_schlüssel))
+
   plot_data <- plot_data_raw %>%
     dplyr::filter(mint_zuordnung %in% fach &
                     !is.na(epa_kat)) %>%
@@ -63,6 +75,7 @@ plot_fachkraft_epa_item <- function(r) {
     dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100)) %>%
     dplyr::left_join(group_col_dt, by = "epa_kat") %>%
     dplyr::arrange(epa_group_order)
+
 
   # expand data for heatmap
   expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
@@ -80,6 +93,29 @@ plot_fachkraft_epa_item <- function(r) {
                                   unique())) %>%
     dplyr::pull(group_col)
 
+  # titel zusammenbauen
+  level <- dplyr::case_when(
+    bf_label == "Gesamt" ~ " ",
+    bf_label == "Fachkräfte" ~ " von Beschäftigten in Ausbildungsberufen",
+    bf_label == "Spezialist*innen" ~ " von Beschäftigten in Meister-/Technikerstellen o.ä.",
+    bf_label == "Expert*innen" ~ " von Beschäftigten in Akademikerberufen",
+  )
+  fach_1 <- dplyr::case_when(
+    fach[1] == "MINT gesamt" ~ "MINT",
+    fach[1] == "Gesamt" ~ "allen Berufen",
+    fach[1] == "Nicht MINT" ~ "allen Berufen außer MINT",
+    T ~ fach[1]
+  )
+  fach_2 <- dplyr::case_when(
+    fach[2] == "MINT gesamt" ~ "MINT",
+    fach[2] == "Gesamt" ~ "allen Berufen",
+    fach[2] == "Nicht MINT" ~ "allen Berufen außer MINT",
+    T ~ fach[2]
+  )
+  titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1, level, " (", timerange, ")")
+  titel_2 <- paste0("Engpassrisiko in ", fach_2, level, " (", timerange, ")")
+
+
   plot_left <- highcharter::hchart(
     object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[1]),
     type = "heatmap",
@@ -95,7 +131,7 @@ plot_fachkraft_epa_item <- function(r) {
     highcharter::hc_colors(used_colors) %>%
     highcharter::hc_tooltip(
       # headerFormat = '{point.group}',
-      pointFormat = 'Berufe: {point.beruf_num}<br/>Anteil: {point.value}%'
+      pointFormat = 'Anteil: {point.value} % <br/> Anzahl betroffener Berufe: {point.beruf_num}'
     ) %>%
     highcharter::hc_xAxis(visible = FALSE) %>%
     highcharter::hc_yAxis(visible = FALSE) %>%
@@ -106,8 +142,7 @@ plot_fachkraft_epa_item <- function(r) {
       )
     ) %>%
     highcharter::hc_title(
-      text = paste0("Verteilung von ", fach[1], "-Berufen nach Engpassrisikos",
-                    " mit Berufslevel ", bf_label, " in ", timerange),
+      text = titel_1,
       margin = 10,
       align = "center",
       style = list(color = "black",
@@ -142,7 +177,7 @@ plot_fachkraft_epa_item <- function(r) {
       highcharter::hc_colors(used_colors) %>%
       highcharter::hc_tooltip(
         # headerFormat = '{point.group}',
-        pointFormat = 'Berufe: {point.beruf_num}<br/>Anteil: {point.value}%'
+        pointFormat = 'Anteil: {point.value} % <br/> Anzahl betroffener Berufe: {point.beruf_num}'
       ) %>%
       highcharter::hc_xAxis(visible = FALSE) %>%
       highcharter::hc_yAxis(visible = FALSE) %>%
@@ -153,8 +188,7 @@ plot_fachkraft_epa_item <- function(r) {
         )
       ) %>%
       highcharter::hc_title(
-        text = paste0("Verteilung von ", fach[2], "-Berufen nach Engpassrisikos",
-                      " mit Berufslevel ", bf_label, " in ", timerange),
+        text = titel_2,
         margin = 10,
         align = "center",
         style = list(color = "black",
@@ -227,9 +261,9 @@ plot_fachkraft_mint_item  <- function(r) {
     mint_epa_kat = factor(x = epa_kat_levels,
                           levels = epa_kat_levels),
     epa_group_order = c(1:6),
-    group_col = c("#EE7775", "#ff0000",
-                  "#FBBF24", "#E79004",
-                  "#35BD97", "#339966")
+    group_col = c("#EE7775","#f5adac",
+                  "#Fcc433", "#fdd670",
+                  "#00a87a", "#66cbaf")
   )
 
   plot_data <- plot_data_raw %>%
@@ -248,7 +282,12 @@ plot_fachkraft_mint_item  <- function(r) {
   #                                 unique())) %>%
   #   dplyr::pull(group_col)
 
-  out <- highcharter::hchart(
+  plot_data$mint_zuordnung <- ifelse(
+    plot_data$mint_zuordnung == "MINT gesamt",
+    "MINT-Berufe", "Nicht-MINT-Berufe"
+  )
+
+  plot <- highcharter::hchart(
     plot_data,
     "item",
     highcharter::hcaes(
@@ -265,9 +304,11 @@ plot_fachkraft_mint_item  <- function(r) {
     # ) %>%
     highcharter::hc_tooltip(
       pointFormat = paste0(
-        " {point.berufe} Berufe<br>",
-        " {point.percent_epa}% von {point.epa_kat}<br>",
-        " {point.percent_total}% aller Berufe")) %>%
+
+        " {point.percent_epa}% der {point.epa_kat}<br>",
+        " sind Berufe in {point.mint_zuordnung}<br>",
+        " Anzahl: {point.berufe}<br>"
+        )) %>%
     highcharter::hc_title(
       text = paste0("Anteil von MINT-Berufen in der Verteilung des Engpassrisikos im Berufslevel ",
                     bf_label, " (", timerange, ")"),
@@ -278,14 +319,57 @@ plot_fachkraft_mint_item  <- function(r) {
                    fontFamily = "SourceSans3-Regular",
                    fontSize = "20px")
     ) %>%
+    highcharter::hc_subtitle(
+      text = "Hier sieht man die Berufsgruppen nach Engpassrisiko verteilt.
+      Die dunkleren Punkte sind Berufsgruppen im Bereich \"MINT\", die helleren Punkte sind Berufsgruppen,
+      die nicht in den MINT-Bereich zählen.",
+      align = "left"
+    ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>%
     # highcharter::hc_size(600, 450) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom")
+    # highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+    #                        verticalAlign = "bottom")
+    highcharter::hc_legend(enabled = FALSE)
 
+
+  # leeren Plot mit individuell angepasster Legende erstellen
+
+  # Erstelle eine Liste von Kategorien für die Legende
+  categories <- c("MINT gesamt - Engpassberuf",
+                  "MINT gesamt - Anzeichen eines Engpassberufs",
+                  "MINT gesamt - kein Engpassberuf",
+                  "Nicht MINT - Engpassberuf",
+                  "Nicht MINT - Anzeichen eines Engpassberufs",
+                  "Nicht MINT - kein Engpassberuf")
+
+  # Farben für jede Kategorie
+  colors <- c("#EE7775",  "#Fcc433", "#00a87a", "#f5adac", "#fdd670", "#66cbaf")
+
+  # Erstelle einen 'leeren' Plot mit einer Serie für jede Kategorie
+  legend_plot <- highcharter::highchart() %>%
+    highcharter::hc_chart(type = 'bar', height = 100) %>% # Reduziere die Höhe
+    highcharter::hc_add_series(name = categories[1], data = list(NULL), color = colors[1]) %>%
+    highcharter::hc_add_series(name = categories[2], data = list(NULL), color = colors[2]) %>%
+    highcharter::hc_add_series(name = categories[3], data = list(NULL), color = colors[3]) %>%
+    highcharter::hc_add_series(name = categories[4], data = list(NULL), color = colors[4]) %>%
+    highcharter::hc_add_series(name = categories[5], data = list(NULL), color = colors[5]) %>%
+    highcharter::hc_add_series(name = categories[6], data = list(NULL), color = colors[6]) %>%
+    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_title(text = NULL) %>%
+    highcharter::hc_subtitle(text = NULL) %>%
+    highcharter::hc_xAxis(visible = FALSE) %>%
+    highcharter::hc_yAxis(visible = FALSE) %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_chart(margin = 0, spacing = c(0, 0, 0, 0)) # Reduziere Margen und Abstand
+
+  plot_list <- list(plot, legend_plot)
+
+  out <- highcharter::hw_grid(
+    plot_list,
+    ncol=1)
 
   return(out)
 }

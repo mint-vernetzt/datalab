@@ -20,7 +20,7 @@ mod_studium_studienzahl_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        img(src='www/Banner_Studium_BB.jpg',
+        img(src='www/Banner_Studium.jpg',
             class = "img-responsive",
             #height = "150px", width = "150px",
             alt = "Banner Studium",

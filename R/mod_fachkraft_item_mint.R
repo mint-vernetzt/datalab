@@ -28,21 +28,11 @@ mod_fachkraft_item_mint_ui <- function(id){
 
     br(),
 
-    # TODO extract into own module, since this is repeated on a lot of modules
-
-    shinyBS::bsPopover(id="dh_fachkraft_epa", title = "",
-                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+    shinyBS::bsPopover(id="ih_fachkraft-berufsgruppen_2", title="",
+                       content = paste0("Bei den Engpassberufen ist die Verteilung von MINT- und Nicht-MINT-Berufsgruppen noch 50-50.<br> Dagegen verteilen sich die Berufe ohne Fachkräfteengpass auf nur 49 MINT-Berufsgruppen (32%) und 104 Nicht-MINT-Berufsgruppen (68%)."),
                        placement = "top",
                        trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_fachkraft_epa"),
-    br(),
-    br(),
-    shinyBS::bsPopover(id="ih_fachkraft_epa", title="",
-                       content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
-                       placement = "top",
-                       trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_epa")
-
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft-berufsgruppen_2")
 
   )
 }

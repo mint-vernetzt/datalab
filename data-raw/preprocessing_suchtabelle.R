@@ -1,18 +1,21 @@
 library(data.table)
-library(SnowballC)
-library(splitstackshape)
+# library(SnowballC)
+library(tm)
+# library(splitstackshape)
 library(stringr)
 library(dplyr)
-library(tidytext)
-library(tokenizers)
+# library(tidytext)
+#library(tokenizers)
 
 # pfad ändern
 pfad_kab <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/04_Input_Suchfunktion/"
+pfad_kbr <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/04_Input_Suchfunktion/"
 
-pfad <- pfad_kab
+pfad <- pfad_kbr
 
 suchtabelle <- read.csv2(paste0(pfad, "Suchtabelle.csv"))
 
+# vektor mit cols, die relvant für suche sind für spätere select-operation
 relevant <- c("Tab.Name",
 #suchtabelle$Titel,
 "Plotart",
@@ -24,13 +27,19 @@ relevant <- c("Tab.Name",
 
 
 suchtabelle <- suchtabelle %>%
+  # neue col "Rgisterkarte
+  mutate(Registerkarte = Tab.Name )%>%
+  # lowecase
   mutate(across(relevant, ~ tolower(.) ))%>%
-  mutate(across(relevant, ~removeWords(., stopwords("german"))))%>%
+  # stopwords raus
+  mutate(across(relevant, ~ tm::removeWords(., stopwords("german"))))%>%
   mutate(across(relevant, ~ str_trim(.)))%>%
+  # white spaces raus
   mutate(across(relevant, ~ str_replace_all(., " ", ",")))%>%
   mutate(across(relevant, ~ str_replace_all(., ",,,", ",")))%>%
   mutate(across(relevant, ~ str_replace_all(., ",,", ",")))%>%
-  mutate(term = paste(.$Tab.Name,
+  # comb als summe aller relevanter serach cols
+  mutate(comb= paste(.$Tab.Name,
                       #suchtabelle$Titel,
                       .$Plotart,
                       .$Interpret..Hover,
@@ -38,23 +47,24 @@ suchtabelle <- suchtabelle %>%
                       .$Tags.II,
                       .$Tags.III,
                       .$Tags.IV,
-                      sep = "," ))%>%
-  mutate(across(term, ~ tokenize_words(.) ))
+                      sep = "," ))
 
 
-term <- suchtabelle$term
 
-counter <- length(c(1:79))
+  # satzzeichen aus search term raus
+   l <- quanteda::tokens(suchtabelle$comb, remove_punct = TRUE)
+  # stemming
+   l <- quanteda::tokens_wordstem(l, language = "de")
 
-stem_func <- function(counter) {
-  out <- paste(SnowballC::wordStem(suchtabello$term[[counter]], language = "de"), collapse = ",")
+  # tokes object in separaten dataframe überführen
+  term <- data.frame(
+    id = seq_along(l),
+    term = sapply(l, paste, collapse = " "),
+    row.names = NULL
+  )
 
-  }
-
-x <- purrr::map(.f=stem_func, .x=c(1:79))
-
-suchtabelle <- suchtabelle %>%
-  mutate(term = x)
+# term und suchrabelle zusammenführen
+suchtabelle <- bind_cols(suchtabelle, term)
 
 # commas raus?
 
