@@ -16,11 +16,11 @@ mod_international_start_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        img(src='www/Banner_alle.jpg',
+        img(src='www/Banner_International.jpg',
             class = "img-responsive",
             #height = "300px",
             #width = "150px",
-            alt = "Banner MINT entlang der Bildungskette",
+            alt = "Banner Fokus: MINT international",
             style="display: block; margin-left: auto; margin-right: auto;"
         )
       )),
