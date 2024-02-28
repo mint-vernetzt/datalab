@@ -615,3 +615,190 @@ plot_fachkraft_bar_vakanz  <- function(r) {
 
   return(out)
 }
+
+
+plot_fachkraft_prognose  <- function(r) {
+  logger::log_debug("plot_fachkraft_prog")
+
+  filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_wirkhebel)
+  filter_indikator <- c("Status-quo", r$fachkraft_item_prog_scenario)
+  filter_berufslevel <- r$fachkraft_item_prog_berufslevel
+
+  plot_data <- fachkraefte_prognose %>%
+    dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
+    dplyr::filter(indikator %in% filter_indikator) %>%
+    dplyr::filter(anforderung == filter_berufslevel) %>%
+    dplyr::filter(geschlecht == "Gesamt") %>%
+    dplyr::filter(nationalitaet == "Gesamt") %>%
+    dplyr::filter(jahr <= 2037) %>%
+    dplyr::mutate(display_color = ifelse(indikator == "Status-quo", "#D0A9CD", "#B16FAB"))
+
+  data_list <- split(plot_data, plot_data$wirkhebel)
+
+  hc <- highcharter::highchart() %>%
+    highcharter::hc_chart(type = "areaspline") %>%
+    highcharter::hc_title(text = "TODO Title Prognose", align = "left") %>%
+    highcharter::hc_subtitle(text = "TODO Sub-title Prognose", align = "left") %>%
+    highcharter::hc_legend(
+      layout = "horizontal",
+      align = "center",
+      verticalAlign = "bottom"
+    ) %>%
+    highcharter::hc_xAxis(plotBands = list(
+      list(
+        from = 2022,
+        to = 2037,
+        color = "#EFE8E6"
+      )
+    )) %>%
+    highcharter::hc_yAxis(title = list(text = "TODO Title y-axis")) %>%
+    highcharter::hc_tooltip(shared = TRUE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_plotOptions(
+      series = list(pointStart = 2012),
+      areaspline = list(fillOpacity = 0.5)
+    )
+
+  for(d in data_list) {
+    hc <- hc %>% highcharter::hc_add_series(
+      name = unique(d$wirkhebel),
+      data = d$wert,
+      color = unique(d$display_color),
+      zoneAxis = 'x',
+      zones = list(
+        list(value = 2022),
+        list(dashStyle = 'dot')
+      )
+    )
+  }
+
+  return(hc)
+}
+
+
+plot_fachkraft_prognose_detail  <- function(r) {
+  logger::log_debug("plot_fachkraft_prog_detail")
+
+  filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_detail_wirkhebel)
+  filter_indikator <- c("Status-quo", ifelse(r$fachkraft_item_prog_detail_wirkhebel == "Basis-Szenario",
+                             "Status-quo",
+                             ifelse(is.null(r$fachkraft_item_prog_detail_scenario), "Verbesserung",
+                             r$fachkraft_item_prog_detail_scenario)))
+  filter_gruppe <- r$fachkraft_item_prog_detail_gruppe
+
+  color_palette <- NULL
+  if(filter_gruppe == "Berufslevel"){
+    color_palette <- c("#000000", colors_mint_vernetzt$general)
+  } else if(filter_gruppe == "Geschlecht"){
+    color_palette <- c("#000000", colors_mint_vernetzt$gender)
+  } else if(filter_gruppe == "Nationalität"){
+    color_palette <- c("#000000", colors_mint_vernetzt$neutral)
+  }
+
+  focused_column <- ifelse(filter_gruppe == "Berufslevel", "anforderung",
+                           ifelse(filter_gruppe == "Geschlecht", "geschlecht",
+                                  ifelse(filter_gruppe == "Nationalität", "nationalitaet", NULL)))
+
+  not_focused_column <- c("anforderung", "geschlecht", "nationalitaet")[c("anforderung", "geschlecht", "nationalitaet") != focused_column]
+
+  plot_data <- fachkraefte_prognose %>%
+    dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
+    dplyr::filter(indikator %in% filter_indikator) %>%
+    dplyr::filter(if_all(all_of(not_focused_column), ~ .x == "Gesamt")) %>%
+    dplyr::filter(jahr <= 2037) %>%
+    dplyr::mutate(dplyr::across(all_of(focused_column), ~ factor(.x, levels = c("Gesamt", sort(unique(.x[!.x == "Gesamt"])))))) %>%
+    dplyr::arrange(dplyr::across(all_of(focused_column)), jahr)
+
+  data_list <- split(plot_data, plot_data[focused_column])
+
+  hc <- highcharter::highchart() %>%
+    highcharter::hc_chart(type = "line") %>%
+    highcharter::hc_title(text = "TODO Title Prognose", align = "left") %>%
+    highcharter::hc_subtitle(text = "TODO Sub-title Prognose", align = "left") %>%
+    highcharter::hc_legend(
+      layout = "horizontal",
+      align = "center",
+      verticalAlign = "bottom"
+    ) %>%
+    highcharter::hc_xAxis(plotBands = list(
+      list(
+        from = 2022,
+        to = 2037,
+        color = "#EFE8E6"
+      )
+    )) %>%
+    highcharter::hc_yAxis(title = list(text = "TODO Title y-axis")) %>%
+    highcharter::hc_tooltip(shared = TRUE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_plotOptions(
+      series = list(pointStart = 2012),
+      areaspline = list(fillOpacity = 0.5)
+    )
+
+
+  for(i in 1:length(data_list)) {
+    for(j in c("Basis-Szenario", r$fachkraft_item_prog_detail_wirkhebel)){
+      hc <- hc %>% highcharter::hc_add_series(
+        name = paste(j, data_list[[i]] %>%
+          dplyr::filter(wirkhebel == j) %>%
+          dplyr::pull(!!sym(focused_column)) %>%
+          unique()),
+
+        data = data_list[[i]] %>%
+          dplyr::filter(wirkhebel == j) %>%
+          dplyr::pull(wert),
+        color = color_palette[i],
+        zoneAxis = 'x',
+        zones = list(
+          list(value = 2022),
+          list(dashStyle = 'dot')
+        )
+      )
+    }
+  }
+
+  return(hc)
+}
+
+plot_fachkraft_wirkhebel_analyse  <- function(r) {
+  logger::log_debug("plot_fachkraft_wirkhebel_analyse")
+
+  year_filter <- r$fachkraft_item_wirkhebel_analyse
+
+  basis_wert <- fachkraefte_prognose %>%
+    dplyr::filter(wirkhebel == "Basis-Szenario") %>%
+    dplyr::filter(geschlecht == "Gesamt") %>%
+    dplyr::filter(nationalitaet == "Gesamt") %>%
+    dplyr::filter(anforderung == "Gesamt") %>%
+    dplyr::filter(jahr == year_filter) %>%
+    dplyr::pull(wert)
+
+  uebersicht_data <- fachkraefte_prognose %>%
+    dplyr::filter(jahr == year_filter) %>%
+    dplyr::filter(indikator %in% c("Verbesserung", "starke Verbesserung")) %>%
+    dplyr::filter(!(wirkhebel == "Frauen in MINT" & indikator == "Verbesserung")) %>%
+    dplyr::filter(geschlecht == "Gesamt") %>%
+    dplyr::filter(nationalitaet == "Gesamt") %>%
+    dplyr::filter(anforderung == "Gesamt") %>%
+    dplyr::mutate(basis_wert = basis_wert) %>%
+    dplyr::select(wirkhebel, basis_wert, wert)
+
+  row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
+
+  uebersicht_data <- uebersicht_data %>%
+    dplyr::slice(-row_to_move) %>% # Entfernt die Zeile
+    dplyr::bind_rows(uebersicht_data[row_to_move, ])
+
+
+  hc <- highcharter::highchart() %>%
+    highcharter::hc_chart(type = 'dumbbell', inverted = TRUE) %>%
+    highcharter::hc_title(text = "TODO Title") %>%
+    highcharter::hc_subtitle(text = "TODO Subtitle") %>%
+    highcharter::hc_xAxis(type = 'category') %>%
+    highcharter::hc_yAxis(title = list(text = "Verbesserung")) %>%
+    highcharter::hc_tooltip(shared = TRUE) %>%
+    highcharter::hc_add_series(name = "Verbesserung", data = highcharter::list_parse2(uebersicht_data))
+
+  return(hc)
+}
+
