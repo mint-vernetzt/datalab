@@ -124,16 +124,6 @@ mod_fachkraft_start_ui <- function(id){
                                                     color = "#154194"),
               p(style="font-size:12px;color:grey",
                 "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
-              shinyBS::bsPopover(
-                id="h_fachkraft_prog_1", title="",
-                content = paste0("POPUP INFO TEXT HERE"),
-                placement = "top",
-                trigger = "hover"),
-              tags$a(paste0("Hinweis zu den Daten"),
-                     icon("info-circle"),
-                     id = "h_fachkraft_prog_1"),
-
-              p(),
               p(),
               tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
@@ -153,47 +143,48 @@ mod_fachkraft_start_ui <- function(id){
 
               p(style="font-size:12px;color:grey",
                 "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
-              shinyBS::bsPopover(id="h_fachkraft_prog_2", title="",
-                                 content = paste0("POPUP INFO TEXT HERE"),
-                                 placement = "top",
-                                 trigger = "hover"),
-              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_2"),
-              p(),
-              p(),
-              tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
-            )
-          ),
-
-          tabPanel(
-            "Übersicht Wirkhebel", br(),
-
-            shiny::sidebarPanel(
-              width = 3,
-
-              mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"), # TODO
-              # downloadButton(
-              #   outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
-              #   label = "Download",
-              #   icon = icon("download"))
-            ),
-            shiny::mainPanel(
-              width = 9,
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
-                                           color = "#154194"),
-
-              p(style="font-size:12px;color:grey",
-                "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
-
-              shinyBS::bsPopover(id="h_fachkraft_prog_3", title="",
-                                 content = paste0("POPUP INFO TEXT HERE"),
-                                 placement = "top",
-                                 trigger = "hover"),
-              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_3"),
-              p(),
+              # shinyBS::bsPopover(id="h_fachkraft_prog_2", title="",
+              #                    content = paste0("POPUP INFO TEXT HERE"),
+              #                    placement = "top",
+              #                    trigger = "hover"),
+              # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_2"),
+              # p(),
               p(),
               tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           )
+          # ,
+          #
+          # tabPanel(
+          #   "Übersicht Wirkhebel", br(),
+          #
+          #   shiny::sidebarPanel(
+          #     width = 3,
+          #
+          #     mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"), # TODO
+          #     # downloadButton(
+          #     #   outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
+          #     #   label = "Download",
+          #     #   icon = icon("download"))
+          #   ),
+          #   shiny::mainPanel(
+          #     width = 9,
+          #     shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
+          #                                  color = "#154194"),
+          #
+          #     p(style="font-size:12px;color:grey",
+          #       "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+          #
+          #     shinyBS::bsPopover(id="h_fachkraft_prog_3", title="",
+          #                        content = paste0("POPUP INFO TEXT HERE"),
+          #                        placement = "top",
+          #                        trigger = "hover"),
+          #     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_3"),
+          #     p(),
+          #     p(),
+          #     tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+          #   )
+          # )
 
         )
       )
@@ -303,6 +294,7 @@ mod_fachkraft_start_ui <- function(id){
                     alt = "Legende",
                     style="display: block; margin-left: auto; margin-right: auto;"
                 ),
+                br(),
 
                 p(style="font-size:12px;color:grey",
                   "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),

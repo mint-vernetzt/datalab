@@ -16,7 +16,7 @@ mod_fachkraft_item_prog_detail_ui <- function(id){
       # choices = c("Basis-Szenario", fachkraft_ui_wirkhebel()),
       # selected = "Basis-Szenario",
       choices = fachkraft_ui_wirkhebel(),
-      selected = "MINT-Bildung",
+      selected = "Basis-Szenario",
       multiple = FALSE
     ),
 
@@ -34,7 +34,7 @@ mod_fachkraft_item_prog_detail_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("fachkraft_item_prog_detail_gruppe"),
       choices = fachkraft_ui_prognose_gruppen(),
-      selected = c("Berufslevel"),
+      selected = c("Nationalität"),
       multiple = FALSE
     ),
 
@@ -86,11 +86,13 @@ mod_fachkraft_item_prog_detail_server <- function(id, r){
           selected = "Status-quo",
         )
       } else {
+        wirkhebel <- selected_prog_detail_wirkhebel()
         shinyWidgets::updatePickerInput(
           session,
           "fachkraft_item_prog_detail_scenario",
           choices = fachkraft_ui_scenario(wirkhebel = selected_prog_detail_wirkhebel()),
-          selected = "Verbesserung",
+          selected = ifelse(wirkhebel == "Frauen in MINT", "starke Verbesserung",
+                            "Verbesserung")
         )
       }
     })
