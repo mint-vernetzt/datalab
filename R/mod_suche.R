@@ -90,7 +90,7 @@ mod_suche_server <- function(id, react_search, parent_session){
       tmp$Link <- shinyInput(
         actionButton, nrow(react_search$suchtabelle),
         'rowline_',
-        label = "Grafik",
+        label = "Plot",
         icon = shiny::icon("chart-column"),
         onclick = sprintf("Shiny.onInputChange('%s', this.id)", ns("select_button"))
       )
@@ -103,7 +103,7 @@ mod_suche_server <- function(id, react_search, parent_session){
     output$search_table <- DT::renderDataTable({
       target_cols <- which(
         # select columns to be shown in the table
-        !names(search_table()) %in% c("Bereich", "Registerkarte", "Grafiktyp", "Link")
+        !names(search_table()) %in% c("Bereich", "Registerkarte", "Plotart", "Link")
         # the - 1 is because js uses 0 index instead of 1 like R
         ) - 1
 
