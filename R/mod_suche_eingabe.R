@@ -16,7 +16,7 @@ mod_suche_eingabe_ui <- function(id){
       shinyWidgets::searchInput(
         inputId = ns("suche_eingabe_txt"),
         label = NULL,#"Click search icon to update or hit 'Enter'",
-        placeholder = "Ihre Suche...",
+        placeholder = "Durchsuchen Sie das MINT-DataLab...",
         btnSearch = icon("search"),
         btnReset = icon("remove"),
         width = "400px"
