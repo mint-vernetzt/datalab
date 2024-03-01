@@ -7,7 +7,7 @@ plot_fachkraft_prognose  <- function(r) {
   filter_berufslevel <- r$fachkraft_item_prog_berufslevel
 
 
-  plot_data <<- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
+  plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
     dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
     dplyr::filter(indikator %in% filter_indikator) %>%
     dplyr::filter(anforderung == filter_berufslevel) %>%
@@ -423,11 +423,9 @@ plot_fachkraft_epa_item <- function(r) {
 
 plot_fachkraft_mint_item  <- function(r) {
 
-  #timerange <- 2022; bf_label <- "Spezialist*innen"
-  #timerange <- 2020; bf_label <- "Gesamt"
-  #timerange <- 2020; bf_label <- "Gesamt"
-  timerange <<- r$map_y_fachkraft_arbeit_mint
-  bf_label <<- r$map_bl_fachkraft_arbeit_mint
+
+  timerange <- r$map_y_fachkraft_arbeit_mint
+  bf_label <- r$map_bl_fachkraft_arbeit_mint
 
   if (bf_label == "Gesamt") {
     bf <- fachkraft_ui_berufslevel()
@@ -437,7 +435,7 @@ plot_fachkraft_mint_item  <- function(r) {
 
 
 
-   plot_data_raw <<- dplyr::tbl(con, from ="arbeitsmarkt_epa_detail") %>%
+   plot_data_raw <- dplyr::tbl(con, from ="arbeitsmarkt_epa_detail") %>%
     dplyr::filter(jahr == timerange &
                     indikator == "Engpassindikator" &
                     anforderung %in% bf) %>%
@@ -699,7 +697,7 @@ plot_fachkraft_detail_item  <- function(r) {
   this_beruf <- r$map_b_fachkraft_arbeit_detail
 
 
-  plot_solidgauge_data <<- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
+  plot_solidgauge_data <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
     dplyr::filter(jahr == timerange &
                     indikator == "Engpassindikator" &
                     anforderung == bf_label &
