@@ -95,10 +95,10 @@ plot_fachkraft_epa_item <- function(r) {
 
   # titel zusammenbauen
   level <- dplyr::case_when(
-    bf_label == "Gesamt" ~ " ",
-    bf_label == "Fachkräfte" ~ " von Beschäftigten in Ausbildungsberufen",
-    bf_label == "Spezialist*innen" ~ " von Beschäftigten in Meister-/Technikerstellen o.ä.",
-    bf_label == "Expert*innen" ~ " von Beschäftigten in Akademikerberufen",
+    bf_label == "Gesamt" ~ "",
+    bf_label == "Fachkräfte" ~ "Nur Beschäftigte in Ausbildungsberufen, ",
+    bf_label == "Spezialist*innen" ~ "Nur Beschäftigte in Meister-/Technikerstellen o.ä., ",
+    bf_label == "Expert*innen" ~ "Nur Beschäftigten in Akademikerberufen, ",
   )
   fach_1 <- dplyr::case_when(
     fach[1] == "MINT gesamt" ~ "MINT",
@@ -112,8 +112,8 @@ plot_fachkraft_epa_item <- function(r) {
     fach[2] == "Nicht MINT" ~ "allen Berufen außer MINT",
     T ~ fach[2]
   )
-  titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1, level, " (", timerange, ")")
-  titel_2 <- paste0("Engpassrisiko in ", fach_2, level, " (", timerange, ")")
+  titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1," (", level, timerange, ")")
+  titel_2 <- paste0("Engpassrisiko in ", fach_2," (", level,timerange, ")")
 
 
   plot_left <- highcharter::hchart(
@@ -287,6 +287,14 @@ plot_fachkraft_mint_item  <- function(r) {
     "MINT-Berufe", "Nicht-MINT-Berufe"
   )
 
+  # Titel vorbereiten
+  level <- dplyr::case_when(
+    bf_label == "Gesamt" ~ "",
+    bf_label == "Fachkräfte" ~ "Nur Beschäftigte in Ausbildungsberufen, ",
+    bf_label == "Spezialist*innen" ~ "Nur Beschäftigte in Meister-/Technikerstellen o.ä., ",
+    bf_label == "Expert*innen" ~ "Nur Beschäftigten in Akademikerberufen, ",
+  )
+
   plot <- highcharter::hchart(
     plot_data,
     "item",
@@ -310,8 +318,8 @@ plot_fachkraft_mint_item  <- function(r) {
         " Anzahl: {point.berufe}<br>"
         )) %>%
     highcharter::hc_title(
-      text = paste0("Anteil von MINT-Berufen in der Verteilung des Engpassrisikos im Berufslevel ",
-                    bf_label, " (", timerange, ")"),
+      text = paste0("Verteilung der Berufe in MINT vs. Nicht-MINT nach ihrem Engpassrisiko",
+                    " <br>(", level, timerange, ")"),
       margin = 10,
       align = "center",
       style = list(color = "black",
@@ -320,15 +328,15 @@ plot_fachkraft_mint_item  <- function(r) {
                    fontSize = "20px")
     ) %>%
     highcharter::hc_subtitle(
-      text = "Hier sieht man die Berufsgruppen nach Engpassrisiko verteilt.
-      Die dunkleren Punkte sind Berufsgruppen im Bereich \"MINT\", die helleren Punkte sind Berufsgruppen,
+      text = "Jeder Punkt steht für einen Beruf.
+      Die dunkleren Punkte sind Berufe im Bereich \"MINT\", die helleren Punkte sind Berufe,
       die nicht in den MINT-Bereich zählen.",
       align = "left"
     ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>%
-    # highcharter::hc_size(600, 450) %>%
+     # highcharter::hc_size(1000, 600) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     # highcharter::hc_legend(layout = "horizontal", floating = FALSE,
     #                        verticalAlign = "bottom")
@@ -357,19 +365,28 @@ plot_fachkraft_mint_item  <- function(r) {
     highcharter::hc_add_series(name = categories[4], data = list(NULL), color = colors[4]) %>%
     highcharter::hc_add_series(name = categories[5], data = list(NULL), color = colors[5]) %>%
     highcharter::hc_add_series(name = categories[6], data = list(NULL), color = colors[6]) %>%
-    highcharter::hc_legend(enabled = TRUE) %>%
+    highcharter::hc_legend(enabled = TRUE,
+                           layout = 'horizontal',
+                           align = 'center',
+                           verticalAlign = 'bottom',
+                           itemMarginTop = 5, # Erhöhe den oberen Rand der Legendenpunkte
+                           itemMarginBottom = 5, # Erhöhe den unteren Rand der Legendenpunkte
+                           itemStyle = list(
+                             lineHeight = '14px' # Kontrolliert die Zeilenhöhe innerhalb der Legendenpunkte
+                           )) %>%
     highcharter::hc_title(text = NULL) %>%
     highcharter::hc_subtitle(text = NULL) %>%
     highcharter::hc_xAxis(visible = FALSE) %>%
     highcharter::hc_yAxis(visible = FALSE) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_chart(margin = 0, spacing = c(0, 0, 0, 0)) # Reduziere Margen und Abstand
+    highcharter::hc_chart(margin = 0, spacing = c(0, 0, 0, 0))  # Reduziere Margen und Abstand
+  #  highcharter::hc_size(1000, 600)
 
-  plot_list <- list(plot, legend_plot)
-
-  out <- highcharter::hw_grid(
-    plot_list,
-    ncol=1)
+   plot_list <- list(plot, legend_plot)
+   out <- plot_list
+  # out <- highcharter::hw_grid(
+  #   plot_list,
+  #   ncol=1)
 
   return(out)
 }
@@ -592,14 +609,35 @@ plot_fachkraft_bar_vakanz  <- function(r) {
     ) %>%
     dplyr::arrange(fachbereich)
 
+  # für Überschrift/Subtitle
+  level <- dplyr::case_when(
+    bf_label == "Gesamt" ~ "",
+    bf_label == "Fachkräfte" ~ "Nur Beschäftigte in Ausbildungsberufen, ",
+    bf_label == "Spezialist*innen" ~ "Nur Beschäftigte in Meister-/Technikerstellen o.ä., ",
+    bf_label == "Expert*innen" ~ "Nur Beschäftigten in Akademikerberufen, ",
+  )
+
+  if(this_indikator == "Arbeitslosen-Stellen-Relation"){
+
+    subtitel <- "Arbeitslosen-Stellen-Relation = Arbeitslose & -suchende / sozialversicherungspflichtige Stellen.
+      <br>Hier ist der Mittelwert in den Bereichen dargestellt. Je geringer der Wert, desto schwieriger ist es, Stellen passend zu besetzten."
+
+  }else if(this_indikator == "Abgeschlossene Vakanzzeit"){
+
+    subtitel <- "Abgeschlossene Vakanzzeit = mittlere Zeit, bis eine Stelle besetzt werden kann.
+      <br>Hier ist der Mittelwert in den Bereichen dargestellt. Je höher der Wert, desto schwieriger ist es, Stellen passend zu besetzten."
+
+  }
+
+
   out <- highcharter::hchart(
     object = plot_data,
       type = "bar",
       mapping = highcharter::hcaes(x = fachbereich, y = wert, color = group_color)
       ) %>%
     highcharter::hc_title(
-      text = paste0("Anteil von MINT-Berufen in der Verteilung der ", this_indikator,
-                    " auf dem ", bf_label, "-Level (", timerange, ")"),
+      text = paste0(this_indikator, " in den MINT-Bereichen in ", this_region,
+                    " (", level, timerange, ")"),
       margin = 10,
       align = "center",
       style = list(color = "black",
@@ -607,9 +645,15 @@ plot_fachkraft_bar_vakanz  <- function(r) {
                    fontFamily = "SourceSans3-Regular",
                    fontSize = "20px")
     ) %>%
-    highcharter::hc_tooltip(
-      pointFormat = 'Anteil: {point.wert}%'
+    highcharter::hc_subtitle(
+      text = subtitel,
+      align = "left"
     ) %>%
+    highcharter::hc_tooltip(
+      pointFormat = ifelse(this_indikator == "Arbeitslosen-Stellen-Relation",
+                           'Auf eine ausgeschriebene Stelle kommen {point.wert} Arbeitslose & -suchende.',
+                           'Eine ausgeschriebene Stelle steht {point.wert} Tage leer, bis sie besetzt werden kann.'
+    )) %>%
     highcharter::hc_yAxis(title = list(text = "")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
 
