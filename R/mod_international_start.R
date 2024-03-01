@@ -475,6 +475,52 @@ mod_international_start_ui <- function(id){
              )
     ),
 
+    # NOCH NICHT FERTIG - INTERNATIONALE TABELLE ----
+    # fluidRow(
+    #   id="international_table_box",
+    #   shinydashboard::box(
+    #     title = "INTERNATIONAL - TABLLE",
+    #     width = 12,
+    #     p("LOREM IPSUM INFO"),
+    #     tabsetPanel(
+    #       type = "tabs",
+    #       tabPanel(
+    #         title = "Tabelle", br(),
+    #
+    #         shiny::sidebarPanel(
+    #           width = 12,
+    #           mod_international_table_input_ui("international_table_input_1"),
+    #         ),
+    #         shiny::mainPanel(
+    #           width = 12,
+    #           DT::dataTableOutput(outputId = ns("international_table_1")),
+    #           br(),
+    #           downloadButton(
+    #             outputId = ns("download_btn_png_international_table_1"),
+    #             label = "Download Tabelle (png)",
+    #             icon = icon("download")),
+    #           downloadButton(
+    #             outputId = ns("download_btn_csv_international_table_1"),
+    #             label = "Download Daten (csv)",
+    #             icon = icon("download")),
+    #           # quellen sind schon in der Tabelle enthalten
+    #           # p(style="font-size:12px;color:grey",
+    #           #   "hier Quellen"),
+    #           # shinyBS::bsPopover(
+    #           #   id="h_fachkraft_arbeitsmarkt_1", title="",
+    #           #   content = paste0("POPUP INFO TEXT HERE"),
+    #           #   placement = "top",
+    #           #   trigger = "hover"),
+    #           # tags$a(paste0("Hinweis zu den Daten"),
+    #           #        icon("info-circle"),
+    #           #        id = "h_fachkraft_arbeitsmarkt_1")
+    #         )
+    #       )
+    #     )
+    #   )
+    # ),
+
+
     #Footer
     funct_footer()
 
@@ -545,6 +591,65 @@ mod_international_start_server <- function(id, r){
     output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
       plot_international_arbeitsmarkt_vergleiche(r)
     })
+
+
+   # Box 4 - International Table ----
+    #
+    # output$international_table_1 <- DT::renderDataTable({
+    #   r$int_table_DT <- DT::datatable(
+    #     data = r$int_table,
+    #     # filter = list(position = "top"),
+    #     rownames = FALSE,
+    #     colnames = stringr::str_to_title(names(r$int_table)),
+    #     escape = FALSE,
+    #     options = list(
+    #       dom = "t"),
+    #     # add logo and source
+    #     caption = htmltools::tags$caption(
+    #       style = 'caption-side: bottom; text-align: right;',
+    #       htmltools::div(
+    #         style = "display: flex; justify-content: space-between;",
+    #         htmltools::p(paste0("Quellen: ", r$int_table_source)),
+    #         htmltools::img(
+    #           src="https://raw.githubusercontent.com/mint-vernetzt/datalab/main/inst/app/www/MINTvernetztLogo_klein.png",
+    #           alt="MINT vernetzt Logo",
+    #           width="30",height="30",
+    #           style = "align-self: center;"
+    #         )
+    #       )
+    #     )
+    #   )
+    #
+    #   r$int_table_DT
+    # })
+    #
+    # output$download_btn_png_international_table_1 <- downloadHandler(
+    #   contentType = "text/csv",
+    #   filename = function() {"International_data_custom_table.png"},
+    #   content = function(file) {
+    #     logger::log_info("Donwload png custom table with international data")
+    #     download_table(table = r$int_table_DT,
+    #                    filename = "International_data_custom_table.png",
+    #                    width = 1000,
+    #                    height = 300)
+    #
+    #     file.copy("International_data_custom_table.png", file)
+    #     file.remove("International_data_custom_table.png")
+    #   }
+    # )
+    #
+    # output$download_btn_csv_international_table_1 <- downloadHandler(
+    #   contentType = "text/csv",
+    #   filename = function() {"International_data_custom_table.csv"},
+    #   content = function(file) {
+    #     logger::log_info("Donwload csv custom table with international data")
+    #
+    #     write.csv2(x = prep_download_data(r$int_table_csv),
+    #                file = file,
+    #                row.names = FALSE)
+    #
+    #   }
+    # )
 
 
   })
