@@ -340,61 +340,60 @@ plot_fachkraft_mint_item  <- function(r) {
     highcharter::hc_credits(enabled = FALSE) %>%
     # highcharter::hc_legend(layout = "horizontal", floating = FALSE,
     #                        verticalAlign = "bottom")
-    highcharter::hc_legend(enabled = FALSE)
+     highcharter::hc_legend(enabled = FALSE)
 
 
   # leeren Plot mit individuell angepasster Legende erstellen
 
-  # Erstelle eine Liste von Kategorien für die Legende
-  categories <- c("MINT gesamt - Engpassberuf",
-                  "MINT gesamt - Anzeichen eines Engpassberufs",
-                  "MINT gesamt - kein Engpassberuf",
-                  "Nicht MINT - Engpassberuf",
-                  "Nicht MINT - Anzeichen eines Engpassberufs",
-                  "Nicht MINT - kein Engpassberuf")
-
-  # Farben für jede Kategorie
-  colors <- c("#EE7775",  "#Fcc433", "#00a87a", "#f5adac", "#fdd670", "#66cbaf")
-
-  # Erstelle einen 'leeren' Plot mit einer Serie für jede Kategorie
-  legend_plot <- highcharter::highchart() %>%
-    highcharter::hc_chart(type = 'bar', height = 100) %>% # Reduziere die Höhe
-    highcharter::hc_add_series(name = categories[1], data = list(NULL), color = colors[1]) %>%
-    highcharter::hc_add_series(name = categories[2], data = list(NULL), color = colors[2]) %>%
-    highcharter::hc_add_series(name = categories[3], data = list(NULL), color = colors[3]) %>%
-    highcharter::hc_add_series(name = categories[4], data = list(NULL), color = colors[4]) %>%
-    highcharter::hc_add_series(name = categories[5], data = list(NULL), color = colors[5]) %>%
-    highcharter::hc_add_series(name = categories[6], data = list(NULL), color = colors[6]) %>%
-    highcharter::hc_legend(enabled = TRUE,
-                           layout = 'horizontal',
-                           align = 'center',
-                           verticalAlign = 'bottom',
-                           itemMarginTop = 5, # Erhöhe den oberen Rand der Legendenpunkte
-                           itemMarginBottom = 5, # Erhöhe den unteren Rand der Legendenpunkte
-                           itemStyle = list(
-                             lineHeight = '14px' # Kontrolliert die Zeilenhöhe innerhalb der Legendenpunkte
-                           )) %>%
-    highcharter::hc_title(text = NULL) %>%
-    highcharter::hc_subtitle(text = NULL) %>%
-    highcharter::hc_xAxis(visible = FALSE) %>%
-    highcharter::hc_yAxis(visible = FALSE) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_chart(margin = 0, spacing = c(0, 0, 0, 0))  # Reduziere Margen und Abstand
-  #  highcharter::hc_size(1000, 600)
-
-   plot_list <- list(plot, legend_plot)
-   out <- plot_list
-  # out <- highcharter::hw_grid(
+  # # Erstelle eine Liste von Kategorien für die Legende
+  # categories <- c("MINT gesamt - Engpassberuf",
+  #                 "MINT gesamt - Anzeichen eines Engpassberufs",
+  #                 "MINT gesamt - kein Engpassberuf",
+  #                 "Nicht MINT - Engpassberuf",
+  #                 "Nicht MINT - Anzeichen eines Engpassberufs",
+  #                 "Nicht MINT - kein Engpassberuf")
+  #
+  # # Farben für jede Kategorie
+  # colors <- c("#EE7775",  "#Fcc433", "#00a87a", "#f5adac", "#fdd670", "#66cbaf")
+  #
+  # # Erstelle einen 'leeren' Plot mit einer Serie für jede Kategorie
+  # legend_plot <- highcharter::highchart() %>%
+  #   highcharter::hc_chart(type = 'bar', height = 100) %>% # Reduziere die Höhe
+  #   highcharter::hc_add_series(name = categories[1], data = list(NULL), color = colors[1]) %>%
+  #   highcharter::hc_add_series(name = categories[2], data = list(NULL), color = colors[2]) %>%
+  #   highcharter::hc_add_series(name = categories[3], data = list(NULL), color = colors[3]) %>%
+  #   highcharter::hc_add_series(name = categories[4], data = list(NULL), color = colors[4]) %>%
+  #   highcharter::hc_add_series(name = categories[5], data = list(NULL), color = colors[5]) %>%
+  #   highcharter::hc_add_series(name = categories[6], data = list(NULL), color = colors[6]) %>%
+  #   highcharter::hc_legend(enabled = TRUE,
+  #                          layout = 'horizontal',
+  #                          align = 'center',
+  #                          verticalAlign = 'bottom',
+  #                          itemMarginTop = 5, # Erhöhe den oberen Rand der Legendenpunkte
+  #                          itemMarginBottom = 5, # Erhöhe den unteren Rand der Legendenpunkte
+  #                          itemStyle = list(
+  #                            lineHeight = '14px' # Kontrolliert die Zeilenhöhe innerhalb der Legendenpunkte
+  #                          )) %>%
+  #   highcharter::hc_title(text = NULL) %>%
+  #   highcharter::hc_subtitle(text = NULL) %>%
+  #   highcharter::hc_xAxis(visible = FALSE) %>%
+  #   highcharter::hc_yAxis(visible = FALSE) %>%
+  #   highcharter::hc_credits(enabled = FALSE) %>%
+  #   highcharter::hc_chart(margin = 0, spacing = c(0, 0, 0, 0))  # Reduziere Margen und Abstand
+  # # highcharter::hc_size(1000, 600)
+  #
+  #  plot_list <- list(plot, legend_plot)
+  #
+  #  out <- highcharter::hw_grid(
   #   plot_list,
   #   ncol=1)
+
+  out <- plot
 
   return(out)
 }
 
 plot_fachkraft_detail_item  <- function(r) {
-  logger::log_debug("plot_fachkraft_detail_item")
-  #timerange <- 2022; bf_label <- "Spezialist*innen"; this_beruf <-"Gesamt"
-  # timerange <- 2022; bf_label <- "Spezialist*innen"; this_beruf <-"Gesamt"
 
   timerange <- r$map_y_fachkraft_arbeit_detail
   bf_label <- r$map_bl_fachkraft_arbeit_detail

@@ -18,7 +18,7 @@ mod_fachkraft_start_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        img(src='www/Banner_Fachkraft.jpg',
+        img(src='www/Banner_Fachkraefte.jpg',
             class = "img-responsive",
             #height = "150px", width = "150px",
             alt = "Banner Fokus: MINT-Fachkraefte",
@@ -110,14 +110,15 @@ mod_fachkraft_start_ui <- function(id){
               width = 3,
               mod_fachkraft_item_prog_ui("fachkraft_item_prog_1"),
               br(),
-              downloadButton(
-                outputId = ns("download_btn_plot_fachkraft_prog_item_1"),
-                label = "Download",
-                icon = icon("download")),
+              # downloadButton(
+              #   outputId = ns("download_btn_plot_fachkraft_prog_item_1"),
+              #   label = "Download",
+              #   icon = icon("download")),
             ),
             shiny::mainPanel(
               width = 9,
-              htmlOutput(ns("plot_fachkraft_prog_item_1")),
+              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_prog_item_1")),
+                                                    color = "#154194"),
               p(style="font-size:12px;color:grey",
                 "hier Quellen"),
               shinyBS::bsPopover(
@@ -140,7 +141,9 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              htmlOutput(ns("plot_fachkraft_prog_detail_item_1")),
+              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_prog_detail_item_1")),
+                                            color = "#154194"),
+
               p(style="font-size:12px;color:grey",
                 "hier Quellen"),
               shinyBS::bsPopover(id="h_fachkraft_prog_2", title="",
@@ -158,14 +161,16 @@ mod_fachkraft_start_ui <- function(id){
               width = 3,
 
               mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"), # TODO
-              downloadButton(
-                outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
-                label = "Download",
-                icon = icon("download"))
+              # downloadButton(
+              #   outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
+              #   label = "Download",
+              #   icon = icon("download"))
             ),
             shiny::mainPanel(
               width = 9,
-              htmlOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
+              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
+                                           color = "#154194"),
+
               p(style="font-size:12px;color:grey",
                 "hier Quellen"),
 
@@ -250,7 +255,9 @@ mod_fachkraft_start_ui <- function(id){
               ),
               shiny::mainPanel(
                 width = 9,
-                htmlOutput(ns("plot_fachkraft_epa_item_1")),
+                shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_item_1")),
+                                             color = "#154194"),
+
                 p(style="font-size:12px;color:grey",
                   "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                 shinyBS::bsPopover(
@@ -276,7 +283,15 @@ mod_fachkraft_start_ui <- function(id){
               ),
               shiny::mainPanel(
                 width = 9,
-                htmlOutput(ns("plot_fachkraft_mint_item_1")),
+                shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_mint_item_1")),
+                                             color = "#154194"),
+                img(src='www/Legende_fachkraft_item.png',
+                    class = "img-responsive",
+                    #height = "150px", width = "150px",
+                    alt = "Legende",
+                    style="display: block; margin-left: auto; margin-right: auto;"
+                ),
+
                 p(style="font-size:12px;color:grey",
                   "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                 shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",
@@ -304,7 +319,9 @@ mod_fachkraft_start_ui <- function(id){
               ),
               shiny::mainPanel(
                 width = 9,
-                htmlOutput(ns("plot_fachkraft_bar_vakanz_1")),
+                shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_bar_vakanz_1")),
+                                             color = "#154194"),
+
                 p(style="font-size:12px;color:grey",
                   "hier Quellen"),
                 shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_4", title="",
@@ -386,7 +403,9 @@ mod_fachkraft_start_ui <- function(id){
               ),
             shiny::mainPanel(
               width = 9,
-              htmlOutput(ns("plot_fachkraft_detail_item_1")),
+              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_detail_item_1")),
+                                           color = "#154194"),
+
               p(style="font-size:12px;color:grey",
                 "hier Quellen"),
 
@@ -401,51 +420,6 @@ mod_fachkraft_start_ui <- function(id){
       )
     ),
 
-
-      # UMPLATZIEREN - INTERNATIONALE TABELLE ----
-      # fluidRow(
-      #   id="international_table_box",
-      #   shinydashboard::box(
-      #     title = "INTERNATIONAL - TABLLE",
-      #     width = 12,
-      #     p("LOREM IPSUM INFO"),
-      #     tabsetPanel(
-      #       type = "tabs",
-      #       tabPanel(
-      #         title = "Tabelle", br(),
-      #
-      #         shiny::sidebarPanel(
-      #           width = 12,
-      #           mod_international_table_input_ui("international_table_input_1"),
-      #         ),
-      #         shiny::mainPanel(
-      #           width = 12,
-      #           DT::dataTableOutput(outputId = ns("international_table_1")),
-      #           br(),
-      #           downloadButton(
-      #             outputId = ns("download_btn_png_international_table_1"),
-      #             label = "Download Tabelle (png)",
-      #             icon = icon("download")),
-      #           downloadButton(
-      #             outputId = ns("download_btn_csv_international_table_1"),
-      #             label = "Download Daten (csv)",
-      #             icon = icon("download")),
-      #           # quellen sind schon in der Tabelle enthalten
-      #           # p(style="font-size:12px;color:grey",
-      #           #   "hier Quellen"),
-      #           # shinyBS::bsPopover(
-      #           #   id="h_fachkraft_arbeitsmarkt_1", title="",
-      #           #   content = paste0("POPUP INFO TEXT HERE"),
-      #           #   placement = "top",
-      #           #   trigger = "hover"),
-      #           # tags$a(paste0("Hinweis zu den Daten"),
-      #           #        icon("info-circle"),
-      #           #        id = "h_fachkraft_arbeitsmarkt_1")
-      #         )
-      #       )
-      #     )
-      #   )
-      # ),
 
 
   # Footer
@@ -541,11 +515,8 @@ mod_fachkraft_start_server <- function(id, r){
 
     ## MINT an EPA
     output$plot_fachkraft_mint_item_1 <- renderUI({
-      plot_list <- plot_fachkraft_mint_item(r)
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol=1)
-      out
+      plot_fachkraft_mint_item(r)
+
     })
 
     ## Bar Vakanz
@@ -629,34 +600,37 @@ mod_fachkraft_start_server <- function(id, r){
     # )
 
 
-
     output$plot_fachkraft_prog_item_1 <- renderUI({
-      plot_list <- plot_fachkraft_prognose(r)
-      r$plot_fachkraft_prog_item_1 <- plot_list
-
-      r$plot_fachkraft_prog_item_1_title <- get_plot_title(
-        plot = r$plot_fachkraft_prog_item_1
-      )
-
-      plot_list
+      plot_fachkraft_prognose(r)
     })
+    # vorläufig Download raus
+    # output$plot_fachkraft_prog_item_1 <- renderUI({
+    #   plot_list <- plot_fachkraft_prognose(r)
+    #   r$plot_fachkraft_prog_item_1 <- plot_list
+    #
+    #   r$plot_fachkraft_prog_item_1_title <- get_plot_title(
+    #     plot = r$plot_fachkraft_prog_item_1
+    #   )
+    #
+    #   plot_list
+    # })
 
-    output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_fachkraft_prog_item_1_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_fachkraft_prog_item_1,
-          filename =  r$plot_fachkraft_prog_item_1_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_fachkraft_prog_item_1_title, file)
-        file.remove(r$plot_fachkraft_prog_item_1_title)
-      }
-    )
+    # output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_fachkraft_prog_item_1_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_fachkraft_prog_item_1,
+    #       filename =  r$plot_fachkraft_prog_item_1_title,
+    #       width = 700,
+    #       height = 400)
+    #
+    #     file.copy(r$plot_fachkraft_prog_item_1_title, file)
+    #     file.remove(r$plot_fachkraft_prog_item_1_title)
+    #   }
+    # )
 
     output$plot_fachkraft_prog_detail_item_1 <- renderUI({
 
@@ -672,77 +646,26 @@ mod_fachkraft_start_server <- function(id, r){
 
     output$plot_fachkraft_wirkhebel_analyse_1 <- renderUI({
 
-      plot_list <- plot_fachkraft_wirkhebel_analyse(r)
-      r$plot_fachkraft_wirkhebel_analyse_1 <- plot_list
-
-      r$plot_fachkraft_wirkhebel_analyse_1_title <- get_plot_title(
-        plot = r$plot_fachkraft_wirkhebel_analyse_1
-      )
-
-      plot_list
+      plot_fachkraft_wirkhebel_analyse(r)
     })
 
-
-
-
-
-    # # BOX 5 International Table
+    # Download vorerst raus
+    # output$plot_fachkraft_wirkhebel_analyse_1 <- renderUI({
     #
-    # output$international_table_1 <- DT::renderDataTable({
-    #   r$int_table_DT <- DT::datatable(
-    #     data = r$int_table,
-    #     # filter = list(position = "top"),
-    #     rownames = FALSE,
-    #     colnames = stringr::str_to_title(names(r$int_table)),
-    #     escape = FALSE,
-    #     options = list(
-    #       dom = "t"),
-    #     # add logo and source
-    #     caption = htmltools::tags$caption(
-    #       style = 'caption-side: bottom; text-align: right;',
-    #       htmltools::div(
-    #         style = "display: flex; justify-content: space-between;",
-    #         htmltools::p(paste0("Quellen: ", r$int_table_source)),
-    #         htmltools::img(
-    #           src="https://raw.githubusercontent.com/mint-vernetzt/datalab/main/inst/app/www/MINTvernetztLogo_klein.png",
-    #           alt="MINT vernetzt Logo",
-    #           width="30",height="30",
-    #           style = "align-self: center;"
-    #         )
-    #       )
-    #     )
+    #   plot_list <- plot_fachkraft_wirkhebel_analyse(r)
+    #   r$plot_fachkraft_wirkhebel_analyse_1 <- plot_list
+    #
+    #   r$plot_fachkraft_wirkhebel_analyse_1_title <- get_plot_title(
+    #     plot = r$plot_fachkraft_wirkhebel_analyse_1
     #   )
     #
-    #   r$int_table_DT
+    #   plot_list
     # })
-    #
-    # output$download_btn_png_international_table_1 <- downloadHandler(
-    #   contentType = "text/csv",
-    #   filename = function() {"International_data_custom_table.png"},
-    #   content = function(file) {
-    #     logger::log_info("Donwload png custom table with international data")
-    #     download_table(table = r$int_table_DT,
-    #                    filename = "International_data_custom_table.png",
-    #                    width = 1000,
-    #                    height = 300)
-    #
-    #     file.copy("International_data_custom_table.png", file)
-    #     file.remove("International_data_custom_table.png")
-    #   }
-    # )
-    #
-    # output$download_btn_csv_international_table_1 <- downloadHandler(
-    #   contentType = "text/csv",
-    #   filename = function() {"International_data_custom_table.csv"},
-    #   content = function(file) {
-    #     logger::log_info("Donwload csv custom table with international data")
-    #
-    #     write.csv2(x = prep_download_data(r$int_table_csv),
-    #                file = file,
-    #                row.names = FALSE)
-    #
-    #   }
-    # )
+
+
+
+
+
   })
 }
 

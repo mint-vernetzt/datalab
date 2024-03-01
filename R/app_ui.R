@@ -45,7 +45,7 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
           shinydashboard::menuItem("Fokus: MINT International", tabName = "international"),
           shinydashboard::menuItem("Fokus: MINT-Fachkräfte",  tabName = "fachkraft"),
-          shinydashboard::menuItem("Suche",  tabName = "suche"),
+          shinydashboard::menuItem("BETA: Suche",  tabName = "suche"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen"),
           shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION")
           #shinydashboard::menuItem("Impressum",  tabName = "impressum")
