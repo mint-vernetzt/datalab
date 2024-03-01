@@ -176,7 +176,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
 
   uebersicht_data <- uebersicht_data %>%
     dplyr::mutate(basis_wert = basis_wert) %>%
-    dplyr::select(wirkhebel, basis_wert, wert)%>%
+    dplyr::select(wirkhebel, basis_wert, wert)
 
 
     row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
@@ -423,8 +423,6 @@ plot_fachkraft_epa_item <- function(r) {
 
 plot_fachkraft_mint_item  <- function(r) {
 
-  browser()
-  logger::log_debug("plot_fachkraft_mint_item")
   #timerange <- 2022; bf_label <- "Spezialist*innen"
   #timerange <- 2020; bf_label <- "Gesamt"
   #timerange <- 2020; bf_label <- "Gesamt"
