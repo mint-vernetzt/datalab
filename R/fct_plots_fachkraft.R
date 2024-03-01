@@ -445,7 +445,7 @@ plot_fachkraft_mint_item  <- function(r) {
      dplyr::mutate(mint_zuordnung = dplyr::if_else(
       !mint_zuordnung %in% c("Nicht MINT", "Gesamt"),
       "MINT gesamt",
-      mint_zuordnung))
+      mint_zuordnung)) %>%
     dplyr::filter(mint_zuordnung %in% c("Nicht MINT", "MINT gesamt")) %>%
     dplyr::group_by(mint_zuordnung, epa_kat) %>%
     dplyr::summarise(berufe = dplyr::n()) %>%
@@ -454,7 +454,7 @@ plot_fachkraft_mint_item  <- function(r) {
     dplyr::mutate(percent_total = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100)) %>%
     dplyr::group_by(epa_kat) %>%
     dplyr::mutate(percent_epa = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100)) %>%
-    dplyr::ungroup
+    dplyr::ungroup()
 
 
   # enthält den Text für den plot
