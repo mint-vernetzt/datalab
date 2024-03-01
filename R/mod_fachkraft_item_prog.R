@@ -14,7 +14,7 @@ mod_fachkraft_item_prog_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("fachkraft_item_prog_wirkhebel"),
       choices = fachkraft_ui_wirkhebel(),
-      selected = "MINT-Bildung",
+      selected = "Gesamteffekt",
       multiple = FALSE
     ),
 
@@ -38,20 +38,11 @@ mod_fachkraft_item_prog_ui <- function(id){
 
     br(),
 
-    # TODO extract into own module, since this is repeated on a lot of modules
-
-    shinyBS::bsPopover(id="dh_fachkraft_prog", title = "",
-                       content = paste0("TODO."),
+    shinyBS::bsPopover(id="ih_fachkraft_prog_1", title="",
+                       content = paste0("Die erste Einstellung zeigt, dass die MINT-Fachkräfte - bleibt alles so wie jetzt - bis 2037 etwa gleich bleiben bzw. sogar leicht abnehmen werden, auf 7,8 Millionen. Schafft man eine Verbesserung in der MINT-Bildung und in der Beteiligung von Frauen, internationalen Beschäftigten und Älteren, könnten die Zahlen der MINT-Fachkräfte bis 2037 auf über 9 Millionen ansteigen."),
                        placement = "top",
                        trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_fachkraft_prog"),
-    br(),
-    br(),
-    shinyBS::bsPopover(id="ih_fachkraft_prog", title="",
-                       content = paste0("TODO."),
-                       placement = "top",
-                       trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_prog")
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_prog_1")
 
   )
 }
@@ -90,11 +81,15 @@ mod_fachkraft_item_prog_server <- function(id, r){
     # })
 
     observeEvent(input$fachkraft_item_prog_wirkhebel, {
+
+      wirkhebel <- selected_prog_wirkhebel()
+
         shinyWidgets::updatePickerInput(
           session,
           inputId = "fachkraft_item_prog_scenario",
-          choices = fachkraft_ui_scenario(wirkhebel = selected_prog_wirkhebel()),
-          selected = "Verbesserung",
+          choices = fachkraft_ui_scenario(wirkhebel),
+          selected = ifelse(wirkhebel == "Frauen in MINT", "starke Verbesserung",
+                            "Verbesserung")
         )
     })
 

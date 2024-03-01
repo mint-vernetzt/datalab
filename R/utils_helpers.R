@@ -102,8 +102,9 @@ round_preserve_sum <- function(x, digits = 0) {
 #'
 #' @noRd
 # Veraltet - nicht die richtigen Farben und nicht richtige Kategroriezuordnung
-colors_mint_vernetzt <- list(general = c("#154194", "#b16fab", "#efe8e6"),
+colors_mint_vernetzt <- list(general = c("#154194", "#b16fab", "#00a87a"),
                              attention = c("#00a87a", "#fcc433", "#ee7775"),
+                             short = c("#154194", "#b16fab"),
                              neutral = c("#141416", "#e6e8ec"),
                              gender = c("#f5adac", "#b1b5c3"))
 
@@ -510,11 +511,11 @@ fachkraft_ui_faecher <- function(exclude = c()) {
 
   # manual selection to have correct order and naming
   selection <- c(
-    "Alle Berufe", #"Gesamt"
+   "Alle Berufe" ="Gesamt",
     "MINT gesamt", #"MINT",
     "Informatik",
     "Landtechnik",
-    "Prdokuktionstechnik",
+    "Produktionstechnik",
     "Bau- und Gebäudetechnik",
     "Mathematik, Naturwissenschaften",
     "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
@@ -573,11 +574,11 @@ fachkraft_ui_wirkhebel <- function() {
   selection <- NULL
 
   selection <- c(
-    "Beteiligung älterer MINT-Fachkräfte",
-    "Frauen in MINT",
     "Gesamteffekt",
-    "Internationale MINT-Fachkräfte",
-    "MINT-Bildung"
+    "MINT-Bildung",
+    "Frauen in MINT",
+    "Beteiligung internationaler MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
+    "Beteiligung älterer MINT-Fachkräfte"
   )
 
   return(selection)
