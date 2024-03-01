@@ -1,3 +1,4 @@
+/* Schriften laden */
 @font-face {
   src: url(SourceSans3/SourceSans3-Bold.ttf);
   font-family: "SourceSans3-Bold";
@@ -8,32 +9,91 @@
   font-family: "SourceSans3-Regular";
 }
 
-
 .h1, .h2, .h3, .h4, .h5,
 .h6, h1, h2, h3, h4, h5, h6
+
+/* Schriften festlegen */
+
 {
   font-family: SourceSans3-Bold;
   color: #154194;
+  font-size: 22px;
 }
 
 * {
   font-family: SourceSans3-Regular;
+  font-size: 16px;
 }
 
 
+/* Sidebar und Hintergrundfarben definieren */
+
 .irs-bar {border-color: transparent !important; background: transparent !important}
 
-/* .skin-blue .sidebar-menu>li.active>a, .skin-blue .sidebar-menu>li:hover>a{
-  border-left-color: #195365;
-} */
 
-/* Box Schatten entfernen */
+  /* logo */
+.skin-blue .main-header .logo {
+background-color: #FFFFFF;
+}
+
+  /* logo when hovered */
+.skin-blue .main-header .logo:hover {
+background-color: #FFFFFF;
+}
+
+  /* navbar (rest of the header) */
+.skin-blue .main-header .navbar {
+background-color: #FFFFFF;
+}
+
+  /* main sidebar */
+.skin-blue .main-sidebar {
+background-color: #FFFFFF;
+}
+
+  /* active selected tab in the sidebarmenu */
+.skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
+background-color: #FFFFFF;
+}
+
+  /* other links in the sidebarmenu */
+.skin-blue .main-sidebar .sidebar .sidebar-menu a{
+background-color: #FFFFFF;
+color: #000000;
+}
+
+  /* other links in the sidebarmenu when hovered */
+.skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
+background-color: #154194;
+color: #FFFFFF;
+}
+
+
+  /* toggle button passive  */
+.skin-blue .main-header .navbar .sidebar-toggle{
+background-color: #FFFFFF;
+color:#154194;
+}
+
+  /* toggle button when hovered  */
+.skin-blue .main-header .navbar .sidebar-toggle:hover{
+background-color: #154194;
+}
+
+  /*body*/
+.content-wrapper, .right-side {
+background-color: #FFFFFF;
+}
+
+
+/* Box-Aussehen definieren - Schatten entfernen */
 
 .box{
     border-top-color: #fff;
     box-shadow: 0px 0px 0px rgba(0,0,0,0);
 
 }
+
 
 /*.box.prime{
   border-bottom-color: #195365;
@@ -43,60 +103,7 @@
 }*/
 
 
-
-/* logo */
-                                .skin-blue .main-header .logo {
-                                background-color: #FFFFFF;
-                                }
-
-                                /* logo when hovered */
-                                .skin-blue .main-header .logo:hover {
-                                background-color: #FFFFFF;
-                                }
-
-                                /* navbar (rest of the header) */
-                                .skin-blue .main-header .navbar {
-                                background-color: #FFFFFF;
-                                }
-
-                                /* main sidebar */
-                                .skin-blue .main-sidebar {
-                                background-color: #FFFFFF;
-                                }
-
-                                /* active selected tab in the sidebarmenu */
-                                .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
-                                background-color: #FFFFFF;
-                                }
-
-                                /* other links in the sidebarmenu */
-                                .skin-blue .main-sidebar .sidebar .sidebar-menu a{
-                                background-color: #FFFFFF;
-                                color: #000000;
-                                }
-
-                                /* other links in the sidebarmenu when hovered */
-                                .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
-                                background-color: #154194;
-                                color: #FFFFFF;
-                                }
-
-                                  /* toggle button passive  */
-                                .skin-blue .main-header .navbar .sidebar-toggle{
-                                background-color: #FFFFFF;
-                                color:#154194;
-                                }
-
-                                /* toggle button when hovered  */
-                                .skin-blue .main-header .navbar .sidebar-toggle:hover{
-                                background-color: #154194;
-                                }
-
-                                /*body*/
-                                .content-wrapper, .right-side {
-                                background-color: #FFFFFF;
-                                }
-
+/* Lade-Symbol für Grafiken festlegen */
 
 /* loading symbol */
 #loader-wrapper {

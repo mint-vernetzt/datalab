@@ -19,31 +19,11 @@ app_ui <- function(request) {
             src = "www/MINTvernetztLogo_klein.png",
             height = 45
           ),
-          "    MINT-DataLab",
-          style = "text-align: justify; color:#154194;"
+          "           MINT-DataLab",
+          style = "text-align: justify; color:#154194; font-size: 22; font-family: SourceSans3-Bold;"
         )
       ),
 
-
-      # Create our navigation menu that links to each of the tabs we defined --- MIT ICONS
-      # sidebar = shinydashboard::dashboardSidebar(
-      #   shinydashboard::sidebarMenu(
-      #     # Setting id makes input$tabs give the tabName of currently-selected tab
-      #     id = "tabs",
-      #     shinydashboard::menuItem("Startseite", icon = shiny::icon("door-open"), tabName = "startseite"),
-      #     shinydashboard::menuItem("Alle Bildungsbereiche", icon = shiny::icon("warehouse"), tabName = "home"),
-      #     shinydashboard::menuItem("Schule im Detail", icon = shiny::icon("school"), tabName = "schule"),
-      #     shinydashboard::menuItem("Studium im Detail", icon = shiny::icon("university"), tabName = "studium"),
-      #     # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
-      #     shinydashboard::menuItem("Ausbildung & Beruf im Detail", icon = shiny::icon("building"), tabName = "beruf"),
-      #     shinydashboard::menuItem("Hinweise & Datenquellen", icon = shiny::icon("book"), tabName = "quellen"),
-      #     shinydashboard::menuItem("BETAVERSION", icon = shiny::icon("gear"), tabName = "BETAVERSION")
-      #     #shinydashboard::menuItem("Impressum", icon = shiny::icon("address-card"), tabName = "impressum")
-      #     #shinydashboard::menuItem("Datenschutz", icon = shiny::icon("address-card"), tabName = "datenschutz")
-      #
-      #
-      #   )
-      # ),
 
       # Create our navigation menu that links to each of the tabs we defined
       sidebar = shinydashboard::dashboardSidebar(
