@@ -59,7 +59,7 @@ mod_fachkraft_start_ui <- function(id){
         width = 7,
         p(
           style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-prognose",
-                                                              span(tags$b(span("Fachkräfte-Prognosetool:")))), "Zukunftsszenarien der MINT-Fachkräfteentwicklung"
+                                                              span(tags$b(span("PREVIEW - Fachkräfte-Prognosetool:")))), "Zukunftsszenarien der MINT-Fachkräfteentwicklung"
         ),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-berufsgruppen",
@@ -91,15 +91,18 @@ mod_fachkraft_start_ui <- function(id){
     ),
 
 
-    # Box 1 - MINT-Fachkräfte-PRognose ----
+    # Box 1 - MINT-Fachkräfte-Prognose ----
 
     fluidRow(
       id = "fachkraft-prognose",
       shinydashboard::box(
-        title = "Fachkräfte-Prognosetool: Zukunftsszenarien der MINT-Fachkräfte",
+        title = "PREVIEW - Fachkräfte-Prognosetool: Zukunftsszenarien der MINT-Fachkräfte",
         width = 12,
-        p("LOREM IOSUM"),
-        br(),
+        p("Hier können Sie in die Zukunft blicken. Wir haben das Wirtschaftsinstitut IW Köln beauftragt,
+          die Entwicklung der MINT-Fachkräfte in den nächsten Jahren zu berechnen.
+          Dabei blicken wir auf die Wirkhebel MINT-Bildung fördern, Mädchen in MINT fördern,
+          internationale MINT-Fachkräfte unterstützen und ältere MINT-Fachkräfte halten.
+          Vergleichen Sie hier, wie sich diese Wirkheble die Fachkräfteentwicklung beeinflussen."),
         br(),
         tabsetPanel(
           type = "tabs",
@@ -120,7 +123,7 @@ mod_fachkraft_start_ui <- function(id){
               shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_prog_item_1")),
                                                     color = "#154194"),
               p(style="font-size:12px;color:grey",
-                "hier Quellen"),
+                "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
               shinyBS::bsPopover(
                 id="h_fachkraft_prog_1", title="",
                 content = paste0("POPUP INFO TEXT HERE"),
@@ -128,7 +131,11 @@ mod_fachkraft_start_ui <- function(id){
                 trigger = "hover"),
               tags$a(paste0("Hinweis zu den Daten"),
                      icon("info-circle"),
-                     id = "h_fachkraft_prog_1")
+                     id = "h_fachkraft_prog_1"),
+
+              p(),
+              p(),
+              tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           ),
           tabPanel(
@@ -145,12 +152,15 @@ mod_fachkraft_start_ui <- function(id){
                                             color = "#154194"),
 
               p(style="font-size:12px;color:grey",
-                "hier Quellen"),
+                "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
               shinyBS::bsPopover(id="h_fachkraft_prog_2", title="",
                                  content = paste0("POPUP INFO TEXT HERE"),
                                  placement = "top",
                                  trigger = "hover"),
-              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_2")
+              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_2"),
+              p(),
+              p(),
+              tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           ),
 
@@ -172,15 +182,19 @@ mod_fachkraft_start_ui <- function(id){
                                            color = "#154194"),
 
               p(style="font-size:12px;color:grey",
-                "hier Quellen"),
+                "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
 
               shinyBS::bsPopover(id="h_fachkraft_prog_3", title="",
                                  content = paste0("POPUP INFO TEXT HERE"),
                                  placement = "top",
                                  trigger = "hover"),
-              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_3")
+              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_3"),
+              p(),
+              p(),
+              tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           )
+
         )
       )
     ),
@@ -198,8 +212,7 @@ mod_fachkraft_start_ui <- function(id){
             Engpass-Analyse der Bundesagentur für Arbeit, der Arbeitslosen-Stellen-Relation und der Vakanzzeit.
             Was diese Indikatoren bedeuten, erklären wir in den Infoboxen, die sich bei Klicken auf
             die folgenden Wörter öffnen."),
-          p(),
-          p(),
+          br(),
           column(width = 2,
                  shinyBS::bsPopover(id="i_engpass_analyse_def", title = "",
 
@@ -229,8 +242,7 @@ mod_fachkraft_start_ui <- function(id){
                  p()
           ),
           column(width = 12,
-                 p(),
-                 p(),
+                 br(),
           tabsetPanel(
             type = "tabs",
             tabPanel(
@@ -352,8 +364,7 @@ mod_fachkraft_start_ui <- function(id){
             Engpass-Analyse der Bundesagentur für Arbeit, der Arbeitslosen-Stellen-Relation und der Vakanzzeit.
             Was diese Indikatoren bedeuten, erklären wir in den Infoboxen, die sich bei Klicken auf
             die folgenden Wörter öffnen."),
-        p(),
-        p(),
+        br(),
         column(width = 2,
         shinyBS::bsPopover(id="i_engpass_analyse_def_2", title = "",
 
@@ -387,8 +398,7 @@ mod_fachkraft_start_ui <- function(id){
         #        ),
 
         column(width = 12,
-               p(),
-               p(),
+               br(),
         tabsetPanel(
           type = "tabs",
           tabPanel(
@@ -662,7 +672,15 @@ mod_fachkraft_start_server <- function(id, r){
     #   plot_list
     # })
 
-
+  # pdf ----
+    output$downloadPDF <- downloadHandler(
+      # filename = function() {
+      #   "MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf"
+      # },
+      content = function(file) {
+        file.copy("www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", file)
+      }
+    )
 
 
 
