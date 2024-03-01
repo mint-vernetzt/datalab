@@ -44,7 +44,8 @@ get_search_data <- function(term, session) {
 
   out <- out %>%
     dplyr::select(Bereich, Registerkarte, Plotart, menuItem..tabName, Box..ID)%>%
-    dplyr::mutate(Plotart = stringr::str_to_title(Plotart))
+    dplyr::mutate(Plotart = stringr::str_to_title(Plotart))%>%
+    dplyr::mutate(Grafiktyp = Plotart)
 
   return(out)
 }
