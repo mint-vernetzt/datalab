@@ -11,7 +11,7 @@ library(dplyr)
 pfad_kab <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/04_Input_Suchfunktion/"
 pfad_kbr <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/04_Input_Suchfunktion/"
 
-pfad <- pfad_kbr
+pfad <- pfad_kab
 
 suchtabelle <- read.csv2(paste0(pfad, "Suchtabelle.csv"))
 

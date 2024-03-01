@@ -27,10 +27,11 @@ mod_suche_ui <- function(id){
         title = "BETA: Suche",
         width = 7,
         p("Auf dieser Seite werden die Ergebnisse des Suchfeldes angezeigt. Bei der vorläufgen Suchfunktion handelt es sich noch um eine BETA-Version, die nicht abschließend optimiert ist.", br(), "Zum Aufrufen einer Grafik dient der Link in der Ergebnistabelle.
-          Dieser Link führt entsprechenden Unterseite und der richtgien Box. Von dort aus kann die gewünschte Registerkarte aufgerufen werden.")
-        # p(style = "text-align: left; font-size = 16px",
-        #   "Sucheingabe:"),
-        # mod_suche_eingabe_ui("suche_eingabe_2")
+          Dieser Link führt zur entsprechenden Unterseite und der richtgien Box. Von dort aus kann die gewünschte Registerkarte aufgerufen werden."),
+        br(),
+        p(tags$b(span(
+          "Sucheingabe:"))),
+        p(mod_suche_eingabe_ui("suche_eingabe_2"))
       ),
 
       shinydashboard::box(
@@ -89,7 +90,7 @@ mod_suche_server <- function(id, react_search, parent_session){
       tmp$Link <- shinyInput(
         actionButton, nrow(react_search$suchtabelle),
         'rowline_',
-        label = "Plot",
+        label = "Grafik",
         icon = shiny::icon("chart-column"),
         onclick = sprintf("Shiny.onInputChange('%s', this.id)", ns("select_button"))
       )
@@ -102,7 +103,7 @@ mod_suche_server <- function(id, react_search, parent_session){
     output$search_table <- DT::renderDataTable({
       target_cols <- which(
         # select columns to be shown in the table
-        !names(search_table()) %in% c("Bereich", "Registerkarte", "Plotart", "Link")
+        !names(search_table()) %in% c("Bereich", "Registerkarte", "Grafiktyp", "Link")
         # the - 1 is because js uses 0 index instead of 1 like R
         ) - 1
 
