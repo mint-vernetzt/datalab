@@ -37,7 +37,9 @@ Imports:
     ggtext,
     ggpubr,
     pkgload,
-    ggalt
+    ggalt,
+    tm,
+    quanteda
 Suggests: 
     spelling,
     testthat (>= 3.0.0)

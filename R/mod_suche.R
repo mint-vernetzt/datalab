@@ -27,10 +27,10 @@ mod_suche_ui <- function(id){
         title = "BETA: Suche",
         width = 7,
         p("Auf dieser Seite werden die Ergebnisse des Suchfeldes angezeigt. Bei der vorläufgen Suchfunktion handelt es sich noch um eine BETA-Version, die nicht abschließend optimiert ist.", br(), "Zum Aufrufen einer Grafik dient der Link in der Ergebnistabelle.
-          Dieser Link führt entsprechenden Unterseite und der richtgien Box. Von dort aus kann die gewünschte Registerkarte aufgerufen werden.")
-        # p(style = "text-align: left; font-size = 16px",
-        #   "Sucheingabe:"),
-        # mod_suche_eingabe_ui("suche_eingabe_2")
+          Dieser Link führt entsprechenden Unterseite und der richtgien Box. Von dort aus kann die gewünschte Registerkarte aufgerufen werden."),
+        p(style = "text-align: left; font-size = 16px",
+          "Sucheingabe:"),
+        mod_suche_eingabe_ui("suche_eingabe_2")
       ),
 
       shinydashboard::box(
