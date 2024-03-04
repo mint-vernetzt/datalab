@@ -268,7 +268,6 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
 
 
 plot_fachkraft_epa_item <- function(r) {
-
   timerange <- r$map_y_fachkraft_arbeit_epa
   fach <- r$map_f_fachkraft_arbeit_epa
   bf_label <- r$map_bl_fachkraft_arbeit_epa
@@ -759,15 +758,16 @@ plot_fachkraft_detail_item  <- function(r) {
     dplyr::filter(jahr == timerange &
                     indikator == "Engpassindikator" &
                     anforderung == bf_label &
-                    beruf %in% this_beruf)%>%
+                    beruf %in% this_beruf) %>%
     dplyr::collect()
 
   used_kategories <- switch(
     EXPR = plot_solidgauge_data$epa_kat[1],
     "Anzeichen eines Engpassberufs" = c("Engpassanalyse", "Risikoanalyse"),
     "Engpassberuf" = c("Engpassanalyse"),
-    "kein Engpassberuf" = c("Engpassanalyse"),
+    "kein Engpassberuf" = c("Engpassanalyse")
   )
+
   plot_bar_data <- arbeitsmarkt_epa_detail %>%
     dplyr::filter(jahr == timerange &
                     #indikator == "Engpassindikator" &

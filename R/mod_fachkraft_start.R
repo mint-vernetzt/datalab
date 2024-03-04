@@ -41,7 +41,11 @@ mod_fachkraft_start_ui <- function(id){
           "Außerdem haben wir selbst eine Analyse in Auftrag gegeben,
           mit der wir auf die Zukunft der MINT-Fachkräfte blicken.
           Wir haben Zukunftsszenarien der MINT-Fachkräfteentwicklung berechnen lassen und schauen darauf,
-          wie verschiedene Wirkhebel die MINT-Fachkräftezahlen der Zukunft bewegen können.")
+          wie verschiedene Wirkhebel die MINT-Fachkräftezahlen der Zukunft bewegen können."),
+        p(),
+        p(style = "text-align: left; font-size = 16px",
+          "Vieles hier ist noch eine Preview oder gibt aktuell nur erste Einblicke in die verschiedenen
+          MINT-Fachkräfte-Daten. Hier arbeiten wir gerade an weiteren Darstellungen.")
       ),
 
       shinydashboard::box(

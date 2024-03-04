@@ -27,8 +27,16 @@ mod_suche_ui <- function(id){
         title = "BETA: Suche",
         width = 7,
         p("Auf dieser Seite werden die Ergebnisse des Suchfeldes angezeigt. Bei der vorläufgen Suchfunktion handelt es sich noch um eine BETA-Version, die nicht abschließend optimiert ist.", br(), "Zum Aufrufen einer Grafik dient der Link in der Ergebnistabelle.
-          Dieser Link führt zur entsprechenden Unterseite und der richtgien Box. Von dort aus kann die gewünschte Registerkarte aufgerufen werden."),
+          Dieser Link führt zur entsprechenden Unterseite und der richtgien Box."),
+        p(),
+        P("In dieser Beta-Version funktioniert das Scrollen zur richtigen Box und das
+          automatische öffnen des richtigen Tabs mit der gewünschten Grafik noch nicht.
+          Wir arbeiten aktuell an der finalen Umsetzung.
+          <br>
+          Aktuell müssen diese Klicks noch selbst gemacht werden. Scollen Sie zur thematisch passenden Box und
+          klicken Sie dort auf die Registerkarte, die heißt, wie hier in der Tabell angegeben."),
         br(),
+
         p(tags$b(span(
           "Sucheingabe:"))),
         p(mod_suche_eingabe_ui("suche_eingabe_2"))

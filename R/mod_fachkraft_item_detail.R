@@ -28,50 +28,50 @@ mod_fachkraft_item_detail_ui <- function(id){
       multiple = FALSE
     ),
     #"Fachkräfte" "Spezialist*innen" "Expert*innen"
-    # p("Beruf:"),
-    # shinyWidgets::pickerInput(
-    #   inputId = ns("map_b_fachkraft_arbeit_detail_fach"),
-    #   choices = NULL,
-    #   # selected = "Basis-Szenario",
-    #
-    #  options = list(`actions-box` = TRUE,
-    #                 `live-search` = TRUE),
-    #   multiple = FALSE
-    # ),
     p("Beruf:"),
-    conditionalPanel(condition = "input.map_bl_fachkraft_arbeit_detail == 'Fachkräfte'",
-                     ns = ns,
+    shinyWidgets::pickerInput(
+      inputId = ns("map_b_fachkraft_arbeit_detail"),
+      choices = NULL,
+      # selected = "Basis-Szenario",
 
-                     shinyWidgets::pickerInput(
-                       inputId = ns("map_b_fachkraft_arbeit_detail_fach"),
-                       choices = fachkraft_ui_berufe(level = "Fachkräfte"),
-                       selected = "Gesamt",
-                       options = list(`actions-box` = TRUE,
-                                      `live-search` = TRUE),
-                       multiple = FALSE
-                     )),
-    conditionalPanel(condition = "input.map_bl_fachkraft_arbeit_detail == 'Spezialist*innen'",
-                     ns = ns,
-
-                     shinyWidgets::pickerInput(
-                       inputId = ns("map_b_fachkraft_arbeit_detail_spez"),
-                       choices = fachkraft_ui_berufe(level = "Spezialist*innen"),
-                       selected = "Gesamt",
-                       options = list(`actions-box` = TRUE,
-                                      `live-search` = TRUE),
-                       multiple = FALSE
-                     )),
-    conditionalPanel(condition = "input.map_bl_fachkraft_arbeit_detail == 'Expert*innen'",
-                     ns = ns,
-
-                     shinyWidgets::pickerInput(
-                       inputId = ns("map_b_fachkraft_arbeit_detail_expert"),
-                       choices = fachkraft_ui_berufe(level = "Expert*innen"),
-                       selected = "Gesamt",
-                       options = list(`actions-box` = TRUE,
-                                      `live-search` = TRUE),
-                       multiple = FALSE
-                     )),
+     options = list(`actions-box` = TRUE,
+                    `live-search` = TRUE),
+      multiple = FALSE
+    ),
+    # p("Beruf:"),
+    # conditionalPanel(condition = "input.map_bl_fachkraft_arbeit_detail == 'Fachkräfte'",
+    #                  ns = ns,
+    #
+    #                  shinyWidgets::pickerInput(
+    #                    inputId = ns("map_b_fachkraft_arbeit_detail_fach"),
+    #                    choices = fachkraft_ui_berufe(level = "Fachkräfte"),
+    #                    selected = "Gesamt",
+    #                    options = list(`actions-box` = TRUE,
+    #                                   `live-search` = TRUE),
+    #                    multiple = FALSE
+    #                  )),
+    # conditionalPanel(condition = "input.map_bl_fachkraft_arbeit_detail == 'Spezialist*innen'",
+    #                  ns = ns,
+    #
+    #                  shinyWidgets::pickerInput(
+    #                    inputId = ns("map_b_fachkraft_arbeit_detail_spez"),
+    #                    choices = fachkraft_ui_berufe(level = "Spezialist*innen"),
+    #                    selected = "Gesamt",
+    #                    options = list(`actions-box` = TRUE,
+    #                                   `live-search` = TRUE),
+    #                    multiple = FALSE
+    #                  )),
+    # conditionalPanel(condition = "input.map_bl_fachkraft_arbeit_detail == 'Expert*innen'",
+    #                  ns = ns,
+    #
+    #                  shinyWidgets::pickerInput(
+    #                    inputId = ns("map_b_fachkraft_arbeit_detail_expert"),
+    #                    choices = fachkraft_ui_berufe(level = "Expert*innen"),
+    #                    selected = "Gesamt",
+    #                    options = list(`actions-box` = TRUE,
+    #                                   `live-search` = TRUE),
+    #                    multiple = FALSE
+    #                  )),
 
 
     br(),
@@ -106,52 +106,57 @@ mod_fachkraft_item_detail_server <- function(id, r){
       r$map_y_fachkraft_arbeit_detail <- input$map_y_fachkraft_arbeit_detail
     })
 
-    # observeEvent(input$map_b_fachkraft_arbeit_detail_fach, {
-    #   r$map_b_fachkraft_arbeit_detail_fach <- input$map_b_fachkraft_arbeit_detail_fach
-    # })
-
-    # observeEvent(input$map_bl_fachkraft_arbeit_detail, {
-    #
-    #   level <- selected_level()
-    #   shinyWidgets::updatePickerInput(
-    #     session,
-    #     inputId = "map_b_fachkraft_arbeit_detail_fach",
-    #     choices = ifelse(level == "Fachkräfte", fachkraft_ui_berufe(level = "Fachkräfte"),
-    #                      ifelse(level == "Spezialist*innen", fachkraft_ui_berufe(level = "Spezialist*innen"),
-    #                             fachkraft_ui_berufe(level = "Expert*innen"))),
-    #     selected = "Gesamt"
-    #   )
-    # })
-    #
-    # selected_level <- reactive({
-    #   input$map_bl_fachkraft_arbeit_detail
-    # })
-
-
-observeEvent(input$map_bl_fachkraft_arbeit_detail, {
-  r$map_bl_fachkraft_arbeit_detail <- input$map_bl_fachkraft_arbeit_detail
-  if (input$map_bl_fachkraft_arbeit_detail == "Fachkräfte") {
-    r$map_b_fachkraft_arbeit_detail <- input$map_b_fachkraft_arbeit_detail_fach
-  }
-  if (input$map_bl_fachkraft_arbeit_detail == "Spezialist*innen") {
-    r$map_b_fachkraft_arbeit_detail <- input$map_b_fachkraft_arbeit_detail_spez
-  }
-  if (input$map_bl_fachkraft_arbeit_detail == "Expert*innen") {
-    r$map_b_fachkraft_arbeit_detail <- input$map_b_fachkraft_arbeit_detail_expert
-  }
-
-})
-
-    # Berufswahl
-    observeEvent(input$map_b_fachkraft_arbeit_detail_fach, {
-      r$map_b_fachkraft_arbeit_detail_fach <- input$map_b_fachkraft_arbeit_detail_fach
+    observeEvent(input$map_bl_fachkraft_arbeit_detail, {
+      r$map_bl_fachkraft_arbeit_detail <- input$map_bl_fachkraft_arbeit_detail
     })
-    observeEvent(input$map_b_fachkraft_arbeit_detail_spez, {
-      r$map_b_fachkraft_arbeit_detail_spez <- input$map_b_fachkraft_arbeit_detail_spez
+
+    observeEvent(input$map_b_fachkraft_arbeit_detail, {
+      r$map_b_fachkraft_arbeit_detail <- input$map_b_fachkraft_arbeit_detail
     })
-    observeEvent(input$map_b_fachkraft_arbeit_detail_expert, {
-      r$map_b_fachkraft_arbeit_detail_expert <- input$map_b_fachkraft_arbeit_detail_expert
+
+    observeEvent(input$map_bl_fachkraft_arbeit_detail, {
+
+      level <- selected_level()
+      shinyWidgets::updatePickerInput(
+        session,
+        inputId = "map_b_fachkraft_arbeit_detail",
+        # choices = ifelse(level == "Fachkräfte", fachkraft_ui_berufe(level = "Fachkräfte"),
+        #                  ifelse(level == "Spezialist*innen", fachkraft_ui_berufe(level = "Spezialist*innen"),
+        #                         fachkraft_ui_berufe(level = "Expert*innen"))),
+        choices = fachkraft_ui_berufe(level),
+        selected = "Gesamt"
+      )
     })
+
+    selected_level <- reactive({
+      input$map_bl_fachkraft_arbeit_detail
+    })
+
+
+# observeEvent(input$map_bl_fachkraft_arbeit_detail, {
+#   r$map_bl_fachkraft_arbeit_detail <- input$map_bl_fachkraft_arbeit_detail
+#   if (input$map_bl_fachkraft_arbeit_detail == "Fachkräfte") {
+#     r$map_b_fachkraft_arbeit_detail <- input$map_b_fachkraft_arbeit_detail_fach
+#   }
+#   if (input$map_bl_fachkraft_arbeit_detail == "Spezialist*innen") {
+#     r$map_b_fachkraft_arbeit_detail <- input$map_b_fachkraft_arbeit_detail_spez
+#   }
+#   if (input$map_bl_fachkraft_arbeit_detail == "Expert*innen") {
+#     r$map_b_fachkraft_arbeit_detail <- input$map_b_fachkraft_arbeit_detail_expert
+#   }
+#
+# })
+#
+#     # Berufswahl
+#     observeEvent(input$map_b_fachkraft_arbeit_detail_fach, {
+#       r$map_b_fachkraft_arbeit_detail_fach <- input$map_b_fachkraft_arbeit_detail_fach
+#     })
+#     observeEvent(input$map_b_fachkraft_arbeit_detail_spez, {
+#       r$map_b_fachkraft_arbeit_detail_spez <- input$map_b_fachkraft_arbeit_detail_spez
+#     })
+#     observeEvent(input$map_b_fachkraft_arbeit_detail_expert, {
+#       r$map_b_fachkraft_arbeit_detail_expert <- input$map_b_fachkraft_arbeit_detail_expert
+#     })
   })
 }
 
