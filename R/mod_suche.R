@@ -65,7 +65,6 @@ mod_suche_server <- function(id, react_search, parent_session){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    logger::log_debug("Setup Seiten-Module: SUCHE")
 
     shinyInput <- function(FUN, len, id, ns, ...) {
       inputs <- character(len)
@@ -78,10 +77,6 @@ mod_suche_server <- function(id, react_search, parent_session){
     shiny::observeEvent(react_search$suchtabelle, {
       output$suche_txt <- shiny::renderText(react_search$suche_eingabe_txt)
     })
-
-    # shiny::observeEvent(react_search$suchtabelle, {
-    #   output$suche_txt <- shiny::renderText(react_search$suche_eingabe_txt)
-    # })
 
 
     search_table <- reactive({
@@ -134,14 +129,17 @@ mod_suche_server <- function(id, react_search, parent_session){
 
 
     observeEvent(input$select_button, {
+
       # naming is "rowline_" & "id", eg rowline_1
       # important is the _1 to be seperateds
       selected_idx <- as.numeric(strsplit(input$select_button, "_")[[1]][2])
       # selected_row <- suchtabelle[1,]
       selected_row <- react_search$suchtabelle[selected_idx,]
 
-      logger::log_debug("Goto page ", selected_row$menuItem..tabName)
-      logger::log_debug("Goto Box ", selected_row$Box..ID)
+      #logger::log_debug("Goto page ", selected_row$menuItem..tabName)
+      print("Goto page ", selected_row$menuItem..tabName)
+      #logger::log_debug("Goto Box ", selected_row$Box..ID)
+      print("Goto Box ", selected_row$Box..ID)
 
       shinydashboard::updateTabItems(
         session = parent_session,
