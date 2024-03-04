@@ -97,7 +97,7 @@ plot_fachkraft_prognose  <- function(r) {
 }
 
 plot_fachkraft_prognose_detail  <- function(r) {
-  logger::log_debug("plot_fachkraft_prog_detail")
+  ## logger::log_debug("plot_fachkraft_prog_detail")
 
   filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_detail_wirkhebel)
   filter_indikator <- c("Status-quo", ifelse(r$fachkraft_item_prog_detail_wirkhebel == "Basis-Szenario",
@@ -207,7 +207,7 @@ plot_fachkraft_prognose_detail  <- function(r) {
 }
 
 plot_fachkraft_wirkhebel_analyse  <- function(r) {
-  logger::log_debug("plot_fachkraft_wirkhebel_analyse")
+ # logger::log_debug("plot_fachkraft_wirkhebel_analyse")
 
   year_filter <- r$fachkraft_item_wirkhebel_analyse
 
@@ -268,6 +268,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
 
 
 plot_fachkraft_epa_item <- function(r) {
+
   timerange <- r$map_y_fachkraft_arbeit_epa
   fach <- r$map_f_fachkraft_arbeit_epa
   bf_label <- r$map_bl_fachkraft_arbeit_epa
@@ -466,11 +467,11 @@ plot_fachkraft_epa_item <- function(r) {
   }
 
 
-  # out <- highcharter::hw_grid(
-  #   plot_left,
-  #   plot_right,
-  #   ncol = 2)
-  out <- list(plot_left, plot_right)
+  out <- highcharter::hw_grid(
+    plot_left,
+    plot_right,
+    ncol = 2)
+  #out <- list(plot_left, plot_right)
 
   return(out)
 
@@ -658,7 +659,7 @@ plot_fachkraft_mint_item  <- function(r) {
 }
 
 plot_fachkraft_bar_vakanz  <- function(r) {
-  logger::log_debug("plot_fachkraft_bar_vakanz")
+  # logger::log_debug("plot_fachkraft_bar_vakanz")
   #this_indikator <- "Abgeschlossene Vakanzzeit"; timerange <- 2021; bf_label <- "Spezialist*innen"; this_region <-"Deutschland"
   #this_indikator <- "Arbeitslosen-Stellen-Relation"; timerange <- 2022; bf_label <- "Gesamt"; this_region <-"Deutschland"
 

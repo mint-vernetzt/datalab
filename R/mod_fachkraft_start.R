@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList
 mod_fachkraft_start_ui <- function(id){
 
-  logger::log_debug("start mod_fachkraft_start_ui")
+  #logger::log_debug("start mod_fachkraft_start_ui")
 
   ns <- NS(id)
   tagList(
