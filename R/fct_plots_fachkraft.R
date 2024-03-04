@@ -785,7 +785,7 @@ plot_fachkraft_prognose_detail  <- function(r) {
       hc <- hc %>% highcharter::hc_add_series(
         name = paste(j, data_list[[i]] %>%
           dplyr::filter(wirkhebel == j) %>%
-          dplyr::pull(!!sym(focused_column)) %>%
+          dplyr::pull(!!rlang::sym(focused_column)) %>%
           unique()),
 
         data = data_list[[i]] %>%
@@ -830,19 +830,22 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
   row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
 
   uebersicht_data <- uebersicht_data %>%
-    dplyr::slice(-row_to_move) %>% # Entfernt die Zeile
-    dplyr::bind_rows(uebersicht_data[row_to_move, ])
+    dplyr::slice(-row_to_move) %>%
+    dplyr::bind_rows(uebersicht_data[row_to_move, ]) %>%
+    dplyr::mutate(basis_label = paste0("Basis-Szenario")) %>%
+    dplyr::mutate(improvement_label = paste0("Verbesserung: ", wirkhebel))
 
+  fig <- plotly::plot_ly(uebersicht_data, color = I("gray80")) %>%
+    plotly::add_segments(x = ~basis_wert, xend = ~wert, y = ~wirkhebel, yend = ~wirkhebel, showlegend = FALSE, text = ~basis_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
+    plotly::add_markers(x = ~basis_wert, y = ~wirkhebel, name = "Basis-Szenario", color = I("pink"), text = ~basis_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
+    plotly::add_markers(x = ~wert, y = ~wirkhebel, name = "Verbesserung", color = I("blue"), text = ~improvement_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
+    plotly::layout(
+      title = "TODO Title",
+      xaxis = list(title = "Fachkräfte", tickformat = ",", range = c(7500000, 9500000)),
+      yaxis = list(title = "", categoryorder = "array", categoryarray = unique(uebersicht_data$wirkhebel)),
+      margin = list(l = 100)
+    )
 
-  hc <- highcharter::highchart() %>%
-    highcharter::hc_chart(type = 'dumbbell', inverted = TRUE) %>%
-    highcharter::hc_title(text = "TODO Title") %>%
-    highcharter::hc_subtitle(text = "TODO Subtitle") %>%
-    highcharter::hc_xAxis(type = 'category') %>%
-    highcharter::hc_yAxis(title = list(text = "Verbesserung")) %>%
-    highcharter::hc_tooltip(shared = TRUE) %>%
-    highcharter::hc_add_series(name = "Verbesserung", data = highcharter::list_parse2(uebersicht_data))
-
-  return(hc)
+  return(fig)
 }
 
