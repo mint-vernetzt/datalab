@@ -2433,6 +2433,8 @@ library(dplyr)
 
 ### BULA Vergleich ####
 
+
+
 #### Rohdaten einlesen -------------------------------------------------------
 # akro <- "kbr"
 # pfad <- paste0("C:/Users/", akro,
@@ -3276,7 +3278,7 @@ mint <- mint %>%
     indikator == "MN" ~ "Mathematik, Naturwissenschaften",
     indikator == "I" ~ "Informatik",
     indikator == "LT" ~ "Landtechnik",
-    indikator == "PT" ~ "Prdokuktionstechnik",
+    indikator == "PT" ~ "Produktionstechnik",
     indikator == "BT" ~ "Bau- und Gebäudetechnik",
     indikator == "VT" ~ "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
     indikator == "GT" ~ "Gesundheitstechnik",
@@ -3300,7 +3302,7 @@ epa_detail <- epa_detail[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel
                              "beruf_schlüssel", "geregelte_ausbildung", "Anzahl Beschäftigte",
                              "mint_select", "region", "anforderung", "jahr",  "kategorie",
                              "indikator_anzahl", "indikator", "wert", "gesamtwert"
-                             )]
+)]
 
 ## Aggregate Berechnen
 # Alle Berufe
@@ -3356,14 +3358,14 @@ m$mint_select <- "Gesamt"
 
 ## Aggregate anhängen
 alle <- alle[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf",
-                             "beruf_schlüssel", "geregelte_ausbildung", "Anzahl Beschäftigte",
-                             "mint_select", "region", "anforderung", "jahr",  "kategorie",
-                             "indikator_anzahl", "indikator", "wert", "gesamtwert"
+                 "beruf_schlüssel", "geregelte_ausbildung", "Anzahl Beschäftigte",
+                 "mint_select", "region", "anforderung", "jahr",  "kategorie",
+                 "indikator_anzahl", "indikator", "wert", "gesamtwert"
 )]
 t <- t[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf",
-                             "beruf_schlüssel", "geregelte_ausbildung", "Anzahl Beschäftigte",
-                             "mint_select", "region", "anforderung", "jahr",  "kategorie",
-                             "indikator_anzahl", "indikator", "wert", "gesamtwert"
+           "beruf_schlüssel", "geregelte_ausbildung", "Anzahl Beschäftigte",
+           "mint_select", "region", "anforderung", "jahr",  "kategorie",
+           "indikator_anzahl", "indikator", "wert", "gesamtwert"
 )]
 m <- m[, c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf",
            "beruf_schlüssel", "geregelte_ausbildung", "Anzahl Beschäftigte",

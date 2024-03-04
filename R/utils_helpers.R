@@ -102,8 +102,9 @@ round_preserve_sum <- function(x, digits = 0) {
 #'
 #' @noRd
 # Veraltet - nicht die richtigen Farben und nicht richtige Kategroriezuordnung
-colors_mint_vernetzt <- list(general = c("#154194", "#b16fab", "#efe8e6"),
+colors_mint_vernetzt <- list(general = c("#154194", "#b16fab", "#00a87a"),
                              attention = c("#00a87a", "#fcc433", "#ee7775"),
+                             short = c("#154194", "#b16fab"),
                              neutral = c("#141416", "#e6e8ec"),
                              gender = c("#f5adac", "#b1b5c3"))
 
@@ -510,11 +511,11 @@ fachkraft_ui_faecher <- function(exclude = c()) {
 
   # manual selection to have correct order and naming
   selection <- c(
-    "Alle Berufe", #"Gesamt"
+   "Alle Berufe" ="Gesamt",
     "MINT gesamt", #"MINT",
     "Informatik",
     "Landtechnik",
-    "Prdokuktionstechnik",
+    "Produktionstechnik",
     "Bau- und Gebäudetechnik",
     "Mathematik, Naturwissenschaften",
     "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
@@ -568,6 +569,67 @@ fachkraft_ui_berufe <- function(level = "Fachkräfte") {
   return(selection)
 }
 
+fachkraft_ui_wirkhebel <- function() {
+
+  selection <- NULL
+
+  selection <- c(
+    "Gesamteffekt",
+    "MINT-Bildung",
+    "Frauen in MINT",
+    "Beteiligung internationaler MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
+    "Beteiligung älterer MINT-Fachkräfte"
+  )
+
+  return(selection)
+}
+
+fachkraft_ui_scenario <- function(wirkhebel) {
+
+  selection <- NULL
+
+  if(wirkhebel %in% c("MINT-Bildung", "Gesamteffekt")){
+    selection <- c(
+      "Verschlechterung",
+      "Verbesserung"
+    )
+  } else if(wirkhebel == "Internationale MINT-Fachkräfte"){
+    selection <- c(
+      "Stillstand",
+      "Verschlechterung",
+      "Verbesserung"
+    )
+  } else if(wirkhebel == "Beteiligung älterer MINT-Fachkräfte"){
+    selection <- c("Verbesserung")
+
+  } else if(wirkhebel == "Frauen in MINT"){
+    selection <- c(
+      "Verbesserung",
+      "starke Verbesserung"
+    )
+  } else if(wirkhebel == "Basis-Szenario"){
+    selection <- c(
+      "Status-quo"
+    )
+  }
+
+  return(selection)
+}
+
+fachkraft_ui_prognose_gruppen <- function() {
+
+  selection <- NULL
+
+  selection <- c(
+    "Berufslevel",
+    "Geschlecht",
+    "Nationalität"
+  )
+
+  return(selection)
+}
+
+
 # function to extract a plot title from a highcharter object
 get_plot_title <- function(plot, path = ".") {
 
@@ -605,7 +667,7 @@ arbeit_fachkraft_ui_years <- function() {
 
 # Funktion zur Region bei Arbeit-Fachkraft Daten
 arbeit_fachkraft_ui_region <- function() {
-  # logger::log_debug("set arbeit-fachkräfte ui selection for region")
+
   selection <- NULL
 
 
@@ -652,10 +714,12 @@ add_caption_and_download <- function(
       '<div style="width: ',width - 10, 'px;',
       ' display: flex; justify-content: space-between;">',
       '<span>',
+      # '<span style="font-size: 10px;">', # max-width: ', width - 50, 'px; # Formatierung der Anordnung des Texts klappt noch nicht
       'Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022;',
       ' KMK, 2022, alle auf Anfrage,<br>',
-      ' eigene Berechnungen durch MINTvernetzt</span>',
+      ' Eigene Berechnungen durch MINTvernetzt</span>',
       '<span>',
+      '<span style="padding-right: 10px;">',
       #'<img src="https://mint-vernetzt.de/static/e99e5a7a75c99c8651863585408242bb/mintvernetzt_og-img.png"',
       '<img src="https://raw.githubusercontent.com/mint-vernetzt/datalab/main/inst/app/www/MINTvernetztLogo_klein.png"',
       #'<img src="www/MINTvernetztLogo_klein.png"',

@@ -19,31 +19,17 @@ app_ui <- function(request) {
             src = "www/MINTvernetztLogo_klein.png",
             height = 45
           ),
-          "    MINT-DataLab",
-          style = "text-align: justify; color:#154194;"
+          "           MINT-DataLab",
+          style = "text-align: justify; color:#154194; font-size: 22; font-family: SourceSans3-Bold;"
+        ),
+
+        shiny::tags$li(
+          class = "dropdown",
+          id = "search-input-all",
+          mod_suche_eingabe_ui("suche_eingabe_1")
         )
       ),
 
-
-      # Create our navigation menu that links to each of the tabs we defined --- MIT ICONS
-      # sidebar = shinydashboard::dashboardSidebar(
-      #   shinydashboard::sidebarMenu(
-      #     # Setting id makes input$tabs give the tabName of currently-selected tab
-      #     id = "tabs",
-      #     shinydashboard::menuItem("Startseite", icon = shiny::icon("door-open"), tabName = "startseite"),
-      #     shinydashboard::menuItem("Alle Bildungsbereiche", icon = shiny::icon("warehouse"), tabName = "home"),
-      #     shinydashboard::menuItem("Schule im Detail", icon = shiny::icon("school"), tabName = "schule"),
-      #     shinydashboard::menuItem("Studium im Detail", icon = shiny::icon("university"), tabName = "studium"),
-      #     # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
-      #     shinydashboard::menuItem("Ausbildung & Beruf im Detail", icon = shiny::icon("building"), tabName = "beruf"),
-      #     shinydashboard::menuItem("Hinweise & Datenquellen", icon = shiny::icon("book"), tabName = "quellen"),
-      #     shinydashboard::menuItem("BETAVERSION", icon = shiny::icon("gear"), tabName = "BETAVERSION")
-      #     #shinydashboard::menuItem("Impressum", icon = shiny::icon("address-card"), tabName = "impressum")
-      #     #shinydashboard::menuItem("Datenschutz", icon = shiny::icon("address-card"), tabName = "datenschutz")
-      #
-      #
-      #   )
-      # ),
 
       # Create our navigation menu that links to each of the tabs we defined
       sidebar = shinydashboard::dashboardSidebar(
@@ -57,6 +43,9 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Studium",  tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
+          shinydashboard::menuItem("Fokus: MINT International", tabName = "international"),
+          shinydashboard::menuItem("Fokus: MINT-Fachkräfte",  tabName = "fachkraft"),
+          shinydashboard::menuItem("BETA: Suche",  tabName = "suche"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen"),
           shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION")
           #shinydashboard::menuItem("Impressum",  tabName = "impressum")
@@ -105,10 +94,13 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
           # shinydashboard::tabItem(tabName ="ausbildung", mod_ausbildung_ui("ausbildung_ui_1")),
           shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
+          shinydashboard::tabItem(tabName = "international", mod_international_ui("mod_international_ui_1")),
+          shinydashboard::tabItem(tabName ="fachkraft", mod_fachkraft_ui("fachkraft_ui_1")),
+
+          shinydashboard::tabItem(tabName ="suche", mod_suche_ui("suche_1")),
           shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
-
-
           shinydashboard::tabItem(tabName ="BETAVERSION", mod_betaversion_ui("betaversion_ui_1")),
+
           shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
           shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),
           shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))
