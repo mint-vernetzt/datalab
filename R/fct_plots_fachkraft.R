@@ -268,6 +268,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
 
 
 plot_fachkraft_epa_item <- function(r) {
+
   timerange <- r$map_y_fachkraft_arbeit_epa
   fach <- r$map_f_fachkraft_arbeit_epa
   bf_label <- r$map_bl_fachkraft_arbeit_epa
@@ -466,11 +467,11 @@ plot_fachkraft_epa_item <- function(r) {
   }
 
 
-  # out <- highcharter::hw_grid(
-  #   plot_left,
-  #   plot_right,
-  #   ncol = 2)
-  out <- list(plot_left, plot_right)
+  out <- highcharter::hw_grid(
+    plot_left,
+    plot_right,
+    ncol = 2)
+  #out <- list(plot_left, plot_right)
 
   return(out)
 

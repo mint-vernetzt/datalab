@@ -455,12 +455,8 @@ mod_fachkraft_start_server <- function(id, r){
     ## EPA nach MINT
 
     output$plot_fachkraft_epa_item_1 <- renderUI({
-      plot_list <- plot_fachkraft_epa_item(r)
+      plot_fachkraft_epa_item(r)
 
-        out <- highcharter::hw_grid(
-          plot_list,
-          ncol = 2)
-        out
     })
 
     # Download kurz mal raus
