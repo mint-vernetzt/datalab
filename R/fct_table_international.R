@@ -106,7 +106,7 @@ create_filter_rule <- function(filter_list = list()) {
   vars <- names(filter_list)
 
   if (length(vars) == 0 | !is.list(filter_list)) {
-    logger::log_warn("create_filter_rule: Filter list must be a named list")
+    #logger::log_warn("create_filter_rule: Filter list must be a named list")
     return(NULL)
   }
 
@@ -142,7 +142,7 @@ create_filter_rule <- function(filter_list = list()) {
 international_zentral_get_unique_values <- function(var, filter = NULL) {
   # var <- "jahr"
   if (!var %in% names(international_zentral)) {
-    logger::log_warn("Column '", var, "' not in the data!")
+    #logger::log_warn("Column '", var, "' not in the data!")
     return(NULL)
   }
 

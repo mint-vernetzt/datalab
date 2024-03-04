@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList
 mod_fachkraft_start_ui <- function(id){
 
-  logger::log_debug("start mod_fachkraft_start_ui")
+  #logger::log_debug("start mod_fachkraft_start_ui")
 
   ns <- NS(id)
   tagList(
@@ -455,8 +455,12 @@ mod_fachkraft_start_server <- function(id, r){
     ## EPA nach MINT
 
     output$plot_fachkraft_epa_item_1 <- renderUI({
-      plot_fachkraft_epa_item(r)
+      plot_list <- plot_fachkraft_epa_item(r)
 
+        out <- highcharter::hw_grid(
+          plot_list,
+          ncol = 2)
+        out
     })
 
     # Download kurz mal raus
