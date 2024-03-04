@@ -29,7 +29,7 @@ mod_suche_ui <- function(id){
         p("Auf dieser Seite werden die Ergebnisse des Suchfeldes angezeigt. Bei der vorläufgen Suchfunktion handelt es sich noch um eine BETA-Version, die nicht abschließend optimiert ist.", br(), "Zum Aufrufen einer Grafik dient der Link in der Ergebnistabelle.
           Dieser Link führt zur entsprechenden Unterseite und der richtgien Box."),
         p(),
-        P("In dieser Beta-Version funktioniert das Scrollen zur richtigen Box und das
+        p("In dieser Beta-Version funktioniert das Scrollen zur richtigen Box und das
           automatische öffnen des richtigen Tabs mit der gewünschten Grafik noch nicht.
           Wir arbeiten aktuell an der finalen Umsetzung.
           <br>
