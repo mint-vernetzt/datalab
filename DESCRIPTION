@@ -39,7 +39,8 @@ Imports:
     pkgload,
     ggalt,
     tm,
-    quanteda
+    quanteda,
+    slickR
 Suggests: 
     spelling,
     testthat (>= 3.0.0)
