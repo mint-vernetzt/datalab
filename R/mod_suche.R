@@ -136,11 +136,6 @@ mod_suche_server <- function(id, react_search, parent_session){
       # selected_row <- suchtabelle[1,]
       selected_row <- react_search$suchtabelle[selected_idx,]
 
-      #logger::log_debug("Goto page ", selected_row$menuItem..tabName)
-      print("Goto page ", selected_row$menuItem..tabName)
-      #logger::log_debug("Goto Box ", selected_row$Box..ID)
-      print("Goto Box ", selected_row$Box..ID)
-
       shinydashboard::updateTabItems(
         session = parent_session,
         inputId = "tabs",
