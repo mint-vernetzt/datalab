@@ -331,12 +331,12 @@ mod_fachkraft_start_ui <- function(id){
                                              color = "#154194"),
 
                 p(style="font-size:12px;color:grey",
-                  "hier Quellen"),
-                shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_4", title="",
-                                   content = paste0("POPUP INFO TEXT HERE"),
-                                   placement = "top",
-                                   trigger = "hover"),
-                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_4")
+                  "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                # shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_4", title="",
+                #                    content = paste0("POPUP INFO TEXT HERE"),
+                #                    placement = "top",
+                #                    trigger = "hover"),
+                # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_4")
               )
             ),
           )
@@ -413,13 +413,13 @@ mod_fachkraft_start_ui <- function(id){
                                            color = "#154194"),
 
               p(style="font-size:12px;color:grey",
-                "hier Quellen"),
+                "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
-              shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
-                                 content = paste0("POPUP INFO TEXT HERE"),
-                                 placement = "top",
-                                 trigger = "hover"),
-              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_3")
+              # shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
+              #                    content = paste0("POPUP INFO TEXT HERE"),
+              #                    placement = "top",
+              #                    trigger = "hover"),
+              # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_3")
             )
             )
         )
@@ -455,12 +455,13 @@ mod_fachkraft_start_server <- function(id, r){
     ## EPA nach MINT
 
     output$plot_fachkraft_epa_item_1 <- renderUI({
-      plot_list <- plot_fachkraft_epa_item(r)
+      plot_fachkraft_epa_item(r)
+      # plot_list <- plot_fachkraft_epa_item(r)
 
-        out <- highcharter::hw_grid(
-          plot_list,
-          ncol = 2)
-        out
+        # out <- highcharter::hw_grid(
+        #   plot_list,
+        #   ncol = 2)
+        # out
     })
 
     # Download kurz mal raus
