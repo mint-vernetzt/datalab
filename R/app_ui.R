@@ -38,7 +38,7 @@ app_ui <- function(request) {
           # Setting id makes input$tabs give the tabName of currently-selected tab
           style = "position: fixed;",
           id = "tabs",
-          shinydashboard::menuItem("Startseite",  tabName = "startseite"),
+         # shinydashboard::menuItem("Startseite",  tabName = "startseite"),
           shinydashboard::menuItem("Alle Bildungsbereiche",  tabName = "home"),
           shinydashboard::menuItem("Schule",  tabName = "schule"),
           shinydashboard::menuItem("Studium",  tabName = "studium"),
@@ -89,7 +89,7 @@ app_ui <- function(request) {
           )),
 
           shinydashboard::tabItems(
-          shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
+         # shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
           shinydashboard::tabItem(tabName ="home", mod_home_ui("home_ui_1")),
           shinydashboard::tabItem(tabName ="schule", mod_schule_ui("schule_ui_1")),
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),

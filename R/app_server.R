@@ -9,7 +9,7 @@ app_server <- function(input, output, session) {
 
   # Alte Logik
 
-   mod_startseite_server("startseite_ui_1")
+  # mod_startseite_server("startseite_ui_1")
 
   # callModule(mod_home_server, "home_ui_1", data=example_data)
   mod_home_server("home_ui_1")
