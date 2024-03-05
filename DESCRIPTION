@@ -33,7 +33,7 @@ Imports:
     tidyr,
     utils,
     waffle,
-    highcharter,
+    highcharter (>= 0.9.4),
     ggpol,
     ggtext,
     ggpubr,
