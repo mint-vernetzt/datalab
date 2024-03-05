@@ -5,9 +5,9 @@ account: mint-vernetzt
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6264358
-bundleId: 8331130
+bundleId: 8331498
 url: https://mint-vernetzt.shinyapps.io/datalab/
-when: 1709621204.72803
-lastSyncTime: 1709621204.72805
+when: 1709624015.30858
+lastSyncTime: 1709624015.3086
 asMultiple: FALSE
 asStatic: FALSE
