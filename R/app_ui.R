@@ -38,14 +38,14 @@ app_ui <- function(request) {
           # Setting id makes input$tabs give the tabName of currently-selected tab
           style = "position: fixed;",
           id = "tabs",
-         # shinydashboard::menuItem("Startseite",  tabName = "startseite"),
+          shinydashboard::menuItem("Startseite",  tabName = "startseite"),
           shinydashboard::menuItem("Alle Bildungsbereiche",  tabName = "home"),
           shinydashboard::menuItem("Schule",  tabName = "schule"),
           shinydashboard::menuItem("Studium",  tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
           shinydashboard::menuItem("Fokus: MINT International", tabName = "international"),
-          shinydashboard::menuItem("Fokus: MINT-Fachkräfte",  tabName = "fachkraft"),
+         # shinydashboard::menuItem("Fokus: MINT-Fachkräfte",  tabName = "fachkraft"),
          # shinydashboard::menuItem("BETA: Suche",  tabName = "suche"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen"),
           shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION")
@@ -89,14 +89,14 @@ app_ui <- function(request) {
           )),
 
           shinydashboard::tabItems(
-         # shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
+          shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
           shinydashboard::tabItem(tabName ="home", mod_home_ui("home_ui_1")),
           shinydashboard::tabItem(tabName ="schule", mod_schule_ui("schule_ui_1")),
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
           # shinydashboard::tabItem(tabName ="ausbildung", mod_ausbildung_ui("ausbildung_ui_1")),
           shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
           shinydashboard::tabItem(tabName = "international", mod_international_ui("mod_international_ui_1")),
-          shinydashboard::tabItem(tabName ="fachkraft", mod_fachkraft_ui("fachkraft_ui_1")),
+          #shinydashboard::tabItem(tabName ="fachkraft", mod_fachkraft_ui("fachkraft_ui_1")),
 
           #shinydashboard::tabItem(tabName ="suche", mod_suche_ui("suche_1")),
           shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
