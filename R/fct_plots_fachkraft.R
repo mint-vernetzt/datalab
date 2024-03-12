@@ -661,6 +661,110 @@ plot_fachkraft_bar_vakanz  <- function(r) {
 }
 
 
+fachkraft_plot_top_bottom  <- function(r) {
+  logger::log_debug("plot_fachkraft_top_bottom")
+
+  this_indikator <- r$fachkraft_arbeit_top_bottom_ind
+  this_year <- r$fachkraft_arbeit_top_bottom_year
+  this_region <- ifelse(r$fachkraft_arbeit_top_bottom_ind == "Engpassrisiko",
+                        "Deutschland",
+                        ifelse(is.null(r$fachkraft_arbeit_top_bottom_region), "Baden-Württemberg",
+                               r$fachkraft_arbeit_top_bottom_region))
+  bf_label <- r$fachkraft_arbeit_top_bottom_level
+
+  if(this_indikator == "Engpassrisiko"){
+
+    # Engpassrisiko
+    filtered_df <- arbeitsmarkt_epa_detail %>%
+      dplyr::filter(indikator == "Engpassindikator",
+                    jahr == this_year,
+                    region == this_region,
+                    anforderung == bf_label,
+                    !(mint_zuordnung %in% c("Nicht MINT", "Gesamt"))) %>%
+      dplyr::select(beruf, beruf_schlüssel, anforderung, indikator, jahr, wert)
+
+    mittelwert <- filtered_df$wert %>% mean(na.rm = T)
+
+    plot_df <- filtered_df %>%
+      dplyr::arrange(desc(wert)) %>%
+      dplyr::slice(1:10)
+
+  } else {
+    ### Arbeitslosen-Stellen-Relation / Abgeschlossene Vakanzzeit
+    gesamts <- paste(unique(arbeitsmarkt_fachkraefte$fachbereich), "(gesamt)")
+
+    filtered_df <- arbeitsmarkt_fachkraefte %>%
+      dplyr::filter(indikator == this_indikator,
+                    jahr == this_year,
+                    region == this_region,
+                    anforderung == bf_label,
+                    !(fachbereich %in% c("MINT-Berufe", "Keine MINT-Berufe",
+                                         "Insgesamt")),
+                    !beruf %in% gesamts) %>%
+      dplyr::select(-bereich, -fachbereich)
+
+    mittelwert <- filtered_df$wert %>% mean(na.rm = T)
+
+    if(this_indikator == "Arbeitslosen-Stellen-Relation"){
+
+      plot_df <- filtered_df %>%
+        dplyr::arrange(wert) %>%
+        na.omit() %>%
+        dplyr::slice(1:10)
+
+    } else {
+
+      plot_df <- filtered_df %>%
+        dplyr::arrange(desc(wert)) %>%
+        na.omit() %>%
+        dplyr::slice(1:10)
+    }
+
+  }
+
+  format <- ifelse(this_indikator == "Abgeschlossene Vakanzzeit", '{point.y: .0f}', '{point.y:.2f}%')
+
+  hc <- highcharter::hchart(plot_df, "bar", highcharter::hcaes(x = beruf, y = wert)) %>%
+    highcharter::hc_xAxis(title = list(text = "Beruf")) %>%
+    highcharter::hc_yAxis(title = list(text = "")) %>%
+    highcharter::hc_chart(inverted = TRUE) %>%
+    highcharter::hc_plotOptions(series = list(
+      dataLabels = list(
+        enabled = TRUE,
+        align = 'right',
+        inside = TRUE,
+        verticalAlign = 'middle',
+        format = format
+      ),
+      showInLegend = FALSE
+    )) %>%
+    highcharter::hc_tooltip(pointFormat = format)
+
+  if(r$fachkraft_arbeit_top_bottom_average){
+
+    if(max(plot_df$wert) < mittelwert){
+      hc <- hc %>%
+        highcharter::hc_yAxis(max = ceiling(mittelwert))
+    }
+
+    hc <- hc %>%
+      highcharter::hc_yAxis(title = list(text = ""),
+                            opposite = TRUE,
+                            plotLines = list(list(
+                              value = mittelwert,
+                              color = "red",
+                              width = 2,
+                              zIndex = 5,
+                              label = list(text = "Mittelwert über alle Berufe")
+                            )),
+                            labels = list(enabled = FALSE))
+
+  }
+
+  return(hc)
+}
+
+
 plot_fachkraft_prognose  <- function(r) {
   logger::log_debug("plot_fachkraft_prog")
 

@@ -633,6 +633,57 @@ fachkraft_ui_prognose_gruppen <- function() {
   return(selection)
 }
 
+fachkraft_arbeit_top_bottom_region_selection <- function(indikator) {
+  logger::log_debug("set top/bottom ui selection for epa indikator: region")
+
+  selection <- NULL
+
+  if(indikator %in% c('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')){
+    selection <- c(
+      "Deutschland",
+      "Baden-Württemberg",
+      "Bayern",
+      "Berlin",
+      "Brandenburg",
+      "Bremen",
+      "Hamburg",
+      "Hessen",
+      "Mecklenburg-Vorpommern",
+      "Niedersachsen",
+      "Nordrhein-Westfalen",
+      "Rheinland-Pfalz",
+      "Saarland",
+      "Sachsen",
+      "Sachsen-Anhalt",
+      "Schleswig-Holstein",
+      "Thüringen"
+    )
+  } else {
+    selection <- c(
+      "Deutschland"
+    )
+  }
+
+  return(selection)
+}
+
+fachkraft_arbeit_top_bottom_year_selection <- function(indikator) {
+  logger::log_debug("set top/bottom ui selection for epa indikator: year")
+
+  print(indikator)
+  selection <- NULL
+
+  if(indikator %in% c('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')){
+    selection <- 2012:2022
+  } else {
+    selection <- 2019:2022
+  }
+
+  return(selection)
+}
+
+
+
 
 # function to extract a plot title from a highcharter object
 get_plot_title <- function(plot, path = ".") {

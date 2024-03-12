@@ -50,6 +50,7 @@ mod_fachkraft_server <- function(id,
   mod_fachkraft_item_mint_server("fachkraft_item_mint_1", r)
   mod_fachkraft_item_detail_server("fachkraft_item_detail_1", r)
   mod_fachkraft_bar_vakanz_server("fachkraft_bar_vakanz_1", r)
+  mod_fachkraft_top_bottom_server("fachkraft_top_bottom_1", r)
   mod_fachkraft_item_prog_server("fachkraft_item_prog_1", r)
   mod_fachkraft_item_prog_detail_server("fachkraft_item_prog_detail_1", r)
   mod_fachkraft_wirkhebel_analyse_server("fachkraft_item_wirkhebel_analyse_1", r)
