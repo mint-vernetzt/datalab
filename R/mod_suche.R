@@ -32,7 +32,7 @@ mod_suche_ui <- function(id){
         p("In dieser Beta-Version funktioniert das Scrollen zur richtigen Box und das
           automatische öffnen des richtigen Tabs mit der gewünschten Grafik noch nicht.
           Wir arbeiten aktuell an der finalen Umsetzung.
-          <br>
+          \n
           Aktuell müssen diese Klicks noch selbst gemacht werden. Scollen Sie zur thematisch passenden Box und
           klicken Sie dort auf die Registerkarte, die heißt, wie hier in der Tabell angegeben."),
         br(),

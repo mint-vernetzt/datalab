@@ -467,11 +467,11 @@ plot_fachkraft_epa_item <- function(r) {
   }
 
 
-  out <- highcharter::hw_grid(
-    plot_left,
-    plot_right,
-    ncol = 2)
-  #out <- list(plot_left, plot_right)
+  # out <- highcharter::hw_grid(
+  #   plot_left,
+  #   plot_right,
+  #   ncol = 2)
+  out <- list(plot_left, plot_right)
 
   return(out)
 
@@ -865,7 +865,8 @@ plot_fachkraft_detail_item  <- function(r) {
     highcharter::hc_plotOptions(
       series = list(
         boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert:.2f}")
+        dataLabels = list(enabled = TRUE, format = "{point.wert:.2f}",
+                          style = list(textOutline = "none"))
       )) %>%
     highcharter::hc_tooltip(pointFormat = "Wert: {point.wert:.2f}") %>%
     highcharter::hc_yAxis(title = list(text = ""),
