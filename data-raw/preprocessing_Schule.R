@@ -316,22 +316,23 @@ data_z <- data_z %>%
 
 # Anpassungen 13.01. kab
 # Oberstufenbelegungen hinzufügen
-
-data_zz <- data_z %>%
-  tidyr::pivot_wider(names_from = indikator, values_from = wert)%>%
-  dplyr::mutate(Oberstufenbelegungen = Grundkurse + Leistungskurse)%>%
-  tidyr::pivot_longer(c(Grundkurse, Leistungskurse, Oberstufenbelegungen), values_to = "wert", names_to ="indikator")%>%
-  dplyr::select("bereich", "hinweise", "quelle", "indikator", "fachbereich", "anzeige_geschlecht",
-         "region", "jahr", "wert")
-
+data_o <- data_z %>%
+  group_by(bereich, hinweise, quelle, jahr, region, anzeige_geschlecht, fachbereich) %>%
+  summarise(wert = sum(wert, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(indikator = "Oberstufenbelegungen",
+         wert = case_when(
+           wert == 0 ~ NA,
+           T ~ wert
+         ))
+data_z <- rbind(data_z, data_o)
 
 #exportieren
-kurse <- data_zz %>%
+kurse <- data_z %>%
   janitor::clean_names() %>%
   janitor::remove_empty() %>%
   dplyr::select(-c("quelle", "hinweise")) %>%
-  dplyr::filter(!fachbereich %in% c("Nicht MINT", "MINT")) %>%
-  dplyr::mutate(wert = tidyr::replace_na(wert, 0))
+  dplyr::filter(!fachbereich %in% c("Nicht MINT", "MINT"))
 
 kurse <- kurse %>% dplyr::filter(jahr >= 2010)
 
@@ -413,6 +414,11 @@ kurse <- kurse %>%
   dplyr::mutate("andere Fächer" = `Alle Fächer`- MINT) %>%
   tidyr::pivot_longer(all_of(alle_kurse), values_to = "wert", names_to = "fachbereich")
 
+kurse <- kurse %>%
+  mutate(wert = case_when(
+    wert == 0 ~NA,
+    T ~ wert
+  ))
 #writexl::write_xlsx(kurse, "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/02_Prozess/Datenaufbereitung 2023/Zentral/kurse_22.xlsx")
 # USE ----
 
