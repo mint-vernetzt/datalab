@@ -17,7 +17,8 @@ get_top10_hc_plot_options <- function(hc,
     highcharter::hc_plotOptions(
       series = list(
         boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert} %")
+        dataLabels = list(enabled = TRUE, format = "{point.wert} %",
+                          style = list(textOutline = "none"))
       )) %>%
     highcharter::hc_tooltip(pointFormat = hc_tooltip) %>%
     highcharter::hc_yAxis(title = list(text = ""),
@@ -2757,7 +2758,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_plotOptions(
           series = list(
             boderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
+            dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
+                              style = list(textOutline = "none"))
           )) %>%
         highcharter::hc_tooltip(pointFormat = plotopshov )%>%
         highcharter::hc_yAxis(plotLines = list(
@@ -2792,7 +2794,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_plotOptions(
           series = list(
             boderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
+            dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
+                              style = list(textOutline = "none"))
           )) %>%
         highcharter::hc_tooltip(pointFormat = plotopshov)%>%
         highcharter::hc_yAxis(
@@ -2839,7 +2842,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_plotOptions(
           series = list(
             boderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
+            dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
+                              style = list(textOutline = "none"))
           )) %>%
         highcharter::hc_tooltip(pointFormat = plotopshov)%>%
         highcharter::hc_yAxis(title = list(text = ""),
@@ -2869,7 +2873,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_plotOptions(
           series = list(
             boderWidth = 0,
-            dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
+            dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
+                              style = list(textOutline = "none"))
           )) %>%
         highcharter::hc_tooltip(pointFormat = plotopshov)%>%
         highcharter::hc_yAxis(title = list(text = ""),
@@ -3324,7 +3329,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
+          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
+                            style = list(textOutline = "none"))
         )) %>%
       highcharter::hc_tooltip(pointFormat = plotopshov) %>%
       highcharter::hc_yAxis(plotLines = list(
@@ -3357,7 +3363,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
+          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
+                            style = list(textOutline = "none"))
         )) %>%
       highcharter::hc_tooltip(pointFormat = plotopshov) %>%
       highcharter::hc_yAxis(
@@ -3404,7 +3411,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
+          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
+                            style = list(textOutline = "none"))
         )) %>%
       highcharter::hc_tooltip(pointFormat = plotopshov) %>%
       highcharter::hc_yAxis(title = list(text = ""),
@@ -3434,7 +3442,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_rel}%")
+          dataLabels = list(enabled = TRUE, format = "{point.display_rel} %",
+                            style = list(textOutline = "none"))
         )) %>%
       highcharter::hc_tooltip(pointFormat = plotopshov) %>%
       highcharter::hc_yAxis(title = list(text = ""),
