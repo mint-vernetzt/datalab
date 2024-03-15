@@ -694,6 +694,10 @@ add_caption_and_download <- function(
   require(webshot2)
   require(htmlwidgets)
 
+  # Sys.setenv(
+  #   CHROMOTE_CHROME = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+  # )
+
   # force the use of pagedown to install chrome on shinyapps.io (this is a workaround)
   require(pagedown)
   # force the use of curl because chromote needs it (see https://github.com/rstudio/chromote/issues/37)
@@ -706,7 +710,7 @@ add_caption_and_download <- function(
                           type = "message",
                           duration = NULL,
                           id = "download_notification")
-
+#browser()
   hc_out <- hc %>%
     # Add the caption to the plot
     highcharter::hc_size(width = width, height = height) %>%
@@ -714,7 +718,7 @@ add_caption_and_download <- function(
       '<div style="width: ',width - 10, 'px;',
       ' display: flex; justify-content: space-between;">',
       '<span>',
-      # '<span style="font-size: 10px;">', # max-width: ', width - 50, 'px; # Formatierung der Anordnung des Texts klappt noch nicht
+      # '<span style="font-size: 10px;">', # max-width: ', width - 50, 'px;
       'Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022;',
       ' KMK, 2022, alle auf Anfrage,<br>',
       ' Eigene Berechnungen durch MINTvernetzt</span>',
@@ -771,3 +775,4 @@ add_caption_and_download <- function(
 
   return(NULL)
 }
+
