@@ -158,14 +158,14 @@ mod_fachkraft_start_ui <- function(id){
               width = 3,
 
               mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"), # TODO
-              downloadButton(
-                outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
-                label = "Download",
-                icon = icon("download"))
+              # downloadButton(
+              #   outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
+              #   label = "Download",
+              #   icon = icon("download"))
             ),
             shiny::mainPanel(
               width = 9,
-              htmlOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
+              plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
               p(style="font-size:12px;color:grey",
                 "hier Quellen"),
 
@@ -670,14 +670,10 @@ mod_fachkraft_start_server <- function(id, r){
       plot_list
     })
 
-    output$plot_fachkraft_wirkhebel_analyse_1 <- renderUI({
+    output$plot_fachkraft_wirkhebel_analyse_1 <- plotly::renderPlotly({
 
       plot_list <- plot_fachkraft_wirkhebel_analyse(r)
       r$plot_fachkraft_wirkhebel_analyse_1 <- plot_list
-
-      r$plot_fachkraft_wirkhebel_analyse_1_title <- get_plot_title(
-        plot = r$plot_fachkraft_wirkhebel_analyse_1
-      )
 
       plot_list
     })
