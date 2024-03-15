@@ -117,10 +117,10 @@ mod_fachkraft_start_ui <- function(id){
               width = 3,
               mod_fachkraft_item_prog_ui("fachkraft_item_prog_1"),
               br(),
-              # downloadButton(
-              #   outputId = ns("download_btn_plot_fachkraft_prog_item_1"),
-              #   label = "Download",
-              #   icon = icon("download")),
+              downloadButton(
+                outputId = ns("download_btn_plot_fachkraft_prog_item_1"),
+                label = "Download",
+                icon = icon("download")),
             ),
             shiny::mainPanel(
               width = 9,
@@ -250,15 +250,15 @@ mod_fachkraft_start_ui <- function(id){
                 width = 3,
                 mod_fachkraft_item_epa_ui("fachkraft_item_epa_1"),
                 br()
-                # ,
-                # downloadButton(
-                #   outputId = ns("download_btn_plot_fachkraft_epa_item_1"),
-                #   label = "Download (links)",
-                #   icon = icon("download")),
-                # downloadButton(
-                #   outputId = ns("download_btn_plot_fachkraft_epa_item_2"),
-                #   label = "Download (rechts)",
-                #   icon = icon("download")),
+                ,
+                downloadButton(
+                  outputId = ns("download_btn_plot_fachkraft_epa_item_1"),
+                  label = "Download (links)",
+                  icon = icon("download")),
+                downloadButton(
+                  outputId = ns("download_btn_plot_fachkraft_epa_item_2"),
+                  label = "Download (rechts)",
+                  icon = icon("download")),
               ),
               shiny::mainPanel(
                 width = 9,
@@ -319,10 +319,10 @@ mod_fachkraft_start_ui <- function(id){
               shiny::sidebarPanel(
                 width = 3,
                 mod_fachkraft_bar_vakanz_ui("fachkraft_bar_vakanz_1"),
-                # downloadButton(
-                #   outputId = ns("download_btn_plot_fachkraft_bar_vakanz_1"),
-                #   label = "Download",
-                #   icon = icon("download"))
+                downloadButton(
+                  outputId = ns("download_btn_plot_fachkraft_bar_vakanz_1"),
+                  label = "Download",
+                  icon = icon("download"))
 
               ),
               shiny::mainPanel(
@@ -402,10 +402,10 @@ mod_fachkraft_start_ui <- function(id){
             shiny::sidebarPanel(
               width = 3,
               mod_fachkraft_item_detail_ui("fachkraft_item_detail_1"),
-              # downloadButton(
-              #   outputId = ns("download_btn_plot_fachkraft_item_detail_1"),
-              #   label = "Download",
-              #   icon = icon("download"))
+              downloadButton(
+                outputId = ns("download_btn_plot_fachkraft_item_detail_1"),
+                label = "Download",
+                icon = icon("download"))
               ),
             shiny::mainPanel(
               width = 9,
@@ -454,70 +454,63 @@ mod_fachkraft_start_server <- function(id, r){
 
     ## EPA nach MINT
 
-    output$plot_fachkraft_epa_item_1 <- renderUI({
-      plot_list <- plot_fachkraft_epa_item(r)
 
-        out <- highcharter::hw_grid(
-          plot_list,
-          ncol = 2)
-        out
-    })
 
     # Download kurz mal raus
-    # output$plot_fachkraft_epa_item_1 <- renderUI({
-    #   plot_list <- plot_fachkraft_epa_item(r)
-    #   r$plot_fachkraft_epa_item_1_left <- plot_list[[1]]
-    #   r$plot_fachkraft_epa_item_1_right <- plot_list[[2]]
-    #
-    #   r$plot_fachkraft_epa_item_1_left_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_epa_item_1_left
-    #   )
-    #   r$plot_fachkraft_epa_item_1_right_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_epa_item_1_right
-    #   )
-    #
-    #   # return plots
-    #   out <- highcharter::hw_grid(
-    #     plot_list,
-    #     ncol = 2)
-    #   out
-    #
-    # })
+    output$plot_fachkraft_epa_item_1 <- renderUI({
+      plot_list <- plot_fachkraft_epa_item(r)
+      r$plot_fachkraft_epa_item_1_left <- plot_list[[1]]
+      r$plot_fachkraft_epa_item_1_right <- plot_list[[2]]
 
-    # output$download_btn_plot_fachkraft_epa_item_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_epa_item_1_left_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_epa_item_1_left,
-    #       filename =  r$plot_fachkraft_epa_item_1_left_title,
-    #       width = 700,
-    #       height = 400,
-    #       with_labels = FALSE)
-    #
-    #     file.copy(r$plot_fachkraft_epa_item_1_left_title, file)
-    #     file.remove(r$plot_fachkraft_epa_item_1_left_title)
-    #   }
-    # )
-    #
-    # output$download_btn_plot_fachkraft_epa_item_2 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_epa_item_1_right_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_epa_item_1_right,
-    #       filename =  r$plot_fachkraft_epa_item_1_right_title,
-    #       width = 700,
-    #       height = 400,
-    #       with_labels = FALSE)
-    #
-    #     file.copy(r$plot_fachkraft_epa_item_1_right_title, file)
-    #     file.remove(r$plot_fachkraft_epa_item_1_right_title)
-    #   }
-    # )
+      r$plot_fachkraft_epa_item_1_left_title <- get_plot_title(
+        plot = r$plot_fachkraft_epa_item_1_left
+      )
+      r$plot_fachkraft_epa_item_1_right_title <- get_plot_title(
+        plot = r$plot_fachkraft_epa_item_1_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
+    })
+
+    output$download_btn_plot_fachkraft_epa_item_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_fachkraft_epa_item_1_left_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_fachkraft_epa_item_1_left,
+          filename =  r$plot_fachkraft_epa_item_1_left_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_fachkraft_epa_item_1_left_title, file)
+        file.remove(r$plot_fachkraft_epa_item_1_left_title)
+      }
+    )
+
+    output$download_btn_plot_fachkraft_epa_item_2 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_fachkraft_epa_item_1_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+        add_caption_and_download(
+          hc = r$plot_fachkraft_epa_item_1_right,
+          filename =  r$plot_fachkraft_epa_item_1_right_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_fachkraft_epa_item_1_right_title, file)
+        file.remove(r$plot_fachkraft_epa_item_1_right_title)
+      }
+    )
 
     ## MINT an EPA
     output$plot_fachkraft_mint_item_1 <- renderUI({
@@ -526,117 +519,108 @@ mod_fachkraft_start_server <- function(id, r){
     })
 
     ## Bar Vakanz
-    output$plot_fachkraft_bar_vakanz_1 <- renderUI({
-      plot_fachkraft_bar_vakanz(r)
-    })
+
 
     # Download für JT kurz raus
-    # output$plot_fachkraft_bar_vakanz_1 <- renderUI({
-    #   plot_list <- plot_fachkraft_bar_vakanz(r)
-    #   r$plot_fachkraft_bar_vakanz_1 <- plot_list
-    #
-    #   r$plot_fachkraft_bar_vakanz_1_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_bar_vakanz_1
-    #   )
-    #
-    #   plot_list
-    # })
-    #
-    # output$download_btn_plot_fachkraft_bar_vakanz_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_bar_vakanz_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_bar_vakanz_1,
-    #       filename =  r$plot_fachkraft_bar_vakanz_1_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_fachkraft_bar_vakanz_1_title, file)
-    #     file.remove(r$plot_fachkraft_bar_vakanz_1_title)
-    #   }
-    # )
+    output$plot_fachkraft_bar_vakanz_1 <- renderUI({
+      plot_list <- plot_fachkraft_bar_vakanz(r)
+      r$plot_fachkraft_bar_vakanz_1 <- plot_list
+
+      r$plot_fachkraft_bar_vakanz_1_title <- get_plot_title(
+        plot = r$plot_fachkraft_bar_vakanz_1
+      )
+
+      plot_list
+    })
+
+    output$download_btn_plot_fachkraft_bar_vakanz_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_fachkraft_bar_vakanz_1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_fachkraft_bar_vakanz_1,
+          filename =  r$plot_fachkraft_bar_vakanz_1_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_fachkraft_bar_vakanz_1_title, file)
+        file.remove(r$plot_fachkraft_bar_vakanz_1_title)
+      }
+    )
 
 
     # Box 3 - Fachkräfte auf Berufsebene ----
 
     ## Detail Berufe
-    output$plot_fachkraft_detail_item_1 <- renderUI({
-      plot_list <- plot_fachkraft_detail_item(r)
-      highcharter::hw_grid(
-            plot_list,
-            ncol = 2)
-    })
+
 
     #Download kurz raus für JT
-    # output$plot_fachkraft_detail_item_1 <- renderUI({
-    #   plot_list <- plot_fachkraft_detail_item(r)
-    #   r$plot_fachkraft_detail_item_1_left <- plot_list[[1]]
-    #   r$plot_fachkraft_detail_item_1_right <- plot_list[[2]]
-    #
-    #   r$plot_fachkraft_detail_item_1_left_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_detail_item_1_left
-    #   )
-    #   r$plot_fachkraft_detail_item_1_right_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_detail_item_1_right
-    #   )
-    #
-    #   highcharter::hw_grid(
-    #     plot_list,
-    #     ncol = 2)
-    # })
-    #
-    # output$download_btn_plot_fachkraft_item_detail_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_detail_item_1_right_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_detail_item_1_right,
-    #       filename =  r$plot_fachkraft_detail_item_1_right_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_fachkraft_detail_item_1_right_title, file)
-    #     file.remove(r$plot_fachkraft_detail_item_1_right_title)
-    #   }
-    # )
+    output$plot_fachkraft_detail_item_1 <- renderUI({
+      plot_list <- plot_fachkraft_detail_item(r)
+      r$plot_fachkraft_detail_item_1_left <- plot_list[[1]]
+      r$plot_fachkraft_detail_item_1_right <- plot_list[[2]]
 
+      r$plot_fachkraft_detail_item_1_left_title <- get_plot_title(
+        plot = r$plot_fachkraft_detail_item_1_left
+      )
+      r$plot_fachkraft_detail_item_1_right_title <- get_plot_title(
+        plot = r$plot_fachkraft_detail_item_1_right
+      )
 
-    output$plot_fachkraft_prog_item_1 <- renderUI({
-      plot_fachkraft_prognose(r)
+      highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
     })
-    # vorläufig Download raus
-    # output$plot_fachkraft_prog_item_1 <- renderUI({
-    #   plot_list <- plot_fachkraft_prognose(r)
-    #   r$plot_fachkraft_prog_item_1 <- plot_list
-    #
-    #   r$plot_fachkraft_prog_item_1_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_prog_item_1
-    #   )
-    #
-    #   plot_list
-    # })
 
-    # output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_prog_item_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_prog_item_1,
-    #       filename =  r$plot_fachkraft_prog_item_1_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_fachkraft_prog_item_1_title, file)
-    #     file.remove(r$plot_fachkraft_prog_item_1_title)
-    #   }
-    # )
+    output$download_btn_plot_fachkraft_item_detail_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_fachkraft_detail_item_1_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_fachkraft_detail_item_1_right,
+          filename =  r$plot_fachkraft_detail_item_1_right_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_fachkraft_detail_item_1_right_title, file)
+        file.remove(r$plot_fachkraft_detail_item_1_right_title)
+      }
+    )
+
+
+
+    # vorläufig Download raus
+    output$plot_fachkraft_prog_item_1 <- renderUI({
+      plot_list <- plot_fachkraft_prognose(r)
+      r$plot_fachkraft_prog_item_1 <- plot_list
+
+      r$plot_fachkraft_prog_item_1_title <- get_plot_title(
+        plot = r$plot_fachkraft_prog_item_1
+      )
+
+      plot_list
+    })
+
+    output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_fachkraft_prog_item_1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_fachkraft_prog_item_1,
+          filename =  r$plot_fachkraft_prog_item_1_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_fachkraft_prog_item_1_title, file)
+        file.remove(r$plot_fachkraft_prog_item_1_title)
+      }
+    )
 
     output$plot_fachkraft_prog_detail_item_1 <- renderUI({
 
@@ -650,23 +634,20 @@ mod_fachkraft_start_server <- function(id, r){
       plot_list
     })
 
-    output$plot_fachkraft_wirkhebel_analyse_1 <- renderUI({
 
-      plot_fachkraft_wirkhebel_analyse(r)
-    })
 
     # Download vorerst raus
-    # output$plot_fachkraft_wirkhebel_analyse_1 <- renderUI({
-    #
-    #   plot_list <- plot_fachkraft_wirkhebel_analyse(r)
-    #   r$plot_fachkraft_wirkhebel_analyse_1 <- plot_list
-    #
-    #   r$plot_fachkraft_wirkhebel_analyse_1_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_wirkhebel_analyse_1
-    #   )
-    #
-    #   plot_list
-    # })
+    output$plot_fachkraft_wirkhebel_analyse_1 <- renderUI({
+
+      plot_list <- plot_fachkraft_wirkhebel_analyse(r)
+      r$plot_fachkraft_wirkhebel_analyse_1 <- plot_list
+
+      r$plot_fachkraft_wirkhebel_analyse_1_title <- get_plot_title(
+        plot = r$plot_fachkraft_wirkhebel_analyse_1
+      )
+
+      plot_list
+    })
 
   # pdf ----
     output$downloadPDF <- downloadHandler(
