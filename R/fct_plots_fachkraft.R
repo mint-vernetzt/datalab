@@ -16,6 +16,17 @@ plot_fachkraft_prognose  <- function(r) {
     dplyr::collect()
 
   plot_data <- plot_data %>%
+    dplyr::group_by("jahr") %>%
+    mutate(
+      wert = dplyr::case_when(
+        wirkhebel == "Gesamteffekt" ~ wert - wert[which(wirkhebel == "Basis-Szenario")],
+        TRUE ~ wert
+      )
+    ) %>%
+    ungroup()
+
+
+  plot_data <- plot_data %>%
     dplyr::mutate(display_color = ifelse(indikator == "Status-quo", "#DCBED9", "#B16FAB"))
 
   data_list <- split(plot_data, plot_data$wirkhebel)
@@ -55,7 +66,6 @@ plot_fachkraft_prognose  <- function(r) {
     Dadurch könnten im Vergleich zum Basisszenario ca. 1,5 Mio. Personen mehr 2037 in MINT beschäftigt sein."
   }
 
-
   hc <- highcharter::highchart() %>%
     highcharter::hc_chart(type = "areaspline") %>%
     highcharter::hc_title(text =  titel, align = "left") %>%
@@ -72,26 +82,44 @@ plot_fachkraft_prognose  <- function(r) {
         color = "#F9F6F5"
       )
     )) %>%
-    highcharter::hc_yAxis(title = list(text = "TODO Title y-axis")) %>%
-    highcharter::hc_tooltip(shared = TRUE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
+    highcharter::hc_yAxis(title = list(text = ""),
+                          labels = list(formatter = highcharter::JS("
+                          function() {
+                            return Highcharts.numberFormat(this.value, 0, '.', '.');
+                          }
+                        "))) %>%
+   # highcharter::hc_yAxis(title = list(text = " ")) %>%
+    highcharter::hc_tooltip(shared = FALSE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
+
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_plotOptions(
-      series = list(pointStart = 2012),
+      series = list(pointStart = 2012,
+                    stacking = 'normal'),
       areaspline = list(fillOpacity = 0.5)
     )
 
-  for(d in data_list) {
-    hc <- hc %>% highcharter::hc_add_series(
-      name = unique(d$wirkhebel),
-      data = d$wert,
-      color = unique(d$display_color),
-      zoneAxis = 'x',
-      zones = list(
-        list(value = 2022),
-        list(dashStyle = 'dot')
-      )
+  # Serie für "Gesamteffekt" hinzufügen
+  hc <- hc %>% highcharter::hc_add_series(
+    name = "Gesamteffekt",
+    data = plot_data %>% filter(wirkhebel == "Gesamteffekt") %>% dplyr::pull(wert),
+    color = "#B16FAB",
+    zoneAxis = 'x',
+    zones = list(
+       list(value = 2022),
+      list(dashStyle = 'Dash')
     )
-  }
+  )
+
+  hc <- hc %>% highcharter::hc_add_series(
+    name = "Basis-Szenario",
+    data = plot_data %>% filter(wirkhebel == "Basis-Szenario") %>% dplyr::pull(wert),
+    color = "#D0A9CD",
+    zoneAxis = 'x',
+    zones = list(
+      list(value = 2022),
+      list(dashStyle = 'Dash')
+    )
+  )
 
   return(hc)
 }
