@@ -314,6 +314,34 @@ mod_fachkraft_start_ui <- function(id){
                 tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_4")
               )
             ),
+            tabPanel(
+              "Berufe mit Engpassrisiko", br(),
+
+              # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+              # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+
+              shiny::sidebarPanel(
+                width = 3,
+                mod_fachkraft_top_bottom_ui("fachkraft_top_bottom_1"),
+                # downloadButton(
+                #   outputId = ns("download_btn_plot_fachkraft_bar_vakanz_1"),
+                #   label = "Download",
+                #   icon = icon("download"))
+
+              ),
+              shiny::mainPanel(
+                width = 9,
+                htmlOutput(ns("fachkraft_plot_top_bottom")),
+                p(style="font-size:12px;color:grey",
+                  "hier Quellen"),
+                shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_5", title="",
+                                   content = paste0("POPUP INFO TEXT HERE"),
+                                   placement = "top",
+                                   trigger = "hover"),
+                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_5")
+              )
+            ),
+
           )
           )
         )
@@ -581,6 +609,11 @@ mod_fachkraft_start_server <- function(id, r){
     #     file.remove(r$plot_fachkraft_bar_vakanz_1_title)
     #   }
     # )
+
+    output$fachkraft_plot_top_bottom <- renderUI({
+      fachkraft_plot_top_bottom(r)
+    })
+
 
 
     # Box 3 - Fachkräfte auf Berufsebene ----
