@@ -239,76 +239,67 @@ mod_fachkraft_start_ui <- function(id){
           column(width = 12,
                  br(),
           tabsetPanel(
+
             type = "tabs",
+
             tabPanel(
-              title = "Engpassrisiko im MINT-Bereich", br(),
+            title = "Engpassrisiko im MINT-Bereich", br(),
 
-              # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-              # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+            # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+            # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
-              shiny::sidebarPanel(
-                width = 3,
-                mod_fachkraft_item_epa_ui("fachkraft_item_epa_1"),
-                br()
-                ,
-                downloadButton(
-                  outputId = ns("download_btn_plot_fachkraft_epa_item_1"),
-                  label = "Download (links)",
-                  icon = icon("download")),
-                downloadButton(
-                  outputId = ns("download_btn_plot_fachkraft_epa_item_2"),
-                  label = "Download (rechts)",
-                  icon = icon("download")),
-              ),
-              shiny::mainPanel(
-                width = 9,
-                shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_item_1")),
-                                             color = "#154194"),
-
-                p(style="font-size:12px;color:grey",
-                  "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                shinyBS::bsPopover(
-                  id="h_fachkraft-berufsgruppen_1", title="",
-                  content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
-                  placement = "top",
-                  trigger = "hover"),
-                tags$a(paste0("Hinweis zu den Daten"),
-                       icon("info-circle"),
-                       id = "h_fachkraft-berufsgruppen_1")
-              )
+            shiny::sidebarPanel(
+              width = 3,
+              mod_fachkraft_item_epa_ui("fachkraft_item_epa_1"),
+              br()
+              ,
+              downloadButton(
+                outputId = ns("download_btn_plot_fachkraft_epa_item_1"),
+                label = "Download (links)",
+                icon = icon("download")),
+              downloadButton(
+                outputId = ns("download_btn_plot_fachkraft_epa_item_2"),
+                label = "Download (rechts)",
+                icon = icon("download")),
             ),
-            tabPanel(
-              "Verteilung MINT-Bereich nach Engpassrisiko", br(),
+            shiny::mainPanel(
+              width = 9,
+              htmlOutput(ns("plot_fachkraft_epa_item_1")),
+              p(style="font-size:12px;color:grey",
+                "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+              shinyBS::bsPopover(
+                id="h_fachkraft-berufsgruppen_1", title="",
+                content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+                placement = "top",
+                trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"),
+                     icon("info-circle"),
+                     id = "h_fachkraft-berufsgruppen_1")
+            )
+          ),
+          tabPanel(
+            "Verteilung MINT-Bereich nach Engpassrisiko", br(),
 
-              # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-              # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+            # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+            # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
-              shiny::sidebarPanel(
-                width = 3,
-                mod_fachkraft_item_mint_ui("fachkraft_item_mint_1")
+            shiny::sidebarPanel(
+              width = 3,
+              mod_fachkraft_item_mint_ui("fachkraft_item_mint_1")
 
-              ),
-              shiny::mainPanel(
-                width = 9,
-                shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_mint_item_1")),
-                                             color = "#154194"),
-                img(src='www/Legende_fachkraft_item.png',
-                    class = "img-responsive",
-                    #height = "150px", width = "150px",
-                    alt = "Legende",
-                    style="display: block; margin-left: auto; margin-right: auto;"
-                ),
-                br(),
-
-                p(style="font-size:12px;color:grey",
-                  "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",
-                                   content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
-                                   placement = "top",
-                                   trigger = "hover"),
-                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft-berufsgruppen_2")
-              )
             ),
+            shiny::mainPanel(
+              width = 9,
+              htmlOutput(ns("plot_fachkraft_mint_item_1")),
+              p(style="font-size:12px;color:grey",
+                "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+              shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",
+                                 content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+                                 placement = "top",
+                                 trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft-berufsgruppen_2")
+            )
+          ),
 
             tabPanel(
               "Arbeitslosen-Stellen-Relation und Vakanzzeit in MINT", br(),

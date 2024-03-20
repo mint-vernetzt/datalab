@@ -17,13 +17,13 @@ plot_fachkraft_prognose  <- function(r) {
 
   plot_data <- plot_data %>%
     dplyr::group_by("jahr") %>%
-    mutate(
+    dplyr::mutate(
       wert = dplyr::case_when(
         wirkhebel == "Gesamteffekt" ~ wert - wert[which(wirkhebel == "Basis-Szenario")],
         TRUE ~ wert
       )
     ) %>%
-    ungroup()
+    dplyr::ungroup()
 
 
   plot_data <- plot_data %>%
@@ -101,7 +101,7 @@ plot_fachkraft_prognose  <- function(r) {
   # Serie für "Gesamteffekt" hinzufügen
   hc <- hc %>% highcharter::hc_add_series(
     name = "Gesamteffekt",
-    data = plot_data %>% filter(wirkhebel == "Gesamteffekt") %>% dplyr::pull(wert),
+    data = plot_data %>% dplyr::filter(wirkhebel == "Gesamteffekt") %>% dplyr::pull(wert),
     color = "#B16FAB",
     zoneAxis = 'x',
     zones = list(
@@ -112,7 +112,7 @@ plot_fachkraft_prognose  <- function(r) {
 
   hc <- hc %>% highcharter::hc_add_series(
     name = "Basis-Szenario",
-    data = plot_data %>% filter(wirkhebel == "Basis-Szenario") %>% dplyr::pull(wert),
+    data = plot_data %>% dplyr::filter(wirkhebel == "Basis-Szenario") %>% dplyr::pull(wert),
     color = "#D0A9CD",
     zoneAxis = 'x',
     zones = list(
