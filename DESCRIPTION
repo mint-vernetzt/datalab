@@ -32,7 +32,7 @@ Imports:
     tidyr,
     utils,
     waffle,
-    webshot2 (== 0.1.1),
+    webshot2 (== 0.1.0),
     highcharter,
     ggpol,
     ggtext,

@@ -103,7 +103,12 @@ mod_home_start_ui <- function(id){
                     tabPanel("Zeitverlauf", br(),
                         shiny::sidebarPanel(
                           width = 3,
-                          mod_home_start_multiple_ui("mod_home_start_multiple_ui_1")
+                          mod_home_start_multiple_ui("mod_home_start_multiple_ui_1"),
+                          br(),
+                          downloadButton(
+                            outputId = ns("download_btn_plot_mint_1_dl"),
+                            label = "Download",
+                            icon = icon("download")),
                           ),
                         shiny::mainPanel(
                           width = 9,
@@ -256,6 +261,25 @@ mod_home_start_server <- function(id,r){
     output$plot_pie_mint_gender <- renderUI({
       home_einstieg_pie_gender( r)
     })
+
+    ### Downloads ----
+    output$download_btn_plot_mint_1_dl <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_mint_1_dl},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_mint_1,
+          filename =  r$plot_mint_1_dl,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_mint_1_dl, file)
+        file.remove(r$plot_mint_1_dl)
+      }
+    )
 
 
   })

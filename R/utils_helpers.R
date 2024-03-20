@@ -686,13 +686,22 @@ add_caption_and_download <- function(
     hc,
     filename = "plot.png",
     labelformat = '{point.y}',
-    with_labels = TRUE,
+    with_labels = TRUE
+    ,
     width = 450,
-    height = 300) {
+    height = 300
+    ) {
 
   require(highcharter)
   require(webshot2)
   require(htmlwidgets)
+
+  #
+  # packageurl <- "https://cran.r-project.org/src/contrib/Archive/webshot2/webshot2_0.1.0.tar.gz"
+  # install.packages(packageurl, repos=NULL, type="source")
+  #
+  # packageVersion("webshot2")
+
 
   # Sys.setenv(
   #   CHROMOTE_CHROME = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
@@ -762,11 +771,13 @@ add_caption_and_download <- function(
   print(html_file)
   # # Capture the HTML as a PNG image
   webshot2::webshot(url = html_file,
-                    file = filename,
+                    file = filename
+                    ,
                     delay = 2,
                     zoom = 2,
                     vwidth = width,
-                    vheight = height)
+                    vheight = height
+                    )
 
   shiny::showNotification(
     ui = paste0("Gespeichert als '", filename, "'"),
