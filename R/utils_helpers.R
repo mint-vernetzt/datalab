@@ -696,7 +696,8 @@ add_caption_and_download <- function(
   require(webshot2)
   require(htmlwidgets)
 
-  #
+
+  # roll back webshot 2
   # packageurl <- "https://cran.r-project.org/src/contrib/Archive/webshot2/webshot2_0.1.0.tar.gz"
   # install.packages(packageurl, repos=NULL, type="source")
   #
@@ -764,6 +765,7 @@ add_caption_and_download <- function(
       )
   }
 
+  #browser()
   #print(hc_out)
   # Save the plot as a standalone HTML file
   html_file <- tempfile(fileext = ".html")

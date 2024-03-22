@@ -291,7 +291,7 @@ kurse_einstieg_comparison <- function(r) {
 
   # plot
 
-  highcharter::hchart(df1, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = forcats::fct_rev(fachbereich))) %>%
+ out <-  highcharter::hchart(df1, 'bar', highcharter::hcaes(y = round(proportion), x = indikator, group = forcats::fct_rev(fachbereich))) %>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert_new}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
@@ -315,6 +315,7 @@ kurse_einstieg_comparison <- function(r) {
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
+ return (out)
 }
 
 #' A function to plot time series

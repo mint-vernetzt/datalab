@@ -104,15 +104,15 @@ mod_home_start_ui <- function(id){
                         shiny::sidebarPanel(
                           width = 3,
                           mod_home_start_multiple_ui("mod_home_start_multiple_ui_1"),
-                          br(),
+                          br(),br(),
                           downloadButton(
-                            outputId = ns("download_btn_plot_mint_1_dl"),
+                            outputId = ns("download_btn_plot_mint_1"),
                             label = "Download",
                             icon = icon("download")),
                           ),
                         shiny::mainPanel(
                           width = 9,
-                          shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_mint_1")),
+                          shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_1")),
                                                        color = "#154194"),
                           br(),
                           p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -129,11 +129,17 @@ mod_home_start_ui <- function(id){
                     tabPanel("Überblick", br(),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1")
+                               mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_comparison_mint"),
+                                 label = "Download",
+                                 icon = icon("download")
+                             )
                                ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_comparison_mint")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_mint")),
                                                             color = "#154194"),
                                br(),
                                p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -146,6 +152,7 @@ mod_home_start_ui <- function(id){
 
          ))
          )),
+ # Box 2 ----
     fluidRow(id="alle_frauen",
       shinydashboard::box(
         title = "Frauen in MINT: Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen",
@@ -180,10 +187,15 @@ mod_home_start_ui <- function(id){
                     tabPanel("Zeitverlauf", br(),
                         shiny::sidebarPanel(
                           width = 3,
-                          mod_home_start_comparison_ui("mod_home_start_comparison_ui_1")),
+                          mod_home_start_comparison_ui("mod_home_start_comparison_ui_1"),
+                          br(),br(),
+                          downloadButton(
+                            outputId = ns("download_btn_plot_verlauf_mint"),
+                            label = "Download",
+                            icon = icon("download"))),
                         shiny::mainPanel(
                           width = 9,
-                          shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_mint")),
+                          shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_mint")),
                                                        color = "#154194"),
 
                           p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -197,10 +209,15 @@ mod_home_start_ui <- function(id){
                     tabPanel("Überblick", br(),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1")),
+                               mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1"),
+                             br(),br(),
+                             downloadButton(
+                               outputId = ns("download_btn_plot_comparison_gender"),
+                               label = "Download",
+                               icon = icon("download"))),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_comparison_gender")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_gender")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -242,44 +259,154 @@ mod_home_start_server <- function(id,r){
     # Rest ----
 
 
-    output$plot_verlauf_mint <- highcharter::renderHighchart({
-      home_comparison_line(r)
-    })
+    # output$plot_verlauf_mint <- highcharter::renderHighchart({
+    #   home_comparison_line(r)
+    # })
 
     output$plot_comparison_gender <- highcharter::renderHighchart({
       home_stacked_comparison_gender(r)
     })
 
-    output$plot_mint_1 <- highcharter::renderHighchart({
-      home_rest_mint_verlauf(r)
-    })
+    # output$plot_mint_1 <- highcharter::renderHighchart({
+    #   home_rest_mint_verlauf(r)
+    # })
 
-    output$plot_comparison_mint <- highcharter::renderHighchart({
-      home_stacked_comparison_mint( r)
-    })
+    # output$plot_comparison_mint <- highcharter::renderHighchart({
+    #   home_stacked_comparison_mint( r)
+    # })
 
     output$plot_pie_mint_gender <- renderUI({
       home_einstieg_pie_gender( r)
     })
 
     ### Downloads ----
-    output$download_btn_plot_mint_1_dl <- downloadHandler(
+
+    #### Box 1 ----
+
+    #tab 2
+    output$plot_mint_1 <- renderUI({
+      plot_list <- home_rest_mint_verlauf(r)
+      r$plot_mint_1 <- plot_list
+
+      r$plot_mint_1_title <- get_plot_title(
+        plot = r$plot_mint_1
+      )
+
+      plot_list
+    })
+
+    output$download_btn_plot_mint_1 <- downloadHandler(
       contentType = "image/png",
-      filename = function() {r$plot_mint_1_dl},
+      filename = function() {r$plot_mint_1_title},
       content = function(file) {
         # creating the file with the screenshot and prepare it to download
 
         add_caption_and_download(
           hc = r$plot_mint_1,
-          filename =  r$plot_mint_1_dl,
+          filename =  r$plot_mint_1_title,
           width = 700,
-          height = 400,
-          with_labels = FALSE)
+          height = 400)
 
-        file.copy(r$plot_mint_1_dl, file)
-        file.remove(r$plot_mint_1_dl)
+        file.copy(r$plot_mint_1_title, file)
+        file.remove(r$plot_mint_1_title)
       }
     )
+
+    # tab 3
+
+    output$plot_comparison_mint <- renderUI({
+      plot_list <-home_stacked_comparison_mint( r)
+      r$plot_comparison_mint <- plot_list
+
+      r$plot_comparison_mint_title <- get_plot_title(
+        plot = r$plot_comparison_mint
+      )
+
+      plot_list
+    })
+
+    output$download_btn_plot_comparison_mint <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_comparison_mint_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_comparison_mint,
+          filename =  r$plot_comparison_mint_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_comparison_mint_title, file)
+        file.remove(r$plot_comparison_mint_title)
+      }
+    )
+
+
+    #### Box 2 ----
+
+
+
+    # tab 2
+
+    output$plot_verlauf_mint <- renderUI({
+      plot_list <- home_comparison_line(r)
+      r$plot_verlauf_mint <- plot_list
+
+      r$plot_verlauf_mint_title <- get_plot_title(
+        plot = r$plot_verlauf_mint
+      )
+
+      plot_list
+    })
+
+    output$download_btn_plot_verlauf_mint <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_verlauf_mint_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_verlauf_mint,
+          filename =  r$plot_verlauf_mint_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_verlauf_mint_title, file)
+        file.remove(r$plot_verlauf_mint_title)
+      }
+    )
+
+    # tab 3
+    output$plot_comparison_gender <- renderUI({
+      plot_list <-home_stacked_comparison_gender(r)
+      r$plot_comparison_gender <- plot_list
+
+      r$plot_comparison_gender_title <- get_plot_title(
+        plot = r$plot_comparison_gender
+      )
+
+      plot_list
+    })
+
+    output$download_btn_plot_comparison_gender <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_comparison_gender_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_comparison_gender,
+          filename =  r$plot_comparison_gender_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_comparison_gender_title, file)
+        file.remove(r$plot_comparison_gender_title)
+      }
+    )
+
+
 
 
   })

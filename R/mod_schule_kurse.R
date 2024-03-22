@@ -91,7 +91,7 @@ mod_schule_kurse_ui <- function(id){
 
       ),
 
-  # Box 1
+  # Box 1 -----
 
     fluidRow(id="schule_mint",
       shinydashboard::box(
@@ -127,10 +127,16 @@ mod_schule_kurse_ui <- function(id){
                     tabPanel("Vergleich Grund- und Leistungskurse, MINT aggregiert", br(),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_einstieg_comparison_ui("mod_schule_kurse_einstieg_comparison_ui_1")),
+                               mod_schule_kurse_einstieg_comparison_ui("mod_schule_kurse_einstieg_comparison_ui_1"),
+                               br(), br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_einstieg_comparison"),
+                                 label = "Download",
+                                 icon = icon("download"))
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_comparison")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_comparison")),
                                                             color = "#154194"),
                                p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_schule_mint_2", title = "",
@@ -247,6 +253,8 @@ mod_schule_kurse_ui <- function(id){
                     #                           icon = shiny::icon("download")))
                     #         )
       ))),
+
+  # Box 2 ----
 
     fluidRow(id="schule_fach",
       shinydashboard::box(
@@ -379,6 +387,7 @@ mod_schule_kurse_ui <- function(id){
                                ))
 
         ))),
+  # Box 3 ----
     fluidRow(id="schule_frauen",
       shinydashboard::box(
         title = "Mädchen in MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?",
@@ -476,6 +485,7 @@ mod_schule_kurse_ui <- function(id){
 
 
                     ))),
+  # Box 4 ----
 
       fluidRow(id="schule_kompetenz",
            shinydashboard::box(
@@ -574,6 +584,7 @@ mod_schule_kurse_ui <- function(id){
                          )
              ))),
 
+  # Box 5----
 
   fluidRow(id="schule_ausserschulisch",
            shinydashboard::box(
@@ -652,16 +663,45 @@ mod_schule_kurse_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # Box 1 - Wer wählt MINT
+    # Box 1 - Wer wählt MINT ----
     ## Waffle
     output$plot_waffle_mint <- renderPlot({
       kurse_waffle_mint(r)
     })
 
     ## Balkendiagramm
-    output$plot_einstieg_comparison <- highcharter::renderHighchart({
-      kurse_einstieg_comparison(r)
+
+    output$plot_einstieg_comparison <- renderUI({
+      plot_list <- kurse_einstieg_comparison(r)
+      r$plot_einstieg_comparison <- plot_list
+
+      r$plot_einstieg_comparison_title <- get_plot_title(
+        plot = r$plot_einstieg_comparison
+      )
+
+      plot_list
+
     })
+
+    output$download_btn_plot_einstieg_comparison <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_einstieg_comparison_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_einstieg_comparison,
+          filename =  r$plot_einstieg_comparison_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_einstieg_comparison_title, file)
+        file.remove(r$plot_einstieg_comparison_title)
+      }
+    )
+    # output$plot_einstieg_comparison <- highcharter::renderHighchart({
+    #   kurse_einstieg_comparison(r)
+    # })
 
     ## Zeitverlauf
     output$plot_einstieg_verlauf <- highcharter::renderHighchart({
@@ -683,7 +723,7 @@ mod_schule_kurse_server <- function(id, r){
     })
 
 
-    # Box 2 -  M-I-N-T
+    # Box 2 -  M-I-N-T ----
 
     ## Karte Fächer
     output$plot_map_kurse <- renderUI({
@@ -716,7 +756,7 @@ mod_schule_kurse_server <- function(id, r){
     })
 
 
-    # Box 3 - Frauen
+    # Box 3 - Frauen ----
 
     ## Balken Frauen
     output$plot_comparison_gender <- highcharter::renderHighchart({
@@ -732,7 +772,7 @@ mod_schule_kurse_server <- function(id, r){
     })
 
 
-    # Box 4  Kompetenzdaten / IQB
+    # Box 4  Kompetenzdaten / IQB ----
 
     output$plot_iqb_standard_zeitverlauf <- highcharter::renderHighchart({
       iqb_standard_zeitverlauf(r)
@@ -746,7 +786,7 @@ mod_schule_kurse_server <- function(id, r){
       iqb_fragebogen(r)
     })
 
-    # Box außerschulisch  / SKf
+    # Box 5 außerschulisch  / SKf ----
 
     output$plot_skf_einrichtungen <- highcharter::renderHighchart({
       skf_einrichtungen(r)
