@@ -697,7 +697,7 @@ add_caption_and_download <- function(
   require(htmlwidgets)
 
 
-  ## roll back webshot 2
+  ## roll back webshot2
 
   # remove.packages("webshot2")
   # packageurl <- "https://cran.r-project.org/src/contrib/Archive/webshot2/webshot2_0.1.0.tar.gz"
@@ -706,7 +706,7 @@ add_caption_and_download <- function(
   # packageVersion("webshot2")
 
 
-  ## set chromote, determine chromium variant
+  # set chromote, determine chromium variant
   # Sys.setenv(
   #   CHROMOTE_CHROME = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
   # )

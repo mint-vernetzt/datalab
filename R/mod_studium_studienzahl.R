@@ -84,7 +84,7 @@ mod_studium_studienzahl_ui <- function(id){
     ),
 
 
-  # Box 1
+  # Box 1 ----
 
     fluidRow( id="studium_mint",
       shinydashboard::box(
@@ -139,10 +139,16 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_studium_studienzahl_einstieg_verlauf_ui("mod_studium_studienzahl_einstieg_verlauf_ui_1")),
+                               mod_studium_studienzahl_einstieg_verlauf_ui("mod_studium_studienzahl_einstieg_verlauf_ui_1"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_einstieg_verlauf"),
+                                 label = "Download",
+                                 icon = icon("download")),
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_verlauf")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey",
@@ -161,10 +167,16 @@ mod_studium_studienzahl_ui <- function(id){
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_studium_studienzahl_verlauf_bl_subject_ui("mod_studium_studienzahl_verlauf_bl_subject_ui_1")),
+                               mod_studium_studienzahl_verlauf_bl_subject_ui("mod_studium_studienzahl_verlauf_bl_subject_ui_1"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject"),
+                                 label = "Download",
+                                 icon = icon("download")),
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_studienzahl_bl_subject")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey",
@@ -182,11 +194,16 @@ mod_studium_studienzahl_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_studium_studienzahl_bl_verlauf_ui("mod_studium_studienzahl_bl_verlauf")
+                               mod_studium_studienzahl_bl_verlauf_ui("mod_studium_studienzahl_bl_verlauf"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_studienzahl_bl_verlauf"),
+                                 label = "Download",
+                                 icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_studienzahl_bl_verlauf")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_studienzahl_bl_verlauf")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey",
@@ -204,10 +221,16 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_studium_studienzahl_einstieg_comparison_ui("mod_studium_studienzahl_einstieg_comparison_ui_1")),
+                               mod_studium_studienzahl_einstieg_comparison_ui("mod_studium_studienzahl_einstieg_comparison_ui_1"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_einstieg_comparison"),
+                                 label = "Download",
+                                 icon = icon("download")),
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_comparison")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_comparison")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey",
@@ -248,11 +271,16 @@ mod_studium_studienzahl_ui <- function(id){
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_studium_studienzahl_verlauf_bl_subject_gender_ui("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1")
+                               mod_studium_studienzahl_verlauf_bl_subject_gender_ui("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject_gender"),
+                                 label = "Download",
+                                 icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -298,7 +326,7 @@ mod_studium_studienzahl_ui <- function(id){
                   # )
         ))),
 
-    # Box 2
+    # Box 2 ----
 
   fluidRow( id="studium_fach",
       shinydashboard::box(
@@ -317,13 +345,19 @@ mod_studium_studienzahl_ui <- function(id){
                        #      .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                       shiny::sidebarPanel(
                         width = 3,
-                        mod_studium_top_faecher_ui("mod_studium_top_faecher")),
-                        # p(style = "font-size:12px;color:grey",
-                        #   "Interpretationshilfe: In der ersten Einstellung sind die TOP-10-Fächer in Bayern in MINT bezogen auf den Frauen- bzw.
-                        #   Männeranteil zu sehen. Die Fächer mit dem höchsten Frauenanteil in MINT sind Pharmazie (74 % Frauen) und Biologie (65 % Frauen).
-                        #   Die Fächer mit dem höchsten Männeranteil
-                        #   in MINT sind dagegen Verkehrstechnik / Nautik mit 86 % Männern und Elektrotechnik und Informationstechnik mit 84 %.")
-                        # ),
+                        mod_studium_top_faecher_ui("mod_studium_top_faecher"),
+                        br()
+                        ,
+                        downloadButton(
+                          outputId = ns("download_btn_plot_top_faecher_1"),
+                          label = "Download (links)",
+                          icon = icon("download")),
+                        br(),br(),
+                        downloadButton(
+                          outputId = ns("download_btn_plot_top_faecher_2"),
+                          label = "Download (rechts)",
+                          icon = icon("download")),
+                      ),
                       shiny::mainPanel(
                         width = 9,
                         shinycssloaders::withSpinner(htmlOutput(ns("plot_top_faecher")),
@@ -371,10 +405,17 @@ mod_studium_studienzahl_ui <- function(id){
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1")),
+                               mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject1"),
+                                 label = "Download",
+                                 icon = icon("download"))
+
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "550px"),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "550px"),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt." ),
@@ -655,7 +696,7 @@ mod_studium_studienzahl_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # Box 1 - Wer Wählt MINT
+    # Box 1 - Wer Wählt MINT ----
 
     ## Pies MINT
     output$test <- renderUI({
@@ -671,24 +712,136 @@ mod_studium_studienzahl_server <- function(id, r){
     })
 
     ## Zeitverlauf
-    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
-      studienzahl_verlauf_single(r)
+    # output$plot_einstieg_verlauf <- highcharter::renderHighchart({
+    #   studienzahl_verlauf_single(r)
+    # })
+
+    output$plot_einstieg_verlauf <- renderUI({
+      plot_list <- studienzahl_verlauf_single(r)
+      r$plot_einstieg_verlauf <- plot_list
+
+      r$plot_einstieg_verlauf_title <- get_plot_title(
+        plot = r$plot_einstieg_verlauf
+      )
+
+      plot_list
     })
+
+    output$download_btn_plot_einstieg_verlauf <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_einstieg_verlauf_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_einstieg_verlauf,
+          filename =  r$plot_einstieg_verlauf_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_einstieg_verlauf_title, file)
+        file.remove(r$plot_einstieg_verlauf_title)
+      }
+    )
 
     ## Zeitverlauf BULAS Fächer
-    output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
-      studienzahl_verlauf_bl_subject(r)#
-    })
+    # output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
+    #   studienzahl_verlauf_bl_subject(r)#
+
+      output$plot_verlauf_studienzahl_bl_subject <- renderUI({
+        plot_list <- studienzahl_verlauf_bl_subject(r)
+        r$plot_verlauf_studienzahl_bl_subject <- plot_list
+
+        r$plot_verlauf_studienzahl_bl_subject_title <- get_plot_title(
+          plot = r$plot_verlauf_studienzahl_bl_subject
+        )
+
+        plot_list
+      })
+
+      output$download_btn_plot_verlauf_studienzahl_bl_subject <- downloadHandler(
+        contentType = "image/png",
+        filename = function() {r$plot_verlauf_studienzahl_bl_subject_title},
+        content = function(file) {
+          # creating the file with the screenshot and prepare it to download
+
+          add_caption_and_download(
+            hc = r$plot_verlauf_studienzahl_bl_subject,
+            filename =  r$plot_verlauf_studienzahl_bl_subject_title,
+            width = 700,
+            height = 400)
+
+          file.copy(r$plot_verlauf_studienzahl_bl_subject_title, file)
+          file.remove(r$plot_verlauf_studienzahl_bl_subject_title)
+        }
+      )
+
 
     ## Fächer
-    output$plot_studienzahl_bl_verlauf <- highcharter::renderHighchart({
-      studierende_verlauf_multiple_bl(r)#
+    # output$plot_studienzahl_bl_verlauf <- highcharter::renderHighchart({
+    #   studierende_verlauf_multiple_bl(r)#
+    # })
+
+    output$plot_studienzahl_bl_verlauf <- renderUI({
+      plot_list <- studierende_verlauf_multiple_bl(r)
+      r$plot_studienzahl_bl_verlauf <- plot_list
+
+      r$plot_studienzahl_bl_verlauf_title <- get_plot_title(
+        plot = r$plot_studienzahl_bl_verlauf
+      )
+
+      plot_list
     })
 
+    output$download_btn_plot_studienzahl_bl_verlauf <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_studienzahl_bl_verlauf_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_studienzahl_bl_verlauf,
+          filename =  r$plot_studienzahl_bl_verlauf_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_studienzahl_bl_verlauf_title, file)
+        file.remove(r$plot_studienzahl_bl_verlauf_title)
+      }
+    )
+
     ## Balken Vergleich
-    output$plot_einstieg_comparison <- highcharter::renderHighchart({
-      studienzahl_einstieg_comparison(r)#
+    # output$plot_einstieg_comparison <- highcharter::renderHighchart({
+    #   studienzahl_einstieg_comparison(r)#
+    # })
+
+    output$plot_einstieg_comparison <- renderUI({
+      plot_list <- studienzahl_einstieg_comparison(r)
+      r$plot_einstieg_comparison <- plot_list
+
+      r$plot_einstieg_comparison_title <- get_plot_title(
+        plot = r$plot_einstieg_comparison
+      )
+
+      plot_list
     })
+
+    output$download_btn_plot_einstieg_comparison <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_einstieg_comparison_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_einstieg_comparison,
+          filename =  r$plot_einstieg_comparison_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_einstieg_comparison_title, file)
+        file.remove(r$plot_einstieg_comparison_title)
+      }
+    )
 
     ## Waffle Gender
     plot_waffle_choice_gender_react <- reactive({
@@ -700,18 +853,101 @@ mod_studium_studienzahl_server <- function(id, r){
     })
 
     ## Zeitverlauf Gender
-    output$plot_verlauf_studienzahl_bl_subject_gender <- highcharter::renderHighchart({
-      studierende_verlauf_single_bl_gender(r)#
+    # output$plot_verlauf_studienzahl_bl_subject_gender <- highcharter::renderHighchart({
+    #   studierende_verlauf_single_bl_gender(r)#
+    # })
+
+    output$plot_verlauf_studienzahl_bl_subject_gender <- renderUI({
+      plot_list <- studierende_verlauf_single_bl_gender(r)
+      r$plot_verlauf_studienzahl_bl_subject_gender <- plot_list
+
+      r$plot_verlauf_studienzahl_bl_subject_gender_title <- get_plot_title(
+        plot = r$plot_verlauf_studienzahl_bl_subject_gender
+      )
+
+      plot_list
     })
 
+    output$download_btn_plot_verlauf_studienzahl_bl_subject_gender <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_verlauf_studienzahl_bl_subject_gender_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_verlauf_studienzahl_bl_subject_gender,
+          filename =  r$plot_verlauf_studienzahl_bl_subject_gender_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_verlauf_studienzahl_bl_subject_gender_title, file)
+        file.remove(r$plot_verlauf_studienzahl_bl_subject_gender_title)
+      }
+    )
 
 
-    # Box 2 - M-I-N-T
+
+    # Box 2 - M-I-N-T ----
 
     ## Top 10
-    output$plot_top_faecher <-  renderUI({
-      plot_ranking_top_faecher(r)
+    # output$plot_top_faecher <-  renderUI({
+    #   plot_ranking_top_faecher(r)
+    # })
+
+    output$plot_top_faecher <- renderUI({
+      plot_list <- plot_ranking_top_faecher(r)
+      r$plot_top_faecher_left <- plot_list[[1]]
+      r$plot_top_faecher_right <- plot_list[[2]]
+
+      r$plot_top_faecher_left_title <- get_plot_title(
+        plot = r$plot_top_faecher_left
+      )
+      r$plot_top_faecher_right_title <- get_plot_title(
+        plot = r$plot_top_faecher_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
     })
+
+    output$download_btn_plot_top_faecher_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_top_faecher_left_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_top_faecher_left,
+          filename =  r$plot_top_faecher_left_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_top_faecher_left_title, file)
+        file.remove(r$plot_top_faecher_left_title)
+      }
+    )
+
+    output$download_btn_plot_top_faecher_2 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_top_faecher_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+        add_caption_and_download(
+          hc = r$plot_top_faecher_right,
+          filename =  r$plot_top_faecher_right_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_top_faecher_right_title, file)
+        file.remove(r$plot_top_faecher_right_title)
+      }
+    )
 
     ## Karte
     output$plot_studienzahl_map <- renderUI({
@@ -719,9 +955,37 @@ mod_studium_studienzahl_server <- function(id, r){
     })
 
     ## Zeitverlauf BuLas
-    output$plot_verlauf_studienzahl_bl_subject1 <- highcharter::renderHighchart({
-      ranking_bl_subject(r)
+    # output$plot_verlauf_studienzahl_bl_subject1 <- highcharter::renderHighchart({
+    #   ranking_bl_subject(r)
+    # })
+
+    output$plot_verlauf_studienzahl_bl_subject1 <- renderUI({
+      plot_list <- ranking_bl_subject(r)
+      r$plot_verlauf_studienzahl_bl_subject1 <- plot_list
+
+      r$plot_verlauf_studienzahl_bl_subject1_title <- get_plot_title(
+        plot = r$plot_verlauf_studienzahl_bl_subject1
+      )
+
+      plot_list
     })
+
+    output$download_btn_plot_verlauf_studienzahl_bl_subject1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_verlauf_studienzahl_bl_subject1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_verlauf_studienzahl_bl_subject1,
+          filename =  r$plot_verlauf_studienzahl_bl_subject1_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_verlauf_studienzahl_bl_subject1_title, file)
+        file.remove(r$plot_verlauf_studienzahl_bl_subject1_title)
+      }
+    )
 
     ## Balken MINT
     output$mint_anteil <-  highcharter::renderHighchart({
