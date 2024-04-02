@@ -19,7 +19,7 @@ plot_fachkraft_prognose  <- function(r) {
     dplyr::group_by("jahr") %>%
     dplyr::mutate(
       wert = dplyr::case_when(
-        wirkhebel == "Gesamteffekt" ~ wert - wert[which(wirkhebel == "Basis-Szenario")],
+        wirkhebel == filter_wirkhebel[2] ~ wert - wert[which(wirkhebel == "Basis-Szenario")],
         TRUE ~ wert
       )
     ) %>%
@@ -33,11 +33,17 @@ plot_fachkraft_prognose  <- function(r) {
 
   # Texte vorbereiten
   szenario <- paste0(filter_indikator[2], " in der ", filter_wirkhebel[2])
-  szenario <- ifelse(filter_indikator[2] == "Gesamteffekt", "Gesamtsituation von Bildung,
-                     Frauenförderung, Beteiligung internationaler und älterer Frachkräfte in MINT",
+  szenario <- ifelse(filter_wirkhebel[2] == "Gesamteffekt",
+                    paste0(filter_indikator[2], " in der Gesamtsituation von Bildung,
+                     Frauenförderung, Integration internationaler und älterer Frachkräfte in MINT"),
                      szenario)
-  szenario <- ifelse(filter_indikator[2] == "Internationale MINT-Fachkräfte",
-                     "Beteiligung internationaler MINT-Fachkräfte",
+  szenario <- ifelse(filter_wirkhebel[2] == "Internationale MINT-Fachkräfte",
+                     paste0(filter_indikator[2],
+                            " bei der Integration internationaler MINT-Fachkräfte"),
+                     szenario)
+  szenario <- ifelse(filter_wirkhebel[2] == "Frauen in MINT",
+                     paste0(filter_indikator[2],
+                            " bei der Gewinnug von Frauen für MINT"),
                      szenario)
 
   titel <- paste0("Zukünftige MINT-Fachkräfteentwicklung bei aktuellen Verhältnissen
@@ -100,8 +106,8 @@ plot_fachkraft_prognose  <- function(r) {
 
   # Serie für "Gesamteffekt" hinzufügen
   hc <- hc %>% highcharter::hc_add_series(
-    name = "Gesamteffekt",
-    data = plot_data %>% dplyr::filter(wirkhebel == "Gesamteffekt") %>% dplyr::pull(wert),
+    name = filter_wirkhebel[2],
+    data = plot_data %>% dplyr::filter(wirkhebel == filter_wirkhebel[2]) %>% dplyr::pull(wert),
     color = "#B16FAB",
     zoneAxis = 'x',
     zones = list(
