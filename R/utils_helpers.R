@@ -696,13 +696,17 @@ add_caption_and_download <- function(
   require(webshot2)
   require(htmlwidgets)
 
-  #
+
+  ## roll back webshot2
+
+  # remove.packages("webshot2")
   # packageurl <- "https://cran.r-project.org/src/contrib/Archive/webshot2/webshot2_0.1.0.tar.gz"
   # install.packages(packageurl, repos=NULL, type="source")
   #
   # packageVersion("webshot2")
 
 
+  # set chromote, determine chromium variant
   # Sys.setenv(
   #   CHROMOTE_CHROME = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
   # )
@@ -764,6 +768,7 @@ add_caption_and_download <- function(
       )
   }
 
+  #browser()
   #print(hc_out)
   # Save the plot as a standalone HTML file
   html_file <- tempfile(fileext = ".html")

@@ -569,7 +569,7 @@ home_rest_mint_verlauf <- function(r) {
     df <- df %>% dplyr::filter(indikator %in% indikator_choice_1)
 
     # plot
-    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
+    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
       highcharter::hc_tooltip(pointFormat = "Anteil MINT <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
       highcharter::hc_yAxis(title = list(text = " "), labels = list(format = "{value}%"),
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -612,7 +612,7 @@ home_rest_mint_verlauf <- function(r) {
 
 
     # plot
-    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
+    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
       highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -639,6 +639,7 @@ home_rest_mint_verlauf <- function(r) {
 
   }
 
+  return (out)
 }
 
 
@@ -754,7 +755,7 @@ home_stacked_comparison_mint <- function(r) {
   #Trennpunkte für lange Zahlen ergänzen
   dfd3$wert_abs <- prettyNum(dfd3$wert_abs, big.mark = ".", decimal.mark = ",")
 
-  highcharter::hchart(dfd3, 'bar', highcharter::hcaes(y = wert, x = indikator, group = "fachbereich"))%>%
+  out <- highcharter::hchart(dfd3, 'bar', highcharter::hcaes(y = wert, x = indikator, group = "fachbereich"))%>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert_abs}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
@@ -778,6 +779,7 @@ home_stacked_comparison_mint <- function(r) {
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
+  return(out)
 }
 
 # Frauen in MINT ----
@@ -1689,7 +1691,7 @@ home_comparison_line <- function(r) {
     df_fn51 <- df_fn51 %>%
       dplyr::filter(selector == "In Prozent")
     # plot
-    highcharter::hchart(df_fn51, 'line', highcharter::hcaes(x = jahr, y = round(wert, 0), group = indikator))%>%
+    out <- highcharter::hchart(df_fn51, 'line', highcharter::hcaes(x = jahr, y = round(wert, 0), group = indikator))%>%
       highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"),
@@ -1723,7 +1725,7 @@ home_comparison_line <- function(r) {
       dplyr::filter(selector == "Anzahl")
 
 
-    highcharter::hchart(df_fn51, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator))%>%
+    out <- highcharter::hchart(df_fn51, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator))%>%
       highcharter::hc_tooltip(pointFormat = "Anzahl Frauen <br> Indikator: {point.indikator} <br> Anzahl: {point.y} ")%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"), reversed = T ) %>%
@@ -1750,7 +1752,7 @@ home_comparison_line <- function(r) {
   }
 
 
-
+return (out)
 }
 
 
@@ -1839,15 +1841,14 @@ home_stacked_comparison_gender <- function(r) {
 
 
   # plot
-  highcharter::hchart(df6_fn, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,0), group = geschlecht)) %>%
+  hc_1 <- highcharter::hchart(df6_fn, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,0), group = geschlecht)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
     highcharter::hc_xAxis(title = list(text = ""), categories = c("Leistungskurse", "Studierende",
                                                  "Auszubildende", "Beschäftigte")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-    highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen (", timerange, ")",
-                                          "<br><br><br>"),
+    highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen (", timerange, ")"),
                           margin = 25,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1864,6 +1865,10 @@ home_stacked_comparison_gender <- function(r) {
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
+
+  out <- hc_1
+
+  return(out)
 
   # ggplot2::ggplot(df, ggplot2::aes(x=indikator, y=wert, fill = anzeige_geschlecht)) +
   #   ggplot2::geom_bar(stat="identity", position = "dodge") +

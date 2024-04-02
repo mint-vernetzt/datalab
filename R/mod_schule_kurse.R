@@ -91,7 +91,7 @@ mod_schule_kurse_ui <- function(id){
 
       ),
 
-  # Box 1
+  # Box 1 -----
 
     fluidRow(id="schule_mint",
       shinydashboard::box(
@@ -127,10 +127,16 @@ mod_schule_kurse_ui <- function(id){
                     tabPanel("Vergleich Grund- und Leistungskurse, MINT aggregiert", br(),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_einstieg_comparison_ui("mod_schule_kurse_einstieg_comparison_ui_1")),
+                               mod_schule_kurse_einstieg_comparison_ui("mod_schule_kurse_einstieg_comparison_ui_1"),
+                               br(), br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_einstieg_comparison"),
+                                 label = "Download",
+                                 icon = icon("download"))
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_comparison")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_comparison")),
                                                             color = "#154194"),
                                p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_schule_mint_2", title = "",
@@ -159,13 +165,18 @@ mod_schule_kurse_ui <- function(id){
                     tabPanel("Vergleich Grund- und Leistungskurse im Zeitverlauf", br(),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1")
+                               mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1"),
+                               br(), br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_einstieg_verlauf"),
+                                 label = "Download",
+                                 icon = icon("download"))
 
 
                                ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_verlauf")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -204,8 +215,17 @@ mod_schule_kurse_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1")
-                               ),
+                               mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
+                               br(), br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_map_kurse_gender_item_1"),
+                                 label = "Download (links)",
+                                 icon = icon("download")),
+                               br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_map_kurse_gender_item_2"),
+                                 label = "Download (rechts)",
+                                 icon = icon("download"))),
                              shiny::mainPanel(
                                width = 9,
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_map_kurse_gender")),
@@ -248,6 +268,8 @@ mod_schule_kurse_ui <- function(id){
                     #         )
       ))),
 
+  # Box 2 ----
+
     fluidRow(id="schule_fach",
       shinydashboard::box(
         title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
@@ -261,7 +283,16 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1"),
-                               ),
+                               br(), br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_map_kurse_item_1"),
+                                 label = "Download (links)",
+                                 icon = icon("download")),
+                               br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_map_kurse_item_2"),
+                                 label = "Download (rechts)",
+                                 icon = icon("download"))),
                              shiny::mainPanel(
                                width = 9,
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_map_kurse")),
@@ -280,10 +311,16 @@ mod_schule_kurse_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1")),
+                               mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1"),
+                               br(), br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_verlauf_multiple"),
+                                 label = "Download",
+                                 icon = icon("download"))
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_multiple")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_multiple")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -300,10 +337,16 @@ mod_schule_kurse_ui <- function(id){
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_verlauf_bl_subjects_ui("mod_schule_kurse_verlauf_bl_subjects_ui_1")),
+                               mod_schule_kurse_verlauf_bl_subjects_ui("mod_schule_kurse_verlauf_bl_subjects_ui_1"),
+                               br(), br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_verlauf_kurse_bl_subjects"),
+                                 label = "Download",
+                                 icon = icon("download"))
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_kurse_bl_subjects")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -346,10 +389,17 @@ mod_schule_kurse_ui <- function(id){
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_comparison_subjects_ui("mod_schule_kurse_comparison_subjects_ui_1")),
+                               mod_schule_kurse_comparison_subjects_ui("mod_schule_kurse_comparison_subjects_ui_1"),
+                               br(), br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_comparison_subjects"),
+                                 label = "Download",
+                                 icon = icon("download"))
+                             ),
+
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_comparison_subjects")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_subjects")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -364,10 +414,16 @@ mod_schule_kurse_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1")),
+                               mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1"),
+                               br(), br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_comparison_bl"),
+                                 label = "Download",
+                                 icon = icon("download"))
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_comparison_bl")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_bl")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -379,6 +435,7 @@ mod_schule_kurse_ui <- function(id){
                                ))
 
         ))),
+  # Box 3 ----
     fluidRow(id="schule_frauen",
       shinydashboard::box(
         title = "Mädchen in MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?",
@@ -414,10 +471,15 @@ mod_schule_kurse_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_schule_kurse_comparison_gender_ui("mod_schule_kurse_comparison_gender_ui_1"),
-                               ),
+                               br(), br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_comparison_gender"),
+                                 label = "Download",
+                                 icon = icon("download"))
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_comparison_gender")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_gender")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -476,6 +538,7 @@ mod_schule_kurse_ui <- function(id){
 
 
                     ))),
+  # Box 4 ----
 
       fluidRow(id="schule_kompetenz",
            shinydashboard::box(
@@ -501,11 +564,15 @@ mod_schule_kurse_ui <- function(id){
                                   shiny::sidebarPanel(
                                     width = 3,
                                     mod_schule_kurse_iqb_standard_zeitverlauf_ui("mod_schule_kurse_iqb_standard_zeitverlauf_ui_1"),
-
+                                    br(), br(),
+                                    downloadButton(
+                                      outputId = ns("download_btn_plot_iqb_standard_zeitverlauf"),
+                                      label = "Download",
+                                      icon = icon("download"))
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_iqb_standard_zeitverlauf")),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_iqb_standard_zeitverlauf")),
                                                                  color = "#154194"),
 
                                     p(style="font-size:12px;color:grey", br(),
@@ -525,12 +592,15 @@ mod_schule_kurse_ui <- function(id){
                                   shiny::sidebarPanel(
                                     width = 3,
                                     mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui("mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui_1"),
-                                   ),
-
-
+                                    br(), br(),
+                                    downloadButton(
+                                      outputId = ns("download_btn_plot_iqb_mathe_mittel_zeitverlauf"),
+                                      label = "Download",
+                                      icon = icon("download"))
+                                  ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_iqb_mathe_mittel_zeitverlauf")),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_iqb_mathe_mittel_zeitverlauf")),
                                                                  color = "#154194"),
 
                                     p(style="font-size:12px;color:grey",br(),
@@ -556,11 +626,16 @@ mod_schule_kurse_ui <- function(id){
                                   shiny::sidebarPanel(
                                     width = 3,
                                     mod_schule_kurse_iqb_fragen_ui("mod_schule_kurse_iqb_fragen_ui_1"),
+                                    br(), br(),
+                                    downloadButton(
+                                      outputId = ns("download_btn_plot_iqb_fragebogen"),
+                                      label = "Download",
+                                      icon = icon("download"))
                                   ),
 
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_iqb_fragebogen")),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_iqb_fragebogen")),
                                                                  color = "#154194"),
 
                                     p(style="font-size:12px;color:grey",br(),
@@ -574,6 +649,7 @@ mod_schule_kurse_ui <- function(id){
                          )
              ))),
 
+  # Box 5----
 
   fluidRow(id="schule_ausserschulisch",
            shinydashboard::box(
@@ -595,10 +671,15 @@ mod_schule_kurse_ui <- function(id){
                                   shiny::sidebarPanel(
                                     width = 3,
                                     mod_ausserschulisch_skf_einrichtungen_ui("mod_ausserschulisch_skf_einrichtungen_ui_1"),
+                                    br(), br(),
+                                    downloadButton(
+                                      outputId = ns("download_btn_plot_skf_einrichtungen"),
+                                      label = "Download",
+                                      icon = icon("download"))
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_einrichtungen")),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_skf_einrichtungen")),
                                                                  color = "#154194"),
 
                                     p(style="font-size:12px;color:grey",
@@ -618,12 +699,15 @@ mod_schule_kurse_ui <- function(id){
                                   shiny::sidebarPanel(
                                     width = 3,
                                     mod_ausserschulisch_skf_personal_ui("mod_ausserschulisch_skf_personal_ui_1"),
-                                    ),
-
-
+                                    br(), br(),
+                                    downloadButton(
+                                      outputId = ns("download_btn_plot_skf_personal"),
+                                      label = "Download",
+                                      icon = icon("download"))
+                                  ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_personal")),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_skf_personal")),
                                                                  color = "#154194"),
 
                                     p(style="font-size:12px;color:grey",
@@ -652,21 +736,79 @@ mod_schule_kurse_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # Box 1 - Wer wählt MINT
+    # Box 1 - Wer wählt MINT ----
     ## Waffle
     output$plot_waffle_mint <- renderPlot({
       kurse_waffle_mint(r)
     })
 
     ## Balkendiagramm
-    output$plot_einstieg_comparison <- highcharter::renderHighchart({
-      kurse_einstieg_comparison(r)
+
+    output$plot_einstieg_comparison <- renderUI({
+      plot_list <- kurse_einstieg_comparison(r)
+      r$plot_einstieg_comparison <- plot_list
+
+      r$plot_einstieg_comparison_title <- get_plot_title(
+        plot = r$plot_einstieg_comparison
+      )
+
+      plot_list
+
     })
 
+    output$download_btn_plot_einstieg_comparison <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_einstieg_comparison_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_einstieg_comparison,
+          filename =  r$plot_einstieg_comparison_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_einstieg_comparison_title, file)
+        file.remove(r$plot_einstieg_comparison_title)
+      }
+    )
+    # output$plot_einstieg_comparison <- highcharter::renderHighchart({
+    #   kurse_einstieg_comparison(r)
+    # })
+
     ## Zeitverlauf
-    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
-      kurse_verlauf_single(r)
+    # output$plot_einstieg_verlauf <- highcharter::renderHighchart({
+    #   kurse_verlauf_single(r)
+    # })
+
+    output$plot_einstieg_verlauf <- renderUI({
+      plot_list <- kurse_verlauf_single(r)
+      r$plot_einstieg_verlauf <- plot_list
+
+      r$plot_einstieg_verlauf_title <- get_plot_title(
+        plot = r$plot_einstieg_verlauf
+      )
+
+      plot_list
+
     })
+
+    output$download_btn_plot_einstieg_verlauf <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_einstieg_verlauf_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_einstieg_verlauf,
+          filename =  r$plot_einstieg_verlauf_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_einstieg_verlauf_title, file)
+        file.remove(r$plot_einstieg_verlauf_title)
+      }
+    )
 
     ## Waffle Geschlecht
     plot_waffle_react <- reactive({
@@ -678,27 +820,195 @@ mod_schule_kurse_server <- function(id, r){
     })
 
     ## Karte Gender
+    # output$plot_map_kurse_gender <- renderUI({
+    #   kurse_map_gender(r)
+    # })
+
     output$plot_map_kurse_gender <- renderUI({
-      kurse_map_gender(r)
+      plot_list <- kurse_map_gender(r)
+      r$plot_map_kurse_gender_left <- plot_list[[1]]
+      r$plot_map_kurse_gender_right <- plot_list[[2]]
+
+      r$plot_map_kurse_gender_left_title <- get_plot_title(
+        plot = r$plot_map_kurse_gender_left
+      )
+      r$plot_map_kurse_gender_right_title <- get_plot_title(
+        plot = r$plot_map_kurse_gender_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
     })
 
+    output$download_btn_plot_map_kurse_gender_item_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_map_kurse_gender_left_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
 
-    # Box 2 -  M-I-N-T
+        add_caption_and_download(
+          hc = r$plot_map_kurse_gender_left,
+          filename =  r$plot_map_kurse_gender_left_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_map_kurse_gender_left_title, file)
+        file.remove(r$plot_map_kurse_gender_left_title)
+      }
+    )
+
+    output$download_btn_plot_map_kurse_gender_item_2 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_map_kurse_gender_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+        add_caption_and_download(
+          hc = r$plot_map_kurse_gender_right,
+          filename =  r$plot_map_kurse_gender_right_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_map_kurse_gender_right_title, file)
+        file.remove(r$plot_map_kurse_gender_right_title)
+      }
+    )
+
+
+    # Box 2 -  M-I-N-T ----
 
     ## Karte Fächer
     output$plot_map_kurse <- renderUI({
       kurse_map(r)
     })
 
-    ## Verlauf nach BuLas
-    output$plot_verlauf_multiple <- highcharter::renderHighchart({
-      kurse_verlauf_multiple_bl(r)
+    output$plot_map_kurse <- renderUI({
+      plot_list <- kurse_map(r)
+      r$plot_map_kurse_left <- plot_list[[1]]
+      r$plot_map_kurse_right <- plot_list[[2]]
+
+      r$plot_map_kurse_left_title <- get_plot_title(
+        plot = r$plot_map_kurse_left
+      )
+      r$plot_map_kurse_right_title <- get_plot_title(
+        plot = r$plot_map_kurse_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
     })
 
-    ## Zeitverlauf Fächer
-    output$plot_verlauf_kurse_bl_subjects <- highcharter::renderHighchart({
-      kurse_verlauf_subjects_bl(r)
+    output$download_btn_plot_map_kurse_item_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_map_kurse_left_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_map_kurse_left,
+          filename =  r$plot_map_kurse_left_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_map_kurse_left_title, file)
+        file.remove(r$plot_map_kurse_left_title)
+      }
+    )
+
+    output$download_btn_plot_map_kurse_item_2 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_map_kurse_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+        add_caption_and_download(
+          hc = r$plot_map_kurse_right,
+          filename =  r$plot_map_kurse_right_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_map_kurse_right_title, file)
+        file.remove(r$plot_map_kurse_right_title)
+      }
+    )
+
+    ## Verlauf nach BuLas
+    # output$plot_verlauf_multiple <- highcharter::renderHighchart({
+    #   kurse_verlauf_multiple_bl(r)
+    # })
+
+    output$plot_verlauf_multiple <- renderUI({
+      plot_list <- kurse_verlauf_multiple_bl(r)
+      r$plot_verlauf_multiple <- plot_list
+
+      r$plot_verlauf_multiple_title <- get_plot_title(
+        plot = r$plot_verlauf_multiple
+      )
+
+      plot_list
+
     })
+
+    output$download_btn_plot_verlauf_multiple <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_verlauf_multiple_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_verlauf_multiple,
+          filename =  r$plot_verlauf_multiple_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_verlauf_multiple_title, file)
+        file.remove(r$plot_verlauf_multiple_title)
+      }
+    )
+
+    ## Zeitverlauf Fächer
+    # output$plot_verlauf_kurse_bl_subjects <- highcharter::renderHighchart({
+    #   kurse_verlauf_subjects_bl(r)
+    # })
+
+    output$plot_verlauf_kurse_bl_subjects <- renderUI({
+      plot_list <- kurse_verlauf_subjects_bl(r)
+      r$plot_verlauf_kurse_bl_subject <- plot_list
+
+      r$plot_verlauf_kurse_bl_subject_title <- get_plot_title(
+        plot = r$plot_verlauf_kurse_bl_subject
+      )
+
+      plot_list
+
+    })
+
+    output$download_btn_plot_verlauf_kurse_bl_subjects <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_verlauf_kurse_bl_subject_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_verlauf_kurse_bl_subject,
+          filename =  r$plot_verlauf_kurse_bl_subject_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_verlauf_kurse_bl_subject_title, file)
+        file.remove(r$plot_verlauf_kurse_bl_subject_title)
+      }
+    )
 
     ## Dumbbell-Plot Mädchen
     output$plot_ranking_gender <- renderPlot({
@@ -706,22 +1016,110 @@ mod_schule_kurse_server <- function(id, r){
     })
 
     ## Balken Übersicht Fächer
-    output$plot_comparison_subjects <- highcharter::renderHighchart({
-      kurse_mint_comparison(r)
+    # output$plot_comparison_subjects <- highcharter::renderHighchart({
+    #   kurse_mint_comparison(r)
+    # })
+
+    output$plot_comparison_subjects <- renderUI({
+      plot_list <- kurse_mint_comparison(r)
+      r$plot_comparison_subjects <- plot_list
+
+      r$plot_comparison_subjects_title <- get_plot_title(
+        plot = r$plot_comparison_subjects
+      )
+
+      plot_list
+
     })
+
+    output$download_btn_plot_comparison_subjects <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_comparison_subjects_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_comparison_subjects,
+          filename =  r$plot_comparison_subjects_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_comparison_subjects_title, file)
+        file.remove(r$plot_comparison_subjects_title)
+      }
+    )
+
 
     ## Balken Übersicht BuLas
-    output$plot_comparison_bl <- highcharter::renderHighchart({
-      kurse_mint_comparison_bl(r)
+    # output$plot_comparison_bl <- highcharter::renderHighchart({
+    #   kurse_mint_comparison_bl(r)
+    # })
+
+    output$plot_comparison_bl <- renderUI({
+      plot_list <- kurse_mint_comparison_bl(r)
+      r$plot_comparison_bl <- plot_list
+
+      r$plot_comparison_bl_title <- get_plot_title(
+        plot = r$plot_comparison_bl
+      )
+
+      plot_list
+
     })
 
+    output$download_btn_plot_comparison_bl <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_comparison_bl_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
 
-    # Box 3 - Frauen
+        add_caption_and_download(
+          hc = r$plot_comparison_bl,
+          filename =  r$plot_comparison_bl_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_comparison_bl_title, file)
+        file.remove(r$plot_comparison_bl_title)
+      }
+    )
+
+
+    # Box 3 - Frauen ----
 
     ## Balken Frauen
-    output$plot_comparison_gender <- highcharter::renderHighchart({
-      kurse_comparison_gender(r)
+    # output$plot_comparison_gender <- highcharter::renderHighchart({
+    #   kurse_comparison_gender(r)
+    # })
+
+    output$plot_comparison_gender <- renderUI({
+      plot_list <- kurse_comparison_gender(r)
+      r$plot_comparison_gender <- plot_list
+
+      r$plot_comparison_gender_title <- get_plot_title(
+        plot = r$plot_comparison_gender
+      )
+
+      plot_list
+
     })
+
+    output$download_btn_plot_comparison_gender <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_comparison_gender_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_comparison_gender,
+          filename =  r$plot_comparison_gender_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_comparison_gender_title, file)
+        file.remove(r$plot_comparison_gender_title)
+      }
+    )
 
     ## Dumbbell Frauen
     output$plot_ranking_2 <- renderPlot({
@@ -732,29 +1130,181 @@ mod_schule_kurse_server <- function(id, r){
     })
 
 
-    # Box 4  Kompetenzdaten / IQB
+    # Box 4  Kompetenzdaten / IQB ----
 
-    output$plot_iqb_standard_zeitverlauf <- highcharter::renderHighchart({
-      iqb_standard_zeitverlauf(r)
+    # Tab 1
+
+    # output$plot_iqb_standard_zeitverlauf <- highcharter::renderHighchart({
+    #   iqb_standard_zeitverlauf(r)
+    # })
+    output$plot_iqb_standard_zeitverlauf <- renderUI({
+      plot_list <- iqb_standard_zeitverlauf(r)
+      r$plot_iqb_standard_zeitverlauf <- plot_list
+
+      r$plot_iqb_standard_zeitverlauf_title <- get_plot_title(
+        plot = r$plot_iqb_standard_zeitverlauf
+      )
+
+      plot_list
+
     })
 
-    output$plot_iqb_mathe_mittel_zeitverlauf <- highcharter::renderHighchart({
-      iqb_mathe_mittel_zeitverlauf(r)
+    output$download_btn_plot_iqb_standard_zeitverlauf <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_iqb_standard_zeitverlauf_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_iqb_standard_zeitverlauf,
+          filename =  r$plot_iqb_standard_zeitverlauf_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_iqb_standard_zeitverlauf_title, file)
+        file.remove(r$plot_iqb_standard_zeitverlauf_title)
+      }
+    )
+    # Tab 2
+
+    # output$plot_iqb_mathe_mittel_zeitverlauf <- highcharter::renderHighchart({
+    #   iqb_mathe_mittel_zeitverlauf(r)
+    # })
+
+    output$plot_iqb_mathe_mittel_zeitverlauf <- renderUI({
+      plot_list <- iqb_mathe_mittel_zeitverlauf(r)
+      r$plot_iqb_mathe_mittel_zeitverlauf <- plot_list
+
+      r$plot_iqb_mathe_mittel_zeitverlauf_title <- get_plot_title(
+        plot = r$plot_iqb_mathe_mittel_zeitverlauf
+      )
+
+      plot_list
+
     })
 
-    output$plot_iqb_fragebogen <- highcharter::renderHighchart({
-      iqb_fragebogen(r)
+    output$download_btn_plot_iqb_mathe_mittel_zeitverlauf <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_iqb_mathe_mittel_zeitverlauf_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_iqb_mathe_mittel_zeitverlauf,
+          filename =  r$plot_iqb_mathe_mittel_zeitverlauf_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_iqb_mathe_mittel_zeitverlauf_title, file)
+        file.remove(r$plot_iqb_mathe_mittel_zeitverlauf_title)
+      }
+    )
+
+    # Tab 3
+
+    # output$plot_iqb_fragebogen <- highcharter::renderHighchart({
+    #   iqb_fragebogen(r)
+    # })
+
+    output$plot_iqb_fragebogen <- renderUI({
+      plot_list <- iqb_fragebogen(r)
+      r$plot_iqb_fragebogen <- plot_list
+
+      r$plot_iqb_fragebogen_title <- get_plot_title(
+        plot = r$plot_iqb_fragebogen
+      )
+
+      plot_list
+
     })
 
-    # Box außerschulisch  / SKf
+    output$download_btn_plot_iqb_fragebogen <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_iqb_fragebogen_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
 
-    output$plot_skf_einrichtungen <- highcharter::renderHighchart({
-      skf_einrichtungen(r)
+        add_caption_and_download(
+          hc = r$plot_iqb_fragebogen,
+          filename =  r$plot_iqb_fragebogen_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_iqb_fragebogen_title, file)
+        file.remove(r$plot_iqb_fragebogen_title)
+      }
+    )
+
+    # Box 5 außerschulisch  / SKf ----
+
+    # Tab 1
+    # output$plot_skf_einrichtungen <- highcharter::renderHighchart({
+    #   skf_einrichtungen(r)
+    # })
+
+    output$plot_skf_einrichtungen <- renderUI({
+      plot_list <- skf_einrichtungen(r)
+      r$plot_skf_einrichtungen <- plot_list
+
+      r$plot_skf_einrichtungen_title <- get_plot_title(
+        plot = r$plot_skf_einrichtungen
+      )
+
+      plot_list
+
     })
+
+    output$download_btn_plot_skf_einrichtungen <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_skf_einrichtungen_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_skf_einrichtungen,
+          filename =  r$plot_skf_einrichtungen_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_skf_einrichtungen_title, file)
+        file.remove(r$plot_skf_einrichtungen_title)
+      }
+    )
+
+    # Tab 2
 
     output$plot_skf_personal <- highcharter::renderHighchart({
       skf_personal(r)
     })
+
+    output$plot_skf_personal <- renderUI({
+      plot_list <- skf_personal(r)
+      r$plot_skf_personal <- plot_list
+
+      r$plot_skf_personal_title <- get_plot_title(
+        plot = r$plot_skf_personal
+      )
+
+      plot_list
+
+    })
+
+    output$download_btn_plot_skf_personal <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_skf_personal_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_skf_personal,
+          filename =  r$plot_skf_personal_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_skf_personal_title, file)
+        file.remove(r$plot_skf_personal_title)
+      }
+    )
 
 
 
