@@ -131,22 +131,21 @@ plot_fachkraft_prognose  <- function(r) {
 }
 
 plot_fachkraft_prognose_detail  <- function(r) {
-  ## logger::log_debug("plot_fachkraft_prog_detail")
-
-  filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_detail_wirkhebel)
+  filter_wirkhebel <- r$fachkraft_item_prog_detail_wirkhebel
   filter_indikator <- c("Status-quo", ifelse(r$fachkraft_item_prog_detail_wirkhebel == "Basis-Szenario",
                                              "Status-quo",
                                              ifelse(is.null(r$fachkraft_item_prog_detail_scenario), "Verbesserung",
                                                     r$fachkraft_item_prog_detail_scenario)))
   filter_gruppe <- r$fachkraft_item_prog_detail_gruppe
 
+
   color_palette <- NULL
   if(filter_gruppe == "Berufslevel"){
-    color_palette <- c("#70809D", colors_mint_vernetzt$general)
+    color_palette <- c(colors_mint_vernetzt$general)
   } else if(filter_gruppe == "Geschlecht"){
-    color_palette <- c("#70809D", colors_mint_vernetzt$short)
+    color_palette <- c(colors_mint_vernetzt$short)
   } else if(filter_gruppe == "Nationalität"){
-    color_palette <- c("#70809D", colors_mint_vernetzt$short)
+    color_palette <- c(colors_mint_vernetzt$short)
   }
 
   focused_column <- ifelse(filter_gruppe == "Berufslevel", "anforderung",
@@ -155,44 +154,54 @@ plot_fachkraft_prognose_detail  <- function(r) {
 
   not_focused_column <- c("anforderung", "geschlecht", "nationalitaet")[c("anforderung", "geschlecht", "nationalitaet") != focused_column]
 
-  plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
-    dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
-    dplyr::filter(indikator %in% filter_indikator) %>%
+  plot_data <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
+    dplyr::filter(wirkhebel %in% filter_wirkhebel,
+                  indikator %in% filter_indikator,
+                  jahr <= 2037) %>%
     dplyr::filter(if_all(all_of(not_focused_column), ~ .x == "Gesamt")) %>%
-    dplyr::filter(jahr <= 2037) %>%
+    dplyr::select(all_of(c("wirkhebel", "indikator", "jahr", focused_column, "wert"))) %>%
+    dplyr::filter(!!dplyr::sym(focused_column) != "Gesamt") %>%
     dplyr::collect()
 
   plot_data <-plot_data %>%
-    dplyr::mutate(dplyr::across(all_of(focused_column), ~ factor(.x, levels = c("Gesamt", sort(unique(.x[!.x == "Gesamt"])))))) %>%
+    dplyr::mutate(dplyr::across(all_of(focused_column), ~ factor(.x, levels = c(sort(unique(.x)))))) %>%
     dplyr::arrange(dplyr::across(all_of(focused_column)), jahr)
+
+  if(focused_column == "nationalitaet"){
+    plot_data$nationalitaet <- factor(plot_data$nationalitaet,
+                                      levels = c("Keine deutsche Staatsangehörigkeit",
+                                                 "deutsche Staatsangehörigkeit"))
+  }
 
   data_list <- split(plot_data, plot_data[focused_column])
 
-  if(filter_wirkhebel[2] == "MINT-Bildung"){
+  if(filter_wirkhebel == "MINT-Bildung"){
     subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch MINT-Bildungsförderung gelingt,
-    den Anteil an jungen Menschen, die einen MINT-Beruf ergereifen, zu erhöhen. <br>
+    den Anteil an jungen Menschen, die einen MINT-Beruf ergreifen, zu erhöhen. <br>
     Dadurch könnten im Vergleich zum Basisszenario ca. 800.000 Personen mehr 2037 in MINT beschäftigt sein."
-  }else if(filter_wirkhebel[2] == "Frauen in MINT"){
+  }else if(filter_wirkhebel == "Frauen in MINT"){
     subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch MINT-Bildungsförderung und
     besonderer Förderung von Mädchen in MINT gelingt,
-    den Anteil an jungen Menschen, die einen MINT-Beruf ergereifen, allgemein und von jungen Fruaen im Besonderen zu erhöhen. <br>
+    den Anteil an jungen Menschen, die einen MINT-Beruf ergreifen, allgemein und von jungen Frauen im Besonderen zu erhöhen.<br>
     Dadurch könnten im Vergleich zum Basisszenario ca. 1 Mio. Personen mehr 2037 in MINT beschäftigt sein."
-  }else if(filter_wirkhebel[2] == "Internationale MINT-Fachkräfte"){
+  }else if(filter_wirkhebel == "Internationale MINT-Fachkräfte"){
     subtitel <- "Die Prognose beruht auf den Annahmen, dass die Zahl an zugewanderten internationalen
-    MINT-Fachkräften zukünftig noch stärker ansteigt, als bisher. <br>
+    MINT-Fachkräften zukünftig noch stärker ansteigt als bisher. <br>
     Dadurch könnten im Vergleich zum Basisszenario ca. 150.000 Personen mehr 2037 in MINT beschäftigt sein."
-  }else if(filter_wirkhebel[2] == "Beteiligung älterer MINT-Fachkräfte"){
+  }else if(filter_wirkhebel == "Beteiligung älterer MINT-Fachkräfte"){
     subtitel <- "Die Prognose beruht auf den Annahmen, das eine längere Beschäftigung von älteren MINT-Fachkräften
     noch weiter ansteigt, als bisher.<br>
     Dadurch könnten im Vergleich zum Basisszenario ca. 200.000 Personen mehr 2037 in MINT beschäftigt sein."
-  }else if(filter_wirkhebel[2] == "Gesamteffekt"){
-    subtitel <- "Die Prognose betrachtet den Gesamteffekt von: Einer Erhöhung des MINT-Nachwuchses durch Bildungsinitativen,
+  }else if(filter_wirkhebel == "Gesamteffekt"){
+    subtitel <- "Die Prognose betrachtet den Gesamteffekt von: Einer Erhöhung des MINT-Nachwuchses durch Bildungsinitiativen,
     der Stärkung von Frauen in MINT und der stärkeren Integration von internationalen und älteren MINT-Fachkräften.
     Dadurch könnten im Vergleich zum Basisszenario ca. 1,5 Mio. Personen mehr 2037 in MINT beschäftigt sein."
+  }else if(filter_wirkhebel == "Basis-Szenario"){
+    subtitel <- "Die Prognose schreibt die aktuellen Entwicklungen in den MINT-Fachkräftezahlen bis 2037 fort (Basisszenario)."
   }
 
   hc <- highcharter::highchart() %>%
-    highcharter::hc_chart(type = "line") %>%
+    highcharter::hc_chart(type = "areaspline") %>%
     highcharter::hc_title(text = paste0("Zukünftige MINT-Fachkräfteentwicklung bis 2037 betrachtet nach ", filter_gruppe), align = "left") %>%
     highcharter::hc_subtitle(text = subtitel, align = "left") %>%
     highcharter::hc_legend(
@@ -207,38 +216,41 @@ plot_fachkraft_prognose_detail  <- function(r) {
         color = "#F9F6F5"
       )
     )) %>%
-    highcharter::hc_yAxis(title = list(text = "TODO Title y-axis")) %>%
+    highcharter::hc_yAxis(title = list(text = ""),
+                          labels = list(formatter = highcharter::JS("
+                          function() {
+                            return Highcharts.numberFormat(this.value, 0, '.', '.');
+                          }
+                        "))) %>%
     highcharter::hc_tooltip(shared = TRUE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_plotOptions(
-      series = list(pointStart = 2012),
+      series = list(pointStart = 2012,
+                    stacking = 'normal'),
       areaspline = list(fillOpacity = 0.5)
     )
 
 
   for(i in 1:length(data_list)) {
-    for(j in c("Basis-Szenario", r$fachkraft_item_prog_detail_wirkhebel)){
-      hc <- hc %>% highcharter::hc_add_series(
-        name = paste(j, data_list[[i]] %>%
-                       dplyr::filter(wirkhebel == j) %>%
-                       dplyr::pull(!!dplyr::sym(focused_column)) %>%
-                       unique()),
+    hc <- hc %>% highcharter::hc_add_series(
+      name = paste(data_list[[i]] %>%
+                     dplyr::pull(!!dplyr::sym(focused_column)) %>%
+                     unique()),
 
-        data = data_list[[i]] %>%
-          dplyr::filter(wirkhebel == j) %>%
-          dplyr::pull(wert),
-        color = color_palette[i],
-        zoneAxis = 'x',
-        zones = list(
-          list(value = 2022),
-          list(dashStyle = 'dot')
-        )
+      data = data_list[[i]] %>%
+        dplyr::pull(wert),
+      color = color_palette[i],
+      zoneAxis = 'x',
+      zones = list(
+        list(value = 2022),
+        list(dashStyle = 'dot')
       )
-    }
+    )
   }
 
   return(hc)
 }
+
 
 plot_fachkraft_wirkhebel_analyse  <- function(r) {
  # logger::log_debug("plot_fachkraft_wirkhebel_analyse")
