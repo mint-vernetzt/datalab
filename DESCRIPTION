@@ -40,7 +40,8 @@ Imports:
     pkgload,
     ggalt,
     tm,
-    quanteda
+    quanteda,
+    plotly
 Suggests: 
     spelling,
     testthat (>= 3.0.0)
