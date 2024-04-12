@@ -104,9 +104,10 @@ round_preserve_sum <- function(x, digits = 0) {
 # Veraltet - nicht die richtigen Farben und nicht richtige Kategroriezuordnung
 colors_mint_vernetzt <- list(general = c("#154194", "#b16fab", "#00a87a"),
                              attention = c("#00a87a", "#fcc433", "#ee7775"),
-                             short = c("#154194", "#b16fab"),
-                             neutral = c("#141416", "#e6e8ec"),
-                             gender = c("#f5adac", "#b1b5c3"))
+                             short = c("#154194", "#b16fab")
+                             #neutral = c("#141416", "#e6e8ec"),
+                             #gender = c("#f5adac", "#b1b5c3"))
+)
 
 
 #' helpers

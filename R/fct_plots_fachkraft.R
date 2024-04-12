@@ -253,53 +253,55 @@ plot_fachkraft_prognose_detail  <- function(r) {
 
 
 plot_fachkraft_wirkhebel_analyse  <- function(r) {
- # logger::log_debug("plot_fachkraft_wirkhebel_analyse")
+  #year_filter <- r$fachkraft_item_wirkhebel_analyse
+  year_filter <- 2037
 
-  year_filter <- r$fachkraft_item_wirkhebel_analyse
-
-  basis_wert <-  dplyr::tbl(con, from ="fachkraefte_prognose")%>%
+  basis_wert <- fachkraefte_prognose %>%
     dplyr::filter(wirkhebel == "Basis-Szenario") %>%
     dplyr::filter(geschlecht == "Gesamt") %>%
     dplyr::filter(nationalitaet == "Gesamt") %>%
     dplyr::filter(anforderung == "Gesamt") %>%
     dplyr::filter(jahr == year_filter) %>%
-    dplyr::collect()
-
-  basis_wert <-basis_wert %>%
     dplyr::pull(wert)
 
-
-  uebersicht_data <-  dplyr::tbl(con, from ="fachkraefte_prognose") %>%
+  uebersicht_data <- fachkraefte_prognose %>%
     dplyr::filter(jahr == year_filter) %>%
     dplyr::filter(indikator %in% c("Verbesserung", "starke Verbesserung")) %>%
     dplyr::filter(!(wirkhebel == "Frauen in MINT" & indikator == "Verbesserung")) %>%
     dplyr::filter(geschlecht == "Gesamt") %>%
     dplyr::filter(nationalitaet == "Gesamt") %>%
     dplyr::filter(anforderung == "Gesamt") %>%
-    dplyr::collect()
-
-  uebersicht_data <- uebersicht_data %>%
     dplyr::mutate(basis_wert = basis_wert) %>%
     dplyr::select(wirkhebel, basis_wert, wert)
 
-
-    row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
+  row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
 
   uebersicht_data <- uebersicht_data %>%
-    dplyr::slice(-row_to_move) %>% # Entfernt die Zeile
-    dplyr::bind_rows(uebersicht_data[row_to_move, ])
+    dplyr::slice(-row_to_move) %>%
+    dplyr::bind_rows(uebersicht_data[row_to_move, ]) %>%
+    dplyr::mutate(basis_label = paste0("Basis-Szenario"),
+                  improvement_label = paste0("Verbesserung: ", wirkhebel),
+                  basis_wert_txt = prettyNum(basis_wert, big.mark = ".", decimal.mark = ","),
+                  wert_txt = prettyNum(wert, big.mark = ".", decimal.mark = ",")
+    )
+#stattdessen die prettyNum werte an die labels anpassen und nur text in hower anzeigen
 
+  fig <- plotly::plot_ly(uebersicht_data, color = I("gray80")) %>%
+    plotly::add_segments(x = ~basis_wert, xend = ~wert, y = ~wirkhebel, yend = ~wirkhebel, showlegend = FALSE, text = ~basis_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
+    plotly::add_markers(x = ~basis_wert, y = ~wirkhebel, name = "Basis-Szenario", color = I("#D0A9CD"), symbol = I("square"), size = I(50), text = ~basis_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
+    plotly::add_markers(x = ~wert, y = ~wirkhebel, name = "Verbesserung", color = I("#b16fab"), symbol = I("square"), size = I(50), text = ~improvement_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
+    plotly::layout(
+      title = "Übersicht über die potentielle Wirkung der Hebel MINT-Bildung, Frauen in MINT und Integration internationale bzw. ältere MINT-Fachkäfte",
+      xaxis = list(title = "Anzahl MINT-Beschäftigte", tickformat = ".", range = c(7500000, 9500000)),
+      yaxis = list(title = "", categoryorder = "array", categoryarray = unique(uebersicht_data$wirkhebel)),
+      margin = list(l = 100),
+      hoverlabel = list(bgcolor = "white")
+    )
 
-  hc <- highcharter::highchart() %>%
-    highcharter::hc_chart(type = 'dumbbell', inverted = TRUE) %>%
-    highcharter::hc_title(text = "TODO Title") %>%
-    highcharter::hc_subtitle(text = "TODO Subtitle") %>%
-    highcharter::hc_xAxis(type = 'category') %>%
-    highcharter::hc_yAxis(title = list(text = "Verbesserung")) %>%
-    highcharter::hc_tooltip(shared = TRUE) %>%
-    highcharter::hc_add_series(name = "Verbesserung", data = highcharter::list_parse2(uebersicht_data))
+  fig <- fig %>%
+    plotly::config(fig, displayModeBar = FALSE)
 
-  return(hc)
+  return(fig)
 }
 
 

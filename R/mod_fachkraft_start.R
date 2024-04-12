@@ -165,7 +165,7 @@ mod_fachkraft_start_ui <- function(id){
             shiny::sidebarPanel(
               width = 3,
 
-              mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"), # TODO
+              # mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"), # TODO
               # downloadButton(
               #   outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
               #   label = "Download",
@@ -173,26 +173,21 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
-                                           color = "#154194"),
-
+              plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
               p(style="font-size:12px;color:grey",
-                "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+                "hier Quellen"),
 
               shinyBS::bsPopover(id="h_fachkraft_prog_3", title="",
                                  content = paste0("POPUP INFO TEXT HERE"),
                                  placement = "top",
                                  trigger = "hover"),
-              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_3"),
-              p(),
-              p(),
-              tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_3")
             )
           )
-
         )
       )
     ),
+
 
       # Box 2 - Fachkräfte auf Berufsgruppen-Level ----
       fluidRow(
@@ -440,6 +435,66 @@ mod_fachkraft_start_server <- function(id, r){
 
   # Box 1 - Fachkraft-Prognose ----
 
+    # Plot-List erstellen für Output
+    output$plot_fachkraft_prog_item_1 <- renderUI({
+      plot_list <- plot_fachkraft_prognose(r)
+      r$plot_fachkraft_prog_item_1 <- plot_list
+
+      r$plot_fachkraft_prog_item_1_title <- get_plot_title(
+        plot = r$plot_fachkraft_prog_item_1
+      )
+
+      plot_list
+    })
+    # Download erstellen
+    output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_fachkraft_prog_item_1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_fachkraft_prog_item_1,
+          filename =  r$plot_fachkraft_prog_item_1_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_fachkraft_prog_item_1_title, file)
+        file.remove(r$plot_fachkraft_prog_item_1_title)
+      }
+    )
+
+    output$plot_fachkraft_prog_detail_item_1 <- renderUI({
+
+      plot_list <- plot_fachkraft_prognose_detail(r)
+      r$plot_fachkraft_prog_detail_item_1 <- plot_list
+
+      r$plot_fachkraft_prog_detail_item_1_title <- get_plot_title(
+        plot = r$plot_fachkraft_prog_detail_item_1
+      )
+
+      plot_list
+    })
+
+    output$plot_fachkraft_wirkhebel_analyse_1 <- plotly::renderPlotly({
+
+      plot_list <- plot_fachkraft_wirkhebel_analyse(r)
+      r$plot_fachkraft_wirkhebel_analyse_1 <- plot_list
+
+      plot_list
+    })
+
+
+
+    ## pdf ----
+    output$downloadPDF <- downloadHandler(
+      # filename = function() {
+      #   "MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf"
+      # },
+      content = function(file) {
+        file.copy("www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", file)
+      }
+    )
 
   # Box 2 - Fachkraft - Berufsgruppen-Ebene ----
 
@@ -582,73 +637,6 @@ mod_fachkraft_start_server <- function(id, r){
       }
     )
 
-
-
-    # vorläufig Download raus
-    output$plot_fachkraft_prog_item_1 <- renderUI({
-      plot_list <- plot_fachkraft_prognose(r)
-      r$plot_fachkraft_prog_item_1 <- plot_list
-
-      r$plot_fachkraft_prog_item_1_title <- get_plot_title(
-        plot = r$plot_fachkraft_prog_item_1
-      )
-
-      plot_list
-    })
-
-    output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_fachkraft_prog_item_1_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_fachkraft_prog_item_1,
-          filename =  r$plot_fachkraft_prog_item_1_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_fachkraft_prog_item_1_title, file)
-        file.remove(r$plot_fachkraft_prog_item_1_title)
-      }
-    )
-
-    output$plot_fachkraft_prog_detail_item_1 <- renderUI({
-
-      plot_list <- plot_fachkraft_prognose_detail(r)
-      r$plot_fachkraft_prog_detail_item_1 <- plot_list
-
-      r$plot_fachkraft_prog_detail_item_1_title <- get_plot_title(
-        plot = r$plot_fachkraft_prog_detail_item_1
-      )
-
-      plot_list
-    })
-
-
-
-    # Download vorerst raus
-    output$plot_fachkraft_wirkhebel_analyse_1 <- renderUI({
-
-      plot_list <- plot_fachkraft_wirkhebel_analyse(r)
-      r$plot_fachkraft_wirkhebel_analyse_1 <- plot_list
-
-      r$plot_fachkraft_wirkhebel_analyse_1_title <- get_plot_title(
-        plot = r$plot_fachkraft_wirkhebel_analyse_1
-      )
-
-      plot_list
-    })
-
-  # pdf ----
-    output$downloadPDF <- downloadHandler(
-      # filename = function() {
-      #   "MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf"
-      # },
-      content = function(file) {
-        file.copy("www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", file)
-      }
-    )
 
 
 
