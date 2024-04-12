@@ -434,10 +434,16 @@ mod_studium_studienzahl_ui <- function(id){
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                             shiny::sidebarPanel(
                               width = 3,
-                              mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui")),
+                              mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui"),
+                              br(),br(),
+                              downloadButton(
+                                outputId = ns("download_btn_mint_anteil"),
+                                label = "Download",
+                                icon = icon("download")),
+                            ),
                             shiny::mainPanel(
                               width = 9,
-                              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("mint_anteil")),
+                              shinycssloaders::withSpinner(htmlOutput(ns("mint_anteil")),
                                                            color = "#154194"),
 
                               p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
@@ -455,11 +461,16 @@ mod_studium_studienzahl_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_studium_studienzahl_bl_vergleich_ui("studium_studienzahl_bl_vergleich")
+                               mod_studium_studienzahl_bl_vergleich_ui("studium_studienzahl_bl_vergleich"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_vergleich_bl1"),
+                                 label = "Download",
+                                 icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_vergleich_bl1")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_vergleich_bl1")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -474,6 +485,7 @@ mod_studium_studienzahl_ui <- function(id){
                     )
         ))),
 
+  # Box 3 ----
     fluidRow(id="studium_frauen",
       shinydashboard::box(
         title = "Frauen in MINT: Wie hoch ist der Anteil von Frauen in den MINT-Fächern?",
@@ -511,10 +523,16 @@ mod_studium_studienzahl_ui <- function(id){
                                width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_studium_studienzahl_einstieg_verlauf_gender_ui("mod_studium_studienzahl_einstieg_verlauf_gender_ui_1")),
+                               mod_studium_studienzahl_einstieg_verlauf_gender_ui("mod_studium_studienzahl_einstieg_verlauf_gender_ui_1"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_einstieg_verlauf_gender"),
+                                 label = "Download",
+                                 icon = icon("download")),
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf_gender")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -533,10 +551,16 @@ mod_studium_studienzahl_ui <- function(id){
                              width = 3,
                              tags$style(".well  {background-color:#FFFFFF;}"),
                              tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                             mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1")),
+                             mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1"),
+                             br(),br(),
+                             downloadButton(
+                               outputId = ns("download_btn_plot_einstieg_comparison_gender"),
+                               label = "Download",
+                               icon = icon("download")),
+                           ),
                            shiny::mainPanel(
                              width = 9,
-                             shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_comparison_gender")),
+                             shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_comparison_gender")),
                                                           color = "#154194"),
 
                              p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -548,6 +572,8 @@ mod_studium_studienzahl_ui <- function(id){
                              )
                   )
         ))),
+
+  # Box 4 ----
 
   fluidRow(id="studium_internationale_studis",
            shinydashboard::box(
@@ -562,12 +588,17 @@ mod_studium_studienzahl_ui <- function(id){
                                     width = 3,
                                     tags$style(".well {background-color:#FFFFFF;}"),
                                     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                                    mod_studium_studienzahl_ausl_ui("mod_studium_studienzahl_ausl_ui")
-                                    ),
+                                    mod_studium_studienzahl_ausl_ui("mod_studium_studienzahl_ausl_ui"),
+                                    br(),br(),
+                                    downloadButton(
+                                      outputId = ns("download_btn_plot_auslaender_test"),
+                                      label = "Download",
+                                      icon = icon("download")),
+                                  ),
                                   shiny::mainPanel(
                                     width = 9,
                                     tags$head(tags$style(HTML(".small-box {height: 400px}"))),
-                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_auslaender_test"), height = "650px"),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_auslaender_test"), height = "650px"),
                                                                  color = "#154194"),
                                     p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                     shinyBS::bsPopover(id="d_studium_international_1", title = "",
@@ -590,10 +621,16 @@ mod_studium_studienzahl_ui <- function(id){
                                     width = 3,
                                     tags$style(".well  {background-color:#FFFFFF;}"),
                                     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                                    mod_studium_studienzahl_ausl_zeit_ui("mod_studium_studienzahl_ausl_zeit_ui")),
+                                    mod_studium_studienzahl_ausl_zeit_ui("mod_studium_studienzahl_ausl_zeit_ui"),
+                                    br(),br(),
+                                    downloadButton(
+                                      outputId = ns("download_btn_plot_auslaender_zeit"),
+                                      label = "Download",
+                                      icon = icon("download")),
+                                  ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_auslaender_zeit")),
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_auslaender_zeit")),
                                                                  color = "#154194"),
 
                                     p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -988,43 +1025,219 @@ mod_studium_studienzahl_server <- function(id, r){
     )
 
     ## Balken MINT
-    output$mint_anteil <-  highcharter::renderHighchart({
-      mint_anteile(r)
+    # output$mint_anteil <-  highcharter::renderHighchart({
+    #   mint_anteile(r)
+    # })
+
+    output$mint_anteil <- renderUI({
+      plot_list <- mint_anteile(r)
+      r$mint_anteil <- plot_list
+
+      r$mint_anteil_title <- get_plot_title(
+        plot = r$mint_anteil
+      )
+
+      plot_list
+
     })
+
+    output$download_btn_mint_anteil <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$mint_anteil_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$mint_anteil,
+          filename =  r$mint_anteil_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$mint_anteil_title, file)
+        file.remove(r$mint_anteil_title)
+      }
+    )
 
     ## Balken MINT BULAs
-    output$plot_vergleich_bl1 <- highcharter::renderHighchart({
-      studierende_mint_vergleich_bl(r)
+    # output$plot_vergleich_bl1 <- highcharter::renderHighchart({
+    #   studierende_mint_vergleich_bl(r)
+    # })
+
+    output$plot_vergleich_bl1 <- renderUI({
+      plot_list <- studierende_mint_vergleich_bl(r)
+      r$plot_vergleich_bl1 <- plot_list
+
+      r$plot_vergleich_bl1_title <- get_plot_title(
+        plot = r$plot_vergleich_bl1
+      )
+
+      plot_list
+
     })
 
+    output$download_btn_plot_vergleich_bl1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_vergleich_bl1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
 
-    # Box 3 - Frauen
+        add_caption_and_download(
+          hc = r$plot_vergleich_bl1,
+          filename =  r$plot_vergleich_bl1_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_vergleich_bl1_title, file)
+        file.remove(r$plot_vergleich_bl1_title)
+      }
+    )
+
+
+
+
+    # Box 3 - Frauen -----
 
     ## Pie Gender
     output$plot_einstieg_pie_gender <- renderUI({
       studienzahl_einstieg_pie_gender(r)#
     })
 
+
+
     ## Verlauf Gender
-    output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
-      studienzahl_verlauf_single_gender(r)#
+    # output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
+    #   studienzahl_verlauf_single_gender(r)#
+    # })
+    #
+    output$plot_einstieg_verlauf_gender <- renderUI({
+      plot_list <- studienzahl_verlauf_single_gender(r)
+      r$plot_einstieg_verlauf_gender <- plot_list
+
+      r$plot_einstieg_verlauf_gender_title <- get_plot_title(
+        plot = r$plot_einstieg_verlauf_gender
+      )
+
+      plot_list
+
     })
+
+    output$download_btn_plot_einstieg_verlauf_gender <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_einstieg_verlauf_gender_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_einstieg_verlauf_gender,
+          filename =  r$plot_einstieg_verlauf_gender_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_einstieg_verlauf_gender_title, file)
+        file.remove(r$plot_einstieg_verlauf_gender_title)
+      }
+    )
 
     ## Balken Frauen
-    output$plot_einstieg_comparison_gender <- highcharter::renderHighchart({
-      studienzahl_einstieg_comparison_gender(r)
+    # output$plot_einstieg_comparison_gender <- highcharter::renderHighchart({
+    #   studienzahl_einstieg_comparison_gender(r)
+    # })
+
+    output$plot_einstieg_comparison_gender <- renderUI({
+      plot_list <- studienzahl_einstieg_comparison_gender(r)
+      r$plot_einstieg_comparison_gender <- plot_list
+
+      r$plot_einstieg_comparison_gender_title <- get_plot_title(
+        plot = r$plot_einstieg_comparison_gender
+      )
+
+      plot_list
     })
 
+    output$download_btn_plot_einstieg_comparison_gender <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_einstieg_comparison_gender_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
 
-    # Box 4 Internationale Studierende
+        add_caption_and_download(
+          hc = r$plot_einstieg_comparison_gender,
+          filename =  r$plot_einstieg_comparison_gender_title,
+          width = 700,
+          height = 400)
 
-    output$plot_auslaender_test <-  highcharter::renderHighchart({
-      plot_auslaender_mint( r)
+        file.copy(r$plot_einstieg_comparison_gender_title, file)
+        file.remove(r$plot_einstieg_comparison_gender_title)
+      }
+    )
+
+    # Box 4 - Internationale Studierende ----
+
+    # Tab 1
+    # output$plot_auslaender_test <-  highcharter::renderHighchart({
+    #   plot_auslaender_mint( r)
+    # })
+
+    output$plot_auslaender_test <- renderUI({
+      plot_list <- plot_auslaender_mint(r)
+      r$plot_auslaender_test <- plot_list
+
+      r$plot_auslaender_test_title <- get_plot_title(
+        plot = r$plot_auslaender_test
+      )
+
+      plot_list
     })
 
-    output$plot_auslaender_zeit <-  highcharter::renderHighchart({
-      plot_auslaender_mint_zeit(r)
+    output$download_btn_plot_auslaender_zeit <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_auslaender_test_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_auslaender_test,
+          filename =  r$plot_auslaender_test_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_auslaender_test_title, file)
+        file.remove(r$plot_auslaender_test_title)
+      }
+    )
+
+    # Tab 2
+    # output$plot_auslaender_zeit <-  highcharter::renderHighchart({
+    #   plot_auslaender_mint_zeit(r)
+    # })
+
+    output$plot_auslaender_zeit <- renderUI({
+      plot_list <- plot_auslaender_mint_zeit(r)
+      r$plot_auslaender_zeit <- plot_list
+
+      r$plot_auslaender_zeit_title <- get_plot_title(
+        plot = r$plot_auslaender_zeit
+      )
+
+      plot_list
     })
+
+    output$download_btn_plot_auslaender_test <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_auslaender_zeit_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_auslaender_zeit,
+          filename =  r$plot_auslaender_zeit_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_auslaender_zeit_title, file)
+        file.remove(r$plot_auslaender_zeit_title)
+      }
+    )
 
 
 

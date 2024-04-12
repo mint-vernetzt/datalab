@@ -1273,9 +1273,9 @@ mod_schule_kurse_server <- function(id, r){
 
     # Tab 2
 
-    output$plot_skf_personal <- highcharter::renderHighchart({
-      skf_personal(r)
-    })
+    # output$plot_skf_personal <- highcharter::renderHighchart({
+    #   skf_personal(r)
+    # })
 
     output$plot_skf_personal <- renderUI({
       plot_list <- skf_personal(r)
