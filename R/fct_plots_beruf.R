@@ -496,8 +496,8 @@ beruf_verlauf_single <- function(r) {
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten/Auszubildenden"),
-                            margin = 45,
+      highcharter::hc_title(text = paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten o. Auszubildenden"),
+                            margin = 45, # o. war vorher /
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_colors(c("#b16fab", "#154194")) %>%
@@ -668,8 +668,8 @@ beruf_einstieg_vergleich <- function(r) {
     highcharter::hc_xAxis(title = list(text = ""), categories = indi) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten/Auszubildenden (", timerange, ")"),
-                          margin = 45,
+    highcharter::hc_title(text = paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten o. Auszubildenden (", timerange, ")"),
+                          margin = 45, # o. war vorher /
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
@@ -1692,9 +1692,8 @@ arbeitsmarkt_bl <- function(r) {
   #
   # }
 
-  highcharter::hw_grid(
     # plot
-    highcharter::hcmap(
+    out1 <- highcharter::hcmap(
       "countries/de/de-all",
       data = df_trainee,
       value = "proportion",
@@ -1727,9 +1726,9 @@ arbeitsmarkt_bl <- function(r) {
       ) %>% highcharter::hc_size(600, 550) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
       highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom"),
+                             verticalAlign = "bottom")
 
-    highcharter::hcmap(
+    out2 <- highcharter::hcmap(
       "countries/de/de-all",
       data = df_employed,
       value = "proportion",
@@ -1761,12 +1760,12 @@ arbeitsmarkt_bl <- function(r) {
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom"),
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
 
 
-    ncol = 2,
-    browsable = TRUE
-  )
+out <- list(out1, out2)
+
+    return(out)
 
 }
 
@@ -2326,10 +2325,11 @@ arbeitsmarkt_top10 <- function( r){
 
   }
 
-  highcharter::hw_grid(
+  out <- list(
     plot_frau,
-    plot_mann,
-    ncol = 2)
+    plot_mann)
+
+  return(out)
 
 
 }

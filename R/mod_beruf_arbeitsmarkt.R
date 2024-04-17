@@ -239,15 +239,21 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     #          )
                     # ),
                     #br(),
+                    # Tab 6
                     tabPanel("Vergleich Anteil MINT bei Frauen nach Bundesländern im Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui("mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui_1")
+                               mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui("mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui_1"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_beruf_arbeitsmarkt_bl_gender_verlauf"),
+                                 label = "Download",
+                                 icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_gender_verlauf")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_beruf_arbeitsmarkt_bl_gender_verlauf")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -262,11 +268,16 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_bl_verlauf_ui("mod_beruf_arbeitsmarkt_bl_verlauf_ui_1")
+                               mod_beruf_arbeitsmarkt_bl_verlauf_ui("mod_beruf_arbeitsmarkt_bl_verlauf_ui_1"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_beruf_arbeitsmarkt_bl_verlauf"),
+                                 label = "Download",
+                                 icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_bl_verlauf")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_beruf_arbeitsmarkt_bl_verlauf")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -329,7 +340,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1")
+                               mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1"),
+                               br(),br()
+                               ,
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_arbeitsmarkt_bl_1"),
+                                 label = "Download (links)",
+                                 icon = icon("download")),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_arbeitsmarkt_bl_2"),
+                                 label = "Download (rechts)",
+                                 icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -344,17 +365,23 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_1")
                              )
                     ),
+                    # tab 2
                     tabPanel("Alle Bereiche auf einen Blick", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_überblick_fächer_ui("mod_beruf_arbeitsmarkt_überblick_fächer_ui_1")
+                               mod_beruf_arbeitsmarkt_überblick_fächer_ui("mod_beruf_arbeitsmarkt_überblick_fächer_ui_1"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
+                                 label = "Download",
+                                 icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_arbeitsmarkt_überblick_fächer")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_überblick_fächer")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -365,17 +392,21 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_2")
                              )
                              ),
-
-
+                    # tab 3
                     tabPanel("Vergleich Anteil MINT-Bereiche nach Bundesländern", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_bl_vergleich_ui("beruf_arbeitsmarkt_bl_vergleich_ui_1")
+                               mod_beruf_arbeitsmarkt_bl_vergleich_ui("beruf_arbeitsmarkt_bl_vergleich_ui_1"),
+                               br(),br(),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_arbeitsmarkt_bl_vergleich"),
+                                 label = "Download",
+                                 icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_arbeitsmarkt_bl_vergleich")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_bl_vergleich")),
                                                             color = "#154194"),
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id = "h_beruf_fach_3", title = "",
@@ -390,7 +421,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_top10_ui("mod_beruf_arbeitsmarkt_top10_ui_1")
+                               mod_beruf_arbeitsmarkt_top10_ui("mod_beruf_arbeitsmarkt_top10_ui_1"),
+                               br(),br()
+                               ,
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_arbeitsmarkt_top10_1"),
+                                 label = "Download (links)",
+                                 icon = icon("download")),
+                               downloadButton(
+                                 outputId = ns("download_btn_plot_arbeitsmarkt_top10_2"),
+                                 label = "Download (rechts)",
+                                 icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -408,7 +449,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     #
         ))),
 
-    # Box 3
+    # Box 3 ----
 
     fluidRow(id="beruf_frauen",
       shinydashboard::box(
@@ -721,20 +762,20 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Tab 5
 
+    # output$plot_arbeitsmarkt_bl_gender <- renderUI({
+    #   arbeitsmarkt_bl_gender(r)
+    # })
+
     output$plot_arbeitsmarkt_bl_gender <- renderUI({
-      arbeitsmarkt_bl_gender(r)
-    })
+      plot_list <- arbeitsmarkt_bl_gender(r)
+      r$plot_arbeitsmarkt_bl_gender_left <- plot_list[[1]]
+      r$plot_arbeitsmarkt_bl_gender_right <- plot_list[[2]]
 
-    output$plot_fachkraft_epa_item_1 <- renderUI({
-      plot_list <- plot_fachkraft_epa_item(r)
-      r$plot_fachkraft_epa_item_1_left <- plot_list[[1]]
-      r$plot_fachkraft_epa_item_1_right <- plot_list[[2]]
-
-      r$plot_fachkraft_epa_item_1_left_title <- get_plot_title(
-        plot = r$plot_fachkraft_epa_item_1_left
+      r$plot_arbeitsmarkt_bl_gender_left_title <- get_plot_title(
+        plot = r$plot_arbeitsmarkt_bl_gender_left
       )
-      r$plot_fachkraft_epa_item_1_right_title <- get_plot_title(
-        plot = r$plot_fachkraft_epa_item_1_right
+      r$plot_arbeitsmarkt_bl_gender_right_title <- get_plot_title(
+        plot = r$plot_arbeitsmarkt_bl_gender_right
       )
 
       # return plots
@@ -745,70 +786,306 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     })
 
-    output$download_btn_plot_fachkraft_epa_item_1 <- downloadHandler(
+    output$download_btn_plot_arbeitsmarkt_bl_gender_1 <- downloadHandler(
       contentType = "image/png",
-      filename = function() {r$plot_fachkraft_epa_item_1_left_title},
+      filename = function() {r$plot_arbeitsmarkt_bl_gender_left_title},
       content = function(file) {
         # creating the file with the screenshot and prepare it to download
 
         add_caption_and_download(
-          hc = r$plot_fachkraft_epa_item_1_left,
-          filename =  r$plot_fachkraft_epa_item_1_left_title,
+          hc = r$plot_arbeitsmarkt_bl_gender_left,
+          filename =  r$plot_arbeitsmarkt_bl_gender_left_title,
           width = 700,
           height = 400,
           with_labels = FALSE)
 
-        file.copy(r$plot_fachkraft_epa_item_1_left_title, file)
-        file.remove(r$plot_fachkraft_epa_item_1_left_title)
+        file.copy(r$plot_arbeitsmarkt_bl_gender_left_title, file)
+        file.remove(r$plot_arbeitsmarkt_bl_gender_left_title)
       }
     )
 
-    output$download_btn_plot_fachkraft_epa_item_2 <- downloadHandler(
+    output$download_btn_plot_arbeitsmarkt_bl_gender_2 <- downloadHandler(
       contentType = "image/png",
-      filename = function() {r$plot_fachkraft_epa_item_1_right_title},
+      filename = function() {r$plot_arbeitsmarkt_bl_gender_right_title},
       content = function(file) {
         # creating the file with the screenshot and prepare it to download
         add_caption_and_download(
-          hc = r$plot_fachkraft_epa_item_1_right,
-          filename =  r$plot_fachkraft_epa_item_1_right_title,
+          hc = r$plot_arbeitsmarkt_bl_gender_right,
+          filename =  r$plot_arbeitsmarkt_bl_gender_right_title,
           width = 700,
           height = 400,
           with_labels = FALSE)
 
-        file.copy(r$plot_fachkraft_epa_item_1_right_title, file)
-        file.remove(r$plot_fachkraft_epa_item_1_right_title)
+        file.copy(r$plot_arbeitsmarkt_bl_gender_right_title, file)
+        file.remove(r$plot_arbeitsmarkt_bl_gender_right_title)
       }
     )
 
     # Tab 6
 
-    output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- highcharter::renderHighchart({
-      arbeitsmarkt_bl_gender_verlauf(r)
+    # output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- highcharter::renderHighchart({
+    #   arbeitsmarkt_bl_gender_verlauf(r)
+
+      output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- renderUI({
+        plot_list <- arbeitsmarkt_bl_gender_verlauf(r)
+        r$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- plot_list
+
+        r$plot_beruf_arbeitsmarkt_bl_gender_verlauf_title <- get_plot_title(
+          plot = r$plot_beruf_arbeitsmarkt_bl_gender_verlauf
+        )
+
+        plot_list
+      })
+
+      output$download_btn_plot_beruf_arbeitsmarkt_bl_gender_verlauf <- downloadHandler(
+        contentType = "image/png",
+        filename = function() {r$plot_beruf_arbeitsmarkt_bl_gender_verlauf_title},
+        content = function(file) {
+          # creating the file with the screenshot and prepare it to download
+
+          add_caption_and_download(
+            hc = r$plot_beruf_arbeitsmarkt_bl_gender_verlauf,
+            filename =  r$plot_beruf_arbeitsmarkt_bl_gender_verlauf_title,
+            width = 700,
+            height = 400)
+
+          file.copy(r$plot_beruf_arbeitsmarkt_bl_gender_verlauf_title, file)
+          file.remove(r$plot_beruf_arbeitsmarkt_bl_gender_verlauf_title)
+        }
+      )
+
+
+
+
+    # Tab 7
+
+    # output$plot_beruf_arbeitsmarkt_bl_verlauf <- highcharter::renderHighchart({
+    #   arbeitsmarkt_bl_verlauf(r)
+    # })
+
+    output$plot_beruf_arbeitsmarkt_bl_verlauf  <- renderUI({
+      plot_list <- arbeitsmarkt_bl_verlauf(r)
+      r$plot_beruf_arbeitsmarkt_bl_verlauf <- plot_list
+
+      r$plot_beruf_arbeitsmarkt_bl_verlauf_title <- get_plot_title(
+        plot = r$plot_beruf_arbeitsmarkt_bl_verlauf
+      )
+
+      plot_list
     })
 
-    output$plot_beruf_arbeitsmarkt_bl_verlauf <- highcharter::renderHighchart({
-      arbeitsmarkt_bl_verlauf(r)
-    })
+    output$download_btn_plot_beruf_arbeitsmarkt_bl_verlauf <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_beruf_arbeitsmarkt_bl_verlauf_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_beruf_arbeitsmarkt_bl_verlauf,
+          filename =  r$plot_beruf_arbeitsmarkt_bl_verlauf_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_beruf_arbeitsmarkt_bl_verlauf_title, file)
+        file.remove(r$plot_beruf_arbeitsmarkt_bl_verlauf_title)
+
+})
 
 
-    # Box 2
+    # Box 2 ----
+
+    # Tab 1
+    # output$plot_arbeitsmarkt_bl <- renderUI({
+    #   arbeitsmarkt_bl(r)
+    # })
+
     output$plot_arbeitsmarkt_bl <- renderUI({
-      arbeitsmarkt_bl(r)
+      plot_list <- arbeitsmarkt_bl(r)
+      r$plot_arbeitsmarkt_bl_left <- plot_list[[1]]
+      r$plot_arbeitsmarkt_bl_right <- plot_list[[2]]
+
+      r$plot_arbeitsmarkt_bl_left_title <- get_plot_title(
+        plot = r$plot_arbeitsmarkt_bl_left
+      )
+      r$plot_arbeitsmarkt_bl_right_title <- get_plot_title(
+        plot = r$plot_arbeitsmarkt_bl_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
     })
 
-    output$plot_arbeitsmarkt_überblick_fächer <- highcharter::renderHighchart({
-      arbeitsmarkt_überblick_fächer(r)
+    output$download_btn_plot_arbeitsmarkt_bl_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_arbeitsmarkt_bl_left},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_arbeitsmarkt_bl_gender_left,
+          filename =  r$plot_arbeitsmarkt_bl_left_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_arbeitsmarkt_bl_left_title, file)
+        file.remove(r$plot_arbeitsmarkt_bl_left_title)
+      }
+    )
+
+    output$download_btn_plot_arbeitsmarkt_bl_2 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_arbeitsmarkt_bl_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+        add_caption_and_download(
+          hc = r$plot_arbeitsmarkt_bl_right,
+          filename =  r$plot_arbeitsmarkt_bl_right_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_arbeitsmarkt_bl_right_title, file)
+        file.remove(r$plot_arbeitsmarkt_bl_right_title)
+      }
+    )
+
+
+    # tab 2
+    # output$plot_arbeitsmarkt_überblick_fächer <- highcharter::renderHighchart({
+    #   arbeitsmarkt_überblick_fächer(r)
+    # })
+
+    output$plot_arbeitsmarkt_überblick_fächer  <- renderUI({
+      plot_list <- arbeitsmarkt_überblick_fächer(r)
+      r$plot_arbeitsmarkt_überblick_fächer <- plot_list
+
+      r$plot_arbeitsmarkt_überblick_fächer_title <- get_plot_title(
+        plot = r$plot_arbeitsmarkt_überblick_fächer
+      )
+
+      plot_list
     })
+
+    output$download_btn_plot_arbeitsmarkt_überblick_fächer <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_arbeitsmarkt_überblick_fächer_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_arbeitsmarkt_überblick_fächer,
+          filename =  r$plot_arbeitsmarkt_überblick_fächer_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_arbeitsmarkt_überblick_fächer_title, file)
+        file.remove(r$plot_arbeitsmarkt_überblick_fächer_title)
+
+      })
+
+    # Tab 3
 
     output$plot_arbeitsmarkt_bl_vergleich <- highcharter::renderHighchart({
       arbeitsmarkt_bl_vergleich(r)
     })
 
-    output$plot_arbeitsmarkt_top10 <- renderUI({
-      arbeitsmarkt_top10(r)
+    output$plot_arbeitsmarkt_bl_vergleich  <- renderUI({
+      plot_list <- arbeitsmarkt_bl_vergleich(r)
+      r$plot_arbeitsmarkt_bl_vergleich <- plot_list
+
+      r$plot_arbeitsmarkt_bl_vergleich_title <- get_plot_title(
+        plot = r$plot_arbeitsmarkt_bl_vergleich
+      )
+
+      plot_list
     })
 
-    # Box3
+    output$download_btn_plot_arbeitsmarkt_bl_vergleich <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_arbeitsmarkt_bl_vergleich_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_arbeitsmarkt_bl_vergleich,
+          filename =  r$plot_arbeitsmarkt_bl_vergleich_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_arbeitsmarkt_bl_vergleich_title, file)
+        file.remove(r$plot_arbeitsmarkt_bl_vergleich_title)
+
+      })
+
+    # Tab 4
+
+    # output$plot_arbeitsmarkt_top10 <- renderUI({
+    #   arbeitsmarkt_top10(r)
+    # })
+
+    output$plot_arbeitsmarkt_top10 <- renderUI({
+      plot_list <- arbeitsmarkt_top10(r)
+      r$plot_arbeitsmarkt_top10_left <- plot_list[[1]]
+      r$plot_arbeitsmarkt_top10_right <- plot_list[[2]]
+
+      r$plot_arbeitsmarkt_top10_left_title <- get_plot_title(
+        plot = r$plot_arbeitsmarkt_top10_left
+      )
+      r$plot_arbeitsmarkt_top10_right_title <- get_plot_title(
+        plot = r$plot_arbeitsmarkt_top10_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
+    })
+
+    output$download_btn_plot_arbeitsmarkt_top10_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_arbeitsmarkt_top10_left_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_arbeitsmarkt_top10_left,
+          filename =  r$plot_arbeitsmarkt_top10_left_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_arbeitsmarkt_top10_left_title, file)
+        file.remove(r$plot_arbeitsmarkt_top10_left_title)
+      }
+    )
+
+    output$download_btn_plot_arbeitsmarkt_top10_2 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_arbeitsmarkt_top10_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+        add_caption_and_download(
+          hc = r$plot_arbeitsmarkt_top10_right,
+          filename =  r$plot_arbeitsmarkt_top10_right_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_arbeitsmarkt_top10_right_title, file)
+        file.remove(r$plot_arbeitsmarkt_top10_right_title)
+      }
+    )
+
+
+
+    # Box3 ----
     output$plot_einstieg_pie_gender <- renderUI({
       arbeitsmarkt_einstieg_pie_gender(r)
     })

@@ -23,7 +23,9 @@ plot_fachkraft_prognose  <- function(r) {
         TRUE ~ wert
       )
     ) %>%
-    dplyr::ungroup()
+    dplyr::ungroup()%>%
+    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Förderung Frauen u. Bildung in MINT",
+                                               T ~ wirkhebel))
 
 
   plot_data <- plot_data %>%
@@ -41,7 +43,7 @@ plot_fachkraft_prognose  <- function(r) {
                      paste0(filter_indikator[2],
                             " bei der Integration internationaler MINT-Fachkräfte"),
                      szenario)
-  szenario <- ifelse(filter_wirkhebel[2] == "Frauen in MINT",
+  szenario <- ifelse(filter_wirkhebel[2] == "Förderung Frauen u. Bildung in MINT",
                      paste0(filter_indikator[2],
                             " bei der Gewinnug von Frauen für MINT"),
                      szenario)
@@ -53,7 +55,7 @@ plot_fachkraft_prognose  <- function(r) {
     subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch MINT-Bildungsförderung gelingt,
     den Anteil an jungen Menschen, die einen MINT-Beruf ergereifen, zu erhöhen. <br>
     Dadurch könnten im Vergleich zum Basisszenario ca. 800.000 Personen mehr 2037 in MINT beschäftigt sein."
-  }else if(filter_wirkhebel[2] == "Frauen in MINT"){
+  }else if(filter_wirkhebel[2] == "Förderung Frauen u. Bildung in MINT"){
     subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch MINT-Bildungsförderung und
     besonderer Förderung von Mädchen in MINT gelingt,
     den Anteil an jungen Menschen, die einen MINT-Beruf ergereifen, allgemein und von jungen Fruaen im Besonderen zu erhöhen. <br>
@@ -165,7 +167,9 @@ plot_fachkraft_prognose_detail  <- function(r) {
 
   plot_data <-plot_data %>%
     dplyr::mutate(dplyr::across(all_of(focused_column), ~ factor(.x, levels = c(sort(unique(.x)))))) %>%
-    dplyr::arrange(dplyr::across(all_of(focused_column)), jahr)
+    dplyr::arrange(dplyr::across(all_of(focused_column)), jahr)%>%
+    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Förderung Frauen u. Bildung in MINT",
+                                               T ~ wirkhebel))
 
   if(focused_column == "nationalitaet"){
     plot_data$nationalitaet <- factor(plot_data$nationalitaet,
@@ -179,7 +183,7 @@ plot_fachkraft_prognose_detail  <- function(r) {
     subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch MINT-Bildungsförderung gelingt,
     den Anteil an jungen Menschen, die einen MINT-Beruf ergreifen, zu erhöhen. <br>
     Dadurch könnten im Vergleich zum Basisszenario ca. 800.000 Personen mehr 2037 in MINT beschäftigt sein."
-  }else if(filter_wirkhebel == "Frauen in MINT"){
+  }else if(filter_wirkhebel == "Förderung Frauen u. Bildung in MINT"){
     subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch MINT-Bildungsförderung und
     besonderer Förderung von Mädchen in MINT gelingt,
     den Anteil an jungen Menschen, die einen MINT-Beruf ergreifen, allgemein und von jungen Frauen im Besonderen zu erhöhen.<br>
@@ -253,8 +257,8 @@ plot_fachkraft_prognose_detail  <- function(r) {
 
 
 plot_fachkraft_wirkhebel_analyse  <- function(r) {
-  #year_filter <- r$fachkraft_item_wirkhebel_analyse
-  year_filter <- 2037
+  year_filter <- r$fachkraft_item_wirkhebel_analyse
+  #year_filter <- 2037
 
   basis_wert <- fachkraefte_prognose %>%
     dplyr::filter(wirkhebel == "Basis-Szenario") %>%
@@ -264,6 +268,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     dplyr::filter(jahr == year_filter) %>%
     dplyr::pull(wert)
 
+
   uebersicht_data <- fachkraefte_prognose %>%
     dplyr::filter(jahr == year_filter) %>%
     dplyr::filter(indikator %in% c("Verbesserung", "starke Verbesserung")) %>%
@@ -272,7 +277,9 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     dplyr::filter(nationalitaet == "Gesamt") %>%
     dplyr::filter(anforderung == "Gesamt") %>%
     dplyr::mutate(basis_wert = basis_wert) %>%
-    dplyr::select(wirkhebel, basis_wert, wert)
+    dplyr::select(wirkhebel, basis_wert, wert)%>%
+    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Förderung Frauen u. Bildung in MINT",
+                                               T ~ wirkhebel))
 
   row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
 

@@ -34,7 +34,8 @@ mod_fachkraft_item_prog_ui <- function(id){
       choices = fachkraft_ui_berufslevel(),
       selected = c("Gesamt"),
       multiple = FALSE
-    ),
+    )
+    ,
 
     br(),
 
