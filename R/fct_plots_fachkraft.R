@@ -291,16 +291,30 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     plotly::add_markers(x = ~basis_wert, y = ~wirkhebel, name = "Basis-Szenario", color = I("#D0A9CD"), symbol = I("square"), size = I(50), text = ~basis_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
     plotly::add_markers(x = ~wert, y = ~wirkhebel, name = "Verbesserung", color = I("#b16fab"), symbol = I("square"), size = I(50), text = ~improvement_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
     plotly::layout(
-      title = "Übersicht über die potentielle Wirkung der Hebel MINT-Bildung, Frauen in MINT und Integration internationale bzw. ältere MINT-Fachkäfte",
-      xaxis = list(title = "Anzahl MINT-Beschäftigte", tickformat = ".", range = c(7500000, 9500000)),
-      yaxis = list(title = "", categoryorder = "array", categoryarray = unique(uebersicht_data$wirkhebel)),
-      margin = list(l = 100),
-      hoverlabel = list(bgcolor = "white")
+      title = list(
+        text = "Übersicht über die potentielle Wirkung der Hebel MINT-Bildung, Frauen in MINT und Integration internationaler \nbzw. älterer MINT-Fachkäfte"
+       # font = list(family = "SourceSans3-Regular", size = 28)
+      ),
+      xaxis = list(title = "Anzahl MINT-Beschäftigte",
+                   tickformat = ",", range = c(7500000, 9500000)),
+      yaxis = list(title = "",
+                   categoryorder = "array",
+                   categoryarray = unique(uebersicht_data$wirkhebel)),
+      margin = list(l = 100, r = 50, t = 80, b = 50),
+      hoverlabel = list(bgcolor = "white"),
+      #font = list(family = "SourceSans3-Regular", size = 14),
+      legend = list(
+        orientation = "h",  # Horizontale Ausrichtung der Legende
+        x = 0.5,  # Zentriert die Legende auf der X-Achse
+        y = -0.5,  # Positioniert die Legende unterhalb der X-Achse
+        xanchor = "center",  # Zentriert die Legende an ihrem X-Wert
+        yanchor = "top"  # Verankert die Legende oben an ihrem Y-Wert
+      )
     )
 
-  fig <- fig %>%
+fig <- fig %>%
     plotly::config(fig, displayModeBar = FALSE)
-
+fig
   return(fig)
 }
 

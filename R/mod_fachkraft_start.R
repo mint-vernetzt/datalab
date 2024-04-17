@@ -173,7 +173,8 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
+              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
+                                           color = "#154194"),
               p(style="font-size:12px;color:grey",
                 "hier Quellen"),
 
