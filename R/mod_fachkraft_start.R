@@ -178,7 +178,6 @@ mod_fachkraft_start_ui <- function(id){
             shiny::mainPanel(
               width = 9,
               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
-<<<<<<< HEAD
               color = "#154194"),
             p(style="font-size:12px;color:grey",
               "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
@@ -187,11 +186,7 @@ mod_fachkraft_start_ui <- function(id){
     )
         )))),
 
-=======
-                                           color = "#154194"),
-              p(style="font-size:12px;color:grey",
-                "hier Quellen"),
->>>>>>> 1911e65716f81d645a1c8d067c56368aba2fe23e
+
 
 
 
