@@ -568,6 +568,15 @@ home_rest_mint_verlauf <- function(r) {
 
     df <- df %>% dplyr::filter(indikator %in% indikator_choice_1)
 
+    # Ordnen der Legende
+    sorted_indicators <- df %>%
+      group_by(indikator) %>%
+      summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      arrange(desc(m_value)) %>%
+      pull(indikator)
+
+    df$indikator <- factor(df$indikator, levels = sorted_indicators)
+
     # plot
     out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
       highcharter::hc_tooltip(pointFormat = "Anteil MINT <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
@@ -609,6 +618,14 @@ home_rest_mint_verlauf <- function(r) {
 
     df <- df[with(df, order(fachbereich, jahr, decreasing = FALSE)), ]
 
+    # Ordnen der Legende
+    sorted_indicators <- df %>%
+      group_by(indikator) %>%
+      summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      arrange(desc(m_value)) %>%
+      pull(indikator)
+
+    df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
 
     # plot
@@ -1690,6 +1707,16 @@ home_comparison_line <- function(r) {
 
     df_fn51 <- df_fn51 %>%
       dplyr::filter(selector == "In Prozent")
+
+    # Ordnen der Legende
+    sorted_indicators <- df_fn51 %>%
+      group_by(indikator) %>%
+      summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      arrange(desc(m_value)) %>%
+      pull(indikator)
+
+    df_fn51$indikator <- factor(df_fn51$indikator, levels = sorted_indicators)
+
     # plot
     out <- highcharter::hchart(df_fn51, 'line', highcharter::hcaes(x = jahr, y = round(wert, 0), group = indikator))%>%
       highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
@@ -1724,6 +1751,14 @@ home_comparison_line <- function(r) {
     df_fn51 <- df_fn51 %>%
       dplyr::filter(selector == "Anzahl")
 
+    # Ordnen der Legende
+    sorted_indicators <- df_fn51 %>%
+      group_by(indikator) %>%
+      summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      arrange(desc(m_value)) %>%
+      pull(indikator)
+
+    df_fn51$indikator <- factor(df_fn51$indikator, levels = sorted_indicators)
 
     out <- highcharter::hchart(df_fn51, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator))%>%
       highcharter::hc_tooltip(pointFormat = "Anzahl Frauen <br> Indikator: {point.indikator} <br> Anzahl: {point.y} ")%>%

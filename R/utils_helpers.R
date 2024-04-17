@@ -575,6 +575,7 @@ fachkraft_ui_wirkhebel <- function() {
   selection <- NULL
 
   selection <- c(
+    "Basisszenario" = "Basis-Szenario",
     "Gesamteffekt",
     "MINT-Bildung",
     "Frauen in MINT",
