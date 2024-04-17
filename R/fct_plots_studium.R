@@ -2596,7 +2596,7 @@ mint_anteile <- function(r) {
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
     #plotting
-    highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = jahr, group = fach))%>%
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = jahr, group = fach))%>%
       highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
       highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
       highcharter::hc_yAxis(title = list(text = "")
@@ -2638,7 +2638,7 @@ mint_anteile <- function(r) {
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
     #plotting
-    highcharter::hchart(df2, 'bar', highcharter::hcaes(y = prop, x = jahr, group = fach))%>%
+    out <- highcharter::hchart(df2, 'bar', highcharter::hcaes(y = prop, x = jahr, group = fach))%>%
       highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
       highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
       highcharter::hc_yAxis(title = list(text = "")
@@ -2651,7 +2651,7 @@ mint_anteile <- function(r) {
 
   }
 
-
+return(out)
 
 }
 
@@ -2732,13 +2732,12 @@ studierende_mint_vergleich_bl <- function(r) {
   df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
 
   # Plot
-  highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
+  out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
     highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
     highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
     highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
     highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
-    highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")",
-                                         "<br><br><br>"),
+    highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")"),
                           margin = 25,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))   #Schrift-Formatierung Überschrift
@@ -2759,6 +2758,8 @@ studierende_mint_vergleich_bl <- function(r) {
   #                   fill = "") +
   #     ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
   #
+
+  return(out)
 }
 
 
@@ -3190,7 +3191,7 @@ studienzahl_verlauf_single_gender <- function(r) {
 
 
 
-      highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
+      out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
         highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.display_rel} %") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -3219,7 +3220,7 @@ studienzahl_verlauf_single_gender <- function(r) {
       df <- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2])
 
 
-      highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
+      out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
         highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.display_rel} %") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -3248,7 +3249,7 @@ studienzahl_verlauf_single_gender <- function(r) {
 
 
 
-      highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
+      out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
         highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.display_rel} %") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -3287,7 +3288,7 @@ studienzahl_verlauf_single_gender <- function(r) {
 
         df <- df %>% dplyr::filter(label== label_sel)
 
-        highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
+        out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
           highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -3315,7 +3316,7 @@ studienzahl_verlauf_single_gender <- function(r) {
         df <- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2])
 
 
-        highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
+        out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
           highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -3344,7 +3345,7 @@ studienzahl_verlauf_single_gender <- function(r) {
 
 
 
-        highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
+        out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
           highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -3468,6 +3469,7 @@ studienzahl_verlauf_single_gender <- function(r) {
   #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
+  return(out)
 }
 
 
@@ -3543,7 +3545,7 @@ studienzahl_einstieg_comparison_gender <- function(r) {
   fach_label <- ifelse(fach_label == "Alle MINT-Fächer", "MINT", fach_label)
 
 
-  highcharter::hchart(df, 'bar', highcharter::hcaes(x = indikator, y=proportion, group = geschlecht))%>%
+  out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = indikator, y=proportion, group = geschlecht))%>%
 
     highcharter::hc_tooltip(pointFormat = "{point.geschlecht}-Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
 
@@ -3561,9 +3563,7 @@ studienzahl_einstieg_comparison_gender <- function(r) {
     ) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-    highcharter::hc_title(text = ifelse(sel_f1 == "Alle Nicht MINT-Fächer", paste0("Frauenanteil in allen Studienfachgruppen außer MINT in ", sel_bl1, " (", timerange, ")",
-                                                                                   "<br><br><br>"), paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " in ", sel_bl1, " (", timerange, ")",
-                                                                                                           "<br><br><br>")),
+    highcharter::hc_title(text = ifelse(sel_f1 == "Alle Nicht MINT-Fächer", paste0("Frauenanteil in allen Studienfachgruppen außer MINT in ", sel_bl1, " (", timerange, ")"), paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " in ", sel_bl1, " (", timerange, ")")),
                           margin = 25,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3582,7 +3582,7 @@ studienzahl_einstieg_comparison_gender <- function(r) {
 
 
 
-
+return(out)
 }
 
 # Internationale Studis ----
@@ -3742,7 +3742,7 @@ plot_auslaender_mint <- function(r){
 
 
 
-      highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
+      out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
         highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
         highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -3795,7 +3795,7 @@ plot_auslaender_mint <- function(r){
 
 
 
-      highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
+      out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
         highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
         highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
@@ -3842,7 +3842,7 @@ plot_auslaender_mint <- function(r){
 
         df_faecher$display_rel <- prettyNum(df_faecher$wert, big.mark = ".", decimal.mark = ",")
 
-        highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
+        out <- highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
           highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -3906,7 +3906,7 @@ plot_auslaender_mint <- function(r){
 
         df_faecher <- df_faecher[order(-df_faecher$wert),]
 
-        highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
+        out <- highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
           highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
@@ -3938,7 +3938,7 @@ plot_auslaender_mint <- function(r){
       }}
 
 
-
+return(out)
 
 
 

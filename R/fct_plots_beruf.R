@@ -1149,9 +1149,9 @@ arbeitsmarkt_bl_gender <- function(r) {
                     paste0("Anteil männlicher ", title_help, ", die das Berufsfeld ", fachbereich_choice, " wählen (", timerange, ")"))
 
 
-  highcharter::hw_grid(
+
     # plot
-    highcharter::hcmap(
+    out_1 <- highcharter::hcmap(
       "countries/de/de-all",
       data = values_female,
       value = "proportion",
@@ -1183,9 +1183,9 @@ arbeitsmarkt_bl_gender <- function(r) {
       ) %>% highcharter::hc_size(600, 550) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
       highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom"),
+                             verticalAlign = "bottom")
 
-    highcharter::hcmap(
+    out_2 <- highcharter::hcmap(
       "countries/de/de-all",
       data = values_male,
       value = "proportion",
@@ -1216,12 +1216,13 @@ arbeitsmarkt_bl_gender <- function(r) {
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom"),
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
 
 
-    ncol = 2,
-    browsable = TRUE
-  )
+    out <- list(out_1, out_2)
+
+    return (out)
+
 
 }
 
