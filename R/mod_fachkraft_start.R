@@ -110,15 +110,17 @@ mod_fachkraft_start_ui <- function(id){
         br(),
         tabsetPanel(
           type = "tabs",
-          tabPanel(
+    tabPanel(
             title = "Zukünftige Fachkräfte-Entwicklung", br(),
 
             shiny::sidebarPanel(
               width = 3,
               mod_fachkraft_item_prog_ui("fachkraft_item_prog_1"),
               br(),
+              # br(),
               # downloadButton(
               #   outputId = ns("download_btn_plot_fachkraft_prog_item_1"),
+              #   br(),
               #   label = "Download",
               #   icon = icon("download")),
             ),
@@ -132,12 +134,14 @@ mod_fachkraft_start_ui <- function(id){
               tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           ),
-          tabPanel(
+    tabPanel(
             "Im Detail: Zukünftige Fachkräfte-Entwicklung", br(),
 
             shiny::sidebarPanel(
               width = 3,
               mod_fachkraft_item_prog_detail_ui("fachkraft_item_prog_detail_1")
+              ,
+              br(),
 
             ),
             shiny::mainPanel(
@@ -157,42 +161,36 @@ mod_fachkraft_start_ui <- function(id){
               tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           )
-          # ,
-          #
-          # tabPanel(
-          #   "Übersicht Wirkhebel", br(),
-          #
-          #   shiny::sidebarPanel(
-          #     width = 3,
-          #
-          #     mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"), # TODO
-          #     # downloadButton(
-          #     #   outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
-          #     #   label = "Download",
-          #     #   icon = icon("download"))
-          #   ),
-          #   shiny::mainPanel(
-          #     width = 9,
-          #     shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
-          #                                  color = "#154194"),
-          #
-          #     p(style="font-size:12px;color:grey",
-          #       "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
-          #
-          #     shinyBS::bsPopover(id="h_fachkraft_prog_3", title="",
-          #                        content = paste0("POPUP INFO TEXT HERE"),
-          #                        placement = "top",
-          #                        trigger = "hover"),
-          #     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_3"),
-          #     p(),
-          #     p(),
-          #     tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
-          #   )
-          # )
+          ,
 
-        )
-      )
-    ),
+    tabPanel(
+            "Übersicht Wirkhebel", br(),
+
+            shiny::sidebarPanel(
+              width = 3,
+
+              mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"),
+              br(),# TODO
+              # br(),
+              # downloadButton(
+              #   outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
+              #   label = "Download",
+              #   icon = icon("download"))
+            ),
+            shiny::mainPanel(
+              width = 9,
+              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
+              color = "#154194"),
+            p(style="font-size:12px;color:grey",
+              "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+            p(),
+            tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+    )
+        )))),
+
+
+
+
 
       # Box 2 - Fachkräfte auf Berufsgruppen-Level ----
       fluidRow(
@@ -239,76 +237,68 @@ mod_fachkraft_start_ui <- function(id){
           column(width = 12,
                  br(),
           tabsetPanel(
+
             type = "tabs",
+
             tabPanel(
-              title = "Engpassrisiko im MINT-Bereich", br(),
+            title = "Engpassrisiko im MINT-Bereich", br(),
 
-              # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-              # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+            # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+            # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
-              shiny::sidebarPanel(
-                width = 3,
-                mod_fachkraft_item_epa_ui("fachkraft_item_epa_1"),
-                br()
-                # ,
-                # downloadButton(
-                #   outputId = ns("download_btn_plot_fachkraft_epa_item_1"),
-                #   label = "Download (links)",
-                #   icon = icon("download")),
-                # downloadButton(
-                #   outputId = ns("download_btn_plot_fachkraft_epa_item_2"),
-                #   label = "Download (rechts)",
-                #   icon = icon("download")),
-              ),
-              shiny::mainPanel(
-                width = 9,
-                shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_item_1")),
-                                             color = "#154194"),
-
-                p(style="font-size:12px;color:grey",
-                  "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                shinyBS::bsPopover(
-                  id="h_fachkraft-berufsgruppen_1", title="",
-                  content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
-                  placement = "top",
-                  trigger = "hover"),
-                tags$a(paste0("Hinweis zu den Daten"),
-                       icon("info-circle"),
-                       id = "h_fachkraft-berufsgruppen_1")
-              )
+            shiny::sidebarPanel(
+              width = 3,
+              mod_fachkraft_item_epa_ui("fachkraft_item_epa_1"),
+              br(),
+              # br(),
+              #
+              # downloadButton(
+              #   outputId = ns("download_btn_plot_fachkraft_epa_item_1"),
+              #   label = "Download (links)",
+              #   icon = icon("download")),
+              # downloadButton(
+              #   outputId = ns("download_btn_plot_fachkraft_epa_item_2"),
+              #   label = "Download (rechts)",
+              #   icon = icon("download")),
             ),
-            tabPanel(
-              "Verteilung MINT-Bereich nach Engpassrisiko", br(),
+            shiny::mainPanel(
+              width = 9,
+              htmlOutput(ns("plot_fachkraft_epa_item_1")),
+              p(style="font-size:12px;color:grey",
+                "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+              shinyBS::bsPopover(
+                id="h_fachkraft-berufsgruppen_1", title="",
+                content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+                placement = "top",
+                trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"),
+                     icon("info-circle"),
+                     id = "h_fachkraft-berufsgruppen_1")
+            )
+          ),
+          tabPanel(
+            "Verteilung MINT-Bereich nach Engpassrisiko", br(),
 
-              # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-              # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+            # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+            # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
-              shiny::sidebarPanel(
-                width = 3,
-                mod_fachkraft_item_mint_ui("fachkraft_item_mint_1")
+            shiny::sidebarPanel(
+              width = 3,
+              mod_fachkraft_item_mint_ui("fachkraft_item_mint_1")
 
-              ),
-              shiny::mainPanel(
-                width = 9,
-                shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_mint_item_1")),
-                                             color = "#154194"),
-                img(src='www/Legende_fachkraft_item.png',
-                    class = "img-responsive",
-                    #height = "150px", width = "150px",
-                    alt = "Legende",
-                    style="display: block; margin-left: auto; margin-right: auto;"
-                ),
-                br(),
-
-                p(style="font-size:12px;color:grey",
-                  "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",
-                                   content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
-                                   placement = "top",
-                                   trigger = "hover"),
-                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft-berufsgruppen_2")
-              )
             ),
+            shiny::mainPanel(
+              width = 9,
+              htmlOutput(ns("plot_fachkraft_mint_item_1")),
+              p(style="font-size:12px;color:grey",
+                "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+              shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",
+                                 content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+                                 placement = "top",
+                                 trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft-berufsgruppen_2")
+            )
+          ),
 
             tabPanel(
               "Arbeitslosen-Stellen-Relation und Vakanzzeit in MINT", br(),
@@ -319,6 +309,8 @@ mod_fachkraft_start_ui <- function(id){
               shiny::sidebarPanel(
                 width = 3,
                 mod_fachkraft_bar_vakanz_ui("fachkraft_bar_vakanz_1"),
+                br(),
+                # br(),
                 # downloadButton(
                 #   outputId = ns("download_btn_plot_fachkraft_bar_vakanz_1"),
                 #   label = "Download",
@@ -332,11 +324,11 @@ mod_fachkraft_start_ui <- function(id){
 
                 p(style="font-size:12px;color:grey",
                   "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                # shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_4", title="",
-                #                    content = paste0("POPUP INFO TEXT HERE"),
-                #                    placement = "top",
-                #                    trigger = "hover"),
-                # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_4")
+                shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_4", title="",
+                                   content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung der Vakanzzeit und der Arbeitslosen-Stellen-Relation finden Sie in der jeweiligen Infobox. Diese sind in der Beschreibung über der Grafik verlinkt."),
+                                   placement = "top",
+                                   trigger = "hover"),
+                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_4")
               )
             ),
           )
@@ -402,6 +394,8 @@ mod_fachkraft_start_ui <- function(id){
             shiny::sidebarPanel(
               width = 3,
               mod_fachkraft_item_detail_ui("fachkraft_item_detail_1"),
+              br(),
+              # br(),
               # downloadButton(
               #   outputId = ns("download_btn_plot_fachkraft_item_detail_1"),
               #   label = "Download",
@@ -415,11 +409,11 @@ mod_fachkraft_start_ui <- function(id){
               p(style="font-size:12px;color:grey",
                 "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
-              # shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
-              #                    content = paste0("POPUP INFO TEXT HERE"),
-              #                    placement = "top",
-              #                    trigger = "hover"),
-              # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_3")
+              shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
+                                 content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+                                 placement = "top",
+                                 trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_3")
             )
             )
         )
@@ -449,22 +443,98 @@ mod_fachkraft_start_server <- function(id, r){
 
   # Box 1 - Fachkraft-Prognose ----
 
+    #ohne download
+    output$plot_fachkraft_prog_item_1 <- renderUI({
+      plot_fachkraft_prognose(r)
+    })
+
+    # # Plot-List erstellen für Output
+    # output$plot_fachkraft_prog_item_1 <- renderUI({
+    #   plot_list <- plot_fachkraft_prognose(r)
+    #   r$plot_fachkraft_prog_item_1 <- plot_list
+    #
+    #   r$plot_fachkraft_prog_item_1_title <- get_plot_title(
+    #     plot = r$plot_fachkraft_prog_item_1
+    #   )
+    #
+    #   plot_list
+    # })
+    # # Download erstellen
+    # output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_fachkraft_prog_item_1_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_fachkraft_prog_item_1,
+    #       filename =  r$plot_fachkraft_prog_item_1_title,
+    #       width = 700,
+    #       height = 400)
+    #
+    #     file.copy(r$plot_fachkraft_prog_item_1_title, file)
+    #     file.remove(r$plot_fachkraft_prog_item_1_title)
+    #   }
+    # )
+
+    # ohne download
+    output$plot_fachkraft_prog_detail_item_1 <- renderUI({
+      plot_fachkraft_prognose_detail(r)
+      })
+
+    # output$plot_fachkraft_prog_detail_item_1 <- renderUI({
+    #
+    #   plot_list <- plot_fachkraft_prognose_detail(r)
+    #   r$plot_fachkraft_prog_detail_item_1 <- plot_list
+    #
+    #   r$plot_fachkraft_prog_detail_item_1_title <- get_plot_title(
+    #     plot = r$plot_fachkraft_prog_detail_item_1
+    #   )
+    #
+    #   plot_list
+    # })
+
+    # ohne Download
+    output$plot_fachkraft_wirkhebel_analyse_1 <- plotly::renderPlotly({
+      plot_fachkraft_wirkhebel_analyse(r)
+      })
+
+    # output$plot_fachkraft_wirkhebel_analyse_1 <- plotly::renderPlotly({
+    #
+    #   plot_list <- plot_fachkraft_wirkhebel_analyse(r)
+    #   r$plot_fachkraft_wirkhebel_analyse_1 <- plot_list
+    #
+    #   plot_list
+    # })
+
+
+
+    ## pdf ----
+    output$downloadPDF <- downloadHandler(
+      # filename = function() {
+      #   "MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf"
+      # },
+      content = function(file) {
+        file.copy("www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", file)
+      }
+    )
 
   # Box 2 - Fachkraft - Berufsgruppen-Ebene ----
 
     ## EPA nach MINT
 
+    # Download kurz mal raus
     output$plot_fachkraft_epa_item_1 <- renderUI({
-      plot_fachkraft_epa_item(r)
-      # plot_list <- plot_fachkraft_epa_item(r)
+      plot_list <- plot_fachkraft_epa_item(r)
 
-        # out <- highcharter::hw_grid(
-        #   plot_list,
-        #   ncol = 2)
-        # out
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
     })
 
-    # Download kurz mal raus
     # output$plot_fachkraft_epa_item_1 <- renderUI({
     #   plot_list <- plot_fachkraft_epa_item(r)
     #   r$plot_fachkraft_epa_item_1_left <- plot_list[[1]]
@@ -484,7 +554,7 @@ mod_fachkraft_start_server <- function(id, r){
     #   out
     #
     # })
-
+    #
     # output$download_btn_plot_fachkraft_epa_item_1 <- downloadHandler(
     #   contentType = "image/png",
     #   filename = function() {r$plot_fachkraft_epa_item_1_left_title},
@@ -527,12 +597,15 @@ mod_fachkraft_start_server <- function(id, r){
     })
 
     ## Bar Vakanz
+
+
+    # Download für JT kurz raus
+
     output$plot_fachkraft_bar_vakanz_1 <- renderUI({
       plot_fachkraft_bar_vakanz(r)
     })
 
-    # Download für JT kurz raus
-    # output$plot_fachkraft_bar_vakanz_1 <- renderUI({
+    #  output$plot_fachkraft_bar_vakanz_1 <- renderUI({
     #   plot_list <- plot_fachkraft_bar_vakanz(r)
     #   r$plot_fachkraft_bar_vakanz_1 <- plot_list
     #
@@ -564,14 +637,17 @@ mod_fachkraft_start_server <- function(id, r){
     # Box 3 - Fachkräfte auf Berufsebene ----
 
     ## Detail Berufe
-    output$plot_fachkraft_detail_item_1 <- renderUI({
-      plot_list <- plot_fachkraft_detail_item(r)
-      highcharter::hw_grid(
-            plot_list,
-            ncol = 2)
-    })
+
 
     #Download kurz raus für JT
+    output$plot_fachkraft_detail_item_1 <- renderUI({
+      plot_list <- plot_fachkraft_detail_item(r)
+
+      highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+    })
+
     # output$plot_fachkraft_detail_item_1 <- renderUI({
     #   plot_list <- plot_fachkraft_detail_item(r)
     #   r$plot_fachkraft_detail_item_1_left <- plot_list[[1]]
@@ -606,78 +682,6 @@ mod_fachkraft_start_server <- function(id, r){
     #   }
     # )
 
-
-    output$plot_fachkraft_prog_item_1 <- renderUI({
-      plot_fachkraft_prognose(r)
-    })
-    # vorläufig Download raus
-    # output$plot_fachkraft_prog_item_1 <- renderUI({
-    #   plot_list <- plot_fachkraft_prognose(r)
-    #   r$plot_fachkraft_prog_item_1 <- plot_list
-    #
-    #   r$plot_fachkraft_prog_item_1_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_prog_item_1
-    #   )
-    #
-    #   plot_list
-    # })
-
-    # output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_prog_item_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_prog_item_1,
-    #       filename =  r$plot_fachkraft_prog_item_1_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_fachkraft_prog_item_1_title, file)
-    #     file.remove(r$plot_fachkraft_prog_item_1_title)
-    #   }
-    # )
-
-    output$plot_fachkraft_prog_detail_item_1 <- renderUI({
-
-      plot_list <- plot_fachkraft_prognose_detail(r)
-      r$plot_fachkraft_prog_detail_item_1 <- plot_list
-
-      r$plot_fachkraft_prog_detail_item_1_title <- get_plot_title(
-        plot = r$plot_fachkraft_prog_detail_item_1
-      )
-
-      plot_list
-    })
-
-    output$plot_fachkraft_wirkhebel_analyse_1 <- renderUI({
-
-      plot_fachkraft_wirkhebel_analyse(r)
-    })
-
-    # Download vorerst raus
-    # output$plot_fachkraft_wirkhebel_analyse_1 <- renderUI({
-    #
-    #   plot_list <- plot_fachkraft_wirkhebel_analyse(r)
-    #   r$plot_fachkraft_wirkhebel_analyse_1 <- plot_list
-    #
-    #   r$plot_fachkraft_wirkhebel_analyse_1_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_wirkhebel_analyse_1
-    #   )
-    #
-    #   plot_list
-    # })
-
-  # pdf ----
-    output$downloadPDF <- downloadHandler(
-      # filename = function() {
-      #   "MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf"
-      # },
-      content = function(file) {
-        file.copy("www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", file)
-      }
-    )
 
 
 

@@ -42,15 +42,16 @@ mod_fachkraft_item_prog_detail_ui <- function(id){
 
     # TODO extract into own module, since this is repeated on a lot of modules
 
-    shinyBS::bsPopover(id="dh_fachkraft_prog_detail", title = "",
-                       content = paste0("TODO."),
-                       placement = "top",
-                       trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_fachkraft_prog_detail"),
-    br(),
-    br(),
+    # shinyBS::bsPopover(id="dh_fachkraft_prog_detail", title = "",
+    #                    content = paste0("TODO."),
+    #                    placement = "top",
+    #                    trigger = "hover"),
+    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_fachkraft_prog_detail"),
+    # br(),
+    # br(),
     shinyBS::bsPopover(id="ih_fachkraft_prog_detail", title="",
-                       content = paste0("TODO."),
+                       content = paste0(
+                       "Die erste Einstellung zeigt den komibierten Effekt aus Förderung von MINT Bildung, besonderer Förderung von Frauen in MINT und der Einbeziehung älterer und ausländischer Fachkräfte auf dei Anzahl der MINT-Fachkräfte in Deutschland. Es wird ersichtlich, dass bei einem Greifen dieser Effekte die Zahl an MINT-Fachkräften durch eine Zunahme an ausländischen Fachkräften - auf ca. 1, 85 Million - deutlich gesteigert werden kann, während die Zahl der deutscehn Fachkräfte geringeres Wachstum aufweist."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_prog_detail")

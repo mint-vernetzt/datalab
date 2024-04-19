@@ -76,20 +76,12 @@ mod_fachkraft_item_detail_ui <- function(id){
 
     br(),
 
-    # TODO extract into own module, since this is repeated on a lot of modules
 
-    # shinyBS::bsPopover(id="dh_fachkraft_epa", title = "",
-    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_fachkraft_epa"),
-    # br(),
-    # br(),
-    # shinyBS::bsPopover(id="ih_fachkraft_epa", title="",
-    #                    content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_epa")
+    shinyBS::bsPopover(id="ih_fachkraft_epa", title="",
+                       content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_epa")
 
 
   )
@@ -117,19 +109,24 @@ mod_fachkraft_item_detail_server <- function(id, r){
     observeEvent(input$map_bl_fachkraft_arbeit_detail, {
 
       level <- selected_level()
+      zeitpunkt <- selected_zeitpunkt()
       shinyWidgets::updatePickerInput(
         session,
         inputId = "map_b_fachkraft_arbeit_detail",
         # choices = ifelse(level == "Fachkräfte", fachkraft_ui_berufe(level = "Fachkräfte"),
         #                  ifelse(level == "Spezialist*innen", fachkraft_ui_berufe(level = "Spezialist*innen"),
         #                         fachkraft_ui_berufe(level = "Expert*innen"))),
-        choices = fachkraft_ui_berufe(level),
+        choices = fachkraft_ui_berufe(level, zeitpunkt),
         selected = "Gesamt"
       )
     })
 
     selected_level <- reactive({
       input$map_bl_fachkraft_arbeit_detail
+    })
+
+    selected_zeitpunkt <- reactive({
+      input$map_y_fachkraft_arbeit_detail
     })
 
 

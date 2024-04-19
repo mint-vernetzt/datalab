@@ -553,7 +553,7 @@ fachkraft_ui_berufslevel <- function() {
   return(selection)
 }
 
-fachkraft_ui_berufe <- function(level = "Fachkräfte") {
+fachkraft_ui_berufe <- function(level = "Fachkräfte", zeitpunkt = 2023) {
 
 
   selection <- NULL
@@ -561,6 +561,7 @@ fachkraft_ui_berufe <- function(level = "Fachkräfte") {
   selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
     dplyr::filter(indikator == "Engpassindikator" &
                     anforderung == level &
+                    jahr == zeitpunkt &
                     !is.na(wert)) %>%
     dplyr::pull(beruf) %>%
     unique()
