@@ -51,7 +51,7 @@ mod_fachkraft_item_prog_detail_ui <- function(id){
     # br(),
     shinyBS::bsPopover(id="ih_fachkraft_prog_detail", title="",
                        content = paste0(
-                       "Die erste Einstellung zeigt den komibierten Effekt aus Förderung von MINT Bildung, besonderer Förderung von Frauen in MINT und der Einbeziehung älterer und ausländischer Fachkräfte auf dei Anzahl der MINT-Fachkräfte in Deutschland. Es wird ersichtlich, dass bei einem Greifen dieser Effekte die Zahl an MINT-Fachkräften durch eine Zunahme an ausländischen Fachkräften - auf ca. 1, 85 Million - deutlich gesteigert werden kann, während die Zahl der deutscehn Fachkräfte geringeres Wachstum aufweist."),
+                       "Die erste Einstellung zeigt den komibierten Effekt aus Förderung von MINT Bildung, besonderer Förderung von Frauen in MINT und der Einbeziehung älterer und ausländischer Fachkräfte auf die Anzahl der MINT-Fachkräfte in Deutschland. Es wird ersichtlich, dass bei einem Greifen dieser Effekte die Zahl an MINT-Fachkräften durch eine Zunahme an ausländischen Fachkräften - auf ca. 1, 85 Million - deutlich gesteigert werden kann, während die Zahl der Fachkräfte mit deutscher Staatsnagehörigkeit geringeres Wachstum aufweist."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_prog_detail")
