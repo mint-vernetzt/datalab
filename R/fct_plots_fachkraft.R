@@ -863,6 +863,18 @@ plot_fachkraft_detail_item  <- function(r) {
   # divide by three (the maximum) to get percentage change values for the gauge plot
   col_stops$q <- col_stops$q / 3
 
+  # titel
+ beruf <- this_beruf
+  if(this_beruf %in% c("Bau- und Gebäudetechnik", "Gesundheitstechnik",
+                  "Informatik", "Landtechnik", "Mathematik, Naturwissenschaften",
+                  "Nicht MINT", "Produktionstechnik", "Verkehr-, Sicherheits- und Veranstaltungstechnik",
+                  "MINT")){
+    beruf <- paste0("Berufe in ", beruf)
+  }
+ if(this_beruf == "Gesamt"){
+   beruf <- paste0("alle Berufe")
+ }
+
   plot_left <- highcharter::highchart() %>%
     highcharter::hc_chart(type = "solidgauge") %>%
     highcharter::hc_pane(
@@ -908,7 +920,7 @@ plot_fachkraft_detail_item  <- function(r) {
       )
     ) %>%
     highcharter::hc_title(
-      text = paste0("Engpassindikator für den Beruf ", this_beruf,
+      text = paste0("Engpassindikator für ", beruf,
                     " auf dem ", bf_label, "-Level (", timerange, ")"),
       margin = 10,
       align = "center",
