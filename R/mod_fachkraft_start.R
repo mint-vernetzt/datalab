@@ -263,7 +263,9 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              htmlOutput(ns("plot_fachkraft_epa_item_1")),
+              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_item_1")),
+                                           color = "#154194"),
+
               p(style="font-size:12px;color:grey",
                 "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
               shinyBS::bsPopover(
@@ -289,7 +291,9 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              htmlOutput(ns("plot_fachkraft_mint_item_1")),
+              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_mint_item_1")),
+                                           color = "#154194"),
+
               p(style="font-size:12px;color:grey",
                 "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
               shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",

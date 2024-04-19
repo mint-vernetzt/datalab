@@ -19,6 +19,12 @@ mod_fachkraft_wirkhebel_analyse_ui <- function(id){
     ),
 
     br(),
+    shinyBS::bsPopover(id="dh_wirkhebel", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_wirkhebel"),
+    br(),
+    br(),
 
     # TODO extract into own module, since this is repeated on a lot of modules
     shinyBS::bsPopover(id="ih_fachkraft_item_wirkhebel_analyse", title="",
