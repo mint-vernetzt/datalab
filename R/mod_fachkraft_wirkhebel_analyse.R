@@ -28,7 +28,7 @@ mod_fachkraft_wirkhebel_analyse_ui <- function(id){
 
     # TODO extract into own module, since this is repeated on a lot of modules
     shinyBS::bsPopover(id="ih_fachkraft_item_wirkhebel_analyse", title="",
-                       content = paste0("Die Grafikt zeigt zu oberst den möglcihen Gesamteffekt aller Hebel pro Jahr. Darunter werden die Einzeleffekte aller Hebel dargestellt. Dabei ist zu beachten, dass der Effekt von Förderung von Frauen mit dem Effekt für MINT-Bildung verbunden ist und zum Hebel Förderueng Frauen u. Bildung in MINT zusammen dargestellt wird"),
+                       content = paste0("Die Grafikt zeigt zuoberst den möglichen Gesamteffekt aller Hebel pro Jahr. Darunter werden die Einzeleffekte aller Hebel dargestellt. Dabei ist zu beachten, dass der Effekt von Förderung von Frauen mit dem Effekt für MINT-Bildung verbunden ist und zum Hebel Förderueng Frauen u. Bildung in MINT zusammen dargestellt wird"),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_item_wirkhebel_analyse")
