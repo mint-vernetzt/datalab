@@ -1916,8 +1916,7 @@ arbeitsmarkt_überblick_fächer <- function( r) {
       colors = ifelse(df$fachbereich %in% c("Alle Berufsfelder außer MINT (gesamt)","MINT-Berufsfelder (gesamt)"), "#b16fab", "#d0a9cd")
     )) %>%
     highcharter::hc_title(text = paste0( "Überblick über die Berufsfelder von ", title_help,
-                                         br(), "in ",state, " (", timerange, ")",
-                                         "<br><br><br>"),
+                                         br(), "in ",state, " (", timerange, ")"),
                           margin = 20,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2974,12 +2973,9 @@ arbeitsmarkt_lk_detail_map <- function(r) {
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-  highcharter::hw_grid(
-    map1,
-    map2,
-    ncol = 2,
-    browsable = TRUE
-  )
+  out <- list(map1, map2)
+
+  return(out)
 }
 #' A function to plot a bar chart
 #'

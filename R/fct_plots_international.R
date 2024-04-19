@@ -523,7 +523,7 @@ plot_international_map_fem <- function(r){
   }
 
 
-  highcharter::hw_grid(
+
     # plot
     highcharter::hcmap(
       #"countries/de/de-all",
@@ -541,8 +541,7 @@ plot_international_map_fem <- function(r){
       )
       #,
       #download_map_data = FALSE
-    )
-    %>%
+    )%>%
       highcharter::hc_tooltip(pointFormat = hoverplot) %>%
       highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#154194",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
@@ -560,7 +559,7 @@ plot_international_map_fem <- function(r){
       highcharter::hc_credits(enabled = FALSE) %>%
       highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                              verticalAlign = "bottom")
-  )
+
 
 
 
@@ -703,11 +702,10 @@ plot_international_top10 <- function(r) {
       add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE), type = "MINT")
   }
 
-  highcharter::hw_grid(
-    plot_top,
-    plot_bottom,
-    ncol = 2)
 
+out <- list(plot_top, plot_bottom)
+
+return(out)
 
 
 }
@@ -914,10 +912,9 @@ plot_international_top10_gender <- function(r) {
       add_avg_to_hc(hc_mean = mean(df$wert, na.rm = TRUE), type = "Frauen")
   }
 
-  highcharter::hw_grid(
-    plot_top,
-    plot_bottom,
-    ncol = 2)
+  out <- list(plot_top, plot_bottom)
+
+  return(out)
 
 
 
@@ -1045,10 +1042,6 @@ if (avg_line == "Ja"){
 
 
 
-    highcharter::hw_grid(
-      plot_top,
-      plot_bottom,
-      ncol = 2)
 
 } else if (avg_line == "Nein"){
 
@@ -1110,15 +1103,14 @@ if (avg_line == "Ja"){
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
 
 
-  highcharter::hw_grid(
-    plot_top,
-    plot_bottom,
-    ncol = 2)
+
 
 
 }
 
+ out <- list(plot_top, plot_bottom)
 
+ return(out)
 
 }
 
@@ -1675,7 +1667,7 @@ plot_international_map_arb <- function(r) {
     title_eu <- paste0(inpp, "n", " in MINT-Fächern an allen ", inpp, "n ",inpy )
 
 
-    highcharter::hw_grid(
+
       # plot
       highcharter::hcmap(
         #"countries/de/de-all",
@@ -1693,8 +1685,7 @@ plot_international_map_arb <- function(r) {
         )
         ,
         download_map_data = T
-      )
-      %>%
+      )%>%
         highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
         highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
         highcharter::hc_title(
@@ -1712,7 +1703,7 @@ plot_international_map_arb <- function(r) {
         highcharter::hc_credits(enabled = FALSE) %>%
         highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                verticalAlign = "bottom")
-    )
+
   }
 
 
@@ -1804,7 +1795,7 @@ plot_international_map_arb <- function(r) {
 
 
 
-      highcharter::hw_grid(
+
         # plot
         highcharter::hcmap(
           #"countries/de/de-all",
@@ -1822,8 +1813,7 @@ plot_international_map_arb <- function(r) {
           )
           ,
           download_map_data = T
-        )
-        %>%
+        )%>%
           highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}%") %>%
           highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
           highcharter::hc_title(
@@ -1841,7 +1831,7 @@ plot_international_map_arb <- function(r) {
           highcharter::hc_credits(enabled = FALSE) %>%
           highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                  verticalAlign = "bottom")
-      )
+
 
 
     }
@@ -1943,7 +1933,7 @@ plot_international_map_arb <- function(r) {
 
 
 
-      highcharter::hw_grid(
+
         # plot
         highcharter::hcmap(
           #"countries/de/de-all",
@@ -1961,8 +1951,7 @@ plot_international_map_arb <- function(r) {
           )
           ,
           download_map_data = T
-        )
-        %>%
+        ) %>%
           highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
           highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
           highcharter::hc_title(
@@ -1980,7 +1969,7 @@ plot_international_map_arb <- function(r) {
           highcharter::hc_credits(enabled = FALSE) %>%
           highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                  verticalAlign = "bottom")
-      )
+
 
 
       }
@@ -2052,7 +2041,7 @@ plot_international_map_arb_gender <- function(r) {
     # Tielt vorbereiten
     title_eu <- paste0(inpp, "n", " in allen MINT-Fächern ", inpy )
 
-    highcharter::hw_grid(
+
       # plot
       highcharter::hcmap(
         #"countries/de/de-all",
@@ -2070,8 +2059,7 @@ plot_international_map_arb_gender <- function(r) {
         )
         ,
         download_map_data = T
-      )
-      %>%
+      )%>%
         highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
         highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
         highcharter::hc_title(
@@ -2089,7 +2077,7 @@ plot_international_map_arb_gender <- function(r) {
         highcharter::hc_credits(enabled = FALSE) %>%
         highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                verticalAlign = "bottom")
-    )
+
 
 
   }
@@ -2199,7 +2187,7 @@ plot_international_map_arb_gender <- function(r) {
       }
 
 
-      highcharter::hw_grid(
+
         # plot
         highcharter::hcmap(
           #"countries/de/de-all",
@@ -2217,8 +2205,7 @@ plot_international_map_arb_gender <- function(r) {
           )
           ,
           download_map_data = T
-        )
-        %>%
+        ) %>%
           highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}%") %>%
           highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
           highcharter::hc_title(
@@ -2236,7 +2223,7 @@ plot_international_map_arb_gender <- function(r) {
           highcharter::hc_credits(enabled = FALSE) %>%
           highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                  verticalAlign = "bottom")
-      )
+
 
 
     } # Falls indikator aus arbeitsmarkt_anzahl_azubis_oecd gewählt wird
@@ -2388,7 +2375,7 @@ plot_international_map_arb_gender <- function(r) {
 
       }
 
-      highcharter::hw_grid(
+
         # plot
         highcharter::hcmap(
           #"countries/de/de-all",
@@ -2406,8 +2393,7 @@ plot_international_map_arb_gender <- function(r) {
           )
           ,
           download_map_data = T
-        )
-        %>%
+        )%>%
           highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
           highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
           highcharter::hc_title(
@@ -2425,7 +2411,7 @@ plot_international_map_arb_gender <- function(r) {
           highcharter::hc_credits(enabled = FALSE) %>%
           highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                                  verticalAlign = "bottom")
-      )
+
 
     }
 
@@ -2826,10 +2812,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
 
 
-      highcharter::hw_grid(
-        plot_top,
-        plot_bottom,
-        ncol = 2)
+     out <- list(plot_top, plot_bo)
 
     } else if (avg_line == "Nein"){
 

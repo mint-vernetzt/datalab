@@ -97,6 +97,7 @@ mod_international_start_ui <- function(id){
                p(),
                p(),
                tabsetPanel(type = "tabs",
+        # tab 1
                            tabPanel("MINT-Kompetenz im Ländervergleich", br(),
 
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -106,7 +107,12 @@ mod_international_start_ui <- function(id){
                                       width = 3,
                                       #p("LOREM"),
                                       #mod_international_map_ui("mod_international_map_ui_1")
-                                      mod_international_schule_map_ui("international_schule_map_1")
+                                      mod_international_schule_map_ui("international_schule_map_1"),
+                                      br(),br(),
+                                      downloadButton(
+                                        outputId = ns("download_btn_plot_international_schule_map_1"),
+                                        label = "Download",
+                                        icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -123,6 +129,7 @@ mod_international_start_ui <- function(id){
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_1")
                                     )
                            ),
+        # tab 2
 
                            tabPanel("MINT-Kompetenz von Jungen und Mädchen", br(),
 
@@ -134,9 +141,12 @@ mod_international_start_ui <- function(id){
                                       width = 3,
                                       #p("LOREM"),
 
-                                      mod_international_schule_item_ui("international_schule_item_1")
-
-
+                                      mod_international_schule_item_ui("international_schule_item_1"),
+                                      br(),br(),
+                                      downloadButton(
+                                        outputId = ns("download_btn_plot_international_schule_item_1"),
+                                        label = "Download",
+                                        icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -154,6 +164,7 @@ mod_international_start_ui <- function(id){
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_2")
                                     )
                            ),
+        # tab 3
 
                            tabPanel("MINT-Kompetenz im Gruppenvergleich", br(),
 
@@ -163,8 +174,12 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
-                                      mod_international_schule_migration_ui("international_schule_migration_1")
-
+                                      mod_international_schule_migration_ui("international_schule_migration_1"),
+                                      br(),br(),
+                                      downloadButton(
+                                        outputId = ns("download_btn_plot_international_schule_migration_1"),
+                                        label = "Download",
+                                        icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -198,6 +213,8 @@ mod_international_start_ui <- function(id){
                  Zum einen zeigen wir, wie groß der Anteil von MINT-Studierenden an allen Studierenden in verschiedenen Ländern ist. Außerdem ist zu sehen,
                  in welchen Ländern der Frauenanteil oder der Anteil an internationalen Studierenden in MINT-Studiengängen besonders groß oder klein ist."),
                tabsetPanel(type = "tabs",
+
+      # tab 1
                            tabPanel("Vergleich MINT-Anteil (Karte)", br(),
 
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -206,8 +223,12 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
-                                      mod_international_map_ui("mod_international_map_ui_1")
-
+                                      mod_international_map_ui("mod_international_map_ui_1"),
+                                      br(),br(),
+                                      downloadButton(
+                                        outputId = ns("download_btn_plot_international_studienzahl_map_1"),
+                                        label = "Download",
+                                        icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -224,7 +245,7 @@ mod_international_start_ui <- function(id){
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_1") )
                            ),
-
+# tab 2
                            tabPanel("Vergleich Frauen in MINT (Karte)", br(),
 
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -233,8 +254,12 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
-                                      mod_international_map_fem_ui("international_map_fem_ui_1")
-
+                                      mod_international_map_fem_ui("international_map_fem_ui_1"),
+                                      br(),br(),
+                                      downloadButton(
+                                        outputId = ns("download_btn_plot_international_map_fem_1"),
+                                        label = "Download",
+                                        icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -251,6 +276,7 @@ mod_international_start_ui <- function(id){
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_2") )
 
                            ),
+# tab 3
 
                            tabPanel("Top 10 MINT-Länder", br(),
 
@@ -260,8 +286,17 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
-                                      mod_international_top10_mint_ui("international_top10_mint_1")
-
+                                      mod_international_top10_mint_ui("international_top10_mint_1"),
+                                      br(),br()
+                                      ,
+                                      downloadButton(
+                                        outputId = ns("download_btn_plot_international_top10_mint_1_1"),
+                                        label = "Download (links)",
+                                        icon = icon("download")),
+                                      downloadButton(
+                                        outputId = ns("download_btn_plot_international_top10_mint_1_2"),
+                                        label = "Download (rechts)",
+                                        icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -280,6 +315,7 @@ mod_international_start_ui <- function(id){
 
                                     )
                            ),
+# tab 4
 
                            tabPanel("Top 10 Länder Frauen in MINT", br(),
 
@@ -289,8 +325,17 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
-                                      mod_international_top10_mint_gender_ui("international_top10_mint_gender_1")
-
+                                      mod_international_top10_mint_gender_ui("international_top10_mint_gender_1"),
+                                      br(),br()
+                                      ,
+                                      downloadButton(
+                                        outputId = ns("download_btn_plot_international_top10_mint_gender_1_1"),
+                                        label = "Download (links)",
+                                        icon = icon("download")),
+                                      downloadButton(
+                                        outputId = ns("download_btn_plot_international_top10_mint_gender_1_2"),
+                                        label = "Download (rechts)",
+                                        icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -307,6 +352,7 @@ mod_international_start_ui <- function(id){
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_4") )
                            ),
+# tab 5
                            tabPanel("Vergleich internationale Studierende", br(),
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                     # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -314,8 +360,18 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
-                                      mod_international_top10_mint_intl_ui("mod_international_top10_mint_intl_ui_1")),
-
+                                      mod_international_top10_mint_intl_ui("mod_international_top10_mint_intl_ui_1"),
+                                    br(),br()
+                                    ,
+                                    downloadButton(
+                                      outputId = ns("download_btn_plot_international_mint_top_10_1_1"),
+                                      label = "Download (links)",
+                                      icon = icon("download")),
+                                    downloadButton(
+                                      outputId = ns("download_btn_plot_international_mint_top_10_1_2"),
+                                      label = "Download (rechts)",
+                                      icon = icon("download"))
+                                    ),
 
                                     shiny::mainPanel(
                                       width = 9,
@@ -351,6 +407,7 @@ mod_international_start_ui <- function(id){
                  im Ländervergleich."),
 
                tabsetPanel(type = "tabs",
+      # tab 1
                            tabPanel("Vergleich MINT-Anteil (Karte)", br(),
 
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -359,8 +416,12 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
-                                      mod_international_map_arb_ui("mod_international_map_arb_ui_1")
-
+                                      mod_international_map_arb_ui("mod_international_map_arb_ui_1"),
+                                      br(),br(),
+                                      downloadButton(
+                                        outputId = ns("download_btn_plot_international_studienzahl_map_arb_1"),
+                                        label = "Download",
+                                        icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -376,6 +437,7 @@ mod_international_start_ui <- function(id){
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_1")
                                     )
                            ),
+                  # tab 2
                            tabPanel("Vergleich Frauen in MINT (Karte)", br(),
 
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -384,7 +446,12 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
-                                      mod_international_map_arb_gender_ui("mod_international_map_arb_gender_ui_1")
+                                      mod_international_map_arb_gender_ui("mod_international_map_arb_gender_ui_1"),
+                                      br(),br(),
+                                      downloadButton(
+                                        outputId = ns("download_btn_plot_international_map_arb_gender_1"),
+                                        label = "Download",
+                                        icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -399,7 +466,10 @@ mod_international_start_ui <- function(id){
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_2")
                                     )
-                           ),tabPanel("Top 10 MINT-Länder", br(),
+
+                       ),
+      # Tab 3
+      tabPanel("Top 10 MINT-Länder", br(),
 
                                       #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                       # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -407,7 +477,17 @@ mod_international_start_ui <- function(id){
                                       shiny::sidebarPanel(
                                         width = 3,
                                         #p("LOREM"),
-                                        mod_international_top10_mint_arb_ui("mod_international_top10_mint_arb_ui_1")
+                                        mod_international_top10_mint_arb_ui("mod_international_top10_mint_arb_ui_1"),
+                                        br(),br()
+                                        ,
+                                        downloadButton(
+                                          outputId = ns("download_btn_plot_international_top10_mint_arb_1_1"),
+                                          label = "Download (links)",
+                                          icon = icon("download")),
+                                        downloadButton(
+                                          outputId = ns("download_btn_plot_international_top10_mint_arb_1_2"),
+                                          label = "Download (rechts)",
+                                          icon = icon("download")),
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
@@ -537,57 +617,520 @@ mod_international_start_server <- function(id, r){
 
 
     # Box 1 - Schule international ----
+
+    # tab 1
+    # output$plot_international_schule_map_1 <- renderUI({
+    #   plot_international_schule_map(r)
+    # })
+
     output$plot_international_schule_map_1 <- renderUI({
-      plot_international_schule_map(r)
+      plot_list <- plot_international_schule_map(r)
+      r$plot_international_schule_map_1 <- plot_list
+
+      r$plot_international_schule_map_1_title <- get_plot_title(
+        plot = r$plot_international_schule_map_1
+      )
+
+      plot_list
     })
+
+    output$download_btn_plot_international_schule_map_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_schule_map_1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_international_schule_map_1,
+          filename =  r$plot_international_schule_map_1_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_international_schule_map_1_title, file)
+        file.remove(r$plot_international_schule_map_1_title)
+      }
+    )
+
+    # tab 2
+    # output$plot_international_schule_item_1 <- renderUI({
+    #   plot_international_schule_item(r)
+    # })
 
     output$plot_international_schule_item_1 <- renderUI({
-      plot_international_schule_item(r)
+      plot_list <- plot_international_schule_map(r)
+      r$plot_international_schule_item_1 <- plot_list
+
+      r$plot_international_schule_item_1_title <- get_plot_title(
+        plot = r$plot_international_schule_item_1
+      )
+
+      plot_list
     })
 
+    output$download_btn_plot_international_schule_item_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_schule_item_1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_international_schule_item_1,
+          filename =  r$plot_international_schule_item_1_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_international_schule_item_1_title, file)
+        file.remove(r$plot_international_schule_item_1_title)
+      }
+    )
+
+    # tab 3
+
+    # output$plot_international_schule_migration_1 <- renderUI({
+    #   plot_international_schule_migration(r)
+    # })
+
     output$plot_international_schule_migration_1 <- renderUI({
-      plot_international_schule_migration(r)
+      plot_list <- plot_international_schule_migration(r)
+      r$plot_international_schule_migration_1 <- plot_list
+
+      r$plot_international_schule_migration_1_title <- get_plot_title(
+        plot = r$plot_international_schule_migration_1
+      )
+
+      plot_list
     })
+
+    output$download_btn_plot_international_schule_migration_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_schule_migration_1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_international_schule_migration_1,
+          filename =  r$plot_international_schule_migration_1_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_international_schule_migration_1_title, file)
+        file.remove(r$plot_international_schule_migration_1_title)
+      }
+    )
+
+
 
 
     # Box 2 - Studium international ----
+    # tab 1
+    # output$plot_international_studienzahl_map_1 <- renderUI({
+    #   plot_international_map(r)
+    # })
+
     output$plot_international_studienzahl_map_1 <- renderUI({
-      plot_international_map(r)
+      plot_list <- plot_international_map(r)
+      r$plot_international_studienzahl_map_1 <- plot_list
+
+      r$plot_international_studienzahl_map_1_title <- get_plot_title(
+        plot = r$plot_international_studienzahl_map_1
+      )
+
+      plot_list
     })
 
-    output$plot_international_top10_mint_1 <- renderUI({
-      plot_international_top10(r)
-    })
+    output$download_btn_plot_international_studienzahl_map_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_studienzahl_map_1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
 
-    output$plot_international_top10_mint_gender_1 <- renderUI({
-      plot_international_top10_gender(r)
-    })
+        add_caption_and_download(
+          hc = r$plot_international_studienzahl_map_1,
+          filename =  r$plot_international_studienzahl_map_1_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_international_studienzahl_map_1_title, file)
+        file.remove(r$plot_international_studienzahl_map_1_title)
+      }
+    )
+
+
+
+    # tab 2
+
+    # output$plot_international_top10_mint_1 <- renderUI({
+    #   plot_international_top10(r)
+    #
+    # })
 
     output$plot_international_map_fem_1 <- renderUI({
       plot_international_map_fem(r)
     })
 
-    output$plot_international_mint_top_10_1 <- renderUI({
-      plot_international_mint_top_10(r)
+    output$plot_international_map_fem_1 <- renderUI({
+      plot_list <- plot_international_map_fem(r)
+      r$plot_international_map_fem_1 <- plot_list
+
+      r$plot_international_map_fem_1_title <- get_plot_title(
+        plot = r$plot_international_map_fem_1
+      )
+
+      plot_list
     })
+
+    output$download_btn_plot_international_map_fem_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_map_fem_1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_international_map_fem_1,
+          filename =  r$plot_international_map_fem_1_title,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_international_map_fem_1_title, file)
+        file.remove(r$plot_international_map_fem_1_title)
+      }
+    )
+
+
+
+    # tab 3
+
+
+
+
+
+    output$plot_international_top10_mint_1 <- renderUI({
+      plot_list <- plot_international_top10(r)
+      r$plot_international_top10_mint_1_left <- plot_list[[1]]
+      r$plot_international_top10_mint_1_right <- plot_list[[2]]
+
+      r$plot_international_top10_min_1_left_title <- get_plot_title(
+        plot = r$plot_international_top10_mint_1_left
+      )
+      r$plot_international_top10_mint_1_right_title <- get_plot_title(
+        plot = r$plot_international_top10_mint_1_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
+    })
+
+    output$download_btn_plot_international_top10_mint_1_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_top10_mint_1_left_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_international_top10_mint_1_left,
+          filename =  r$plot_international_top10_mint_1_left_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_international_top10_mint_1_left_title, file)
+        file.remove(r$plot_international_top10_mint_1_left_title)
+      }
+    )
+
+    output$download_btn_plot_international_top10_mint_1_2 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_top10_mint_1_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+        add_caption_and_download(
+          hc = r$plot_international_top10_mint_1_right,
+          filename =  r$plot_international_top10_mint_1_right_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_international_top10_mint_1_right_title, file)
+        file.remove(r$plot_international_top10_mint_1_right_title)
+      }
+    )
+
+
+
+    # tab 4
+
+    # output$plot_international_top10_mint_gender_1 <- renderUI({
+    #   plot_international_top10_gender(r)
+    # })
+    output$plot_international_top10_mint_gender_1  <- renderUI({
+      plot_list <- plot_international_top10_gender(r)
+      r$plot_international_top10_mint_gender_1_left <- plot_list[[1]]
+      r$plot_international_top10_mint_gender_1_right <- plot_list[[2]]
+
+      r$plot_international_top10_mint_gender_1_left_title <- get_plot_title(
+        plot = r$plot_international_top10_mint_gender_1_left
+      )
+      r$plot_international_top10_mint_gender_1_right_title <- get_plot_title(
+        plot = r$plot_international_top10_mint_gender_1_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
+    })
+
+    output$download_btn_plot_international_top10_mint_gender_1_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_top10_mint_gender_1_left_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_international_top10_mint_gender_1_left,
+          filename =  r$plot_international_top10_mint_gender_1_left_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_international_top10_mint_gender_1_left_title, file)
+        file.remove(r$plot_international_top10_mint_gender_1_left_title)
+      }
+    )
+
+    output$download_btn_plot_international_top10_mint_gender_1_2 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_top10_mint_gender_1_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+        add_caption_and_download(
+          hc = r$plot_international_top10_mint_gender_1_right,
+          filename =  r$plot_international_top10_mint_gender_1_right_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_international_top10_mint_gender_1_right_title, file)
+        file.remove(r$plot_international_top10_mint_gender_1_right_title)
+      }
+    )
+
+
+
+
+    # tab 5
+
+    # output$plot_international_mint_top_10_1 <- renderUI({
+    #   plot_international_mint_top_10(r)
+    # })
+
+    output$plot_international_mint_top_10_1  <- renderUI({
+      plot_list <- plot_international_mint_top_10(r)
+      r$plot_international_mint_top_10_1_left <- plot_list[[1]]
+      r$plot_international_mint_top_10_1_right <- plot_list[[2]]
+
+      r$plot_international_mint_top_10_1_left_title <- get_plot_title(
+        plot = r$plot_international_mint_top_10_1_left
+      )
+      r$plot_international_mint_top_10_1_right_title <- get_plot_title(
+        plot = r$plot_international_mint_top_10_1_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
+    })
+
+    output$download_btn_plot_international_mint_top_10_1_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_mint_top_10_1_left_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_international_mint_top_10_1_left,
+          filename =  r$plot_international_mint_top_10_1_left_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_international_mint_top_10_1_left_title, file)
+        file.remove(r$plot_international_mint_top_10_1_left_title)
+      }
+    )
+
+    output$download_btn_plot_international_mint_top_10_1_2 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_mint_top_10_1_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+        add_caption_and_download(
+          hc = r$plot_international_mint_top_10_1_right,
+          filename =  r$plot_international_mint_top_10_1_right_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_international_mint_top_10_1_right_title, file)
+        file.remove(r$plot_international_mint_top_10_1_right_title)
+      }
+    )
+
+
 
 
     # Box 3 - Arbeitsmarkt internatnional ----
+
+    # Tab 1
+    # output$plot_international_studienzahl_map_arb_1 <- renderUI({
+    #   plot_international_map_arb(r)
+    # })
+
     output$plot_international_studienzahl_map_arb_1 <- renderUI({
-      plot_international_map_arb(r)
+      plot_list <- plot_international_map_arb(r)
+      r$plot_international_studienzahl_map_arb_1 <- plot_list
+
+      r$plot_international_studienzahl_map_arb_1_title <- get_plot_title(
+        plot = r$plot_international_studienzahl_map_arb_1
+      )
+
+      plot_list
     })
+
+    output$download_btn_plot_international_studienzahl_map_arb_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_studienzahl_map_arb_1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_international_studienzahl_map_arb_1,
+          filename =  r$plot_international_studienzahl_map_arb_1_title ,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_international_studienzahl_map_arb_1_title , file)
+        file.remove(r$plot_international_studienzahl_map_arb_1_title )
+      }
+    )
+
+
+    # tab 2
 
     output$plot_international_map_arb_gender_1 <- renderUI({
       plot_international_map_arb_gender(r)
     })
 
-    output$plot_international_top10_mint_arb_1 <- renderUI({
-      plot_international_top10_mint_arb(r)
+    output$plot_international_map_arb_gender_1 <- renderUI({
+      plot_list <- plot_international_map_arb_gender(r)
+      r$plot_international_map_arb_gender_1 <- plot_list
+
+      r$plot_international_map_arb_gender_1_title <- get_plot_title(
+        plot = r$plot_international_map_arb_gender_1
+      )
+
+      plot_list
     })
 
+    output$download_btn_plot_international_map_arb_gender_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_map_arb_gender_1_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_international_map_arb_gender_1,
+          filename =  r$plot_international_map_arb_gender_1_title ,
+          width = 700,
+          height = 400)
+
+        file.copy(r$plot_international_map_arb_gender_1_title , file)
+        file.remove(r$plot_international_map_arb_gender_1_title )
+      }
+    )
+
+
+
+    # tab 3
+
+    # output$plot_international_top10_mint_arb_1 <- renderUI({
+    #   plot_international_top10_mint_arb(r)
+    # })
+
+    output$plot_international_top10_mint_arb_1  <- renderUI({
+      plot_list <- plot_international_top10_mint_arb(r)
+      r$plot_international_top10_mint_arb_1_left <- plot_list[[1]]
+      r$plot_international_top10_mint_arb_1_right <- plot_list[[2]]
+
+      r$plot_international_top10_mint_arb_1_left_title <- get_plot_title(
+        plot = r$plot_international_top10_mint_arb_1_left
+      )
+      r$plot_international_top10_mint_arb_1_right_title <- get_plot_title(
+        plot = r$plot_international_top10_mint_arb_1_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
+    })
+
+    output$download_btn_plot_international_top10_mint_arb_1_1 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_mint_top_10_1_left_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_international_mint_top_10_1_left,
+          filename =  r$plot_international_mint_top_10_1_left_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_international_mint_top_10_1_left_title, file)
+        file.remove(r$plot_international_mint_top_10_1_left_title)
+      }
+    )
+
+    output$download_btn_plot_international_top10_mint_arb_1_2 <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$plot_international_mint_top_10_1_right_title},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+        add_caption_and_download(
+          hc = r$plot_international_mint_top_10_1_right,
+          filename =  r$plot_international_mint_top_10_1_right_title,
+          width = 700,
+          height = 400,
+          with_labels = FALSE)
+
+        file.copy(r$plot_international_mint_top_10_1_right_title, file)
+        file.remove(r$plot_international_mint_top_10_1_right_title)
+      }
+    )
+
+
+
+
+
+    # tab 4
     output$plot_international_top10_mint_arb_gender_1 <- renderUI({
       plot_international_top10_mint_arb_gender(r)
     })
+
+    # tab 5
     output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
       plot_international_arbeitsmarkt_vergleiche(r)
     })
