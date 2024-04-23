@@ -23,7 +23,7 @@ app_server <- function(input, output, session) {
 
   mod_international_server("international_ui_1")
 
-  #mod_fachkraft_server("fachkraft_ui_1")
+  mod_fachkraft_server("fachkraft_ui_1")
 
   # react_search <- reactiveValues()
   # mod_suche_server("suche_1", react_search, parent_session = session)

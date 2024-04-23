@@ -448,7 +448,7 @@ mod_fachkraft_start_server <- function(id, r){
   # Box 1 - Fachkraft-Prognose ----
 
     #ohne download
-    output$plot_fachkraft_prog_item_1 <- renderUI({
+    output$plot_fachkraft_prog_item_1 <- highcharter::renderHighchart({
       plot_fachkraft_prognose(r)
     })
 
@@ -482,7 +482,7 @@ mod_fachkraft_start_server <- function(id, r){
     # )
 
     # ohne download
-    output$plot_fachkraft_prog_detail_item_1 <- renderUI({
+    output$plot_fachkraft_prog_detail_item_1 <- highcharter::renderHighchart({
       plot_fachkraft_prognose_detail(r)
       })
 
@@ -514,21 +514,21 @@ mod_fachkraft_start_server <- function(id, r){
 
 
     ## pdf ----
-    output$downloadPDF <- downloadHandler(
-      # filename = function() {
-      #   "MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf"
-      # },
-      content = function(file) {
-        file.copy("www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", file)
-      }
-    )
+    # output$downloadPDF <- downloadHandler(
+    #   # filename = function() {
+    #   #   "MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf"
+    #   # },
+    #   content = function(file) {
+    #     file.copy("www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", file)
+    #   }
+    # )
 
   # Box 2 - Fachkraft - Berufsgruppen-Ebene ----
 
     ## EPA nach MINT
 
     # Download kurz mal raus
-    output$plot_fachkraft_epa_item_1 <- renderUI({
+    output$plot_fachkraft_epa_item_1 <- highcharter::renderHighchart({
       plot_list <- plot_fachkraft_epa_item(r)
 
       # return plots
@@ -595,7 +595,7 @@ mod_fachkraft_start_server <- function(id, r){
     # )
 
     ## MINT an EPA
-    output$plot_fachkraft_mint_item_1 <- renderUI({
+    output$plot_fachkraft_mint_item_1 <- highcharter::renderHighchart({
       plot_fachkraft_mint_item(r)
 
     })
@@ -605,7 +605,7 @@ mod_fachkraft_start_server <- function(id, r){
 
     # Download für JT kurz raus
 
-    output$plot_fachkraft_bar_vakanz_1 <- renderUI({
+    output$plot_fachkraft_bar_vakanz_1 <- highcharter::renderHighchart({
       plot_fachkraft_bar_vakanz(r)
     })
 
@@ -644,7 +644,7 @@ mod_fachkraft_start_server <- function(id, r){
 
 
     #Download kurz raus für JT
-    output$plot_fachkraft_detail_item_1 <- renderUI({
+    output$plot_fachkraft_detail_item_1 <- highcharter::renderHighchart({
       plot_list <- plot_fachkraft_detail_item(r)
 
       highcharter::hw_grid(
