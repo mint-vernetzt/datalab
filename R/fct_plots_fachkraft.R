@@ -838,7 +838,7 @@ plot_fachkraft_detail_item  <- function(r) {
     "kein Engpassberuf" = c("Engpassanalyse")
   )
 
-  plot_bar_data <- arbeitsmarkt_epa_detail %>%
+  plot_bar_data <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
     dplyr::filter(jahr == timerange &
                     #indikator == "Engpassindikator" &
                     anforderung == bf_label &
@@ -847,7 +847,8 @@ plot_fachkraft_detail_item  <- function(r) {
                     kategorie %in% used_kategories &
                     !is.na(wert)) %>%
     dplyr::select(indikator, kategorie, wert) %>%
-    dplyr::mutate(wert = round(wert, 2))
+    dplyr::mutate(wert = round(wert, 2)) %>%
+    dplyr::collect()
 
   # color change on 0.01. level, since data labels are also rounded to 2 decimal places
   col_stops <- data.frame(

@@ -3432,8 +3432,8 @@ epa_detail$epa_kat <- ifelse(epa_detail$indikator == "Engpassindikator", epa_det
 
 
 # in shinyapp:
-arbeitsmarkt_epa_detail <- epa_detail
-usethis::use_data(arbeitsmarkt_epa_detail, overwrite = T)
+# arbeitsmarkt_epa_detail <- epa_detail
+# usethis::use_data(arbeitsmarkt_epa_detail, overwrite = T)
 
 
 
