@@ -126,7 +126,7 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_prog_item_1")),
+              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_item_1")),
                                                     color = "#154194"),
               p(style="font-size:12px;color:grey",
                 "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
@@ -146,7 +146,7 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_prog_detail_item_1")),
+              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_detail_item_1")),
                                             color = "#154194"),
 
               p(style="font-size:12px;color:grey",
@@ -161,7 +161,7 @@ mod_fachkraft_start_ui <- function(id){
               tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           )
-          ,
+    ,
 
     tabPanel(
             "Übersicht Wirkhebel", br(),
@@ -192,7 +192,7 @@ mod_fachkraft_start_ui <- function(id){
 
 
 
-      # Box 2 - Fachkräfte auf Berufsgruppen-Level ----
+      # # Box 2 - Fachkräfte auf Berufsgruppen-Level ----
       fluidRow(
         id="fachkraft-berufsgruppen",
         shinydashboard::box(
@@ -291,7 +291,7 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_mint_item_1")),
+              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_mint_item_1")),
                                            color = "#154194"),
 
               p(style="font-size:12px;color:grey",
@@ -323,7 +323,7 @@ mod_fachkraft_start_ui <- function(id){
               ),
               shiny::mainPanel(
                 width = 9,
-                shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_bar_vakanz_1")),
+                shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_bar_vakanz_1")),
                                              color = "#154194"),
 
                 p(style="font-size:12px;color:grey",
@@ -528,28 +528,8 @@ mod_fachkraft_start_server <- function(id, r){
     ## EPA nach MINT
 
     # Download kurz mal raus
-    output$plot_fachkraft_epa_item_1 <- highcharter::renderHighchart({
-      plot_list <- plot_fachkraft_epa_item(r)
-
-      # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
-
-    })
-
-    # output$plot_fachkraft_epa_item_1 <- renderUI({
+    # output$plot_fachkraft_epa_item_1 <- highcharter::renderHighchart({
     #   plot_list <- plot_fachkraft_epa_item(r)
-    #   r$plot_fachkraft_epa_item_1_left <- plot_list[[1]]
-    #   r$plot_fachkraft_epa_item_1_right <- plot_list[[2]]
-    #
-    #   r$plot_fachkraft_epa_item_1_left_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_epa_item_1_left
-    #   )
-    #   r$plot_fachkraft_epa_item_1_right_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_epa_item_1_right
-    #   )
     #
     #   # return plots
     #   out <- highcharter::hw_grid(
@@ -558,6 +538,26 @@ mod_fachkraft_start_server <- function(id, r){
     #   out
     #
     # })
+
+    output$plot_fachkraft_epa_item_1 <- renderUI({
+      plot_list <- plot_fachkraft_epa_item(r)
+      r$plot_fachkraft_epa_item_1_left <- plot_list[[1]]
+      r$plot_fachkraft_epa_item_1_right <- plot_list[[2]]
+
+      r$plot_fachkraft_epa_item_1_left_title <- get_plot_title(
+        plot = r$plot_fachkraft_epa_item_1_left
+      )
+      r$plot_fachkraft_epa_item_1_right_title <- get_plot_title(
+        plot = r$plot_fachkraft_epa_item_1_right
+      )
+
+      # return plots
+      out <- highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+      out
+
+    })
     #
     # output$download_btn_plot_fachkraft_epa_item_1 <- downloadHandler(
     #   contentType = "image/png",
@@ -644,30 +644,30 @@ mod_fachkraft_start_server <- function(id, r){
 
 
     #Download kurz raus für JT
-    output$plot_fachkraft_detail_item_1 <- highcharter::renderHighchart({
-      plot_list <- plot_fachkraft_detail_item(r)
-
-      highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-    })
-
-    # output$plot_fachkraft_detail_item_1 <- renderUI({
+    # output$plot_fachkraft_detail_item_1 <- highcharter::renderHighchart({
     #   plot_list <- plot_fachkraft_detail_item(r)
-    #   r$plot_fachkraft_detail_item_1_left <- plot_list[[1]]
-    #   r$plot_fachkraft_detail_item_1_right <- plot_list[[2]]
-    #
-    #   r$plot_fachkraft_detail_item_1_left_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_detail_item_1_left
-    #   )
-    #   r$plot_fachkraft_detail_item_1_right_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_detail_item_1_right
-    #   )
     #
     #   highcharter::hw_grid(
     #     plot_list,
     #     ncol = 2)
     # })
+
+    output$plot_fachkraft_detail_item_1 <- renderUI({
+      plot_list <- plot_fachkraft_detail_item(r)
+      r$plot_fachkraft_detail_item_1_left <- plot_list[[1]]
+      r$plot_fachkraft_detail_item_1_right <- plot_list[[2]]
+
+      r$plot_fachkraft_detail_item_1_left_title <- get_plot_title(
+        plot = r$plot_fachkraft_detail_item_1_left
+      )
+      r$plot_fachkraft_detail_item_1_right_title <- get_plot_title(
+        plot = r$plot_fachkraft_detail_item_1_right
+      )
+
+      highcharter::hw_grid(
+        plot_list,
+        ncol = 2)
+    })
     #
     # output$download_btn_plot_fachkraft_item_detail_1 <- downloadHandler(
     #   contentType = "image/png",
