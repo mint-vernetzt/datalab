@@ -1,12 +1,13 @@
 name: datalab4
 title: datalab4
-username: mint-vernetzt
+username:
 account: mint-vernetzt
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 10896422
-bundleId:
+bundleId: 8536414
 url: https://mint-vernetzt.shinyapps.io/datalab4/
-version: 1
+when: 1713971465.80338
+lastSyncTime: 1713971465.80339
 asMultiple: FALSE
 asStatic: FALSE

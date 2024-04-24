@@ -2625,6 +2625,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
       plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
 
 
+
       # Realtive Häufigkeit
       data1 <- dplyr::tbl(con, from = "arbeitsmarkt_anzahl_azubis_oecd") %>%
         dplyr::filter(geschlecht == "Gesamt" &

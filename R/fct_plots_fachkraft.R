@@ -260,7 +260,10 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
   year_filter <- r$fachkraft_item_wirkhebel_analyse
   #year_filter <- 2037
 
-  basis_wert <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
+  basis<- dplyr::tbl(con, from = "fachkraefte_prognose")%>%
+    dplyr::collect()
+
+  basis_wert <- basis %>%
     dplyr::filter(wirkhebel == "Basis-Szenario") %>%
     dplyr::filter(geschlecht == "Gesamt") %>%
     dplyr::filter(nationalitaet == "Gesamt") %>%
@@ -269,7 +272,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     dplyr::pull(wert)
 
 
-  uebersicht_data <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
+  uebersicht_data <- basis  %>%
     dplyr::filter(jahr == year_filter) %>%
     dplyr::filter(indikator %in% c("Verbesserung", "starke Verbesserung")) %>%
     dplyr::filter(!(wirkhebel == "Frauen in MINT" & indikator == "Verbesserung")) %>%
@@ -279,8 +282,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     dplyr::mutate(basis_wert = basis_wert) %>%
     dplyr::select(wirkhebel, basis_wert, wert)%>%
     dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Förderung Frauen u. Bildung in MINT",
-                                               T ~ wirkhebel)) %>%
-    dplyr::collect()
+                                               T ~ wirkhebel))
 
   row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
 
