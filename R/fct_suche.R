@@ -14,10 +14,10 @@ get_search_data <- function(term, session) {
   # term zu lower case
   this_search <- tolower(term)
   # stopwords raus, satzzeichen raus, stemming
-  this_search <- tm::removeWords(this_search, tm::stopwords("german"))
-  this_search <- quanteda::tokens(this_search, remove_punct = TRUE)
-  this_search <- quanteda::tokens_wordstem(this_search, language = "de")
-  this_search <- paste(this_search)
+  # this_search <- tm::removeWords(this_search, tm::stopwords("german"))
+  # this_search <- quanteda::tokens(this_search, remove_punct = TRUE)
+  # this_search <- quanteda::tokens_wordstem(this_search, language = "de")
+  # this_search <- paste(this_search)
 
 
   # this_search <- SnowballC::wordStem(this_search, language = "de")

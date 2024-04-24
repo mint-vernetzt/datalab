@@ -40,7 +40,7 @@ Imports:
     pkgload,
     ggalt,
     tm,
-    quanteda,
+    slickR,
     plotly
 Suggests: 
     spelling,

@@ -610,7 +610,7 @@ mod_fachkraft_start_server <- function(id, r){
     ## Detail Berufe
 
 
-    #Download kurz raus für JT
+    # #Download kurz raus für JT
     output$plot_fachkraft_detail_item_1 <- renderUI({
       plot_list <- plot_fachkraft_detail_item(r)
       r$plot_fachkraft_detail_item_1_left <- plot_list[[1]]

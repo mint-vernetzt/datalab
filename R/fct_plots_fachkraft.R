@@ -260,7 +260,10 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
   year_filter <- r$fachkraft_item_wirkhebel_analyse
   #year_filter <- 2037
 
-  basis_wert <- fachkraefte_prognose %>%
+  basis <-  dplyr::tbl(con, from = "fachkraefte_prognose") %>%
+    dplyr::collect()
+
+  basis_wert <- basis %>%
     dplyr::filter(wirkhebel == "Basis-Szenario") %>%
     dplyr::filter(geschlecht == "Gesamt") %>%
     dplyr::filter(nationalitaet == "Gesamt") %>%
@@ -269,7 +272,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     dplyr::pull(wert)
 
 
-  uebersicht_data <- fachkraefte_prognose %>%
+  uebersicht_data <-  basis %>%
     dplyr::filter(jahr == year_filter) %>%
     dplyr::filter(indikator %in% c("Verbesserung", "starke Verbesserung")) %>%
     dplyr::filter(!(wirkhebel == "Frauen in MINT" & indikator == "Verbesserung")) %>%
@@ -1018,3 +1021,4 @@ plot_fachkraft_detail_item  <- function(r) {
 
   return(out)
 }
+
