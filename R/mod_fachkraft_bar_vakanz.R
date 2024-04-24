@@ -49,6 +49,15 @@ mod_fachkraft_bar_vakanz_ui <- function(id){
       selected = c("Gesamt"),
       multiple = FALSE
     ),
+
+    br(),
+
+    shinyBS::bsPopover(id="ih_fachkraft_asr_vz_1", title="",
+                       content = paste0("Die erste Einstellung zeigt einen erhöhten Mangel an Arbeitskräften in MINT vs. Nicht-MINT. Deutschlandweit kommen 2022 auf eine offene Stelle in MINT nur 1.13 arbeitssuchende Personen. Im Nicht-MINT-Bereich sieht diese Relation besser aus: hier kommen etwas mehr als 3 Arbeitssuchende auf eine offene Stelle."),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_asr_vz_1")
+
   )
 }
 

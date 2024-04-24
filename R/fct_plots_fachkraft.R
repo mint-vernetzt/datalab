@@ -838,7 +838,7 @@ plot_fachkraft_detail_item  <- function(r) {
     "kein Engpassberuf" = c("Engpassanalyse")
   )
 
-  plot_bar_data <- arbeitsmarkt_epa_detail %>%
+  plot_bar_data <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
     dplyr::filter(jahr == timerange &
                     #indikator == "Engpassindikator" &
                     anforderung == bf_label &
@@ -847,7 +847,8 @@ plot_fachkraft_detail_item  <- function(r) {
                     kategorie %in% used_kategories &
                     !is.na(wert)) %>%
     dplyr::select(indikator, kategorie, wert) %>%
-    dplyr::mutate(wert = round(wert, 2))
+    dplyr::mutate(wert = round(wert, 2)) %>%
+    dplyr::collect()
 
   # color change on 0.01. level, since data labels are also rounded to 2 decimal places
   col_stops <- data.frame(
@@ -862,6 +863,18 @@ plot_fachkraft_detail_item  <- function(r) {
   plot_bar_data$bar_color <- col_stops$c[color_idx]
   # divide by three (the maximum) to get percentage change values for the gauge plot
   col_stops$q <- col_stops$q / 3
+
+  # titel
+ beruf <- this_beruf
+  if(this_beruf %in% c("Bau- und Gebäudetechnik", "Gesundheitstechnik",
+                  "Informatik", "Landtechnik", "Mathematik, Naturwissenschaften",
+                  "Nicht MINT", "Produktionstechnik", "Verkehr-, Sicherheits- und Veranstaltungstechnik",
+                  "MINT")){
+    beruf <- paste0("Berufe in ", beruf)
+  }
+ if(this_beruf == "Gesamt"){
+   beruf <- paste0("alle Berufe")
+ }
 
   plot_left <- highcharter::highchart() %>%
     highcharter::hc_chart(type = "solidgauge") %>%
@@ -908,7 +921,7 @@ plot_fachkraft_detail_item  <- function(r) {
       )
     ) %>%
     highcharter::hc_title(
-      text = paste0("Engpassindikator für den Beruf ", this_beruf,
+      text = paste0("Engpassindikator für ", beruf,
                     " auf dem ", bf_label, "-Level (", timerange, ")"),
       margin = 10,
       align = "center",

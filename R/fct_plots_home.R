@@ -570,10 +570,10 @@ home_rest_mint_verlauf <- function(r) {
 
     # Ordnen der Legende
     sorted_indicators <- df %>%
-      group_by(indikator) %>%
-      summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
-      arrange(desc(m_value)) %>%
-      pull(indikator)
+      dplyr::group_by(indikator) %>%
+      dplyr::summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      dplyr::arrange(desc(m_value)) %>%
+      dplyr::pull(indikator)
 
     df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
@@ -620,10 +620,10 @@ home_rest_mint_verlauf <- function(r) {
 
     # Ordnen der Legende
     sorted_indicators <- df %>%
-      group_by(indikator) %>%
-      summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
-      arrange(desc(m_value)) %>%
-      pull(indikator)
+      dplyr::group_by(indikator) %>%
+      dplyr::summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      dplyr::arrange(desc(m_value)) %>%
+      dplyr::pull(indikator)
 
     df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
@@ -1710,10 +1710,10 @@ home_comparison_line <- function(r) {
 
     # Ordnen der Legende
     sorted_indicators <- df_fn51 %>%
-      group_by(indikator) %>%
-      summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
-      arrange(desc(m_value)) %>%
-      pull(indikator)
+      dplyr::group_by(indikator) %>%
+      dplyr::summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      dplyr::arrange(desc(m_value)) %>%
+      dplyr::pull(indikator)
 
     df_fn51$indikator <- factor(df_fn51$indikator, levels = sorted_indicators)
 
@@ -1753,10 +1753,10 @@ home_comparison_line <- function(r) {
 
     # Ordnen der Legende
     sorted_indicators <- df_fn51 %>%
-      group_by(indikator) %>%
-      summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
-      arrange(desc(m_value)) %>%
-      pull(indikator)
+      dplyr::group_by(indikator) %>%
+      dplyr::summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      dplyr::arrange(desc(m_value)) %>%
+      dplyr::pull(indikator)
 
     df_fn51$indikator <- factor(df_fn51$indikator, levels = sorted_indicators)
 

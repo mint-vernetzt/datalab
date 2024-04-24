@@ -117,6 +117,7 @@ mod_fachkraft_start_ui <- function(id){
               width = 3,
               mod_fachkraft_item_prog_ui("fachkraft_item_prog_1"),
               br(),
+              br(),
               downloadButton(
                 outputId = ns("download_btn_plot_fachkraft_prog_item_1"),
                 br(),
@@ -170,6 +171,7 @@ mod_fachkraft_start_ui <- function(id){
 
               mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"),
               br(),# TODO
+              br(),
               downloadButton(
                 outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
                 label = "Download",
@@ -247,8 +249,9 @@ mod_fachkraft_start_ui <- function(id){
             shiny::sidebarPanel(
               width = 3,
               mod_fachkraft_item_epa_ui("fachkraft_item_epa_1"),
-              br()
-              ,
+              br(),
+              br(),
+
               downloadButton(
                 outputId = ns("download_btn_plot_fachkraft_epa_item_1"),
                 label = "Download (links)",
@@ -306,6 +309,8 @@ mod_fachkraft_start_ui <- function(id){
               shiny::sidebarPanel(
                 width = 3,
                 mod_fachkraft_bar_vakanz_ui("fachkraft_bar_vakanz_1"),
+                br(),
+                br(),
                 downloadButton(
                   outputId = ns("download_btn_plot_fachkraft_bar_vakanz_1"),
                   label = "Download",
@@ -320,7 +325,7 @@ mod_fachkraft_start_ui <- function(id){
                 p(style="font-size:12px;color:grey",
                   "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                 shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_4", title="",
-                                   content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+                                   content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung der Vakanzzeit und der Arbeitslosen-Stellen-Relation finden Sie in der jeweiligen Infobox. Diese sind in der Beschreibung über der Grafik verlinkt."),
                                    placement = "top",
                                    trigger = "hover"),
                 tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_4")
@@ -389,6 +394,8 @@ mod_fachkraft_start_ui <- function(id){
             shiny::sidebarPanel(
               width = 3,
               mod_fachkraft_item_detail_ui("fachkraft_item_detail_1"),
+              br(),
+              br(),
               downloadButton(
                 outputId = ns("download_btn_plot_fachkraft_item_detail_1"),
                 label = "Download",
