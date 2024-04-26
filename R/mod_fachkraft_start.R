@@ -192,7 +192,7 @@ mod_fachkraft_start_ui <- function(id){
 
 
 
-      # # Box 2 - Fachkräfte auf Berufsgruppen-Level ----
+  # Box 2 - Fachkräfte auf Berufsgruppen-Level ----
       fluidRow(
         id="fachkraft-berufsgruppen",
         shinydashboard::box(
@@ -304,37 +304,37 @@ mod_fachkraft_start_ui <- function(id){
             )
           ),
 
-            tabPanel(
-              "Arbeitslosen-Stellen-Relation und Vakanzzeit in MINT", br(),
-
-              # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-              # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
-              shiny::sidebarPanel(
-                width = 3,
-                mod_fachkraft_bar_vakanz_ui("fachkraft_bar_vakanz_1"),
-                br(),
-                # br(),
-                # downloadButton(
-                #   outputId = ns("download_btn_plot_fachkraft_bar_vakanz_1"),
-                #   label = "Download",
-                #   icon = icon("download"))
-
-              ),
-              shiny::mainPanel(
-                width = 9,
-                shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_bar_vakanz_1")),
-                                             color = "#154194"),
-
-                p(style="font-size:12px;color:grey",
-                  "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_4", title="",
-                                   content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung der Vakanzzeit und der Arbeitslosen-Stellen-Relation finden Sie in der jeweiligen Infobox. Diese sind in der Beschreibung über der Grafik verlinkt."),
-                                   placement = "top",
-                                   trigger = "hover"),
-                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_4")
-              )
-            ),
+            # tabPanel(
+            #   "Arbeitslosen-Stellen-Relation und Vakanzzeit in MINT", br(),
+            #
+            #   # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+            #   # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+            #
+            #   shiny::sidebarPanel(
+            #     width = 3,
+            #     mod_fachkraft_bar_vakanz_ui("fachkraft_bar_vakanz_1"),
+            #     br(),
+            #     # br(),
+            #     # downloadButton(
+            #     #   outputId = ns("download_btn_plot_fachkraft_bar_vakanz_1"),
+            #     #   label = "Download",
+            #     #   icon = icon("download"))
+            #
+            #   ),
+            #   shiny::mainPanel(
+            #     width = 9,
+            #     shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_bar_vakanz_1")),
+            #                                  color = "#154194"),
+            #
+            #     p(style="font-size:12px;color:grey",
+            #       "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+            #     shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_4", title="",
+            #                        content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung der Vakanzzeit und der Arbeitslosen-Stellen-Relation finden Sie in der jeweiligen Infobox. Diese sind in der Beschreibung über der Grafik verlinkt."),
+            #                        placement = "top",
+            #                        trigger = "hover"),
+            #     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_4")
+            #   )
+            # ),
           )
           )
         )
@@ -605,20 +605,20 @@ mod_fachkraft_start_server <- function(id, r){
 
     # Download für JT kurz raus
 
-    output$plot_fachkraft_bar_vakanz_1 <- highcharter::renderHighchart({
-      plot_fachkraft_bar_vakanz(r)
-    })
-
-    #  output$plot_fachkraft_bar_vakanz_1 <- renderUI({
-    #   plot_list <- plot_fachkraft_bar_vakanz(r)
-    #   r$plot_fachkraft_bar_vakanz_1 <- plot_list
-    #
-    #   r$plot_fachkraft_bar_vakanz_1_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_bar_vakanz_1
-    #   )
-    #
-    #   plot_list
+    # output$plot_fachkraft_bar_vakanz_1 <- highcharter::renderHighchart({
+    #   plot_fachkraft_bar_vakanz(r)
     # })
+
+     output$plot_fachkraft_bar_vakanz_1 <- highcharter::renderHighchart({
+      plot_list <- plot_fachkraft_bar_vakanz(r)
+      r$plot_fachkraft_bar_vakanz_1 <- plot_list
+
+      r$plot_fachkraft_bar_vakanz_1_title <- get_plot_title(
+        plot = r$plot_fachkraft_bar_vakanz_1
+      )
+
+      plot_list
+    })
     #
     # output$download_btn_plot_fachkraft_bar_vakanz_1 <- downloadHandler(
     #   contentType = "image/png",
