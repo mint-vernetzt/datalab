@@ -787,7 +787,7 @@ plot_fachkraft_bar_vakanz  <- function(r) {
   }
 
 
-  out <- highcharter::hchart(
+  plot<- highcharter::hchart(
     object = plot_data,
     type = "bar",
     mapping = highcharter::hcaes(x = fachbereich, y = wert, color = group_color)
@@ -812,9 +812,10 @@ plot_fachkraft_bar_vakanz  <- function(r) {
                            'Eine ausgeschriebene Stelle steht {point.wert} Tage leer, bis sie besetzt werden kann.'
       )) %>%
     highcharter::hc_yAxis(title = list(text = "")) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_xAxis(title = list(text = ""))
 
-    return(out)
+  out <- plot
+  return(out)
 }
 
 
