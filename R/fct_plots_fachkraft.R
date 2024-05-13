@@ -863,7 +863,7 @@ plot_fachkraft_detail_item  <- function(r) {
   color_idx <- sapply(plot_bar_data$wert, function(x) {
     max(which((col_stops$q)<= x))
   })
-  plot_bar_data$bar_color <- col_stops$c[color_idx]
+  if(length(color_idx)>0) plot_bar_data$bar_color <- col_stops$c[color_idx]
   # divide by three (the maximum) to get percentage change values for the gauge plot
   col_stops$q <- col_stops$q / 3
 
