@@ -577,7 +577,7 @@ fachkraft_ui_wirkhebel <- function() {
   selection <- c(
     "Gesamteffekt",
     "MINT-Bildung",
-    "Frauen in MINT",
+    "Förderung Frauen u. Bildung in MINT" = "Frauen in MINT",
     "Beteiligung internationaler MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
     "Beteiligung älterer MINT-Fachkräfte"
   )

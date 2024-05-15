@@ -181,8 +181,19 @@ mod_fachkraft_start_ui <- function(id){
               width = 9,
               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
               color = "#154194"),
-            p(style="font-size:12px;color:grey",
+
+
+              p(style="font-size:12px;color:grey",
               "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+            p(),
+            shinyBS::bsPopover(
+              id="h_fachkraft-prognosen_3", title="",
+              content = paste0("Der Effekt der Förderung von Frauen baut auf den Effekt der MINT-Bildung auf. Das Szenario betrachtet eine erfolgreichere MINT-Bildung mit besonderen Erfolgen bei Mädchen und Frauen."),
+              placement = "top",
+              trigger = "hover"),
+            tags$a(paste0("Hinweis zu den Daten"),
+                   icon("info-circle"),
+                   id = "h_fachkraft-prognosen_3"),
             p(),
             tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
     )
@@ -323,7 +334,7 @@ mod_fachkraft_start_ui <- function(id){
               ),
               shiny::mainPanel(
                 width = 9,
-                shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_bar_vakanz_1")),
+                shinycssloaders::withSpinner(highcharter::highchartOutput(ns("fachkraft_bar_vakanz_1_plot")),
                                              color = "#154194"),
 
                 p(style="font-size:12px;color:grey",
@@ -605,7 +616,7 @@ mod_fachkraft_start_server <- function(id, r){
 
     # Download für JT kurz raus
 
-    output$plot_fachkraft_bar_vakanz_1 <- highcharter::renderHighchart({
+    output$fachkraft_bar_vakanz_1_plot <- highcharter::renderHighchart({
       plot_fachkraft_bar_vakanz(r)
     })
 

@@ -5,7 +5,6 @@ plot_fachkraft_prognose  <- function(r) {
   filter_indikator <- c("Status-quo", r$fachkraft_item_prog_scenario)
   filter_berufslevel <- r$fachkraft_item_prog_berufslevel
 
-
   plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
     dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
     dplyr::filter(indikator %in% filter_indikator) %>%
@@ -24,8 +23,12 @@ plot_fachkraft_prognose  <- function(r) {
       )
     ) %>%
     dplyr::ungroup()%>%
-    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Förderung Frauen u. Bildung in MINT",
+    dplyr::mutate(
+      wirkhebel = dplyr::case_when(
+        wirkhebel == "Frauen in MINT" ~ "Förderung Frauen u. Bildung in MINT",
                                                T ~ wirkhebel))
+
+  if(filter_wirkhebel[2] == "Frauen in MINT") filter_wirkhebel[2]<-"Förderung Frauen u. Bildung in MINT"
 
 
   plot_data <- plot_data %>%
@@ -85,8 +88,8 @@ plot_fachkraft_prognose  <- function(r) {
     ) %>%
     highcharter::hc_xAxis(plotBands = list(
       list(
-        from = 2022,
-        to = 2037,
+        from = 2012,
+        to = 2022,
         color = "#F9F6F5"
       )
     )) %>%
@@ -171,10 +174,17 @@ plot_fachkraft_prognose_detail  <- function(r) {
     dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Förderung Frauen u. Bildung in MINT",
                                                T ~ wirkhebel))
 
+  if(filter_wirkhebel == "Frauen in MINT") filter_wirkhebel <- "Förderung Frauen u. Bildung in MINT"
+
   if(focused_column == "nationalitaet"){
     plot_data$nationalitaet <- factor(plot_data$nationalitaet,
                                       levels = c("Keine deutsche Staatsangehörigkeit",
                                                  "deutsche Staatsangehörigkeit"))
+  }else if(focused_column == "anforderung"){
+    plot_data$anforderung <- factor(plot_data$anforderung,
+                                    levels = c("Expert:innen",
+                                               "Spezialist:innen",
+                                               "Fachkräfte"))
   }
 
   data_list <- split(plot_data, plot_data[focused_column])
@@ -215,8 +225,8 @@ plot_fachkraft_prognose_detail  <- function(r) {
     ) %>%
     highcharter::hc_xAxis(plotBands = list(
       list(
-        from = 2022,
-        to = 2037,
+        from = 2012,
+        to = 2022,
         color = "#F9F6F5"
       )
     )) %>%
@@ -732,13 +742,17 @@ plot_fachkraft_mint_item  <- function(r) {
 
 plot_fachkraft_bar_vakanz  <- function(r) {
   # logger::log_debug("plot_fachkraft_bar_vakanz")
-  #this_indikator <- "Abgeschlossene Vakanzzeit"; timerange <- 2021; bf_label <- "Spezialist*innen"; this_region <-"Deutschland"
+  # this_indikator <- "Abgeschlossene Vakanzzeit"
+  # timerange <- 2021
+  # bf_label <- "Spezialist*innen"
+  # this_region <-"Deutschland"
   #this_indikator <- "Arbeitslosen-Stellen-Relation"; timerange <- 2022; bf_label <- "Gesamt"; this_region <-"Deutschland"
 
   this_indikator <- r$map_ind_fachkraft_arbeit_bar
   timerange <- r$map_y_fachkraft_arbeit_bar
   this_region <- r$map_reg_fachkraft_arbeit_bar
   bf_label <- r$map_bl_fachkraft_arbeit_bar
+
 
   berufe_order <- c("Insgesamt", "Keine MINT-Berufe", "MINT-Berufe")
 
@@ -869,15 +883,18 @@ plot_fachkraft_detail_item  <- function(r) {
 
   # titel
  beruf <- this_beruf
-  if(this_beruf %in% c("Bau- und Gebäudetechnik", "Gesundheitstechnik",
-                  "Informatik", "Landtechnik", "Mathematik, Naturwissenschaften",
-                  "Nicht MINT", "Produktionstechnik", "Verkehr-, Sicherheits- und Veranstaltungstechnik",
-                  "MINT")){
-    beruf <- paste0("Berufe in ", beruf)
-  }
- if(this_beruf == "Gesamt"){
-   beruf <- paste0("alle Berufe")
+ if(!is.null(this_beruf)){
+   if(this_beruf %in% c("Bau- und Gebäudetechnik", "Gesundheitstechnik",
+                        "Informatik", "Landtechnik", "Mathematik, Naturwissenschaften",
+                        "Nicht MINT", "Produktionstechnik", "Verkehr-, Sicherheits- und Veranstaltungstechnik",
+                        "MINT")){
+     beruf <- paste0("Berufe in ", beruf)
+   }
+   if(this_beruf == "Gesamt"){
+     beruf <- paste0("alle Berufe")
+   }
  }
+
 
 
 

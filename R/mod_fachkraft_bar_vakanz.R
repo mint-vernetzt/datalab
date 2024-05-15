@@ -21,23 +21,38 @@ mod_fachkraft_bar_vakanz_ui <- function(id){
     ),
 
     #Conditional Panel, da verschiede Datensätze zu Grunde liegen
-    conditionalPanel(condition = "input.map_ind %in% c('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')",
-                     ns = ns,
-                     p("Jahr:"),
-                     shinyWidgets::sliderTextInput(
-                       inputId = ns("map_y_vakanz_fachkraft_arbeit_bar"),
-                       label = NULL,
-                       choices = arbeit_fachkraft_ui_years(),
-                       selected = "2022"
-                     ),
+    # conditionalPanel(condition = "input.map_ind %in% c('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')",
+    #                  ns = ns,
+    #                  p("Jahr:"),
+    #                  shinyWidgets::sliderTextInput(
+    #                    inputId = ns("map_y_vakanz_fachkraft_arbeit_bar"),
+    #                    label = NULL,
+    #                    choices = arbeit_fachkraft_ui_years(),
+    #                    selected = "2022"
+    #                  ),
+    #
+    #                  p("Region:"),
+    #                  shinyWidgets::pickerInput(
+    #                    inputId = ns("map_reg_vakanz_fachkraft_arbeit_bar"),
+    #                    choices = arbeit_fachkraft_ui_region(),
+    #                    selected = c("Deutschland"),
+    #                    multiple = FALSE
+    #                  )),
+    p("Jahr:"),
+     shinyWidgets::sliderTextInput(
+       inputId = ns("map_y_vakanz_fachkraft_arbeit_bar"),
+       label = NULL,
+       choices = arbeit_fachkraft_ui_years(),
+       selected = "2022"
+     ),
 
-                     p("Region:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("map_reg_vakanz_fachkraft_arbeit_bar"),
-                       choices = arbeit_fachkraft_ui_region(),
-                       selected = c("Deutschland"),
-                       multiple = FALSE
-                     )),
+     p("Region:"),
+     shinyWidgets::pickerInput(
+       inputId = ns("map_reg_vakanz_fachkraft_arbeit_bar"),
+       choices = arbeit_fachkraft_ui_region(),
+       selected = c("Deutschland"),
+       multiple = FALSE
+     ),
 
     p("Berufslevel:"),
     shinyWidgets::pickerInput(
@@ -68,18 +83,19 @@ mod_fachkraft_bar_vakanz_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-
     observeEvent(input$map_ind_fachkraft_arbeit_bar, {
-      r$map_ind_fachkraft_arbeit_bar <- input$map_ind_fachkraft_arbeit_bar
-      if (input$map_ind_fachkraft_arbeit_bar %in% c("Abgeschlossene Vakanzzeit", "Arbeitslosen-Stellen-Relation")) {
-        r$map_y_fachkraft_arbeit_bar <- input$map_y_vakanz_fachkraft_arbeit_bar
-        r$map_reg_fachkraft_arbeit_bar <- input$map_reg_vakanz_fachkraft_arbeit_bar
-      } else  {
-        # TODO add selection here for EPA later
-      }
-
-
+        r$map_ind_fachkraft_arbeit_bar <- input$map_ind_fachkraft_arbeit_bar
     })
+
+    # observeEvent(input$map_ind_fachkraft_arbeit_bar, {
+    #   r$map_ind_fachkraft_arbeit_bar <- input$map_ind_fachkraft_arbeit_bar
+    #   if (input$map_ind_fachkraft_arbeit_bar %in% c("Abgeschlossene Vakanzzeit", "Arbeitslosen-Stellen-Relation")) {
+    #     r$map_y_fachkraft_arbeit_bar <- input$map_y_vakanz_fachkraft_arbeit_bar
+    #     r$map_reg_fachkraft_arbeit_bar <- input$map_reg_vakanz_fachkraft_arbeit_bar
+    #   } else  {
+    #     # TODO add selection here for EPA later
+    #   }
+    # })
 
     observeEvent(input$map_y_vakanz_fachkraft_arbeit_bar, {
       r$map_y_fachkraft_arbeit_bar <- input$map_y_vakanz_fachkraft_arbeit_bar
