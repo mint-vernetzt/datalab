@@ -44,8 +44,8 @@ mod_fachkraft_start_ui <- function(id){
           wie verschiedene Wirkhebel die MINT-Fachkräftezahlen der Zukunft bewegen können."),
         p(),
         p(style = "text-align: left; font-size = 16px",
-          "Vieles hier ist noch eine Preview oder gibt aktuell nur erste Einblicke in die verschiedenen
-          MINT-Fachkräfte-Daten. Hier arbeiten wir gerade an weiteren Darstellungen.")
+          "Wir geben hier erste Einblicke in die verschiedenen
+          MINT-Fachkräfte-Daten und arbeiten gerade an weiteren Darstellungen.")
       ),
 
       shinydashboard::box(
@@ -63,7 +63,7 @@ mod_fachkraft_start_ui <- function(id){
         width = 7,
         p(
           style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-prognose",
-                                                              span(tags$b(span("PREVIEW - Fachkräfte-Prognosetool:")))), "Zukunftsszenarien der MINT-Fachkräfteentwicklung"
+                                                              span(tags$b(span("Fachkräfte-Prognosetool:")))), "Zukunftsszenarien der MINT-Fachkräfteentwicklung"
         ),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-berufsgruppen",
@@ -100,13 +100,16 @@ mod_fachkraft_start_ui <- function(id){
     fluidRow(
       id = "fachkraft-prognose",
       shinydashboard::box(
-        title = "PREVIEW - Fachkräfte-Prognosetool: Zukunftsszenarien der MINT-Fachkräfte",
+        title = "Fachkräfte-Prognosetool: Zukunftsszenarien der MINT-Fachkräfte",
         width = 12,
         p("Hier können Sie in die Zukunft blicken. Wir haben das Wirtschaftsinstitut IW Köln beauftragt,
-          die Entwicklung der MINT-Fachkräfte in den nächsten Jahren zu berechnen.
+          die Entwicklung der MINT-Fachkräfte in den nächsten Jahren zu berechnen. Wir wollen dabei nicht schauen,
+          wie viele Personen uns fehlen werden, sondern darauf, wie viele Personen für MINT gewonnen werden könnten.
+
           Dabei blicken wir auf die Wirkhebel MINT-Bildung fördern, Mädchen in MINT fördern,
-          internationale MINT-Fachkräfte unterstützen und ältere MINT-Fachkräfte halten.
-          Vergleichen Sie hier, wie sich diese Wirkheble die Fachkräfteentwicklung beeinflussen."),
+          internationale MINT-Fachkräfte integrieren und ältere MINT-Fachkräfte halten.
+
+          Vergleichen Sie hier, wie sich diese Wirkhebel die Fachkräfteentwicklung beeinflussen."),
         br(),
         tabsetPanel(
           type = "tabs",
@@ -126,10 +129,11 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_item_1")),
+              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_item_1"),
+                                                                        height = "600px"),
                                                     color = "#154194"),
               p(style="font-size:12px;color:grey",
-                "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+                "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
               p(),
               tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
@@ -146,11 +150,12 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_detail_item_1")),
+              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_detail_item_1"),
+                                                                        height = "600px"),
                                             color = "#154194"),
 
               p(style="font-size:12px;color:grey",
-                "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+                "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
               # shinyBS::bsPopover(id="h_fachkraft_prog_2", title="",
               #                    content = paste0("POPUP INFO TEXT HERE"),
               #                    placement = "top",

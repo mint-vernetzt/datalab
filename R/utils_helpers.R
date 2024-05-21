@@ -596,8 +596,8 @@ fachkraft_ui_scenario <- function(wirkhebel) {
     )
   } else if(wirkhebel == "Internationale MINT-Fachkräfte"){
     selection <- c(
-      "Stillstand",
-      "Verschlechterung",
+      "vollständiger Stillstand der Zuwanderung" = "Stillstand",
+      "Rückgang im Positivtrend der Zuwanderung" = "Verschlechterung",
       "Verbesserung"
     )
   } else if(wirkhebel == "Beteiligung älterer MINT-Fachkräfte"){

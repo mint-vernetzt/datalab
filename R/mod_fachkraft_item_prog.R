@@ -28,14 +28,14 @@ mod_fachkraft_item_prog_ui <- function(id){
 
     # uiOutput(ns("prog_scenario_picker_ui")),
 
-    p("Berufslevel:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("fachkraft_item_prog_berufslevel"),
-      choices = fachkraft_ui_berufslevel(),
-      selected = c("Gesamt"),
-      multiple = FALSE
-    )
-    ,
+    # p("Berufslevel:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("fachkraft_item_prog_berufslevel"),
+    #   choices = fachkraft_ui_berufslevel(),
+    #   selected = c("Gesamt"),
+    #   multiple = FALSE
+    # )
+    # ,
 
     br(),
 
