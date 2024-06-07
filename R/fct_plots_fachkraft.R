@@ -53,7 +53,6 @@ plot_fachkraft_prognose  <- function(r) {
                             " bei der Gewinnug von Frauen für MINT"),
                      szenario)
 
-
   titel <- paste0("Zukünftige MINT-Fachkräfteentwicklung bei aktuellen Verhältnissen
   im Vergleich zu einer ", szenario, " bis 2037")
 
@@ -175,6 +174,89 @@ plot_fachkraft_prognose  <- function(r) {
   return(hc)
 }
 
+plot_fachkraft_prognose_alle  <- function(r) {
+
+  filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_alle_wirkhebel)
+
+  plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
+    dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
+    dplyr::filter(anforderung == "Gesamt") %>%
+    dplyr::filter(geschlecht == "Gesamt") %>%
+    dplyr::filter(nationalitaet == "Gesamt") %>%
+    dplyr::filter(jahr <= 2037) %>%
+    dplyr::collect()
+
+  if(filter_wirkhebel[2] == "Frauen in MINT"){
+    plot_data$indikator <- factor(plot_data$indikator, levels = c("starke Verbesserung",
+                                                                  "Verbesserung",
+                                                                  "Status-quo"))
+    color_vec <- c("#b16fab", "#D0A9CD", "#8893a7" )
+  }else if (filter_wirkhebel[2] == "Internationale MINT-Fachkräfte"){
+    plot_data$indikator <- factor(plot_data$indikator, levels = c("Verbesserung",
+                                                                  "Verschlechterung",
+                                                                  "Stillstand",
+                                                                  "Status-quo"))
+    plot_data$indikator[plot_data$indikato == "Verschlechterung"] <-   "Rückgang im Positivtrend der Zuwanderung"
+    plot_data$indikator[plot_data$indikato == "Stillstand"] <-   "vollständiger Stillstand der Zuwanderung"
+
+    color_vec <- c("#b16fab", "#D0A9CD", "#DCBED9", "#8893a7" )
+  }else if (filter_wirkhebel[2] == "Beteiligung älterer MINT-Fachkräfte"){
+    plot_data$indikator <- factor(plot_data$indikator, levels = c("Verbesserung",
+                                                                  "Status-quo"))
+    color_vec <- c("#b16fab", "#8893a7" )
+  }else{
+    plot_data$indikator <- factor(plot_data$indikator, levels = c("Verbesserung",
+                                                                  "Verschlechterung",
+                                                                  "Status-quo"))
+    color_vec <- c("#b16fab", "#D0A9CD", "#8893a7" )
+  }
+
+  if(filter_wirkhebel[2] == "Frauen in MINT") filter_wirkhebel[2]<-"Förderung Frauen u. Bildung in MINT"
+
+  # Texte vorbereiten
+  titel <- paste0("Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
+                   bei unterschiedlichen Entwicklungen in der ", filter_wirkhebel[2])#"Titel"
+  titel <- ifelse(filter_wirkhebel[2] == "Förderung Frauen u. Bildung in MINT",
+                  "Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
+                   bei unterschiedlichen Entwicklungen in der Förderung von Bildung und
+                  Frauen in MINT", titel)
+  titel <- ifelse(filter_wirkhebel[2] == "Internationale MINT-Fachkräfte",
+                  "Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
+                   bei unterschiedlichen Entwicklungen in der Integration internatoinaler MINT-Fachkräfte",
+                  titel)
+
+  # plot
+
+  hc <- highcharter::hchart(plot_data, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
+    highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    # highcharter::hc_subtitle(text = subtitel,
+    #                       margin = 45,
+    #                       align = "center",
+    #                       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    highcharter::hc_colors(color_vec) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+  return(hc)
+}
+
 plot_fachkraft_prognose_detail  <- function(r) {
   filter_wirkhebel <- r$fachkraft_item_prog_detail_wirkhebel
   filter_indikator <- c("Status-quo", ifelse(r$fachkraft_item_prog_detail_wirkhebel == "Basis-Szenario",
@@ -208,6 +290,7 @@ plot_fachkraft_prognose_detail  <- function(r) {
     dplyr::filter(!!dplyr::sym(focused_column) != "Gesamt") %>%
     dplyr::collect()
 
+
   plot_data <-plot_data %>%
     dplyr::mutate(dplyr::across(all_of(focused_column), ~ factor(.x, levels = c(sort(unique(.x)))))) %>%
     dplyr::arrange(dplyr::across(all_of(focused_column)), jahr)%>%
@@ -221,11 +304,18 @@ plot_fachkraft_prognose_detail  <- function(r) {
                                       levels = c("Keine deutsche Staatsangehörigkeit",
                                                  "deutsche Staatsangehörigkeit"))
   }else if(focused_column == "anforderung"){
+
     plot_data$anforderung <- factor(plot_data$anforderung,
                                     levels = c("Expert:innen",
                                                "Spezialist:innen",
                                                "Fachkräfte"))
+
+    levels(plot_data$anforderung) <- c("Akademiker:innen", "Facharbeiter:innen mit Fortbildung (Techniker, Meister)",
+                                       "Facharbeiter:innen mit Ausbildung")
+
   }
+
+
 
   data_list <- split(plot_data, plot_data[focused_column])
 
@@ -336,7 +426,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     dplyr::slice(-row_to_move) %>%
     dplyr::bind_rows(uebersicht_data[row_to_move, ]) %>%
     dplyr::mutate(basis_label = paste0("Basis-Szenario"),
-                  improvement_label = paste0("Verbesserung: ", wirkhebel),
+                  improvement_label = paste0("positives Szenario: ", wirkhebel),
                   basis_wert_txt = prettyNum(basis_wert, big.mark = ".", decimal.mark = ","),
                   wert_txt = prettyNum(wert, big.mark = ".", decimal.mark = ",")
     )
@@ -345,7 +435,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
   fig <- plotly::plot_ly(uebersicht_data, color = I("gray80")) %>%
     plotly::add_segments(x = ~basis_wert, xend = ~wert, y = ~wirkhebel, yend = ~wirkhebel, showlegend = FALSE, text = ~basis_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
     plotly::add_markers(x = ~basis_wert, y = ~wirkhebel, name = "Basis-Szenario", color = I("#D0A9CD"), symbol = I("square"), size = I(50), text = ~basis_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
-    plotly::add_markers(x = ~wert, y = ~wirkhebel, name = "Verbesserung", color = I("#b16fab"), symbol = I("square"), size = I(50), text = ~improvement_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
+    plotly::add_markers(x = ~wert, y = ~wirkhebel, name = "positives Szenario", color = I("#b16fab"), symbol = I("square"), size = I(50), text = ~improvement_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
     plotly::layout(
       title = list(
         text = "Übersicht über die potentielle Wirkung der Hebel MINT-Bildung, Frauen in MINT und Integration internationaler \nbzw. älterer MINT-Fachkäfte"

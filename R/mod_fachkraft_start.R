@@ -139,6 +139,31 @@ mod_fachkraft_start_ui <- function(id){
             )
           ),
     tabPanel(
+      title = "Im Vergleich: Zukünftige Fachkräfte-Entwicklung", br(),
+
+      shiny::sidebarPanel(
+        width = 3,
+        mod_fachkraft_item_prog_alle_ui("fachkraft_item_prog_alle_1"),
+        br(),
+        # br(),
+        # downloadButton(
+        #   outputId = ns("download_btn_plot_fachkraft_prog_item_1"),
+        #   br(),
+        #   label = "Download",
+        #   icon = icon("download")),
+      ),
+      shiny::mainPanel(
+        width = 9,
+        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_alle_1"),
+                                                                  height = "600px"),
+                                     color = "#154194"),
+        p(style="font-size:12px;color:grey",
+          "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+        p(),
+        tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+      )
+    ),
+    tabPanel(
             "Im Detail: Zukünftige Fachkräfte-Entwicklung", br(),
 
             shiny::sidebarPanel(
@@ -496,6 +521,11 @@ mod_fachkraft_start_server <- function(id, r){
     #     file.remove(r$plot_fachkraft_prog_item_1_title)
     #   }
     # )
+
+    #ohne download
+    output$plot_fachkraft_prog_alle_1 <- highcharter::renderHighchart({
+      plot_fachkraft_prognose_alle(r)
+    })
 
     # ohne download
     output$plot_fachkraft_prog_detail_item_1 <- highcharter::renderHighchart({
