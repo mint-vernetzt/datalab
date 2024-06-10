@@ -47,10 +47,12 @@ mod_startseite_start_ui <- function(id){
         title = "Was steckt hinter den MINT-Statistiken?",
         p(style = "text-align: justify; font-size = 20px",
             "Ausgewählte Statistiken bereiten wir in Kurzanalysen auf.
-           Die Kurzanalysen können auf der DataLab-Unterseite von MINTvernetzt gelesen und
+           Die Kurzanalysen können auf der MINT-DataLab-Themenseite der MINTvernetzt-Website gelesen und
             heruntergeladen werden.",
           # LINK ergänzen, wenn da (Nike)
-          br(), br()),
+          br()),
+        tags$a(href="https://www.mint-vernetzt.de/mint-datalab/", "Hier geht es zu den Kurzanalysen!", target = "_blank"),
+        p(br()),
 
         slickR::slickROutput(ns("slider_output"), width = '900px', height = '500px'),
 
