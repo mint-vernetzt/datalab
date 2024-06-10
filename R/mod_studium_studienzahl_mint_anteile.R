@@ -48,15 +48,15 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
       selected = "MINT-Fächer"
     ),
 
-    # br(),
-    #
-    # p("Betrachtung:"),
-    # shinyWidgets::radioGroupButtons(
-    #   inputId = ns("anteile_betrachtung"),
-    #   choices = c("In Prozent", "Anzahl"),
-    #   justified = TRUE,
-    #   checkIcon = list(yes = icon("ok",
-    #                               lib = "glyphicon"))),
+    br(),
+
+    p("Betrachtung:"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("anteile_betrachtung"),
+      choices = c("In Prozent", "Anzahl"),
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))),
     br(),
 
     shinyBS::bsPopover(id="ih_studium_fach_4", title="",
@@ -88,9 +88,9 @@ mod_studium_studienzahl_mint_anteile_server <- function(id, r){
       r$anteile_order <- input$anteile_order
     })
 
-    # observeEvent(input$anteile_betrachtung, {
-    #   r$anteile_betrachtung <- input$anteile_betrachtung
-    # })
+    observeEvent(input$anteile_betrachtung, {
+      r$anteile_betrachtung <- input$anteile_betrachtung
+    })
 
 
   })

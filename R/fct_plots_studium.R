@@ -2619,7 +2619,7 @@ mint_anteile <- function(r) {
       out <- highcharter::hchart(df, 'line', highcharter::hcaes(y = wert, x = jahr, group = fach))%>%
         highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
         highcharter::hc_yAxis(title = list(text = "")
-                              , labels = list(format = "{value} %")) %>%
+                              , labels = list(format = "{value}")) %>%
         highcharter::hc_xAxis(title = list(text = ""))%>%
         highcharter::hc_colors(colors)
     }

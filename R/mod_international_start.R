@@ -173,11 +173,11 @@ mod_international_start_ui <- function(id){
                                       width = 3,
                                       #p("LOREM"),
                                       mod_international_schule_migration_ui("international_schule_migration_1"),
-                                      br(),br(),
-                                      downloadButton(
-                                        outputId = ns("download_btn_plot_international_schule_migration_1"),
-                                        label = "Download",
-                                        icon = icon("download")),
+                                      # br(),br(),
+                                      # downloadButton(
+                                      #   outputId = ns("download_btn_plot_international_schule_migration_1"),
+                                      #   label = "Download",
+                                      #   icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -1135,28 +1135,28 @@ mod_international_start_server <- function(id, r){
     output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
       plot <- plot_international_arbeitsmarkt_vergleiche(r)
 
-      r$plot_international_arbeitsmarkt_vergleiche <- plot
-      r$plot_international_arbeitsmarkt_vergleiche_title <- get_plot_title(
-        plot = r$plot_international_arbeitsmarkt_vergleiche
+      r$plot_international_arbeitsmarkt_vergleiche_1 <- plot
+      r$plot_international_arbeitsmarkt_vergleiche_1_title <- get_plot_title(
+        plot = r$plot_international_arbeitsmarkt_vergleiche_1
       )
 
       plot
     })
 
-    output$download_btn_plot_international_arbeitsmarkt_vergleiche <- downloadHandler(
+    output$download_btn_plot_international_arbeitsmarkt_vergleiche_1 <- downloadHandler(
       contentType = "image/png",
-      filename = function() {r$plot_international_arbeitsmarkt_vergleiche_title},
+      filename = function() {r$plot_international_arbeitsmarkt_vergleiche_1_title},
       content = function(file) {
         # creating the file with the screenshot and prepare it to download
         add_caption_and_download(
-          hc = r$plot_international_arbeitsmarkt_vergleiche,
-          filename =  r$plot_international_arbeitsmarkt_vergleiche_title,
+          hc = r$plot_international_arbeitsmarkt_vergleiche_1,
+          filename =  r$plot_international_arbeitsmarkt_vergleiche_1_title,
           width = 700,
           height = 400,
           with_labels = FALSE)
 
-        file.copy(r$plot_international_arbeitsmarkt_vergleiche_title, file)
-        file.remove(r$plot_international_arbeitsmarkt_vergleiche_title)
+        file.copy(r$plot_international_arbeitsmarkt_vergleiche_1_title, file)
+        file.remove(r$plot_international_arbeitsmarkt_vergleiche_1_title)
       }
     )
 

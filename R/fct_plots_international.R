@@ -2812,7 +2812,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
 
 
-     out <- list(plot_top, plot_bot)
+     out <- list(plot_top, plot_bottom)
 
     } else if (avg_line == "Nein"){
 
@@ -3523,8 +3523,8 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
   plot <- highcharter::hchart(object = tmp_df,
                       type = "column",
                       mapping = highcharter::hcaes(x = land, y = wert, group = variable))  %>%
-    #hc_xAxis(categories = tmp_df$land) %>%
-    #hc_yAxis(title = list(text = "THIS TITLE")) %>%
+    highcharter::hc_xAxis(title="Land") %>%
+    highcharter::hc_yAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(
       series = list(
         dataLabels = list(enabled = FALSE))) %>%
