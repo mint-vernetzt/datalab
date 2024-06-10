@@ -528,12 +528,12 @@ mod_international_start_ui <- function(id){
                                         width = 3,
                                         #p("LOREM"),
                                         mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
-                                        br(),br()
-                                        ,
-                                        downloadButton(
-                                          outputId = ns("download_btn_plot_international_arbeitsmarkt_vergleiche_1"),
-                                          label = "Download",
-                                          icon = icon("download")),
+                                        # br(),br()
+                                        # ,
+                                        # downloadButton(
+                                        #   outputId = ns("download_btn_plot_international_arbeitsmarkt_vergleiche_1"),
+                                        #   label = "Download",
+                                        #   icon = icon("download")),
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
