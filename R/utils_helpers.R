@@ -579,17 +579,17 @@ fachkraft_ui_wirkhebel <- function(version = "lang") {
 
     selection <- c(
       "Gesamteffekt",
-      "MINT-Bildung",
-      "Förderung Frauen u. Bildung in MINT" = "Frauen in MINT",
-      "Beteiligung internationaler MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
-      "Beteiligung älterer MINT-Fachkräfte"
+      "MINT-Nachwuchs fördern" = "MINT-Bildung",
+      "Mädchen und Frauen in MINT fördern" = "Frauen in MINT",
+      "Zuwanderung MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
+      "Verbleib älterer MINT-Fachkräfte" = "Beteiligung älterer MINT-Fachkräfte"
     )
   }else if (version == "kurz"){
     selection <- c(
-      "MINT-Bildung",
-      "Förderung Frauen u. Bildung in MINT" = "Frauen in MINT",
-      "Beteiligung internationaler MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
-      "Beteiligung älterer MINT-Fachkräfte"
+      "MINT-Nachwuchs fördern" = "MINT-Bildung",
+      "Mädchen und Frauen in MINT fördern" = "Frauen in MINT",
+      "Zuwanderung MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
+      "Verbleib älterer MINT-Fachkräfte" = "Beteiligung älterer MINT-Fachkräfte"
     )
   }
   return(selection)
@@ -617,9 +617,8 @@ fachkraft_ui_scenario <- function(wirkhebel) {
 
   } else if(wirkhebel == "Frauen in MINT"){
     selection <- c(
-
-      "positives Szenario" = "starke Verbesserung",
-      "moderates Szenario" = "Verbesserung"
+      "positives Szenario" = "Verbesserung",
+      "kombiniertes Szenario" = "starke Verbesserung"
     )
   } else if(wirkhebel == "Basis-Szenario"){
     selection <- c(

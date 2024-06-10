@@ -6,7 +6,6 @@ plot_fachkraft_prognose  <- function(r) {
   #filter_berufslevel <- r$fachkraft_item_prog_berufslevel
   filter_berufslevel <- "Gesamt"
 
-
   plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
     dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
     dplyr::filter(indikator %in% filter_indikator) %>%
@@ -25,8 +24,8 @@ plot_fachkraft_prognose  <- function(r) {
       )
     ) %>%
     dplyr::ungroup()%>%
-
-    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Förderung Frauen u. Bildung in MINT",
+    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Mädchen und Frauen in MINT fördern",
+                                               wirkhebel == "MINT-Bildung" ~ "MINT-Nachwuchs fördern",
                                                T ~ wirkhebel))
 
   plot_data <- plot_data %>%
@@ -34,32 +33,46 @@ plot_fachkraft_prognose  <- function(r) {
 
   data_list <- split(plot_data, plot_data$wirkhebel)
 
+  if (filter_wirkhebel[2] == "Frauen in MINT") filter_wirkhebel[2]<-"Mädchen und Frauen in MINT fördern"
+  if (filter_wirkhebel[2] == "MINT-Bildung") filter_wirkhebel[2]<-"MINT-Nachwuchs fördern"
   # Texte vorbereiten
   szenario <- paste0(filter_indikator[2], " in der ", filter_wirkhebel[2])
   szenario <- ifelse(filter_wirkhebel[2] == "Gesamteffekt",
-                    paste0(filter_indikator[2], " in der Gesamtsituation von Bildung,
-                     Frauenförderung, Integration internationaler und älterer Fachkräfte in MINT"),
+                    paste0(filter_indikator[2], " in der Gesamtsituation von Nachwuchs- und
+                     Frauenförderung sowie der Integration internationaler und älterer Fachkräfte in MINT"),
                      szenario)
   szenario <- ifelse(filter_wirkhebel[2] == "Internationale MINT-Fachkräfte",
                      paste0(filter_indikator[2],
                             " bei der Integration internationaler MINT-Fachkräfte"),
                      szenario)
-
-  szenario <- ifelse(filter_wirkhebel[2] == "Förderung Frauen u. Bildung in MINT",
+  szenario <- ifelse(filter_wirkhebel[2] == "Mädchen und Frauen in MINT fördern",
                      paste0(filter_indikator[2],
                             " bei der Gewinnug von Frauen für MINT"),
+                     szenario)
+  szenario <- ifelse(filter_wirkhebel[2] == "MINT-Nachwuchs fördern",
+                     paste0(filter_indikator[2],
+                            " bei der Förderung des MINT-Nachwuchses"),
                      szenario)
 
   titel <- paste0("Zukünftige MINT-Fachkräfteentwicklung bei aktuellen Verhältnissen
   im Vergleich zu einer ", szenario, " bis 2037")
 
-  titel <- ifelse(filter_wirkhebel[2] == "Förderung Frauen u. Bildung in MINT" &
-                       filter_indikator[2] == "starke Verbesserung",
+  titel <- ifelse(filter_wirkhebel[2] == "Internationale MINT-Fachkräfte" &
+                    filter_indikator[2] == "Stillstand",
                   "Zukünftige MINT-Fachkräfteentwicklung bei aktuellen Verhältnissen
-                  im Vergleich zu einer starken Verbesserung bei der Gewinnung von Frauen in MINT bis 2037",
+                  im Vergleich zu einem Kombination aus einem Stillstand in der Zuwanderung
+                  von internationalen MINT-Fachkräften bis 2037",
                   titel)
 
-  if(filter_wirkhebel[2] == "MINT-Bildung"){
+  titel <- ifelse(filter_wirkhebel[2] == "Mädchen und Frauen in MINT fördern" &
+                       filter_indikator[2] == "starke Verbesserung",
+                  "Zukünftige MINT-Fachkräfteentwicklung bei aktuellen Verhältnissen
+                  im Vergleich zu einer Kombination aus einem Zuwachs im
+                  MINT-Nachwuchs und einem außerdem zusätzlich verstärkten Zuwachs von
+                  jungen Frauen in MINT bis 2037",
+                  titel)
+
+  if(filter_wirkhebel[2] == "MINT-Nachwuchs fördern"){
     if(filter_indikator[2] == "Verbesserung"){
       subtitel <- "Die Prognose beruht auf der Annahme, dass es durch MINT-Bildungsförderung gelingt,
     den Anteil an jungen Menschen, die einen MINT-Beruf ergereifen, zu erhöhen. <br>
@@ -69,16 +82,15 @@ plot_fachkraft_prognose  <- function(r) {
     durch eine Rückgang in MINT-Bildungsinitiativen verringert. <br>
     Dadurch könnten im Vergleich zum Basisszenario knapp 800.000 Personen weniger 2037 in MINT beschäftigt sein."
     }
-  }else if(filter_wirkhebel[2] == "Förderung Frauen u. Bildung in MINT"){
+  }else if(filter_wirkhebel[2] == "Mädchen und Frauen in MINT fördern"){
     if(filter_indikator[2] == "Verbesserung"){
-      subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch MINT-Bildungsförderung und
-    besonderer Förderung von Mädchen in MINT gelingt,
-    den Anteil an jungen Menschen, die einen MINT-Beruf ergereifen, allgemein und von jungen Frauen im Besonderen zu erhöhen. <br>
-    Dadurch könnten schon bei moderat positiver Entwicklung im Vergleich zum Basisszenario ca. 290.000 Personen mehr 2037 in MINT beschäftigt sein."
+      subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch eine Förderung von Mädchen und jungen Frauen in MINT gelingt,
+    den Anteil an jungen Frauen in MINT zu ehröhen. <br>
+    Dadurch könnten im Vergleich zum Basisszenario ca. 290.000 Personen mehr 2037 in MINT beschäftigt sein."
     }else if(filter_indikator[2] == "starke Verbesserung"){
-    subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch MINT-Bildungsförderung und
-    besonderer Förderung von Mädchen in MINT gelingt,
-    den Anteil an jungen Menschen, die einen MINT-Beruf ergereifen, allgemein und von jungen Frauen im Besonderen zu erhöhen. <br>
+    subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch eine Kombination aus MINT-Bildungsförderung und
+    besonderer Förderung von Mädchen und jungen Frauen in MINT gelingt,
+    den Anteil an jungen Menschen, die einen MINT-Beruf ergereifen, zu erhöhen. <br>
     Dadurch könnten im Vergleich zum Basisszenario ca. 1 Mio. Personen mehr 2037 in MINT beschäftigt sein."
     }
   }else if(filter_wirkhebel[2] == "Internationale MINT-Fachkräfte"){
@@ -166,7 +178,7 @@ plot_fachkraft_prognose  <- function(r) {
       list(dashStyle = 'Dash')
     )
   )
-    
+
   return(hc)
 }
 
@@ -208,18 +220,23 @@ plot_fachkraft_prognose_alle  <- function(r) {
   }
 
 
-  if(filter_wirkhebel[2] == "Frauen in MINT") filter_wirkhebel[2]<-"Förderung Frauen u. Bildung in MINT"
+  if(filter_wirkhebel[2] == "Frauen in MINT") filter_wirkhebel[2]<-"Mädchen und Frauen in MINT fördern"
+  if(filter_wirkhebel[2] == "MINT-Bildung") filter_wirkhebel[2] <- "MINT-Nachwuchs fördern"
 
   # Texte vorbereiten
   titel <- paste0("Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
                    bei unterschiedlichen Entwicklungen in der ", filter_wirkhebel[2])#"Titel"
-  titel <- ifelse(filter_wirkhebel[2] == "Förderung Frauen u. Bildung in MINT",
+  titel <- ifelse(filter_wirkhebel[2] == "Mädchen und Frauen in MINT fördern",
                   "Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
-                   bei unterschiedlichen Entwicklungen in der Förderung von Bildung und
-                  Frauen in MINT", titel)
+                   bei unterschiedlichen Entwicklungen in der Förderung von Mädchen und jungen
+                   Frauen in MINT", titel)
   titel <- ifelse(filter_wirkhebel[2] == "Internationale MINT-Fachkräfte",
                   "Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
                    bei unterschiedlichen Entwicklungen in der Integration internatoinaler MINT-Fachkräfte",
+                  titel)
+  titel <- ifelse(filter_wirkhebel[2] == "MINT-Nachwuchs fördern",
+                  "Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
+                   bei unterschiedlichen Entwicklungen in der Förderung des MINT-Nachwuchses",
                   titel)
 
   # plot
@@ -291,10 +308,12 @@ plot_fachkraft_prognose_detail  <- function(r) {
   plot_data <-plot_data %>%
     dplyr::mutate(dplyr::across(all_of(focused_column), ~ factor(.x, levels = c(sort(unique(.x)))))) %>%
     dplyr::arrange(dplyr::across(all_of(focused_column)), jahr)%>%
-    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Förderung Frauen u. Bildung in MINT",
+    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Mädchen und Frauen in MINT fördern",
+                                               wirkhebel == "MINT-Bildung" ~ "MINT-Nachwuchs fördern",
                                                T ~ wirkhebel))
 
-  if(filter_wirkhebel == "Frauen in MINT") filter_wirkhebel <- "Förderung Frauen u. Bildung in MINT"
+  if(filter_wirkhebel == "Frauen in MINT") filter_wirkhebel <- "Mädchen und Frauen in MINT fördern"
+  if(filter_wirkhebel == "MINT-Bildung") filter_wirkhebel <- "MINT-Nachwuchs fördern"
 
   if(focused_column == "nationalitaet"){
     plot_data$nationalitaet <- factor(plot_data$nationalitaet,
@@ -316,14 +335,13 @@ plot_fachkraft_prognose_detail  <- function(r) {
 
   data_list <- split(plot_data, plot_data[focused_column])
 
-  if(filter_wirkhebel == "MINT-Bildung"){
-
+  if(filter_wirkhebel == "MINT-Nachwuchs fördern"){
     subtitel <- "Die Prognose beruht auf der Annahme, dass es durch MINT-Bildungsförderung gelingt,
     den Anteil an jungen Menschen, die einen MINT-Beruf ergreifen, zu erhöhen."
-  }else if(filter_wirkhebel == "Förderung Frauen u. Bildung in MINT"){
-    subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch MINT-Bildungsförderung und
-    besonderer Förderung von Mädchen in MINT gelingt,
-    den Anteil an jungen Menschen, die einen MINT-Beruf ergreifen, allgemein und von jungen Frauen im Besonderen zu erhöhen."
+  }else if(filter_wirkhebel == "Mädchen und Frauen in MINT fördern"){
+    subtitel <- "Die Prognose beruht auf den Annahmen, dass es durch Förderung
+    von Mädchen und jungen Frauen in MINT gelingt,
+    den Anteil an jungen Frauen, die einen MINT-Beruf ergreifen, zu erhöhen."
   }else if(filter_wirkhebel == "Internationale MINT-Fachkräfte"){
     subtitel <- "Die Prognose beruht auf der Annahme, dass die Zahl an zugewanderten internationalen
     MINT-Fachkräften zukünftig noch stärker ansteigt als bisher."
@@ -396,10 +414,10 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
   #year_filter <- 2037
 
 
-  basis <-  dplyr::tbl(con, from = "fachkraefte_prognose") %>%
-    dplyr::collect()
+  # basis <-  dplyr::tbl(con, from = "fachkraefte_prognose") %>%
+  #   dplyr::collect()
 
-  basis_wert <- basis %>%
+  basis_wert <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
     dplyr::filter(wirkhebel == "Basis-Szenario") %>%
     dplyr::filter(geschlecht == "Gesamt") %>%
     dplyr::filter(nationalitaet == "Gesamt") %>%
@@ -407,17 +425,21 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     dplyr::filter(jahr == year_filter) %>%
     dplyr::pull(wert)
 
-  uebersicht_data <-  basis %>%
+  uebersicht_data <-  dplyr::tbl(con, from = "fachkraefte_prognose") %>%
     dplyr::filter(jahr == year_filter) %>%
-    dplyr::filter(indikator %in% c("Verbesserung", "starke Verbesserung")) %>%
-    dplyr::filter(!(wirkhebel == "Frauen in MINT" & indikator == "Verbesserung")) %>%
+    dplyr::filter(indikator %in% c("Verbesserung")) %>%
     dplyr::filter(geschlecht == "Gesamt") %>%
     dplyr::filter(nationalitaet == "Gesamt") %>%
     dplyr::filter(anforderung == "Gesamt") %>%
     dplyr::mutate(basis_wert = basis_wert) %>%
     dplyr::select(wirkhebel, basis_wert, wert)%>%
-    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Förderung Frauen u. Bildung in MINT",
-                                               T ~ wirkhebel))
+    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Mädchen und Frauen in MINT fördern",
+                                               wirkhebel == "MINT-Bildung" ~ "MINT-Nachwuchs fördern",
+                                               wirkhebel == "Internationale MINT-Fachkräfte" ~ "Zuwanderung MINT-Fachkräfte",
+                                               wirkhebel == "Beteiligung älterer MINT-Fachkräfte" ~ "Verbleib älterer MINT-Fachkräfte",
+                                               T ~ wirkhebel),
+                  diff = wert - basis_wert) %>%
+    dplyr::collect()
 
   row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
 
@@ -428,33 +450,65 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
                   improvement_label = paste0("positives Szenario: ", wirkhebel),
 
                   basis_wert_txt = prettyNum(basis_wert, big.mark = ".", decimal.mark = ","),
-                  wert_txt = prettyNum(wert, big.mark = ".", decimal.mark = ",")
-    )
-#stattdessen die prettyNum werte an die labels anpassen und nur text in hower anzeigen
+                  wert_txt = prettyNum(wert, big.mark = ".", decimal.mark = ","),
+                  diff_txt = prettyNum(diff, big.mark = ".", decimal.mark = ",")) %>%
+    dplyr::arrange(diff)
 
   fig <- plotly::plot_ly(uebersicht_data, color = I("gray80")) %>%
-    plotly::add_segments(x = ~basis_wert, xend = ~wert, y = ~wirkhebel, yend = ~wirkhebel, showlegend = FALSE, text = ~basis_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
-    plotly::add_markers(x = ~basis_wert, y = ~wirkhebel, name = "Basis-Szenario", color = I("#D0A9CD"), symbol = I("square"), size = I(50), text = ~basis_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
-    plotly::add_markers(x = ~wert, y = ~wirkhebel, name = "positives Szenario", color = I("#b16fab"), symbol = I("square"), size = I(50), text = ~improvement_label, texttemplate = "%{x:.f}", hoverinfo = "x+text") %>%
+    plotly::add_segments(
+      x = ~basis_wert,
+      xend = ~wert,
+      y = ~wirkhebel,
+      yend = ~wirkhebel,
+      showlegend = FALSE,
+      text = ~paste0("MINT-Fachkräfteanzahl im Basis: ", basis_wert, "<br>Wert: ", wert_txt, "<br>: ", diff_txt),
+      hoverinfo = "text"
+    ) %>%
+    plotly::add_markers(
+      x = ~basis_wert,
+      y = ~wirkhebel,
+      name = "Basis-Szenario",
+      color = I("#D0A9CD"),
+      symbol = I("square"),
+      size = I(50),
+      text = ~paste0("Basis-Szenario: ", basis_wert_txt),
+      hoverinfo = "text"
+    ) %>%
+    plotly::add_markers(
+      x = ~wert,
+      y = ~wirkhebel,
+      name = "positives Szenario",
+      color = I("#b16fab"),
+      symbol = I("square"),
+      size = I(50),
+      text = ~paste0("Positives Szenario für Wirkhebel ", wirkhebel, ": ", wert_txt, "<br>Zunahme der MINT-Fachkräfte um: ", diff_txt),
+      hoverinfo = "text"
+    ) %>%
     plotly::layout(
       title = list(
-        text = "Übersicht über die potentielle Wirkung der Hebel MINT-Bildung, Frauen in MINT und Integration internationaler \nbzw. älterer MINT-Fachkäfte"
-       # font = list(family = "SourceSans3-Regular", size = 28)
+        text = paste0(
+          "Übersicht über die potentielle Wirkung der Hebel MINT-Nachwuchs und Mädchen und Frauen in MINT fördern,
+          Zuwanderung internationaler und Verbleib älterer MINT-Fachkäfte"
+        )
       ),
-      xaxis = list(title = "Anzahl MINT-Beschäftigte",
-                   tickformat = ",", range = c(7500000, 9500000)),
-      yaxis = list(title = "",
-                   categoryorder = "array",
-                   categoryarray = unique(uebersicht_data$wirkhebel)),
+      xaxis = list(
+        title = "Anzahl MINT-Fachkräfte",
+        tickformat = ",",
+        range = c(7500000, 9500000)
+      ),
+      yaxis = list(
+        title = "",
+        categoryorder = "array",
+        categoryarray = unique(uebersicht_data$wirkhebel)
+      ),
       margin = list(l = 100, r = 50, t = 80, b = 50),
       hoverlabel = list(bgcolor = "white"),
-      #font = list(family = "SourceSans3-Regular", size = 14),
       legend = list(
-        orientation = "h",  # Horizontale Ausrichtung der Legende
-        x = 0.5,  # Zentriert die Legende auf der X-Achse
-        y = -0.5,  # Positioniert die Legende unterhalb der X-Achse
-        xanchor = "center",  # Zentriert die Legende an ihrem X-Wert
-        yanchor = "top"  # Verankert die Legende oben an ihrem Y-Wert
+        orientation = "h",
+        x = 0.5,
+        y = -0.5,
+        xanchor = "center",
+        yanchor = "top"
       )
     )
 
