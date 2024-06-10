@@ -496,8 +496,8 @@ beruf_verlauf_single <- function(r) {
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten/Auszubildenden"),
-                            margin = 45,
+      highcharter::hc_title(text = paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten o. Auszubildenden"),
+                            margin = 45, # o. war vorher /
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_colors(c("#b16fab", "#154194")) %>%
@@ -668,8 +668,8 @@ beruf_einstieg_vergleich <- function(r) {
     highcharter::hc_xAxis(title = list(text = ""), categories = indi) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten/Auszubildenden (", timerange, ")"),
-                          margin = 45,
+    highcharter::hc_title(text = paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten o. Auszubildenden (", timerange, ")"),
+                          margin = 45, # o. war vorher /
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
@@ -1149,9 +1149,9 @@ arbeitsmarkt_bl_gender <- function(r) {
                     paste0("Anteil männlicher ", title_help, ", die das Berufsfeld ", fachbereich_choice, " wählen (", timerange, ")"))
 
 
-  highcharter::hw_grid(
+
     # plot
-    highcharter::hcmap(
+    out_1 <- highcharter::hcmap(
       "countries/de/de-all",
       data = values_female,
       value = "proportion",
@@ -1183,9 +1183,9 @@ arbeitsmarkt_bl_gender <- function(r) {
       ) %>% highcharter::hc_size(600, 550) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
       highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom"),
+                             verticalAlign = "bottom")
 
-    highcharter::hcmap(
+    out_2 <- highcharter::hcmap(
       "countries/de/de-all",
       data = values_male,
       value = "proportion",
@@ -1216,12 +1216,13 @@ arbeitsmarkt_bl_gender <- function(r) {
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom"),
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
 
 
-    ncol = 2,
-    browsable = TRUE
-  )
+    out <- list(out_1, out_2)
+
+    return (out)
+
 
 }
 
@@ -1691,9 +1692,8 @@ arbeitsmarkt_bl <- function(r) {
   #
   # }
 
-  highcharter::hw_grid(
     # plot
-    highcharter::hcmap(
+    out1 <- highcharter::hcmap(
       "countries/de/de-all",
       data = df_trainee,
       value = "proportion",
@@ -1726,9 +1726,9 @@ arbeitsmarkt_bl <- function(r) {
       ) %>% highcharter::hc_size(600, 550) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
       highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom"),
+                             verticalAlign = "bottom")
 
-    highcharter::hcmap(
+    out2 <- highcharter::hcmap(
       "countries/de/de-all",
       data = df_employed,
       value = "proportion",
@@ -1760,12 +1760,12 @@ arbeitsmarkt_bl <- function(r) {
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>% highcharter::hc_size(600, 550) %>%
       highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom"),
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
 
 
-    ncol = 2,
-    browsable = TRUE
-  )
+out <- list(out1, out2)
+
+    return(out)
 
 }
 
@@ -1916,8 +1916,7 @@ arbeitsmarkt_überblick_fächer <- function( r) {
       colors = ifelse(df$fachbereich %in% c("Alle Berufsfelder außer MINT (gesamt)","MINT-Berufsfelder (gesamt)"), "#b16fab", "#d0a9cd")
     )) %>%
     highcharter::hc_title(text = paste0( "Überblick über die Berufsfelder von ", title_help,
-                                         br(), "in ",state, " (", timerange, ")",
-                                         "<br><br><br>"),
+                                         br(), "in ",state, " (", timerange, ")"),
                           margin = 20,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2189,7 +2188,8 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.prop} %")
+          dataLabels = list(enabled = TRUE, format = "{point.prop} %",
+                            style = list(textOutline = "none"))
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
@@ -2219,7 +2219,9 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.prop} %")
+          dataLabels = list(enabled = TRUE,
+                            format = "{point.prop} %",
+                            style = list(textOutline = "none"))
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
@@ -2264,7 +2266,8 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_abs}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_abs}",
+                            style = list(textOutline = "none"))
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Anzahl: {point.display_abs}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}", rotation = -45), min = 0, max = plyr::round_any(max(berufe_frauen$wert), 500, f = ceiling), tickInterval = 1000) %>%
@@ -2294,7 +2297,8 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_plotOptions(
         series = list(
           boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_abs}")
+          dataLabels = list(enabled = TRUE, format = "{point.display_abs}",
+                            style = list(textOutline = "none"))
         )) %>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Absolut: {point.display_abs}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}", rotation = -45), min = 0, max = plyr::round_any(max(berufe_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
@@ -2320,10 +2324,11 @@ arbeitsmarkt_top10 <- function( r){
 
   }
 
-  highcharter::hw_grid(
+  out <- list(
     plot_frau,
-    plot_mann,
-    ncol = 2)
+    plot_mann)
+
+  return(out)
 
 
 }
@@ -2968,12 +2973,9 @@ arbeitsmarkt_lk_detail_map <- function(r) {
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-  highcharter::hw_grid(
-    map1,
-    map2,
-    ncol = 2,
-    browsable = TRUE
-  )
+  out <- list(map1, map2)
+
+  return(out)
 }
 #' A function to plot a bar chart
 #'

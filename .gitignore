@@ -6,3 +6,5 @@
 *.rda
 *.xlsx
 *.xlsb
+*.csv
+*.duckdb

@@ -19,6 +19,7 @@ mod_fachkraft_wirkhebel_analyse_ui <- function(id){
     ),
 
     br(),
+
     shinyBS::bsPopover(id="dh_wirkhebel", title = "",
                        content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                        trigger = "hover"),
@@ -29,6 +30,7 @@ mod_fachkraft_wirkhebel_analyse_ui <- function(id){
     # TODO extract into own module, since this is repeated on a lot of modules
     shinyBS::bsPopover(id="ih_fachkraft_item_wirkhebel_analyse", title="",
                        content = paste0("Die Grafikt zeigt in der obersten Zeile, wie viele MINT-Fachkräfte durch ein Zusammenspiel aller betrachteten Wirkhebel gewonnen werden könnten. Darunter werden die Einzeleffekte aller Wirkhebel dargestellt. Z. B. kann eine Förderung in der MINT-Bildung knapp 800.000 Fachkräfte zusätzlich bis 2037 gewinnen."),
+
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_item_wirkhebel_analyse")

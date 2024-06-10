@@ -104,9 +104,10 @@ round_preserve_sum <- function(x, digits = 0) {
 # Veraltet - nicht die richtigen Farben und nicht richtige Kategroriezuordnung
 colors_mint_vernetzt <- list(general = c("#154194", "#b16fab", "#00a87a"),
                              attention = c("#00a87a", "#fcc433", "#ee7775"),
-                             short = c("#154194", "#b16fab"),
-                             neutral = c("#141416", "#e6e8ec"),
-                             gender = c("#f5adac", "#b1b5c3"))
+                             short = c("#154194", "#b16fab")
+                             #neutral = c("#141416", "#e6e8ec"),
+                             #gender = c("#f5adac", "#b1b5c3"))
+)
 
 
 #' helpers
@@ -699,13 +700,30 @@ add_caption_and_download <- function(
     hc,
     filename = "plot.png",
     labelformat = '{point.y}',
-    with_labels = TRUE,
+    with_labels = TRUE
+    ,
     width = 450,
-    height = 300) {
+    height = 300
+    ) {
 
   require(highcharter)
   require(webshot2)
   require(htmlwidgets)
+
+
+  ## roll back webshot2
+
+  # remove.packages("webshot2")
+  # packageurl <- "https://cran.r-project.org/src/contrib/Archive/webshot2/webshot2_0.1.0.tar.gz"
+  # install.packages(packageurl, repos=NULL, type="source")
+  #
+  # packageVersion("webshot2")
+
+
+  # set chromote, determine chromium variant
+  # Sys.setenv(
+  #   CHROMOTE_CHROME = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+  # )
 
   # force the use of pagedown to install chrome on shinyapps.io (this is a workaround)
   require(pagedown)
@@ -719,7 +737,7 @@ add_caption_and_download <- function(
                           type = "message",
                           duration = NULL,
                           id = "download_notification")
-
+#browser()
   hc_out <- hc %>%
     # Add the caption to the plot
     highcharter::hc_size(width = width, height = height) %>%
@@ -727,7 +745,7 @@ add_caption_and_download <- function(
       '<div style="width: ',width - 10, 'px;',
       ' display: flex; justify-content: space-between;">',
       '<span>',
-      # '<span style="font-size: 10px;">', # max-width: ', width - 50, 'px; # Formatierung der Anordnung des Texts klappt noch nicht
+      # '<span style="font-size: 10px;">', # max-width: ', width - 50, 'px;
       'Quellen: Statistisches Bundesamt, 2022; Bundesagentur für Arbeit, 2022;',
       ' KMK, 2022, alle auf Anfrage,<br>',
       ' Eigene Berechnungen durch MINTvernetzt</span>',
@@ -764,6 +782,7 @@ add_caption_and_download <- function(
       )
   }
 
+  #browser()
   #print(hc_out)
   # Save the plot as a standalone HTML file
   html_file <- tempfile(fileext = ".html")
@@ -771,11 +790,13 @@ add_caption_and_download <- function(
   print(html_file)
   # # Capture the HTML as a PNG image
   webshot2::webshot(url = html_file,
-                    file = filename,
+                    file = filename
+                    ,
                     delay = 2,
                     zoom = 2,
                     vwidth = width,
-                    vheight = height)
+                    vheight = height
+                    )
 
   shiny::showNotification(
     ui = paste0("Gespeichert als '", filename, "'"),
@@ -784,3 +805,5 @@ add_caption_and_download <- function(
 
   return(NULL)
 }
+
+

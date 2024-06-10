@@ -120,12 +120,14 @@ mod_fachkraft_start_ui <- function(id){
               width = 3,
               mod_fachkraft_item_prog_ui("fachkraft_item_prog_1"),
               br(),
+
               # br(),
               # downloadButton(
               #   outputId = ns("download_btn_plot_fachkraft_prog_item_1"),
               #   br(),
               #   label = "Download",
               #   icon = icon("download")),
+
             ),
             shiny::mainPanel(
               width = 9,
@@ -139,6 +141,7 @@ mod_fachkraft_start_ui <- function(id){
             )
           ),
     tabPanel(
+
       title = "Im Vergleich: Zukünftige Fachkräfte-Entwicklung", br(),
 
       shiny::sidebarPanel(
@@ -193,6 +196,7 @@ mod_fachkraft_start_ui <- function(id){
           )
     ,
 
+
     tabPanel(
             "Übersicht Wirkhebel", br(),
 
@@ -201,17 +205,18 @@ mod_fachkraft_start_ui <- function(id){
 
               mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"),
               br(),# TODO
+
               # br(),
               # downloadButton(
               #   outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
               #   label = "Download",
               #   icon = icon("download"))
+
             ),
             shiny::mainPanel(
               width = 9,
               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
               color = "#154194"),
-
 
               p(style="font-size:12px;color:grey",
               "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
@@ -225,6 +230,7 @@ mod_fachkraft_start_ui <- function(id){
                    icon("info-circle"),
                    id = "h_fachkraft-prognosen_3"),
             p(),
+
             tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
     )
         )))),
@@ -307,6 +313,7 @@ mod_fachkraft_start_ui <- function(id){
               shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_item_1")),
                                            color = "#154194"),
 
+
               p(style="font-size:12px;color:grey",
                 "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
               shinyBS::bsPopover(
@@ -335,6 +342,7 @@ mod_fachkraft_start_ui <- function(id){
               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_mint_item_1")),
                                            color = "#154194"),
 
+
               p(style="font-size:12px;color:grey",
                 "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
               shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",
@@ -355,6 +363,7 @@ mod_fachkraft_start_ui <- function(id){
                 width = 3,
                 mod_fachkraft_bar_vakanz_ui("fachkraft_bar_vakanz_1"),
                 br(),
+
                 # br(),
                 # downloadButton(
                 #   outputId = ns("download_btn_plot_fachkraft_bar_vakanz_1"),
@@ -445,6 +454,7 @@ mod_fachkraft_start_ui <- function(id){
               #   outputId = ns("download_btn_plot_fachkraft_item_detail_1"),
               #   label = "Download",
               #   icon = icon("download"))
+
               ),
             shiny::mainPanel(
               width = 9,
@@ -648,7 +658,6 @@ mod_fachkraft_start_server <- function(id, r){
 
     ## Bar Vakanz
 
-
     # Download für JT kurz raus
 
     output$fachkraft_bar_vakanz_1_plot <- highcharter::renderHighchart({
@@ -683,8 +692,15 @@ mod_fachkraft_start_server <- function(id, r){
     #   }
     # )
 
+    # Download für JT kurz raus
+    output$plot_fachkraft_bar_vakanz_1 <- renderUI({
+      plot_list <- plot_fachkraft_bar_vakanz(r)
+      r$plot_fachkraft_bar_vakanz_1 <- plot_list
 
-    # Box 3 - Fachkräfte auf Berufsebene ----
+      r$plot_fachkraft_bar_vakanz_1_title <- get_plot_title(
+        plot = r$plot_fachkraft_bar_vakanz_1
+      )
+
 
     ## Detail Berufe
 
@@ -732,8 +748,11 @@ mod_fachkraft_start_server <- function(id, r){
     #   }
     # )
 
-
-
+        add_caption_and_download(
+          hc = r$plot_fachkraft_bar_vakanz_1,
+          filename =  r$plot_fachkraft_bar_vakanz_1_title,
+          width = 700,
+          height = 400)
 
   })
 }

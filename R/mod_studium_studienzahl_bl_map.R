@@ -14,7 +14,7 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("map_y"),
       label = NULL,
-      choices = c("2018", "2019", "2020", "2021", "2022"),
+      choices = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022"),
       selected = "2022"
     ),
     p("Indikator:"),

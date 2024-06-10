@@ -34,6 +34,7 @@ Imports:
     tidyr,
     utils,
     waffle,
+    webshot2 (== 0.1.0),
     highcharter (>= 0.9.4),
     ggpol,
     ggtext,
@@ -41,7 +42,8 @@ Imports:
     pkgload,
     ggalt,
     tm,
-    quanteda
+    slickR,
+    plotly
 Suggests: 
     spelling,
     testthat (>= 3.0.0)
