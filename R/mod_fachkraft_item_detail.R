@@ -109,19 +109,24 @@ mod_fachkraft_item_detail_server <- function(id, r){
     observeEvent(input$map_bl_fachkraft_arbeit_detail, {
 
       level <- selected_level()
+      zeitpunkt <- selected_zeitpunkt()
       shinyWidgets::updatePickerInput(
         session,
         inputId = "map_b_fachkraft_arbeit_detail",
         # choices = ifelse(level == "Fachkräfte", fachkraft_ui_berufe(level = "Fachkräfte"),
         #                  ifelse(level == "Spezialist*innen", fachkraft_ui_berufe(level = "Spezialist*innen"),
         #                         fachkraft_ui_berufe(level = "Expert*innen"))),
-        choices = fachkraft_ui_berufe(level),
+        choices = fachkraft_ui_berufe(level, zeitpunkt),
         selected = "Gesamt"
       )
     })
 
     selected_level <- reactive({
       input$map_bl_fachkraft_arbeit_detail
+    })
+
+    selected_zeitpunkt <- reactive({
+      input$map_y_fachkraft_arbeit_detail
     })
 
 

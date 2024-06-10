@@ -10,7 +10,9 @@ Depends:
     shinyBS,
     DBI,
     RSQLite,
-    duckdb
+    duckdb,
+    slickR,
+    shinyjs
 Imports: 
     config (>= 0.3.1),
     dplyr,
@@ -33,7 +35,7 @@ Imports:
     utils,
     waffle,
     webshot2 (== 0.1.0),
-    highcharter,
+    highcharter (>= 0.9.4),
     ggpol,
     ggtext,
     ggpubr,

@@ -21,13 +21,14 @@ app_ui <- function(request) {
           ),
           "           MINT-DataLab",
           style = "text-align: justify; color:#154194; font-size: 22; font-family: SourceSans3-Bold;"
-        ),
-
-        shiny::tags$li(
-          class = "dropdown",
-          id = "search-input-all",
-          mod_suche_eingabe_ui("suche_eingabe_1")
         )
+        #,
+
+        # shiny::tags$li(
+        #   class = "dropdown",
+        #   id = "search-input-all",
+        #   mod_suche_eingabe_ui("suche_eingabe_1")
+        # )
       ),
 
 
@@ -45,7 +46,7 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
           shinydashboard::menuItem("Fokus: MINT International", tabName = "international"),
           shinydashboard::menuItem("Fokus: MINT-Fachkräfte",  tabName = "fachkraft"),
-          shinydashboard::menuItem("BETA: Suche",  tabName = "suche"),
+        # shinydashboard::menuItem("BETA: Suche",  tabName = "suche"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen"),
           shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION")
           #shinydashboard::menuItem("Impressum",  tabName = "impressum")
@@ -97,7 +98,7 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName = "international", mod_international_ui("mod_international_ui_1")),
           shinydashboard::tabItem(tabName ="fachkraft", mod_fachkraft_ui("fachkraft_ui_1")),
 
-          shinydashboard::tabItem(tabName ="suche", mod_suche_ui("suche_1")),
+          # shinydashboard::tabItem(tabName ="suche", mod_suche_ui("suche_1")),
           shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
           shinydashboard::tabItem(tabName ="BETAVERSION", mod_betaversion_ui("betaversion_ui_1")),
 

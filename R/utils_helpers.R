@@ -554,7 +554,7 @@ fachkraft_ui_berufslevel <- function() {
   return(selection)
 }
 
-fachkraft_ui_berufe <- function(level = "Fachkräfte") {
+fachkraft_ui_berufe <- function(level = "Fachkräfte", zeitpunkt = 2023) {
 
 
   selection <- NULL
@@ -562,6 +562,7 @@ fachkraft_ui_berufe <- function(level = "Fachkräfte") {
   selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
     dplyr::filter(indikator == "Engpassindikator" &
                     anforderung == level &
+                    jahr == zeitpunkt &
                     !is.na(wert)) %>%
     dplyr::pull(beruf) %>%
     unique()
@@ -570,19 +571,27 @@ fachkraft_ui_berufe <- function(level = "Fachkräfte") {
   return(selection)
 }
 
-fachkraft_ui_wirkhebel <- function() {
+fachkraft_ui_wirkhebel <- function(version = "lang") {
 
   selection <- NULL
 
-  selection <- c(
-    "Basisszenario" = "Basis-Szenario",
-    "Gesamteffekt",
-    "MINT-Bildung",
-    "Frauen in MINT",
-    "Beteiligung internationaler MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
-    "Beteiligung älterer MINT-Fachkräfte"
-  )
+  if(version == "lang"){
 
+    selection <- c(
+      "Gesamteffekt",
+      "MINT-Bildung",
+      "Förderung Frauen u. Bildung in MINT" = "Frauen in MINT",
+      "Beteiligung internationaler MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
+      "Beteiligung älterer MINT-Fachkräfte"
+    )
+  }else if (version == "kurz"){
+    selection <- c(
+      "MINT-Bildung",
+      "Förderung Frauen u. Bildung in MINT" = "Frauen in MINT",
+      "Beteiligung internationaler MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
+      "Beteiligung älterer MINT-Fachkräfte"
+    )
+  }
   return(selection)
 }
 
@@ -592,26 +601,29 @@ fachkraft_ui_scenario <- function(wirkhebel) {
 
   if(wirkhebel %in% c("MINT-Bildung", "Gesamteffekt")){
     selection <- c(
-      "Verschlechterung",
-      "Verbesserung"
+      "positives Szenario" = "Verbesserung",
+      "negatives Szenario" = "Verschlechterung"
     )
   } else if(wirkhebel == "Internationale MINT-Fachkräfte"){
     selection <- c(
-      "Stillstand",
-      "Verschlechterung",
-      "Verbesserung"
+      "positives Szenario" = "Verbesserung",
+      "Rückgang im Positivtrend der Zuwanderung" = "Verschlechterung",
+      "vollständiger Stillstand der Zuwanderung" = "Stillstand"
+
+
     )
   } else if(wirkhebel == "Beteiligung älterer MINT-Fachkräfte"){
-    selection <- c("Verbesserung")
+    selection <- c("positives Szenario" = "Verbesserung")
 
   } else if(wirkhebel == "Frauen in MINT"){
     selection <- c(
-      "Verbesserung",
-      "starke Verbesserung"
+
+      "positives Szenario" = "starke Verbesserung",
+      "moderates Szenario" = "Verbesserung"
     )
   } else if(wirkhebel == "Basis-Szenario"){
     selection <- c(
-      "Status-quo"
+      "Fortschreibung aktueller Lage" = "Status-quo"
     )
   }
 
