@@ -490,10 +490,7 @@ mod_fachkraft_start_ui <- function(id){
 #'
 #' @noRd
 mod_fachkraft_start_server <- function(id, r){
-
-  #logger::log_debug("start mod_international_start_server")
-
-  moduleServer( id, function(input, output, session){
+  moduleServer(id, function(input, output, session){
     ns <- session$ns
 
   # Box 1 - Fachkraft-Prognose ----
@@ -695,11 +692,8 @@ mod_fachkraft_start_server <- function(id, r){
     # Download für JT kurz raus
     output$plot_fachkraft_bar_vakanz_1 <- renderUI({
       plot_list <- plot_fachkraft_bar_vakanz(r)
-      r$plot_fachkraft_bar_vakanz_1 <- plot_list
-
-      r$plot_fachkraft_bar_vakanz_1_title <- get_plot_title(
-        plot = r$plot_fachkraft_bar_vakanz_1
-      )
+      plot_list
+    })
 
 
     ## Detail Berufe
@@ -748,11 +742,6 @@ mod_fachkraft_start_server <- function(id, r){
     #   }
     # )
 
-        add_caption_and_download(
-          hc = r$plot_fachkraft_bar_vakanz_1,
-          filename =  r$plot_fachkraft_bar_vakanz_1_title,
-          width = 700,
-          height = 400)
 
   })
 }
