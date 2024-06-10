@@ -70,7 +70,7 @@ mod_studium_server <- function(id,
 
 
   # neu
-  mod_studium_studienzahl_mint_anteile_server("mod_studium_studienzahl_mint_anteile_ui",  r)
+  mod_studium_studienzahl_mint_anteile_server("mod_studium_studienzahl_mint_anteile_ui_1",  r)
 
   # international
   mod_international_map_server("mod_international_map_ui_1", r)

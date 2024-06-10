@@ -256,9 +256,6 @@ mod_home_start_server <- function(id,r){
     })
 
 
-    # Rest ----
-
-
     # output$plot_verlauf_mint <- highcharter::renderHighchart({
     #   home_comparison_line(r)
     # })

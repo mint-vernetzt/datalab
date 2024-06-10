@@ -2217,7 +2217,7 @@ iqb_standard_zeitverlauf <- function(r){
   out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = region, group=jahr))%>%
     highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
     highcharter::hc_tooltip(pointFormat = "{point.jahr} <br> {point.display_rel} % leistungsschwach")%>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), pointsWidth=100) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %")) %>% #, pointsWidth=100
     highcharter::hc_xAxis(title = list(text = "")) %>%
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
     #highcharter::hc_colors(c("#efe8e6","#D0A9CD", "#b16fab")) %>%

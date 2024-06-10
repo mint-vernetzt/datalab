@@ -216,16 +216,17 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
-                               br(), br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_map_kurse_gender_item_1"),
-                                 label = "Download (links)",
-                                 icon = icon("download")),
-                               br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_map_kurse_gender_item_2"),
-                                 label = "Download (rechts)",
-                                 icon = icon("download"))),
+                               # br(), br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_map_kurse_gender_item_1"),
+                               #   label = "Download (links)",
+                               #   icon = icon("download")),
+                               # br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_map_kurse_gender_item_2"),
+                               #   label = "Download (rechts)",
+                               #   icon = icon("download"))
+                               ),
                              shiny::mainPanel(
                                width = 9,
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_map_kurse_gender")),
@@ -283,16 +284,17 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_map_ui("mod_schule_kurse_map_ui_1"),
-                               br(), br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_map_kurse_item_1"),
-                                 label = "Download (links)",
-                                 icon = icon("download")),
-                               br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_map_kurse_item_2"),
-                                 label = "Download (rechts)",
-                                 icon = icon("download"))),
+                               # br(), br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_map_kurse_item_1"),
+                               #   label = "Download (links)",
+                               #   icon = icon("download")),
+                               # br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_map_kurse_item_2"),
+                               #   label = "Download (rechts)",
+                               #   icon = icon("download"))
+                               ),
                              shiny::mainPanel(
                                width = 9,
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_map_kurse")),
@@ -820,21 +822,18 @@ mod_schule_kurse_server <- function(id, r){
     })
 
     ## Karte Gender
-    # output$plot_map_kurse_gender <- renderUI({
-    #   kurse_map_gender(r)
-    # })
 
     output$plot_map_kurse_gender <- renderUI({
       plot_list <- kurse_map_gender(r)
-      r$plot_map_kurse_gender_left <- plot_list[[1]]
-      r$plot_map_kurse_gender_right <- plot_list[[2]]
-
-      r$plot_map_kurse_gender_left_title <- get_plot_title(
-        plot = r$plot_map_kurse_gender_left
-      )
-      r$plot_map_kurse_gender_right_title <- get_plot_title(
-        plot = r$plot_map_kurse_gender_right
-      )
+      # r$plot_map_kurse_gender_left <- plot_list[[1]]
+      # r$plot_map_kurse_gender_right <- plot_list[[2]]
+      #
+      # r$plot_map_kurse_gender_left_title <- get_plot_title(
+      #   plot = r$plot_map_kurse_gender_left
+      # )
+      # r$plot_map_kurse_gender_right_title <- get_plot_title(
+      #   plot = r$plot_map_kurse_gender_right
+      # )
 
       # return plots
       out <- highcharter::hw_grid(
@@ -844,60 +843,56 @@ mod_schule_kurse_server <- function(id, r){
 
     })
 
-    output$download_btn_plot_map_kurse_gender_item_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_map_kurse_gender_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_map_kurse_gender_left,
-          filename =  r$plot_map_kurse_gender_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_map_kurse_gender_left_title, file)
-        file.remove(r$plot_map_kurse_gender_left_title)
-      }
-    )
-
-    output$download_btn_plot_map_kurse_gender_item_2 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_map_kurse_gender_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_map_kurse_gender_right,
-          filename =  r$plot_map_kurse_gender_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_map_kurse_gender_right_title, file)
-        file.remove(r$plot_map_kurse_gender_right_title)
-      }
-    )
+    # output$download_btn_plot_map_kurse_gender_item_1 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_map_kurse_gender_left_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_map_kurse_gender_left,
+    #       filename =  r$plot_map_kurse_gender_left_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_map_kurse_gender_left_title, file)
+    #     file.remove(r$plot_map_kurse_gender_left_title)
+    #   }
+    # )
+    #
+    # output$download_btn_plot_map_kurse_gender_item_2 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_map_kurse_gender_right_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #     add_caption_and_download(
+    #       hc = r$plot_map_kurse_gender_right,
+    #       filename =  r$plot_map_kurse_gender_right_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_map_kurse_gender_right_title, file)
+    #     file.remove(r$plot_map_kurse_gender_right_title)
+    #   }
+    # )
 
 
     # Box 2 -  M-I-N-T ----
 
     ## Karte Fächer
     output$plot_map_kurse <- renderUI({
-      kurse_map(r)
-    })
-
-    output$plot_map_kurse <- renderUI({
       plot_list <- kurse_map(r)
-      r$plot_map_kurse_left <- plot_list[[1]]
-      r$plot_map_kurse_right <- plot_list[[2]]
-
-      r$plot_map_kurse_left_title <- get_plot_title(
-        plot = r$plot_map_kurse_left
-      )
-      r$plot_map_kurse_right_title <- get_plot_title(
-        plot = r$plot_map_kurse_right
-      )
+      # r$plot_map_kurse_left <- plot_list[[1]]
+      # r$plot_map_kurse_right <- plot_list[[2]]
+      #
+      # r$plot_map_kurse_left_title <- get_plot_title(
+      #   plot = r$plot_map_kurse_left
+      # )
+      # r$plot_map_kurse_right_title <- get_plot_title(
+      #   plot = r$plot_map_kurse_right
+      # )
 
       # return plots
       out <- highcharter::hw_grid(
@@ -907,40 +902,40 @@ mod_schule_kurse_server <- function(id, r){
 
     })
 
-    output$download_btn_plot_map_kurse_item_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_map_kurse_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_map_kurse_left,
-          filename =  r$plot_map_kurse_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_map_kurse_left_title, file)
-        file.remove(r$plot_map_kurse_left_title)
-      }
-    )
-
-    output$download_btn_plot_map_kurse_item_2 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_map_kurse_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_map_kurse_right,
-          filename =  r$plot_map_kurse_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_map_kurse_right_title, file)
-        file.remove(r$plot_map_kurse_right_title)
-      }
-    )
+    # output$download_btn_plot_map_kurse_item_1 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_map_kurse_left_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_map_kurse_left,
+    #       filename =  r$plot_map_kurse_left_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_map_kurse_left_title, file)
+    #     file.remove(r$plot_map_kurse_left_title)
+    #   }
+    # )
+    #
+    # output$download_btn_plot_map_kurse_item_2 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_map_kurse_right_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #     add_caption_and_download(
+    #       hc = r$plot_map_kurse_right,
+    #       filename =  r$plot_map_kurse_right_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_map_kurse_right_title, file)
+    #     file.remove(r$plot_map_kurse_right_title)
+    #   }
+    # )
 
     ## Verlauf nach BuLas
     # output$plot_verlauf_multiple <- highcharter::renderHighchart({

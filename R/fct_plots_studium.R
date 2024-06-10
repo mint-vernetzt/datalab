@@ -2474,37 +2474,10 @@ ranking_bl_subject <- function(r) {
 
 mint_anteile <- function(r) {
 
-
   states <- r$anteile_states
-
   indi <- r$anteile_indi
-
   ordering <- r$anteile_order
-
-  df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
-                  geschlecht == "Gesamt",
-                  fach == "Alle MINT-Fächer") %>%
-    dplyr::collect()
-  df_ges <- df_ges %>%
-    tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-    dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
-
-
-  df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
-                  geschlecht == "Gesamt") %>%
-    dplyr::collect()
-
-  df<- df %>%
-    dplyr::select(indikator, region, jahr, fach, wert)%>%
-    dplyr::left_join(df_ges , by=c("indikator", "region", "jahr"))%>%
-    dplyr::filter(fach != "Alle MINT-Fächer")%>%
-    dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
-
-  df <- df %>%
-    dplyr::filter(indikator == indi)%>%
-    dplyr::filter(region == states)
+  betrachtung <- r$anteile_betrachtung
 
 
   get_all_years <- function(year){
@@ -2521,54 +2494,46 @@ mint_anteile <- function(r) {
 
   }
 
-  year_vec <- df %>%
-    dplyr::select(jahr)%>%
-    unique()%>%
-    as.vector%>%
-    unlist()%>%
-    unname()
-
-  df_gegenwert <- purrr::map(.f=get_all_years, .x =year_vec)%>%
-    purrr::list_rbind()
-
-  df <- df %>%
-    dplyr::bind_rows(df_gegenwert)
-
-
-  # direkt neu einlesen so
-  df2_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(fach=="Informatik" | fach == "Ingenieurwissenschaften ohne Informatik"|
-                    fach == "Mathematik, Naturwissenschaften" | fach == "Alle MINT-Fächer",
-                  geschlecht == "Gesamt") %>%
-    dplyr::collect()
-
-  #hier
-  df2_ges <- df2_ges %>% dplyr::filter(fach == "Alle MINT-Fächer")%>%
-    tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-    dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
-
-  #hier
-  df2 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(fach=="Informatik" | fach == "Ingenieurwissenschaften ohne Informatik"|
-                    fach == "Mathematik, Naturwissenschaften" | fach == "Alle MINT-Fächer",
-                  geschlecht == "Gesamt") %>%
-    dplyr::collect()
-
-  df2 <- df2 %>%
-    dplyr::select(indikator, region, jahr, fach, wert)%>%
-    dplyr::left_join(df2_ges , by=c("indikator", "region", "jahr"))%>%
-    dplyr::filter(fach != "Alle MINT-Fächer")%>%
-    dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
-
-  df2 <- df2 %>%
-    dplyr::filter(indikator == indi)%>%
-    dplyr::filter(region == states)
-
-  df2$wert <- prettyNum(df2$wert, big.mark = ".", decimal.mark = ",")
-
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
   if(ordering=="MINT-Fächer"){
+
+    df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
+                    geschlecht == "Gesamt",
+                    fach == "Alle MINT-Fächer") %>%
+      dplyr::collect()
+
+    df_ges <- df_ges %>%
+      tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+      dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
+
+
+    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
+                    geschlecht == "Gesamt") %>%
+      dplyr::collect()
+
+    df<- df %>%
+      dplyr::select(indikator, region, jahr, fach, wert)%>%
+      dplyr::left_join(df_ges , by=c("indikator", "region", "jahr"))%>%
+      dplyr::filter(fach != "Alle MINT-Fächer")%>%
+      dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
+
+    df <- df %>%
+      dplyr::filter(indikator == indi)%>%
+      dplyr::filter(region == states)
+
+    year_vec <- df %>%
+      dplyr::select(jahr)%>%
+      unique()%>%
+      as.vector%>%
+      unlist()%>%
+      unname()
+
+    df_gegenwert <- purrr::map(.f=get_all_years, .x =year_vec)%>%
+      purrr::list_rbind()
+
+    df <- df %>%
+      dplyr::bind_rows(df_gegenwert)
 
     #Reihenfolge sortieren
     df$fach <- as.factor(df$fach)
@@ -2592,64 +2557,72 @@ mint_anteile <- function(r) {
       "Bergbau, Hüttenwesen",
       "Andere MINT-Fächer"))
 
-    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
-
-    #plotting
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = jahr, group = fach))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
-      highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
-      highcharter::hc_yAxis(title = list(text = "")
-                            , labels = list(format = "{value} %")) %>%
-      highcharter::hc_xAxis(title = list(text = ""))%>%
-      highcharter::hc_colors(c("#b16fab","#DCBED9","#D0A9CD","#BE88BA", "#ECDBEA","#F1EBEA",
-                               "#66CBAF", "#BBD1FC", "#5F94F9", "#1B54C0", "#2D6BE1", "#EDF3FF",
-                               "#DDFFF6", "#AFF3E0", "#35BD97", "#F4EFEE",
-                               "#EFE8E6", "#D4C1BB"
-      ))
-    # %>%
-    #   highcharter::hc_legend(itemDistance=10)
-
-    # %>%
-    #
-    # highcharter::hc_plotOptions(column = list(pointWidth = 70))%>%
-    # highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-    # highcharter::hc_yAxis(max = 40)%>%
-    # highcharter::hc_title(text = paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select ),
-    #                       align = "center",
-    #                       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    # highcharter::hc_chart(
-    #   style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    # ) %>%
-    # highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-    # highcharter::hc_exporting(enabled = FALSE,
-    #                           buttons = list(contextButton = list(
-    #                             symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-    #                             onclick = highcharter::JS("function () {
-    #                                                         this.exportChart({ type: 'image/png' }); }"),
-    #                             align = 'right',
-    #                             verticalAlign = 'bottom',
-    #                             theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
+    colors <- c("#b16fab","#DCBED9","#D0A9CD","#BE88BA", "#ECDBEA","#F1EBEA",
+                "#66CBAF", "#BBD1FC", "#5F94F9", "#1B54C0", "#2D6BE1", "#EDF3FF",
+                "#DDFFF6", "#AFF3E0", "#35BD97", "#F4EFEE",
+                "#EFE8E6", "#D4C1BB")
 
   } else if (ordering=="MINT-Aggregate"){
 
-    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
+    # direkt neu einlesen so
+    df2_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      dplyr::filter(fach=="Informatik" | fach == "Ingenieurwissenschaften ohne Informatik"|
+                      fach == "Mathematik, Naturwissenschaften" | fach == "Alle MINT-Fächer",
+                    geschlecht == "Gesamt") %>%
+      dplyr::collect()
+
+    #hier
+    df2_ges <- df2_ges %>% dplyr::filter(fach == "Alle MINT-Fächer")%>%
+      tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+      dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
+
+    #hier
+    df2 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      dplyr::filter(fach=="Informatik" | fach == "Ingenieurwissenschaften ohne Informatik"|
+                      fach == "Mathematik, Naturwissenschaften" | fach == "Alle MINT-Fächer",
+                    geschlecht == "Gesamt") %>%
+      dplyr::collect()
+
+    df2 <- df2 %>%
+      dplyr::select(indikator, region, jahr, fach, wert)%>%
+      dplyr::left_join(df2_ges , by=c("indikator", "region", "jahr"))%>%
+      dplyr::filter(fach != "Alle MINT-Fächer")%>%
+      dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
+
+    df2 <- df2 %>%
+      dplyr::filter(indikator == indi)%>%
+      dplyr::filter(region == states)
+
+    colors <- c("#66cbaf", "#154194", "#b16fab" )
+
+    df <- df2
+  }
 
     #plotting
-    out <- highcharter::hchart(df2, 'bar', highcharter::hcaes(y = prop, x = jahr, group = fach))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
-      highcharter::hc_plotOptions(bar = list(stacking = "percent"))%>%
-      highcharter::hc_yAxis(title = list(text = "")
-                            , labels = list(format = "{value} %")) %>%
-      highcharter::hc_xAxis(title = list(text = ""))%>%
-      highcharter::hc_colors(c("#66cbaf", "#154194", "#b16fab" ))
+    if(betrachtung == "In Prozent"){
 
+      df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+      df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
+      out <- highcharter::hchart(df, 'line', highcharter::hcaes(y = prop, x = jahr, group = fach))%>%
+        highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
+        highcharter::hc_yAxis(title = list(text = "")
+                              , labels = list(format = "{value} %")) %>%
+        highcharter::hc_xAxis(title = list(text = ""))%>%
+        highcharter::hc_colors(colors)
 
+    } else if (betrachtung == "Anzahl"){
 
-  }
+      df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+      df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
+
+      out <- highcharter::hchart(df, 'line', highcharter::hcaes(y = wert, x = jahr, group = fach))%>%
+        highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
+        highcharter::hc_yAxis(title = list(text = "")
+                              , labels = list(format = "{value} %")) %>%
+        highcharter::hc_xAxis(title = list(text = ""))%>%
+        highcharter::hc_colors(colors)
+    }
 
 return(out)
 

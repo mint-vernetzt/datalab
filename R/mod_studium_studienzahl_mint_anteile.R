@@ -39,14 +39,26 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
       ),
       selected = "Nordrhein-Westfalen"
     ),
-    p("Betrachtung:"),
+
+    p("Fächer-Ebene:"),
     shinyWidgets::pickerInput(
       inputId = ns("anteile_order"),
       choices = c("MINT-Fächer", "MINT-Aggregate"),
       multiple = FALSE,
       selected = "MINT-Fächer"
     ),
+
+    # br(),
+    #
+    # p("Betrachtung:"),
+    # shinyWidgets::radioGroupButtons(
+    #   inputId = ns("anteile_betrachtung"),
+    #   choices = c("In Prozent", "Anzahl"),
+    #   justified = TRUE,
+    #   checkIcon = list(yes = icon("ok",
+    #                               lib = "glyphicon"))),
     br(),
+
     shinyBS::bsPopover(id="ih_studium_fach_4", title="",
                        content = paste0("Diese Grafik zeigt, wie sich die Anteile der einzelnen MINT-Diszipline über die Jahre verändern. So sieht man z. B. in der ersten Einstellung, dass in Nordrheinwestfalen von 2018 bis 2021 der Anteil an Informatik-Studierenden zunimmt, der Anteil an Studierenden in Maschinenbau/Verfahrenstechnik nimmt dagegen ab."),
                        placement = "top",
@@ -76,7 +88,9 @@ mod_studium_studienzahl_mint_anteile_server <- function(id, r){
       r$anteile_order <- input$anteile_order
     })
 
-
+    # observeEvent(input$anteile_betrachtung, {
+    #   r$anteile_betrachtung <- input$anteile_betrachtung
+    # })
 
 
   })

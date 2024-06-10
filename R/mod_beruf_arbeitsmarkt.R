@@ -200,16 +200,16 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_bl_gender_ui("mod_beruf_arbeitsmarkt_bl_gender_ui_1"),
-                               br(),br()
-                               ,
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_arbeitsmarkt_bl_gender_1"),
-                                 label = "Download (links)",
-                                 icon = icon("download")),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_arbeitsmarkt_bl_gender_2"),
-                                 label = "Download (rechts)",
-                                 icon = icon("download")),
+                               # br(),br()
+                               # ,
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_gender_1"),
+                               #   label = "Download (links)",
+                               #   icon = icon("download")),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_gender_2"),
+                               #   label = "Download (rechts)",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -341,16 +341,16 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1"),
-                               br(),br()
-                               ,
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_arbeitsmarkt_bl_1"),
-                                 label = "Download (links)",
-                                 icon = icon("download")),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_arbeitsmarkt_bl_2"),
-                                 label = "Download (rechts)",
-                                 icon = icon("download")),
+                               # br(),br()
+                               # ,
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_1"),
+                               #   label = "Download (links)",
+                               #   icon = icon("download")),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_2"),
+                               #   label = "Download (rechts)",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -554,16 +554,16 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_landkreis_map_ui("mod_beruf_arbeitsmarkt_landkreis_map_ui_1"),
-                               br(),br()
-                               ,
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_arbeitsmarkt_detail_map_1"),
-                                 label = "Download (links)",
-                                 icon = icon("download")),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_arbeitsmarkt_detail_map_2"),
-                                 label = "Download (rechts)",
-                                 icon = icon("download")),
+                               # br(),br()
+                               # ,
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_detail_map_1"),
+                               #   label = "Download (links)",
+                               #   icon = icon("download")),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_detail_map_2"),
+                               #   label = "Download (rechts)",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -792,21 +792,17 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Tab 5
 
-    # output$plot_arbeitsmarkt_bl_gender <- renderUI({
-    #   arbeitsmarkt_bl_gender(r)
-    # })
-
     output$plot_arbeitsmarkt_bl_gender <- renderUI({
       plot_list <- arbeitsmarkt_bl_gender(r)
-      r$plot_arbeitsmarkt_bl_gender_left <- plot_list[[1]]
-      r$plot_arbeitsmarkt_bl_gender_right <- plot_list[[2]]
-
-      r$plot_arbeitsmarkt_bl_gender_left_title <- get_plot_title(
-        plot = r$plot_arbeitsmarkt_bl_gender_left
-      )
-      r$plot_arbeitsmarkt_bl_gender_right_title <- get_plot_title(
-        plot = r$plot_arbeitsmarkt_bl_gender_right
-      )
+      # r$plot_arbeitsmarkt_bl_gender_left <- plot_list[[1]]
+      # r$plot_arbeitsmarkt_bl_gender_right <- plot_list[[2]]
+      #
+      # r$plot_arbeitsmarkt_bl_gender_left_title <- get_plot_title(
+      #   plot = r$plot_arbeitsmarkt_bl_gender_left
+      # )
+      # r$plot_arbeitsmarkt_bl_gender_right_title <- get_plot_title(
+      #   plot = r$plot_arbeitsmarkt_bl_gender_right
+      # )
 
       # return plots
       out <- highcharter::hw_grid(
@@ -816,40 +812,40 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     })
 
-    output$download_btn_plot_arbeitsmarkt_bl_gender_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_arbeitsmarkt_bl_gender_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_arbeitsmarkt_bl_gender_left,
-          filename =  r$plot_arbeitsmarkt_bl_gender_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_arbeitsmarkt_bl_gender_left_title, file)
-        file.remove(r$plot_arbeitsmarkt_bl_gender_left_title)
-      }
-    )
-
-    output$download_btn_plot_arbeitsmarkt_bl_gender_2 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_arbeitsmarkt_bl_gender_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_arbeitsmarkt_bl_gender_right,
-          filename =  r$plot_arbeitsmarkt_bl_gender_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_arbeitsmarkt_bl_gender_right_title, file)
-        file.remove(r$plot_arbeitsmarkt_bl_gender_right_title)
-      }
-    )
+    # output$download_btn_plot_arbeitsmarkt_bl_gender_1 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_arbeitsmarkt_bl_gender_left_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_arbeitsmarkt_bl_gender_left,
+    #       filename =  r$plot_arbeitsmarkt_bl_gender_left_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_arbeitsmarkt_bl_gender_left_title, file)
+    #     file.remove(r$plot_arbeitsmarkt_bl_gender_left_title)
+    #   }
+    # )
+    #
+    # output$download_btn_plot_arbeitsmarkt_bl_gender_2 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_arbeitsmarkt_bl_gender_right_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #     add_caption_and_download(
+    #       hc = r$plot_arbeitsmarkt_bl_gender_right,
+    #       filename =  r$plot_arbeitsmarkt_bl_gender_right_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_arbeitsmarkt_bl_gender_right_title, file)
+    #     file.remove(r$plot_arbeitsmarkt_bl_gender_right_title)
+    #   }
+    # )
 
     # Tab 6
 
@@ -925,21 +921,18 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # Box 2 ----
 
     # Tab 1
-    # output$plot_arbeitsmarkt_bl <- renderUI({
-    #   arbeitsmarkt_bl(r)
-    # })
 
     output$plot_arbeitsmarkt_bl <- renderUI({
       plot_list <- arbeitsmarkt_bl(r)
-      r$plot_arbeitsmarkt_bl_left <- plot_list[[1]]
-      r$plot_arbeitsmarkt_bl_right <- plot_list[[2]]
-
-      r$plot_arbeitsmarkt_bl_left_title <- get_plot_title(
-        plot = r$plot_arbeitsmarkt_bl_left
-      )
-      r$plot_arbeitsmarkt_bl_right_title <- get_plot_title(
-        plot = r$plot_arbeitsmarkt_bl_right
-      )
+      # r$plot_arbeitsmarkt_bl_left <- plot_list[[1]]
+      # r$plot_arbeitsmarkt_bl_right <- plot_list[[2]]
+      #
+      # r$plot_arbeitsmarkt_bl_left_title <- get_plot_title(
+      #   plot = r$plot_arbeitsmarkt_bl_left
+      # )
+      # r$plot_arbeitsmarkt_bl_right_title <- get_plot_title(
+      #   plot = r$plot_arbeitsmarkt_bl_right
+      # )
 
       # return plots
       out <- highcharter::hw_grid(
@@ -949,40 +942,40 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     })
 
-    output$download_btn_plot_arbeitsmarkt_bl_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_arbeitsmarkt_bl_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_arbeitsmarkt_bl_left,
-          filename =  r$plot_arbeitsmarkt_bl_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_arbeitsmarkt_bl_left_title, file)
-        file.remove(r$plot_arbeitsmarkt_bl_left_title)
-      }
-    )
-
-    output$download_btn_plot_arbeitsmarkt_bl_2 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_arbeitsmarkt_bl_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_arbeitsmarkt_bl_right,
-          filename =  r$plot_arbeitsmarkt_bl_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_arbeitsmarkt_bl_right_title, file)
-        file.remove(r$plot_arbeitsmarkt_bl_right_title)
-      }
-    )
+    # output$download_btn_plot_arbeitsmarkt_bl_1 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_arbeitsmarkt_bl_left_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_arbeitsmarkt_bl_left,
+    #       filename =  r$plot_arbeitsmarkt_bl_left_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_arbeitsmarkt_bl_left_title, file)
+    #     file.remove(r$plot_arbeitsmarkt_bl_left_title)
+    #   }
+    # )
+    #
+    # output$download_btn_plot_arbeitsmarkt_bl_2 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_arbeitsmarkt_bl_right_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #     add_caption_and_download(
+    #       hc = r$plot_arbeitsmarkt_bl_right,
+    #       filename =  r$plot_arbeitsmarkt_bl_right_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_arbeitsmarkt_bl_right_title, file)
+    #     file.remove(r$plot_arbeitsmarkt_bl_right_title)
+    #   }
+    # )
 
 
     # tab 2
@@ -1195,21 +1188,18 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # Box Regional ----
 
     # tab 1
-    # output$plot_arbeitsmarkt_detail_map <- renderUI({
-    #   arbeitsmarkt_lk_detail_map(r)
-    # })
 
     output$plot_arbeitsmarkt_detail_map <- renderUI({
       plot_list <- arbeitsmarkt_lk_detail_map(r)
-      r$plot_arbeitsmarkt_detail_map_left <- plot_list[[1]]
-      r$plot_arbeitsmarkt_detail_map_right <- plot_list[[2]]
-
-      r$plot_arbeitsmarkt_detail_map_left_title <- get_plot_title(
-        plot = r$plot_arbeitsmarkt_detail_map_left
-      )
-      r$plot_arbeitsmarkt_detail_map_right_title <- get_plot_title(
-        plot = r$plot_arbeitsmarkt_detail_map_right
-      )
+      # r$plot_arbeitsmarkt_detail_map_left <- plot_list[[1]]
+      # r$plot_arbeitsmarkt_detail_map_right <- plot_list[[2]]
+      #
+      # r$plot_arbeitsmarkt_detail_map_left_title <- get_plot_title(
+      #   plot = r$plot_arbeitsmarkt_detail_map_left
+      # )
+      # r$plot_arbeitsmarkt_detail_map_right_title <- get_plot_title(
+      #   plot = r$plot_arbeitsmarkt_detail_map_right
+      # )
 
       # return plots
       out <- highcharter::hw_grid(
@@ -1219,40 +1209,40 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     })
 
-    output$download_btn_plot_arbeitsmarkt_detail_map_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_arbeitsmarkt_detail_map_left_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_arbeitsmarkt_detail_map_left,
-          filename =  r$plot_arbeitsmarkt_detail_map_left_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_arbeitsmarkt_detail_map_left_title, file)
-        file.remove(r$plot_arbeitsmarkt_detail_map_left_title)
-      }
-    )
-
-    output$download_btn_plot_arbeitsmarkt_detail_map_2 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_arbeitsmarkt_detail_map_right_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-        add_caption_and_download(
-          hc = r$plot_arbeitsmarkt_detail_map_right,
-          filename =  r$plot_arbeitsmarkt_detail_map_right_title,
-          width = 700,
-          height = 400,
-          with_labels = FALSE)
-
-        file.copy(r$plot_arbeitsmarkt_detail_map_right_title, file)
-        file.remove(r$plot_arbeitsmarkt_detail_map_right_title)
-      }
-    )
+    # output$download_btn_plot_arbeitsmarkt_detail_map_1 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_arbeitsmarkt_detail_map_left_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_arbeitsmarkt_detail_map_left,
+    #       filename =  r$plot_arbeitsmarkt_detail_map_left_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_arbeitsmarkt_detail_map_left_title, file)
+    #     file.remove(r$plot_arbeitsmarkt_detail_map_left_title)
+    #   }
+    # )
+    #
+    # output$download_btn_plot_arbeitsmarkt_detail_map_2 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_arbeitsmarkt_detail_map_right_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #     add_caption_and_download(
+    #       hc = r$plot_arbeitsmarkt_detail_map_right,
+    #       filename =  r$plot_arbeitsmarkt_detail_map_right_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_arbeitsmarkt_detail_map_right_title, file)
+    #     file.remove(r$plot_arbeitsmarkt_detail_map_right_title)
+    #   }
+    # )
 
 
 

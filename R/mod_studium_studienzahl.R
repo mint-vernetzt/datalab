@@ -434,7 +434,7 @@ mod_studium_studienzahl_ui <- function(id){
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                             shiny::sidebarPanel(
                               width = 3,
-                              mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui"),
+                              mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui_1"),
                               br(),br(),
                               downloadButton(
                                 outputId = ns("download_btn_mint_anteil"),
@@ -1189,7 +1189,7 @@ mod_studium_studienzahl_server <- function(id, r){
       plot_list
     })
 
-    output$download_btn_plot_auslaender_zeit <- downloadHandler(
+    output$download_btn_plot_auslaender_test <- downloadHandler(
       contentType = "image/png",
       filename = function() {r$plot_auslaender_test_title},
       content = function(file) {
@@ -1222,7 +1222,7 @@ mod_studium_studienzahl_server <- function(id, r){
       plot_list
     })
 
-    output$download_btn_plot_auslaender_test <- downloadHandler(
+    output$download_btn_plot_auslaender_zeit <- downloadHandler(
       contentType = "image/png",
       filename = function() {r$plot_auslaender_zeit_title},
       content = function(file) {

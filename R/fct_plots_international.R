@@ -2812,7 +2812,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
 
 
-     out <- list(plot_top, plot_bo)
+     out <- list(plot_top, plot_bot)
 
     } else if (avg_line == "Nein"){
 
@@ -2878,11 +2878,11 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         # highcharter::hc_caption(
         #   text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
 
-
-      highcharter::hw_grid(
-        plot_top,
-        plot_bottom,
-        ncol = 2)
+      out <- list(plot_top, plot_bottom)
+      # highcharter::hw_grid(
+      #   plot_top,
+      #   plot_bottom,
+      #   ncol = 2)
 
 
     }
@@ -3376,12 +3376,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
       # highcharter::hc_caption(
       #   text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
 
+    out <- list(plot_top, plot_bottom)
 
-
-    highcharter::hw_grid(
-      plot_top,
-      plot_bottom,
-      ncol = 2)
 
   } else if (avg_line == "Nein"){
 
@@ -3448,11 +3444,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       #   text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
 
 
-    highcharter::hw_grid(
-      plot_top,
-      plot_bottom,
-      ncol = 2)
-
+    out <- list(plot_top, plot_bottom)
 
   }
 
