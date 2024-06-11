@@ -28,9 +28,9 @@ mod_quellen_ui <- function(id){
         title = "Definition MINT",
                 p(style = "text-align: justify; font-size = 16px",
           "MINT ist eine Abkürzung aus den Anfangsbuchstaben bestimmter Schul- und Studienfächer bzw. Berufe.
-          Es steht als Sammelbegriff für die Felder Mathematik, Informatik, Naturwissenschaften und Technik.
-          <br><br>
-          Die genaue Definition davon, was als 'MINT' zählt, und was nicht, variiert vor allem für Beschäftigte.
+          Es steht als Sammelbegriff für die Felder Mathematik, Informatik, Naturwissenschaften und Technik.",
+          br(),br(),
+          "Die genaue Definition davon, was als 'MINT' zählt, und was nicht, variiert vor allem für Beschäftigte.
           Die folgende Darstellung versucht, eine Übersicht zu geben."
         ), br(),
         img(src='www/Definition_MINT_Bild.png',
