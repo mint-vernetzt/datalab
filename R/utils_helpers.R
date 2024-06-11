@@ -282,26 +282,9 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
 # Funktion zur Fachauswahl bei international Daten
 international_ui_faecher <- function(region = "EU") {
 
-  # names(studierende_europa)
-  # names(studierende_anzahl_oecd)
-  # names(studierende_absolventen_weltweit)
-
-  # region <- "OECD"
-  # weltweit kommt nicht vor, da es keine tiefere Unterteilung gibt
-  # if (region == "Weltweit") {
-  #
-  #   df <- studierende_absolventen_weltweit  %>%
-  #     dplyr::filter(fach == "Alle MINT-Fächer")
-  # }
   selection <- NULL
   if (region == "OECD") {
-    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    # selection <- studierende_anzahl_oecd %>%
-    #   dplyr::filter(geschlecht == "Gesamt" &
-    #                   fachbereich != "Alle") %>%
-    #   dplyr::pull(fachbereich) %>%
-    #   unique()
     selection <- c("MINT",
                    "--- Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik",
                    "--- Informatik & Kommunikationstechnologie" = "Informatik & Kommunikationstechnologie",
@@ -315,16 +298,7 @@ international_ui_faecher <- function(region = "EU") {
   }
 
   if (region == "EU") {
-    #load(file = system.file(package="datalab","data/studierende_europa.rda"))
 
-    # selection <- studierende_europa %>%
-    #   dplyr::filter(geschlecht == "Gesamt"  &
-    #                   mint_select == "mint" &
-    #                   indikator == "Fächerwahl") %>%
-    #   dplyr::pull(fach) %>%
-    #   unique() %>%
-    #   # extra hinzufügen da es sonst mit filter mint_select = FALSE wäre
-    #   c(., "Alle MINT-Fächer")
     selection <- c("Alle MINT-Fächer",
                    "--- Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik",
                    "--- Informatik & Kommunikationstechnologie" = "Informatik & Kommunikationstechnologie",
@@ -579,17 +553,17 @@ fachkraft_ui_wirkhebel <- function(version = "lang") {
 
     selection <- c(
       "Gesamteffekt",
-      "MINT-Bildung",
-      "Förderung Frauen u. Bildung in MINT" = "Frauen in MINT",
-      "Beteiligung internationaler MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
-      "Beteiligung älterer MINT-Fachkräfte"
+      "MINT-Nachwuchs fördern" = "MINT-Bildung",
+      "Mädchen und Frauen in MINT fördern" = "Frauen in MINT",
+      "Zuwanderung MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
+      "Verbleib älterer MINT-Fachkräfte" = "Beteiligung älterer MINT-Fachkräfte"
     )
   }else if (version == "kurz"){
     selection <- c(
-      "MINT-Bildung",
-      "Förderung Frauen u. Bildung in MINT" = "Frauen in MINT",
-      "Beteiligung internationaler MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
-      "Beteiligung älterer MINT-Fachkräfte"
+      "MINT-Nachwuchs fördern" = "MINT-Bildung",
+      "Mädchen und Frauen in MINT fördern" = "Frauen in MINT",
+      "Zuwanderung MINT-Fachkräfte" = "Internationale MINT-Fachkräfte",
+      "Verbleib älterer MINT-Fachkräfte" = "Beteiligung älterer MINT-Fachkräfte"
     )
   }
   return(selection)
@@ -617,9 +591,8 @@ fachkraft_ui_scenario <- function(wirkhebel) {
 
   } else if(wirkhebel == "Frauen in MINT"){
     selection <- c(
-
-      "positives Szenario" = "starke Verbesserung",
-      "moderates Szenario" = "Verbesserung"
+      "positives Szenario" = "Verbesserung",
+      "kombiniertes Szenario" = "starke Verbesserung"
     )
   } else if(wirkhebel == "Basis-Szenario"){
     selection <- c(
