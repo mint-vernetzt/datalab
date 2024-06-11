@@ -275,16 +275,16 @@ mod_international_start_ui <- function(id){
                                       width = 3,
                                       #p("LOREM"),
                                       mod_international_top10_mint_ui("international_top10_mint_1"),
-                                      br(),br()
-                                      ,
-                                      downloadButton(
-                                        outputId = ns("download_btn_plot_international_top10_mint_1_1"),
-                                        label = "Download (links)",
-                                        icon = icon("download")),
-                                      downloadButton(
-                                        outputId = ns("download_btn_plot_international_top10_mint_1_2"),
-                                        label = "Download (rechts)",
-                                        icon = icon("download")),
+                                      # br(),br()
+                                      # ,
+                                      # downloadButton(
+                                      #   outputId = ns("download_btn_plot_international_top10_mint_1_1"),
+                                      #   label = "Download (links)",
+                                      #   icon = icon("download")),
+                                      # downloadButton(
+                                      #   outputId = ns("download_btn_plot_international_top10_mint_1_2"),
+                                      #   label = "Download (rechts)",
+                                      #   icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -314,16 +314,16 @@ mod_international_start_ui <- function(id){
                                       width = 3,
                                       #p("LOREM"),
                                       mod_international_top10_mint_gender_ui("international_top10_mint_gender_1"),
-                                      br(),br()
-                                      ,
-                                      downloadButton(
-                                        outputId = ns("download_btn_plot_international_top10_mint_gender_1_1"),
-                                        label = "Download (links)",
-                                        icon = icon("download")),
-                                      downloadButton(
-                                        outputId = ns("download_btn_plot_international_top10_mint_gender_1_2"),
-                                        label = "Download (rechts)",
-                                        icon = icon("download")),
+                                      # br(),br()
+                                      # ,
+                                      # downloadButton(
+                                      #   outputId = ns("download_btn_plot_international_top10_mint_gender_1_1"),
+                                      #   label = "Download (links)",
+                                      #   icon = icon("download")),
+                                      # downloadButton(
+                                      #   outputId = ns("download_btn_plot_international_top10_mint_gender_1_2"),
+                                      #   label = "Download (rechts)",
+                                      #   icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -349,16 +349,16 @@ mod_international_start_ui <- function(id){
                                       width = 3,
                                       #p("LOREM"),
                                       mod_international_top10_mint_intl_ui("mod_international_top10_mint_intl_ui_1"),
-                                    br(),br()
-                                    ,
-                                    downloadButton(
-                                      outputId = ns("download_btn_plot_international_mint_top_10_1_1"),
-                                      label = "Download (links)",
-                                      icon = icon("download")),
-                                    downloadButton(
-                                      outputId = ns("download_btn_plot_international_mint_top_10_1_2"),
-                                      label = "Download (rechts)",
-                                      icon = icon("download"))
+                                    # br(),br()
+                                    # ,
+                                    # downloadButton(
+                                    #   outputId = ns("download_btn_plot_international_mint_top_10_1_1"),
+                                    #   label = "Download (links)",
+                                    #   icon = icon("download")),
+                                    # downloadButton(
+                                    #   outputId = ns("download_btn_plot_international_mint_top_10_1_2"),
+                                    #   label = "Download (rechts)",
+                                    #   icon = icon("download"))
                                     ),
 
                                     shiny::mainPanel(
@@ -457,16 +457,16 @@ mod_international_start_ui <- function(id){
                                         width = 3,
                                         #p("LOREM"),
                                         mod_international_top10_mint_arb_ui("mod_international_top10_mint_arb_ui_1"),
-                                        br(),br()
-                                        ,
-                                        downloadButton(
-                                          outputId = ns("download_btn_plot_international_top10_mint_arb_1_1"),
-                                          label = "Download (links)",
-                                          icon = icon("download")),
-                                        downloadButton(
-                                          outputId = ns("download_btn_plot_international_top10_mint_arb_1_2"),
-                                          label = "Download (rechts)",
-                                          icon = icon("download"))
+                                        # br(),br()
+                                        # ,
+                                        # downloadButton(
+                                        #   outputId = ns("download_btn_plot_international_top10_mint_arb_1_1"),
+                                        #   label = "Download (links)",
+                                        #   icon = icon("download")),
+                                        # downloadButton(
+                                        #   outputId = ns("download_btn_plot_international_top10_mint_arb_1_2"),
+                                        #   label = "Download (rechts)",
+                                        #   icon = icon("download"))
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
@@ -490,16 +490,16 @@ mod_international_start_ui <- function(id){
                                         width = 3,
                                         #p("LOREM"),
                                         mod_international_top10_mint_arb_gender_ui("mod_international_top10_mint_arb_gender_ui_1"),
-                                        br(),br()
-                                        ,
-                                        downloadButton(
-                                          outputId = ns("download_btn_plot_international_top10_mint_arb_gender_1_1"),
-                                          label = "Download (links)",
-                                          icon = icon("download")),
-                                        downloadButton(
-                                          outputId = ns("download_btn_plot_international_top10_mint_arb_gender_1_2"),
-                                          label = "Download (rechts)",
-                                          icon = icon("download"))
+                                        # br(),br()
+                                        # ,
+                                        # downloadButton(
+                                        #   outputId = ns("download_btn_plot_international_top10_mint_arb_gender_1_1"),
+                                        #   label = "Download (links)",
+                                        #   icon = icon("download")),
+                                        # downloadButton(
+                                        #   outputId = ns("download_btn_plot_international_top10_mint_arb_gender_1_2"),
+                                        #   label = "Download (rechts)",
+                                        #   icon = icon("download"))
 
                                         ),
                                       shiny::mainPanel(

@@ -120,11 +120,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_verlauf_ui("mod_beruf_arbeitsmarkt_einstieg_verlauf_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_einstieg_verlauf"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_einstieg_verlauf"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -150,11 +150,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_vergleich_ui("mod_beruf_arbeitsmarkt_einstieg_vergleich_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_einstieg_vergleich"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_einstieg_vergleich"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -245,11 +245,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui("mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_beruf_arbeitsmarkt_bl_gender_verlauf"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_beruf_arbeitsmarkt_bl_gender_verlauf"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -269,11 +269,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_bl_verlauf_ui("mod_beruf_arbeitsmarkt_bl_verlauf_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_beruf_arbeitsmarkt_bl_verlauf"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_beruf_arbeitsmarkt_bl_verlauf"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -373,11 +373,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_überblick_fächer_ui("mod_beruf_arbeitsmarkt_überblick_fächer_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -398,11 +398,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_bl_vergleich_ui("beruf_arbeitsmarkt_bl_vergleich_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_arbeitsmarkt_bl_vergleich"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_vergleich"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -422,16 +422,16 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_top10_ui("mod_beruf_arbeitsmarkt_top10_ui_1"),
-                               br(),br()
-                               ,
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_arbeitsmarkt_top10_1"),
-                                 label = "Download (links)",
-                                 icon = icon("download")),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_arbeitsmarkt_top10_2"),
-                                 label = "Download (rechts)",
-                                 icon = icon("download")),
+                               # br(),br()
+                               # ,
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_top10_1"),
+                               #   label = "Download (links)",
+                               #   icon = icon("download")),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_top10_2"),
+                               #   label = "Download (rechts)",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -490,11 +490,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui("mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_einstieg_verlauf_gender"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_einstieg_verlauf_gender"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -518,11 +518,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui("mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_einstieg_vergleich_gender"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_einstieg_vergleich_gender"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -584,11 +584,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_landkreis_vergleich_ui("mod_beruf_arbeitsmarkt_landkreis_vergleich_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_arbeitsmarkt_detail_vergleich"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_detail_vergleich"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,

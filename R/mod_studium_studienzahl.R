@@ -140,11 +140,11 @@ mod_studium_studienzahl_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_studium_studienzahl_einstieg_verlauf_ui("mod_studium_studienzahl_einstieg_verlauf_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_einstieg_verlauf"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_einstieg_verlauf"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -168,11 +168,11 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_studium_studienzahl_verlauf_bl_subject_ui("mod_studium_studienzahl_verlauf_bl_subject_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -195,11 +195,11 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_studium_studienzahl_bl_verlauf_ui("mod_studium_studienzahl_bl_verlauf"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_studienzahl_bl_verlauf"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_studienzahl_bl_verlauf"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -222,11 +222,11 @@ mod_studium_studienzahl_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_studium_studienzahl_einstieg_comparison_ui("mod_studium_studienzahl_einstieg_comparison_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_einstieg_comparison"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_einstieg_comparison"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -272,11 +272,11 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_studium_studienzahl_verlauf_bl_subject_gender_ui("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject_gender"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject_gender"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -346,17 +346,17 @@ mod_studium_studienzahl_ui <- function(id){
                       shiny::sidebarPanel(
                         width = 3,
                         mod_studium_top_faecher_ui("mod_studium_top_faecher"),
-                        br()
-                        ,
-                        downloadButton(
-                          outputId = ns("download_btn_plot_top_faecher_1"),
-                          label = "Download (links)",
-                          icon = icon("download")),
-                        br(),br(),
-                        downloadButton(
-                          outputId = ns("download_btn_plot_top_faecher_2"),
-                          label = "Download (rechts)",
-                          icon = icon("download")),
+                        # br()
+                        # ,
+                        # downloadButton(
+                        #   outputId = ns("download_btn_plot_top_faecher_1"),
+                        #   label = "Download (links)",
+                        #   icon = icon("download")),
+                        # br(),br(),
+                        # downloadButton(
+                        #   outputId = ns("download_btn_plot_top_faecher_2"),
+                        #   label = "Download (rechts)",
+                        #   icon = icon("download")),
                       ),
                       shiny::mainPanel(
                         width = 9,
@@ -406,11 +406,11 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject1"),
-                                 label = "Download",
-                                 icon = icon("download"))
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject1"),
+                               #   label = "Download",
+                               #   icon = icon("download"))
 
                              ),
                              shiny::mainPanel(
@@ -435,11 +435,11 @@ mod_studium_studienzahl_ui <- function(id){
                             shiny::sidebarPanel(
                               width = 3,
                               mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui_1"),
-                              br(),br(),
-                              downloadButton(
-                                outputId = ns("download_btn_mint_anteil"),
-                                label = "Download",
-                                icon = icon("download")),
+                              # br(),br(),
+                              # downloadButton(
+                              #   outputId = ns("download_btn_mint_anteil"),
+                              #   label = "Download",
+                              #   icon = icon("download")),
                             ),
                             shiny::mainPanel(
                               width = 9,
@@ -462,11 +462,11 @@ mod_studium_studienzahl_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_studium_studienzahl_bl_vergleich_ui("studium_studienzahl_bl_vergleich"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_vergleich_bl1"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_vergleich_bl1"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -524,11 +524,11 @@ mod_studium_studienzahl_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_studium_studienzahl_einstieg_verlauf_gender_ui("mod_studium_studienzahl_einstieg_verlauf_gender_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_einstieg_verlauf_gender"),
-                                 label = "Download",
-                                 icon = icon("download")),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_einstieg_verlauf_gender"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -552,11 +552,11 @@ mod_studium_studienzahl_ui <- function(id){
                              tags$style(".well  {background-color:#FFFFFF;}"),
                              tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                              mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1"),
-                             br(),br(),
-                             downloadButton(
-                               outputId = ns("download_btn_plot_einstieg_comparison_gender"),
-                               label = "Download",
-                               icon = icon("download")),
+                             # br(),br(),
+                             # downloadButton(
+                             #   outputId = ns("download_btn_plot_einstieg_comparison_gender"),
+                             #   label = "Download",
+                             #   icon = icon("download")),
                            ),
                            shiny::mainPanel(
                              width = 9,
@@ -589,11 +589,11 @@ mod_studium_studienzahl_ui <- function(id){
                                     tags$style(".well {background-color:#FFFFFF;}"),
                                     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                     mod_studium_studienzahl_ausl_ui("mod_studium_studienzahl_ausl_ui"),
-                                    br(),br(),
-                                    downloadButton(
-                                      outputId = ns("download_btn_plot_auslaender_test"),
-                                      label = "Download",
-                                      icon = icon("download")),
+                                    # br(),br(),
+                                    # downloadButton(
+                                    #   outputId = ns("download_btn_plot_auslaender_test"),
+                                    #   label = "Download",
+                                    #   icon = icon("download")),
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
@@ -622,11 +622,11 @@ mod_studium_studienzahl_ui <- function(id){
                                     tags$style(".well  {background-color:#FFFFFF;}"),
                                     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                     mod_studium_studienzahl_ausl_zeit_ui("mod_studium_studienzahl_ausl_zeit_ui"),
-                                    br(),br(),
-                                    downloadButton(
-                                      outputId = ns("download_btn_plot_auslaender_zeit"),
-                                      label = "Download",
-                                      icon = icon("download")),
+                                    # br(),br(),
+                                    # downloadButton(
+                                    #   outputId = ns("download_btn_plot_auslaender_zeit"),
+                                    #   label = "Download",
+                                    #   icon = icon("download")),
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
