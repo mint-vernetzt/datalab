@@ -128,11 +128,11 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_einstieg_comparison_ui("mod_schule_kurse_einstieg_comparison_ui_1"),
-                               br(), br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_einstieg_comparison"),
-                                 label = "Download",
-                                 icon = icon("download"))
+                               # br(), br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_einstieg_comparison"),
+                               #   label = "Download",
+                               #   icon = icon("download"))
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -166,11 +166,11 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1"),
-                               br(), br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_einstieg_verlauf"),
-                                 label = "Download",
-                                 icon = icon("download"))
+                               # br(), br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_einstieg_verlauf"),
+                               #   label = "Download",
+                               #   icon = icon("download"))
 
 
                                ),
@@ -314,11 +314,11 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1"),
-                               br(), br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_verlauf_multiple"),
-                                 label = "Download",
-                                 icon = icon("download"))
+                               # br(), br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_verlauf_multiple"),
+                               #   label = "Download",
+                               #   icon = icon("download"))
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -340,11 +340,11 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_verlauf_bl_subjects_ui("mod_schule_kurse_verlauf_bl_subjects_ui_1"),
-                               br(), br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_verlauf_kurse_bl_subjects"),
-                                 label = "Download",
-                                 icon = icon("download"))
+                               # br(), br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_verlauf_kurse_bl_subjects"),
+                               #   label = "Download",
+                               #   icon = icon("download"))
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -392,11 +392,11 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_comparison_subjects_ui("mod_schule_kurse_comparison_subjects_ui_1"),
-                               br(), br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_comparison_subjects"),
-                                 label = "Download",
-                                 icon = icon("download"))
+                               # br(), br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_comparison_subjects"),
+                               #   label = "Download",
+                               #   icon = icon("download"))
                              ),
 
                              shiny::mainPanel(
@@ -417,11 +417,11 @@ mod_schule_kurse_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1"),
-                               br(), br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_comparison_bl"),
-                                 label = "Download",
-                                 icon = icon("download"))
+                               # br(), br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_comparison_bl"),
+                               #   label = "Download",
+                               #   icon = icon("download"))
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -473,11 +473,11 @@ mod_schule_kurse_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_schule_kurse_comparison_gender_ui("mod_schule_kurse_comparison_gender_ui_1"),
-                               br(), br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_comparison_gender"),
-                                 label = "Download",
-                                 icon = icon("download"))
+                               # br(), br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_comparison_gender"),
+                               #   label = "Download",
+                               #   icon = icon("download"))
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -566,11 +566,11 @@ mod_schule_kurse_ui <- function(id){
                                   shiny::sidebarPanel(
                                     width = 3,
                                     mod_schule_kurse_iqb_standard_zeitverlauf_ui("mod_schule_kurse_iqb_standard_zeitverlauf_ui_1"),
-                                    br(), br(),
-                                    downloadButton(
-                                      outputId = ns("download_btn_plot_iqb_standard_zeitverlauf"),
-                                      label = "Download",
-                                      icon = icon("download"))
+                                    # br(), br(),
+                                    # downloadButton(
+                                    #   outputId = ns("download_btn_plot_iqb_standard_zeitverlauf"),
+                                    #   label = "Download",
+                                    #   icon = icon("download"))
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
@@ -594,11 +594,11 @@ mod_schule_kurse_ui <- function(id){
                                   shiny::sidebarPanel(
                                     width = 3,
                                     mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui("mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui_1"),
-                                    br(), br(),
-                                    downloadButton(
-                                      outputId = ns("download_btn_plot_iqb_mathe_mittel_zeitverlauf"),
-                                      label = "Download",
-                                      icon = icon("download"))
+                                    # br(), br(),
+                                    # downloadButton(
+                                    #   outputId = ns("download_btn_plot_iqb_mathe_mittel_zeitverlauf"),
+                                    #   label = "Download",
+                                    #   icon = icon("download"))
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
@@ -628,11 +628,11 @@ mod_schule_kurse_ui <- function(id){
                                   shiny::sidebarPanel(
                                     width = 3,
                                     mod_schule_kurse_iqb_fragen_ui("mod_schule_kurse_iqb_fragen_ui_1"),
-                                    br(), br(),
-                                    downloadButton(
-                                      outputId = ns("download_btn_plot_iqb_fragebogen"),
-                                      label = "Download",
-                                      icon = icon("download"))
+                                    # br(), br(),
+                                    # downloadButton(
+                                    #   outputId = ns("download_btn_plot_iqb_fragebogen"),
+                                    #   label = "Download",
+                                    #   icon = icon("download"))
                                   ),
 
                                   shiny::mainPanel(
@@ -673,11 +673,11 @@ mod_schule_kurse_ui <- function(id){
                                   shiny::sidebarPanel(
                                     width = 3,
                                     mod_ausserschulisch_skf_einrichtungen_ui("mod_ausserschulisch_skf_einrichtungen_ui_1"),
-                                    br(), br(),
-                                    downloadButton(
-                                      outputId = ns("download_btn_plot_skf_einrichtungen"),
-                                      label = "Download",
-                                      icon = icon("download"))
+                                    # br(), br(),
+                                    # downloadButton(
+                                    #   outputId = ns("download_btn_plot_skf_einrichtungen"),
+                                    #   label = "Download",
+                                    #   icon = icon("download"))
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
@@ -701,11 +701,11 @@ mod_schule_kurse_ui <- function(id){
                                   shiny::sidebarPanel(
                                     width = 3,
                                     mod_ausserschulisch_skf_personal_ui("mod_ausserschulisch_skf_personal_ui_1"),
-                                    br(), br(),
-                                    downloadButton(
-                                      outputId = ns("download_btn_plot_skf_personal"),
-                                      label = "Download",
-                                      icon = icon("download"))
+                                    # br(), br(),
+                                    # downloadButton(
+                                    #   outputId = ns("download_btn_plot_skf_personal"),
+                                    #   label = "Download",
+                                    #   icon = icon("download"))
                                   ),
                                   shiny::mainPanel(
                                     width = 9,

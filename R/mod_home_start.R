@@ -104,11 +104,11 @@ mod_home_start_ui <- function(id){
                         shiny::sidebarPanel(
                           width = 3,
                           mod_home_start_multiple_ui("mod_home_start_multiple_ui_1"),
-                          br(),br(),
-                          downloadButton(
-                            outputId = ns("download_btn_plot_mint_1"),
-                            label = "Download",
-                            icon = icon("download")),
+                          # br(),br(),
+                          # downloadButton(
+                          #   outputId = ns("download_btn_plot_mint_1"),
+                          #   label = "Download",
+                          #   icon = icon("download")),
                           ),
                         shiny::mainPanel(
                           width = 9,
@@ -130,12 +130,11 @@ mod_home_start_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1"),
-                               br(),br(),
-                               downloadButton(
-                                 outputId = ns("download_btn_plot_comparison_mint"),
-                                 label = "Download",
-                                 icon = icon("download")
-                             )
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_comparison_mint"),
+                               #   label = "Download",
+                               #   icon = icon("download"))
                                ),
                              shiny::mainPanel(
                                width = 9,
@@ -188,11 +187,12 @@ mod_home_start_ui <- function(id){
                         shiny::sidebarPanel(
                           width = 3,
                           mod_home_start_comparison_ui("mod_home_start_comparison_ui_1"),
-                          br(),br(),
-                          downloadButton(
-                            outputId = ns("download_btn_plot_verlauf_mint"),
-                            label = "Download",
-                            icon = icon("download"))),
+                          # br(),br(),
+                          # downloadButton(
+                          #   outputId = ns("download_btn_plot_verlauf_mint"),
+                          #   label = "Download",
+                          #   icon = icon("download"))
+                          ),
                         shiny::mainPanel(
                           width = 9,
                           shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_mint")),
@@ -210,11 +210,12 @@ mod_home_start_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1"),
-                             br(),br(),
-                             downloadButton(
-                               outputId = ns("download_btn_plot_comparison_gender"),
-                               label = "Download",
-                               icon = icon("download"))),
+                             # br(),br(),
+                             # downloadButton(
+                             #   outputId = ns("download_btn_plot_comparison_gender"),
+                             #   label = "Download",
+                             #   icon = icon("download"))
+                             ),
                              shiny::mainPanel(
                                width = 9,
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_gender")),
