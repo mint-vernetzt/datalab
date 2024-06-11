@@ -686,17 +686,17 @@ add_caption_and_download <- function(
 
   ## roll back webshot2
 
-  # remove.packages("webshot2")
+  remove.packages("webshot2")
   # packageurl <- "https://cran.r-project.org/src/contrib/Archive/webshot2/webshot2_0.1.0.tar.gz"
   # install.packages(packageurl, repos=NULL, type="source")
   #
   # packageVersion("webshot2")
-
+  #
 
   # set chromote, determine chromium variant
-  # Sys.setenv(
-  #   CHROMOTE_CHROME = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
-  # )
+  Sys.setenv(
+    CHROMOTE_CHROME = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+  )
 
   # force the use of pagedown to install chrome on shinyapps.io (this is a workaround)
   require(pagedown)
