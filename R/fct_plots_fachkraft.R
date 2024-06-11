@@ -195,28 +195,43 @@ plot_fachkraft_prognose_alle  <- function(r) {
     dplyr::collect()
 
   if(filter_wirkhebel[2] == "Frauen in MINT"){
+
     plot_data$indikator <- factor(plot_data$indikator, levels = c("starke Verbesserung",
                                                                   "Verbesserung",
                                                                   "Status-quo"))
+    levels(plot_data$indikator) <- c("kombiniertes Szenario", "positives Szenario",
+                                     "aktuelles Szenario")
     color_vec <- c("#b16fab", "#D0A9CD", "#8893a7" )
+
   }else if (filter_wirkhebel[2] == "Internationale MINT-Fachkräfte"){
+
     plot_data$indikator <- factor(plot_data$indikator, levels = c("Verbesserung",
                                                                   "Verschlechterung",
                                                                   "Stillstand",
                                                                   "Status-quo"))
-    plot_data$indikator[plot_data$indikato == "Verschlechterung"] <-   "Rückgang im Positivtrend der Zuwanderung"
-    plot_data$indikator[plot_data$indikato == "Stillstand"] <-   "vollständiger Stillstand der Zuwanderung"
+    levels(plot_data$indikator) <- c("positives Szenario", "Rückgang im Positivtrend der Zuwanderung",
+                                     "vollständiger Stillstand der Zuwanderung", "aktuelles Szenario")
 
     color_vec <- c("#b16fab", "#D0A9CD", "#DCBED9", "#8893a7" )
+
   }else if (filter_wirkhebel[2] == "Beteiligung älterer MINT-Fachkräfte"){
+
     plot_data$indikator <- factor(plot_data$indikator, levels = c("Verbesserung",
                                                                   "Status-quo"))
+    levels(plot_data$indikator) <- c("positives Szenario",
+                                     "aktuelles Szenario")
     color_vec <- c("#b16fab", "#8893a7" )
+
   }else{
+
     plot_data$indikator <- factor(plot_data$indikator, levels = c("Verbesserung",
                                                                   "Verschlechterung",
                                                                   "Status-quo"))
+    levels(plot_data$indikator) <- c("positives Szenario",
+                                     "negatives Szenario",
+                                     "aktuelles Szenario")
     color_vec <- c("#b16fab", "#D0A9CD", "#8893a7" )
+
   }
 
 
@@ -244,7 +259,7 @@ plot_fachkraft_prognose_alle  <- function(r) {
   hc <- highcharter::hchart(plot_data, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
     highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = ""), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = titel,
                           margin = 45,

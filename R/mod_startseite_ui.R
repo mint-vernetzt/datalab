@@ -51,7 +51,7 @@ mod_startseite_start_ui <- function(id){
             heruntergeladen werden.",
           # LINK ergänzen, wenn da (Nike)
           br()),
-        tags$a(href="https://www.mint-vernetzt.de/mint-datalab/", "Hier geht es zu den Kurzanalysen!", target = "_blank"),
+        tags$a(href="https://www.mint-vernetzt.de/mint-datalab/", "Hier geht es zu den Kurzanalysen", target = "_blank"),
         p(br()),
 
         slickR::slickROutput(ns("slider_output"), width = '900px', height = '500px'),

@@ -271,10 +271,6 @@ mod_international_start_ui <- function(id){
 # tab 3
 
                            tabPanel("Top 10 MINT-Länder", br(),
-
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),

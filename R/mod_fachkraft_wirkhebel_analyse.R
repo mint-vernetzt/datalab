@@ -20,12 +20,14 @@ mod_fachkraft_wirkhebel_analyse_ui <- function(id){
 
     br(),
 
-    shinyBS::bsPopover(id="dh_wirkhebel", title = "",
-                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+    shinyBS::bsPopover(id="erkl_fachkraft_item_wirkhebel_analyse", title="",
+                       content = paste0("Gesamteffekt: Wirkung aller Hebel kombiniert.", br(),br(), "MINT-Nachwuchs fördern: Zunahme von MINT-Fachkräften unter 35 zwischen 2012-2022 setzt sich so in den nächsten Jahren fort.", br(),br(), "Mädchen- und Frauen-Förderung in MINT: Zunahme von weiblichen MINT-Fachkräften unter 35 zwischen 2012-2022 setzt sich so in den nächsten Jahren fort.", br(),br(), "Zuwanderung MINT-Fachkräfte: „hohe Zuwanderung“-Szenario der 15. koordinierten Bevölkerungsvorausberechnung des statistischen Bundesamts.", br(),br(), "Verbleib älterer MINT-Fachkräfte: Anteil an erwerbstätigen MINT-Fachkräften unter den 55-59-, 60-64-, und 65-69-Jährigen wächst weiterhin so an wie zwischen 2012-2022."),
+
+                       placement = "bottom",
                        trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_wirkhebel"),
-    br(),
-    br(),
+    tags$a(paste0("Das bedeuten wir Wirkhebel"), icon("info-circle"), id="erkl_fachkraft_item_wirkhebel_analyse"),
+
+    br(),br(),
 
     # TODO extract into own module, since this is repeated on a lot of modules
     shinyBS::bsPopover(id="ih_fachkraft_item_wirkhebel_analyse", title="",
