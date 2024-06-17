@@ -1816,7 +1816,7 @@ studierende_map <- function(r) {
     help_fach <- ifelse(help_fach == "Alle MINT-Fächer", "MINT", help_fach)
 
     label_m <- ifelse(label_m == "Studierende", paste0(label_m, "n"), label_m)
-    label_m <- ifelse(label_m == "Internationale Studierende", "internationalen Studierenden", label_m)
+    #label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
     label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
     label_m <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
 
@@ -1888,7 +1888,7 @@ studierende_map <- function(r) {
     help_fach2 <- ifelse(help_fach2 == "Alle MINT-Fächer", "MINT", help_fach2)
 
     label_m <- ifelse(label_m == "Studierende", paste0(label_m, "n"), label_m)
-    label_m <- ifelse(label_m == "Internationale Studierende", "internationalen Studierenden", label_m)
+   # label_m <- ifelse(label_m == "Internationale Studierende", "internationalen Studierenden", label_m)
     label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
     label_m <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
 
@@ -2690,10 +2690,10 @@ studierende_mint_vergleich_bl <- function(r) {
 
 
   r_lab1 <- ifelse(r_lab1 == "Studierende", paste0(r_lab1, "n"), r_lab1)
-  r_lab1 <- ifelse(r_lab1 == "Internationale Studierende", "internationalen Studierenden", r_lab1)
+ # r_lab1 <- ifelse(r_lab1 == "Internationale Studierende", "internationalen Studierenden", r_lab1)
   r_lab1 <- ifelse(grepl("Lehr", r_lab1), "Studierenden (Lehramt)", r_lab1)
-  r_lab1 <- ifelse(r_lab1 == "Internationale Studienanfänger:innen (1. Hochschulsemester)",
-                   "internationalenen Studienanfänger:innen (1. Hochschulsemester)", r_lab1)
+  # r_lab1 <- ifelse(r_lab1 == "Internationale Studienanfänger:innen (1. Hochschulsemester)",
+  #                  "internationalenen Studienanfänger:innen (1. Hochschulsemester)", r_lab1)
   help <- r_lab1
   help <- ifelse(help == "internationalenen Studienanfänger:innen (1. Hochschulsemester)", "internationalen Studienanfänger:innen", help)
   help <- ifelse(help == "Studienanfänger:innen (1. Fachsemester)" |
@@ -3499,7 +3499,7 @@ studienzahl_einstieg_comparison_gender <- function(r) {
     dplyr::mutate(across(c("Männer", "Frauen"), ~ round(./Gesamt*100,1)))%>%
     dplyr::select(-Gesamt)%>%
     tidyr::pivot_longer(c("Männer", "Frauen"), names_to = "geschlecht", values_to  = "proportion")%>%
-    dplyr::filter(indikator !="Internationale Studienanfänger:innen (1. Hochschulsemester)"&indikator!= "Internationale Studierende"  )
+    dplyr::filter(indikator !="internationale Studienanfänger:innen (1. Hochschulsemester)"&indikator!= "internationale Studierende"  )
 
   df <- df %>%
     tidyr::pivot_wider(names_from = geschlecht, values_from = wert) %>%
@@ -3572,7 +3572,6 @@ return(out)
 
 plot_auslaender_mint <- function(r){
 
-
   bl_select <- r$states_studium_studienzahl_ausl
 
   year_select <- r$date_studium_studienzahl_ausl
@@ -3601,22 +3600,25 @@ plot_auslaender_mint <- function(r){
 #   marker_nicht_mint <- as.vector(unlist(marker_nicht_mint))
 
   df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(indikator %in% c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Internationale Studierende",
+    dplyr::filter(indikator %in% c("internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
                                    "Studierende"),
-                  geschlecht == "Gesamt")%>%
+                  geschlecht == "Gesamt",
+                  region==bl_select,
+                  jahr ==year_select ,
+                  indikator==status_select)%>%
     dplyr::select(-mint_select,- fachbereich)%>%
     dplyr::collect() %>%
     tidyr::pivot_wider(names_from=indikator, values_from = wert)%>%
     #dplyr::rename("Internationale Studierende" = `Ausländische Studierende`,"Internationale Studienanfänger:innen (1. Hochschulsemester)" = `Auländische Studienanfänger:innen (1. Hochschulsemester)` )%>%
-    dplyr::mutate("Deutsche Studierende" =`Studierende`-`Internationale Studierende`,
-                  "Deutsche Studienanfänger:innen (1. Hochschulsemester)"=`Studienanfänger:innen (1. Hochschulsemester)`-
-                    `Internationale Studienanfänger:innen (1. Hochschulsemester)`)%>%
-    dplyr::mutate("Deutsche Studierende_p" =`Deutsche Studierende`/Studierende,
-                  "Internationale Studierende_p"= `Internationale Studierende`/Studierende,
-                  "Deutsche Studienanfänger:innen (1. Hochschulsemester)_p" =`Deutsche Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`,
-                  "Internationale Studienanfänger:innen (1. Hochschulsemester)_p"=`Internationale Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`)%>%
+    dplyr::mutate("deutsche Studierende" =`Studierende`-`internationale Studierende`,
+                  "deutsche Studienanfänger:innen (1. Hochschulsemester)"=`Studienanfänger:innen (1. Hochschulsemester)`-
+                    `internationale Studienanfänger:innen (1. Hochschulsemester)`)%>%
+    dplyr::mutate("deutsche Studierende_p" =`deutsche Studierende`/Studierende,
+                  "internationale Studierende_p"= `internationale Studierende`/Studierende,
+                  "deutsche Studienanfänger:innen (1. Hochschulsemester)_p" =`deutsche Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`,
+                  "internationale Studienanfänger:innen (1. Hochschulsemester)_p"=`internationale Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`)%>%
     dplyr::select(-c(Studierende, `Studienanfänger:innen (1. Hochschulsemester)` ))%>%
   #  dplyr::filter(geschlecht=="Gesamt")%>%
     tidyr::pivot_longer(c(7:ncol(.)), names_to="indikator", values_to="wert")%>%
@@ -3633,19 +3635,14 @@ plot_auslaender_mint <- function(r){
 
   df$indikator <- gsub("_p", "", df$indikator)
 
-  df$indikator <- gsub("Deutsche ", "", df$indikator)
+  df$indikator <- gsub("deutsche ", "", df$indikator)
 
-  df$indikator <- gsub("Internationale ", "", df$indikator)
+  df$indikator <- gsub("internationale ", "", df$indikator)
 
   #df$fach <- gsub("Nicht_MINT", "Nicht MINT", df$fach)
 
 
-  df$ausl_detect  <- factor(df$ausl_detect, levels=c("Deutsch", "International"))
-
-  df <- df %>%
-    dplyr::filter(region==bl_select) %>%
-    dplyr::filter(jahr ==year_select )%>%
-    dplyr::filter(indikator==status_select)
+  df$ausl_detect  <- factor(df$ausl_detect, levels=c("deutsch", "international"))
 
 
   df_fachbereich <- df %>%
@@ -3980,8 +3977,8 @@ plot_auslaender_mint_zeit <- function(r){
   #   marker_nicht_mint <- as.vector(unlist(marker_nicht_mint))
 
   df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(indikator %in% c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Internationale Studierende",
+    dplyr::filter(indikator %in% c("internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
                                    "Studierende"),
                   geschlecht == "Gesamt")%>%
@@ -3989,33 +3986,33 @@ plot_auslaender_mint_zeit <- function(r){
     dplyr::collect() %>%
 
     tidyr::pivot_wider(names_from=indikator, values_from = wert)%>%
-    dplyr::mutate("Deutsche Studierende" =`Studierende`-`Internationale Studierende`,
-                  "Deutsche Studienanfänger:innen (1. Hochschulsemester)"=`Studienanfänger:innen (1. Hochschulsemester)`-
-                    `Internationale Studienanfänger:innen (1. Hochschulsemester)`)%>%
-    dplyr::mutate("Deutsche Studierende_p" =`Deutsche Studierende`/Studierende,
-                  "Internationale Studierende_p"= `Internationale Studierende`/Studierende,
-                  "Deutsche Studienanfänger:innen (1. Hochschulsemester)_p" =`Deutsche Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`,
-                  "Internationale Studienanfänger:innen (1. Hochschulsemester)_p"=`Internationale Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`)%>%
+    dplyr::mutate("deutsche Studierende" =`Studierende`-`internationale Studierende`,
+                  "deutsche Studienanfänger:innen (1. Hochschulsemester)"=`Studienanfänger:innen (1. Hochschulsemester)`-
+                    `internationale Studienanfänger:innen (1. Hochschulsemester)`)%>%
+    dplyr::mutate("deutsche Studierende_p" =`deutsche Studierende`/Studierende,
+                  "internationale Studierende_p"= `internationale Studierende`/Studierende,
+                  "deutsche Studienanfänger:innen (1. Hochschulsemester)_p" =`deutsche Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`,
+                  "internationale Studienanfänger:innen (1. Hochschulsemester)_p"=`internationale Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`)%>%
     dplyr::select(-c(Studierende, `Studienanfänger:innen (1. Hochschulsemester)` ))%>%
     #  dplyr::filter(geschlecht=="Gesamt")%>%
     tidyr::pivot_longer(c(7:ncol(.)), names_to="indikator", values_to="wert")%>%
     dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p")~"Relativ",
-                                            T~"Asolut"))%>%
+                                            T~"Absolut"))%>%
     dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p") ~ "In Prozent",
                                             T ~ "Anzahl"))%>%
-    dplyr::mutate(ausl_detect=dplyr::case_when(stringr::str_detect(.$indikator, "International")~"International",
-                                               T~ "Deutsch"))
+    dplyr::mutate(ausl_detect=dplyr::case_when(stringr::str_detect(.$indikator, "international")~"international",
+                                               T~ "deutsch"))
 
   df$indikator <- gsub("_p", "", df$indikator)
 
-  df$indikator <- gsub("Deutsche ", "", df$indikator)
+  df$indikator <- gsub("deutsche ", "", df$indikator)
 
-  df$indikator <- gsub("Internationale ", "", df$indikator)
+  df$indikator <- gsub("internationale ", "", df$indikator)
 
   #df$fach <- gsub("Nicht_MINT", "Nicht MINT", df$fach)
 
 
-  df$ausl_detect  <- factor(df$ausl_detect, levels=c("Deutsch", "International"))
+  df$ausl_detect  <- factor(df$ausl_detect, levels=c("deutsch", "international"))
 
   df <- df %>%
     dplyr::filter(region==bl_select,
