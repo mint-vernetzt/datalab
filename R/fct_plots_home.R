@@ -489,8 +489,6 @@ home_rest_mint_verlauf <- function(r) {
     dplyr::select(bereich, indikator, fachbereich, jahr, wert) %>%
     dplyr::collect()
 
-  # %>%
-  #   dplyr::collect()
 
   # call function to calculate the share of MINT for every "bereich"
   # df <- share_MINT(df)
@@ -561,7 +559,7 @@ home_rest_mint_verlauf <- function(r) {
     df <- dfk2_fn2 %>%
       dplyr::filter(selector=="In Prozent")
 
-    df <- df[with(df, order(fachbereich, decreasing = FALSE)), ]
+    df <- df[with(df, order(fachbereich, jahr, decreasing = FALSE)), ]
 
     #here only MINT
     df <- df %>% dplyr::filter(fachbereich == "MINT")
