@@ -19,9 +19,6 @@ akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
-path_kek <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
-
-pfad <- path_kek
 
 # Studierende Domestisch ----
 
@@ -286,175 +283,215 @@ akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
-pfad <- path_kek
-# Funktion zur Extrahierung von Rohdatensätzen
+# Daten einlesen
+sheet <- as.character(2013:2021)
+raw <- data.frame()
 
-clean_des <- function (dat,year){
-
-  raw <- readxl::read_excel(dat, col_types = "text")
-
-# Indexe prüfen!
-  raw <- raw[-c(1:6),-c(1,3,5)]
-
-  colnames(raw) <- c("region", "fachgruppe", "fach", "gesamt", "weiblich",
-                     "auslaender", "lehramt", "lehramt_weiblich",
-                     "gesamt_1hs", "weiblich_1hs", "auslaender_1hs", "gesamt_1fs",
-                     "weiblich_1fs")
-
-  raw$jahr <- year
-  raw$bereich <- "hochschule"
-  raw$hinweise <- NA
-  raw$quelle <- ifelse(raw$jahr == 2022, "Statistisches Bundesamt (Destatis), 2023: Auf Anfrage", "Statistisches Bundesamt (Destatis), 2022: Auf Anfrage")
-
-  return(raw)
-
+for(i in 1:length(sheet)){
+  temp <- readxl::read_xlsx(paste0(pfad, "DES068_Brunner_Stud_Land_FG_STB_2013_2021.xlsx"),
+                            sheet = sheet[i])
+  temp$jahr <- as.numeric(sheet[i])
+  raw <- rbind(raw, temp)
 }
 
-# Creating master
+temp <- readxl::read_xlsx(paste0(pfad, "DES069_Brunner_Stud_Land_FG_STB_2022.xlsx"))
+temp$jahr <- 2022
+raw <- rbind(raw, temp)
 
-raw2018 <- clean_des(dat= paste0(pfad, "DES060_Kroeger_Stud_Land_FG_STB_2018.xlsx"), year="2018")
-raw2019 <- clean_des(dat= paste0(pfad, "DES061_Kroeger_Stud_Land_FG_STB_2019.xlsx"), year="2019")
-raw2020 <- clean_des(dat= paste0(pfad, "DES062_Kroeger_Stud_Land_FG_STB_2020.xlsx"), year="2020")
-raw2021 <- clean_des(dat= paste0(pfad, "DES063_Kroeger_Stud_Land_FG_STB_2021.xlsx"), year="2021")
-raw2022 <- clean_des(dat= paste0(pfad, "DES065_Brunner_Stud_Land_FG_STB_2022.xlsx"), year="2022")
+rm(temp)
 
-master <- dplyr::bind_rows(raw2018,raw2019,raw2020, raw2021, raw2022)
+raw <- raw %>% select(-c(`...2`, `...3`, `...5`))
 
+colnames(raw) <- c("region", "fachbereich", "fach", "gesamt", "weiblich",
+                   "auslaender", "international", "lehramt", "lehramt_weiblich",
+                   "gesamt_1hs", "weiblich_1hs", "auslaender_1hs", "international_1hs",
+                   "gesamt_1fs", "weiblich_1fs", "jahr")
 
-# Cleaning
-library(dplyr)
-library(tidyr)
-## Filtering relevant subjects
+raw$bereich <- "hochschule"
 
-master_natwi_ing_unique <- master %>%  filter(fachgruppe =="Ingenieurwissenschaften" |
-                                                fachgruppe=="Mathematik, Naturwissenschaften")%>%
-  distinct(fach)%>%
-  as.vector()%>%
-  unlist()
+raw <- raw %>%
+  pivot_longer(cols = "gesamt":"weiblich_1fs",
+                values_to = "wert", names_to = "indikator") %>%
+  na.omit()
 
+bulas <- c(
+"Baden-Württemberg",
+"Bayern",
+"Berlin",
+"Brandenburg",
+"Bremen",
+"Hamburg",
+"Hessen",
+"Mecklenburg-Vorpommern",
+"Niedersachsen",
+"Nordrhein-Westfalen",
+"Rheinland-Pfalz",
+"Saarland",
+"Sachsen",
+"Sachsen-Anhalt",
+"Schleswig-Holstein",
+"Thüringen")
 
-master_tada <- master  %>%
-  filter(fach %in% master_natwi_ing_unique)
-
-master_tada_long <- master_tada %>%
-  pivot_longer(c(4:13), names_to = "indikator", values_to = "wert")%>%
-  unite(dummy,2:3, sep="_")%>%
-  pivot_wider(names_from = dummy, values_from = wert)
-
-
-## changing allgemein to weitere
-colnames(master_tada_long)[10] <- "Mathematik, Naturwissenschaften_Weitere naturwissenschaftliche und mathematische Fächer"
-colnames(master_tada_long)[21] <- "Ingenieurwissenschaft_Weitere ingenieurwissenschaftliche Fächer"
-
-## Turning character columns into numerics
-master_tada_long[,c(7:36)] <- purrr::map_dfr(.x = master_tada_long[,c(7:36)], .f =as.numeric )
-
-## Creating aggregates and missing regions
-master_tada_long_1 <- master_tada_long %>%
-  mutate(`Mathematik, Naturwissenschaften_Geowissenschaften und Geographie` =
-           `Mathematik, Naturwissenschaften_Geowissenschaften (ohne Geographie)`+
-           `Mathematik, Naturwissenschaften_Geographie`,
-         `Ingenieurwissenschaften_Ingenieurwissenschaften ohne Informatik`=
-           `Ingenieurwissenschaften_Zusammen`-
-           `Ingenieurwissenschaften_Informatik`,
-         MINT_MINT = `Ingenieurwissenschaften_Zusammen` +
-           `Mathematik, Naturwissenschaften_Zusammen`)%>%
-  mutate(`Mathematik, Naturwissenschaften_Naturwissenschaften` =
-           `Mathematik, Naturwissenschaften_Physik, Astronomie`+
-           `Mathematik, Naturwissenschaften_Chemie`+
-           `Mathematik, Naturwissenschaften_Biologie`+
-           `Mathematik, Naturwissenschaften_Geowissenschaften und Geographie`+
-           `Mathematik, Naturwissenschaften_Pharmazie`)%>%
-  mutate("Nicht MINT_Nicht MINT" = Zusammen_Zusammen - MINT_MINT)%>%
-  select(-`Mathematik, Naturwissenschaften_Geowissenschaften (ohne Geographie)`,
-         -`Mathematik, Naturwissenschaften_Geographie`)%>%
-  pivot_longer(c(7:39), names_to = "dummy", values_to ="wert")%>%
-  pivot_wider(names_from=region, values_from = wert)%>%
-  mutate(Deutschland = rowSums(dplyr::select(., c(7:ncol(.))),na.rm = T))%>%
-  mutate("Ostdeutschland (inkl. Berlin)"= rowSums(select(., c("Thüringen", "Berlin", "Mecklenburg-Vorpommern", "Sachsen", "Sachsen-Anhalt", "Brandenburg")),na.rm = T))%>%
-  mutate("Westdeutschland (o. Berlin)"=Deutschland - `Ostdeutschland (inkl. Berlin)`)%>%
-  pivot_longer(c(7:ncol(.)), names_to = "region", values_to = "wert")%>%
-  separate(dummy, c("fachbereich", "fach"), sep="_")
-
-master_faecher_output <- master_tada_long_1 %>%
-  select(bereich, indikator, region, jahr, fachbereich, fach, wert, quelle, hinweise)
-
-
-master_faecher_output$fach <- gsub("Zusammen", "Alle Fächer", master_faecher_output$fach )
-master_faecher_output$fach <- gsub("MINT", "Alle MINT-Fächer", master_faecher_output$fach )
-master_faecher_output$fach <- gsub("Nicht Alle MINT-Fächer", "Alle Nicht MINT-Fächer", master_faecher_output$fach )
-
-master_faecher_output <- master_faecher_output %>%
+df <- raw %>%
   mutate(
+    region = case_when(
+      region == 1 ~ bulas[1],
+      region == 2~ bulas[2],
+      region == 3 ~ bulas[3],
+      region == 4 ~ bulas[4],
+      region == 5 ~ bulas[5],
+      region == 6 ~ bulas[6],
+      region == 7 ~ bulas[7],
+      region == 8 ~ bulas[8],
+      region == 9 ~ bulas[9],
+      region == 10 ~ bulas[10],
+      region == 11 ~ bulas[11],
+      region == 12 ~ bulas[12],
+      region == 13 ~ bulas[13],
+      region == 14 ~ bulas[14],
+      region == 15 ~ bulas[15],
+      region == 16 ~ bulas[16],
+      region == "~~" ~ "Deutschland"
+    ),
+    fachbereich = case_when(
+      fachbereich == "Zusammen" ~ "Gesamt",
+      fachbereich == "Insgesamt" ~ "Gesamt",
+      T ~ fachbereich
+    ),
+    fach = case_when(
+      fach == "Zusammen" ~ "Alle Fächer",
+      fach == "Insgesamt" ~ "Alle Fächer",
+      T ~ fach
+    ),
+    wert = as.numeric(wert),
+    jahr = as.numeric(jahr),
     geschlecht = case_when(
-      stringr::str_detect(.$indikator, "weiblich") ~ "Frauen",
-      T ~ "Gesamt"),
-    dummy_indi=case_when(
-      stringr::str_detect(.$indikator, "1hs")~ "Studienanfänger:innen_1hs",
-      stringr::str_detect(.$indikator, "1fs")~ "Studienanfänger:innen_1fs",
-      T~ "Studierende")
-    # ,
-    # lehramt = case_when(
-    #   str_detect(.$indikator, "lehramt")~ "Ja",
-    #   T ~ "Nein")
+      str_detect(pattern="weiblich", indikator) ~ "Frauen",
+       T ~ "Gesamt"
+    ),
+    indikator = case_when(
+      indikator %in% c("gesamt", "weiblich") ~ "Studierende",
+      indikator == "auslaender" ~ "ausländische Studierende",
+      indikator == "international" ~ "internationale Studierende",
+      indikator == "auslaender_1hs" ~ "ausländische Studienanfänger:innen (1. Hochschulsemester)",
+      indikator == "international_1hs" ~ "internationale Studienanfänger:innen (1. Hochschulsemester)",
+      indikator %in% c("gesamt_1hs", "weiblich_1hs") ~ "Studienanfänger:innen (1. Hochschulsemester)",
+      indikator %in% c("gesamt_1fs", "weiblich_1fs") ~ "Studienanfänger:innen (1. Fachsemester)",
+      str_detect(pattern = "lehramt", indikator) ~ "Studierende (Lehramt)",
+      T ~ indikator
+    ),
+    mint_select = case_when(
+      fachbereich %in% c("Mathematik, Naturwissenschaften", "Ingenieurwissenschaften") ~
+        "MINT",
+      T ~ "Nicht MINT"
+    ),
+    typ = case_when(
+      fach == "Alle Fächer" ~ "Aggregat",
+      fach != "Alle Fächer" ~ "Einzelauswahl"
+    )
+  ) %>%
+  filter(fachbereich %in% c("Mathematik, Naturwissenschaften",
+                            "Ingenieurwissenschaften") |
+           fach == "Alle Fächer")
+
+# Aggregate Berechnen
+
+mint_agg <- df %>%
+  filter(fachbereich %in% c("Mathematik, Naturwissenschaften",
+                            "Ingenieurwissenschaften") &
+         fach == "Alle Fächer",
+         region != "Deutschland") %>%
+  group_by(region, jahr, geschlecht, indikator) %>%
+  summarise(wert = sum(wert)) %>%
+  ungroup() %>%
+  mutate(bereich = "hochschule",
+         typ = "Aggregat",
+         mint_select = "Nicht MINT",
+         fach = "Alle MINT-Fächer",
+         fachbereich = "MINT")
+
+nicht_mint_agg <- df %>%
+  filter(!(fachbereich %in% c("Mathematik, Naturwissenschaften",
+                            "Ingenieurwissenschaften",
+                            "Gesamt")) &
+           fach == "Alle Fächer",
+         region != "Deutschland") %>%
+  group_by(region, jahr, geschlecht, indikator) %>%
+  summarise(wert = sum(wert)) %>%
+  ungroup() %>%
+  mutate(bereich = "hochschule",
+         typ = "Aggregat",
+         mint_select = "Nicht MINT",
+         fach = "Alle Nicht MINT-Fächer",
+         fachbereich = "Nicht MINT")
+
+df_all <- rbind(df, mint_agg, nicht_mint_agg)
+
+#Deutschland berechnen
+de_all <- df_all %>%
+  filter(fachbereich != "Gesamt") %>%
+  group_by(jahr, fachbereich, geschlecht, indikator, fach, typ, mint_select) %>%
+  summarise(wert = sum(wert)) %>%
+  ungroup() %>%
+  mutate(bereich = "hochschule",
+         region = "Deutschland")
+
+
+df_all <- rbind(df_all, de_all)
+
+
+df_all$fach <- ifelse(!(df_all$fachbereich %in% c("Gesamt")) & df_all$fach == "Alle Fächer",
+                        df_all$fachbereich, df_all$fach)
+
+df_all <- df_all %>%
+  mutate(fach =case_when(
+    fach == "Mathematik, Naturwissenschaften allgemein" ~
+      "allgemeine naturwissenschaftliche und mathematische Fächer",
+    fach == "Ingenieurwissenschaften allgemein" ~
+      "Ingenieurwesen allgemein",
+    T ~ fach
+    )
   )
 
-master_faecher_output$dummy_indi <- ifelse(grepl("lehramt", master_faecher_output$indikator),
-                                           paste0(master_faecher_output$dummy_indi, "_Lehramt"),
-                                           master_faecher_output$dummy_indi)
-
-master_faecher_output$dummy_indi <- ifelse(grepl("auslaender", master_faecher_output$indikator),
-                                           paste0(master_faecher_output$dummy_indi, "_Ausländisch"),
-                                           master_faecher_output$dummy_indi)
+# df_all <- df_all %>%
+#   filter(!fach %in% c("Weitere naturwissenschaftliche und mathematische Fächer",
+#                       "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
+#                       "Weitere ingenieurwissenschaftliche Fächer"))
 
 
-master_faecher_output1 <- master_faecher_output %>%
-  select(bereich, dummy_indi,  region, jahr, fachbereich, fach, geschlecht, wert, quelle, hinweise
-  )%>%
-  rename(indikator=dummy_indi)%>%
-  mutate(indikator=case_when(
-    indikator=="Studienanfänger:innen_1fs" ~ "Studienanfänger:innen (1. Fachsemester)",
-    indikator=="Studienanfänger:innen_1hs" ~ "Studienanfänger:innen (1. Hochschulsemester)",
-    indikator=="Studienanfänger:innen_1hs_Ausländisch"~ "Internationale Studienanfänger:innen (1. Hochschulsemester)",
-    indikator=="Studierende" ~ "Studierende",
-    indikator=="Studierende_Ausländisch" ~ "Internationale Studierende",
-    indikator=="Studierende_Lehramt" ~ "Studierende (Lehramt)"
-  ))%>%
-  select(- hinweise, -quelle)%>%
-  mutate(fachbereich =case_when (
-    fachbereich== "Ingenieurwissenschaft"~ "Ingenieurwissenschaften",
-    T~.$fachbereich
-  ))%>%
-  mutate(mint_select=case_when(
-    fachbereich== "Mathematik, Naturwissenschaften" ~"MINT",
-    fachbereich== "Ingenieurwissenschaften" ~ "MINT",
-  #warum nicht "Alle MINT-Fächer"?
-    T~ "Nicht MINT"
-  ))%>%
-  mutate(typ=case_when(fach %in% c("Alle Fächer", "Naturwissenschaften", "Ingenieurwissenschaften ohne Informatik",
-                                   "Alle MINT-Fächer", "Alle Nicht MINT-Fächer")  ~ "Aggregat",
-                       T ~ "Einzelauswahl"))
+df_all <- df_all %>%
+  pivot_wider(names_from = geschlecht, values_from = wert, values_fill = list(wert = NA)) %>%
+  mutate(Männer = ifelse(is.na(Frauen), NA, Gesamt - Frauen)) %>%
+  pivot_longer(c("Männer", "Frauen", "Gesamt"), names_to = "geschlecht", values_to = "wert") %>%
+  mutate(fach = case_when(
+    fach == "Ingenieurwissenschaften" & jahr > 2014 ~ "Ingenieurwissenschaften (inkl. Informatik)",
+    fach == "Ingenieurwissenschaften" & jahr < 2015 ~ "Ingenieurwissenschaften (ohne Informatik)",
+    TRUE ~ fach
+  )) %>%
+  na.omit()
 
-master_faecher_output1$fach <- ifelse(master_faecher_output1$fach == "Alle Fächer", master_faecher_output1$fachbereich, master_faecher_output1$fach)
+states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Hamburg",
+                                  "Hessen", "Niedersachsen", "Nordrhein-Westfalen",
+                                  "Rheinland-Pfalz", "Saarland", "Schleswig-Holstein"),
+                         east = c("Brandenburg", "Mecklenburg-Vorpommern", "Sachsen",
+                                  "Sachsen-Anhalt", "Thüringen", "Berlin"))
 
-master_faecher_output1$fach <- ifelse(master_faecher_output1$fach == "Zusammen", "Alle Fächer", master_faecher_output1$fach)
+df_ew <- df_all
+df_ew$dummy_west <- ifelse(df_ew$region %in% states_east_west$west & df_ew$region != "Deutschland", "Westdeutschland (o. Berlin)", NA)
+df_ew$dummy_west <- ifelse(df_ew$region %in% states_east_west$east & df_ew$region != "Deutschland", "Ostdeutschland (inkl. Berlin)", df_ew$dummy_west)
 
-studierende_faecher2 <- master_faecher_output1 %>%
-  filter(!fach %in% c("Weitere naturwissenschaftliche und mathematische Fächer",
-                      "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
-                      "Weitere ingenieurwissenschaftliche Fächer"))
+df_ew <- df_ew %>% dplyr::group_by(jahr, geschlecht, indikator, fachbereich, fach, dummy_west
+                                   ,bereich, typ, mint_select) %>%
+  dplyr::summarise(wert = sum(wert, na.rm = T))
 
-studierende_detailliert <- studierende_faecher2%>%
-  pivot_wider(names_from = geschlecht, values_from =wert)%>%
-  mutate(Männer= Gesamt - Frauen)%>%
-  pivot_longer(c("Männer", "Frauen", "Gesamt"), names_to= "geschlecht", values_to = "wert")%>%
-  mutate(fach=case_when(
-    fach == "Ingenieurwissenschaften" ~ "Ingenieurwissenschaften (inkl. Informatik)",
-    T~ .$fach
-  ))
+colnames(df_ew)[colnames(df_ew) == "dummy_west"] <- "region"
 
+df_ew <- df_ew[, colnames(df_all)]
 
+df_ew <- na.omit(df_ew)
+df_all <- rbind(df_all, df_ew)
 
+studierende_detailliert <- df_all
 ## Export
 
  # rio::export(studierende_detailliert, paste0(pfad, "studierende_detailliert.xlsx"))
