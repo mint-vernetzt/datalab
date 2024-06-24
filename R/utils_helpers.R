@@ -274,8 +274,6 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
     df1 <- sort(df1)
 
   }
-
-
 }
 
 
