@@ -42,10 +42,7 @@ mod_fachkraft_start_ui <- function(id){
           mit der wir auf die Zukunft der MINT-Fachkräfte blicken.
           Wir haben Zukunftsszenarien der MINT-Fachkräfteentwicklung berechnen lassen und schauen darauf,
           wie verschiedene Wirkhebel die MINT-Fachkräftezahlen der Zukunft bewegen können."),
-        p(),
-        p(style = "text-align: left; font-size = 16px",
-          "Wir geben hier erste Einblicke in die verschiedenen
-          MINT-Fachkräfte-Daten und arbeiten gerade an weiteren Darstellungen.")
+        p()
       ),
 
       shinydashboard::box(
@@ -62,8 +59,8 @@ mod_fachkraft_start_ui <- function(id){
         title = "Übersicht Fragestellungen",
         width = 7,
         p(
-          style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-prognose",
-                                                              span(tags$b(span("Fachkräfte-Prognosetool:")))), "Zukunftsszenarien der MINT-Fachkräfteentwicklung"
+          style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-zukunft",
+                                                              span(tags$b(span("Fachkräfte-Zukunftsszenarien:")))), "Zukunftsszenarien der MINT-Fachkräfteentwicklung"
         ),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-berufsgruppen",
@@ -95,19 +92,22 @@ mod_fachkraft_start_ui <- function(id){
     ),
 
 
-    # Box 1 - MINT-Fachkräfte-Prognose ----
+    # Box 1 - MINT-Fachkräfte-Zukunftsszenarien ----
 
     fluidRow(
-      id = "fachkraft-prognose",
+      id = "fachkraft-zukunft",
       shinydashboard::box(
-        title = "Fachkräfte-Prognosetool: Zukunftsszenarien der MINT-Fachkräfte",
+        title = "Zukunftsszenarien der MINT-Fachkräftezahlen",
         width = 12,
-        p("Hier können Sie in die Zukunft blicken. Wir haben das Wirtschaftsinstitut IW Köln beauftragt,
-          die Entwicklung der MINT-Fachkräfte in den nächsten Jahren zu berechnen. Wir wollen dabei nicht schauen,
-          wie viele Personen uns fehlen werden, sondern darauf, wie viele Personen für MINT gewonnen werden könnten.
+        p("Hier können Sie in die Zukunft blicken. Wir haben das Wirtschaftsforschungsinstitut IW Köln beauftragt,
+          Projektionen möglicher Entwicklungen der MINT-Fachkräftezahlen in den nächsten Jahren zu berechnen. Wir wollen dabei nicht schauen,
+          wie viele Personen uns fehlen werden, sondern darauf, wie viele Personen für MINT-Berufe gewonnen werden könnten.
 
-          Dabei blicken wir auf die Wirkhebel MINT-Bildung fördern, Mädchen in MINT fördern,
-          internationale MINT-Fachkräfte integrieren und ältere MINT-Fachkräfte halten.
+          Dabei blicken wir auf die Wirkhebel MINT-Nachwuchs fördern, Mädchen und Frauen in MINT fördern,
+          Zuwanderung von MINT-Fachkräfte und Verbleib älterer Fachkräfte in MINT-Berufen.
+
+          Nähere Informationen dazu, welche methodischen Annahmen den Wirkhebeln und Szenarien zugurnde liegen,
+          finden Sie in den Info-Boxen der Grafiken.
 
           Vergleichen Sie hier, wie sich diese Wirkhebel die Fachkräfteentwicklung beeinflussen."),
         br(),
