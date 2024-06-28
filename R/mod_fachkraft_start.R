@@ -60,7 +60,7 @@ mod_fachkraft_start_ui <- function(id){
         width = 7,
         p(
           style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-zukunft",
-                                                              span(tags$b(span("Fachkräfte-Zukunftsszenarien:")))), "Zukunftsszenarien der MINT-Fachkräfteentwicklung"
+                                                              span(tags$b(span("Fachkräfte-Zukunftsszenarien:")))), "Zukunftsszenarien der MINT-Fachkräfte"
         ),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-berufsgruppen",
@@ -97,7 +97,7 @@ mod_fachkraft_start_ui <- function(id){
     fluidRow(
       id = "fachkraft-zukunft",
       shinydashboard::box(
-        title = "Zukunftsszenarien der MINT-Fachkräftezahlen",
+        title = "Zukunftsszenarien der MINT-Fachkräfte",
         width = 12,
         p("Hier können Sie in die Zukunft blicken. Wir haben das Wirtschaftsforschungsinstitut IW Köln beauftragt,
           Projektionen möglicher Entwicklungen der MINT-Fachkräftezahlen in den nächsten Jahren zu berechnen. Wir wollen dabei nicht schauen,
