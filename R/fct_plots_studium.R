@@ -2494,6 +2494,16 @@ mint_anteile <- function(r) {
 
   }
 
+  gruppe <- indi
+  gruppe <- dplyr::case_when(
+    gruppe == "Studierende" ~ "Studierenden",
+    gruppe == "Internationale Studierende" ~ "internationalen Studierenden",
+    gruppe == "Studierende (Lehramt)" ~ "Lehramtstudierenden",
+    gruppe == "Internationale Studienanfänger:innen (1. Hochschulsemester)" ~
+      "internationale Studienanfänger:innen (1. Hochschulsemester)",
+    T ~ gruppe
+  )
+
   if(ordering=="MINT-Fächer"){
 
     df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
@@ -2618,6 +2628,10 @@ mint_anteile <- function(r) {
         highcharter::hc_yAxis(title = list(text = "")
                               , labels = list(format = "{value} %")) %>%
         highcharter::hc_xAxis(title = list(text = ""))%>%
+        highcharter::hc_title(text = ifelse(ordering == "MINT-Aggregate",
+                                            paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " in ", states),
+                                            paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " in ", states)),
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_colors(colors)
 
     } else if (betrachtung == "Anzahl"){
@@ -2629,6 +2643,10 @@ mint_anteile <- function(r) {
         highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
         highcharter::hc_yAxis(title = list(text = "")
                               , labels = list(format = "{value}")) %>%
+        highcharter::hc_title(text = ifelse(ordering == "MINT-Aggregate",
+                                            paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " in ", states),
+                                            paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " in ", states)),
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
         highcharter::hc_xAxis(title = list(text = ""))%>%
         highcharter::hc_colors(colors)
     }
