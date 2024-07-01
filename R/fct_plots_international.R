@@ -818,7 +818,7 @@ plot_international_top10_gender <- function(r) {
                             fach_m == "Alle MINT-Fächer")) &
                       fach == fach_m &
                       indikator == "Frauen-/Männeranteil" &
-                      !(land %in% c("EU (27), seit 2020", "Lichtenstein"))
+                      !(land %in% c("EU (27), seit 2020", "Liechtenstein"))
                     ) %>%
       dplyr::select(land, wert) %>%
       dplyr::collect()
