@@ -437,7 +437,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     dplyr::filter(geschlecht == "Gesamt") %>%
     dplyr::filter(nationalitaet == "Gesamt") %>%
     dplyr::filter(anforderung == "Gesamt") %>%
-    dplyr::filter(jahr == year_filter) %>%
+    dplyr::filter(jahr == 2022) %>%
     dplyr::pull(wert)
 
   uebersicht_data <-  dplyr::tbl(con, from = "fachkraefte_prognose") %>%
@@ -482,7 +482,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     plotly::add_markers(
       x = ~basis_wert,
       y = ~wirkhebel,
-      name = "Basis-Szenario",
+      name = "Basis-Szenario 2022",
       color = I("#D0A9CD"),
       symbol = I("square"),
       size = I(50),
@@ -492,11 +492,11 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     plotly::add_markers(
       x = ~wert,
       y = ~wirkhebel,
-      name = "positives Szenario",
+      name = paste0("positives Szenario",year_filter),
       color = I("#b16fab"),
       symbol = I("square"),
       size = I(50),
-      text = ~paste0("Positives Szenario für Wirkhebel ", wirkhebel, ": ", wert_txt, "<br>Zunahme der MINT-Fachkräfte um: ", diff_txt),
+      text = ~paste0("Positives Szenario für Wirkhebel ", wirkhebel, ": ", wert_txt, "<br>Zunahme der MINT-Fachkräfte seit 2022: ", diff_txt),
       hoverinfo = "text"
     ) %>%
     plotly::layout(
@@ -526,6 +526,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
         yanchor = "top"
       )
     )
+
 
 fig <- fig %>%
     plotly::config(fig, displayModeBar = FALSE)
