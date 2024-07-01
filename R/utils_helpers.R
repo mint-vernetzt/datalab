@@ -348,6 +348,7 @@ international_ui_years <- function(region = "EU") {
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
+    selection<- selection[-1]
   }
 
   if (region == "Weltweit"){
