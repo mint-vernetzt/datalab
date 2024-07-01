@@ -492,7 +492,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     plotly::add_markers(
       x = ~wert,
       y = ~wirkhebel,
-      name = paste0("positives Szenario",year_filter),
+      name = paste0("positives Szenario ",year_filter),
       color = I("#b16fab"),
       symbol = I("square"),
       size = I(50),
