@@ -96,6 +96,31 @@ mod_fachkraft_start_ui <- function(id){
 
     fluidRow(
       id = "fachkraft-zukunft",
+      tags$script(HTML("
+        document.addEventListener('DOMContentLoaded', function() {
+          const links = document.querySelectorAll('.has-tooltip');
+          links.forEach(link => {
+            const titleText = link.getAttribute('data-tooltip');
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+            tooltip.innerHTML = titleText;
+            link.appendChild(tooltip);
+
+            link.addEventListener('mouseover', function() {
+              tooltip.style.display = 'block';
+            });
+
+            link.addEventListener('mousemove', function(e) {
+              tooltip.style.left = e.pageX + 10 + 'px';
+              tooltip.style.top = e.pageY + 10 + 'px';
+            });
+
+            link.addEventListener('mouseout', function() {
+              tooltip.style.display = 'none';
+            });
+          });
+        });
+      ")),
       shinydashboard::box(
         title = "Zukunftsszenarien der MINT-Fachkräfte",
         width = 12,
@@ -110,7 +135,21 @@ mod_fachkraft_start_ui <- function(id){
           finden Sie in den Info-Boxen der Grafiken.
 
           Vergleichen Sie hier, wie sich diese Wirkhebel die Fachkräfteentwicklung beeinflussen."),
+
+        p("Hier liegen drei statische Grafikvarianten zum Herunterladen. Die interaktiven Grafiken folgen darunter und können auch gerne als Screenshots weiterverwendet werden."),
+
+        tags$a(href = "www/Vergleich_Wirkhebel_MINT-Fachkräfte.png", target = "_blank", "Grafik Vergleich Wirkhebel",
+               title = "Die Grafik öffnet sich in einem neuen Browserfenster und kann mit Rechtsklick + \"Grafik speichern unter...\" heruntergeladen werden."),
         br(),
+        tags$a(href = "www/Gesamteffekt_MINT-Fachkräfte.png", target = "_blank", "Grafik Gesamteffekt Wirkhebel",
+               title = "Die Grafik öffnet sich in einem neuen Browserfenster und kann mit Rechtsklick + \"Grafik speichern unter...\" heruntergeladen werden."),
+        br(),
+        tags$a(href = "www/Zukunftsszenarien_MINT-Fachkräfte.png", target = "_blank", "Grafik Szenarien des Gesamteffekts",
+               title = "Die Grafik öffnet sich in einem neuen Browserfenster und kann mit Rechtsklick + \"Grafik speichern unter...\" heruntergeladen werden."),
+
+       # shiny::downloadLink(outputId = "download_wirkhebel", label = "Download Grafik Vergleich Wirkhebel"),
+
+       br(),br(),
         tabsetPanel(
           type = "tabs",
     tabPanel(
@@ -494,6 +533,16 @@ mod_fachkraft_start_server <- function(id, r){
     ns <- session$ns
 
   # Box 1 - Fachkraft-Prognose ----
+
+    # output$download_wirkhebel <- shiny::downloadHandler(
+    #   filename = function() {
+    #     "Vergleich_Wirkhebel_MINT-Fachkräfte.png"
+    #   },
+    #   content = function(file) {
+    #     file.copy("www/Vergleich_Wirkhebel_MINT-Fachkräfte.png", file)
+    #   },
+    #   contentType = "image/png"
+    # )
 
     #ohne download
     output$plot_fachkraft_prog_item_1 <- highcharter::renderHighchart({
