@@ -103,7 +103,7 @@ background-color: #FFFFFF;
 }*/
 
 
-/* Anpassung des Popovers */
+/* Anpassung des Popovers und Tooltips */
 
 .popover {
   background-color: #ffffff;
@@ -125,7 +125,64 @@ background-color: #FFFFFF;
 
 }
 
+/*.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
 
+.tooltip-container .tooltip-text {
+  visibility: hidden;
+  width: 220px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -110px;
+
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-container .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+*/
+
+.tooltip {
+  position: absolute;
+  z-index: 1070;
+  display: block;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  padding: 5px;
+  color: #fff;
+  background: #333;
+  border-radius: 3px;
+  white-space: nowrap;
+  display: none; /* Initially hide tooltips */
+}
+
+.has-tooltip {
+  position: relative;
+}
 
 /* Lade-Symbol für Grafiken festlegen */
 
