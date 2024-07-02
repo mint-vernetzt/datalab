@@ -486,7 +486,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
       color = I("#D0A9CD"),
       symbol = I("square"),
       size = I(50),
-      text = ~paste0("Basis-Szenario: ", basis_wert_txt),
+      text = ~paste0("Basis-Szenario 2022: ", basis_wert_txt),
       hoverinfo = "text"
     ) %>%
     plotly::add_markers(
