@@ -91,6 +91,23 @@ mod_fachkraft_start_ui <- function(id){
       )
     ),
 
+    # - Infobox Kurzanalysen
+    fluidRow(
+      div(class = "content-box",
+          #   style = "width: 90%",
+          p(br(),"KURZANALYSE", br()),
+          p(style = "font-size = 24",
+            strong("Für die folgenden Zukunftsszenarien hat MINTvernetzt vom IW Köln berechnen lassen,
+            wie sich die MINT-Fachkräftezaheln in den nächsten Jahren entwickeln werden.
+            Wirken Förderinitiativen für den MINT-Nachwuchs, Frauen in MINT, den Verbleib
+            älterer Fachkräftre und für die Zuwanderung von MINT-Fachkräften zusammen, können
+           bis 2037 1,4 Mio. MINT-Fachkräfte zusätzlich gewonnen werden. Im Vergleich dazu bewegen wir
+            uns aktuell auf rund 100.000 MINT-Fachkräfte weniger zu, in einem Worst Case sogar auf rund 1 Mio. weniger."),
+            br(), br(),
+            tags$a(href = "https://www.mint-vernetzt.de/mint-datalab/", target = "_blank", "Link zu den Kurzanalysen"),
+            br(), br())),
+    ),
+
 
     # Box 1 - MINT-Fachkräfte-Zukunftsszenarien ----
 
