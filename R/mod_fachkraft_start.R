@@ -138,13 +138,13 @@ mod_fachkraft_start_ui <- function(id){
 
         p("Hier liegen drei statische Grafikvarianten zum Herunterladen. Die interaktiven Grafiken folgen darunter und können auch gerne als Screenshots weiterverwendet werden."),
 
-        tags$a(href = "www/Vergleich_Wirkhebel_MINT-Fachkräfte.png", target = "_blank", "Grafik Vergleich Wirkhebel",
+        tags$a(href = "www/Vergleich_Wirkhebel_MINT-Fachkräfte.png", target = "_blank", "Download Grafik Vergleich Wirkhebel",
                title = "Die Grafik öffnet sich in einem neuen Browserfenster und kann mit Rechtsklick + \"Grafik speichern unter...\" heruntergeladen werden."),
         br(),
-        tags$a(href = "www/Gesamteffekt_MINT-Fachkräfte.png", target = "_blank", "Grafik Gesamteffekt Wirkhebel",
+        tags$a(href = "www/Gesamteffekt_MINT-Fachkräfte.png", target = "_blank", "Download Grafik Gesamteffekt Wirkhebel",
                title = "Die Grafik öffnet sich in einem neuen Browserfenster und kann mit Rechtsklick + \"Grafik speichern unter...\" heruntergeladen werden."),
         br(),
-        tags$a(href = "www/Zukunftsszenarien_MINT-Fachkräfte.png", target = "_blank", "Grafik Szenarien des Gesamteffekts",
+        tags$a(href = "www/Zukunftsszenarien_MINT-Fachkräfte.png", target = "_blank", "Download Grafik Szenarien des Gesamteffekts",
                title = "Die Grafik öffnet sich in einem neuen Browserfenster und kann mit Rechtsklick + \"Grafik speichern unter...\" heruntergeladen werden."),
 
        # shiny::downloadLink(outputId = "download_wirkhebel", label = "Download Grafik Vergleich Wirkhebel"),
