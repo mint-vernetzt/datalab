@@ -1248,38 +1248,38 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # tab 2
 
-    output$plot_arbeitsmarkt_detail_vergleich <- highcharter::renderHighchart({
+    output$plot_arbeitsmarkt_detail_vergleich <- renderUI({
       arbeitsmarkt_lk_detail_vergleich(r)
 
     })
 
-    output$plot_arbeitsmarkt_detail_vergleich  <- renderUI({
-      plot_list <- arbeitsmarkt_einstieg_vergleich_gender(r)
-      r$plot_arbeitsmarkt_detail_vergleich <- plot_list
-
-      r$plot_arbeitsmarkt_detail_vergleich_title <- get_plot_title(
-        plot = r$plot_arbeitsmarkt_detail_vergleich
-      )
-
-      plot_list
-    })
-
-    output$download_btn_plot_arbeitsmarkt_detail_vergleich <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_arbeitsmarkt_detail_vergleich_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_arbeitsmarkt_detail_vergleich,
-          filename =  r$plot_arbeitsmarkt_detail_vergleich_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_arbeitsmarkt_detail_vergleich_title, file)
-        file.remove(r$plot_arbeitsmarkt_detail_vergleich_title)
-
-      })
+    # output$plot_arbeitsmarkt_detail_vergleich  <- renderUI({
+    #   plot_list <- arbeitsmarkt_lk_detail_vergleich(r)
+    #   r$plot_arbeitsmarkt_detail_vergleich <- plot_list
+    #
+    #   r$plot_arbeitsmarkt_detail_vergleich_title <- get_plot_title(
+    #     plot = r$plot_arbeitsmarkt_detail_vergleich
+    #   )
+    #
+    #   plot_list
+    # })
+    #
+    # output$download_btn_plot_arbeitsmarkt_detail_vergleich <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_arbeitsmarkt_detail_vergleich_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_arbeitsmarkt_detail_vergleich,
+    #       filename =  r$plot_arbeitsmarkt_detail_vergleich_title,
+    #       width = 700,
+    #       height = 400)
+    #
+    #     file.copy(r$plot_arbeitsmarkt_detail_vergleich_title, file)
+    #     file.remove(r$plot_arbeitsmarkt_detail_vergleich_title)
+    #
+    #   })
 
 
 
