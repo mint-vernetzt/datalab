@@ -51,7 +51,7 @@ mod_studium_studienzahl_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Übersicht Fragestellungen",
+        title = "Links zu den Themen dieser Seite",
         width = 7,
         p(
           style = "text-align: left; font-size = 16px",tags$a(href="#studium_mint",
@@ -325,6 +325,19 @@ mod_studium_studienzahl_ui <- function(id){
                   #                                  icon = shiny::icon("download")))
                   # )
         ))),
+
+  # Kurzanalyse-Box ----
+  div(class = "content-box",
+      p(br(),"KURZANALYSE", br()),
+      p(style = "font-size = 24",
+        strong("Die Anzahl an MINT-Studienanfänger:innen ist in den letzten Jahren zurückgegangen, von 197.000 neuen Studierenden
+               in MINT 2015 auf 176.000 in 2022. Ein ähnliches Bild zeigt sich auch bei den Auszubildenden.
+               In einer Kurzanalyse fassen wir die Entwicklungen im MINT-Nachwuchs zusammen."),
+        br(), br(),
+        tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Interesse_final.pdf",
+               target = "_blank", "Link zur Kurzanalyse"),
+        br(), br())
+  ),
 
     # Box 2 ----
 

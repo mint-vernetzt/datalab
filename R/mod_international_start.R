@@ -48,7 +48,7 @@ mod_international_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Übersicht Fragestellungen",
+        title = "Links zu den Themen dieser Seite",
         width = 7,
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_international",
                                                               span(tags$b(span("MINT-Kompetenzen im internationalen Vergleich:")))),

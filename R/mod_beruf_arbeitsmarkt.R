@@ -47,7 +47,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
       fluidRow(
         shinydashboard::box(
-          title = "Übersicht Fragestellungen",
+          title = "Links zu den Themen dieser Seite",
           width = 7,
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_mint",
             span(tags$b(span("Berufswahl MINT:")))),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten in MINT?"
@@ -324,6 +324,19 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     # )
         ))),
 
+    # Kurzanalyse-Box ----
+    div(class = "content-box",
+        p(br(),"KURZANALYSE", br()),
+        p(style = "font-size = 24",
+          strong("Die Anzahl an MINT-Auszubildenden ist in den letzten Jahren rückläufig gewesen.
+          Während es 2020 rund 450.000 Auszubildenden in MINT gab, sind es 2022 noch 400.000.
+          Auch die Zahl an Studienanfänger:innen hat in den letzten Jahren stetig abgenommen.
+          In einer Kurzanalyse fassen wir die Entwicklungen im MINT-Nachwuchs zusammen."),
+          br(), br(),
+          tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Interesse_final.pdf",
+                 target = "_blank", "Link zur Kurzanalyse"),
+          br(), br())
+    ),
 
     # Box 2 ----
 
@@ -538,6 +551,20 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                )
                     )
         ))),
+
+    # Kurzanalyse-Box ----
+    div(class = "content-box",
+        p(br(),"KURZANALYSE", br()),
+        p(style = "font-size = 24",
+          strong("Nur 8 Prozent der Frauen üben einen MINT-Berufe aus, bei Männer sind es über ein Drittel.
+       Außerdem sinkt der Frauenanteil entlang der Bildungskette.
+      Diese Zahlen werden in unserer Kurzanalyse \"Arbeitswelt: Frauen & MINT\" eingeordnet und mit Empfehlungen, was man
+              für einen höheren Frauenanteil tun könnte, verknüpft."),
+          br(), br(),
+          tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Frauen_Berufe_final.pdf",
+                 target = "_blank", "Link zur Kurzanalyse"),
+          br(), br())
+    ),
 
     # Box Regional ----
 

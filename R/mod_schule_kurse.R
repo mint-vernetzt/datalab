@@ -56,7 +56,7 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Übersicht Fragestellungen",
+        title = "Links zu den Themen dieser Seite",
         width = 7,
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_mint",
@@ -650,6 +650,24 @@ mod_schule_kurse_ui <- function(id){
                                   )
                          )
              ))),
+
+
+  # Kurzanalyse-Box ----
+  div(class = "content-box",
+      p(br(),"KURZANALYSE", br()),
+      p(style = "font-size = 24",
+        strong("MINT-Kompetenztests wie die IQB-Befragung zeigen systematische Gruppenunterschiede in den MINT-Kompetenzen.
+               Zwei dieser Unterschiede ordnen wir in jeweils einer Kurzanalyse ein: Wir schauen darauf, woher die Unterschiede
+               zwischen Jungen und Mädchen in Mathematik kommen können und wie man Mädchen hier fördern kann. Außerdem betrachten wir
+               in unsere Kurzanalyse zum Thema Teilhabe den Einfluss der sozialen Herkunft auf die Schulzeit und wie MINT-Förderung zu Chancengerechtigkeit
+                beitragen kann."),
+        br(), br(),
+        tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Gender_final.pdf",
+               target = "_blank", "Link zu der Kurzanalyse Schule: Mädchen & MINT"),
+        tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Teilhabe_final.pdf",
+               target = "_blank", "Link zu der Kurzanalyse Mit MINT-Förderung zu mehr Chancengerechtigkeit"),
+        br(), br())
+  ),
 
   # Box 5----
 

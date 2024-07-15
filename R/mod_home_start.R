@@ -39,24 +39,23 @@ mod_home_start_ui <- function(id){
         title = "Fragen oder Feedback?",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Sind alle Zahlen und Grafiken verständlich?", br(),
-          "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          "Sind alle Zahlen und Grafiken verständlich? Gibt es Darstellungsschwierigkeiten? Wünschen Sie sich weitere Daten?", br(),
+          "Wir freuen uns über Rückfragen und Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))
     ),
 
     fluidRow(
       shinydashboard::box(
-        title = "Übersicht Fragestellungen",
+        title = "Links zu den Themen dieser Seite",
         width = 7,
         p(style = "text-align: left; font-size = 16px",tags$a(href="#alle_mint",
-        span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
+                                                              span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
         ),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#alle_frauen",
-        span(tags$b(span("Frauen in MINT:")))),"Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen"))
-
-        ,
+                                                                    span(tags$b(span("Frauen in MINT:")))),"Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen"))
+      ,
 
       shinydashboard::box(
         title = "Datenquellen",
@@ -66,8 +65,7 @@ mod_home_start_ui <- function(id){
          p("Schüler:innenzahlen: KMK 2022, auf Anfrage"),
           p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2022, auf Anfrage")
         )
-
-   ),
+      ),
 
    # Box 1 ----
 
@@ -231,10 +229,22 @@ mod_home_start_ui <- function(id){
                              )
                     )
         )
-    )
+    ) ,
 
+ # Kurzanalyse-Box ----
+ div(class = "content-box",
+     p(br(),"KURZANALYSE", br()),
+     p(style = "font-size = 24",
+       strong("Der Frauenanteil sinkt entlang der Bildungskette.
+       Nur 8 Prozent der Frauen üben einen MINT-Berufe aus, bei Männer sind es über ein Drittel.
 
-  ,
+      Diese Zahlen werden in unserer Kurzanalyse \"Arbeitswelt: Frauen & MINT\" eingeordnet und mit Empfehlungen, was man
+              für einen höheren Frauenanteil tun könnte, verknüpft."),
+       br(), br(),
+       tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Frauen_Berufe_final.pdf",
+              target = "_blank", "Link zur Kurzanalyse"),
+       br(), br())
+ ),
 
 
 # Footer
