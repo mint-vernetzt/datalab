@@ -60,20 +60,20 @@ mod_schule_kurse_ui <- function(id){
         width = 7,
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_mint",
-                                                              span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?"
+                                                              span(tags$b(span("MINT-Anteil:")))),"Ein Drittel der Leistungskursbelegungen sind in MINT."
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_fach",
-                                                              span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
+                                                              span(tags$b(span("M-I-N-T:")))), "70 % der MINT-Leistungskurse sind Mathematik."
 
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_frauen",
-                                                              span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?"),
+                                                              span(tags$b(span("Frauen in MINT:")))),"MINT-Belegungen unter Mädchen und Jungen ungefähr gleich häufig."),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_kompetenz",
-                                                              span(tags$b(span("MINT-Kompetenzen in der 4. und 9. Klasse:")))),"Wie entwickelt sich die MINT-Kompetenz und das Interesse in MINT?"),
+                                                              span(tags$b(span("MINT-Kompetenzen:")))),"MINT-Kompetenzen nehmen weiter ab. IQB-Ergebnisse der letzten Jahre."),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_ausserschulisch",
-                                                              span(tags$b(span("Außerschulische, frühkindliche MINT-Bildung:")))),"Wie hoch ist die Beteiligung in außerschulische, frühkindliche MINT-Bildung?"),
+                                                              span(tags$b(span("Frühkindliche Bildung:")))),"Zahl der MINT-aktive Einrichtungen bei Stiftung Kinder forschen wächst stetig."),
 
       ),
       shinydashboard::box(
@@ -95,7 +95,7 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(id="schule_mint",
       shinydashboard::box(
-        title = "Fächerwahl MINT: Wie hoch ist der Anteil von MINT-Fächern in der Oberstufe?",
+        title = "MINT-Anteil: Ein Drittel der Leistungskursbelegungen sind in MINT.",
         width = 12,
         p("In diesen interaktiven Diagrammen beleuchten wir, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt werden."),
                 tabsetPanel(type = "tabs",
@@ -273,7 +273,7 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(id="schule_fach",
       shinydashboard::box(
-        title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
+        title = "M-I-N-T: 70 % der MINT-Leistungskurse sind Mathematik.",
         width = 12,
         p("Hier zeigen wir die Anteile einzelner MINT-Fächer in Deutschland. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse.",
         ),
@@ -440,7 +440,7 @@ mod_schule_kurse_ui <- function(id){
   # Box 3 ----
     fluidRow(id="schule_frauen",
       shinydashboard::box(
-        title = "Mädchen in MINT: Wie hoch ist der Anteil von Mädchen in den MINT-Fächern?",
+        title = "Frauen in MINT: MINT-Belegungen unter Mädchen und Jungen ungefähr gleich häufig.",
         width = 12,
         p("Hier schauen wir uns die Verteilung von Mädchen und Jungen innerhalb der MINT-Fächer in Deutschland an. Zum Vergleich
           zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern. Die verschiedenen Diagramme bieten außerdem
@@ -544,7 +544,7 @@ mod_schule_kurse_ui <- function(id){
 
       fluidRow(id="schule_kompetenz",
            shinydashboard::box(
-             title = "MINT-Kompetenzen in der 4. und 9. Klasse",
+             title = "MINT-Kompetenzen: MINT-Kompetenzen nehmen weiter ab. IQB-Ergebnisse der letzten Jahre.",
              width = 12,
              p("Diese interaktiven Diagramme geben einen Einblick in die Mathe-Kompetenzen von Schüler:innen der 4. und 9. Klassen.
              Die Daten stammen aus der Befragung des Instituts zur Qualitätsentwicklung im Bildungswesen e.V. (IQB), das in regelmäßigen Abständen
@@ -673,7 +673,7 @@ mod_schule_kurse_ui <- function(id){
 
   fluidRow(id="schule_ausserschulisch",
            shinydashboard::box(
-             title = "Außerschulische, frühkindliche MINT-Bildung",
+             title = "Frühkindliche Bildung: Zahl der MINT-aktive Einrichtungen bei Stiftung Kinder forschen wächst stetig.",
              width = 12,
              p("In diesem Abschnitt betrachten wir die Entwicklung der außerschulischen, frühkindlichen MINT-Bildung.
                Die interaktiven Grafiken basieren auf den Daten der 'Stiftung Kinder forschen' (SKf, früher Haus der kleinen Forscher).

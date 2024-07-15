@@ -50,11 +50,11 @@ mod_home_start_ui <- function(id){
         title = "Links zu den Themen dieser Seite",
         width = 7,
         p(style = "text-align: left; font-size = 16px",tags$a(href="#alle_mint",
-                                                              span(tags$b(span("Fächerwahl MINT:")))),"Wie hoch ist der Anteil von MINT entlang der Bildungskette?"
+                                                              span(tags$b(span("MINT-Anteil:")))),"Ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf."
         ),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#alle_frauen",
-                                                                    span(tags$b(span("Frauen in MINT:")))),"Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen"))
+                                                                    span(tags$b(span("Frauen in MINT:")))),"Der Frauenanteil nimmt entlang der Bildungskette ab."))
       ,
 
       shinydashboard::box(
@@ -71,10 +71,15 @@ mod_home_start_ui <- function(id){
 
     fluidRow(id="alle_mint",
       shinydashboard::box(
-        title = "Fächerwahl MINT: Wie hoch ist der Anteil von MINT entlang der Bildungskette?",
+        title = "MINT-Anteil: Ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf.",
         width = 12,
-        p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von MINT-Fächern in der Schule? Wie hoch ist der Anteil von Studierenden, die MINT-Fächer belegen?
-          Wie hoch ist der Anteil von Auszubildenden, die eine Ausbildung in MINT machen? Wie hoch ist der Anteil von Beschäftigten, die im MINT-Bereich arbeiten?"),
+        p("Wie groß ist der MINT-Anteil entlang der Bildungskette von Schule bis Beruf?
+          Rund ein Drittel der Leistungskursbelegungen sind in einem MINT Fach.
+          37% der Studierenden und rund ein Drittel der Auszubildenden lernen in MINT.
+          Unter den Beschäftigten ist der MINT-Anteil geringer. Hier üben Stand 2022 23%
+          der sozialversicherungspflichtig Beschäftigten eine MINT-Tätigkeit aus.
+          In den letzten 10 Jahren sind diese Anteile ziemlich stabil geblieben.
+          Leichte Veränderungen sieht man in den absoluten Zahlen."),
 
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Bereiche", br(),
@@ -152,12 +157,14 @@ mod_home_start_ui <- function(id){
  # Box 2 ----
     fluidRow(id="alle_frauen",
       shinydashboard::box(
-        title = "Frauen in MINT: Anteil von Frauen und Mädchen innerhalb von MINT in den verschiedenen Bildungsbereichen",
+        title = "Frauen in MINT: Der Frauenanteil nimmt entlang der Bildungskette ab.",
         width = 12,
-        p("Die folgende interaktive Grafik gibt Antworten auf die Fragen: Wie hoch ist der Anteil von Mädchen in MINT-Leistungskursen?
-          Wie hoch ist der Anteil von Frauen in MINT-Studienfächern? Wie hoch ist der Anteil von Frauen in MINT-Ausbildungsgängen?
-          Wie hoch ist der Anteil von Frauen in MINT-Berufen?", br(),
-        "Zum Vergleich zeigen wir jeweils auch, wie hoch der Anteil von Frauen in den anderen, nicht-MINT-Fächern oder -Berufszweigen ist."),
+        p("In den MINT-Leistungskursen sind rund 50% der Schüler:innen weiblich.
+          In der weiterführenden Bildung, in Ausbildung und Studium, ist der Frauenanteil bei 13% beziehungsweise 32%.
+          In den MINT-Berufen sind nur 17% Frauen vertreten. Im Vergleich dazu ist der Frauenanteil bei \"Nicht-MINT\"-Berufen 56%,
+          bei \"Nicht-MINT\"-Studiengängen sogar bei über 60%.", br(),
+        "In den letzten 10 Jahren hat sich daran nicht stark etwas verändert.
+        Es kam zu leichten Zunahmen des Frauenanteils im Studium und im Beruf."),
 
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Bereiche", br(),  # Verlgeich
