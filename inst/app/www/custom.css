@@ -102,6 +102,18 @@ background-color: #FFFFFF;
   border-top-color:    #195365;
 }*/
 
+.content-box {
+  padding: 10px;
+  margin: 10px auto;
+  width: 100%;
+  background-color: #154194;
+  color: #FFFFFF;
+
+  font-family: SourceSans3-Regular;
+  font-size: 18px;
+  text-align: center;
+
+}
 
 /* Anpassung des Popovers und Tooltips */
 

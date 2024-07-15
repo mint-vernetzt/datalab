@@ -91,6 +91,9 @@ mod_fachkraft_start_ui <- function(id){
       )
     ),
 
+    # div(class = "content-box",
+    #     "Test-Text"),
+
 
     # Box 1 - MINT-Fachkräfte-Zukunftsszenarien ----
 
