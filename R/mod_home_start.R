@@ -31,14 +31,16 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Auf dieser Seite",
         width = 7,
-        p(style = "text-align: left; font-size = 16px",
+        p(
+          #style = "text-align: left; font-size = 16px",
            "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")),
       shinydashboard::box(
         title = "Fragen oder Feedback?",
         width = 5,
-        p(style = "text-align: left; font-size = 16px",
+        p(
+          #style = "text-align: left; font-size = 16px",
           "Sind alle Zahlen und Grafiken verständlich? Gibt es Darstellungsschwierigkeiten? Wünschen Sie sich weitere Daten?", br(),
           "Wir freuen uns über Rückfragen und Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
@@ -49,18 +51,19 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Links zu den Themen dieser Seite",
         width = 7,
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#alle_mint",
+        p(style = "text-align: left; font-size = 22px",tags$a(href="#alle_mint",
                                                               span(tags$b(span("MINT-Anteil:")))),"Ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf."
         ),
 
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#alle_frauen",
+        p(style = "text-align: left; font-size = 22px",tags$a(href="#alle_frauen",
                                                                     span(tags$b(span("Frauen in MINT:")))),"Der Frauenanteil nimmt entlang der Bildungskette ab."))
       ,
 
       shinydashboard::box(
         title = "Datenquellen",
         width = 5,
-        p(style = "text-align: left; font-size = 16px",
+        p(
+          #style = "text-align: left; font-size = 16px",
           "Studierendenzahlen: Destatis 2022, auf Anfrage"),
          p("Schüler:innenzahlen: KMK 2022, auf Anfrage"),
           p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2022, auf Anfrage")

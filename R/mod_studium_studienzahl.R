@@ -55,18 +55,18 @@ mod_studium_studienzahl_ui <- function(id){
         width = 7,
         p(
           style = "text-align: left; font-size = 16px",tags$a(href="#studium_mint",
-                                                              span(tags$b(span("Fächerwahl MINT:")))), "Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?"
+                                                              span(tags$b(span("MINT-Anteil:")))), "Ein Drittel studiert MINT."
         ),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_fach",
-                                                              span(tags$b(span("M-I-N-T:")))), "Blick auf die einzelnen Fächer und Fachbereiche."
+                                                              span(tags$b(span("M-I-N-T:")))), "Knapp 3/4 aus MINT studieren Ingenieurwissenschaften/Informatik."
 
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_frauen",
-                                                              span(tags$b(span("Frauen in MINT:")))), "Wie hoch ist der Anteil von Frauen in den MINT-Fächern?"
+                                                              span(tags$b(span("Frauen in MINT:")))), "Frauen in MINT und vor allem den Ingenieurwissenschaften/Informatik eine Minderheit."
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_internationale_studis",
-                                                              span(tags$b(span("Internationale Studierende in MINT:")))), "Wie hoch ist der Anteil von internationalen Studierenden in den MINT-Fächern?"
+                                                              span(tags$b(span("Internationale Studierende:")))), "Ihre Anzahl wächst - und am häufigsten studieren sie MINT."
         )
         ),
 
@@ -88,10 +88,13 @@ mod_studium_studienzahl_ui <- function(id){
 
     fluidRow( id="studium_mint",
       shinydashboard::box(
-        title = "Fächerwahl MINT: Wie hoch ist der Anteil von Studierenden, die ein MINT-Fach studieren?",
+        title = "MINT-Anteil: Ein Drittel studiert MINT.",
         width = 12,
-        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Fächern an allen Studienfächern in Deutschland.
-          Dabei betrachten wir sowohl Studienanfänger:innen als auch Studierende allgemein. Darüber hinaus werfen wir ein Schlaglicht auf die Verteilung von Männern und Frauen in MINT"),
+        p("Im Jahr 2022 studierend 37% MINT-Fächer, 63% Fächer aus anderen Bereichen.
+        Bei den Studienanfänger:innen ist der Anteil derer, die MINT studiert bei 38%."),
+        p("Die Zahl an MINT-Studierenden hat sich in den letzten 10 Jahren nur leicht verändert,
+          von 1.001.260 im Jahr 2013 auf 1.078.042 in 2022. Der MINT-Anteil unter Studienanfänger:innen
+          ist lange konstant gesunken und erstmals von 2021 auf 2022 wieder leicht gestiegen, von 37,7% auf 38,3%."),
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Anteil MINT nach Studierendengruppen", br(),
 
@@ -343,10 +346,14 @@ mod_studium_studienzahl_ui <- function(id){
 
   fluidRow( id="studium_fach",
       shinydashboard::box(
-        title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
+        title = "M-I-N-T: Knapp 3/4 aus MINT studieren Ingenieurwissenschaften/Informatik.",
         width = 12,
-        p("Hier zeigen wir, wie häufig MINT-Fächer im Vergleich zu anderen Studienfächern in Deutschland gewählt werden.
-          Außerdem kann man den Anteil von MINT-Fächern zwischen den Bundesländern vergleichen."),
+        p("Zoomt man auf den MINT-Fachbereich, studieren 70% der MINT-Studierenden
+          Ingenieurwissenschaften/Informatik. Die restlichen 30% befinden sich in einem Studium
+          der Mathematik/Naturwissenschaft."),
+        p("Während der Anteil und die Zahl der Informatikstudierenden in den letzten Jahren immer
+          weiter angestiegen ist, nehmen die Studierendenzahlen in anderen Ingenieurswissenschaften ab,
+          in Mathematik/Naturwissenschaften sind die Zahlen in den letzten Jahren stabil."),
 
         tabsetPanel(type = "tabs",
 
@@ -501,11 +508,17 @@ mod_studium_studienzahl_ui <- function(id){
   # Box 3 ----
     fluidRow(id="studium_frauen",
       shinydashboard::box(
-        title = "Frauen in MINT: Wie hoch ist der Anteil von Frauen in den MINT-Fächern?",
+        title = "Frauen in MINT: Frauen in MINT und vor allem den Ingenieurwissenschaften/Informatik eine Minderheit.",
         width = 12,
-        p("Hier schauen wir uns die Verteilung von Frauen und Männern in Deutschland innerhalb der MINT-Studienfächer an.
-          Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern.
-          Die verschiedenen Diagramme bieten außerdem Fächer- und Bundeslandvergleiche."),
+        p("Der Frauenanteil in MINT-Studienfächern liegt immer noch bei nur 32%.
+        Im Vergleich dazu: Betrachtet man alle \"Nicht-MINT\"-Studienbereiche zusammen,
+        ist der Frauenanteil bei mehr als der Hälfte. Doch in den letzten 10 Jahren gab es eine leichte Positiventwicklung.
+        Der Frauenanteil nahm von etwa 29% auf 32% zu."),
+        p("Es gibt auch MINT-Fachbereiche, in denen es ganz anders aussieht - in Pharmazie oder auch Biologie studieren mehr Frauen als Männer.
+        Wechselt man die Perspektive und blickt auf die Gruppe der Studentinnen,
+          wird die unterschiedliche Attraktivität der MINT-Studium für Frauen vs.
+          Männern nochmal deutlich. Von allen Studentinnen wählen nur 22% MINT.
+          Bei den Studenten sind es knapp die Hälfte."),
 
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Anteil Frauen in MINT zwischen Studienanfänger:innen und Studierenden", br(),
@@ -590,11 +603,16 @@ mod_studium_studienzahl_ui <- function(id){
 
   fluidRow(id="studium_internationale_studis",
            shinydashboard::box(
-             title = "Internationale Studierende in MINT: Wie hoch ist der Anteil internationaler Studierender in den MINT-Fächern?",
+             title = "Internationale Studierende: Ihre Anzahl wächst - und am häufigsten studieren sie MINT.",
              width = 12,
-             p("Diese Darstellungen zeigen, wie hoch der Anteil internationale Studierender an allen Studierenden eines Fachbereichs oder eines Studienfachs ist.
-               Außerdem zeigen wir hier, wie viele internationale Studierende in welchen Fächern studieren. Als 'internationale Studierende' fassen wir alle
-               Studierenden zusammen, welche in Deutschland studieren, aber keine deutsche Staatsbürgerschaft besitzen."),
+             p("Deutschland ist bei internationalen Studierenden beliebt.
+             Und ihre Zahl ist in den letzten 10 Jahren stark gestiegen - von knapp 97.000
+             auf rund 196.000 internationale Studierende allein in MINT.
+             Damit machen sie 2022 18% der MINT-Studierenden aus."),
+            p("Vergleicht man die Fachbereiche, studieren Internationals besonders oft MINT-Fächer.
+              153.000 von ihnen studieren Ingenieurwissenschaften/Informatik,
+              gefolgt von 93.000 in Rechts-, Wirtschafts-, und Sozialwissenschaften und 43.000 in
+              Mathematik/Naturwissenschaften."),
              tabsetPanel(type = "tabs",
                          tabPanel("Anteil von internationalen Studierenden nach Fächern", br(),
                                   shiny::sidebarPanel(

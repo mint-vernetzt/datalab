@@ -73,7 +73,7 @@ mod_schule_kurse_ui <- function(id){
                                                               span(tags$b(span("MINT-Kompetenzen:")))),"MINT-Kompetenzen nehmen weiter ab. IQB-Ergebnisse der letzten Jahre."),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_ausserschulisch",
-                                                              span(tags$b(span("Frühkindliche Bildung:")))),"Zahl der MINT-aktive Einrichtungen bei Stiftung Kinder forschen wächst stetig."),
+                                                              span(tags$b(span("Frühkindliche Bildung:")))),"Zahl der MINT-aktiven Einrichtungen bei Stiftung Kinder forschen wächst stetig."),
 
       ),
       shinydashboard::box(
@@ -97,7 +97,16 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "MINT-Anteil: Ein Drittel der Leistungskursbelegungen sind in MINT.",
         width = 12,
-        p("In diesen interaktiven Diagrammen beleuchten wir, wie häufig MINT-Fächer im Vergleich zu anderen Fächern in der Oberstufe in Deutschland belegt werden."),
+        p("In 2022 fallen 24% der Grundkursbelegungen auf ein MINT-Fach.
+        Der MINT-Anteil an Leistungskursbelegungen ist noch einmal etwas höher:
+        33% der Belegungen sind in MINT."),
+        p("Wie viel MINT in grundlegendem und gehobenem Leistungsniveau belegt werden kann,
+        ist von den Wahlmöglichkeiten in den Bundesländer abhängig. Das ist bei einer Betrachtung
+        einzelner Bundesländer zu berücksichtigen."),
+        p("In den letzten 10 Jahren hat sich der MINT-Anteil an den gesamten
+          Oberstufenbelegungen nicht verändert.
+          Dabei hat der Anteil von MINT in Grundkurse leicht zu, und der MINT-Anteil
+          in Leistungskursen leicht abgenommen."),
                 tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich Grund- und Leistungskurse, Fachbereiche", br(),
@@ -275,7 +284,12 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "M-I-N-T: 70 % der MINT-Leistungskurse sind Mathematik.",
         width = 12,
-        p("Hier zeigen wir die Anteile einzelner MINT-Fächer in Deutschland. Berechnungsgrundlage sind wieder die Belegungszahlen aller Grund- und Leistungskurse.",
+        p("Zoomt man auf die MINT-Fächer, zeigt sich: In den Leistungskursen heißt
+          MINT zum Großteil Mathematik. 70% der MINT-Leistungskursbelegungen sind in Mathematik.
+          Kaum Oberstufenbelegungen fallen dagegen auf Informatik."),
+        p("Das hängt mit den Wahlmöglichkeiten in der Oberstufe zusammen.
+          Während Mathematik oft ein Pflichtfach für das Abitur ist und in gehobenem Leistungsniveau
+          angeboten wird, sind Oberstufenangebote in Informatik weniger verbreitet.",
         ),
         tabsetPanel(type = "tabs",
 
@@ -442,9 +456,16 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "Frauen in MINT: MINT-Belegungen unter Mädchen und Jungen ungefähr gleich häufig.",
         width = 12,
-        p("Hier schauen wir uns die Verteilung von Mädchen und Jungen innerhalb der MINT-Fächer in Deutschland an. Zum Vergleich
-          zeigen wir auch den Anteil in den anderen, nicht-MINT-Fächern. Die verschiedenen Diagramme bieten außerdem
-          Fächer- und Bundeslandvergleiche."),
+        p("Der Mädchenanteil in MINT-Oberstufenfächern liegt bei gut der Hälfte.
+        In \"Nicht-MINT\"-Fächern machen Mädchen 55% der Kursteilnehmenden aus.
+        Das weist darauf hin, dass mehr Mädchen als Jungen insgesamt auf Gymnasien sind,
+        und das Jungen im Verhältnis etwas wahrscheinlicher MINT wählen."),
+        p("Diese ähnliche Kurswahl hängt vielleicht auch mit Kursbelegungsvorgaben zusammen,
+        nach welchen oft alle mindestens ein oder mehrere MINT-Fächer wählen müssen.
+        Was sich unterscheidet, ist, welche MINT-Fächer eher von Jungen oder Mädchen belegt werden.
+          Der Mädchenanteil in Biologie-Leistungs- und Grundkursen liegt bei um die 60%.
+          In Physik-Leistungskursen ist der Mädchenanteil dagegen bei knapp einem Viertel,
+          in Informatik-Leistungskursen bei rund 16%."),
 
         tabsetPanel(type = "tabs",
 
@@ -550,6 +571,10 @@ mod_schule_kurse_ui <- function(id){
              Die Daten stammen aus der Befragung des Instituts zur Qualitätsentwicklung im Bildungswesen e.V. (IQB), das in regelmäßigen Abständen
              die Leistung von Schüler:innen in verschiedenen Fächern testet. Dafür werden deutschlandweit mehr als 1.300 Schulen und
                über 26.000 Schüler:innen befragt."),
+             p("Die Ergebnisse aus 2021 zeigen, jede:r fünfte Viertklässler:in kennen die nötigen Grundlagen in Mathematik nicht.
+               In der Befragung 10 Jahre zuvor waren es nur jede:r 10te. Mädchen, sowie Schüler:innen mit Zuwanderungsgeschichte und niedrigem sozialen Status
+               schneiden im Mittel schlechter ab. Dabei zeigt ein näherer Blick auf die Unterschiede zwischen Mädchen und Jungen, dass sich Mädchen auch weniger für Mathematik
+               interessieren und ihre Fähigkeiten im Fach schlechter einschätzen."),
              p(),
              shinyBS::bsPopover(id="i_schule_kompetenz_1", title = "",
                                 content = paste0("Im Bericht des IQB-Bildungstrends 2021 kann man weitere Informationen und eine Einordnung der dargestellten Daten finden. <br> <a>https://www.iqb.hu-berlin.de/bt/BT2021/Bericht/</a> <br><br> Weitere Informationen zum Thema Diversität und soziale Herkunft in der Bildungsweld können in der Diversitätsstudie von MINTvernetzt nachgelesen werden. <br> <a> https://mint-vernetzt.de/data/daten-fakten#mint-studie-diversitaet </a>"),
@@ -673,13 +698,14 @@ mod_schule_kurse_ui <- function(id){
 
   fluidRow(id="schule_ausserschulisch",
            shinydashboard::box(
-             title = "Frühkindliche Bildung: Zahl der MINT-aktive Einrichtungen bei Stiftung Kinder forschen wächst stetig.",
+             title = "Frühkindliche Bildung: Zahl der MINT-aktiven Einrichtungen bei Stiftung Kinder forschen wächst stetig.",
              width = 12,
-             p("In diesem Abschnitt betrachten wir die Entwicklung der außerschulischen, frühkindlichen MINT-Bildung.
-               Die interaktiven Grafiken basieren auf den Daten der 'Stiftung Kinder forschen' (SKf, früher Haus der kleinen Forscher).
-               Es wird gezeigt, wie die Anzahl an Kitas, Horten und Grundschulen wächst, die in der MINT-Bildung aktiv sind. Außerdem wird
-               die Anzahl an Fach- und Lehrkräften dargestellt, die sich in frühkindlicher MINT-Bildung durch die Stiftung Kinder forschen
-               fortgebildet haben."), br(),
+             p("In diesem Abschnitt betrachten wir die Entwicklung der außerschulischen, frühkindlichen MINT-Bildung. Die interaktiven Grafiken basieren auf den Daten der 'Stiftung Kinder forschen' (SKf, früher Haus der kleinen Forscher)."),
+
+            p("Die Anzahl an Kitas, Grundschulen und Horte, die durch die Stiftung Kinder forschen für ihr MINT-Bildungsengagement
+               zertifiziert wurden oder deren Personal durch die SKf fortgebildet wurde, wächst. Allerdings hat sich während der Jahre,
+               die akut von der Corona-Pandemie betroffen waren, verlangsamt. Das spiegelt sich auch in den Zahlen der neu fortgebildeten Personen wieder.
+               Wärend zwischen 2013 und 2018 jährlich zwischen 6.000 und 8.000 Personen dazukamen, sind es im Jahr 2022 nur 2.000."), br(),
              p("Dies sind bislang die einzigen Darstellungen aus dem Bereich der ausserschulischen MINT-Bildung. Hier wird in Zukunft noch mehr hinzukommen."),
 
              tabsetPanel(type = "tabs",

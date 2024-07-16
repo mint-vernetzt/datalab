@@ -50,17 +50,17 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           title = "Links zu den Themen dieser Seite",
           width = 7,
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_mint",
-            span(tags$b(span("Berufswahl MINT:")))),"Wie hoch ist der Anteil von Auszubildenden und Beschäftigten in MINT?"
+            span(tags$b(span("MINT-Anteil:")))),"Ein Viertel arbeitet in MINT-Berufen."
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_fach",
-            span(tags$b(span("M-I-N-T:")))),"Blick auf die einzelnen Fächer und Fachbereiche."
+            span(tags$b(span("M-I-N-T:")))),"MINT oder eher IT - über 90 % sind in Informatik- oder Technikberufen tätig."
 
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_frauen",
-            span(tags$b(span("Frauen in MINT:")))),"Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?"
+            span(tags$b(span("Frauen in MINT:")))),"Frauenanteil in MINT-Berufen bei 17 Prozent."
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_regional",
-            span(tags$b(span("Regionaler MINT-Steckbrief:")))),"Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen."
+            span(tags$b(span("Regionale Daten:")))),"MINT-Daten aus Ihrem Landkreis."
             )),
 
         shinydashboard::box(
@@ -81,7 +81,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow( id="beruf_mint",
       shinydashboard::box(
-        title = "Berufswahl MINT: Wie hoch ist der Anteil von Auszubildenden und Beschäftigten in MINT?",
+        title = "MINT-Anteil: Ein Viertel arbeitet in MINT-Berufen.",
         width = 12,
         p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Berufen insgesamt bei Auszubildenden und Beschäftigten in Deutschland und Unterschiede in der Berufswahl von Männern und Frauen?"),
 
@@ -342,7 +342,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow(id="beruf_fach",
       shinydashboard::box(
-        title = "M-I-N-T: Blick auf die einzelnen Fächer und Fachbereiche",
+        title = "M-I-N-T: MINT oder eher IT - über 90 % sind in Informatik- oder Technikberufen tätig.",
         width = 12,
         p("Hier zeigen wir die Unterschiede nach MINT-Berufsbereichen Mathematik/ Naturwissenschaft, Informatik und Technik.
         Außerdem können die Top 10 MINT-Ausbildunsberufe von Frauen und Männern verglichen werden. Hierfür betrachten wir die
@@ -466,7 +466,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow(id="beruf_frauen",
       shinydashboard::box(
-        title = "Frauen in MINT: Wie hoch ist der Anteil von Frauen innerhalb der MINT-Berufe?",
+        title = "Frauen in MINT: Frauenanteil in MINT-Berufen bei 17 Prozent.",
         width = 12,
         p("Hier schauen wir uns die Verteilung von Frauen und Männern innerhalb der MINT-Berufe in Deutschland an. Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Berufen."),
 
@@ -570,7 +570,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow(id="beruf_regional",
       shinydashboard::box(
-        title = "Regionaler MINT-Steckbrief",
+        title = "Regionale Daten: MINT-Daten aus Ihrem Landkreis.",
         width = 12,
         p("Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen.",
 
