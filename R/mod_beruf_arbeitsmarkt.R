@@ -50,14 +50,14 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           title = "Links zu den Themen dieser Seite",
           width = 7,
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_mint",
-            span(tags$b(span("MINT-Anteil:")))),"Ein Viertel arbeitet in MINT-Berufen."
+            span(tags$b(span("MINT-Anteil:")))),"Etwa ein Viertel arbeitet in MINT-Berufen."
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_fach",
-            span(tags$b(span("M-I-N-T:")))),"MINT oder eher IT - über 90 % sind in Informatik- oder Technikberufen tätig."
+            span(tags$b(span("M-I-N-T:")))),"MINT oder I/T - über 90 % sind in Informatik- oder Technikberufen tätig."
 
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_frauen",
-            span(tags$b(span("Frauen in MINT:")))),"Frauenanteil in MINT-Berufen bei 17 Prozent."
+            span(tags$b(span("Frauen in MINT:")))),"Frauenanteil in MINT-Berufen bei 17 %."
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_regional",
             span(tags$b(span("Regionale Daten:")))),"MINT-Daten aus Ihrem Landkreis."
@@ -81,10 +81,18 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow( id="beruf_mint",
       shinydashboard::box(
-        title = "MINT-Anteil: Ein Viertel arbeitet in MINT-Berufen.",
+        title = "MINT-Anteil: Etwa ein Viertel arbeitet in MINT-Berufen.",
         width = 12,
-        p("In diesen interaktiven Diagrammen beleuchten wir den Anteil von MINT-Berufen insgesamt bei Auszubildenden und Beschäftigten in Deutschland und Unterschiede in der Berufswahl von Männern und Frauen?"),
-
+        column(
+          width = 8,
+        p("Im Jahr 2022 arbeiten 23% der sozialversicherungspflichtig Beschäftigten in einem MINT-Beruf und 77% in anderen Bereichen.
+        Bei den Auszubildenden ist der Anteil derer, die in einem MINT-Beruf lernen, sogar bei 30%."),
+        p("Die Zahl an MINT-Beschäftigten ist in den letzten 10 Jahren leicht gestiegen,
+          von 7,3 Mio. im Jahr 2013 auf 7,8 Mio. 2022. Die Zahl der Auszubildenden hat im selben Zeitraum etwas abgenommen,
+          von 414.000 auf 403.000.")
+        ),
+        column(
+          width = 12,
 
         tabsetPanel(type = "tabs",
                     # Tab 1
@@ -322,10 +330,12 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     #                                  class = "butt",
                     #                                  icon = shiny::icon("download")))
                     # )
-        ))),
+        )
+                    ))),
 
     # Kurzanalyse-Box ----
     div(class = "content-box",
+        div(class = "inner-box",
         p(br(),"KURZANALYSE", br()),
         p(style = "font-size = 24",
           strong("Die Anzahl an MINT-Auszubildenden ist in den letzten Jahren rückläufig gewesen.
@@ -336,17 +346,22 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Interesse_final.pdf",
                  target = "_blank", "Link zur Kurzanalyse"),
           br(), br())
+        )
     ),
 
     # Box 2 ----
 
     fluidRow(id="beruf_fach",
       shinydashboard::box(
-        title = "M-I-N-T: MINT oder eher IT - über 90 % sind in Informatik- oder Technikberufen tätig.",
+        title = "M-I-N-T: MINT oder I/T - über 90 % sind in Informatik- oder Technikberufen tätig.",
         width = 12,
-        p("Hier zeigen wir die Unterschiede nach MINT-Berufsbereichen Mathematik/ Naturwissenschaft, Informatik und Technik.
-        Außerdem können die Top 10 MINT-Ausbildunsberufe von Frauen und Männern verglichen werden. Hierfür betrachten wir die
-          neu abgeschlossenen Ausbildungsverträge des jeweiligen Jahres."),
+        column(
+          width = 8,
+        p("Zoomt man auf den MINT-Fachbereich, arbeiten rund 80% der MINT-Beschäftigten in einem technischen oder Ingenieurberuf.
+          Weitere gut 14% sind beruflich in Bereich Informatik. Die restlichen 6% arbeiten in Mathematik oder Naturwissenschaft.")
+        ),
+        column(
+          width = 12,
 
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Anteil MINT-Berufsfelder zwischen Auszubildenden und Beschäftigten (Karte)", br(),
@@ -459,6 +474,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_4")
                              )
                     )
+        )
                     #
         ))),
 
@@ -466,9 +482,20 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     fluidRow(id="beruf_frauen",
       shinydashboard::box(
-        title = "Frauen in MINT: Frauenanteil in MINT-Berufen bei 17 Prozent.",
+        title = "Frauen in MINT: Frauenanteil in MINT-Berufen bei 17 %.",
         width = 12,
-        p("Hier schauen wir uns die Verteilung von Frauen und Männern innerhalb der MINT-Berufe in Deutschland an. Zum Vergleich zeigen wir auch den Anteil in den anderen, nicht-MINT-Berufen."),
+        column(
+          width = 8,
+        p("Der Frauenanteil in MINT-Berufen liegt bei nur 17%, in Ausbildungen sogar nur bei 13%.
+        In \"Nicht-MINT\"-Berufen und -Ausbildungen sind Frauen dagegen die Mehrheit.
+        In den letzten 10 Jahren hat sich an diesem niedrigen Frauenanteil wenig verändert.
+        Blick man auf die absolute Anzahl an weiblichen MINT-Beschäftigten, ist diese in den letzten 10 Jahren allerdings durchaus gewachsen
+        - um knapp 300.000. Das spricht dafür, dass zwar mehr Frauen, aber auch mehr Männer in MINT-Berufen arbeiten."),
+        p("Manche MINT-Ausbildungen sind bei Frauen besonders beliebt.
+          2022 waren die Top-Ausbildungsberufe unter neuen weiblichen Azubis Augenoptiker:in, Mediengestalter:in und Bauzeichner:in.")
+        ),
+        column(
+          width = 12,
 
         tabsetPanel(type = "tabs",
               # tab 1
@@ -550,10 +577,12 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_frauen_3")
                                )
                     )
+        )
         ))),
 
     # Kurzanalyse-Box ----
     div(class = "content-box",
+        div(class = "inner-box",
         p(br(),"KURZANALYSE", br()),
         p(style = "font-size = 24",
           strong("Nur 8 Prozent der Frauen üben einen MINT-Berufe aus, bei Männer sind es über ein Drittel.
@@ -564,6 +593,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Frauen_Berufe_final.pdf",
                  target = "_blank", "Link zur Kurzanalyse"),
           br(), br())
+        )
     ),
 
     # Box Regional ----
@@ -572,7 +602,16 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
       shinydashboard::box(
         title = "Regionale Daten: MINT-Daten aus Ihrem Landkreis.",
         width = 12,
-        p("Hier bieten wir die Möglichkeit, den eigenen Landkreis unter die Lupe zu nehmen.",
+        column(
+          width = 8,
+        p("Hier können Sie ausgewählte Statistiken dieser Seite auf Regionalebene betrachten und vergleichen, z. B.:
+          Wie hoch ist der MINT-Anteil unter Beschäftigten in Ludwigshafen am Rhein?
+          Welcher Landkreis aus Sachsen-Anhalt hat den höchsten Frauenanteil unter MINT-Auszubildenden?
+          Welche Landkreise sind besonders international geprägt,
+          mit höheren Anteilen an ausländischen Auszubildenden und Beschäftigten als im Bundeslanddurchschnitt?")
+        ),
+        column(
+          width = 12,
 
         tabsetPanel(type = "tabs",
               # tab 1

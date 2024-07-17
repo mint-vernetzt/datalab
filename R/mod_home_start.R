@@ -76,14 +76,18 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "MINT-Anteil: Ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf.",
         width = 12,
-        p("Wie groß ist der MINT-Anteil entlang der Bildungskette von Schule bis Beruf?
+        column(
+          width = 8,
+          p("Wie groß ist der MINT-Anteil entlang der Bildungskette von Schule bis Beruf?
           Rund ein Drittel der Leistungskursbelegungen sind in einem MINT Fach.
           37% der Studierenden und rund ein Drittel der Auszubildenden lernen in MINT.
           Unter den Beschäftigten ist der MINT-Anteil geringer. Hier üben Stand 2022 23%
           der sozialversicherungspflichtig Beschäftigten eine MINT-Tätigkeit aus.
           In den letzten 10 Jahren sind diese Anteile ziemlich stabil geblieben.
-          Leichte Veränderungen sieht man in den absoluten Zahlen."),
-
+          Leichte Veränderungen sieht man in den absoluten Zahlen.")
+        ),
+        column(
+          width = 12,
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Bereiche", br(),
                              shiny::sidebarPanel(
@@ -154,6 +158,7 @@ mod_home_start_ui <- function(id){
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_alle_mint_3")
                              )
+                    )
 
          ))
          )),
@@ -162,13 +167,17 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Frauen in MINT: Der Frauenanteil nimmt entlang der Bildungskette ab.",
         width = 12,
-        p("In den MINT-Leistungskursen sind rund 50% der Schüler:innen weiblich.
+        column(
+          width = 8,
+          p("In den MINT-Leistungskursen sind rund 50% der Schüler:innen weiblich.
           In der weiterführenden Bildung, in Ausbildung und Studium, ist der Frauenanteil bei 13% beziehungsweise 32%.
           In den MINT-Berufen sind nur 17% Frauen vertreten. Im Vergleich dazu ist der Frauenanteil bei \"Nicht-MINT\"-Berufen 56%,
           bei \"Nicht-MINT\"-Studiengängen sogar bei über 60%.", br(),
-        "In den letzten 10 Jahren hat sich daran nicht stark etwas verändert.
-        Es kam zu leichten Zunahmen des Frauenanteils im Studium und im Beruf."),
-
+            "In den letzten 10 Jahren hat sich daran nicht stark etwas verändert.
+        Es kam zu leichten Zunahmen des Frauenanteils im Studium und im Beruf.")
+        ),
+        column(
+          width = 12,
         tabsetPanel(type = "tabs",
                     tabPanel("Vergleich Bereiche", br(),  # Verlgeich
                              shiny::sidebarPanel(
@@ -238,11 +247,13 @@ mod_home_start_ui <- function(id){
 
                              )
                     )
+          )
         )
     ) ,
 
  # Kurzanalyse-Box ----
  div(class = "content-box",
+     div(class = "inner-box",
      p(br(),"KURZANALYSE", br()),
      p(style = "font-size = 24",
        strong("Der Frauenanteil sinkt entlang der Bildungskette.
@@ -254,6 +265,7 @@ mod_home_start_ui <- function(id){
        tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Frauen_Berufe_final.pdf",
               target = "_blank", "Link zur Kurzanalyse"),
        br(), br())
+     )
  ),
 
 

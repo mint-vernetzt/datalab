@@ -84,6 +84,8 @@ mod_international_start_ui <- function(id){
              shinydashboard::box(
                title = "MINT-Kompetenzen im internationalen Vergleich: Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests Pisa und TIMSS ab?",
                width = 12,
+               column(
+                 width = 8,
                p("In dieser Box blicken wir auf die Kompetenzdaten der PISA-Studie und der TIMSS-Erhebung.
                Bei beiden Erhebungen werden unter anderem Kompetenztests in Mathematik und Naturwissenschaften in 4. und 9. Klassen weltweit durchgeführt.
                Außerdem betrachten die Grafiken Kompetenz-Unterschiede zwischen Jungen und Mädchen und Unterschiede in Abhängigkeit der sozialen Herkunft der Kinder."),
@@ -95,7 +97,10 @@ mod_international_start_ui <- function(id){
                                   trigger = "click"),
                tags$a(paste0("Um zu den original Ergebnisberichten von TIMSS und PISA zu kommen, klicken Sie hier:"), icon("info-circle"), id = "i_schule_international_1"),
                p(),
-               p(),
+               p()
+               ),
+               column(
+                 width = 12,
                tabsetPanel(type = "tabs",
         # tab 1
                            tabPanel("MINT-Kompetenz im Ländervergleich", br(),
@@ -195,6 +200,7 @@ mod_international_start_ui <- function(id){
                                     )
                            )
                )
+               )
              )
     ),
 
@@ -206,10 +212,15 @@ mod_international_start_ui <- function(id){
                title = "MINT-Studierende im internationalen Vergleich: Hier können Sie den MINT-Anteil an deutschen Hochschulen international vergleichen.",
 
                width = 12,
+               column(
+                 width = 8,
                p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich Studium für den internationalen Vergleich.
                Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU, die OECD oder die UNESCO gesammelt wurden.
                  Zum einen zeigen wir, wie groß der Anteil von MINT-Studierenden an allen Studierenden in verschiedenen Ländern ist. Außerdem ist zu sehen,
-                 in welchen Ländern der Frauenanteil oder der Anteil an internationalen Studierenden in MINT-Studiengängen besonders groß oder klein ist."),
+                 in welchen Ländern der Frauenanteil oder der Anteil an internationalen Studierenden in MINT-Studiengängen besonders groß oder klein ist.")
+               ),
+               column(
+                 width = 12,
                tabsetPanel(type = "tabs",
 
       # tab 1
@@ -378,6 +389,7 @@ mod_international_start_ui <- function(id){
                                     )
                             )
                       )
+)
                 )
              ),
 
@@ -387,12 +399,17 @@ mod_international_start_ui <- function(id){
              shinydashboard::box(
                title = "MINT-Beschäftigung im internationalen Vergleich: Hier können Sie den MINT-Anteil im deutschen Arbeitsmarkt international vergleichen.",
                width = 12,
+               column(
+                 width = 8,
                p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich des Arbeitsmarkts für den internationalen Vergleich.
                  Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU und die OECD gesammelt wurden.
                  Zum einen zeigen wir, wie groß der Anteil von MINT-Auszubildenden und Beschäftigten in verschiedenen Ländern ist.
                  Außerdem ist zu sehen, in welchen Ländern der Frauenanteil besonders groß oder klein ist.
                  Darüber hinaus werfen wir einen Blick auf Studiums- bzw. Ausbildungs-Anfänger*innen und Absolvent*innen in MINT
-                 im Ländervergleich."),
+                 im Ländervergleich.")
+               ),
+               column(
+                 width = 12,
 
                tabsetPanel(type = "tabs",
       # tab 1
@@ -546,6 +563,7 @@ mod_international_start_ui <- function(id){
                                         # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_arbeit_3")
                                       )
                            )
+               )
                )
              )
     ),

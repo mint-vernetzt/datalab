@@ -97,6 +97,8 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "MINT-Anteil: Ein Drittel der Leistungskursbelegungen sind in MINT.",
         width = 12,
+        column(
+          width = 8,
         p("In 2022 fallen 24% der Grundkursbelegungen auf ein MINT-Fach.
         Der MINT-Anteil an Leistungskursbelegungen ist noch einmal etwas höher:
         33% der Belegungen sind in MINT."),
@@ -106,7 +108,11 @@ mod_schule_kurse_ui <- function(id){
         p("In den letzten 10 Jahren hat sich der MINT-Anteil an den gesamten
           Oberstufenbelegungen nicht verändert.
           Dabei hat der Anteil von MINT in Grundkurse leicht zu, und der MINT-Anteil
-          in Leistungskursen leicht abgenommen."),
+          in Leistungskursen leicht abgenommen.")
+        ),
+        column(
+          width = 12,
+
                 tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich Grund- und Leistungskurse, Fachbereiche", br(),
@@ -276,7 +282,7 @@ mod_schule_kurse_ui <- function(id){
                     #                           class = "butt",
                     #                           icon = shiny::icon("download")))
                     #         )
-      ))),
+      )))),
 
   # Box 2 ----
 
@@ -284,13 +290,18 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "M-I-N-T: 70 % der MINT-Leistungskurse sind Mathematik.",
         width = 12,
+        column(
+          width = 8,
         p("Zoomt man auf die MINT-Fächer, zeigt sich: In den Leistungskursen heißt
           MINT zum Großteil Mathematik. 70% der MINT-Leistungskursbelegungen sind in Mathematik.
           Kaum Oberstufenbelegungen fallen dagegen auf Informatik."),
         p("Das hängt mit den Wahlmöglichkeiten in der Oberstufe zusammen.
           Während Mathematik oft ein Pflichtfach für das Abitur ist und in gehobenem Leistungsniveau
           angeboten wird, sind Oberstufenangebote in Informatik weniger verbreitet.",
+        )
         ),
+        column(
+          width = 12,
         tabsetPanel(type = "tabs",
 
                     tabPanel("Vergleich Grund- und Leistungskurse nach Bundesländern (Karte)", br(),
@@ -449,6 +460,7 @@ mod_schule_kurse_ui <- function(id){
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_6")
                                ))
+        )
 
         ))),
   # Box 3 ----
@@ -456,6 +468,8 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "Frauen in MINT: MINT-Belegungen unter Mädchen und Jungen ungefähr gleich häufig.",
         width = 12,
+        column(
+          width = 8,
         p("Der Mädchenanteil in MINT-Oberstufenfächern liegt bei gut der Hälfte.
         In \"Nicht-MINT\"-Fächern machen Mädchen 55% der Kursteilnehmenden aus.
         Das weist darauf hin, dass mehr Mädchen als Jungen insgesamt auf Gymnasien sind,
@@ -465,8 +479,10 @@ mod_schule_kurse_ui <- function(id){
         Was sich unterscheidet, ist, welche MINT-Fächer eher von Jungen oder Mädchen belegt werden.
           Der Mädchenanteil in Biologie-Leistungs- und Grundkursen liegt bei um die 60%.
           In Physik-Leistungskursen ist der Mädchenanteil dagegen bei knapp einem Viertel,
-          in Informatik-Leistungskursen bei rund 16%."),
-
+          in Informatik-Leistungskursen bei rund 16%.")
+        ),
+        column(
+          width = 12,
         tabsetPanel(type = "tabs",
 
                     # tabPanel("Frauenanteil in MINT-Kursen", br(),
@@ -558,7 +574,7 @@ mod_schule_kurse_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_frauen_2")
                                )
                              ),
-
+                        )
 
                     ))),
   # Box 4 ----
@@ -567,6 +583,8 @@ mod_schule_kurse_ui <- function(id){
            shinydashboard::box(
              title = "MINT-Kompetenzen: MINT-Kompetenzen nehmen weiter ab. IQB-Ergebnisse der letzten Jahre.",
              width = 12,
+             column(
+               width = 8,
              p("Diese interaktiven Diagramme geben einen Einblick in die Mathe-Kompetenzen von Schüler:innen der 4. und 9. Klassen.
              Die Daten stammen aus der Befragung des Instituts zur Qualitätsentwicklung im Bildungswesen e.V. (IQB), das in regelmäßigen Abständen
              die Leistung von Schüler:innen in verschiedenen Fächern testet. Dafür werden deutschlandweit mehr als 1.300 Schulen und
@@ -581,7 +599,10 @@ mod_schule_kurse_ui <- function(id){
                                 placement = "right",
                                 trigger = "click"),
              tags$a(paste0("Interessieren Sie weitere Infos zum Thema, klicken Sie hier:"), icon("info-circle"), id = "i_schule_kompetenz_1"),
-             p(),
+             p()
+             ),
+             column(
+               width = 12,
              tabsetPanel(type = "tabs",
 
                          tabPanel("Leistungsschwache Schüler:innen in Mathematik", br(),
@@ -674,11 +695,13 @@ mod_schule_kurse_ui <- function(id){
                                     tags$a(paste0("Hinweis zu den Daten und Stichprobengröße"), icon("info-circle"), id = "h_schule_kompetenz_3")
                                   )
                          )
+             )
              ))),
 
 
   # Kurzanalyse-Box ----
   div(class = "content-box",
+      div(class = "inner-box",
       p(br(),"KURZANALYSE", br()),
       p(style = "font-size = 24",
         strong("MINT-Kompetenztests wie die IQB-Befragung zeigen systematische Gruppenunterschiede in den MINT-Kompetenzen.
@@ -688,10 +711,11 @@ mod_schule_kurse_ui <- function(id){
                 beitragen kann."),
         br(), br(),
         tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Gender_final.pdf",
-               target = "_blank", "Link zu der Kurzanalyse Schule: Mädchen & MINT"),
+               target = "_blank", "Link zu der Kurzanalyse Schule: Mädchen & MINT"), br(),
         tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Teilhabe_final.pdf",
                target = "_blank", "Link zu der Kurzanalyse Mit MINT-Förderung zu mehr Chancengerechtigkeit"),
         br(), br())
+      )
   ),
 
   # Box 5----
@@ -700,13 +724,20 @@ mod_schule_kurse_ui <- function(id){
            shinydashboard::box(
              title = "Frühkindliche Bildung: Zahl der MINT-aktiven Einrichtungen bei Stiftung Kinder forschen wächst stetig.",
              width = 12,
-             p("In diesem Abschnitt betrachten wir die Entwicklung der außerschulischen, frühkindlichen MINT-Bildung. Die interaktiven Grafiken basieren auf den Daten der 'Stiftung Kinder forschen' (SKf, früher Haus der kleinen Forscher)."),
+             column(
+               width = 8,
+             p("In diesem Abschnitt betrachten wir die Entwicklung der außerschulischen, frühkindlichen MINT-Bildung.
+               Die interaktiven Grafiken basieren auf den Daten der 'Stiftung Kinder forschen'
+               (SKf, früher Haus der kleinen Forscher)."),
 
             p("Die Anzahl an Kitas, Grundschulen und Horte, die durch die Stiftung Kinder forschen für ihr MINT-Bildungsengagement
                zertifiziert wurden oder deren Personal durch die SKf fortgebildet wurde, wächst. Allerdings hat sich während der Jahre,
                die akut von der Corona-Pandemie betroffen waren, verlangsamt. Das spiegelt sich auch in den Zahlen der neu fortgebildeten Personen wieder.
                Wärend zwischen 2013 und 2018 jährlich zwischen 6.000 und 8.000 Personen dazukamen, sind es im Jahr 2022 nur 2.000."), br(),
-             p("Dies sind bislang die einzigen Darstellungen aus dem Bereich der ausserschulischen MINT-Bildung. Hier wird in Zukunft noch mehr hinzukommen."),
+             p("Dies sind bislang die einzigen Darstellungen aus dem Bereich der ausserschulischen MINT-Bildung. Hier wird in Zukunft noch mehr hinzukommen.")
+            ),
+            column(
+              width = 12,
 
              tabsetPanel(type = "tabs",
 
@@ -766,6 +797,7 @@ mod_schule_kurse_ui <- function(id){
                                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_ausserschulisch_2")
                                   )
                          )
+             )
              ))),
 
 

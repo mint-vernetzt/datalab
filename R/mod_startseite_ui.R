@@ -28,7 +28,7 @@ mod_startseite_start_ui <- function(id){
     # Einleitungstext
     fluidRow(
       shinydashboard::box(
-        width = 9,
+        width = 8,
         title = "Willkommen in der Betaversion des MINT-DataLabs von MINTvernetzt!",
         p(style = "text-align: justify; font-size = 20px",
           "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
@@ -51,7 +51,7 @@ mod_startseite_start_ui <- function(id){
             heruntergeladen werden.",
           # LINK ergänzen, wenn da (Nike)
           br()),
-        tags$a(href="https://www.mint-vernetzt.de/mint-datalab/", "Hier geht es zu den Kurzanalysen", target = "_blank"),
+        tags$a(href="https://www.mint-vernetzt.de/mint-datalab/#kurzanalysen", "Link zu den Kurzanalysen", target = "_blank"),
         p(br()),
 
         slickR::slickROutput(ns("slider_output"), width = '900px', height = '500px'),
