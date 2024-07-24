@@ -28,6 +28,8 @@ mod_schule_server <- function(id, r){
 
   # Kurse
   mod_schule_kurse_server("mod_schule_kurse_ui_1", r)
+ # mod_schule_kurse_verlauf_mint_server("mod_schule_kurse_verlauf_mint_ui_1", r)
+  mod_schule_kurse_mint_map_server("mod_schule_kurse_mint_map_ui_1", r)
 
   # Box 2
   #mod_schule_kurse_einstieg_server("mod_schule_kurse_einstieg_ui_1", r)
