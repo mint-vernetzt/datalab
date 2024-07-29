@@ -50,16 +50,18 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
                   "Westdeutschland (o. Berlin)",
                   "Ostdeutschland (inkl. Berlin)"
       ),
-      selected = "Brandenburg"
+      selected = "Deutschland"
     ),
 
     p("Fächer/Fächergruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_bl_sub"),
       choices = c("MINT-Fächer (gesamt)","Mathematik", "Informatik", "Physik", "Chemie",
-                  "Biologie", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+                  "Biologie", "andere naturwiss.-technische Fächer", "Deutsch", "Fremdsprachen",
+                  "Gesellschaftswissenschaften",
                   "Musik/Kunst", "Religion/Ethik", "Sport"),
-      selected = c("MINT-Fächer (gesamt)", "Mathematik"),
+      selected = c("Mathematik", "Informatik", "Physik", "Chemie",
+                   "Biologie"),
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),

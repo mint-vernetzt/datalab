@@ -490,30 +490,6 @@ home_rest_mint_verlauf <- function(r) {
     dplyr::collect()
 
 
-  # call function to calculate the share of MINT for every "bereich"
-  # df <- share_MINT(df)
-  #
-  # df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
-  #
-  #
-  # df <- df %>% dplyr::filter(indikator %in% indikator_choice_1)
-  #
-  # # calculate proportions
-  # df <- df %>% dplyr::group_by(indikator, jahr) %>%
-  #   dplyr::mutate(props = sum(wert))
-  #
-  #
-  # df <- df %>% dplyr::group_by(indikator, jahr,fachbereich) %>%
-  #   dplyr::summarize(proportion = wert/props)
-  #
-  # df$proportion <- df$proportion * 100
-
-  # dfü <- df %>% dplyr::filter(jahr == timerange)
-
-  # dfk <- dfü %>% dplyr::filter(region == "Deutschland")
-
-
-
   dfk2a2 <- df %>% dplyr::filter(bereich == "Hochschule")%>%
   dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle")
 
@@ -528,8 +504,6 @@ home_rest_mint_verlauf <- function(r) {
   dfk2b2 <- df %>% dplyr::filter(bereich != "Hochschule" & bereich != "Schule")%>%
     unique()
 
-
-
   dfk2_fn2 <- dplyr::bind_rows(dfk2b2, dfk2a2, dfk2c2)%>%
     dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle")%>%
     tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
@@ -541,17 +515,11 @@ home_rest_mint_verlauf <- function(r) {
     tidyr::pivot_longer(c(MINT, `Nicht MINT`, `Nicht MINT_p`, `MINT_p`), names_to = "fachbereich", values_to = "wert")%>%
     dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$fachbereich, "_p") ~ "In Prozent",
                                             T~"Anzahl"))
-  # %>%
-  #   dplyr::mutate(wert=dplyr::case_when(stringr::str_detect(.$selector, "Relativ") ~ round_preserve_sum(.),
-  # T~))
 
   dfk2_fn2$fachbereich <- gsub("_p", "", dfk2_fn2$fachbereich)
 
 
   dfk2_fn2$wert <- ifelse(stringr::str_detect(dfk2_fn2$selector, "In Prozent"),round(as.numeric(dfk2_fn2$wert),0), dfk2_fn2$wert )
-
-  #dfk2_fn2$proportion[selector=="In Prozent",wert] <- round_preserve_sum(as.numeric(dfk2_fn2[selector=="In Prozent",wert]),0)
-
 
 
   if(absolut_selector=="In Prozent"){

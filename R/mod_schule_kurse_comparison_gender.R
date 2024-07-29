@@ -10,12 +10,66 @@
 mod_schule_kurse_comparison_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
+    p("Betrachtungsart:"),
+    shiny::radioButtons(
+      inputId = ns("ansicht_kurse_comparison_gender"),
+      label = NULL,
+      choices = c("Einzelansicht - Kuchendiagramm", "Gruppenvergleich - Balkendiagramm",
+                  "Kursvergleich - Hanteldiagramm"),
+      selected = "Einzelansicht - Kuchendiagramm"
+    ),
     p("Jahr:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_comparison_gender"),
       label = NULL,
       choices = c("2013","2014","2015","2016","2017", "2018", "2019", "2020", "2021", "2022"),
       selected = "2022"
+    ),
+    p("Region:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("region_kurse_comparison_gender"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = F,
+      selected = "Deutschland"
+    ),
+    conditionalPanel(condition = "ansicht_kurse_comparison_gender == 'Einzelansicht - Kuchendiagramm'",
+       ns = ns,
+       p("Kursniveau:"),
+       shinyWidgets::pickerInput(
+         inputId = ns("indikator_kurse_comparison_gender"),
+         choices = c("Grundkurse", "Leistungskurse", "Oberstufenbelegungen"),
+         selected = c("Oberstufenbelegungen"),
+         multiple = FALSE
+       )
+       ),
+    br(),
+    p("Nicht-MINT als Vergleich anzeigen?", style = "color: #b16fab;"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("gegenwert_kurse_comparison_gender"),
+      choices = c("Ja", "Nein"),
+      selected = "Nein",
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
     ),
     br(),
     shinyBS::bsPopover(id="ih_schule_frauen_1", title="",
@@ -33,6 +87,22 @@ mod_schule_kurse_comparison_gender_server <- function(id, r){
 
     observeEvent(input$date_kurse_comparison_gender, {
       r$date_kurse_comparison_gender <- input$date_kurse_comparison_gender
+    })
+
+    observeEvent(input$gegenwert_kurse_comparison_gender, {
+      r$gegenwert_kurse_comparison_gender <- input$gegenwert_kurse_comparison_gender
+    })
+
+    observeEvent(input$region_kurse_comparison_gender, {
+      r$region_kurse_comparison_gender <- input$region_kurse_comparison_gender
+    })
+
+    observeEvent(input$indikator_kurse_comparison_gender, {
+      r$indikator_kurse_comparison_gender <- input$indikator_kurse_comparison_gender
+    })
+
+    observeEvent(input$ansicht_kurse_comparison_gender, {
+      r$ansicht_kurse_comparison_gender <- input$ansicht_kurse_comparison_gender
     })
 
   })

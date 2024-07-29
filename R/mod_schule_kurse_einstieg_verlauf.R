@@ -18,6 +18,32 @@ mod_schule_kurse_einstieg_verlauf_ui <- function(id){
                   "2018","2019", "2020", "2021", "2022"),
       selected = c("2016", "2022")
     ),
+    p("Region:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("region_kurse_einstieg_verlauf"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = FALSE,
+      selected = c("Deutschland")
+    ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_kurse_einstieg_verlauf"),
@@ -49,6 +75,10 @@ mod_schule_kurse_einstieg_verlauf_server <- function(id, r){
 
     observeEvent(input$abs_zahlen_kurse_einstieg_verlauf, {
       r$abs_zahlen_kurse_einstieg_verlauf <- input$abs_zahlen_kurse_einstieg_verlauf
+    })
+
+    observeEvent(input$region_kurse_einstieg_verlauf, {
+      r$region_kurse_einstieg_verlauf <- input$region_kurse_einstieg_verlauf
     })
 
 

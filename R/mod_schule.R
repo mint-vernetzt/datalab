@@ -53,8 +53,8 @@ mod_schule_server <- function(id, r){
 
   # Box 6
   mod_schule_kurse_map_server("mod_schule_kurse_map_ui_1", r)
-  mod_schule_kurse_verlauf_multiple_server("mod_schule_kurse_verlauf_multiple_ui_1", r)
-  mod_schule_kurse_comparison_bl_server("mod_schule_kurse_comparison_bl_ui_1", r)
+  #mod_schule_kurse_verlauf_multiple_server("mod_schule_kurse_verlauf_multiple_ui_1", r)
+  #mod_schule_kurse_comparison_bl_server("mod_schule_kurse_comparison_bl_ui_1", r)
 
   # Box 7
   mod_schule_kurse_map_gender_server("mod_schule_kurse_map_gender_ui_1", r)

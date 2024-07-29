@@ -19,7 +19,7 @@ mod_schule_kurse_mint_map_ui <- function(id){
       selected = "Übersicht - Kartendiagramm"
     ),
 
-    conditionalPanel(condition = "input.ansicht_mint_map == 'Übersicht - Karten'",
+    conditionalPanel(condition = "input.ansicht_mint_map == 'Übersicht - Kartendiagramm'",
                      ns = ns,
                      p("Jahr:"),
                      shinyWidgets::pickerInput(
