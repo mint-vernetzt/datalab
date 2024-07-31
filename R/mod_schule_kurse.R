@@ -542,7 +542,7 @@ mod_schule_kurse_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_gender")),
+                               shinycssloaders::withSpinner(uiOutput(ns("plot_comparison_gender")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -553,20 +553,24 @@ mod_schule_kurse_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_frauen_1")
                                )
                     ),
+                    tabPanel("Zeitverlauf Mädchenanteil in MINT", br(), #kann raus
 
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_schule_kurse_verlauf_gender_ui("mod_schule_kurse_verlauf_gender_ui_1")
+                               ),
+                             shiny::mainPanel(
+                               width = 9,
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_gender")),
+                                                            color = "#154194"),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
-
-                    # tabPanel("Zeitverlauf MINT", br(), #kann raus
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            tags$style(".well {background-color:#FFFFFF;}"),
-                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #            mod_schule_kurse_verlauf_gender_ui("mod_schule_kurse_verlauf_gender_ui_1")),
-                    #          shiny::mainPanel(
-                    #            highcharter::highchartOutput(ns("plot_verlauf_gender")))
-                    # ),
+                             )
+                    ),
 
                     # Fehler drin: erstmal raus:
                     # tabPanel("Zeitverlauf", br(),
@@ -577,28 +581,28 @@ mod_schule_kurse_ui <- function(id){
                     #            highcharter::highchartOutput(ns("plot_verlauf_kurse_bl"))
                     #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."))
                     # ),
-                    tabPanel("Vergleich Grund- und Leistungskursen nach einzelnen Fächern", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1"), br(),
-                              ),
-                             shiny::mainPanel(
-                               width = 9,
-                               shinycssloaders::withSpinner(plotOutput(ns("plot_ranking_2")),
-                                                            color = "#154194"),
-
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id="h_schule_frauen_2", title = "",
-                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. Baden-Württemberg erfasst das Geschlecht von Schüler*innen nicht und kann deshalb nicht angezeigt werden."),
-                                                  placement = "top",
-                                                  trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_frauen_2")
-                               )
-                             ),
-                    tabPanel("Vergleich Mädchen und Jungen", br(),
+                    # tabPanel("Vergleich Grund- und Leistungskursen nach einzelnen Fächern", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1"), br(),
+                    #           ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            shinycssloaders::withSpinner(plotOutput(ns("plot_ranking_2")),
+                    #                                         color = "#154194"),
+                    #
+                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            shinyBS::bsPopover(id="h_schule_frauen_2", title = "",
+                    #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. Baden-Württemberg erfasst das Geschlecht von Schüler*innen nicht und kann deshalb nicht angezeigt werden."),
+                    #                               placement = "top",
+                    #                               trigger = "hover"),
+                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_frauen_2")
+                    #            )
+                    #          ),
+                    tabPanel("MINT-Wahlverhalten nach Geschlecht", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -607,7 +611,7 @@ mod_schule_kurse_ui <- function(id){
                                mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotOutput(ns("plot_waffle")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_wahl")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", br(),"Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -617,38 +621,39 @@ mod_schule_kurse_ui <- function(id){
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_4")
                              )
-                    ),
-
-                    tabPanel("Vergleich Mädchen und Jungen nach Bundesländern (Karte)", br(),
-
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
-                               # br(), br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_map_kurse_gender_item_1"),
-                               #   label = "Download (links)",
-                               #   icon = icon("download")),
-                               # br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_map_kurse_gender_item_2"),
-                               #   label = "Download (rechts)",
-                               #   icon = icon("download"))
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_map_kurse_gender")),
-                                                            color = "#154194"),
-
-                               p(style="font-size:12px;color:grey",br(), "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id="h_schule_mint_5", title = "",
-                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. Baden-Württemberg erfasst das Geschlecht von Schüler*innen nicht und kann deshalb nicht angezeigt werden." , "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
-                                                  placement = "top",
-                                                  trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_5")
-
-                             )
                     )
+                    # ,
+
+                    # tabPanel("Bundeslandvergleich", br(),
+                    #
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
+                    #            # br(), br(),
+                    #            # downloadButton(
+                    #            #   outputId = ns("download_btn_plot_map_kurse_gender_item_1"),
+                    #            #   label = "Download (links)",
+                    #            #   icon = icon("download")),
+                    #            # br(),
+                    #            # downloadButton(
+                    #            #   outputId = ns("download_btn_plot_map_kurse_gender_item_2"),
+                    #            #   label = "Download (rechts)",
+                    #            #   icon = icon("download"))
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_map_kurse_gender")),
+                    #                                         color = "#154194"),
+                    #
+                    #            p(style="font-size:12px;color:grey",br(), "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            shinyBS::bsPopover(id="h_schule_mint_5", title = "",
+                    #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. Baden-Württemberg erfasst das Geschlecht von Schüler*innen nicht und kann deshalb nicht angezeigt werden." , "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
+                    #                               placement = "top",
+                    #                               trigger = "hover"),
+                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_5")
+                    #
+                    #          )
+                    # )
                         )
 
                     ))),
@@ -964,12 +969,8 @@ mod_schule_kurse_server <- function(id, r){
     )
 
     ## Waffle Geschlecht
-    plot_waffle_react <- reactive({
-      kurse_waffle(r)
-    })
-
-    output$plot_waffle <- renderPlot({
-      plot_waffle_react()
+    output$plot_wahl <- renderUI({
+      kurse_wahl(r)
     })
 
     ## Karte Gender
@@ -1087,23 +1088,23 @@ mod_schule_kurse_server <- function(id, r){
     # Box 2 -  M-I-N-T ----
 
     ## Karte Fächer
-    output$plot_map_kurse <- renderUI({
-      out <- kurse_map(r)
-      # r$plot_map_kurse_left <- plot_list[[1]]
-      # r$plot_map_kurse_right <- plot_list[[2]]
-      #
-      # r$plot_map_kurse_left_title <- get_plot_title(
-      #   plot = r$plot_map_kurse_left
-      # )
-      # r$plot_map_kurse_right_title <- get_plot_title(
-      #   plot = r$plot_map_kurse_right
-      # )
-
-      # return plots
-
-      out
-
-    })
+    # output$plot_map_kurse <- renderUI({
+    #   out <- kurse_map(r)
+    #   # r$plot_map_kurse_left <- plot_list[[1]]
+    #   # r$plot_map_kurse_right <- plot_list[[2]]
+    #   #
+    #   # r$plot_map_kurse_left_title <- get_plot_title(
+    #   #   plot = r$plot_map_kurse_left
+    #   # )
+    #   # r$plot_map_kurse_right_title <- get_plot_title(
+    #   #   plot = r$plot_map_kurse_right
+    #   # )
+    #
+    #   # return plots
+    #
+    #   out
+    #
+    # })
 
     # output$download_btn_plot_map_kurse_item_1 <- downloadHandler(
     #   contentType = "image/png",
@@ -1293,17 +1294,34 @@ mod_schule_kurse_server <- function(id, r){
     output$plot_comparison_gender <- renderUI({
       if(r$ansicht_kurse_comparison_gender ==
          "Kursvergleich - Hanteldiagramm"){
-        plot_ranking_react()
+        plotOutput(ns("plot_ranking_3"))
       }else {
-        plot_list <- kurse_comparison_gender(r)
-        # r$plot_comparison_gender <- plot_list
-        #
-        # r$plot_comparison_gender_title <- get_plot_title(
-        #   plot = r$plot_comparison_gender
-        # )
+      htmlOutput(ns("plot_comparison_gender_2"))
 
-        plot_list
       }
+    })
+
+    output$plot_comparison_gender_2 <- renderUI({
+      plot_list <- kurse_comparison_gender(r)
+    # r$plot_comparison_gender <- plot_list
+    #
+    # r$plot_comparison_gender_title <- get_plot_title(
+    #   plot = r$plot_comparison_gender
+    # )
+
+    plot_list
+    })
+
+    output$plot_ranking_3 <- renderPlot({
+     # plot_ranking_react()
+      kurse_comparison_gender(r)
+    })
+    # plot_ranking_react <- reactive({
+    #   kurse_ranking(r) # type = "other"
+    # })
+
+    output$plot_verlauf_gender <- highcharter::renderHighchart({
+      kurse_verlauf_gender(r)
     })
 
     # output$download_btn_plot_comparison_gender <- downloadHandler(
@@ -1324,12 +1342,12 @@ mod_schule_kurse_server <- function(id, r){
     # )
 
     ## Dumbbell Frauen
-    output$plot_ranking_2 <- renderPlot({
-      plot_ranking_react()
-    })
-    plot_ranking_react <- reactive({
-      kurse_ranking(r) # type = "other"
-    })
+    # output$plot_ranking_2 <- renderPlot({
+    #   plot_ranking_react()
+    # })
+    # plot_ranking_react <- reactive({
+    #   kurse_ranking(r) # type = "other"
+    # })
 
 
     # Box 4  Kompetenzdaten / IQB ----

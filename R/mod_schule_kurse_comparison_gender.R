@@ -22,8 +22,8 @@ mod_schule_kurse_comparison_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_comparison_gender"),
       label = NULL,
-      choices = c("2013","2014","2015","2016","2017", "2018", "2019", "2020", "2021", "2022"),
-      selected = "2022"
+      choices = 2013:2022,
+      selected = 2022
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -51,16 +51,23 @@ mod_schule_kurse_comparison_gender_ui <- function(id){
       multiple = F,
       selected = "Deutschland"
     ),
-    conditionalPanel(condition = "ansicht_kurse_comparison_gender == 'Einzelansicht - Kuchendiagramm'",
-       ns = ns,
+
+    conditionalPanel(condition = sprintf("input['%s'] == 'Einzelansicht - Kuchendiagramm'
+                                         || input['%s'] == 'Gruppenvergleich - Balkendiagramm'",
+                                         ns("ansicht_kurse_comparison_gender"),
+                                         ns("ansicht_kurse_comparison_gender")),
+
+    # "input.ansicht_kurse_comparison_gender == 'Einzelansicht - Kuchendiagramm'
+    #                  || input.ansicht_kurse_comparison_gender == Gruppenvergleich - Balkendiagramm",
+      # ns = ns,
        p("Kursniveau:"),
        shinyWidgets::pickerInput(
          inputId = ns("indikator_kurse_comparison_gender"),
          choices = c("Grundkurse", "Leistungskurse", "Oberstufenbelegungen"),
          selected = c("Oberstufenbelegungen"),
          multiple = FALSE
-       )
        ),
+
     br(),
     p("Nicht-MINT als Vergleich anzeigen?", style = "color: #b16fab;"),
     shinyWidgets::radioGroupButtons(
@@ -70,6 +77,7 @@ mod_schule_kurse_comparison_gender_ui <- function(id){
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
+    )
     ),
     br(),
     shinyBS::bsPopover(id="ih_schule_frauen_1", title="",
@@ -85,6 +93,10 @@ mod_schule_kurse_comparison_gender_ui <- function(id){
 mod_schule_kurse_comparison_gender_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
+    observeEvent(input$ansicht_kurse_comparison_gender, {
+      r$ansicht_kurse_comparison_gender <- input$ansicht_kurse_comparison_gender
+    })
+
     observeEvent(input$date_kurse_comparison_gender, {
       r$date_kurse_comparison_gender <- input$date_kurse_comparison_gender
     })
@@ -99,10 +111,6 @@ mod_schule_kurse_comparison_gender_server <- function(id, r){
 
     observeEvent(input$indikator_kurse_comparison_gender, {
       r$indikator_kurse_comparison_gender <- input$indikator_kurse_comparison_gender
-    })
-
-    observeEvent(input$ansicht_kurse_comparison_gender, {
-      r$ansicht_kurse_comparison_gender <- input$ansicht_kurse_comparison_gender
     })
 
   })
