@@ -9,15 +9,18 @@
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-home_einstieg_pie <- function(r) {
+home_einstieg <- function(r) {
 
   # load UI inputs from reactive value
+  betrachtung <- r$ansicht_start_einstieg
+  zeit <- r$date_start_comparison_mint
+  #regio <- r$region_start_einstieg_comparsion -->fehlt noch in Arbeitsmarkt bei zentral nach Bulas
   indikator_choice_1 <- r$indikator_start_einstieg_1
 
   # filter dataset based on UI input
 
   df <- dplyr::tbl(con, from = "zentral") %>%
-    dplyr::filter(jahr == "2022",
+    dplyr::filter(jahr == zeit,
                   region == "Deutschland",
                   geschlecht=="Gesamt") %>%
    # dplyr::select(bereich, region, indikator, geschlecht, fachbereich, jahr, wert) %>%
@@ -26,8 +29,6 @@ home_einstieg_pie <- function(r) {
 
   df_hs <- df %>% dplyr::filter(bereich == "Hochschule")%>%
     dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle")
-
-
 
   df_s <- df %>% dplyr::filter(bereich == "Schule")%>%
     dplyr::filter(fachbereich== "MINT" | fachbereich == "Alle Fächer")%>%
@@ -41,7 +42,6 @@ home_einstieg_pie <- function(r) {
                       fachbereich == "Mathematik_Naturwissenschaften",
                   bereich != "Hochschule" & bereich != "Schule")%>%
     unique()
-
 
 
   dfy <- dplyr::bind_rows(df_s, df_hs, df_ab)%>%
@@ -82,6 +82,7 @@ home_einstieg_pie <- function(r) {
 
   dfö <- dft %>% dplyr::filter(indikator %in% indikator_choice_1)
 
+  if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
   if(length(indikator_choice_1) == 1) {
 
@@ -243,216 +244,33 @@ home_einstieg_pie <- function(r) {
     )
 
   }
+    }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
+    highcharter::hchart(dfk2_fn, 'bar', highcharter::hcaes(y = proportion, x = indikator, group = "fachbereich"))%>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+      highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+      # highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
+      highcharter::hc_title(text = paste0("Anteil von MINT nach Bildungsbereichen (", zeit,")"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-
-  # df11 <- df %>%
-  #   dplyr::rename(anzeige_geschlecht = geschlecht)
-
-
-  # df2 <- df2 %>%
-  #   tidyr::pivot_wider(names_from=anzeige_geschlecht, values_from=wert)%>%
-  #   dplyr::mutate(Gesamt=Männer+Frauen)%>%
-  #   tidyr::pivot_longer(c("Gesamt", "Frauen", "Männer"), names_to = "anzeige_geschlecht", values_to = "wert")
-
-
-  # df8 <- df2 %>%
-  #   tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
-  #   dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
-  #                 "andere Fächer" =`Alle Fächer`- MINT)%>%
-  #  tidyr::pivot_longer(c(6:20), values_to = "wert", names_to= "fachbereich")%>%
-  #  dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
-  #
-  #
-  # df5 <- df %>% dplyr::filter(bereich != "Schule")
-  #
-  # #df2<- df2[, colnames(df)]
-  #
-  # df3<-  dplyr::bind_rows(df5, df8)
-
-  # df<- df %>%
-  #   tidyr::pivot_wider(values_from = wert, names_from = anzeige_geschlecht)%>%
-  #   tidyr::pivot_longer(c("Männer","Frauen", "Gesamt"),names_to = "anzeige_geschlecht", values_to= "wert")%>%
-  #   dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
-
-  # call function to calculate the share of MINT for every "bereich"
-
-  # df <- share_MINT(df11)
-  #
-  # df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
-  #
-  # df <- df %>% dplyr::filter(indikator %in% indikator_choice_1)
-  #
-  #
-  # # calculate proportions for MINT vs. Rest
-  # df <- df %>% dplyr::group_by(indikator) %>%
-  #   dplyr::mutate(props = sum(wert))
-  #
-  #
-  # df <- df %>% dplyr::group_by(indikator, fachbereich) %>%
-  #   dplyr::summarize(proportion = wert/props)
-  #
-  # df$proportion <- df$proportion * 100
-
-  # create an if statement for the options of plotting 1, 2 or 3 graphs
-  # if(length(indikator_choice_1) == 1) {
-  #
-  #   # ensure that proportion sum to 1
-  #   df$proportion <- round_preserve_sum(as.numeric(df$proportion),0)
-  #
-  #   title_help <- helper_title_home(indikator_choice_1)
-  #
-  #   highcharter::hw_grid(
-  #     df %>%
-  #       highcharter::hchart(
-  #         "pie", highcharter::hcaes(x = fachbereich, y = proportion)
-  #       ) %>%
-  #       highcharter::hc_tooltip(
-  #         pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-  #       highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-  #       highcharter::hc_title(text = paste0("", indikator_choice_1, " (2020"),
-  #                             margin = 45,
-  #                             align = "center",
-  #                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  #       highcharter::hc_chart(
-  #         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-  #       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-  #       #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-  #       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-  #                                              dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
-  #
-  #     ncol = 1,
-  #     browsable = TRUE
-  #   )
-  #
-  #
-  # } else if(length(indikator_choice_1) == 2) {
-  #
-  #   # filter for UI input and ensure proportions sum to 1
-  #   df_1 <- df %>% dplyr::filter(indikator == indikator_choice_1[1])
-  #
-  #   df_1$proportion <- round_preserve_sum(as.numeric(df_1$proportion),0)
-  #
-  #   title_help_1 <- helper_title_home(indikator_choice_1[1])
-  #
-  #   df_2 <- df %>% dplyr::filter(indikator == indikator_choice_1[2])
-  #
-  #   df_2$proportion <- round_preserve_sum(as.numeric(df_2$proportion),0)
-  #
-  #   title_help_2 <- helper_title_home(indikator_choice_1[2])
-  #
-  #
-  #   highcharter::hw_grid(
-  #     highcharter::hchart(df_1, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
-  #       highcharter::hc_tooltip(
-  #         pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-  #       highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-  #       highcharter::hc_title(text = paste0("", indikator_choice_1[1], " (2020)"),
-  #                             margin = 45,
-  #                             align = "center",
-  #                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  #       highcharter::hc_chart(
-  #         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-  #       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-  #       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-  #                                              dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
-  #
-  #
-  #     highcharter::hchart(df_2, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
-  #       highcharter::hc_tooltip(
-  #         pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-  #       highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-  #       highcharter::hc_title(text = paste0("", indikator_choice_1[2], " (2020)"),
-  #                             margin = 45,
-  #                             align = "center",
-  #                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  #       highcharter::hc_chart(
-  #         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-  #       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-  #       #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-  #       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-  #                                              dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
-  #
-  #     ncol = 2,
-  #     browsable = TRUE
-  #   )
-  #
-  #
-  # } else if(length(indikator_choice_1) == 3) {
-  #
-  #   # filter for UI input and ensure proportions sum to 1
-  #
-  #   df_1 <- df %>% dplyr::filter(indikator == indikator_choice_1[1])
-  #
-  #   df_1$proportion <- round_preserve_sum(as.numeric(df_1$proportion),0)
-  #
-  #   title_help_1 <- helper_title_home(indikator_choice_1[1])
-  #
-  #   df_2 <- df %>% dplyr::filter(indikator == indikator_choice_1[2])
-  #
-  #   df_2$proportion <- round_preserve_sum(as.numeric(df_2$proportion),0)
-  #
-  #   title_help_2 <- helper_title_home(indikator_choice_1[2])
-  #
-  #   df_3 <- df %>% dplyr::filter(indikator == indikator_choice_1[3])
-  #
-  #   df_3$proportion <- round_preserve_sum(as.numeric(df_3$proportion),0)
-  #
-  #   title_help_3 <- helper_title_home(indikator_choice_1[3])
-  #
-  #
-  #   highcharter::hw_grid(
-  #     highcharter::hchart(df_1, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
-  #       highcharter::hc_tooltip(
-  #         pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-  #       highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-  #       highcharter::hc_title(text = paste0("", indikator_choice_1[1], " (2020)"),
-  #                             margin = 45,
-  #                             align = "center",
-  #                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  #       highcharter::hc_chart(
-  #         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-  #       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-  #       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-  #                                              dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
-  #
-  #
-  #     highcharter::hchart(df_2, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
-  #       highcharter::hc_tooltip(
-  #         pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-  #       highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-  #       highcharter::hc_title(text = paste0("", indikator_choice_1[2], " (2020)"),
-  #                             margin = 45,
-  #                             align = "center",
-  #                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  #       highcharter::hc_chart(
-  #         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-  #       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-  #       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-  #                                              dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE)),
-  #
-  #     highcharter::hchart(df_3, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
-  #       highcharter::hc_tooltip(
-  #         pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-  #       highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-  #       highcharter::hc_title(text = paste0("", indikator_choice_1[3], " (2020)"),
-  #                             margin = 45,
-  #                             align = "center",
-  #                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  #       highcharter::hc_chart(
-  #         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-  #       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-  #       #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-  #       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-  #                                              dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
-  #
-  #
-  #
-  #     ncol = 3,
-  #     browsable = TRUE
-  #   )
-  #
-  # }
+  }
 
 }
 
@@ -776,46 +594,23 @@ home_stacked_comparison_mint <- function(r) {
 #' @param df The dataframe "zentral.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-home_einstieg_pie_gender <- function(r) {
-
-
+home_einstieg_gender <- function(r) {
 
   # load UI inputs from reactive value
-  timerange <- "2022"
-
+  betrachtung <- r$ansicht_start_comparison_mint_gender
+  zeit <- r$date_start_comparison_mint_gender
+  gegenwert <- r$gegenwert_start_comparison_gender
   indikator_choice_1_gender <- r$indikator_start_einstieg_1_gender
-
+ #TODO Region mit rein, wenn in zentral ergänzt wurde
 
   # filter dataset based on UI input
 
   df <- dplyr::tbl(con, from = "zentral") %>%
     dplyr::filter(region == "Deutschland",
-                  jahr == timerange) %>%
+                  jahr == zeit) %>%
     dplyr::select(bereich, indikator, geschlecht, fachbereich, wert) %>%
     dplyr::collect()
 
-
-  # call function to calculate the share of MINT for every "bereich"
-  # df <- share_MINT(df)
-  #
-  # df <- df %>% dplyr::filter(anzeige_geschlecht == "Gesamt")
-  #
-  #
-  # df <- df %>% dplyr::filter(indikator %in% indikator_choice_1)
-  #
-  # # calculate proportions
-  # df <- df %>% dplyr::group_by(indikator, jahr) %>%
-  #   dplyr::mutate(props = sum(wert))
-  #
-  #
-  # df <- df %>% dplyr::group_by(indikator, jahr,fachbereich) %>%
-  #   dplyr::summarize(proportion = wert/props)
-  #
-  # df$proportion <- df$proportion * 100
-
-  # dfü <- df %>% dplyr::filter(jahr == timerange)
-
-  # dfk <- dfü %>% dplyr::filter(region == "Deutschland")
 
   dfk24 <- df %>%
     dplyr::filter(fachbereich == "MINT" | fachbereich == "Alle"|  fachbereich == "Ingenieurwissenschaften" |fachbereich == "Mathematik_Naturwissenschaften"
@@ -892,9 +687,11 @@ home_einstieg_pie_gender <- function(r) {
   dfk2_fn4$titel_help2 <- ifelse(dfk2_fn4$indikator == "Auszubildende", "Vergleich: Auszubildend in anderen Bereichen", dfk2_fn4$titel_help2)
   dfk2_fn4$titel_help2 <- ifelse(dfk2_fn4$indikator == "Studierende", "Vergleich: Studierende in anderen Bereichen", dfk2_fn4$titel_help2)
 
-  #gewählte Indikatoren ausfiltern
-  dfk2_fn4 <- dfk2_fn4 %>% dplyr::filter(indikator %in% indikator_choice_1_gender)
 
+  if(betrachtung == "Einzelansicht - Kuchendiagramm"){
+
+    #gewählte Indikatoren ausfiltern
+    dfk2_fn4 <- dfk2_fn4 %>% dplyr::filter(indikator %in% indikator_choice_1_gender)
 
   if(length(indikator_choice_1_gender) == 1) {
 
@@ -908,10 +705,7 @@ home_einstieg_pie_gender <- function(r) {
 
     #df_rest$wert <- round_preserve_sum(as.numeric(df_rest$wert),0)
 
-
-    highcharter::hw_grid(
-
-      highcharter::hchart(df_mint4, size = 280,
+    mint1 <-  highcharter::hchart(df_mint4, size = 280,
                           "pie", highcharter::hcaes(x = geschlecht, y = proportion)
       ) %>%
         highcharter::hc_tooltip(
@@ -925,9 +719,15 @@ home_einstieg_pie_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
 
-      highcharter::hchart(df_rest4, size = 150,
+    if(gegenwert == "Nein"){
+
+     out <- mint1
+
+    }
+    if(gegenwert == "Ja"){
+     nmint1 <- highcharter::hchart(df_rest4, size = 150,
                           "pie", highcharter::hcaes(x = geschlecht, y = proportion)
       ) %>%
         highcharter::hc_tooltip(
@@ -943,11 +743,14 @@ home_einstieg_pie_gender <- function(r) {
         # highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE,
-                                               opacity = 0.7)),
+                                               opacity = 0.7))
 
-      ncol = 1,
-      browsable = TRUE
-    )
+     out <- highcharter::hw_grid(
+        mint1, nmint1,
+        ncol = 2,
+        browsable = TRUE
+      )
+    }
 
 
   } else if(length(indikator_choice_1_gender) == 2) {
@@ -974,11 +777,7 @@ home_einstieg_pie_gender <- function(r) {
     #df_2_rest$wert <- round_preserve_sum(as.numeric(df_2_rest$wert),0)
 
 
-    highcharter::hw_grid(
-
-
-
-      highcharter::hchart(df_1_mint4, size = 280, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
+     mint1 <- highcharter::hchart(df_1_mint4, size = 280, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
@@ -990,10 +789,10 @@ home_einstieg_pie_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
 
 
-      highcharter::hchart(df_2_mint4, size = 280, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
+      mint2 <-highcharter::hchart(df_2_mint4, size = 280, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
@@ -1005,10 +804,18 @@ home_einstieg_pie_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
+      if(gegenwert == "Nein"){
 
+        out <- highcharter::hw_grid(
+          mint1, mint2,
+          ncol = 2,
+          browsable = TRUE
+        )
+      }
+      if(gegenwert == "Ja"){
 
-      highcharter::hchart(df_1_rest4, size = 150, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
+      nmint1 <- highcharter::hchart(df_1_rest4, size = 150, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
@@ -1021,10 +828,10 @@ home_einstieg_pie_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
-                                               opacity = 0.7)),
+                                               opacity = 0.7))
 
 
-      highcharter::hchart(df_2_rest4, size = 150, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
+     nmint2 <- highcharter::hchart(df_2_rest4, size = 150, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
@@ -1038,11 +845,14 @@ home_einstieg_pie_gender <- function(r) {
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
-                                               opacity = 0.7)),
+                                               opacity = 0.7))
 
-      ncol = 2,
-      browsable = TRUE
-    )
+     out <-  highcharter::hw_grid(
+        mint1, mint2, nmint1, nmint2,
+        ncol = 2,
+        browsable = TRUE
+      )
+    }
 
     ### 3 Kreise ###
 
@@ -1078,10 +888,8 @@ home_einstieg_pie_gender <- function(r) {
 
     #df_3_rest$wert <- round_preserve_sum(as.numeric(df_3_rest$wert),0)
 
-    highcharter::hw_grid(
 
-
-      highcharter::hchart(df_1_mint4, size = 170, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
+    mint1<-  highcharter::hchart(df_1_mint4, size = 170, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
@@ -1093,10 +901,10 @@ home_einstieg_pie_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
 
 
-      highcharter::hchart(df_2_mint4, size = 170, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
+    mint2<-  highcharter::hchart(df_2_mint4, size = 170, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
@@ -1108,9 +916,9 @@ home_einstieg_pie_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
 
-      highcharter::hchart(df_3_mint4, size = 170, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
+    mint3 <-  highcharter::hchart(df_3_mint4, size = 170, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
@@ -1122,12 +930,21 @@ home_einstieg_pie_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
+                                               dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE))
 
+    if(gegenwert == "Nein"){
+
+      out <- highcharter::hw_grid(
+        mint1, mint2, mint3,
+        ncol = 3,
+        browsable = TRUE
+      )
+    }
       ## Untere Kreise: Vergleiche
 
+    if(gegenwert == "Ja"){
 
-      highcharter::hchart(df_1_rest4, size = 100, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
+    nmint1 <-  highcharter::hchart(df_1_rest4, size = 100, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
@@ -1140,10 +957,10 @@ home_einstieg_pie_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
-                                               opacity = 0.7)),
+                                               opacity = 0.7))
 
 
-      highcharter::hchart(df_2_rest4, size = 100, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
+    nmint2 <-  highcharter::hchart(df_2_rest4, size = 100, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
@@ -1157,9 +974,9 @@ home_einstieg_pie_gender <- function(r) {
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
-                                               opacity = 0.7)),
+                                               opacity = 0.7))
 
-      highcharter::hchart(df_3_rest4, size = 100, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
+     nmint3 <- highcharter::hchart(df_3_rest4, size = 100, type = "pie", mapping = highcharter::hcaes(x = geschlecht, y = proportion)) %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.percentage:.0f}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
@@ -1173,404 +990,100 @@ home_einstieg_pie_gender <- function(r) {
         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
-                                               opacity = 0.7)),
+                                               opacity = 0.7))
 
 
-
-
+     out <- highcharter::hw_grid(
+      mint1, mint2, mint3, nmint1, nmint2, nmint3,
       ncol = 3,
       browsable = TRUE
     )
+    }
+
+  }
+  } else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
+    df <- dfk2_fn4 %>%
+      dplyr::mutate(indikator = dplyr::case_when(
+        fachbereich == "MINT" ~ paste0(indikator, " in MINT"),
+        fachbereich == "andere Fächer" ~ paste0(indikator, " in anderen Bereichen")
+      ))
+
+    if(gegenwert == "Nein"){
+      df <- df %>% dplyr::filter(fachbereich == "MINT")
+      # ,
+      # !fachbereich %in% c("Schüler:innen Grundkurse in MINT",
+      #                     "Schüler:innen Leistungskurse in MINT")
+
+      out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,0), group = geschlecht)) %>%
+        highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+        highcharter::hc_xAxis(title = list(text = ""), categories = c("Schüler:innen Oberstufenbelegungen in MINT",
+                                                                      "Schüler:innen Grundkurse in MINT",
+                                                                      "Schüler:innen Leistungskurse in MINT",
+                                                                      "Studierende in MINT",
+                                                                      "Auszubildende in MINT",
+                                                                      "Beschäftigte in MINT")) %>%
+        highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+        highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
+        highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen (", zeit, ")"),
+                              margin = 25,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+        highcharter::hc_exporting(enabled = FALSE,
+                                  buttons = list(contextButton = list(
+                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                    onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                    align = 'right',
+                                    verticalAlign = 'bottom',
+                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    }else{
+
+      out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,0), group = geschlecht)) %>%
+        highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+        highcharter::hc_xAxis(title = list(text = ""), categories = c("Schüler:innen Oberstufenbelegungen in MINT",
+                                                                      "Schüler:innen Oberstufenbelegungen in anderen Bereichen",
+                                                                      "Schüler:innen Grundkurse in MINT",
+                                                                      "Schüler:innen Grundkurse in anderen Bereichen",
+                                                                      "Schüler:innen Leistungskurse in MINT",
+                                                                      "Schüler:innen Leistungskurse in anderen Bereichen",
+                                                                      "Studierende in MINT",
+                                                                      "Studierende in anderen Bereichen",
+                                                                      "Auszubildende in MINT",
+                                                                      "Auszubildende in anderen Bereichen",
+                                                                      "Beschäftigte in MINT",
+                                                                      "Beschäftigte in anderen Bereichen")) %>%
+        highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+        highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
+        highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen (", zeit, ")"),
+                              margin = 25,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+        highcharter::hc_exporting(enabled = FALSE,
+                                  buttons = list(contextButton = list(
+                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                    onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                    align = 'right',
+                                    verticalAlign = 'bottom',
+                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+    }
+
 
   }
 
 
-
-  # filter dataset based on UI inputs
-  # df <- df %>% dplyr::filter(jahr == timerange)
-  # df_naa  <- df_naa %>% dplyr::filter(jahr == timerange)
-  #
-  # df <- df %>% dplyr::filter(region == "Deutschland")
-  # df_naa <- df_naa %>% dplyr::filter(region == "Deutschland")
-  #
-  #
-  # # call function to calculate the share of MINT for every "bereich"
-  # df<- share_MINT(df)
-  #
-  #
-  # #rename
-  # df[df$fachbereich != "MINT", "fachbereich"] <- "Andere Fachbereiche"
-  #
-  #
-  # # order
-  # df <- df[with(df, order(indikator, anzeige_geschlecht, decreasing = TRUE)), ]
-  #
-  # # filter parts which need more invovled calculation of proportion
-  # df_sub_2 <- df %>% dplyr::filter(indikator == "Promotionen (angestrebt)" |
-  #                                    indikator == "Habilitationen" | indikator == "Leistungskurse")
-  #
-  # # calculate the new "Gesamt"
-  #
-  # df_sub_2[(df_sub_2$anzeige_geschlecht == "Gesamt" & df_sub_2$indikator == "Leistungskurse"), "wert"] <-  df_sub_2 %>%
-  #   dplyr::filter(indikator == "Leistungskurse") %>%
-  #   dplyr::group_by(indikator, jahr) %>%
-  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"] +
-  #                      wert[anzeige_geschlecht == "Männer"]) %>% dplyr::pull(wert)
-  #
-  # # calculate proprotion female
-  # df_sub_2[df_sub_2$anzeige_geschlecht == "Frauen", "wert"] <-  df_sub_2 %>% dplyr::group_by(indikator, fachbereich) %>%
-  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Frauen"]/
-  #                      wert[anzeige_geschlecht == "Gesamt"]) %>%
-  #   dplyr::arrange(-dplyr::row_number()) %>% dplyr::pull(wert)
-  #
-  #
-  # # calculate proprotion male
-  # df_sub_2[df_sub_2$anzeige_geschlecht == "Männer", "wert"] <- df_sub_2 %>% dplyr::group_by(indikator, fachbereich) %>%
-  #   dplyr::summarise(wert = wert[anzeige_geschlecht == "Männer"]/
-  #                      wert[anzeige_geschlecht == "Gesamt"]) %>%
-  #   dplyr::arrange(-dplyr::row_number()) %>% dplyr::pull(wert)
-  #
-  #
-  # df_sub_2 <- df_sub_2 %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
-  #
-  # df_sub_2$wert <- df_sub_2$wert * 100
-  #
-  # # calcuate porportion of remaining topics
-  # df <- df %>% dplyr::filter(indikator != "Promotionen (angestrebt)",
-  #                            indikator != "Habilitationen", indikator != "Leistungskurse") %>%
-  #   dplyr::group_by(indikator, fachbereich) %>%
-  #   dplyr::summarize(wert = dplyr::lead(wert)/wert) %>% na.omit()
-  #
-  #
-  # df$wert <- df$wert * 100
-  #
-  # df$anzeige_geschlecht <- "Frauen"
-  #
-  # df_sub <- df
-  #
-  # df_sub$anzeige_geschlecht <- "Männer"
-  #
-  # df_sub$wert <- 100 - df$wert
-  #
-  # df <- rbind(df, df_sub, df_sub_2)
-  #
-  # # calcualte proportion for "neue ausbildungsverträge"
-  # #vorläufige Anpassung, dass in beiden df gleicher Name ist
-  # df_n <- df_naa %>%
-  #   dplyr::rename(anzeige_geschlecht = geschlecht)
-  #
-  # df_sub <- df_n %>% dplyr::group_by(anzeige_geschlecht) %>%
-  #   dplyr::summarize(wert = sum(wert))
-  #
-  # df_sub <- df_sub %>% dplyr::group_by(anzeige_geschlecht) %>%
-  #   dplyr::summarize(wert = wert/df_sub[df_sub$anzeige_geschlecht == "Gesamt", "wert"][[1]])
-  #
-  # df_sub$wert <- df_sub$wert * 100
-  #
-  # df_sub <- df_sub %>% dplyr::filter(anzeige_geschlecht != "Gesamt")
-  #
-  # df_sub$indikator <- "Neue Ausbildungsverträge"
-  #
-  # df_sub$fachbereich <- "MINT"
-  #
-  #
-  # df_sub <- df_sub[, c("indikator", "fachbereich", "wert", "anzeige_geschlecht")]
-  #
-  # df <- subset(df, select = c(indikator, fachbereich, wert, anzeige_geschlecht))
-  #
-  # df <- rbind(df, df_sub)
-  #
-  # df <- df %>% dplyr::filter(indikator %in% indikator_choice_1_gender) %>%
-  #   dplyr::arrange(anzeige_geschlecht)
-  #
-  # # create an if statement for the options of plotting 1, 2 or 3 graphs
-#   if(length(indikator_choice_1_gender) == 1) {
-#
-#     # ensure that proportion sum to 1
-#     df_mint <- df %>% dplyr::filter(fachbereich == "MINT")
-#
-#     df_mint$wert <- round_preserve_sum(as.numeric(df_mint$wert),0)
-#
-#     df_rest <- df %>% dplyr::filter(fachbereich == "Andere Fachbereiche")
-#
-#     df_rest$wert <- round_preserve_sum(as.numeric(df_rest$wert),0)
-#
-#     #title_help <- helper_title_home(indikator_choice_1_gender)
-#
-#     highcharter::hw_grid(
-#
-#         highcharter::hchart(df_mint, size = 280,
-#           "pie", highcharter::hcaes(x = geschlecht, y = wert)
-#         ) %>%
-#         highcharter::hc_tooltip(
-#           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender, " (2020)"),
-#                               margin = 45,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#         highcharter::hc_legend(enabled = TRUE) %>%
-#         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
-#
-#         highcharter::hchart(df_rest, size = 150,
-#                             "pie", highcharter::hcaes(x = anzeige_geschlecht, y = wert)
-#         ) %>%
-#           highcharter::hc_tooltip(
-#             pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#           highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#           highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender, " (2020)"),
-#                                 margin = 45,
-#                                 align = "center",
-#                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#           highcharter::hc_chart(
-#             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#           highcharter::hc_legend(enabled = TRUE, y = -120) %>%
-#          # highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-#           highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                  dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE,
-#                                                  opacity = 0.7)),
-#
-#       ncol = 1,
-#       browsable = TRUE
-#     )
-#
-#
-#   } else if(length(indikator_choice_1_gender) == 2) {
-#
-#     # filter for UI input and ensure proportions sum to 1
-#     df_mint <- df %>% dplyr::filter(fachbereich == "MINT")
-#
-#     df_1_mint <- df_mint %>% dplyr::filter(indikator == indikator_choice_1_gender[1])
-#
-#     df_1_mint$wert <- round_preserve_sum(as.numeric(df_1_mint$wert),0)
-#
-#     df_2_mint <- df_mint %>% dplyr::filter(indikator == indikator_choice_1_gender[2])
-#
-#     df_2_mint$wert <- round_preserve_sum(as.numeric(df_2_mint$wert),0)
-#
-#     df_rest <- df %>% dplyr::filter(fachbereich == "Andere Fachbereiche")
-#
-#     df_1_rest <- df_rest %>% dplyr::filter(indikator == indikator_choice_1_gender[1])
-#
-#     df_1_rest$wert <- round_preserve_sum(as.numeric(df_1_rest$wert),0)
-#
-#     df_2_rest<- df_rest %>% dplyr::filter(indikator == indikator_choice_1_gender[2])
-#
-#     df_2_rest$wert <- round_preserve_sum(as.numeric(df_2_rest$wert),0)
-#
-#
-#     highcharter::hw_grid(
-#
-#
-#
-#       highcharter::hchart(df_1_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
-#         highcharter::hc_tooltip(
-#           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[1], " (2020)"),
-#                               margin = 45,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#         highcharter::hc_legend(enabled = TRUE) %>%
-#         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
-#
-#
-#       highcharter::hchart(df_2_mint, size = 280, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
-#         highcharter::hc_tooltip(
-#           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[2], " (2020)"),
-#                               margin = 45,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#         highcharter::hc_legend(enabled = TRUE) %>%
-#         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
-#
-#
-#       highcharter::hchart(df_1_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
-#         highcharter::hc_tooltip(
-#           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[1], " (2020)"),
-#                               margin = 45,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_legend(enabled = TRUE, y = -120) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
-#                                                opacity = 0.7)),
-#
-#
-#       highcharter::hchart(df_2_rest, size = 150, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
-#         highcharter::hc_tooltip(
-#           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[2], " (2020)"),
-#                               margin = 45,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_legend(enabled = TRUE, y = -120) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#         #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-#         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
-#                                                opacity = 0.7)),
-#
-#       ncol = 2,
-#       browsable = TRUE
-#     )
-#
-#     ### 3 Kreise ###
-#
-#   } else if(length(indikator_choice_1_gender) == 3) {
-#
-#     # filter for UI input and ensure proportions sum to 1
-#     # filter for UI input and ensure proportions sum to 1
-#     df_mint <- df %>% dplyr::filter(fachbereich == "MINT")
-#
-#     df_1_mint <- df_mint %>% dplyr::filter(indikator == indikator_choice_1_gender[1])
-#
-#     df_1_mint$wert <- round_preserve_sum(as.numeric(df_1_mint$wert),0)
-#
-#     df_2_mint <- df_mint %>% dplyr::filter(indikator == indikator_choice_1_gender[2])
-#
-#     df_2_mint$wert <- round_preserve_sum(as.numeric(df_2_mint$wert),0)
-#
-#     df_3_mint <- df_mint %>% dplyr::filter(indikator == indikator_choice_1_gender[3])
-#
-#     df_3_mint$wert <- round_preserve_sum(as.numeric(df_3_mint$wert),0)
-#
-#     df_rest <- df %>% dplyr::filter(fachbereich == "Andere Fachbereiche")
-#
-#     df_1_rest <- df_rest %>% dplyr::filter(indikator == indikator_choice_1_gender[1])
-#
-#     df_1_rest$wert <- round_preserve_sum(as.numeric(df_1_rest$wert),0)
-#
-#     df_2_rest<- df_rest %>% dplyr::filter(indikator == indikator_choice_1_gender[2])
-#
-#     df_2_rest$wert <- round_preserve_sum(as.numeric(df_2_rest$wert),0)
-#
-#     df_3_rest<- df_rest %>% dplyr::filter(indikator == indikator_choice_1_gender[3])
-#
-#     df_3_rest$wert <- round_preserve_sum(as.numeric(df_3_rest$wert),0)
-#
-#     highcharter::hw_grid(
-#
-#
-#       highcharter::hchart(df_1_mint, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
-#         highcharter::hc_tooltip(
-#           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[1], " (2020)"),
-#                               margin = 45,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#         highcharter::hc_legend(enabled = TRUE) %>%
-#         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
-#
-#
-#       highcharter::hchart(df_2_mint, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
-#         highcharter::hc_tooltip(
-#           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[2], " (2020)"),
-#                               margin = 45,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#         highcharter::hc_legend(enabled = TRUE) %>%
-#         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
-#
-#       highcharter::hchart(df_3_mint, size = 170, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
-#         highcharter::hc_tooltip(
-#           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("MINT-", indikator_choice_1_gender[3], " (2020)"),
-#                               margin = 45,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#         highcharter::hc_legend(enabled = TRUE) %>%
-#         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                dataLabels = list(enabled = TRUE,  format='{point.y}%'), showInLegend = TRUE)),
-#
-# ## Untere Kreise: Vergleiche
-#
-#
-#       highcharter::hchart(df_1_rest, size = 100, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
-#         highcharter::hc_tooltip(
-#           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[1], " (2020)"),
-#                               margin = 45,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_legend(enabled = TRUE, y = -180) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
-#                                                opacity = 0.7)),
-#
-#
-#       highcharter::hchart(df_2_rest, size = 100, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
-#         highcharter::hc_tooltip(
-#           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[2], " (2020)"),
-#                               margin = 45,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_legend(enabled = TRUE, y = -180) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
-#                                                opacity = 0.7)),
-#
-#       highcharter::hchart(df_3_rest, size = 100, type = "pie", mapping = highcharter::hcaes(x = anzeige_geschlecht, y = wert)) %>%
-#         highcharter::hc_tooltip(
-#           pointFormat=paste('Anteil: {point.percentage:.0f}%')) %>%
-#         highcharter::hc_colors(c("#154194","#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("Vergleich: Andere ", indikator_choice_1_gender[3], " (2020)"),
-#                               margin = 45,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_legend(enabled = TRUE, y = -180) %>%
-#          #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-#         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-#                                                dataLabels = list(enabled = TRUE, format='{point.y}%'), showInLegend = TRUE,
-#                                                opacity = 0.7)),
-#
-#
-#
-#
-#       ncol = 3,
-#       browsable = TRUE
-#     )
-#
-#   }
-
+  return(out)
 }
 
 

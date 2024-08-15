@@ -1087,6 +1087,10 @@ mod_schule_kurse_server <- function(id, r){
 
     # Box 2 -  M-I-N-T ----
 
+    output$plot_map_kurse <- renderUI({
+      kurse_map(r)
+    })
+
     ## Karte Fächer
     # output$plot_map_kurse <- renderUI({
     #   out <- kurse_map(r)
