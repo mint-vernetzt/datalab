@@ -15,10 +15,36 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studienzahl_einstieg_verlauf"),
       label = NULL,
-      choices = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020,2021,2022),
+      choices = 2013:2022,
       selected = c(2015,2022)
     ),
-    p("Indikatoren:"),
+    p("Region:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("region_studienzahl_einstieg_verlauf"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = FALSE,
+      selected = c("Deutschland")
+    ),
+    p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("studienzahl_einstieg_verlauf_indi"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -73,6 +99,11 @@ mod_studium_studienzahl_einstieg_verlauf_server <- function(id, r){
     observeEvent(input$date_studienzahl_einstieg_verlauf, {
       r$date_studienzahl_einstieg_verlauf <- input$date_studienzahl_einstieg_verlauf
     })
+
+    observeEvent(input$region_studienzahl_einstieg_verlauf, {
+      r$region_studienzahl_einstieg_verlauf <- input$region_studienzahl_einstieg_verlauf
+    })
+
 
     observeEvent(input$studienzahl_einstieg_verlauf_indi, {
       r$studienzahl_einstieg_verlauf_indi <- input$studienzahl_einstieg_verlauf_indi

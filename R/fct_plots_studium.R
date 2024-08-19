@@ -11,55 +11,54 @@
 #' @noRd
 
 
-studienzahl_test <- function(r){
-
-
-# Box 1 Pie ab 2023
+studienzahl_mint <- function(r){
 
  # ui inputs
- testy1 <- r$testy
- testl1 <- r$testl
+ betrachtung <- r$ansicht_studium_anteil
+ testy1 <- r$studium_anteil_y
+ regio <- r$region_studium_anteil
+ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
+   testl1 <- r$studium_anteil_i
+ }else{
+   testl1 <- r$studium_anteil_i_balken
+ }
 
  # filtering
  df <- dplyr::tbl(con, from = "studierende") %>%
    dplyr::filter(jahr == testy1,
                  geschlecht == "Gesamt",
-                 region == "Deutschland",
+                 region == regio,
                  fachbereich %in% c("Nicht MINT", "MINT (Gesamt)", "Alle" )) %>%
    dplyr::collect()
 
  # calculating proportions
- df3 <- df %>%
+ df2 <- df %>%
    tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
    dplyr::mutate(dplyr::across(c("MINT (Gesamt)", "Nicht MINT"), ~./Alle))%>%
    dplyr::mutate(dplyr::across(c("Nicht MINT", "MINT (Gesamt)"), ~ round(.*100,0)))%>%
    dplyr::select(- Alle)%>%
    tidyr::pivot_longer(c("MINT (Gesamt)", "Nicht MINT"), names_to = "fachbereich", values_to = "proportion")
 
-# Keine Nachkommastellen, richtig?
-
  # joining wert and prportion
- df4 <- df %>%
+ df <- df %>%
    dplyr::filter(fachbereich != "Alle")%>%
-   dplyr::left_join(df3)
+   dplyr::left_join(df2)
 
 
  #Trennpunkte für lange Zahlen ergänzen
 
- df4$wert <- prettyNum(df4$wert, big.mark = ".", decimal.mark = ",")
- df4$display_rel <- prettyNum(df4$proportion, big.mark = ".", decimal.mark = ",")
+ df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+ df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
 
 
  # Ordering
- df4 <- within(df4, fachbereich <- factor(fachbereich, levels=c("Nicht MINT", "MINT (Gesamt)")))
+ df <- within(df, fachbereich <- factor(fachbereich, levels=c("Nicht MINT", "MINT (Gesamt)")))
 
-
-
-
+ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
   if(length(testl1) == 1) {
 
-    df_pie <- df4 %>% dplyr::filter(indikator == testl1)
+    df_pie <- df %>% dplyr::filter(indikator == testl1)
 
     #df_pie <- within(df_pie, fachbereich <- factor(fachbereich, levels=c("Nicht MINT", "MINT")))
 
@@ -72,7 +71,7 @@ studienzahl_test <- function(r){
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab" )) %>%
-        highcharter::hc_title(text = paste0(testl1[1], " in ", testy1),
+        highcharter::hc_title(text = paste0(testl1[1], " in ", regio, " (", testy1, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -91,9 +90,9 @@ studienzahl_test <- function(r){
   } else if(length(testl1) == 2) {
 
     # filter for UI input and ensure proportions sum to 1
-    df_1_pie <- df4 %>% dplyr::filter(indikator == testl1[1])
+    df_1_pie <- df %>% dplyr::filter(indikator == testl1[1])
 
-    df_2_pie <- df4 %>% dplyr::filter(indikator == testl1[2])
+    df_2_pie <- df %>% dplyr::filter(indikator == testl1[2])
 
 
      highcharter::hw_grid(
@@ -103,7 +102,7 @@ studienzahl_test <- function(r){
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-        highcharter::hc_title(text=paste0(testl1[1], " in ", testy1),
+        highcharter::hc_title(text=paste0(testl1[1], " in ", regio, " (", testy1, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -120,7 +119,7 @@ studienzahl_test <- function(r){
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}'))%>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-      highcharter::hc_title(text=paste0(testl1[2], " in ", testy1),
+      highcharter::hc_title(text=paste0(testl1[2], " in ", regio, " (", testy1, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -140,11 +139,11 @@ studienzahl_test <- function(r){
 
     # filter for UI input and ensure proportions sum to 1
 
-    df_1_pie <- df4 %>% dplyr::filter(indikator == testl1[1])
+    df_1_pie <- df %>% dplyr::filter(indikator == testl1[1])
 
-    df_2_pie <- df4 %>% dplyr::filter(indikator == testl1[2])
+    df_2_pie <- df %>% dplyr::filter(indikator == testl1[2])
 
-    df_3_pie <- df4 %>% dplyr::filter(indikator == testl1[3])
+    df_3_pie <- df %>% dplyr::filter(indikator == testl1[3])
 
 
      highcharter::hw_grid(
@@ -153,7 +152,7 @@ studienzahl_test <- function(r){
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-        highcharter::hc_title(text=paste0(testl1[1], " in ", testy1),
+        highcharter::hc_title(text=paste0(testl1[1], " in ", regio, " (", testy1, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -171,7 +170,7 @@ studienzahl_test <- function(r){
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-      highcharter::hc_title(text=paste0(testl1[2], " in ", testy1),
+      highcharter::hc_title(text=paste0(testl1[2], " in ", regio, " (", testy1, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -188,7 +187,7 @@ studienzahl_test <- function(r){
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-      highcharter::hc_title(text=paste0(testl1[3], " in ", testy1),
+      highcharter::hc_title(text=paste0(testl1[3], " in ", regio, " (", testy1, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -207,8 +206,36 @@ studienzahl_test <- function(r){
 
 
 
-  }
-  }
+    }
+   }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
+
+     df <- df %>% dplyr::filter(indikator %in% testl1)
+
+     highcharter::hchart(df, 'bar', highcharter::hcaes(y = proportion, x = indikator, group =forcats::fct_rev(fachbereich)))%>%
+       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.proportion} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
+       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  F) %>%
+       highcharter::hc_xAxis(title = list(text = "")) %>%
+       highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+       highcharter::hc_colors(c( "#b16fab","#efe8e6")) %>%
+       highcharter::hc_title(text = paste0("Anteil von Studierenden in MINT an allen Studierenden in ", regio, " (", testy1, ")"),
+                             margin = 45,
+                             align = "center",
+                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+       highcharter::hc_chart(
+         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+       ) %>%
+       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+       highcharter::hc_exporting(enabled = FALSE,
+                                 buttons = list(contextButton = list(
+                                   symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                   onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                   align = 'right',
+                                   verticalAlign = 'bottom',
+                                   theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+   }
+
+ }
 
 
 
@@ -599,6 +626,7 @@ studienzahl_verlauf_single <- function(r) {
   indi_selct <- r$studienzahl_einstieg_verlauf_indi
   timerange <- r$date_studienzahl_einstieg_verlauf
   t  <- as.character(timerange[1]:timerange[2])
+  regio <- r$region_studienzahl_einstieg_verlauf
 
   abs_zahlen_selector <- r$abs_zahlen_einstieg_verlauf_indi
 
@@ -607,7 +635,7 @@ studienzahl_verlauf_single <- function(r) {
   df <- dplyr::tbl(con, from = "studierende") %>%
     dplyr::filter(jahr %in% t,
                   geschlecht == "Gesamt",
-                  region== "Deutschland")%>%
+                  region == regio)%>%
     dplyr::select( -region)%>%
     dplyr::collect()
 
