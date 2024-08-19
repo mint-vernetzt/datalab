@@ -63,15 +63,29 @@ mod_schule_kurse_einstieg_comparison_ui <- function(id){
                                    "Oberstufenbelegungen"),
                        selected = "Leistungskurse",
                        multiple = FALSE
-                     )
+                     ),
+
+                     br(),
+                     shinyBS::bsPopover(id="ih_schule_mint_2", title="",
+                                        content = paste0("In der ersten Einstellung ist zu sehen, dass im Jahr 2022 in Deutschland 33 % aller gewählten Leistungskurse aus dem Bereich MINT sind."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_2")
 
     ),
 
-    br(),
-    shinyBS::bsPopover(id="ih_schule_mint_2", title="",
-                       content = paste0("In der ersten Einstellung ist zu sehen, dass im Jahr 2021 in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2021 bei 33 %."),
-                       trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_2")
+    conditionalPanel(condition = "input.ansicht_kurse_einstieg_comparison ==
+                     'Gruppenvergleich - Balkendiagramm'",
+                     ns = ns,
+
+                     br(),
+                     shinyBS::bsPopover(id="ih_schule_mint_2b", title="",
+                                        content = paste0("In der ersten Einstellung ist zu sehen, dass im Jahr 2022 in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2022 bei 33 %."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_2b")
+    )
+
+
+
   )
 }
 
