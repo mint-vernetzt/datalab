@@ -36,7 +36,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                      ns = ns,
       shinyWidgets::pickerInput(
         inputId = ns("bl_f_lehr"),
-        choices = studi_det_ui_faecher(0),
+        choices = studi_det_ui_faecher(spezif_i ='Studierende (Lehramt)'),
 
         selected = "Alle MINT-Fächer"
       )),
