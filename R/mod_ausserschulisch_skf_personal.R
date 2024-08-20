@@ -32,6 +32,13 @@ mod_ausserschulisch_skf_personal_ui <- function(id){
       multiple = FALSE
 
     ),
+
+    br(),
+    shinyBS::bsPopover(id="sfk_pop2", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "sfk_pop2"),
+    br(),
     br(),
     shinyBS::bsPopover(id="ih_schule_ausserschulisch_2", title="",
                        content = paste0("Diese Darstellung zeigt, wie viele Lehrkräfte an SKf-Fortbildungen zur MINT-Bildung teilgenommen haben. Bis zum Jahr 2022 wurden bereits insgesamt 86.000 Fach- und Lehrkräfte an Kitas, Horten und Grundschulen durch SKf fortgebildet. Allerdings nehmen seit 2019 immer weniger Personen neu an Fortbildungen teil."),

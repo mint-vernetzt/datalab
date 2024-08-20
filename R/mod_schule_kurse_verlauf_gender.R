@@ -27,6 +27,8 @@ mod_schule_kurse_verlauf_gender_ui <- function(id){
    #   label = "Region:",
    label = NULL,
       choices = c("Deutschland",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)",
                   "Baden-Württemberg",
                   "Bayern",
                   "Berlin",
@@ -42,9 +44,7 @@ mod_schule_kurse_verlauf_gender_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
-                  "Westdeutschland (o. Berlin)",
-                  "Ostdeutschland (inkl. Berlin)"
+                  "Thüringen"
       ),
       multiple = FALSE,
       selected = c("Deutschland")
@@ -56,7 +56,20 @@ mod_schule_kurse_verlauf_gender_ui <- function(id){
      justified = TRUE,
      checkIcon = list(yes = icon("ok",
                                  lib = "glyphicon"))
-   )
+   ),
+
+   br(),
+   shinyBS::bsPopover(id="popoverbox3_1", title="",
+                      content = paste0("Die erste Darstellung zeigt z.B., dass deutschlandweit der Mädchenanteil an den MINT-Grundkursen in der Oberstufe grundsätzlich höher ist als an den MINT-Leistungskursen."),
+                      trigger = "hover"),
+   tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="popoverbox3_1"),
+   br(),
+   br(),
+   shinyBS::bsPopover(id="popoverdarstellung_1", title = "",
+                      content = paste0("Falls die Grafik abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                      trigger = "hover"),
+   tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "popoverdarstellung_1"),
+   br()
 
   )
 

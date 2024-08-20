@@ -35,6 +35,8 @@ mod_schule_kurse_multiple_mint_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("region_kurse_mint"),
       choices = c("Deutschland",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)",
                   "Baden-Württemberg",
                   "Bayern",
                   "Berlin",
@@ -50,9 +52,7 @@ mod_schule_kurse_multiple_mint_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
-                  "Westdeutschland (o. Berlin)",
-                  "Ostdeutschland (inkl. Berlin)"
+                  "Thüringen"
       ),
       multiple = F,
       selected = "Deutschland"
@@ -65,13 +65,31 @@ mod_schule_kurse_multiple_mint_ui <- function(id){
           inputId = ns("ebene_kurse_mint"),
           choices = c("MINT-Fachbereiche", "MINT-Fächer"),
           selected = "MINT-Fachbereiche"
-        )
+        ),
+        br(),
+        shinyBS::bsPopover(id="ih_schule_mint_1", title="",
+                           content = paste0("In der ersten Einstellung (d.h. Kursniveau = &quotLeistungskurs&quot, Region = &quotDeutschland&quot, Fächer-Ebene = &quotMINT-Fachbereiche&quot) ist zu sehen, dass z.B. von allen Leistungskursbelegungen nur 1% dem Fach Informatik entspricht. Weitere 16% sind naturwissenschaftliche Fächer (z.B. Physik)."),
+                           trigger = "hover"),
+        tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_1")
       ),
+
+    conditionalPanel(condition = "input.ansicht_kurse_mint == 'Gruppenvergleich - Balkendiagramm'
+                     ",
+                     ns = ns,
+                     br(),
+                     shinyBS::bsPopover(id="balken_mint_1", title="",
+                                        content = paste0("In der ersten Einstellung erkennt man, dass MINT-Fächer in Deutschland insgesamt 33% aller Leistungskursbelegungen ausmachen. Davon entfallen 17 Prozentpunkte auf die Mathematik, 1 Prozentpunkt auf die Informatik, etc."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="balken_mint_1")
+    ),
+
+
     br(),
-    shinyBS::bsPopover(id="ih_schule_mint_1", title="",
-                       content = paste0("In der ersten Einstellung ist zu sehen, dass im Jahr 2021 in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2021 bei 33 %. Außerdem sieht man, welche MINT-Fächer dabei einen wie großen Teil ausmachen."),
+    shinyBS::bsPopover(id="popover_darstellung1", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                        trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_1")
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "popover_darstellung1"),
+    br()
 
   )
 }

@@ -27,7 +27,14 @@ mod_schule_kurse_mint_map_ui <- function(id){
                        label = NULL,
                        choices = 2013:2022,
                        selected = 2022
-                       )
+                       ),
+
+                     br(),
+                     shinyBS::bsPopover(id="box1_neu", title="",
+                                        content = paste0("In der ersten Einstellung ist zu sehen, dass der Anteil von MINT-Fächern an den Grundkursbelegung mit 29 % in Sachsen deutschlandweit am höchsten ist. Bei den Leistungskursen ist der Anteil der MINT-Fächer in Sachsen-Anhalt mit 50 % am höchsten. Die Vergleiche zwischen den Bundesländern sind jedoch schwierig, da die Regelungen für die Wahl der Kurse in den Bundesländern sehr unterschiedlich sind."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="box1_neu")
+
                      ),
     conditionalPanel(condition = "input.ansicht_mint_map == 'Zeitverlauf - Liniendiagramm'",
                      ns = ns,
@@ -48,6 +55,8 @@ mod_schule_kurse_mint_map_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("states_kurse_verlauf_mint"),
                        choices = c("Deutschland",
+                                   "Westdeutschland (o. Berlin)",
+                                   "Ostdeutschland (inkl. Berlin)",
                                    "Baden-Württemberg",
                                    "Bayern",
                                    "Berlin",
@@ -63,9 +72,7 @@ mod_schule_kurse_mint_map_ui <- function(id){
                                    "Sachsen",
                                    "Sachsen-Anhalt",
                                    "Schleswig-Holstein",
-                                   "Thüringen",
-                                   "Westdeutschland (o. Berlin)",
-                                   "Ostdeutschland (inkl. Berlin)"
+                                   "Thüringen"
                        ),
                        multiple = TRUE,
                        options = list(`actions-box` = TRUE,
@@ -81,19 +88,21 @@ mod_schule_kurse_mint_map_ui <- function(id){
                        checkIcon = list(yes = icon("ok",
                                                    lib = "glyphicon"))
                      ),
+
+                     br(),
+                     shinyBS::bsPopover(id="ih_schule_fach_1b", title="",
+                                        content = paste0("In der ersten Einstellung ist zu sehen, dass z.B. Hamburg im Jahr 2016 deutlich unter Hessen liegt im Bezug auf den Anteil der MINT-Fächer an den Leistungskursbelegungen (25% Hamburg, 41% Hessen). Dieser Trend setzt sich in den folgenden Jahren so fort. Die Vergleiche zwischen den Staaten sind aufgrund der föderalen Bildungspolitik der Länder jedoch noch schwierig zu vergleichen, da jedes Bundesland andere und besondere Regelungen in der Fächerbelegung hat. "),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_1b")
+
     ),
 
     br(),
-    shinyBS::bsPopover(id="dh_schule_fach_1b", title = "",
+    shinyBS::bsPopover(id="dh_schule_fach_neu2", title = "",
                        content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                        trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_schule_fach_1b"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_schule_fach_neu2"),
     br(),
-    br(),
-    shinyBS::bsPopover(id="ih_schule_fach_1b", title="",
-                       content = paste0("In der ersten Einstellung ist zu sehen, dass der Anteil von MINT-Fächern an den Grundkursbelegung mit 29 % in Sachsen deutschlandweit am höchsten ist. Bei den Leistungskursen ist der Anteil der MINT-Fächer in Sachsen-Anhalt mit 50 % am höchsten. Die Vergleiche zwischen den Bundesländern sind jedoch schwierig, da die Regelungen für die Wahl der Kurse in den Bundesländern sehr unterschiedlich sind."),
-                       trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_1b")
 
   )
 }

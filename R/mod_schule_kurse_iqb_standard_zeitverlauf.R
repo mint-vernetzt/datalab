@@ -82,7 +82,14 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
                          "max-options-text" = "Maximal 3 Bundesländer auswählen")
                      )
     ),
-      br(),
+
+    br(),
+    shinyBS::bsPopover(id="leistungsschwache_schueler1", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "leistungsschwache_schueler1"),
+    br(),
+    br(),
     shinyBS::bsPopover(id="ih_schule_kompetenzen_1", title="",
                        content = paste0("Betrachtet man Deutschland zeigt sich: Während 2011 noch 11.9 % der Schüler:innen die Mindestanforderung im Mathematik-Kompetenztest nicht erfüllen, hat 2021 ein fast doppelt so großer Anteil an Schüler:innen wichtige Grundkenntnisse in Mathe nicht mehr (21.8 % Mindesstandard nicht erreicht)."),
                        trigger = "hover"),

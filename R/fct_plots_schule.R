@@ -390,7 +390,7 @@ kurse_einstieg_comparison <- function(r) {
 
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg_comparison
-  regio <- r$region_kurse_einstieg_comparsion
+  regio <- r$region_kurse_einstieg_comparison
   betrachtung <- r$ansicht_kurse_einstieg_comparison
 
   # filter dataset based on UI inputs

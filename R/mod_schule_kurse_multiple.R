@@ -23,8 +23,25 @@ mod_schule_kurse_multiple_ui <- function(id){
       inputId = ns("date_kurse"),
       label = NULL,
       choices = 2013:2022,
-      selected = 2022
+      selected = 2021
     ),
+
+    p("Kursniveau:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("indikator_kurse_gender"),
+      choices = c("Grundkurse", "Leistungskurse", "Oberstufenbelegungen"),
+      selected = "Grundkurse"
+    ),
+    p("Kurswahl der Jungen als Vergleich anzeigen?", style = "color: #b16fab;"),
+    shinyWidgets::radioGroupButtons(
+      inputId = ns("gegenwert_kurse_gender"),
+      choices = c("Ja", "Nein"),
+      selected = "Nein",
+      justified = TRUE,
+      checkIcon = list(yes = icon("ok",
+                                  lib = "glyphicon"))
+    ),
+
     conditionalPanel(condition = "input.ansicht_kurse_gender == 'Einzelansicht - Kuchendiagramm'",
                      ns = ns,
 
@@ -32,6 +49,8 @@ mod_schule_kurse_multiple_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("region_kurse_gender"),
       choices = c("Deutschland",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)",
                   "Baden-Württemberg",
                   "Bayern",
                   "Berlin",
@@ -47,13 +66,20 @@ mod_schule_kurse_multiple_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
-                  "Westdeutschland (o. Berlin)",
-                  "Ostdeutschland (inkl. Berlin)"
+                  "Thüringen"
       ),
       multiple = F,
       selected = "Deutschland"
-    )
+    ),
+
+    br(),
+    shinyBS::bsPopover(id="ih_schule_mint_4", title="",
+                       content = paste0("In der Grafik ist zu lesen, dass 2021 deutschlandweit sowohl für Mädchen wie Jungen 24 von 100 Grundkursbelegungen in einem MINT-Fach sind. Unterschiede sieht man in den Leistungskursen. 29 von 100 Leistungskursbelegungen von Mädchen, aber 38 % der Leistungskursbelegungen von Jungen sind in einem MINT-Fach."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_4"),
+
+    br()
+
     ),
     conditionalPanel(
       condition = "input.ansicht_kurse_gender == 'Bundeslandvergleich - Kartendiagramm'",
@@ -75,28 +101,23 @@ mod_schule_kurse_multiple_ui <- function(id){
                      "Religion/Ethik",
                      "Sport"),
          selected = "MINT-Fächer (gesamt)"
-       )
+       ),
+
+      br(),
+      shinyBS::bsPopover(id="ih_schule_mint_5", title="",
+                         content = paste0("In dieser Grafik ist in der ersten Einstellung zu sehen, wie viele Mädchen in der Oberstufe einen Grundkurs in MINT wählen, aufgeschlüsselt nach Bundesländern. Ein direkter Vergleich zwischen den Bundesländern ist allerdings schwierig, da eingie Länder Besonderheiten in der Fächerwahl aufweisen."),
+                         trigger = "hover"),
+      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_5"),
+      br(),
+
     ),
-    p("Kursniveau:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("indikator_kurse_gender"),
-      choices = c("Grundkurse", "Leistungskurse", "Oberstufenbelegungen"),
-      selected = "Grundkurse"
-    ),
-    p("Kurswahl der Jungen als Vergleich anzeigen?", style = "color: #b16fab;"),
-    shinyWidgets::radioGroupButtons(
-      inputId = ns("gegenwert_kurse_gender"),
-      choices = c("Ja", "Nein"),
-      selected = "Nein",
-      justified = TRUE,
-      checkIcon = list(yes = icon("ok",
-                                  lib = "glyphicon"))
-    ),
+
     br(),
-    shinyBS::bsPopover(id="ih_schule_mint_4", title="",
-                       content = paste0("In der Grafik ist zu lesen, dass 2021 deutschlandweit sowohl für Mädchen wie Jungen 24 von 100 Grundkursbelegungen in einem MINT-Fach sind. Unterschiede sieht man in den Leistungskursen. 29 von 100 Leistungskursbelegungen von Mädchen, aber 38 % der Leistungskursbelegungen von Jungen sind in einem MINT-Fach."),
+    shinyBS::bsPopover(id="popoverdarstellung_3", title = "",
+                       content = paste0("Falls die Grafik abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                        trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_4")
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "popoverdarstellung_3"),
+    br()
   )
 }
 

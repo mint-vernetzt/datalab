@@ -30,6 +30,8 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf_subject_bl"),
       choices = c("Deutschland",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)",
                   "Baden-Württemberg",
                   "Bayern",
                   "Berlin",
@@ -46,9 +48,6 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen"
-                  ,
-                  "Westdeutschland (o. Berlin)",
-                  "Ostdeutschland (inkl. Berlin)"
       ),
       selected = "Deutschland"
     ),
@@ -77,10 +76,18 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_schule_fach_3", title="",
-                       content = paste0("Wählt man für die Grafik beispielsweise die einzelnen MINT-Fächer und als Kursart &quotLeistungskurs&quot, sieht man, dass in Brandenbrug Mathe und Biologie den Großteil der Leistungskursbelegungen in MINT ausmachen. Seit 2018 gingen die Leistungskursbelegungen in Mathe allerdings um 6 Prozentpunkte zurück."),
+                       content = paste0("In dieser Grafik ist bei den voreingestellten Kategorien (Kursart = &quotGrundkurs&quot, Region = &quotDeutschland&quot, Fächer/Fächergruppen = &quotMathematik&quot etc., Betrachung = &quotProzent&quot) zu sehen, dass z.B. im Jahr 2022 die Mathematik mit 8% den größten Anteil an den Grundkursbelegungen hat."),
                        placement = "top",
                        trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_3")
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_3"),
+
+    br(),
+    br(),
+    shinyBS::bsPopover(id="popover_darstellung2", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "popover_darstellung2"),
+    br()
   )
 
 }

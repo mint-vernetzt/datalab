@@ -27,8 +27,10 @@ mod_schule_kurse_einstieg_comparison_ui <- function(id){
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
-      inputId = ns("region_kurse_einstieg_comparsion"),
+      inputId = ns("region_kurse_einstieg_comparison"),
       choices = c("Deutschland",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)",
                   "Baden-Württemberg",
                   "Bayern",
                   "Berlin",
@@ -44,9 +46,7 @@ mod_schule_kurse_einstieg_comparison_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen",
-                  "Westdeutschland (o. Berlin)",
-                  "Ostdeutschland (inkl. Berlin)"
+                  "Thüringen"
       ),
       multiple = FALSE,
       selected = c("Deutschland")
@@ -82,9 +82,14 @@ mod_schule_kurse_einstieg_comparison_ui <- function(id){
                                         content = paste0("In der ersten Einstellung ist zu sehen, dass im Jahr 2022 in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2022 bei 33 %."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_2b")
-    )
+    ),
 
-
+    br(),
+    shinyBS::bsPopover(id="dh_schule_fach_1b", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_schule_fach_1b"),
+    br()
 
   )
 }
@@ -103,8 +108,8 @@ mod_schule_kurse_einstieg_comparison_server <- function(id, r){
       r$date_kurse_einstieg_comparison <- input$date_kurse_einstieg_comparison
     })
 
-    observeEvent(input$region_kurse_einstieg_comparsion, {
-      r$region_kurse_einstieg_comparsion <- input$region_kurse_einstieg_comparsion
+    observeEvent(input$region_kurse_einstieg_comparison, {
+      r$region_kurse_einstieg_comparison <- input$region_kurse_einstieg_comparison
     })
 
     observeEvent(input$indikator_kurse_einstieg_comparison, {
