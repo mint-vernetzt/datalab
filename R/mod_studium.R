@@ -32,8 +32,9 @@ mod_studium_server <- function(id,
   # Box 2
   #mod_studium_studienzahl_einstieg_server("mod_studium_studienzahl_einstieg_ui_1", r)
   mod_studium_studienzahl_einstieg_verlauf_server("mod_studium_studienzahl_einstieg_verlauf_ui_1", r)
-  mod_studium_studienzahl_einstieg_comparison_server("mod_studium_studienzahl_einstieg_comparison_ui_1", r)
-  mod_studium_studienzahl_test_server("mod_studium_studienzahl_test_ui_1",  r)
+  #mod_studium_studienzahl_einstieg_comparison_server("mod_studium_studienzahl_einstieg_comparison_ui_1", r)
+  mod_studium_studienzahl_anteil_server("mod_studium_studienzahl_anteil_ui_1",  r)
+  mod_studium_studienzahl_bundeslandvergleich_server("mod_studium_studienzahl_bundeslandvergleich_ui_1", r)
 
 
   # Box 3
