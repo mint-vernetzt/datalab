@@ -810,7 +810,7 @@ kurse_mint_map <- function(r) {
       value = "proportion",
       joinBy = c("name", "region"),
       borderColor = "#FAFAFA",
-      # name = paste0(subjects),
+      name = paste0("MINT-Anteil"),
       borderWidth = 0.1,
       nullColor = "#A9A9A9",
       tooltip = list(
