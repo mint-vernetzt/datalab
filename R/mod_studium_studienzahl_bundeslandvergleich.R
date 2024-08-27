@@ -14,12 +14,12 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
     shiny::radioButtons(
       inputId = ns("ansicht_studium_bulas"),
       label = NULL,
-      choices = c("Einzelansicht - Kuchendiagramm", "Zeitverlauf - Liniendiagramm",
+      choices = c("Übersicht - Kartendiagramm", "Zeitverlauf - Liniendiagramm",
                   "Gruppenvergleich - Balkendiagramm"),
-      selected = "Einzelansicht - Kuchendiagramm"
+      selected = "Übersicht - Kartendiagramm"
     ),
 
-    conditionalPanel(condition = "input.ansicht_studium_bulas == 'Einzelansicht - Kuchendiagramm'",
+    conditionalPanel(condition = "input.ansicht_studium_bulas == 'Übersicht - Kartendiagramm'",
                      ns = ns,
 
                      p("Jahr:"),
@@ -33,10 +33,10 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("bulas_map_l"),
-                       choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
+                       choices = c("internationale Studienanfänger:innen (1. Hochschulsemester)",
                                    "Studienanfänger:innen (1. Fachsemester)",
                                    "Studierende",
-                                   "Internationale Studierende",
+                                   "internationale Studierende",
                                    "Studierende (Lehramt)"
 
                        ),
@@ -55,11 +55,10 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_fach_2"),
                      br(),
                      br(),
-                     shinyBS::bsPopover(id="ih_studium_fach_2", title="",
-                                        content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
-                                        placement = "top",
+                     shinyBS::bsPopover(id="ih_studium_fach_2neu", title="",
+                                        content = paste0("Die Karte in der ersten Einstellung zeigt: Während Sachsen mit über 41 % MINT-Studierende den höchsten MINT-Anteil im Bundeslandvergleich hat, studieren im Nachbarland Thüringen nur 24 % aller Studierenden ein MINT-Fach."),
                                         trigger = "hover"),
-                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_2")
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_2neu")
     ),
 
     conditionalPanel(condition = "input.ansicht_studium_bulas == 'Zeitverlauf - Liniendiagramm'",
@@ -156,10 +155,10 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("bulas_balken_l"),
-                       choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
+                       choices = c("internationale Studienanfänger:innen (1. Hochschulsemester)",
                                    "Studienanfänger:innen (1. Fachsemester)",
                                    "Studierende",
-                                   "Internationale Studierende",
+                                   "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
                                    "Studierende (Lehramt)"
                        ),
@@ -167,7 +166,7 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
 
                      br(),
                      shinyBS::bsPopover(id="ih_studium_fach_5", title="",
-                                        content = paste0("Die Übersicht zeigt, dass der Anteil von Studierenden in MINT an allen Studierenden zwischen den Bundesländern zwischen 24 % (Thüringen, Saarland) und 42 % (Sachsen) liegt."),
+                                        content = paste0("Die Übersicht zeigt, dass der Anteil von Studierenden in MINT an allen Studierenden in den Bundesländern 2022 zwischen 24 % (Thüringen) und 42 % (Sachsen) liegt."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_5")

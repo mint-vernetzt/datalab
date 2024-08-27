@@ -30,6 +30,7 @@ mod_studium_server <- function(id,
                                  r)
 
   # Box 2
+  mod_studium_studienzahl_mint_fach_server("mod_studium_studienzahl_mint_fach_ui_1", r)
   #mod_studium_studienzahl_einstieg_server("mod_studium_studienzahl_einstieg_ui_1", r)
   mod_studium_studienzahl_einstieg_verlauf_server("mod_studium_studienzahl_einstieg_verlauf_ui_1", r)
   #mod_studium_studienzahl_einstieg_comparison_server("mod_studium_studienzahl_einstieg_comparison_ui_1", r)

@@ -37,15 +37,16 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
                   "Ostdeutschland (inkl. Berlin)",
                   "Westdeutschland (o. Berlin)"
       ),
-      selected = "Nordrhein-Westfalen"
+      selected = "Deutschland"
     ),
 
     p("Fächer-Ebene:"),
     shinyWidgets::pickerInput(
       inputId = ns("anteile_order"),
-      choices = c("MINT-Fächer", "MINT-Aggregate"),
+      choices = c("MINT-Fächergruppen",
+                  "MINT-Fachbereiche"),
       multiple = FALSE,
-      selected = "MINT-Fächer"
+      selected = "MINT-Fachbereiche"
     ),
 
     br(),
