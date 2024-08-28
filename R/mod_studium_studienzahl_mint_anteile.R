@@ -4,11 +4,10 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
     p("Auswahl des Indikators:"),
     shinyWidgets::pickerInput(
       inputId = ns("anteile_indi"),
-      choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
+      choices = c("internationale Studienanfänger:innen (1. Hochschulsemester)",
                   "Studienanfänger:innen (1. Fachsemester)",
                   "Studierende",
-                  "Internationale Studierende",
-                  "Studienanfänger:innen (1. Hochschulsemester)",
+                  "internationale Studierende",
                   "Studierende (Lehramt)"
       ),
       selected = "Studierende"),

@@ -29,14 +29,17 @@ mod_studium_server <- function(id,
   mod_studium_studienzahl_server("mod_studium_studienzahl_ui_1",
                                  r)
 
-  # Box 2
-  mod_studium_studienzahl_mint_fach_server("mod_studium_studienzahl_mint_fach_ui_1", r)
+  # Box 1
   #mod_studium_studienzahl_einstieg_server("mod_studium_studienzahl_einstieg_ui_1", r)
   mod_studium_studienzahl_einstieg_verlauf_server("mod_studium_studienzahl_einstieg_verlauf_ui_1", r)
   #mod_studium_studienzahl_einstieg_comparison_server("mod_studium_studienzahl_einstieg_comparison_ui_1", r)
   mod_studium_studienzahl_anteil_server("mod_studium_studienzahl_anteil_ui_1",  r)
   mod_studium_studienzahl_bundeslandvergleich_server("mod_studium_studienzahl_bundeslandvergleich_ui_1", r)
 
+
+  # Box 2
+  mod_studium_studienzahl_mint_fach_server("mod_studium_studienzahl_mint_fach_ui_1", r)
+  mod_studium_studienzahl_bulas_faecher_server("mod_studium_studienzahl_bulas_faecher_ui_1", r)
 
   # Box 3
   mod_studium_studienzahl_einstieg_gender_server("mod_studium_studienzahl_einstieg_gender_ui_1", r)

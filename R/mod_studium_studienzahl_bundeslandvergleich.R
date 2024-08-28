@@ -164,9 +164,10 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                        ),
                        selected = "Studierende"),
 
+
                      br(),
                      shinyBS::bsPopover(id="ih_studium_fach_5", title="",
-                                        content = paste0("Die Übersicht zeigt, dass der Anteil von Studierenden in MINT an allen Studierenden in den Bundesländern 2022 zwischen 24 % (Thüringen) und 42 % (Sachsen) liegt."),
+                                        content = paste0("Die Übersicht zeigt, dass der Anteil von Studierenden in MINT an allen Studierenden zwischen den Bundesländern zwischen 24 % (Thüringen, Saarland) und 42 % (Sachsen) liegt."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_5")
