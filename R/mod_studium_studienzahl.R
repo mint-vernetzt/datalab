@@ -650,7 +650,7 @@ mod_studium_studienzahl_ui <- function(id){
                            ),
                            shiny::mainPanel(
                              width = 9,
-                             shinycssloaders::withSpinner(plotOutput(ns("plot_waffle_choice_gender")),
+                             shinycssloaders::withSpinner(htmlOutput(ns("plot_choice_gender")),
                                                           color = "#154194"),
 
                              p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -1008,13 +1008,8 @@ mod_studium_studienzahl_server <- function(id, r){
       }
     )
 
-    ## Waffle Gender
-    plot_waffle_choice_gender_react <- reactive({
-      studienzahl_waffle_choice_gender(r)
-    })
-
-    output$plot_waffle_choice_gender <- renderPlot({
-      plot_waffle_choice_gender_react()
+    output$plot_choice_gender <- renderUI({
+      studienzahl_choice_gender(r)
     })
 
     ## Zeitverlauf Gender
