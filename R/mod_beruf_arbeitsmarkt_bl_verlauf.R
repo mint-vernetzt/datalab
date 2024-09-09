@@ -1,4 +1,4 @@
-#' beruf_arbeitsmarkt_bl_verlauf UI Function
+#' beruf_arbeitsmarkt_mint_bula UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,27 +7,67 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
+mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
   ns <- NS(id)
   tagList(
+    p("Betrachtungsart:"),
+    shiny::radioButtons(
+      inputId = ns("ansicht_beruf_mint_bula"),
+      label = NULL,
+      choices = c("Übersicht - Kartendiagramm", "Zeitverlauf - Liniendiagramm",
+                  "Gruppenvergleich - Balkendiagramm"),
+      selected = "Übersicht - Kartendiagramm"
+    ),
 
+
+    conditionalPanel(condition = "input.ansicht_beruf_mint_bula == 'Übersicht - Kartendiagramm'",
+                     ns = ns,
+                     p("Auswahl des Jahres:"),
+                     shinyWidgets::sliderTextInput(
+                       inputId = ns("zeit_beruf_mint_bula_karte"),
+                       label = NULL,
+                       choices = c(2021, 2022),
+                       selected = 2022
+                     ),
+                     p("Beschäftigtengruppe:"),
+                     shinyWidgets::pickerInput(
+                       inputId = ns("indikator_beruf_mint_bula_karte"),
+                       choices = c("Auszubildende",
+                                   "Beschäftigte"),
+                       # justified = TRUE,
+                       # checkIcon = list(yes = icon("ok",
+                       #                             lib = "glyphicon")),
+                       selected= "Beschäftigte",
+                     ),
+                     br(),
+                     shinyBS::bsPopover(id="dh_beruf_mint_bula_1", title = "",
+                                        content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_beruf_mint_bula_1"),
+
+                     br(),
+                     br(),
+                     shinyBS::bsPopover(id="ih_beruf_mint_bula_1", title="",
+                                        content = paste0("Die Karten in der ersten Einstellung zeigen beispielsweise, dass 2022 der Anteil an Auszubildenden und Beschäftigten in Technik von allen Bundesländern in Berlin am geringsten ausfällt. In Thüringen lernt dagegen rund ein Drittel der Auszubildenden im Bereich Technik. Den höchsten Anteil an Beschäftigten in Technik weist noch knapp vor Thüringen Baden-Württemberg auf (21,7 %)."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_bula_1")
+
+    ),
+
+    conditionalPanel(condition = "input.ansicht_beruf_mint_bula == 'Zeitverlauf - Liniendiagramm'",
+                     ns = ns,
     p("Jahre:"),
     shinyWidgets::sliderTextInput(
-      inputId = ns("date_beruf_arbeitsmarkt_bl_verlauf"),
+      inputId = ns("zeit_beruf_mint_bula_verlauf"),
       label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021", "2022"),
-      selected = c("2017", "2022")
+      choices = 2013:2022,
+      selected = c(2017, 2022)
     ),
-    p("Beschäftigungsform"),
+    p("Beschäftigtengruppe:"),
     shinyWidgets::pickerInput(
-      inputId = ns("niveau"),
-      choices = c(
-                   "Auszubildende",
-
-                   "Beschäftigte"
-
-                   ),
+      inputId = ns("indikator_beruf_mint_bula_verlauf"),
+      choices = c("Auszubildende",
+                   "Beschäftigte"),
       # justified = TRUE,
       # checkIcon = list(yes = icon("ok",
       #                             lib = "glyphicon")),
@@ -55,7 +95,7 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
     # ),
     p("Regionen:"),
     shinyWidgets::pickerInput(
-      inputId = ns("states_beruf_arbeitsmarkt_bl_verlauf"),
+      inputId = ns("region_beruf_mint_bula_verlauf"),
       choices = c("Deutschland",
                   "Baden-Württemberg",
                   "Bayern",
@@ -82,11 +122,10 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       selected = c("Ostdeutschland (inkl. Berlin)", "Nordrhein-Westfalen")
-
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
-      inputId = ns("abs_zahlen_4"),
+      inputId = ns("abs_beruf_mint_bula_verlauf"),
       choices = c("In Prozent", "Anzahl"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
@@ -98,41 +137,81 @@ mod_beruf_arbeitsmarkt_bl_verlauf_ui <- function(id){
                        content = paste0("Die erste Darstellung zeigt z. B., dass sich der Anteil von Beschäftigten in MINT an allen Beschäftigten deutschlandweit in den ostdeutschen Bundesländern und Nordrhein-Westfalen ählich entwickelt. Der Anteil bleibt relativ konstant und nimmt von 2020 auf 2021 um ca. einen Prozentpunkt ab."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_7")
-  )
+    ),
 
+    conditionalPanel(condition = "input.ansicht_beruf_mint_bula == 'Gruppenvergleich - Balkendiagramm'",
+                     ns = ns,
+                     p("Auswahl des Jahres:"),
+                     shinyWidgets::sliderTextInput(
+                       inputId = ns("zeit_beruf_mint_bula_balken"),
+                       label = NULL,
+                       choices = 2021:2022,
+                       selected = 2022
+                     ),
+                     p("Beschäftigtengruppe:"),
+                      shinyWidgets::pickerInput(
+                        inputId = ns("indikator_beruf_mint_bula_balken"),
+                        choices = c("Auszubildende",
+                                    "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
+                                    "Beschäftigte",
+                                    "ausländische Auszubildende",
+                                    "ausländische Beschäftigte",
+                                    "Beschäftigte 25-55",
+                                    "Beschäftigte u25",
+                                    "Beschäftigte ü55"),
+                        selected = "Beschäftigte",
+                        multiple = FALSE
+                      ),
+
+                     br(),
+                     shinyBS::bsPopover(id="ih_beruf_fach_3", title="",
+                                        content = paste0("Diese Darstellung gibt einen Überblick darürber, wie hoch der Anteil von MINT-Beschäftigten in den Bundesländern ist. Beispielsweise sind 2022 etwa 3,5 % der Beschäftigten in Bayern im Bereich Informatik tätig. Damit liegt Bayern etwas über dem gesamtdeutschen Durchschnitt von knapp 3 %."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_3")
+    )
+  )
 }
 
 #' beruf_arbeitsmarkt_bl_verlauf Server Functions
 #'
 #' @noRd
-mod_beruf_arbeitsmarkt_bl_verlauf_server <- function(id, r){
+mod_beruf_arbeitsmarkt_mint_bula_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$pick_i, {
-      r$pick_i <- input$pick_i
+    observeEvent(input$ansicht_beruf_mint_bula, {
+      r$ansicht_beruf_mint_bula <- input$ansicht_beruf_mint_bula
     })
 
-    observeEvent(input$niveau, {
-      r$niveau <- input$niveau
+    observeEvent(input$zeit_beruf_mint_bula_karte, {
+      r$zeit_beruf_mint_bula_karte <- input$zeit_beruf_mint_bula_karte
     })
 
-    observeEvent(input$abs_zahlen_4, {
-      r$abs_zahlen_4 <- input$abs_zahlen_4
+    observeEvent(input$indikator_beruf_mint_bula_karte, {
+      r$indikator_beruf_mint_bula_karte <- input$indikator_beruf_mint_bula_karte
     })
 
-    # observeEvent(input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf, {
-    #   r$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf <- input$anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf
-    # }) kab
-
-    observeEvent(input$states_beruf_arbeitsmarkt_bl_verlauf, {
-      r$states_beruf_arbeitsmarkt_bl_verlauf <- input$states_beruf_arbeitsmarkt_bl_verlauf
+    observeEvent(input$zeit_beruf_mint_bula_verlauf, {
+      r$zeit_beruf_mint_bula_verlauf <- input$zeit_beruf_mint_bula_verlauf
     })
 
-    observeEvent(input$date_beruf_arbeitsmarkt_bl_verlauf, {
-      r$date_beruf_arbeitsmarkt_bl_verlauf <- input$date_beruf_arbeitsmarkt_bl_verlauf
+    observeEvent(input$indikator_beruf_mint_bula_verlauf, {
+      r$indikator_beruf_mint_bula_verlauf <- input$indikator_beruf_mint_bula_verlauf
+    })
+    observeEvent(input$region_beruf_mint_bula_verlauf, {
+      r$region_beruf_mint_bula_verlauf <- input$region_beruf_mint_bula_verlauf
     })
 
+    observeEvent(input$abs_beruf_mint_bula_verlauf, {
+      r$abs_beruf_mint_bula_verlauf <- input$abs_beruf_mint_bula_verlauf
+    })
 
+    observeEvent(input$zeit_beruf_mint_bula_balken, {
+      r$zeit_beruf_mint_bula_balken <- input$zeit_beruf_mint_bula_balken
+    })
+
+    observeEvent(input$indikator_beruf_mint_bula_balken, {
+      r$indikator_beruf_mint_bula_balken <- input$indikator_beruf_mint_bula_balken
+    })
 
   })
 }

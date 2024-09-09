@@ -14,9 +14,34 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_einstieg_verlauf"),
       label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021", "2022"),
-      selected = c("2017", "2022")
+      choices = 2013:2022,
+      selected = c(2017, 2022)
+    ),
+    p("Region:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("region_arbeitsmarkt_einstieg_verlauf"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = FALSE,
+      selected = c("Deutschland")
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
@@ -44,6 +69,10 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_server <- function(id, r){
 
     observeEvent(input$date_arbeitsmarkt_einstieg_verlauf, {
       r$date_arbeitsmarkt_einstieg_verlauf <- input$date_arbeitsmarkt_einstieg_verlauf
+    })
+
+    observeEvent(input$region_arbeitsmarkt_einstieg_verlauf, {
+      r$region_arbeitsmarkt_einstieg_verlauf <- input$region_arbeitsmarkt_einstieg_verlauf
     })
 
     observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_verlauf, {

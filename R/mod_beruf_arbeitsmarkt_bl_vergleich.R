@@ -15,8 +15,8 @@ mod_beruf_arbeitsmarkt_bl_vergleich_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_bl_vergl"),
       label = NULL,
-      choices = c( "2021", "2022"),
-      selected = "2022"
+      choices = 2021:2022,
+      selected = 2022
     ),
     p("Beschäftigungsform:"),
     conditionalPanel(condition = "input.date_bl_vergl == '2022'",
