@@ -270,7 +270,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotOutput(ns("plot_arbeitsmarkt_waffle")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_faecher_anteil")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", br(),
@@ -767,15 +767,18 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     ns <- session$ns
 
     # Box 1 ----
-    # Tab 1
-    plot_arbeitsmarkt_waffle_react <- reactive({
-      arbeitsmarkt_anforderungen(r)
+    # Tab
+    output$plot_arbeitsmarkt_faecher_anteil <- renderUI({
+      arbeitsmarkt_faecher_anteil(r)
     })
-
-
-    output$plot_arbeitsmarkt_waffle <- renderPlot({
-      plot_arbeitsmarkt_waffle_react()
-    })
+    # plot_arbeitsmarkt_waffle_react <- reactive({
+    #   arbeitsmarkt_anforderungen(r)
+    # })
+    #
+    #
+    # output$plot_arbeitsmarkt_waffle <- renderPlot({
+    #   plot_arbeitsmarkt_waffle_react()
+    # })
 
     # Tab 2
 
@@ -946,7 +949,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Tab 7
 
-    output$plot_beruf_arbeitsmarkt_mint_bulas <- highcharter::renderHighchart({
+    output$plot_beruf_arbeitsmarkt_mint_bulas <- renderUI({
       arbeitsmarkt_mint_bulas(r)
     })
 

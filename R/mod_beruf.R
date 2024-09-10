@@ -52,7 +52,7 @@ mod_beruf_server <- function(id,
 
   # Box 6
   mod_beruf_arbeitsmarkt_bl_server("mod_beruf_arbeitsmarkt_bl_ui_1", r)
-  mod_beruf_arbeitsmarkt_mint_bula_server("mod_beruf_arbeitsmarkt_mint_bula_ui", r)
+  mod_beruf_arbeitsmarkt_mint_bula_server("mod_beruf_arbeitsmarkt_mint_bula_ui_1", r)
   mod_beruf_arbeitsmarkt_bl_vergleich_server("beruf_arbeitsmarkt_bl_vergleich_ui_1", r)
   mod_beruf_arbeitsmarkt_top10_server("mod_beruf_arbeitsmarkt_top10_ui_1", r)
 
