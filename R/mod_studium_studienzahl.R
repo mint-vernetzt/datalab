@@ -650,7 +650,7 @@ mod_studium_studienzahl_ui <- function(id){
                            ),
                            shiny::mainPanel(
                              width = 9,
-                             shinycssloaders::withSpinner(plotOutput(ns("plot_waffle_choice_gender")),
+                             shinycssloaders::withSpinner(htmlOutput(ns("plot_choice_gender")),
                                                           color = "#154194"),
 
                              p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -736,13 +736,13 @@ mod_studium_studienzahl_ui <- function(id){
                                     tags$head(tags$style(HTML(".small-box {height: 400px}"))),
                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_auslaender_test"), height = "650px"),
                                                                  color = "#154194"),
-                                    p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                                    shinyBS::bsPopover(id="d_studium_international_1", title = "",
-                                                       content = paste0("internationale Studierende = Studierende, die in Deutschland studieren aber keine deutsche Staatsbürgerschaft besitzen."),
-                                                       placement = "top",
-                                                       trigger = "hover"),
-                                    tags$a(paste0("Definition der Begriffe"), icon("info-circle"), id = "d_studium_international_1"),
-                                    p(),
+                                    # p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                    # shinyBS::bsPopover(id="d_studium_international_1", title = "",
+                                    #                    content = paste0("internationale Studierende = Studierende, die in Deutschland studieren aber keine deutsche Staatsbürgerschaft besitzen."),
+                                    #                    placement = "top",
+                                    #                    trigger = "hover"),
+                                    # tags$a(paste0("Definition der Begriffe"), icon("info-circle"), id = "d_studium_international_1"),
+                                    # p(),
                                     shinyBS::bsPopover(id="h_studium_international_1", title="",
                                                        content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die vorhandenen Studienfachgruppen angezeigt.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                        placement = "top",
@@ -769,13 +769,13 @@ mod_studium_studienzahl_ui <- function(id){
                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_auslaender_zeit")),
                                                                  color = "#154194"),
 
-                                    p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                                    shinyBS::bsPopover(id="d_studium_international_2", title = "",
-                                                       content = paste0("internationale Studierende = Studierende, die in deutschland studieren aber keine deutsche Staatsbürgerschaft besitzen."),
-                                                       placement = "top",
-                                                       trigger = "hover"),
-                                    tags$a(paste0("Definition der Begriffe"), icon("info-circle"), id = "d_studium_international_2"),
-                                    p(),
+                                    # p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                    # shinyBS::bsPopover(id="d_studium_international_2", title = "",
+                                    #                    content = paste0("internationale Studierende = Studierende, die in deutschland studieren aber keine deutsche Staatsbürgerschaft besitzen."),
+                                    #                    placement = "top",
+                                    #                    trigger = "hover"),
+                                    # tags$a(paste0("Definition der Begriffe"), icon("info-circle"), id = "d_studium_international_2"),
+                                    # p(),
                                     shinyBS::bsPopover(id="h_studium_international_2", title="",
                                                        content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die vorhandenen Studienfachgruppen angezeigt.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                        placement = "top",
@@ -1008,13 +1008,8 @@ mod_studium_studienzahl_server <- function(id, r){
       }
     )
 
-    ## Waffle Gender
-    plot_waffle_choice_gender_react <- reactive({
-      studienzahl_waffle_choice_gender(r)
-    })
-
-    output$plot_waffle_choice_gender <- renderPlot({
-      plot_waffle_choice_gender_react()
+    output$plot_choice_gender <- renderUI({
+      studienzahl_choice_gender(r)
     })
 
     ## Zeitverlauf Gender
