@@ -123,7 +123,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              )
                     ),
                     # Tab 2
-                    tabPanel("Zeitverlauf MINT-Anteil", br(),
+                    tabPanel("MINT-Anteil im Zeitverlauf", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -259,7 +259,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
         tabsetPanel(type = "tabs",
                     # Tab Boxen Fächer
-                    tabPanel("Vergleich Anteil MINT bei Beschäftigten und Auszubildenden", br(),
+                    tabPanel("aktueller Anteil MINT-Disziplinen", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -282,14 +282,41 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_1")
                              )
                     ),
+
                     # Übersicht Balkendiagramm
-                    tabPanel("Alle Bereiche auf einen Blick", br(),
+                    # tabPanel("Alle Bereiche auf einen Blick", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_beruf_arbeitsmarkt_überblick_fächer_ui("mod_beruf_arbeitsmarkt_überblick_fächer_ui_1"),
+                    #            # br(),br(),
+                    #            # downloadButton(
+                    #            #   outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
+                    #            #   label = "Download",
+                    #            #   icon = icon("download")),
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_überblick_fächer")),
+                    #                                         color = "#154194"),
+                    #
+                    #            p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            shinyBS::bsPopover(id = "h_beruf_fach_2", title = "",
+                    #                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
+                    #                               placement = "top",
+                    #                               trigger = "hover"),
+                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_2")
+                    #          )
+                    # ),
+                    tabPanel("MINT-Disziplinen im Zeitverlauf", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_überblick_fächer_ui("mod_beruf_arbeitsmarkt_überblick_fächer_ui_1"),
+                               mod_beruf_arbeitsmarkt_faecher_verlauf_ui("mod_beruf_arbeitsmarkt_faecher_verlauf_ui_1"),
                                # br(),br(),
                                # downloadButton(
                                #   outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
@@ -298,15 +325,15 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_überblick_fächer")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_verlauf_faecher")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id = "h_beruf_fach_2", title = "",
+                               shinyBS::bsPopover(id = "h_beruf_fach_mint_2", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
                                                   placement = "top",
                                                   trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_2")
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_mint_2")
                              )
                     ),
                     tabPanel("Vergleich Anteil MINT-Berufsfelder zwischen Auszubildenden und Beschäftigten (Karte)", br(),
@@ -984,6 +1011,14 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Box 2 ----
 
+    #Tab 1
+
+    #Tab 2
+    output$plot_arbeitsmarkt_verlauf_faecher <- renderUI({
+      beruf_verlauf_faecher(r)
+    })
+
+    # ALT
     # Tab 1
 
     output$plot_arbeitsmarkt_bl <- renderUI({

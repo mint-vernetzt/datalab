@@ -67,7 +67,11 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                        selected = "Beschäftigte",
                        multiple = FALSE
                      ),
-                     br()
+                     br(),
+                     shinyBS::bsPopover(id="ih_beruf_fach_2", title="",
+                                        content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Sachsen-Anhalt im Jahr 2022 21 % der Beschäftigten in MINT arbeiten. Den größten Anteil machen dabei die ca. 142.000 Beschäftigten im Berufsfeld Technik aus."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_2")
 
     ),
 
@@ -89,6 +93,15 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                        options =  list(
                          "max-options" = 2,
                          "max-options-text" = "Maximal 2 Indikatoren auswählen")
+                     ),
+                     p("Nicht-MINT Berufsfelder mit anzeigen?", style = "color: #b16fab;"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("gegenwert_arbeitsmarkt_fach_vergleich"),
+                       choices = c("Ja", "Nein"),
+                       selected = "Ja",
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_mint_1", title="",
@@ -121,6 +134,10 @@ mod_beruf_arbeitsmarkt_anforderungen_server <- function(id, r){
     observeEvent(input$indikator_arbeitsmarkt_fach_vergleich_balken, {
       r$indikator_arbeitsmarkt_fach_vergleich_balken <- input$indikator_arbeitsmarkt_fach_vergleich_balken
     })
+    observeEvent(input$gegenwert_arbeitsmarkt_fach_vergleich, {
+      r$gegenwert_arbeitsmarkt_fach_vergleich <- input$gegenwert_arbeitsmarkt_fach_vergleich
+    })
+
   })
 }
 
