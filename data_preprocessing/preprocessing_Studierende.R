@@ -15,7 +15,7 @@ library(countrycode)
 
 # hier pathen
 
-akro <- "kbr"
+akro <- "tko"
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
