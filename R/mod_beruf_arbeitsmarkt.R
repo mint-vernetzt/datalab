@@ -283,33 +283,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              )
                     ),
 
-                    # Übersicht Balkendiagramm
-                    # tabPanel("Alle Bereiche auf einen Blick", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            mod_beruf_arbeitsmarkt_überblick_fächer_ui("mod_beruf_arbeitsmarkt_überblick_fächer_ui_1"),
-                    #            # br(),br(),
-                    #            # downloadButton(
-                    #            #   outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
-                    #            #   label = "Download",
-                    #            #   icon = icon("download")),
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_überblick_fächer")),
-                    #                                         color = "#154194"),
-                    #
-                    #            p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                    #            shinyBS::bsPopover(id = "h_beruf_fach_2", title = "",
-                    #                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
-                    #                               placement = "top",
-                    #                               trigger = "hover"),
-                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_2")
-                    #          )
-                    # ),
+
                     tabPanel("MINT-Disziplinen im Zeitverlauf", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -336,11 +310,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_mint_2")
                              )
                     ),
-                    tabPanel("Vergleich Anteil MINT-Berufsfelder zwischen Auszubildenden und Beschäftigten (Karte)", br(),
+                    tabPanel("Bundeslandvergleich MINT-Disziplinen", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_bl_ui("mod_beruf_arbeitsmarkt_bl_ui_1"),
+                               mod_beruf_arbeitsmarkt_bula_faecher_ui("mod_beruf_arbeitsmarkt_bula_faecher_ui_1"),
                                # br(),br()
                                # ,
                                # downloadButton(
@@ -354,7 +328,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_bl")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_faecher_bl")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -363,31 +337,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                                   placement = "top",
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_1")
-                             )
-                    ),
-
-                    # tab 3
-                    tabPanel("Vergleich Anteil MINT-Bereiche nach Bundesländern", br(),
-
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_beruf_arbeitsmarkt_bl_vergleich_ui("beruf_arbeitsmarkt_bl_vergleich_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_vergleich"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_bl_vergleich")),
-                                                            color = "#154194"),
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id = "h_beruf_fach_3", title = "",
-                                                  content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
-                                                  placement = "top",
-                                                  trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_3")
                              )
                     )
         )
@@ -415,7 +364,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
         tabsetPanel(type = "tabs",
               # tab 1
-                    tabPanel("Vergleich Anteil Frauen bei MINT-Auszubildenden und MINT-Beschäftigen", br(),
+                    tabPanel("Frauenanteil in MINT", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -466,33 +415,33 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
 
                     ),
-            # tab 3
-                    tabPanel("Anteil Frauen an verschiedenen MINT-Berufsgruppen", br(),
-
-                             shiny::sidebarPanel(
-                               width = 3,
-                               tags$style(".well {background-color:#FFFFFF;}"),
-                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui("mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_einstieg_vergleich_gender"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_vergleich_gender")),
-                                                            color = "#154194"),
-
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id = "h_beruf_frauen_3", title = "",
-                                                  content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
-                                                  placement = "top",
-                                                  trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_frauen_3")
-                               )
-                    ),
+            # tab 3 Balken
+                    # tabPanel("Anteil Frauen an verschiedenen MINT-Berufsgruppen", br(),
+                    #
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            tags$style(".well {background-color:#FFFFFF;}"),
+                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                    #            mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui("mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui_1"),
+                    #            # br(),br(),
+                    #            # downloadButton(
+                    #            #   outputId = ns("download_btn_plot_einstieg_vergleich_gender"),
+                    #            #   label = "Download",
+                    #            #   icon = icon("download")),
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_vergleich_gender")),
+                    #                                         color = "#154194"),
+                    #
+                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            shinyBS::bsPopover(id = "h_beruf_frauen_3", title = "",
+                    #                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                    #                               placement = "top",
+                    #                               trigger = "hover"),
+                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_frauen_3")
+                    #            )
+                    # ),
             # Wahl nach Geschlecht in Boxen
             tabPanel("Vergleich Anteil MINT bei Frauen und Männern", br(),
 
@@ -1021,8 +970,8 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # ALT
     # Tab 1
 
-    output$plot_arbeitsmarkt_bl <- renderUI({
-      plot_list <- arbeitsmarkt_bl(r)
+    output$plot_arbeitsmarkt_faecher_bl <- renderUI({
+      plot_list <- arbeitsmarkt_bula_faecher(r)
       # r$plot_arbeitsmarkt_bl_left <- plot_list[[1]]
       # r$plot_arbeitsmarkt_bl_right <- plot_list[[2]]
       #
@@ -1034,10 +983,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
       # )
 
       # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
+      plot_list
 
     })
 
