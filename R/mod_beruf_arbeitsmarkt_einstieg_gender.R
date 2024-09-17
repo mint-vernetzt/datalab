@@ -64,8 +64,7 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
                    "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"
       ),
       selected = "MINT"
-    )
-    ,
+    ),
 
     conditionalPanel(condition = "input.ansicht_arbeitsmarkt_einstieg_gender == 'Einzelansicht - Kuchendiagramm'",
                     ns = ns,
