@@ -55,13 +55,13 @@ beruf_einstieg_vergleich <- function(r) {
     #dplyr::rename(fachbereich = "fachbereich.x") %>%
     #dplyr::select(-fachbereich.y) %>%
     dplyr::group_by(indikator) %>%
-    dplyr::mutate(proportion = round((wert/wert_gesamt)*100,0))
+    dplyr::mutate(proportion = round((wert/wert_gesamt)*100,1))
 
   #andere Berufe berechnen:
   df_andere <- df %>%
     dplyr::mutate(fachbereich = "Andere Berufe") %>%
     dplyr::mutate(wert = wert_gesamt-wert) %>%
-    dplyr::mutate(proportion = round((wert/wert_gesamt)*100,0))
+    dplyr::mutate(proportion = round((wert/wert_gesamt)*100,1))
 
   df <- rbind(df, df_andere)
 
