@@ -10,7 +10,7 @@
 mod_home_start_einstieg_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Betrachtungsart:"),
+    p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_start_comparison_mint_gender"),
       label = NULL,

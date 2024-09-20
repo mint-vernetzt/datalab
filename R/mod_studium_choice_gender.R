@@ -10,7 +10,7 @@
 mod_studium_choice_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Betrachtungsart:"),
+    p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_studi_gen_wahl"),
       label = NULL,

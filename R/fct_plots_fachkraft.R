@@ -613,7 +613,7 @@ plot_fachkraft_epa_item <- function(r) {
     dplyr::group_by(epa_kat, mint_zuordnung)  %>%
     dplyr::summarise(beruf_num = dplyr::n()) %>%
     dplyr::group_by(mint_zuordnung)  %>%
-    dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100)) %>%
+    dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,1)) %>%
     dplyr::left_join(group_col_dt, by = "epa_kat") %>%
     dplyr::arrange(epa_group_order)
 
@@ -787,9 +787,9 @@ plot_fachkraft_mint_item  <- function(r) {
     dplyr::summarise(berufe = dplyr::n()) %>%
     dplyr::mutate(mint_epa_kat = paste0(mint_zuordnung, " - ", epa_kat)) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(percent_total = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100)) %>%
+    dplyr::mutate(percent_total = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100,1)) %>%
     dplyr::group_by(epa_kat) %>%
-    dplyr::mutate(percent_epa = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100)) %>%
+    dplyr::mutate(percent_epa = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100,1)) %>%
     dplyr::ungroup()
 
 

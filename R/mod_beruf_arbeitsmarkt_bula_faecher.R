@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_bula_faecher_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Betrachtungsart:"),
+    p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_beruf_faecher_bula"),
       label = NULL,

@@ -10,7 +10,7 @@
 mod_studium_studienzahl_bulas_faecher_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Betrachtungsart:"),
+    p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_studium_bulas_faecher"),
       label = NULL,

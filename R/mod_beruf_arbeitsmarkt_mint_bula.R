@@ -10,7 +10,7 @@
 mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Betrachtungsart:"),
+    p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_beruf_mint_bula"),
       label = NULL,

@@ -10,7 +10,7 @@
 mod_schule_kurse_einstieg_comparison_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Betrachtungsart:"),
+    p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_kurse_einstieg_comparison"),
       label = NULL,

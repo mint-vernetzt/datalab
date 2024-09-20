@@ -10,7 +10,7 @@
 mod_studium_studienzahl_ausl_zeit_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Betrachtungsart:"),
+    p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_ausl_zeit"),
       label = NULL,
