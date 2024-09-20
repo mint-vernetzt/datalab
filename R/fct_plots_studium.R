@@ -3034,7 +3034,7 @@ studienzahl_einstieg_gender <- function(r) {
               highcharter::hc_tooltip(
                 pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')) %>%
               highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-              highcharter::hc_title(text = paste0("Frauenanteil unter ",genl[1], " in ", gen_f[1], " (", timerange, ")"),
+              highcharter::hc_title(text = paste0("Frauenanteil unter ",genl[1], " in ", gen_f[1], " in ", regio, " (", timerange, ")"),
                                     margin = 45,
                                     align = "center",
                                     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3053,7 +3053,7 @@ studienzahl_einstieg_gender <- function(r) {
                highcharter::hc_tooltip(
                  pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')) %>%
                highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-               highcharter::hc_title(text = paste0("Frauenanteil unter ",genl[1], " in Nicht MINT-Fächern (", timerange, ")"),
+               highcharter::hc_title(text = paste0("Frauenanteil unter ",genl[1], " in Nicht MINT-Fächern  in ", regio, " (", timerange, ")"),
                                      margin = 45,
                                      align = "center",
                                      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%

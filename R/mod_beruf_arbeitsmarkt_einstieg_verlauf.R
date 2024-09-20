@@ -43,6 +43,20 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_ui <- function(id){
       multiple = FALSE,
       selected = c("Deutschland")
     ),
+    p("Beschäftigtengruppe:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("indikator_arbeitsmarkt_einstieg_verlauf"),
+      choices = c("Auszubildende",
+                  "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
+                  "Beschäftigte",
+                  "ausländische Auszubildende",
+                  "ausländische Beschäftigte",
+                  "Beschäftigte 25-55",
+                  "Beschäftigte u25",
+                  "Beschäftigte ü55"),
+      selected = c("Beschäftigte", "Auszubildende"),
+      multiple = TRUE
+    ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_verlauf"),
@@ -73,6 +87,10 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_server <- function(id, r){
 
     observeEvent(input$region_arbeitsmarkt_einstieg_verlauf, {
       r$region_arbeitsmarkt_einstieg_verlauf <- input$region_arbeitsmarkt_einstieg_verlauf
+    })
+
+    observeEvent(input$indikator_arbeitsmarkt_einstieg_verlauf, {
+      r$indikator_arbeitsmarkt_einstieg_verlauf <- input$indikator_arbeitsmarkt_einstieg_verlauf
     })
 
     observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_verlauf, {

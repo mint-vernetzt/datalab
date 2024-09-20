@@ -12,15 +12,69 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui <- function(id){
   tagList(
     p("Jahre:"),
     shinyWidgets::sliderTextInput(
-      inputId = ns("date_arbeitsmarkt_einstieg_verlauf_gender"),
+      inputId = ns("date_arbeitsmarkt_verlauf_gender"),
       label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021", "2022"),
-      selected = c("2017", "2022")
+      choices = 2013:2022,
+      selected = c(2017, 2022)
+    ),
+    p("Beschäftigtengruppe:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("indikator_arbeitsmarkt_verlauf_gender"),
+      choices = c("Auszubildende",
+                  "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
+                  "Beschäftigte",
+                  "ausländische Auszubildende",
+                  "ausländische Beschäftigte",
+                  "Beschäftigte 25-55",
+                  "Beschäftigte u25",
+                  "Beschäftigte ü55"),
+      selected = c("Beschäftigte", "Auszubildende"),
+      multiple = TRUE
+    ),
+    p("Berufsfeld:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("fachbereich_arbeitsmarkt_verlauf_gender"),
+      choices = c( "MINT",
+                   "Mathematik/ Naturwissenschaften" = "Mathematik, Naturwissenschaften",
+                   "Informatik",
+                   "Technik (gesamt)",
+                   "Bau- und Gebäudetechnik",
+                   "Gesundheitstechnik",
+                   "Landtechnik",
+                   "Produktionstechnik",
+                   "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"
+      ),
+      selected = "MINT"
+    ),
+    p("Region:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("region_arbeitsmarkt_verlauf_gender"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = FALSE,
+      selected = c("Deutschland")
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
-      inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_verlauf_gender"),
+      inputId = ns("abs_zahlen_arbeitsmarkt_verlauf_gender"),
       choices = c("In Prozent", "Anzahl"),
       justified = TRUE,
       checkIcon = list(yes = icon("ok",
@@ -41,12 +95,24 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui <- function(id){
 mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$date_arbeitsmarkt_einstieg_verlauf_gender, {
-      r$date_arbeitsmarkt_einstieg_verlauf_gender <- input$date_arbeitsmarkt_einstieg_verlauf_gender
+    observeEvent(input$date_arbeitsmarkt_verlauf_gender, {
+      r$date_arbeitsmarkt_verlauf_gender <- input$date_arbeitsmarkt_verlauf_gender
     })
 
-    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_verlauf_gender, {
-      r$abs_zahlen_arbeitsmarkt_einstieg_verlauf_gender <- input$abs_zahlen_arbeitsmarkt_einstieg_verlauf_gender
+    observeEvent(input$indikator_arbeitsmarkt_verlauf_gender, {
+      r$indikator_arbeitsmarkt_verlauf_gender <- input$indikator_arbeitsmarkt_verlauf_gender
+    })
+
+    observeEvent(input$fachbereich_arbeitsmarkt_verlauf_gender, {
+      r$fachbereich_arbeitsmarkt_verlauf_gender <- input$fachbereich_arbeitsmarkt_verlauf_gender
+    })
+
+    observeEvent(input$region_arbeitsmarkt_verlauf_gender, {
+      r$region_arbeitsmarkt_verlauf_gender <- input$region_arbeitsmarkt_verlauf_gender
+    })
+
+    observeEvent(input$abs_zahlen_arbeitsmarkt_verlauf_gender, {
+      r$abs_zahlen_arbeitsmarkt_verlauf_gender <- input$abs_zahlen_arbeitsmarkt_verlauf_gender
     })
 
   })
