@@ -205,7 +205,7 @@ mod_international_table_input_server <- function(id, r){
 
       tmp_int_table_display <- tmp_int_table_filtered %>%
         dplyr::mutate(
-          wert = paste0(round(wert_prozent), " %<br>",
+          wert = paste0(round(wert_prozent,1), " %<br>",
                         dplyr::if_else(is.na(wert_absolut),
                                        "",
                                        paste0("(", wert_absolut, ")"))

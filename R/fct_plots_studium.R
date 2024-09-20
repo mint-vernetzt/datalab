@@ -35,7 +35,7 @@ studienzahl_mint <- function(r){
  df2 <- df %>%
    tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
    dplyr::mutate(dplyr::across(c("MINT (Gesamt)", "Nicht MINT"), ~./Alle))%>%
-   dplyr::mutate(dplyr::across(c("Nicht MINT", "MINT (Gesamt)"), ~ round(.*100,0)))%>%
+   dplyr::mutate(dplyr::across(c("Nicht MINT", "MINT (Gesamt)"), ~ round(.*100,1)))%>%
    dplyr::select(- Alle)%>%
    tidyr::pivot_longer(c("MINT (Gesamt)", "Nicht MINT"), names_to = "fachbereich", values_to = "proportion")
 
@@ -297,7 +297,7 @@ studienzahl_waffle_mint <- function(r) {
     label_w <- überschrift_label(label_w)
     title_1 <- as.character(label_w)
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <- round(data_1 * 100,0)
+    data_1 <- round(data_1 * 100,1)
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     data_k <- data_1
@@ -338,14 +338,14 @@ studienzahl_waffle_mint <- function(r) {
     waf_1[1,1] <- überschrift_label(waf_1[1,1])
     title_1 <- as.character(as.vector(waf_1[1,1]))
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <- round(data_1 * 100,0)
+    data_1 <- round(data_1 * 100,1)
 
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     waf_2[1,1] <- überschrift_label(waf_2[1,1])
     title_2 <- as.character(as.vector(waf_2[1,1]))
     data_2 <- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
-    data_2 <- round(data_2 * 100,0)
+    data_2 <- round(data_2 * 100,1)
 
     names(data_2) <- colnames(waf_2[2:ncol(waf_2)])
 
@@ -414,19 +414,19 @@ studienzahl_waffle_mint <- function(r) {
     waf_1[1,1] <- überschrift_label(waf_1[1,1])
     title_1 <- as.character(as.vector(waf_1[1,1]))
     data_1 <- as.numeric(as.vector(waf_1[1,2:ncol(waf_1)]))
-    data_1 <- round(data_1 * 100,0)
+    data_1 <- round(data_1 * 100,1)
     names(data_1) <- colnames(waf_1[2:ncol(waf_1)])
 
     waf_2[1,1] <- überschrift_label(waf_2[1,1])
     title_2 <- as.character(as.vector(waf_2[1,1]))
     data_2 <- as.numeric(as.vector(waf_2[1,2:ncol(waf_2)]))
-    data_2 <- round(data_2 * 100,0)
+    data_2 <- round(data_2 * 100,1)
     names(data_2) <- colnames(waf_2[2:ncol(waf_2)])
 
     waf_3[1,1] <- überschrift_label(waf_3[1,1])
     title_3 <- as.character(as.vector(waf_3[1,1]))
     data_3 <- as.numeric(as.vector(waf_3[1,2:ncol(waf_3)]))
-    data_3 <- round(data_3 * 100,0)
+    data_3 <- round(data_3 * 100,1)
     names(data_3) <- colnames(waf_3[2:ncol(waf_3)])
 
 
@@ -2000,7 +2000,7 @@ mint_anteile <- function(r) {
     df2 <- df %>%dplyr::filter(jahr == year)%>%
       dplyr::slice_head()%>%
       dplyr::mutate(prop=round(100-sum(df1$prop),1))%>%
-      dplyr::mutate(wert = round(`Alle MINT-Fächer`*(prop/100),0))%>%
+      dplyr::mutate(wert = round(`Alle MINT-Fächer`*(prop/100),1))%>%
       dplyr::mutate(fach = "Andere MINT-Fächer")
 
     return(df2)
@@ -2131,7 +2131,7 @@ mint_anteile <- function(r) {
 
     sorted_indicators <- df %>%
       dplyr::group_by(fach) %>%
-      dplyr::summarize(m_value = mean(round(prop, 0), na.rm = TRUE)) %>%
+      dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
       dplyr::arrange(desc(m_value)) %>%
       dplyr::pull(fach)
 
@@ -2160,7 +2160,7 @@ mint_anteile <- function(r) {
 
     sorted_indicators <- df %>%
       dplyr::group_by(fach) %>%
-      dplyr::summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
       dplyr::arrange(desc(m_value)) %>%
       dplyr::pull(fach)
 
@@ -3022,7 +3022,7 @@ studienzahl_einstieg_gender <- function(r) {
           dplyr::rename(wert = wert.x,
                         wert_ges = wert.y,
                         geschlecht = geschlecht.x) %>%
-          dplyr::mutate(prop = round(wert/wert_ges * 100))
+          dplyr::mutate(prop = round(wert/wert_ges * 100,1))
 
 
         #Trennpunkte für lange Zahlen ergänzen
@@ -3768,7 +3768,7 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
     dplyr::left_join(df_alle, dplyr::join_by(jahr, indikator, geschlecht, region)) %>%
     dplyr::select(-fachbereich.y) %>%
     dplyr::rename(fachbereich = fachbereich.x) %>%
-    dplyr::mutate(prop = round(wert/wert_ges * 100))
+    dplyr::mutate(prop = round(wert/wert_ges * 100,1))
 
   df$fachbereich[df$fachbereich == "Nicht MINT"] <- "andere Fachbereiche"
 
@@ -3886,9 +3886,9 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
     tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
     #dplyr::rename("MINT (Gesamt)" = MINT)%>%
 
-    dplyr::mutate("Mathematik, Naturwissenschaften_p" =round(`Mathematik, Naturwissenschaften`/Alle*100,0),
-                  "MINT (Gesamt)_p"= round(`MINT (Gesamt)`/Alle*100,0),
-                  "Ingenieurwissenschaften_p"= round(Ingenieurwissenschaften/Alle*100,0))%>%
+    dplyr::mutate("Mathematik, Naturwissenschaften_p" =round(`Mathematik, Naturwissenschaften`/Alle*100,1),
+                  "MINT (Gesamt)_p"= round(`MINT (Gesamt)`/Alle*100,1),
+                  "Ingenieurwissenschaften_p"= round(Ingenieurwissenschaften/Alle*100,1))%>%
     dplyr::select(-Alle, -`Nicht MINT`)%>%
     tidyr::pivot_longer(c(5:10),names_to="fach",values_to="wert")%>%
     dplyr::mutate(selector= dplyr::case_when(stringr::str_ends(.$fach, "_p")~"In Prozent",

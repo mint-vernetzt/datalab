@@ -72,7 +72,7 @@ home_einstieg <- function(r) {
   dfk2_fn$wert <- prettyNum(dfk2_fn$wert, big.mark = ".", decimal.mark = ",")
 
 
-  dfk2_fn$proportion <- round(as.numeric(dfk2_fn$proportion),0)
+  dfk2_fn$proportion <- round(as.numeric(dfk2_fn$proportion),1)
 
 #  dfk2_fn <- dfk2_fn[with(dfk2_fn, order(region, fachbereich, jahr, decreasing = TRUE)), ]
    dfk2_fn <- dfk2_fn[with(dfk2_fn, order( fachbereich, decreasing = TRUE)), ]
@@ -337,7 +337,7 @@ home_rest_mint_verlauf <- function(r) {
   dfk2_fn2$fachbereich <- gsub("_p", "", dfk2_fn2$fachbereich)
 
 
-  dfk2_fn2$wert <- ifelse(stringr::str_detect(dfk2_fn2$selector, "In Prozent"),round(as.numeric(dfk2_fn2$wert),0), dfk2_fn2$wert )
+  dfk2_fn2$wert <- ifelse(stringr::str_detect(dfk2_fn2$selector, "In Prozent"),round(as.numeric(dfk2_fn2$wert),1), dfk2_fn2$wert )
 
 
   if(absolut_selector=="In Prozent"){
@@ -355,7 +355,7 @@ home_rest_mint_verlauf <- function(r) {
     # Ordnen der Legende
     sorted_indicators <- df %>%
       dplyr::group_by(indikator) %>%
-      dplyr::summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
       dplyr::arrange(desc(m_value)) %>%
       dplyr::pull(indikator)
 
@@ -405,7 +405,7 @@ home_rest_mint_verlauf <- function(r) {
     # Ordnen der Legende
     sorted_indicators <- df %>%
       dplyr::group_by(indikator) %>%
-      dplyr::summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
       dplyr::arrange(desc(m_value)) %>%
       dplyr::pull(indikator)
 
@@ -548,7 +548,7 @@ home_stacked_comparison_mint <- function(r) {
     dplyr::mutate(fachbereich=dplyr::case_when(
       fachbereich== "Nicht MINT_p" ~ "Nicht MINT",
       fachbereich== "MINT_p" ~ "MINT"
-    ))%>% dplyr::mutate(wert = round(.$wert,0))
+    ))%>% dplyr::mutate(wert = round(.$wert,1))
 
   #Ansoluten Wert anhägnge
   dfd3 <- dfd3 %>% dplyr::left_join(df_wert, by = c("bereich","indikator", "fachbereich"))
@@ -668,7 +668,7 @@ home_einstieg_gender <- function(r) {
 
   # Indikator u25 mit NAs löschen und Runden
   dfk2_fn4 <- stats::na.omit(dfk2_fn4)
-  dfk2_fn4$proportion <- round_preserve_sum(as.numeric(dfk2_fn4$proportion),0)
+  dfk2_fn4$proportion <- round_preserve_sum(as.numeric(dfk2_fn4$proportion),1)
 
   #Trennpunkte für lange Zahlen ergänzen
   dfk2_fn4$wert <- prettyNum(dfk2_fn4$wert, big.mark = ".", decimal.mark = ",")
@@ -1014,7 +1014,7 @@ home_einstieg_gender <- function(r) {
       # !fachbereich %in% c("Schüler:innen Grundkurse in MINT",
       #                     "Schüler:innen Leistungskurse in MINT")
 
-      out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,0), group = geschlecht)) %>%
+      out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,1), group = geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
         highcharter::hc_xAxis(title = list(text = ""), categories = c("Schüler:innen Oberstufenbelegungen in MINT",
@@ -1043,7 +1043,7 @@ home_einstieg_gender <- function(r) {
                                     theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
     }else{
 
-      out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,0), group = geschlecht)) %>%
+      out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,1), group = geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
         highcharter::hc_xAxis(title = list(text = ""), categories = c("Schüler:innen Oberstufenbelegungen in MINT",
@@ -1190,14 +1190,14 @@ home_comparison_line <- function(r) {
     # Ordnen der Legende
     sorted_indicators <- df_fn51 %>%
       dplyr::group_by(indikator) %>%
-      dplyr::summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
       dplyr::arrange(desc(m_value)) %>%
       dplyr::pull(indikator)
 
     df_fn51$indikator <- factor(df_fn51$indikator, levels = sorted_indicators)
 
     # plot
-    out <- highcharter::hchart(df_fn51, 'line', highcharter::hcaes(x = jahr, y = round(wert, 0), group = indikator))%>%
+    out <- highcharter::hchart(df_fn51, 'line', highcharter::hcaes(x = jahr, y = round(wert, 1), group = indikator))%>%
       highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"),
@@ -1233,7 +1233,7 @@ home_comparison_line <- function(r) {
     # Ordnen der Legende
     sorted_indicators <- df_fn51 %>%
       dplyr::group_by(indikator) %>%
-      dplyr::summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
       dplyr::arrange(desc(m_value)) %>%
       dplyr::pull(indikator)
 
@@ -1355,7 +1355,7 @@ home_stacked_comparison_gender <- function(r) {
 
 
   # plot
-  hc_1 <- highcharter::hchart(df6_fn, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,0), group = geschlecht)) %>%
+  hc_1 <- highcharter::hchart(df6_fn, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,1), group = geschlecht)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
     highcharter::hc_xAxis(title = list(text = ""), categories = c("Leistungskurse", "Studierende",

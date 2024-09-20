@@ -964,7 +964,7 @@ plot_fachkraft_bar_vakanz  <- function(r) {
 
   plot_data <- plot_data %>%
     dplyr::group_by(fachbereich) %>%
-    dplyr::summarise(wert = round(mean(wert, na.rm = TRUE), 2)) %>%
+    dplyr::summarise(wert = round(mean(wert, na.rm = TRUE), 1)) %>%
     na.omit() %>%
     dplyr::mutate(
       group_color = dplyr::if_else(
@@ -1060,7 +1060,7 @@ plot_fachkraft_detail_item  <- function(r) {
                     kategorie %in% used_kategories &
                     !is.na(wert)) %>%
     dplyr::select(indikator, kategorie, wert) %>%
-    dplyr::mutate(wert = round(wert, 2)) %>%
+    dplyr::mutate(wert = round(wert, 1)) %>%
     dplyr::collect()
 
   # color change on 0.01. level, since data labels are also rounded to 2 decimal places
@@ -1127,7 +1127,7 @@ plot_fachkraft_detail_item  <- function(r) {
           }"))
     ) %>%
     highcharter::hc_add_series(
-      data = round(plot_solidgauge_data$wert, 2),
+      data = round(plot_solidgauge_data$wert, 1),
       dataLabels = list(
         y = -50,
         borderWidth = 0,
@@ -1175,7 +1175,7 @@ plot_fachkraft_detail_item  <- function(r) {
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_title(
       text = paste0("Einzelne Indikatoren der Engpassanalyse (gesamt ",
-                    round(plot_solidgauge_data$wert, 2),
+                    round(plot_solidgauge_data$wert, 1),
                     ") für Beruf ", this_beruf, " (", timerange, ")"),
       margin = 45,
       align = "center",

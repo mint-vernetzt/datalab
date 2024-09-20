@@ -153,14 +153,14 @@ calculate_landkreis <- function(df, states, category, domain, indikator_azubi, i
                       anforderung) %>%
       dplyr::summarise(wert.x = sum(wert.x),
                        wert.y = sum(wert.y)) %>%
-      dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
+      dplyr::mutate(prob = round((wert.x/wert.y)*100,1)) %>%
       dplyr::rename(wert = wert.x) %>%
       dplyr::select(-wert.y) %>%
       dplyr::ungroup()
 
   } else {
     df_compare <- df_compare %>%
-      dplyr::mutate(prob = round((wert.x/wert.y)*100)) %>%
+      dplyr::mutate(prob = round((wert.x/wert.y)*100,1)) %>%
       dplyr::rename(wert = wert.x,
                     geschlecht = geschlecht.x) %>%
       dplyr::select(-c(wert.y, geschlecht.y))

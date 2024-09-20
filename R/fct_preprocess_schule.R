@@ -32,7 +32,7 @@ prep_kurse_proportion <- function(df, indikator_choice) {
   df$anzeige_geschlecht <- paste0(df$anzeige_geschlecht, " (", df$fachbereich, ")")
 
   # ensure that proportions sum to 1
-  x <- setNames(round_preserve_sum(as.numeric(df$proportion),0),
+  x <- setNames(round_preserve_sum(as.numeric(df$proportion),1),
                    df$anzeige_geschlecht)
 
   return(x)

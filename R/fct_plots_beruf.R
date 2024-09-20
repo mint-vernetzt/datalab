@@ -1353,7 +1353,7 @@ arbeitsmarkt_bl_verlauf <- function(r) {
     #                       "Rheinland-Pfalz", "Saarland"
     #                       ),names_to= "region", values_to="wert")%>%
      tidyr::pivot_wider(values_from=wert, names_from=fachbereich)%>%
-    dplyr::mutate(MINT_p= round(MINT/Alle*100,2))%>%
+    dplyr::mutate(MINT_p= round(MINT/Alle*100,1))%>%
     dplyr::select(- "Alle")%>%
     dplyr::rename(Absolut = MINT, Relativ = MINT_p)%>%
     tidyr::pivot_longer(c(Absolut , Relativ), names_to="selector", values_to="wert")%>%
@@ -2017,7 +2017,7 @@ arbeitsmarkt_bl_vergleich <- function(r) {
     dplyr::ungroup()%>%
     dplyr::select(-c("fachbereich.y")) %>%
     dplyr::mutate(prop = (wert/wert_ges)*100)%>%
-    dplyr::mutate(prop = round(prop,2))
+    dplyr::mutate(prop = round(prop,1))
 
   #Trennpunkte für lange Zahlen in absolutem Wert ergänzen
   df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
@@ -2181,7 +2181,7 @@ arbeitsmarkt_top10 <- function( r){
                             "jahr",
                             "fachbereich",
                             "beruf")) %>%
-    dplyr::mutate(prop = round((wert.x/wert.y)*100)) %>%
+    dplyr::mutate(prop = round((wert.x/wert.y)*100,1)) %>%
     dplyr::rename(wert = wert.x,
                   wert_ges = wert.y,
                   geschlecht = geschlecht.x,
@@ -2574,7 +2574,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
     # plot
-    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert), group = indikator)) %>%
+    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = indikator)) %>%
       highcharter::hc_tooltip(pointFormat = "Anteil Frauen  {point.indikator} <br> Wert: {point.y} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -2610,7 +2610,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
     # plot
-    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert), group = indikator)) %>%
+    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = indikator)) %>%
       highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -2730,7 +2730,7 @@ arbeitsmarkt_einstieg_vergleich_gender <- function(r) {
                                   paste0("Ausländische Beschäftigte in ",fach_choice), "Ausländische Beschäftigte in anderen Berufen")
 
   # plot
-  highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion), group = geschlecht)) %>%
+  highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,1), group = geschlecht)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.geschlecht}-Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
     highcharter::hc_xAxis(title = list(text = "")
