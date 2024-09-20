@@ -1668,20 +1668,20 @@ timss_benchmarks_extract <- function(dat7){
 
   colnames(dat_bench) <- dat_bench_coln_fn
 
-  dat_bench1a <<- dat_bench %>%
+  dat_bench1a <- dat_bench %>%
     slice(which(if_any(everything(),~ str_detect(., "2019")))+1:nrow(.))%>%
     select(Country, contains("signifikanz"))%>%
     pivot_longer(-Country, names_to="indikator", values_to = "signifikanz")%>%
     separate(indikator, into = c("indikator", "typ", "jahr"), sep="_")
 
-  dat_bench1b <<- dat_bench %>%
+  dat_bench1b <- dat_bench %>%
     slice(which(if_any(everything(),~ str_detect(., "2019")))+1:nrow(.))%>%
     select(Country, !contains("signifikanz"))%>%
     mutate(across(-c("Country"), ~ as.numeric(.)))%>%
     pivot_longer(-Country, names_to="indikator", values_to = "wert")%>%
     separate(indikator, into = c("indikator", "typ", "jahr" ), sep="_")
 
-  dat_bench2 <<- dat_bench1b %>%
+  dat_bench2 <- dat_bench1b %>%
      left_join(dat_bench1a) %>%
     rename(land = Country, signifikant = signifikanz)%>%
     mutate(typ = case_when(typ=="Percent of Students"~ "Prozentsatz der Schüler:innen",
