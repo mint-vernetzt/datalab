@@ -1818,7 +1818,7 @@ beruf_verlauf_faecher <- function(r) {
     df$prop_disp <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
     sorted_indicators <- df %>%
       dplyr::group_by(fachbereich) %>%
-      dplyr::summarize(m_value = mean(round(prop, 0), na.rm = TRUE)) %>%
+      dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
       dplyr::arrange(desc(m_value)) %>%
       dplyr::pull(fachbereich)
 
@@ -1826,7 +1826,7 @@ beruf_verlauf_faecher <- function(r) {
     colors <- color_fachbereich[sorted_indicators]
 
     # plot
-    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(prop), group = fachbereich)) %>%
+    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(prop,1), group = fachbereich)) %>%
       highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> Anteil: {point.prop_disp} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -1855,7 +1855,7 @@ beruf_verlauf_faecher <- function(r) {
     df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     sorted_indicators <- df %>%
       dplyr::group_by(fachbereich) %>%
-      dplyr::summarize(m_value = mean(round(wert, 0), na.rm = TRUE)) %>%
+      dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
       dplyr::arrange(desc(m_value)) %>%
       dplyr::pull(fachbereich)
 
@@ -1863,7 +1863,7 @@ beruf_verlauf_faecher <- function(r) {
     colors <- color_fachbereich[sorted_indicators]
 
     # plot
-    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert), group = fachbereich)) %>%
+    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = fachbereich)) %>%
       highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> Anzahl: {point.wert_disp}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -2014,7 +2014,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
       dplyr::ungroup()%>%
       dplyr::select(-c("fachbereich.y")) %>%
       dplyr::mutate(prop = (wert/wert_ges)*100)%>%
-      dplyr::mutate(prop = round(prop,2))
+      dplyr::mutate(prop = round(prop,1))
 
     #Trennpunkte für lange Zahlen in absolutem Wert ergänzen
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
@@ -2145,7 +2145,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
         dplyr::ungroup()%>%
         dplyr::select(-c("fachbereich.y")) %>%
         dplyr::mutate(prop = (wert/wert_ges)*100)%>%
-        dplyr::mutate(prop = round(prop,2))
+        dplyr::mutate(prop = round(prop,1))
 
       df$display_rel <- prettyNum(round(df$prop,1), big.mark = ".", decimal.mark = ",")
       df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
@@ -2833,7 +2833,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
     dplyr::rename(geschlecht = geschlecht.x) %>%
     dplyr::select(-geschlecht.y) %>%
     dplyr::group_by(indikator, geschlecht) %>%
-    dplyr::mutate(proportion = round((wert/wert_gesamt)*100,0))
+    dplyr::mutate(proportion = round((wert/wert_gesamt)*100,1))
 
   if(gegenwert == "Ja"){
 
@@ -2883,7 +2883,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
       dplyr::rename(geschlecht = geschlecht.x) %>%
       dplyr::select(-geschlecht.y) %>%
       dplyr::group_by(indikator, geschlecht) %>%
-      dplyr::mutate(proportion = round((wert/wert_gesamt)*100,0))
+      dplyr::mutate(proportion = round((wert/wert_gesamt)*100,1))
 
     df <- rbind(df, df_andere)
   }
@@ -3361,7 +3361,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
                                                   "geschlecht")) %>%
       dplyr::rename(fachbereich = fachbereich.x) %>%
       dplyr::select(-fachbereich.y) %>%
-      dplyr::mutate(prop = round(wert/wert_ges *100, 0))
+      dplyr::mutate(prop = round(wert/wert_ges *100, 1))
 
      # nach Geschlechtern trennen
      df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
@@ -3463,7 +3463,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
        dplyr::filter(fachbereich != "Alle")
 
      #Gerundetes Prop für Hover:
-     df$prop_disp <- prettyNum(round(df$prop, 0), big.mark = ".", decimal.mark = ",")
+     df$prop_disp <- prettyNum(round(df$prop, 1), big.mark = ".", decimal.mark = ",")
      df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
      values_female <- df %>% dplyr::filter(geschlecht == "Frauen")
@@ -4118,7 +4118,7 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
     title_help <- paste0(indikator_choice, "r")
 
     # plot
-    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert), group = region)) %>%
+    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = region)) %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -4158,7 +4158,7 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
 
 
     # plot
-    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert), group = region)) %>%
+    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = region)) %>%
       highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
