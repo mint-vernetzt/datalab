@@ -62,7 +62,7 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
                      'Einzelansicht - Kuchendiagramm'",
                      ns = ns,
 
-      p("Studierendengruppen (max. 3):"),
+      p("Studierendengruppen (max. 2):"),
       shinyWidgets::pickerInput(
         inputId = ns("gruppe_mint_fach_pies"),
         choices = c("Studienanfänger:innen (1. Fachsemester)",
@@ -77,8 +77,8 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
         selected = c("Studierende"),
         multiple = TRUE,
         options =  list(
-          "max-options" = 3,
-          "max-options-text" = "Maximal 3 Indikatoren auswählen")
+          "max-options" = 2,
+          "max-options-text" = "Maximal 2 Indikatoren auswählen")
       ),
       br(),
       shinyBS::bsPopover(id="dh_studium_mint_fach_1", title = "",

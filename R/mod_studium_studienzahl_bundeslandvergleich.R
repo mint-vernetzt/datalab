@@ -91,8 +91,8 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                        ,
                        multiple = F,
                        options =  list(
-                         "max-options" = 3,
-                         "max-options-text" = "Maximal 3 Gruppen auswählen")
+                         "max-options" = 2,
+                         "max-options-text" = "Maximal 2 Gruppen auswählen")
                      ),
                      p("Regionen:"),
                      shinyWidgets::pickerInput(
@@ -134,7 +134,7 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_5", title="",
-                                        content = paste0("Die erste Ansicht zeigt, dass in Baden-Württember im Vergleich zu Hamburg ein größerer Anteil an Studierenden MINT-Fächer studiert. In beiden Bundesländern bleibt der Anteil an MINT-Studierenden über die Jahre relativ konstat und sinkt in den letzten Jahren leicht ab."),
+                                        content = paste0("Die erste Ansicht zeigt, dass in Baden-Württemberg im Vergleich zu Hamburg ein größerer Anteil an Studierenden MINT-Fächer studiert. In beiden Bundesländern bleibt der Anteil an MINT-Studierenden über die Jahre relativ konstat und sinkt in den letzten Jahren leicht ab."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_5")

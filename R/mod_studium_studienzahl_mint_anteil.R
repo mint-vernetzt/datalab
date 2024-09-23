@@ -55,7 +55,7 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                      'Einzelansicht - Kuchendiagramm'",
                       ns = ns,
 
-                     p("Studierendengruppen (max. 3):"),
+                     p("Studierendengruppen (max. 2):"),
                      shinyWidgets::pickerInput(
                        inputId = ns("studium_anteil_i"),
                        choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -76,8 +76,8 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                        ),
                        multiple = TRUE,
                        options =  list(
-                         "max-options" = 3,
-                         "max-options-text" = "Maximal 3 Indikatoren auswählen")
+                         "max-options" = 2,
+                         "max-options-text" = "Maximal 2 Indikatoren auswählen")
                      ),
                      br(),
                      shinyBS::bsPopover(id="dh_studium_mint_1", title = "",
@@ -96,7 +96,7 @@ mod_studium_studienzahl_anteil_ui <- function(id){
     conditionalPanel(condition = "input.ansicht_studium_anteil ==
                      'Gruppenvergleich - Balkendiagramm'",
                      ns = ns,
-                     p("Studierendengruppen:"),
+                     p("Studierendengruppen (mehrere auswählbar):"),
                      shinyWidgets::pickerInput(
                        inputId = ns("studium_anteil_i_balken"),
                        choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -116,13 +116,27 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                        options = list(`actions-box` = TRUE,
                                       `deselect-all-text` = "Alle abwählen",
                                       `select-all-text` = "Alle auswählen"),
+                       # selected = c("Studienanfänger:innen (1.Fachsemester)",
+                       #              "Studierende",
+                       #              "Studierende (Lehramt, Universität)",
+                       #              "Studierende (Universität)",
+                       #              "Studierende (Fachhochschulen)"
+                       # )
                        selected = c("Studienanfänger:innen (1.Fachsemester)",
+                                    "Studienanfänger:innen (1.Hochschulsemester)",
+                                    "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
+                                    "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
+                                    "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
+                                    "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
+                                    "Studienanfänger:innen (Universität, 1.Fachsemester)",
+                                    "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
                                     "Studierende",
+                                    "Studierende (Fachhochschulen)",
                                     "Studierende (Lehramt, Universität)",
-                                    "Studierende (Universität)",
-                                    "Studierende (Fachhochschulen)"
-
+                                    "Studierende (Universität)"
                        )
+
+
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_6", title="",
@@ -135,6 +149,63 @@ mod_studium_studienzahl_anteil_ui <- function(id){
     )
 
 }
+
+#moment
+# p("Regionen:"),
+# shinyWidgets::pickerInput(
+#   inputId = ns("bulas_balken_regio_faecher"),
+#   choices = c("Deutschland",
+#               "Baden-Württemberg",
+#               "Bayern",
+#               "Berlin",
+#               "Brandenburg",
+#               "Bremen",
+#               "Hamburg",
+#               "Hessen",
+#               "Mecklenburg-Vorpommern",
+#               "Niedersachsen",
+#               "Nordrhein-Westfalen",
+#               "Rheinland-Pfalz",
+#               "Saarland",
+#               "Sachsen",
+#               "Sachsen-Anhalt",
+#               "Schleswig-Holstein",
+#               "Thüringen"
+#               ,
+#               "Westdeutschland (o. Berlin)",
+#               "Ostdeutschland (inkl. Berlin)"),
+#   selected = c("Deutschland",
+#                "Baden-Württemberg",
+#                "Bayern",
+#                "Berlin",
+#                "Brandenburg",
+#                "Bremen",
+#                "Hamburg",
+#                "Hessen",
+#                "Mecklenburg-Vorpommern",
+#                "Niedersachsen",
+#                "Nordrhein-Westfalen",
+#                "Rheinland-Pfalz",
+#                "Saarland",
+#                "Sachsen",
+#                "Sachsen-Anhalt",
+#                "Schleswig-Holstein",
+#                "Thüringen"
+#                ,
+#                "Westdeutschland (o. Berlin)",
+#                "Ostdeutschland (inkl. Berlin)"),
+#   options = list(`actions-box` = TRUE,
+#                  `deselect-all-text` = "Alle abwählen",
+#                  `select-all-text` = "Alle auswählen"),
+#   multiple = TRUE
+# ),
+
+
+
+
+
+
+
 
 #' studium_choice_gender Server Functions
 #'

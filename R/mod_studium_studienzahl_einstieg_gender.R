@@ -28,7 +28,7 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
     conditionalPanel(condition = "input.ansicht_gen_mint == 'Einzelansicht - Kuchendiagramm'",
                      ns = ns,
 
-        p("Studierendengruppe (max. 3):"),
+        p("Studierendengruppe (max. 2):"),
         shinyWidgets::pickerInput(
           inputId = ns("gen_l"),
           choices = c(
@@ -39,8 +39,8 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
           selected = c("Studierende"),
           multiple = TRUE,
           options =  list(
-            "max-options" = 3,
-            "max-options-text" = "Maximal 3 Indikatoren auswählen")
+            "max-options" = 2,
+            "max-options-text" = "Maximal 2 Indikatoren auswählen")
         ),
 
         p("Fächergruppe:"),

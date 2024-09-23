@@ -112,8 +112,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                        ,
                        multiple = F,
                        options =  list(
-                         "max-options" = 3,
-                         "max-options-text" = "Maximal 3 Gruppen auswählen")
+                         "max-options" = 2,
+                         "max-options-text" = "Maximal 2 Gruppen auswählen")
                      ),
                      #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
                      p("Fächergruppe:"),

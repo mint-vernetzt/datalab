@@ -48,7 +48,7 @@ mod_studium_choice_gender_ui <- function(id){
       multiple = F,
       options =  list(
         "max-options" = 2,
-        "max-options-text" = "Maximal 3 Indikatoren auswählen")
+        "max-options-text" = "Maximal 2 Indikatoren auswählen")
     ),
     p("Region:"),
     shinyWidgets::pickerInput(

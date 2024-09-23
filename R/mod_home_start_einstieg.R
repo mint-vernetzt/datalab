@@ -59,7 +59,7 @@ mod_home_start_einstieg_ui <- function(id){
     conditionalPanel(condition = "input.ansicht_start_einstieg == 'Einzelansicht - Kuchendiagramm'",
                      ns = ns,
 
-          p("Bereiche (max. 3):"),
+          p("Bereiche (max. 2):"),
           shinyWidgets::pickerInput(
             inputId = ns("indikator_start_einstieg_1"),
             choices = c("Schüler:innen Leistungskurse",
@@ -68,8 +68,8 @@ mod_home_start_einstieg_ui <- function(id){
             selected = c( "Beschäftigte", "Studierende"),
             multiple = TRUE,
             options =  list(
-              "max-options" = 3,
-              "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
+              "max-options" = 2,
+              "max-options-text" = "Bitte nur maximal 2 Bereiche auswählen"
             )
           ),
           br(),

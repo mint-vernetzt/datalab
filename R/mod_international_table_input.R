@@ -38,8 +38,8 @@ mod_international_table_input_ui <- function(id){
           multiple = TRUE,
           options =  list(
             title = "Bis zu 3 Länder wählen",
-            "max-options" = 3,
-            "max-options-text" = "Bitte nur maximal 3 Länder auswählen"
+            "max-options" = 2,
+            "max-options-text" = "Bitte nur maximal 2 Länder auswählen"
           )
         )
       )

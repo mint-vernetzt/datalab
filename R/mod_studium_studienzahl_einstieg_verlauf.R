@@ -44,7 +44,7 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
       multiple = FALSE,
       selected = c("Deutschland")
     ),
-    p("Studierendengruppen:"),
+    p("Studierendengruppen (alle auswählbar): "),
     shinyWidgets::pickerInput(
       inputId = ns("studienzahl_einstieg_verlauf_indi"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -64,11 +64,11 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
                    , "Studienanfänger:innen (1.Fachsemester)"
       ),
       multiple = TRUE,
-      options =  list(
-        "max-options-text" = "Maximal 3 Indikatoren auswählen")
-      # options = list(`actions-box` = TRUE,
-      #                `deselect-all-text` = "Alle abwählen",
-      #                `select-all-text` = "Alle auswählen")
+      # options =  list(
+      #   "max-options-text" = "Maximal 3 Indikatoren auswählen")
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen")
     ),
     p("Betrachtung:"),
     shinyWidgets::radioGroupButtons(
@@ -80,7 +80,7 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_studium_mint_3", title="",
-                       content = paste0("Der Zeitverlauf zeigt, dass der Anteil von MINT-Studierenden an allen Studierenden sowie die absolute Anzahl der Studierenden in MINT bis zuletzt über die Jahre relativ konstant bleibt."),
+                       content = paste0("Der Zeitverlauf zeigt, dass der Anteil von MINT-Studierenden an allen Studierenden sowie die absolute Anzahl der Studierenden in MINT bis zuletzt über die Jahre relativ konstant bleibt. (Großes Augenmerk muss hier auf die Y-Skala gelegt werden. Die visuellen Sprünge sind kleiner als sie aussehen.)"),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_3")
     )

@@ -48,8 +48,8 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
                                     "Bayern","Bremen"),
                        multiple = TRUE,
                        options =  list(
-                         "max-options" = 3,
-                         "max-options-text" = "Maximal 3 Bundesländer auswählen")
+                         "max-options" = 2,
+                         "max-options-text" = "Maximal 2 Bundesländer auswählen")
                      )
                 ),
     conditionalPanel(condition = "input.klasse_iqb_standard_zeitverlauf == '9. Klasse'",
@@ -78,8 +78,8 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
                                     "Bayern","Bremen"),
                        multiple = TRUE,
                        options =  list(
-                         "max-options" = 3,
-                         "max-options-text" = "Maximal 3 Bundesländer auswählen")
+                         "max-options" = 2,
+                         "max-options-text" = "Maximal 2 Bundesländer auswählen")
                      )
     ),
 

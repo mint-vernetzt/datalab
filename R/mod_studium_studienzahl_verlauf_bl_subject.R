@@ -56,8 +56,8 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
       ,
       multiple = F,
       options =  list(
-        "max-options" = 3,
-        "max-options-text" = "Maximal 3 Indikatoren auswählen")
+        "max-options" = 2,
+        "max-options-text" = "Maximal 2 Indikatoren auswählen")
     ),
     # p("Auswahl der Fächer:"),
     # shinyWidgets::pickerInput(

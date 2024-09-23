@@ -28,7 +28,7 @@ mod_home_start_einstieg_gender_ui <- function(id){
 
     conditionalPanel("input.ansicht_start_comparison_mint_gender == 'Einzelansicht - Kuchendiagramm'",
                      ns = ns,
-             p("Bereiche (max. 3):"),
+             p("Bereiche (max. 2):"),
              shinyWidgets::pickerInput(
                inputId = ns("indikator_start_einstieg_1_gender"),
                choices = c("Schüler:innen Leistungskurse","Studierende",
@@ -36,8 +36,8 @@ mod_home_start_einstieg_gender_ui <- function(id){
                selected = c("Beschäftigte"),
                multiple = TRUE,
                options =  list(
-                 "max-options" = 3,
-                 "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
+                 "max-options" = 2,
+                 "max-options-text" = "Bitte nur maximal 2 Bereiche auswählen"
                )
              )
              ),
