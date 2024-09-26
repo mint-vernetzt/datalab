@@ -36,7 +36,7 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
     #                      choices = "Uni"
     #                    ))
     # ),
-    p("Indikator:"),
+    p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("verl_l"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -57,7 +57,7 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
       multiple = F,
       options =  list(
         "max-options" = 2,
-        "max-options-text" = "Maximal 2 Indikatoren auswählen")
+        "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
     ),
     # p("Auswahl der Fächer:"),
     # shinyWidgets::pickerInput(
@@ -95,7 +95,7 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
 
     ),
 
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_verlauf_subject_bl"),
       choices = c("In Prozent", "Anzahl"),

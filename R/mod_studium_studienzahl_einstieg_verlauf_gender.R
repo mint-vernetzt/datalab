@@ -23,7 +23,7 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
     #   shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_einstieg_verlauf_gender"), label = "Nein", inline = TRUE),
     #   tags$span("Ja")
     # ),
-    p("Indikatoren (max. 2):"),
+    p("Studierendengruppen (max. 2):"),
     shinyWidgets::pickerInput(
       inputId = ns("genzl"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -44,7 +44,7 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
       ),multiple = TRUE,
       options =  list(
         "max-options" = 2,
-        "max-options-text" = "Maximal 2 Indikatoren auswählen")
+        "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
       # options = list(`actions-box` = TRUE,
       #                `deselect-all-text` = "Alle abwählen",
       #                `select-all-text` = "Alle auswählen")
@@ -63,7 +63,7 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
     #                    choices = "Uni"
     #                  ))
 
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen"),
       choices = c("In Prozent", "Anzahl"),

@@ -57,7 +57,7 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_ui <- function(id){
       selected = c("Beschäftigte", "Auszubildende"),
       multiple = TRUE
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_verlauf"),
       choices = c("In Prozent", "Anzahl"),

@@ -30,7 +30,7 @@ mod_home_start_multiple_ui <- function(id){
       # ),
       multiple = T
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_start_multiple"),
       choices = c("In Prozent", "Anzahl"),

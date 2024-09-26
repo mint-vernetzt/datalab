@@ -58,7 +58,7 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
       selected = "MINT (gesamt)"
     ),
 
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("betr_abs_rel"),
       choices = c("In Prozent", "Anzahl"),

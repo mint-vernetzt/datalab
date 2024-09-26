@@ -18,7 +18,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       choices = 2013:2022,
       selected = c(2016,2022)
     ),
-    p("Indikatoren:"),
+    p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("choice_l_v"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -38,7 +38,8 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       ,
       multiple = T,
       options =  list(
-        "max-options-text" = "Maximal 3 Indikatoren auswählen")
+        "max-options" = 2,
+        "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
       # options = list(`actions-box` = TRUE,
       #                `deselect-all-text` = "Alle abwählen",
       #                `select-all-text` = "Alle auswählen")
@@ -77,7 +78,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       ),
       selected = "Sachsen"
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_l_v"),
       choices = c("In Prozent", "Anzahl"),

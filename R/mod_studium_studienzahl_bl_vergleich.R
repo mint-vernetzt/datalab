@@ -18,7 +18,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
       choices = 2013:2022,
       selected = 2022
     ),
-    p("Indikator:"),
+    p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("rank_bl_l"),
       choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",

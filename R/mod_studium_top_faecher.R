@@ -50,7 +50,7 @@ mod_studium_top_faecher_ui <- function(id){
       selected = "MINT-Fächer",
       multiple = FALSE
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("subject_abs_rel"),
       choices = c("In Prozent", "Anzahl"),

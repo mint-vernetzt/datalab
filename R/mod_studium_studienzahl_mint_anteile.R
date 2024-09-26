@@ -1,7 +1,7 @@
 mod_studium_studienzahl_mint_anteile_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Indikators:"),
+    p("Auswahl der Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("anteile_indi"),
       choices = c("internationale Studienanfänger:innen (1. Hochschulsemester)",
@@ -47,10 +47,7 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
       multiple = FALSE,
       selected = "MINT-Fachbereiche"
     ),
-
-    br(),
-
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("anteile_betrachtung"),
       choices = c("In Prozent", "Anzahl"),

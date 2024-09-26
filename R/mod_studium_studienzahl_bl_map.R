@@ -17,7 +17,7 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
       choices = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022"),
       selected = "2022"
     ),
-    p("Indikator:"),
+    p("Studierendengruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("map_l"),
       choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
@@ -32,7 +32,7 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
       multiple = F,
       options =  list(
         "max-options" = 2,
-        "max-options-text" = "Maximal 2 Indikatoren auswählen")
+        "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
     ),
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
     p("Fächer/Fächergruppen (max. 2):"),
@@ -72,7 +72,7 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                        multiple = TRUE,
                        options =  list(
                          "max-options" = 2,
-                         "max-options-text" = "Maximal 2 Indikatoren auswählen")
+                         "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
                      )),
     br(),
     shinyBS::bsPopover(id="dh_studium_fach_2", title = "",

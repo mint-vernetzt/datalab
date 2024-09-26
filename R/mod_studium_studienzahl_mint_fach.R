@@ -78,7 +78,7 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
         multiple = TRUE,
         options =  list(
           "max-options" = 2,
-          "max-options-text" = "Maximal 2 Indikatoren auswählen")
+          "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
       ),
       br(),
       shinyBS::bsPopover(id="dh_studium_mint_fach_1", title = "",

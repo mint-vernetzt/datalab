@@ -40,7 +40,7 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
           multiple = TRUE,
           options =  list(
             "max-options" = 2,
-            "max-options-text" = "Maximal 2 Indikatoren auswählen")
+            "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
         ),
 
         p("Fächergruppe:"),
@@ -268,7 +268,6 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
                                         selected = "Alle MINT-Fächer",
                                         multiple = FALSE
                                       )),
-    br(),
     p("Nicht-MINT als Vergleich anzeigen?", style = "color: #b16fab;"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("gen_gegenwert_balken"),

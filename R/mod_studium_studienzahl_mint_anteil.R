@@ -10,6 +10,20 @@
 mod_studium_studienzahl_anteil_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
     p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_studium_anteil"),
@@ -77,7 +91,7 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                        multiple = TRUE,
                        options =  list(
                          "max-options" = 2,
-                         "max-options-text" = "Maximal 2 Indikatoren auswählen")
+                         "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
                      ),
                      br(),
                      shinyBS::bsPopover(id="dh_studium_mint_1", title = "",

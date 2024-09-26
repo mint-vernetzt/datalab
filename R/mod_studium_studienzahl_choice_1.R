@@ -17,7 +17,7 @@ mod_studium_studienzahl_choice_1_ui <- function(id){
       choices = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022"),
       selected = "2022"
     ),
-    p("Indikatoren (max. 2):"),
+    p("Studierendengruppen (max. 2):"),
     shinyWidgets::pickerInput(
       inputId = ns("waffle_l"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -39,7 +39,7 @@ mod_studium_studienzahl_choice_1_ui <- function(id){
       multiple = TRUE,
       options =  list(
         "max-options" = 2,
-        "max-options-text" = "Maximal 2 Indikatoren auswählen")
+        "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
     ),
     br(),
     shinyBS::bsPopover(id="ih_studium_mint_2", title="",

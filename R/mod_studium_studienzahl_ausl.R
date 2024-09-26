@@ -41,7 +41,7 @@ mod_studium_studienzahl_ausl_ui <- function(id){
                   "Ostdeutschland (inkl. Berlin)"
       ),selected = "Deutschland"
     ),
-    p("Indikator:"),
+    p("Studierendengruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("status_ausl"),
       choices = c("Studierende",
@@ -49,7 +49,7 @@ mod_studium_studienzahl_ausl_ui <- function(id){
       ),
       selected = "Studierende"
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_studium_studienzahl_ausl"),
       choices = c("In Prozent", "Anzahl"),

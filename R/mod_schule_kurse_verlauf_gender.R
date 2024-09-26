@@ -49,7 +49,7 @@ mod_schule_kurse_verlauf_gender_ui <- function(id){
       multiple = FALSE,
       selected = c("Deutschland")
     ),
-   p("Betrachtung:"),
+   p("Darstellungsart:"),
    shinyWidgets::radioGroupButtons(
      inputId = ns("abs_rel_kurse_verlauf_gender"),
      choices = c("In Prozent", "Anzahl"),

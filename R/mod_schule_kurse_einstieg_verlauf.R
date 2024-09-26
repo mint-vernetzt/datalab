@@ -44,7 +44,7 @@ mod_schule_kurse_einstieg_verlauf_ui <- function(id){
       multiple = FALSE,
       selected = c("Deutschland")
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_kurse_einstieg_verlauf"),
       choices = c("In Prozent", "Anzahl"),

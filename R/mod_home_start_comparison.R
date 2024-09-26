@@ -34,7 +34,7 @@ mod_home_start_comparison_ui <- function(id){
       multiple = TRUE
 
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_start_comparison"),
       choices = c("In Prozent", "Anzahl"),

@@ -10,6 +10,21 @@
 mod_schule_kurse_map_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
     p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_map"),
@@ -118,7 +133,7 @@ mod_schule_kurse_map_ui <- function(id){
                                       `select-all-text` = "Alle auswählen"),
                        selected = c("Hessen", "Hamburg")
                      ),
-                     p("Betrachtung:"),
+                     p("Darstellungsart:"),
                      shinyWidgets::radioGroupButtons(
                        inputId = ns("abs_zahlen_kurse_verlauf_multiple"),
                        choices = c("In Prozent", "Anzahl"),

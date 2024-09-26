@@ -110,7 +110,7 @@ mod_international_map_arb_gender_ui <- function(id) {
                                         #   "max-options" = 2,
                                         #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
                                       ),
-                                      p("Betrachtung:"),
+                                      p("Darstellungsart:"),
                                       shinyWidgets::pickerInput(
                                         inputId = ns("map_betr_oecd_arb_gender"),
                                         choices = c("Anteil von Frauen an Allen", "Anteil an Frauen von Frauen"),

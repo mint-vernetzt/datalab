@@ -3922,7 +3922,7 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
       dplyr::mutate(jahr= as.character(.$jahr))
 
     #Trennpunkte für lange Zahlen ergänzen
-browser()
+#browser()
     df$display_rel <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     max_c <- unique(ifelse(df$fach == "MINT (Gesamt)", 30, 20))
     min_c <- unique(ifelse(df$fach == "MINT (Gesamt)", 20, 0))

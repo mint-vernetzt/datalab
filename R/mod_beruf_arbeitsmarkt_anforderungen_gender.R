@@ -10,6 +10,20 @@
 mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
     p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_arbeitsmarkt_wahl_gender"),
@@ -179,7 +193,7 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                                    "Alle Berufsfelder außer MINT" = "Andere Berufsgruppen"),
                        multiple = FALSE,
                        selected = "MINT"),
-                     p("Betrachtung:"),
+                     p("Darstellungsart:"),
                      shinyWidgets::radioGroupButtons(
                        inputId = ns("abs_zahlen_arbeitsmarkt_wahl_gender_verlauf"),
                        choices = c("In Prozent", "Anzahl"),

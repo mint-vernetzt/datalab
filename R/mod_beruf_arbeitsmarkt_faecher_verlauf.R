@@ -58,7 +58,7 @@ mod_beruf_arbeitsmarkt_faecher_verlauf_ui <- function(id){
       selected = "Beschäftigte",
       multiple = FALSE
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_arbeitsmarkt_faecher_verlauf"),
       choices = c("In Prozent", "Anzahl"),

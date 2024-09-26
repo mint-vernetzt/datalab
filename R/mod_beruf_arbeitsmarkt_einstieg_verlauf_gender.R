@@ -72,7 +72,7 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui <- function(id){
       multiple = FALSE,
       selected = c("Deutschland")
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_arbeitsmarkt_verlauf_gender"),
       choices = c("In Prozent", "Anzahl"),
