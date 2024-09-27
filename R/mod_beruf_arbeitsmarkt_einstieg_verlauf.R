@@ -10,6 +10,22 @@
 mod_beruf_arbeitsmarkt_einstieg_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+    #farbe auswahl
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
+
     p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_einstieg_verlauf"),
@@ -54,8 +70,11 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_ui <- function(id){
                   "Beschäftigte 25-55",
                   "Beschäftigte u25",
                   "Beschäftigte ü55"),
+      multiple = TRUE,
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
       selected = c("Beschäftigte", "Auszubildende"),
-      multiple = TRUE
     ),
     p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(

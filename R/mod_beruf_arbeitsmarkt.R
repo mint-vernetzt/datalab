@@ -32,7 +32,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           p(style = "text-align: left; font-size = 16px",
             "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
            Dabei unterscheiden wir zwischen Auszubildenden und (sozialversicherungspflichtigen) Beschäftigten.
-           Die Kategorisierung in MINT entspricht der Klassifikation durch die Bundesagentur für Arbeit.
+           Die Kategorisierungen der MINT-Fächer entspricht den Klassifikationen der Bundesagentur für Arbeit.
             Weitere Inforamtionen dazu finden Sie auf der Unterseite \"Hinweise & Datenquellen\".")
         ),
 

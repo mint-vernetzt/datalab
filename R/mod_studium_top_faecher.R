@@ -41,7 +41,7 @@ mod_studium_top_faecher_ui <- function(id){
                   "Westdeutschland (o. Berlin)",
                   "Ostdeutschland (inkl. Berlin)"
       ),
-      selected = "Deutschland"
+      selected = "Bayern"
     ),
     p("Fachbereich:"),
     shinyWidgets::pickerInput(
@@ -60,7 +60,7 @@ mod_studium_top_faecher_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_studium_fach_1", title="",
-                       content = paste0("In der ersten Einstellung sind die TOP-10-Fächer in Bayern in MINT bezogen auf den Frauen- bzw. Männeranteil zu sehen. Die Fächer mit dem höchsten Frauenanteil in MINT sind Pharmazie (74 % Frauen) und Biologie (65 % Frauen). Die Fächer mit dem höchsten Männeranteil in MINT sind dagegen Verkehrstechnik / Nautik mit 86 % Männern und Elektrotechnik und Informationstechnik mit 84 %."),
+                       content = paste0("In der ersten Einstellung sind die TOP-10-Fächer in Bayern in MINT bezogen auf den Frauen- bzw. Männeranteil zu sehen. Die Fächer mit dem höchsten Frauenanteil in MINT sind Pharmazie (73.1 % Frauen) und Biologie (64.5 % Frauen). Die Fächer mit dem höchsten Männeranteil in MINT sind dagegen Verkehrstechnik / Nautik mit 86.4 % Männern und Elektrotechnik und Informationstechnik mit 84 %."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_1")
