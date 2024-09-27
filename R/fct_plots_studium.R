@@ -2191,6 +2191,8 @@ mint_anteile <- function(r) {
 
 }
 
+
+#funktion für Box 2 Tab 3 Zeitlicher Lauf wo der Fehler auftritt mit doppelter Überschrift
 plot_studierende_bula_faecher <- function(r){
 
   #load UI inputs from reactive value
