@@ -382,7 +382,11 @@ arbeitsmarkt_mint_bulas <- function(r) {
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
-    df <- df[with(df, order(fachbereich, jahr, decreasing = FALSE)), ]
+
+    df <- df[with(df, order(prop, decreasing = TRUE)),]
+
+    #df <- df[with(df, order(fachbereich, decreasing = TRUE)),]
+    # df <- df[with(df, order(fachbereich, jahr, decreasing = TRUE)),]
 
     # nur nötig für stacked, machen wir hier doch nicht
     # #gegenwert Berechnen für jeweilige Auswahl
@@ -414,33 +418,39 @@ arbeitsmarkt_mint_bulas <- function(r) {
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = bundesland)) %>%
       highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-      highcharter::hc_xAxis(title = list(text = ""), categories =c("Deutschland",
-                                                                   "Westdeutschland (o. Berlin)",
-                                                                   "Ostdeutschland (einschl. Berlin)",
-                                                                   "Baden-Württemberg",
-                                                                   "Bayern",
-                                                                   "Berlin",
-                                                                   "Brandenburg",
-                                                                   "Bremen",
-                                                                   "Hamburg",
-                                                                   "Hessen",
-                                                                   "Mecklenburg-Vorpommern",
-                                                                   "Niedersachsen",
-                                                                   "Nordrhein-Westfalen",
-                                                                   "Rheinland-Pfalz",
-                                                                   "Saarland",
-                                                                   "Sachsen",
-                                                                   "Sachsen-Anhalt",
-                                                                   "Schleswig-Holstein",
-                                                                   "Thüringen")
+      highcharter::hc_xAxis(title = list(text = "")
+                            # ,categories =c("Deutschland",
+                            #                                        "Westdeutschland (o. Berlin)",
+                            #                                        "Ostdeutschland (einschl. Berlin)",
+                            #                                        "Baden-Württemberg",
+                            #                                        "Bayern",
+                            #                                        "Berlin",
+                            #                                        "Brandenburg",
+                            #                                        "Bremen",
+                            #                                        "Hamburg",
+                            #                                        "Hessen",
+                            #                                        "Mecklenburg-Vorpommern",
+                            #                                        "Niedersachsen",
+                            #                                        "Nordrhein-Westfalen",
+                            #                                        "Rheinland-Pfalz",
+                            #                                        "Saarland",
+                            #                                        "Sachsen",
+                            #                                        "Sachsen-Anhalt",
+                            #                                        "Schleswig-Holstein",
+                            #                                        "Thüringen")
       ) %>%
       # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
       # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+      # highcharter::hc_plotOptions(bar = list(
+      #   colorByPoint = TRUE,
+      #   colors = ifelse(df$bundesland %in% c("Deutschland","Westdeutschland (o. Berlin)",
+      #                                        "Ostdeutschland (einschl. Berlin)"), "#b16fab", "#A9A9A9")))
+
       highcharter::hc_plotOptions(bar = list(
         colorByPoint = TRUE,
-        colors = ifelse(df$bundesland %in% c("Deutschland","Westdeutschland (o. Berlin)",
-                                             "Ostdeutschland (einschl. Berlin)"), "#d0a9cd", "#b16fab")
-      )) %>%
+        colors = ifelse(df$bundesland == "Deutschland", "#b16fab",
+                        ifelse(df$bundesland == "Ostdeutschland (einschl. Berlin)", "#d3a4d7",
+                               ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))%>%
       # highcharter::hc_colors( "#b16fab") %>%
       highcharter::hc_title(text = paste0( "Anteil von ", title_help, " in MINT an allen ", title_h2, " in ", timerange,
                                            "<br><br><br>"),
@@ -3221,16 +3231,41 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
 
     # plot
 
+    ###vorbereitung titel
+    combine_with_and <- function(items) {
+      if (length(items) == 1) {
+        return(items)
+      } else if (length(items) == 2) {
+        return(paste(items, collapse = " und "))
+      } else {
+        return(paste(paste(items[-length(items)], collapse = ", "), "und", items[length(items)]))
+      }
+    }
+
+    # Kombiniere die Indikatoren mit Komma und "und", falls es mehrere gibt
+    indi_text <- combine_with_and(indi)
+
+    # Kombiniere auch den Fachbereich auf gleiche Weise
+    faecher_text <- combine_with_and(faecher)
+
+    # Generiere den Titel dynamisch
+    title_text <- paste0("Frauenanteil in den Gruppen ", indi_text, " im Feld ", faecher_text, " in ", regio)
+
     highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = prop, group = indikator)) %>%
       highcharter::hc_tooltip(pointFormat = "Anteil Frauen  {point.indikator} <br> Wert: {point.prop_disp} %") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       # highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Fauenanteil in MINT-Ausbildungen und -Beschäftigungen"),
+      # highcharter::hc_title(text = paste0("Frauenanteil in der Gruppe ", indi," im Feld ", faecher," in ", regio), #error 3 ist leer
+      #                       margin = 45,
+      #                       align = "center",
+      #                       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_title(text = title_text,   # Verwende den dynamisch generierten Titel
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(c("#b16fab", "#154194")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+                               "#bfc6d3", "#5f94f9")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -3255,16 +3290,44 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
     # plot
+
+
+
+    combine_with_and <- function(items) {
+      if (length(items) == 1) {
+        return(items)
+      } else if (length(items) == 2) {
+        return(paste(items, collapse = " und "))
+      } else {
+        return(paste(paste(items[-length(items)], collapse = ", "), "und", items[length(items)]))
+      }
+    }
+
+    # Kombiniere die Indikatoren mit Komma und "und", falls es mehrere gibt
+    indi_text <- combine_with_and(indi)
+
+    # Kombiniere auch den Fachbereich auf gleiche Weise
+    faecher_text <- combine_with_and(faecher)
+
+    # Generiere den Titel dynamisch
+    title_text <- paste0("Frauenanteil in den Gruppen ", indi_text, " im Feld ", faecher_text, " in ", regio)
+
     highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
       highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert_disp}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       # highcharter::hc_caption(text = "Quelle: Bundesagentur für Arbeit 2021, auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Anzahl an Frauen in MINT-Ausbildungen und -Beschäftigungen"),
+      # highcharter::hc_title(text = paste0("Anzahl an Frauen in MINT-Ausbildungen und -Beschäftigungen"),
+      #                       margin = 45,
+      #                       align = "center",
+      #                       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      # highcharter::hc_colors(c("#b16fab", "#154194")) %>%
+      highcharter::hc_title(text = title_text,   # Verwende den dynamisch generierten Titel
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(c("#b16fab", "#154194")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+                               "#bfc6d3", "#5f94f9")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%

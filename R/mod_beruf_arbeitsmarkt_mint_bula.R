@@ -126,8 +126,7 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                   "Sachsen",
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
-                  "Thüringen"
-                  ,
+                  "Thüringen",
                   "Westdeutschland (o. Berlin)",
                   "Ostdeutschland (inkl. Berlin)"
                   ),

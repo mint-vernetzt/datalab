@@ -1033,7 +1033,19 @@ studierende_bula_mint <- function(r) {
       highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
       highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
       highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
-      highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
+
+      #Anpassung der Farben
+
+      highcharter::hc_plotOptions(bar = list(
+        colorByPoint = TRUE,
+        colors = ifelse(df$region == "Deutschland", "#b16fab",
+                        ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
+                               ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
+
+      #das deleted
+      # highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
+
+
       highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in MINT-Fächern an allen ", help,  " (", timerange, ")"),
                             margin = 25,
                             align = "center",
@@ -2567,12 +2579,24 @@ plot_studierende_bula_faecher <- function(r){
     df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
 
+    df <- df[with(df, order(proportion, decreasing = TRUE)),]
+
+
     # Plot
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
       highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
       highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
       highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
-      highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
+
+
+      #highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
+
+      highcharter::hc_plotOptions(bar = list(
+        colorByPoint = TRUE,
+        colors = ifelse(df$region == "Deutschland", "#b16fab",
+                        ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
+                               ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
+
       highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")"),
                             margin = 25,
                             align = "center",
