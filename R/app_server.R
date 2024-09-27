@@ -25,6 +25,18 @@ app_server <- function(input, output, session) {
 
   mod_fachkraft_server("fachkraft_ui_1")
 
+
+
+
+
+
+
+
+
+
+
+
+
   # react_search <- reactiveValues()
   # mod_suche_server("suche_1", react_search, parent_session = session)
   # mod_suche_eingabe_server("suche_eingabe_1", react_search, parent_session = session)
