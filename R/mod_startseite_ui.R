@@ -61,16 +61,54 @@ mod_startseite_start_ui <- function(id){
     ),
 
     # How-To
+    # fluidRow(
+    #   shinydashboard::box(
+    #     width = 10,
+    #     img(src='www/How-To_MINT-DataLab_2.png',
+    #         class = "img-responsive",
+    #         # height = "800px",
+    #         #width = "150px",
+    #         alt = "How to",
+    #         style="display: block; margin-left: auto; margin-right: auto;"
+    #     ))
+    # ),
+
+
+    # # How-To
+    # fluidRow(
+    #      shinydashboard::box(
+    #         width = 10,
+    #        img(src='www/How-To_MINT-DataLab_2.png',
+    #                     class = "img-responsive",
+    #                    # height = "800px",
+    #                     #width = "150px",
+    #                     alt = "How to",
+    #                     style="display: block; margin-left: auto; margin-right: auto;"
+    #                 ))
+    # ),
+
     fluidRow(
-         shinydashboard::box(
-            width = 10,
-           img(src='www/How-To_MINT-DataLab_2.png',
-                        class = "img-responsive",
-                       # height = "800px",
-                        #width = "150px",
-                        alt = "How to",
-                        style="display: block; margin-left: auto; margin-right: auto;"
-                    ))
+      shinydashboard::box(
+        width = 10,
+        img(src='www/howto_turan_neu_1.png',
+            class = "img-responsive",
+            # height = "800px",
+            #width = "150px",
+            alt = "How to",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        ))
+    ),
+
+    fluidRow(
+      shinydashboard::box(
+        width = 10,
+        img(src='www/howto_turan_neu_2.png',
+            class = "img-responsive",
+            # height = "800px",
+            #width = "150px",
+            alt = "How to",
+            style="display: block; margin-left: auto; margin-right: auto;"
+        ))
     ),
 
 

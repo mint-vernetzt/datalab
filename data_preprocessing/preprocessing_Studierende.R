@@ -10,15 +10,16 @@ library(readxl)
 library(janitor)
 library(purrr)
 library(readr)
-library(countrycode)
+library(countrycode)S
 
 
 # hier pathen
 
 akro <- "tko"
-pfad <- paste0("C:/Users/", akro,
-               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
-
+# pfad <- paste0("C:/Users/", akro,
+#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+# oder optional bei mir ist es anders:
+pfad <- paste0("C:/Users/", akro ,"/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 # Studierende Domestisch ----
 
@@ -272,6 +273,263 @@ duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht, jahr
 ## Studierende detailliert ----
 
 
+
+
+
+
+
+# hier habe ich (turan) jetzt mal mich an das preprocessing getraut. Ich hoffe an der richtigen Stelle.
+# preprocessin studierende_Absolventinnen 2013-2022, excel file = Brunner_Absolventen_Land_FG_STB_2022
+
+
+#akronym pathing
+akro <- "tko"
+# pfad <- paste0("C:/Users/", akro,
+#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+# oder optional bei mir ist es anders:
+#pfad <- paste0("C:/Users/", akro ,"/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+# hier noch etwas ungenau, weil der pfad dieser excel datei woanders liegt:
+pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/01_Eingang/Destatis/Datenlieferung_24_08_Bildungsausländer_Absolventen/")
+
+
+#Daten einlesen
+Jahre <- as.character(2013:2022)
+rohe_data_df <- data.frame()
+
+for(i in 1:length(Jahre)){
+  temporar <- readxl::read_xlsx(paste0(pfad, "Brunner_Absolventen_Land_FG_STB_2022.xlsx"), sheet = Jahre[i])
+  temporar$jahr <- as.numeric(Jahre[i])
+  rohe_data_df <- rbind(rohe_data_df, temporar)
+}
+
+rm(temporar)
+rohe_data_df <- rohe_data_df %>% select(-c(`...2`, `...3`, `...5`))
+
+
+colnames(rohe_data_df) <- c("bundesland", "faechergruppe", "studienbereich", "bestandene pruefung", "weiblich",
+                            "auslaender", "bildungsauslaender", "lehramtspruefung zusammen", "Bachelorabschluss (Lehramt)",
+                            "Masterabschluss (Lehramt)", "jahr")
+
+rohe_data_df$bereich <- "hochschule"
+
+#neue darstellung
+rohe_data_df <- rohe_data_df %>%
+  pivot_longer(cols = "bestandene pruefung":"Masterabschluss (Lehramt)",
+               values_to = "wert", names_to = "indikator") %>%
+  na.omit()
+
+bulas <- c(
+  "Baden-Württemberg",
+  "Bayern",
+  "Berlin",
+  "Brandenburg",
+  "Bremen",
+  "Hamburg",
+  "Hessen",
+  "Mecklenburg-Vorpommern",
+  "Niedersachsen",
+  "Nordrhein-Westfalen",
+  "Rheinland-Pfalz",
+  "Saarland",
+  "Sachsen",
+  "Sachsen-Anhalt",
+  "Schleswig-Holstein",
+  "Thüringen")
+
+df_testroh <- rohe_data_df %>%
+  mutate(
+    bundesland = case_when(
+      bundesland == 1 ~ bulas[1],
+      bundesland == 2~ bulas[2],
+      bundesland == 3 ~ bulas[3],
+      bundesland == 4 ~ bulas[4],
+      bundesland == 5 ~ bulas[5],
+      bundesland == 6 ~ bulas[6],
+      bundesland == 7 ~ bulas[7],
+      bundesland == 8 ~ bulas[8],
+      bundesland == 9 ~ bulas[9],
+      bundesland == 10 ~ bulas[10],
+      bundesland == 11 ~ bulas[11],
+      bundesland == 12 ~ bulas[12],
+      bundesland == 13 ~ bulas[13],
+      bundesland == 14 ~ bulas[14],
+      bundesland == 15 ~ bulas[15],
+      bundesland == 16 ~ bulas[16],
+      bundesland == "~~" ~ "Deutschland"
+    ),
+    faechergruppe = case_when(
+      faechergruppe == "Zusammen" ~ "Gesamt",
+      faechergruppe == "Insgesamt" ~ "Gesamt",
+      T ~ faechergruppe
+    ),
+    studienbereich = case_when(
+      studienbereich == "Zusammen" ~ "Alle Fächer",
+      studienbereich == "Insgesamt" ~ "Alle Fächer",
+      T ~ studienbereich
+    ),
+    wert = as.numeric(wert),
+    jahr = as.numeric(jahr),
+    geschlecht = case_when(
+      str_detect(pattern="weiblich", indikator) ~ "Frauen",
+      T ~ "Gesamt"
+    ),
+    indikator = case_when(
+      indikator %in% c("bestandene pruefung", "weiblich") ~ "Absolventen",
+      indikator == "auslaender" ~ "ausländische Absolventen",
+      indikator == "auslaender" ~ "ausländische Absolventen",
+      indikator == "bildungsauslaender" ~ "internationale Absolventen",
+      indikator == "lehramtspruefung zusammen" ~ "Absolventen (Lehramt)",
+      indikator == "Bachelorabschluss (Lehramt)" ~ "Bachelorabsolventen (Lehramt)",
+      indikator == "Masterabschluss (Lehramt)" ~ "Masterabsolventen (Lehramt)",
+      T ~ indikator
+    ),
+    mint_select = case_when(
+      faechergruppe %in% c("Mathematik, Naturwissenschaften", "Ingenieurwissenschaften") ~
+        "MINT",
+      T ~ "Nicht MINT"
+    ),
+    typ = case_when(
+      studienbereich == "Alle Fächer" ~ "Aggregat",
+      studienbereich != "Alle Fächer" ~ "Einzelauswahl"
+    )
+  ) %>%
+  filter(faechergruppe %in% c("Mathematik, Naturwissenschaften",
+                            "Ingenieurwissenschaften") |
+           studienbereich == "Alle Fächer")
+
+
+#Aggregate
+mint_agg_testroh <- df_testroh %>%
+  filter(faechergruppe %in% c("Mathematik, Naturwissenschaften",
+                            "Ingenieurwissenschaften") &
+           studienbereich == "Alle Fächer",
+         bundesland != "Deutschland") %>%
+  group_by(bundesland, jahr, geschlecht, indikator) %>%
+  summarise(wert = sum(wert)) %>%
+  ungroup() %>%
+  mutate(bereich = "hochschule",
+         typ = "Aggregat",
+         mint_select = "Nicht MINT",
+         studienbereich = "Alle MINT-Fächer",
+         faechergruppe = "MINT")
+
+
+#nicht mint
+nicht_mint_agg_testroh <- df_testroh %>%
+  filter(!(faechergruppe %in% c("Mathematik, Naturwissenschaften",
+                              "Ingenieurwissenschaften",
+                              "Gesamt")) &
+           studienbereich == "Alle Fächer",
+         bundesland != "Deutschland") %>%
+  group_by(bundesland, jahr, geschlecht, indikator) %>%
+  summarise(wert = sum(wert)) %>%
+  ungroup() %>%
+  mutate(bereich = "hochschule",
+         typ = "Aggregat",
+         mint_select = "Nicht MINT",
+         studienbereich = "Alle Nicht MINT-Fächer",
+         faechergruppe = "Nicht MINT")
+
+df_all_testroh <- rbind(df_testroh, mint_agg_testroh, nicht_mint_agg_testroh)
+
+
+de_all_testroh <- df_all_testroh %>%
+  filter(faechergruppe != "Gesamt") %>%
+  group_by(jahr, faechergruppe, geschlecht, indikator, studienbereich, typ, mint_select) %>%
+  summarise(wert = sum(wert)) %>%
+  ungroup() %>%
+  mutate(bereich = "hochschule",
+         bundesland = "Deutschland")
+
+
+df_all_testroh <- rbind(df_all_testroh, de_all_testroh)
+
+#Verbesserung der unklaren sachen:
+df_all_testroh$studienbereich <- ifelse(!(df_all_testroh$faechergruppe %in% c("Gesamt")) & df_all_testroh$studienbereich == "Alle Fächer",
+                                        df_all_testroh$faechergruppe, df_all_testroh$studienbereich)
+
+
+###weiter gehts - copy pasted here von unten
+df_all_testroh <- df_all_testroh %>%
+  mutate(studienbereich =case_when(
+    studienbereich == "Mathematik, Naturwissenschaften allgemein" ~
+      "allgemeine naturwissenschaftliche und mathematische Fächer",
+    studienbereich == "Ingenieurwissenschaften allgemein" ~
+      "Ingenieurwesen allgemein",
+    T ~ studienbereich
+  )
+)
+
+
+
+df_all_testroh <- df_all_testroh %>%
+  pivot_wider(names_from = geschlecht, values_from = wert, values_fill = list(wert = NA)) %>%
+  mutate(Männer = ifelse(is.na(Frauen), NA, Gesamt - Frauen)) %>%
+  pivot_longer(c("Männer", "Frauen", "Gesamt"), names_to = "geschlecht", values_to = "wert") %>%
+  mutate(studienbereich = case_when(
+    studienbereich == "Ingenieurwissenschaften" & jahr > 2014 ~ "Ingenieurwissenschaften (inkl. Informatik)",
+    studienbereich == "Ingenieurwissenschaften" & jahr < 2015 ~ "Ingenieurwissenschaften (ohne Informatik)",
+    TRUE ~ studienbereich
+  )) %>%
+  na.omit()
+
+states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Hamburg",
+                                  "Hessen", "Niedersachsen", "Nordrhein-Westfalen",
+                                  "Rheinland-Pfalz", "Saarland", "Schleswig-Holstein"),
+                         east = c("Brandenburg", "Mecklenburg-Vorpommern", "Sachsen",
+                                  "Sachsen-Anhalt", "Thüringen", "Berlin"))
+
+
+
+
+
+
+df_ew_testroh <- df_all_testroh
+df_ew_testroh$dummy_west <- ifelse(df_ew_testroh$bundesland %in% states_east_west$west & df_ew_testroh$bundesland != "Deutschland", "Westdeutschland (o. Berlin)", NA)
+df_ew_testroh$dummy_west <- ifelse(df_ew_testroh$bundesland %in% states_east_west$east & df_ew_testroh$bundesland != "Deutschland", "Ostdeutschland (inkl. Berlin)", df_ew_testroh$dummy_west)
+
+df_ew_testroh <- df_ew_testroh %>% dplyr::group_by(jahr, geschlecht, indikator, faechergruppe, studienbereich, dummy_west
+                                   ,bereich, typ, mint_select) %>%
+  dplyr::summarise(wert = sum(wert, na.rm = T))
+
+colnames(df_ew_testroh)[colnames(df_ew_testroh) == "dummy_west"] <- "bundesland"
+
+df_ew_testroh <- df_ew_testroh[, colnames(df_all_testroh)]
+
+df_ew_testroh <- na.omit(df_ew_testroh)
+df_all_testroh <- rbind(df_all_testroh, df_ew_testroh)
+
+studierende_absolventen<- df_all_testroh
+## Export
+
+# rio::export(studierende_detailliert, paste0(pfad, "studierende_detailliert.xlsx"))
+
+# setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw")
+
+
+setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+
+#usethis::use_data(studierende_absolventen, overwrite = T)
+save(studierende_absolventen, file = "studierende_absolventen.RData")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #-----------------------------------------------------------------------------------------------------------------#
 # Ein Datensatz, der nur die Datensätze für mit mit Fächerunterscheidung beinhaltet für alle Indikatoren          #
 #-----------------------------------------------------------------------------------------------------------------#
@@ -282,6 +540,9 @@ duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht, jahr
 akro <- "kbr"
 pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+#akro turan
+pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 # Daten einlesen
 sheet <- as.character(2013:2021)
