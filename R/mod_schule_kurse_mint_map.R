@@ -37,7 +37,7 @@ mod_schule_kurse_mint_map_ui <- function(id){
     conditionalPanel(condition = "input.ansicht_mint_map == 'Übersicht - Kartendiagramm'",
                      ns = ns,
                      p("Jahr:"),
-                     shinyWidgets::pickerInput(
+                     shinyWidgets::sliderTextInput(
                        inputId = ns("date_mint_map"),
                        label = NULL,
                        choices = 2013:2022,
@@ -70,8 +70,8 @@ mod_schule_kurse_mint_map_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("states_kurse_verlauf_mint"),
                        choices = c("Deutschland",
-                                   "Westdeutschland (o. Berlin)",
-                                   "Ostdeutschland (inkl. Berlin)",
+                                  "Westdeutschland (o. Berlin)",
+                                  "Ostdeutschland (inkl. Berlin)",
                                    "Baden-Württemberg",
                                    "Bayern",
                                    "Berlin",

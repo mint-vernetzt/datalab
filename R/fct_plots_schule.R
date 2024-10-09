@@ -39,9 +39,7 @@ kurse_waffle_mint <- function(r) {
       dplyr::select(indikator, fachbereich, anzeige_geschlecht, wert) %>%
       dplyr::collect()
 
-
     if(ebene == "MINT-Fachbereiche"){
-
 
       # combine subjects to get numbers on share of MINT
       # make a function out of it
@@ -393,15 +391,13 @@ kurse_einstieg_comparison <- function(r) {
   regio <- r$region_kurse_einstieg_comparison
   betrachtung <- r$ansicht_kurse_einstieg_comparison
 
-  # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "kurse") %>%
-    dplyr::filter(jahr == timerange,
-                  region == regio,
-                  fachbereich %in% c( "MINT", "andere Fächer" ),
-                  anzeige_geschlecht == "Gesamt") %>%
-    dplyr::select(-region, -jahr, - bereich) %>%
-    dplyr::collect()
-
+    df <- dplyr::tbl(con, from = "kurse") %>%
+      dplyr::filter(jahr == timerange,
+                    region == regio,
+                    fachbereich %in% c( "MINT", "andere Fächer" ),
+                    anzeige_geschlecht == "Gesamt") %>%
+      dplyr::select(-region, -jahr, - bereich) %>%
+      dplyr::collect()
 
   df <- df %>%
     dplyr::group_by(indikator) %>%
@@ -503,16 +499,15 @@ kurse_verlauf_single <- function(r) {
   regio <- r$region_kurse_einstieg_verlauf
   absolut_selector <- r$abs_zahlen_kurse_einstieg_verlauf
 
-
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "kurse") %>%
-    dplyr::filter(jahr %in% t,
-                  region == regio,
-                  anzeige_geschlecht == "Gesamt",
-                  fachbereich %in% c( "MINT", "Alle Fächer" )
-                  ) %>%
-    dplyr::select(-bereich, -region, -anzeige_geschlecht)%>%
-    dplyr::collect()
+    df <- dplyr::tbl(con, from = "kurse") %>%
+      dplyr::filter(jahr %in% t,
+                    region == regio,
+                    anzeige_geschlecht == "Gesamt",
+                    fachbereich %in% c( "MINT", "Alle Fächer" )
+                    ) %>%
+      dplyr::select(-bereich, -region, -anzeige_geschlecht)%>%
+      dplyr::collect()
 
   df_alle <- subset(df, df$fachbereich == "Alle Fächer")
   df_alle <- df_alle %>%
@@ -1485,14 +1480,10 @@ kurse_verlauf_subjects_bl <- function(r) {
   # load UI inputs from reactive value
 
   absolut_selector <- r$abs_zahlen_kurse_verlauf_subject_bl
-
   timerange <- r$date_kurse_verlauf_subject_bl
   t <- as.numeric(timerange[1]:timerange[2])
-
   states <- r$states_kurse_verlauf_subject_bl
-
   indikator_kurse <- r$topic_selected_subject_bl
-
   subjects_select <- r$subject_selected_bl_sub
 
   color_fach <- c(
@@ -2035,9 +2026,15 @@ kurse_comparison_gender <- function(r) {
   # load UI inputs from reactive value
   betrachtung <- r$ansicht_kurse_comparison_gender
   timerange <- r$date_kurse_comparison_gender
-  gegenwert <- r$gegenwert_kurse_comparison_gender
   indika <- r$indikator_kurse_comparison_gender
   regio <- r$region_kurse_comparison_gender
+
+  if(betrachtung == "Einzelansicht - Kuchendiagramm"){
+    gegenwert <- r$gegenwert_kurse_comparison_gender
+  }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
+    gegenwert <- r$gegenwert_kurse_comparison_gender_balken
+   # indika <- DBI:dbGetQuery(con, "SELECT DISTINCT indikator FROM kurse")
+  }
 
   if (betrachtung == "Kursvergleich - Hanteldiagramm"){
 
@@ -2379,7 +2376,7 @@ kurse_verlauf_gender <- function(r){
       highcharter::hc_title(text = paste0("Anzahl von Mädchen in MINT-Oberstufenkursen"),
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Arial", fontSize = "18px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_colors(colors_mint_vernetzt$general) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "Arial", fontSize = "16px")
@@ -2398,7 +2395,7 @@ kurse_verlauf_gender <- function(r){
       highcharter::hc_title(text = paste0("Mädchenanteil in MINT-Oberstufenkursen"),
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Arial", fontSize = "18px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_colors(colors_mint_vernetzt$general) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "Arial", fontSize = "16px")

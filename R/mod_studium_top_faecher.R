@@ -41,7 +41,7 @@ mod_studium_top_faecher_ui <- function(id){
                   "Westdeutschland (o. Berlin)",
                   "Ostdeutschland (inkl. Berlin)"
       ),
-      selected = "Bayern"
+      selected = "Deutschland"
     ),
     p("Fachbereich:"),
     shinyWidgets::pickerInput(

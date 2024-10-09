@@ -49,33 +49,33 @@ prep_kurse_proportion <- function(df, indikator_choice) {
 
 prep_kurse_east_west <- function(df, type = "no_subjects") {
   #berechnet war Falsch - hat Deutschland in Osten enthalten
-
+  browser()
   df_incl <- df
 
   # create dummy variable to indicate east or west
-  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west & df_incl$region != "Deutschland", "Westen", NA)
-  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$east & df_incl$region != "Deutschland", "Osten", df_incl$dummy_west)
+  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west & df_incl$region != "Deutschland", "Westdeutschland (o. Berlin)", NA)
+  df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$east & df_incl$region != "Deutschland", "Ostdeutschland (inkl. Berlin)", df_incl$dummy_west)
   df_incl <- na.omit(df_incl)# ifelse erstellt nochmal DE mit "NA" als region-Namen -->löschen
 
   # aggregate values
-  df_incl <- df_incl %>% dplyr::group_by(jahr, anzeige_geschlecht, indikator, fachbereich, dummy_west, bereich) %>%
+  df_incl <- df_incl %>% dplyr::group_by(jahr, anzeige_geschlecht, indikator, fachbereich, dummy_west) %>%
     dplyr::summarise(wert = sum(wert, na.rm = T))
 
-  names(df_incl)[5] <- "region"
+  names(df_incl)[names(df_incl) == "dummy_west"] <- "region"
 
-  if(type == "subjects"){
-
-    # df_incl <-  df_incl %>%
-    #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-    #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-    #                   wert[anzeige_geschlecht == "Männer"])
-
-    df_incl <- df_incl[, colnames(df)]
-
-    df <- rbind(df, df_incl)
-
-  } else {
-   # # calcualte new "Gesamt"
+  # if(type == "subjects"){
+  #
+  #   # df_incl <-  df_incl %>%
+  #   #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
+  #   #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
+  #   #                   wert[anzeige_geschlecht == "Männer"])
+  #
+  #   df_incl <- df_incl[, colnames(df)]
+  #
+  #   df <- rbind(df, df_incl)
+  #
+  # } else {
+  #  # # calcualte new "Gesamt"
    #  df_incl <-  df_incl %>%
    #    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
    #    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
@@ -86,7 +86,7 @@ prep_kurse_east_west <- function(df, type = "no_subjects") {
 
     df <- rbind(df, df_incl)
 
-  }
+  # }
 
 
   return(df)

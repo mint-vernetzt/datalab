@@ -29,8 +29,8 @@ mod_schule_kurse_einstieg_comparison_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("region_kurse_einstieg_comparison"),
       choices = c("Deutschland",
-                  "Westdeutschland (o. Berlin)",
-                  "Ostdeutschland (inkl. Berlin)",
+                 "Westdeutschland (o. Berlin)",
+                 "Ostdeutschland (inkl. Berlin)",
                   "Baden-Württemberg",
                   "Bayern",
                   "Berlin",

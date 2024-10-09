@@ -23,32 +23,56 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
     #   shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_einstieg_verlauf_gender"), label = "Nein", inline = TRUE),
     #   tags$span("Ja")
     # ),
-    p("Studierendengruppen (max. 2):"),
+    p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("genzl"),
-      choices = c("Studienanfänger:innen (1.Fachsemester)",
-                  "Studienanfänger:innen (1.Hochschulsemester)",
-                  "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
-                  "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
-                  "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
-                  "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
-                  "Studienanfänger:innen (Universität, 1.Fachsemester)",
-                  "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
-                  "Studierende",
-                  "Studierende (Fachhochschulen)",
-                  "Studierende (Lehramt, Universität)",
-                  "Studierende (Universität)"
+      choices = c(
+        "Studienanfänger:innen (1. Fachsemester)",
+        "Studienanfänger:innen (1. Hochschulsemester)",
+        "Studierende",
+        "Studierende (Lehramt)"
       ),
       selected = c("Studierende"
-                   , "Studienanfänger:innen (1.Fachsemester)"
-      ),multiple = TRUE,
-      options =  list(
-        "max-options" = 2,
-        "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
+                   , "Studienanfänger:innen (1. Hochschulsemester)"
+      ),multiple = TRUE
       # options = list(`actions-box` = TRUE,
       #                `deselect-all-text` = "Alle abwählen",
       #                `select-all-text` = "Alle auswählen")
     ),
+    p("Region:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("gen_z_region"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = FALSE,
+      selected = c("Deutschland")
+    ),
+
+    p("Fach/Fächergruppe:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("gen_z_faecher"),
+      choices = studi_det_ui_faecher(),
+      selected = "Alle MINT-Fächer",
+      multiple = FALSE),
+
     # p("Auswahl der Hochschulform:"),
     # conditionalPanel(condition = "input.nurLehramt_studierende_einstieg_verlauf_gender == false",
     #                  ns = ns,
@@ -100,6 +124,13 @@ mod_studium_studienzahl_einstieg_verlauf_gender_server <- function(id, r){
       r$abs_zahlen <- input$abs_zahlen
     })
 
+    observeEvent(input$gen_z_faecher, {
+      r$gen_z_faecher <- input$gen_z_faecher
+    })
+
+    observeEvent(input$gen_z_region, {
+      r$gen_z_region <- input$gen_z_region
+    })
 
     # observeEvent(input$hochschulform_studierende_einstieg_verlauf_gender_1, {
     #   r$hochschulform_studierende_einstieg_verlauf_gender_1 <- input$hochschulform_studierende_einstieg_verlauf_gender_1

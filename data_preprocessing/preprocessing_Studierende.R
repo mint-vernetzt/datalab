@@ -283,7 +283,7 @@ duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht, jahr
 
 
 #akronym pathing
-akro <- "tko"
+akro <- "kbr"
 # pfad <- paste0("C:/Users/", akro,
 #                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 # oder optional bei mir ist es anders:
@@ -291,7 +291,7 @@ akro <- "tko"
 
 # hier noch etwas ungenau, weil der pfad dieser excel datei woanders liegt:
 pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/01_Eingang/Destatis/Datenlieferung_24_08_Bildungsausländer_Absolventen/")
-
+pfad <- paste0("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/01_Eingang/Destatis/Datenlieferung_24_08_Bildungsausländer_Absolventen/")
 
 #Daten einlesen
 Jahre <- as.character(2013:2022)
@@ -304,7 +304,8 @@ for(i in 1:length(Jahre)){
 }
 
 rm(temporar)
-rohe_data_df <- rohe_data_df %>% select(-c(`...2`, `...3`, `...5`))
+#rohe_data_df <- rohe_data_df %>% select(-c(`...2`, `...3`, `...5`))
+rohe_data_df <- rohe_data_df %>% select(-c(`Statistisches Bundesamt`, `...3`, `...5`))
 
 
 colnames(rohe_data_df) <- c("bundesland", "faechergruppe", "studienbereich", "bestandene pruefung", "weiblich",
@@ -339,24 +340,28 @@ bulas <- c(
 
 df_testroh <- rohe_data_df %>%
   mutate(
+    # bundesland = case_when(
+    #   bundesland == 1 ~ bulas[1],
+    #   bundesland == 2~ bulas[2],
+    #   bundesland == 3 ~ bulas[3],
+    #   bundesland == 4 ~ bulas[4],
+    #   bundesland == 5 ~ bulas[5],
+    #   bundesland == 6 ~ bulas[6],
+    #   bundesland == 7 ~ bulas[7],
+    #   bundesland == 8 ~ bulas[8],
+    #   bundesland == 9 ~ bulas[9],
+    #   bundesland == 10 ~ bulas[10],
+    #   bundesland == 11 ~ bulas[11],
+    #   bundesland == 12 ~ bulas[12],
+    #   bundesland == 13 ~ bulas[13],
+    #   bundesland == 14 ~ bulas[14],
+    #   bundesland == 15 ~ bulas[15],
+    #   bundesland == 16 ~ bulas[16],
+    #   bundesland == "~~" ~ "Deutschland"
+    # ),
     bundesland = case_when(
-      bundesland == 1 ~ bulas[1],
-      bundesland == 2~ bulas[2],
-      bundesland == 3 ~ bulas[3],
-      bundesland == 4 ~ bulas[4],
-      bundesland == 5 ~ bulas[5],
-      bundesland == 6 ~ bulas[6],
-      bundesland == 7 ~ bulas[7],
-      bundesland == 8 ~ bulas[8],
-      bundesland == 9 ~ bulas[9],
-      bundesland == 10 ~ bulas[10],
-      bundesland == 11 ~ bulas[11],
-      bundesland == 12 ~ bulas[12],
-      bundesland == 13 ~ bulas[13],
-      bundesland == 14 ~ bulas[14],
-      bundesland == 15 ~ bulas[15],
-      bundesland == 16 ~ bulas[16],
-      bundesland == "~~" ~ "Deutschland"
+      bundesland == "Insgesamt" ~ "Deutschland",
+      T ~ bundesland
     ),
     faechergruppe = case_when(
       faechergruppe == "Zusammen" ~ "Gesamt",
@@ -376,7 +381,6 @@ df_testroh <- rohe_data_df %>%
     ),
     indikator = case_when(
       indikator %in% c("bestandene pruefung", "weiblich") ~ "Absolventen",
-      indikator == "auslaender" ~ "ausländische Absolventen",
       indikator == "auslaender" ~ "ausländische Absolventen",
       indikator == "bildungsauslaender" ~ "internationale Absolventen",
       indikator == "lehramtspruefung zusammen" ~ "Absolventen (Lehramt)",

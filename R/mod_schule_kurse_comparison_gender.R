@@ -31,7 +31,7 @@ mod_schule_kurse_comparison_gender_ui <- function(id){
       choices = c("Deutschland",
                   "Westdeutschland (o. Berlin)",
                   "Ostdeutschland (inkl. Berlin)",
-                  "Baden-Württemberg",
+                  #"Baden-Württemberg",
                   "Bayern",
                   "Berlin",
                   "Brandenburg",
@@ -52,9 +52,7 @@ mod_schule_kurse_comparison_gender_ui <- function(id){
       selected = "Deutschland"
     ),
 
-    conditionalPanel(condition = sprintf("input['%s'] == 'Einzelansicht - Kuchendiagramm'
-                                         || input['%s'] == 'Gruppenvergleich - Balkendiagramm'",
-                                         ns("ansicht_kurse_comparison_gender"),
+    conditionalPanel(condition = sprintf("input['%s'] == 'Einzelansicht - Kuchendiagramm'",
                                          ns("ansicht_kurse_comparison_gender")),
 
     # "input.ansicht_kurse_comparison_gender == 'Einzelansicht - Kuchendiagramm'
@@ -77,6 +75,18 @@ mod_schule_kurse_comparison_gender_ui <- function(id){
       checkIcon = list(yes = icon("ok",
                                   lib = "glyphicon"))
     )
+    ),
+    conditionalPanel(condition = sprintf("input['%s'] == 'Gruppenvergleich - Balkendiagramm'",
+                                         ns("ansicht_kurse_comparison_gender")),
+                     p("Nicht-MINT als Vergleich anzeigen?", style = "color: #b16fab;"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("gegenwert_kurse_comparison_gender_balken"),
+                       choices = c("Ja", "Nein"),
+                       selected = "Nein",
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     )
     ),
     br(),
     shinyBS::bsPopover(id="ih_schule_frauen_1", title="",
@@ -111,6 +121,10 @@ mod_schule_kurse_comparison_gender_server <- function(id, r){
 
     observeEvent(input$gegenwert_kurse_comparison_gender, {
       r$gegenwert_kurse_comparison_gender <- input$gegenwert_kurse_comparison_gender
+    })
+
+    observeEvent(input$gegenwert_kurse_comparison_gender_balken, {
+      r$gegenwert_kurse_comparison_gender_balken <- input$gegenwert_kurse_comparison_gender_balken
     })
 
     observeEvent(input$region_kurse_comparison_gender, {
