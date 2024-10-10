@@ -56,7 +56,10 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
                        choices = studi_det_ui_faecher(),
                        selected = c("Informatik", "Elektrotechnik und Informationstechnik",
                                     "Physik, Astronomie", "Mathematik", "Chemie", "Maschinenbau/Verfahrenstechnik"),
-                       multiple = TRUE
+                       multiple = TRUE,
+                       options = list(`actions-box` = TRUE,
+                                      `deselect-all-text` = "Alle abwählen",
+                                      `select-all-text` = "Alle auswählen")
                      )
     ),
 
