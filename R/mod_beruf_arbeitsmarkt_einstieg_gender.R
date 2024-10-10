@@ -68,7 +68,7 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
 
     conditionalPanel(condition = "input.ansicht_arbeitsmarkt_einstieg_gender == 'Einzelansicht - Kuchendiagramm'",
                     ns = ns,
-                     p("Beschäftigtengruppe (max 3):"),
+                     p("Beschäftigtengruppe (max. 2):"),
                      shinyWidgets::pickerInput(
                        inputId = ns("indikator_arbeitsmarkt_einsteig_gender_pie"),
                        choices = c("Auszubildende",
@@ -80,7 +80,10 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
                                    "Beschäftigte u25",
                                    "Beschäftigte ü55"),
                        selected = "Beschäftigte",
-                       multiple = TRUE
+                       multiple = TRUE,
+                       options =  list(
+                         "max-options" = 2,
+                         "max-options-text" = "<span style='color: red;'>Maximal 2 Indikatoren auswählen</span>")
                      ),
                      p("Nicht-MINT als Vergleich anzeigen?", style = "color: #b16fab;"),
                      shinyWidgets::radioGroupButtons(

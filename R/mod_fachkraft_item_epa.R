@@ -27,7 +27,7 @@ mod_fachkraft_item_epa_ui <- function(id){
       multiple = TRUE,
       options =  list(
         "max-options" = 2,
-        "max-options-text" = "Maximal 2 Indikatoren auswählen")
+        "max-options-text" = "<span style='color: red;'>Maximal 2 Indikatoren auswählen</span>")
     ),
 
     p("Berufslevel:"),

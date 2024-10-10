@@ -37,7 +37,7 @@ mod_home_start_einstieg_gender_ui <- function(id){
                multiple = TRUE,
                options =  list(
                  "max-options" = 2,
-                 "max-options-text" = "Bitte nur maximal 2 Bereiche auswählen"
+                 "max-options-text" = "<span style='color: red;'>Bitte nur maximal 2 Bereiche auswählen</span>"
                )
              )
              ),

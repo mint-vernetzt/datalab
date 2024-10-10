@@ -48,7 +48,7 @@ mod_studium_choice_gender_ui <- function(id){
       multiple = F,
       options =  list(
         "max-options" = 2,
-        "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
+        "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
     ),
     p("Region:"),
     shinyWidgets::pickerInput(

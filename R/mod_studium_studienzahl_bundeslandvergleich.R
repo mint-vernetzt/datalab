@@ -59,7 +59,7 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                        multiple = F,
                        options =  list(
                          "max-options" = 2,
-                         "max-options-text" = "Maximal 2 Gruppen auswählen")
+                         "max-options-text" = "<span style='color: red;'>Maximal 2 Gruppen auswählen</span>")
                      ),
                      br(),
                      shinyBS::bsPopover(id="dh_studium_fach_2", title = "",
@@ -106,7 +106,7 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                        multiple = F,
                        options =  list(
                          "max-options" = 2,
-                         "max-options-text" = "Maximal 2 Gruppen auswählen")
+                         "max-options-text" = "<span style='color: red;'>Maximal 2 Gruppen auswählen</span>")
                      ),
                      p("Regionen:"),
                      shinyWidgets::pickerInput(
