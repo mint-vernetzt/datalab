@@ -51,10 +51,7 @@ mod_beruf_arbeitsmarkt_faecher_verlauf_ui <- function(id){
                   "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
                   "Beschäftigte",
                   "ausländische Auszubildende",
-                  "ausländische Beschäftigte",
-                  "Beschäftigte 25-55",
-                  "Beschäftigte u25",
-                  "Beschäftigte ü55"),
+                  "ausländische Beschäftigte"),
       selected = "Auszubildende",
       multiple = FALSE
     ),

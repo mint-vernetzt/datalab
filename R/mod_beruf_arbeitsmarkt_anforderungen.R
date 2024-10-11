@@ -60,10 +60,7 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                                    "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
                                    "Beschäftigte",
                                    "ausländische Auszubildende",
-                                   "ausländische Beschäftigte",
-                                   "Beschäftigte 25-55",
-                                   "Beschäftigte u25",
-                                   "Beschäftigte ü55"),
+                                   "ausländische Beschäftigte"),
                        selected = "Beschäftigte",
                        multiple = FALSE
                      ),
@@ -84,10 +81,7 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                                    "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
                                    "Beschäftigte",
                                    "ausländische Auszubildende",
-                                   "ausländische Beschäftigte",
-                                   "Beschäftigte 25-55",
-                                   "Beschäftigte u25",
-                                   "Beschäftigte ü55"),
+                                   "ausländische Beschäftigte"),
                        selected = "Beschäftigte",
                        multiple = TRUE,
                        options =  list(

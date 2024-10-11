@@ -2014,7 +2014,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm" ){
     timerange <- r$zeit_beruf_faecher_bula_balken
     indikator_choice <- r$indikator_beruf_faecher_bula_balken
-    faecher <- r$fachbereich_beruf_faecher_bula_verlauf
+    faecher <- r$fachbereich_beruf_faecher_bula_balken
 
     df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
       dplyr::filter(
@@ -2137,7 +2137,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
     indi <- r$indikator_beruf_faecher_bula_verlauf
     states <- r$region_beruf_faecher_bula_verlauf
     absolut_selector <- r$abs_beruf_faecher_bula_verlauf
-    faecher <- r$fachbereich_beruf_faecher_bula_balken
+    faecher <- r$fachbereich_beruf_faecher_bula_verlauf
 
     # filter dataset based on UI inputs
     df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
@@ -2218,6 +2218,8 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
       df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
+
+
 
       # plot
       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = region)) %>%
@@ -3663,7 +3665,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
        if(betrachtung == "Zeitverlauf - Liniendiagramm"){
     timerange <- r$date_arbeitsmarkt_wahl_gender_verlauf
     t <- timerange[1]:timerange[2]
-    inid <- r$level_arbeitsmarkt_wahl_gender_verlauf
+    indi <- r$level_arbeitsmarkt_wahl_gender_verlauf
     regio <- r$states_arbeitsmarkt_wahl_gender_verlauf
     faecher <- r$fach_arbeitsmarkt_wahl_gender_verlauf
     absolut_selector <- r$abs_zahlen_arbeitsmarkt_wahl_gender_verlauf
@@ -3736,7 +3738,34 @@ arbeitsmarkt_wahl_gender <- function(r) {
 
      }else if(absolut_selector=="Anzahl"){
 
-       title_help <- paste0(indikator_choice, "r")
+
+
+
+       # df_alle <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
+       #   dplyr::filter(jahr %in% t,
+       #                 indikator == indi,
+       #                 landkreis == "alle Landkreise",
+       #                 bundesland %in% regio,
+       #                 anforderung == "Gesamt",
+       #                 geschlecht == "Frauen",
+       #                 fachbereich == "Alle")%>%
+       #   dplyr::select("indikator", "fachbereich", "geschlecht", "bundesland",
+       #                 "jahr", "wert" ) %>%
+       #   dplyr::rename(wert_ges = wert) %>%
+       #   dplyr::collect()
+       #
+       # df <- df %>%
+       #   dplyr::left_join(df_alle, by = c("bundesland", "jahr", "geschlecht", "indikator")) %>%
+       #   dplyr::rename(fachbereich = fachbereich.x) %>%
+       #   dplyr::select(-fachbereich.y) %>%
+       #   dplyr::filter(fachbereich != "Alle")
+       # # order years for plot
+       # df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
+       #
+       # title_help <- paste0(indi, "r")
+
+
+       title_help <- paste0(indi, "r")
 
        hcoptslang <- getOption("highcharter.lang")
        hcoptslang$thousandsSep <- "."
