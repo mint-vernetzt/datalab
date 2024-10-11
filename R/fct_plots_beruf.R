@@ -2044,6 +2044,9 @@ arbeitsmarkt_bula_faecher <- function(r) {
     #
     # df <- rbind(df, df_n)
 
+
+    df <- df[with(df, order(prop, decreasing = TRUE)),]
+
     # titel-helper
     title_help <- paste0(indikator_choice, "n")
     title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen Beschäftigten", title_help)
@@ -2086,11 +2089,19 @@ arbeitsmarkt_bula_faecher <- function(r) {
                                                                    "Schleswig-Holstein",
                                                                    "Thüringen")
       ) %>%
+      # highcharter::hc_plotOptions(bar = list(
+      #   colorByPoint = TRUE,
+      #   colors = ifelse(df$bundesland %in% c("Deutschland","Westdeutschland (o. Berlin)",
+      #                                        "Ostdeutschland (einschl. Berlin)"), "#d0a9cd", "#b16fab")
+      # )) %>%
+
       highcharter::hc_plotOptions(bar = list(
         colorByPoint = TRUE,
-        colors = ifelse(df$bundesland %in% c("Deutschland","Westdeutschland (o. Berlin)",
-                                             "Ostdeutschland (einschl. Berlin)"), "#d0a9cd", "#b16fab")
-      )) %>%
+        colors = ifelse(df$bundesland == "Deutschland", "#b16fab",
+                        ifelse(df$bundesland == "Ostdeutschland (einschl. Berlin)", "#d3a4d7",
+                               ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))%>%
+
+
       highcharter::hc_title(text = paste0( "Anteil von ", title_help, " in ", faecher, " an allen ", title_h2, " in ", timerange,
                                            "<br><br><br>"),
                             margin = 20,
