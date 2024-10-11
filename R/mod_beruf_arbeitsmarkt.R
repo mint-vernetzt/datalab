@@ -623,16 +623,24 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               textInput("search_in_bar_chart", "Suchen Sie Ihren Landkreis:", ""),
+                               # textInput("search_in_bar_chart", "Suchen Sie Ihren Landkreis:", ""),
+                               # shinyWidgets::pickerInput(
+                               #   inputId = "search_in_bar_chart",
+                               #   label = "Suchen Sie Ihren Landkreis:",
+                               #   choices = unique(df_compare$landkreis),  # Hier die Liste der Landkreise
+                               #   selected = NULL,  # Keine Vorauswahl
+                               #   multiple = FALSE,
+                               #   options = list(`live-search` = TRUE)
+                               # ),
                                shinycssloaders::withSpinner(
                                  htmlOutput(ns("plot_arbeitsmarkt_detail_vergleich"),height = "1600px"),
                                 color = "#154194"),
 
-                               shinyBS::bsPopover(id = "h_beruf_regional_2", title = "",
+                               shinyBS::bsPopover(id = "h_beruf_regional_23", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br> <br>In die Kategorie &quotAuszubildende mit neuem Lehrvertrag&quot fallen sowohl neue Auszubilndende als auch Auszubildende nach Vertragswechsel."),
                                                   placement = "top",
                                                   trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_regional_2")
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_regional_23")
                                )
                              # ,
                              # p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
@@ -1288,6 +1296,12 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
 
     # tab 2
+
+    # observeEvent(input$search_in_bar_chart, {
+    #   r$search_in_bar_chart <- input$search_in_bar_chart
+    # })
+
+
     observeEvent(input$search_in_bar_chart, {
       r$search_in_bar_chart <- input$search_in_bar_chart
     })
@@ -1296,6 +1310,11 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
       arbeitsmarkt_lk_detail_vergleich(r)
 
     })
+
+
+
+
+
 
     # output$plot_arbeitsmarkt_detail_vergleich  <- renderUI({
     #   plot_list <- arbeitsmarkt_lk_detail_vergleich(r)

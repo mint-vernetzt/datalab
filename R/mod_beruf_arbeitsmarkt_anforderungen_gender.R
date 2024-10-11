@@ -82,7 +82,7 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                         inputId = ns("level_arbeitsmarkt_wahl_gender_karte"),
                         choices = c("Beschäftigte",
                                     "Auszubildende",
-                                    "Auszubildende mit neuem Lehrvertrag" =  "Auszubildende (1. Jahr)", #auskommentiert bis für 2022 auch da
+                                    "Auszubildende mit neuem Lehrvertrag", #auskommentiert bis für 2022 auch da
                                     "ausländische Beschäftigte",
                                     "ausländische Auszubildende"),
                         selected = "Beschäftigte",

@@ -3459,10 +3459,12 @@ arbeitsmarkt_wahl_gender <- function(r) {
      df_m <- df %>% dplyr::filter(geschlecht=="Männer")
 
      # Titel für Plots
-     title_help <- paste0(indi, "n <br>")
+     title_help <- paste0(indi)
+     title_help <- ifelse(grepl("Beschäftigte", indi), "Beschäftigten", title_help)
+     title_help <- ifelse(grepl("Auszubildende", indi), "Auszubildenden", title_help)
      title_help <- ifelse(grepl("ausländische Beschäftigte", indi), "ausländischen Beschäftigten", title_help)
      title_help <- ifelse(grepl("ausländische Auszubildende", indi), "ausländischen Auszubildenden", title_help)
-     title_help <- ifelse(grepl("Auszubildende mit neuem Lehrvertrag", indi), "Auszubildenden <br> mit neuem Lehrvertrag <br>", title_help)
+     title_help <- ifelse(grepl("Auszubildende mit neuem Lehrvertrag", indi), "Auszubildenden (1. Jahr)", title_help)
 
      df_f <- df_f[with(df_f, order(prop, decreasing = FALSE)), ]
      df_f <- df_f %>%
@@ -3577,10 +3579,12 @@ arbeitsmarkt_wahl_gender <- function(r) {
      # title_help <- ifelse(grepl("ü55", indi), "Beschäftigten über 55 Jahren", title_help)
 
      titel_w <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil weiblicher ", title_help, ", die kein MINT-Berufsfeld wählen (", timerange, ")"),
-                       paste0("Anteil weiblicher ", title_help, ", die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
+                       paste0("Anteil weiblicher ", title_help, ", die das <br> Berufsfeld", faecher, " wählen (", timerange, ")"))
      titel_m <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil männlicher ", title_help, ", die kein MINT-Berufsfeld wählen (", timerange, ")"),
-                       paste0("Anteil männlicher ", title_help, ", die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
+                       paste0("Anteil männlicher ", title_help, ", die das <br> Berufsfeld ", faecher, " wählen (", timerange, ")"))
 
+    # titel_w <- ifelse(indi == "Auszubildende mit neuem Lehrvertrag", paste0("Anteil weiblicher Auszubildenden mit neuem Lehrvertrag, die kein MINT-Berufsfeld wählen (", timerange, ")"), paste0("Anteil weiblicher Auszubildenden mit neuem Lehrvertrag, die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
+    # titel_m <- ifelse(indi == "Auszubildende mit neuem Lehrvertrag", paste0("Anteil männlicher Auszubildenden mit neuem Lehrvertrag, die kein MINT-Berufsfeld wählen (", timerange, ")"), paste0("Anteil männlicher Auszubildenden mit neuem Lehrvertrag, die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
      # plot
      out_1 <- highcharter::hcmap(
        "countries/de/de-all",
@@ -4431,7 +4435,17 @@ arbeitsmarkt_lk_detail_map <- function(r) {
     ) %>% highcharter::hc_size(600, 550) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom") %>%
+                           verticalAlign = "bottom"
+    ) %>%
+    # highcharter::hc_exporting(
+    #   enabled = TRUE,  # Hier fügst du die Exportfunktion hinzu
+    #   buttons = list(contextButton = list(
+    #     symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #     onclick = highcharter::JS("function () { this.exportChart({ type: 'image/jpeg' }); }"),
+    #     align = 'right',
+    #     verticalAlign = 'bottom',
+    #     theme = list(states = list(hover = list(fill = '#FFFFFF'))) )))
+
     highcharter::hc_exporting(enabled = FALSE, #noch kein Download bis jetzt
                               buttons = list(contextButton = list(
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
