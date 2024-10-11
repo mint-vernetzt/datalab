@@ -54,12 +54,19 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                         selected = "Beschäftigte",
                         multiple = FALSE
                       ),
-                     br(),
                      shinyBS::bsPopover(id="ih_beruf_mint_4", title="",
-                                        content = paste0("Die erste Einstellung zeigt, dass von allen weiblichen Beschäftigten 2022 nur 9 % eine MINT-Tätigkeit ausüben. Bei den Männern arbeitet ein weitaus größerer Anteil von rund 35 % in der MINT-Branche. Dabei sind die meisten Männer im Bereich Technik tätig (29 %)."),
+                                        content = paste0("Die erste Einstellung zeigt, dass von allen weiblichen Beschäftigten 2022 nur 8.4 % eine MINT-Tätigkeit ausüben. Bei den Männern arbeitet ein weitaus größerer Anteil von rund 35 % in der MINT-Branche. Dabei sind die meisten Männer im Bereich Technik tätig (29 %)."),
                                         trigger = "hover"),
-                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_4")
-                     ),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_4"),
+
+                    br(),
+                    br(),
+                    shinyBS::bsPopover(id="poppp123", title = "",
+                                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                                       trigger = "hover"),
+                    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "poppp123"),
+                    br(),
+    ),
 
     conditionalPanel(condition = "input.ansicht_arbeitsmarkt_wahl_gender == 'Übersicht - Kartendiagramm'",
                      ns = ns,
@@ -192,7 +199,8 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                                    "Technik (gesamt)",
                                    "Alle Berufsfelder außer MINT" = "Andere Berufsgruppen"),
                        multiple = FALSE,
-                       selected = "MINT"),
+                       selected = "MINT"
+                       ),
                      p("Darstellungsart:"),
                      shinyWidgets::radioGroupButtons(
                        inputId = ns("abs_zahlen_arbeitsmarkt_wahl_gender_verlauf"),

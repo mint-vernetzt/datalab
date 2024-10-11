@@ -69,7 +69,7 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_fach_2", title="",
-                                        content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Sachsen-Anhalt im Jahr 2022 21 % der Beschäftigten in MINT arbeiten. Den größten Anteil machen dabei die ca. 142.000 Beschäftigten im Berufsfeld Technik aus."),
+                                        content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Deutschland im Jahr 2022 knapp 77% der Beschäftigten in Nicht-MINT Berufen tätig sind. In den MINT-Berufen dominiert die Technik mit 18.2%."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_2")
 
@@ -98,14 +98,14 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                      shinyWidgets::radioGroupButtons(
                        inputId = ns("gegenwert_arbeitsmarkt_fach_vergleich"),
                        choices = c("Ja", "Nein"),
-                       selected = "Nein",
+                       selected = "Ja",
                        justified = TRUE,
                        checkIcon = list(yes = icon("ok",
                                                    lib = "glyphicon"))
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_mint_1", title="",
-                                        content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland im Jahr 2022 23 % der Beschäftigten in MINT beschäftigt waren (2 + 3 + 18 = 23 %). Bei den Auszubildenden waren dies 30 %."),
+                                        content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland im Jahr 2022 knapp 23 % der Beschäftigten in MINT beschäftigt waren (1.5 + 3 + 18.2 = 22.7 %). Bei den Auszubildenden waren dies etwa 30 %."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_1")
 

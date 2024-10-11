@@ -25,9 +25,9 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui <- function(id){
                   "Beschäftigte",
                   "ausländische Auszubildende",
                   "ausländische Beschäftigte",
-                  "Beschäftigte 25-55",
-                  "Beschäftigte u25",
-                  "Beschäftigte ü55"),
+                  "Beschäftigte 25-55" = "Beschäftigte zwischen 25 und 55 Jahren",
+                  "Beschäftigte u25" = "Beschäftigte unter 25 Jahren",
+                  "Beschäftigte ü55" = "Beschäftigte über 55 Jahren"),
       selected = c("Beschäftigte", "Auszubildende"),
       multiple = TRUE
     ),
@@ -82,7 +82,7 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_beruf_frauen_2", title="",
-                       content = paste0("Betrachten man den Zeitverlauf in der ersten Einstellung sieht man, dass der Frauenanteil in MINT-Ausbildungen und -Berufen seit 2018 etwas gestiegen ist. Wechselt man in der Betrachtung auf &quotAnzahl&quot kann man die Entwicklung der absoluten Anzahl von Frauen in MINT betrachten."),
+                       content = paste0("Betrachten man den Zeitverlauf in der ersten Einstellung sieht man, dass der Frauenanteil in MINT-Ausbildungen und -Berufen seit 2017 etwas gestiegen ist. In den absoluten Zahlen ist die Zahl allerdings nur um 5000 gestiegen in dem Zeitraum 2017 bis 2022."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_frauen_2")
   )

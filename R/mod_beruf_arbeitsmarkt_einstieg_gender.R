@@ -10,6 +10,23 @@
 mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
+
+
+
     p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_arbeitsmarkt_einstieg_gender"),
@@ -106,8 +123,7 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
                                         content = paste0("Der Anteil von Frauen an MINT-Auszubildenden in Deutschland beträgt 13 % im Jahr 2022. Bei den MINT-Beschäftigten beträgt dieser Anteil 17 %. Dagegen machen Frauen in anderen, Nicht-MINT-Berufen mehr als die Hälfte aller Auszubildenden und Beschäftigten aus (56 bzw. 55 %)."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_frauen_1")
-    )
-  ,
+    ),
     conditionalPanel(condition = "input.ansicht_arbeitsmarkt_einstieg_gender == 'Gruppenvergleich - Balkendiagramm'",
                      ns = ns,
                      p("Beschäftigtengruppe:"),
@@ -118,11 +134,14 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
                                    "Beschäftigte",
                                    "ausländische Auszubildende",
                                    "ausländische Beschäftigte",
-                                   "Beschäftigte 25-55",
-                                   "Beschäftigte u25",
-                                   "Beschäftigte ü55"),
+                                   "Beschäftigte 25-55" = "Beschäftigte zwischen 25 und 55 Jahren",
+                                   "Beschäftigte u25" = "Beschäftigte unter 25 Jahren",
+                                   "Beschäftigte ü55" = "Beschäftigte über 55 Jahren"),
                        selected = c("Beschäftigte", "Auszubildende"),
-                       multiple = TRUE
+                       multiple = TRUE,
+                       options = list(`actions-box` = TRUE,
+                                      `deselect-all-text` = "Alle abwählen",
+                                      `select-all-text` = "Alle auswählen"),
                      ),
                     p("Nicht-MINT als Vergleich anzeigen?", style = "color: #b16fab;"),
                     shinyWidgets::radioGroupButtons(
@@ -135,11 +154,10 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
                     ),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_frauen_3", title="",
-                                        content = paste0("In der ersten Einstellung sieht man beispielsweise im oberen Teil der Grafik, dass in Niedersachsen 2022 Frauen nur 14 % der Auszubildenden in MINT ausmachen. Dagegen sind Frauen in allen anderen Ausbildungen zusammen betrachtet in der Mehrheit."),
+                                        content = paste0("In der ersten Einstellung sieht man beispielsweise im oberen Teil der Grafik, dass in Niedersachsen 2022 Frauen fast 40% der Auszubildenden in MINT ausmachen. Dieser Wert liegt nur knapp unter dem Frauenanteil an allen Ausbildungen (41%)."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_frauen_3")
-    )
-   )
+    ))
 }
 
 #' beruf_arbeitsmarkt_einstieg_gender Server Functions
