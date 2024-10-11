@@ -2163,7 +2163,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
       df_ges <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
         dplyr::filter(
           jahr %in% t &
-            indikator == indikator_choice &
+            indikator == indi &
             landkreis == "alle Landkreise" &
             bundesland %in% states &
             anforderung == "Gesamt" &
