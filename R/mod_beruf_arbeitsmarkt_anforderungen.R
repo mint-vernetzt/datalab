@@ -92,13 +92,13 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                        multiple = TRUE,
                        options =  list(
                          "max-options" = 2,
-                         "max-options-text" = "Maximal 2 Indikatoren auswählen")
+                         "max-options-text" = "<span style='color: red;'>Maximal 2 Indikatoren auswählen</span>")
                      ),
                      p("Nicht-MINT Berufsfelder mit anzeigen?", style = "color: #b16fab;"),
                      shinyWidgets::radioGroupButtons(
                        inputId = ns("gegenwert_arbeitsmarkt_fach_vergleich"),
                        choices = c("Ja", "Nein"),
-                       selected = "Ja",
+                       selected = "Nein",
                        justified = TRUE,
                        checkIcon = list(yes = icon("ok",
                                                    lib = "glyphicon"))

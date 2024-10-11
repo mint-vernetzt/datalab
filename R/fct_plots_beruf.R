@@ -1536,10 +1536,16 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       df <- df %>% dplyr::group_by(fachbereich, indikator) %>%
         dplyr::mutate(prop = round(wert/prop*100,1))
 
+      preposition <- ifelse(grepl("aarland$", regio), "im", "in")
+
       df$titel_help <- paste0(df$indikator, "n <br>")
-      df$titel_help <- ifelse(df$indikator == "Auszubildende (1. Jahr)", "Auszubildenden <br>mit neuem Lehrvertrag", df$titel_help)
-      df$titel_help <- ifelse(df$indikator == "ausländische Auszubildende", "ausländischen <br> Auszubildenden", df$titel_help)
-      df$titel_help <- ifelse(df$indikator == "ausländische Beschäftigte", "ausländischen <br> Beschäftigten", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "Auszubildende (1. Jahr)", "Auszubildenden <br>mit neuem Lehrvertrag ", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "ausländische Auszubildende", "ausländischen <br> Auszubildenden ", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "ausländische Beschäftigte", "ausländischen <br> Beschäftigten ", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "Beschäftigte 25-55", "Beschäftigten <br> 25-55 ", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "Beschäftigte u25", "Beschäftigten <br> u25 ", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "Beschäftigte ü55", "Beschäftigten <br> ü55 ", df$titel_help)
+
 
       df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       df$prop_disp <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
@@ -1572,10 +1578,16 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       df <- df %>% dplyr::group_by(fachbereich, indikator) %>%
         dplyr::mutate(prop = round(wert/prop*100,1))
 
+
+      preposition <- ifelse(grepl("aarland$", regio), "im", "in")
+
       df$titel_help <- paste0(df$indikator, "n <br>")
-      df$titel_help <- ifelse(df$indikator == "Auszubildende (1. Jahr)", "Auszubildenden <br>mit neuem Lehrvertrag", df$titel_help)
-      df$titel_help <- ifelse(df$indikator == "ausländische Auszubildende", "ausländischen <br> Auszubildenden", df$titel_help)
-      df$titel_help <- ifelse(df$indikator == "ausländische Beschäftigte", "ausländischen <br> Beschäftigten", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "Auszubildende (1. Jahr)", "Auszubildenden <br>mit neuem Lehrvertrag ", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "ausländische Auszubildende", "ausländischen <br> Auszubildenden ", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "ausländische Beschäftigte", "ausländischen <br> Beschäftigten ", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "Beschäftigte 25-55", "Beschäftigten <br> 25-55 ", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "Beschäftigte u25", "Beschäftigten <br> u25 ", df$titel_help)
+      df$titel_help <- ifelse(df$indikator == "Beschäftigte ü55", "Beschäftigten <br> ü55 ", df$titel_help)
 
       df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       df$prop_disp <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
@@ -1593,7 +1605,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}')) %>%
         highcharter::hc_colors(as.character(df$color)) %>%
-        highcharter::hc_title(text = paste0("MINT-Anteile von ", unique(df$titel_help), "in ", regio, " (", timerange, ")"),
+        highcharter::hc_title(text = paste0("MINT-Anteile von ", unique(df$titel_help), preposition, " ", regio, " (", timerange, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1622,7 +1634,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}')) %>%
         highcharter::hc_colors(as.character(df_1$color)) %>%
-        highcharter::hc_title(text = paste0("MINT-Anteile von ", unique(df_1$titel_help), " in ", regio, " (", timerange, ")"),
+        highcharter::hc_title(text = paste0("MINT-Anteile von ", unique(df_1$titel_help), preposition, " ", regio, " (", timerange, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1637,7 +1649,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}')) %>%
         highcharter::hc_colors(as.character(df_2$color)) %>%
-        highcharter::hc_title(text = paste0("MINT-Anteile von ", unique(df_2$titel_help), "  in ", regio, " (", timerange, ")"),
+        highcharter::hc_title(text = paste0("MINT-Anteile von ", unique(df_2$titel_help), preposition, " ", regio, " (", timerange, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2042,6 +2054,9 @@ arbeitsmarkt_bula_faecher <- function(r) {
     #
     # df <- rbind(df, df_n)
 
+
+    df <- df[with(df, order(prop, decreasing = TRUE)),]
+
     # titel-helper
     title_help <- paste0(indikator_choice, "n")
     title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen Beschäftigten", title_help)
@@ -2084,11 +2099,19 @@ arbeitsmarkt_bula_faecher <- function(r) {
                                                                    "Schleswig-Holstein",
                                                                    "Thüringen")
       ) %>%
+      # highcharter::hc_plotOptions(bar = list(
+      #   colorByPoint = TRUE,
+      #   colors = ifelse(df$bundesland %in% c("Deutschland","Westdeutschland (o. Berlin)",
+      #                                        "Ostdeutschland (einschl. Berlin)"), "#d0a9cd", "#b16fab")
+      # )) %>%
+
       highcharter::hc_plotOptions(bar = list(
         colorByPoint = TRUE,
-        colors = ifelse(df$bundesland %in% c("Deutschland","Westdeutschland (o. Berlin)",
-                                             "Ostdeutschland (einschl. Berlin)"), "#d0a9cd", "#b16fab")
-      )) %>%
+        colors = ifelse(df$bundesland == "Deutschland", "#b16fab",
+                        ifelse(df$bundesland == "Ostdeutschland (einschl. Berlin)", "#d3a4d7",
+                               ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))%>%
+
+
       highcharter::hc_title(text = paste0( "Anteil von ", title_help, " in ", faecher, " an allen ", title_h2, " in ", timerange,
                                            "<br><br><br>"),
                             margin = 20,

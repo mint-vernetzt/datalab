@@ -39,7 +39,7 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
       multiple = T,
       options =  list(
         "max-options" = 2,
-        "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
+        "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
       # options = list(`actions-box` = TRUE,
       #                `deselect-all-text` = "Alle abwählen",
       #                `select-all-text` = "Alle auswählen")

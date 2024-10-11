@@ -59,7 +59,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                        multiple = F,
                        options =  list(
                          "max-options" = 2,
-                         "max-options-text" = "Maximal 2 Gruppen auswählen")
+                         "max-options-text" = "<span style='color: red;'>Maximal 2 Gruppen auswählen</span>")
                      ),
                      #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
                      p("Fächergruppe:"),
@@ -127,7 +127,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                        multiple = F,
                        options =  list(
                          "max-options" = 2,
-                         "max-options-text" = "Maximal 2 Gruppen auswählen")
+                         "max-options-text" = "<span style='color: red;'>Maximal 2 Gruppen auswählen</span>")
                      ),
                      #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
                      p("Fächergruppe:"),
