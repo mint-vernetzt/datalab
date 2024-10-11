@@ -11,15 +11,24 @@
 beruf_einstieg_vergleich <- function(r) {
 
   # load UI inputs from reactive value
-  betrachtung <- r$ansicht_arbeitsmarkt_einstieg_gender
-  timerange <- r$date_arbeitsmarkt_einstieg_gender
-  regio <- r$region_arbeitsmarkt_einstieg_gender
+  betrachtung <- r$ansicht_arbeitsmarkt_einsteig_vergleich
+  timerange <- r$date_arbeitsmarkt_einstieg_vergleich
+  regio <- r$region_arbeitsmarkt_einstieg_vergleich
   faecher <- r$fachbereich_arbeitsmarkt_einstieg_gender
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
-    gruppe <- r$indikator_arbeitsmarkt_einsteig_gender_pie
+    gruppe <- r$indikator_arbeitsmarkt_einsteig_vergleich
   }else{
-    gruppe <- r$arbeitsmarkt_gender_gegenwert_pie
+   # gruppe <- DBI::dbGetQuery(con, "SELECT DISTINCT indikator FROM arbeitsmarkt_detail")$indikator
+    gruppe <- c("Auszubildende",
+                "Auszubildende (1. Jahr)",
+                "ausländische Auszubildende",
+                "Beschäftigte",
+                "ausländische Beschäftigte",
+                "Beschäftigte u25",
+                "Beschäftigte 25-55",
+                "Beschäftigte ü55",
+                "in Minijobs")
   }
 
   df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
@@ -74,13 +83,14 @@ beruf_einstieg_vergleich <- function(r) {
   #Trennpunkte für lange Zahlen ergänzen
   df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
+
   #Graifken
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
-    highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
+   out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion)) %>%
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.percentage:.0f} % <br> Anzahl: {point.wert}')) %>%
-      highcharter::hc_title(text = paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten o. Auszubildenden ", regio, " (", timerange, ")"),
+      highcharter::hc_title(text = paste0(gruppe, " in ", regio, " (", timerange, ")"),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -114,7 +124,7 @@ beruf_einstieg_vergleich <- function(r) {
               "in Minijobs")
 
     # plot
-    highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = indikator, group = "fachbereich")) %>%
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = indikator, group = "fachbereich")) %>%
       highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
       highcharter::hc_xAxis(title = list(text = ""), categories = indi) %>%
@@ -137,7 +147,7 @@ beruf_einstieg_vergleich <- function(r) {
                                   verticalAlign = 'bottom',
                                   theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
   }
-
+  return(out)
 }
 
 

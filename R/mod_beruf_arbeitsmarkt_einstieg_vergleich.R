@@ -50,13 +50,6 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_ui <- function(id){
       multiple = FALSE,
       selected = c("Deutschland")
     ),
-    conditionalPanel(condition = "input.ansicht_arbeitsmarkt_einsteig_vergleich == 'Gruppenvergleich - Balkendiagramm'",
-                     ns = ns,
-    shinyBS::bsPopover(id="ih_beruf_mint_3", title="",
-                       content = paste0("Die Darstellung zeigt, dass der MINT-Anteil in der Gruppe der Auszubildenden mit knapp einem Drittel vergleichsweise hoch ist. Am wenigsten groß ist der Anteil an Beschäftigungen in MINT im Minijob."),
-                       trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_3")
-    ),
 
     conditionalPanel(condition = "input.ansicht_arbeitsmarkt_einsteig_vergleich == 'Einzelansicht - Kuchendiagramm'",
                      ns = ns,
@@ -73,8 +66,19 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_ui <- function(id){
                        "Beschäftigte ü55"),
            selected = "Beschäftigte",
            multiple = FALSE
-         )
-       )
+         ),
+         shinyBS::bsPopover(id="ih_beruf_mint_3b", title="",
+                            content = paste0("Die Darstellung zeigt, dass der MINT-Anteil in der Gruppe der Beschäftigten knapp ein Viertel ausmacht, während rund 3 von 4 sozialversicherungspflichtig Beschäftigten in anderen Bereichen als MINT arbeiten."),
+                            trigger = "hover"),
+         tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_3b")
+    ),
+    conditionalPanel(condition = "input.ansicht_arbeitsmarkt_einsteig_vergleich == 'Gruppenvergleich - Balkendiagramm'",
+                     ns = ns,
+                     shinyBS::bsPopover(id="ih_beruf_mint_3", title="",
+                                        content = paste0("Die Darstellung zeigt, dass der MINT-Anteil in der Gruppe der Auszubildenden mit knapp einem Drittel vergleichsweise hoch ist. Am wenigsten groß ist der Anteil an Beschäftigungen in MINT im Minijob."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_3")
+    )
 
   )
 }

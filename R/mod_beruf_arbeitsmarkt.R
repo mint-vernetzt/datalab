@@ -793,31 +793,31 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     output$plot_einstieg_vergleich <- renderUI({
       plot_list <- beruf_einstieg_vergleich(r)
-      r$plot_einstieg_vergleich <- plot_list
-
-      r$plot_einstieg_vergleich_title <- get_plot_title(
-        plot = r$plot_einstieg_vergleich
-      )
+      # r$plot_einstieg_vergleich <- plot_list
+      #
+      # r$plot_einstieg_vergleich_title <- get_plot_title(
+      #   plot = r$plot_einstieg_vergleich
+      # )
 
       plot_list
     })
 
-    output$download_btn_plot_einstieg_vergleich <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_einstieg_vergleich_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_einstieg_vergleich,
-          filename =  r$plot_einstieg_vergleich_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_einstieg_vergleich_title, file)
-        file.remove(r$plot_einstieg_vergleich_title)
-      }
-    )
+    # output$download_btn_plot_einstieg_vergleich <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_einstieg_vergleich_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_einstieg_vergleich,
+    #       filename =  r$plot_einstieg_vergleich_title,
+    #       width = 700,
+    #       height = 400)
+    #
+    #     file.copy(r$plot_einstieg_vergleich_title, file)
+    #     file.remove(r$plot_einstieg_vergleich_title)
+    #   }
+    # )
 
     # Tab 4
     output$plot_arbeitsmarkt_waffle_gender <- renderPlot({
