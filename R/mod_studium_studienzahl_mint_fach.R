@@ -62,23 +62,20 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
                      'Einzelansicht - Kuchendiagramm'",
                      ns = ns,
 
-      p("Studierendengruppen (max. 2):"),
+      p("Studierendengruppen:"),
       shinyWidgets::pickerInput(
         inputId = ns("gruppe_mint_fach_pies"),
-        choices = c("Studienanfänger:innen (1. Fachsemester)",
-                    "Studienanfänger:innen (1. Hochschulsemester)",
-                    "Studierende",
+        choices = c("Studierende",
                     "Studierende (Lehramt)",
-                    "ausländische Studienanfänger:innen (1. Hochschulsemester)",
-                    "ausländische Studierende",
-                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                    "internationale Studierende"
-        ),
+                    "internationale Studierende",
+                    "Studienanfänger:innen (1. Hochschulsemester)",
+                    "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
         selected = c("Studierende"),
-        multiple = TRUE,
-        options =  list(
-          "max-options" = 2,
-          "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
+        multiple = FALSE
+        # ,
+        # options =  list(
+        #   "max-options" = 2,
+        #   "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
       ),
       br(),
       shinyBS::bsPopover(id="dh_studium_mint_fach_1", title = "",
@@ -100,15 +97,11 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("gruppe_mint_fach_balken"),
 
-                       choices = c( "Studienanfänger:innen (1. Fachsemester)",
-                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Studierende",
-                                   "Studierende (Lehramt)",
-                                    "ausländische Studienanfänger:innen (1. Hochschulsemester)",
-                                   "ausländische Studierende",
-                                     "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                     "internationale Studierende"
-                       ),
+                       choices =c("Studierende",
+                                  "Studierende (Lehramt)",
+                                  "internationale Studierende",
+                                  "Studienanfänger:innen (1. Hochschulsemester)",
+                                  "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
                        selected = c("Studierende"),
                        multiple = FALSE
                      ),

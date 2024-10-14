@@ -21,7 +21,7 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_einstieg_vergleich"),
       label = NULL,
-      choices = 2021:2022,
+      choices = 2013:2022,
       selected = 2022
     ),
     p("Region:"),

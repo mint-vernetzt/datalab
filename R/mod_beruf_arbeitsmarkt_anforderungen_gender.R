@@ -40,49 +40,16 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("date_arbeitsmarkt_wahl_gender_pie"),
                        label = NULL,
-                       choices = c(2021, 2022),
+                       choices = 2013:2022,
                        selected = 2022
                      ),
+
                      p("Beschäftigungsform:"),
                       shinyWidgets::pickerInput(
                         inputId = ns("level_arbeitsmarkt_wahl_gender_pie"),
                         choices = c("Beschäftigte",
                                     "Auszubildende",
                                     "Auszubildende mit neuem Lehrvertrag" =  "Auszubildende (1. Jahr)",
-                                    "ausländische Beschäftigte",
-                                    "ausländische Auszubildende"),
-                        selected = "Beschäftigte",
-                        multiple = FALSE
-                      ),
-                     shinyBS::bsPopover(id="ih_beruf_mint_4", title="",
-                                        content = paste0("Die erste Einstellung zeigt, dass von allen weiblichen Beschäftigten 2022 nur 8.4 % eine MINT-Tätigkeit ausüben. Bei den Männern arbeitet ein weitaus größerer Anteil von rund 35 % in der MINT-Branche. Dabei sind die meisten Männer im Bereich Technik tätig (29 %)."),
-                                        trigger = "hover"),
-                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_4"),
-
-                    br(),
-                    br(),
-                    shinyBS::bsPopover(id="poppp123", title = "",
-                                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                       trigger = "hover"),
-                    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "poppp123"),
-                    br(),
-    ),
-
-    conditionalPanel(condition = "input.ansicht_arbeitsmarkt_wahl_gender == 'Übersicht - Kartendiagramm'",
-                     ns = ns,
-                     p("Auswahl des Jahres:"),
-                     shinyWidgets::sliderTextInput(
-                       inputId = ns("date_arbeitsmarkt_wahl_gender_karte"),
-                       label = NULL,
-                       choices = c(2021, 2022),
-                       selected = 2022
-                     ),
-                     p("Beschäftigungsform:"),
-                      shinyWidgets::pickerInput(
-                        inputId = ns("level_arbeitsmarkt_wahl_gender_karte"),
-                        choices = c("Beschäftigte",
-                                    "Auszubildende",
-                                    "Auszubildende mit neuem Lehrvertrag", #auskommentiert bis für 2022 auch da
                                     "ausländische Beschäftigte",
                                     "ausländische Auszubildende"),
                         selected = "Beschäftigte",
@@ -115,6 +82,42 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                        multiple = FALSE,
                        selected = "Deutschland"
                      ),
+
+                     shinyBS::bsPopover(id="ih_beruf_mint_4", title="",
+                                        content = paste0("Die erste Einstellung zeigt, dass von allen weiblichen Beschäftigten 2022 nur 8.4 % eine MINT-Tätigkeit ausüben. Bei den Männern arbeitet ein weitaus größerer Anteil von rund 35 % in der MINT-Branche. Dabei sind die meisten Männer im Bereich Technik tätig (29 %)."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_4"),
+
+                    br(),
+                    br(),
+                    shinyBS::bsPopover(id="poppp123", title = "",
+                                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                                       trigger = "hover"),
+                    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "poppp123"),
+                    br(),
+    ),
+
+    conditionalPanel(condition = "input.ansicht_arbeitsmarkt_wahl_gender == 'Übersicht - Kartendiagramm'",
+                     ns = ns,
+                     p("Auswahl des Jahres:"),
+                     shinyWidgets::sliderTextInput(
+                       inputId = ns("date_arbeitsmarkt_wahl_gender_karte"),
+                       label = NULL,
+                       choices = 2013:2022,
+                       selected = 2022
+                     ),
+                     p("Beschäftigungsform:"),
+                      shinyWidgets::pickerInput(
+                        inputId = ns("level_arbeitsmarkt_wahl_gender_karte"),
+                        choices = c("Beschäftigte",
+                                    "Auszubildende",
+                                    "Auszubildende mit neuem Lehrvertrag" =  "Auszubildende (1. Jahr)",
+                                    "ausländische Beschäftigte",
+                                    "ausländische Auszubildende"),
+                        selected = "Beschäftigte",
+                        multiple = FALSE
+                      ),
+
 
                      p("Berufsfeld:"),
                      shinyWidgets::pickerInput(

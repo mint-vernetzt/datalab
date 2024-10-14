@@ -1,5 +1,5 @@
 # Wer wählt MINT ----
-
+### Tab 1 ----
 #' A function to plot a graph.
 #'
 #' @description A function to create a pie chart for the first box
@@ -9,7 +9,6 @@
 #' @param df The dataframe "Kurse.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-
 
 studienzahl_mint <- function(r){
 
@@ -24,25 +23,30 @@ studienzahl_mint <- function(r){
  }
 
  # filtering
- df <- dplyr::tbl(con, from = "studierende") %>%
+ df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
    dplyr::filter(jahr == testy1,
                  geschlecht == "Gesamt",
                  region == regio,
-                 fachbereich %in% c("Nicht MINT", "MINT (Gesamt)", "Alle" )) %>%
+                 indikator %in% testl1,
+                 fach %in% c("Alle Nicht MINT-Fächer", "Alle MINT-Fächer")) %>%
+   dplyr::select(region, jahr, indikator, fach, wert) %>%
+   dplyr::collect()
+
+ alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+   dplyr::filter(jahr == testy1,
+                 geschlecht == "Gesamt",
+                 region == regio,
+                 indikator %in% testl1,
+                 fach  == "Alle Fächer") %>%
+   dplyr::select(region, jahr, indikator, fach, wert) %>%
+   dplyr::rename(wert_ges = wert) %>%
    dplyr::collect()
 
  # calculating proportions
- df2 <- df %>%
-   tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
-   dplyr::mutate(dplyr::across(c("MINT (Gesamt)", "Nicht MINT"), ~./Alle))%>%
-   dplyr::mutate(dplyr::across(c("Nicht MINT", "MINT (Gesamt)"), ~ round(.*100,1)))%>%
-   dplyr::select(- Alle)%>%
-   tidyr::pivot_longer(c("MINT (Gesamt)", "Nicht MINT"), names_to = "fachbereich", values_to = "proportion")
-
- # joining wert and prportion
- df <- df %>%
-   dplyr::filter(fachbereich != "Alle")%>%
-   dplyr::left_join(df2)
+ df <- df %>% dplyr::left_join(alle, by = c("region", "jahr", "indikator")) %>%
+   dplyr::rename(fach = fach.x) %>%
+   dplyr::mutate(proportion = round(wert/wert_ges*100,1)) %>%
+   dplyr::select(-fach.y)
 
 
  #Trennpunkte für lange Zahlen ergänzen
@@ -52,7 +56,7 @@ studienzahl_mint <- function(r){
 
 
  # Ordering
- df <- within(df, fachbereich <- factor(fachbereich, levels=c("Nicht MINT", "MINT (Gesamt)")))
+ df <- within(df, fach <- factor(fach, levels=c("Alle Nicht MINT-Fächer", "Alle MINT-Fächer")))
 
  if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
@@ -66,7 +70,7 @@ studienzahl_mint <- function(r){
 
       df_pie %>%
         highcharter::hchart(
-          "pie", highcharter::hcaes(x = fachbereich , y = proportion)
+          "pie", highcharter::hcaes(x = fach , y = proportion)
         )%>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
@@ -96,13 +100,15 @@ studienzahl_mint <- function(r){
 
 
      highcharter::hw_grid(
-       highcharter::hchart(df_1_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
+       highcharter::hchart(df_1_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = fach, y = proportion))
 
       %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-        highcharter::hc_title(text=paste0(testl1[1], " in ", regio, " (", testy1, ")"),
+        highcharter::hc_title(text= ifelse(regio == "Saarland",
+                                           paste0(testl1[1], " im ", regio, " (", testy1, ")"),
+                                           paste0(testl1[1], " in ", regio, " (", testy1, ")")),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -113,7 +119,7 @@ studienzahl_mint <- function(r){
                                                dataLabels = list(enabled = TRUE,  format='{point.display_rel}%'), showInLegend = TRUE)),
 
 
-    highcharter:: hchart(df_2_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich , y = proportion))
+    highcharter:: hchart(df_2_pie, size = 280, type = "pie", mapping = highcharter::hcaes(x = fach , y = proportion))
 
     %>%
         highcharter::hc_tooltip(
@@ -147,7 +153,7 @@ studienzahl_mint <- function(r){
 
 
      highcharter::hw_grid(
-       highcharter::hchart(df_1_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
+       highcharter::hchart(df_1_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fach, y = proportion))
       %>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')) %>%
@@ -163,7 +169,7 @@ studienzahl_mint <- function(r){
                                                dataLabels = list(enabled = TRUE,  format='{point.display_rel}%'), showInLegend = TRUE)),
 
 
-    highcharter::hchart(df_2_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
+    highcharter::hchart(df_2_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fach, y = proportion))
 
 
     %>%
@@ -180,7 +186,7 @@ studienzahl_mint <- function(r){
         highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                                dataLabels = list(enabled = TRUE, format='{point.display_rel}%'), showInLegend = TRUE)),
 
-    highcharter::hchart(df_3_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = proportion))
+    highcharter::hchart(df_3_pie, size = 170, type = "pie", mapping = highcharter::hcaes(x = fach, y = proportion))
 
 
     %>%
@@ -211,13 +217,15 @@ studienzahl_mint <- function(r){
 
      df <- df %>% dplyr::filter(indikator %in% testl1)
 
-     highcharter::hchart(df, 'bar', highcharter::hcaes(y = proportion, x = indikator, group =forcats::fct_rev(fachbereich)))%>%
+     highcharter::hchart(df, 'bar', highcharter::hcaes(y = proportion, x = indikator, group =forcats::fct_rev(fach)))%>%
        highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.proportion} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  F) %>%
        highcharter::hc_xAxis(title = list(text = "")) %>%
        highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
        highcharter::hc_colors(c( "#b16fab","#efe8e6")) %>%
-       highcharter::hc_title(text = paste0("Anteil von Studierenden in MINT an allen Studierenden in ", regio, " (", testy1, ")"),
+       highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                           paste0("Anteil von Studierenden in MINT an allen Studierenden im ", regio, " (", testy1, ")"),
+                                           paste0("Anteil von Studierenden in MINT an allen Studierenden in ", regio, " (", testy1, ")")),
                              margin = 45,
                              align = "center",
                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -237,7 +245,438 @@ studienzahl_mint <- function(r){
 
  }
 
+### Tab 2 ----
 
+#' A function to plot time series
+#'
+#' @description A function to plot the time series
+#'
+#' @return The return value, if any, from executing the function.
+#' @param data The dataframe "Kurse.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+studienzahl_verlauf_single <- function(r) {
+
+  # load UI inputs from reactive value
+  indi_selct <- r$studienzahl_einstieg_indi_verlauf
+  timerange <- r$date_studienzahl_einstieg_verlauf
+  t  <- (timerange[1]:timerange[2])
+  regio <- r$region_studienzahl_einstieg_verlauf
+
+  abs_zahlen_selector <- r$abs_zahlen_einstieg_verlauf_indi
+
+  # filter dataset based on UI inputs
+  df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    dplyr::filter(jahr %in% t,
+                  geschlecht == "Gesamt",
+                  region == regio,
+                  indikator %in% indi_selct,
+                  fach == "Alle MINT-Fächer") %>%
+    dplyr::select(jahr, fach, indikator, wert)%>%
+    dplyr::collect()
+
+
+  if(abs_zahlen_selector == "In Prozent"){
+
+    alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      dplyr::filter(jahr %in% t,
+                    geschlecht == "Gesamt",
+                    region == regio,
+                    indikator %in% indi_selct,
+                    fach == "Alle Fächer")%>%
+      dplyr::select(jahr, fach, indikator, wert)%>%
+      dplyr::rename(wert_ges = wert) %>%
+      dplyr::collect()
+
+    df <- df %>% dplyr::left_join(alle, by = c( "jahr", "indikator")) %>%
+      dplyr::rename(fach = fach.x) %>%
+      dplyr::mutate(proportion = round(wert/wert_ges*100,1)) %>%
+      dplyr::select(-fach.y)
+
+    hcoptslang <- getOption("highcharter.lang")
+    hcoptslang$thousandsSep <- "."
+    options(highcharter.lang = hcoptslang)
+
+    df <- df[with(df, order( jahr, decreasing = FALSE)), ]
+
+    #Trennpunkte für lange Zahlen ergänzen
+
+    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
+
+    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = proportion, group=indikator))%>%
+      highcharter::hc_tooltip(pointFormat = "Anteil: {point.display_rel}%") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+      highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                          paste0("Anteil von Studierenden in MINT an allen Studierenden im ", regio),
+                                          paste0("Anteil von Studierenden in MINT an allen Studierenden in ", regio)),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
+                               "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+
+  }else if (abs_zahlen_selector == "Anzahl"){
+
+    hcoptslang <- getOption("highcharter.lang")
+    hcoptslang$thousandsSep <- "."
+    options(highcharter.lang = hcoptslang)
+
+    df <- df[with(df, order( jahr, decreasing = FALSE)), ]
+
+    #Trennpunkte für lange Zahlen ergänzen
+
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
+    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
+      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+      highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                          paste0("Anzahl an Studierenden in MINT im ", regio),
+                                          paste0("Anzahl an Studierenden in MINT in ", regio)),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
+                               "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+
+
+
+
+
+  }
+
+
+  return (out)
+
+}
+
+### Tab 3 ----
+#' A function to plot the german map
+#'
+#' @description A function to plot the german map with all states that contain
+#' information about the share of women in STEM
+#'
+#' @return The return value is the german map with information
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+studierende_bula_mint <- function(r) {
+
+  # load UI inputs from reactive value
+  betrachtung <- r$ansicht_studium_bulas
+
+  if(betrachtung == "Übersicht - Kartendiagramm"){
+
+    #UI nach Betrachtung
+    timerange <- r$bulas_map_y
+    label_m <- r$bulas_map_l
+
+    # filter dataset based on UI inputs
+    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      dplyr::filter(jahr == timerange,
+                    region != "Deutschland",
+                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
+                    indikator == label_m,
+                    geschlecht == "Gesamt") %>%
+      dplyr::collect()
+
+    df <- df %>%
+      dplyr::select(-fachbereich,- mint_select, -typ )%>%
+      tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+      dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
+      tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
+      dplyr::right_join(df) %>%
+      dplyr::filter(fach != "Alle Fächer")
+
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
+
+    # Plot
+    # Vorbereitung Überschrift
+
+    label_m <- ifelse(label_m == "Studierende", paste0(label_m, "n"), label_m)
+    label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
+    label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
+    label_m <- ifelse(label_m == "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                      "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
+
+    help_l <- label_m
+    help_l <- ifelse(label_m == "internationalen Studienanfänger:innen (1. Hochschulsemester)",
+                     "internationalen Studienanfänger:innen", help_l)
+    help_l <- ifelse(label_m == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
+
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
+
+    # plot
+    out <- highcharter::hcmap(
+      "countries/de/de-all",
+      data = df[df$fachbereich == "MINT",],
+      value = "proportion",
+      joinBy = c("name", "region"),
+      borderColor = "#FAFAFA",
+      name = paste0(label_m, " in MINT"),
+      borderWidth = 0.1,
+      nullColor = "#A9A9A9",
+      tooltip = list(
+        valueDecimals = 0,
+        valueSuffix = "%"
+      )
+      #,
+      #download_map_data = FALSE
+    ) %>%
+      highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
+      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+      highcharter::hc_title(
+        text = paste0("Anteil von ", label_m, " in MINT-Fächern an allen ", help_l, " (", timerange, ")"),
+        margin = 10,
+        align = "center",
+        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      ) %>%
+      # highcharter::hc_caption(
+      #   text = "...",  style = list(color= "white", fontSize = "12px")
+      # ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular")
+      ) %>% highcharter::hc_size(600, 550) %>%
+      highcharter::hc_credits(enabled = FALSE) %>%
+      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                             verticalAlign = "bottom")
+
+  }
+
+  else if(betrachtung == "Zeitverlauf - Liniendiagramm"){
+
+    # load UI inputs from reactive value
+    timerange <- r$bulas_verlauf_y
+    t <- (timerange[1]:timerange[2])
+    absolut_selector <- r$bulas_verlauf_abs_rel
+    bl_label <- r$bulas_verlauf_l
+    states <- r$bulas_verlauf_regio
+
+    # filter dataset based on UI inputs
+    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      dplyr::filter(jahr %in% t,
+                    geschlecht == "Gesamt",
+                    region %in% states,
+                    indikator == bl_label,
+                    fach == "Alle MINT-Fächer") %>%
+      dplyr::select(jahr, fach, indikator, region, wert)%>%
+      dplyr::collect()
+
+    # Vorbereitung Überschrift
+
+    label <- ifelse(bl_label == "Studierende", paste0(bl_label, "n"), bl_label)
+    label <- ifelse(label == "internationale Studierende", "internationalen Studierenden", label)
+    label <- ifelse(grepl("Lehram", label), "Studierenden (Lehramt)", label)
+    label <- ifelse(label == "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                      "internationalen Studienanfänger:innen (1. Hochschulsemester)", label)
+
+    help_l <- label
+    help_l <- ifelse(label == "internationalen Studienanfänger:innen (1. Hochschulsemester)",
+                     "internationalen Studienanfänger:innen", help_l)
+    help_l <- ifelse(label == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
+
+    # Plot
+
+    if (absolut_selector=="In Prozent"){
+
+      alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        dplyr::filter(jahr %in% t,
+                      geschlecht == "Gesamt",
+                      region %in% states,
+                      indikator == bl_label,
+                      fach == "Alle Fächer")%>%
+        dplyr::select(jahr, fach, indikator, wert, region)%>%
+        dplyr::rename(wert_ges = wert) %>%
+        dplyr::collect()
+
+      df <- df %>% dplyr::left_join(alle, by = c( "jahr", "indikator", "region")) %>%
+        dplyr::rename(fach = fach.x) %>%
+        dplyr::mutate(prop = round(wert/wert_ges*100,1)) %>%
+        dplyr::select(-fach.y)
+
+      df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+      df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
+
+      out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = prop, group = region))%>%
+        highcharter::hc_tooltip(pointFormat = "Anteil {point.region} <br> Wert: {point.display_rel} %") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+        highcharter::hc_title(text = paste0("Anteil von ", label, " in MINT-Fächern an allen ", help_l),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+                                 "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_exporting(enabled = FALSE,
+                                  buttons = list(contextButton = list(
+                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                    onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                    align = 'right',
+                                    verticalAlign = 'bottom',
+                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+
+    } else if(absolut_selector=="Anzahl"){
+
+
+      hcoptslang <- getOption("highcharter.lang")
+      hcoptslang$thousandsSep <- "."
+      options(highcharter.lang = hcoptslang)
+
+      df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+      df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
+      out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = region))%>%
+        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+        highcharter::hc_title(text = paste0("Anzahl an ", label),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+                                 "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_exporting(enabled = FALSE,
+                                  buttons = list(contextButton = list(
+                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                    onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                    align = 'right',
+                                    verticalAlign = 'bottom',
+                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    }
+
+  }
+
+  else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
+
+    timerange <- r$bulas_balken_date
+    r_lab1 <- r$bulas_balken_l
+
+
+    df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      dplyr::filter(geschlecht=="Gesamt",
+                    jahr %in% timerange,
+                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
+                    indikator == r_lab1) %>%
+      dplyr::collect()
+
+    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      dplyr::filter(geschlecht=="Gesamt",
+                    jahr %in% timerange,
+                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
+                    indikator == r_lab1) %>%
+      dplyr::select(-fachbereich,- mint_select, -typ )%>%
+      dplyr::collect() %>%
+      tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+      dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
+      tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
+      dplyr::right_join(df_ges)%>%
+      dplyr::filter(fach == "Alle MINT-Fächer")
+
+
+    #Trennpunkte für lange Zahlen ergänzen
+    df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
+    df <- df %>%
+      dplyr::select(indikator, region, jahr, fach, proportion, wert)
+
+    # NA aus fach entfernen für BULAs mit weniger Studienfachgruppen
+    df <- stats::na.omit(df)
+
+    # Vorbereitung Überschrift
+    r_lab1 <- ifelse(r_lab1 == "Studierende", paste0(r_lab1, "n"), r_lab1)
+    r_lab1 <- ifelse(r_lab1 == "internationale Studierende", "internationalen Studierenden", r_lab1)
+    r_lab1 <- ifelse(grepl("Lehram", r_lab1), "Studierenden (Lehramt)", r_lab1)
+    r_lab1 <- ifelse(r_lab1 == "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                    "internationalen Studienanfänger:innen (1. Hochschulsemester)", r_lab1)
+
+    help_l <- r_lab1
+    help_l <- ifelse(r_lab1 == "internationalen Studienanfänger:innen (1. Hochschulsemester)",
+                     "internationalen Studienanfänger:innen", help_l)
+    help_l <- ifelse(r_lab1 == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
+
+
+    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
+
+    df <- df[with(df, order(proportion, decreasing = TRUE)),]
+
+    # Plot
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
+      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
+      highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
+      highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
+
+      #Anpassung der Farben
+
+      highcharter::hc_plotOptions(bar = list(
+        colorByPoint = TRUE,
+        colors = ifelse(df$region == "Deutschland", "#b16fab",
+                        ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
+                               ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
+
+      #das deleted
+      # highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
+
+
+      highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in MINT-Fächern an allen ", help_l,  " (", timerange, ")"),
+                            margin = 25,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))   #Schrift-Formatierung Überschrift
+
+
+  }
+
+
+  return(out)
+
+}
+
+### Nicht Box 1 ----
 
 #' A function to plot a waffle chart
 #'
@@ -606,452 +1045,9 @@ studienzahl_waffle_mint <- function(r) {
 
 
 
-#' A function to plot time series
-#'
-#' @description A function to plot the time series
-#'
-#' @return The return value, if any, from executing the function.
-#' @param data The dataframe "Kurse.xlsx" needs to be used for this function
-#' @param r Reactive variable that stores all the inputs from the UI
-#' @noRd
 
-studienzahl_verlauf_single <- function(r) {
 
 
-
-  # load UI inputs from reactive value
-  indi_selct <- r$studienzahl_einstieg_verlauf_indi
-  timerange <- r$date_studienzahl_einstieg_verlauf
-  t  <- as.character(timerange[1]:timerange[2])
-  regio <- r$region_studienzahl_einstieg_verlauf
-
-  abs_zahlen_selector <- r$abs_zahlen_einstieg_verlauf_indi
-
-
-  # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "studierende") %>%
-    dplyr::filter(jahr %in% t,
-                  geschlecht == "Gesamt",
-                  region == regio)%>%
-    dplyr::select( -region)%>%
-    dplyr::collect()
-
-  df <- df %>%
-    tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
-    #dplyr::rename("MINT (gesamt)" = MINT)%>%
-    dplyr::mutate("MINT (Gesamt)_p"=`MINT (Gesamt)`/Alle)%>%
-    dplyr::mutate("Nicht MINT_p"=`Nicht MINT`/Alle)%>%
-    dplyr::select(-Ingenieurwissenschaften,- "Mathematik, Naturwissenschaften",-Alle)%>%
-    tidyr::pivot_longer(c("MINT (Gesamt)", "Nicht MINT", "Nicht MINT_p", "MINT (Gesamt)_p"), names_to = "var", values_to = "wert")%>%
-    dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$var, "p")~"In Prozent",
-                                            T~ "Anzahl"))%>%
-    dplyr::filter(!var %in% c("Nicht MINT", "Nicht MINT_p"))
-
-
-  if(abs_zahlen_selector == "In Prozent"){
-
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
-
-    df <- df %>%  dplyr::filter(selector=="In Prozent")
-
-
-    df$wert <- df$wert *100
-    df$wert <- round(df$wert,1)
-
-    df <- df[with(df, order( jahr, decreasing = FALSE)), ]
-
-
-
-    #Trennpunkte für lange Zahlen ergänzen
-
-    df$display_rel <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
-
-    df <- df %>% dplyr::filter(indikator %in% indi_selct)
-
-    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
-      highcharter::hc_tooltip(pointFormat = "Anteil: {point.display_rel}%") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Anteil von Studierenden in MINT an allen Studierenden"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
-                               "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-
-
-  }else if (abs_zahlen_selector == "Anzahl"){
-
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
-
-    df <- df %>%  dplyr::filter(selector=="Anzahl")
-
-    df <- df[with(df, order( jahr, decreasing = FALSE)), ]
-
-    #Trennpunkte für lange Zahlen ergänzen
-
-    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
-
-    #if(length(indi_selct) == 1) {
-
-    df <- df %>% dplyr::filter(indikator %in% indi_selct)
-
-    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
-      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Anzahl an Studierenden in MINT"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
-                               "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-
-
-
-
-
-
-  }
-
-
-  return (out)
-
-}
-
-
-
-#' A function to plot the german map
-#'
-#' @description A function to plot the german map with all states that contain
-#' information about the share of women in STEM
-#'
-#' @return The return value is the german map with information
-#' @param r Reactive variable that stores all the inputs from the UI
-#' @noRd
-
-studierende_bula_mint <- function(r) {
-
-  # load UI inputs from reactive value
-  betrachtung <- r$ansicht_studium_bulas
-
-  if(betrachtung == "Übersicht - Kartendiagramm"){
-
-    #UI nach Betrachtung
-    timerange <- r$bulas_map_y
-    label_m <- r$bulas_map_l
-
-    # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == timerange,
-                    region != "Deutschland",
-                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-                    indikator == label_m,
-                    geschlecht == "Gesamt") %>%
-      dplyr::collect()
-
-    df <- df %>%
-      dplyr::select(-fachbereich,- mint_select, -typ )%>%
-      tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-      dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
-      tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
-      dplyr::right_join(df)
-
-    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
-
-    # Plot
-    # Vorbereitung Überschrift
-
-    label_m <- ifelse(label_m == "Studierende", paste0(label_m, "n"), label_m)
-    #label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
-    label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
-    label_m <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
-
-    help_l <- "Studierenden"
-    help_l <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen", help_l)
-    help_l <- ifelse(grepl("1. Fach", label_m), "Studienanfänger:innen", help_l)
-
-
-    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
-
-    # plot
-    out <- highcharter::hcmap(
-      "countries/de/de-all",
-      data = df[df$fachbereich == "MINT",],
-      value = "proportion",
-      joinBy = c("name", "region"),
-      borderColor = "#FAFAFA",
-      name = paste0(label_m, " in MINT"),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      #,
-      #download_map_data = FALSE
-    ) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
-      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = paste0("Anteil von ", label_m, " in MINT-Fächern an allen ", help_l, " (", timerange, ")"),
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      # highcharter::hc_caption(
-      #   text = "...",  style = list(color= "white", fontSize = "12px")
-      # ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
-
-  }
-
-  else if(betrachtung == "Zeitverlauf - Liniendiagramm"){
-
-    # load UI inputs from reactive value
-    timerange <- r$bulas_verlauf_y
-    t <- as.character(timerange[1]:timerange[2])
-
-    absolut_selector <- r$bulas_verlauf_abs_rel
-
-    bl_label <- r$bulas_verlauf_l
-
-    states <- r$bulas_verlauf_regio
-
-    # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "studierende") %>%
-      dplyr::filter(jahr %in% t,
-                    geschlecht == "Gesamt",
-                    indikator==bl_label,
-                    fachbereich %in% c("MINT (Gesamt)", "Alle"),
-                    region %in% states) %>%
-      dplyr::collect()
-
-    df <- df %>%
-      dplyr::select(-geschlecht)%>%
-      dplyr::filter(!is.na(wert))%>%
-      tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
-      #dplyr::rename("MINT (Gesamt)"=MINT)%>%
-      dplyr::mutate("MINT (Gesamt)_p"=`MINT (Gesamt)`/`Alle`)%>%
-      dplyr::select(-`Alle`)%>%
-      dplyr::mutate(
-        dplyr::across(
-          c(`MINT (Gesamt)_p`),  ~round(.*100,1)))%>%
-      tidyr::pivot_longer(c(4:5), values_to ="wert", names_to="fach")%>%
-      dplyr::mutate(selector = dplyr::case_when(
-        stringr::str_ends(.$fach, "_p") ~ "In Prozent",
-        T~"Anzahl"
-      ))
-
-    df$fach <- gsub("_p", "", df$fach)
-
-    df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-
-    # Vorbereitung Überschrift
-
-    bl_label <- ifelse(bl_label == "Studierende", paste0(bl_label, "n"), bl_label)
-    bl_label <- ifelse(bl_label == "Studierende (Fachhochschulen)", "Studierenden (Fachhochschulen)" , bl_label)
-    bl_label <- ifelse(bl_label == "Studierende (Lehramt, Universität)", "Studierenden (Lehramt, Universität)" , bl_label)
-    bl_label <- ifelse(bl_label == "Studierende (Universität)", "Studierenden (Universität)" , bl_label)
-
-    help <- "Studierenden"
-    help <- ifelse(grepl("Studienanfänger:innen",bl_label), "Studienanfänger:innen", help)
-
-    # Plot
-
-    if (absolut_selector=="In Prozent"){
-
-      df <- df %>%
-        dplyr::filter(selector=="In Prozent")
-
-      df$display_rel <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
-      out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = region))%>%
-        highcharter::hc_tooltip(pointFormat = "Anteil {point.region} <br> Wert: {point.display_rel} %") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-        #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-        highcharter::hc_title(text = paste0("Anteil von ", bl_label, " in MINT-Fächern an allen ", help),
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-                                 "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-
-
-    } else if(absolut_selector=="Anzahl"){
-
-
-      hcoptslang <- getOption("highcharter.lang")
-      hcoptslang$thousandsSep <- "."
-      options(highcharter.lang = hcoptslang)
-
-      df <- df %>%
-        dplyr::filter(selector == "Anzahl")
-
-      df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
-      out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = region))%>%
-        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-        #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-        highcharter::hc_title(text = paste0("Anzahl an ", bl_label, " in ", help),
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-                                 "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-    }
-
-  }
-
-  else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
-
-    timerange <- r$bulas_balken_date
-    r_lab1 <- r$bulas_balken_l
-
-
-    df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(geschlecht=="Gesamt",
-                    jahr %in% timerange,
-                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-                    indikator == r_lab1) %>%
-      dplyr::collect()
-
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(geschlecht=="Gesamt",
-                    jahr %in% timerange,
-                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-                    indikator == r_lab1) %>%
-      dplyr::select(-fachbereich,- mint_select, -typ )%>%
-      dplyr::collect() %>%
-      tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-      dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
-      tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
-      dplyr::right_join(df_ges)%>%
-      dplyr::filter(fach == "Alle MINT-Fächer")
-
-
-    #Trennpunkte für lange Zahlen ergänzen
-    df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
-    df <- df %>%
-      dplyr::select(indikator, region, jahr, fach, proportion, wert)
-
-    # NA aus fach entfernen für BULAs mit weniger Studienfachgruppen
-    df <- stats::na.omit(df)
-
-    # Vorbereitung Überschrift
-    r_lab1 <- ifelse(r_lab1 == "Studierende", paste0(r_lab1, "n"), r_lab1)
-    # r_lab1 <- ifelse(r_lab1 == "Internationale Studierende", "internationalen Studierenden", r_lab1)
-    r_lab1 <- ifelse(grepl("Lehr", r_lab1), "Studierenden (Lehramt)", r_lab1)
-    # r_lab1 <- ifelse(r_lab1 == "Internationale Studienanfänger:innen (1. Hochschulsemester)",
-    #                  "internationalenen Studienanfänger:innen (1. Hochschulsemester)", r_lab1)
-    help <- r_lab1
-    help <- ifelse(help == "internationalenen Studienanfänger:innen (1. Hochschulsemester)", "internationalen Studienanfänger:innen", help)
-    help <- ifelse(help == "Studienanfänger:innen (1. Fachsemester)" |
-                     help == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help)
-
-
-
-    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
-
-    df <- df[with(df, order(proportion, decreasing = TRUE)),]
-
-    # Plot
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
-      highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
-      highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
-
-      #Anpassung der Farben
-
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors = ifelse(df$region == "Deutschland", "#b16fab",
-                        ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
-                               ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
-
-      #das deleted
-      # highcharter::hc_colors("#b16fab") %>% #balken lila für MINT
-
-
-      highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in MINT-Fächern an allen ", help,  " (", timerange, ")"),
-                            margin = 25,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))   #Schrift-Formatierung Überschrift
-
-
-  }
-
-
-  return(out)
-
-}
 
 
 #' A function to plot time series
@@ -1619,7 +1615,7 @@ studierende_verlauf_single_bl_gender <- function(r) {
 }
 
 # M-I-N-T ----
-
+### Tab 1 ----
 #' A function to create barplots, showing ranked study subjects
 #'
 #' @description A function to compare different subjects
@@ -1771,23 +1767,17 @@ plot_mint_faecher <- function(r){
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
     # Überschriften vorbereiten
-    überschrift_label <- function(label) {
-      label <- ifelse(label == "Studienanfänger:innen (1.Fachsemester)", "Studienanfänger:innen <br> (1. Fachsemester)", label)
-      label <- ifelse(label == "Studienanfänger:innen (1.Hochschulsemester)", "Studienanfänger:innen <br> (1. Hochschulsemester)" , label)
-      label <- ifelse(label == "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)", "Studienanfänger:innen <br> (Fachhochschule, 1. Fachsemester)" , label)
-      label <- ifelse(label == "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Fachhochschule, 1. Hochschulsemester)" , label)
-      label <- ifelse(label == "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)", "Studienanfänger:innen <br> (Lehramt, Universität, 1. Fachsemester)" , label)
-      label <- ifelse(label == "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Lehramt, Universität, 1. Hochschulsemester)" , label)
-      label <- ifelse(label == "Studienanfänger:innen (Universität, 1.Fachsemester)", "Studienanfänger:innen <br> (Universität, 1. Fachsemester)" , label)
-      label <- ifelse(label == "Studienanfänger:innen (Universität, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Universität, 1. Hochschulsemester)" , label)
-      label <- ifelse(label == "Studierende (Fachhochschulen)", "Studierende <br> (Fachhochschulen)" , label)
-      label <- ifelse(label == "Studierende (Lehramt, Universität)", "Studierende <br> (Lehramt, Universität)" , label)
-      label <- ifelse(label == "Studierende (Universität)", "Studierende <br> (Universität)" , label)
-      return(label)
+    ueberschrift_fct <- function(label){
+      titel_help <- ifelse(label == "Studierende", paste0(label, "n"), label)
+      titel_help <- ifelse(titel_help == "internationale Studierende", "internationalen Studierenden", titel_help)
+      titel_help <- ifelse(grepl("Lehr", titel_help), "Studierenden (Lehramt)", titel_help)
+      titel_help <- ifelse(titel_help == "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                           "internationalenen Studienanfänger:innen (1. Hochschulsemester)", titel_help)
+      return(titel_help)
     }
 
     if(length(label_w)==1){
-      titel_help <- überschrift_label(label_w)
+    titel_help <- ueberschrift_fct(label_w)
 
       out <- df %>%
         highcharter::hchart(
@@ -1796,7 +1786,9 @@ plot_mint_faecher <- function(r){
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')) %>%
         highcharter::hc_colors(as.character(df$color)) %>%
-        highcharter::hc_title(text = paste0("MINT-Fächeranteile von ", titel_help , " in ", regio, " (", timerange, ")"),
+        highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                            paste0("MINT-Fächeranteile von ", titel_help , " im ", regio, " (", timerange, ")"),
+                                            paste0("MINT-Fächeranteile von ", titel_help , " in ", regio, " (", timerange, ")")),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -1807,8 +1799,8 @@ plot_mint_faecher <- function(r){
                                                dataLabels = list(enabled = TRUE,  format='{point.prop}%'), showInLegend = TRUE))
 
     } else if(length(label_w)==2){
-      titel_help1 <- überschrift_label(label_w[1])
-      titel_help2 <- überschrift_label(label_w[2])
+      titel_help1 <- ueberschrift_fct(label_w[1])
+      titel_help2 <- ueberschrift_fct(label_w[2])
 
       p1 <- df[df$indikator == label_w[1],] %>%
         highcharter::hchart(
@@ -1851,9 +1843,9 @@ plot_mint_faecher <- function(r){
 
 
     } else if (length(label_w)==3){
-      titel_help1 <- überschrift_label(label_w[1])
-      titel_help2 <- überschrift_label(label_w[2])
-      titel_help3 <- überschrift_label(label_w[3])
+      titel_help1 <- ueberschrift_fct(label_w[1])
+      titel_help2 <- ueberschrift_fct(label_w[2])
+      titel_help3 <- ueberschrift_fct(label_w[3])
 
       p1 <- df[df$indikator == label_w[1],] %>%
         highcharter::hchart(
@@ -1922,12 +1914,16 @@ plot_mint_faecher <- function(r){
       df <- df %>%
         dplyr::mutate(color = color_fachbereich[fach])
       col <- df$color
-      titel <- paste0( "Anteil der MINT-Fachbereiche an allen Fächern in ",regio," ", timerange, br(), label_w)
+      titel <- ifelse(regio == "Saarland",
+                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern im ",regio," ", timerange, br(), label_w),
+                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern in ",regio," ", timerange, br(), label_w))
     }else{
       df <- df %>%
         dplyr::mutate(color = color_fach_balken[fach])
       col <- df$color
-      titel <- paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern in ",regio," ", timerange, br(), label_w)
+      titel <- ifelse(regio == "Saarland",
+                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern im ",regio," ", timerange, br(), label_w),
+                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern in ",regio," ", timerange, br(), label_w))
 
     }
 
@@ -1951,6 +1947,7 @@ plot_mint_faecher <- function(r){
   return(out)
 }
 
+### Tab 2 ----
 
 #' A function to create a bar plot
 #'
@@ -2016,10 +2013,10 @@ mint_anteile <- function(r) {
   gruppe <- indi
   gruppe <- dplyr::case_when(
     gruppe == "Studierende" ~ "Studierenden",
-    gruppe == "Internationale Studierende" ~ "internationalen Studierenden",
+    gruppe == "internationale Studierende" ~ "internationalen Studierenden",
     gruppe == "Studierende (Lehramt)" ~ "Lehramtstudierenden",
-    gruppe == "Internationale Studienanfänger:innen (1. Hochschulsemester)" ~
-      "internationale Studienanfänger:innen (1. Hochschulsemester)",
+    gruppe == "internationale Studienanfänger:innen (1. Hochschulsemester)" ~
+      "internationalen Studienanfänger:innen (1. Hochschulsemester)",
     T ~ gruppe
   )
 
@@ -2161,8 +2158,12 @@ mint_anteile <- function(r) {
                             , labels = list(format = "{value} %")) %>%
       highcharter::hc_xAxis(title = list(text = ""))%>%
       highcharter::hc_title(text = ifelse(ordering == "MINT-Fachbereiche",
-                                          paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " in ", states),
-                                          paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " in ", states)),
+                                          ifelse(states == "Saarland",
+                                                 paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " im ", states),
+                                                 paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " in ", states)),
+                                          ifelse(states == "Saarland",
+                                                 paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " im ", states),
+                                                 paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " in ", states))),
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_colors(as.character(colors))
 
@@ -2190,8 +2191,12 @@ mint_anteile <- function(r) {
       highcharter::hc_yAxis(title = list(text = "")
                             , labels = list(format = "{value}")) %>%
       highcharter::hc_title(text = ifelse(ordering == "MINT-Fachbereiche",
-                                          paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " in ", states),
-                                          paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " in ", states)),
+                                          ifelse(states== "Saarland",
+                                                 paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " im ", states),
+                                                 paste0("Zeitverlauf der MINT-Fachbereiche von ", gruppe, " in ", states)),
+                                          ifelse(states == "Saarland",
+                                                 paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " im ", states),
+                                                 paste0("Zeitverlauf der MINT-Fächer von ", gruppe, " in ", states))),
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_xAxis(title = list(text = ""))%>%
       highcharter::hc_colors(as.character(colors))
@@ -2203,6 +2208,7 @@ mint_anteile <- function(r) {
 }
 
 
+### Tab 3 ----
 #funktion für Box 2 Tab 3 Zeitlicher Lauf wo der Fehler auftritt mit doppelter Überschrift
 plot_studierende_bula_faecher <- function(r){
 
@@ -2258,13 +2264,15 @@ plot_studierende_bula_faecher <- function(r){
     label_m <- ifelse(label_m == "Studierende", paste0(label_m, "n"), label_m)
     label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
     label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
-    label_m <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
+    label_m <- ifelse(label_m == "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                      "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
 
-    help_l <- "Studierenden"
-    help_l <- ifelse(grepl("1. Hoch", label_m), "internationalen Studienanfänger:innen", help_l)
-    help_l <- ifelse(grepl("1. Fach", label_m), "Studienanfänger:innen", help_l)
+    help_l <- label_m
+    help_l <- ifelse(label_m == "internationalen Studienanfänger:innen (1. Hochschulsemester)",
+                     "internationalen Studienanfänger:innen", help_l)
+    help_l <- ifelse(label_m == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
 
-    titel_help <- faecher
+    titel_help <- label_m
     titel_help <- ifelse(titel_help == "Alle MINT-Fächer", "MINT-Fächern", titel_help)
     titel_help <- ifelse(titel_help == "Alle Nicht MINT-Fächer", "allen Nicht-MINT-Fächern", titel_help)
     titel_help <- ifelse(titel_help == "allgemeine naturwissenschaftliche und mathematische Fächer",
@@ -2289,8 +2297,9 @@ plot_studierende_bula_faecher <- function(r){
       tooltip = list(
         valueDecimals = 0,
         valueSuffix = "%"
-      ),
-      download_map_data = FALSE
+      )
+      # ,
+      # download_map_data = FALSE
     ) %>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
       highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
@@ -2361,18 +2370,16 @@ plot_studierende_bula_faecher <- function(r){
       #df <- df %>% dplyr::filter(indikator==label_select)
 
       # Überschrift vorbereiten
-      label_select <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
-      label_select <- ifelse(label_select == "Studierende (Fachhochschulen)", "Studierenden (Fachhochschulen)" , label_select)
-      label_select <- ifelse(label_select == "Studierende (Lehramt, Universität)", "Studierenden (Lehramt, Universität)" , label_select)
-      label_select <- ifelse(label_select == "Studierende (Universität)", "Studierenden (Universität)" , label_select)
+      label_m <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
+      label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
+      label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
+      label_m <- ifelse(label_m == "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                        "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
 
-      titel_help <- "Studierenden"
-      titel_help <- ifelse(grepl("Studienanfänger:innen",label_select), "Studienanfänger:innen", titel_help)
-      #
-      # df6 <- df5 %>% dplyr::filter(region == states)
-
-      df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-      # plot
+      help_l <- label_m
+      help_l <- ifelse(label_m == "internationalen Studienanfänger:innen (1. Hochschulsemester)",
+                       "internationalen Studienanfänger:innen", help_l)
+      help_l <- ifelse(label_m == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
 
       titel_help <- fach_select
       titel_help <- ifelse(titel_help == "Alle MINT-Fächer", "MINT-Fächern", titel_help)
@@ -2380,23 +2387,12 @@ plot_studierende_bula_faecher <- function(r){
       titel_help <- ifelse(titel_help == "allgemeine naturwissenschaftliche und mathematische Fächer",
                            "allgemeinen naturwissenschaftlichen und mathematischen Fächern", titel_help)
 
-      # States Länge angucken
-      if (length(states) == 1) {
-        # Nur eine Region ausgewählt
-        region_text <- states[1]
-      } else if (length(states) == 2) {
-        # Zwei Regionen ausgewählt
-        region_text <- paste(states[1], "und", states[2])
-      } else {
-        # Mehr als zwei Regionen ausgewählt
-        region_text <- paste(paste(states[1:(length(states)-1)], collapse = ", "), "und", states[length(states)])
-      }
-
       if(nrow(df) == 0){
         titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
         Bitte wählen Sie eine andere Komination oder Fächergruppe aus."
       }else{
-      titel <- paste0("Anteil von ", label_select, " in ", titel_help)}
+        titel <- paste0("Anteil von ", label_m, " in ", titel_help, " an allen ", help_l)
+      }
 
       # Den dynamisch erstellten Text in die Überschrift einfügen
       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = region)) %>%
@@ -2431,13 +2427,11 @@ plot_studierende_bula_faecher <- function(r){
       df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
       # Überschrift vorbereiten
-      label_select <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
-      label_select <- ifelse(label_select == "Studierende (Fachhochschulen)", "Studierenden (Fachhochschulen)" , label_select)
-      label_select <- ifelse(label_select == "Studierende (Lehramt, Universität)", "Studierenden (Lehramt, Universität)" , label_select)
-      label_select <- ifelse(label_select == "Studierende (Universität)", "Studierenden (Universität)" , label_select)
-
-      df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-      # plot
+      label_m <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
+      label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
+      label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
+      label_m <- ifelse(label_m == "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                        "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
 
       titel_help <- fach_select
       titel_help <- ifelse(titel_help == "Alle MINT-Fächer", "MINT-Fächern", titel_help)
@@ -2445,24 +2439,22 @@ plot_studierende_bula_faecher <- function(r){
       titel_help <- ifelse(titel_help == "allgemeine naturwissenschaftliche und mathematische Fächer",
                            "allgemeinen naturwissenschaftlichen und mathematischen Fächern", titel_help)
 
-      #states länge angucken
-      if (length(states) == 1) {
-        # Nur eine Region ausgewählt
-        region_text <- states[1]
-      } else if (length(states) == 2) {
-        # Zwei Regionen ausgewählt
-        region_text <- paste(states[1], "und", states[2])
-      } else {
-        # Mehr als zwei Regionen ausgewählt
-        region_text <- paste(paste(states[1:(length(states)-1)], collapse = ", "), "und", states[length(states)])
+      if(nrow(df) == 0){
+        titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
+        Bitte wählen Sie eine andere Komination oder Fächergruppe aus."
+      }else{
+        titel <- paste0("Anzahl an ", label_m, " in ", titel_help)
       }
+
+      df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+      # plot
 
       # Den dynamisch erstellten Text in die Überschrift einfügen
       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = region)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
-        highcharter::hc_title(text = paste0("Anzahl an ", label_select, " in ", titel_help),
+        highcharter::hc_title(text = titel,
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -2592,6 +2584,7 @@ plot_studierende_bula_faecher <- function(r){
 
 }
 
+### Nicht Box 2 ----
 #' A function to create barplots, showing ranked study subjects
 #'
 #' @description A function to compare different subjects
@@ -3062,7 +3055,7 @@ studierende_mint_vergleich_bl <- function(r) {
 
 
 # Frauen in MINT ----
-
+### Tab 1 ----
 
 #' A function to plot a graph.
 #'
@@ -3150,7 +3143,9 @@ studienzahl_einstieg_gender <- function(r) {
             highcharter::hc_tooltip(
               pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')) %>%
             highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-            highcharter::hc_title(text = paste0("Frauenanteil unter ", genl[1], " in ", titel_help, " in ", regio, " (", timerange, ")"),
+            highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                                paste0("Frauenanteil unter ", genl[1], " in ", titel_help, " im ", regio, " (", timerange, ")"),
+                                                paste0("Frauenanteil unter ", genl[1], " in ", titel_help, " in ", regio, " (", timerange, ")")),
                                   margin = 45,
                                   align = "center",
                                   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3187,7 +3182,9 @@ studienzahl_einstieg_gender <- function(r) {
                highcharter::hc_tooltip(
                  pointFormat = paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')) %>%
                highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-               highcharter::hc_title(text = paste0("Frauenanteil unter ", genl[1], " in Nicht MINT-Fächern in ", regio, " (", timerange, ")"),
+               highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                                   paste0("Frauenanteil unter ", genl[1], " in Nicht MINT-Fächern im ", regio, " (", timerange, ")"),
+                                                   paste0("Frauenanteil unter ", genl[1], " in Nicht MINT-Fächern in ", regio, " (", timerange, ")")),
                                      margin = 45,
                                      align = "center",
                                      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3239,7 +3236,9 @@ studienzahl_einstieg_gender <- function(r) {
             highcharter::hc_tooltip(
               pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')) %>%
             highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-            highcharter::hc_title(text = paste0("Frauenanteil unter ", genl[1], " in ", titel_help, " in ", regio, " (", timerange, ")"),
+            highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                                paste0("Frauenanteil unter ", genl[1], " in ", titel_help, " im ", regio, " (", timerange, ")"),
+                                                paste0("Frauenanteil unter ", genl[1], " in ", titel_help, " in ", regio, " (", timerange, ")")),
                                   margin = 45,
                                   align = "center",
                                   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3253,7 +3252,9 @@ studienzahl_einstieg_gender <- function(r) {
             highcharter::hc_tooltip(
               pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')) %>%
             highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-            highcharter::hc_title(text = paste0("Frauenanteil unter ", genl[2], " in ",titel_help, " in ", regio, " (", timerange, ")"),
+            highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                                paste0("Frauenanteil unter ", genl[2], " in ",titel_help, " im ", regio, " (", timerange, ")"),
+                                                paste0("Frauenanteil unter ", genl[2], " in ",titel_help, " in ", regio, " (", timerange, ")")),
                                   margin = 45,
                                   align = "center",
                                   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3362,7 +3363,9 @@ studienzahl_einstieg_gender <- function(r) {
                 pointFormat = paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')) %>%
               highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
               # Region in die Überschrift einfügen
-              highcharter::hc_title(text = paste0("Frauenanteil unter ", genl[1], " in Nicht MINT-Fächern in ", regio, " (", timerange, ")"),
+              highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                                  paste0("Frauenanteil unter ", genl[1], " in Nicht MINT-Fächern im ", regio, " (", timerange, ")"),
+                                                  paste0("Frauenanteil unter ", genl[1], " in Nicht MINT-Fächern in ", regio, " (", timerange, ")")),
                                     margin = 45,
                                     align = "center",
                                     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3377,7 +3380,9 @@ studienzahl_einstieg_gender <- function(r) {
                 pointFormat = paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')) %>%
               highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
               # Region in die Überschrift einfügen
-              highcharter::hc_title(text = paste0("Frauenanteil unter ", genl[2], " in Nicht MINT-Fächern in ", regio, " (", timerange, ")"),
+              highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                                  paste0("Frauenanteil unter ", genl[2], " in Nicht MINT-Fächern im ", regio, " (", timerange, ")"),
+                                                  paste0("Frauenanteil unter ", genl[2], " in Nicht MINT-Fächern in ", regio, " (", timerange, ")")),
                                     margin = 45,
                                     align = "center",
                                     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3594,9 +3599,13 @@ studienzahl_einstieg_gender <- function(r) {
     fach_label <- sel_f1
     fach_label <- ifelse(fach_label == "Alle MINT-Fächer", "MINT", fach_label)
     if(gegenwert == "Ja"){
-      titel <- paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " und allen Nicht-MINT-Fächern in ", sel_bl1, " (", timerange, ")")
+      titel <- ifelse(sel_bl1 == "Saarland",
+                      paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " und allen Nicht-MINT-Fächern im ", sel_bl1, " (", timerange, ")"),
+                      paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " und allen Nicht-MINT-Fächern in ", sel_bl1, " (", timerange, ")"))
     }else{
-      titel <- paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " in ", sel_bl1, " (", timerange, ")")
+      titel <- ifelse(sel_bl1 == "Saarland",
+                      paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " im ", sel_bl1, " (", timerange, ")"),
+                      paste0("Frauenanteil in der Studienfachgruppe ", fach_label, " in ", sel_bl1, " (", timerange, ")"))
 
     }
 
@@ -3634,7 +3643,7 @@ studienzahl_einstieg_gender <- function(r) {
   return(out)
 }
 
-
+### Tab 2 ----
 
 #' A function to plot time series
 #'
@@ -3717,7 +3726,9 @@ studienzahl_verlauf_single_gender <- function(r) {
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-        highcharter::hc_title(text = paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio),
+        highcharter::hc_title(text = ifelse(regio =="Saarland",
+                                            paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
+                                            paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio)),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3746,7 +3757,9 @@ studienzahl_verlauf_single_gender <- function(r) {
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-        highcharter::hc_title(text =  paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio),
+        highcharter::hc_title(text =  ifelse(regio == "Saarland",
+                                             paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
+                                             paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio)),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3768,14 +3781,14 @@ studienzahl_verlauf_single_gender <- function(r) {
 
       df<- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3])
 
-
-
       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
         highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.display_rel} %") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-        highcharter::hc_title(text =  paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio),
+        highcharter::hc_title(text =  ifelse(regio == "Saarland",
+                                             paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
+                                             paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio)),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3794,6 +3807,11 @@ studienzahl_verlauf_single_gender <- function(r) {
 
 
     }} else if(absolut_selector=="Anzahl"){
+
+
+      fach_help <- faecher
+      fach_help <- ifelse(fach_help == "Alle MINT-Fächer", "MINT", fach_help)
+      fach_help <- ifelse(fach_help == "Alle Nicht MINT-Fächer", "Nicht-MINT", fach_help)
 
       hcoptslang <- getOption("highcharter.lang")
       hcoptslang$thousandsSep <- "."
@@ -3814,7 +3832,9 @@ studienzahl_verlauf_single_gender <- function(r) {
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-          highcharter::hc_title(text =  paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio),
+          highcharter::hc_title(text =  ifelse(regio == "Saarland",
+                                               paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
+                                               paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio)),
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3842,7 +3862,9 @@ studienzahl_verlauf_single_gender <- function(r) {
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-          highcharter::hc_title(text = paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio),
+          highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                              paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
+                                              paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio)),
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3871,7 +3893,9 @@ studienzahl_verlauf_single_gender <- function(r) {
           highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
           #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-          highcharter::hc_title(text =  paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio),
+          highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                              paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio),
+                                              paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio)),
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3995,6 +4019,7 @@ studienzahl_verlauf_single_gender <- function(r) {
   return(out)
 }
 
+### Tab 3 -----
 
 #' A function to plot a waffle chart
 #'
@@ -4085,8 +4110,9 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')) %>%
       highcharter::hc_colors(as.character(df_f$col)) %>%
-      highcharter::hc_title(text = paste0("Studienfachwahl von Frauen in ", regio, " (", timerange, ")"),
-                            margin = 45,
+      highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                          paste0("Studienfachwahl von Frauen im ", regio, " (", timerange, ")"),
+                                          paste0("Studienfachwahl von Frauen in ", regio, " (", timerange, ")")),margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_subtitle(text = paste0("Von allen Frauen die studieren, wählen ", 100-df_f$prop[df_f$fachbereich=="andere Fachbereiche"],
@@ -4105,8 +4131,10 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')) %>%
       highcharter::hc_colors(as.character(df_f$col)) %>%
-      highcharter::hc_title(text = paste0("Studienfachwahl von Männern in ", regio, " (", timerange, ")"),
-                            margin = 45,
+      highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                          paste0("Studienfachwahl von Männern im ", regio, " (", timerange, ")"),
+                                          paste0("Studienfachwahl von Männern in ", regio, " (", timerange, ")")),
+                                          margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_subtitle(text = paste0("Von allen Männern die studieren, wählen ", 100-df_m$prop[df_m$fachbereich=="andere Fachbereiche"],
@@ -4132,7 +4160,9 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')) %>%
       highcharter::hc_colors(as.character(df$col)) %>%
-      highcharter::hc_title(text = paste0("Studienfachwahl von Frauen in ", regio, " (", timerange, ")"),
+      highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                          paste0("Studienfachwahl von Frauen im ", regio, " (", timerange, ")"),
+                                          paste0("Studienfachwahl von Frauen in ", regio, " (", timerange, ")")),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -4154,7 +4184,6 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
   v_lab <- r$choice_l_v
   absolut_selector <- r$abs_zahlen_l_v
   subjects_select <- r$choice_v_f
-
   states <- r$choice_states
 
   df <- dplyr::tbl(con, from = "studierende") %>%
@@ -4207,15 +4236,21 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
     #Trennpunkte für lange Zahlen ergänzen
 #browser()
     df$display_rel <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    max_c <- unique(ifelse(df$fach == "MINT (Gesamt)", 30, 20))
-    min_c <- unique(ifelse(df$fach == "MINT (Gesamt)", 20, 0))
+    # max_c <- unique(ifelse(df$fach == "MINT (Gesamt)", 30, 20))
+    # min_c <- unique(ifelse(df$fach == "MINT (Gesamt)", 20, 0))
+    max_c <- max(df$wert) + 3
+    min_c <- min(df$wert) - 3
+
+
 
     out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert,group=indikator))%>%
       highcharter::hc_tooltip(pointFormat = "Anteil {point.label} <br> Wert: {point.display_rel} %") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), max=max_c, min=min_c) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %"), max = max_c, min = min_c) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= F, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Anteil von weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, an allen weiblichen Studierenden in ", states),
+      highcharter::hc_title(text = ifelse(states == "Saarland",
+                                          paste0("Anteil von weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, an allen weiblichen Studierenden in ", states),
+                                          paste0("Anteil von weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, an allen weiblichen Studierenden in ", states)),
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -4242,11 +4277,8 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
     hcoptslang$thousandsSep <- "."
     options(highcharter.lang = hcoptslang)
 
-
     df <- df %>%
       dplyr::filter(selector=="Anzahl")
-
-
 
     df <- df[with(df, order( jahr, decreasing = FALSE)), ]
 
@@ -4268,8 +4300,9 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"),reversed= TRUE, allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       #highcharter::hc_caption(text = "Quelle: ", style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = paste0("Anzahl an weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, in ", states),
-                            margin = 45,
+      highcharter::hc_title(text = ifelse(states == "Saarland",
+                                          paste0("Anzahl an weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, in ", states),
+                                          paste0("Anzahl an weiblichen Studierenden, die ein Studium in ", fach_label, " gewählt haben, in ", states)),                            margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24","#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",

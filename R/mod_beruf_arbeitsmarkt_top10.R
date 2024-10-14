@@ -42,7 +42,7 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
                   "Westdeutschland (o. Berlin)",
                   "Ostdeutschland (inkl. Berlin)"
       ),
-      selected = "Bayern"
+      selected = "Deutschland"
     ),
 
     p("Fachbereich:"),

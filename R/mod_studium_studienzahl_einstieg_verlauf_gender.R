@@ -27,10 +27,9 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("genzl"),
       choices = c(
-        "Studienanfänger:innen (1. Fachsemester)",
-        "Studienanfänger:innen (1. Hochschulsemester)",
         "Studierende",
-        "Studierende (Lehramt)"
+        "Studierende (Lehramt)",
+        "Studienanfänger:innen (1. Hochschulsemester)"
       ),
       selected = c("Studierende"
                    , "Studienanfänger:innen (1. Hochschulsemester)"

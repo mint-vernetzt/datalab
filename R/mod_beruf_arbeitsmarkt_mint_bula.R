@@ -40,14 +40,20 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("zeit_beruf_mint_bula_karte"),
                        label = NULL,
-                       choices = c(2021, 2022),
+                       choices = 2013:2022,
                        selected = 2022
                      ),
                      p("Beschäftigtengruppe:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("indikator_beruf_mint_bula_karte"),
                        choices = c("Auszubildende",
-                                   "Beschäftigte"),
+                                   "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
+                                   "Beschäftigte",
+                                   "ausländische Auszubildende",
+                                   "ausländische Beschäftigte",
+                                   "Beschäftigte 25-55",
+                                   "Beschäftigte u25",
+                                   "Beschäftigte ü55"),
                        # justified = TRUE,
                        # checkIcon = list(yes = icon("ok",
                        #                             lib = "glyphicon")),
@@ -81,7 +87,13 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("indikator_beruf_mint_bula_verlauf"),
       choices = c("Auszubildende",
-                   "Beschäftigte"),
+                  "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
+                  "Beschäftigte",
+                  "ausländische Auszubildende",
+                  "ausländische Beschäftigte",
+                  "Beschäftigte 25-55",
+                  "Beschäftigte u25",
+                  "Beschäftigte ü55"),
       # justified = TRUE,
       # checkIcon = list(yes = icon("ok",
       #                             lib = "glyphicon")),
@@ -158,7 +170,7 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("zeit_beruf_mint_bula_balken"),
                        label = NULL,
-                       choices = 2021:2022,
+                       choices = 2013:2022,
                        selected = 2022
                      ),
                      p("Beschäftigtengruppe:"),

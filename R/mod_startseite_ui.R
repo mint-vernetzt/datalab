@@ -17,7 +17,7 @@ mod_startseite_start_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 12,
-        img(src='www/Banner_Willkommen_Beta.jpg',
+        img(src='www/Banner_Willkommen.jpg',
             class = "img-responsive",
             height = "300px",
             # width = "150px",
@@ -29,12 +29,12 @@ mod_startseite_start_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 8,
-        title = "Willkommen in der Betaversion des MINT-DataLabs von MINTvernetzt!",
+        title = "Willkommen im MINT-DataLab von MINTvernetzt!",
         p(style = "text-align: justify; font-size = 20px",
           "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
             Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
                   für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver
-          Diagramme einen intuitiven und informativen Zugang zu gewähren.",
+          Diagramme einen intuitiven und informativen Zugang zu gewähren. Dabei entwickeln wir das MINT-DataLab stetig weiter.",
           br()
       )
     )

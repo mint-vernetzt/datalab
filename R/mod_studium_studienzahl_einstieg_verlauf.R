@@ -143,21 +143,15 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
 
     p("Studierendengruppen (alle auswählbar): "),
     shinyWidgets::pickerInput(
-      inputId = ns("studienzahl_einstieg_verlauf_indi"),
-      choices = c("Studienanfänger:innen (1.Fachsemester)",
-                  "Studienanfänger:innen (1.Hochschulsemester)",
-                  "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
-                  "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
-                  "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
-                  "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
-                  "Studienanfänger:innen (Universität, 1.Fachsemester)",
-                  "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
-                  "Studierende",
-                  "Studierende (Fachhochschulen)",
-                  "Studierende (Lehramt, Universität)",
-                  "Studierende (Universität)"
+      inputId = ns("studienzahl_einstieg_indi_verlauf"),
+      choices = c("Studierende",
+                  "internationale Studierende",
+                  "Studierende (Lehramt)",
+                  "Studienanfänger:innen (1. Hochschulsemester)",
+                  "internationale Studienanfänger:innen (1. Hochschulsemester)"),
+      selected = c("Studierende"
+                   , "Studienanfänger:innen (1. Hochschulsemester)"
       ),
-      selected = c("Studierende", "Studienanfänger:innen (1.Fachsemester)"),
       multiple = TRUE,
       options = list(`actions-box` = TRUE,  # Die Auswahlbox für "Alle auswählen" und "Alle abwählen"
                      `deselect-all-text` = "Alle abwählen",  # Text für "Alle abwählen"
@@ -201,9 +195,8 @@ mod_studium_studienzahl_einstieg_verlauf_server <- function(id, r){
       r$region_studienzahl_einstieg_verlauf <- input$region_studienzahl_einstieg_verlauf
     })
 
-
-    observeEvent(input$studienzahl_einstieg_verlauf_indi, {
-      r$studienzahl_einstieg_verlauf_indi <- input$studienzahl_einstieg_verlauf_indi
+    observeEvent(input$studienzahl_einstieg_indi_verlauf, {
+      r$studienzahl_einstieg_indi_verlauf <- input$studienzahl_einstieg_indi_verlauf
     })
 
     observeEvent(input$abs_zahlen_einstieg_verlauf_indi, {

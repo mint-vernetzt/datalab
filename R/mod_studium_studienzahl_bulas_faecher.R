@@ -47,13 +47,11 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("bulas_map_l_faecher"),
-                       choices = c("internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Studienanfänger:innen (1. Fachsemester)",
-                                   "Studierende",
+                       choices = c("Studierende",
+                                   "Studierende (Lehramt)",
                                    "internationale Studierende",
-                                   "Studierende (Lehramt)"
-
-                       ),
+                                   "Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -72,17 +70,15 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                         selected = "Alle MINT-Fächer"
                                       )),
 
-                     conditionalPanel(condition = "input.bulas_map_l_faecher == 'Internationale Studienanfänger:innen (1. Hochschulsemester)' |
-                     input.bulas_map_l_faecher == 'Studienanfänger:innen (1. Fachsemester)' |
+                     conditionalPanel(condition = "input.bulas_map_l_faecher == 'internationale Studienanfänger:innen (1. Hochschulsemester)' |
                      input.bulas_map_l_faecher == 'Studierende' |
-                     input.bulas_map_l_faecher == 'Internationale Studierende' |
+                     input.bulas_map_l_faecher == 'internationale Studierende' |
                      input.bulas_map_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
                                         inputId = ns("bl_f_alle_faecher"),
 
                                         choices = studi_det_ui_faecher(spezif_i =c('Internationale Studienanfänger:innen (1. Hochschulsemester)',
-                                                                                   'Studienanfänger:innen (1. Fachsemester)',
                                                                                    'Studierende',
                                                                                    'Internationale Studierende',
                                                                                    'Studienanfänger:innen (1. Hochschulsemester)')),
@@ -116,12 +112,11 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("bulas_verlauf_l_faecher"),
-                       choices = c("internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Studienanfänger:innen (1. Fachsemester)",
-                                   "Studierende",
+                       choices = c("Studierende",
+                                   "Studierende (Lehramt)",
                                    "internationale Studierende",
-                                   "Studierende (Lehramt)"
-                       ),
+                                   "Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -140,17 +135,15 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                         selected = "Alle MINT-Fächer"
                                       )),
 
-                     conditionalPanel(condition = "input.bulas_verlauf_l_faecher == 'Internationale Studienanfänger:innen (1. Hochschulsemester)' |
-                     input.bulas_verlauf_l_faecher == 'Studienanfänger:innen (1. Fachsemester)' |
+                     conditionalPanel(condition = "input.bulas_verlauf_l_faecher == 'internationale Studienanfänger:innen (1. Hochschulsemester)' |
                      input.bulas_verlauf_l_faecher == 'Studierende' |
-                     input.bulas_verlauf_l_faecher == 'Internationale Studierende' |
+                     input.bulas_verlauf_l_faecher == 'internationale Studierende' |
                      input.bulas_verlauf_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
                                         inputId = ns("bl_verlauf_alle_faecher"),
 
                                         choices = studi_det_ui_faecher(spezif_i =c('Internationale Studienanfänger:innen (1. Hochschulsemester)',
-                                                                                   'Studienanfänger:innen (1. Fachsemester)',
                                                                                    'Studierende',
                                                                                    'Internationale Studierende',
                                                                                    'Studienanfänger:innen (1. Hochschulsemester)')),
@@ -219,13 +212,11 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("bulas_balken_l_faecher"),
-                       choices = c("internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Studienanfänger:innen (1. Fachsemester)",
-                                   "Studierende",
+                       choices = c("Studierende",
+                                   "Studierende (Lehramt)",
                                    "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Studierende (Lehramt)"
-                       ),
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
                        selected = "Studierende"),
 
                      #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
@@ -239,17 +230,15 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                         selected = "Alle MINT-Fächer"
                                       )),
 
-                     conditionalPanel(condition = "input.bulas_balken_l_faecher == 'Internationale Studienanfänger:innen (1. Hochschulsemester)' |
-                     input.bulas_balken_l_faecher == 'Studienanfänger:innen (1. Fachsemester)' |
+                     conditionalPanel(condition = "input.bulas_balken_l_faecher == 'internationale Studienanfänger:innen (1. Hochschulsemester)' |
                      input.bulas_balken_l_faecher == 'Studierende' |
-                     input.bulas_balken_l_faecher == 'Internationale Studierende' |
+                     input.bulas_balken_l_faecher == 'internationale Studierende' |
                      input.bulas_balken_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
                                         inputId = ns("bl_balken_alle_faecher"),
 
                                         choices = studi_det_ui_faecher(spezif_i =c('Internationale Studienanfänger:innen (1. Hochschulsemester)',
-                                                                                   'Studienanfänger:innen (1. Fachsemester)',
                                                                                    'Studierende',
                                                                                    'Internationale Studierende',
                                                                                    'Studienanfänger:innen (1. Hochschulsemester)')),

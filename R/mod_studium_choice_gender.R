@@ -30,18 +30,10 @@ mod_studium_choice_gender_ui <- function(id){
     p("Studierendengruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("choice_l"),
-      choices = c("Studienanfänger:innen (1.Fachsemester)",
-                  "Studienanfänger:innen (1.Hochschulsemester)",
-                  "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
-                  "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
-                  "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
-                  "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
-                  "Studienanfänger:innen (Universität, 1.Fachsemester)",
-                  "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
-                  "Studierende",
-                  "Studierende (Fachhochschulen)",
-                  "Studierende (Lehramt, Universität)",
-                  "Studierende (Universität)"
+      choices = c(
+        "Studierende",
+        "Studierende (Lehramt)" = "Studierende (Lehramt, Universität)",
+        "Studienanfänger:innen (1.Hochschulsemester)"
       ),
       selected = c("Studierende")
       ,
@@ -106,18 +98,10 @@ mod_studium_choice_gender_ui <- function(id){
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("choice_l_v"),
-                       choices = c("Studienanfänger:innen (1.Fachsemester)",
-                                   "Studienanfänger:innen (1.Hochschulsemester)",
-                                   "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
-                                   "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
-                                   "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
-                                   "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
-                                   "Studienanfänger:innen (Universität, 1.Fachsemester)",
-                                   "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
-                                   "Studierende",
-                                   "Studierende (Fachhochschulen)",
-                                   "Studierende (Lehramt, Universität)",
-                                   "Studierende (Universität)"
+                       choices = c(
+                         "Studierende",
+                         "Studierende (Lehramt)" = "Studierende (Lehramt, Universität)",
+                         "Studienanfänger:innen (1.Hochschulsemester)"
                        ),
                        selected = c("Studierende", "Studienanfänger:innen (1.Hochschulsemester)")
                        ,

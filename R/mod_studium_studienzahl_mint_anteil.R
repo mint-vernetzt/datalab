@@ -72,21 +72,13 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                      p("Studierendengruppen (max. 2):"),
                      shinyWidgets::pickerInput(
                        inputId = ns("studium_anteil_i"),
-                       choices = c("Studienanfänger:innen (1.Fachsemester)",
-                                   "Studienanfänger:innen (1.Hochschulsemester)",
-                                   "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
-                                   "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
-                                   "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
-                                   "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
-                                   "Studienanfänger:innen (Universität, 1.Fachsemester)",
-                                   "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
-                                   "Studierende",
-                                   "Studierende (Fachhochschulen)",
-                                   "Studierende (Lehramt, Universität)",
-                                   "Studierende (Universität)"
-                       ),
+                       choices = c("Studierende",
+                                   "internationale Studierende",
+                                   "Studierende (Lehramt)",
+                                   "Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)"),
                        selected = c("Studierende"
-                                    , "Studienanfänger:innen (1.Fachsemester)"
+                                    , "Studienanfänger:innen (1. Hochschulsemester)"
                        ),
                        multiple = TRUE,
                        options =  list(
@@ -113,19 +105,11 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                      p("Studierendengruppen (mehrere auswählbar):"),
                      shinyWidgets::pickerInput(
                        inputId = ns("studium_anteil_i_balken"),
-                       choices = c("Studienanfänger:innen (1.Fachsemester)",
-                                   "Studienanfänger:innen (1.Hochschulsemester)",
-                                   "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
-                                   "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
-                                   "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
-                                   "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
-                                   "Studienanfänger:innen (Universität, 1.Fachsemester)",
-                                   "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
-                                   "Studierende",
-                                   "Studierende (Fachhochschulen)",
-                                   "Studierende (Lehramt, Universität)",
-                                   "Studierende (Universität)"
-                       ),
+                       choices =  c("Studierende",
+                                              "internationale Studierende",
+                                              "Studierende (Lehramt)",
+                                              "Studienanfänger:innen (1. Hochschulsemester)",
+                                              "internationale Studienanfänger:innen (1. Hochschulsemester)"),
                        multiple = TRUE,
                        options = list(`actions-box` = TRUE,
                                       `deselect-all-text` = "Alle abwählen",
@@ -136,21 +120,11 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                        #              "Studierende (Universität)",
                        #              "Studierende (Fachhochschulen)"
                        # )
-                       selected = c("Studienanfänger:innen (1.Fachsemester)",
-                                    "Studienanfänger:innen (1.Hochschulsemester)",
-                                    "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)",
-                                    "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)",
-                                    "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)",
-                                    "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)",
-                                    "Studienanfänger:innen (Universität, 1.Fachsemester)",
-                                    "Studienanfänger:innen (Universität, 1.Hochschulsemester)",
-                                    "Studierende",
-                                    "Studierende (Fachhochschulen)",
-                                    "Studierende (Lehramt, Universität)",
-                                    "Studierende (Universität)"
-                       )
-
-
+                       selected = c("Studierende",
+                                               "internationale Studierende",
+                                               "Studierende (Lehramt)",
+                                               "Studienanfänger:innen (1. Hochschulsemester)",
+                                               "internationale Studienanfänger:innen (1. Hochschulsemester)")
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_6", title="",

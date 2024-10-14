@@ -1,4 +1,13 @@
 
+get_lks <- function(bula = "Sachsen"){
+
+lks <- DBI::dbGetQuery(con,
+                      paste0("SELECT DISTINCT landkreis
+                       FROM arbeitsmarkt_detail
+                       WHERE bundesland = '", bula, "'"))$landkreis
+
+return(lks)
+}
 
 #' preprocess_beruf on landkreis level
 #'
