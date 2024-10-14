@@ -200,7 +200,7 @@ mod_fachkraft_start_ui <- function(id){
               p(style="font-size:12px;color:grey",
                 "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
               p(),
-              tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+              tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           ),
     tabPanel(
@@ -226,7 +226,7 @@ mod_fachkraft_start_ui <- function(id){
         p(style="font-size:12px;color:grey",
           "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
         p(),
-        tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+        tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
       )
     ),
     tabPanel(
@@ -254,7 +254,7 @@ mod_fachkraft_start_ui <- function(id){
               # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_2"),
               # p(),
               p(),
-              tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+              tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           )
     ,
@@ -294,7 +294,7 @@ mod_fachkraft_start_ui <- function(id){
                    id = "h_fachkraft-prognosen_3"),
             p(),
 
-            tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+            tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
     )
 )
 )))),
@@ -652,10 +652,10 @@ mod_fachkraft_start_server <- function(id, r){
     ## pdf ----
     # output$downloadPDF <- downloadHandler(
     #   # filename = function() {
-    #   #   "MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf"
+    #   #   "Methodenbericht_MINT-Fachkraefteszenarien.pdf"
     #   # },
     #   content = function(file) {
-    #     file.copy("www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", file)
+    #     file.copy("www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", file)
     #   }
     # )
 

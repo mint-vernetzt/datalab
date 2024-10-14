@@ -10,15 +10,73 @@
 mod_beruf_arbeitsmarkt_einstieg_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+    #farbe auswahl
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
+
     p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_einstieg_verlauf"),
       label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021", "2022"),
-      selected = c("2017", "2022")
+      choices = 2013:2022,
+      selected = c(2017, 2022)
     ),
-    p("Betrachtung:"),
+    p("Region:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("region_arbeitsmarkt_einstieg_verlauf"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = FALSE,
+      selected = c("Deutschland")
+    ),
+    p("Beschäftigtengruppe:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("indikator_arbeitsmarkt_einstieg_verlauf"),
+      choices = c("Auszubildende",
+                  "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
+                  "Beschäftigte",
+                  "ausländische Auszubildende",
+                  "ausländische Beschäftigte",
+                  "Beschäftigte 25-55",
+                  "Beschäftigte u25",
+                  "Beschäftigte ü55"),
+      multiple = TRUE,
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
+      selected = c("Beschäftigte", "Auszubildende"),
+    ),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_verlauf"),
       choices = c("In Prozent", "Anzahl"),
@@ -44,6 +102,14 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_server <- function(id, r){
 
     observeEvent(input$date_arbeitsmarkt_einstieg_verlauf, {
       r$date_arbeitsmarkt_einstieg_verlauf <- input$date_arbeitsmarkt_einstieg_verlauf
+    })
+
+    observeEvent(input$region_arbeitsmarkt_einstieg_verlauf, {
+      r$region_arbeitsmarkt_einstieg_verlauf <- input$region_arbeitsmarkt_einstieg_verlauf
+    })
+
+    observeEvent(input$indikator_arbeitsmarkt_einstieg_verlauf, {
+      r$indikator_arbeitsmarkt_einstieg_verlauf <- input$indikator_arbeitsmarkt_einstieg_verlauf
     })
 
     observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_verlauf, {

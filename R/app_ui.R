@@ -47,8 +47,9 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Fokus: MINT International", tabName = "international"),
           shinydashboard::menuItem("Fokus: MINT-Fachkräfte",  tabName = "fachkraft"),
         # shinydashboard::menuItem("BETA: Suche",  tabName = "suche"),
-          shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen"),
-          shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION")
+          shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen")
+        #,
+          #shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION")
           #shinydashboard::menuItem("Impressum",  tabName = "impressum")
           #shinydashboard::menuItem("Datenschutz", tabName = "datenschutz")
 
@@ -100,7 +101,7 @@ app_ui <- function(request) {
 
           # shinydashboard::tabItem(tabName ="suche", mod_suche_ui("suche_1")),
           shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
-          shinydashboard::tabItem(tabName ="BETAVERSION", mod_betaversion_ui("betaversion_ui_1")),
+          #shinydashboard::tabItem(tabName ="BETAVERSION", mod_betaversion_ui("betaversion_ui_1")),
 
           shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
           shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),

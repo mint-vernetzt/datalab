@@ -10,67 +10,101 @@
 mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
   ns <- NS(id)
   tagList(
+    p("Darstellungsart:"),
+    shiny::radioButtons(
+      inputId = ns("ansicht_arbeitsmarkt_fach_vergleich"),
+      label = NULL,
+      choices = c("Einzelansicht - Kuchendiagramm", "Gruppenvergleich - Balkendiagramm"),
+      selected = "Einzelansicht - Kuchendiagramm"
+    ),
     p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(
-      inputId = ns("date_arbeitsmarkt_anforderungen"),
+      inputId = ns("date_arbeitsmarkt_fach_vergleich"),
       label = NULL,
-      choices = c(2021, 2022),
+      choices = 2013:2022,
       selected = 2022
     ),
-
-    # shinyWidgets::pickerInput(
-    #                      inputId = ns("indikator_arbeitsmarkt_anforderungen"),
-    #                      choices = c("Beschäftigte",
-    #                                  "Auszubildende",
-    #                              #    "Auszubildende (1. Jahr)",
-    #                                  "ausländische Beschäftigte",
-    #                                  "ausländische Auszubildende"),
-    #                      selected = c("Beschäftigte", "Auszubildende"),
-    #                      multiple = TRUE,
-    #                      options =  list(
-    #                        "max-options" = 2,
-    #                        "max-options-text" = "Bitte nur maximal 2 Bereiche auswählen"
-    #                      )),
-
-    p("Beschäftigungsform:"),
-    conditionalPanel(condition = "input.date_arbeitsmarkt_anforderungen == '2022'",
-                     ns = ns,
+    p("Region:"),
     shinyWidgets::pickerInput(
-      inputId = ns("indikator_arbeitsmarkt_anforderungen_22"),
-      choices = c("Beschäftigte",
-                  "Auszubildende",
-                  "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
-                  "ausländische Beschäftigte",
-                  "ausländische Auszubildende"),
-      selected = c("Beschäftigte", "Auszubildende"),
-      multiple = TRUE,
-      options =  list(
-        "max-options" = 2,
-        "max-options-text" = "Bitte nur maximal 2 Bereiche auswählen"
-      ))),
-    conditionalPanel(condition = "input.date_arbeitsmarkt_anforderungen == '2021'",
+      inputId = ns("region_arbeitsmarkt_fach_vergleich"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = FALSE,
+      selected = c("Deutschland")
+    ),
+
+    conditionalPanel(condition = "input.ansicht_arbeitsmarkt_fach_vergleich == 'Gruppenvergleich - Balkendiagramm'",
                      ns = ns,
+                     p("Beschäftigtengruppe:"),
                      shinyWidgets::pickerInput(
-                       inputId = ns("indikator_arbeitsmarkt_anforderungen_21"),
-                       choices = c("Beschäftigte",
-                                   "Auszubildende",
+                       inputId = ns("indikator_arbeitsmarkt_fach_vergleich_balken"),
+                       choices = c("Auszubildende",
                                    "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
-                                   "ausländische Beschäftigte",
-                                   "ausländische Auszubildende"),
-                       selected = c("Beschäftigte", "Auszubildende"),
+                                   "Beschäftigte",
+                                   "ausländische Auszubildende",
+                                   "ausländische Beschäftigte"),
+                       selected = "Beschäftigte",
+                       multiple = FALSE
+                     ),
+                     br(),
+                     shinyBS::bsPopover(id="ih_beruf_fach_2", title="",
+                                        content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Deutschland im Jahr 2022 knapp 77% der Beschäftigten in Nicht-MINT Berufen tätig sind. In den MINT-Berufen dominiert die Technik mit 18.2%."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_2")
+
+    ),
+
+    conditionalPanel(condition = "input.ansicht_arbeitsmarkt_fach_vergleich == 'Einzelansicht - Kuchendiagramm'",
+                     ns = ns,
+                     p("Beschäftigtengruppe (max. 2):"),
+                     shinyWidgets::pickerInput(
+                       inputId = ns("indikator_arbeitsmarkt_fach_vergleich_pies"),
+                       choices = c("Auszubildende",
+                                   "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
+                                   "Beschäftigte",
+                                   "ausländische Auszubildende",
+                                   "ausländische Beschäftigte"),
+                       selected = "Beschäftigte",
                        multiple = TRUE,
                        options =  list(
                          "max-options" = 2,
-                         "max-options-text" = "Bitte nur maximal 2 Bereiche auswählen"
-                       ))),
-
-    br(),
-    shinyBS::bsPopover(id="ih_beruf_mint_1", title="",
-                       content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland im Jahr 2022 23 % der Beschäftigten in MINT beschäftigt waren (2 + 3 + 18 = 23 %). Bei den Auszubildenden waren dies 30 %."),
-                       trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_1")
+                         "max-options-text" = "<span style='color: red;'>Maximal 2 Indikatoren auswählen</span>")
+                     ),
+                     p("Nicht-MINT Berufsfelder mit anzeigen?", style = "color: #b16fab;"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("gegenwert_arbeitsmarkt_fach_vergleich"),
+                       choices = c("Ja", "Nein"),
+                       selected = "Ja",
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
+                     br(),
+                     shinyBS::bsPopover(id="ih_beruf_mint_1", title="",
+                                        content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland im Jahr 2022 knapp 23 % der Beschäftigten in MINT beschäftigt waren (1.5 + 3 + 18.2 = 22.7 %). Bei den Auszubildenden waren dies etwa 30 %."),
+                                        trigger = "hover"),
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_1")
 
     )
+  )
 }
 
 #' beruf_arbeitsmarkt_anforderungen Server Functions
@@ -79,18 +113,24 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
 mod_beruf_arbeitsmarkt_anforderungen_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$date_arbeitsmarkt_anforderungen, {
-      r$date_arbeitsmarkt_anforderungen <- input$date_arbeitsmarkt_anforderungen
+    observeEvent(input$ansicht_arbeitsmarkt_fach_vergleich, {
+      r$ansicht_arbeitsmarkt_fach_vergleich <- input$ansicht_arbeitsmarkt_fach_vergleich
     })
-    observeEvent(input$indikator_arbeitsmarkt_anforderungen_21, {
-      r$indikator_arbeitsmarkt_anforderungen_21 <- input$indikator_arbeitsmarkt_anforderungen_21
+    observeEvent(input$date_arbeitsmarkt_fach_vergleich, {
+      r$date_arbeitsmarkt_fach_vergleich <- input$date_arbeitsmarkt_fach_vergleich
     })
-    observeEvent(input$indikator_arbeitsmarkt_anforderungen_22, {
-      r$indikator_arbeitsmarkt_anforderungen_22 <- input$indikator_arbeitsmarkt_anforderungen_22
+    observeEvent(input$region_arbeitsmarkt_fach_vergleich, {
+      r$region_arbeitsmarkt_fach_vergleich <- input$region_arbeitsmarkt_fach_vergleich
     })
-    # observeEvent(input$indikator_arbeitsmarkt_anforderungen, {
-    #     r$indikator_arbeitsmarkt_anforderungen <- input$indikator_arbeitsmarkt_anforderungen
-    #   })
+    observeEvent(input$indikator_arbeitsmarkt_fach_vergleich_pies, {
+      r$indikator_arbeitsmarkt_fach_vergleich_pies <- input$indikator_arbeitsmarkt_fach_vergleich_pies
+    })
+    observeEvent(input$indikator_arbeitsmarkt_fach_vergleich_balken, {
+      r$indikator_arbeitsmarkt_fach_vergleich_balken <- input$indikator_arbeitsmarkt_fach_vergleich_balken
+    })
+    observeEvent(input$gegenwert_arbeitsmarkt_fach_vergleich, {
+      r$gegenwert_arbeitsmarkt_fach_vergleich <- input$gegenwert_arbeitsmarkt_fach_vergleich
+    })
 
   })
 }

@@ -59,7 +59,7 @@ mod_international_top10_mint_gender_ui <- function(id){
                        multiple = FALSE
                      )),
 
-    p("Betrachtungsart:"),
+    p("Darstellungsart:"),
     shinyWidgets::pickerInput(
       inputId = ns("art"),
       choices = c("Frauenanteil in MINT" ="höchster Frauenanteil in MINT",

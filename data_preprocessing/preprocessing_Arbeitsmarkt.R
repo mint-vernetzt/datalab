@@ -426,7 +426,7 @@ wrangling_detailliert <- function(data_n){
     dplyr::mutate(bundesland=dplyr::case_when(
       ...1 == "Deutschland" ~ "Deutschland",
       ...1 == "Westdeutschland" ~"Westdeutschland (o. Berlin)",
-      ...1 == "Ostdeutschland" ~ "Ostdeutschland (einschl. Berlin)",
+      ...1 == "Ostdeutschland" ~ "Ostdeutschland (inkl. Berlin)",
       ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
       ...1 == "Bayern" ~"Bayern",
       ...1 == "Berlin" ~"Berlin",
@@ -544,7 +544,7 @@ data1 <- data %>%
   dplyr::mutate(bundesland=dplyr::case_when(
     ...1 == "Deutschland" ~ "Deutschland",
     ...1 == "Westdeutschland (o. Berlin)" ~"Westdeutschland (o. Berlin)",
-    ...1 == "Ostdeutschland (einschl. Berlin)" ~ "Ostdeutschland (einschl. Berlin)",
+    ...1 == "Ostdeutschland (einschl. Berlin)" ~ "Ostdeutschland (inkl. Berlin)",
     ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
     ...1 == "Bayern" ~"Bayern",
     ...1 == "Berlin" ~"Berlin",
@@ -870,7 +870,7 @@ wrangling_detailliert <- function(data_a22){
     dplyr::mutate(bundesland=dplyr::case_when(
       ...1 == "Deutschland" ~ "Deutschland",
       ...1 == "Westdeutschland" ~"Westdeutschland (o. Berlin)",
-      ...1 == "Ostdeutschland" ~ "Ostdeutschland (einschl. Berlin)",
+      ...1 == "Ostdeutschland" ~ "Ostdeutschland (inkl. Berlin)",
       ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
       ...1 == "Bayern" ~"Bayern",
       ...1 == "Berlin" ~"Berlin",
@@ -1017,7 +1017,7 @@ data_a1 <- data_a %>%
   dplyr::mutate(bundesland=dplyr::case_when(
     ...1 == "Deutschland" ~ "Deutschland",
     ...1 == "Westdeutschland (ohne Berlin)" ~"Westdeutschland (o. Berlin)",
-    ...1 == "Ostdeutschland (einschl. Berlin)" ~ "Ostdeutschland (einschl. Berlin)",
+    ...1 == "Ostdeutschland (einschl. Berlin)" ~ "Ostdeutschland (inkl. Berlin)",
     ...1 == "Baden-Württemberg" ~"Baden-Württemberg",
     ...1 == "Bayern" ~"Bayern",
     ...1 == "Berlin" ~"Berlin",

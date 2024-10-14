@@ -114,32 +114,32 @@ mod_schule_kurse_ui <- function(id){
           width = 12,
 
                 tabsetPanel(type = "tabs",
-
-                    tabPanel("Vergleich Grund- und Leistungskurse, Fachbereiche", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")
-                               ),
-
-                             shiny::mainPanel(
-                               width = 9,
-                               shinycssloaders::withSpinner(plotOutput(ns("plot_waffle_mint")),
-                                                            color = "#154194"),
-
-                               p(style="font-size:12px;color:grey", br(),
-                              "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                              shinyBS::bsPopover(id="h_schule_mint_1", title = "",
-                                                 content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Es wird der Anteil von MINT-Belegungen an allen Belegungen betrachtet. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen."),
-                                                 placement = "top",
-                                                 trigger = "hover"),
-                              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_1")
-
-                             )
-                    ),
-                    tabPanel("Vergleich Grund- und Leistungskurse, MINT aggregiert", br(),
+                    # TODO das als MINT gesamt bzw. als Pie
+                    # tabPanel("Vergleich Grund- und Leistungskurse, Fachbereiche", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")
+                    #            ),
+                    #
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            shinycssloaders::withSpinner(plotOutput(ns("plot_waffle_mint")),
+                    #                                         color = "#154194"),
+                    #
+                    #            p(style="font-size:12px;color:grey", br(),
+                    #           "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #           shinyBS::bsPopover(id="h_schule_mint_1", title = "",
+                    #                              content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Es wird der Anteil von MINT-Belegungen an allen Belegungen betrachtet. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen."),
+                    #                              placement = "top",
+                    #                              trigger = "hover"),
+                    #           tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_1")
+                    #
+                    #          )
+                    # ),
+                    tabPanel("aktueller MINT-Anteil", br(),
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_einstieg_comparison_ui("mod_schule_kurse_einstieg_comparison_ui_1"),
@@ -177,7 +177,7 @@ mod_schule_kurse_ui <- function(id){
                     #     htmlOutput(ns("plot_einstieg_pie")),p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."))
                     #         ),
 
-                    tabPanel("Vergleich Grund- und Leistungskurse im Zeitverlauf", br(),
+                    tabPanel("MINT-Anteil im Zeitverlauf", br(),
                              shiny::sidebarPanel(
                                width = 3,
                                mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1"),
@@ -203,59 +203,61 @@ mod_schule_kurse_ui <- function(id){
                                )
                              ),
 
-
-
-                    tabPanel("Vergleich Mädchen und Jungen", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
-                             shiny::mainPanel(
-                               width = 9,
-                               shinycssloaders::withSpinner(plotOutput(ns("plot_waffle")),
-                                                            color = "#154194"),
-
-                               p(style="font-size:12px;color:grey", br(),"Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id="h_schule_mint_4", title = "",
-                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden." , "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen."),
-                                                  placement = "top",
-                                                  trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_4")
-                               )
-                    ),
-
-                    tabPanel("Vergleich Mädchen und Jungen nach Bundesländern (Karte)", br(),
+                    tabPanel("Bundeslandvergleich MINT-Anteil", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
+                               mod_schule_kurse_mint_map_ui("mod_schule_kurse_mint_map_ui_1"),
                                # br(), br(),
                                # downloadButton(
-                               #   outputId = ns("download_btn_plot_map_kurse_gender_item_1"),
+                               #   outputId = ns("download_btn_plot_mint_map_kurse_item_1"),
                                #   label = "Download (links)",
                                #   icon = icon("download")),
                                # br(),
                                # downloadButton(
-                               #   outputId = ns("download_btn_plot_map_kurse_gender_item_2"),
+                               #   outputId = ns("download_btn_plot_mint_map_kurse_item_2"),
                                #   label = "Download (rechts)",
                                #   icon = icon("download"))
-                               ),
+                             ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_map_kurse_gender")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_map_kurse")),
                                                             color = "#154194"),
 
-                               p(style="font-size:12px;color:grey",br(), "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id="h_schule_mint_5", title = "",
-                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. Baden-Württemberg erfasst das Geschlecht von Schüler*innen nicht und kann deshalb nicht angezeigt werden." , "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
+                               p(style="font-size:12px;color:grey",
+                                 "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               shinyBS::bsPopover(id="h_schule_fach_1", title = "",
+                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
                                                   placement = "top",
                                                   trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_5")
-
-                               )
-                    ),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_1")
+                             )
+                    )
+                    # ,
+                    # tabPanel("Vergleich Bundesländer im Zeitverlauf", br(),
+                    #
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_schule_kurse_verlauf_mint_ui("mod_schule_kurse_verlauf_mint_ui_1"),
+                    #            # br(), br(),
+                    #            # downloadButton(
+                    #            #   outputId = ns("download_btn_plot_verlauf_mint"),
+                    #            #   label = "Download",
+                    #            #   icon = icon("download"))
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_mint")),
+                    #                                         color = "#154194"),
+                    #
+                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            shinyBS::bsPopover(id="h_schule_fach_2", title = "",
+                    #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
+                    #                               placement = "top",
+                    #                               trigger = "hover"),
+                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_2")
+                    #          )
+                    # )
 
                     # tabPanel("Vergleich (Bundesländer)", br(),
                     #
@@ -303,8 +305,85 @@ mod_schule_kurse_ui <- function(id){
         column(
           width = 12,
         tabsetPanel(type = "tabs",
+                    tabPanel("aktueller Anteil MINT-Fächer", br(),
 
-                    tabPanel("Vergleich Grund- und Leistungskurse nach Bundesländern (Karte)", br(),
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_schule_kurse_multiple_mint_ui("mod_schule_kurse_multiple_mint_ui_1")
+                             ),
+
+                             shiny::mainPanel(
+                               width = 9,
+                               shinycssloaders::withSpinner(uiOutput(ns("plot_waffle_mint")),
+                                                            color = "#154194"),
+
+                               p(style="font-size:12px;color:grey", br(),
+                                 "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               shinyBS::bsPopover(id="h_schule_mint_1", title = "",
+                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Es wird der Anteil von MINT-Belegungen an allen Belegungen betrachtet. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_1")
+
+                             )
+                    ),
+                    # tabPanel("Alle Fächer auf einen Blick", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_schule_kurse_comparison_subjects_ui("mod_schule_kurse_comparison_subjects_ui_1"),
+                    #            # br(), br(),
+                    #            # downloadButton(
+                    #            #   outputId = ns("download_btn_plot_comparison_subjects"),
+                    #            #   label = "Download",
+                    #            #   icon = icon("download"))
+                    #          ),
+                    #
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_subjects")),
+                    #                                         color = "#154194"),
+                    #
+                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            shinyBS::bsPopover(id="h_schule_fach_5", title = "",
+                    #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
+                    #                               placement = "top",
+                    #                               trigger = "hover"),
+                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_5")
+                    #
+                    #          )),
+                    tabPanel("MINT-Fächer im Zeitverlauf", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_schule_kurse_verlauf_bl_subjects_ui("mod_schule_kurse_verlauf_bl_subjects_ui_1"),
+                               # br(), br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_verlauf_kurse_bl_subjects"),
+                               #   label = "Download",
+                               #   icon = icon("download"))
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_kurse_bl_subjects")),
+                                                            color = "#154194"),
+
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               shinyBS::bsPopover(id="h_schule_fach_3", title = "",
+                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_3")
+
+                             )),
+
+                    tabPanel("Bundeslandvergleich MINT-Fächer", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -334,132 +413,77 @@ mod_schule_kurse_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_1")
                                )
                     ),
-                    tabPanel("Vergleich Bundesländer im Zeitverlauf", br(),
-
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1"),
-                               # br(), br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_verlauf_multiple"),
-                               #   label = "Download",
-                               #   icon = icon("download"))
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_multiple")),
-                                                            color = "#154194"),
-
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id="h_schule_fach_2", title = "",
-                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
-                                                  placement = "top",
-                                                  trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_2")
-                               )
-                    ),
-                    tabPanel("Vergleich Fächer im Zeitverlauf", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_verlauf_bl_subjects_ui("mod_schule_kurse_verlauf_bl_subjects_ui_1"),
-                               # br(), br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_verlauf_kurse_bl_subjects"),
-                               #   label = "Download",
-                               #   icon = icon("download"))
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_kurse_bl_subjects")),
-                                                            color = "#154194"),
-
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id="h_schule_fach_3", title = "",
-                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
-                                                  placement = "top",
-                                                  trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_3")
-
-                               ))
-                    ,
-
-
-                    tabPanel("Vergleich Grund- und Leistungskurse nach Bundesländern", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1"),
-                               ),
-
-                             shiny::mainPanel(
-                               width = 9,
-                               shinycssloaders::withSpinner(plotOutput(ns("plot_ranking_gender")),
-                                                            color = "#154194"),
-
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id="h_schule_fach_4", title = "",
-                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt. <br> <br> Baden-Württemberg erfasst das Geschlecht von Schüler*innen nicht und kann deshalb nicht angezeigt werden."),
-                                                  placement = "top",
-                                                  trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_4"))
-
-                    ),
-
-                    tabPanel("Alle Fächer auf einen Blick", br(),
-
-                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_comparison_subjects_ui("mod_schule_kurse_comparison_subjects_ui_1"),
-                               # br(), br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_comparison_subjects"),
-                               #   label = "Download",
-                               #   icon = icon("download"))
-                             ),
-
-                             shiny::mainPanel(
-                               width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_subjects")),
-                                                            color = "#154194"),
-
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id="h_schule_fach_5", title = "",
-                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
-                                                  placement = "top",
-                                                  trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_5")
-
-                             )),
-                    tabPanel("Alle Bundesländer auf einen Blick", br(),
-
-                             shiny::sidebarPanel(
-                               width = 3,
-                               mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1"),
-                               # br(), br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_comparison_bl"),
-                               #   label = "Download",
-                               #   icon = icon("download"))
-                             ),
-                             shiny::mainPanel(
-                               width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_bl")),
-                                                            color = "#154194"),
-
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id="h_schule_fach_6", title = "",
-                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
-                                                  placement = "top",
-                                                  trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_6")
-                               ))
+                    # tabPanel("Vergleich Bundesländer im Zeitverlauf", br(),
+                    #
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_schule_kurse_verlauf_multiple_ui("mod_schule_kurse_verlauf_multiple_ui_1"),
+                    #            # br(), br(),
+                    #            # downloadButton(
+                    #            #   outputId = ns("download_btn_plot_verlauf_multiple"),
+                    #            #   label = "Download",
+                    #            #   icon = icon("download"))
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_multiple")),
+                    #                                         color = "#154194"),
+                    #
+                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            shinyBS::bsPopover(id="h_schule_fach_2", title = "",
+                    #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
+                    #                               placement = "top",
+                    #                               trigger = "hover"),
+                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_2")
+                    #            )
+                    # ),
+                    #
+                    # # tabPanel("Vergleich Grund- und Leistungskurse nach Bundesländern", br(),
+                    # #
+                    # #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    # #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    # #          shiny::sidebarPanel(
+                    # #            width = 3,
+                    # #            mod_schule_kurse_ranking_gender_ui("mod_schule_kurse_ranking_gender_ui_1"),
+                    # #            ),
+                    # #
+                    # #          shiny::mainPanel(
+                    # #            width = 9,
+                    # #            shinycssloaders::withSpinner(plotOutput(ns("plot_ranking_gender")),
+                    # #                                         color = "#154194"),
+                    # #
+                    # #            p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    # #            shinyBS::bsPopover(id="h_schule_fach_4", title = "",
+                    # #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt. <br> <br> Baden-Württemberg erfasst das Geschlecht von Schüler*innen nicht und kann deshalb nicht angezeigt werden."),
+                    # #                               placement = "top",
+                    # #                               trigger = "hover"),
+                    # #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_4"))
+                    # #
+                    # # ),
+                    #
+                    # tabPanel("Alle Bundesländer auf einen Blick", br(),
+                    #
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_schule_kurse_comparison_bl_ui("mod_schule_kurse_comparison_bl_ui_1"),
+                    #            # br(), br(),
+                    #            # downloadButton(
+                    #            #   outputId = ns("download_btn_plot_comparison_bl"),
+                    #            #   label = "Download",
+                    #            #   icon = icon("download"))
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_bl")),
+                    #                                         color = "#154194"),
+                    #
+                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            shinyBS::bsPopover(id="h_schule_fach_6", title = "",
+                    #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
+                    #                               placement = "top",
+                    #                               trigger = "hover"),
+                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_6")
+                    #            ))
         )
 
         ))),
@@ -500,7 +524,7 @@ mod_schule_kurse_ui <- function(id){
                     #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."))
                     # ),
 
-                    tabPanel("Vergleich Frauenanteil nach Fächergruppen", br(),
+                    tabPanel("aktueller Anteil Mädchen in MINT", br(),
 
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -518,7 +542,7 @@ mod_schule_kurse_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_gender")),
+                               shinycssloaders::withSpinner(uiOutput(ns("plot_comparison_gender")),
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
@@ -529,20 +553,24 @@ mod_schule_kurse_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_frauen_1")
                                )
                     ),
+                    tabPanel("Zeitverlauf Mädchenanteil in MINT", br(), #kann raus
 
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               tags$style(".well {background-color:#FFFFFF;}"),
+                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                               mod_schule_kurse_verlauf_gender_ui("mod_schule_kurse_verlauf_gender_ui_1")
+                               ),
+                             shiny::mainPanel(
+                               width = 9,
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_gender")),
+                                                            color = "#154194"),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
-
-                    # tabPanel("Zeitverlauf MINT", br(), #kann raus
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            tags$style(".well {background-color:#FFFFFF;}"),
-                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #            mod_schule_kurse_verlauf_gender_ui("mod_schule_kurse_verlauf_gender_ui_1")),
-                    #          shiny::mainPanel(
-                    #            highcharter::highchartOutput(ns("plot_verlauf_gender")))
-                    # ),
+                             )
+                    ),
 
                     # Fehler drin: erstmal raus:
                     # tabPanel("Zeitverlauf", br(),
@@ -553,27 +581,79 @@ mod_schule_kurse_ui <- function(id){
                     #            highcharter::highchartOutput(ns("plot_verlauf_kurse_bl"))
                     #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."))
                     # ),
-                    tabPanel("Vergleich Grund- und Leistungskursen nach einzelnen Fächern", br(),
+                    # tabPanel("Vergleich Grund- und Leistungskursen nach einzelnen Fächern", br(),
+                    #
+                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1"), br(),
+                    #           ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            shinycssloaders::withSpinner(plotOutput(ns("plot_ranking_2")),
+                    #                                         color = "#154194"),
+                    #
+                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            shinyBS::bsPopover(id="h_schule_frauen_2", title = "",
+                    #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. Baden-Württemberg erfasst das Geschlecht von Schüler*innen nicht und kann deshalb nicht angezeigt werden."),
+                    #                               placement = "top",
+                    #                               trigger = "hover"),
+                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_frauen_2")
+                    #            )
+                    #          ),
+                    tabPanel("MINT-Wahlverhalten nach Geschlecht", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                                           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
                              shiny::sidebarPanel(
                                width = 3,
-                               mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1"), br(),
-                              ),
+                               mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(plotOutput(ns("plot_ranking_2")),
+                               shinycssloaders::withSpinner(htmlOutput(ns("plot_wahl")),
                                                             color = "#154194"),
 
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                               shinyBS::bsPopover(id="h_schule_frauen_2", title = "",
-                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. Baden-Württemberg erfasst das Geschlecht von Schüler*innen nicht und kann deshalb nicht angezeigt werden."),
+                               p(style="font-size:12px;color:grey", br(),"Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               shinyBS::bsPopover(id="h_schule_mint_4", title = "",
+                                                  content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden." , "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen."),
                                                   placement = "top",
                                                   trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_frauen_2")
-                               )
-                             ),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_4")
+                             )
+                    )
+                    # ,
+
+                    # tabPanel("Bundeslandvergleich", br(),
+                    #
+                    #          shiny::sidebarPanel(
+                    #            width = 3,
+                    #            mod_schule_kurse_map_gender_ui("mod_schule_kurse_map_gender_ui_1"),
+                    #            # br(), br(),
+                    #            # downloadButton(
+                    #            #   outputId = ns("download_btn_plot_map_kurse_gender_item_1"),
+                    #            #   label = "Download (links)",
+                    #            #   icon = icon("download")),
+                    #            # br(),
+                    #            # downloadButton(
+                    #            #   outputId = ns("download_btn_plot_map_kurse_gender_item_2"),
+                    #            #   label = "Download (rechts)",
+                    #            #   icon = icon("download"))
+                    #          ),
+                    #          shiny::mainPanel(
+                    #            width = 9,
+                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_map_kurse_gender")),
+                    #                                         color = "#154194"),
+                    #
+                    #            p(style="font-size:12px;color:grey",br(), "Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            shinyBS::bsPopover(id="h_schule_mint_5", title = "",
+                    #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. Baden-Württemberg erfasst das Geschlecht von Schüler*innen nicht und kann deshalb nicht angezeigt werden." , "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
+                    #                               placement = "top",
+                    #                               trigger = "hover"),
+                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_5")
+                    #
+                    #          )
+                    # )
                         )
 
                     ))),
@@ -816,7 +896,7 @@ mod_schule_kurse_server <- function(id, r){
 
     # Box 1 - Wer wählt MINT ----
     ## Waffle
-    output$plot_waffle_mint <- renderPlot({
+    output$plot_waffle_mint <- renderUI({
       kurse_waffle_mint(r)
     })
 
@@ -889,12 +969,8 @@ mod_schule_kurse_server <- function(id, r){
     )
 
     ## Waffle Geschlecht
-    plot_waffle_react <- reactive({
-      kurse_waffle(r)
-    })
-
-    output$plot_waffle <- renderPlot({
-      plot_waffle_react()
+    output$plot_wahl <- renderUI({
+      kurse_wahl(r)
     })
 
     ## Karte Gender
@@ -955,28 +1031,84 @@ mod_schule_kurse_server <- function(id, r){
     # )
 
 
-    # Box 2 -  M-I-N-T ----
-
-    ## Karte Fächer
-    output$plot_map_kurse <- renderUI({
-      plot_list <- kurse_map(r)
-      # r$plot_map_kurse_left <- plot_list[[1]]
-      # r$plot_map_kurse_right <- plot_list[[2]]
+    output$plot_mint_map_kurse <- renderUI({
+      plot_list <- kurse_mint_map(r)
+      # r$plot_mint_map_kurse_left <- plot_list[[1]]
+      # r$plot_mint_map_kurse_right <- plot_list[[2]]
       #
-      # r$plot_map_kurse_left_title <- get_plot_title(
-      #   plot = r$plot_map_kurse_left
+      # r$plot_mint_map_kurse_left_title <- get_plot_title(
+      #   plot = r$plot_mint_map_kurse_left
       # )
-      # r$plot_map_kurse_right_title <- get_plot_title(
-      #   plot = r$plot_map_kurse_right
+      # r$plot_mint_map_kurse_right_title <- get_plot_title(
+      #   plot = r$plot_mint_map_kurse_right
       # )
 
       # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
+
+      plot_list
 
     })
+
+    # output$download_btn_plot_mint_map_kurse_item_1 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_mint_map_kurse_left_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_mint_map_kurse_left,
+    #       filename =  r$plot_mint_map_kurse_left_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_mint_map_kurse_left_title, file)
+    #     file.remove(r$plot_mint_map_kurse_left_title)
+    #   }
+    # )
+    #
+    # output$download_btn_plot_mint_map_kurse_item_2 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_mint_map_kurse_right_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #     add_caption_and_download(
+    #       hc = r$plot_mint_map_kurse_right,
+    #       filename =  r$plot_mint_map_kurse_right_title,
+    #       width = 700,
+    #       height = 400,
+    #       with_labels = FALSE)
+    #
+    #     file.copy(r$plot_map_kurse_right_title, file)
+    #     file.remove(r$plot_map_kurse_right_title)
+    #   }
+    # )
+
+
+    # Box 2 -  M-I-N-T ----
+
+    output$plot_map_kurse <- renderUI({
+      kurse_map(r)
+    })
+
+    ## Karte Fächer
+    # output$plot_map_kurse <- renderUI({
+    #   out <- kurse_map(r)
+    #   # r$plot_map_kurse_left <- plot_list[[1]]
+    #   # r$plot_map_kurse_right <- plot_list[[2]]
+    #   #
+    #   # r$plot_map_kurse_left_title <- get_plot_title(
+    #   #   plot = r$plot_map_kurse_left
+    #   # )
+    #   # r$plot_map_kurse_right_title <- get_plot_title(
+    #   #   plot = r$plot_map_kurse_right
+    #   # )
+    #
+    #   # return plots
+    #
+    #   out
+    #
+    # })
 
     # output$download_btn_plot_map_kurse_item_1 <- downloadHandler(
     #   contentType = "image/png",
@@ -1164,41 +1296,62 @@ mod_schule_kurse_server <- function(id, r){
     # })
 
     output$plot_comparison_gender <- renderUI({
-      plot_list <- kurse_comparison_gender(r)
-      r$plot_comparison_gender <- plot_list
+      if(r$ansicht_kurse_comparison_gender ==
+         "Kursvergleich - Hanteldiagramm"){
+        plotOutput(ns("plot_ranking_3"))
+      }else {
+      htmlOutput(ns("plot_comparison_gender_2"))
 
-      r$plot_comparison_gender_title <- get_plot_title(
-        plot = r$plot_comparison_gender
-      )
-
-      plot_list
-
+      }
     })
 
-    output$download_btn_plot_comparison_gender <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_comparison_gender_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
+    output$plot_comparison_gender_2 <- renderUI({
+      plot_list <- kurse_comparison_gender(r)
+    # r$plot_comparison_gender <- plot_list
+    #
+    # r$plot_comparison_gender_title <- get_plot_title(
+    #   plot = r$plot_comparison_gender
+    # )
 
-        add_caption_and_download(
-          hc = r$plot_comparison_gender,
-          filename =  r$plot_comparison_gender_title,
-          width = 700,
-          height = 400)
+    plot_list
+    })
 
-        file.copy(r$plot_comparison_gender_title, file)
-        file.remove(r$plot_comparison_gender_title)
-      }
-    )
+    output$plot_ranking_3 <- renderPlot({
+     # plot_ranking_react()
+      kurse_comparison_gender(r)
+    })
+    # plot_ranking_react <- reactive({
+    #   kurse_ranking(r) # type = "other"
+    # })
+
+    output$plot_verlauf_gender <- highcharter::renderHighchart({
+      kurse_verlauf_gender(r)
+    })
+
+    # output$download_btn_plot_comparison_gender <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_comparison_gender_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_comparison_gender,
+    #       filename =  r$plot_comparison_gender_title,
+    #       width = 700,
+    #       height = 400)
+    #
+    #     file.copy(r$plot_comparison_gender_title, file)
+    #     file.remove(r$plot_comparison_gender_title)
+    #   }
+    # )
 
     ## Dumbbell Frauen
-    output$plot_ranking_2 <- renderPlot({
-      plot_ranking_react()
-    })
-    plot_ranking_react <- reactive({
-      kurse_ranking(r) # type = "other"
-    })
+    # output$plot_ranking_2 <- renderPlot({
+    #   plot_ranking_react()
+    # })
+    # plot_ranking_react <- reactive({
+    #   kurse_ranking(r) # type = "other"
+    # })
 
 
     # Box 4  Kompetenzdaten / IQB ----

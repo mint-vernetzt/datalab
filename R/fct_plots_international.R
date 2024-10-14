@@ -967,7 +967,7 @@ inpy <- r$map_y_ti
 
 if (avg_line == "Ja"){
 
-  data_avg <- round(mean(data1$wert, na.rm = T),0)
+  data_avg <- round(mean(data1$wert, na.rm = T),1)
 
     plot_top <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
@@ -1170,7 +1170,7 @@ plot_international_schule_map <- function(r) {
                   " im ", fach_m, "-Kompetenztest von ",
                   label_m, " ", timerange)
 
-  dfs$display_wert <- prettyNum(round(dfs$wert, 0),
+  dfs$display_wert <- prettyNum(round(dfs$wert, 1),
                                 big.mark = ".",
                                 decimal.mark = ",")
 
@@ -1493,7 +1493,7 @@ plot_international_schule_migration <- function(r) {
     dplyr::filter(land %in% used_lands)
 
   #Trennpunkte für lange Zahlen ergänzen
-  dfs$display_wert <- prettyNum(round(dfs$wert, 0),
+  dfs$display_wert <- prettyNum(round(dfs$wert, 1),
                                 big.mark = ".",
                                 decimal.mark = ",")
 
@@ -2736,7 +2736,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
   # Create top 10 plot
     if (avg_line == "Ja"){
 
-      data_avg <- round(mean(data_fn$wert, na.rm = T),0)
+      data_avg <- round(mean(data_fn$wert, na.rm = T),1)
 
       plot_top <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
@@ -3304,7 +3304,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
   # Create top 10 plot
   if (avg_line == "Ja"){
 
-    data_avg <- round(mean(data1$wert, na.rm = T),0)
+    data_avg <- round(mean(data1$wert, na.rm = T),1)
 
     plot_top <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
