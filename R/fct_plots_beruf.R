@@ -3386,7 +3386,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
       #                       margin = 45,
       #                       align = "center",
       #                       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_title(text = title_text,   # Verwende den dynamisch generierten Titel
+      highcharter::hc_title(text = titel_text,   # Verwende den dynamisch generierten Titel
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3457,7 +3457,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
       #                       align = "center",
       #                       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
       # highcharter::hc_colors(c("#b16fab", "#154194")) %>%
-      highcharter::hc_title(text = title_text,   # Verwende den dynamisch generierten Titel
+      highcharter::hc_title(text = titel_text,   # Verwende den dynamisch generierten Titel
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
