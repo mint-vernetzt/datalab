@@ -1,16 +1,14 @@
 mod_studium_studienzahl_mint_anteile_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl des Indikators:"),
+    p("Auswahl der Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("anteile_indi"),
-      choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
-                  "Studienanfänger:innen (1. Fachsemester)",
-                  "Studierende",
-                  "Internationale Studierende",
-                  "Studienanfänger:innen (1. Hochschulsemester)",
-                  "Studierende (Lehramt)"
-      ),
+      choices = c("Studierende",
+                            "Studierende (Lehramt)",
+                            "internationale Studierende",
+                            "Studienanfänger:innen (1. Hochschulsemester)",
+                            "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
       selected = "Studierende"),
 
     p("Auswahl des Bundeslands:"),
@@ -37,20 +35,34 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
                   "Ostdeutschland (inkl. Berlin)",
                   "Westdeutschland (o. Berlin)"
       ),
-      selected = "Nordrhein-Westfalen"
+      selected = "Deutschland"
     ),
 
     p("Fächer-Ebene:"),
     shinyWidgets::pickerInput(
       inputId = ns("anteile_order"),
-      choices = c("MINT-Fächer", "MINT-Aggregate"),
+      choices = c("MINT-Fächergruppen",
+                  "MINT-Fachbereiche"),
       multiple = FALSE,
-      selected = "MINT-Fächer"
+      selected = "MINT-Fachbereiche"
     ),
 
-    br(),
+    conditionalPanel(condition = "input.anteile_order == 'MINT-Fächergruppen'",
+                     ns = ns,
+                     p("Fächergruppen:"),
+                     shinyWidgets::pickerInput(
+                       inputId = ns("anteile_faecher_mint"),
+                       choices = studi_det_ui_faecher(),
+                       selected = c("Informatik", "Elektrotechnik und Informationstechnik",
+                                    "Physik, Astronomie", "Mathematik", "Chemie", "Maschinenbau/Verfahrenstechnik"),
+                       multiple = TRUE,
+                       options = list(`actions-box` = TRUE,
+                                      `deselect-all-text` = "Alle abwählen",
+                                      `select-all-text` = "Alle auswählen")
+                     )
+    ),
 
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("anteile_betrachtung"),
       choices = c("In Prozent", "Anzahl"),
@@ -86,6 +98,10 @@ mod_studium_studienzahl_mint_anteile_server <- function(id, r){
 
     observeEvent(input$anteile_order, {
       r$anteile_order <- input$anteile_order
+    })
+
+    observeEvent(input$anteile_faecher_mint, {
+      r$anteile_faecher_mint <- input$anteile_faecher_mint
     })
 
     observeEvent(input$anteile_betrachtung, {

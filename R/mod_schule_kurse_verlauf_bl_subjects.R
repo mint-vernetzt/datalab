@@ -11,13 +11,26 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
   ns <- NS(id)
   tagList(
 
+
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
     p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_verlauf_subject_bl"),
       label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021","2022"),
-      selected = c("2016", "2022")
+      choices = 2013:2022,
+      selected = c(2016, 2022)
     ),
     p("Kursart:"),
     shinyWidgets::pickerInput(
@@ -30,6 +43,8 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("states_kurse_verlauf_subject_bl"),
       choices = c("Deutschland",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)",
                   "Baden-Württemberg",
                   "Bayern",
                   "Berlin",
@@ -46,26 +61,25 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
                   "Sachsen-Anhalt",
                   "Schleswig-Holstein",
                   "Thüringen"
-                  ,
-                  "Westdeutschland (o. Berlin)",
-                  "Ostdeutschland (inkl. Berlin)"
       ),
-      selected = "Brandenburg"
+      selected = "Deutschland"
     ),
 
     p("Fächer/Fächergruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("subject_selected_bl_sub"),
       choices = c("MINT-Fächer (gesamt)","Mathematik", "Informatik", "Physik", "Chemie",
-                  "Biologie", "Deutsch", "Fremdsprachen", "Gesellschaftswissenschaften",
+                  "Biologie", "andere naturwiss.-technische Fächer", "Deutsch", "Fremdsprachen",
+                  "Gesellschaftswissenschaften",
                   "Musik/Kunst", "Religion/Ethik", "Sport"),
-      selected = c("MINT-Fächer (gesamt)", "Mathematik"),
+      selected = c("Mathematik", "Informatik", "Physik", "Chemie",
+                   "Biologie"),
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
       multiple = TRUE
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_kurse_verlauf_subject_bl"),
       choices = c("In Prozent", "Anzahl"),
@@ -75,10 +89,18 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_schule_fach_3", title="",
-                       content = paste0("Wählt man für die Grafik beispielsweise die einzelnen MINT-Fächer und als Kursart &quotLeistungskurs&quot, sieht man, dass in Brandenbrug Mathe und Biologie den Großteil der Leistungskursbelegungen in MINT ausmachen. Seit 2018 gingen die Leistungskursbelegungen in Mathe allerdings um 6 Prozentpunkte zurück."),
+                       content = paste0("In dieser Grafik ist bei den voreingestellten Kategorien (Kursart = &quotGrundkurs&quot, Region = &quotDeutschland&quot, Fächer/Fächergruppen = &quotMathematik&quot etc., Betrachung = &quotProzent&quot) zu sehen, dass z.B. im Jahr 2022 die Mathematik mit 8% den größten Anteil an den Grundkursbelegungen hat."),
                        placement = "top",
                        trigger = "hover"),
-    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_3")
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_3"),
+
+    br(),
+    br(),
+    shinyBS::bsPopover(id="popover_darstellung2", title = "",
+                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                       trigger = "hover"),
+    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "popover_darstellung2"),
+    br()
   )
 
 }

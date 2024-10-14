@@ -14,8 +14,8 @@ mod_studium_studienzahl_ausl_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_ausl"),
       label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022"),
-      selected = "2022"
+      choices = 2013:2022,
+      selected = 2022
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -39,9 +39,9 @@ mod_studium_studienzahl_ausl_ui <- function(id){
                   "Thüringen",
                   "Westdeutschland (o. Berlin)",
                   "Ostdeutschland (inkl. Berlin)"
-      ),selected = "Ostdeutschland (inkl. Berlin)"
+      ),selected = "Deutschland"
     ),
-    p("Indikator:"),
+    p("Studierendengruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("status_ausl"),
       choices = c("Studierende",
@@ -49,7 +49,7 @@ mod_studium_studienzahl_ausl_ui <- function(id){
       ),
       selected = "Studierende"
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_studium_studienzahl_ausl"),
       choices = c("In Prozent", "Anzahl"),

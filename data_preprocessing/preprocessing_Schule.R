@@ -359,8 +359,8 @@ states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Ham
 df_incl <- kurse
 
 # create dummy variable to indicate east or west
-df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west & df_incl$region != "Deutschland", "Westen", NA)
-df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$east & df_incl$region != "Deutschland", "Osten", df_incl$dummy_west)
+df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$west & df_incl$region != "Deutschland", "Westdeutschland (o. Berlin)", NA)
+df_incl$dummy_west <- ifelse(df_incl$region %in% states_east_west$east & df_incl$region != "Deutschland", "Ostdeutschland (inkl. Berlin)", df_incl$dummy_west)
 df_incl <- na.omit(df_incl)# ifelse erstellt nochmal DE mit "NA" als region-Namen -->löschen
 
 # aggregate values
@@ -423,8 +423,16 @@ kurse <- kurse %>%
 # USE ----
 
 
-usethis::use_data(kurse, overwrite = T)
-
+#usethis::use_data(kurse, overwrite = T)
+kurse <- dbGetQuery(con, "SELECT * FROM kurse")
+kurse <- kurse %>% dplyr::mutate(
+  region = dplyr::case_when(
+    region == "Westen" ~ "Westdeutschland (o. Berlin)",
+    region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
+    T ~ region
+  )
+)
+save(kurse, file="kurse.rda")
 
 
 # Erstellt "iqb" -------------------------------------------------
@@ -1668,20 +1676,20 @@ timss_benchmarks_extract <- function(dat7){
 
   colnames(dat_bench) <- dat_bench_coln_fn
 
-  dat_bench1a <<- dat_bench %>%
+  dat_bench1a <- dat_bench %>%
     slice(which(if_any(everything(),~ str_detect(., "2019")))+1:nrow(.))%>%
     select(Country, contains("signifikanz"))%>%
     pivot_longer(-Country, names_to="indikator", values_to = "signifikanz")%>%
     separate(indikator, into = c("indikator", "typ", "jahr"), sep="_")
 
-  dat_bench1b <<- dat_bench %>%
+  dat_bench1b <- dat_bench %>%
     slice(which(if_any(everything(),~ str_detect(., "2019")))+1:nrow(.))%>%
     select(Country, !contains("signifikanz"))%>%
     mutate(across(-c("Country"), ~ as.numeric(.)))%>%
     pivot_longer(-Country, names_to="indikator", values_to = "wert")%>%
     separate(indikator, into = c("indikator", "typ", "jahr" ), sep="_")
 
-  dat_bench2 <<- dat_bench1b %>%
+  dat_bench2 <- dat_bench1b %>%
      left_join(dat_bench1a) %>%
     rename(land = Country, signifikant = signifikanz)%>%
     mutate(typ = case_when(typ=="Percent of Students"~ "Prozentsatz der Schüler:innen",

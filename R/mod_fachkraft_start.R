@@ -56,7 +56,7 @@ mod_fachkraft_start_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Übersicht Fragestellungen",
+        title = "Links zu den Themen dieser Seite",
         width = 7,
         p(
           style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-zukunft",
@@ -91,6 +91,25 @@ mod_fachkraft_start_ui <- function(id){
       )
     ),
 
+    # Kurzanalyse ----
+    div(class = "content-box",
+        div(class = "inner-box",
+            p(br(),"KURZANALYSE", br()),
+            p(style = "font-size = 24",
+              strong("Für die folgenden Zukunftsszenarien hat MINTvernetzt vom IW Köln berechnen lassen,
+        wie sich die MINT-Fachkräftezaheln in den nächsten Jahren entwickeln werden.
+        Wirken Förderinitiativen für den MINT-Nachwuchs, Frauen in MINT, den Verbleib
+        älterer Fachkräftre und für die Zuwanderung von MINT-Fachkräften zusammen, können
+       bis 2037 1,4 Mio. MINT-Fachkräfte zusätzlich gewonnen werden. Im Vergleich dazu bewegen wir
+        uns aktuell auf rund 100.000 MINT-Fachkräfte weniger zu, in einem Worst Case sogar auf rund 1,1 Mio. weniger."),
+              br(), br(),
+              tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/07/MINTvernetzt_Kurzanalyse_Zukunftsszenarien_MINT_Fachkraefte.pdf", target = "_blank",
+                     "Link zu der Kurzanalyse über die Zukunftsszenarien allgemein"), br(),
+              tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/07/MINTvernetzt_Kurzanalyse_Zukunftsszenarien_Zuwanderung.pdf", target = "_blank",
+                     "Link zu der Kurzanalyse über die Zukunftsszenarien der Zuwanderung in MINT"), br(),
+              br())
+        )
+    ),
 
     # Box 1 - MINT-Fachkräfte-Zukunftsszenarien ----
 
@@ -124,6 +143,8 @@ mod_fachkraft_start_ui <- function(id){
       shinydashboard::box(
         title = "Zukunftsszenarien der MINT-Fachkräfte",
         width = 12,
+        column(
+          width = 8,
         p("Hier können Sie in die Zukunft blicken. Wir haben das Wirtschaftsforschungsinstitut IW Köln beauftragt,
           Projektionen möglicher Entwicklungen der MINT-Fachkräftezahlen in den nächsten Jahren zu berechnen. Wir wollen dabei nicht schauen,
           wie viele Personen uns fehlen werden, sondern darauf, wie viele Personen für MINT-Berufe gewonnen werden könnten.
@@ -148,6 +169,9 @@ mod_fachkraft_start_ui <- function(id){
                title = "Die Grafik öffnet sich in einem neuen Browserfenster und kann mit Rechtsklick + \"Grafik speichern unter...\" heruntergeladen werden."),
 
        # shiny::downloadLink(outputId = "download_wirkhebel", label = "Download Grafik Vergleich Wirkhebel"),
+        ),
+       column(
+         width = 12,
 
        br(),br(),
         tabsetPanel(
@@ -176,7 +200,7 @@ mod_fachkraft_start_ui <- function(id){
               p(style="font-size:12px;color:grey",
                 "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
               p(),
-              tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+              tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           ),
     tabPanel(
@@ -202,7 +226,7 @@ mod_fachkraft_start_ui <- function(id){
         p(style="font-size:12px;color:grey",
           "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
         p(),
-        tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+        tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
       )
     ),
     tabPanel(
@@ -230,7 +254,7 @@ mod_fachkraft_start_ui <- function(id){
               # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_2"),
               # p(),
               p(),
-              tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+              tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           )
     ,
@@ -270,11 +294,10 @@ mod_fachkraft_start_ui <- function(id){
                    id = "h_fachkraft-prognosen_3"),
             p(),
 
-            tags$a(href = "www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+            tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
     )
-        )))),
-
-
+)
+)))),
 
 
 
@@ -284,13 +307,18 @@ mod_fachkraft_start_ui <- function(id){
         shinydashboard::box(
           title = "Berufsgruppen: Aktueller Fachkräftebedarf in MINT",
           width = 12,
+          column(
+            width = 8,
           p("In dieser Box blicken wir auf den Fachkräftebedarf im Bereich MINT.
           Dabei bleiben wir zunächst auf der Ebene der Berufsbereiche MINT bzw. der MINT-Disziplinen
           und Vergleichen diese Bereiche mit \"Nicht-MINT\" bzw. allen Berufen."),
           p("Die hier betrachteten Indikatoren des Fachkräftebedarfs sind die Ergebnisse der
             Engpass-Analyse der Bundesagentur für Arbeit, der Arbeitslosen-Stellen-Relation und der Vakanzzeit.
             Was diese Indikatoren bedeuten, erklären wir in den Infoboxen, die sich bei Klicken auf
-            die folgenden Wörter öffnen."),
+            die folgenden Wörter öffnen.")
+          ),
+          column(
+            width = 12,
           br(),
           column(width = 2,
                  shinyBS::bsPopover(id="i_engpass_analyse_def", title = "",
@@ -319,6 +347,7 @@ mod_fachkraft_start_ui <- function(id){
                                     trigger = "click"),
                  tags$a(paste0("   Vakanzzeit"), icon("info-circle"), id = "i_vakanzzeit_def"),
                  p()
+          )
           ),
           column(width = 12,
                  br(),
@@ -436,7 +465,8 @@ mod_fachkraft_start_ui <- function(id){
       shinydashboard::box(
         title = "Berufsebene: Aktueller Fachkräftebedarf in MINT",
         width = 12,
-
+        column(
+          width = 8,
         p("In dieser Box blicken wir auf den Fachkräftebedarf in einzelnen Berufen.
           Die interaktiven Darstellungen ermöglichen es, den Fachkräftebedarf der einzelner Berufsgattungen,
           z. B. Mechatronik oder Gesundheits- und Krankenpflege, zu betrachten. Außerdem zeigen wir ein Ranking der
@@ -444,7 +474,10 @@ mod_fachkraft_start_ui <- function(id){
         p("Die hier betrachteten Indikatoren des Fachkräftebedarfs sind die Ergebnisse der
             Engpass-Analyse der Bundesagentur für Arbeit, der Arbeitslosen-Stellen-Relation und der Vakanzzeit.
             Was diese Indikatoren bedeuten, erklären wir in den Infoboxen, die sich bei Klicken auf
-            die folgenden Wörter öffnen."),
+            die folgenden Wörter öffnen.")
+        ),
+        column(
+          width = 12,
         br(),
         column(width = 2,
         shinyBS::bsPopover(id="i_engpass_analyse_def_2", title = "",
@@ -473,6 +506,7 @@ mod_fachkraft_start_ui <- function(id){
                                             trigger = "click"),
                            tags$a(paste0("   Vakanzzeit"), icon("info-circle"), id = "i_vakanzzeit_def_2"),
         p()
+        )
         ),
         # column(width = 5,
         #        p(" ")
@@ -618,10 +652,10 @@ mod_fachkraft_start_server <- function(id, r){
     ## pdf ----
     # output$downloadPDF <- downloadHandler(
     #   # filename = function() {
-    #   #   "MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf"
+    #   #   "Methodenbericht_MINT-Fachkraefteszenarien.pdf"
     #   # },
     #   content = function(file) {
-    #     file.copy("www/MINT-Fachkraeftezukunftsszenarien_Methodenbericht.pdf", file)
+    #     file.copy("www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", file)
     #   }
     # )
 

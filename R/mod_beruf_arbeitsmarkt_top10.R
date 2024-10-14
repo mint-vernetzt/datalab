@@ -42,7 +42,7 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
                   "Westdeutschland (o. Berlin)",
                   "Ostdeutschland (inkl. Berlin)"
       ),
-      selected = "Bayern"
+      selected = "Deutschland"
     ),
 
     p("Fachbereich:"),
@@ -58,7 +58,7 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
       selected = "MINT (gesamt)"
     ),
 
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("betr_abs_rel"),
       choices = c("In Prozent", "Anzahl"),
@@ -68,7 +68,7 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_beruf_fach_4", title="",
-                       content = paste0("Die erste Ansicht zeigt, dass in Bayern 2022 ausschließlich Frauen eine Ausbildung zur Textillaborantin begonnen haben. Wechselt man in der Betrachtung auf &quotAnzahl&quot ist zu erkennen, dass sich neue weilbliche Auszubildende in Bayern am häufigsten für eine Lehre als KfZ-Mechatronikerin oder Bauzeichnerin entscheiden."),
+                       content = paste0("Die erste Ansicht zeigt, dass in Deutschland 2022 unter den Milchwirtschaftlichen Laboranten 77.1% Frauen waren. Demgegenüber haben 2022 100% der Männer eine Ausbildung zum Bergmaschinenmann angefangen. "),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_4")

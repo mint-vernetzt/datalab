@@ -10,6 +10,13 @@
 mod_studium_studienzahl_ausl_zeit_ui <- function(id){
   ns <- NS(id)
   tagList(
+    p("Darstellungsart:"),
+    shiny::radioButtons(
+      inputId = ns("ansicht_ausl_zeit"),
+      label = NULL,
+      choices = c("Gruppenvergleich - Balkendiagramm", "Zeitverlauf - Liniendiagramm"),
+      selected = "Gruppenvergleich - Balkendiagramm"
+    ),
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_studium_studienzahl_ausl_zeit"),
@@ -32,7 +39,7 @@ mod_studium_studienzahl_ausl_zeit_ui <- function(id){
                   "Thüringen",
                   "Westdeutschland (o. Berlin)",
                   "Ostdeutschland (inkl. Berlin)"),
-      selected = "Nordrhein-Westfalen"
+      selected = "Deutschland"
     ),
     p("Fach/Fächergruppe:"),
 
@@ -133,7 +140,7 @@ mod_studium_studienzahl_ausl_zeit_ui <- function(id){
                        multiple = FALSE
                      )),
 
-    p("Status der Studierenden:"),
+    p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("status_ausl_zeit"),
       choices = c("Studierende",
@@ -141,7 +148,7 @@ mod_studium_studienzahl_ausl_zeit_ui <- function(id){
       ),
       selected = "Studierende"
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_studium_studienzahl_ausl_zeit"),
       choices = c("In Prozent", "Anzahl"),
@@ -165,6 +172,10 @@ mod_studium_studienzahl_ausl_zeit_ui <- function(id){
 mod_studium_studienzahl_ausl_zeit_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+    observeEvent(input$ansicht_ausl_zeit, {
+      r$ansicht_ausl_zeit <- input$ansicht_ausl_zeit
+    })
 
     observeEvent(input$states_studium_studienzahl_ausl_zeit, {
       r$states_studium_studienzahl_ausl_zeit <- input$states_studium_studienzahl_ausl_zeit

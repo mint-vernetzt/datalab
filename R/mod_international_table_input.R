@@ -38,8 +38,8 @@ mod_international_table_input_ui <- function(id){
           multiple = TRUE,
           options =  list(
             title = "Bis zu 3 Länder wählen",
-            "max-options" = 3,
-            "max-options-text" = "Bitte nur maximal 3 Länder auswählen"
+            "max-options" = 2,
+            "max-options-text" = "Bitte nur maximal 2 Länder auswählen"
           )
         )
       )
@@ -205,7 +205,7 @@ mod_international_table_input_server <- function(id, r){
 
       tmp_int_table_display <- tmp_int_table_filtered %>%
         dplyr::mutate(
-          wert = paste0(round(wert_prozent), " %<br>",
+          wert = paste0(round(wert_prozent,1), " %<br>",
                         dplyr::if_else(is.na(wert_absolut),
                                        "",
                                        paste0("(", wert_absolut, ")"))

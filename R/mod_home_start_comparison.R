@@ -24,7 +24,8 @@ mod_home_start_comparison_ui <- function(id){
       inputId = ns("indikator_start_comparison"),
       choices = c("Schülerinnen Leistungskurse", "Studierende",
                   "Auszubildende", "Beschäftigte"),
-      selected = c("Schülerinnen Leistungskurse", "Beschäftigte"),
+      selected = c("Schülerinnen Leistungskurse", "Studierende",
+                   "Auszubildende",  "Beschäftigte"),
       # brauchts nicht, gibt nur 4
       # options =  list(
       #   "max-options" = 3,
@@ -33,7 +34,7 @@ mod_home_start_comparison_ui <- function(id){
       multiple = TRUE
 
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_start_comparison"),
       choices = c("In Prozent", "Anzahl"),

@@ -15,9 +15,8 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_verlauf_subject_bl"),
       label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021", "2022"),
-      selected = c("2015", "2022")
+      choices = 2013:2022,
+      selected = c(2016, 2022)
     ),
     # p("Nur Lehramt anzeigen:"),
     # tags$div(
@@ -37,7 +36,7 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
     #                      choices = "Uni"
     #                    ))
     # ),
-    p("Indikator:"),
+    p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("verl_l"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -57,8 +56,8 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
       ,
       multiple = F,
       options =  list(
-        "max-options" = 3,
-        "max-options-text" = "Maximal 3 Indikatoren auswählen")
+        "max-options" = 2,
+        "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
     ),
     # p("Auswahl der Fächer:"),
     # shinyWidgets::pickerInput(
@@ -96,7 +95,7 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
 
     ),
 
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_verlauf_subject_bl"),
       choices = c("In Prozent", "Anzahl"),

@@ -11,13 +11,26 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
   ns <- NS(id)
   tagList(
 
+
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
     p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_bl_verlauf"),
       label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017",
-                  "2018","2019", "2020", "2021", "2022"),
-      selected = c("2015", "2022")
+      choices = 2013:2022,
+      selected = c(2015, 2022)
     ),
     # p("Nur Lehramt anzeigen:"),
     # tags$div(
@@ -43,7 +56,7 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
         selected = "MINT (Gesamt)"
       )
     ,
-    p("Indikator:"),
+    p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("verl_bl_l"),
       choices = c("Studienanfänger:innen (1.Fachsemester)",
@@ -63,8 +76,8 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
       ,
       multiple = F,
       options =  list(
-        "max-options" = 3,
-        "max-options-text" = "Maximal 3 Indikatoren auswählen")
+        "max-options" = 2,
+        "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
     ),
     p("Regionen:"),
     shinyWidgets::pickerInput(
@@ -96,7 +109,7 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
                      `select-all-text` = "Alle auswählen"),
       multiple = TRUE
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_studium_studienzahl_bl_verlauf"),
       choices = c("In Prozent", "Anzahl"),

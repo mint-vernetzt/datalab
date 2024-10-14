@@ -103,6 +103,31 @@ background-color: #FFFFFF;
 }*/
 
 
+.content-box {
+  padding: 10px;
+  margin: 10px auto;
+  width: 100%;
+  background-color: #00a87a;
+  color: #FFFFFF;
+
+  font-family: SourceSans3-Regular;
+  font-size: 18px;
+  text-align: center;
+
+  box-sizing: border-box;
+
+}
+
+.content-box a {
+  color: #FFFFFF;
+  text-decoration: underline;
+}
+
+.content-box > .inner-box{
+  width: 75% !important;
+  display: inline-block !important;
+}
+
 /* Anpassung des Popovers und Tooltips */
 
 .popover {

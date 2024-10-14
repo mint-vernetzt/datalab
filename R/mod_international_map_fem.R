@@ -44,7 +44,7 @@ mod_international_map_fem_ui <- function(id) {
                        selected = c("Alle MINT-Fächer"),
                        multiple = FALSE
                      ),
-                     p("Betrachtung:"),
+                     p("Darstellungsart:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_betr_eu_f"),
                        choices = c("Frauenanteil in MINT" = "Anteil von Frauen an Allen",
@@ -82,7 +82,7 @@ mod_international_map_fem_ui <- function(id) {
                      #   selected = c("Promotion (ISCED 8)"),
                      #   multiple = FALSE),
 
-                     p("Betrachtung:"),
+                     p("Darstellungsart:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("map_betr_oecd_f"),
                        choices = c("Frauenanteil in MINT" = "Anteil von Frauen an Allen",

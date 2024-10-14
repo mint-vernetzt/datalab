@@ -14,23 +14,23 @@ mod_home_start_multiple_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_multiple"),
       label = NULL,
-      choices = c("2013", "2014","2015", "2016", "2017",
-                  "2018","2019", "2020", "2021", "2022"),
-      selected = c("2015", "2022")
+      choices = 2013:2022,
+      selected = c(2015, 2022)
     ),
     p("Bereiche:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_multiple_1"),
       choices = c("Schüler:innen Leistungskurse", "Studierende",
                   "Auszubildende", "Beschäftigte"),
-      selected = c("Schüler:innen Leistungskurse", "Beschäftigte"),
+      selected = c("Schüler:innen Leistungskurse", "Studierende",
+                   "Auszubildende", "Beschäftigte"),
       # options =  list(
       #   "max-options" = 3,
       #   "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
       # ),
       multiple = T
     ),
-    p("Betrachtung:"),
+    p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_start_multiple"),
       choices = c("In Prozent", "Anzahl"),

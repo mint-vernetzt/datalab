@@ -15,10 +15,10 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("bl_date"),
       label = NULL,
-      choices = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022"),
-      selected = "2022"
+      choices = 2013:2022,
+      selected = 2022
     ),
-    p("Indikator:"),
+    p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("rank_bl_l"),
       choices = c("Internationale Studienanfänger:innen (1. Hochschulsemester)",
@@ -36,7 +36,7 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
                      ns = ns,
       shinyWidgets::pickerInput(
         inputId = ns("bl_f_lehr"),
-        choices = studi_det_ui_faecher(0),
+        choices = studi_det_ui_faecher(spezif_i ='Studierende (Lehramt)'),
 
         selected = "Alle MINT-Fächer"
       )),
