@@ -2187,14 +2187,13 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
 
     # Hilfe für Titel
-    #TODO Überschrift
-    title_help <- paste0(indikator_choice, "n")
-    title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen Beschäftigten", title_help)
-    title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischen Auszubildenden", title_help)
-    title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden im ersten Lehrjahr", title_help)
-    title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
-    title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
-    title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
+    title_help <- paste0(indi, "n")
+    title_help <- ifelse(grepl("ausländische Beschäftigte", indi), "ausländischen Beschäftigten", title_help)
+    title_help <- ifelse(grepl("ausländische Auszubildende", indi), "ausländischen Auszubildenden", title_help)
+    title_help <- ifelse(grepl("Jahr", indi), "Auszubildenden im ersten Lehrjahr", title_help)
+    title_help <- ifelse(grepl("u25", indi), "Beschäftigten unter 25 Jahren", title_help)
+    title_help <- ifelse(grepl("25-55", indi), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
+    title_help <- ifelse(grepl("ü55", indi), "Beschäftigten über 55 Jahren", title_help)
 
     if(absolut_selector=="In Prozent"){
 
