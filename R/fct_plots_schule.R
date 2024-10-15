@@ -1255,7 +1255,8 @@ kurse_map <- function(r) {
 
     kurs_help <- ifelse(indikator_comparison == "Grundkurse", "Grundkurs", "Leistungskurs")
 
-   # df <- order(df$wert, decreasing = TRUE)
+    #df <- order(df$wert, decreasing = TRUE)
+
     #Plot
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
       highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
