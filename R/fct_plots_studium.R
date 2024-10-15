@@ -2434,6 +2434,86 @@ plot_studierende_bula_faecher <- function(r){
     # }
     #
 
+#     if (absolut_selector == "In Prozent") {
+#
+#       # Berechnung des Anteils in Prozent
+#       df <- df %>%
+#         dplyr::left_join(alle, dplyr::join_by(region, jahr)) %>%
+#         dplyr::select(-fach.y, -indikator.y) %>%
+#         dplyr::rename(wert = wert.x, wert_ges = wert.y, fach = fach.x, indikator = indikator.x) %>%
+#         dplyr::mutate(prop = round(wert / wert_ges * 100, 1))  # Berechne Prozentsatz
+#
+#       # Daten sortieren nach Region und Jahr (aufsteigend)
+#       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+#
+# <<<<<<< HEAD
+#       # Überschrift vorbereiten
+#       label_m <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
+#       label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
+#       label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
+#       label_m <- ifelse(label_m == "internationale Studienanfänger:innen (1. Hochschulsemester)",
+#                         "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
+#
+#       help_l <- label_m
+#       help_l <- ifelse(label_m == "internationalen Studienanfänger:innen (1. Hochschulsemester)",
+#                        "internationalen Studienanfänger:innen", help_l)
+#       help_l <- ifelse(label_m == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
+#
+# =======
+#       # Titel-Hilfstext vorbereiten
+#       label_select <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
+#       label_select <- ifelse(label_select == "Studierende (Fachhochschulen)", "Studierenden (Fachhochschulen)" , label_select)
+#       label_select <- ifelse(label_select == "Studierende (Lehramt, Universität)", "Studierenden (Lehramt, Universität)" , label_select)
+#       label_select <- ifelse(label_select == "Studierende (Universität)", "Studierenden (Universität)" , label_select)
+#
+# >>>>>>> umsortieren
+#       titel_help <- fach_select
+#       titel_help <- ifelse(titel_help == "Alle MINT-Fächer", "MINT-Fächern", titel_help)
+#       titel_help <- ifelse(titel_help == "Alle Nicht MINT-Fächer", "allen Nicht-MINT-Fächern", titel_help)
+#       titel_help <- ifelse(titel_help == "allgemeine naturwissenschaftliche und mathematische Fächer",
+#                            "allgemeinen naturwissenschaftlichen und mathematischen Fächern", titel_help)
+#
+# <<<<<<< HEAD
+#       if(nrow(df) == 0){
+#         titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
+#         Bitte wählen Sie eine andere Komination oder Fächergruppe aus."
+#       }else{
+#         titel <- paste0("Anteil von ", label_m, " in ", titel_help, " an allen ", help_l)
+#       }
+#
+#       # Den dynamisch erstellten Text in die Überschrift einfügen
+#       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = region)) %>%
+#         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
+#         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+#         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+#         highcharter::hc_title(text = titel,
+# =======
+#       # Dynamischer Titel für den Plot
+#       titel <- paste0("Anteil von ", label_select, " in ", titel_help)
+#
+#       # Erstellung des Plots mit Prozenten
+#       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = prop, group = region)) %>%
+#         highcharter::hc_tooltip(pointFormat = "Anteil: {point.prop}%") %>%  # Tooltip zeigt den Prozentwert an
+#         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
+#         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE) %>%
+#         highcharter::hc_title(text = titel,  # Dynamisch generierter Titel
+# >>>>>>> umsortieren
+#                               margin = 45,
+#                               align = "center",
+#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+#         highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#d0a9cd",
+#                                  "#bfc6d3", "#5f94f9", "#B45309")) %>%
+#         highcharter::hc_chart(
+#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+#         ) %>%
+#         highcharter::hc_exporting(enabled = FALSE,  # Export-Button
+#                                   buttons = list(contextButton = list(
+#                                     symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+#                                     onclick = highcharter::JS("function () {
+#                                                               this.exportChart({ type: 'image/png' }); }"),
+#                                     align = 'right', verticalAlign = 'bottom')))
+#     }
+
     if (absolut_selector == "In Prozent") {
 
       # Berechnung des Anteils in Prozent
@@ -2446,8 +2526,7 @@ plot_studierende_bula_faecher <- function(r){
       # Daten sortieren nach Region und Jahr (aufsteigend)
       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
-<<<<<<< HEAD
-      # Überschrift vorbereiten
+      # Titel-Hilfstext vorbereiten
       label_m <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
       label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
       label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
@@ -2459,37 +2538,20 @@ plot_studierende_bula_faecher <- function(r){
                        "internationalen Studienanfänger:innen", help_l)
       help_l <- ifelse(label_m == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
 
-=======
-      # Titel-Hilfstext vorbereiten
-      label_select <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
-      label_select <- ifelse(label_select == "Studierende (Fachhochschulen)", "Studierenden (Fachhochschulen)" , label_select)
-      label_select <- ifelse(label_select == "Studierende (Lehramt, Universität)", "Studierenden (Lehramt, Universität)" , label_select)
-      label_select <- ifelse(label_select == "Studierende (Universität)", "Studierenden (Universität)" , label_select)
-
->>>>>>> umsortieren
+      # Weitere Anpassung des Titels für den Plot
       titel_help <- fach_select
       titel_help <- ifelse(titel_help == "Alle MINT-Fächer", "MINT-Fächern", titel_help)
       titel_help <- ifelse(titel_help == "Alle Nicht MINT-Fächer", "allen Nicht-MINT-Fächern", titel_help)
       titel_help <- ifelse(titel_help == "allgemeine naturwissenschaftliche und mathematische Fächer",
                            "allgemeinen naturwissenschaftlichen und mathematischen Fächern", titel_help)
 
-<<<<<<< HEAD
-      if(nrow(df) == 0){
+      # Überprüfen, ob es Daten gibt
+      if (nrow(df) == 0) {
         titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
-        Bitte wählen Sie eine andere Komination oder Fächergruppe aus."
-      }else{
+    Bitte wählen Sie eine andere Kombination oder Fächergruppe aus."
+      } else {
         titel <- paste0("Anteil von ", label_m, " in ", titel_help, " an allen ", help_l)
       }
-
-      # Den dynamisch erstellten Text in die Überschrift einfügen
-      out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = region)) %>%
-        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
-        highcharter::hc_title(text = titel,
-=======
-      # Dynamischer Titel für den Plot
-      titel <- paste0("Anteil von ", label_select, " in ", titel_help)
 
       # Erstellung des Plots mit Prozenten
       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = prop, group = region)) %>%
@@ -2497,11 +2559,10 @@ plot_studierende_bula_faecher <- function(r){
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE) %>%
         highcharter::hc_title(text = titel,  # Dynamisch generierter Titel
->>>>>>> umsortieren
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#d0a9cd",
+        highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#d0a9cd",
                                  "#bfc6d3", "#5f94f9", "#B45309")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
@@ -2510,9 +2571,11 @@ plot_studierende_bula_faecher <- function(r){
                                   buttons = list(contextButton = list(
                                     symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
                                     onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
+                                                      this.exportChart({ type: 'image/png' }); }"),
                                     align = 'right', verticalAlign = 'bottom')))
     }
+
+
 
 
     else if (absolut_selector == "Anzahl") {
