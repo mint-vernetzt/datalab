@@ -10,7 +10,7 @@ library(readxl)
 library(janitor)
 library(purrr)
 library(readr)
-library(countrycode)S
+library(countrycode)
 
 
 # hier pathen
@@ -515,7 +515,7 @@ studierende_absolventen<- df_all_testroh
 setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 
 #usethis::use_data(studierende_absolventen, overwrite = T)
-save(studierende_absolventen, file = "studierende_absolventen.RData")
+save(studierende_absolventen, file = "studierende_absolventen.rda")
 
 
 
