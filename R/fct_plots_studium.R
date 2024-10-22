@@ -1915,15 +1915,15 @@ plot_mint_faecher <- function(r){
         dplyr::mutate(color = color_fachbereich[fach])
       col <- df$color
       titel <- ifelse(regio == "Saarland",
-                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern im ",regio," ", timerange, br(), label_w),
-                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern in ",regio," ", timerange, br(), label_w))
+                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern im ",regio," (", timerange, ")", br(), "Studierendengruppe: ",label_w),
+                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern in ",regio," (", timerange, ")", br(), "Studierendengruppe: ",label_w))
     }else{
       df <- df %>%
         dplyr::mutate(color = color_fach_balken[fach])
       col <- df$color
       titel <- ifelse(regio == "Saarland",
-                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern im ",regio," ", timerange, br(), label_w),
-                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern in ",regio," ", timerange, br(), label_w))
+                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern im ",regio," (", timerange, ")", br(), "Studierendengruppe: ",label_w),
+                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern in ",regio," (", timerange, ")", br(), "Studierendengruppe: ",label_w))
 
     }
 

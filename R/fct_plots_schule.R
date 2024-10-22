@@ -2275,7 +2275,14 @@ kurse_comparison_gender <- function(r) {
     df1$indikator <- ifelse(df1$indikator == "Oberstufenbelegungen" & df1$fachbereich == "MINT", "Oberstufenbelegungen MINT-Fächer", df1$indikator)
     df1$indikator <- ifelse(df1$indikator == "Oberstufenbelegungen" & df1$fachbereich == "andere Fächer", "Oberstufenbelegungen andere Fächer", df1$indikator)
 
+
+
+
+
     if(gegenwert == "Ja"){
+
+      df <- df %>%
+        dplyr::mutate(farbe = ifelse(grepl("andere Fächer", indikator), c("#efe8e6", "#dc2626"), c("#efe8e6", "#154194")))
 
       out <- highcharter::hchart(df1, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,1), group = anzeige_geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}-Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
@@ -2287,7 +2294,8 @@ kurse_comparison_gender <- function(r) {
                                                                     "Oberstufenbelegungen MINT-Fächer",
                                                                     "Oberstufenbelegungen andere Fächer")) %>%
         highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-        highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
+        highcharter::hc_colors(unique(df$farbe)) %>%
+       # highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
         highcharter::hc_title(text = paste0("Anteil von Mädchen in MINT- und anderen Fächern in ",regio, " (", timerange, ")"),
                               margin = 25,
                               align = "center",
@@ -3035,7 +3043,7 @@ iqb_standard_zeitverlauf <- function(r){
     #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
     #highcharter::hc_colors(c("#efe8e6","#D0A9CD", "#b16fab")) %>%
     highcharter::hc_colors(color) %>%
-    highcharter::hc_title(text = paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard in Mathematik nicht erreichen"),
+    highcharter::hc_title(text = paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3225,7 +3233,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
                                  #"#154194",
         )) %>%
-        highcharter::hc_title(text = paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen, nach Geschlecht in " , bl_select),
+        highcharter::hc_title(text = paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen, nach Geschlecht in " , bl_select, " (", klasse_select, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3259,7 +3267,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
                                  #"#154194",
         )) %>%
-        highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht in " , bl_select),
+        highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3296,7 +3304,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
                                  #"#154194",
         )) %>%
-        highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest nach Geschlecht in " , bl_select),
+        highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")"),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3329,7 +3337,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
                                    #"#154194",
           )) %>%
-          highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select),
+          highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3360,7 +3368,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
             #"#154194",
             highcharter::hc_colors(color) %>%
-            highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select),
+            highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
                                   margin = 45,
                                   align = "center",
                                   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3390,7 +3398,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
             #"#154194",
             highcharter::hc_colors(color) %>%
-            highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select),
+            highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
                                   margin = 45,
                                   align = "center",
                                   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
