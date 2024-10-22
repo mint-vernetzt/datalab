@@ -49,7 +49,7 @@ mod_fachkraft_start_ui <- function(id){
         title = "Fragen oder Feedback?",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))
     ),
@@ -97,9 +97,9 @@ mod_fachkraft_start_ui <- function(id){
             p(br(),"KURZANALYSE", br()),
             p(style = "font-size = 24",
               strong("Für die folgenden Zukunftsszenarien hat MINTvernetzt vom IW Köln berechnen lassen,
-        wie sich die MINT-Fachkräftezaheln in den nächsten Jahren entwickeln werden.
+        wie sich die MINT-Fachkräftezahlen in den nächsten Jahren entwickeln werden.
         Wirken Förderinitiativen für den MINT-Nachwuchs, Frauen in MINT, den Verbleib
-        älterer Fachkräftre und für die Zuwanderung von MINT-Fachkräften zusammen, können
+        älterer Fachkräfte und für die Zuwanderung von MINT-Fachkräften zusammen, können
        bis 2037 1,4 Mio. MINT-Fachkräfte zusätzlich gewonnen werden. Im Vergleich dazu bewegen wir
         uns aktuell auf rund 100.000 MINT-Fachkräfte weniger zu, in einem Worst Case sogar auf rund 1,1 Mio. weniger."),
               br(), br(),
@@ -150,14 +150,14 @@ mod_fachkraft_start_ui <- function(id){
           wie viele Personen uns fehlen werden, sondern darauf, wie viele Personen für MINT-Berufe gewonnen werden könnten.
 
           Dabei blicken wir auf die Wirkhebel MINT-Nachwuchs fördern, Mädchen und Frauen in MINT fördern,
-          Zuwanderung von MINT-Fachkräfte und Verbleib älterer Fachkräfte in MINT-Berufen.
+          Zuwanderung von MINT-Fachkräften und Verbleib älterer Fachkräfte in MINT-Berufen.
 
-          Nähere Informationen dazu, welche methodischen Annahmen den Wirkhebeln und Szenarien zugurnde liegen,
+          Nähere Informationen dazu, welche methodischen Annahmen den Wirkhebeln und Szenarien zugrunde liegen,
           finden Sie in den Info-Boxen der Grafiken.
 
-          Vergleichen Sie hier, wie sich diese Wirkhebel die Fachkräfteentwicklung beeinflussen."),
+          Vergleichen Sie hier, wie sich diese Wirkhebel die Fachkräfteentwicklung auswirken."),
 
-        p("Hier liegen drei statische Grafikvarianten zum Herunterladen. Die interaktiven Grafiken folgen darunter und können auch gerne als Screenshots weiterverwendet werden."),
+        p("Her finden Sie drei statische Grafikvarianten zum Herunterladen. Die interaktiven Grafiken folgen darunter und können auch gerne als Screenshots weiterverwendet werden. In Zukunft ist auch ein Download der interaktiven Grafiken möglich."),
 
         tags$a(href = "www/Vergleich_Wirkhebel_MINT-Fachkraefte.png", target = "_blank", "Download Grafik Vergleich Wirkhebel",
                title = "Die Grafik öffnet sich in einem neuen Browserfenster und kann mit Rechtsklick + \"Grafik speichern unter...\" heruntergeladen werden."),
@@ -176,6 +176,46 @@ mod_fachkraft_start_ui <- function(id){
        br(),br(),
         tabsetPanel(
           type = "tabs",
+
+          tabPanel(
+            "Übersicht Wirkhebel", br(),
+
+            shiny::sidebarPanel(
+              width = 3,
+
+              mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"),
+              br(),# TODO
+
+              # br(),
+              # downloadButton(
+              #   outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
+              #   label = "Download",
+              #   icon = icon("download"))
+
+            ),
+            shiny::mainPanel(
+              width = 9,
+              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
+                                           color = "#154194"),
+
+              p(style="font-size:12px;color:grey",
+                "Vorausberechnung durch das IW Köln, 2024, beauftragt durch MINTvernetzt"),
+              p(),
+              shinyBS::bsPopover(
+                id="h_fachkraft-prognosen_3", title="",
+                content = paste0("Der Effekt der Förderung von Frauen baut auf den Effekt der MINT-Bildung auf. Das Szenario betrachtet eine erfolgreichere MINT-Bildung mit besonderen Erfolgen bei Mädchen und Frauen."),
+                placement = "top",
+                trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"),
+                     icon("info-circle"),
+                     id = "h_fachkraft-prognosen_3"),
+              p(),
+
+              tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
+            )
+          ),
+
+
     tabPanel(
             title = "Zukünftige Fachkräfte-Entwicklung", br(),
 
@@ -257,46 +297,6 @@ mod_fachkraft_start_ui <- function(id){
               tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
           )
-    ,
-
-
-    tabPanel(
-            "Übersicht Wirkhebel", br(),
-
-            shiny::sidebarPanel(
-              width = 3,
-
-              mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"),
-              br(),# TODO
-
-              # br(),
-              # downloadButton(
-              #   outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
-              #   label = "Download",
-              #   icon = icon("download"))
-
-            ),
-            shiny::mainPanel(
-              width = 9,
-              shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
-              color = "#154194"),
-
-              p(style="font-size:12px;color:grey",
-              "Vorausberechnung druch IW Köln, 2024, beauftragt durch MINTvernetzt"),
-            p(),
-            shinyBS::bsPopover(
-              id="h_fachkraft-prognosen_3", title="",
-              content = paste0("Der Effekt der Förderung von Frauen baut auf den Effekt der MINT-Bildung auf. Das Szenario betrachtet eine erfolgreichere MINT-Bildung mit besonderen Erfolgen bei Mädchen und Frauen."),
-              placement = "top",
-              trigger = "hover"),
-            tags$a(paste0("Hinweis zu den Daten"),
-                   icon("info-circle"),
-                   id = "h_fachkraft-prognosen_3"),
-            p(),
-
-            tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
-    )
-)
 )))),
 
 
@@ -311,10 +311,10 @@ mod_fachkraft_start_ui <- function(id){
             width = 8,
           p("In dieser Box blicken wir auf den Fachkräftebedarf im Bereich MINT.
           Dabei bleiben wir zunächst auf der Ebene der Berufsbereiche MINT bzw. der MINT-Disziplinen
-          und Vergleichen diese Bereiche mit \"Nicht-MINT\" bzw. allen Berufen."),
+          und vergleichen diese Bereiche mit \"Nicht-MINT\" bzw. allen Berufen."),
           p("Die hier betrachteten Indikatoren des Fachkräftebedarfs sind die Ergebnisse der
             Engpass-Analyse der Bundesagentur für Arbeit, der Arbeitslosen-Stellen-Relation und der Vakanzzeit.
-            Was diese Indikatoren bedeuten, erklären wir in den Infoboxen, die sich bei Klicken auf
+            Was diese Indikatoren bedeuten, erklären wir in den Infoboxen, die sich beim Klicken auf
             die folgenden Wörter öffnen.")
           ),
           column(
@@ -468,12 +468,12 @@ mod_fachkraft_start_ui <- function(id){
         column(
           width = 8,
         p("In dieser Box blicken wir auf den Fachkräftebedarf in einzelnen Berufen.
-          Die interaktiven Darstellungen ermöglichen es, den Fachkräftebedarf der einzelner Berufsgattungen,
+          Die interaktiven Darstellungen ermöglichen es, den Fachkräftebedarf der einzelnen Berufsgattungen,
           z. B. Mechatronik oder Gesundheits- und Krankenpflege, zu betrachten. Außerdem zeigen wir ein Ranking der
           MINT-Berufe, mit dem aktuell höchsten und geringsten Fachkräftebedarf."),
         p("Die hier betrachteten Indikatoren des Fachkräftebedarfs sind die Ergebnisse der
             Engpass-Analyse der Bundesagentur für Arbeit, der Arbeitslosen-Stellen-Relation und der Vakanzzeit.
-            Was diese Indikatoren bedeuten, erklären wir in den Infoboxen, die sich bei Klicken auf
+            Was diese Indikatoren bedeuten, erklären wir in den Infoboxen, die sich beim Klicken auf
             die folgenden Wörter öffnen.")
         ),
         column(

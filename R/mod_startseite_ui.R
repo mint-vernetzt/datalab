@@ -48,7 +48,7 @@ mod_startseite_start_ui <- function(id){
         p(style = "text-align: justify; font-size = 20px",
             "Ausgewählte Statistiken bereiten wir in Kurzanalysen auf.
            Die Kurzanalysen können auf der MINT-DataLab-Themenseite der MINTvernetzt-Website gelesen und
-            heruntergeladen werden.",
+           zukünftig heruntergeladen werden. ",
           # LINK ergänzen, wenn da (Nike)
           br()),
         tags$a(href="https://www.mint-vernetzt.de/mint-datalab/#kurzanalysen", "Link zu den Kurzanalysen", target = "_blank"),

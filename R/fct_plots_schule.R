@@ -739,7 +739,7 @@ kurse_mint_map <- function(r) {
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-        highcharter::hc_title(text = paste0("Anzahl an ", title_help, help_title),
+        highcharter::hc_title(text = paste0("Anzahl an ", title_help ,help_title),
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -818,7 +818,7 @@ kurse_mint_map <- function(r) {
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von ", help_title, " an allen Grundkurs-Belegungen ", timerange),
+        text = paste0("Anteil von ", help_title, "<br> an allen Grundkurs-Belegungen ", "(",timerange, ")"),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -853,7 +853,7 @@ kurse_mint_map <- function(r) {
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von ", help_title, " an allen Leistungskurs-Belegungen ", timerange),
+        text = paste0("Anteil von ", help_title, "<br> an allen Leistungskurs-Belegungen ", "(",timerange, ")"),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -898,22 +898,23 @@ kurse_map <- function(r) {
   timerange <- r$date_map
   subjects <- r$subject_map
   color_fach <- c(
-    "MINT-Fächer (gesamt)" = "#b16fab",
+    "MINT-Fächer (gesamt)" = "#fca5a5",
     "Informatik" = "#00a87a",
     "Naturwissenschaften" = "#fcc433",
-    "Biologie" = "#fbbf24",
+    "Biologie" = "#B45309",
     "Chemie" = "#D97706",
-    "Physik" = "#F59E0B",
+    "Physik" = "#5f94f9",
     "andere naturwiss.-technische Fächer" = "#fde68a",
     "Mathematik" = "#ee7775",
-    "andere Fächer (gesamt)" = "#D4C1BB",
-    "Deutsch"= "#D4C1BB",
-    "Fremdsprachen"= "#D4C1BB",
-    "Gesellschaftswissenschaften" ="#D4C1BB",
+    "andere Fächer (gesamt)" = "#5d335a",
+    "Deutsch"= "#007655",
+    "Fremdsprachen"= "#dc2626",
+    "Gesellschaftswissenschaften" ="#b16fab",
     "Musik/Kunst" = "#D4C1BB",
-    "Religion/Ethik"= "#D4C1BB",
-    "Sport"= "#D4C1BB"
+    "Religion/Ethik"= "#d0a9cd",
+    "Sport"= "#154194"
   )
+
 
   if(betrachtung == "Übersicht - Kartendiagramm"){
     # filter dataset based on UI inputs
@@ -972,7 +973,7 @@ kurse_map <- function(r) {
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor=col, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von ", help_title, " an allen Grundkurs-Belegungen ", timerange),
+        text = paste0("Anteil von ", help_title, "<br> an allen Grundkurs-Belegungen ", "(",timerange, ")"),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1007,7 +1008,7 @@ kurse_map <- function(r) {
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor=col,labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von ", help_title, " an allen Leistungskurs-Belegungen ", timerange),
+        text = paste0("Anteil von ", help_title, "<br> an allen Leistungskurs-Belegungen ", "(",timerange, ")"),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1255,7 +1256,10 @@ kurse_map <- function(r) {
 
     kurs_help <- ifelse(indikator_comparison == "Grundkurse", "Grundkurs", "Leistungskurs")
 
+
+    df <- df %>% dplyr::arrange(desc(proportion))
     #df <- order(df$wert, decreasing = TRUE)
+#    df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
     #Plot
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
@@ -1264,7 +1268,21 @@ kurse_map <- function(r) {
       highcharter::hc_xAxis(title = list(text = "")) %>%
       # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
       # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-      highcharter::hc_colors("#b16fab") %>%
+      #highcharter::hc_colors("#b16fab") %>%
+#
+
+      # highcharter::hc_colors(c(
+      #   "#b16fab",  # Deutschland
+      #   "#d3a4d7",  # Ostdeutschland (inkl. Berlin)
+      #   "#A9A9A9"   # Default für andere Regionen
+      # )) %>%
+
+      highcharter::hc_plotOptions(bar = list(
+        colorByPoint = TRUE,
+        colors = ifelse(df$region == "Deutschland", "#b16fab",
+                        ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
+                               ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
+
       highcharter::hc_title(text = paste0( "Anteil von ", kurs_help, "-Belegungen in ", help_title, " nach Bundesländern (",  timerange, ")"
       ),
       margin = 20,
@@ -1490,19 +1508,21 @@ kurse_verlauf_subjects_bl <- function(r) {
   color_fach <- c(
     "MINT-Fächer (gesamt)" = "#D4C1BB",
     "Mathematik" = "#ee7775",
-    "Informatik" = "#00a87a",
+    "Informatik" = "#8893a7",
     "Physik" = "#F59E0B",
     "Chemie" = "#D97706",
-    "Physik" = "#F59E0B",
-    "andere naturwiss.-technische Fächer" = "#fde68a",
-    "andere Fächer (gesamt)"  = "#D4C1BB",
-    "Deutsch"= "#efe8e6",
-    "Fremdsprachen"= "#efe8e6",
-    "Gesellschaftswissenschaften" = "#efe8e6",
-    "Musik/Kunst" = "#efe8e6",
+    "Physik" = "#b16fab",
+    "andere naturwiss.-technische Fächer" = "#9d7265",
+    "andere Fächer (gesamt)"  = "#5f94f9",
+    "Deutsch"= "#66cbaf",
+    "Fremdsprachen"= "#007655",
+    "Gesellschaftswissenschaften" = "#d0a9cd",
+    "Musik/Kunst" = "#fde68a",
     "Religion/Ethik"= "#efe8e6",
-    "Sport"= "#efe8e6"
+    "Sport"= "#fca5a5"
   )
+
+
 
   # filter dataset based on UI inputs
   df <- dplyr::tbl(con, from = "kurse") %>%

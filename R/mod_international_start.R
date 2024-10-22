@@ -32,7 +32,7 @@ mod_international_start_ui <- function(id){
         title = "Auf dieser Seite",
         width = 7,
         p(style = "text-align: left; font-size = 16px",
-          "Auf dieser Fokus-Seite Blicken wir über Deutschland hinaus. Hier können Sie in den Bereichen 'Schule',
+          "Auf dieser Fokus-Seite blicken wir über Deutschland hinaus. Hier können Sie in den Bereichen 'Schule',
           'Studium' und 'Beruf' internationale Vergleiche anstellen. Betrachten Sie zum Beispiel, in welchen Ländern
           der MINT-Anteil besonders hoch ist oder wo ein verhältnismäßig hoher Frauenanteil in MINT erreicht wird.
           Wenn Sie sich für den MINT-Nachwuchs interessieren, können Sie die Ergebnisse der internationalen MINT-Kompetenzerhebungen Pisa und TIMSS betrachten.")),
@@ -41,7 +41,7 @@ mod_international_start_ui <- function(id){
         width = 5,
         p(style = "text-align: left; font-size = 16px",
           "Sind alle Zahlen und Grafiken verständlich?", br(),
-          "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))
     ),
