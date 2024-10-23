@@ -11,6 +11,10 @@ mod_home_start_ui <- function(id){
   ns <- NS(id)
   tagList(
 
+
+
+
+
     # Banner
 
        fluidRow(
@@ -33,7 +37,7 @@ mod_home_start_ui <- function(id){
         width = 7,
         p(
           #style = "text-align: left; font-size = 16px",
-           "Auf dieser Überblicksseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
+           "Auf dieser Überblickseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")),
       shinydashboard::box(
@@ -42,7 +46,7 @@ mod_home_start_ui <- function(id){
         p(
           #style = "text-align: left; font-size = 16px",
           "Sind alle Zahlen und Grafiken verständlich? Gibt es Darstellungsschwierigkeiten? Wünschen Sie sich weitere Daten?", br(),
-          "Wir freuen uns über Rückfragen und Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          "Wir freuen uns über Rückfragen und Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))
     ),
@@ -79,11 +83,11 @@ mod_home_start_ui <- function(id){
         column(
           width = 8,
           p("Wie groß ist der MINT-Anteil entlang der Bildungskette von Schule bis Beruf?
-          Rund ein Drittel der Leistungskursbelegungen sind in einem MINT Fach.
-          37% der Studierenden und rund ein Drittel der Auszubildenden lernen in MINT.
-          Unter den Beschäftigten ist der MINT-Anteil geringer. Hier üben Stand 2022 23%
-          der sozialversicherungspflichtig Beschäftigten eine MINT-Tätigkeit aus.
-          In den letzten 10 Jahren sind diese Anteile ziemlich stabil geblieben.
+          Rund ein Drittel der Leistungskursbelegungen ist in einem MINT-Fach.
+          37 % der Studierenden und rund ein Drittel der Auszubildenden lernen in MINT.
+          Unter den Beschäftigten ist der MINT-Anteil geringer. Hier üben Stand 2022 23 %
+          der sozialversicherungspflichtigen Beschäftigten eine MINT-Tätigkeit aus.
+          In den letzten 10 Jahren sind die prozentualen Anteile relativ konstant geblieben.
           Leichte Veränderungen sieht man in den absoluten Zahlen.")
         ),
         column(
@@ -169,11 +173,11 @@ mod_home_start_ui <- function(id){
         width = 12,
         column(
           width = 8,
-          p("In den MINT-Leistungskursen sind rund 50% der Schüler:innen weiblich.
-          In der weiterführenden Bildung, in Ausbildung und Studium, ist der Frauenanteil bei 13% beziehungsweise 32%.
-          In den MINT-Berufen sind nur 17% Frauen vertreten. Im Vergleich dazu ist der Frauenanteil bei \"Nicht-MINT\"-Berufen 56%,
-          bei \"Nicht-MINT\"-Studiengängen sogar bei über 60%.", br(),
-            "In den letzten 10 Jahren hat sich daran nicht stark etwas verändert.
+          p("In den MINT-Leistungskursen sind rund 50 % der Schüler:innen weiblich.
+          In der weiterführenden Bildung, in Ausbildung und Studium, ist der Frauenanteil bei 13 % beziehungsweise 32 %.
+          In den MINT-Berufen sind nur 17 % Frauen vertreten. Im Vergleich dazu liegt der Frauenanteil in \"Nicht-MINT\"-Berufen bei 56 %,
+          in \"Nicht-MINT\"-Studiengängen sogar bei über 60 %.", br(),
+            "In den letzten 10 Jahren gab es diesbezüglich nur geringe Veränderungen.
         Es kam zu leichten Zunahmen des Frauenanteils im Studium und im Beruf.")
         ),
         column(

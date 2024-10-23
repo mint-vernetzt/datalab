@@ -10,7 +10,7 @@ library(readxl)
 library(janitor)
 library(purrr)
 library(readr)
-library(countrycode)S
+library(countrycode)
 
 
 # hier pathen
@@ -270,7 +270,7 @@ usethis::use_data(studierende, overwrite = T)
 
 duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht, jahr, region, fachbereich))
 
-## Studierende detailliert ----
+## Studierende absolventen ----
 
 
 
@@ -302,6 +302,11 @@ for(i in 1:length(Jahre)){
   temporar$jahr <- as.numeric(Jahre[i])
   rohe_data_df <- rbind(rohe_data_df, temporar)
 }
+
+
+temporar <- readxl::read_xlsx(paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/01_Eingang/Destatis/Datenlieferung_24_10_Absolv_Studis2023/", "Brunner_Absolventinnen_Land_FG_STB_2023.xlsx"))
+temporar$jahr <- 2023
+rohe_data_df <- rbind(rohe_data_df, temporar)
 
 rm(temporar)
 #rohe_data_df <- rohe_data_df %>% select(-c(`...2`, `...3`, `...5`))
@@ -515,10 +520,7 @@ studierende_absolventen<- df_all_testroh
 setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 
 #usethis::use_data(studierende_absolventen, overwrite = T)
-save(studierende_absolventen, file = "studierende_absolventen.RData")
-
-
-
+save(studierende_absolventen, file = "studierende_absolventen.rda")
 
 
 
@@ -538,6 +540,8 @@ save(studierende_absolventen, file = "studierende_absolventen.RData")
 # Ein Datensatz, der nur die Datensätze für mit mit Fächerunterscheidung beinhaltet für alle Indikatoren          #
 #-----------------------------------------------------------------------------------------------------------------#
 
+
+###einfügt neue daten 2023 :) tko 17.10.2024
 ### Creating and Cleaning ----
 
 #setwd("C:/Users/kab/Downloads/datalab/datalab/data-raw/raw")
@@ -563,7 +567,142 @@ temp <- readxl::read_xlsx(paste0(pfad, "DES069_Brunner_Stud_Land_FG_STB_2022.xls
 temp$jahr <- 2022
 raw <- rbind(raw, temp)
 
+
+#neu hinzugekommen 17.10.2024
+temp2 <- readxl::read_xlsx(paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/01_Eingang/Destatis/Datenlieferung_24_10_Absolv_Studis2023/", "Brunner_Stud_Hochschultyp_Land_FG_STB_2023.xlsx"))
+temp2$jahr <- 2023
+###
+
+temp2 <- temp2 %>% select(-c(`...3`, `...4`, `...6`))
+
+colnames(temp2) <- c("Hochschultyp","region", "fachbereich", "fach", "gesamt", "weiblich",
+                   "auslaender", "international", "lehramt", "lehramt_weiblich",
+                   "gesamt_1hs", "weiblich_1hs", "auslaender_1hs", "international_1hs",
+                   "gesamt_1fs", "weiblich_1fs", "jahr")
+bulas <- c(
+  "Baden-Württemberg",
+  "Bayern",
+  "Berlin",
+  "Brandenburg",
+  "Bremen",
+  "Hamburg",
+  "Hessen",
+  "Mecklenburg-Vorpommern",
+  "Niedersachsen",
+  "Nordrhein-Westfalen",
+  "Rheinland-Pfalz",
+  "Saarland",
+  "Sachsen",
+  "Sachsen-Anhalt",
+  "Schleswig-Holstein",
+  "Thüringen")
+
+temp2 <- temp2 %>%
+  pivot_longer(
+    cols = "gesamt":"weiblich_1fs",
+    values_to = "wert",
+    names_to = "indikator"
+  ) %>%
+  na.omit()
+
+temp2 <- temp2 %>%
+  mutate(
+
+    region = case_when(
+      region == 1 ~ bulas[1],
+      region == 2~ bulas[2],
+      region == 3 ~ bulas[3],
+      region == 4 ~ bulas[4],
+      region == 5 ~ bulas[5],
+      region == 6 ~ bulas[6],
+      region == 7 ~ bulas[7],
+      region == 8 ~ bulas[8],
+      region == 9 ~ bulas[9],
+      region == 10 ~ bulas[10],
+      region == 11 ~ bulas[11],
+      region == 12 ~ bulas[12],
+      region == 13 ~ bulas[13],
+      region == 14 ~ bulas[14],
+      region == 15 ~ bulas[15],
+      region == 16 ~ bulas[16],
+      region == "~~" ~ "Deutschland"
+    ),
+    fachbereich = case_when(
+      fachbereich == "Zusammen" ~ "Gesamt",
+      fachbereich == "Insgesamt" ~ "Gesamt",
+      T ~ fachbereich
+    ),
+    fach = case_when(
+      fach == "Zusammen" ~ "Alle Fächer",
+      fach == "Insgesamt" ~ "Alle Fächer",
+      T ~ fach
+    ),
+    wert = as.numeric(wert),
+    jahr = as.numeric(jahr),
+    geschlecht = case_when(
+      str_detect(pattern="weiblich", indikator) ~ "Frauen",
+      T ~ "Gesamt"
+    ),
+    indikator = case_when(
+      indikator %in% c("gesamt", "weiblich") & Hochschultyp == "Universitäten" ~ "Studierende (Universität)",
+      indikator %in% c("gesamt", "weiblich") & Hochschultyp == "Fachhochschulen" ~ "Studierende (Fachhochschule)",
+      indikator %in% c("gesamt", "weiblich") & Hochschultyp == "Hochschulen insgesamt" ~ "Studierende (Gesamt Hochschule)",
+
+      indikator == "auslaender" & Hochschultyp == "Universitäten" ~ "ausländische Studierende (Universität)",
+      indikator == "auslaender" & Hochschultyp == "Fachhochschulen" ~ "ausländische Studierende (Fachhochschule)",
+      indikator == "auslaender" & Hochschultyp == "Hochschulen insgesamt" ~ "ausländische Studierende (Gesamt Hochschule)",
+
+      indikator == "international" & Hochschultyp == "Universitäten" ~ "internationale Studierende (Universität)",
+      indikator == "international" & Hochschultyp == "Fachhochschulen" ~ "internationale Studierende (Fachhochschule)",
+      indikator == "international" & Hochschultyp == "Hochschulen insgesamt" ~ "internationale Studierende (Gesamt Hochschule)",
+
+      indikator == "gesamt_1hs" & Hochschultyp == "Universitäten" ~ "Studienanfänger:innen (1. Hochschulsemester, Universität)",
+      indikator == "gesamt_1hs" & Hochschultyp == "Fachhochschulen" ~ "Studienanfänger:innen (1. Hochschulsemester, Fachhochschule)",
+      indikator == "gesamt_1hs" & Hochschultyp == "Hochschulen insgesamt" ~ "Studienanfänger:innen (1. Hochschulsemester, Gesamt Hochschule)",
+
+      indikator == "weiblich_1hs" & Hochschultyp == "Universitäten" ~ "weibliche Studienanfänger:innen (1. Hochschulsemester, Universität)",
+      indikator == "weiblich_1hs" & Hochschultyp == "Fachhochschulen" ~ "weibliche Studienanfänger:innen (1. Hochschulsemester, Fachhochschule)",
+      indikator == "weiblich_1hs" & Hochschultyp == "Hochschulen insgesamt" ~ "weibliche Studienanfänger:innen (1. Hochschulsemester, Gesamt Hochschule)",
+
+      indikator == "weiblich" & Hochschultyp == "Universitäten" ~ "weibliche Studierende ( Universität)",
+      indikator == "weiblich" & Hochschultyp == "Fachhochschulen" ~ "weibliche Studierende (Fachhochschule)",
+      indikator == "weiblich" & Hochschultyp == "Hochschulen insgesamt" ~ "weibliche Studierende (Gesamt Hochschule)",
+
+      indikator == "auslaender_1hs" & Hochschultyp == "Universitäten" ~ "ausländische Studienanfänger:innen (1. Hochschulsemester, Universität)",
+      indikator == "auslaender_1hs" & Hochschultyp == "Fachhochschulen" ~ "ausländische Studienanfänger:innen (1. Hochschulsemester, Fachhochschule)",
+      indikator == "auslaender_1hs" & Hochschultyp == "Hochschulen insgesamt" ~ "ausländische Studienanfänger:innen (1. Hochschulsemester, Gesamt Hochschule)",
+
+      indikator == "international_1hs" & Hochschultyp == "Universitäten" ~ "internationale Studienanfänger:innen (1. Hochschulsemester, Universität)",
+      indikator == "international_1hs" & Hochschultyp == "Fachhochschulen" ~ "internationale Studienanfänger:innen (1. Hochschulsemester, Fachhochschule)",
+      indikator == "international_1hs" & Hochschultyp == "Hochschulen insgesamt" ~ "internationale Studienanfänger:innen (1. Hochschulsemester, Gesamt Hochschule)",
+
+      indikator == "weiblich_1fs" & Hochschultyp == "Universitäten" ~ "weibliche Studiumsanfänger:innen (1. Fachsemester, Universität)",
+      indikator == "weiblich_1fs" & Hochschultyp == "Fachhochschulen" ~ "weibliche Studiumsanfänger:innen (1. Fachsemester, Fachhochschule)",
+      indikator == "weiblich_1fs" & Hochschultyp == "Hochschulen insgesamt" ~ "weibliche Studiumsanfänger:innen (1. Fachsemester, Gesamt Hochschule)",
+
+      indikator == "gesamt_1fs" & Hochschultyp == "Universitäten" ~ "weibliche Studiumsanfänger:innen (1. Fachsemester, Universität)",
+      indikator == "gesamt_1fs" & Hochschultyp == "Fachhochschulen" ~ "weibliche Studiumsanfänger:innen (1. Fachsemester, Fachhochschule)",
+      indikator == "gesamt_1fs" & Hochschultyp == "Hochschulen insgesamt" ~ "weibliche Studiumsanfänger:innen (1. Fachsemester, Gesamt Hochschule)",
+
+      str_detect(indikator, "lehramt") & Hochschultyp == "Universitäten" ~ "Studierende (Lehramt, Universität)",
+      str_detect(indikator, "lehramt") & Hochschultyp == "Fachhochschulen" ~ "Studierende (Lehramt, Fachhochschule)",
+      str_detect(indikator, "lehramt") & Hochschultyp == "Gesamt" ~ "Studierende (Lehramt, Gesamt Hochschule)",
+
+      TRUE ~ indikator  # Default für Fälle, die nicht explizit behandelt werden
+    ),
+    mint_select = case_when(
+      fachbereich %in% c("Mathematik, Naturwissenschaften", "Ingenieurwissenschaften") ~
+        "MINT",
+      T ~ "Nicht MINT"
+    ),
+    typ = case_when(
+      fach == "Alle Fächer" ~ "Aggregat",
+      fach != "Alle Fächer" ~ "Einzelauswahl"
+    )
+  )
+
 rm(temp)
+temp2 <- temp2 %>% select(-c(`Hochschultyp`))
 
 raw <- raw %>% select(-c(`...2`, `...3`, `...5`))
 
@@ -579,23 +718,6 @@ raw <- raw %>%
                 values_to = "wert", names_to = "indikator") %>%
   na.omit()
 
-bulas <- c(
-"Baden-Württemberg",
-"Bayern",
-"Berlin",
-"Brandenburg",
-"Bremen",
-"Hamburg",
-"Hessen",
-"Mecklenburg-Vorpommern",
-"Niedersachsen",
-"Nordrhein-Westfalen",
-"Rheinland-Pfalz",
-"Saarland",
-"Sachsen",
-"Sachsen-Anhalt",
-"Schleswig-Holstein",
-"Thüringen")
 
 df <- raw %>%
   mutate(
@@ -658,6 +780,16 @@ df <- raw %>%
   filter(fachbereich %in% c("Mathematik, Naturwissenschaften",
                             "Ingenieurwissenschaften") |
            fach == "Alle Fächer")
+
+
+temp2 <- temp2 %>%
+  mutate(bereich = "hochschule")
+
+temp2 <- temp2 %>%
+  relocate(bereich, .after = jahr)
+
+
+df <- rbind(df, temp2)
 
 # Aggregate Berechnen
 
@@ -765,6 +897,9 @@ studierende_detailliert <- df_all
 
 usethis::use_data(studierende_detailliert, overwrite = T)
 
+setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+
+save(studierende_detailliert, file = "studierende_detailliert.rda")
 
 # Studierende Int'l. ----
 

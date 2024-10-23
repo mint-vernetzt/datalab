@@ -29,15 +29,12 @@ mod_international_schule_item_ui <- function(id){
       choices = international_ui_years(region = "TIMSS"),
       selected = "2019"
     ),
-
-
   br(),
   shinyBS::bsPopover(id="ih_international_schule_item", title="",
                      content = paste0("Deutschland wird farblich abgehoben dargestelt", "<br> <br>Die Darstellung zeigt Unterschiede von Mädchen und Jungen im Kompetenztest von TIMSS. Z. B. schneiden in Deutschland und weiteren 25 Ländern Jungen im Mathematiktest signifikant besser ab als Mädchen."),
                      placement = "top",
                      trigger = "hover"),
   tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_schule_item")
-
   )
 
 }
