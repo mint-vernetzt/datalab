@@ -11,6 +11,20 @@ mod_home_start_comparison_ui <- function(id){
   ns <- NS(id)
 
   tagList(
+
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
     p("Jahre:"),
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_comparison"),
@@ -24,6 +38,9 @@ mod_home_start_comparison_ui <- function(id){
       inputId = ns("indikator_start_comparison"),
       choices = c("Schülerinnen Leistungskurse", "Studierende",
                   "Auszubildende", "Beschäftigte"),
+      options = list(`actions-box` = TRUE,
+                     `deselect-all-text` = "Alle abwählen",
+                     `select-all-text` = "Alle auswählen"),
       selected = c("Schülerinnen Leistungskurse", "Studierende",
                    "Auszubildende",  "Beschäftigte"),
       # brauchts nicht, gibt nur 4

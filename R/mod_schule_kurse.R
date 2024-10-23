@@ -47,7 +47,7 @@ mod_schule_kurse_ui <- function(id){
         title = "Fragen oder Feedback?",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))
 
@@ -84,7 +84,7 @@ mod_schule_kurse_ui <- function(id){
         p(style = "text-align: left; font-size = 16px",
           "Kompetenzdaten in Deutschland: Institut zur Qualitätsentwicklung im Bildungswesen (IQB), 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
         p(style = "text-align: left; font-size = 16px",
-          "Kompetenzdaten internatinal: OECD, 2023, freier Download; IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
+          "Kompetenzdaten international: OECD, 2023, freier Download; IEA, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
         p(style = "text-align: left; font-size = 16px",
           "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.")
         )
@@ -99,11 +99,11 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("In 2022 fallen 24% der Grundkursbelegungen auf ein MINT-Fach.
+        p("In 2022 fallen 24 % der Grundkursbelegungen auf ein MINT-Fach.
         Der MINT-Anteil an Leistungskursbelegungen ist noch einmal etwas höher:
-        33% der Belegungen sind in MINT."),
+        33 % der Belegungen sind in MINT."),
         p("Wie viel MINT in grundlegendem und gehobenem Leistungsniveau belegt werden kann,
-        ist von den Wahlmöglichkeiten in den Bundesländer abhängig. Das ist bei einer Betrachtung
+        ist von den Wahlmöglichkeiten in den Bundesländern abhängig. Das ist bei einer Betrachtung
         einzelner Bundesländer zu berücksichtigen."),
         p("In den letzten 10 Jahren hat sich der MINT-Anteil an den gesamten
           Oberstufenbelegungen nicht verändert.
@@ -290,15 +290,15 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(id="schule_fach",
       shinydashboard::box(
-        title = "M-I-N-T: 70 % der MINT-Leistungskurse sind Mathematik.",
+        title = "M-I-N-T: 70 % der MINT-Leistungskursbelegungen sind Mathematik.",
         width = 12,
         column(
           width = 8,
         p("Zoomt man auf die MINT-Fächer, zeigt sich: In den Leistungskursen heißt
-          MINT zum Großteil Mathematik. 70% der MINT-Leistungskursbelegungen sind in Mathematik.
+          MINT zum Großteil Mathematik. 70 % der MINT-Leistungskursbelegungen sind in Mathematik.
           Kaum Oberstufenbelegungen fallen dagegen auf Informatik."),
         p("Das hängt mit den Wahlmöglichkeiten in der Oberstufe zusammen.
-          Während Mathematik oft ein Pflichtfach für das Abitur ist und in gehobenem Leistungsniveau
+          Während Mathematik oft ein Pflichtfach für das Abitur ist und auf gehobenem Leistungsniveau
           angeboten wird, sind Oberstufenangebote in Informatik weniger verbreitet.",
         )
         ),
@@ -495,15 +495,15 @@ mod_schule_kurse_ui <- function(id){
         column(
           width = 8,
         p("Der Mädchenanteil in MINT-Oberstufenfächern liegt bei gut der Hälfte.
-        In \"Nicht-MINT\"-Fächern machen Mädchen 55% der Kursteilnehmenden aus.
-        Das weist darauf hin, dass mehr Mädchen als Jungen insgesamt auf Gymnasien sind,
-        und das Jungen im Verhältnis etwas wahrscheinlicher MINT wählen."),
+        In \"Nicht-MINT\"-Fächern machen Mädchen 55 % der Kursteilnehmenden aus.
+        Diese Zahlen zeigen auf subtile Weise, dass insgesamt mehr Jungen als Mädchen auf Gymnasien sind,
+        und dass Jungen im Verhältnis etwas wahrscheinlicher MINT wählen."),
         p("Diese ähnliche Kurswahl hängt vielleicht auch mit Kursbelegungsvorgaben zusammen,
         nach welchen oft alle mindestens ein oder mehrere MINT-Fächer wählen müssen.
         Was sich unterscheidet, ist, welche MINT-Fächer eher von Jungen oder Mädchen belegt werden.
-          Der Mädchenanteil in Biologie-Leistungs- und Grundkursen liegt bei um die 60%.
+          Der Mädchenanteil in Biologie-Leistungs- und Grundkursen liegt bei um die 60 %.
           In Physik-Leistungskursen ist der Mädchenanteil dagegen bei knapp einem Viertel,
-          in Informatik-Leistungskursen bei rund 16%.")
+          in Informatik-Leistungskursen bei rund 16 %.")
         ),
         column(
           width = 12,
@@ -665,11 +665,11 @@ mod_schule_kurse_ui <- function(id){
              width = 12,
              column(
                width = 8,
-             p("Diese interaktiven Diagramme geben einen Einblick in die Mathe-Kompetenzen von Schüler:innen der 4. und 9. Klassen.
+             p("Diese interaktiven Diagramme geben einen Einblick in die Mathematik-Kompetenzen von Schüler:innen der 4. und 9. Klassen.
              Die Daten stammen aus der Befragung des Instituts zur Qualitätsentwicklung im Bildungswesen e.V. (IQB), das in regelmäßigen Abständen
              die Leistung von Schüler:innen in verschiedenen Fächern testet. Dafür werden deutschlandweit mehr als 1.300 Schulen und
                über 26.000 Schüler:innen befragt."),
-             p("Die Ergebnisse aus 2021 zeigen, jede:r fünfte Viertklässler:in kennen die nötigen Grundlagen in Mathematik nicht.
+             p("Die Ergebnisse aus 2021 zeigen, jede:r fünfte Viertklässler:in beherrscht die nötigen Grundlagen in der Mathematik nicht.
                In der Befragung 10 Jahre zuvor waren es nur jede:r 10te. Mädchen, sowie Schüler:innen mit Zuwanderungsgeschichte und niedrigem sozialen Status
                schneiden im Mittel schlechter ab. Dabei zeigt ein näherer Blick auf die Unterschiede zwischen Mädchen und Jungen, dass sich Mädchen auch weniger für Mathematik
                interessieren und ihre Fähigkeiten im Fach schlechter einschätzen."),
@@ -678,7 +678,7 @@ mod_schule_kurse_ui <- function(id){
                                 content = paste0("Im Bericht des IQB-Bildungstrends 2021 kann man weitere Informationen und eine Einordnung der dargestellten Daten finden. <br> <a>https://www.iqb.hu-berlin.de/bt/BT2021/Bericht/</a> <br><br> Weitere Informationen zum Thema Diversität und soziale Herkunft in der Bildungsweld können in der Diversitätsstudie von MINTvernetzt nachgelesen werden. <br> <a> https://mint-vernetzt.de/data/daten-fakten#mint-studie-diversitaet </a>"),
                                 placement = "right",
                                 trigger = "click"),
-             tags$a(paste0("Interessieren Sie weitere Infos zum Thema, klicken Sie hier:"), icon("info-circle"), id = "i_schule_kompetenz_1"),
+             tags$a(paste0("Interessieren Sie sich für weitere Informationen zum Thema, klicken Sie hier:"), icon("info-circle"), id = "i_schule_kompetenz_1"),
              p()
              ),
              column(
@@ -787,7 +787,7 @@ mod_schule_kurse_ui <- function(id){
         strong("MINT-Kompetenztests wie die IQB-Befragung zeigen systematische Gruppenunterschiede in den MINT-Kompetenzen.
                Zwei dieser Unterschiede ordnen wir in jeweils einer Kurzanalyse ein: Wir schauen darauf, woher die Unterschiede
                zwischen Jungen und Mädchen in Mathematik kommen können und wie man Mädchen hier fördern kann. Außerdem betrachten wir
-               in unsere Kurzanalyse zum Thema Teilhabe den Einfluss der sozialen Herkunft auf die Schulzeit und wie MINT-Förderung zu Chancengerechtigkeit
+               in unserer Kurzanalyse zum Thema Teilhabe den Einfluss der sozialen Herkunft auf die Schulzeit und wie MINT-Förderung zu Chancengerechtigkeit
                 beitragen kann."),
         br(), br(),
         tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Gender_final.pdf",
@@ -808,13 +808,13 @@ mod_schule_kurse_ui <- function(id){
                width = 8,
              p("In diesem Abschnitt betrachten wir die Entwicklung der außerschulischen, frühkindlichen MINT-Bildung.
                Die interaktiven Grafiken basieren auf den Daten der 'Stiftung Kinder forschen'
-               (SKf, früher Haus der kleinen Forscher)."),
+               (kurz SKf; früher: 'Haus der kleinen Forscher')."),
 
             p("Die Anzahl an Kitas, Grundschulen und Horte, die durch die Stiftung Kinder forschen für ihr MINT-Bildungsengagement
                zertifiziert wurden oder deren Personal durch die SKf fortgebildet wurde, wächst. Allerdings hat sich während der Jahre,
-               die akut von der Corona-Pandemie betroffen waren, verlangsamt. Das spiegelt sich auch in den Zahlen der neu fortgebildeten Personen wieder.
-               Wärend zwischen 2013 und 2018 jährlich zwischen 6.000 und 8.000 Personen dazukamen, sind es im Jahr 2022 nur 2.000."), br(),
-             p("Dies sind bislang die einzigen Darstellungen aus dem Bereich der ausserschulischen MINT-Bildung. Hier wird in Zukunft noch mehr hinzukommen.")
+               die akut von der Corona-Pandemie betroffen waren, verlangsamt. Das spiegelt sich auch in den Zahlen der neu fortgebildeten Personen wider.
+               Während zwischen 2013 und 2018 jährlich zwischen 6.000 und 8.000 Personen dazukamen, sind es im Jahr 2022 nur 2.000."), br(),
+             p("Dies sind bislang die einzigen Darstellungen aus dem Bereich der außerschulischen MINT-Bildung. Hier wird in Zukunft noch mehr hinzukommen.")
             ),
             column(
               width = 12,

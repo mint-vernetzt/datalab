@@ -32,7 +32,7 @@ mod_international_start_ui <- function(id){
         title = "Auf dieser Seite",
         width = 7,
         p(style = "text-align: left; font-size = 16px",
-          "Auf dieser Fokus-Seite Blicken wir über Deutschland hinaus. Hier können Sie in den Bereichen 'Schule',
+          "Auf dieser Fokus-Seite blicken wir über Deutschland hinaus. Hier können Sie in den Bereichen 'Schule',
           'Studium' und 'Beruf' internationale Vergleiche anstellen. Betrachten Sie zum Beispiel, in welchen Ländern
           der MINT-Anteil besonders hoch ist oder wo ein verhältnismäßig hoher Frauenanteil in MINT erreicht wird.
           Wenn Sie sich für den MINT-Nachwuchs interessieren, können Sie die Ergebnisse der internationalen MINT-Kompetenzerhebungen Pisa und TIMSS betrachten.")),
@@ -41,7 +41,7 @@ mod_international_start_ui <- function(id){
         width = 5,
         p(style = "text-align: left; font-size = 16px",
           "Sind alle Zahlen und Grafiken verständlich?", br(),
-          "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per Email"),"oder über unsere kurze",
+          "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))
     ),
@@ -146,10 +146,10 @@ mod_international_start_ui <- function(id){
 
                                       mod_international_schule_item_ui("international_schule_item_1"),
                                       br(),br(),
-                                      downloadButton(
-                                        outputId = ns("download_btn_plot_international_schule_item_1"),
-                                        label = "Download",
-                                        icon = icon("download")),
+                                      # downloadButton(
+                                      #   outputId = ns("download_btn_plot_international_schule_item_1"),
+                                      #   label = "Download",
+                                      #   icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -674,22 +674,22 @@ mod_international_start_server <- function(id, r){
       plot_list
     })
 
-    output$download_btn_plot_international_schule_item_1 <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_international_schule_item_1_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_international_schule_item_1,
-          filename =  r$plot_international_schule_item_1_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_international_schule_item_1_title, file)
-        file.remove(r$plot_international_schule_item_1_title)
-      }
-    )
+    # output$download_btn_plot_international_schule_item_1 <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_international_schule_item_1_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_international_schule_item_1,
+    #       filename =  r$plot_international_schule_item_1_title,
+    #       width = 700,
+    #       height = 400)
+    #
+    #     file.copy(r$plot_international_schule_item_1_title, file)
+    #     file.remove(r$plot_international_schule_item_1_title)
+    #   }
+    # )
 
     # tab 3
 

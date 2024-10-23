@@ -75,22 +75,22 @@ plot_fachkraft_prognose  <- function(r) {
   if(filter_wirkhebel[2] == "MINT-Nachwuchs fördern"){
     if(filter_indikator[2] == "Verbesserung"){
       subtitel <- "Die Berechnung beruht auf der Annahme, dass es durch MINT-Bildungsförderung gelingt,
-    den Anteil an jungen Menschen, die einen MINT-Beruf ergereifen, zu erhöhen. <br>
+    den Anteil an jungen Menschen, die einen MINT-Beruf ergreifen, zu erhöhen. <br>
     Dadurch könnten im Vergleich zum Basisszenario knapp 800.000 Personen mehr 2037 in MINT beschäftigt sein."
     }else if(filter_indikator[2] == "Verschlechterung"){
-    subtitel <- "Die Berechnung beruht auf der Annahme, dass sich der Anteil an jungen Menschen, die einen MINT-Beruf ergereifen,
-    durch eine Rückgang in MINT-Bildungsinitiativen verringert. <br>
+    subtitel <- "Die Berechnung beruht auf der Annahme, dass sich der Anteil an jungen Menschen, die einen MINT-Beruf ergreifen,
+    durch einen Rückgang in MINT-Bildungsinitiativen verringert. <br>
     Dadurch könnten im Vergleich zum Basisszenario knapp 800.000 Personen weniger 2037 in MINT beschäftigt sein."
     }
   }else if(filter_wirkhebel[2] == "Mädchen und Frauen in MINT fördern"){
     if(filter_indikator[2] == "Verbesserung"){
       subtitel <- "Die Berechnung beruht auf den Annahmen, dass es durch eine Förderung von Mädchen und jungen Frauen in MINT gelingt,
-    den Anteil an jungen Frauen in MINT zu ehröhen. <br>
+    den Anteil an jungen Frauen in MINT zu erhöhen. <br>
     Dadurch könnten im Vergleich zum Basisszenario ca. 290.000 Personen mehr 2037 in MINT beschäftigt sein."
     }else if(filter_indikator[2] == "starke Verbesserung"){
     subtitel <- "Die Berechnung beruht auf den Annahmen, dass es durch eine Kombination aus MINT-Bildungsförderung und
     besonderer Förderung von Mädchen und jungen Frauen in MINT gelingt,
-    den Anteil an jungen Menschen, die einen MINT-Beruf ergereifen, zu erhöhen. <br>
+    den Anteil an jungen Menschen, die einen MINT-Beruf ergreifen, zu erhöhen. <br>
     Dadurch könnten im Vergleich zum Basisszenario ca. 1 Mio. Personen mehr 2037 in MINT beschäftigt sein."
     }
   }else if(filter_wirkhebel[2] == "Internationale MINT-Fachkräfte"){
@@ -99,12 +99,12 @@ plot_fachkraft_prognose  <- function(r) {
     MINT-Fachkräften zukünftig noch stärker ansteigt als bisher. <br>
     Dadurch könnten im Vergleich zum Basisszenario ca. 150.000 Personen mehr 2037 in MINT beschäftigt sein."
     }else if(filter_indikator[2] == "Verschlechterung"){
-    subtitel <- "Die Berechnung beruht auf der Annahme, dass sich der positive Tend in der Zuwanderung internationaler
+    subtitel <- "Die Berechnung beruht auf der Annahme, dass sich der positive Trend in der Zuwanderung internationaler
     MINT-Fachkräfte wieder verschlechtert. <br>
     Dadurch könnten im Vergleich zum Basisszenario ca. 150.000 Personen weniger 2037 in MINT beschäftigt sein."
     }else if(filter_indikator[2] == "Stillstand"){
       subtitel <- "Die Berechnung beruht auf der Annahme, dass die Zuwanderung internationaler MINT-Fachkräfte vollständig
-      zum Stillstand kommt. <br>
+      zum Erliegen kommt. <br>
     Dadurch könnten im Vergleich zum Basisszenario gut 350.000 Personen weniger 2037 in MINT beschäftigt sein."
     }
   }else if(filter_wirkhebel[2] == "Beteiligung älterer MINT-Fachkräfte"){
@@ -113,11 +113,11 @@ plot_fachkraft_prognose  <- function(r) {
     Dadurch könnten im Vergleich zum Basisszenario gut 250.000 Personen mehr 2037 in MINT beschäftigt sein."
   }else if(filter_wirkhebel[2] == "Gesamteffekt"){
     if(filter_indikator[2] == "Verbesserung"){
-      subtitel <- "Die Berechnung betrachtet den Gesamteffekt von einer Erhöhung des MINT-Nachwuchses durch Bildungsinitativen,
+      subtitel <- "Die Berechnung betrachtet den Gesamteffekt von einer Erhöhung des MINT-Nachwuchses durch Bildungsinitiativen,
     der Stärkung von Frauen in MINT und der stärkeren Integration von internationalen und älteren MINT-Fachkräften.
-    Dadurch könnten im Vergleich zum Basisszenario ca. 1,5 Mio. Personen mehr 2037 in MINT beschäftigt sein."
+    Dadurch könnten im Vergleich zum Basiszenario ca. 1,5 Mio. Personen mehr 2037 in MINT beschäftigt sein."
     }else if(filter_indikator[2] == "Verschlechterung"){
-      subtitel <- "Die Berechnung betrachtet den Gesamteffekt auf die MINT-Nachwuchzahlen bei einem Rückgang von Bildungsinitativen und Frauenförderung in MINT
+      subtitel <- "Die Berechnung betrachtet den Gesamteffekt auf die MINT-Nachwuchzahlen bei einem Rückgang von Bildungsinitiativen und Frauenförderung in MINT
       und geringerer Integration von internationaler und älterer MINT-Fachkräften.
     Dadurch würden im Vergleich zum Basisszenario gut 1 Mio. Personen weniger 2037 in MINT beschäftigt sein."
     }
@@ -570,7 +570,7 @@ plot_fachkraft_epa_item <- function(r) {
   }
   if ("MINT gesamt" %in% fach) {
     plot_data_raw <- plot_data_raw %>%
-      dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesmat")) %>%
+      dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
       dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
       rbind(plot_data_raw)
   }
@@ -618,12 +618,13 @@ plot_fachkraft_epa_item <- function(r) {
     dplyr::arrange(epa_group_order)
 
 
+
   # expand data for heatmap
   expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
     dplyr::arrange(mint_zuordnung, epa_group_order) %>%
     # the order of XX and YY determines if the plot is shown right to left or bottom to top
-    dplyr::mutate(XX = rep(c(1:10), each = 10),
-                  YY = rep(c(1:10), times = 10),
+    dplyr::mutate(XX = rep(c(1:10), each = 10)[1:99],
+                  YY = rep(c(1:10), times = 10)[1:99],
                   epa_kat = factor(x = epa_kat,
                                    levels = epa_kat_levels))
 
