@@ -72,7 +72,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
 
                      conditionalPanel(condition = "input.bulas_map_l_faecher == 'internationale Studienanfänger:innen (1. Hochschulsemester)' |
                      input.bulas_map_l_faecher == 'Studierende' |
-                     input.bulas_map_l_faecher == 'internationale Studierende' |
+                     input.bulas_map_l_faecher == 'Internationale Studierende' |
                      input.bulas_map_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
@@ -80,7 +80,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
 
                                         choices = studi_det_ui_faecher(spezif_i =c('Internationale Studienanfänger:innen (1. Hochschulsemester)',
                                                                                    'Studierende',
-                                                                                   'Internationale Studierende',
+                                                                                   'internationale Studierende',
                                                                                    'Studienanfänger:innen (1. Hochschulsemester)')),
 
                                         selected = "Alle MINT-Fächer"

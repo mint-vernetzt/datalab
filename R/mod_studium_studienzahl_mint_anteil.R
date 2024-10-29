@@ -35,8 +35,8 @@ mod_studium_studienzahl_anteil_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("studium_anteil_y"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -76,7 +76,8 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                                    "internationale Studierende",
                                    "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)"),
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "Absolvent:innen"),
                        selected = c("Studierende"
                                     , "Studienanfänger:innen (1. Hochschulsemester)"
                        ),
