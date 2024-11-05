@@ -77,8 +77,8 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                                    "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
                                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Absolventen"),
-                       selected = c("Absolventen"),
+                                   "Absolvent:innen"),
+                       selected = c("Absolvent:innen"),
                        multiple = TRUE,
                        options =  list(
                          "max-options" = 2,
@@ -121,7 +121,8 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                                               "internationale Studierende",
                                               "Studierende (Lehramt)",
                                               "Studienanfänger:innen (1. Hochschulsemester)",
-                                              "internationale Studienanfänger:innen (1. Hochschulsemester)"),
+                                              "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                              "Absolvent:innen"),
                        multiple = TRUE,
                        options = list(`actions-box` = TRUE,
                                       `deselect-all-text` = "Alle abwählen",
@@ -136,7 +137,8 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                                                "internationale Studierende",
                                                "Studierende (Lehramt)",
                                                "Studienanfänger:innen (1. Hochschulsemester)",
-                                               "internationale Studienanfänger:innen (1. Hochschulsemester)")
+                                               "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                               "Absolvent:innen")
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_6", title="",

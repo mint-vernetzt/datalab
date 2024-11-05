@@ -110,8 +110,8 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studienzahl_einstieg_verlauf"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2015,2022)
+      choices = 2013:2023,
+      selected = c(2016,2023)
     ),
 
     p("Region:"),
@@ -148,7 +148,8 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
                   "internationale Studierende",
                   "Studierende (Lehramt)",
                   "Studienanfänger:innen (1. Hochschulsemester)",
-                  "internationale Studienanfänger:innen (1. Hochschulsemester)"),
+                  "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                  "Absolvent:innen"),
       selected = c("Studierende"
                    , "Studienanfänger:innen (1. Hochschulsemester)"
       ),
