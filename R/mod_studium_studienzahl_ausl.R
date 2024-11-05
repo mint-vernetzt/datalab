@@ -14,8 +14,8 @@ mod_studium_studienzahl_ausl_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_ausl"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
     p("Region:"),
     shinyWidgets::pickerInput(

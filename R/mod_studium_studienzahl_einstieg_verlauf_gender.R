@@ -15,8 +15,8 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("genz_date"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2015, 2022)
+      choices = 2013:2023,
+      selected = c(2015, 2023)
     ),
     # p("Nur Lehramt anzeigen:"),
     # tags$div(

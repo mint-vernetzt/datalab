@@ -8,7 +8,8 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
                             "Studierende (Lehramt)",
                             "internationale Studierende",
                             "Studienanfänger:innen (1. Hochschulsemester)",
-                            "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
+                            "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                            "Absolvent:innen"),
       selected = "Studierende"),
 
     p("Auswahl des Bundeslands:"),

@@ -40,8 +40,8 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("bulas_map_y"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = 2022
+                       choices = 2013:2023,
+                       selected = 2023
                      ),
 
                      p("Studierendengruppen:"),
@@ -51,7 +51,8 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                                    "internationale Studierende",
                                    "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)"),
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "Absolvent:innen"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -79,8 +80,8 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("bulas_verlauf_y"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = c(2015, 2022)
+                       choices = 2013:2023,
+                       selected = c(2015, 2023)
                      ),
 
                      p("Studierendengruppen:"),
@@ -90,7 +91,8 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                                    "internationale Studierende",
                                    "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)"),
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "Absolvent:innen"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -153,8 +155,8 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("bulas_balken_date"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = 2022
+                       choices = 2013:2023,
+                       selected = 2023
                      ),
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
@@ -163,7 +165,8 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                                    "internationale Studierende",
                                    "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)"),
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "Absolvent:innen"),
                        selected = "Studierende"),
 
 
