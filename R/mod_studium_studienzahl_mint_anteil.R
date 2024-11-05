@@ -77,16 +77,27 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                                    "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
                                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Absolvent:innen"),
-                       selected = c("Studierende"
-                                    , "Studienanfänger:innen (1. Hochschulsemester)"
-                       ),
+                                   "Absolventen"),
+                       selected = c("Absolventen"),
                        multiple = TRUE,
                        options =  list(
                          "max-options" = 2,
                          "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
                      ),
                      br(),
+
+
+#
+#                      conditionalPanel(condition = "input-studium_anteil_i =='Absolventen'",
+#                                       ns = ns,
+#
+#                                       p("Erweiterte Absolventenauswahl (max. 2)"),
+#                                       inputId = ns("absolventen_auswahl_i"),
+#                                       choices = c("internationale Absolventen",
+#                                                   "ausländische Absolventen",
+#                                                   "Weibliche Absolventen")
+#                      ),
+
                      shinyBS::bsPopover(id="dh_studium_mint_1", title = "",
                                         content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                                         trigger = "hover"),
