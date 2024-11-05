@@ -40,8 +40,8 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("zeit_beruf_mint_bula_karte"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = 2022
+                       choices = 2013:2023,
+                       selected = 2023
                      ),
                      p("Beschäftigtengruppe:"),
                      shinyWidgets::pickerInput(
@@ -80,8 +80,8 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("zeit_beruf_mint_bula_verlauf"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2017, 2022)
+      choices = 2013:2023,
+      selected = c(2017, 2023)
     ),
     p("Beschäftigtengruppe:"),
     shinyWidgets::pickerInput(
@@ -170,8 +170,8 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("zeit_beruf_mint_bula_balken"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = 2022
+                       choices = 2013:2023,
+                       selected = 2023
                      ),
                      p("Beschäftigtengruppe:"),
                       shinyWidgets::pickerInput(

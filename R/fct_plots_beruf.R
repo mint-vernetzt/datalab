@@ -2615,245 +2615,6 @@ arbeitsmarkt_bl_vergleich <- function(r) {
   #   ggplot2::scale_x_continuous(labels = function(x) paste0(x, "%"))
 }
 
-arbeitsmarkt_top10 <- function( r){
-
-  # UI Input zuweisen
-  time <- r$date_top_beruf
-  bula <- r$states_top_beruf
-  abs_rel <- r$betr_abs_rel
-  fb <- r$FB_top_beruf
-
-
-  df <- dplyr::tbl(con, from = "data_naa") %>%
-    dplyr::filter(
-      jahr == time &
-        ebene == "Ebene 3" &
-        region == bula )%>%
-    dplyr::select(-code)%>%
-    dplyr::collect()
-
-  df <- df %>% dplyr::ungroup() %>%
-    dplyr::mutate(region = dplyr::case_when(
-      region == "Westdeutschland (ohne Berlin)" ~ "Westdeutschland (o. Berlin)",
-      region == "Ostdeutschland (mit Berlin)" ~ "Ostdeutschland (inkl. Berlin)",
-      T ~ .$region
-    ))
-
-  # un-groupen
-  # df <- df %>%dplyr::ungroup()
-
-  # West- / Ost umbenennen, dass es zum Imput passt
-  # df$region[df$region == "Westdeutschland (ohne Berlin)"] <- "Westdeutschland (o. Berlin)"
-  # df$region[df$region == "Ostdeutschland (mit Berlin)"] <- "Ostdeutschland (inkl. Berlin)"
-  #
-  # # Filtern
-  # df <- df %>% dplyr::filter(df$ebene == "Ebene 3") #Ebene der einzelnen Berufe aus Datensatz ausfiltern
-  # df <- df %>% dplyr::filter(df$jahr == time) #Jahr auswählen
-  # df <- df %>% dplyr::filter(df$region == bula) #gewähltes Bundesland filtern
-  # df <- df %>% dplyr::select(-code)
-  #
-  # Auswahl Fachbereich
-  if(fb != "MINT (gesamt)"){
-    df <- df %>% dplyr::filter(fachbereich == fb)
-  }
-
-  # zu gering besetzte Ausbildungen ausfiltern
-  df <- df %>% dplyr::filter(df$wert > 8)
-
-  # Anteile von Frauen/Männern berechnen
-  # Gesamt als eigenen Df speichern, mit dem Anteil berechnet wird
-  df_gesamt <- df %>% dplyr::filter(geschlecht == "Gesamt")
-
-  # Anteil berechnen und Geschlecht Gesamt ausfiltern
-  df <- df %>%
-    dplyr::left_join(df_gesamt,
-                     by = c("region",
-                            "jahr",
-                            "fachbereich",
-                            "beruf")) %>%
-    dplyr::mutate(prop = round((wert.x/wert.y)*100,1)) %>%
-    dplyr::rename(wert = wert.x,
-                  wert_ges = wert.y,
-                  geschlecht = geschlecht.x,
-                  ebene = ebene.x) %>%
-    dplyr::select(-c("geschlecht.y", "ebene.y")) %>%
-    dplyr::filter(geschlecht != "Gesamt")
-
-
-  # Split dataframe by gender and create plots
-  if(abs_rel == "In Prozent"){
-
-    # female
-    berufe_frauen <- df %>%
-      dplyr::filter(geschlecht == "Frauen") %>%
-      dplyr::arrange(desc(prop)) %>%
-      dplyr::slice(1:10)
-
-    # male
-    berufe_maenner <- df %>%
-      dplyr::filter(geschlecht == "Männer") %>%
-      dplyr::arrange(desc(prop)) %>%
-      dplyr::slice(1:10)
-
-
-    if(sum(berufe_maenner$prop)==1000){ #falls alle 10 Berufe 100 % sind
-      berufe_maenner <- df %>%
-        dplyr::filter(geschlecht == "Männer") %>%
-        dplyr::filter(prop == 100) %>% #diese 100% Jobs auswählen
-        dplyr::arrange(desc(wert)) %>% #und die anzeigen, die am stärksten besetzt sind von diesen
-        dplyr::slice(1:10)
-    }
-
-    # Create female plot
-    plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.prop} %",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-    # %>%
-    #   highcharter::hc_exporting(enabled = TRUE,
-    #                             buttons = list(contextButton = list(
-    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-    #                               onclick = highcharter::JS("function () {
-    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
-    #                               align = 'right',
-    #                               verticalAlign = 'bottom',
-    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-
-    # Create male plot
-    plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE,
-                            format = "{point.prop} %",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich ", fb ," in ", bula ," (", time, ")"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-    # %>%
-    #   highcharter::hc_exporting(enabled = TRUE,
-    #                             buttons = list(contextButton = list(
-    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-    #                               onclick = highcharter::JS("function () {
-    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
-    #                               align = 'right',
-    #                               verticalAlign = 'bottom',
-    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-  } else if(abs_rel == "Anzahl"){
-
-    df <- df %>%
-      dplyr::mutate(display_abs = prettyNum(df$wert, big.mark = ".", decimal.mark = ","))
-    # female
-    berufe_frauen <- df %>%
-      dplyr::filter(geschlecht == "Frauen") %>%
-      dplyr::arrange(desc(wert)) %>%
-      dplyr::slice(1:10)
-
-    # male
-    berufe_maenner <- df %>%
-      dplyr::filter(geschlecht == "Männer") %>%
-      dplyr::arrange(desc(wert)) %>%
-      dplyr::slice(1:10)
-
-    # Create female plot
-    plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_abs}",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Anzahl: {point.display_abs}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}", rotation = -45), min = 0, max = plyr::round_any(max(berufe_frauen$wert), 500, f = ceiling), tickInterval = 1000) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb ,"  in ", bula ," (", time, ")"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-    # %>%
-    #   highcharter::hc_exporting(enabled = TRUE,
-    #                             buttons = list(contextButton = list(
-    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-    #                               onclick = highcharter::JS("function () {
-    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
-    #                               align = 'right',
-    #                               verticalAlign = 'bottom',
-    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-
-    # Create male plot
-    plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.display_abs}",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Absolut: {point.display_abs}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}", rotation = -45), min = 0, max = plyr::round_any(max(berufe_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#66cbaf")) %>%
-      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich ",fb," in ", bula ," (", time, ")"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-    # %>%
-    #   highcharter::hc_exporting(enabled = TRUE,
-    #                             buttons = list(contextButton = list(
-    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-    #                               onclick = highcharter::JS("function () {
-    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
-    #                               align = 'right',
-    #                               verticalAlign = 'bottom',
-    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-  }
-
-  out <- list(
-    plot_frau,
-    plot_mann)
-
-  return(out)
-
-
-}
-
 # Frauen in MINT ----
 ### Tab 1 ----
 #' A function to plot a pic charts
@@ -3059,8 +2820,8 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
          pointFormat=paste('Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}'))%>%
        highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
        highcharter::hc_title(text= ifelse(regio == "Saarland",
-                                          paste0("Frauenanteil unter ", titel_help2, " in ", faecher[1], " im ", regio, " (", timerange, ")"),
-                                          paste0("Frauenanteil unter ", titel_help2, " in ", faecher[1], " in ", regio, " (", timerange, ")")),
+                                          paste0("Frauenanteil unter ", title_help2, " in ", faecher[1], " im ", regio, " (", timerange, ")"),
+                                          paste0("Frauenanteil unter ", title_help2, " in ", faecher[1], " in ", regio, " (", timerange, ")")),
                              margin = 45,
                              align = "center",
                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3104,8 +2865,8 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
            pointFormat=paste('Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}')) %>%
          highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
          highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                             paste0("Frauenanteil unter ", titel_help1, " in Nicht MINT-Berufen im ", regio , " (", timerange, ")"),
-                                             paste0("Frauenanteil unter ", titel_help1, " in Nicht MINT-Berufen in ", regio , " (", timerange, ")")),
+                                             paste0("Frauenanteil unter ", title_help2, " in Nicht MINT-Berufen im ", regio , " (", timerange, ")"),
+                                             paste0("Frauenanteil unter ", title_help2, " in Nicht MINT-Berufen in ", regio , " (", timerange, ")")),
                                margin = 45,
                                align = "center",
                                style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3805,7 +3566,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
        # title_help <- ifelse(grepl("ü55", indi), "Beschäftigten über 55 Jahren", title_help)
 
        titel_w <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil weiblicher ", title_help, ", die kein MINT-Berufsfeld wählen (", timerange, ")"),
-                         paste0("Anteil weiblicher ", title_help, ", die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
+                         paste0("Anteil weiblicher ", title_help, ", die das Berufsfeld ", faecher, " wählen"))
 
        # plot
        out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = prop, group = bundesland)) %>%
@@ -3911,6 +3672,249 @@ arbeitsmarkt_wahl_gender <- function(r) {
   }
   return(out)
 }
+
+### Tab 4 ----
+
+arbeitsmarkt_top10 <- function( r){
+
+  # UI Input zuweisen
+  time <- r$date_top_beruf
+  bula <- r$states_top_beruf
+  abs_rel <- r$betr_abs_rel
+  fb <- r$FB_top_beruf
+
+
+  df <- dplyr::tbl(con, from = "data_naa") %>%
+    dplyr::filter(
+      jahr == time &
+        ebene == "Ebene 3" &
+        region == bula )%>%
+    dplyr::select(-code)%>%
+    dplyr::collect()
+
+  df <- df %>% dplyr::ungroup() %>%
+    dplyr::mutate(region = dplyr::case_when(
+      region == "Westdeutschland (ohne Berlin)" ~ "Westdeutschland (o. Berlin)",
+      region == "Ostdeutschland (mit Berlin)" ~ "Ostdeutschland (inkl. Berlin)",
+      T ~ .$region
+    ))
+
+  # un-groupen
+  # df <- df %>%dplyr::ungroup()
+
+  # West- / Ost umbenennen, dass es zum Imput passt
+  # df$region[df$region == "Westdeutschland (ohne Berlin)"] <- "Westdeutschland (o. Berlin)"
+  # df$region[df$region == "Ostdeutschland (mit Berlin)"] <- "Ostdeutschland (inkl. Berlin)"
+  #
+  # # Filtern
+  # df <- df %>% dplyr::filter(df$ebene == "Ebene 3") #Ebene der einzelnen Berufe aus Datensatz ausfiltern
+  # df <- df %>% dplyr::filter(df$jahr == time) #Jahr auswählen
+  # df <- df %>% dplyr::filter(df$region == bula) #gewähltes Bundesland filtern
+  # df <- df %>% dplyr::select(-code)
+  #
+  # Auswahl Fachbereich
+  if(fb != "MINT (gesamt)"){
+    df <- df %>% dplyr::filter(fachbereich == fb)
+  }
+
+  # zu gering besetzte Ausbildungen ausfiltern
+  df <- df %>% dplyr::filter(df$wert > 8)
+
+  # Anteile von Frauen/Männern berechnen
+  # Gesamt als eigenen Df speichern, mit dem Anteil berechnet wird
+  df_gesamt <- df %>% dplyr::filter(geschlecht == "Gesamt")
+
+  # Anteil berechnen und Geschlecht Gesamt ausfiltern
+  df <- df %>%
+    dplyr::left_join(df_gesamt,
+                     by = c("region",
+                            "jahr",
+                            "fachbereich",
+                            "beruf")) %>%
+    dplyr::mutate(prop = round((wert.x/wert.y)*100,1)) %>%
+    dplyr::rename(wert = wert.x,
+                  wert_ges = wert.y,
+                  geschlecht = geschlecht.x,
+                  ebene = ebene.x) %>%
+    dplyr::select(-c("geschlecht.y", "ebene.y")) %>%
+    dplyr::filter(geschlecht != "Gesamt")
+
+
+  # Split dataframe by gender and create plots
+  if(abs_rel == "In Prozent"){
+
+    # female
+    berufe_frauen <- df %>%
+      dplyr::filter(geschlecht == "Frauen") %>%
+      dplyr::arrange(desc(prop)) %>%
+      dplyr::slice(1:10)
+
+    # male
+    berufe_maenner <- df %>%
+      dplyr::filter(geschlecht == "Männer") %>%
+      dplyr::arrange(desc(prop)) %>%
+      dplyr::slice(1:10)
+
+
+    if(sum(berufe_maenner$prop)==1000){ #falls alle 10 Berufe 100 % sind
+      berufe_maenner <- df %>%
+        dplyr::filter(geschlecht == "Männer") %>%
+        dplyr::filter(prop == 100) %>% #diese 100% Jobs auswählen
+        dplyr::arrange(desc(wert)) %>% #und die anzeigen, die am stärksten besetzt sind von diesen
+        dplyr::slice(1:10)
+    }
+
+    # Create female plot
+    plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.prop} %",
+                            style = list(textOutline = "none"))
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(c("#154194")) %>%
+      highcharter::hc_title(text = paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    # %>%
+    #   highcharter::hc_exporting(enabled = TRUE,
+    #                             buttons = list(contextButton = list(
+    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #                               onclick = highcharter::JS("function () {
+    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
+    #                               align = 'right',
+    #                               verticalAlign = 'bottom',
+    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+    # Create male plot
+    plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE,
+                            format = "{point.prop} %",
+                            style = list(textOutline = "none"))
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(c("#66cbaf")) %>%
+      highcharter::hc_title(text = paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich ", fb ," in ", bula ," (", time, ")"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    # %>%
+    #   highcharter::hc_exporting(enabled = TRUE,
+    #                             buttons = list(contextButton = list(
+    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #                               onclick = highcharter::JS("function () {
+    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
+    #                               align = 'right',
+    #                               verticalAlign = 'bottom',
+    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  } else if(abs_rel == "Anzahl"){
+
+    df <- df %>%
+      dplyr::mutate(display_abs = prettyNum(df$wert, big.mark = ".", decimal.mark = ","))
+    # female
+    berufe_frauen <- df %>%
+      dplyr::filter(geschlecht == "Frauen") %>%
+      dplyr::arrange(desc(wert)) %>%
+      dplyr::slice(1:10)
+
+    # male
+    berufe_maenner <- df %>%
+      dplyr::filter(geschlecht == "Männer") %>%
+      dplyr::arrange(desc(wert)) %>%
+      dplyr::slice(1:10)
+
+    # Create female plot
+    plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.display_abs}",
+                            style = list(textOutline = "none"))
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Anzahl: {point.display_abs}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}", rotation = -45), min = 0, max = plyr::round_any(max(berufe_frauen$wert), 500, f = ceiling), tickInterval = 1000) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(c("#154194")) %>%
+      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb ,"  in ", bula ," (", time, ")"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    # %>%
+    #   highcharter::hc_exporting(enabled = TRUE,
+    #                             buttons = list(contextButton = list(
+    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #                               onclick = highcharter::JS("function () {
+    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
+    #                               align = 'right',
+    #                               verticalAlign = 'bottom',
+    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+    # Create male plot
+    plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.display_abs}",
+                            style = list(textOutline = "none"))
+        )) %>%
+      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop} % <br> Absolut: {point.display_abs}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}", rotation = -45), min = 0, max = plyr::round_any(max(berufe_maenner$wert), 1000, f = ceiling), tickInterval = 1000) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(c("#66cbaf")) %>%
+      highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich ",fb," in ", bula ," (", time, ")"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    # %>%
+    #   highcharter::hc_exporting(enabled = TRUE,
+    #                             buttons = list(contextButton = list(
+    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #                               onclick = highcharter::JS("function () {
+    #                                                           this.exportChart({ type: 'image/jpeg' }); }"),
+    #                               align = 'right',
+    #                               verticalAlign = 'bottom',
+    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  }
+
+  out <- list(
+    plot_frau,
+    plot_mann)
+
+  return(out)
+
+
+}
+
+
 
 #' A function to plot a waffle chart ::: b3
 #'
