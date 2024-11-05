@@ -3059,8 +3059,8 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
          pointFormat=paste('Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}'))%>%
        highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
        highcharter::hc_title(text= ifelse(regio == "Saarland",
-                                          paste0("Frauenanteil unter ", titel_help2, " in ", faecher[1], " im ", regio, " (", timerange, ")"),
-                                          paste0("Frauenanteil unter ", titel_help2, " in ", faecher[1], " in ", regio, " (", timerange, ")")),
+                                          paste0("Frauenanteil unter ", title_help2, " in ", faecher[1], " im ", regio, " (", timerange, ")"),
+                                          paste0("Frauenanteil unter ", title_help2, " in ", faecher[1], " in ", regio, " (", timerange, ")")),
                              margin = 45,
                              align = "center",
                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -3104,8 +3104,8 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
            pointFormat=paste('Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}')) %>%
          highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
          highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                             paste0("Frauenanteil unter ", titel_help1, " in Nicht MINT-Berufen im ", regio , " (", timerange, ")"),
-                                             paste0("Frauenanteil unter ", titel_help1, " in Nicht MINT-Berufen in ", regio , " (", timerange, ")")),
+                                             paste0("Frauenanteil unter ", title_help2, " in Nicht MINT-Berufen im ", regio , " (", timerange, ")"),
+                                             paste0("Frauenanteil unter ", title_help2, " in Nicht MINT-Berufen in ", regio , " (", timerange, ")")),
                                margin = 45,
                                align = "center",
                                style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
