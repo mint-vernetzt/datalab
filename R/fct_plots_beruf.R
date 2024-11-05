@@ -3805,7 +3805,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
        # title_help <- ifelse(grepl("ü55", indi), "Beschäftigten über 55 Jahren", title_help)
 
        titel_w <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil weiblicher ", title_help, ", die kein MINT-Berufsfeld wählen (", timerange, ")"),
-                         paste0("Anteil weiblicher ", title_help, ", die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
+                         paste0("Anteil weiblicher ", title_help, ", die das Berufsfeld ", faecher, " wählen"))
 
        # plot
        out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = prop, group = bundesland)) %>%
