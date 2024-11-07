@@ -31,7 +31,7 @@ mod_schule_kurse_comparison_gender_ui <- function(id){
       choices = c("Deutschland",
                   "Westdeutschland (o. Berlin)",
                   "Ostdeutschland (inkl. Berlin)",
-                  #"Baden-Württemberg",
+                  "Baden-Württemberg",
                   "Bayern",
                   "Berlin",
                   "Brandenburg",

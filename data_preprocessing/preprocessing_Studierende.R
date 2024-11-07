@@ -273,7 +273,7 @@ duplika <- janitor::get_dupes(studierende, c(region, indikator, geschlecht, jahr
 
 #akronym pathing - Pfad
 pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
-pfad <- paste0("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+#pfad <- paste0("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 #Daten einlesen
 Jahre <- as.character(2013:2022)
@@ -327,17 +327,17 @@ bulas <- c(
 df <- long_df %>%
   mutate(
     bundesland = case_when(
-      bundesland == "Insgesamt" ~ "Deutschland",
+      bundesland  %in% c("Ingesamt", "Insgesamt") ~ "Deutschland",
       T ~ bundesland
     ),
     faechergruppe = case_when(
       faechergruppe == "Zusammen" ~ "Gesamt",
-      faechergruppe == "Insgesamt" ~ "Gesamt",
+      faechergruppe %in% c("Ingesamt", "Insgesamt") ~ "Gesamt",
       T ~ faechergruppe
     ),
     studienbereich = case_when(
       studienbereich == "Zusammen" ~ "Alle Fächer",
-      studienbereich == "Insgesamt" ~ "Alle Fächer",
+      studienbereich %in% c("Ingesamt", "Insgesamt") ~ "Alle Fächer",
       T ~ studienbereich
     ),
     wert = as.numeric(wert),
@@ -474,7 +474,7 @@ studierende_absolventen<- df_all
 ## Export
 
 setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+#setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 
 #usethis::use_data(studierende_absolventen, overwrite = T)
 save(studierende_absolventen, file = "studierende_absolventen.rda")
@@ -812,10 +812,33 @@ df_all <- df_all %>%
 #                       "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
 #                       "Weitere ingenieurwissenschaftliche Fächer"))
 
-# Dublikate entfernen
+#Dublikate entfernen
 df_all <- df_all %>%
   group_by(region, fachbereich, fach, jahr, bereich, indikator, mint_select, typ, geschlecht) %>%
   summarise(wert = sum(wert, na.rm = TRUE), .groups = "drop")
+
+
+
+# ###############################################
+# test <- df_all %>%
+#   filter(!(geschlecht == "Gesamt" & fachbereich == "Gesamt")) %>%
+#   group_by(region, fachbereich, fach, jahr, bereich, indikator, mint_select, typ, geschlecht) %>%
+#   summarise(wert = sum(wert, na.rm = TRUE), .groups = "drop")
+
+
+
+
+# Entferne doppelte Zeilen
+df_all<- df_all %>%
+  distinct(region, fachbereich, fach, jahr, bereich, indikator, mint_select, typ, geschlecht, wert)
+
+
+
+# df_all <- df_all %>%
+#   group_by(region, fachbereich, jahr, indikator, mint_select, geschlecht) %>%
+#   summarise(wert = sum(wert, na.rm = TRUE), .groups = "drop")
+
+
 
 df_all <- df_all %>%
   pivot_wider(names_from = geschlecht, values_from = wert, values_fill = list(wert = NA)) %>%
@@ -854,7 +877,7 @@ studierende_detailliert <- df_all
 ## Export
 
 setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
-setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+#setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 
 save(studierende_detailliert, file = "studierende_detailliert.rda")
 

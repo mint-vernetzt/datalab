@@ -701,6 +701,10 @@ studierende_bula_mint <- function(r) {
       #   dplyr::rename(wert_ges = wert) %>%
       #   dplyr::collect()
 
+
+
+
+
       alle_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
         dplyr::filter(jahr %in% t,
                       geschlecht == "Gesamt",
@@ -710,6 +714,8 @@ studierende_bula_mint <- function(r) {
         dplyr::select(jahr, fach, indikator, wert, region)%>%
         dplyr::rename(wert_ges = wert) %>%
         dplyr::collect()
+
+
 
       alle_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
         dplyr::filter(jahr %in% t,
@@ -730,6 +736,8 @@ studierende_bula_mint <- function(r) {
         dplyr::rename(fach = fach.x) %>%
         dplyr::mutate(prop = round(wert/wert_ges*100,1)) %>%
         dplyr::select(-fach.y)
+
+
 
       df_absolventen <- df_absolventen %>% dplyr::left_join(alle_absolventen, by = c( "jahr", "indikator", "region")) %>%
         dplyr::rename(fach = fach.x) %>%

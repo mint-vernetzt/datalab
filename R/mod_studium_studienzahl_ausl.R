@@ -45,7 +45,8 @@ mod_studium_studienzahl_ausl_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("status_ausl"),
       choices = c("Studierende",
-                  "Studienanfänger:innen (1. Hochschulsemester)"
+                  "Studienanfänger:innen (1. Hochschulsemester)",
+                  "Absolvent:innen"
       ),
       selected = "Studierende"
     ),
