@@ -12,332 +12,336 @@ library(dplyr)
 pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten"
 
 # Community Plattform Daten -----------------------------------------------
-
 ## Organisationen ----
 
-orgas <- read.csv(paste0(pfad,"/CP001_Organisationen.csv"))
-orgas <- orgas %>% select(-X)
+orgas <- read.csv(paste0(pfad, "/CP001_Organisationen.csv"))
+orgas <- subset(orgas, select=-c(X) )
 
 # Datenaufbereitung
-## Anzahl Organisationen
-orgas$total_N <- length(unique(orgas$name))
-orgas <- subset(orgas, !(is.na(orgas$area)) | !(is.na(orgas$organizationType)))
-t <- subset(orgas, !(is.na(orgas$organizationType)))
-t$N_types <- length(unique(t$name))
-r <- subset(orgas, !(is.na(orgas$area)))
-r$N_regio<- length(unique(r$name))
+total_N <- length(unique(orgas$name))
+orgas <- subset(orgas, !(is.na(orgas$area)) | !(is.na(orgas$organizationType)) |
+                  is.na(orgas$focus))
+any_value_N <- length(unique(orgas$name))
+
+# Gesamt
+type <- subset(orgas, select = c(name, organizationType))
+type <- type[!duplicated(type), ]
+type <- na.omit(type)
+N_type <- length(unique(type$name))
+type <- type %>%
+  mutate(organizationType = as.factor(organizationType)) %>%
+  count(organizationType) %>%
+  rename(wert = n,
+         indikator = organizationType)
+type$typ <- "Organisationstyp"
+type$region <- "Gesamt"
+type <- type[, c("region", "typ", "indikator", "wert")]
+
+area <- subset(orgas, select = c(name, area))
+area <- area[!duplicated(area), ]
+area <- na.omit(area)
+N_area <- length(unique(area$name))
+area <- area %>%
+  mutate(area = as.factor(area)) %>%
+  count(area) %>%
+  rename(wert = n,
+         indikator = area)
+area$typ <- "Region"
+area$region <- "Gesamt"
+area <- area[, c("region", "typ", "indikator", "wert")]
+
+focus <- subset(orgas, select = c(name, focus))
+focus <- focus[!duplicated(focus), ]
+focus <- na.omit(focus)
+N_focus <- length(unique(focus$name))
+focus <- focus %>%
+  mutate(focus = as.factor(focus)) %>%
+  count(focus) %>%
+  rename(wert = n,
+         indikator = focus)
+focus$typ <- "Fokus"
+focus$region <- "Gesamt"
+focus <- focus[, c("region", "typ", "indikator", "wert")]
 
 
-## Long-Format
-cp <- tidyr::pivot_longer(orgas,cols = c("area", "organizationType"),
-                             names_to = "kategorie", values_to = "indikator")
-
-## Anzahl/Anteil Ausprägungen
-types <- cp %>%
-  filter(kategorie == "organizationType") %>%
-  unique()
-types <- types %>%
-  count(indikator) %>%
-  na.omit() %>%
-  rename(wert = n)
-
-types <- types %>%
-  mutate(typ = "Organisation",
-         kategorie = "Organisationstyp",
-         ebene = NA)
-#cp <- left_join(cp, types, by = join_by(indikator), keep = FALSE)
-types$N <- t$N_types[1]
-types$N_total <- cp$total_N[1]
-
-areas <- cp %>%
-  filter(kategorie == "area") %>%
-  unique()
-areas <- areas %>%
-  count(indikator) %>%
-  na.omit() %>%
-  rename(wert = n)
-
-areas_DE <- areas %>%
-  filter(indikator == "Bundesweit")
-areas_DE$ebene <- "Bundesweit"
-
+# Schnittmengen
 bundeslaender_string <- c(
   "Baden-Württemberg", "Bayern", "Berlin", "Brandenburg",
   "Bremen", "Hamburg", "Hessen", "Mecklenburg-Vorpommern",
   "Niedersachsen", "Nordrhein-Westfalen", "Rheinland-Pfalz",
   "Saarland", "Sachsen", "Sachsen-Anhalt", "Schleswig-Holstein", "Thüringen"
 )
-areas_BULA <- areas %>%
-  filter(indikator %in% bundeslaender_string)
-areas_BULA$ebene <- "Bundesländer"
 
-areas_LKs <- areas %>%
-  filter(!(indikator %in% c("Bundesweit", bundeslaender_string)))
-areas_LKs$ebene <- "Landkreise"
+type_area <- subset(orgas, select = c(name, organizationType, area))
+type_area <- type_area[!duplicated(type_area), ]
+type_area <- na.omit(type_area)
+type_area <- type_area %>%
+  filter(area %in% c(bundeslaender_string, "Bundesweit"))
+N_type_area <-  type_area %>%
+  group_by(area) %>%
+  summarize(count = n_distinct(name))
+type_area <- type_area %>%
+  mutate(organizationType = as.factor(organizationType)) %>%
+  group_by(area) %>%
+  count(organizationType) %>%
+  ungroup() %>%
+  rename(wert = n,
+         indikator = organizationType,
+         region = area)
+type_area$typ <- "Organisationstyp"
+type_area <- type_area[, c("region", "typ", "indikator", "wert")]
 
-areas <- rbind(areas_DE, areas_BULA, areas_LKs)
+focus_area <- subset(orgas, select = c(name, focus, area))
+focus_area <- focus_area[!duplicated(focus_area), ]
+focus_area <- na.omit(focus_area)
+focus_area <- focus_area %>%
+  filter(area %in% c(bundeslaender_string, "Bundesweit"))
+N_focus_area <-  focus_area %>%
+  group_by(area) %>%
+  summarize(count = n_distinct(name))
+focus_area <- focus_area %>%
+  mutate(focus = as.factor(focus)) %>%
+  group_by(area) %>%
+  count(focus) %>%
+  ungroup() %>%
+  rename(wert = n,
+         indikator = focus,
+         region = area)
+focus_area$typ <- "Fokus"
+focus_area <- focus_area[, c("region", "typ", "indikator", "wert")]
 
-areas <- areas %>%
-  group_by(ebene) %>%
-  mutate(
-         typ = "Organisation",
-         kategorie = "Region") %>%
-  ungroup()
+# zusammenhängen
+cp_orgas <- rbind(area, type, type_area, focus, focus_area)
+cp_orgas$indikator <- as.character(cp_orgas$indikator)
 
-areas$N <- r$N_regio[1]
-areas$N_total <- cp$total_N[1]
+#Ns anhängen
+alle <- c(region ="Gesamt", typ = "Gesamt", indikator = "Alle",  wert= total_N)
+ges <- c(region ="Gesamt", typ = "Gesamt", indikator = "Gesamt",  wert = any_value_N)
+ges_area <- c(region = "Gesamt", typ = "Region", indikator = "Gesamt", wert = N_area)
+ges_focus <- c(region = "Gesamt", typ = "Fokus", indikator = "Gesamt", wert = N_focus)
+ges_typ <- c(region = "Gesamt", typ = "Organisationstyp", indikator = "Gesamt", wert = N_type)
+N_focus_area <- N_focus_area %>%
+  rename(region = area,
+         wert = count) %>%
+  mutate(typ = "Fokus",
+        indikator = "Gesamt")
+N_type_area <- N_type_area %>%
+  rename(region = area,
+         wert = count) %>%
+  mutate(typ = "Organisationstyp",
+         indikator = "Gesamt")
 
-# cp <- left_join(cp, areas, by = join_by(indikator), keep = FALSE) %>%
-#   mutate(wert = coalesce(wert.x, wert.y)) %>%
-#   mutate(N = coalesce(N.x, N.y)) %>%
-#   select(-wert.x, -wert.y, -N.x, -N.y)
+cp_orgas <- rbind(cp_orgas, alle, ges, ges_area, ges_focus, ges_typ,
+                  N_type_area, N_focus_area)
 
-# cp <- fill(o, ebene)
-# orgas <- orgas %>%
-#   mutate(kategorie = case_when(
-#     kategorie == "area" ~ "Region",
-#     kategorie == "organizationType" ~ "Organisationstyp",
-#     TRUE ~ kategorie
-#   )) %>%
-#   unique()
+#Speichern
+ausserschulisch_cp_organisationen <- cp_orgas
 
-## zusammenhängen
-areas <- areas[, c("typ", "N_total", "N", "kategorie", "ebene", "indikator", "wert")]
-types <- types[, c("typ", "N_total", "N", "kategorie", "ebene", "indikator", "wert")]
-
-cp <- rbind(areas, types)
+  #setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+  setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+save(ausserschulisch_cp_organisationen, file = "ausserschulisch_cp_organisationen.rda")
+setwd("~/datalab2")
 
 ## Envir. aufräumen
 all <- ls()
-keep <- c("orgas", "pros", "profs", "pfad", "cp")
+keep <- c("pfad")
 delete <- setdiff(all, keep)
 rm(list=delete)
 
 
 ## Projekte ----
 
-pros <- read.csv(paste0(pfad,"/CP002_Projekte.csv"))
-pros <- pros %>% select(-X)
+pros <- read.csv(paste0(pfad, "/CP002_Projekte.csv"))
+pros <- subset(pros, select=-c(X) )
 
-# Anzahl Projekte
-pros$total_N <- length(unique(pros$name))
-pros <- subset(pros, !(is.na(pros$discipline)) | !(is.na(pros$targetGroup)))
-z <- subset(pros, !(is.na(pros$targetGroup)))
-z$N_target <- length(unique(z$name))
-b <- subset(pros, !(is.na(pros$discipline)))
-b$N_bereich<- length(unique(b$name))
+# Datenaufbereitung
+total_N <- length(unique(pros$name))
+pros <- subset(pros, !(is.na(pros$area)) | !(is.na(pros$discipline)) |
+                  is.na(pros$additionalDiscipline) | is.na(pros$projectTargetGroup) |
+                 is.na(pros$specialTargetGroup) | is.na(pros$format) |
+                 is.na(pros$financing)
+                 )
+any_value_N <- length(unique(pros$name))
 
+type <- c("discipline",  "additionalDiscipline", "projectTargetGroup", "specialTargetGroup",
+          "format", "financing", "area")
+indi <- c("MINT-Disziplin",  "weitere Disziplin", "Zielgruppe", "weitere Zielgruppe",
+          "Format", "Finanzierung", "Region")
+pros <- pros %>%
+  mutate_at(vars(discipline, additionalDiscipline, projectTargetGroup, specialTargetGroup,
+                 format, financing, area), as.factor)
 
-# Longformat
-cp_n <- tidyr::pivot_longer(pros, cols = c("discipline", "targetGroup"),
-                            names_to = "kategorie", values_to = "indikator")
+# Gesamt
+daten_gesamt_aufbereiten <- function(pros, typ, indi){
 
-cp_n <- cp_n %>%
-  mutate(kategorie = case_when(
-           kategorie == "discipline" ~ "MINT-Bereich",
-           kategorie == "targetGroup" ~ "Zielgruppe",
-           TRUE ~ kategorie
-         )) %>%
-  unique()
+  var <- sym(typ)
+  df <- subset(pros, select = c("name", typ))
+  df <- df[!duplicated(df), ]
+  df <- na.omit(df)
+  N <- length(unique(df$name))
+  df <- df %>%
+    count(!!var) %>%
+    rename(wert = n,
+           indikator = !!var)
+  df$typ <- indi
+  df$region <- "Gesamt"
+  df <- df[, c("region", "typ", "indikator", "wert")]
 
-cp_n <- cp_n %>%
-  mutate(indikator = case_when(
-    indikator %in% c("Erzieher:innen (Kita)",
-                     "Erzieher:innen (Schule)",
-                     "Pädagogische Fachkräfte") ~ "Erzieher:innen",
-    indikator %in% c("Frühkindliche Bildung",
-                     "Kinder in der Kita oder Vorschule") ~ "Frühkindliche Bildung",
-    indikator %in% c("Kinder Primarstufe",
-                     "Primarbereich") ~ "Primarbereich",
-    indikator %in% c("Lehrkräfte",
-                     "Lehrkräfte Sek. I",
-                     "Lehrkräfte Sek. II",
-                     "Lehrkräfte Vorschule und Primarstufe") ~ "Lehrkräfte",
-    indikator %in% c("Schüler:innen Sek. I",
-                     "Schüler:innen Sek. II",
-                     "Sek 1",
-                     "Sek 2") ~ "Schüler:innen",
-    indikator %in% c("Hochschulbildung",
-                     "Dozierende Hochschule",
-                     "Wissenschaftler:innen") ~ "Hochschulbildung/ Hochschulpersonal",
-    TRUE ~ indikator
-  )) %>%
-  unique()
+  return(list(df = df,
+              df = N))
+}
 
-zielgr <- cp_n %>%
-  filter(kategorie == "Zielgruppe") %>%
-  select(name, indikator) %>%
-  na.omit() %>%
-  unique() %>%
-  count(indikator) %>%
-  rename(wert = n) %>%
-  mutate(
-    typ = "Projekt",
-    kategorie = "Zielgruppe",
-    ebene = NA
-  )
-zielgr$N_total <- cp_n$total_N[1]
-zielgr$N <- z$N_target[1]
-#pros <- left_join(pros, zielgr, by = join_by("indikator"), keep = FALSE)
+ges <- list()
+for(i in 1:7){
 
-mint <- cp_n %>%
-  filter(kategorie == "MINT-Bereich") %>%
-  select(name, indikator) %>%
-  na.omit() %>%
-  unique() %>%
-  count(indikator) %>%
-  rename(wert = n) %>%
-  mutate(
-    typ = "Projekt",
-    kategorie = "MINT-Bereich",
-    ebene = NA
-  )
-mint$N_total <- cp_n$total_N[1]
-mint$N <- b$N_bereich[1]
-# pros <- left_join(pros, mint, by = join_by("indikator"), keep = FALSE) %>%
-#   mutate(wert = coalesce(wert.x, wert.y)) %>%
-#   select(-wert.x, -wert.y)
+  ges_new <- daten_gesamt_aufbereiten(pros, type[i], indi[i])
+  ges <- c(ges, ges_new)
 
-## zusammenhängen
-zielgr <- zielgr[, c("typ", "N_total", "N", "kategorie", "ebene", "indikator", "wert")]
-mint <- mint[, c("typ", "N_total", "N", "kategorie", "ebene", "indikator", "wert")]
+}
 
-cp<- rbind(cp, zielgr, mint)
-
-## Envir. aufräumen
-all <- ls()
-keep <- c("orgas", "pros", "profs", "pfad", "cp")
-delete <- setdiff(all, keep)
-rm(list=delete)
+discipline <- ges[[1]]
+N_discipline <- ges[[2]]
+additionalDiscipline <- ges[[3]]
+N_additionalDiscipline <- ges[[4]]
+projectTargetGroup <- ges[[5]]
+N_projectTargetGroup <- ges[[6]]
+specialTargetGroup <- ges[[7]]
+N_specialTargetGroup <- ges[[8]]
+format <- ges[[9]]
+N_format <- ges[[10]]
+financing <- ges[[11]]
+N_financing <- ges[[12]]
+area <- ges[[13]]
+N_area <- ges[[14]]
 
 
-## Profile ----
-
-profs <- read.csv(paste0(pfad,"/CP003_Profile.csv"))
-profs <- profs %>% select(-X)
-
-profs <- profs %>%
-  rename(Region = area,
-         Angebot = offer,
-         Interesse = seekingsseeking_offer)
-
-# Anzahl Projekte
-profs$total_N <- length(unique(profs$id))
-profs <- subset(profs, !(is.na(profs$Region)) | !(is.na(profs$Angebot)) | !(is.na(profs$Interesse)))
-r <- subset(profs, !(is.na(profs$Region)))
-r$N_region <- length(unique(r$id))
-a <- subset(profs, !(is.na(profs$Angebot)))
-a$N_angeb<- length(unique(a$id))
-i <- subset(profs, !(is.na(profs$Interesse)))
-i$N_interesse<- length(unique(i$id))
-
-cp_n <- tidyr::pivot_longer(profs, cols = "Region":"Interesse",
-                             names_to = "kategorie", values_to = "indikator")
-
-cp_n <- unique(cp_n)
-
-region <- cp_n %>%
-  filter(kategorie == "Region") %>%
-  select(id, indikator) %>%
-  na.omit() %>%
-  count(indikator) %>%
-  rename(wert = n)
-
-# nur Bundesweit
-region_DE <- region %>%
-  filter(indikator == "Bundesweit")
-region_DE$ebene <- "Bundesweit"
-
-# nur auf Bundesland ebene
+# Schnittmengen
 bundeslaender_string <- c(
   "Baden-Württemberg", "Bayern", "Berlin", "Brandenburg",
   "Bremen", "Hamburg", "Hessen", "Mecklenburg-Vorpommern",
   "Niedersachsen", "Nordrhein-Westfalen", "Rheinland-Pfalz",
   "Saarland", "Sachsen", "Sachsen-Anhalt", "Schleswig-Holstein", "Thüringen"
 )
-region_BULA <- region %>%
-  filter(indikator %in% bundeslaender_string)
-region_BULA$ebene <- "Bundesländer"
 
-# Landkeis-Ebene
-region_LKs <- region %>%
-  filter(!(indikator %in% c("Bundesweit", bundeslaender_string)))
-region_LKs$ebene <- "Landkreise"
+type <- c("discipline",  "additionalDiscipline", "projectTargetGroup", "specialTargetGroup",
+          "format", "financing")
+indi <- c("MINT-Disziplin",  "weitere Disziplin", "Zielgruppe", "weitere Zielgruppe",
+          "Format", "Finanzierung")
+daten_schnittmenge_aufbereiten <- function(pros, vek, indi){
 
-region <- rbind(region_DE, region_BULA, region_LKs)
-#profs <- left_join(profs, region, by = join_by("indikator"), keep = FALSE)
+  var <- sym(vek)
+  temp <- subset(pros, select = c("name", vek, "area"))
+  temp <- temp[!duplicated(temp), ]
+  temp <- na.omit(temp)
+  temp <- temp %>%
+    filter(area %in% c(bundeslaender_string, "Bundesweit"))
+  N_schnitt <-  temp %>%
+    group_by(area) %>%
+    summarize(count = n_distinct(name))
+  temp <- temp %>%
+    group_by(area) %>%
+    count(!!var) %>%
+    ungroup() %>%
+    rename(wert = n,
+           indikator = var,
+           region = area)
+  temp$typ <- indi
+  temp <- temp[, c("region", "typ", "indikator", "wert")]
 
-region <- region %>%
-  mutate(
-    typ = "Profile",
-    kategorie = "Region"
-  )
-region$N_total <- cp_n$total_N[1]
-region$N <- r$N_region[1]
+  return(list(df = temp,
+              N = N_schnitt))
+}
 
-angeb <- cp_n %>%
-  filter(kategorie == "Angebot") %>%
-  select(id, indikator) %>%
-  na.omit() %>%
-  count(indikator) %>%
-  rename(wert = n) %>%
-  filter(indikator != "") %>%
-  mutate(
-    typ = "Profile",
-    kategorie = "Angebot",
-    ebene = NA
-  )
-angeb$N_total <- cp_n$total_N[1]
-angeb$N <- a$N_angeb[1]
-# profs <- left_join(profs, angeb, by = join_by("indikator"), keep = FALSE) %>%
-#   mutate(wert = coalesce(wert.x, wert.y)) %>%
-#   select(-wert.x, -wert.y)
+schnittmenge<- list()
+for(i in 1:length(type)){
 
-seek <- cp_n %>%
-  filter(kategorie == "Interesse") %>%
-  select(id, indikator) %>%
-  na.omit() %>%
-  count(indikator) %>%
-  rename(wert = n) %>%
-  filter(indikator != "") %>%
-  mutate(
-    typ = "Profile",
-    kategorie = "Gesucht",
-    ebene = NA
-  )
-seek$N_total <- cp_n$total_N[1]
-seek$N <- i$N_interesse[1]
-# profs <- left_join(profs, seek, by = join_by("indikator"), keep = FALSE) %>%
-#   mutate(wert = coalesce(wert.x, wert.y)) %>%
-#   select(-wert.x, -wert.y)
-#
-# profs <- profs %>%
-#   group_by(id) %>%
-#   fill(ebene) %>%
-#   ungroup() %>%
-#   na.omit(wert)
-#
+  schnitt_new <- daten_schnittmenge_aufbereiten(pros, type[i], indi[i])
+  schnittmenge <- c(schnittmenge, schnitt_new)
 
-## zusammenhängen
-region <- region[, c("typ", "N_total", "N", "kategorie", "ebene", "indikator", "wert")]
-angeb <- angeb[, c("typ", "N_total", "N", "kategorie", "ebene", "indikator", "wert")]
-seek <- seek[, c("typ", "N_total", "N", "kategorie", "ebene", "indikator", "wert")]
+}
 
-cp<- rbind(cp, region, angeb, seek)
+discipline_area <- schnittmenge[[1]]
+N_discipline_area <- schnittmenge[[2]]
+additionalDiscipline_area <- schnittmenge[[3]]
+N_additionalDiscipline_area <- schnittmenge[[4]]
+projectTargetGroup_area <- schnittmenge[[5]]
+N_projectTargetGroup_area <- schnittmenge[[6]]
+specialTargetGroup_area <- schnittmenge[[7]]
+N_specialTargetGroup_area <- schnittmenge[[8]]
+format_area <- schnittmenge[[9]]
+N_format_area <- schnittmenge[[10]]
+financing_area <- schnittmenge[[11]]
+N_financing_area <- schnittmenge[[12]]
+
+# Zusammenhängen der Datensetzt und Ns
+cp_pros <- rbind(area, discipline, discipline_area,
+                 additionalDiscipline, additionalDiscipline_area,
+                 projectTargetGroup, projectTargetGroup_area,
+                 specialTargetGroup, specialTargetGroup_area,
+                 format, format_area, financing, financing_area)
+
+cp_pros$indikator <- as.character(cp_pros$indikator)
+
+#Ns anhängen
+alle <- c(region ="Gesamt", typ = "Gesamt", indikator = "Alle",  wert= total_N)
+ges <- c(region ="Gesamt", typ = "Gesamt", indikator = "Gesamt",  wert = any_value_N)
+ges_area <- c(region = "Gesamt", typ = "Region", indikator = "Gesamt", wert = N_area)
+ges_discipline <- c(region = "Gesamt", typ = "MINT-Disziplin", indikator = "Gesamt", wert = N_discipline)
+ges_adidtional_disp <- c(region = "Gesamt", typ = "weitere Disziplin", indikator = "Gesamt", wert = N_additionalDiscipline)
+ges_targetgr <- c(region = "Gesamt", typ = "Zielgruppe", indikator = "Gesamt", wert = N_projectTargetGroup)
+ges_special_target <- c(region = "Gesamt", typ = "weitere Zielgruppe", indikator = "Gesamt", wert = N_specialTargetGroup)
+ges_format <- c(region = "Gesamt", typ = "Format", indikator = "Gesamt", wert = N_format)
+ges_financing <- c(region = "Gesamt", typ = "Finanzierung", indikator = "Gesamt", wert = N_financing)
+
+N_discipline_area <- N_discipline_area %>%
+  rename(region = area,
+         wert = count) %>%
+  mutate(typ = "MINT-Disziplin",
+         indikator = "Gesamt")
+N_additionalDiscipline_area <- N_additionalDiscipline_area %>%
+  rename(region = area,
+         wert = count) %>%
+  mutate(typ = "weitere Disziplin",
+         indikator = "Gesamt")
+N_projectTargetGroup_area <- N_projectTargetGroup_area %>%
+  rename(region = area,
+         wert = count) %>%
+  mutate(typ = "Zielgruppe",
+         indikator = "Gesamt")
+N_specialTargetGroup_area <- N_specialTargetGroup_area %>%
+  rename(region = area,
+         wert = count) %>%
+  mutate(typ = "weitere Zielgruppe",
+         indikator = "Gesamt")
+N_format_area <- N_format_area %>%
+  rename(region = area,
+         wert = count) %>%
+  mutate(typ = "Format",
+         indikator = "Gesamt")
+N_financing_area <- N_financing_area %>%
+  rename(region = area,
+         wert = count) %>%
+  mutate(typ = "Finanzierung",
+         indikator = "Gesamt")
+
+cp_pros <- rbind(cp_pros, alle, ges, ges_area, ges_discipline,
+                 ges_adidtional_disp, ges_targetgr,
+                 ges_special_target, ges_format, ges_financing,
+                 N_discipline_area, N_additionalDiscipline_area,
+                 N_projectTargetGroup_area, N_specialTargetGroup_area,
+                 N_format_area, N_financing_area)
+
+#Speichern
+ausserschulisch_cp_projekte <- cp_pros
+
+#setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+
+save(ausserschulisch_cp_projekte, file = "ausserschulisch_cp_projekte.rda")
+
 
 ## Envir. aufräumen
-all <- ls()
-keep <- c("orgas", "pros", "profs", "pfad", "cp")
-delete <- setdiff(all, keep)
-rm(list=delete)
-
-## Datensatz CP speichern ----
-
-ausserschulisch_cp <- cp
-
-# Datensatz speichern
-usethis::use_data(ausserschulisch_cp, overwrite = T)
-
+rm(list=ls())
 
 # Stiftung Kinder Forschen ------------------------------------------------
 
