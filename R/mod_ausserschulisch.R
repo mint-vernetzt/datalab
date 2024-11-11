@@ -23,6 +23,7 @@ mod_ausserschulisch_server <- function(id, r){
 
   # Box 1 - CP
   mod_ausserschulisch_cp_orgas_server("mod_ausserschulisch_cp_orgas_ui",r)
+  mod_ausserschulisch_cp_projekte_server("mod_ausserschulisch_cp_projekte_ui",r)
 
   #Box SKf
   mod_ausserschulisch_skf_einrichtungen_server("mod_ausserschulisch_skf_einrichtungen_ui_1", r)

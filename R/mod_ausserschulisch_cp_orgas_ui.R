@@ -9,7 +9,7 @@ mod_ausserschulisch_cp_orgas_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("chara_cp_orgas"),
       label = NULL,
-      choices = c("Organisationstyp", "Fokus"),
+      choices = c("Organisationstyp", "Fokus", "Region"),
       selected = "Organisationstyp"
     ),
     conditionalPanel(condition = "input.chara_cp_orgas != 'Region'",
@@ -40,6 +40,17 @@ mod_ausserschulisch_cp_orgas_ui <- function(id){
                       selected = "Gesamt"
                     )
     ),
+    conditionalPanel(condition = "input.chara_cp_orgas == 'Region'",
+                     ns = ns,
+                     p("Differenzierte Anzeige:"),
+                     shinyWidgets::pickerInput(
+                       inputId = ns("bula_cp_orgas"),
+                       label = NULL,
+                       choices = c("Bundesländern zusammen anzeigen",
+                                   "Bundesländern einzeln anzeigen"),
+                       selected = "Bundesländern zusammen anzeigen"
+                     )
+    ),
     p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_rel_cp_orgas"),
@@ -69,6 +80,10 @@ mod_ausserschulisch_cp_orgas_server <-function(id, r){
 
     observeEvent(input$chara_cp_orgas, {
       r$chara_cp_orgas <- input$chara_cp_orgas
+    })
+
+    observeEvent(input$bula_cp_orgas, {
+      r$bula_cp_orgas <- input$bula_cp_orgas
     })
 
     observeEvent(input$abs_rel_cp_orgas, {
