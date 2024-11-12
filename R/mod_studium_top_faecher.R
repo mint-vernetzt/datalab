@@ -50,6 +50,13 @@ mod_studium_top_faecher_ui <- function(id){
       selected = "MINT-Fächer",
       multiple = FALSE
     ),
+    p("Studierendengruppe:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("indi_top_faecher"),
+      choices = c("Studierende", "Absolvent:innen"),
+      selected = "Studierende",
+      multiple = FALSE
+    ),
     p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("subject_abs_rel"),
@@ -86,9 +93,15 @@ mod_studium_top_faecher_server <- function(id, r){
       r$subject_top_faecher <- input$subject_top_faecher
     })
 
+    observeEvent(input$indi_top_faecher, {
+      r$indi_top_faecher <- input$indi_top_faecher
+    })
+
+
     observeEvent(input$subject_abs_rel, {
       r$subject_abs_rel <- input$subject_abs_rel
     })
+
 
 
   })

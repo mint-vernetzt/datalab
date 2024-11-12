@@ -14,7 +14,7 @@ run_app <- function(
 
     # con <<- DBI::dbConnect(RSQLite::SQLite(), "data/mint_db.sqlite", encoding = "UTF-8")
      con <<- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb", read_only = TRUE)
-     # con <<- DBI::dbConnect(duckdb::duckdb(), "mint_db.duckdb", read_only = TRUE)
+     #con <<- DBI::dbConnect(duckdb::duckdb(), "mint_db.duckdb", read_only = TRUE)
 
      onStop(function() {
        DBI::dbDisconnect(con, shutdown = TRUE)
