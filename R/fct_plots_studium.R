@@ -3717,9 +3717,9 @@ studierende_mint_vergleich_bl <- function(r) {
 #' @noRd
 
 studienzahl_einstieg_gender <- function(r) {
-  betrachtung <- r$ansicht_gen_mint
-  timerange <- r$gen_y
-  genl <- r$gen_l
+  betrachtung <- r$ansicht_gen_mint #Kuchendia
+  timerange <- r$gen_y #Jahr
+  genl <- r$gen_l #Studierende, Absolventinnen
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
     gegenwert <- r$gen_gegenwert_pie
@@ -3733,7 +3733,16 @@ studienzahl_einstieg_gender <- function(r) {
 
         if(gegenwert == "Ja") gen_f <- c(gen_f, "Alle Nicht MINT-Fächer")
 
-        df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        #   dplyr::filter(jahr == timerange,
+        #                 region== regio,
+        #                 fach %in% gen_f,
+        #                 geschlecht != "Gesamt",
+        #                 indikator %in% genl) %>%
+        #   dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
+        #   dplyr::collect()
+
+        df_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
           dplyr::filter(jahr == timerange,
                         region== regio,
                         fach %in% gen_f,
@@ -3742,7 +3751,26 @@ studienzahl_einstieg_gender <- function(r) {
           dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
           dplyr::collect()
 
-        alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        df_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+          dplyr::filter(jahr == timerange,
+                        region== regio,
+                        fach %in% gen_f,
+                        geschlecht != "Gesamt",
+                        indikator %in% genl) %>%
+          dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
+          dplyr::collect()
+
+
+        # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        #   dplyr::filter(jahr == timerange,
+        #                 region== regio,
+        #                 fach %in% gen_f,
+        #                 geschlecht == "Gesamt",
+        #                 indikator %in% genl) %>%
+        #   dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
+        #   dplyr::collect()
+
+        alle_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
           dplyr::filter(jahr == timerange,
                         region== regio,
                         fach %in% gen_f,
@@ -3751,7 +3779,26 @@ studienzahl_einstieg_gender <- function(r) {
           dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
           dplyr::collect()
 
-        df <- df %>%
+        alle_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+          dplyr::filter(jahr == timerange,
+                        region== regio,
+                        fach %in% gen_f,
+                        geschlecht == "Gesamt",
+                        indikator %in% genl) %>%
+          dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
+          dplyr::collect()
+
+        df_combined <- dplyr::bind_rows(
+          df_studierende %>% dplyr::mutate(data_type = "Studierende"),
+          df_absolventen %>% dplyr::mutate(data_type = "Absolventen")
+        )
+
+        alle <- dplyr::bind_rows(
+          alle_studierende %>% dplyr::mutate(data_type = "Studierende"),
+          alle_absolventen %>% dplyr::mutate(data_type = "Absolventen")
+        )
+
+        df <- df_combined %>%
           dplyr::left_join(alle, dplyr::join_by(fach, indikator)) %>%
           dplyr::select(-geschlecht.y) %>%
           dplyr::rename(wert = wert.x,
@@ -4143,11 +4190,28 @@ studienzahl_einstieg_gender <- function(r) {
     if(gegenwert == "Ja") sel_f1 <- c(sel_f1, "Alle Nicht MINT-Fächer")
 
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr %in% timerange,
+    #                 region==sel_bl1,
+    #                 fach %in% sel_f1)%>%
+    #   dplyr::collect()
+
+    df_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
       dplyr::filter(jahr %in% timerange,
                     region==sel_bl1,
                     fach %in% sel_f1)%>%
       dplyr::collect()
+
+    df_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+      dplyr::filter(jahr %in% timerange,
+                    region==sel_bl1,
+                    fach %in% sel_f1)%>%
+      dplyr::collect()
+
+    df <- dplyr::bind_rows(
+      df_studierende %>% dplyr::mutate(data_type = "Studierende"),
+      df_absolventen %>% dplyr::mutate(data_type = "Absolventen")
+    )
 
     if(nrow(df) == 0){
       titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
@@ -4201,6 +4265,13 @@ studienzahl_einstieg_gender <- function(r) {
     df$fach_indikator <- paste(df$fach, df$indikator, sep = " - ")
     df <- df[with(df, order(indikator)), ]
 
+
+
+    #da es viele NAs gibt, also Daten, die nicht berechnet wurden und können denke ich, gibt es ein filtering
+    df <- df %>%
+      dplyr::filter(!is.na(proportion), !is.na(wert))
+
+
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = fach_indikator, y=proportion, group = geschlecht))%>%
 
       highcharter::hc_tooltip(pointFormat = "{point.geschlecht}-Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
@@ -4253,12 +4324,31 @@ studienzahl_verlauf_single_gender <- function(r) {
   faecher <- r$gen_z_faecher
 
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+  #   dplyr::filter(jahr %in% t,
+  #                 region== regio,
+  #                 fach == faecher,
+  #                 indikator %in% label_sel) %>%
+  #   dplyr::collect()
+
+  df_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
     dplyr::filter(jahr %in% t,
                   region== regio,
                   fach == faecher,
                   indikator %in% label_sel) %>%
     dplyr::collect()
+
+  df_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+    dplyr::filter(jahr %in% t,
+                  region== regio,
+                  fach == faecher,
+                  indikator %in% label_sel) %>%
+    dplyr::collect()
+
+  df <- dplyr::bind_rows(
+    df_studierende %>% dplyr::mutate(data_type = "Studierende"),
+    df_absolventen %>% dplyr::mutate(data_type = "Absolventen")
+  )
 
   if(nrow(df) == 0){
     titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
@@ -4644,7 +4734,15 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
   }
 
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "studierende") %>%
+  # df <- dplyr::tbl(con, from = "studierende") %>%
+  #   dplyr::filter(jahr == timerange,
+  #                 region==regio,
+  #                 geschlecht %in% gen,
+  #                 indikator == lab_cho,
+  #                 !(fachbereich %in% c("MINT (Gesamt)", "Alle"))) %>%
+  #   dplyr::collect()
+
+  df_studierende <- dplyr::tbl(con, from = "studierende") %>%
     dplyr::filter(jahr == timerange,
                   region==regio,
                   geschlecht %in% gen,
@@ -4652,7 +4750,32 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
                   !(fachbereich %in% c("MINT (Gesamt)", "Alle"))) %>%
     dplyr::collect()
 
-  df_alle <- dplyr::tbl(con, from = "studierende") %>%
+  df_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>% #weibliche absolventen nach Fach und männliche absolventen nach fach
+    dplyr::filter(jahr == timerange,
+                  region==regio,
+                  geschlecht %in% gen,
+                  indikator == lab_cho,
+                  typ == "Aggregat",
+                  !(fachbereich %in% c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin", "MINT","Gesamt", "Außerhalb der Studienbereichsgliederung/Sonstige Fächer", "Geisteswissenschaften", "Humanmedizin/Gesundheitswissenschaften", "Rechts-, Wirtschafts- und Sozialwissenschaften", "Kunst, Kunstwissenschaft","Sport" ))) %>%
+    dplyr::collect()
+
+  df_studierende <- df_studierende %>% dplyr::mutate(jahr = as.numeric(jahr))
+  df_absolventen <- df_absolventen %>% dplyr::mutate(jahr = as.numeric(jahr))
+
+  df <- dplyr::bind_rows(
+    df_studierende %>% dplyr::mutate(data_type = "Studierende"),
+    df_absolventen %>% dplyr::mutate(data_type = "Absolventen")
+  )
+
+  # df_alle <- dplyr::tbl(con, from = "studierende") %>%
+  #   dplyr::filter(jahr == timerange,
+  #                 region==regio,
+  #                 geschlecht %in% gen,
+  #                 indikator == lab_cho,
+  #                 fachbereich == "Alle") %>%
+  #   dplyr::rename(wert_ges = wert) %>%
+  #   dplyr::collect()
+  df_alle_studierende <- dplyr::tbl(con, from = "studierende") %>%
     dplyr::filter(jahr == timerange,
                   region==regio,
                   geschlecht %in% gen,
@@ -4660,6 +4783,23 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
                   fachbereich == "Alle") %>%
     dplyr::rename(wert_ges = wert) %>%
     dplyr::collect()
+
+  df_alle_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+    dplyr::filter(jahr == timerange,
+                  region==regio,
+                  geschlecht %in% gen,
+                  indikator == lab_cho,
+                  fachbereich == "Gesamt") %>%
+    dplyr::rename(wert_ges = wert) %>%
+    dplyr::collect()
+
+  df_alle_studierende <- df_alle_studierende %>% dplyr::mutate(jahr = as.numeric(jahr))
+  df_alle_absolventen <- df_alle_absolventen %>% dplyr::mutate(jahr = as.numeric(jahr))
+
+  df_alle<- dplyr::bind_rows(
+    df_alle_studierende %>% dplyr::mutate(data_type = "Studierende"),
+    df_alle_absolventen %>% dplyr::mutate(data_type = "Absolventen")
+  )
 
   df <- df %>%
     dplyr::left_join(df_alle, dplyr::join_by(jahr, indikator, geschlecht, region)) %>%
@@ -4673,24 +4813,55 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
   df <- df %>% dplyr::mutate(col = color_fachbereich[fachbereich])
   df$wert <- prettyNum(df$wert, big.mark=".", decimal.mark = ",")
 
-  # Überschriften vorbereiten
-  lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (1.Fachsemester)", "Studienanfänger:innen <br> (1. Fachsemester)", lab_cho)
-  lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (1.Hochschulsemester)", "Studienanfänger:innen <br> (1. Hochschulsemester)" , lab_cho)
-  lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)", "Studienanfänger:innen <br> (Fachhochschule, 1. Fachsemester)" , lab_cho)
-  lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Fachhochschule, 1. Hochschulsemester)" , lab_cho)
-  lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)", "Studienanfänger:innen <br> (Lehramt, Universität, 1. Fachsemester)" , lab_cho)
-  lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Lehramt, Universität, 1. Hochschulsemester)" , lab_cho)
-  lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Universität, 1.Fachsemester)", "Studienanfänger:innen <br> (Universität, 1. Fachsemester)" , lab_cho)
-  lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Universität, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Universität, 1. Hochschulsemester)" , lab_cho)
-  lab_cho <- ifelse(lab_cho == "Studierende (Fachhochschulen)", "Studierende <br> (Fachhochschulen)" , lab_cho)
-  lab_cho <- ifelse(lab_cho == "Studierende (Lehramt, Universität)", "Studierende <br> (Lehramt, Universität)" , lab_cho)
-  lab_cho <- ifelse(lab_cho == "Studierende (Universität)", "Studierende <br> (Universität)" , lab_cho)
 
-  titel_help <- paste0(lab_cho, " ")
+  # if (lab_cho == "Absolvent:innen"){
+  #
+  #
+  # } else {
+  #
+  # # Überschriften vorbereiten
+  # lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (1.Fachsemester)", "Studienanfänger:innen <br> (1. Fachsemester)", lab_cho)
+  # lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (1.Hochschulsemester)", "Studienanfänger:innen <br> (1. Hochschulsemester)" , lab_cho)
+  # lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Fachhochschulen, 1.Fachsemester)", "Studienanfänger:innen <br> (Fachhochschule, 1. Fachsemester)" , lab_cho)
+  # lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Fachhochschulen, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Fachhochschule, 1. Hochschulsemester)" , lab_cho)
+  # lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Lehramt, Universität, 1.Fachsemester)", "Studienanfänger:innen <br> (Lehramt, Universität, 1. Fachsemester)" , lab_cho)
+  # lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Lehramt, Universität, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Lehramt, Universität, 1. Hochschulsemester)" , lab_cho)
+  # lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Universität, 1.Fachsemester)", "Studienanfänger:innen <br> (Universität, 1. Fachsemester)" , lab_cho)
+  # lab_cho <- ifelse(lab_cho == "Studienanfänger:innen (Universität, 1.Hochschulsemester)", "Studienanfänger:innen <br> (Universität, 1. Hochschulsemester)" , lab_cho)
+  # lab_cho <- ifelse(lab_cho == "Studierende (Fachhochschulen)", "Studierende <br> (Fachhochschulen)" , lab_cho)
+  # lab_cho <- ifelse(lab_cho == "Studierende (Lehramt, Universität)", "Studierende <br> (Lehramt, Universität)" , lab_cho)
+  # lab_cho <- ifelse(lab_cho == "Studierende (Universität)", "Studierende <br> (Universität)" , lab_cho)
+  # }
+  # #studierende und absolventen überschrift
+  #
+  #
+  #
+  #
+  # titel_help <- paste0(lab_cho, " ")
 
   if(vergl == "Ja"){
     df_f <- df %>% dplyr::filter(geschlecht == "Frauen")
     df_m <- df %>% dplyr::filter(geschlecht == "Männer")
+
+
+    # Dynamische Titel und Untertitel für Frauen-Chart basierend auf lab_cho
+    titel_f_w <- ifelse(regio == "Saarland",
+                      paste0(ifelse(lab_cho == "Absolvent:innen", "Weibliche Absolventen in MINT im ", "Studienfachwahl von Frauen im "), regio, " (", timerange, ")"),
+                      paste0(ifelse(lab_cho == "Absolvent:innen", "Weibliche Absolventen in MINT in ", "Studienfachwahl von Frauen in "), regio, " (", timerange, ")"))
+
+    titel_f_m <- ifelse(regio == "Saarland",
+                        paste0(ifelse(lab_cho == "Absolvent:innen", "Männliche Absolventen in MINT im ", "Studienfachwahl von Männern im "), regio, " (", timerange, ")"),
+                        paste0(ifelse(lab_cho == "Absolvent:innen", "Männliche Absolventen in MINT in ", "Studienfachwahl von Männern in "), regio, " (", timerange, ")"))
+
+    untertitel_f_w <- ifelse(lab_cho == "Absolvent:innen",
+                           paste0("Von allen Frauen, die absolvierten, wählten ", 100 - df_f$prop[df_f$fachbereich == "andere Fachbereiche" & df_f$geschlecht == "Frauen"], " % ein MINT-Fach."),
+                           paste0("Von allen Frauen, die studieren, wählen ", 100 - df_f$prop[df_f$fachbereich == "andere Fachbereiche" & df_f$geschlecht == "Frauen"], " % ein MINT-Fach."))
+
+
+
+    untertitel_f_m <- ifelse(lab_cho == "Absolvent:innen",
+                             paste0("Von allen Männern, die absolvierten, wählten ", 100 - df_m$prop[df_m$fachbereich == "andere Fachbereiche" & df_m$geschlecht == "Männer"], " % ein MINT-Fach."),
+                             paste0("Von allen Männern, die studieren, wählen ", 100 - df_m$prop[df_m$fachbereich == "andere Fachbereiche" & df_m$geschlecht == "Männer"], " % ein MINT-Fach."))
 
     p1 <- df_f %>%
       highcharter::hchart(
@@ -4699,14 +4870,17 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')) %>%
       highcharter::hc_colors(as.character(df_f$col)) %>%
-      highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                          paste0("Studienfachwahl von Frauen im ", regio, " (", timerange, ")"),
-                                          paste0("Studienfachwahl von Frauen in ", regio, " (", timerange, ")")),margin = 45,
-                            align = "center",
+      # highcharter::hc_title(text = ifelse(regio == "Saarland",
+      #                                     paste0("Studienfachwahl von Frauen im ", regio, " (", timerange, ")"),
+      #                                     paste0("Studienfachwahl von Frauen in ", regio, " (", timerange, ")")),margin = 45,
+      #                       align = "center",
+      #                       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      # highcharter::hc_subtitle(text = paste0("Von allen Frauen die studieren, wählen ", 100-df_f$prop[df_f$fachbereich=="andere Fachbereiche"],
+      #                                        " % ein MINT-Fach."),
+      #                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      highcharter::hc_title(text = titel_f_w, margin = 45, align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = paste0("Von allen Frauen die studieren, wählen ", 100-df_f$prop[df_f$fachbereich=="andere Fachbereiche"],
-                                             " % ein MINT-Fach."),
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      highcharter::hc_subtitle(text = untertitel_f_w, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
@@ -4720,15 +4894,18 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')) %>%
       highcharter::hc_colors(as.character(df_f$col)) %>%
-      highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                          paste0("Studienfachwahl von Männern im ", regio, " (", timerange, ")"),
-                                          paste0("Studienfachwahl von Männern in ", regio, " (", timerange, ")")),
-                                          margin = 45,
-                            align = "center",
+      # highcharter::hc_title(text = ifelse(regio == "Saarland",
+      #                                     paste0("Studienfachwahl von Männern im ", regio, " (", timerange, ")"),
+      #                                     paste0("Studienfachwahl von Männern in ", regio, " (", timerange, ")")),
+      #                                     margin = 45,
+      #                       align = "center",
+      #                       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      # highcharter::hc_subtitle(text = paste0("Von allen Männern die studieren, wählen ", 100-df_m$prop[df_m$fachbereich=="andere Fachbereiche"],
+      #                                        " % ein MINT-Fach."),
+      #                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      highcharter::hc_title(text = titel_f_m, margin = 45, align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = paste0("Von allen Männern die studieren, wählen ", 100-df_m$prop[df_m$fachbereich=="andere Fachbereiche"],
-                                             " % ein MINT-Fach."),
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      highcharter::hc_subtitle(text = untertitel_f_m, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
@@ -4742,6 +4919,30 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
       browsable = TRUE
     )
   }else{
+
+    df_f <- df %>% dplyr::filter(geschlecht == "Frauen")
+    df_m <- df %>% dplyr::filter(geschlecht == "Männer")
+
+
+    # Dynamische Titel und Untertitel für Frauen-Chart basierend auf lab_cho
+    titel_f_w <- ifelse(regio == "Saarland",
+                        paste0(ifelse(lab_cho == "Absolvent:innen", "Weibliche Absolventen in MINT im ", "Studienfachwahl von Frauen im "), regio, " (", timerange, ")"),
+                        paste0(ifelse(lab_cho == "Absolvent:innen", "Weibliche Absolventen in MINT in ", "Studienfachwahl von Frauen in "), regio, " (", timerange, ")"))
+
+    titel_f_m <- ifelse(regio == "Saarland",
+                        paste0(ifelse(lab_cho == "Absolvent:innen", "Männliche Absolventen in MINT im ", "Studienfachwahl von Männern im "), regio, " (", timerange, ")"),
+                        paste0(ifelse(lab_cho == "Absolvent:innen", "Männliche Absolventen in MINT in ", "Studienfachwahl von Männern in "), regio, " (", timerange, ")"))
+
+    untertitel_f_w <- ifelse(lab_cho == "Absolvent:innen",
+                             paste0("Von allen Frauen, die absolvierten, wählten ", 100 - df_f$prop[df_f$fachbereich == "andere Fachbereiche" & df_f$geschlecht == "Frauen"], " % ein MINT-Fach."),
+                             paste0("Von allen Frauen, die studieren, wählen ", 100 - df_f$prop[df_f$fachbereich == "andere Fachbereiche" & df_f$geschlecht == "Frauen"], " % ein MINT-Fach."))
+
+
+
+    untertitel_f_m <- ifelse(lab_cho == "Absolvent:innen",
+                             paste0("Von allen Männern, die absolvierten, wählten ", 100 - df_m$prop[df_m$fachbereich == "andere Fachbereiche" & df_m$geschlecht == "Männer"], " % ein MINT-Fach."),
+                             paste0("Von allen Männern, die studieren, wählen ", 100 - df_m$prop[df_m$fachbereich == "andere Fachbereiche" & df_m$geschlecht == "Männer"], " % ein MINT-Fach."))
+
     out <- df %>%
       highcharter::hchart(
         "pie", size = 280, mapping = highcharter::hcaes(x = fachbereich , y =prop)
@@ -4749,15 +4950,18 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
       highcharter::hc_tooltip(
         pointFormat=paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')) %>%
       highcharter::hc_colors(as.character(df$col)) %>%
-      highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                          paste0("Studienfachwahl von Frauen im ", regio, " (", timerange, ")"),
-                                          paste0("Studienfachwahl von Frauen in ", regio, " (", timerange, ")")),
-                            margin = 45,
-                            align = "center",
+      # highcharter::hc_title(text = ifelse(regio == "Saarland",
+      #                                     paste0("Studienfachwahl von Frauen im ", regio, " (", timerange, ")"),
+      #                                     paste0("Studienfachwahl von Frauen in ", regio, " (", timerange, ")")),
+      #                       margin = 45,
+      #                       align = "center",
+      #                       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      # highcharter::hc_subtitle(text = paste0("Von allen Frauen die studieren, wählen ", 100-df$prop[df$fachbereich=="andere Fachbereiche"],
+      #                                        " % ein MINT-Fach."),
+      #                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      highcharter::hc_title(text = titel_f_w, margin = 45, align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = paste0("Von allen Frauen die studieren, wählen ", 100-df$prop[df$fachbereich=="andere Fachbereiche"],
-                                             " % ein MINT-Fach."),
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      highcharter::hc_subtitle(text = untertitel_f_w, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
@@ -4775,12 +4979,31 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
   subjects_select <- r$choice_v_f
   states <- r$choice_states
 
-  df <- dplyr::tbl(con, from = "studierende") %>%
+  # df <- dplyr::tbl(con, from = "studierende") %>%
+  #   dplyr::filter(jahr %in% t,
+  #                 geschlecht=="Frauen",
+  #                 region == states,
+  #                 indikator %in%v_lab) %>%
+  #   dplyr::collect()
+
+  df_studierende <- dplyr::tbl(con, from = "studierende") %>%
     dplyr::filter(jahr %in% t,
                   geschlecht=="Frauen",
                   region == states,
                   indikator %in%v_lab) %>%
     dplyr::collect()
+
+  df_absolventen <- dplyr::tbl(con, from = "studierende") %>%
+    dplyr::filter(jahr %in% t,
+                  geschlecht=="Frauen",
+                  region == states,
+                  indikator %in%v_lab) %>%
+    dplyr::collect()
+
+  df <- dplyr::bind_rows(
+    df_studierende %>% dplyr::mutate(data_type = "Studierende"),
+    df_absolventen %>% dplyr::mutate(data_type = "Absolventen")
+  )
 
   df <- df %>%
     #dplyr::select(-quelle, -bereich)%>%

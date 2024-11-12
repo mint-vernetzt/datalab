@@ -33,7 +33,8 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
           inputId = ns("gen_l"),
           choices = c("Studierende",
                       "Studierende (Lehramt)",
-                      "Studienanfänger:innen (1. Hochschulsemester)"
+                      "Studienanfänger:innen (1. Hochschulsemester)",
+                      "Absolvent:innen"
 
           ),
           selected = "Studierende",
