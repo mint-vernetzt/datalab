@@ -198,6 +198,9 @@ return(out)
 
 }
 
+#' ausserschulisch cp projekte Plot
+#'
+#' @noRd
 plot_cp_projekte <- function(r){
 
   charas <- r$chara_cp_pros
@@ -385,6 +388,53 @@ plot_cp_projekte <- function(r){
   }
 
   return(out)
+
+}
+
+# Befragungen ----
+
+#' ausserschulisch Akteursbefragung Plot
+#'
+#' @noRd
+
+plot_mv_akteursb <- function(r){
+  frage <- r$typ_akteursb
+
+  if(frage == "Arbeitsverhältnis"){
+
+    df <- dplyr::tbl(con, "ausserschulisch_akteursbefragung") %>%
+      dplyr::filter(typ %in% c("arbeitsverhältnis")) %>%
+      dplyr::collect()
+
+    df_ges <- df %>%
+      dplyr::filter(indikator == "Gesamt") %>%
+      dplyr::rename(wert_ges = wert) %>%
+      dplyr::select(-indikator)
+    df <- df %>% dplyr::filter(indikator != "Gesamt") %>%
+      dplyr::left_join(df_ges, by = c("typ")) %>%
+      dplyr::mutate(prop = round(wert/wert_ges*100, 1))
+
+    titel <- "Teilnehmende der Akteursbefragung nach Areitsverhältnis"
+    subtitel <- paste0("N = ", df$wert[df$indikator == "Gesamt"])
+
+    plot <- df %>%
+      highcharter::hchart(
+        "pie", highcharter::hcaes(x = indikator , y = wert)
+      )%>%
+      highcharter::hc_tooltip(
+        pointFormat=paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')) %>%
+      highcharter::hc_colors(as.character(df$color)) %>%
+      highcharter::hc_title(text = paste0("MINT-Fächeranteile in ", titel_help , " in ", regio, " (", timerange, ")"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                             dataLabels = list(enabled = TRUE,  format='{point.proportion}%'), showInLegend = TRUE))
+
+  }
 
 }
 
