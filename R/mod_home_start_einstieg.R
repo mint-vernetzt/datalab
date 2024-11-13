@@ -25,36 +25,36 @@ mod_home_start_einstieg_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_comparison_mint"),
       label = NULL,
-      choices = 2013:2022,
+      choices = 2013:2023,
       selected = 2022
     ),
 
-    # p("Region:"),
-    # shinyWidgets::pickerInput(
-    #   inputId = ns("region_start_einstieg_comparsion"),
-    #   choices = c("Deutschland",
-    #               "Baden-Württemberg",
-    #               "Bayern",
-    #               "Berlin",
-    #               "Brandenburg",
-    #               "Bremen",
-    #               "Hamburg",
-    #               "Hessen",
-    #               "Mecklenburg-Vorpommern",
-    #               "Niedersachsen",
-    #               "Nordrhein-Westfalen",
-    #               "Rheinland-Pfalz",
-    #               "Saarland",
-    #               "Sachsen",
-    #               "Sachsen-Anhalt",
-    #               "Schleswig-Holstein",
-    #               "Thüringen",
-    #               "Westdeutschland (o. Berlin)",
-    #               "Ostdeutschland (inkl. Berlin)"
-    #   ),
-    #   multiple = FALSE,
-    #   selected = c("Deutschland")
-    # ),
+    p("Region:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("region_start_einstieg_comparsion"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = FALSE,
+      selected = c("Deutschland")
+    ),
 
     conditionalPanel(condition = "input.ansicht_start_einstieg == 'Einzelansicht - Kuchendiagramm'",
                      ns = ns,
@@ -62,7 +62,7 @@ mod_home_start_einstieg_ui <- function(id){
           p("Bereiche (max. 2):"),
           shinyWidgets::pickerInput(
             inputId = ns("indikator_start_einstieg_1"),
-            choices = c("Schüler:innen Leistungskurse",
+            choices = c("Schüler:innen Leistungskurse" = "Leistungskurse",
                          "Studierende",
                         "Auszubildende", "Beschäftigte"),
             selected = c( "Beschäftigte", "Studierende"),
@@ -113,9 +113,9 @@ mod_home_start_einstieg_server <- function(id, r){
       r$date_start_comparison_mint <- input$date_start_comparison_mint
     })
 
-    # observeEvent(input$region_start_einstieg_comparsion, {
-    #   r$region_start_einstieg_comparsion <- input$region_start_einstieg_comparsion
-    # })
+    observeEvent(input$region_start_einstieg_comparsion, {
+      r$region_start_einstieg_comparsion <- input$region_start_einstieg_comparsion
+    })
 
     observeEvent(input$indikator_start_einstieg_1, {
       r$indikator_start_einstieg_1 <- input$indikator_start_einstieg_1
