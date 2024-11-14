@@ -5620,10 +5620,10 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
     tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
     #dplyr::rename("MINT (Gesamt)" = MINT)%>%
 
-    dplyr::mutate("Mathematik, Naturwissenschaften_p" =round(`Mathematik, Naturwissenschaften`/Alle*100,1),
-                  "MINT (Gesamt)_p"= round(`MINT (Gesamt)`/Alle*100,1),
-                  "Ingenieurwissenschaften_p"= round(Ingenieurwissenschaften/Alle*100,1))%>%
-    dplyr::select(-Alle, -`Nicht MINT`)%>%
+    dplyr::mutate("Mathematik, Naturwissenschaften_p" =round(`Mathematik, Naturwissenschaften`/`Gesamt`*100,1),
+                  "MINT (Gesamt)_p"= round(`Alle MINT-Fächer`/`Gesamt` *100,1),
+                  "Ingenieurwissenschaften_p"= round(`Ingenieurwissenschaften (inkl. Informatik)`/`Gesamt`*100,1))%>%
+    dplyr::select(-`Gesamt`, -`Nicht MINT`)%>%
     tidyr::pivot_longer(c(5:10),names_to="fach",values_to="wert")%>%
     dplyr::mutate(selector= dplyr::case_when(stringr::str_ends(.$fach, "_p")~"In Prozent",
                                              T~"Anzahl"))
