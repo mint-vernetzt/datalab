@@ -29,10 +29,37 @@ mod_home_start_comparison_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_comparison"),
       label = NULL,
-      choices = c("2013", "2014","2015", "2016", "2017",
-                  "2018","2019", "2020", "2021", "2022"),
-      selected = c("2016", "2022")
+      choices = 2013:2023,
+      selected = c(2015, 2023)
     ),
+
+    p("Region:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("regio_start_comparison"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = FALSE,
+      selected = c("Deutschland")
+    ),
+
     p("Bereich:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_comparison"),
@@ -77,6 +104,11 @@ mod_home_start_comparison_server <- function(id, r){
     observeEvent(input$date_start_comparison, {
       r$date_start_comparison <- input$date_start_comparison
     })
+
+    observeEvent(input$regio_start_comparison, {
+      r$regio_start_comparison <- input$regio_start_comparison
+    })
+
 
     observeEvent(input$indikator_start_comparison, {
       r$indikator_start_comparison <- input$indikator_start_comparison
