@@ -218,7 +218,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                    "Studierende (Lehramt)",
                                    "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "Absolvent:innen"),
                        selected = "Studierende"),
 
                      #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen

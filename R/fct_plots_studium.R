@@ -2412,31 +2412,107 @@ mint_anteile <- function(r) {
     #                 fach == "Alle MINT-Fächer",
     #                 jahr %in% 2015:2022) %>%
     #   dplyr::collect()
-    df_ges_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
-                    geschlecht == "Gesamt",
-                    fach == "Alle MINT-Fächer",
-                    jahr %in% 2015:2022) %>%
-      dplyr::collect()
 
-    df_ges_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
-      dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
-                    geschlecht == "Gesamt",
-                    fach == "Alle MINT-Fächer",
-                    jahr %in% 2015:2022) %>%
-      dplyr::collect()
+
+    if(indi == "Absolvent:innen"){
+
+
+      df_ges_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+        dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
+                      geschlecht == "Gesamt",
+                      fach == "Alle MINT-Fächer",
+                      jahr %in% 2015:2022) %>%
+        dplyr::collect()
+
+      df_ges_absolventen <- df_ges_absolventen %>%
+        tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+        dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
+
+
+
+      df_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+        dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
+                      geschlecht == "Gesamt",
+                      jahr %in% 2015:2022,
+                      fach %in% faecher_select,
+                      # !(fach %in% c("Andere MINT-Fächer", "Ingenieurwesen allgemein",
+                      #               "allgemeine naturwissenschaftliche und mathematische Fächer"))
+        ) %>%
+        dplyr::collect()
+
+      df_absolventen <- df_absolventen %>%
+        dplyr::select(indikator, region, jahr, fach, wert)%>%
+        dplyr::left_join(df_ges_absolventen , by=c("indikator", "region", "jahr"))%>%
+        dplyr::filter(fach != "Alle MINT-Fächer")%>%
+        dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
+
+      df_absolventen <- df_absolventen %>%
+        dplyr::filter(indikator == indi)%>%
+        dplyr::filter(region == states)
+
+      year_vec <- df_absolventen %>%
+        dplyr::select(jahr)%>%
+        unique()%>%
+        as.vector%>%
+        unlist()%>%
+        unname()
+
+
+      df <- df_absolventen
+
+
+
+      } else {
+
+        df_ges_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+          dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
+                        geschlecht == "Gesamt",
+                        fach == "Alle MINT-Fächer",
+                        jahr %in% 2015:2022) %>%
+          dplyr::collect()
+
+        df_ges_studierende <- df_ges_studierende %>%
+          tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+          dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
+        df_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+          dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
+                        geschlecht == "Gesamt",
+                        jahr %in% 2015:2022,
+                        fach %in% faecher_select,
+                        # !(fach %in% c("Andere MINT-Fächer", "Ingenieurwesen allgemein",
+                        #               "allgemeine naturwissenschaftliche und mathematische Fächer"))
+          ) %>%
+          dplyr::collect()
+
+        df_studierende <- df_studierende %>%
+          dplyr::select(indikator, region, jahr, fach, wert)%>%
+          dplyr::left_join(df_ges_studierende , by=c("indikator", "region", "jahr"))%>%
+          dplyr::filter(fach != "Alle MINT-Fächer")%>%
+          dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
+
+        df_studierende <- df_studierende %>%
+          dplyr::filter(indikator == indi)%>%
+          dplyr::filter(region == states) ###auch hier noch weiter machen
+
+        year_vec <- df_studierende %>%
+          dplyr::select(jahr)%>%
+          unique()%>%
+          as.vector%>%
+          unlist()%>%
+          unname()
+
+        df <- df_studierende
+      }
+
+
+
+
 
     # df_ges <- df_ges %>%
     #   tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
     #   dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
 
-    df_ges_studierende <- df_ges_studierende %>%
-      tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-      dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
 
-    df_ges_absolventen <- df_ges_absolventen %>%
-      tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-      dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
 
 
     # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
@@ -2466,74 +2542,147 @@ mint_anteile <- function(r) {
     #   unlist()%>%
     #   unname()
 
-    df_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
-                    geschlecht == "Gesamt",
-                    jahr %in% 2015:2022,
-                    fach %in% faecher_select,
-                    # !(fach %in% c("Andere MINT-Fächer", "Ingenieurwesen allgemein",
-                    #               "allgemeine naturwissenschaftliche und mathematische Fächer"))
-      ) %>%
-      dplyr::collect()
 
-    df_studierende <- df_studierende %>%
-      dplyr::select(indikator, region, jahr, fach, wert)%>%
-      dplyr::left_join(df_ges , by=c("indikator", "region", "jahr"))%>%
-      dplyr::filter(fach != "Alle MINT-Fächer")%>%
-      dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
-
-    df_studierende <- df_studierende %>%
-      dplyr::filter(indikator == indi)%>%
-      dplyr::filter(region == states) ###auch hier noch weiter machen
-
-    year_vec <- df_studierende %>%
-      dplyr::select(jahr)%>%
-      unique()%>%
-      as.vector%>%
-      unlist()%>%
-      unname()
-
-
-    df_absolventen <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(mint_select == "MINT" & typ == "Einzelauswahl"| fach == "Alle MINT-Fächer",
-                    geschlecht == "Gesamt",
-                    jahr %in% 2015:2022,
-                    fach %in% faecher_select,
-                    # !(fach %in% c("Andere MINT-Fächer", "Ingenieurwesen allgemein",
-                    #               "allgemeine naturwissenschaftliche und mathematische Fächer"))
-      ) %>%
-      dplyr::collect()
-
-    df_absolventen <- df_absolventen %>%
-      dplyr::select(indikator, region, jahr, fach, wert)%>%
-      dplyr::left_join(df_ges , by=c("indikator", "region", "jahr"))%>%
-      dplyr::filter(fach != "Alle MINT-Fächer")%>%
-      dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
-
-    df_absolventen <- df_absolventen %>%
-      dplyr::filter(indikator == indi)%>%
-      dplyr::filter(region == states)
-
-    year_vec <- df_absolventen %>%
-      dplyr::select(jahr)%>%
-      unique()%>%
-      as.vector%>%
-      unlist()%>%
-      unname()
 
     colors <- as.character(color_fach)
 
   } else if (ordering=="MINT-Fachbereiche"){
 
 
-    df2_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(fach == "Alle MINT-Fächer",
-                    geschlecht == "Gesamt",
-                    indikator == indi,
-                    region == states) %>%
-      dplyr::collect()%>%
-      tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-      dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
+    # df2_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(fach == "Alle MINT-Fächer",
+    #                 geschlecht == "Gesamt",
+    #                 indikator == indi,
+    #                 region == states) %>%
+    #   dplyr::collect()%>%
+    #   tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+    #   dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
+
+    if(indi == "Absolvent:innen"){
+
+      df2_ges_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+        dplyr::filter(fach == "Alle MINT-Fächer",
+                      geschlecht == "Gesamt",
+                      indikator == indi,
+                      region == states) %>%
+        dplyr::collect()%>%
+        tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+        dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
+
+      informatik_data_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+        dplyr::filter(fach == "Informatik",
+                      geschlecht == "Gesamt",
+                      indikator == indi,
+                      region == states,
+                      jahr %in% 2015:2023) %>%
+        dplyr::collect()
+
+
+      ingenieur_incl_informatik_data_absolventen <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        dplyr::filter(fach == "Ingenieurwissenschaften (inkl. Informatik)",
+                      geschlecht == "Gesamt",
+                      indikator == indi,
+                      region == states,
+                      jahr %in% 2015:2023) %>%
+        dplyr::collect()
+
+
+      ingenieur_ohne_informatik_data_absolventen <- ingenieur_incl_informatik_data_absolventen %>%
+        dplyr::left_join(informatik_data_absolventen, by = c("geschlecht", "indikator", "region", "jahr"), suffix = c(".ingenieur", ".informatik")) %>%
+        dplyr::mutate(wert = wert.ingenieur - wert.informatik) %>%
+        dplyr::select(-wert.ingenieur, -wert.informatik, -fach.ingenieur, -fach.informatik)
+
+
+      ingenieur_ohne_informatik_data <- ingenieur_ohne_informatik_data_absolventen
+
+
+      df_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+        dplyr::filter((fach == "Informatik" |
+                         # fach == "Ingenieurwissenschaften (inkl. Informatik)" |
+                         fach == "Mathematik, Naturwissenschaften" |
+                         fach == "Alle MINT-Fächer"),
+                      geschlecht == "Gesamt",
+                      indikator == indi,
+                      region == states,
+                      jahr %in% 2015:2022) %>%
+        dplyr::collect() %>%
+        dplyr::bind_rows(ingenieur_ohne_informatik_data %>%
+                           dplyr::mutate(fach = "Ingenieurwissenschaften (ohne Informatik)"))
+
+      df_absolventen <- df_absolventen %>%
+        dplyr::select(indikator, region, jahr, fach, wert)%>%
+        dplyr::left_join(df2_ges_absolventen , by=c("indikator", "region", "jahr"))%>%
+        dplyr::filter(fach != "Alle MINT-Fächer")%>%
+        dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
+
+
+      df <-  df_absolventen
+
+    } else {
+
+      df2_ges_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        dplyr::filter(fach == "Alle MINT-Fächer",
+                      geschlecht == "Gesamt",
+                      indikator == indi,
+                      region == states) %>%
+        dplyr::collect()%>%
+        tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+        dplyr::select(indikator, region, jahr, `Alle MINT-Fächer`)
+
+      informatik_data_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        dplyr::filter(fach == "Informatik",
+                      geschlecht == "Gesamt",
+                      indikator == indi,
+                      region == states,
+                      jahr %in% 2015:2023) %>%
+        dplyr::collect()
+
+
+      ingenieur_incl_informatik_data_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        dplyr::filter(fach == "Ingenieurwissenschaften (inkl. Informatik)",
+                      geschlecht == "Gesamt",
+                      indikator == indi,
+                      region == states,
+                      jahr %in% 2015:2023) %>%
+        dplyr::collect()
+
+      ingenieur_ohne_informatik_data_studierende <- ingenieur_incl_informatik_data_studierende %>%
+        dplyr::left_join(informatik_data_studierende, by = c("geschlecht", "indikator", "region", "jahr"), suffix = c(".ingenieur", ".informatik")) %>%
+        dplyr::mutate(wert = wert.ingenieur - wert.informatik) %>%
+        dplyr::select(-wert.ingenieur, -wert.informatik, -fach.ingenieur, -fach.informatik)#
+
+
+      ingenieur_ohne_informatik_data <- ingenieur_ohne_informatik_data_studierende
+
+      df_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        dplyr::filter((fach == "Informatik" |
+                         # fach == "Ingenieurwissenschaften (inkl. Informatik)" |
+                         fach == "Mathematik, Naturwissenschaften" |
+                         fach == "Alle MINT-Fächer"),
+                      geschlecht == "Gesamt",
+                      indikator == indi,
+                      region == states,
+                      jahr %in% 2015:2022) %>%
+        dplyr::collect() %>%
+        dplyr::bind_rows(ingenieur_ohne_informatik_data %>%
+                           dplyr::mutate(fach = "Ingenieurwissenschaften (ohne Informatik)"))
+
+
+      df_studierende <- df_studierende %>%
+        dplyr::select(indikator, region, jahr, fach, wert)%>%
+        dplyr::left_join(df2_ges_studierende , by=c("indikator", "region", "jahr"))%>%
+        dplyr::filter(fach != "Alle MINT-Fächer")%>%
+        dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
+
+
+
+      df <- df_studierende
+
+    }
+
+
+
+
 
     # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
     #   dplyr::filter(fach=="Informatik" | fach == "Ingenieurwissenschaften (inkl. Informatik)"|
@@ -2545,47 +2694,61 @@ mint_anteile <- function(r) {
     #   dplyr::collect()
 
     # Daten für Informatik abrufen
-    informatik_data <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(fach == "Informatik",
-                    geschlecht == "Gesamt",
-                    indikator == indi,
-                    region == states,
-                    jahr %in% 2015:2022) %>%
-      dplyr::collect()
+    # informatik_data <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(fach == "Informatik",
+    #                 geschlecht == "Gesamt",
+    #                 indikator == indi,
+    #                 region == states,
+    #                 jahr %in% 2015:2022) %>%
+    #   dplyr::collect()
+
+
+
+
 
     # Daten für Ingenieurwissenschaften (inkl. Informatik) abrufen
-    ingenieur_incl_informatik_data <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(fach == "Ingenieurwissenschaften (inkl. Informatik)",
-                    geschlecht == "Gesamt",
-                    indikator == indi,
-                    region == states,
-                    jahr %in% 2015:2022) %>%
-      dplyr::collect()
+    # ingenieur_incl_informatik_data <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(fach == "Ingenieurwissenschaften (inkl. Informatik)",
+    #                 geschlecht == "Gesamt",
+    #                 indikator == indi,
+    #                 region == states,
+    #                 jahr %in% 2015:2022) %>%
+    #   dplyr::collect()
+
+
 
     # Berechnung der Ingenieurwissenschaften ohne Informatik
-    ingenieur_ohne_informatik_data <- ingenieur_incl_informatik_data %>%
-      dplyr::left_join(informatik_data, by = c("geschlecht", "indikator", "region", "jahr"), suffix = c(".ingenieur", ".informatik")) %>%
-      dplyr::mutate(wert = wert.ingenieur - wert.informatik) %>%
-      dplyr::select(-wert.ingenieur, -wert.informatik, -fach.ingenieur, -fach.informatik)
+    # ingenieur_ohne_informatik_data <- ingenieur_incl_informatik_data %>%
+    #   dplyr::left_join(informatik_data, by = c("geschlecht", "indikator", "region", "jahr"), suffix = c(".ingenieur", ".informatik")) %>%
+    #   dplyr::mutate(wert = wert.ingenieur - wert.informatik) %>%
+    #   dplyr::select(-wert.ingenieur, -wert.informatik, -fach.ingenieur, -fach.informatik)
 
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter((fach == "Informatik" |
-                       # fach == "Ingenieurwissenschaften (inkl. Informatik)" |
-                       fach == "Mathematik, Naturwissenschaften" |
-                       fach == "Alle MINT-Fächer"),
-                    geschlecht == "Gesamt",
-                    indikator == indi,
-                    region == states,
-                    jahr %in% 2015:2022) %>%
-      dplyr::collect() %>%
-      dplyr::bind_rows(ingenieur_ohne_informatik_data %>%
-                         dplyr::mutate(fach = "Ingenieurwissenschaften (ohne Informatik)"))
 
-    df <- df %>%
-      dplyr::select(indikator, region, jahr, fach, wert)%>%
-      dplyr::left_join(df2_ges , by=c("indikator", "region", "jahr"))%>%
-      dplyr::filter(fach != "Alle MINT-Fächer")%>%
-      dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
+
+
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter((fach == "Informatik" |
+    #                    # fach == "Ingenieurwissenschaften (inkl. Informatik)" |
+    #                    fach == "Mathematik, Naturwissenschaften" |
+    #                    fach == "Alle MINT-Fächer"),
+    #                 geschlecht == "Gesamt",
+    #                 indikator == indi,
+    #                 region == states,
+    #                 jahr %in% 2015:2022) %>%
+    #   dplyr::collect() %>%
+    #   dplyr::bind_rows(ingenieur_ohne_informatik_data %>%
+    #                      dplyr::mutate(fach = "Ingenieurwissenschaften (ohne Informatik)"))
+
+
+
+
+
+    # df <- df %>%
+    #   dplyr::select(indikator, region, jahr, fach, wert)%>%
+    #   dplyr::left_join(df2_ges , by=c("indikator", "region", "jahr"))%>%
+    #   dplyr::filter(fach != "Alle MINT-Fächer")%>%
+    #   dplyr::mutate(prop = round(wert /`Alle MINT-Fächer`*100, 1))
+
 
     colors <- as.character(color_fachbereich)
 
@@ -3208,7 +3371,7 @@ plot_studierende_bula_faecher <- function(r){
         titel <- paste0("Anzahl an ", label_m, " in ", titel_help)
       }
 
-      df_combined <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+      df_combined <- df_combined[with(df_combined, order(region, jahr, decreasing = FALSE)), ]
       # plot
 
       # Den dynamisch erstellten Text in die Überschrift einfügen
@@ -3247,25 +3410,86 @@ plot_studierende_bula_faecher <- function(r){
       fach_bl <- r$bl_balken_alle_faecher
     }
 
-    df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(geschlecht=="Gesamt",
-                    jahr %in% timerange,
-                    region %in% regio,
-                    indikator == r_lab1) %>%
-      dplyr::collect()
+    # df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(geschlecht=="Gesamt",
+    #                 jahr %in% timerange,
+    #                 region %in% regio,
+    #                 indikator == r_lab1) %>%
+    #   dplyr::collect()
 
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(geschlecht=="Gesamt",
-                    jahr %in% timerange,
-                    region %in% regio,
-                    indikator == r_lab1) %>%
-      dplyr::select(-fachbereich,- mint_select, -typ )%>%
-      dplyr::collect() %>%
-      tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-      dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
-      tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
-      dplyr::right_join(df_ges)%>%
-      dplyr::collect()
+
+
+    if(r_lab1 == "Absolvent:innen"){
+
+
+      df_ges_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+        dplyr::filter(geschlecht=="Gesamt",
+                      jahr %in% timerange,
+                      region %in% regio,
+                      indikator == r_lab1) %>%
+        dplyr::collect()
+
+      df_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
+        dplyr::filter(geschlecht=="Gesamt",
+                      jahr %in% timerange,
+                      region %in% regio,
+                      indikator == r_lab1) %>%
+        dplyr::select(-fachbereich,- mint_select, -typ )%>%
+        dplyr::collect() %>%
+        tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+        dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
+        tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
+        dplyr::right_join(df_ges_absolventen)%>%
+        dplyr::collect()
+
+      df <- df_absolventen
+
+    } else {
+
+      df_ges_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        dplyr::filter(geschlecht=="Gesamt",
+                      jahr %in% timerange,
+                      region %in% regio,
+                      indikator == r_lab1) %>%
+        dplyr::collect()
+
+      df_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        dplyr::filter(geschlecht=="Gesamt",
+                      jahr %in% timerange,
+                      region %in% regio,
+                      indikator == r_lab1) %>%
+        dplyr::select(-fachbereich,- mint_select, -typ )%>%
+        dplyr::collect() %>%
+        tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+        dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
+        tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
+        dplyr::right_join(df_ges_studierende)%>%
+        dplyr::collect()
+
+      df <- df_studierende
+
+    }
+
+
+
+
+
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(geschlecht=="Gesamt",
+    #                 jahr %in% timerange,
+    #                 region %in% regio,
+    #                 indikator == r_lab1) %>%
+    #   dplyr::select(-fachbereich,- mint_select, -typ )%>%
+    #   dplyr::collect() %>%
+    #   tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+    #   dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
+    #   tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
+    #   dplyr::right_join(df_ges)%>%
+    #   dplyr::collect()
+
+
+
+
 
 
     #Trennpunkte für lange Zahlen ergänzen
