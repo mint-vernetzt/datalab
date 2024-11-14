@@ -102,7 +102,8 @@ mod_studium_choice_gender_ui <- function(id){
                        choices = c(
                          "Studierende",
                          "Studierende (Lehramt)" = "Studierende (Lehramt, Universität)",
-                         "Studienanfänger:innen (1.Hochschulsemester)"
+                         "Studienanfänger:innen (1.Hochschulsemester)",
+                         "Absolvent:innen"
                        ),
                        selected = c("Studierende", "Studienanfänger:innen (1.Hochschulsemester)")
                        ,

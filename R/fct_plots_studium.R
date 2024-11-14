@@ -5345,7 +5345,8 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
                   region==regio,
                   geschlecht %in% gen,
                   indikator == lab_cho,
-                  !(fachbereich %in% c("MINT (Gesamt)", "Alle"))) %>%
+                  typ == "Aggregat",
+                  !(fachbereich %in% c("Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin", "MINT","Gesamt", "Außerhalb der Studienbereichsgliederung/Sonstige Fächer", "Geisteswissenschaften", "Humanmedizin/Gesundheitswissenschaften", "Rechts-, Wirtschafts- und Sozialwissenschaften", "Kunst, Kunstwissenschaft","Sport" ))) %>%
     dplyr::collect()
 
   df_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>% #weibliche absolventen nach Fach und männliche absolventen nach fach
@@ -5378,7 +5379,7 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
                   region==regio,
                   geschlecht %in% gen,
                   indikator == lab_cho,
-                  fachbereich == "Alle") %>%
+                  fachbereich == "Gesamt") %>%
     dplyr::rename(wert_ges = wert) %>%
     dplyr::collect()
 
@@ -5571,7 +5572,7 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 } else if(betrachtung == "Zeitverlauf - Liniendiagramm"){
   # load UI inputs from reactive value
   timerange <- r$choice_V_y
-  t <- as.character(timerange[1]:timerange[2])
+  t <- timerange[1]:timerange[2]
   v_lab <- r$choice_l_v
   absolut_selector <- r$abs_zahlen_l_v
   subjects_select <- r$choice_v_f
@@ -5584,11 +5585,13 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
   #                 indikator %in%v_lab) %>%
   #   dplyr::collect()
 
-  df_studierende <- dplyr::tbl(con, from = "studierende") %>%
+  df_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
     dplyr::filter(jahr %in% t,
                   geschlecht=="Frauen",
                   region == states,
-                  indikator %in%v_lab) %>%
+                  indikator %in%v_lab,
+                  (fachbereich %in% c("Ingenieurwissenschaften", "MINT", "Nicht MINT", "Mathematik, Naturwissenschaften", "Gesamt")),
+                  typ == "Aggregat")%>%
     dplyr::collect()
 
   df_absolventen <- dplyr::tbl(con, from = "studierende_absolventen") %>%
@@ -5608,9 +5611,7 @@ if(betrachtung == "Einzelansicht - Kuchendiagramm"){
     df_absolventen %>% dplyr::mutate(data_type = "Absolventen")
   )
 
-    #####################HIER NOCH WEITER MACHEN, das ist echt etwas komsich
-
-  df_absolventen <- df_absolventen[, setdiff(names(df), c("fach", "bereich", "typ", "mint_select"))]
+    #################### Ab hier noch weiter machen ##################################################### Turan 14.11.2024
 
 
 
