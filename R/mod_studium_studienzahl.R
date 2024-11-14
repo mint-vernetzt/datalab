@@ -782,7 +782,32 @@ mod_studium_studienzahl_ui <- function(id){
                                                        trigger = "hover"),
                                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_international_2"))
 
+                                  ),
+
+
+
+                         tabPanel("Bundeslandvergleich", br(),
+
+                                  shiny::sidebarPanel(
+                                    width = 3,
+                                    mod_studium_studienzahl_international_bundeslandvergleich_ui("mod_studium_studienzahl_international_bundeslandvergleich_ui"),
+
+                                  ),
+                                  shiny::mainPanel(
+                                    width = 9,
+                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_auslaender_international_bula")),
+                                                                 color = "#154194"),
+
+                                    p(style="font-size:12px;color:grey",
+                                      "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+
+                                    shinyBS::bsPopover(id="p_auslaender_bula_1", title="",
+                                                       content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden die betroffenen Bundesländer als grau schattiert angezeigt.", "<br> <br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
+                                                       placement = "top",
+                                                       trigger = "hover"),
+                                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="p_auslaender_bula_1")
                                   )
+                         ),
 
                          # tabPanel("Anteil von internationalen Studierenden im Zeitgergleich", br(),
                          #          shiny::sidebarPanel(
@@ -1379,6 +1404,42 @@ mod_studium_studienzahl_server <- function(id, r){
 
         file.copy(r$plot_auslaender_zeit_title, file)
         file.remove(r$plot_auslaender_zeit_title)
+      }
+    )
+
+
+
+
+    # Tab 3
+
+    output$plot_auslaender_international_bula <- renderUI({
+      plot_list <- studierende_international_bula_mint(r)
+      r$plot_auslaender_international_bula <- plot_list
+
+      r$studierende_international_bula_mint <- get_plot_title(
+        plot = r$plot_auslaender_international_bula
+      )
+
+      plot_list
+    })
+
+
+
+
+    output$download_btn_plot_auslaender_zeit <- downloadHandler(
+      contentType = "image/png",
+      filename = function() {r$studierende_international_bula_mint},
+      content = function(file) {
+        # creating the file with the screenshot and prepare it to download
+
+        add_caption_and_download(
+          hc = r$plot_auslaender_international_bula,
+          filename =  r$studierende_international_bula_mint,
+          width = 700,
+          height = 400)
+
+        file.copy(r$studierende_international_bula_mint, file)
+        file.remove(r$studierende_international_bula_mint)
       }
     )
 
