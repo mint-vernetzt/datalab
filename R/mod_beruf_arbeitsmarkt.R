@@ -644,34 +644,33 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                )
                              # ,
                              # p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
-                    )
-              # ,
-              # tabPanel("Zeitverlauf MINT in Landkreisen", br(),
-              #
-              #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-              #                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-              #          shiny::sidebarPanel(
-              #            width = 3,
-              #            mod_beruf_arbeitsmarkt_regional_verlauf_ui("mod_beruf_arbeitsmarkt_regional_verlauf_ui_1"),
-              #            # br(),br(),
-              #            # downloadButton(
-              #            #   outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
-              #            #   label = "Download",
-              #            #   icon = icon("download")),
-              #          ),
-              #          shiny::mainPanel(
-              #            width = 9,
-              #            shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_verlauf_regional")),
-              #                                         color = "#154194"),
-              #
-              #            p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-              #            shinyBS::bsPopover(id = "h_beruf_fach_mint_2", title = "",
-              #                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
-              #                               placement = "top",
-              #                               trigger = "hover"),
-              #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_mint_2")
-              #          )
-              # ),
+                    ),
+                    tabPanel("Zeitverlauf MINT in Landkreisen", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                                 .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_beruf_arbeitsmarkt_regional_verlauf_ui("mod_beruf_arbeitsmarkt_regional_verlauf_ui_1"),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               shinycssloaders::withSpinner(htmlOutput(ns("fachbereich_beruf_arbeitsmarkt_landkreis_verlauf")),
+                                                            color = "#154194"),
+
+                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               shinyBS::bsPopover(id = "h_beruf_fach_mint_2", title = "",
+                                                  content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_mint_2")
+                             )
+                    )#,
                     # Tabelle noch nicht fertig gelayoutet
                     # tabPanel("Tabelle", br(),
                     #

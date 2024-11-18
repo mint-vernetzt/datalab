@@ -16,8 +16,8 @@ mod_beruf_arbeitsmarkt_regional_verlauf_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_landkreis_verlauf"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2017, 2022)
+      choices = 2013:2023,
+      selected = c(2017, 2023)
     ),
     p("Bundesland:"),
     shinyWidgets::pickerInput(
@@ -26,7 +26,7 @@ mod_beruf_arbeitsmarkt_regional_verlauf_ui <- function(id){
                   "Bayern",
                   #"Berlin",
                   "Brandenburg",
-                  #"Bremen",
+                  "Bremen",
                   #"Hamburg",
                   "Hessen",
                   "Mecklenburg-Vorpommern",
@@ -42,13 +42,20 @@ mod_beruf_arbeitsmarkt_regional_verlauf_ui <- function(id){
       multiple = FALSE,
       selected = c("Rheinland-Pfalz")
     ),
+
     p("Landkreise:"),
     shinyWidgets::pickerInput(
       inputId = ns("kreise_beruf_arbeitsmarkt_landkreis_verlauf"),
-      choices = get_lks("input.states_beruf_arbeitsmarkt_landkreis_verlauf"),
+      choices = NULL, # Initial leer
       multiple = TRUE,
-      selected = c("alle Landkreise")
+      options = list(
+        `actions-box` = TRUE,
+        `deselect-all-text` = "Alle abwählen",
+        `select-all-text` = "Alle auswählen",
+        `live-search` = TRUE
+      )
     ),
+
     hr(),
     p("Beschäftigtengruppen:"),
     shinyWidgets::pickerInput(
@@ -111,12 +118,44 @@ mod_beruf_arbeitsmarkt_regional_verlauf_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+
+    selected_region <- reactive({
+      input$states_beruf_arbeitsmarkt_landkreis_verlauf
+    })
+
+    # output$lk_auswahl <- renderUI({
+    #
+    #   regio <- selected_region()
+    #   lk_auswahl <- get_lks(regio)
+    #
+    #     shinyWidgets::pickerInput(
+    #       inputId = "kreise_beruf_arbeitsmarkt_landkreis_verlauf",
+    #       choices = lk_auswahl,
+    #       multiple = TRUE,
+    #       options = list(`actions-box` = TRUE,
+    #                      `deselect-all-text` = "Alle abwählen",
+    #                      `select-all-text` = "Alle auswählen"),
+    #       selected = lk_auswahl
+    #     )
+    #
+    # })
+
     observeEvent(input$date_beruf_arbeitsmarkt_landkreis_verlauf, {
       r$date_beruf_arbeitsmarkt_landkreis_verlauf <- input$date_beruf_arbeitsmarkt_landkreis_verlauf
     })
 
     observeEvent(input$states_beruf_arbeitsmarkt_landkreis_verlauf, {
       r$states_beruf_arbeitsmarkt_landkreis_verlauf <- input$states_beruf_arbeitsmarkt_landkreis_verlauf
+
+      regio <- selected_region()
+      lk_auswahl <- get_lks(regio)
+
+          shinyWidgets::updatePickerInput(
+            session= session,
+            inputId = "kreise_beruf_arbeitsmarkt_landkreis_verlauf",
+            choices = lk_auswahl,
+            selected = lk_auswahl[1:6]
+          )
     })
 
     observeEvent(input$kreise_beruf_arbeitsmarkt_landkreis_verlauf, {

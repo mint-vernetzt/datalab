@@ -5,6 +5,8 @@ lks <- DBI::dbGetQuery(con,
                       paste0("SELECT DISTINCT landkreis
                        FROM arbeitsmarkt_detail
                        WHERE bundesland = '", bula, "'"))$landkreis
+lks <- setdiff(lks, "alle Landkreise")
+lks <- c("Landesdurchschnitt", lks)
 
 return(lks)
 }
