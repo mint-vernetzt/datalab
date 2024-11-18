@@ -40,7 +40,7 @@ mod_beruf_arbeitsmarkt_regional_verlauf_ui <- function(id){
                   "Thüringen"
       ),
       multiple = FALSE,
-      selected = c("Rheinland-Pfalz")
+      selected = c("Mecklenburg-Vorpommern")
     ),
 
     p("Landkreise:"),
@@ -104,7 +104,7 @@ mod_beruf_arbeitsmarkt_regional_verlauf_ui <- function(id){
     br(),
 
     shinyBS::bsPopover(id="ih_beruf_regional_v1", title="",
-                       content = paste0("Die Karte in der ersten Einstellung zeigt beispielsweise, dass 2022 in Ludwigshafen am Rhein (unten, seitlich rechts, dunkelblaue Stelle) mit 38% der größte Anteil an MINT-Beschäftigten in Rheinland-Pfalz arbeitet."),
+                       content = paste0("Dieser Zeitverlauf zeigt, dass zwischen 2017 und 2023 im Landesdurchschnitt der MINT-Anteil unter Beschäftigten in Mecklenburg-Vorpommern bei knapp 18% liegt. Rostock und Nordwest-Mecklenburg haben einen überdurchschnittlich hohen MINT-Anteil."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_regional_v1")

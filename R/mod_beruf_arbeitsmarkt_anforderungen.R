@@ -66,7 +66,7 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_fach_2", title="",
-                                        content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Deutschland im Jahr 2022 knapp 77% der Beschäftigten in Nicht-MINT Berufen tätig sind. In den MINT-Berufen dominiert die Technik mit 18.2%."),
+                                        content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Deutschland im Jahr 2023 rund 77% der Beschäftigten in Nicht-MINT Berufen tätig sind. In den MINT-Berufen dominiert die Technik: 18.1% der Beschäftigten gehen beruflich einer Tätigkeit in der Technik nach."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_2")
 
@@ -99,7 +99,7 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_mint_1", title="",
-                                        content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland im Jahr 2022 knapp 23 % der Beschäftigten in MINT beschäftigt waren (1.5 + 3 + 18.2 = 22.7 %). Bei den Auszubildenden waren dies etwa 30 %."),
+                                        content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Deutschland im Jahr 2023 rund 77% der Beschäftigten in Nicht-MINT Berufen tätig sind. In den MINT-Berufen dominiert die Technik: 18.1% der Beschäftigten gehen beruflich einer Tätigkeit in der Technik nach."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_1")
 
