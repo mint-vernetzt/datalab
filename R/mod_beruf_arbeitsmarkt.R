@@ -85,11 +85,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("Im Jahr 2022 arbeiten 23 % der sozialversicherungspflichtig Beschäftigten in einem MINT-Beruf und 77 % in anderen Bereichen.
+        p("Im Jahr 2023 arbeiten 23 % der sozialversicherungspflichtig Beschäftigten in einem MINT-Beruf und 77 % in anderen Bereichen.
         Bei den Auszubildenden ist der Anteil derer, die in einem MINT-Beruf lernen, sogar bei 30 %."),
         p("Die Zahl an MINT-Beschäftigten ist in den letzten 10 Jahren leicht gestiegen,
-          von 7,3 Mio. im Jahr 2013 auf 7,8 Mio. 2022. Die Zahl der Auszubildenden hat im selben Zeitraum etwas abgenommen,
-          von 414.000 auf 403.000.")
+          von 7 Mio. im Jahr 2014 auf 7,9 Mio. 2023. Die Zahl der Auszubildenden hat im selben Zeitraum etwas abgenommen,
+          von rund 406.000 auf 390.000.")
         ),
         column(
           width = 12,
@@ -252,7 +252,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         column(
           width = 8,
         p("Zoomt man auf den MINT-Fachbereich, arbeiten rund 80 % der MINT-Beschäftigten in einem technischen oder Ingenieurberuf.
-          Weitere gut 14% sind beruflich im Bereich Informatik. Die restlichen 6 % arbeiten in Mathematik oder Naturwissenschaft.")
+          Weitere gut 14 % sind beruflich im Bereich Informatik tätig. Die restlichen 6 % arbeiten in Mathematik oder Naturwissenschaft.")
         ),
         column(
           width = 12,

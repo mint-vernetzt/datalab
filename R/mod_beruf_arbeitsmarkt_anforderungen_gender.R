@@ -40,8 +40,8 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("date_arbeitsmarkt_wahl_gender_pie"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = 2022
+                       choices = 2013:2023,
+                       selected = 2023
                      ),
 
                      p("Beschäftigungsform:"),
@@ -103,8 +103,8 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("date_arbeitsmarkt_wahl_gender_karte"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = 2022
+                       choices = 2013:2023,
+                       selected = 2023
                      ),
                      p("Beschäftigungsform:"),
                       shinyWidgets::pickerInput(
@@ -150,8 +150,8 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("date_arbeitsmarkt_wahl_gender_verlauf"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = c(2017, 2022)
+                       choices = 2013:2023,
+                       selected = c(2017, 2023)
                      ),
                      p("Beschäftigungsform:"),
                      shinyWidgets::pickerInput(
