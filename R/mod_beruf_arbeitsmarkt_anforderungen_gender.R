@@ -83,17 +83,17 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                        selected = "Deutschland"
                      ),
 
-                     shinyBS::bsPopover(id="ih_beruf_mint_4", title="",
-                                        content = paste0("Die erste Einstellung zeigt, dass von allen weiblichen Beschäftigten 2022 nur 8.4 % eine MINT-Tätigkeit ausüben. Bei den Männern arbeitet ein weitaus größerer Anteil von rund 35 % in der MINT-Branche. Dabei sind die meisten Männer im Bereich Technik tätig (29 %)."),
-                                        trigger = "hover"),
-                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_4"),
+                     shinyBS::bsPopover(id="poppp123", title = "",
+                                        content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                                        trigger = "hover", placement = "top"),
+                     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "poppp123"),
+                    br(),
+                    br(),
+                    shinyBS::bsPopover(id="ih_beruf_mint_4", title="",
+                                       content = paste0("Die erste Einstellung zeigt, dass von allen weiblichen Beschäftigten 2023 nur 8,5 % eine MINT-Tätigkeit ausüben. Bei den Männern arbeitet ein weitaus größerer Anteil von 35 % in MINT."),
+                                       trigger = "hover", placement = "top"),
+                    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_4"),
 
-                    br(),
-                    br(),
-                    shinyBS::bsPopover(id="poppp123", title = "",
-                                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                       trigger = "hover"),
-                    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "poppp123"),
                     br(),
     ),
 
@@ -138,7 +138,7 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_mint_5", title="",
-                                        content = paste0("Vergleicht man die Legenden der Karten sieht man, dass der Anteil von Frauen, die in MINT-Berufen arbeiten, weitaus geringer ist als der von Männern. In Rheinland-Pfalz arbeiten beispielsweise 2022 nur 7 % aller berufstätigen Frauen in MINT, dagegen aber 35 % der Männer."),
+                                        content = paste0("Vergleicht man die Legenden der Karten sieht man, dass der Anteil von Frauen, die in MINT-Berufen arbeiten, weitaus geringer ist als der von Männern. In Rheinland-Pfalz arbeiten beispielsweise 2023 nur 7 % aller berufstätigen Frauen in MINT, dagegen aber 35 % der Männer."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_5")
 
@@ -215,8 +215,8 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
 
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_mint_6", title="",
-                                        content = paste0("Die erste Einstellung zeigt beispielsweise, dass in Niedersachsen im Vergleich zu Deutschland der Anteil an Frauen, die eine MINT-Tätigkeit ergreifen, um ein bis zwei Prozentpunkte höher liegt."),
-                                        trigger = "hover"),
+                                        content = paste0("Die erste Einstellung zeigt beispielsweise, dass in Niedersachsen im Vergleich zum deutschen Durchschnitt der Anteil an Frauen, die eine MINT-Tätigkeit ergreifen, um ein bis zwei Prozentpunkte niedriger liegt."),
+                                        trigger = "hover", placement = "top"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_6")
 
     )

@@ -77,8 +77,9 @@ mod_beruf_arbeitsmarkt_bula_faecher_ui <- function(id){
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_fach_1", title="",
-                                        content = paste0("Die Karten in der ersten Einstellung zeigen beispielsweise, dass 2022 der Anteil an Beschäftigten in Technik von allen Bundesländern in Berlin am geringsten ausfällt. Den höchsten Anteil an Beschäftigten in Technik weist noch knapp vor Thüringen (21.5%) Baden-Württemberg auf (21,7 %)."),
-                                        trigger = "hover"),
+                                        content = paste0("Die Karte in der ersten Einstellung zeigt beispielsweise, dass 2023 der Anteil an Beschäftigten in Technik von allen Bundesländern in Berlin am geringsten ausfällt. Den höchsten Anteil an Beschäftigten in Technik haben Thüringen und Baden-Württemberg mit 21,5 %. Jede:r Fünfte arbeitet hier im Technik-Bereich."),
+                                        trigger = "hover", placement = "top"
+                                        ),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_1")
 
     ),
@@ -159,8 +160,8 @@ mod_beruf_arbeitsmarkt_bula_faecher_ui <- function(id){
 
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_faecher_7", title="",
-                                        content = paste0("Die erste Darstellung zeigt z. B., dass sich der Anteil von Beschäftigten im Berufsfeld Technik (gesamt) an allen Beschäftigten deutschlandweit in den ostdeutschen Bundesländern und Nordrhein-Westfalen ähnlich entwickelt. Prozentual zeigen sich allerdings nur geringe Änderungen (-1% NRW 2017 - 2022, -0.7% Ostdeutschland inkl. Berlin."),
-                                        trigger = "hover"),
+                                        content = paste0("Die erste Darstellung zeigt z. B., dass sich der Anteil von Beschäftigten im Berufsfeld Technik in den ostdeutschen Bundesländern und Nordrhein-Westfalen ähnlich entwickelt hat. Der Anteil ist in beiden Regionen nur leicht um rund 1 Prozentpunkt gesunken."),
+                                        trigger = "hover", placement = "top"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_faecher_7")
     ),
 
@@ -201,14 +202,14 @@ mod_beruf_arbeitsmarkt_bula_faecher_ui <- function(id){
                                     "Produktionstechnik",
                                     "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"
                        ),
-                       selected = "Technik (gesamt)"
+                       selected = "Informatik"
                      ),
 
 
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_faecher_3", title="",
-                                        content = paste0("Diese Darstellung gibt einen Überblick darürber, wie hoch der Anteil von MINT-Beschäftigten in den Bundesländern ist. Beispielsweise sind 2022 etwa 3,5 % der Beschäftigten in Bayern im Bereich Informatik tätig. Damit liegt Bayern etwas über dem gesamtdeutschen Durchschnitt von knapp 3 %."),
-                                        trigger = "hover"),
+                                        content = paste0("Diese Darstellung gibt einen Überblick darürber, wie hoch der Anteil von MINT-Beschäftigten in den Bundesländern ist. Beispielsweise sind 2023 etwa 3,7 % der Beschäftigten in Bayern im Bereich Informatik tätig. Damit liegt Bayern etwas über dem gesamtdeutschen Durchschnitt von 3,1 %."),
+                                        trigger = "hover", placement = "top"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_faecher_3")
                      # br(),
                      # shinyBS::bsPopover(id="ih_beruf_fach_3", title="",
