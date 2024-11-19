@@ -65,7 +65,7 @@ mod_beruf_arbeitsmarkt_faecher_verlauf_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_beruf_mint_faecher_2", title="",
-                       content = paste0("In der ersten Einstellung ist zu sehen, dass der Anteil an Auszubildenden in MINT von 2020 auf 2021 leicht sinkt. Betrachtet man die absolute Anzahl, sieht man, dass es deutschlandweit 2022 ca. 30.000 Auszubildende weniger in MINT gibt als noch 2020."),
+                       content = paste0("In der ersten Einstellung ist zu sehen, dass der Anteil an Auszubildenden in MINT-Berufen über die letzten Jahre nur wenig schwankt. Betrachtet man die Anzahl der MINT-Auszubildenden sieht man, dass die Zahlen im Bereich Technik seit 2020 rückläufig sind (-45.000 bis 2023)."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_faecher_2")
   )

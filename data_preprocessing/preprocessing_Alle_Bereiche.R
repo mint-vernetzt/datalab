@@ -1,90 +1,73 @@
 library(magrittr)
 library(dplyr)
+library(DBI)
 
-pfad_kab <- "C:/Users/kab/Downloads/datalab/datalab/data/"
-
-pfad_kbr <- "C:/Users/kbr/Documents/datalab2/data/"
-
-
-pfad <- pfad_kab
-pfad <- pfad_kbr
 
 # daten laden
-load(paste0(pfad,"kurse.rda"))
-load(paste0(pfad,"arbeitsmarkt.rda"))
-load(paste0(pfad,"studierende.rda"))
-
-
-
+setwd("~/datalab")
+con <- DBI::dbConnect(duckdb::duckdb(), "data/mint_db.duckdb")
+kurse <- DBI::dbGetQuery(con,
+                        "SELECT * FROM kurse")
+studierende_detailliert <- DBI::dbGetQuery(con,
+                                           "SELECT * FROM studierende_detailliert")
+arbeitsmarkt_detail <- DBI::dbGetQuery(con,
+                                       "SELECT * FROM arbeitsmarkt_detail")
+#
 # Schule
 data_schule <-kurse %>%
   select(bereich, indikator, anzeige_geschlecht, fachbereich, jahr, region, wert)%>%
   #rename(jahr=Jahr)%>%
-  mutate(across(jahr, ~ as.character(.)))%>%
-  rename(geschlecht=anzeige_geschlecht)
+  mutate(across(jahr, ~ as.numeric(.)))%>%
+  rename(geschlecht=anzeige_geschlecht) %>%
+  filter(fachbereich %in% c("Alle Fächer", "MINT", "andere Fächer"),
+         indikator == "Leistungskurse")
 duplikate <- data_schule %>%
   janitor::get_dupes()
+data_schule$fachbereich[data_schule$fachbereich == "Alle Fächer"] <- "Alle"
+data_schule$fachbereich[data_schule$fachbereich == "andere Fächer"] <- "Nicht MINT"
 
 # Arbeitsmarkt
-data_arbeitsmarkt <- arbeitsmarkt %>%
+data_arbeitsmarkt <- arbeitsmarkt_detail %>%
   filter(anforderung=="Gesamt") %>%
-  select(-anforderung)%>%
   mutate(across(wert, ~ as.numeric(.)))%>%
   #rename(jahr=Jahr)%>%
-  mutate(across(jahr, ~ as.character(.)))%>%
-  filter(region== "Deutschland")
+  mutate(across(jahr, ~ as.numeric(.)))%>%
+  filter(landkreis == "alle Landkreise",
+         fachbereich %in% c("Alle", "MINT"),
+         indikator %in% c("Beschäftigte", "Auszubildende")) %>%
+  rename(region = bundesland) %>%
+  select(bereich, indikator, geschlecht, fachbereich, jahr, region, wert)
+alle <- data_arbeitsmarkt %>%
+  filter(fachbereich == "Alle") %>%
+  rename(wert_ges = wert) %>%
+  select(-c(bereich, fachbereich))
+nm <- data_arbeitsmarkt %>%
+  left_join(alle, by = c("indikator", "geschlecht", "jahr", "region")) %>%
+  mutate(wert = wert_ges - wert) %>%
+  select(-wert_ges) %>%
+  filter(fachbereich != "Alle")
+nm$fachbereich <- "Nicht MINT"
+data_arbeitsmarkt <- rbind(data_arbeitsmarkt, nm)
 
 # Studierende
-data_studierende <- studierende%>%
-  filter(indikator=="Studierende") %>%
-  #select(-quelle,-hinweise,-indikator)%>%
-  #rename(indikator=label)%>%
+data_studierende <- studierende_detailliert%>%
+  filter(indikator=="Studierende",
+         fachbereich %in% c("MINT", "Nicht MINT", "Gesamt")) %>%
   mutate(across(wert, ~ as.numeric(.)))%>%
-  #rename(jahr=Jahr)%>%
-  mutate(across(jahr, ~ as.character(.)))%>%
-  mutate(bereich = "Hochschule",
-         fachbereich = case_when(
-           fachbereich == "MINT (Gesamt)" ~ "MINT",
-           T ~ .$fachbereich
-         ))
-
+  mutate(across(jahr, ~ as.numeric(.)))%>%
+  mutate(bereich = "Hochschule") %>%
+  select(bereich, indikator, geschlecht, fachbereich, jahr, region, wert)
 duplikate <- data_studierende%>%
   janitor::get_dupes(-wert)
-
+data_studierende$fachbereich[data_studierende$fachbereich == "Gesamt"] <- "Alle"
 
 zentral <- bind_rows(data_schule,  data_arbeitsmarkt,  data_studierende)
 
+#setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 
+save(zentral, file = "zentral.rda")
 
-# zentral_read_2 <-
-#   readxl::read_xlsx(paste0(pfad, "Zentraler_Datensatz_neu_12_01_24.xlsx"))%>%
-#   janitor::clean_names() %>%
-#   janitor::remove_empty()
-#
-#
-# zentral_read_2$region <- gsub("\\.", "", zentral_read_2$region, perl=TRUE)
-#
-# zentral_read_2$region <- gsub(' ', '', zentral_read_2$region)
-#
-# zentral_neu <- zentral_read_2 %>% dplyr::mutate(wert = round(as.numeric(wert))) %>%
-#   dplyr::mutate(geschlecht = replace(anzeige_geschlecht,
-#                                      anzeige_geschlecht == "frauen",
-#                                              "Frauen"),
-#                 geschlecht = replace(anzeige_geschlecht,
-#                                      anzeige_geschlecht == "männer",
-#                                              "Männer"),
-#                 geschlecht = replace(anzeige_geschlecht,
-#                                      anzeige_geschlecht == "gesamt",
-#                                              "Gesamt"),
-#                 fachbereich = replace(fachbereich,
-#                                       fachbereich == "Mathe",
-#                                       "Mathematik/Naturwissenschaften"),
-#                 fachbereich = replace(fachbereich,
-#                                       fachbereich == "Ingenieur",
-#                                       "Ingenieurwissenschaften"))%>%
-#   dplyr::filter(jahr >= "2010")
+setwd("~/datalab2")
 
-
-
-usethis::use_data(zentral, overwrite = T)
 

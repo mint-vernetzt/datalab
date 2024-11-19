@@ -22,8 +22,35 @@ mod_home_start_einstieg_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_comparison_mint_gender"),
       label = NULL,
-      choices = 2013:2022,
+      choices = 2013:2023,
       selected = 2022
+    ),
+
+    p("Region:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("regio_start_comparison_gender"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = FALSE,
+      selected = c("Deutschland")
     ),
 
     conditionalPanel("input.ansicht_start_comparison_mint_gender == 'Einzelansicht - Kuchendiagramm'",
@@ -31,9 +58,10 @@ mod_home_start_einstieg_gender_ui <- function(id){
              p("Bereiche (max. 2):"),
              shinyWidgets::pickerInput(
                inputId = ns("indikator_start_einstieg_1_gender"),
-               choices = c("Schüler:innen Leistungskurse","Studierende",
+               choices = c("Schüler:innen Leistungskurse" = "Leistungskurse",
+                           "Studierende",
                            "Auszubildende", "Beschäftigte"),
-               selected = c("Beschäftigte"),
+               selected = c("Beschäftigte", "Studierende"),
                multiple = TRUE,
                options =  list(
                  "max-options" = 2,
@@ -88,6 +116,10 @@ mod_home_start_einstieg_gender_server <- function(id, r){
 
     observeEvent(input$ansicht_start_comparison_mint_gender, {
       r$ansicht_start_comparison_mint_gender <- input$ansicht_start_comparison_mint_gender
+    })
+
+    observeEvent(input$regio_start_comparison_gender, {
+      r$regio_start_comparison_gender <- input$regio_start_comparison_gender
     })
 
     observeEvent(input$date_start_comparison_mint_gender, {

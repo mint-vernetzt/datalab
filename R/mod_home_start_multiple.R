@@ -29,18 +29,45 @@ mod_home_start_multiple_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_start_multiple"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2015, 2022)
+      choices = 2013:2023,
+      selected = c(2015, 2023)
+    ),
+    p("Region:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("region_start_multiple"),
+      choices = c("Deutschland",
+                  "Baden-Württemberg",
+                  "Bayern",
+                  "Berlin",
+                  "Brandenburg",
+                  "Bremen",
+                  "Hamburg",
+                  "Hessen",
+                  "Mecklenburg-Vorpommern",
+                  "Niedersachsen",
+                  "Nordrhein-Westfalen",
+                  "Rheinland-Pfalz",
+                  "Saarland",
+                  "Sachsen",
+                  "Sachsen-Anhalt",
+                  "Schleswig-Holstein",
+                  "Thüringen",
+                  "Westdeutschland (o. Berlin)",
+                  "Ostdeutschland (inkl. Berlin)"
+      ),
+      multiple = FALSE,
+      selected = c("Deutschland")
     ),
     p("Bereiche:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_multiple_1"),
-      choices = c("Schüler:innen Leistungskurse", "Studierende",
+      choices = c("Schüler:innen Leistungskurse" = "Leistungskurse",
+                  "Studierende",
                   "Auszubildende", "Beschäftigte"),
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
-      selected = c("Schüler:innen Leistungskurse", "Studierende",
+      selected = c("Leistungskurse", "Studierende",
                    "Auszubildende", "Beschäftigte"),
       # options =  list(
       #   "max-options" = 3,
@@ -48,6 +75,7 @@ mod_home_start_multiple_ui <- function(id){
       # ),
       multiple = T
     ),
+
     p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("abs_zahlen_start_multiple"),
@@ -74,6 +102,9 @@ mod_home_start_multiple_server <- function(id, r){
 
     observeEvent(input$date_start_multiple, {
       r$date_start_multiple <- input$date_start_multiple
+    })
+    observeEvent(input$region_start_multiple, {
+      r$region_start_multiple <- input$region_start_multiple
     })
 
     observeEvent(input$abs_zahlen_start_multiple, {

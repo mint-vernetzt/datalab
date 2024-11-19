@@ -4762,10 +4762,12 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
 }
 
 arbeitsmarkt_lk_verlauf <- function(r){
+
   zeit <- r$date_beruf_arbeitsmarkt_landkreis_verlauf
   t <- zeit[1]:zeit[2]
   regio <- r$states_beruf_arbeitsmarkt_landkreis_verlauf
   lk <- r$kreise_beruf_arbeitsmarkt_landkreis_verlauf
+  lk_filter <- ifelse(lk == "Landesdurchschnitt", "alle Landkreise", lk)
   gruppe <- r$kategorie_beruf_arbeitsmarkt_landkreis_verlauf
   fach <- r$fachbereich_beruf_arbeitsmarkt_landkreis_verlauf
   absolut_selector <- r$abs_zahlen_beruf_arbeitsmarkt_landkreis_verlauf
@@ -4781,7 +4783,7 @@ arbeitsmarkt_lk_verlauf <- function(r){
   df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
     dplyr::filter(jahr %in% t &
                     bundesland == regio &
-                    landkreis %in% lk &
+                    landkreis %in% lk_filter &
                     geschlecht == geschlecht_s &
                     anforderung == "Gesamt" &
                     fachbereich == fach &
@@ -4795,7 +4797,7 @@ arbeitsmarkt_lk_verlauf <- function(r){
     df_alle <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
       dplyr::filter(jahr %in% t &
                       bundesland == regio &
-                      landkreis %in% lk &
+                      landkreis %in% lk_filter &
                       geschlecht == geschlecht_s &
                       anforderung == "Gesamt" &
                       fachbereich == "Alle" &
@@ -4811,6 +4813,8 @@ arbeitsmarkt_lk_verlauf <- function(r){
                     wert = wert.x,
                     wert_ges = wert.y) %>%
       dplyr::mutate(prop = round(wert/wert_ges *100, 1))
+
+    df$landkreis[df$landkreis == "alle Landkreise"] <- "Landesdurchschnitt"
 
     df$prop_disp <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
@@ -4830,8 +4834,9 @@ arbeitsmarkt_lk_verlauf <- function(r){
                             margin = 45, # o. war vorher /
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a",
-                               "#5f94f9", "#007655", "#d0a9cd")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+                               "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a", "#007655", "#dc6262",
+                               "#9d7265", "#5d335a", "#bfc6d3",  "#B45309","#d4c1bb", "#112c5f", "#8893a7")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -4850,6 +4855,8 @@ arbeitsmarkt_lk_verlauf <- function(r){
     hcoptslang$thousandsSep <- "."
     options(highcharter.lang = hcoptslang)
 
+    df$landkreis[df$landkreis == "alle Landkreise"] <- "Landesdurchschnitt"
+
     df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
     # order years for plot
@@ -4866,8 +4873,9 @@ arbeitsmarkt_lk_verlauf <- function(r){
                             margin = 45, # o. war vorher /
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#35bd97", "#5d335a",
-                               "#5f94f9", "#007655", "#d0a9cd", "#112c5f")) %>%
+      highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+                               "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a", "#007655", "#dc6262",
+                               "#9d7265", "#5d335a", "#bfc6d3",  "#B45309","#d4c1bb", "#112c5f", "#8893a7")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%

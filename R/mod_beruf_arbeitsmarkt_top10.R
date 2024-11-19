@@ -68,7 +68,7 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_beruf_fach_4", title="",
-                       content = paste0("Die erste Ansicht zeigt, dass in Deutschland 2022 unter den Milchwirtschaftlichen Laboranten 77.1% Frauen waren. Demgegenüber haben 2022 100% der Männer eine Ausbildung zum Bergmaschinenmann angefangen. "),
+                       content = paste0("Die Grafik zeigt, dass Ausbildungsberufe mit Schnittstellen zu Nicht-MINT-Bereichn wie Milchwirtschaftlichen Laboranten oder Zahntechnik besonders hohe Frauenanteile unter den neuen Azubis haben. Demgegenüber sind Männer auch in rein technisch fokussierten Ausbildung interessiert. "),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_4")

@@ -1,8 +1,8 @@
 ################################################################################
 #
 # Preprocessing Data Lab
-# Vorbereitung Datensatz: SKF001
-# Author: Katharina Brunner, Juni 2023
+# Vorbereitung Datensatz: alles Ausserschulische
+# Author: Katharina Brunner
 #
 ################################################################################
 
@@ -341,6 +341,34 @@ save(ausserschulisch_cp_projekte, file = "ausserschulisch_cp_projekte.rda")
 
 
 ## Envir. aufräumen
+rm(list=ls())
+
+
+# MINTvernetzt-Befragungen ------------------------------------------------
+
+## Akteursbefragung ----
+
+df_akt <- readxl::read_excel(paste0(pfad,"/CP004_MINTvernetzt_Befragungsdaten.xlsx"),
+                             sheet = "Akteursbefragung", col_names = TRUE)
+df_akt <- df_akt[,1:3]
+
+df_akt$indikator[df_akt$indikator == "Sonstige:"] <- "Sonstige"
+df_akt$indikator[df_akt$indikator == "Anderer Sektor:"] <- "anderer Sektor"
+
+# Speichern
+ausserschulisch_akteursbefragung <- df_akt
+setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+save(ausserschulisch_akteursbefragung, file = "ausserschulisch_akteursbefragung.rda")
+rm(list=ls())
+
+## Stimmungsbarometer ----
+df_stimm <- readxl::read_excel(paste0(pfad,"/CP004_MINTvernetzt_Befragungsdaten.xlsx"),
+                             sheet = "Stimmungsbarometer", col_names = TRUE)
+
+# Speichern
+ausserschulisch_stimmungsbarometer <- df_stimm
+setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+save(ausserschulisch_stimmungsbarometer, file = "ausserschulisch_stimmungsbarometer.rda")
 rm(list=ls())
 
 # Stiftung Kinder Forschen ------------------------------------------------
