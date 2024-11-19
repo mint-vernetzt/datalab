@@ -40,8 +40,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("bulas_map_y_faecher"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = 2022
+                       choices = 2013:2023,
+                       selected = 2023
                      ),
 
                      p("Studierendengruppen:"),
@@ -51,7 +51,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                    "Studierende (Lehramt)",
                                    "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "Absolvent:innen"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -72,7 +73,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
 
                      conditionalPanel(condition = "input.bulas_map_l_faecher == 'internationale Studienanfänger:innen (1. Hochschulsemester)' |
                      input.bulas_map_l_faecher == 'Studierende' |
-                     input.bulas_map_l_faecher == 'internationale Studierende' |
+                     input.bulas_map_l_faecher == 'Internationale Studierende' |
                      input.bulas_map_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
@@ -80,7 +81,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
 
                                         choices = studi_det_ui_faecher(spezif_i =c('Internationale Studienanfänger:innen (1. Hochschulsemester)',
                                                                                    'Studierende',
-                                                                                   'Internationale Studierende',
+                                                                                   'internationale Studierende',
                                                                                    'Studienanfänger:innen (1. Hochschulsemester)')),
 
                                         selected = "Alle MINT-Fächer"
@@ -105,8 +106,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("bulas_verlauf_y_faecher"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = c(2015, 2022)
+                       choices = 2013:2023,
+                       selected = c(2015, 2023)
                      ),
 
                      p("Studierendengruppen:"),
@@ -116,7 +117,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                    "Studierende (Lehramt)",
                                    "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "Absolvent:innen"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -206,8 +208,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("bulas_balken_date_faecher"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = 2022
+                       choices = 2013:2023,
+                       selected = 2023
                      ),
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
@@ -216,7 +218,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                    "Studierende (Lehramt)",
                                    "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "Absolvent:innen"),
                        selected = "Studierende"),
 
                      #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen

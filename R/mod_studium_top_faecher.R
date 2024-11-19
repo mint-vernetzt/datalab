@@ -14,8 +14,8 @@ mod_studium_top_faecher_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_top_faecher"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
     # Region
     p("Region:"),
@@ -48,6 +48,13 @@ mod_studium_top_faecher_ui <- function(id){
       inputId = ns("subject_top_faecher"),
       choices = c("MINT-Fächer", "Alle Fachbereiche"= "Alle Fächer"),
       selected = "MINT-Fächer",
+      multiple = FALSE
+    ),
+    p("Studierendengruppe:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("indi_top_faecher"),
+      choices = c("Studierende", "Absolvent:innen"),
+      selected = "Studierende",
       multiple = FALSE
     ),
     p("Darstellungsart:"),
@@ -86,9 +93,15 @@ mod_studium_top_faecher_server <- function(id, r){
       r$subject_top_faecher <- input$subject_top_faecher
     })
 
+    observeEvent(input$indi_top_faecher, {
+      r$indi_top_faecher <- input$indi_top_faecher
+    })
+
+
     observeEvent(input$subject_abs_rel, {
       r$subject_abs_rel <- input$subject_abs_rel
     })
+
 
 
   })

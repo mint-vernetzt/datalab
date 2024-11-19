@@ -22,8 +22,8 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("jahr_mint_fach"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
 
     p("Region:"),
@@ -69,7 +69,8 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
                     "Studierende (Lehramt)",
                     "internationale Studierende",
                     "Studienanfänger:innen (1. Hochschulsemester)",
-                    "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
+                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                    "Absolvent:innen"),
         selected = c("Studierende"),
         multiple = FALSE
         # ,
@@ -101,7 +102,8 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
                                   "Studierende (Lehramt)",
                                   "internationale Studierende",
                                   "Studienanfänger:innen (1. Hochschulsemester)",
-                                  "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
+                                  "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                  "Absolvent:innen"),
                        selected = c("Studierende"),
                        multiple = FALSE
                      ),

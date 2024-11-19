@@ -33,7 +33,8 @@ mod_studium_choice_gender_ui <- function(id){
       choices = c(
         "Studierende",
         "Studierende (Lehramt)" = "Studierende (Lehramt, Universität)",
-        "Studienanfänger:innen (1.Hochschulsemester)"
+        "Studienanfänger:innen (1.Hochschulsemester)",
+        "Absolvent:innen"
       ),
       selected = c("Studierende")
       ,
@@ -92,8 +93,8 @@ mod_studium_choice_gender_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("choice_V_y"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = c(2016,2022)
+                       choices = 2013:2023,
+                       selected = c(2016,2023)
                      ),
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
@@ -101,7 +102,8 @@ mod_studium_choice_gender_ui <- function(id){
                        choices = c(
                          "Studierende",
                          "Studierende (Lehramt)" = "Studierende (Lehramt, Universität)",
-                         "Studienanfänger:innen (1.Hochschulsemester)"
+                         "Studienanfänger:innen (1.Hochschulsemester)",
+                         "Absolvent:innen"
                        ),
                        selected = c("Studierende", "Studienanfänger:innen (1.Hochschulsemester)")
                        ,

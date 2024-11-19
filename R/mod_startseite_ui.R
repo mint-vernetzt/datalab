@@ -90,7 +90,7 @@ mod_startseite_start_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 10,
-        img(src='www/howto_turan_neu_1.png',
+        img(src='www/ht1.png',
             class = "img-responsive",
             # height = "800px",
             #width = "150px",
@@ -102,7 +102,7 @@ mod_startseite_start_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 10,
-        img(src='www/howto_turan_neu_2.png',
+        img(src='www/ht2.png',
             class = "img-responsive",
             # height = "800px",
             #width = "150px",

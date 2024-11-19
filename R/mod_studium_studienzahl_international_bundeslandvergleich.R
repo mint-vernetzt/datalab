@@ -1,5 +1,3 @@
-#' studium_studienzahl_bundeslandvergleich UI Function
-#'
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
@@ -7,7 +5,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
+mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){ ###DIESE SEITE IST NICHT INTERNATIONAL GRADE
   ns <- NS(id)
   tagList(
 
@@ -26,19 +24,19 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
 
     p("Darstellungsart:"),
     shiny::radioButtons(
-      inputId = ns("ansicht_studium_bulas"),
+      inputId = ns("ansicht_studium_international_bulas"),
       label = NULL,
       choices = c("Übersicht - Kartendiagramm", "Zeitverlauf - Liniendiagramm",
                   "Gruppenvergleich - Balkendiagramm"),
       selected = "Übersicht - Kartendiagramm"
     ),
 
-    conditionalPanel(condition = "input.ansicht_studium_bulas == 'Übersicht - Kartendiagramm'",
+    conditionalPanel(condition = "input.ansicht_studium_international_bulas == 'Übersicht - Kartendiagramm'",
                      ns = ns,
 
                      p("Jahr:"),
                      shinyWidgets::sliderTextInput(
-                       inputId = ns("bulas_map_y"),
+                       inputId = ns("international_bulas_map_y"),
                        label = NULL,
                        choices = 2013:2023,
                        selected = 2023
@@ -46,13 +44,10 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
 
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
-                       inputId = ns("bulas_map_l"),
-                       choices = c("Studierende",
-                                   "internationale Studierende",
-                                   "Studierende (Lehramt)",
-                                   "Studienanfänger:innen (1. Hochschulsemester)",
+                       inputId = ns("international_bulas_map_l"),
+                       choices = c("internationale Studierende",
                                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Absolvent:innen"),
+                                   "internationale Absolvent:innen"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -61,24 +56,24 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                          "max-options-text" = "<span style='color: red;'>Maximal 2 Gruppen auswählen</span>")
                      ),
                      br(),
-                     shinyBS::bsPopover(id="dh_studium_fach_2", title = "",
+                     shinyBS::bsPopover(id="international_dh_studium_fach_2", title = "",
                                         content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                                         placement = "top",
                                         trigger = "hover"),
-                     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_fach_2"),
+                     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "international_dh_studium_fach_2"),
                      br(),
                      br(),
-                     shinyBS::bsPopover(id="ih_studium_fach_2neu", title="",
-                                        content = paste0("Die Karte in der ersten Einstellung zeigt: Während Sachsen mit über 41 % MINT-Studierende den höchsten MINT-Anteil im Bundeslandvergleich hat, studieren im Nachbarland Thüringen nur 24 % aller Studierenden ein MINT-Fach."),
+                     shinyBS::bsPopover(id="international_ih_studium_fach_2neu", title="",
+                                        content = paste0("Servus"),
                                         trigger = "hover"),
-                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_2neu")
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="international_ih_studium_fach_2neu")
     ),
 
-    conditionalPanel(condition = "input.ansicht_studium_bulas == 'Zeitverlauf - Liniendiagramm'",
+    conditionalPanel(condition = "input.ansicht_studium_international_bulas == 'Zeitverlauf - Liniendiagramm'",
                      ns = ns,
                      p("Jahre:"),
                      shinyWidgets::sliderTextInput(
-                       inputId = ns("bulas_verlauf_y"),
+                       inputId = ns("international_bulas_verlauf_y"),
                        label = NULL,
                        choices = 2013:2023,
                        selected = c(2015, 2023)
@@ -86,13 +81,10 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
 
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
-                       inputId = ns("bulas_verlauf_l"),
-                       choices = c("Studierende",
-                                   "internationale Studierende",
-                                   "Studierende (Lehramt)",
-                                   "Studienanfänger:innen (1. Hochschulsemester)",
+                       inputId = ns("international_bulas_verlauf_l"),
+                       choices = c("internationale Studierende",
                                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Absolvent:innen"),
+                                   "internationale Absolvent:innen"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -102,7 +94,7 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      ),
                      p("Regionen:"),
                      shinyWidgets::pickerInput(
-                       inputId = ns("bulas_verlauf_regio"),
+                       inputId = ns("international_bulas_verlauf_regio"),
                        choices = c("Deutschland",
                                    "Baden-Württemberg",
                                    "Bayern",
@@ -132,50 +124,47 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      ),
                      p("Darstellungsart:"),
                      shinyWidgets::radioGroupButtons(
-                       inputId = ns("bulas_verlauf_abs_rel"),
+                       inputId = ns("international_bulas_verlauf_abs_rel"),
                        choices = c("In Prozent", "Anzahl"),
                        justified = TRUE,
                        checkIcon = list(yes = icon("ok",
                                                    lib = "glyphicon"))
                      ),
                      br(),
-                     shinyBS::bsPopover(id="ih_studium_mint_5", title="",
-                                        content = paste0("Die erste Ansicht zeigt, dass in Baden-Württemberg im Vergleich zu Hamburg ein größerer Anteil an Studierenden MINT-Fächer studiert. In beiden Bundesländern bleibt der Anteil an MINT-Studierenden über die Jahre relativ konstat und sinkt in den letzten Jahren leicht ab."),
+                     shinyBS::bsPopover(id="international_ih_studium_mint_5", title="",
+                                        content = paste0("Servus"),
                                         placement = "top",
                                         trigger = "hover"),
-                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_5")
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="international_ih_studium_mint_5")
 
     ),
 
 
-    conditionalPanel(condition = "input.ansicht_studium_bulas == 'Gruppenvergleich - Balkendiagramm'",
+    conditionalPanel(condition = "input.ansicht_studium_international_bulas == 'Gruppenvergleich - Balkendiagramm'",
                      ns = ns,
 
                      p("Jahr:"),
                      shinyWidgets::sliderTextInput(
-                       inputId = ns("bulas_balken_date"),
+                       inputId = ns("international_bulas_balken_date"),
                        label = NULL,
                        choices = 2013:2023,
                        selected = 2023
                      ),
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
-                       inputId = ns("bulas_balken_l"),
-                       choices = c("Studierende",
-                                   "internationale Studierende",
-                                   "Studierende (Lehramt)",
-                                   "Studienanfänger:innen (1. Hochschulsemester)",
+                       inputId = ns("international_bulas_balken_l"),
+                       choices = c("internationale Studierende",
                                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Absolvent:innen"),
+                                   "internationale Absolvent:innen"),
                        selected = "Studierende"),
 
 
                      br(),
-                     shinyBS::bsPopover(id="ih_studium_fach_5", title="",
-                                        content = paste0("Die Übersicht zeigt, dass der Anteil von Studierenden in MINT an allen Studierenden zwischen den Bundesländern zwischen 24 % (Thüringen, Saarland) und 42 % (Sachsen) liegt."),
+                     shinyBS::bsPopover(id="international_ih_studium_fach_5", title="",
+                                        content = paste0("Servus"),
                                         placement = "top",
                                         trigger = "hover"),
-                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_5")
+                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="international_ih_studium_fach_5")
     )
   )
 
@@ -184,52 +173,46 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
 #' studium_studienzahl_bundeslandvergleich Server Functions
 #'
 #' @noRd
-mod_studium_studienzahl_bundeslandvergleich_server <- function(id, r){
+mod_studium_studienzahl_international_bundeslandvergleich_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    observeEvent(input$ansicht_studium_bulas, {
-      r$ansicht_studium_bulas <- input$ansicht_studium_bulas
+    observeEvent(input$ansicht_studium_international_bulas, {
+      r$ansicht_studium_international_bulas <- input$ansicht_studium_international_bulas
     })
 
-    observeEvent(input$bulas_map_y, {
-      r$bulas_map_y <- input$bulas_map_y
+    observeEvent(input$international_bulas_map_y, {
+      r$international_bulas_map_y <- input$international_bulas_map_y
     })
 
-    observeEvent(input$bulas_map_l, {
-      r$bulas_map_l <- input$bulas_map_l
+    observeEvent(input$international_bulas_map_l, {
+      r$international_bulas_map_l <- input$international_bulas_map_l
     })
 
-    observeEvent(input$bulas_verlauf_y, {
-      r$bulas_verlauf_y <- input$bulas_verlauf_y
+    observeEvent(input$international_bulas_verlauf_y, {
+      r$international_bulas_verlauf_y <- input$international_bulas_verlauf_y
     })
 
-    observeEvent(input$bulas_verlauf_l, {
-      r$bulas_verlauf_l <- input$bulas_verlauf_l
+    observeEvent(input$international_bulas_verlauf_l, {
+      r$international_bulas_verlauf_l <- input$international_bulas_verlauf_l
     })
 
-    observeEvent(input$bulas_verlauf_regio, {
-      r$bulas_verlauf_regio <- input$bulas_verlauf_regio
+    observeEvent(input$international_bulas_verlauf_regio, {
+      r$international_bulas_verlauf_regio <- input$international_bulas_verlauf_regio
     })
 
-    observeEvent(input$bulas_verlauf_abs_rel, {
-      r$bulas_verlauf_abs_rel <- input$bulas_verlauf_abs_rel
+    observeEvent(input$international_bulas_verlauf_abs_rel, {
+      r$international_bulas_verlauf_abs_rel <- input$international_bulas_verlauf_abs_rel
     })
 
-    observeEvent(input$bulas_balken_date, {
-      r$bulas_balken_date <- input$bulas_balken_date
+    observeEvent(input$international_bulas_balken_date, {
+      r$international_bulas_balken_date <- input$international_bulas_balken_date
     })
 
-    observeEvent(input$bulas_balken_l, {
-      r$bulas_balken_l <- input$bulas_balken_l
+    observeEvent(input$international_bulas_balken_l, {
+      r$international_bulas_balken_l <- input$international_bulas_balken_l
     })
 
 
   })
 }
-
-## To be copied in the UI
-# mod_studium_studienzahl_bl_map_ui("studium_studienzahl_bl_map_1")
-
-## To be copied in the server
-# mod_studium_studienzahl_bl_map_server("studium_studienzahl_bl_map_1")
