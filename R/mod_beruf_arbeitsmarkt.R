@@ -67,11 +67,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           title = "Datenquellen",
           width = 5,
           p(style = "text-align: left; font-size = 16px",
-            "Auszubildenden- und Beschäftigenzahlen in Deutschland: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-          p(style = "text-align: left; font-size = 16px",
-            "Studierendenzahlen aus Europa: Eurostat 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
-          p(style = "text-align: left; font-size = 16px",
-            "Studierendenzahlen der OECD-Länder: OECD 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
+            "Auszubildenden- und Beschäftigenzahlen in Deutschland: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
 
         )
       ),
@@ -85,11 +81,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("Im Jahr 2022 arbeiten 23 % der sozialversicherungspflichtig Beschäftigten in einem MINT-Beruf und 77 % in anderen Bereichen.
+        p("Im Jahr 2023 arbeiten 23 % der sozialversicherungspflichtig Beschäftigten in einem MINT-Beruf und 77 % in anderen Bereichen.
         Bei den Auszubildenden ist der Anteil derer, die in einem MINT-Beruf lernen, sogar bei 30 %."),
         p("Die Zahl an MINT-Beschäftigten ist in den letzten 10 Jahren leicht gestiegen,
-          von 7,3 Mio. im Jahr 2013 auf 7,8 Mio. 2022. Die Zahl der Auszubildenden hat im selben Zeitraum etwas abgenommen,
-          von 414.000 auf 403.000.")
+          von 7 Mio. im Jahr 2014 auf 7,9 Mio. 2023. Die Zahl der Auszubildenden hat im selben Zeitraum etwas abgenommen,
+          von rund 406.000 auf 390.000.")
         ),
         column(
           width = 12,
@@ -114,7 +110,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_vergleich")),
                                                             color = "#154194"),
 
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
                                                   placement = "top",
@@ -141,7 +137,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf")),
                                                             color = "#154194"),
 
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id = "h_beruf_mint_2", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
                                                   placement = "top",
@@ -161,7 +157,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     #          shiny::mainPanel(
                     #            width = 9,
                     #            htmlOutput(ns("plot_einstieg_pie"))
-                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
+                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
                     #          )
                     # ),
                     #br(),
@@ -182,7 +178,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_beruf_arbeitsmarkt_mint_bulas")),
                                                             color = "#154194"),
 
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id = "h_beruf_mint_7", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
                                                   placement = "top",
@@ -201,7 +197,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     #          shiny::mainPanel(
                     #            width = 9,
                     #            plotOutput(ns("plot_arbeitsmarkt_bl_gender_vergleich"))
-                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."))
+                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."))
                     #
                     # )
 
@@ -215,7 +211,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     #            tags$style(".well {background-color:#FFFFFF;}"),
                     #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                     #            mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
-                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
+                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
                     #            ),
                     #          shiny::mainPanel(
                     #            div(DT::dataTableOutput(ns("data_table_einstieg")),
@@ -252,7 +248,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         column(
           width = 8,
         p("Zoomt man auf den MINT-Fachbereich, arbeiten rund 80 % der MINT-Beschäftigten in einem technischen oder Ingenieurberuf.
-          Weitere gut 14% sind beruflich im Bereich Informatik. Die restlichen 6 % arbeiten in Mathematik oder Naturwissenschaft.")
+          Weitere gut 14 % sind beruflich im Bereich Informatik tätig. Die restlichen 6 % arbeiten in Mathematik oder Naturwissenschaft.")
         ),
         column(
           width = 12,
@@ -274,7 +270,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey", br(),
-                                 "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                 "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id = "h_beruf_mint_1", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> Durch Rundung der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen."),
                                                   placement = "top",
@@ -302,7 +298,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_verlauf_faecher")),
                                                             color = "#154194"),
 
-                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id = "h_beruf_fach_mint_2", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
                                                   placement = "top",
@@ -331,7 +327,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_faecher_bl")),
                                                             color = "#154194"),
 
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id = "h_beruf_fach_1", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
                                                   placement = "top",
@@ -376,7 +372,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                width = 9,
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_pie_gender")),
                                                             color = "#154194"),
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id = "h_beruf_frauen_1", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                                   placement = "top",
@@ -401,7 +397,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                width = 9,
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf_gender")),
                                                             color = "#154194"),
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id = "h_beruf_frauen_2", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                                   placement = "top",
@@ -428,7 +424,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     #            shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_vergleich_gender")),
                     #                                         color = "#154194"),
                     #
-                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                     #            shinyBS::bsPopover(id = "h_beruf_frauen_3", title = "",
                     #                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                     #                               placement = "top",
@@ -450,7 +446,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                        shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_wahl_gender")),
                                                     color = "#154194"),
 
-                       p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                       p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
                        shinyBS::bsPopover(id = "h_beruf_mint_4", title = "",
                                           content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br> <br> Durch Rundung der berechneten Werte kann es zu minimalen Abweichungen zwischen den Grafiken kommen."),
@@ -480,7 +476,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
             #            width = 9,
             #            shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_bl_gender")),
             #                                         color = "#154194"),
-            #            p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+            #            p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
             #            shinyBS::bsPopover(id = "h_beruf_mint_5", title = "",
             #                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
             #                               placement = "top",
@@ -505,7 +501,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
             #            shinycssloaders::withSpinner(htmlOutput(ns("plot_beruf_arbeitsmarkt_bl_gender_verlauf")),
             #                                         color = "#154194"),
             #
-            #            p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+            #            p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
             #            shinyBS::bsPopover(id = "h_beruf_mint_6", title = "",
             #                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
             #                               placement = "top",
@@ -534,7 +530,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                        shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_top10")),
                                                     color = "#154194"),
 
-                       p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                       p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                        shinyBS::bsPopover(id = "h_beruf_fach_4", title = "",
                                           content = paste0("Hier gezeigt werden nur neue Auszubildende im Fachbereich MINT des jeweiligen Jahres. Ausbidlungsberufe mit weniger als 10 neuen Vertragsabschlüssen für das betrachtete Jahr wurden ausgeschlossen. <br><br>In manchen Fällen weisen mehr als 10 Berufe einen Männeranteil von 100 % auf. In diesen Fällen sind die 10 Berufe mit 100 % Männeranteil angezeigt, welche die meisten Neu-Auszubildenden haben.", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                           placement = "top",
@@ -601,7 +597,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_detail_map"),height = "1600px"),
                                                             color = "#154194"),
 
-                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id = "h_beruf_regional_1", title = "",
                                                   content = paste0("Manche Landkreise sind grau dargestellt oder fehlen in der Darstellung. Das liegt daran, dass die zugrundeliegenden Karten vereinzelt alte oder falsche Landkreiszuordnungen (in Niedersachen, Sachsen-Anhalt) enthalten oder einzelne Regionen gar nicht enthalten (Bremen, in Sachsen). Daten zu den fehlenden Regionen sind in der Darstellung im nächstne Tab zu finden.", "<br> <br> Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br> <br>In die Kategorie &quotAuszubildende mit neuem Lehrvertrag&quot fallen sowohl neue Auszubilndende als auch Auszubildende nach Vertragswechsel."),
                                                   placement = "top",
@@ -643,35 +639,34 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_regional_23")
                                )
                              # ,
-                             # p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
-                    )
-              # ,
-              # tabPanel("Zeitverlauf MINT in Landkreisen", br(),
-              #
-              #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-              #                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-              #          shiny::sidebarPanel(
-              #            width = 3,
-              #            mod_beruf_arbeitsmarkt_regional_verlauf_ui("mod_beruf_arbeitsmarkt_regional_verlauf_ui_1"),
-              #            # br(),br(),
-              #            # downloadButton(
-              #            #   outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
-              #            #   label = "Download",
-              #            #   icon = icon("download")),
-              #          ),
-              #          shiny::mainPanel(
-              #            width = 9,
-              #            shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_verlauf_regional")),
-              #                                         color = "#154194"),
-              #
-              #            p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-              #            shinyBS::bsPopover(id = "h_beruf_fach_mint_2", title = "",
-              #                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
-              #                               placement = "top",
-              #                               trigger = "hover"),
-              #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_mint_2")
-              #          )
-              # ),
+                             # p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
+                    ),
+                    tabPanel("Zeitverlauf MINT in Landkreisen", br(),
+
+                             tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                                                 .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                             shiny::sidebarPanel(
+                               width = 3,
+                               mod_beruf_arbeitsmarkt_regional_verlauf_ui("mod_beruf_arbeitsmarkt_regional_verlauf_ui_1"),
+                               # br(),br(),
+                               # downloadButton(
+                               #   outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
+                               #   label = "Download",
+                               #   icon = icon("download")),
+                             ),
+                             shiny::mainPanel(
+                               width = 9,
+                               shinycssloaders::withSpinner(htmlOutput(ns("fachbereich_beruf_arbeitsmarkt_landkreis_verlauf")),
+                                                            color = "#154194"),
+
+                               p(style="font-size:12px;color:grey", br(), "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                               shinyBS::bsPopover(id = "h_beruf_fach_mint_2", title = "",
+                                                  content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
+                                                  placement = "top",
+                                                  trigger = "hover"),
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_mint_2")
+                             )
+                    )#,
                     # Tabelle noch nicht fertig gelayoutet
                     # tabPanel("Tabelle", br(),
                     #
@@ -705,7 +700,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                     #            width = 12,
                     #            DT::DTOutput(ns("table_lk_analysis"))
                     #          ),
-                    #          p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
+                    #          p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
                     # ))
         )
 

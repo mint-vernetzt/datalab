@@ -40,8 +40,8 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("zeit_beruf_mint_bula_karte"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = 2022
+                       choices = 2013:2023,
+                       selected = 2023
                      ),
                      p("Beschäftigtengruppe:"),
                      shinyWidgets::pickerInput(
@@ -68,7 +68,7 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_mint_bula_1", title="",
-                                        content = paste0("Die Karten in der ersten Einstellung zeigen beispielsweise, dass 2022 der Anteil an Auszubildenden und Beschäftigten in Technik von allen Bundesländern in Berlin am geringsten ausfällt. In Thüringen lernt dagegen rund ein Drittel der Auszubildenden im Bereich Technik. Den höchsten Anteil an Beschäftigten in Technik weist noch knapp vor Thüringen Baden-Württemberg auf (21,7 %)."),
+                                        content = paste0("Die Karten in der ersten Einstellung zeigt, dass 2023 der Anteil an Beschäftigten in MINT von allen Bundesländern in Mecklenburg-Vorpommern am geringsten ausfällt. In Thüringen, Bayern oder Baden-Württemberg arbeitet dagegen rund ein Viertel aller Beschäftigten in einem MINT-Beruf."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_bula_1")
 
@@ -80,8 +80,8 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("zeit_beruf_mint_bula_verlauf"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2017, 2022)
+      choices = 2013:2023,
+      selected = c(2017, 2023)
     ),
     p("Beschäftigtengruppe:"),
     shinyWidgets::pickerInput(
@@ -159,7 +159,7 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
 
     br(),
     shinyBS::bsPopover(id="ih_beruf_mint_7", title="",
-                       content = paste0("Die erste Darstellung zeigt z. B., dass sich der Anteil von Beschäftigten in MINT an allen Beschäftigten deutschlandweit in den ostdeutschen Bundesländern und Nordrhein-Westfalen ählich entwickelt. Der Anteil bleibt relativ konstant und nimmt von 2020 auf 2021 um ca. einen Prozentpunkt ab."),
+                       content = paste0("Die erste Darstellung zeigt, dass sich der MINT-Anteil unter Beschäftigten in den ostdeutschen Bundesländern und Nordrhein-Westfalen ählich entwickelt. Der Anteil bleibt relativ konstant und nimmt von 2020 auf 2022 ein weing, um ca. einen halben Prozentpunkt, ab."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_7")
     ),
@@ -170,8 +170,8 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("zeit_beruf_mint_bula_balken"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = 2022
+                       choices = 2013:2023,
+                       selected = 2023
                      ),
                      p("Beschäftigtengruppe:"),
                       shinyWidgets::pickerInput(
@@ -190,7 +190,7 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
 
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_fach_3", title="",
-                                        content = paste0("Diese Darstellung gibt einen Überblick darürber, wie hoch der Anteil von MINT-Beschäftigten in den Bundesländern ist. Beispielsweise sind 2022 etwa 3,5 % der Beschäftigten in Bayern im Bereich Informatik tätig. Damit liegt Bayern etwas über dem gesamtdeutschen Durchschnitt von knapp 3 %."),
+                                        content = paste0("Dieses Ranking gibt einen Überblick über den MINT-Anteil im Bundeslandvergleich. Der MINT-Anteil von Beschäftigten im westdeutschen Durchschnitt liegt etwas höher als in Deutschland insgesamt. Das liegt vor allem an den MINT-Spitzenreitern Baden-Württemberg und Bayern."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_3")
     )

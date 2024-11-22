@@ -18,7 +18,7 @@ library(dplyr)
 #pafd kbr
 #pfad <- "C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 #pfad kab
-pfad <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
+# pfad <- "C:/Users/kab/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/"
 
 # Erstellt "arbeitsmarkt" -------------------------------------------------
 
@@ -388,14 +388,6 @@ usethis::use_data(arbeitsmarkt, overwrite = T)
 
 library(dplyr)
 
-# 2021
-data <- readxl::read_excel(paste0(pfad, "BA006_221123_Besch_MINT.xlsx"),
-                           sheet = "Auswertung", col_names = F, range = "A17:AK7576")
-
-# 2022
-data_n <- readxl::read_excel(paste0(pfad, "BA009_230717_EA_344636_SvB_Azubi_MINT.xlsx"),
-                             sheet = "Auswertung", col_names = F, range = "A16:AH7521")
-
 # 2013 - 2020
 sheet <- 2013:2020
 data_z <- list()
@@ -409,11 +401,21 @@ for(i in 1:length(sheet)){
 rm(list_temp, data_temp)
 names(data_z) <- paste0("data_", 2013:2020)
 
+# 2021
+data <- readxl::read_excel(paste0(pfad, "BA006_221123_Besch_MINT.xlsx"),
+                           sheet = "Auswertung", col_names = F, range = "A17:AK7576")
+
+# 2022
+data_n <- readxl::read_excel(paste0(pfad, "BA009_230717_EA_344636_SvB_Azubi_MINT.xlsx"),
+                             sheet = "Auswertung", col_names = F, range = "A16:AH7521")
+
+# 2023
+data_n2 <- readxl::read_excel(paste0(pfad, "BA024_240802_EA_357830_SvB_Azubi_MINT.xlsx"),
+                              sheet = "Auswertung", col_names = F, range = "A15:AH7520")
 
 ## Data wrangling ----------------------------------------------------------
 
-
-### 2013-2020, 2022 -------------------------------------------------------
+### Funktion ---------------------------------------------------------------
 
 wrangling_detailliert <- function(data_n){
   # Spalten zusammenfassen/löschen für 2023
@@ -521,18 +523,22 @@ wrangling_detailliert <- function(data_n){
   return(data_n)
 }
 
+### 2013-2020, 2022 -------------------------------------------------------
 
-data_n <- wrangling_detailliert(data_n)
-
+# 2013-2020
 data_z <- lapply(names(data_z), function(x) wrangling_detailliert(data_z[[x]]))
 #data_z <- lapply(names(data_z) FUN = as.numeric(data_z[[,6:33]]))
-
 
 data_z <- lapply(data_z, function(df) dplyr::mutate_at(df, vars(6:33), as.numeric))
 names(data_z) <- paste0("data_", 2013:2020)
 
-### 2021 --------------------------------------------------------------------
+# 2022
+data_n <- wrangling_detailliert(data_n)
 
+# 2023
+data_n2 <- wrangling_detailliert(data_n2)
+
+### 2021 --------------------------------------------------------------------
 
 # Spalten zusammenfassen/löschen
 data$...1 <- dplyr::coalesce(data$...4, data$...3, data$...2, data$...1) # Regionen in eine Spalte
@@ -654,6 +660,7 @@ header <- c("region", "ort", "zusatz", "schluesselnummer", "fachbereich",
             "bundesland"
 )
 colnames(data) <- header
+
 
 
 ## Aufbereiten in gewünschte DF-Struktur ---------------------------------
@@ -799,14 +806,15 @@ detailliert_aufbereiten <- function(data){
     dplyr::distinct()
 }
 
-
-
+# 2021
 data <- detailliert_aufbereiten(data = data)
 data$jahr <- 2021
 # Spalten in logische Reihenfolge bringen
 data <- data[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
                 #, "hinweise", "quelle"
 )]
+
+# 2022
 data_n <- detailliert_aufbereiten(data = data_n)
 data_n$jahr <- 2022
 # Spalten in logische Reihenfolge bringen
@@ -814,6 +822,15 @@ data_n <- data_n[,c("bereich", "kategorie", "indikator", "fachbereich", "geschle
                     #, "hinweise", "quelle"
 )]
 
+# 2023
+data_n2 <- detailliert_aufbereiten(data = data_n2)
+data_n2$jahr <- 2023
+# Spalten in logische Reihenfolge bringen
+data_n2 <- data_n2[,c("bereich", "kategorie", "indikator", "fachbereich", "geschlecht", "bundesland", "landkreis", "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "wert"
+                    #, "hinweise", "quelle"
+)]
+
+# 2013-2020
 data_z <- lapply(names(data_z), function(x) detailliert_aufbereiten(data_z[[x]]))
 data_z <- lapply(1:length(data_z), function(i) {
   df <- data_z[[i]]
@@ -838,6 +855,10 @@ data_a <- readxl::read_excel(paste0(pfad, "/BA007_221205_AusbV_MINT.xlsx"),
                              sheet = "Auswertung2", col_names = F, range = "A12:L4201")
 #2022
 data_a22 <- readxl::read_excel(paste0(pfad, "/BA019_230823_EA_SvB_Azub_MINT.xlsx"),
+                               sheet = "Auswertung", col_names = F, range = "A12:L4201")
+
+#2023
+data_a23 <- readxl::read_excel(paste0(pfad, "/BA022_240731_EA_357830_SvB_Azub_MINT_Dauer.xlsx"),
                                sheet = "Auswertung", col_names = F, range = "A12:L4201")
 
 # 2013 - 2020
@@ -1002,6 +1023,8 @@ wrangling_detailliert <- function(data_a22){
 
 data_a22 <- wrangling_detailliert(data_a22)
 
+data_a23 <- wrangling_detailliert(data_a23)
+
 data_az <- lapply(names(data_az), function(x) wrangling_detailliert(data_az[[x]]))
 names(data_az) <- paste0("data_a", 2013:2020)
 
@@ -1137,6 +1160,7 @@ azubi_aufbereiten <- function(data_a){
 
   return(data_a)
 }
+
 # 2021
 data_a <- azubi_aufbereiten(data_a1)
 data_a$jahr <- 2021
@@ -1144,6 +1168,10 @@ data_a$jahr <- 2021
 # 2022
 data_a22 <- azubi_aufbereiten(data_a22)
 data_a22$jahr <- 2022
+
+# 2023
+data_a23 <- azubi_aufbereiten(data_a23)
+data_a23$jahr <- 2023
 
 # 2013 - 2020
 data_az <- lapply(names(data_az), function(x) azubi_aufbereiten(data_az[[x]]))
@@ -1195,6 +1223,8 @@ azubi_aufbereiten_2 <- function(data_a){
 data_a <- azubi_aufbereiten_2(data_a)
 #2022
 data_a22 <- azubi_aufbereiten_2(data_a22)
+#2023
+data_a23 <- azubi_aufbereiten_2(data_a23)
 #2013-2020
 data_az <- lapply(names(data_az), function(x) azubi_aufbereiten_2(data_az[[x]]))
 names(data_az) <- paste0("data_a", 2013:2020)
@@ -1203,7 +1233,7 @@ names(data_az) <- paste0("data_a", 2013:2020)
 ## letzte Korrekturen für Alle und Azubi und zusammenfügen -----------------
 
 
-## Hambrug und Berlin mit Lk Nummer ergänzen für 2013-2020 & 2022
+## Hambrug und Berlin mit Lk Nummer ergänzen für 2013-2020 & 2022, 2023
 staedte_anhaengen <- function(data_n){
   data_hh <- data_n[data_n$bundesland == "Hamburg",]
   data_hh$landkreis_nummer <- "02000"
@@ -1220,6 +1250,7 @@ staedte_anhaengen <- function(data_n){
 data_n <- staedte_anhaengen(data_n)
 data_z <- lapply(names(data_z), function(x) staedte_anhaengen(data_z[[x]]))
 names(data_z) <- paste0("data_", 2013:2020)
+data_n2 <- staedte_anhaengen(data_n2)
 
 
 staedte_anhaengen_azubis <- function(data_a22){
@@ -1238,24 +1269,25 @@ staedte_anhaengen_azubis <- function(data_a22){
 data_a22 <- staedte_anhaengen_azubis(data_a22)
 data_az <- lapply(names(data_az), function(x) staedte_anhaengen_azubis(data_az[[x]]))
 names(data_az) <- paste0("data_a", 2013:2020)
-
+data_a23 <- staedte_anhaengen_azubis(data_a23)
 
 ## arbeitsmarkt_detailliert Zusammenfügen und speichern -------------------------------
-
 
 data <- rbind(data_z$data_2013, data_z$data_2014, data_z$data_2015,
               data_z$data_2016, data_z$data_2017, data_z$data_2018,
               data_z$data_2019, data_z$data_2020,
               data,
-              data_n)
-rm(data_n, data_z, data1)
+              data_n,
+              data_n2)
+rm(data_n, data_z, data1, data_n2)
 
 data_a <- rbind(data_az$data_a2013, data_az$data_a2014, data_az$data_a2015,
                 data_az$data_a2016, data_az$data_a2017, data_az$data_a2018,
                 data_az$data_a2019, data_az$data_a2020,
                 data_a,
-                data_a22)
-rm(data_a22, data_az, data_a1)
+                data_a22,
+                data_a23)
+rm(data_a22, data_az, data_a1, data_a23)
 
 data_final <- rbind(data, data_a)
 rm(data, data_a)
@@ -1283,8 +1315,10 @@ data_final$wert <- as.numeric(data_final$wert)
 #### Datensatz speichern
 
 arbeitsmarkt_detail <- data_final
-usethis::use_data(arbeitsmarkt_detail, overwrite = T)
 
+#setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+save(arbeitsmarkt_detail, file ="arbeitsmarkt_detail.rda")
 
 # Erstellt "data_naa" -----------------------------------------------------
 

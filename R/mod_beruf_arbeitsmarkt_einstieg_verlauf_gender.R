@@ -14,8 +14,8 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_verlauf_gender"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2017, 2022)
+      choices = 2013:2023,
+      selected = c(2017, 2023)
     ),
     p("Beschäftigtengruppe:"),
     shinyWidgets::pickerInput(
@@ -79,8 +79,8 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_beruf_frauen_2", title="",
-                       content = paste0("Betrachten man den Zeitverlauf in der ersten Einstellung sieht man, dass der Frauenanteil in MINT-Ausbildungen und -Berufen seit 2017 etwas gestiegen ist. In den absoluten Zahlen ist die Zahl allerdings nur um 5000 gestiegen in dem Zeitraum 2017 bis 2022."),
-                       trigger = "hover"),
+                       content = paste0("Der Zeitverlauf zeigt, dass der Frauenanteil in MINT in den letzten Jahren etwas gestiegen ist (ca.1 Prozentpunkt). Vergleicht man die absolute Anzahl kann man ablesen, dass 2023 im Vergleich zu 2017 rund 200.000 Frauen mehr in MINT gibt."),
+                       trigger = "hover", placement = "top"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_frauen_2")
   )
 

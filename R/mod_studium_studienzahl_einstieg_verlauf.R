@@ -110,8 +110,8 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studienzahl_einstieg_verlauf"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2015,2022)
+      choices = 2013:2023,
+      selected = c(2016,2023)
     ),
 
     p("Region:"),
@@ -148,7 +148,9 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
                   "internationale Studierende",
                   "Studierende (Lehramt)",
                   "Studienanfänger:innen (1. Hochschulsemester)",
-                  "internationale Studienanfänger:innen (1. Hochschulsemester)"),
+                  "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                  "Absolvent:innen",
+                  "internationale Absolvent:innen"),
       selected = c("Studierende"
                    , "Studienanfänger:innen (1. Hochschulsemester)"
       ),
@@ -170,7 +172,7 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
     br(),
 
     shinyBS::bsPopover(id="ih_studium_mint_3", title="",
-                       content = paste0("Der Zeitverlauf zeigt, dass der Anteil von MINT-Studierenden an allen Studierenden sowie die absolute Anzahl der Studierenden in MINT bis zuletzt über die Jahre relativ konstant bleibt. (Großes Augenmerk muss hier auf die Y-Skala gelegt werden. Die visuellen Sprünge sind kleiner als sie aussehen.)"),
+                       content = paste0("Der Zeitverlauf in erster Einstellung zeigt, dass der Anteil von MINT-Studierenden an allen Studierenden zwischen 2016-2023 leicht gesunken ist. Großes Augenmerk muss hier auf die Prozente-Skala links gelegt werden. Die visuellen Sprünge in den Zeitverläufen sind ggf. kleiner als sie aussehen."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_3")
   )

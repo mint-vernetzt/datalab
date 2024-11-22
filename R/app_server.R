@@ -25,6 +25,8 @@ app_server <- function(input, output, session) {
 
   mod_fachkraft_server("fachkraft_ui_1")
 
+  # mod_ausserschulisch_server("ausserschulisch_ui_1")
+
 
 
 

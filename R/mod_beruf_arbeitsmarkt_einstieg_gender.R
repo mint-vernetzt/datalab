@@ -24,9 +24,6 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
       "))
     ),
 
-
-
-
     p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_arbeitsmarkt_einstieg_gender"),
@@ -38,8 +35,8 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_arbeitsmarkt_einstieg_gender"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -111,14 +108,14 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
                      br(),
                      shinyBS::bsPopover(id="dh_beruf_frauen_1", title = "",
                                         content = paste0("Falls die Grafik abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                        trigger = "hover"),
+                                        trigger = "hover", placement = "top"),
                      tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_beruf_frauen_1"),
 
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_frauen_1", title="",
-                                        content = paste0("Der Anteil von Frauen an MINT-Auszubildenden in Deutschland beträgt 13 % im Jahr 2022. Bei den MINT-Beschäftigten beträgt dieser Anteil 17 %. Dagegen machen Frauen in anderen, Nicht-MINT-Berufen mehr als die Hälfte aller Auszubildenden und Beschäftigten aus (56 bzw. 55 %)."),
-                                        trigger = "hover"),
+                                        content = paste0("Der Frauenanteil unter MINT-Beschäftigten beträgt 2023 rund 17 %. Lässt man sich den Nicht-MINT-Bereich dazu anzeigen, sieht man: Hier sind die Frauen dagegen sogar in der knappen Überzahl (55 %)."),
+                                        trigger = "hover", placement = "top"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_frauen_1")
     ),
     conditionalPanel(condition = "input.ansicht_arbeitsmarkt_einstieg_gender == 'Gruppenvergleich - Balkendiagramm'",
@@ -148,8 +145,8 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
                     ),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_frauen_3", title="",
-                                        content = paste0("In der ersten Einstellung sieht man beispielsweise im oberen Teil der Grafik, dass in Niedersachsen 2022 Frauen fast 40% der Auszubildenden in MINT ausmachen. Dieser Wert liegt nur knapp unter dem Frauenanteil an allen Ausbildungen (41%)."),
-                                        trigger = "hover"),
+                                        content = paste0("In dieser Übersicht sieht man, dass der Frauenanteil in MINT-Berufen unter den Auszubildenden noch einmal ein wenig geringer ist, als unter den Beschäftigten. Nur 13 % der MINT-Azubis 2023 sind Frauen."),
+                                        trigger = "hover", placement = "top"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_frauen_3")
     ))
 }

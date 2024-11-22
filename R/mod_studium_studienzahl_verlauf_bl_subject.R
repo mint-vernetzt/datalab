@@ -15,8 +15,8 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_verlauf_subject_bl"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2016, 2022)
+      choices = 2013:2023,
+      selected = c(2016, 2023)
     ),
     # p("Nur Lehramt anzeigen:"),
     # tags$div(

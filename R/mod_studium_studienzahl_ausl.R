@@ -14,8 +14,8 @@ mod_studium_studienzahl_ausl_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_studium_studienzahl_ausl"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -45,7 +45,8 @@ mod_studium_studienzahl_ausl_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("status_ausl"),
       choices = c("Studierende",
-                  "Studienanfänger:innen (1. Hochschulsemester)"
+                  "Studienanfänger:innen (1. Hochschulsemester)",
+                  "Absolvent:innen"
       ),
       selected = "Studierende"
     ),
@@ -67,7 +68,7 @@ mod_studium_studienzahl_ausl_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_studium_international_1", title="",
-                       content = paste0("Diese Grafik zeigt z. B., dass im Jahr 2020 in Ostdeutschland ca. 39 % der Elektortechnik- und Informationstechnik-Studierenden internationale Studierende waren. Wählt man als Betrachtung die Anzahl der Studierenden, sieht man das diese 39 % 5.391 internationale Studierende in Elektrotechnik und Informationstechnik ausmachen."),
+                       content = paste0("Diese Grafik zeigt in der ersten Einstellung, dass im Jahr 2023 deutschlandweit 21% der Studierenden im Ingenieurwesen internationale Studierende waren. Blickt man auf die absolute Anzahl sieht man z. B., dass 204.000 internationale Studierende für ein MINT-Studium in Deutschland sind."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_international_1")

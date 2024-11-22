@@ -14,8 +14,8 @@ mod_beruf_arbeitsmarkt_landkreis_map_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_beruf_arbeitsmarkt_landkreis_karte"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
     p("Region:"),
     shinyWidgets::pickerInput(

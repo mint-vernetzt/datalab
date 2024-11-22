@@ -1,17 +1,15 @@
 mod_studium_studienzahl_mint_anteile_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Auswahl der Studierendengruppen:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("anteile_indi"),
-      choices = c("Studierende",
-                            "Studierende (Lehramt)",
-                            "internationale Studierende",
-                            "Studienanfänger:innen (1. Hochschulsemester)",
-                            "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
-      selected = "Studierende"),
+    p("Jahre:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("anteile_jahr"),
+      label = NULL,
+      choices = 2013:2023,
+      selected = c(2017, 2023)
+    ),
 
-    p("Auswahl des Bundeslands:"),
+    p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("anteile_states"),
       choices = c("Deutschland",
@@ -37,6 +35,18 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
       ),
       selected = "Deutschland"
     ),
+
+    p("Studierendengruppen:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("anteile_indi"),
+      choices = c("Studierende",
+                  "Studierende (Lehramt)",
+                  "internationale Studierende",
+                  "Studienanfänger:innen (1. Hochschulsemester)",
+                  "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                  "Absolvent:innen",
+                  "internationale Absolvent:innen"),
+      selected = "Studierende"),
 
     p("Fächer-Ebene:"),
     shinyWidgets::pickerInput(
@@ -72,7 +82,7 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
     br(),
 
     shinyBS::bsPopover(id="ih_studium_fach_4", title="",
-                       content = paste0("Diese Grafik zeigt, wie sich die Anteile der einzelnen MINT-Diszipline über die Jahre verändern. So sieht man z. B. in der ersten Einstellung, dass in Nordrheinwestfalen von 2018 bis 2021 der Anteil an Informatik-Studierenden zunimmt, der Anteil an Studierenden in Maschinenbau/Verfahrenstechnik nimmt dagegen ab."),
+                       content = paste0("Diese Grafik zeigt, wie sich die Anteile der einzelnen MINT-Diszipline über die Jahre verändern. So sieht man z. B. in der ersten Einstellung, dass deutschlandweit von 2017 bis 2023 der Anteil an Informatik-Studierenden zunimmt, der Anteil an Studierenden in anderen Ingenieurwissenschaften dagegen rückläufig ist."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_4")
@@ -87,6 +97,12 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
 mod_studium_studienzahl_mint_anteile_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+
+    observeEvent(input$anteile_jahr, {
+      r$anteile_jahr<- input$anteile_jahr
+    })
+
 
     observeEvent(input$anteile_indi, {
       r$anteile_indi<- input$anteile_indi

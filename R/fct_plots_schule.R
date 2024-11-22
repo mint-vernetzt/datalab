@@ -2108,7 +2108,7 @@ kurse_comparison_gender <- function(r) {
 
     df2$fachbereich <- factor(df2$fachbereich, levels = levels(df2$fachbereich))
 
-
+#nicht interaktiv
     out <- ggplot2::ggplot(df,
                     ggplot2::aes(y = fachbereich)) +
       ggplot2::geom_point(data = df2, ggplot2::aes(x = value, color = group), size = 5) +
