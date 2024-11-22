@@ -52,7 +52,8 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                                    "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
                                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Absolvent:innen"),
+                                   "Absolvent:innen",
+                                   "internationale Absolvent:innen"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -69,7 +70,7 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_fach_2neu", title="",
-                                        content = paste0("Die Karte in der ersten Einstellung zeigt: Während Sachsen mit über 41 % MINT-Studierende den höchsten MINT-Anteil im Bundeslandvergleich hat, studieren im Nachbarland Thüringen nur 24 % aller Studierenden ein MINT-Fach."),
+                                        content = paste0("Die Karte in der ersten Einstellung zeigt: Während Sachsen mit über 41% MINT-Studierende den höchsten MINT-Anteil im Bundeslandvergleich hat, studieren im Nachbarland Thüringen nur 23% aller Studierenden ein MINT-Fach."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_2neu")
     ),
@@ -81,7 +82,7 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                        inputId = ns("bulas_verlauf_y"),
                        label = NULL,
                        choices = 2013:2023,
-                       selected = c(2015, 2023)
+                       selected = c(2017, 2023)
                      ),
 
                      p("Studierendengruppen:"),
@@ -92,7 +93,8 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                                    "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
                                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Absolvent:innen"),
+                                   "Absolvent:innen",
+                                   "internationale Absolvent:innen"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -140,7 +142,7 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_5", title="",
-                                        content = paste0("Die erste Ansicht zeigt, dass in Baden-Württemberg im Vergleich zu Hamburg ein größerer Anteil an Studierenden MINT-Fächer studiert. In beiden Bundesländern bleibt der Anteil an MINT-Studierenden über die Jahre relativ konstat und sinkt in den letzten Jahren leicht ab."),
+                                        content = paste0("Die erste Ansicht zeigt, dass in Baden-Württemberg im Vergleich zu Hamburg ein größerer Anteil an Studierenden MINT-Fächer studiert. In beiden Bundesländern bleibt der Anteil an MINT-Studierenden über die Jahre relativ konstat."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_5")
@@ -166,7 +168,8 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                                    "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
                                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Absolvent:innen"),
+                                   "Absolvent:innen",
+                                   "internationale Absolvent:innen"),
                        selected = "Studierende"),
 
 

@@ -10,12 +10,20 @@
 mod_studium_studienzahl_ausl_zeit_ui <- function(id){
   ns <- NS(id)
   tagList(
+
     p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_ausl_zeit"),
       label = NULL,
       choices = c("Gruppenvergleich - Balkendiagramm", "Zeitverlauf - Liniendiagramm"),
       selected = "Gruppenvergleich - Balkendiagramm"
+    ),
+    p("Jahr:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("date_ausl_zeit"),
+      label = NULL,
+      choices = 2013:2023,
+      selected = c(2017, 2023)
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -160,7 +168,7 @@ mod_studium_studienzahl_ausl_zeit_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_studium_international_2", title="",
-                       content = paste0("Die erste Einstellung der Grafik zeigt z. B., dass der Anteil an internationalen Studierenden an allen Studierenden in MINT in Nordrhein-Westfalen in den letzten 4 Jahren um fast 5 Prozentpunkte angestiegen ist. Betrachtet man die &quotAnzahl&quot zeigt sich, dass die Anzahl internationaler Studierender von knapp 87.000 in 2018 auf knapp 99.000 in 2021 angestiegen ist."),
+                       content = paste0("Die erste Einstellung der Grafik zeigt, dass der Anteil internationaler Studierender an allen Studierenden in MINT in den letzten 7 Jahren um fast 7 Prozentpunkte angestiegen ist. Betrachtet man die &quotAnzahl&quot zeigt sich, dass die Anzahl internationaler Studierender von 137.000 in 2017 auf 204.000 in 2023 angestiegen ist."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_international_2")
@@ -176,6 +184,10 @@ mod_studium_studienzahl_ausl_zeit_server <- function(id, r){
 
     observeEvent(input$ansicht_ausl_zeit, {
       r$ansicht_ausl_zeit <- input$ansicht_ausl_zeit
+    })
+
+    observeEvent(input$date_ausl_zeit, {
+      r$date_ausl_zeit <- input$date_ausl_zeit
     })
 
     observeEvent(input$states_studium_studienzahl_ausl_zeit, {

@@ -52,7 +52,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                    "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
                                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Absolvent:innen"),
+                                   "Absolvent:innen",
+                                   "internationale Absolvent:innen"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -74,15 +75,19 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      conditionalPanel(condition = "input.bulas_map_l_faecher == 'internationale Studienanfänger:innen (1. Hochschulsemester)' |
                      input.bulas_map_l_faecher == 'Studierende' |
                      input.bulas_map_l_faecher == 'Internationale Studierende' |
-                     input.bulas_map_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'",
+                     input.bulas_map_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'|
+                    input.bulas_map_l_faecher == 'Absolvent:innen' |
+                     input.bulas_map_l_faecher == 'internationale Absolvent:innen'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
                                         inputId = ns("bl_f_alle_faecher"),
 
-                                        choices = studi_det_ui_faecher(spezif_i =c('Internationale Studienanfänger:innen (1. Hochschulsemester)',
+                                        choices = studi_det_ui_faecher(spezif_i =c('internationale Studienanfänger:innen (1. Hochschulsemester)',
                                                                                    'Studierende',
                                                                                    'internationale Studierende',
-                                                                                   'Studienanfänger:innen (1. Hochschulsemester)')),
+                                                                                   'Studienanfänger:innen (1. Hochschulsemester)',
+                                                                                   "internationale Absolvent:innen",
+                                                                                   "Absolvent:innen")),
 
                                         selected = "Alle MINT-Fächer"
                                       )),
@@ -95,7 +100,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_fach_2neub", title="",
-                                        content = paste0("Die Karte in der ersten Einstellung zeigt: Während Sachsen mit über 41 % MINT-Studierende den höchsten MINT-Anteil im Bundeslandvergleich hat, studieren im Nachbarland Thüringen nur 24 % aller Studierenden ein MINT-Fach."),
+                                        content = paste0("Die Karte in der ersten Einstellung zeigt: Während Sachsen mit über 41% MINT-Studierende den höchsten MINT-Anteil im Bundeslandvergleich hat, studieren im Nachbarland Thüringen nur 23% aller Studierenden ein MINT-Fach."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_2neub")
     ),
@@ -118,7 +123,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                    "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
                                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Absolvent:innen"),
+                                   "Absolvent:innen",
+                                   "internationale Absolvent:innen"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -140,15 +146,19 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      conditionalPanel(condition = "input.bulas_verlauf_l_faecher == 'internationale Studienanfänger:innen (1. Hochschulsemester)' |
                      input.bulas_verlauf_l_faecher == 'Studierende' |
                      input.bulas_verlauf_l_faecher == 'internationale Studierende' |
-                     input.bulas_verlauf_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'",
+                     input.bulas_verlauf_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'|
+                     input.bulas_map_l_faecher == 'Absolvent:innen' |
+                     input.bulas_map_l_faecher == 'internationale Absolvent:innen'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
                                         inputId = ns("bl_verlauf_alle_faecher"),
 
-                                        choices = studi_det_ui_faecher(spezif_i =c('Internationale Studienanfänger:innen (1. Hochschulsemester)',
+                                        choices = studi_det_ui_faecher(spezif_i =c('internationale Studienanfänger:innen (1. Hochschulsemester)',
                                                                                    'Studierende',
-                                                                                   'Internationale Studierende',
-                                                                                   'Studienanfänger:innen (1. Hochschulsemester)')),
+                                                                                   'internationale Studierende',
+                                                                                   'Studienanfänger:innen (1. Hochschulsemester)',
+                                                                                   "internationale Absolvent:innen",
+                                                                                   "Absolvent:innen")),
 
                                         selected = "Alle MINT-Fächer"
                                       )),
@@ -193,7 +203,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_5b", title="",
-                                        content = paste0("Die erste Ansicht zeigt, dass in Baden-Württember im Vergleich zu Hamburg ein größerer Anteil an Studierenden MINT-Fächer studiert. In beiden Bundesländern bleibt der Anteil an MINT-Studierenden über die Jahre relativ konstat und sinkt in den letzten Jahren leicht ab."),
+                                        content = paste0("Die erste Ansicht zeigt, dass in Baden-Württember im Vergleich zu Hamburg ein größerer Anteil an Studierenden MINT-Fächer studiert. In beiden Bundesländern bleibt der Anteil an MINT-Studierenden über die Jahre relativ konstant."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_5b")
@@ -219,7 +229,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                    "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
                                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Absolvent:innen"),
+                                   "Absolvent:innen",
+                                   "internationale Absolvent:innen"),
                        selected = "Studierende"),
 
                      #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
@@ -236,7 +247,9 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      conditionalPanel(condition = "input.bulas_balken_l_faecher == 'internationale Studienanfänger:innen (1. Hochschulsemester)' |
                      input.bulas_balken_l_faecher == 'Studierende' |
                      input.bulas_balken_l_faecher == 'internationale Studierende' |
-                     input.bulas_balken_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'",
+                     input.bulas_balken_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'|
+                     input.bulas_map_l_faecher == 'Absolvent:innen' |
+                     input.bulas_map_l_faecher == 'internationale Absolvent:innen'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
                                         inputId = ns("bl_balken_alle_faecher"),
@@ -244,7 +257,9 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                         choices = studi_det_ui_faecher(spezif_i =c('Internationale Studienanfänger:innen (1. Hochschulsemester)',
                                                                                    'Studierende',
                                                                                    'Internationale Studierende',
-                                                                                   'Studienanfänger:innen (1. Hochschulsemester)')),
+                                                                                   'Studienanfänger:innen (1. Hochschulsemester)',
+                                                                                   "internationale Absolvent:innen",
+                                                                                   "Absolvent:innen")),
 
                                         selected = "Alle MINT-Fächer"
                                       )),
@@ -300,7 +315,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
 
                      br(),
                      shinyBS::bsPopover(id="ih_studium_fach_5b", title="",
-                                        content = paste0("Die Übersicht zeigt, dass der Anteil von Studierenden in MINT an allen Studierenden zwischen den Bundesländern zwischen 24 % (Thüringen, Saarland) und 42 % (Sachsen) liegt."),
+                                        content = paste0("Die Übersicht zeigt, dass der Anteil von Studierenden in MINT an allen Studierenden zwischen den Bundesländern zwischen 23% (Thüringen) und 41% (Sachsen, Bayern) liegt."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_5b")

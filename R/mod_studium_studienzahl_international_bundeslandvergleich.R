@@ -64,7 +64,7 @@ mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){ ##
                      br(),
                      br(),
                      shinyBS::bsPopover(id="international_ih_studium_fach_2neu", title="",
-                                        content = paste0("Servus"),
+                                        content = paste0("Die Darstellung zeigt, wie hoch der MINT-Anteil unter internationalen Studierenden in MINT ist. In Sachsen studierenden bspw. besonders viele Internationals MINT (63%)."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="international_ih_studium_fach_2neu")
     ),
@@ -76,7 +76,7 @@ mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){ ##
                        inputId = ns("international_bulas_verlauf_y"),
                        label = NULL,
                        choices = 2013:2023,
-                       selected = c(2015, 2023)
+                       selected = c(2017, 2023)
                      ),
 
                      p("Studierendengruppen:"),
@@ -132,7 +132,7 @@ mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){ ##
                      ),
                      br(),
                      shinyBS::bsPopover(id="international_ih_studium_mint_5", title="",
-                                        content = paste0("Servus"),
+                                        content = paste0("Der Zeitverlauf lässt den MINT-Anteil unter internationalen Studierenden in einzelnen Bundesländern über die Zeit betrachten. Hier sieht man z. B., dass MINT bei Internationals in Baden-Würrtemberg beliebter ist als in Hamburg."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="international_ih_studium_mint_5")
@@ -161,7 +161,7 @@ mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){ ##
 
                      br(),
                      shinyBS::bsPopover(id="international_ih_studium_fach_5", title="",
-                                        content = paste0("Servus"),
+                                        content = paste0("In dieser Übersicht sieht man, dass der MINT-Anteil unter internationalen Studierenden in Sachsen und Mecklenburg-Vorpommern besonders hoch ist."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="international_ih_studium_fach_5")

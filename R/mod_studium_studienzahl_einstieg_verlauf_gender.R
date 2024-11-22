@@ -31,7 +31,7 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
       inputId = ns("genz_date"),
       label = NULL,
       choices = 2013:2023,
-      selected = c(2015, 2023)
+      selected = c(2017, 2023)
     ),
     # p("Nur Lehramt anzeigen:"),
     # tags$div(
@@ -114,7 +114,7 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
 
     br(),
     shinyBS::bsPopover(id="ih_studium_frauen_2", title="",
-                       content = paste0("Die erste Einstellung der interaktiven Grafik zeigt, dass sowohl unter Studienanfänger:innen als auch Studierenden der Frauenanteil über die Jahre gewachsen ist. Waren 2015 deutschlandweit nur 29 % der Studierenden in MINT Frauen, sind es 2021 32 %."),
+                       content = paste0("Die erste Einstellung der interaktiven Grafik zeigt, dass sowohl unter Studierenden als auch Absolvent:innen der Frauenanteil über die Jahre gewachsen ist. Waren 2017 deutschlandweit nur 29,4% der Studierenden in MINT Frauen, sind es 2023 32,6%."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_frauen_2")

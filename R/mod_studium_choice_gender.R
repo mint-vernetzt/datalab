@@ -25,16 +25,16 @@ mod_studium_choice_gender_ui <- function(id){
       inputId = ns("choice_y"),
       label = NULL,
       choices = 2013:2023,
-      selected = 2022
+      selected = 2023
     ),
     p("Studierendengruppe:"),
     shinyWidgets::pickerInput(
       inputId = ns("choice_l"),
       choices = c(
         "Studierende",
-        "Studierende (Lehramt)" = "Studierende (Lehramt, Universität)",
-        "Studienanfänger:innen (1.Hochschulsemester)",
-        "Absolvent:innen"
+         "Studierende (Lehramt)",
+         "Studienanfänger:innen (1. Hochschulsemester)",
+         "Absolvent:innen"
       ),
       selected = c("Studierende")
       ,
@@ -81,7 +81,7 @@ mod_studium_choice_gender_ui <- function(id){
 
     br(),
     shinyBS::bsPopover(id="ih_studium_mint_7", title="",
-                       content = paste0("Von allen Frauen, die studieren, studieren nur 24 % ein MINT-Fach im Hauptfach. Unter männlichen Studierenden ist MINT und insbesondere Ingenieurwissenschaften verbreiteter: Etwas über die Hälfte aller studierender Männer studieren in MINT."),
+                       content = paste0("Von allen Frauen, die studieren, studieren 23,4% ein MINT-Fach. Unter männlichen Studierenden ist MINT und insbesondere Ingenieurwissenschaften verbreiteter: Etwas über die Hälfte studieren MINT."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_7")
 
@@ -94,18 +94,18 @@ mod_studium_choice_gender_ui <- function(id){
                        inputId = ns("choice_V_y"),
                        label = NULL,
                        choices = 2013:2023,
-                       selected = c(2016,2023)
+                       selected = c(2017,2023)
                      ),
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("choice_l_v"),
                        choices = c(
                          "Studierende",
-                         "Studierende (Lehramt)" = "Studierende (Lehramt, Universität)",
-                         "Studienanfänger:innen (1.Hochschulsemester)",
+                         "Studierende (Lehramt)",
+                         "Studienanfänger:innen (1. Hochschulsemester)",
                          "Absolvent:innen"
                        ),
-                       selected = c("Studierende", "Studienanfänger:innen (1.Hochschulsemester)")
+                       selected = c("Studierende", "Studienanfänger:innen (1. Hochschulsemester)")
                        ,
                        multiple = T,
                        options =  list(
@@ -118,9 +118,9 @@ mod_studium_choice_gender_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("choice_v_f"),
 
-                       choices = c("MINT (Gesamt)","Mathematik, Naturwissenschaften", "Ingenieurwissenschaften"),
+                       choices = c("Alle MINT-Fächer","Mathematik, Naturwissenschaften", "Ingenieurwissenschaften (inkl. Informatik)"),
 
-                       selected = "MINT (Gesamt)"
+                       selected = "Alle MINT-Fächer"
                      ),
                      p("Region:"),
                      shinyWidgets::pickerInput(
@@ -158,7 +158,7 @@ mod_studium_choice_gender_ui <- function(id){
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_8", title="",
-                                        content = paste0("Die erste Einstellung zeigt u.a., dass der Anteil an MINT-Studierenden unter den weiblichen Studienanfänger*innen im ersten Fachsemester in Sachsen im Mittel höher liegt als unter den weiblichen Studierenden. Das deutet darauf hin, dass weibliche Studierende MINT-Studiengänge häufiger wieder abbrechen als andere Studiengänge."),
+                                        content = paste0("Die erste Einstellung zeigt u.a., dass der Anteil an Frauen, die sich für ein MINT-Studium entscheiden sowohl unter den Studienanfänger:innen und Studierenden ähnlich verläuft."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_8")
