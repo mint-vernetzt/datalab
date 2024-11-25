@@ -215,7 +215,7 @@ plot_cp_projekte <- function(r){
       dplyr::collect()
   }else{
     bula_anzeigen<- r$bula_cp_pros
-
+    regio <- ""
     df <- dplyr::tbl(con, "ausserschulisch_cp_projekte") %>%
       dplyr::filter(region == "Gesamt",
                     typ == charas) %>%
@@ -286,9 +286,9 @@ plot_cp_projekte <- function(r){
     df <- df[with(df, order(prop, decreasing = TRUE)),]
 
     # Titel
-    if(regio == "Gesamt"){
+    if(regio == "Gesamt" | charas == "Region"){
       regio_angabe <- ""
-    }else if(regio == "Bundesweit"){
+    }else if(charas == "Bundesweit"){
       regio_angabe <- paste0(" die ", regio, " tätig sind")
     }else{
       regio_angabe <- paste0(" die in ", regio, " tätig sind")
@@ -302,9 +302,9 @@ plot_cp_projekte <- function(r){
     out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = prop, x = indikator))%>%
       highcharter::hc_plotOptions(column = list(#pointWidth = 50,
                                                 colorByPoint = TRUE,
-                                                colors = c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                                                           "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                                                           "#007655", "#dc6262"))
+                                                colors =  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+                                                            "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+                                                            "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc"))
       )%>%
       highcharter::hc_tooltip(pointFormat = "{point.y} %")%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f} %"),
@@ -342,9 +342,9 @@ plot_cp_projekte <- function(r){
     df <- df[with(df, order(wert, decreasing = TRUE)),]
 
     # Titel
-    if(regio == "Gesamt"){
+    if(charas == "Gesamt"| charas == "Region"){
       regio_angabe <- ""
-    }else if(regio == "Bundesweit"){
+    }else if(charas == "Bundesweit"){
       regio_angabe <- paste0(" die ", regio, " tätig sind")
     }else{
       regio_angabe <- paste0(" die in ", regio, " tätig sind")
@@ -357,9 +357,9 @@ plot_cp_projekte <- function(r){
     out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = indikator))%>%
       highcharter::hc_plotOptions(column = list(#pointWidth = 50,
                                                 colorByPoint = TRUE,
-                                                colors = c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                                                           "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                                                           "#007655", "#dc6262"))
+                                                colors =  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+                                                            "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+                                                            "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc"))
       )%>%
       highcharter::hc_tooltip(pointFormat = "{point.y}")%>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
@@ -398,44 +398,153 @@ plot_cp_projekte <- function(r){
 #' @noRd
 
 plot_mv_akteursb <- function(r){
-  frage <- r$typ_akteursb
+  frage <- r$chara_mvb_akteur
 
-  if(frage == "Arbeitsverhältnis"){
+  frage_typ <- ifelse(frage == "Arbeitsverhältnis", "arbeitsverhältnis",
+                      ifelse(frage == "Kategorie", "kategorie", "sektoren"))
+  frage_typ <- ifelse(frage == "Berufshintergrund", "berufshintergrund",
+                      ifelse(frage == "Zielgruppen", "zielgruppen", frage_typ))
 
-    df <- dplyr::tbl(con, "ausserschulisch_akteursbefragung") %>%
-      dplyr::filter(typ %in% c("arbeitsverhältnis")) %>%
-      dplyr::collect()
+  df <- dplyr::tbl(con, "ausserschulisch_akteursbefragung") %>%
+    dplyr::filter(typ == frage_typ) %>%
+    dplyr::collect()
 
-    df_ges <- df %>%
-      dplyr::filter(indikator == "Gesamt") %>%
-      dplyr::rename(wert_ges = wert) %>%
-      dplyr::select(-indikator)
-    df <- df %>% dplyr::filter(indikator != "Gesamt") %>%
-      dplyr::left_join(df_ges, by = c("typ")) %>%
-      dplyr::mutate(prop = round(wert/wert_ges*100, 1))
+  df_ges <- df %>%
+    dplyr::filter(indikator == "Gesamt") %>%
+    dplyr::rename(wert_ges = wert) %>%
+    dplyr::select(-indikator)
+  df <- df %>% dplyr::filter(indikator != "Gesamt") %>%
+    dplyr::left_join(df_ges, by = c("typ")) %>%
+    dplyr::mutate(prop = round(wert/wert_ges*100, 1)) %>%
+    dplyr::filter(prop > 1)
 
-    titel <- "Teilnehmende der Akteursbefragung nach Areitsverhältnis"
-    subtitel <- paste0("N = ", df$wert[df$indikator == "Gesamt"])
+  titel <- paste0("Teilnehmende der Akteursbefragung 2024 nach ", frage)
+  subtitel <- paste0("N = ", unique(df$wert_ges))
+
+
+  if(frage %in% c("Arbeitsverhältnis", "Kategorie", "Sektor")){
 
     plot <- df %>%
       highcharter::hchart(
         "pie", highcharter::hcaes(x = indikator , y = wert)
       )%>%
       highcharter::hc_tooltip(
-        pointFormat=paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')) %>%
-      highcharter::hc_colors(as.character(df$color)) %>%
-      highcharter::hc_title(text = paste0("MINT-Fächeranteile in ", titel_help , " in ", regio, " (", timerange, ")"),
+        pointFormat=paste('Anteil: {point.prop}%')) %>%
+      highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+                                "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+                                "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")) %>%
+      highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               align = "center",
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                             dataLabels = list(enabled = TRUE,  format='{point.proportion}%'), showInLegend = TRUE))
+                                             dataLabels = list(enabled = TRUE,  format='{point.prop} %'), showInLegend = TRUE))
+
+  }else{
+
+    abs_rel <- r$abs_rel_mvb_akteur
+
+    if(abs_rel == "Anzahl"){
+      df$prop <- df$wert
+      tooltip <- "{point.y}"
+      label <- "{value:, f}"
+    }else{
+      tooltip <- "{point.y} %"
+      label <- "{value:, f} %"
+    }
+
+    subtitel <- paste0(subtitel, ", Mehrfachangabe möglich.")
+
+    plot <- highcharter::hchart(df, 'column', highcharter::hcaes(y = prop, x = indikator))%>%
+      highcharter::hc_plotOptions(column = list(#pointWidth = 50,
+        colorByPoint = TRUE,
+        colors = c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+                   "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+                   "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc"))
+      )%>%
+      highcharter::hc_tooltip(pointFormat = tooltip)%>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = label),
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"), pointsWidth=100) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      # highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+      #                          "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a")) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               align = "center",
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                            this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
   }
+  return(plot)
+}
 
+plot_mv_stimmung <- function(r){
+  frage <- r$chara_mvb_stimmung
+  gruppe <- r$gruppe_mvb_stimmung
+
+  if(frage == "Nutzung des Ganztagsunterrichts"){
+    frage_typ <-  c("Der Ganztag sollte eher für schulische Zwecke wie Hausaufgabenbetreuung genutzt werden.",
+                    "Der Ganztag sollte eher für Freizeitangebote wie Sport, Kunst und Mustik genutzt werden.",
+                    "Der Ganzag sollte als bildungsort genutzt werden und dabei auch MINT-Bildungsangebote einbinden.")
+  }else{
+    frage_typ <- "Lernrückstände"
+  }
+
+  df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
+    dplyr::filter(typ %in% frage_typ,
+                  indikator == gruppe) %>%
+    dplyr::collect()
+
+  df$antwort <- factor(df$antwort, levels = c("Kann ich nicht beurteilen",
+                                              "Stimme nicht zu",
+                                              "Stimme eher nicht zu",
+                                              "Stimme eher zu",
+                                              "Stimme volll zu"
+                                              ))
+  df <- df[with(df, order(typ, antwort)),]
+
+  plot <- df %>%
+    highcharter::hchart(
+      "bar", highcharter::hcaes(group = antwort , y = wert, x = typ)
+    )%>%
+    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+    highcharter::hc_tooltip(
+      pointFormat=paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')) %>%
+    highcharter::hc_colors( c("#efe8e6",
+                              "#ee7775", "#fca5a5",
+                              "#66cbaf", "#35bd97" )) %>%
+    highcharter::hc_title(text = "Antworten darauf, wie der Ganztag am besten genutzt werden sollte",
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_subtitle(text = "N = 453",
+                             align = "center",
+                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+    highcharter::hc_yAxis(title = list(text = "")) %>%
+    highcharter::hc_xAxis(title = list(text = ""))
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = T)
 }
 
 # SkF ----

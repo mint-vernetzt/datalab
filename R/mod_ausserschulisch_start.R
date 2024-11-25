@@ -146,6 +146,53 @@ mod_ausserschulisch_start_ui <- function(id){
               )
     ),
 
+    # MV-Befragungen ----
+
+    fluidRow( id="ausserschulisch_mint-vernetzt_befragungen",
+              shinydashboard::box(
+                title = "Was sagt die MINTvernetzt-Community?",
+                width = 12,
+                column(
+                  width = 8,
+                  p("Text kommt noch.")
+                ),
+                column(
+                  width = 12,
+
+                  tabsetPanel(type = "tabs",
+                              # Tab 1
+                              tabPanel("Akteursbefragung: Wer sind die außerschulisch MINT-Akteur:innen", br(),
+
+                                       shiny::sidebarPanel(
+                                         width = 3,
+                                         tags$style(".well {background-color:#FFFFFF;}"),
+                                         tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                         mod_ausserschulisch_mvb_akteursbefragung_ui("mod_ausserschulisch_mvb_akteursbefragung_ui_1"),
+                                         # br(),br(),
+                                         # downloadButton(
+                                         #   outputId = ns("download_btn_plot___"),
+                                         #   label = "Download",
+                                         #   icon = icon("download")),
+                                       ),
+                                       shiny::mainPanel(
+                                         width = 9,
+                                         shinycssloaders::withSpinner(
+                                           highcharter::highchartOutput(ns("plot_mvb_akteursbefragung"), height = "600px"),
+                                                                      color = "#154194"),
+
+                                         p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."),
+                                         # shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
+                                         #                    content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
+                                         #                    placement = "top",
+                                         #                    trigger = "hover"),
+                                         # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_3")
+                                       )
+                              )
+                  )
+                )
+              )
+    ),
+
     # SKf ----
 
     fluidRow(id="ausserschulisch_skf",
@@ -251,6 +298,12 @@ mod_ausserschulisch_start_server <- function(id, r){
     output$plot_cp_projekte <- renderUI({
       plot_cp_projekte(r)
     })
+
+    # MV-Befragungen ----
+
+    output$plot_mvb_akteursbefragung <- highcharter::renderHighchart(
+      plot_mv_akteursb(r)
+    )
 
     # SKf ----
 
