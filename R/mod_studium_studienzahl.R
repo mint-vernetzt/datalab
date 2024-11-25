@@ -74,11 +74,7 @@ mod_studium_studienzahl_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Studierendenzahlen in Deutschland: Destatis 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-        p(style = "text-align: left; font-size = 16px",
-          "Studierendenzahlen aus Europa: Eurostat 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
-        p(style = "text-align: left; font-size = 16px",
-          "Studierendenzahlen der OECD-Länder: OECD 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
+          "Studierendenzahlen in Deutschland: Destatis 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
 
       )
     ),
@@ -92,11 +88,12 @@ mod_studium_studienzahl_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("Im Jahr 2022 studieren 37 % MINT-Fächer, 63 % Fächer aus anderen Bereichen.
-        Bei den Studienanfänger:innen ist der Anteil derer, die MINT studiert, bei 38 %."),
+        p("Im Jahr 2023 studieren 37 % MINT-Fächer, 63 % Fächer aus anderen Bereichen.
+        Bei den Studienanfänger:innen ist der Anteil derer, die MINT studiert, bei 37 %.
+          Unter den Absolvent:innen haben 36 % ein MINT-Studium abgeschlossen."),
         p("Die Zahl an MINT-Studierenden hat sich in den letzten 10 Jahren nur leicht verändert,
-          von 1.001.260 im Jahr 2013 auf 1.078.042 in 2022. Der MINT-Anteil unter Studienanfänger:innen
-          ist lange konstant gesunken und erstmals von 2021 auf 2022 wieder leicht gestiegen, von 37,7 % auf 38,3 %.")
+          von 1.035.841 im Jahr 2014 auf 1.049.902 in 2023. Der MINT-Anteil unter Studienanfänger:innen
+          ist lange konstant gesunken und erstmals von 2021 auf 2022 wieder leicht gestiegen, von 36,5 % auf 37,2 %.")
         ),
         column(
           width = 12,
@@ -530,15 +527,15 @@ mod_studium_studienzahl_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("Der Frauenanteil in MINT-Studienfächern liegt immer noch bei nur 32 %.
+        p("Der Frauenanteil in MINT-Studienfächern liegt bei nur 33 %.
         Im Vergleich dazu: Betrachtet man alle \"Nicht-MINT\"-Studienbereiche zusammen,
         ist der Frauenanteil bei mehr als der Hälfte. Doch in den letzten 10 Jahren gab es eine leichte Positiventwicklung.
-        Der Frauenanteil nahm von etwa 29 % auf 32 % zu."),
+        Der Frauenanteil nahm von etwa 29 % auf 33 % zu."),
         p("Es gibt auch MINT-Fachbereiche, in denen es ganz anders aussieht - in Pharmazie oder auch Biologie studieren mehr Frauen als Männer.
         Wechselt man die Perspektive und blickt auf die Gruppe der Studentinnen,
           wird die unterschiedliche Attraktivität des MINT-Studiums für Frauen vs.
-          Männer nochmal deutlich. Von allen Studentinnen wählen nur 22 % MINT.
-          Bei den Studenten sind es knapp die Hälfte.")
+          Männer nochmal deutlich. Von allen Studentinnen wählen nur 23 % MINT.
+          Bei den Studenten sind es die Hälfte.")
         ),
         column(
           width = 12,
@@ -708,12 +705,12 @@ mod_studium_studienzahl_ui <- function(id){
              column(
                width = 8,
              p("Deutschland ist bei internationalen Studierenden beliebt.
-             Und ihre Zahl ist in den letzten 10 Jahren stark gestiegen - von knapp 97.000
-             auf rund 196.000 internationale Studierende allein in MINT.
-             Damit machen sie 2022 18 % der MINT-Studierenden aus."),
-            p("Vergleicht man die Fachbereiche, studieren Internationale Studierende besonders oft MINT-Fächer.
-              153.000 von ihnen studieren Ingenieurwissenschaften/Informatik,
-              gefolgt von 93.000 in Rechts-, Wirtschafts- und Sozialwissenschaften und 43.000 in
+             Und ihre Zahl ist in den letzten 10 Jahren stark gestiegen - von rund 106.542
+             auf rund 204.006 internationale Studierende allein in MINT.
+             Damit machen sie 2023 19 % der MINT-Studierenden aus."),
+            p("Vergleicht man die Fachbereiche, studieren internationale Studierende besonders oft MINT-Fächer.
+              etwa 159.000 von ihnen studieren Ingenieurwissenschaften/Informatik,
+              gefolgt von rund 97.000 in Rechts-, Wirtschafts- und Sozialwissenschaften und rund 45.000 in
               Mathematik/Naturwissenschaften.")
             ),
             column(
