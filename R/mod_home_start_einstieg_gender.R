@@ -23,7 +23,7 @@ mod_home_start_einstieg_gender_ui <- function(id){
       inputId = ns("date_start_comparison_mint_gender"),
       label = NULL,
       choices = 2013:2023,
-      selected = 2022
+      selected = 2023
     ),
 
     p("Region:"),
