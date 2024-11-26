@@ -115,16 +115,7 @@ beruf_einstieg_vergleich <- function(r) {
     #                                             "Beschäftigte 25-55",
     #                                             "Beschäftigte ü55",
     #                                             "in Minijobs"))
-    df$indikator[df$indikator == "Auszubildende (1. Jahr)"] <- "Auszubildende mit neuem Lehrvertrag"
-    indi <- c("Auszubildende",
-              "Auszubildende mit neuem Lehrvertrag",
-              "ausländische Auszubildende",
-              "Beschäftigte",
-              "ausländische Beschäftigte",
-              "Beschäftigte u25",
-              "Beschäftigte 25-55",
-              "Beschäftigte ü55",
-              "in Minijobs")
+    df <- df %>% dplyr::filter(indikator %in% testl2)
 
     df <- df[with(df, order(proportion, decreasing = TRUE)), ] #############################################
 

@@ -78,7 +78,7 @@ mod_fachkraft_item_detail_ui <- function(id){
 
 
     shinyBS::bsPopover(id="ih_fachkraft_epa", title="",
-                       content = paste0("Die linke Karte der ersten Einstellung zeigt, dass die beiden Bundesländer mit dem höchsten Anteil von Informatik-Studierenden Bayern und Schleswig-Holstein mit jeweils 10 % sind."),
+                       content = paste0("Die erste Einstlellung zeigt: "),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_epa")

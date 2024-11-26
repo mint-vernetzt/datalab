@@ -1147,7 +1147,28 @@ plot_fachkraft_detail_item  <- function(r) {
                    useHTML = TRUE,
                    fontFamily = "SourceSans3-Regular",
                    fontSize = "20px")
+    ) %>%
+    highcharter::hc_subtitle(
+      text = paste0(
+        "<div style='text-align: left;'>",
+        "Werte < 1.5             : Kein Fachkräfteengpass<br>",
+        "Werte zwischen 1.5 und 2: Anzeichen auf einen Fachkräfteengpass<br>",
+        "Werte > 2               : Gesicherter Fachkräfteengpass</div>"
+      ),
+      useHTML = TRUE, # Erlaubt HTML-Tags im Text
+      align = "left", # Links ausrichten
+      style = list(color = "gray",
+                   fontFamily = "SourceSans3-Regular",
+                   fontSize = "16px")
     )
+    # highcharter::hc_subtitle(
+    #   text = "Werte < 1.5: Kein Fachkräfteengpass.",
+    #   align = "center",
+    #   style = list(color = "gray",
+    #                fontFamily = "SourceSans3-Regular",
+    #                fontSize = "16px")
+    # )
+
 
 
   # count "Engpassanalyse" to add line afterward
