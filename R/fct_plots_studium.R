@@ -4069,6 +4069,7 @@ studienzahl_verlauf_single_gender <- function(r) {
                   indikator %in% label_sel) %>%
     dplyr::collect()
 
+
   # df_studierende <- dplyr::tbl(con, from = "studierende_detailliert") %>%
   #   dplyr::filter(jahr %in% t,
   #                 region== regio,
@@ -4117,7 +4118,7 @@ studienzahl_verlauf_single_gender <- function(r) {
     dplyr::mutate(selector=dplyr::case_when(
       selector=="wert" ~ "Anzahl",
       T~"In Prozent"
-    ))
+    ))}
 
   #Trennpunkte für lange Zahlen ergänzen
 
@@ -4149,7 +4150,7 @@ studienzahl_verlauf_single_gender <- function(r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fcc433")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -4180,7 +4181,7 @@ studienzahl_verlauf_single_gender <- function(r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fcc433")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -4193,7 +4194,7 @@ studienzahl_verlauf_single_gender <- function(r) {
                                     verticalAlign = 'bottom',
                                     theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-    } else if(length(label_sel == 3)){
+    } else if(length(label_sel) == 3){
 
 
       df<- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3])
@@ -4209,7 +4210,7 @@ studienzahl_verlauf_single_gender <- function(r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fcc433")) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
@@ -4223,7 +4224,36 @@ studienzahl_verlauf_single_gender <- function(r) {
                                     theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
-    }} else if(absolut_selector=="Anzahl"){
+    } else if(length(label_sel) == 4){
+
+      df<- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3] | indikator == label_sel [4])
+
+      out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
+        highcharter::hc_tooltip(pointFormat = "Anteil {point.indikator} <br> Wert: {point.display_rel} %") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+        #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+        highcharter::hc_title(text =  ifelse(regio == "Saarland",
+                                             paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " im ", regio),
+                                             paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio)),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fcc433")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_exporting(enabled = FALSE,
+                                  buttons = list(contextButton = list(
+                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                    onclick = highcharter::JS("function () {
+                                                                this.exportChart({ type: 'image/png' }); }"),
+                                    align = 'right',
+                                    verticalAlign = 'bottom',
+                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+    } }else if(absolut_selector=="Anzahl"){
 
 
       fach_help <- faecher
@@ -4255,7 +4285,7 @@ studienzahl_verlauf_single_gender <- function(r) {
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-          highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
+          highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fcc433")) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
@@ -4285,7 +4315,7 @@ studienzahl_verlauf_single_gender <- function(r) {
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-          highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
+          highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fcc433")) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
@@ -4298,7 +4328,7 @@ studienzahl_verlauf_single_gender <- function(r) {
                                       verticalAlign = 'bottom',
                                       theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-      } else if(length(label_sel == 3)){
+      } else if(length(label_sel) == 3){
 
 
         df<- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3])
@@ -4316,7 +4346,7 @@ studienzahl_verlauf_single_gender <- function(r) {
                                 margin = 45,
                                 align = "center",
                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-          highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf")) %>%
+          highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fcc433")) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
@@ -4332,9 +4362,39 @@ studienzahl_verlauf_single_gender <- function(r) {
 
 
 
+      } else if (length(label_sel) == 4){
+
+        df<- df %>% dplyr::filter(indikator == label_sel[1] | indikator == label_sel [2] | indikator == label_sel [3] | indikator == label_sel [4])
+
+
+
+        out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group=indikator))%>%
+          highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
+          highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+          highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+          #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
+          highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                              paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio),
+                                              paste0("Frauenanteil in der Studienfachgruppe ", fach_help, " in ", regio)),
+                                margin = 45,
+                                align = "center",
+                                style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+          highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fcc433")) %>%
+          highcharter::hc_chart(
+            style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+          ) %>%
+          highcharter::hc_exporting(enabled = FALSE,
+                                    buttons = list(contextButton = list(
+                                      symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                      onclick = highcharter::JS("function () {
+                                                                this.exportChart({ type: 'image/png' }); }"),
+                                      align = 'right',
+                                      verticalAlign = 'bottom',
+                                      theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
       }
     }
-  }
+  #}
 
 
 
