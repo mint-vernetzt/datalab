@@ -187,6 +187,33 @@ mod_ausserschulisch_start_ui <- function(id){
                                          #                    trigger = "hover"),
                                          # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_3")
                                        )
+                              ),
+                              # Tab 2
+                              tabPanel("Stimmungabarometer: Wie soll der Ganztag gestaltet werden?", br(),
+                                       shiny::sidebarPanel(
+                                         width = 3,
+                                         tags$style(".well {background-color:#FFFFFF;}"),
+                                         tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                         mod_ausserschulisch_mvb_stimmungsb_ui("mod_ausserschulisch_mvb_stimmungsb_ui"),
+                                         # br(),br(),
+                                         # downloadButton(
+                                         #   outputId = ns("download_btn_plot___"),
+                                         #   label = "Download",
+                                         #   icon = icon("download")),
+                                       ),
+                                       shiny::mainPanel(
+                                         width = 9,
+                                         shinycssloaders::withSpinner(
+                                           highcharter::highchartOutput(ns("plot_mv_stimmung"), height = "600px"),
+                                           color = "#154194"),
+
+                                         p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."),
+                                         # shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
+                                         #                    content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
+                                         #                    placement = "top",
+                                         #                    trigger = "hover"),
+                                         # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_3")
+                                       )
                               )
                   )
                 )
@@ -303,6 +330,10 @@ mod_ausserschulisch_start_server <- function(id, r){
 
     output$plot_mvb_akteursbefragung <- highcharter::renderHighchart(
       plot_mv_akteursb(r)
+    )
+
+    output$plot_mv_stimmung <- highcharter::renderHighchart(
+      plot_mv_stimmung(r)
     )
 
     # SKf ----

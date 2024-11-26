@@ -499,52 +499,93 @@ plot_mv_akteursb <- function(r){
 }
 
 plot_mv_stimmung <- function(r){
-  frage <- r$chara_mvb_stimmung
+  frage <- r$frage_mvb_stimmung
   gruppe <- r$gruppe_mvb_stimmung
 
-  if(frage == "Nutzung des Ganztagsunterrichts"){
+  if(frage == "Nutzung des Ganztags"){
     frage_typ <-  c("Der Ganztag sollte eher für schulische Zwecke wie Hausaufgabenbetreuung genutzt werden.",
                     "Der Ganztag sollte eher für Freizeitangebote wie Sport, Kunst und Mustik genutzt werden.",
                     "Der Ganzag sollte als bildungsort genutzt werden und dabei auch MINT-Bildungsangebote einbinden.")
-  }else{
-    frage_typ <- "Lernrückstände"
+
+    df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
+      dplyr::filter(typ %in% frage_typ,
+                    indikator == gruppe) %>%
+      dplyr::collect()
+
+    df$antwort <- factor(df$antwort, levels = c("Kann ich nicht beurteilen",
+                                                "Stimme nicht zu",
+                                                "Stimme eher nicht zu",
+                                                "Stimme eher zu",
+                                                "Stimme volll zu"
+    ))
+    df <- df[with(df, order(typ, antwort)),]
+    subtitel <- "N = 453"
+    subtitel <- ifelse(gruppe == "Schule", "N = 18", ifelse(gruppe == "außerschulische Akteur:innen",
+                                                            "N = 24", subtitel))
+
+    plot <- df %>%
+      highcharter::hchart(
+        "bar", highcharter::hcaes(group = antwort , y = wert, x = typ)
+      )%>%
+      highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+      highcharter::hc_tooltip(
+        pointFormat=paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')) %>%
+      highcharter::hc_colors( c("#efe8e6",
+                                "#ee7775", "#fca5a5",
+                                "#66cbaf", "#35bd97" )) %>%
+      highcharter::hc_title(text = paste0("Antworten der ", gruppe, " darauf, wie der Ganztag am besten genutzt werden sollte"),
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               align = "center",
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
+      highcharter::hc_yAxis(title = list(text = "")) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = T)
+
+    }else{
+
+      frage_typ <- "Lernrückstände"
+      df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
+        dplyr::filter(typ %in% frage_typ,
+                      indikator == gruppe) %>%
+        dplyr::collect()
+
+      titel <- paste0("Antworten der ", gruppe, " darauf, ob der Ganztag zum Abbau von Leistungslücken in MINT genutzt werden soll")
+      subtitel <- paste0("N = 464")
+      subtitel <- ifelse(gruppe == "Schule", "N = 18", ifelse(gruppe == "außerschulische Akteur:innen",
+                                                              "N = 24", subtitel))
+
+      plot <- df %>%
+        highcharter::hchart(
+          "pie", highcharter::hcaes(x = antwort, y = wert)
+        )%>%
+        highcharter::hc_tooltip(
+          pointFormat=paste('Anteil: {point.wert}%')) %>%
+        highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+                                  "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+                                  "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")) %>%
+        highcharter::hc_title(text = titel,
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+        highcharter::hc_subtitle(text = subtitel,
+                                 align = "center",
+                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) #%>%
+        # highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        # highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+        #                                        dataLabels = list(enabled = TRUE,  format='{point.wert} %'), showInLegend = TRUE))
+
   }
 
-  df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
-    dplyr::filter(typ %in% frage_typ,
-                  indikator == gruppe) %>%
-    dplyr::collect()
 
-  df$antwort <- factor(df$antwort, levels = c("Kann ich nicht beurteilen",
-                                              "Stimme nicht zu",
-                                              "Stimme eher nicht zu",
-                                              "Stimme eher zu",
-                                              "Stimme volll zu"
-                                              ))
-  df <- df[with(df, order(typ, antwort)),]
 
-  plot <- df %>%
-    highcharter::hchart(
-      "bar", highcharter::hcaes(group = antwort , y = wert, x = typ)
-    )%>%
-    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-    highcharter::hc_tooltip(
-      pointFormat=paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')) %>%
-    highcharter::hc_colors( c("#efe8e6",
-                              "#ee7775", "#fca5a5",
-                              "#66cbaf", "#35bd97" )) %>%
-    highcharter::hc_title(text = "Antworten darauf, wie der Ganztag am besten genutzt werden sollte",
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_subtitle(text = "N = 453",
-                             align = "center",
-                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
-    highcharter::hc_yAxis(title = list(text = "")) %>%
-    highcharter::hc_xAxis(title = list(text = ""))
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = T)
+    return(plot)
 }
 
 # SkF ----
