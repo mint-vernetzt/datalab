@@ -63,23 +63,6 @@ prep_kurse_east_west <- function(df, type = "no_subjects") {
 
   names(df_incl)[names(df_incl) == "dummy_west"] <- "region"
 
-  # if(type == "subjects"){
-  #
-  #   # df_incl <-  df_incl %>%
-  #   #   dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-  #   #   dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-  #   #                   wert[anzeige_geschlecht == "Männer"])
-  #
-  #   df_incl <- df_incl[, colnames(df)]
-  #
-  #   df <- rbind(df, df_incl)
-  #
-  # } else {
-  #  # # calcualte new "Gesamt"
-   #  df_incl <-  df_incl %>%
-   #    dplyr::group_by(region, fachbereich, indikator, jahr) %>%
-   #    dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
-   #                    wert[anzeige_geschlecht == "Männer"])
 
     df_incl <- df_incl[, colnames(df)]
 
@@ -117,14 +100,6 @@ share_mint_kurse <- function(df){
 
    values_Mint$fachbereich <- "MINT"
 
-#falsches Ergebnis, da Alle Fächer korrekter wäre -->incl. Sonstige Fächer, und so diese Sonstigen Fächer rausfallen
-  # values_andere <- df %>%
-  #   dplyr::filter(fachbereich %!in% subjects, fachbereich != "Alle Fächer") %>%
-  #   dplyr::group_by(jahr, region, indikator, anzeige_geschlecht, bereich) %>%
-  #   dplyr::summarise(wert = sum(wert))
-
-
-  #calculating nicht MINT
 
   values_andere <- df %>% dplyr::filter(fachbereich == "Alle Fächer")
 
@@ -139,24 +114,6 @@ share_mint_kurse <- function(df){
    df <- rbind(values_Mint, values_andere)
 
 
-# df <- df %>%
-#     tidyr::pivot_wider(names_from=anzeige_geschlecht, values_from=wert)%>%
-#     dplyr::mutate(Gesamt=Männer+Frauen)%>%
-#     tidyr::pivot_longer(c("Gesamt", "Frauen", "Männer"), names_to = "anzeige_geschlecht", values_to = "wert")
-#
-#
-#   df <- df %>%
-#     tidyr::pivot_wider(values_from = wert, names_from = fachbereich)%>%
-#     dplyr::mutate(MINT=Mathematik+Informatik+Physik+Biologie+Chemie,
-#                   "andere Fächer" =`Alle Fächer`- MINT)%>%
-#     tidyr::pivot_longer(c(6:19), values_to = "wert", names_to= "fachbereich")
-#
-#
-#   df <- df %>%
-#     tidyr::pivot_wider(values_from = wert, names_from = anzeige_geschlecht)%>%
-#     tidyr::pivot_longer(c("Männer","Frauen"),names_to = "anzeige_geschlecht", values_to= "wert")%>%
-#     dplyr::rename(wert_new = Gesamt)%>%
-#     dplyr::filter(fachbereich=="MINT" | fachbereich == "andere Fächer")
 
   return(df)
 }
