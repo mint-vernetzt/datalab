@@ -126,6 +126,8 @@ beruf_einstieg_vergleich <- function(r) {
               "Beschäftigte ü55",
               "in Minijobs")
 
+    df <- df[with(df, order(proportion, decreasing = TRUE)), ] #############################################
+
     # plot
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = indikator, group = "fachbereich")) %>%
       highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
@@ -3007,6 +3009,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
     df$indi_fach <- paste0(df$indikator, " - ", df$fachbereich)
+    df <- df[with(df, order(proportion, decreasing = TRUE)), ] ######################################################
     if(gegenwert == "Ja"){
       titel <- ifelse(regio == "Saarland",
                       paste0("Frauenanteil in MINT- und anderen Berufen im ", regio, " (", timerange, ")"),

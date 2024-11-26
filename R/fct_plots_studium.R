@@ -6421,6 +6421,8 @@ plot_auslaender_mint_zeit <- function(r){
 
       if (status_select == "Absolvent:innen"){
 
+        df <- df[with(df, order(wert, decreasing = TRUE)), ]############################################
+
 
         highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
@@ -6451,6 +6453,8 @@ plot_auslaender_mint_zeit <- function(r){
 
 
       } else {
+
+        df <- df[with(df, order(wert, decreasing = TRUE)), ]##########################################
 
         highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
@@ -6497,6 +6501,7 @@ plot_auslaender_mint_zeit <- function(r){
 
       if (status_select == "Absolvent:innen"){
 
+
         highcharter::hchart(df, 'line', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
           # highcharter::hc_size(height = 1000)%>%
@@ -6524,6 +6529,7 @@ plot_auslaender_mint_zeit <- function(r){
                                       theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
       } else {
+
 
         highcharter::hchart(df, 'line', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
@@ -6556,6 +6562,8 @@ plot_auslaender_mint_zeit <- function(r){
 
       if (status_select == "Absolvent:innen"){
 
+        df <- df[with(df, order(wert, decreasing = TRUE)), ]##########################################
+
         highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
           # highcharter::hc_size(height = 1000)%>%
@@ -6583,6 +6591,8 @@ plot_auslaender_mint_zeit <- function(r){
                                       theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
       } else {
+
+        df <- df[with(df, order(wert, decreasing = TRUE)), ]##########################################
 
         highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
