@@ -73,6 +73,11 @@ mod_ausserschulisch_start_ui <- function(id){
     ),
 
 
+    # Trennlinie
+    p("Daten von MINTvernetzt", style = "color: #00A87A;
+      font-size: 22px; font-family: 'SourceSans3-Bold';"),
+    hr(style = "border-top: 3px solid #00A87A; margin-top: 5px"),
+
     # Community Plattform ----
 
     fluidRow( id="ausserschulisch_community_plattform",
@@ -144,6 +149,43 @@ mod_ausserschulisch_start_ui <- function(id){
                             )
                 )
               )
+    ),
+
+    div(class = "reference-box",
+        style = "display: flex; align-items: stretch; padding: 0px; margin-bottom: 10px;
+        color: #154194; background-color: #efe8e6",
+        width = 12,
+        column(
+          style = "padding: 0;",
+          width = 4,
+          img(src='www/CP_screenshot.png',
+              class = "responsive-image",
+              # height = "800px",
+              #width = "150px",
+              alt = "Community Plattform Screenshot",
+              style="max-width: 100%; heigth: auto; object-fit: cover;"
+          )
+        ),
+        column(
+          width = 8,
+          div(class = "inner-box",
+              style = "margin: 0; padding: 0px; background-color: #efe8e6;
+              display: flex; flex-direction:column; justify-content: center;",
+
+              p(br(),strong("Vervollständige die Daten der außerschulischen MINT-Bildung"), br()),
+              p(
+                strong("Legen Sie Ihre Organisation auf der Community Plattform von MINTvernetzt an
+                     oder füllen Sie Ihre Projekt-Informationen weiter aus.
+                     So können Sie dabei mitwirken, die Datenlücke der außerschulischen
+                     MINT-Bildung zu reduzieren."),
+                br(), br(),
+                tags$a(href = "https://community.mint-vernetzt.de/",
+                       target = "_blank", "Link zur Community Plattform",
+                       style = "color: #154194"),
+                br(), br())
+
+          )
+        )
     ),
 
     # MV-Befragungen ----
@@ -219,6 +261,11 @@ mod_ausserschulisch_start_ui <- function(id){
                 )
               )
     ),
+
+    # Trennlinie
+    p("Daten von MINT-Bildungsakteur:innen", style = "color: #00A87A;
+      font-size: 22px; font-family: 'SourceSans3-Bold';"),
+    hr(style = "border-top: 3px solid #00A87A; margin-top: 5px"),
 
     # SKf ----
 
@@ -335,6 +382,7 @@ mod_ausserschulisch_start_server <- function(id, r){
     output$plot_mv_stimmung <- highcharter::renderHighchart(
       plot_mv_stimmung(r)
     )
+
 
     # SKf ----
 

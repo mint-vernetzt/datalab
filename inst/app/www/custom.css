@@ -25,6 +25,10 @@
   font-size: 16px;
 }
 
+p {
+  font-family: inherit; /* Bezieht sich auf den Eltern-Container */
+  font-size: inherit;  /* Bezieht sich auf den Eltern-Container */
+}
 
 /* Sidebar und Hintergrundfarben definieren */
 
@@ -102,7 +106,7 @@ background-color: #FFFFFF;
   border-top-color:    #195365;
 }*/
 
-
+/* Box für Kurzanalysen */
 .content-box {
   padding: 10px;
   margin: 10px auto;
@@ -126,6 +130,47 @@ background-color: #FFFFFF;
 .content-box > .inner-box{
   width: 75% !important;
   display: inline-block !important;
+}
+
+/*Box für Weiterleitungen*/
+.reference-box {
+  width: 100%;
+  background-color: #efe8e6;
+  color: #154194;
+  display: flex;
+  align-items: stretch;
+  padding: 0px;
+  margin-bottom: 10px;
+}
+
+.reference-box .inner-box p{
+  font-family: SourceSans3-Regular;
+  font-size: 22px;
+}
+
+.reference-box a {
+  color:  #154194;
+  text-decoration: underline;
+  font-size: 22px;
+}
+
+.reference-box > .inner-box{
+  width: 75% !important;
+  display: inline-block !important;
+  text-align: center;
+}
+
+
+/* Standard-Stil: Bild anzeigen */
+.responsive-image {
+  display: block;
+}
+
+/* Fensterbreite unter 768px: Bild ausblenden */
+@media (max-width: 768px) {
+  .responsive-image {
+    display: none;
+  }
 }
 
 /* Anpassung des Popovers und Tooltips */
