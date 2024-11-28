@@ -87,7 +87,7 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
       br(),
       br(),
       shinyBS::bsPopover(id="ih_studium_mint_fach_2", title="",
-                         content = paste0("Die erste Darstellung zeigt: Zusammen gerechnet knapp 37% der Studierenden belegen ein MINT-Fach. Der Großteil davon (26%) studiert eine Ingenieurwissenschaft, wozu auch ein Informatik-Studium zählt."),
+                         content = paste0("Die erste Darstellung zeigt: Zusammen gerechnet knapp 37% der Studierenden belegen ein MINT-Fach. Der Großteil davon (26%) studiert eine Ingenieurwissenschaft, wozu auch ein Informatikstudium zählt."),
                          trigger = "hover", placement = "top"),
       tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_fach_2")
     ),
