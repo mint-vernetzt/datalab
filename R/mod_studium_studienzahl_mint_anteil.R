@@ -106,7 +106,7 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_1", title="",
-                                        content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland 2023 rund 37 % der Studierenden ein MINT-Fach belegen. Blick man dazu auf die Studierendengruppe der Absovlent:innen sieht man: Der MINT-Anteil hier ist mit 36% entwas geringer, was auf Studienaabrüche in MINT hindeutet."),
+                                        content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland 2023 rund 37 % der Studierenden ein MINT-Fach belegen. Blickt man dazu auf die Studierendengruppe der Absolvent:innen sieht man: Der MINT-Anteil hier ist mit 36% etwas geringer, was auf Studienabbrüche in den MINT-Fächern hindeutet."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_1")
 

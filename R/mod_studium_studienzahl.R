@@ -36,7 +36,7 @@ mod_studium_studienzahl_ui <- function(id){
         width = 7,
         p(style = "text-align: left; font-size = 16px",
           "Auf dieser Seite zeigen wir statistische Kennzahlen zum Thema MINT-Fächer studieren. Wir zeigen, wie hoch der Anteil
-           von MINT-Fächern gemessen an allen gewählten Studienfächern ist. Dazu zeigen wir Vergleiche nach männlichen und
+           von MINT-Fächern, gemessen an allen gewählten Studienfächern, ist. Dazu zeigen wir Vergleiche nach männlichen und
            weiblichen Studierenden, einzelnen Fächern und nach Bundesländern.")
         ),
 
@@ -44,7 +44,7 @@ mod_studium_studienzahl_ui <- function(id){
         title = "Fragen oder Feedback?",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
+          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder die Teilnahme an unserer kurzen",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))
     ),
@@ -59,14 +59,14 @@ mod_studium_studienzahl_ui <- function(id){
         ),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_fach",
-                                                              span(tags$b(span("M-I-N-T:")))), "Knapp 3/4 aus MINT studieren Ingenieurwissenschaften/Informatik."
+                                                              span(tags$b(span("M-I-N-T:")))), "Knapp drei Viertel aus MINT studieren Ingenieurwissenschaften/Informatik."
 
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_frauen",
                                                               span(tags$b(span("Frauen in MINT:")))), "Frauen in MINT und vor allem den Ingenieurwissenschaften/Informatik eine Minderheit."
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_internationale_studis",
-                                                              span(tags$b(span("Internationale Studierende:")))), "Ihre Anzahl wächst - und am häufigsten studieren sie MINT."
+                                                              span(tags$b(span("Internationale Studierende:")))), "Ihre Anzahl wächst und am häufigsten studieren sie MINT."
         )
         ),
 
