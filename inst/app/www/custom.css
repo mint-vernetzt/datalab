@@ -154,6 +154,12 @@ background-color: #FFFFFF;
   font-size: 22px;
 }
 
+.reference-box .inner-box p {
+  color:  #154194;
+  font-size: 22px;
+}
+
+
 .reference-box > .inner-box{
   width: 75% !important;
   display: inline-block !important;
