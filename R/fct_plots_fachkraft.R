@@ -557,7 +557,6 @@ plot_fachkraft_epa_item <- function(r) {
     bf <- bf_label
   }
 
-
   plot_data_raw <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail")%>%
     # plot_data_raw <- arbeitsmarkt_epa_detail %>%
     dplyr::filter(jahr == timerange &
@@ -613,18 +612,17 @@ plot_fachkraft_epa_item <- function(r) {
     dplyr::group_by(epa_kat, mint_zuordnung)  %>%
     dplyr::summarise(beruf_num = dplyr::n()) %>%
     dplyr::group_by(mint_zuordnung)  %>%
-    dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,1)) %>%
+    dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,0)) %>%
     dplyr::left_join(group_col_dt, by = "epa_kat") %>%
     dplyr::arrange(epa_group_order)
-
 
 
   # expand data for heatmap
   expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
     dplyr::arrange(mint_zuordnung, epa_group_order) %>%
     # the order of XX and YY determines if the plot is shown right to left or bottom to top
-    dplyr::mutate(XX = rep(c(1:10), each = 10)[1:99],
-                  YY = rep(c(1:10), times = 10)[1:99],
+    dplyr::mutate(XX = rep(c(1:10), each = 10),
+                  YY = rep(c(1:10), times = 10),
                   epa_kat = factor(x = epa_kat,
                                    levels = epa_kat_levels))
 
@@ -648,15 +646,8 @@ plot_fachkraft_epa_item <- function(r) {
     fach[1] == "Nicht MINT" ~ "allen Berufen außer MINT",
     T ~ fach[1]
   )
-  fach_2 <- dplyr::case_when(
-    fach[2] == "MINT gesamt" ~ "MINT",
-    fach[2] == "Gesamt" ~ "allen Berufen",
-    fach[2] == "Nicht MINT" ~ "allen Berufen außer MINT",
-    T ~ fach[2]
-  )
-  titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1," (", level, timerange, ")")
-  titel_2 <- paste0("Engpassrisiko in ", fach_2," (", level,timerange, ")")
 
+  titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1," (", level, timerange, ")")
 
   plot_left <- highcharter::hchart(
     object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[1]),
@@ -696,8 +687,17 @@ plot_fachkraft_epa_item <- function(r) {
       style = list(fontFamily = "SourceSans3-Regular")
     )
 
-
   if (length(fach) == 2) {
+
+    fach_2 <- dplyr::case_when(
+      fach[2] == "MINT gesamt" ~ "MINT",
+      fach[2] == "Gesamt" ~ "allen Berufen",
+      fach[2] == "Nicht MINT" ~ "allen Berufen außer MINT",
+      T ~ fach[2]
+    )
+
+    titel_2 <- paste0("Engpassrisiko in ", fach_2," (", level,timerange, ")")
+
     used_colors <- group_col_dt %>%
       dplyr::filter(epa_kat %in% (expanded_dt %>%
                                     dplyr::filter(mint_zuordnung == fach[2]) %>%
@@ -741,8 +741,17 @@ plot_fachkraft_epa_item <- function(r) {
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       )
-  } else {
-    plot_right <- NULL
+
+    # out <- highcharter::hw_grid(
+    #   plot_left, plot_right,
+    #   ncol = 2
+    # )
+    out <- list(plot_left, plot_right)
+
+    return(out)
+
+  }else{
+    return(plot_left)
   }
 
 
