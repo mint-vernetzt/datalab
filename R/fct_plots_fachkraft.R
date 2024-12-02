@@ -564,10 +564,7 @@ plot_fachkraft_epa_item <- function(r) {
                     anforderung %in% bf)%>%
     dplyr::collect()
 
-  if ("Alle Berufe" %in% fach) {
-    fach[fach == "Alle Berufe"] <- "Gesamt"
-  }
-  if ("MINT gesamt" %in% fach) {
+   if ("MINT gesamt" %in% fach) {
     plot_data_raw <- plot_data_raw %>%
       dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
       dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
@@ -616,6 +613,18 @@ plot_fachkraft_epa_item <- function(r) {
     dplyr::left_join(group_col_dt, by = "epa_kat") %>%
     dplyr::arrange(epa_group_order)
 
+  if("Gesamt" %in% fach){
+    plot_data_ges <- plot_data_raw %>%
+      dplyr::filter(!is.na(epa_kat)) %>%
+      dplyr::group_by(epa_kat) %>%
+      dplyr::summarise(beruf_num = dplyr::n()) %>%
+      dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,0)) %>%
+      dplyr::left_join(group_col_dt, by = "epa_kat") %>%
+      dplyr::arrange(epa_group_order) %>%
+      dplyr::mutate(mint_zuordnung = "Gesamt")
+
+    plot_data <- rbind(plot_data, plot_data_ges)
+  }
 
   # expand data for heatmap
   expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
@@ -1156,6 +1165,19 @@ plot_fachkraft_detail_item  <- function(r) {
                    useHTML = TRUE,
                    fontFamily = "SourceSans3-Regular",
                    fontSize = "20px")
+    ) %>%
+    highcharter::hc_caption(
+      text = paste0("< 1,5: kein Fachkräfteengpass", br(),
+      "1,5 - 1,9: Anzeichen eines Fachkräfteengpasses", br(),
+      ">= 2,0: Fachkräfteengpass"),
+      # "Berufe ohne aktuellen Fachkräfteengpass haben Werte unter 1,5. Werte
+      # zwischen 1,5 und 1,9 deuten auf ein Risiko für einen Engpass hin. Für Berufe mit akutem Fachkräfteengpass
+      # ergeben sich Werte von 2,0 und höher.",
+      align = "left",
+      style = list(color = "black",
+                   useHTML = TRUE,
+                   fontFamily = "SourceSans3-Regular",
+                   fontSize = "16px")
     )
 
 
