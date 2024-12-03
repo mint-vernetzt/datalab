@@ -2580,7 +2580,7 @@ epa <- epa %>%
   dplyr::mutate(epa_kat = dplyr::case_when(
     wert >= 2.0 ~ "Engpassberuf",
     wert < 2.0 & wert >= 1.5 ~ "Anzeichen eines Engpassberufs",
-    wert < 1.5 ~ "kein Engpassberuf"
+    wert < 1.5 ~ "Kein Engpassberuf"
   ))
 
 # in shinyapp:
@@ -3435,7 +3435,7 @@ epa_detail <- epa_detail %>%
   dplyr::mutate(epa_kat = dplyr::case_when(
     kategorie == "Engpassanalyse" & gesamtwert >= 2.0 ~ "Engpassberuf",
     kategorie == "Engpassanalyse" & gesamtwert < 2.0 & gesamtwert >= 1.5 ~ "Anzeichen eines Engpassberufs",
-    kategorie == "Engpassanalyse" & gesamtwert < 1.5 ~ "kein Engpassberuf"
+    kategorie == "Engpassanalyse" & gesamtwert < 1.5 ~ "Kein Engpassberuf"
   ))
 # epa_detail <- epa_detail %>%
 #   dplyr::mutate(risiko_kat = dplyr::case_when(

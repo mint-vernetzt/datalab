@@ -90,7 +90,7 @@ mod_international_schule_map_ui <- function(id){
     # br(),
     # br(),
     shinyBS::bsPopover(id="ih_international_schule_map", title="",
-                       content = paste0("Die erste Einstellung der Karte zeigt, das Schüler:innen in Deutschland 2019 im Durchschnitt 521 Punkte im Mathematiktest von TIMSS erziehlen. Damit liegen sie z. B. etwas hinter Schüler*innen aus den Niederlande oder den USA."),
+                       content = paste0("Die erste Einstellung der Karte zeigt, dass Schüler:innen in Deutschland 2019 im Durchschnitt 521 Punkte im Mathematiktest von TIMSS erzielen. Damit liegen sie z. B. etwas hinter Schüler:innen aus den Niederlanden oder den USA."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_schule_map")

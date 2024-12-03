@@ -1166,7 +1166,7 @@ plot_international_schule_map <- function(r) {
 
 
   # Hover & Titel vorbereiten
-  titel <- paste0("Durschnittliche Leistung von Schüler:innen der ", help_l,
+  titel <- paste0("Durchnittliche Leistung von Schüler:innen der ", help_l,
                   " im ", fach_m, "-Kompetenztest von ",
                   label_m, " ", timerange)
 
