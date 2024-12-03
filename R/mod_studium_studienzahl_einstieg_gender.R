@@ -127,7 +127,7 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
         br(),
         br(),
         shinyBS::bsPopover(id="ih_studium_frauen_1", title="",
-                           content = paste0("In der ersten interaktiven Grafik ist zu sehen, dass deutschlandweit 2023 der Anteil von Frauen unter den Studierenden in MINT-Fächern 32,6% ausmacht."),
+                           content = paste0("In der ersten interaktiven Grafik ist zu sehen, dass deutschlandweit im Jahr 2023 der Anteil von Frauen unter den Studierenden in MINT-Fächern 32,6 % ausmacht."),
                            trigger = "hover", placement = "top"),
         tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_frauen_1")
       ),

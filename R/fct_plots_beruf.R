@@ -76,10 +76,10 @@ beruf_einstieg_vergleich <- function(r) {
   df <- rbind(df, df_andere)
 
   #Umbennen von MINT/Andere Berufe
-  df$fachbereich[df$fachbereich=="MINT"]<-"beschäftigt in MINT"
-  df$fachbereich[df$fachbereich=="Andere Berufe"]<-"beschäftigt in allen Bereichen außer MINT"
-  df$fachbereich <- factor(df$fachbereich, levels = c("beschäftigt in allen Bereichen außer MINT",
-                                                      "beschäftigt in MINT"))
+  df$fachbereich[df$fachbereich=="MINT"]<-"Beschäftigt in MINT"
+  df$fachbereich[df$fachbereich=="Andere Berufe"]<-"Beschäftigt in allen Bereichen außer MINT"
+  df$fachbereich <- factor(df$fachbereich, levels = c("Beschäftigt in allen Bereichen außer MINT",
+                                                      "Beschäftigt in MINT"))
 
   #Trennpunkte für lange Zahlen ergänzen
   df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")

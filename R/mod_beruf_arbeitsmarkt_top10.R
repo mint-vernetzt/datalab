@@ -68,7 +68,7 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_beruf_fach_4", title="",
-                       content = paste0("Die Grafik zeigt, dass Ausbildungsberufe mit Schnittstellen zu Nicht-MINT-Bereichn wie Milchwirtschaftlichen Laboranten oder Zahntechnik besonders hohe Frauenanteile unter den neuen Azubis haben. Demgegenüber sind Männer auch in rein technisch fokussierten Ausbildung interessiert. "),
+                       content = paste0("Die Grafik zeigt, dass Ausbildungsberufe mit Schnittstellen zu Nicht-MINT-Bereichen wie Milchwirtschaftlichen Laboranten oder Zahntechnik besonders hohe Frauenanteile unter den neuen Azubis haben. Demgegenüber sind Männer auch in rein technisch fokussierten Ausbildung interessiert. "),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_4")

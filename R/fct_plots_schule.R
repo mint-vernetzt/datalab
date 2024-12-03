@@ -26,7 +26,7 @@ kurse_waffle_mint <- function(r) {
     "Physik" = "#F59E0B",
     "andere naturwiss.-technische Fächer" =  "#fde68a",
     "Mathematik" = "#ee7775",
-    "andere Fächer" = "#efe8e6"
+    "Andere Fächer" = "#efe8e6"
   )
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
@@ -56,14 +56,14 @@ kurse_waffle_mint <- function(r) {
       df <- rbind(df, values_natwi)
 
       df <- df %>% dplyr::filter(fachbereich %in% c("Mathematik", "Informatik",
-                                                    "Naturwissenschaften", "andere Fächer"))
+                                                    "Naturwissenschaften", "Andere Fächer"))
 
 
     }else if(ebene == "MINT-Fächer"){
 
       df <- df %>% dplyr::filter(fachbereich %in% c("Mathematik", "Informatik", "Physik", "Chemie",
                                                     "Biologie", "andere naturwiss.-technische Fächer",
-                                                    "andere Fächer"))
+                                                    "Andere Fächer"))
     }
 
 

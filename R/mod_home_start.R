@@ -46,7 +46,7 @@ mod_home_start_ui <- function(id){
         p(
           #style = "text-align: left; font-size = 16px",
           "Sind alle Zahlen und Grafiken verständlich? Gibt es Darstellungsschwierigkeiten? Wünschen Sie sich weitere Daten?", br(),
-          "Wir freuen uns über Rückfragen und Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
+          "Wir freuen uns über Rückfragen und Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über eine Teilnahme an unserer kurzen",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))
     ),
@@ -56,7 +56,7 @@ mod_home_start_ui <- function(id){
         title = "Links zu den Themen dieser Seite",
         width = 7,
         p(style = "text-align: left; font-size = 22px",tags$a(href="#alle_mint",
-                                                              span(tags$b(span("MINT-Anteil:")))),"Ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf."
+                                                              span(tags$b(span("MINT-Anteil:")))),"ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf."
         ),
 
         p(style = "text-align: left; font-size = 22px",tags$a(href="#alle_frauen",
@@ -69,7 +69,7 @@ mod_home_start_ui <- function(id){
         p(
           #style = "text-align: left; font-size = 16px",
           "Studierendenzahlen: Destatis 2024, auf Anfrage"),
-         p("Schüler:innenzahlen: KMK 2023, auf Anfrage"),
+         p("Schülerzahlen: KMK 2023, auf Anfrage"),
           p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2024, auf Anfrage")
         )
       ),
@@ -78,7 +78,7 @@ mod_home_start_ui <- function(id){
 
     fluidRow(id="alle_mint",
       shinydashboard::box(
-        title = "MINT-Anteil: Ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf.",
+        title = "MINT-Anteil: ein Drittel MINT in Schule, Studium und Ausbildung, ein knappes Viertel im Beruf.",
         width = 12,
         column(
           width = 8,
@@ -87,7 +87,7 @@ mod_home_start_ui <- function(id){
           37 % der Studierenden und rund ein Drittel der Auszubildenden lernen in MINT.
           Unter den Beschäftigten ist der MINT-Anteil geringer. Hier üben Stand 2023 rund 23 %
           der sozialversicherungspflichtigen Beschäftigten eine MINT-Tätigkeit aus.
-          In den letzten 10 Jahren sind die prozentualen Anteile relativ konstant geblieben.
+          In den letzten zehn Jahren sind die prozentualen Anteile relativ konstant geblieben.
           Leichte Veränderungen sieht man in den absoluten Zahlen."),
           p("Die Belegungszahlen der Schüler:innen für 2023 liegen noch nicht vor.")
         ),
@@ -175,10 +175,10 @@ mod_home_start_ui <- function(id){
         column(
           width = 8,
           p("In den MINT-Leistungskursen sind 47 % der Schüler:innen weiblich.
-          In der weiterführenden Bildung, in Ausbildung und Studium, ist der Frauenanteil bei 13 % beziehungsweise 33 %.
+          In der weiterführenden Bildung, in Ausbildung und Studium, liegt der Frauenanteil bei 13 % beziehungsweise 33 %.
           In den MINT-Berufen sind nur 17 % Frauen vertreten. Im Vergleich dazu liegt der Frauenanteil in \"Nicht-MINT\"-Berufen bei 55 %,
           in \"Nicht-MINT\"-Studiengängen sogar bei über 60 %.", br(),
-            "In den letzten 10 Jahren gab es diesbezüglich nur geringe Veränderungen.
+            "In den letzten zehn Jahren gab es diesbezüglich nur geringe Veränderungen.
         Es kam zu leichten Zunahmen des Frauenanteils im Studium und im Beruf."),
           p("Die Belegungszahlen der Schüler:innen für 2023 liegen noch nicht vor.")
 
@@ -264,8 +264,7 @@ mod_home_start_ui <- function(id){
      p(br(),"KURZANALYSE", br()),
      p(style = "font-size = 24",
        strong("Der Frauenanteil sinkt entlang der Bildungskette.
-       Nur 8 Prozent der Frauen üben einen MINT-Berufe aus, bei Männer sind es über ein Drittel.
-
+       Nur 8 % der Frauen üben einen MINT-Beruf aus, bei Männern sind es über ein Drittel.
       Diese Zahlen werden in unserer Kurzanalyse \"Arbeitswelt: Frauen & MINT\" eingeordnet und mit Empfehlungen, was man
               für einen höheren Frauenanteil tun könnte, verknüpft."),
        br(), br(),

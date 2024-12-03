@@ -317,7 +317,7 @@ mod_studium_studienzahl_ui <- function(id){
       p(br(),"KURZANALYSE", br()),
       p(style = "font-size = 24",
         strong("Die Anzahl an MINT-Studienanfänger:innen ist in den letzten Jahren zurückgegangen, von 197.000 neuen Studierenden
-               in MINT 2015 auf 176.000 im Jahr 2022. Ein ähnliches Bild zeigt sich auch bei den Auszubildenden.
+               in MINT im Jahre 2015 auf 176.000 im Jahr 2022. Ein ähnliches Bild zeigt sich auch bei den Auszubildenden.
                In einer Kurzanalyse fassen wir die Entwicklungen im MINT-Nachwuchs zusammen."),
         br(), br(),
         tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Interesse_final.pdf",
@@ -705,11 +705,11 @@ mod_studium_studienzahl_ui <- function(id){
              column(
                width = 8,
              p("Deutschland ist bei internationalen Studierenden beliebt.
-             Und ihre Zahl ist in den letzten 10 Jahren stark gestiegen - von rund 106.542
+             Und ihre Zahl ist in den letzten zehn Jahren stark gestiegen: von rund 106.542
              auf rund 204.006 internationale Studierende allein in MINT.
              Damit machen sie 2023 19 % der MINT-Studierenden aus."),
             p("Vergleicht man die Fachbereiche, studieren internationale Studierende besonders oft MINT-Fächer.
-              etwa 159.000 von ihnen studieren Ingenieurwissenschaften/Informatik,
+              etwa 159.000 von ihnen studieren Ingenieurswissenschaften/Informatik,
               gefolgt von rund 97.000 in Rechts-, Wirtschafts- und Sozialwissenschaften und rund 45.000 in
               Mathematik/Naturwissenschaften.")
             ),

@@ -66,7 +66,7 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_fach_2", title="",
-                                        content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Deutschland im Jahr 2023 rund 77% der Beschäftigten in Nicht-MINT Berufen tätig sind. In den MINT-Berufen dominiert die Technik: 18.1% der Beschäftigten gehen beruflich einer Tätigkeit in der Technik nach."),
+                                        content = paste0("Die Grafik mit der ersten Einstellung zeigt, dass in Deutschland im Jahr 2023 rund 77 % der Beschäftigten in Nicht-MINT Berufen tätig sind. In den MINT-Berufen dominiert die Technik: 18.1 % der Beschäftigten gehen beruflich einer Tätigkeit in der Technik nach."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_fach_2")
 
@@ -88,7 +88,7 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
                          "max-options" = 2,
                          "max-options-text" = "<span style='color: red;'>Maximal 2 Indikatoren auswählen</span>")
                      ),
-                     p("Nicht-MINT Berufsfelder mit anzeigen?", style = "color: #b16fab;"),
+                     p("Nicht-MINT-Berufsfelder mit anzeigen?", style = "color: #b16fab;"),
                      shinyWidgets::radioGroupButtons(
                        inputId = ns("gegenwert_arbeitsmarkt_fach_vergleich"),
                        choices = c("Ja", "Nein"),
