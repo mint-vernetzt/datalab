@@ -662,6 +662,11 @@ plot_fachkraft_epa_item <- function(r) {
   titel_2 <- paste0("Engpassrisiko in ", fach_2," (", level,timerange, ")")
 
 
+  # Entfernen aller Zeilen, bei denen group_col NA ist
+  expanded_dt <- expanded_dt[!is.na(expanded_dt$group_col), ]
+
+
+
   plot_left <- highcharter::hchart(
     object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[1]),
     type = "heatmap",

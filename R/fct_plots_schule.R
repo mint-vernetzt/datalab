@@ -420,6 +420,8 @@ kurse_einstieg_comparison <- function(r) {
   # plot
   if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
+   df1 <- df1[with(df1, order(round(proportion,1), decreasing = FALSE)),]
+
  out <-  highcharter::hchart(df1, 'bar', highcharter::hcaes(y = round(proportion,1), x = indikator, group = forcats::fct_rev(fachbereich))) %>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -2281,8 +2283,10 @@ kurse_comparison_gender <- function(r) {
 
     if(gegenwert == "Ja"){
 
-      df <- df %>%
-        dplyr::mutate(farbe = ifelse(grepl("andere Fächer", indikator), c("#efe8e6", "#dc2626"), c("#efe8e6", "#154194")))
+      # df <- df %>%
+      #   dplyr::mutate(farbe = ifelse(grepl("andere Fächer", indikator), c("#efe8e6", "#dc2626"), c("#efe8e6", "#154194")))
+
+
 
       out <- highcharter::hchart(df1, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,1), group = anzeige_geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}-Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%

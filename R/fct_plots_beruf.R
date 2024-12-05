@@ -17,10 +17,27 @@ beruf_einstieg_vergleich <- function(r) {
   regio <- r$region_arbeitsmarkt_einstieg_vergleich
   faecher <- r$fachbereich_arbeitsmarkt_einstieg_gender
 
+
+  # if(betrachtung == "Einzelansicht - Kuchendiagramm"){
+  #   gruppe <- r$indikator_arbeitsmarkt_einsteig_vergleich
+  # } else {
+  #   gruppe <- c("Auszubildende",
+  #               "Auszubildende (1. Jahr)",
+  #               "ausländische Auszubildende",
+  #               "Beschäftigte",
+  #               "ausländische Beschäftigte",
+  #               "Beschäftigte u25",
+  #               "Beschäftigte 25-55",
+  #               "Beschäftigte ü55")
+  # }
+
+
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
     gruppe <- r$indikator_arbeitsmarkt_einsteig_vergleich
-  }else{
+  }else if (betrachtung == "Gruppenvergleich - Balkendiagramm"){
    # gruppe <- DBI::dbGetQuery(con, "SELECT DISTINCT indikator FROM arbeitsmarkt_detail")$indikator
+    gruppe <- r$indikator_arbeitsmarkt_einsteig_vergleich
+  } else {
     gruppe <- c("Auszubildende",
                 "Auszubildende (1. Jahr)",
                 "ausländische Auszubildende",
@@ -28,8 +45,7 @@ beruf_einstieg_vergleich <- function(r) {
                 "ausländische Beschäftigte",
                 "Beschäftigte u25",
                 "Beschäftigte 25-55",
-                "Beschäftigte ü55",
-                "in Minijobs")
+                "Beschäftigte ü55")
   }
 
   df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
@@ -115,7 +131,9 @@ beruf_einstieg_vergleich <- function(r) {
     #                                             "Beschäftigte 25-55",
     #                                             "Beschäftigte ü55",
     #                                             "in Minijobs"))
-    df <- df %>% dplyr::filter(indikator %in% testl2)
+    df <- df %>% dplyr::filter(indikator %in% gruppe)
+
+    indikator = gruppe
 
     df <- df[with(df, order(proportion, decreasing = TRUE)), ] #############################################
 
@@ -123,7 +141,7 @@ beruf_einstieg_vergleich <- function(r) {
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = indikator, group = "fachbereich")) %>%
       highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-      highcharter::hc_xAxis(title = list(text = ""), categories = indi) %>%
+      highcharter::hc_xAxis(title = list(text = ""), categories = indikator) %>%
       highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
       highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
       highcharter::hc_title(text = ifelse(regio == "Saarland",
@@ -2088,7 +2106,8 @@ arbeitsmarkt_bula_faecher <- function(r) {
     #Trennpunkte für lange Zahlen in absolutem Wert ergänzen
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
-    df <- df[with(df, order(fachbereich, jahr, decreasing = TRUE)), ]
+    #df <- df[with(df, order(fachbereich, jahr, decreasing = TRUE)), ]
+    df <- df[with(df, order(prop, decreasing = FALSE)),]
 
     # nur nötig für stacked, machen wir hier doch nicht
     # #gegenwert Berechnen für jeweilige Auswahl
@@ -2107,6 +2126,8 @@ arbeitsmarkt_bula_faecher <- function(r) {
     title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
     title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
     title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
+
+
 
 
     # plot
