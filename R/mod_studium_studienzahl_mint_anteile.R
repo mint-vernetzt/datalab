@@ -82,7 +82,7 @@ mod_studium_studienzahl_mint_anteile_ui <- function(id){
     br(),
 
     shinyBS::bsPopover(id="ih_studium_fach_4", title="",
-                       content = paste0("Diese Grafik zeigt, wie sich die Anteile der einzelnen MINT-Diszipline über die Jahre verändern. So sieht man z. B. in der ersten Einstellung, dass deutschlandweit von 2017 bis 2023 der Anteil an Informatik-Studierenden zunimmt, der Anteil an Studierenden in anderen Ingenieurwissenschaften dagegen rückläufig ist."),
+                       content = paste0("Diese Grafik zeigt, wie sich die Anteile der einzelnen MINT-Disziplinen über die Jahre verändern. So sieht man z. B. in der ersten Einstellung, dass deutschlandweit von 2017 bis 2023 der Anteil an Informatik-Studierenden zunimmt, der Anteil an Studierenden in anderen Ingenieurwissenschaften dagegen rückläufig ist."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_4")

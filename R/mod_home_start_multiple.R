@@ -86,7 +86,7 @@ mod_home_start_multiple_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_alle_mint_2", title="",
-                       content = paste0("Die Grafik zeigt, dass der Anteil von MINT über alle Bereiche von 2015 bis 2020 ziemlich konstat bleibt. Bei Schüler*innen, Auszubildenden und Beschäftigten zeigt sich zwischen 2020 und 2021 ein leichter Rückgang des MINT-Anteil um jeweils einen Prozentpunkt. Was dieser Prozentpunkt ausmacht, sieht man, wenn man die absolute Anzahl betrachtet. 2021 gibt es deutschlandweit knapp 400.000 Beschäftigte weniger in MINT als noch 2020."),
+                       content = paste0("Die Grafik zeigt, dass der Anteil von MINT über alle Bereiche von 2015 bis 2020 ziemlich konstant bleibt. Bei Schüler:innen, Auszubildenden und Beschäftigten zeigt sich zwischen 2020 und 2021 ein leichter Rückgang des MINT-Anteil um jeweils einen Prozentpunkt. Was dieser Prozentpunkt ausmacht, sieht man, wenn man die absolute Anzahl betrachtet. 2021 gibt es deutschlandweit knapp 400.000 Beschäftigte weniger in MINT als noch 2020."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_alle_mint_2")
   )

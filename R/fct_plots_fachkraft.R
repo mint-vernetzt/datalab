@@ -247,11 +247,15 @@ plot_fachkraft_prognose_alle  <- function(r) {
                    Frauen in MINT", titel)
   titel <- ifelse(filter_wirkhebel[2] == "Internationale MINT-Fachkräfte",
                   "Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
-                   bei unterschiedlichen Entwicklungen in der Integration internatoinaler MINT-Fachkräfte",
+                   bei unterschiedlichen Entwicklungen in der Integration internationaler MINT-Fachkräfte",
                   titel)
   titel <- ifelse(filter_wirkhebel[2] == "MINT-Nachwuchs fördern",
                   "Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
                    bei unterschiedlichen Entwicklungen in der Förderung des MINT-Nachwuchses",
+                  titel)
+  titel <- ifelse(filter_wirkhebel[2] == "Gesamteffekt",
+                  "Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
+                   bei unterschiedlichen Entwicklungen der Gesamteffekte",
                   titel)
 
   # plot

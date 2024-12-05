@@ -46,7 +46,7 @@ mod_fachkraft_item_prog_detail_ui <- function(id){
 
     shinyBS::bsPopover(id="ih_fachkraft_prog_detail", title="",
                        content = paste0(
-                       "Die erste Einstellung zeigt das Basis-Szenario - also die zukünftige Entwicklung, auf die wir uns aktuell zubewegen. Die Darstellung zeigt, dass sich die Struktur der MINT-Fachkräfte ändern wird. Der Anteil intrenationaler Fachkräfte ohne deutsche Staatsangehörgikeit wird steigen und so den demographischen Wandel etwas abfedern."),
+                       "Die erste Einstellung zeigt das Basisszenario - also die zukünftige Entwicklung, auf die wir uns aktuell zubewegen. Die Darstellung zeigt, dass sich die Struktur der MINT-Fachkräfte ändern wird. Der Anteil internationaler Fachkräfte ohne deutsche Staatsangehörigkeit wird steigen und so den demographischen Wandel etwas abfedern."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_prog_detail")

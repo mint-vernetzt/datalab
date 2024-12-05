@@ -669,11 +669,11 @@ kurse_mint_map <- function(r) {
 
       if(indikator_select == "Grundkurse") {
 
-        title_help <- "Grundkurs-Belegungen"
+        title_help <- "Grundkursbelegungen"
 
       }else {
 
-        title_help <- "Leistungskurs-Belegungen"
+        title_help <- "Leistungskursbelegungen"
 
       }
 
@@ -720,11 +720,11 @@ kurse_mint_map <- function(r) {
 
       if(indikator_select == "Grundkurse") {
 
-        title_help <- "Grundkurs-Belegungen "
+        title_help <- "Grundkursbelegungen "
 
       }else {
 
-        title_help <- "Leistungskurs-Belegungen "
+        title_help <- "Leistungskursbelegungen "
 
       }
 
@@ -818,7 +818,7 @@ kurse_mint_map <- function(r) {
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von ", help_title, "<br> an allen Grundkurs-Belegungen ", "(",timerange, ")"),
+        text = paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")"),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -853,7 +853,7 @@ kurse_mint_map <- function(r) {
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von ", help_title, "<br> an allen Leistungskurs-Belegungen ", "(",timerange, ")"),
+        text = paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")"),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -973,7 +973,7 @@ kurse_map <- function(r) {
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor=col, labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von ", help_title, "<br> an allen Grundkurs-Belegungen ", "(",timerange, ")"),
+        text = paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")"),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1008,7 +1008,7 @@ kurse_map <- function(r) {
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor=col,labels = list(format = "{text}%")) %>%
       highcharter::hc_title(
-        text = paste0("Anteil von ", help_title, "<br> an allen Leistungskurs-Belegungen ", "(",timerange, ")"),
+        text = paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")"),
         margin = 10,
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
@@ -1095,11 +1095,11 @@ kurse_map <- function(r) {
 
       if(indikator_select == "Grundkurse") {
 
-        title_help <- "Grundkurs-Belegungen"
+        title_help <- "Grundkursbelegungen"
 
       }else {
 
-        title_help <- "Leistungskurs-Belegungen"
+        title_help <- "Leistungskursbelegungen"
 
       }
 
@@ -1147,11 +1147,11 @@ kurse_map <- function(r) {
 
       if(indikator_select == "Grundkurse") {
 
-        title_help <- "Grundkurs-Belegungen "
+        title_help <- "Grundkursbelegungen "
 
       }else {
 
-        title_help <- "Leistungskurs-Belegungen "
+        title_help <- "Leistungskursbelegungen "
 
       }
 
@@ -1387,11 +1387,11 @@ kurse_verlauf_multiple_bl <- function(r) {
 
     if(indikator_select == "Grundkurse") {
 
-      title_help <- "Grundkurs-Belegungen"
+      title_help <- "Grundkursbelegungen"
 
     }else {
 
-      title_help <- "Leistungskurs-Belegungen"
+      title_help <- "Leistungskursbelegungen"
 
     }
 
@@ -1439,11 +1439,11 @@ kurse_verlauf_multiple_bl <- function(r) {
 
     if(indikator_select == "Grundkurse") {
 
-      title_help <- "Grundkurs-Belegungen "
+      title_help <- "Grundkursbelegungen "
 
     }else {
 
-      title_help <- "Leistungskurs-Belegungen "
+      title_help <- "Leistungskursbelegungen "
 
     }
 
@@ -1572,7 +1572,7 @@ kurse_verlauf_subjects_bl <- function(r) {
  # df <- df %>% dplyr::filter(region %in% states)
 
   #titel hilfe für Plot
-  kurs_help <- ifelse(indikator_kurse == "Grundkurse", "Grundkurs-Belegungen", "Leistungskurs-Belegungen")
+  kurs_help <- ifelse(indikator_kurse == "Grundkurse", "Grundkursbelegungen", "Leistungskursbelegungen")
 
 
   if(absolut_selector=="In Prozent"){
@@ -2505,7 +2505,7 @@ kurse_wahl <- function(r) {
 
     # Titel erstellen
     titel_help <- indikator_gender
-    titel_help <-ifelse(grepl("Leistung", titel_help), "Leistungskurs-Belegungen", "Grundkurs-Belegungen")
+    titel_help <-ifelse(grepl("Leistung", titel_help), "Leistungskursbelegungen", "Grundkursbelegungen")
     titel_help <-ifelse(grepl("Ober", titel_help), "Oberstufenbelegungen", titel_help)
 
     if(vergleich == "Ja"){
@@ -3472,7 +3472,7 @@ iqb_fragebogen <- function(r){
     highcharter::hc_colors(c("#154194",
                              "#efe8e6")) %>%
     highcharter::hc_title(text = paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
-                                        " von Schüler*innen der 4. Klasse (", jahr_select, ")"
+                                        " von Schüler:innen der 4. Klasse (", jahr_select, ")"
     ),
     margin = 45,
     align = "center",

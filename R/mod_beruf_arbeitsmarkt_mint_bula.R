@@ -102,20 +102,7 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
     ),
     # p("Auswahl des Fachs:"),
     # shinyWidgets::pickerInput(
-    #   inputId = ns("pick_i"),
-    #   choices = c( "Bau- und Gebäudetechnik",  "Gesundheitstechnik",
-    #
-    #                "Informatik",    "Landtechnik", "Mathematik, Naturwissenschaften",
-    #
-    #                "MINT",  "Produktionstechnik","Technik (gesamt)",
-    #
-    #                "Verkehrs-, Sicherheits- u. Veranstaltungstechnik"
-    #   ),
-    #   selected = "Informatik"
-    # ),
-    # p("Auswahl des Anforderungsniveaus:"),
-    # shinyWidgets::pickerInput(
-    #   inputId = ns("anforderungsniveau_beruf_arbeitsmarkt_bl_verlauf"),
+
     #   choices = c("Gesamt", "Fachkraft",  "Spezialist:in"="Spezialist", "Expert:in"="Experte"), kab
     #   selected = "Gesamt"
     # ),
@@ -159,7 +146,7 @@ mod_beruf_arbeitsmarkt_mint_bula_ui <- function(id){
 
     br(),
     shinyBS::bsPopover(id="ih_beruf_mint_7", title="",
-                       content = paste0("Die erste Darstellung zeigt, dass sich der MINT-Anteil unter Beschäftigten in den ostdeutschen Bundesländern und Nordrhein-Westfalen ählich entwickelt. Der Anteil bleibt relativ konstant und nimmt von 2020 auf 2022 ein weing, um ca. einen halben Prozentpunkt, ab."),
+                       content = paste0("Die erste Darstellung zeigt, dass sich der MINT-Anteil unter Beschäftigten in den ostdeutschen Bundesländern und Nordrhein-Westfalen ähnlich entwickelt. Der Anteil bleibt relativ konstant und nimmt von 2020 auf 2022 ein weing, um ca. einen halben Prozentpunkt, ab."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_beruf_mint_7")
     ),

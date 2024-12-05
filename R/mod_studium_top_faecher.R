@@ -61,7 +61,7 @@ mod_studium_top_faecher_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_studium_fach_1", title="",
-                       content = paste0("In der ersten Einstellung sind die TOP-10-MINT-Fächer in Deutschland 2023 für weibliche bzw. männliche Studierende gezeigt. Die MINT-Fächer mit dem höchsten Frauenanteil sind Pharmazie (73.1% Frauen) und Biologie (64.5%). Die MINT-Fächer mit dem höchsten Männeranteil sind Verkehrstechnik/Nautik (86.4% Männern) und Elektrotechnik und Informationstechnik (84%)."),
+                       content = paste0("In der ersten Einstellung sind die TOP-10-MINT-Fächer in Deutschland 2023 für weibliche bzw. männliche Studierende gezeigt. Die MINT-Fächer mit dem höchsten Frauenanteil sind Pharmazie (73.1 % Frauen) und Biologie (64.5 %). Die MINT-Fächer mit dem höchsten Männeranteil sind Verkehrstechnik/Nautik (86.4 %  Männern) und Elektrotechnik und Informationstechnik (84 %)."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_1")

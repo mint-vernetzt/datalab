@@ -29,7 +29,7 @@ mod_fachkraft_item_mint_ui <- function(id){
     br(),
 
     shinyBS::bsPopover(id="ih_fachkraft-berufsgruppen_2", title="",
-                       content = paste0("Bei den Engpassberufen ist die Verteilung von MINT- und Nicht-MINT-Berufsgruppen noch 50-50.<br> Dagegen verteilen sich die Berufe ohne Fachkräfteengpass auf nur 49 MINT-Berufsgruppen (32%) und 104 Nicht-MINT-Berufsgruppen (68%)."),
+                       content = paste0("Bei den Engpassberufen ist die Verteilung von MINT- und Nicht-MINT-Berufsgruppen noch 50 : 50.<br> Dagegen verteilen sich die Berufe ohne Fachkräfteengpass auf nur 49 MINT-Berufsgruppen (32%) und 104 Nicht-MINT-Berufsgruppen (68%)."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft-berufsgruppen_2")

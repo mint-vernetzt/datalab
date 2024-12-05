@@ -73,7 +73,7 @@ mod_international_top10_mint_intl_ui <- function(id){
     # br(),
     # br(),
     shinyBS::bsPopover(id="ih_international_map5", title="",
-                       content = paste0("Diese Grafik gibt eine Übersicht über die Ländern mit den höchsten und geringsten Zahlen internationaler Studeirender in MINT. Deutschland ist hier Spitzenreiter, wobei dies unter anderem auch mit der Gesamtstudierendenzahl Deutschlands zusammenhängt."),
+                       content = paste0("Diese Grafik gibt eine Übersicht über die Länder mit den höchsten und geringsten Zahlen internationaler Studierender in MINT. Deutschland ist hier Spitzenreiter, wobei dies unter anderem auch mit der Gesamtstudierendenzahl Deutschlands zusammenhängt."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_map5")

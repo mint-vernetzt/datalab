@@ -280,7 +280,7 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
     ),
     br(),
                      shinyBS::bsPopover(id="ih_studium_frauen_3", title="",
-                                        content = paste0("Die Übersicht zeigt unter anderem, dass deutschlandweit 2023 der Frauenanteil von Lehramtstudierenden mit einem Hauptfach in MINT bei 54% liegt. Dagegen sind nur ein Drittel der allgemeinen MINT-Studierenden weiblich."),
+                                        content = paste0("Die Übersicht zeigt unter anderem, dass deutschlandweit 2023 der Frauenanteil von Lehramtstudierenden mit einem Hauptfach in MINT bei 54 % liegt. Dagegen ist nur ein Drittel der allgemeinen MINT-Studierenden weiblich."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_frauen_3")

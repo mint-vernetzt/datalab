@@ -161,7 +161,7 @@ mod_international_start_ui <- function(id){
                                         "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_schule_2", title="",
-                                                         content = paste0("Test-Leistungen der Schüler:innen werden nur dann als unterschiedlich dargestellt, wenn das mittlere Ergebnis der Mädchen im Vergelich zu den Jungen signifikant unterschiedlich ist.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                                         content = paste0("Test-Leistungen der Schüler:innen werden nur dann als unterschiedlich dargestellt, wenn das mittlere Ergebnis der Mädchen im Vergleich zu den Jungen signifikant unterschiedlich ist.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                                          placement = "top",
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_2")
@@ -346,7 +346,7 @@ mod_international_start_ui <- function(id){
                                         "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_vergl_4", title="",
-                                                         content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung).", "<br><br>Lichtenstein und San Marino sind in dieser Betrachtung ausgeschlossen, da in beiden Ländern nur eine Hochschule für MINT-Fächer ansässig ist und das die Vergleichbarkeit verzerren könnte."),
+                                                         content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung).", "<br><br>Liechtenstein und San Marino sind in dieser Betrachtung ausgeschlossen, da in beiden Ländern nur eine Hochschule für MINT-Fächer ansässig ist und das die Vergleichbarkeit verzerren könnte."),
                                                          placement = "top",
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_4") )

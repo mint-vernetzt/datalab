@@ -100,7 +100,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_fach_2neub", title="",
-                                        content = paste0("Die Karte in der ersten Einstellung zeigt: Während Sachsen mit über 41% MINT-Studierende den höchsten MINT-Anteil im Bundeslandvergleich hat, studieren im Nachbarland Thüringen nur 23% aller Studierenden ein MINT-Fach."),
+                                        content = paste0("Die Karte in der ersten Einstellung zeigt: Während Sachsen mit über 41 % MINT-Studierende den höchsten MINT-Anteil im Bundeslandvergleich hat, studieren im Nachbarland Thüringen nur 23 % aller Studierenden ein MINT-Fach."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_2neub")
     ),
@@ -203,7 +203,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_5b", title="",
-                                        content = paste0("Die erste Ansicht zeigt, dass in Baden-Württember im Vergleich zu Hamburg ein größerer Anteil an Studierenden MINT-Fächer studiert. In beiden Bundesländern bleibt der Anteil an MINT-Studierenden über die Jahre relativ konstant."),
+                                        content = paste0("Die erste Ansicht zeigt, dass in Baden-Württemberg im Vergleich zu Hamburg ein größerer Anteil an Studierenden MINT-Fächer studiert. In beiden Bundesländern bleibt der Anteil an MINT-Studierenden über die Jahre relativ konstant."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_5b")

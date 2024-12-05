@@ -90,7 +90,7 @@ mod_international_top10_mint_gender_ui <- function(id){
     # br(),
     # br(),
     shinyBS::bsPopover(id="ih_international_map4", title="",
-                       content = paste0("Hier sieht man, dass Lichtenstein mit über 60 % einen außergewöhnlich hohen Frauenanteil aufweist. Deutschland dagegen hat den neuntkleinsten Frauenanteil in MINT (29 %)."),
+                       content = paste0("Hier sieht man, dass Liechtenstein mit über 60 % einen außergewöhnlich hohen Frauenanteil aufweist. Deutschland dagegen hat den neuntkleinsten Frauenanteil in MINT (29 %)."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_map4")

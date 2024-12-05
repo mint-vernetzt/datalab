@@ -147,31 +147,12 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                )
                     ),
                     # tabPanel("Pie (RAUS)", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            tags$style(".well {background-color:#FFFFFF;}"),
-                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #            mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            htmlOutput(ns("plot_einstieg_pie"))
-                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
-                    #          )
-                    # ),
-                    #br(),
-                    # Bundeslandvergleich - bis jetzt nur Zeitdiagramm
+
                     tabPanel("Bundeslandvergleich", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_mint_bula_ui("mod_beruf_arbeitsmarkt_mint_bula_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_beruf_arbeitsmarkt_bl_verlauf"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -204,19 +185,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                     # ,
                     # tabPanel("Datensatz", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            tags$style(".well {background-color:#FFFFFF;}"),
-                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #            mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
-                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
-                    #            ),
-                    #          shiny::mainPanel(
-                    #            div(DT::dataTableOutput(ns("data_table_einstieg")),
-                    #                style = "font-size: 75%; width: 75%"),
-                    #            shiny::downloadButton(ns("download_data_box1"), label = "",
+
                     #                                  class = "butt",
                     #                                  icon = shiny::icon("download")))
                     # )
@@ -287,11 +256,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_faecher_verlauf_ui("mod_beruf_arbeitsmarkt_faecher_verlauf_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -311,15 +275,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_bula_faecher_ui("mod_beruf_arbeitsmarkt_bula_faecher_ui_1"),
-                               # br(),br()
-                               # ,
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_1"),
-                               #   label = "Download (links)",
-                               #   icon = icon("download")),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_2"),
-                               #   label = "Download (rechts)",
+
                                #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
@@ -387,11 +343,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui("mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_einstieg_verlauf_gender"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
+
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -532,7 +484,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                        p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                        shinyBS::bsPopover(id = "h_beruf_fach_4", title = "",
-                                          content = paste0("Hier gezeigt werden nur neue Auszubildende im Fachbereich MINT des jeweiligen Jahres. Ausbildungsberufe mit weniger als 10 neuen Vertragsabschlüssen für das betrachtete Jahr wurden ausgeschlossen. <br><br>In manchen Fällen weisen mehr als 10 Berufe einen Männeranteil von 100 % auf. In diesen Fällen sind die zehn Berufe mit einem Männeranteil von 100 % angezeigt, welche die meisten Neu-Auszubildenden haben.", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                          content = paste0("Hier gezeigt werden nur neue Auszubildende im Fachbereich MINT des jeweiligen Jahres. Ausbildungsberufe mit weniger als zehn neuen Vertragsabschlüssen für das betrachtete Jahr wurden ausgeschlossen. <br><br>In manchen Fällen weisen mehr als zehn Berufe einen Männeranteil von 100 % auf. In diesen Fällen sind die zehn Berufe mit einem Männeranteil von 100 % angezeigt, welche die meisten Neu-Auszubildenden haben.", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                           placement = "top",
                                           trigger = "hover"),
                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_4")

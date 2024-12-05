@@ -89,7 +89,7 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_schule_fach_3", title="",
-                       content = paste0("In dieser Grafik ist bei den voreingestellten Kategorien (Kursart = &quotGrundkurs&quot, Region = &quotDeutschland&quot, Fächer/Fächergruppen = &quotMathematik&quot etc., Betrachung = &quotProzent&quot) zu sehen, dass z.B. im Jahr 2022 die Mathematik mit 8% den größten Anteil an den Grundkursbelegungen hat."),
+                       content = paste0("In dieser Grafik ist bei den voreingestellten Kategorien (Kursart = &quotGrundkurs&quot, Region = &quotDeutschland&quot, Fächer/Fächergruppen = &quotMathematik&quot etc., Betrachtung = &quotProzent&quot) zu sehen, dass z.B. im Jahr 2022 die Mathematik mit 8 % den größten Anteil an den Grundkursbelegungen hat."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_3"),

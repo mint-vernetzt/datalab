@@ -31,7 +31,7 @@ mod_international_schule_item_ui <- function(id){
     ),
   br(),
   shinyBS::bsPopover(id="ih_international_schule_item", title="",
-                     content = paste0("Deutschland wird farblich abgehoben dargestelt", "<br> <br>Die Darstellung zeigt Unterschiede von Mädchen und Jungen im Kompetenztest von TIMSS. Z. B. schneiden in Deutschland und weiteren 25 Ländern Jungen im Mathematiktest signifikant besser ab als Mädchen."),
+                     content = paste0("Deutschland wird farblich abgehoben dargestellt", "<br> <br>Die Darstellung zeigt Unterschiede von Mädchen und Jungen im Kompetenztest von TIMSS. Z. B. Schneiden in Deutschland und weiteren 25 Ländern Jungen im Mathematiktest signifikant besser ab als Mädchen."),
                      placement = "top",
                      trigger = "hover"),
   tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_schule_item")

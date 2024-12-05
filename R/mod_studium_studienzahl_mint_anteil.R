@@ -145,7 +145,7 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_6", title="",
-                                        content = paste0("Der MINT-Anteil variiert zwischen den Studierendengruppen. MINT wird von internationalen Studierenden besonders oft belegt (47%-54%). Dagegen belegt nur etwas weniger als ein viertel der Lehramstudierenden ein MINT-Fach als Hauptfach."),
+                                        content = paste0("Der MINT-Anteil variiert zwischen den Studierendengruppen. MINT wird von internationalen Studierenden besonders oft belegt (47 % - 54 %). Dagegen belegt nur etwas weniger als ein viertel der Lehramstudierenden ein MINT-Fach als Hauptfach."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_6")
 

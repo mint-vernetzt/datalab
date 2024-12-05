@@ -82,7 +82,7 @@ mod_international_schule_migration_ui <- function(id){
 
 
     shinyBS::bsPopover(id="ih_international_schule_gruppen", title="",
-                       content = paste0("Die erste Darstellung zeigt, dass in allen teilnehmenden Ländern Kinder mit höherem sozialen Status höhere Punktzahlen in den Kompetenztest von TIMSS erreichen. So auch in Deutschland, wo Kinder mit höherem sozialem Status 572 Punkte und Kinder mit niedrigerem sozialem Status 521 Punkte erzielen."),
+                       content = paste0("Die erste Darstellung zeigt, dass in allen teilnehmenden Ländern Kinder mit höherem sozialem Status höhere Punktzahlen in dem Kompetenztest von TIMSS erreichen. So auch in Deutschland, wo Kinder mit höherem sozialem Status 572 Punkte und Kinder mit niedrigerem sozialem Status 521 Punkte erzielen."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_schule_gruppen")
