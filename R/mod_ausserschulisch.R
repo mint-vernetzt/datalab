@@ -24,6 +24,8 @@ mod_ausserschulisch_server <- function(id, r){
   # Box 1 - CP
   mod_ausserschulisch_cp_orgas_server("mod_ausserschulisch_cp_orgas_ui",r)
   mod_ausserschulisch_cp_projekte_server("mod_ausserschulisch_cp_projekte_ui",r)
+  mod_ausserschulisch_cp_profile_server("mod_ausserschulisch_cp_profile_ui",r)
+
 
   # Box 2 - MV-Befragungne
   mod_ausserschulisch_mvb_akteursbefragung_server("mod_ausserschulisch_mvb_akteursbefragung_ui_1", r)

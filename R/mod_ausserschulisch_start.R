@@ -32,14 +32,22 @@ mod_ausserschulisch_start_ui <- function(id){
         title = "Auf dieser Seite",
         width = 7,
         p(style = "text-align: left; font-size = 16px",
-          "Auf dieser Seite ...")
+          "Auf dieser Seite zeigen wir Daten aus dem außerschulischen MINT-Bildungsbereich.
+          Amtliche Statistiken für den außerschulischen Bereich liegen nicht vor. Hier wollen wir
+          schrittweise immer mehr weiße Flecken der außerschulischen MINT-Bildungslandschaft füllen."),
+        p("Erstens zeigen wir Daten von MINTvernetzt. Hier nutzen wir die Daten der Community Plattform und
+          stellen dar, wie viele Organsiationen, Projekte und Personen in welchen Bereichen der außerschulischen MINT-Bildung
+          tätig sind. Außerdem zeigen wir eine Auswahl an Ergebnisse von Befragungen von MINTvernetzt."),
+        p("Zweitens zeigen wir Daten aus der außerschulischen MINT-Bildungs-Community. Aktuell sind das Zahlen der Stiftung
+          Kinder forschen.")
       ),
 
       shinydashboard::box(
         title = "Fragen oder Feedback?",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
+          "Sind alle Zahlen und Grafiken verständlich dargestellt? Haben Sie eigene Daten, die für Akteur:innen in der MINT-Bildung interessant sein könnten?", br(),
+          "Kontaktieren Sie uns gern! Wir freuen uns über Rückfragen, Vorschläge oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))
     ),
@@ -66,7 +74,7 @@ mod_ausserschulisch_start_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Daten zu den außerschulische MINT-Akteur:innen und Befragungen: Quelle MINTvernetzt."),
+          "Daten zu den außerschulische MINT-Akteur:innen und Befragungen: Quelle MINTvernetzt, Stand November 2024."),
         p(style = "text-align: left; font-size = 16px",
           "Daten zu frühklindlicher Bildung: Quelle Stiftung Kinder forschen, 2023."),
       )
@@ -86,7 +94,7 @@ mod_ausserschulisch_start_ui <- function(id){
                 width = 12,
                 column(
                   width = 8,
-                  p("Text kommt noch.")
+                  p("Text kommt noch...")
                 ),
                 column(
                   width = 12,
@@ -108,7 +116,8 @@ mod_ausserschulisch_start_ui <- function(id){
                                  ),
                                  shiny::mainPanel(
                                    width = 9,
-                                   shinycssloaders::withSpinner(htmlOutput(ns("plot_cp_orgas")),
+                                   shinycssloaders::withSpinner(
+                                     highcharter::highchartOutput(ns("plot_cp_orgas"), height = "600px"),
                                                                 color = "#154194"),
 
                                    p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."),
@@ -134,7 +143,8 @@ mod_ausserschulisch_start_ui <- function(id){
                                        ),
                                        shiny::mainPanel(
                                          width = 9,
-                                         shinycssloaders::withSpinner(htmlOutput(ns("plot_cp_projekte")),
+                                         shinycssloaders::withSpinner(
+                                           highcharter::highchartOutput(ns("plot_cp_projekte"), height = "600px"),
                                                                       color = "#154194"),
 
                                          p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."),
@@ -144,7 +154,59 @@ mod_ausserschulisch_start_ui <- function(id){
                                          #                    trigger = "hover"),
                                          # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_3")
                                        )
-                              )
+                              ),
+                              tabPanel("Profile der MINTvernetzt-Community", br(),
+
+                                       shiny::sidebarPanel(
+                                         width = 3,
+                                         tags$style(".well {background-color:#FFFFFF;}"),
+                                         tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                         mod_ausserschulisch_cp_profile_ui("mod_ausserschulisch_cp_profile_ui"),
+                                         # br(),br(),
+                                         # downloadButton(
+                                         #   outputId = ns("download_btn_plot___"),
+                                         #   label = "Download",
+                                         #   icon = icon("download")),
+                                       ),
+                                       shiny::mainPanel(
+                                         width = 9,
+                                         shinycssloaders::withSpinner(
+                                           highcharter::highchartOutput(ns("plot_cp_profile"), height = "600px"),
+                                                                      color = "#154194"),
+
+                                         p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."),
+                                         # shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
+                                         #                    content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
+                                         #                    placement = "top",
+                                         #                    trigger = "hover"),
+                                         # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_3")
+                                       )
+                              ),
+                              tabPanel("Informationen zu den Daten", br(),
+                                       column(
+                                         width = 8,
+                                         p("Die hier gezeigten Daten haben keinen Anspruch darauf, den MINT-Bildungsbereich vollständig abzubilden.
+                                         Wir geben hier einen Einblick in die Daten, welche MINTvernetzt vorliegen."),
+                                         div(
+                                           style = "display: flex; justify-content: center; align-items: center; margin-bottom: 25px;",
+                                           img(src='www/Ausserschulisch_cp_Zahlen.png',
+                                               class = "img-responsive",
+                                               #height = "150px", width = "150px",
+                                               alt = "Bild Zahlen Nutzung Community Plattform")
+                                         ),
+                                         p("Nicht alle Profile sind vollständig ausgefüllt. In den hier gezeigten Darstellungen werden alle die Profile berücksichtigt,
+                                         die zu der betrachteten Eigenschaft Angaben gemacht haben."),
+                                         div(
+                                           style = "display: flex; justify-content: center; align-items: center; margin-bottom: 25px;",
+                                           img(src='www/Ausserschulisch_cp_Ausfuellstatus.png',
+                                               class = "img-responsive",
+                                               width = "80%",
+                                               alt = "Bild Ausfuellstatus Community Plattform"
+                                           )
+                                         )
+                                       )
+
+                                      )
 
                             )
                 )
@@ -159,46 +221,11 @@ mod_ausserschulisch_start_ui <- function(id){
         tags$img(
           src = "www/Banner_CP_Absrpung.png",
           alt = "Community Plattform Aufruf",
-          style = "max-width: 100%; height: auto; cursor: pointer;"
+          style = "max-width: 100%; height: auto; cursor: pointer;
+          margin-bottom: 20px;"
         )
       )
     ),
-    # div(class = "reference-box",
-    #     style = "display: flex; align-items: stretch; padding: 0px; margin-bottom: 10px;
-    #     color: #154194; background-color: #efe8e6",
-    #     width = 12,
-    #     column(
-    #       style = "padding: 0;",
-    #       width = 4,
-    #       img(src='www/CP_screenshot.png',
-    #           class = "responsive-image",
-    #           # height = "800px",
-    #           #width = "150px",
-    #           alt = "Community Plattform Screenshot",
-    #           style="max-width: 100%; heigth: auto; object-fit: cover;"
-    #       )
-    #     ),
-    #     column(
-    #       width = 8,
-    #       div(class = "inner-box",
-    #           style = "margin: 0; padding: 0px; background-color: #efe8e6;
-    #           display: flex; flex-direction:column; justify-content: center;",
-    #
-    #           p(br(),strong("Vervollständige die Daten der außerschulischen MINT-Bildung"), br()),
-    #           p(
-    #             strong("Legen Sie Ihre Organisation auf der Community Plattform von MINTvernetzt an
-    #                  oder füllen Sie Ihre Projekt-Informationen weiter aus.
-    #                  So können Sie dabei mitwirken, die Datenlücke der außerschulischen
-    #                  MINT-Bildung zu reduzieren."),
-    #             br(), br(),
-    #             tags$a(href = "https://community.mint-vernetzt.de/",
-    #                    target = "_blank", "Link zur Community Plattform",
-    #                    style = "color: #154194"),
-    #             br(), br())
-    #
-    #       )
-    #     )
-    # ),
 
     # MV-Befragungen ----
 
@@ -268,7 +295,90 @@ mod_ausserschulisch_start_ui <- function(id){
                                          #                    trigger = "hover"),
                                          # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_3")
                                        )
-                              )
+                              ),
+
+                              # Info-Tab mit allen drei Befragungen
+                              shiny::tabPanel(
+                                "Informationen zu den Befragungen",
+                                # Erste Befragung
+                                    fluidRow(
+                                      style= "top: 15px;",
+                                      column(
+                                        style = "top: 15px;",
+                                        width = 6,
+                                        div(
+                                          p(strong("MINTvernetzt-Akteursbefragung:")),
+                                          p(tags$i("Ziel der Umfrage:"), "Übersicht über die MINT-Bildungsakteur:innen und ihre Bedarfe und Herausforderungen herstellen.", br(),
+                                            tags$i("Teilnehmendenzahl:"), "221 Personen haben an der Umfrage teilgenommen.",br(),
+                                            tags$i("Befragung:"), "Durchgeführt zwischen Juni und Juli 2024. Die Umfrage wurde über Kanäle von MINTvernetzt geteilt.")
+                                        )
+                                      ),
+                                      column(
+                                        style = "top: 15px;",
+                                        width = 3,
+                                        tags$a(
+                                          href = "https://www.mint-vernetzt.de/studien-und-umfragen/",
+                                          target = "_blank",
+                                          tags$img(src = "www/Außerschulisch_Befragung_Akteur.png",
+                                                   style = "position: relative; float: inline-end;
+                                                 right: 15px; height: auto; width: 200px;")
+                                        )
+                                      )
+                                ),
+                                # Zweite Befragung
+                                fluidRow(
+                                  style= "top: 15px;",
+                                  column(
+                                    style = "top: 15px;",
+                                    width = 6,
+                                    div(
+                                      p(strong("MINT-Stimmungsbarometer:")),
+                                      p(tags$i("Ziel der Umfrage:"), "Einblicke in die Stimmung zur Qualität der MINT-Bildung in Deutschland erlangen.", br(),
+                                        tags$i("Teilnehmendenzahl:"), "454 Personen haben an der Umfrage teilgenommen.",br(),
+                                        tags$i("Befragung:"), "Durchgeführt zwischen August und September 2024. Die Umfrage wurde über Kanäle von MINTvernetzt und
+                                                              des Stifterverbands an Vertreter:innen von Bildung, Wirtschaft und Wissenschaft versandt.")
+                                    )
+                                  ),
+                                  column(
+                                    style = "top: 15px;",
+                                    width = 3,
+                                    tags$a(
+                                      href = "https://www.mint-vernetzt.de/studien-und-umfragen/#stimmungsbarometer",
+                                      target = "_blank",
+                                      tags$img(src = "www/Außerschulisch_Befragung_Stimmung.png",
+                                               style = "position: relative; float: inline-end;
+                                                 right: 15px; height: auto; width: 200px;")
+                                    )
+                                  )
+                                ),
+                                # Dritte Befragung
+                                fluidRow(
+                                  style= "top: 15px;",
+                                  column(
+                                    style = "top: 15px;",
+                                    width = 6,
+                                    div(
+                                      p(strong("MINTvernetzt-Genderbefragung:")),
+                                      p(tags$i("Ziel der Umfrage:"), "Synergien und nachhaltige Fördereffekte für Mädchen in MINT schaffen, aufbauend auf den
+                                                                      Erfahrungen der MINT-Bildungsanbieter:innen.", br(),
+                                        tags$i("Teilnehmendenzahl:"), "456 Personen haben an der Umfrage teilgenommen.",br(),
+                                        tags$i("Befragung:"), "Durchgeführt zwischen November und Dezember 2023. Die Umfrage wurde über die Kanäle von MINTvernetzt geteilt.")
+                                    )
+                                  ),
+                                  column(
+                                    style = "top: 15px;",
+                                    width = 3,
+                                    tags$a(
+                                      href = "https://www.mint-vernetzt.de/studien-und-umfragen/",
+                                      target = "_blank",
+                                      tags$img(src = "www/Außerschulisch_Befragung_Gender.png",
+                                               style = "position: relative; float: inline-end;
+                                                 right: 15px; height: auto; width: 200px;")
+                                    )
+                                  )
+                                )
+
+                               )
                   )
                 )
               )
@@ -377,14 +487,17 @@ mod_ausserschulisch_start_server <- function(id, r){
 
     # Community Plattform ----
 
-    output$plot_cp_orgas <- renderUI({
+    output$plot_cp_orgas <- highcharter::renderHighchart({
       plot_cp_orgas(r)
     })
 
-    output$plot_cp_projekte <- renderUI({
+    output$plot_cp_projekte <- highcharter::renderHighchart({
       plot_cp_projekte(r)
     })
 
+    output$plot_cp_profile <- highcharter::renderHighchart({
+      plot_cp_profile(r)
+    })
     # MV-Befragungen ----
 
     output$plot_mvb_akteursbefragung <- highcharter::renderHighchart(
