@@ -329,7 +329,7 @@ mod_fachkraft_start_ui <- function(id){
                                                    content = paste0("Die Bundesagentur für Arbeit hat, basierend auf sechs Indikatoren, für alle Berufe einen Engpassindikator berechnet. <br><br>Indikatoren: Abgangsrate aus der Arbeitslosigkeit, Arbeitssuchenden-Stellen-Relation, Berufssp. Arbeitslosenquote, Entwicklung der mittleren Entgelte, Vakanzzeit, Veränderung in der Beschäftigung ausländischer Personen. <br><br> Näheres zur Berechnung können Sie hier nachlesen: <br> <a>https://statistik.arbeitsagentur.de/DE/Navigation/Statistiken/Interaktive-Statistiken/Fachkraeftebedarf/Engpassanalyse-Nav.html</a> "),
                                                    delay = list(show = 100, hide = 100),
                                                    template = '<div class="popover" role="tooltip" style="max-width: 100%;"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>')),
-                 tags$a(paste0("Engpassanalyse"), icon("info-circle"), id = "i_engpass_analyse_def"),
+                 tags$a(paste0("Engpassanalyse, hier klicken: "), icon("info-circle"), id = "i_engpass_analyse_def"),
                  p()
           ),
           column(width = 3,
@@ -337,7 +337,7 @@ mod_fachkraft_start_ui <- function(id){
                                     content = paste0("Die Arbeitslosen-Stellen-Relation berechnet sich aus folgendem Verhältnis: Jahresdurchschnitt Arbeitslose / Jahresdurchschnitt gemeldete sozialversicherungspflichtige Arbeitsstellen. <br> <br> Eine Arbeitslosen-Stellen-Relation von 3 bedeutet, dass in einem Beruf drei arbeitslose/arbeitssuchende Bewerber:innen auf eine gemeldete Arbeitsstelle kommen. <br><br>Quelle: Bundesagentur für Arbeit"),
                                     placement = "right",
                                     trigger = "click"),
-                 tags$a(paste0("   Arbeitslosen-Stellen-Relation"), icon("info-circle"), id = "i_asr_def"),
+                 tags$a(paste0("   Arbeitslosen-Stellen-Relation, hier klicken: "), icon("info-circle"), id = "i_asr_def"),
                  p()
           ),
           column(width = 2,
@@ -345,7 +345,7 @@ mod_fachkraft_start_ui <- function(id){
                                     content = paste0("Wir betrachten hier die abgeschlossene Vakanzzeit. Als abgeschlossene Vakanzzeit versteht man die Dauer, die benötigt wird, bis eine leer stehende Stelle besetzt wird. <br><br>Eine Vakanzzeit von 50 bedeutet, dass eine gemeldete Arbeitsstelle 50 Tage zur Vermittlung gemeldet war, bis sie besetzt werden konnte. <br><br>Quelle: Bundesagentur für Arbeit."),
                                     placement = "right",
                                     trigger = "click"),
-                 tags$a(paste0("   Vakanzzeit"), icon("info-circle"), id = "i_vakanzzeit_def"),
+                 tags$a(paste0("   Vakanzzeit, hier klicken: "), icon("info-circle"), id = "i_vakanzzeit_def"),
                  p()
           )
           ),
@@ -488,7 +488,7 @@ mod_fachkraft_start_ui <- function(id){
                                           content = paste0("Die Bundesagentur für Arbeit hat, basierend auf sechs Indikatoren, für alle Berufe einen Engpassindikator berechnet. <br><br>Indikatoren: Abgangsrate aus der Arbeitslosigkeit, Arbeitssuchenden-Stellen-Relation, Berufssp. Arbeitslosenquote, Entwicklung der mittleren Entgelte, Vakanzzeit, Veränderung in der Beschäftigung ausländischer Personen. <br><br> Näheres zur Berechnung können Sie hier nachlesen: <br> <a>https://statistik.arbeitsagentur.de/DE/Navigation/Statistiken/Interaktive-Statistiken/Fachkraeftebedarf/Engpassanalyse-Nav.html</a> "),
                                           delay = list(show = 100, hide = 100),
                                           template = '<div class="popover" role="tooltip" style="max-width: 100%;"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>')),
-        tags$a(paste0("Engpassanalyse"), icon("info-circle"), id = "i_engpass_analyse_def_2"),
+        tags$a(paste0("Engpassanalyse, hier klicken: "), icon("info-circle"), id = "i_engpass_analyse_def_2"),
         p()
         ),
         column(width = 3,
@@ -496,7 +496,7 @@ mod_fachkraft_start_ui <- function(id){
                            content = paste0("Die Arbeitslosen-Stellen-Relation berechnet sich aus folgendem Verhältnis: Jahresdurchschnitt Arbeitslose / Jahresdurchschnitt gemeldete sozialversicherungspflichtige Arbeitsstellen. <br> <br> Eine Arbeitslosen-Stellen-Relation von 3 bedeutet, dass in einem Beruf drei arbeitslose/arbeitssuchende Bewerber:innen auf eine gemeldete Arbeitsstelle kommen. <br><br>Quelle: Bundesagentur für Arbeit"),
                            placement = "right",
                            trigger = "click"),
-        tags$a(paste0("   Arbeitslosen-Stellen-Relation"), icon("info-circle"), id = "i_asr_def_2"),
+        tags$a(paste0("   Arbeitslosen-Stellen-Relation, hier klicken: "), icon("info-circle"), id = "i_asr_def_2"),
         p()
         ),
         column(width = 2,
@@ -504,7 +504,7 @@ mod_fachkraft_start_ui <- function(id){
                            content = paste0("Wir betrachten hier die abgeschlossene Vakanzzeit. Als abgeschlossene Vakanzzeit versteht man die Dauer, die benötigt wird, bis eine leer stehende Stelle besetzt wird. <br><br>Eine Vakanzzeit von 50 bedeutet, dass eine gemeldete Arbeitsstelle 50 Tage zur Vermittlung gemeldet war, bis sie besetzt werden konnte. <br><br>Quelle: Bundesagentur für Arbeit."),
                                             placement = "right",
                                             trigger = "click"),
-                           tags$a(paste0("   Vakanzzeit"), icon("info-circle"), id = "i_vakanzzeit_def_2"),
+                           tags$a(paste0("   Vakanzzeit, hier klicken: "), icon("info-circle"), id = "i_vakanzzeit_def_2"),
         p()
         )
         ),

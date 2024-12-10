@@ -556,6 +556,14 @@ mod_international_start_ui <- function(id){
                                         p(style="font-size:12px;color:grey",
                                           "Quelle der Daten: OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
 
+                                        p(style="font-size:12px;color:grey",
+                                          "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
+                                        shinyBS::bsPopover(id = "h_beruf_international_ho", title = "",
+                                                           content = paste0("Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
+                                                           placement = "top",
+                                                           trigger = "hover"),
+                                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_ho")
+
                                         # shinyBS::bsPopover(id="h_international_arbeit_3", title="",
                                         #                    content = paste0("POPUP INFO TEXT HERE"),
                                         #                    placement = "top",
