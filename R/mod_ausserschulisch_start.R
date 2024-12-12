@@ -296,7 +296,7 @@ mod_ausserschulisch_start_ui <- function(id){
 
                                          p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt 2024."),
 
-                                         p(style = "font-size:16px; font-weight: 600; color: #154194;",
+                                         p(style = "font-size:16px; font-weight: 600;",
                                            br(),
                                            "Die MINTvernetzt-Akteursbefragung fragt ab, wer die MINTvernetzt-Community ist und welche Bedrüfnisse
                                            und Wünsche sie hat. Weitere Ergebnisse und Informationen finden sich ",
@@ -325,7 +325,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                            color = "#154194"),
 
                                          p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt 2024."),
-                                         p(style = "font-size:16px; font-weight: 600; color: #154194;",
+                                         p(style = "font-size:16px; font-weight: 600;",
                                            br(),
                                            "Im MINT-Stimmungsbarometer schätzen jährlich Vertreter:innen aus Bildung, Wissenschaft und Wirtschaft
                                            die Qualität der MINT-Bildung in Deutschland ein. Jedes Jahr werden dazu Fragen eines neuen Themenfokus,
@@ -350,7 +350,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                            color = "#154194"),
 
                                          p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt 2024."),
-                                         p(style = "font-size:16px; font-weight: 600; color: #154194;",
+                                         p(style = "font-size:16px; font-weight: 600;",
                                            br(),
                                            "Die MINTvernetzt-Genderbefragung beschäftigt sich damit, inwieweit Genderaspekte in MINT-Bildungsangeboten
                                            berücksichtigt werden und wie man Bildungsanbieter:innen dabei unterstützen kann.
@@ -372,10 +372,10 @@ mod_ausserschulisch_start_ui <- function(id){
                                         style = "top: 15px;",
                                         width = 6,
                                         div(
-                                          p(strong("MINTvernetzt-Akteursbefragung:")),
-                                          p(tags$i("Ziel der Umfrage:"), "Übersicht über die MINT-Bildungsakteur:innen und ihre Bedarfe und Herausforderungen herstellen.", br(),
-                                            tags$i("Teilnehmendenzahl:"), "221 Personen haben an der Umfrage teilgenommen.",br(),
-                                            tags$i("Befragung:"), "Durchgeführt zwischen Juni und Juli 2024. Die Umfrage wurde über Kanäle von MINTvernetzt geteilt.")
+                                          p(strong("MINTvernetzt-Akteursbefragung:", style = "color: #FCC433;")),
+                                          p(tags$b("Ziel der Umfrage:"), "Übersicht über die MINT-Bildungsakteur:innen und ihre Bedarfe und Herausforderungen herstellen.", br(),
+                                            tags$b("Teilnehmendenzahl:"), "221 Personen haben an der Umfrage teilgenommen.",br(),
+                                            tags$b("Befragung:"), "Durchgeführt zwischen Juni und Juli 2024. Die Umfrage wurde über Kanäle von MINTvernetzt geteilt.")
                                         )
                                       ),
                                       column(
@@ -397,10 +397,10 @@ mod_ausserschulisch_start_ui <- function(id){
                                     style = "top: 15px;",
                                     width = 6,
                                     div(
-                                      p(strong("MINT-Stimmungsbarometer:")),
-                                      p(tags$i("Ziel der Umfrage:"), "Einblicke in die Stimmung zur Qualität der MINT-Bildung in Deutschland erlangen.", br(),
-                                        tags$i("Teilnehmendenzahl:"), "454 Personen haben an der Umfrage teilgenommen.",br(),
-                                        tags$i("Befragung:"), "Durchgeführt zwischen August und September 2024. Die Umfrage wurde über Kanäle von MINTvernetzt und
+                                      p(strong("MINT-Stimmungsbarometer:", style = "color: #00A87A;")),
+                                      p(tags$b("Ziel der Umfrage:"), "Einblicke in die Stimmung zur Qualität der MINT-Bildung in Deutschland erlangen.", br(),
+                                        tags$b("Teilnehmendenzahl:"), "454 Personen haben an der Umfrage teilgenommen.",br(),
+                                        tags$b("Befragung:"), "Durchgeführt zwischen August und September 2024. Die Umfrage wurde über Kanäle von MINTvernetzt und
                                                               des Stifterverbands an Vertreter:innen von Bildung, Wirtschaft und Wissenschaft versandt.")
                                     )
                                   ),
@@ -423,11 +423,11 @@ mod_ausserschulisch_start_ui <- function(id){
                                     style = "top: 15px;",
                                     width = 6,
                                     div(
-                                      p(strong("MINTvernetzt-Genderbefragung:")),
-                                      p(tags$i("Ziel der Umfrage:"), "Synergien und nachhaltige Fördereffekte für Mädchen in MINT schaffen, aufbauend auf den
+                                      p(strong("MINTvernetzt-Genderbefragung:", style = "color: #b16fab;")),
+                                      p(tags$b("Ziel der Umfrage:"), "Synergien und nachhaltige Fördereffekte für Mädchen in MINT schaffen, aufbauend auf den
                                                                       Erfahrungen der MINT-Bildungsanbieter:innen.", br(),
-                                        tags$i("Teilnehmendenzahl:"), "456 Personen haben an der Umfrage teilgenommen.",br(),
-                                        tags$i("Befragung:"), "Durchgeführt zwischen November und Dezember 2023. Die Umfrage wurde über die Kanäle von MINTvernetzt geteilt.")
+                                        tags$b("Teilnehmendenzahl:"), "456 Personen haben an der Umfrage teilgenommen.",br(),
+                                        tags$b("Befragung:"), "Durchgeführt zwischen November und Dezember 2023. Die Umfrage wurde über die Kanäle von MINTvernetzt geteilt.")
                                     )
                                   ),
                                   column(

@@ -868,9 +868,7 @@ plot_mv_stimmung <- function(r){
         )%>%
         highcharter::hc_tooltip(
           pointFormat=paste('Anteil: {point.wert}%')) %>%
-        highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                                  "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                                  "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")) %>%
+        highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf","#fbbf24")) %>%
         highcharter::hc_title(text = titel,
                               margin = 45,
                               align = "center",
@@ -879,8 +877,19 @@ plot_mv_stimmung <- function(r){
                                  align = "center",
                                  style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"))#%>%
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_plotOptions(
+          pie = list(
+            dataLabels = list(
+              style = list(
+                fontSize = "14px",  # Schriftgröße für die Labels anpassen
+                fontFamily = "SourceSans3-Regular"
+              )
+            )
+          )
+        )
         # highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
         # highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
         #                                        dataLabels = list(enabled = TRUE,  format='{point.wert} %'), showInLegend = TRUE))
