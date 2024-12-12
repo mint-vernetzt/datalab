@@ -63,7 +63,7 @@ mod_ausserschulisch_cp_projekte_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_ausserschulisch_cp2", title="",
-                       content = paste0("Text fehlt noch"),
+                       content = paste0("Betrachtet man die Anzahl der Projekte"),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_ausserschulisch_cp2")
 
