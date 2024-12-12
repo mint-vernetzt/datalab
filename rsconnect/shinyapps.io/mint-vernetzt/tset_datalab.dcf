@@ -1,0 +1,13 @@
+name: tset_datalab
+title: tset_datalab
+username:
+account: mint-vernetzt
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13585351
+bundleId: 9509422
+url: https://mint-vernetzt.shinyapps.io/tset_datalab/
+when: 1734009886.44821
+lastSyncTime: 1734009886.44823
+asMultiple: FALSE
+asStatic: FALSE

@@ -238,7 +238,7 @@ mod_ausserschulisch_start_ui <- function(id){
         href = "https://community.mint-vernetzt.de/",
         target = "_blank",
         tags$img(
-          src = "www/Banner_CP_Absrpung.png",
+          src = "www/Banner_CP_Absprung.png",
           alt = "Community Plattform Aufruf",
           style = "max-width: 100%; height: auto; cursor: pointer;
           margin-bottom: 20px;"
@@ -337,13 +337,15 @@ mod_ausserschulisch_start_ui <- function(id){
                               ),
                               # Tab 3
                               tabPanel("MINTvernetzt-Genderbefragung: Netzwerke der Mädchenförderung", br(),
-                                       shiny::sidebarPanel(
+                                       column(
                                          width = 3,
-                                         tags$style(".well {background-color:#FFFFFF;}"),
-                                         tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                                         mod_ausserschulisch_mvb_genderb_ui("mod_ausserschulisch_mvb_genderb_ui"),
+                                         # tags$style(".well {background-color:#FFFFFF;}"),
+                                         # tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                         # mod_ausserschulisch_mvb_genderb_ui("mod_ausserschulisch_mvb_genderb_ui"),
+                                         tags$img(src = "www/Ausserschulisch_Gender_Text.png",
+                                                  style = "margin-top: 90px;")
                                        ),
-                                       shiny::mainPanel(
+                                       column(
                                          width = 9,
                                          shinycssloaders::withSpinner(
                                            highcharter::highchartOutput(ns("plot_mv_gender"), height = "500px"),
@@ -434,7 +436,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                     style = "top: 15px;",
                                     width = 2,
                                     tags$a(
-                                      href = "https://www.mint-vernetzt.de/studien-und-umfragen/#genderbefragung",
+                                      href = "https://www.mint-vernetzt.de/studien-und-umfragen/#gender",
                                       target = "_blank",
                                       tags$img(src = "www/Außerschulisch_Befragung_Gender.png",
                                                style = "position: relative; float: inline-end;
@@ -574,7 +576,7 @@ mod_ausserschulisch_start_server <- function(id, r){
     )
 
     output$plot_mv_gender <- highcharter::renderHighchart(
-      plot_mv_genderb(r)
+      plot_mv_genderb()
     )
 
     # SKf ----

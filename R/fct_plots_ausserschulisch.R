@@ -808,7 +808,8 @@ plot_mv_stimmung <- function(r){
   if(frage == "Nutzung des Ganztags"){
     frage_typ <-  c("Der Ganztag sollte eher für schulische Zwecke wie Hausaufgabenbetreuung genutzt werden.",
                     "Der Ganztag sollte eher für Freizeitangebote wie Sport, Kunst und Mustik genutzt werden.",
-                    "Der Ganzag sollte als Bildungsort genutzt werden und dabei auch MINT-Bildungsangebote einbinden.")
+                    "Der Ganztag sollte als Bildungsort genutzt werden und dabei auch MINT-Bildungsangebote einbinden.")
+
 
     df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
       dplyr::filter(typ %in% frage_typ,
@@ -901,26 +902,27 @@ plot_mv_stimmung <- function(r){
     return(plot)
 }
 
-plot_mv_genderb <- function(r){
+plot_mv_genderb <- function(){
 
-  thema_wahl <- r$thema_wahl_gender
+ # thema_wahl <- r$thema_wahl_gender
 
-  if(thema_wahl == "Vernetzungswunsch"){
+  #if(thema_wahl == "Vernetzungswunsch"){
 
     df <- dplyr::tbl(con, "ausserschulisch_genderbefragung") %>%
-      dplyr::filter(thema %in% thema_wahl) %>%
+      dplyr::filter(thema == "Vernetzungswunsch") %>%
       dplyr::collect()
 
     # Title und Texte vorbereiten
     titel <- "Aktivität im MINT-Bildungsnetzwerk und Vernetzungswunsch"
-    subtitel <- "Angaben von 456 MINT-Bildungsanbieter:innen mit Interesse oder Angeboten im Bereich MINT-Förderung für Mädchen und Frauen"
+    subtitel <- "Angaben von 456 MINT-Bildungsanbieter:innen mit Interesse
+                       oder Angeboten im Bereich MINT-Förderung für Mädchen und Frauen"
 
     df <- df %>%
       dplyr::mutate(
         gruppe = dplyr::case_when(
-          gruppe == "Die moderat Aktiven" ~ "Die moderat Aktiven: hohe Motivation, hoher Vernetzungswunsch, moderat Vernetzt",
-          gruppe == "Die hoch Aktiven" ~ "Die hoch Aktiven: aktiv vernetzt, weiterhin hoher Vernetzungswunsch",
-          gruppe == "Die moderat Passiven" ~ "Die moderat Passiven: wenig aktiv vernetzt, passives Netzwerk, geringer Vernetzungswunsch"
+          gruppe == "Die moderat Aktiven" ~ "Die mit Vernetzungswunsch",
+          gruppe == "Die hoch Aktiven" ~ "Die Aktiven",
+          gruppe == "Die moderat Passiven" ~ "Die Passiven"
         )
       )
 
@@ -939,47 +941,63 @@ plot_mv_genderb <- function(r){
                                align = "center",
                                style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"))
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+      highcharter::hc_caption(text =  "Die Befragten zeichnen sich durch aktive Vernetzung und einen hohen
+                       Vernetzungswunsch aus. Das trifft auf 86% der Bildungsanbieter:innen zu.") %>%
+      highcharter::hc_plotOptions(
+        pie = list(
+          dataLabels = list(
+            style = list(
+              fontSize = "14px",  # Schriftgröße für die Labels anpassen
+              fontFamily = "SourceSans3-Regular"
+            )
+          )
+        )
+      )
     # %>%
     #   highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"))
 
 
-  }else if(thema_wahl == "Netzwerk"){
-
-    df <- dplyr::tbl(con, "ausserschulisch_genderbefragung") %>%
-      dplyr::filter(thema %in% thema_wahl) %>%
-      dplyr::collect()
-
-    # Title und Texte vorbereiten
-    titel <- "Vertrautheit mit dem MINT-Bildungsnetzwerk und Rahmenbedingungen für Vernetzung"
-    subtitel <- paste0("Mittelwert auf einer Skala von 1 (stimme gar nicht zu) und 4 (stimme voll zu) \n\n\n
-                       Angaben von 456 MINT-Bildungsanbieter:innen mit Interesse oder Angeboten im Bereich MINT-Förderung für Mädchen und Frauen")
-
-    plot <- df %>%
-      highcharter::hchart(
-        "bar", highcharter::hcaes(x = gruppe, y = wert)
-      )%>%
-      highcharter::hc_tooltip(
-        pointFormat=paste('Mittelwert: {point.wert}')) %>%
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors =  c("#b16fab", "#154194")))%>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"),
-                            pointsWidth=100, min = 1, max = 4, tickInterval = 1) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"))
-
-  }
+  # }else if(thema_wahl == "Netzwerk"){
+  #
+  #   df <- dplyr::tbl(con, "ausserschulisch_genderbefragung") %>%
+  #     dplyr::filter(thema %in% thema_wahl) %>%
+  #     dplyr::collect()
+  #
+  #   # Title und Texte vorbereiten
+  #   titel <- "Vertrautheit mit dem MINT-Bildungsnetzwerk und Rahmenbedingungen für Vernetzung"
+  #   subtitel <- paste0("Mittelwert auf einer Skala von 1 (stimme gar nicht zu) und 4 (stimme voll zu) \n\n\n
+  #                      Angaben von 456 MINT-Bildungsanbieter:innen mit Interesse oder Angeboten im Bereich MINT-Förderung für Mädchen und Frauen")
+  #
+  #   plot <- df %>%
+  #     highcharter::hchart(
+  #       "bar", highcharter::hcaes(x = gruppe, y = wert)
+  #     )%>%
+  #     highcharter::hc_tooltip(
+  #       pointFormat=paste('Mittelwert: {point.wert}')) %>%
+  #     highcharter::hc_plotOptions(bar = list(
+  #       colorByPoint = TRUE,
+  #       colors =  c("#b16fab", "#154194")))%>%
+  #     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
+  #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"),
+  #                           pointsWidth=100, min = 1, max = 4, tickInterval = 1) %>%
+  #     highcharter::hc_xAxis(title = list(text = "")) %>%
+  #     highcharter::hc_title(text = titel,
+  #                           margin = 45,
+  #                           align = "center",
+  #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+  #     highcharter::hc_subtitle(text = subtitel,
+  #                              align = "center",
+  #                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+  #     highcharter::hc_chart(
+  #       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+  #     highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+  #     highcharter::hc_caption(text = "Im Mittel betrachtet stimmen die Befragten dem zu, dass sie mit
+  #                             ihrem MINT-Bildungsnetzwerk vertraut sind. Noch stärker fällt die mittlerer
+  #                             Zustimmung dafür aus, dass die Bildungsakteur:innen von ihren Institutionen
+  #                             durch günstige Rahmenbedingungen bei der Vernetzung unterstützt werden.")
+  #
+  # }
 
 
   return(plot)
