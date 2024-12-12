@@ -16,7 +16,7 @@ mod_ausserschulisch_mvb_genderb_ui <- function(id){
 
     br(),
     shinyBS::bsPopover(id="ih_ausserschulisch_mvb3", title="",
-                       content = paste0("Text fehlt noch"),
+                       content = paste0("Ich habe keine Ahnung "),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_ausserschulisch_mvb3")
 

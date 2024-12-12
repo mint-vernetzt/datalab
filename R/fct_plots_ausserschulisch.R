@@ -810,6 +810,7 @@ plot_mv_stimmung <- function(r){
                     "Der Ganztag sollte eher für Freizeitangebote wie Sport, Kunst und Mustik genutzt werden.",
                     "Der Ganztag sollte als Bildungsort genutzt werden und dabei auch MINT-Bildungsangebote einbinden.")
 
+
     df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
       dplyr::filter(typ %in% frage_typ,
                     indikator == gruppe) %>%
