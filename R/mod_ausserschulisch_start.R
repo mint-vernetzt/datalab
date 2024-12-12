@@ -209,7 +209,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                                class = "img-responsive",
                                                #height = "150px", width = "150px",
                                                alt = "Bild Zahlen Nutzung Community Plattform",
-                                               style = "max-width: 35%;")
+                                               style = "max-width: 55%;")
                                          ),
                                          p("Nicht alle Profile sind vollständig ausgefüllt. In den hier gezeigten Darstellungen werden diejenigen Profile berücksichtigt,
                                          die zu der betrachteten Eigenschaft Angaben gemacht haben."),
