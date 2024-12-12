@@ -36,10 +36,10 @@ mod_ausserschulisch_start_ui <- function(id){
           "Auf dieser Seite zeigen wir Daten aus dem außerschulischen MINT-Bildungsbereich.
           Amtliche Statistiken für den außerschulischen Bereich liegen nicht vor. Hier wollen wir
           schrittweise immer mehr weiße Flecken der außerschulischen MINT-Bildungslandschaft füllen."),
-        p("Erstens zeigen wir Daten von MINTvernetzt. Hier nutzen wir die Daten der Community Plattform und
+        p("Wir zeigen Daten von MINTvernetzt. Hierzu nutzen wir die Daten der Community-Plattform und
           stellen dar, wie viele Organsiationen, Projekte und Personen in welchen Bereichen der außerschulischen MINT-Bildung
-          tätig sind. Außerdem zeigen wir eine Auswahl an Ergebnisse von Befragungen von MINTvernetzt."),
-        p("Zweitens zeigen wir Daten aus der außerschulischen MINT-Bildungs-Community. Aktuell sind das Zahlen der Stiftung
+          tätig sind. Außerdem zeigen wir eine Auswahl an Ergebnisse von Befragungen durch MINTvernetzt."),
+        p("Zweitens zeigen wir Daten aus der außerschulischen MINT-Bildungscommunity. Aktuell sind das Zahlen der Stiftung
           Kinder forschen. Liegen in Ihrem Projekt Daten vor, die für die außerschulische MINT-Bildungslandschaft interessant
           sein könnten, kommen Sie gerne per E-Mail auf uns zu.")
       ),
@@ -49,7 +49,7 @@ mod_ausserschulisch_start_ui <- function(id){
         width = 5,
         p(style = "text-align: left; font-size = 16px",
           "Sind alle Zahlen und Grafiken verständlich dargestellt? Haben Sie eigene Daten, die für Akteur:innen in der MINT-Bildung interessant sein könnten?", br(),
-          "Kontaktieren Sie uns gern! Wir freuen uns über Rückfragen, Vorschläge oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
+          "Kontaktieren Sie uns gern! Wir freuen uns über Rückfragen, Vorschläge oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über eine Teilnahme an unserer kurzen",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         , br(), br(), br(), br(), br(), br())
       )
@@ -60,7 +60,7 @@ mod_ausserschulisch_start_ui <- function(id){
         title = "Links zu den Themen dieser Seite",
         width = 7,
         p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_community_plattform",
-                                                              span(tags$b(span("Außerschulische MINT-Aktreur:innen:")))),"Unsere MINTverentzt-Community in Zahlen."
+                                                              span(tags$b(span("Außerschulische MINT-Akteur:innen:")))),"Unsere MINTverentzt-Community in Zahlen."
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_befragung",
                                                               span(tags$b(span("MINTvernetzt Befragungen:")))),"Was sagt die Community über sich und MINT in Deutschland."
@@ -98,16 +98,16 @@ mod_ausserschulisch_start_ui <- function(id){
                 width = 12,
                 column(
                   width = 8,
-                  p("Die Community Plattform von MINTvernetzt ist eine Plattform für
-                    das Vernetzten und Wissen teilen zwischen MINT-Bildungsakteur:innen. Die Plattform
-                    wurde im Herbst 2022 livegeschaltet und wurde und wird seitdem stetig weiterentwickelt.
+                  p("Die Community-Plattform von MINTvernetzt ist eine Plattform für
+                    das Vernetzen, Austauschen und dem Teilen von Wissen zwischen MINT-Bildungsakteur:innen. Die Plattform
+                    wurde im Herbst 2022 livegeschaltet und wird seitdem stetig weiterentwickelt.
                     Auf der Community Plattform können Profile für Personen, Projekte, Organisationen oder
-                    Netzwerke angelegt werden, die Informationen über Themenbereiche, Zielgruppen, Aktivitätstgebiet und vielem mehr
+                    Netzwerke angelegt werden, die Informationen über Themenbereiche, Zielgruppen, Aktivitätsgebiete und vielem mehr
                     enthalten."),
                   br(),
-                  p("Für die folgenden Darstellungen wurden die Daten der MINTvernetzt Community Plattform aggregiert und ausgewertet.
-                    Entsprechend können die Grafiken nur die Akteur:innen, Projekte und Organsiationen darstellen, die
-                    Teil des Netzwerks sind. Diese Angaben können nicht das vollständige Angebot der außerschulischen
+                  p("Für die folgenden Darstellungen wurden die Daten der MINTvernetzt Community-Plattform aggregiert und ausgewertet.
+                    Entsprechend bilden die folgenden Grafiken nur die Akteur:innen, Projekte und Organsiationen ab, die
+                    Teil des MINTvernetzt-Netzwerks sind. Diese Angaben können nicht das vollständige Angebot der außerschulischen
                     MINT-Bildung abdecken. Sie können allerdings einen Einblick geben, in welchen Themenbereichen, für welche Zielgruppen und in welchen Regionen
                     MINT-Akteur:innen besonders aktiv sind."),
                   br(),
@@ -202,7 +202,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                        column(
                                          width = 8,
                                          p("Die hier gezeigten Daten haben keinen Anspruch darauf, den MINT-Bildungsbereich vollständig abzubilden.
-                                         Wir geben hier einen Einblick in die Daten, welche MINTvernetzt vorliegen."),
+                                         Wir geben hier einen Einblick in die Daten, die MINTvernetzt vorliegen."),
                                          div(
                                            style = "display: flex; justify-content: center; align-items: center; margin-bottom: 25px;",
                                            img(src='www/Ausserschulisch_cp_Zahlen.png',
@@ -211,7 +211,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                                alt = "Bild Zahlen Nutzung Community Plattform",
                                                style = "max-width: 35%;")
                                          ),
-                                         p("Nicht alle Profile sind vollständig ausgefüllt. In den hier gezeigten Darstellungen werden alle die Profile berücksichtigt,
+                                         p("Nicht alle Profile sind vollständig ausgefüllt. In den hier gezeigten Darstellungen werden diejenigen Profile berücksichtigt,
                                          die zu der betrachteten Eigenschaft Angaben gemacht haben."),
                                          div(
                                            style = "display: flex; justify-content: center; align-items: center; margin-bottom: 25px;
@@ -259,13 +259,13 @@ mod_ausserschulisch_start_ui <- function(id){
                     zu den Befragungen finden sich auf der MINTvernetzt-Website. Weitere Hinweise und Verlinkungen finden
                     sich unter den jeweiligen Befragungsergebnissen und unter \"Informationen zu den Befragungen\"."),
                   br(),
-                  p("Die Ergebnisse der MINTvernetzt-Akteursbefragung zeigen z. B., dass 4 von 5 der befragten
-                    MINT-Bildungsakteur:innen hauptberuflich tätig sind, und etwas mehr als ein Drittel trotz ihres
-                    Engagement in MINT keinen MINT-Bildungshintergrund haben.",
-                    "Eine der hier dargestellten Fragen des MINT-Stimmungsbarometers zeigen, dass die Befragten
+                  p("Die Ergebnisse der MINTvernetzt-Akteursbefragung zeigen, dass z.B. vier von fünf der Befragten
+                    MINT-Bildungsakteur:innen hauptberuflich tätig sind. Etwas mehr als ein Drittel haben, trotz ihres
+                    Engagement in MINT, keinen MINT-Bildungshintergrund.",
+                    "Eine der hier dargestellten Fragen des MINT-Stimmungsbarometers zeigt, dass die Befragten
                     das Ganztagsangebots an Schulen besonders als Bildungsort unter Einbezug außerschulischer Angebote nutzen wollen würden.",
                     "In der MINTvernetzt-Genderbefragung von 2024 wurde ein Blick in die Vernetzung außerschulischer MINT-Bildungsakteur:innen
-                    geworfen, welche sie für Mädchen und Frauenförderung in MINT interessieren oder in diesem Bereich aktiv sind.
+                    geworfen, die sich für Mädchen- und Frauenförderung in MINT interessieren oder in diesem Bereich aktiv sind.
                     Hier zeigt sich, dass Bildungsnetzwerke in diesem Bereich vor allem durch Aktivität und hohe Vernetzungswünsche geprägt sind."),
 
                 ),
@@ -306,7 +306,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                        )
                               ),
                               # Tab 2
-                              tabPanel("MINT-Stimmungabarometer: Nutzung des Ganztags", br(),
+                              tabPanel("MINT-Stimmungsbarometer: Nutzung des Ganztags", br(),
                                        shiny::sidebarPanel(
                                          width = 3,
                                          tags$style(".well {background-color:#FFFFFF;}"),
@@ -467,9 +467,9 @@ mod_ausserschulisch_start_ui <- function(id){
                (kurz SKf; früher: 'Haus der kleinen Forscher')."),
 
                  p("Die Anzahl an Kitas, Grundschulen und Horte, die durch die Stiftung Kinder forschen für ihr MINT-Bildungsengagement
-               zertifiziert wurden oder deren Personal durch die SKf fortgebildet wurde, wächst. Allerdings hat sich während der Jahre,
-               die akut von der Corona-Pandemie betroffen waren, verlangsamt. Das spiegelt sich auch in den Zahlen der neu fortgebildeten Personen wider.
-               Während zwischen 2013 und 2018 jährlich zwischen 6.000 und 8.000 Personen dazukamen, sind es im Jahr 2022 nur 2.000."), br(),
+               zertifiziert wurden oder deren Personal durch die SKf fortgebildet wurde, wächst. Während der Corona-Pandemie 2020-2021
+               hat sich das Wachstum drastisch verlangsamt. Das spiegelt sich auch in den Zahlen der neu fortgebildeten Personen wider.
+               Während zwischen 2013 und 2018 jährlich zwischen 6.000 und 8.000 Personen hinzukamen, sind es im Jahr 2022 nur 2.000."), br(),
                  p("Dies sind bislang die einzigen Darstellungen aus dem Bereich der außerschulischen MINT-Bildung. Hier wird in Zukunft noch mehr hinzukommen.")
                ),
                column(
