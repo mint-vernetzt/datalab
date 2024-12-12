@@ -22,7 +22,7 @@ mod_ausserschulisch_mvb_stimmungsb_ui <- function(id){
 
     br(),
     shinyBS::bsPopover(id="ih_ausserschulisch_mvb2", title="",
-                       content = paste0("Text fehlt noch"),
+                       content = paste0("Die erste Einstellung zeigt zwei der mehreren möglichen Antworten im MINT-Stimmungsbarometer auf die Frage, wie der Ganztag am besten genutzt werden sollte. Dabei stimmen gleichermaßen mehr als die Hälfte der Befragten zu, dass der Ganztag eher für Freizeitangebote wie Sport oder Kunst und/oder eher für schulische Zwecke genutzt werden sollte."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_ausserschulisch_mvb2")
 

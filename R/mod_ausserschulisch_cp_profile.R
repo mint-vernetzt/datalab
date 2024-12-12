@@ -71,7 +71,7 @@ mod_ausserschulisch_cp_profile_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_ausserschulisch_cp3", title="",
-                       content = paste0("Text fehlt noch"),
+                       content = paste0("In der ersten Einstellung ist zu sehen, dass es deutlich weniger Gesuche (4.6 %) als angebotene Angebote (37.8 %) in den Digitalen Kompetenzen gibt. Die Prozentzahlen sind für die einzelnen Kategorien getrennt zu interpretieren aufgrund von Mehrfachangaben. So haben 37.8 % der Profile Digitale Kompetenzen als Angebot auf ihren Profilen angegeben, während nur 4.6 % aller Profile angegeben haben, nach Digitalen Kompetenzen zu suchen. "),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_ausserschulisch_cp3")
 

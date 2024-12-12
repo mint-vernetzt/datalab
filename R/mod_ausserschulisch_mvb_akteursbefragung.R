@@ -27,7 +27,7 @@ mod_ausserschulisch_mvb_akteursbefragung_ui <- function(id){
                     ),
     br(),
     shinyBS::bsPopover(id="ih_ausserschulisch_mvb1", title="",
-                       content = paste0("Text fehlt noch"),
+                       content = paste0("In der ersten Einstellung ist zu sehen, dass ein großer Teil von mehr als 80 % (zumindest nach der Umfrage!) der Bildungsakteur:innen in MINT hauptberuflich in dieser Position tätig sind. "),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_ausserschulisch_mvb1")
 

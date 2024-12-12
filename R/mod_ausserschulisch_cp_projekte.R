@@ -63,7 +63,7 @@ mod_ausserschulisch_cp_projekte_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_ausserschulisch_cp2", title="",
-                       content = paste0("Betrachtet man die Anzahl der Projekte"),
+                       content = paste0("Betrachtet man die Anzahl der Projekte auf der Community-Plattform, erkennt man in der ersten Einstellung, dass 60% der Projekte an Schüler:innen der Sekundarstufe I gerichtet ist, 50% an Schüler:innen der Sekundarstufe I. Durch Überschneidungen der Zielgruppen, die durch die Mehrfachauswahl miterfasst wurde, ergeben die Prozentzahlen kumulativ nicht 100%. So sind zwar 60% aller Projekte an Schüler:innen der Sek. I gerichtet, jedoch sind dieselben Projekte beispielsweise auch an Schüler:innen der Sek. I oder Kinder der Primarstufe gerichtet. "),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_ausserschulisch_cp2")
 
