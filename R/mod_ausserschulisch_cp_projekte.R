@@ -9,9 +9,9 @@ mod_ausserschulisch_cp_projekte_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("chara_cp_pros"),
       label = NULL,
-      choices = c("Zielgruppe", "weitere Zielgruppe",
+      choices = c("Zielgruppe", "spezifische Zielgruppe" = "weitere Zielgruppe",
                   "MINT-Disziplin", "weitere Disziplin",
-                  "Region", "Format", "Finanzierung"),
+                  "Aktivitätsgebiet" = "Region", "Format", "Finanzierung"),
       selected = "Zielgruppe"
     ),
     conditionalPanel(condition = "input.chara_cp_pros != 'Region'",

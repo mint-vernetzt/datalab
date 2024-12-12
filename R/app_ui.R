@@ -44,9 +44,9 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Studium",  tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
-          shinydashboard::menuItem("Außerschulische MINT-Bildung", tabName = "ausserschulisch"),
-          shinydashboard::menuItem("Fokus: MINT International", tabName = "international"),
+          shinydashboard::menuItem("Fokus: Außerschulische Bildung", tabName = "ausserschulisch"),
           shinydashboard::menuItem("Fokus: MINT-Fachkräfte",  tabName = "fachkraft"),
+          shinydashboard::menuItem("Fokus: MINT International", tabName = "international"),
         # shinydashboard::menuItem("BETA: Suche",  tabName = "suche"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen")
         #,

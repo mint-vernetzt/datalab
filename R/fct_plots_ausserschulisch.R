@@ -879,7 +879,8 @@ plot_mv_stimmung <- function(r){
                                  align = "center",
                                  style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) #%>%
+          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"))#%>%
         # highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
         # highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
         #                                        dataLabels = list(enabled = TRUE,  format='{point.wert} %'), showInLegend = TRUE))
@@ -889,6 +890,90 @@ plot_mv_stimmung <- function(r){
 
 
     return(plot)
+}
+
+plot_mv_genderb <- function(r){
+
+  thema_wahl <- r$thema_wahl_gender
+
+  if(thema_wahl == "Vernetzungswunsch"){
+
+    df <- dplyr::tbl(con, "ausserschulisch_genderbefragung") %>%
+      dplyr::filter(thema %in% thema_wahl) %>%
+      dplyr::collect()
+
+    # Title und Texte vorbereiten
+    titel <- "Aktivität im MINT-Bildungsnetzwerk und Vernetzungswunsch"
+    subtitel <- "Angaben von 456 MINT-Bildungsanbieter:innen mit Interesse oder Angeboten im Bereich MINT-Förderung für Mädchen und Frauen"
+
+    df <- df %>%
+      dplyr::mutate(
+        gruppe = dplyr::case_when(
+          gruppe == "Die moderat Aktiven" ~ "Die moderat Aktiven: hohe Motivation, hoher Vernetzungswunsch, moderat Vernetzt",
+          gruppe == "Die hoch Aktiven" ~ "Die hoch Aktiven: aktiv vernetzt, weiterhin hoher Vernetzungswunsch",
+          gruppe == "Die moderat Passiven" ~ "Die moderat Passiven: wenig aktiv vernetzt, passives Netzwerk, geringer Vernetzungswunsch"
+        )
+      )
+
+    plot <- df %>%
+      highcharter::hchart(
+        "pie", highcharter::hcaes(x = gruppe, y = wert)
+      )%>%
+      highcharter::hc_tooltip(
+        pointFormat=paste('Anteil: {point.wert} %')) %>%
+      highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf")) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               align = "center",
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"))
+    # %>%
+    #   highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"))
+
+
+  }else if(thema_wahl == "Netzwerk"){
+
+    df <- dplyr::tbl(con, "ausserschulisch_genderbefragung") %>%
+      dplyr::filter(thema %in% thema_wahl) %>%
+      dplyr::collect()
+
+    # Title und Texte vorbereiten
+    titel <- "Vertrautheit mit dem MINT-Bildungsnetzwerk und Rahmenbedingungen für Vernetzung"
+    subtitel <- paste0("Mittelwert auf einer Skala von 1 (stimme gar nicht zu) und 4 (stimme voll zu) \n\n\n
+                       Angaben von 456 MINT-Bildungsanbieter:innen mit Interesse oder Angeboten im Bereich MINT-Förderung für Mädchen und Frauen")
+
+    plot <- df %>%
+      highcharter::hchart(
+        "bar", highcharter::hcaes(x = gruppe, y = wert)
+      )%>%
+      highcharter::hc_tooltip(
+        pointFormat=paste('Mittelwert: {point.wert}')) %>%
+      highcharter::hc_plotOptions(bar = list(
+        colorByPoint = TRUE,
+        colors =  c("#b16fab", "#154194")))%>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"),
+                            pointsWidth=100, min = 1, max = 4, tickInterval = 1) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               align = "center",
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+      highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"))
+
+  }
+
+
+  return(plot)
 }
 
 # SkF ----

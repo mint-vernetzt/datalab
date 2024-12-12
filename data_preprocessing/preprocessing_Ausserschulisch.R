@@ -511,6 +511,16 @@ setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MIN
 save(ausserschulisch_stimmungsbarometer, file = "ausserschulisch_stimmungsbarometer.rda")
 rm(list=ls())
 
+## Genderbefragung ----
+df_gen <- readxl::read_excel(paste0(pfad,"/CP004_MINTvernetzt_Befragungsdaten.xlsx"),
+                                sheet = "Genderbefragung", col_names = TRUE)
+
+# Speichern
+ausserschulisch_genderbefragung <- df_gen
+setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+save(ausserschulisch_genderbefragung, file = "ausserschulisch_genderbefragung.rda")
+rm(list=ls())
+
 # Stiftung Kinder Forschen ------------------------------------------------
 
 ## Rohdatensatz einlesen ----

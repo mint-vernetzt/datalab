@@ -15,34 +15,39 @@ mod_startseite_start_ui <- function(id){
 
 
     fluidRow(
-      shinydashboard::box(
-        width = 12,
+      div(class = "clean-box",
+          column(
+            width = 12,
         img(src='www/Banner_Willkommen.jpg',
             class = "img-responsive",
             height = "300px",
             # width = "150px",
             alt = "Banner Start",
             style="display: block; margin-left: auto; margin-right: auto;"
-        ))),
+        )))),
 
     # Einleitungstext
     fluidRow(
-      shinydashboard::box(
-        width = 8,
-        title = "Willkommen im MINT-DataLab von MINTvernetzt!",
-        p(style = "text-align: justify; font-size = 20px",
-          "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
+        div(class = "clean-box",
+          column(
+          width = 10,
+          h1("Willkommen im MINT-DataLab von MINTvernetzt!"),
+          p(style = "text-align: justify; font-size = 20px",
+            "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
             Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
                   für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver
           Diagramme einen intuitiven und informativen Zugang zu gewähren. Dabei entwickeln wir das MINT-DataLab stetig weiter.",
-          br()
-      )
-    )
+            br()
+          )
+        )
+        )
     ),
 
     # Dynamische Grafiken
     fluidRow(
-      shinydashboard::box(
+      div(
+        class = "clean-box",
+        column(
         width = 10,
         title = "Was steckt hinter den MINT-Statistiken?",
         p(style = "text-align: justify; font-size = 20px",
@@ -52,11 +57,12 @@ mod_startseite_start_ui <- function(id){
           # LINK ergänzen, wenn da (Nike)
           br()),
         tags$a(href="https://www.mint-vernetzt.de/mint-datalab/#kurzanalysen", "Link zu den Kurzanalysen", target = "_blank"),
-        p(br()),
+        p(br())
+        ),
 
         slickR::slickROutput(ns("slider_output"), width = '900px', height = '500px'),
 
-        p(br(),br())
+        p(br(),br(),br(),br(),br(),br())
       )
     ),
 
@@ -95,19 +101,22 @@ mod_startseite_start_ui <- function(id){
             # height = "800px",
             #width = "150px",
             alt = "How to",
-            style="display: block; margin-left: auto; margin-right: auto;"
+            style="display: block; margin-left: auto; margin-right: auto;
+            max-width: 80%;"
         ))
     ),
 
     fluidRow(
       shinydashboard::box(
+
         width = 10,
         img(src='www/howto_turan_neu_2.png',
             class = "img-responsive",
             # height = "800px",
             #width = "150px",
             alt = "How to",
-            style="display: block; margin-left: auto; margin-right: auto;"
+            style="display: block; margin-left: auto; margin-right: auto;
+            max-width: 80%;"
         ))
     ),
 

@@ -30,6 +30,7 @@ mod_ausserschulisch_server <- function(id, r){
   # Box 2 - MV-Befragungne
   mod_ausserschulisch_mvb_akteursbefragung_server("mod_ausserschulisch_mvb_akteursbefragung_ui_1", r)
   mod_ausserschulisch_mvb_stimmungsb_server("mod_ausserschulisch_mvb_stimmungsb_ui", r)
+  mod_ausserschulisch_mvb_genderb_server("mod_ausserschulisch_mvb_genderb_ui", r)
 
   #Box SKf
   mod_ausserschulisch_skf_einrichtungen_server("mod_ausserschulisch_skf_einrichtungen_ui_1", r)

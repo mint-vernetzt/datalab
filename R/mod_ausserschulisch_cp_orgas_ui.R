@@ -9,7 +9,7 @@ mod_ausserschulisch_cp_orgas_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("chara_cp_orgas"),
       label = NULL,
-      choices = c("Organisationstyp", "Fokus", "Region"),
+      choices = c("Organisationstyp", "Arbeitsfokus" = "Fokus", "Aktivitätsgebiet" = "Region"),
       selected = "Organisationstyp"
     ),
     conditionalPanel(condition = "input.chara_cp_orgas != 'Region'",
