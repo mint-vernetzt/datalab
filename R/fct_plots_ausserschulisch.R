@@ -810,6 +810,7 @@ plot_mv_stimmung <- function(r){
                     "Der Ganztag sollte eher für Freizeitangebote wie Sport, Kunst und Mustik genutzt werden.",
                     "Der Ganztag sollte als Bildungsort genutzt werden und dabei auch MINT-Bildungsangebote einbinden.")
 
+
     df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
       dplyr::filter(typ %in% frage_typ,
                     indikator == gruppe) %>%
@@ -912,16 +913,16 @@ plot_mv_genderb <- function(){
       dplyr::collect()
 
     # Title und Texte vorbereiten
-    titel <- "Aktivität im MINT-Bildungsnetzwerk und Vernetzungswunsch"
-    subtitel <- "Angaben von 456 MINT-Bildungsanbieter:innen mit Interesse
-                       oder Angeboten im Bereich MINT-Förderung für Mädchen und Frauen"
+    titel <- "Aktivität und Vernetzung in MINT-Bildungsnetzwerken zum Thema MINT-Förderung
+    für Mädchen und Frauen"
+    subtitel <- "Angaben von 456 MINT-Bildungsanbieter:innen"
 
     df <- df %>%
       dplyr::mutate(
         gruppe = dplyr::case_when(
-          gruppe == "Die moderat Aktiven" ~ "Die mit Vernetzungswunsch",
-          gruppe == "Die hoch Aktiven" ~ "Die Aktiven",
-          gruppe == "Die moderat Passiven" ~ "Die Passiven"
+          gruppe == "Die moderat Aktiven" ~ "Die moderat Aktiven",
+          gruppe == "Die hoch Aktiven" ~ "Die hoch Aktiven",
+          gruppe == "Die moderat Passiven" ~ "Die moderat Passiven"
         )
       )
 
@@ -941,8 +942,12 @@ plot_mv_genderb <- function(){
                                style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      highcharter::hc_caption(text =  "Die Befragten zeichnen sich durch aktive Vernetzung und einen hohen
-                       Vernetzungswunsch aus. Das trifft auf 86% der Bildungsanbieter:innen zu.") %>%
+      highcharter::hc_caption(text =  "Die Gruppe der bislang moderat aktiven MINT-Bildungsanbieter:innen zeichnet
+                              sich durch einen großen Vernetzungswunsch und eine hohe Motivation aus,
+                              sich aktiv in Netzwerke zum Thema MINT-Förderung für Mädchen einzubringen,
+                              was auf ein großes Aktivierungspotenzial hinweist.
+                              Die Gruppe der hoch Aktiven ist bereits sehr motiviert und engagiert in ihrem Netzwerk.
+                              Die kleinste Gruppe der Befragten nimmt stattdessen lieber passive an Netzwerkaktivitäten teil.") %>%
       highcharter::hc_plotOptions(
         pie = list(
           dataLabels = list(

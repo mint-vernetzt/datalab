@@ -336,19 +336,19 @@ mod_ausserschulisch_start_ui <- function(id){
                                        )
                               ),
                               # Tab 3
-                              tabPanel("MINTvernetzt-Genderbefragung: Netzwerke der Mädchenförderung", br(),
+                              tabPanel("MINTvernetzt-Genderbefragung: Aktive Vernetzung", br(),
                                        column(
                                          width = 3,
                                          # tags$style(".well {background-color:#FFFFFF;}"),
                                          # tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                          # mod_ausserschulisch_mvb_genderb_ui("mod_ausserschulisch_mvb_genderb_ui"),
-                                         tags$img(src = "www/Ausserschulisch_Gender_Text.png",
+                                         tags$img(src = "www/Ausserschulisch_Gender_Tabelle.png",
                                                   style = "margin-top: 90px;")
                                        ),
                                        column(
                                          width = 9,
                                          shinycssloaders::withSpinner(
-                                           highcharter::highchartOutput(ns("plot_mv_gender"), height = "500px"),
+                                           highcharter::highchartOutput(ns("plot_mv_gender"), height = "600px"),
                                            color = "#154194"),
 
                                          p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt 2024."),
@@ -372,7 +372,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                       style= "top: 15px;",
                                       column(
                                         style = "top: 15px;",
-                                        width = 6,
+                                        width = 8,
                                         div(
                                           p(strong("MINTvernetzt-Akteursbefragung:", style = "color: #FCC433;")),
                                           p(tags$b("Ziel der Umfrage:"), "Übersicht über die MINT-Bildungsakteur:innen und ihre Bedarfe und Herausforderungen herstellen.", br(),
@@ -397,7 +397,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                   style= "top: 15px;",
                                   column(
                                     style = "top: 15px;",
-                                    width = 6,
+                                    width = 8,
                                     div(
                                       p(strong("MINT-Stimmungsbarometer:", style = "color: #00A87A;")),
                                       p(tags$b("Ziel der Umfrage:"), "Einblicke in die Stimmung zur Qualität der MINT-Bildung in Deutschland erlangen.", br(),
@@ -423,7 +423,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                   style= "top: 15px;",
                                   column(
                                     style = "top: 15px;",
-                                    width = 6,
+                                    width = 8,
                                     div(
                                       p(strong("MINTvernetzt-Genderbefragung:", style = "color: #b16fab;")),
                                       p(tags$b("Ziel der Umfrage:"), "Synergien und nachhaltige Fördereffekte für Mädchen in MINT schaffen, aufbauend auf den
