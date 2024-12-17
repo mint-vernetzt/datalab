@@ -10,7 +10,7 @@ mod_ausserschulisch_cp_projekte_ui <- function(id){
       inputId = ns("chara_cp_pros"),
       label = NULL,
       choices = c("Zielgruppe", "spezifische Zielgruppe" = "weitere Zielgruppe",
-                  "MINT-Disziplin", "weitere Disziplin",
+                  "MINT-Disziplin", "weitere Disziplin/ MINT+" = "weitere Disziplin",
                   "Aktivitätsgebiet" = "Region", "Format", "Finanzierung"),
       selected = "Zielgruppe"
     ),

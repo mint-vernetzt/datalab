@@ -51,7 +51,7 @@ mod_ausserschulisch_start_ui <- function(id){
           "Sind alle Zahlen und Grafiken verständlich dargestellt? Haben Sie eigene Daten, die für Akteur:innen in der MINT-Bildung interessant sein könnten?", br(),
           "Kontaktieren Sie uns gern! Wir freuen uns über Rückfragen, Vorschläge oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über eine Teilnahme an unserer kurzen",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
-        , br(), br(), br(), br(), br(), br())
+        )
       )
     ),
 
@@ -77,10 +77,9 @@ mod_ausserschulisch_start_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Daten zu den außerschulische MINT-Akteur:innen und Befragungen: Quelle MINTvernetzt, Stand November 2024."),
+          "Daten zu den außerschulische MINT-Akteur:innen und MINTvernetzt Befragungen: Quelle MINTvernetzt, Stand November 2024."),
         p(style = "text-align: left; font-size = 16px",
-          "Daten zu frühklindlicher Bildung: Quelle Stiftung Kinder forschen, 2023.",
-          br(),br(), br())
+          "Daten zu frühklindlicher Bildung: Quelle Stiftung Kinder forschen, 2023.")
       )
     ),
 
@@ -263,8 +262,8 @@ mod_ausserschulisch_start_ui <- function(id){
                     MINT-Bildungsakteur:innen hauptberuflich tätig sind. Etwas mehr als ein Drittel haben, trotz ihres
                     Engagement in MINT, keinen MINT-Bildungshintergrund.",
                     "Eine der hier dargestellten Fragen des MINT-Stimmungsbarometers zeigt, dass die Befragten
-                    das Ganztagsangebots an Schulen besonders als Bildungsort unter Einbezug außerschulischer Angebote nutzen wollen würden.",
-                    "In der MINTvernetzt-Genderbefragung von 2024 wurde ein Blick in die Vernetzung außerschulischer MINT-Bildungsakteur:innen
+                    das Ganztagsangebot an Schulen besonders als Bildungsort unter Einbezug außerschulischer Angebote nutzen wollen würden.",
+                    "In der MINTvernetzt-Genderbefragung von 2023 wurde ein Blick in die Vernetzung außerschulischer MINT-Bildungsakteur:innen
                     geworfen, die sich für Mädchen- und Frauenförderung in MINT interessieren oder in diesem Bereich aktiv sind.
                     Hier zeigt sich, dass Bildungsnetzwerke in diesem Bereich vor allem durch Aktivität und hohe Vernetzungswünsche geprägt sind."),
 
@@ -351,15 +350,17 @@ mod_ausserschulisch_start_ui <- function(id){
                                            highcharter::highchartOutput(ns("plot_mv_gender"), height = "600px"),
                                            color = "#154194"),
 
-                                         p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt 2024."),
+                                         p(),
+                                         p(style="font-size:14px;color:grey", "Quelle der Daten: MINTvernetzt 2024."),
                                          p(style = "font-size:16px; font-weight: 600;",
                                            br(),
-                                           "Die MINTvernetzt-Genderbefragung beschäftigt sich damit, inwieweit Genderaspekte in MINT-Bildungsangeboten
-                                           berücksichtigt werden und wie man Bildungsanbieter:innen dabei unterstützen kann.
-                                           Es werden zum einen Daten erhoben und dargestellt, zum anderen konkrete Empfehlungen und Tipps für die Bildungsarbeit abgeleitet.
-                                           Diese Tipps und die weiteren Ergebnisse der Befragung finden sich ",
-                                           tags$a(style = "color: #008F68; font-size: 16px;", href = "https://www.mint-vernetzt.de/studien-und-umfragen/#genderbefragung",
-                                                  target = "_blank", "hier, auf der MINTvernetzt-Website"),
+                                           "Die MINTvernetzt-Genderbefragungen untersuchen, inwieweit MINT-Bildungsangebote
+                                           verschiedene Aspekte einer nachhaltig erfolgreichen MINT-Förderung für Mädchen umsetzen
+                                           und wie sie dabei gezielt unterstützt werden können. Auf Basis der erhobenen Daten werden
+                                           praxisnahe Handlungsempfehlungen und Tipps für die Bildungsarbeit entwickelt.
+                                           Diese sowie weiteren Ergebnisse sind ",
+                                           tags$a(style = "color: #008F68; font-size: 16px;", href = "https://www.mint-vernetzt.de/studien-und-umfragen/#gender",
+                                                  target = "_blank", "hier, auf der MINTvernetzt-Website verfügbar"),
                                            "."), br(),
                                        )
                               ),
