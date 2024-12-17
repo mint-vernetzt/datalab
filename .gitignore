@@ -8,3 +8,6 @@
 *.xlsb
 *.csv
 *.duckdb
+*.png
+*.jpg
+*.pdf
