@@ -62,16 +62,18 @@ mod_ausserschulisch_start_ui <- function(id){
         p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_community_plattform",
                                                               span(tags$b(span("Außerschulische MINT-Akteur:innen:")))),"Unsere MINTverentzt-Community in Zahlen."
         ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_befragung",
+        p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_mintvernetzt_befragung",
                                                               span(tags$b(span("MINTvernetzt Befragungen:")))),"Was sagt die Community über sich und MINT in Deutschland."
 
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_skf",
                                                               span(tags$b(span("Frühkindliche Bildung:")))),"Zahl der MINT-aktiven Einrichtungen bei Stiftung Kinder forschen wächst stetig."
+        )
+        # ,
+        # p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_community_daten",
+        #                                                       span(tags$b(span("Daten aus der Community:")))),"Daten und Ergebnisse aus MINT-Projekten."
+        # )
         ),
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#ausserschulisch_community_daten",
-                                                              span(tags$b(span("Daten aus der Community:")))),"Daten und Ergebnisse aus MINT-Projekten."
-        )),
 
       shinydashboard::box(
         title = "Datenquellen",
@@ -247,7 +249,7 @@ mod_ausserschulisch_start_ui <- function(id){
 
     # MV-Befragungen ----
 
-    fluidRow( id="ausserschulisch_mint-vernetzt_befragungen",
+    fluidRow( id="ausserschulisch_mintvernetzt_befragung",
               shinydashboard::box(
                 title = "MINTvernetzt Befragungen: Was sagt die MINTvernetzt-Community?",
                 width = 12,
@@ -350,8 +352,8 @@ mod_ausserschulisch_start_ui <- function(id){
                                            highcharter::highchartOutput(ns("plot_mv_gender"), height = "600px"),
                                            color = "#154194"),
 
-                                         p(),
-                                         p(style="font-size:14px;color:grey", "Quelle der Daten: MINTvernetzt 2024."),
+                                         p(style="font-size:14px;color:grey", br(),
+                                           "Quelle der Daten: MINTvernetzt 2024."),
                                          p(style = "font-size:16px; font-weight: 600;",
                                            br(),
                                            "Die MINTvernetzt-Genderbefragungen untersuchen, inwieweit MINT-Bildungsangebote
