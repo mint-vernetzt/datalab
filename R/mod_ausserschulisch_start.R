@@ -497,7 +497,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_einrichtungen")),
+                                        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_einrichtungen"), height = "500px"),
                                                                      color = "#154194"),
 
                                         p(style="font-size:12px;color:grey",
@@ -525,7 +525,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_personal")),
+                                        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_personal"), height = "500px"),
                                                                      color = "#154194"),
 
                                         p(style="font-size:12px;color:grey",
