@@ -101,36 +101,46 @@ mod_startseite_start_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 10,
-        img(src='www/ht1.png',
+        img(src='www/HowToMINTDataLab1.png',
             class = "img-responsive",
             # height = "800px",
             #width = "150px",
             alt = "How to",
             style="display: block; margin-left: auto; margin-right: auto;
             max-width: 80%;"
-        ))
-    ),
-    br(),
-
-    fluidRow(
-      shinydashboard::box(
-
-        width = 10,
-        style = "margin-top: 0; padding: 0;",
-        img(src='www/ht2_neu.png',
+        ),
+        img(src='www/HowToMINTDataLab2.png',
             class = "img-responsive",
             # height = "800px",
             #width = "150px",
             alt = "How to",
             style="display: block; margin-left: auto; margin-right: auto;
             max-width: 80%;"
-        ))
+        )
+        )
     ),
+    # br(),
+    #
+    # fluidRow(
+    #   shinydashboard::box(
+    #
+    #     width = 10,
+    #     style = "margin-top: 0; padding: 0;",
+    #     img(src='www/ht2_neu.png',
+    #         class = "img-responsive",
+    #         # height = "800px",
+    #         #width = "150px",
+    #         alt = "How to",
+    #         style="display: block; margin-left: auto; margin-right: auto;
+    #         max-width: 80%;"
+    #     ))
+    # ),
 
 
     # Footer
     fluidRow(
       shinydashboard::box(
+        style = "margin-top: 20px",
         width = 12,
         funct_footer()
       )

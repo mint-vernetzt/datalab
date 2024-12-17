@@ -99,6 +99,7 @@ background-color:#FCFCFD;
     box-shadow: 0px 0px 0px rgba(0,0,0,0);
     border: 1px solid #EAECF0;
     border-radius: 10px;
+    margin-bottom: 15px;
 
 }
 
@@ -301,16 +302,4 @@ background-color:#FCFCFD;
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-/* Remove spacing between fluidRow elements */
-.row {
-    margin-bottom: 0 !important;
-    margin-top: 0 !important;
-}
-
-/* Adjust box spacing */
-.box {
-    margin-bottom: 0 !important;
-    padding: 0 !important;
 }

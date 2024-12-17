@@ -13,14 +13,15 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
     # Banner
       fluidRow(
-        shinydashboard::box(
-          width = 12,
-          img(src='www/Banner_Ausbildung_Beruf.jpg',
-              class = "img-responsive",
-              #height = "150px", width = "150px",
-              alt = "Banner Beruf",
-              style="display: block; margin-left: auto; margin-right: auto;"
-          ))),
+        div(class = "clean-box",
+            column(
+              width = 12,
+              img(src='www/Banner_Ausbildung_Beruf.jpg',
+                  class = "img-responsive",
+                  #height = "150px", width = "150px",
+                  alt = "Banner Beruf",
+                  style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px;"
+              )))),
 
 
       # Info-Texte

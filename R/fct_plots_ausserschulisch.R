@@ -946,8 +946,7 @@ plot_mv_genderb <- function(){
                               sich durch einen großen Vernetzungswunsch und eine hohe Motivation aus,
                               sich aktiv in Netzwerke zum Thema MINT-Förderung für Mädchen einzubringen,
                               was auf ein großes Aktivierungspotenzial hinweist.
-                              Die Gruppe der hoch Aktiven ist bereits sehr motiviert und engagiert in ihrem Netzwerk.
-                              Die kleinste Gruppe der Befragten nimmt lieber passiv an Netzwerkaktivitäten teil.") %>%
+                              Die Gruppe der hoch Aktiven ist bereits sehr motiviert und engagiert in ihrem Netzwerk. Die kleinste Gruppe der Befragten nimmt lieber passiv an Netzwerkaktivitäten teil.") %>%
       highcharter::hc_plotOptions(
         pie = list(
           dataLabels = list(

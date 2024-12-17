@@ -13,15 +13,15 @@ mod_schule_kurse_ui <- function(id){
 
     # Banner
     fluidRow(
-      shinydashboard::box(
-        width = 12,
-        img(src='www/Banner_Schule.jpg',
-            class = "img-responsive",
-            #height = "150px", width = "150px",
-            alt = "Banner Schule",
-            style="display: block; margin-left: auto; margin-right: auto;"
-        ))),
-
+      div(class = "clean-box",
+          column(
+            width = 12,
+            img(src='www/Banner_Schule.jpg',
+                class = "img-responsive",
+                #height = "150px", width = "150px",
+                alt = "Banner Schule",
+                style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px;"
+            )))),
 
 
     # Info-Texte

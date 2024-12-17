@@ -16,14 +16,15 @@ mod_fachkraft_start_ui <- function(id){
 
     # Banner
     fluidRow(
-      shinydashboard::box(
-        width = 12,
-        img(src='www/Banner_Fachkraefte.jpg',
-            class = "img-responsive",
-            #height = "150px", width = "150px",
-            alt = "Banner Fokus: MINT-Fachkraefte",
-            style="display: block; margin-left: auto; margin-right: auto;"
-        ))),
+      div(class = "clean-box",
+          column(
+            width = 12,
+            img(src='www/Banner_Fachkraefte.jpg',
+                class = "img-responsive",
+                #height = "150px", width = "150px",
+                alt = "Banner Fokus: MINT-Fachkraefte",
+                style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px;"
+            )))),
 
 
     # Info-Texte ----

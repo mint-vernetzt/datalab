@@ -88,8 +88,9 @@ mod_ausserschulisch_start_ui <- function(id){
 
     # Trennlinie
     p("Daten von MINTvernetzt", style = "color: #00A87A;
-      font-size: 22px; font-family: 'SourceSans3-Bold';"),
-    hr(style = "border-top: 3px solid #00A87A; margin-top: 5px"),
+      font-size: 22px; font-family: 'SourceSans3-Bold';
+      margin-top: 20px;"),
+    hr(style = "border-top: 3px solid #00A87A; margin-top: 5px;"),
 
     # Community Plattform ----
 
@@ -242,7 +243,7 @@ mod_ausserschulisch_start_ui <- function(id){
           src = "www/Banner_CP_Absprung.png",
           alt = "Community Plattform Aufruf",
           style = "max-width: 100%; height: auto; cursor: pointer;
-          margin-bottom: 20px;"
+          margin-bottom: 20px; margin-top: 20px;"
         )
       )
     ),
@@ -343,7 +344,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                          # tags$style(".well {background-color:#FFFFFF;}"),
                                          # tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                          # mod_ausserschulisch_mvb_genderb_ui("mod_ausserschulisch_mvb_genderb_ui"),
-                                         tags$img(src = "www/Ausserschulisch_Gender_Tabelle.png",
+                                         tags$img(src = "www/Ausserschulisch_Gender_Tabelle2.png",
                                                   style = "margin-top: 90px;")
                                        ),
                                        column(
@@ -362,8 +363,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                            praxisnahe Handlungsempfehlungen und Tipps für die Bildungsarbeit entwickelt.
                                            Diese sowie weiteren Ergebnisse sind ",
                                            tags$a(style = "color: #008F68; font-size: 16px;", href = "https://www.mint-vernetzt.de/studien-und-umfragen/#gender",
-                                                  target = "_blank", "hier, auf der MINTvernetzt-Website verfügbar"),
-                                           "."), br(),
+                                                  target = "_blank", "auf der MINTvernetzt-Website verfügbar.")), br(),
                                        )
                               ),
 
@@ -456,8 +456,9 @@ mod_ausserschulisch_start_ui <- function(id){
 
     # Trennlinie
     p("Daten von MINT-Bildungsakteur:innen", style = "color: #00A87A;
-      font-size: 22px; font-family: 'SourceSans3-Bold';"),
-    hr(style = "border-top: 3px solid #00A87A; margin-top: 5px"),
+      font-size: 22px; font-family: 'SourceSans3-Bold';
+      margin-top: 20px;"),
+    hr(style = "border-top: 3px solid #00A87A; margin-top: 5px;"),
 
     # SKf ----
     fluidRow(id="ausserschulisch_skf",
