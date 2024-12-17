@@ -70,10 +70,7 @@ mod_schule_kurse_ui <- function(id){
                                                               span(tags$b(span("Frauen in MINT:")))),"MINT-Belegungen unter Mädchen und Jungen ungefähr gleich häufig."),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_kompetenz",
-                                                              span(tags$b(span("MINT-Kompetenzen:")))),"MINT-Kompetenzen nehmen weiter ab. IQB-Ergebnisse der letzten Jahre."),
-
-        p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_ausserschulisch",
-                                                              span(tags$b(span("Frühkindliche Bildung:")))),"Zahl der MINT-aktiven Einrichtungen bei Stiftung Kinder forschen wächst stetig."),
+                                                              span(tags$b(span("MINT-Kompetenzen:")))),"MINT-Kompetenzen nehmen weiter ab. IQB-Ergebnisse der letzten Jahre.")
 
       ),
       shinydashboard::box(

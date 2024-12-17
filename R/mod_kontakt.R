@@ -44,7 +44,6 @@ mod_kontakt_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        div(class = "clean-box",
         width = 12,
         tags$h2("Kontakt und Feedback"),
         column(width = 9,
@@ -90,7 +89,7 @@ mod_kontakt_ui <- function(id){
                    alt = "Logo MINT",
                    style="display: block; margin-left: auto; margin-right: auto;"
                ))
-      ))),
+      )),
 
 
 #

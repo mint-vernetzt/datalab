@@ -77,8 +77,20 @@ plot_cp_orgas <- function(r){
     }
 
   }
+  if(length(df$wert) == 0){
 
-  if(abs_rel_select == "In Prozent"){
+    titel <- paste0("Für die gewählten Eingaben hat keine Organisation eine Angabe gemacht.")
+
+    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(indikator, wert), y = wert, group = region)) %>%
+      # highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
+      # highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      # highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+
+  }else if(abs_rel_select == "In Prozent"){
 
     ges <- df$wert[df$indikator == "Gesamt"]
     df_ges <- df %>% dplyr::filter(indikator == "Gesamt") %>%
@@ -271,7 +283,20 @@ plot_cp_projekte <- function(r){
 
   }
 
-  if(abs_rel_select == "In Prozent"){
+  if(length(df$wert) == 0){
+
+    titel <- paste0("Für die gewählten Eingaben hat kein Projekt eine Angabe gemacht.")
+
+    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(indikator, wert), y = wert, group = region)) %>%
+      # highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
+      # highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      # highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+
+  }else if(abs_rel_select == "In Prozent"){
 
     ges <- df$wert[df$indikator == "Gesamt"]
     df_ges <- df %>% dplyr::filter(indikator == "Gesamt") %>%
@@ -293,6 +318,10 @@ plot_cp_projekte <- function(r){
     }else{
       regio_angabe <- paste0(" die in ", regio, " tätig sind")
     }
+
+    if(charas == "weitere Zielgruppe") charas <- "spezifischer Zielgruppe"
+    if(charas == "weitere Disziplin") charas <- "weiterer Disziplin"
+
     titel <- paste0("Anteil der Projekte der Community-Plattform von MINTvernetzt nach ",
                     charas, regio_angabe)
     subtitel <- paste0("Angaben wurden von ", ges, " Projekten gemacht. Mehrfachangabe möglich.")
@@ -349,6 +378,10 @@ plot_cp_projekte <- function(r){
     }else{
       regio_angabe <- paste0(" die in ", regio, " tätig sind")
     }
+
+    if(charas == "weitere Zielgruppe") charas <- "spezifischer Zielgruppe"
+    if(charas == "weitere Disziplin") charas <- "weiterer Disziplin"
+
     titel <- paste0("Projekte der Community-Plattform von MINTvernetzt nach ",
                     charas, regio_angabe)
     subtitel <- paste0("Angaben wurden von ", ges, " Projekten gemacht. Mehrfachangabe möglich.")
@@ -822,7 +855,14 @@ plot_mv_stimmung <- function(r){
                                                 "Stimme eher zu",
                                                 "Stimme volll zu"
     ))
+
     df <- df[with(df, order(typ, antwort)),]
+
+    gruppe <- ifelse(gruppe == "Gesamt", "aller Befragten",
+                     ifelse(gruppe == "Schule", "der schulischen Akteur:innen",
+                            ifelse(gruppe == "außerschulische Akteur:innen", "der außerschulischen Akteur:innen", gruppe)))
+
+    titel <- paste0("Antworten ", gruppe, " darauf, wie der Ganztag am besten genutzt werden sollte")
     subtitel <- "N = 453"
     subtitel <- ifelse(gruppe == "Schule", "N = 18", ifelse(gruppe == "außerschulische Akteur:innen",
                                                             "N = 24", subtitel))
@@ -837,7 +877,7 @@ plot_mv_stimmung <- function(r){
       highcharter::hc_colors( c("#efe8e6",
                                 "#ee7775", "#fca5a5",
                                 "#66cbaf", "#35bd97" )) %>%
-      highcharter::hc_title(text = paste0("Antworten der ", gruppe, " darauf, wie der Ganztag am besten genutzt werden sollte"),
+      highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
@@ -858,7 +898,11 @@ plot_mv_stimmung <- function(r){
                       indikator == gruppe) %>%
         dplyr::collect()
 
-      titel <- paste0("Antworten der ", gruppe, " darauf, ob der Ganztag zum Abbau von Leistungslücken in MINT genutzt werden soll")
+      gruppe <- ifelse(gruppe == "Gesamt", "aller Befragten",
+                       ifelse(gruppe == "Schule", "der schulischen Akteur:innen",
+                              ifelse(gruppe == "außerschulische Akteur:innen", "der außerschulischen Akteur:innen", gruppe)))
+
+      titel <- paste0("Antworten ", gruppe, " darauf, ob der Ganztag zum Abbau von Leistungslücken in MINT genutzt werden soll")
       subtitel <- paste0("N = 464")
       subtitel <- ifelse(gruppe == "Schule", "N = 18", ifelse(gruppe == "außerschulische Akteur:innen",
                                                               "N = 24", subtitel))
@@ -877,19 +921,25 @@ plot_mv_stimmung <- function(r){
         highcharter::hc_subtitle(text = subtitel,
                                  align = "center",
                                  style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-        ) %>%
+
         highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
         highcharter::hc_plotOptions(
           pie = list(
             dataLabels = list(
+              enabled = TRUE,
+              distance = 50,
               style = list(
-                fontSize = "14px",  # Schriftgröße für die Labels anpassen
+                fontSize = "13px",  # Schriftgröße für die Labels anpassen
                 fontFamily = "SourceSans3-Regular"
               )
             )
           )
+        ) %>%
+        highcharter::hc_chart(
+          marginTop = 80,      # Mehr Platz oben
+          marginBottom = 80,   # Mehr Platz unten
+          marginLeft = 100,    # Platz links für Labels
+          marginRight = 100   # Platz rechts für Labels
         )
         # highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
         # highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",

@@ -497,7 +497,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(htmlOutput(ns("plot_skf_einrichtungen")),
+                                        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_einrichtungen")),
                                                                      color = "#154194"),
 
                                         p(style="font-size:12px;color:grey",
@@ -525,7 +525,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(htmlOutput(ns("plot_skf_personal")),
+                                        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_personal")),
                                                                      color = "#154194"),
 
                                         p(style="font-size:12px;color:grey",
@@ -586,9 +586,9 @@ mod_ausserschulisch_start_server <- function(id, r){
     # SKf ----
 
     # Tab 1
-    # output$plot_skf_einrichtungen <- highcharter::renderHighchart({
-    #   skf_einrichtungen(r)
-    # })
+    output$plot_skf_einrichtungen <- highcharter::renderHighchart({
+      skf_einrichtungen(r)
+    })
 
     # output$plot_skf_einrichtungen <- renderUI({
     #   plot_list <- skf_einrichtungen(r)
@@ -619,11 +619,11 @@ mod_ausserschulisch_start_server <- function(id, r){
     #   }
     # )
     #
-    # # Tab 2
-    #
-    # # output$plot_skf_personal <- highcharter::renderHighchart({
-    # #   skf_personal(r)
-    # # })
+    # Tab 2
+
+    output$plot_skf_personal <- highcharter::renderHighchart({
+      skf_personal(r)
+    })
     #
     # output$plot_skf_personal <- renderUI({
     #   plot_list <- skf_personal(r)
