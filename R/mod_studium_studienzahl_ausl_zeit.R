@@ -168,7 +168,7 @@ mod_studium_studienzahl_ausl_zeit_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_studium_international_2", title="",
-                       content = paste0("Die erste Einstellung der Grafik zeigt, dass der Anteil internationaler Studierender an allen Studierenden in MINT in den letzten 7 Jahren um fast 7 Prozentpunkte angestiegen ist. Betrachtet man die &quotAnzahl&quot zeigt sich, dass die Anzahl internationaler Studierender von 137.000 in 2017 auf 204.000 in 2023 angestiegen ist."),
+                       content = paste0("Die erste Einstellung der Grafik zeigt, dass der Anteil internationaler Studierender an allen Studierenden in MINT in den letzten 7 Jahren um fast 7 Prozentpunkte angestiegen ist. Betrachtet man die &quotAnzahl&quot, zeigt sich, dass die Anzahl internationaler Studierender von 137.000 in 2017 auf 204.000 in 2023 angestiegen ist."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_international_2")

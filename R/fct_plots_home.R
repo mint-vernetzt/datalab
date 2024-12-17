@@ -199,6 +199,8 @@ home_einstieg <- function(r) {
    if(zeit == 2023){subtitel <- paste0("Schüler:innendaten für 2023 liegen noch nicht vor.")}else{
      subtitel <- ""
    }
+
+   df <- df[with(df, order(prop, decreasing = TRUE)), ] ################################
    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = indikator, group = "fachbereich"))%>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
@@ -902,6 +904,8 @@ home_einstieg_gender <- function(r) {
       # ,
       # !fachbereich %in% c("Schüler:innen Grundkurse in MINT",
       #                     "Schüler:innen Leistungskurse in MINT")
+
+      df <- df[with(df, order(prop, decreasing = TRUE)), ]###############################################
 
       out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=prop, group = geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%

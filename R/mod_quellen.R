@@ -28,9 +28,9 @@ mod_quellen_ui <- function(id){
         title = "Definition MINT",
                 p(style = "text-align: justify; font-size = 16px",
           "MINT ist eine Abkürzung aus den Anfangsbuchstaben bestimmter Schul- und Studienfächer bzw. Berufe.
-          Es steht als Sammelbegriff für die Felder Mathematik, Informatik, Naturwissenschaften und Technik.",
+          Sie steht als Sammelbegriff für die Felder Mathematik, Informatik, Naturwissenschaften und Technik.",
           br(),br(),
-          "Die genaue Definition davon, was als 'MINT' zählt, und was nicht, variiert vor allem für Beschäftigte.
+          "Die genaue Definition davon, was als 'MINT' zählt und was nicht, variiert vor allem für Beschäftigte.
           Die folgende Darstellung versucht, eine Übersicht zu geben."
         ), br(),
         img(src='www/Definition_MINT_Bild.png',
@@ -89,7 +89,7 @@ mod_quellen_ui <- function(id){
         column(4,
         tags$a(href="https://statistik.arbeitsagentur.de/DE/Statischer-Content/Grundlagen/Methodik-Qualitaet/Methodenberichte/Uebergreifend/Generische-Publikationen/Hintergrundinfo-Anpassung-Berufsaggregat-MINT-Berufe.pdf?__blob=publicationFile", "Aktuelle Infos zur Anpassung der Definition der MINT-Berufe", target ="_blank"),
         br(),
-        tags$a(href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=International_Standard_Classification_of_Education_(ISCED)#ISCED_1997_.28fields.29_and_ISCED-F_2013", "Internationale Klassifikation von Ausbidlungen (ISCED-F)", target ="_blank"),
+        tags$a(href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=International_Standard_Classification_of_Education_(ISCED)#ISCED_1997_.28fields.29_and_ISCED-F_2013", "Internationale Klassifikation von Ausbildungen (ISCED-F)", target ="_blank"),
         br(),
         tags$a(href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:Scientists_and_engineers", "Eurostat Einteilung von Naturwissenschaftler:innen und Ingenieur:innen", target ="_blank"),
         )
@@ -100,7 +100,7 @@ mod_quellen_ui <- function(id){
       title = "Weitere Datengeber:innen",
       #tags$b(span("Weitere Datengeber:", style = "color:#154194")),
 
-      tags$a(href="https://www.iqb.hu-berlin.de/", "Seite des Institut zur Qualitätsentwicklung im Bildungswesen IQB", target = "_blank"),
+      tags$a(href="https://www.iqb.hu-berlin.de/", "Seite des Instituts zur Qualitätsentwicklung im Bildungswesen.(IQB)", target = "_blank"),
       br(),
       tags$a(href="https://www.oecd.org/pisa/", "Seite des Pisa-Programms der OECD", target = "_blank"),
       br(),
@@ -124,11 +124,11 @@ mod_quellen_ui <- function(id){
         width = 9,
         title = "Datenpool und Quellen",
         p(style = "text-align: justify; font-size = 16px",
-          "Ziel dieses Projektes ist es, die vorhandenen Statistiken über MINT in Deutschland in einem Datenpool zu bündeln
+          "Ziel dieses Projektes ist es, die vorhandenen Statistiken über MINT in Deutschland in einem Datenpools zu bündeln
           und über das MINT-DataLab zur weiteren Nutzung zur Verfügung zu stellen. Die Basis unseres Datenpool sind die amtlichen Statistiken aus Deutschland,
           also die Statistiken der Bundesagentur für Arbeit, des Statistischen Bundesamtes (Destatis) und der Kultusministerkonferenz (KMK).
           Weitere Datenquellen aus dem internationalen Bereich sind Eurostat, die OECD und die IEA.
-          Im schulisch-/außerschulischen Bereich zeigen wir außerdem Daten des IQB und der Stiftung Kinder forschen.
+          Im schulischen/außerschulischen Bereich zeigen wir außerdem Daten des IQB und der Stiftung Kinder forschen.
           Wir bauen dabei unsere Datengrundlage stetig weiter aus."
         ))),
 
@@ -137,7 +137,7 @@ mod_quellen_ui <- function(id){
         width = 9,
         title = "Nutzungsbedingungen der Daten",
         p(style = "text-align: justify; font-size = 16px",
-          "Die Nutzungsbedingungen der Datengeber erlauben die Verwendung der Daten und die grafische Aufbereitung
+          "Die Nutzungsbedingungen der Datengeber:innen erlauben die Verwendung der Daten und die grafische Aufbereitung
           sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet.
           Bei Interesse an den kompletten Datensätzen müssen die Datengeber:innen direkt kontaktiert werden."
         )

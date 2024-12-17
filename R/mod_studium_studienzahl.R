@@ -36,7 +36,7 @@ mod_studium_studienzahl_ui <- function(id){
         width = 7,
         p(style = "text-align: left; font-size = 16px",
           "Auf dieser Seite zeigen wir statistische Kennzahlen zum Thema MINT-Fächer studieren. Wir zeigen, wie hoch der Anteil
-           von MINT-Fächern gemessen an allen gewählten Studienfächern ist. Dazu zeigen wir Vergleiche nach männlichen und
+           von MINT-Fächern, gemessen an allen gewählten Studienfächern, ist. Dazu zeigen wir Vergleiche nach männlichen und
            weiblichen Studierenden, einzelnen Fächern und nach Bundesländern.")
         ),
 
@@ -44,7 +44,7 @@ mod_studium_studienzahl_ui <- function(id){
         title = "Fragen oder Feedback?",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
+          "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder die Teilnahme an unserer kurzen",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))
     ),
@@ -59,14 +59,14 @@ mod_studium_studienzahl_ui <- function(id){
         ),
 
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_fach",
-                                                              span(tags$b(span("M-I-N-T:")))), "Knapp 3/4 aus MINT studieren Ingenieurwissenschaften/Informatik."
+                                                              span(tags$b(span("M-I-N-T:")))), "Knapp drei Viertel aus MINT studieren Ingenieurwissenschaften/Informatik."
 
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_frauen",
                                                               span(tags$b(span("Frauen in MINT:")))), "Frauen in MINT und vor allem den Ingenieurwissenschaften/Informatik eine Minderheit."
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_internationale_studis",
-                                                              span(tags$b(span("Internationale Studierende:")))), "Ihre Anzahl wächst - und am häufigsten studieren sie MINT."
+                                                              span(tags$b(span("Internationale Studierende:")))), "Ihre Anzahl wächst und am häufigsten studieren sie MINT."
         )
         ),
 
@@ -74,7 +74,7 @@ mod_studium_studienzahl_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Studierendenzahlen in Deutschland: Destatis 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
+          "Studierendenzahlen in Deutschland: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
 
       )
     ),
@@ -89,16 +89,16 @@ mod_studium_studienzahl_ui <- function(id){
         column(
           width = 8,
         p("Im Jahr 2023 studieren 37 % MINT-Fächer, 63 % Fächer aus anderen Bereichen.
-        Bei den Studienanfänger:innen ist der Anteil derer, die MINT studiert, bei 37 %.
+        Bei den Studienanfänger:innen ist der Anteil derer, die MINT studieren, bei 37 %.
           Unter den Absolvent:innen haben 36 % ein MINT-Studium abgeschlossen."),
-        p("Die Zahl an MINT-Studierenden hat sich in den letzten 10 Jahren nur leicht verändert,
-          von 1.035.841 im Jahr 2014 auf 1.049.902 in 2023. Der MINT-Anteil unter Studienanfänger:innen
+        p("Die Zahl an MINT-Studierenden hat sich in den letzten zehn Jahren nur leicht verändert,
+          von 1.035.841 im Jahr 2014 auf 1.049.902 im Jahr 2023. Der MINT-Anteil unter Studienanfänger:innen
           ist lange konstant gesunken und erstmals von 2021 auf 2022 wieder leicht gestiegen, von 36,5 % auf 37,2 %.")
         ),
         column(
           width = 12,
         tabsetPanel(type = "tabs",
-                    tabPanel("aktueller MINT-Anteil", br(),
+                    tabPanel("Aktueller MINT-Anteil", br(),
 
                              shiny::sidebarPanel(width = 3,
                                tags$style(".well {background-color:#FFFFFF;}"),
@@ -112,7 +112,7 @@ mod_studium_studienzahl_ui <- function(id){
                                p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_mint_1", title = "",
-                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
+                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierenden, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten Mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht-MINT&quot betrachtet.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                   placement = "top",
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_1")
@@ -138,7 +138,7 @@ mod_studium_studienzahl_ui <- function(id){
                                p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_mint_3", title = "",
-                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
+                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierenden, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten Mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht-MINT&quot betrachtet.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                   placement = "top",
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_3"))
@@ -170,141 +170,7 @@ mod_studium_studienzahl_ui <- function(id){
 
                     # tabPanel("Vergleich Anteil MINT nach Bundesländern im Zeitverlauf", br(),
                     #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            mod_studium_studienzahl_verlauf_bl_subject_ui("mod_studium_studienzahl_verlauf_bl_subject_ui_1"),
-                    #            # br(),br(),
-                    #            # downloadButton(
-                    #            #   outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject"),
-                    #            #   label = "Download",
-                    #            #   icon = icon("download")),
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_studienzahl_bl_subject")),
-                    #                                         color = "#154194"),
-                    #
-                    #            p(style="font-size:12px;color:grey",
-                    #               "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                    #            shinyBS::bsPopover(id="h_studium_mint_4", title = "",
-                    #                               content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br> <br> Seit dem Jahr 2015 zählt Informatik zu den Ingenieurwissenschaften und nicht mehr zu den Naturwissenschaften.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
-                    #                               placement = "top",
-                    #                               trigger = "hover"),
-                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_4")
-                    #
-                    #          )
-                    # ),
-                    #
-                    # tabPanel("Vergleich Anteil MINT nach Bundesländer im Zeitverlauf", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            mod_studium_studienzahl_bl_verlauf_ui("mod_studium_studienzahl_bl_verlauf"),
-                    #            # br(),br(),
-                    #            # downloadButton(
-                    #            #   outputId = ns("download_btn_plot_studienzahl_bl_verlauf"),
-                    #            #   label = "Download",
-                    #            #   icon = icon("download")),
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_studienzahl_bl_verlauf")),
-                    #                                         color = "#154194"),
-                    #
-                    #            p(style="font-size:12px;color:grey",
-                    #              "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                    #            shinyBS::bsPopover(id="h_studium_mint_5", title = "",
-                    #                               content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br> <br> Seit dem Jahr 2015 zählt Informatik zu den Ingenieurwissenschaften und nicht mehr zu den Naturwissenschaften.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
-                    #                               placement = "top",
-                    #                               trigger = "hover"),
-                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_5")
-                    #          )
-                    # ),
-                    # tabPanel("Alle Studierendengruppen auf einen Blick", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            tags$style(".well {background-color:#FFFFFF;}"),
-                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #            mod_studium_studienzahl_einstieg_comparison_ui("mod_studium_studienzahl_einstieg_comparison_ui_1"),
-                    #            # br(),br(),
-                    #            # downloadButton(
-                    #            #   outputId = ns("download_btn_plot_einstieg_comparison"),
-                    #            #   label = "Download",
-                    #            #   icon = icon("download")),
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_comparison")),
-                    #                                         color = "#154194"),
-                    #
-                    #            p(style="font-size:12px;color:grey",
-                    #              "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                    #            shinyBS::bsPopover(id="h_studium_mint_6", title = "",
-                    #                               content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
-                    #                               placement = "top",
-                    #                               trigger = "hover"),
-                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_6"))
-                    # ),
-                    #
-                    # tabPanel("Studienfachwahl Frauen im Zeitverlauf", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            mod_studium_studienzahl_verlauf_bl_subject_gender_ui("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1"),
-                    #            # br(),br(),
-                    #            # downloadButton(
-                    #            #   outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject_gender"),
-                    #            #   label = "Download",
-                    #            #   icon = icon("download")),
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_studienzahl_bl_subject_gender")),
-                    #                                         color = "#154194"),
-                    #
-                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                    #            shinyBS::bsPopover(id="h_studium_mint_8", title = "",
-                    #                               content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
-                    #                               placement = "top",
-                    #                               trigger = "hover"),
-                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_8")
-                    #          )
-                    # ),
-                    # tabPanel("Überblick Frauen und Männer", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            mod_studium_studienzahl_ranking_bl_subject_gender_ui("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1")
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            #highcharter::highchartOutput(ns("plot_ranking_studienzahl_bl_subject_gender1")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
-                    #            plotOutput(ns("plot_ranking_studienzahl_bl_subject_gender")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
-                    #          )
-                    # )
 
-                  # ,
-                  #
-                  #
-                  # tabPanel("Datensatz", br(),
-                  #
-                  #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                  #              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                  #          shiny::sidebarPanel(
-                  #            tags$style(".well {background-color:#FFFFFF;}"),
-                  #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                  #            mod_studium_studienzahl_einstieg_ui("mod_schule_kurse_einstieg_ui_1")),
-                  #          shiny::mainPanel(
-                  #            div(DT::dataTableOutput(ns("data_table_einstieg")),
-                  #                style = "font-size: 75%; width: 75%"),
-                  #            shiny::downloadButton(ns("download_data_box1"), label = "",
                   #                                  class = "butt",
                   #                                  icon = shiny::icon("download")))
                   # )
@@ -317,7 +183,7 @@ mod_studium_studienzahl_ui <- function(id){
       p(br(),"KURZANALYSE", br()),
       p(style = "font-size = 24",
         strong("Die Anzahl an MINT-Studienanfänger:innen ist in den letzten Jahren zurückgegangen, von 197.000 neuen Studierenden
-               in MINT 2015 auf 176.000 im Jahr 2022. Ein ähnliches Bild zeigt sich auch bei den Auszubildenden.
+               in MINT im Jahre 2015 auf 176.000 im Jahr 2022. Ein ähnliches Bild zeigt sich auch bei den Auszubildenden.
                In einer Kurzanalyse fassen wir die Entwicklungen im MINT-Nachwuchs zusammen."),
         br(), br(),
         tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Interesse_final.pdf",
@@ -330,7 +196,7 @@ mod_studium_studienzahl_ui <- function(id){
 
   fluidRow( id="studium_fach",
       shinydashboard::box(
-        title = "M-I-N-T: Knapp 3/4 aus MINT studieren Ingenieurwissenschaften/Informatik.",
+        title = "M-I-N-T: Knapp drei Viertel aus dem MINT-Bereich studieren Ingenieurwissenschaften/Informatik.",
         width = 12,
         column(
           width = 8,
@@ -338,14 +204,14 @@ mod_studium_studienzahl_ui <- function(id){
           Ingenieurwissenschaften/Informatik. Die restlichen 30 % befinden sich in einem Studium
           der Mathematik/Naturwissenschaft."),
         p("Während der Anteil und die Zahl der Informatikstudierenden in den letzten Jahren immer
-          weiter angestiegen ist, nehmen die Studierendenzahlen in anderen Ingenieurswissenschaften ab,
+          weiter angestiegen sind, nehmen die Studierendenzahlen in anderen Ingenieurwissenschaften ab,
           in Mathematik/Naturwissenschaften sind die Zahlen in den letzten Jahren stabil.")
           ),
         column(
           width = 12,
 
         tabsetPanel(type = "tabs",
-                    tabPanel("aktueller Anteil MINT-Fächer", br(),
+                    tabPanel("Aktueller Anteil MINT-Fächer", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -360,7 +226,7 @@ mod_studium_studienzahl_ui <- function(id){
                                p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_studium_mint_2", title = "",
-                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
+                                                  content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierenden, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht-MINT&quot betrachtet.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                   placement = "top",
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_2"))
@@ -408,114 +274,17 @@ mod_studium_studienzahl_ui <- function(id){
                                p(style="font-size:12px;color:grey",
                                  "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
-                               shinyBS::bsPopover(id="h_studium_fach_2", title="",
+                               shinyBS::bsPopover(id="h_studium_fach_1l", title="",
                                                   content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden die betroffenen Bundesländer als grau schattiert angezeigt.", "<br> <br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                   placement = "top",
                                                   trigger = "hover"),
-                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_2")
+                               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_1l")
                              )
                     ),
 
                    #  tabPanel("Vergleich Anteil MINT nach Studierendengruppen II", br(),
                    #
-                   #           tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                   #           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                   #           shiny::sidebarPanel(
-                   #             width = 3,
-                   #             mod_studium_studienzahl_choice_1_ui("mod_studium_studienzahl_choice_ui_1_1")),
-                   #           shiny::mainPanel(
-                   #             width = 9,
-                   #             shinycssloaders::withSpinner(plotOutput(ns("plot_waffle")),
-                   #                                          color = "#154194"),
-                   #             p(),
-                   #             p(style="font-size:12px;color:grey",
-                   #               "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                   #             shinyBS::bsPopover(id="h_studium_mint_2", title = "",
-                   #                                content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht MINT&quot betrachtet.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
-                   #                                placement = "top",
-                   #                                trigger = "hover"),
-                   #             tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_2"))
-                   #  ),
-                   #
-                   #  tabPanel("Vergleich Fächer (Karte)", br(),
-                   #
-                   #           shiny::sidebarPanel(
-                   #             width = 3,
-                   #             mod_studium_studienzahl_bl_map_ui("mod_studium_studienzahl_bl_map"),
-                   #
-                   #           ),
-                   #           shiny::mainPanel(
-                   #             width = 9,
-                   #             shinycssloaders::withSpinner(htmlOutput(ns("plot_studienzahl_map")),
-                   #                                          color = "#154194"),
-                   #
-                   #             p(style="font-size:12px;color:grey",
-                   #               "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                   #
-                   #             shinyBS::bsPopover(id="h_studium_fach_2", title="",
-                   #                                content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden die betroffenen Bundesländer als grau schattiert angezeigt.", "<br> <br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
-                   #                                placement = "top",
-                   #                                trigger = "hover"),
-                   #             tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_2")
-                   #           )
-                   #  ),
-                   #
-                   #
-                   #  # Fehler in der Boxgrösse, muss noch behoben werden
-                   #
-                   # tabPanel("Alle Fächer auf einen Blick", br(),
-                   #
-                   #           tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                   #           .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                   #           shiny::sidebarPanel(
-                   #             width = 3,
-                   #             mod_studium_studienzahl_ranking_bl_subject_ui("mod_studium_studienzahl_ranking_bl_subject_ui_1"),
-                   #             # br(),br(),
-                   #             # downloadButton(
-                   #             #   outputId = ns("download_btn_plot_verlauf_studienzahl_bl_subject1"),
-                   #             #   label = "Download",
-                   #             #   icon = icon("download"))
-                   #
-                   #           ),
-                   #           shiny::mainPanel(
-                   #             width = 9,
-                   #             shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_studienzahl_bl_subject1"), height = "550px"),
-                   #                                          color = "#154194"),
-                   #
-                   #             p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt." ),
-                   #             shinyBS::bsPopover(id="h_studium_fach_3", title="",
-                   #                                content = paste0("Durch Rundung kann es dazu kommen, dass einzelne Studienfachgruppen für bestimmte Indikatoren oder Regionen nicht in der Darstellung angezeigt werden.", "<br> <br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
-                   #                                placement = "top",
-                   #                                trigger = "hover"),
-                   #             tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_3")
-                   #             #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen.")
-                   #           )
-                   #  ),
-                   #  tabPanel("Vergleich nach Bundesländern", br(),
-                   #
-                   #           shiny::sidebarPanel(
-                   #             width = 3,
-                   #             mod_studium_studienzahl_bl_vergleich_ui("studium_studienzahl_bl_vergleich"),
-                   #             # br(),br(),
-                   #             # downloadButton(
-                   #             #   outputId = ns("download_btn_plot_vergleich_bl1"),
-                   #             #   label = "Download",
-                   #             #   icon = icon("download")),
-                   #           ),
-                   #           shiny::mainPanel(
-                   #             width = 9,
-                   #             shinycssloaders::withSpinner(htmlOutput(ns("plot_vergleich_bl1")),
-                   #                                          color = "#154194"),
-                   #
-                   #             p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                   #
-                   #             shinyBS::bsPopover(id="h_studium_fach_5", title="",
-                   #                                content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die Bundesländer angezeigt, welche die betrachtete Studienfachgruppe aufweisen.", "<br><br> In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierende, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
-                   #                                placement = "top",
-                   #                                trigger = "hover"),
-                   #             tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_5")
-                   #
-                   #           )
+
                    #  )
         )
         ))),
@@ -529,12 +298,12 @@ mod_studium_studienzahl_ui <- function(id){
           width = 8,
         p("Der Frauenanteil in MINT-Studienfächern liegt bei nur 33 %.
         Im Vergleich dazu: Betrachtet man alle \"Nicht-MINT\"-Studienbereiche zusammen,
-        ist der Frauenanteil bei mehr als der Hälfte. Doch in den letzten 10 Jahren gab es eine leichte Positiventwicklung.
+        ist der Frauenanteil bei mehr als der Hälfte. Doch in den letzten zehn Jahren gab es eine leichte Positiventwicklung.
         Der Frauenanteil nahm von etwa 29 % auf 33 % zu."),
-        p("Es gibt auch MINT-Fachbereiche, in denen es ganz anders aussieht - in Pharmazie oder auch Biologie studieren mehr Frauen als Männer.
+        p("Es gibt auch MINT-Fachbereiche, in denen es ganz anders aussieht. In Pharmazie oder auch Biologie studieren mehr Frauen als Männer.
         Wechselt man die Perspektive und blickt auf die Gruppe der Studentinnen,
           wird die unterschiedliche Attraktivität des MINT-Studiums für Frauen vs.
-          Männer nochmal deutlich. Von allen Studentinnen wählen nur 23 % MINT.
+          Männer nochmal deutlich: Von allen Studentinnen wählen nur 23 % MINT.
           Bei den Studenten sind es die Hälfte.")
         ),
         column(
@@ -563,30 +332,7 @@ mod_studium_studienzahl_ui <- function(id){
                                )
                     ),
                     # tabPanel("Anteil Frauen nach Bundesländern", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            tags$style(".well  {background-color:#FFFFFF;}"),
-                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #            #mod_studium_studienzahl_einstieg_comparison_gender_ui("mod_studium_studienzahl_einstieg_comparison_gender_ui_1"),
-                    #            # br(),br(),
-                    #            # downloadButton(
-                    #            #   outputId = ns("download_btn_plot_einstieg_comparison_gender"),
-                    #            #   label = "Download",
-                    #            #   icon = icon("download")),
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            # shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_comparison_gender")),
-                    #            #                              color = "#154194"),
-                    #
-                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                    #            shinyBS::bsPopover(id="h_studium_frauen_3", title="",
-                    #                               content = paste0("In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br> <br> Studierende auf Lehramt werden für Fächergruppen, die nicht oder nur von einer sehr geringen Anzahlen an Lehramtstudierenden deutschlandweit als Hauptfach studiert werden, nicht in der Übersicht angezeigt. In einzelnen Bundesländern kann es für spezfisiche Fächergruppen zu keinen oder sehr geringen Leharamtstudierendenzahlen kommen. Achten Sie hierbei auf die absoluten Zahlenangaben zur Anzahl der Studierenden.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
-                    #                               placement = "top",
-                    #                               trigger = "hover"),
-                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_frauen_3")
-                    #          )
+
                     # ),
 
                     tabPanel("Anteil Frauen im Zeitverlauf", br(),
@@ -669,14 +415,7 @@ mod_studium_studienzahl_ui <- function(id){
                              mod_studium_top_faecher_ui("mod_studium_top_faecher"),
                              # br()
                              # ,
-                             # downloadButton(
-                             #   outputId = ns("download_btn_plot_top_faecher_1"),
-                             #   label = "Download (links)",
-                             #   icon = icon("download")),
-                             # br(),br(),
-                             # downloadButton(
-                             #   outputId = ns("download_btn_plot_top_faecher_2"),
-                             #   label = "Download (rechts)",
+
                              #   icon = icon("download")),
                            ),
                            shiny::mainPanel(
@@ -705,11 +444,11 @@ mod_studium_studienzahl_ui <- function(id){
              column(
                width = 8,
              p("Deutschland ist bei internationalen Studierenden beliebt.
-             Und ihre Zahl ist in den letzten 10 Jahren stark gestiegen - von rund 106.542
+             Und ihre Zahl ist in den letzten zehn Jahren stark gestiegen: von rund 106.542
              auf rund 204.006 internationale Studierende allein in MINT.
              Damit machen sie 2023 19 % der MINT-Studierenden aus."),
             p("Vergleicht man die Fachbereiche, studieren internationale Studierende besonders oft MINT-Fächer.
-              etwa 159.000 von ihnen studieren Ingenieurwissenschaften/Informatik,
+              etwa 159.000 von ihnen studieren Ingenieurswissenschaften/Informatik,
               gefolgt von rund 97.000 in Rechts-, Wirtschafts- und Sozialwissenschaften und rund 45.000 in
               Mathematik/Naturwissenschaften.")
             ),

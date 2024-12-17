@@ -172,7 +172,7 @@ mod_studium_studienzahl_einstieg_verlauf_ui <- function(id){
     br(),
 
     shinyBS::bsPopover(id="ih_studium_mint_3", title="",
-                       content = paste0("Der Zeitverlauf in erster Einstellung zeigt, dass der Anteil von MINT-Studierenden an allen Studierenden zwischen 2016-2023 leicht gesunken ist. Großes Augenmerk muss hier auf die Prozente-Skala links gelegt werden. Die visuellen Sprünge in den Zeitverläufen sind ggf. kleiner als sie aussehen."),
+                       content = paste0("Der Zeitverlauf in erster Einstellung zeigt, dass der Anteil von MINT-Studierenden an allen Studierenden zwischen 2016-2023 leicht gesunken ist. Großes Augenmerk muss hier auf die Prozente-Skala links gelegt werden. Die visuellen Sprünge in den Zeitverläufen sind ggf. kleiner, als sie aussehen."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_3")
   )

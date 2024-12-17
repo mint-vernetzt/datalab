@@ -60,7 +60,7 @@ mod_schule_kurse_verlauf_gender_ui <- function(id){
 
    br(),
    shinyBS::bsPopover(id="popoverbox3_1", title="",
-                      content = paste0("Die erste Darstellung zeigt z.B., dass deutschlandweit der Mädchenanteil an den MINT-Grundkursen in der Oberstufe grundsätzlich höher ist als an den MINT-Leistungskursen."),
+                      content = paste0("Die erste Darstellung zeigt z.B. , dass deutschlandweit der Mädchenanteil an den MINT-Grundkursen in der Oberstufe grundsätzlich höher ist als an den MINT-Leistungskursen."),
                       trigger = "hover"),
    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="popoverbox3_1"),
    br(),

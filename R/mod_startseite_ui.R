@@ -87,6 +87,11 @@ mod_startseite_start_ui <- function(id){
     #                 ))
     # ),
 
+
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    ),
+
     fluidRow(
       shinydashboard::box(
         width = 10,
@@ -98,11 +103,13 @@ mod_startseite_start_ui <- function(id){
             style="display: block; margin-left: auto; margin-right: auto;"
         ))
     ),
+    br(),
 
     fluidRow(
       shinydashboard::box(
         width = 10,
-        img(src='www/ht2.png',
+        style = "margin-top: 0; padding: 0;",
+        img(src='www/ht2_neu.png',
             class = "img-responsive",
             # height = "800px",
             #width = "150px",

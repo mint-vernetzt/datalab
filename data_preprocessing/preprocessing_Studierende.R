@@ -878,7 +878,38 @@ df_ew <- df_ew[, colnames(df_all)]
 df_ew <- na.omit(df_ew)
 df_all <- rbind(df_all, df_ew)
 
+
+
+##neu
+ingenieur_incl_informatik <- df_all %>%
+  filter(fach == "Ingenieurwissenschaften (inkl. Informatik)") %>%
+  select(region, jahr, geschlecht, indikator, wert)
+
+informatik <- df_all %>%
+  filter(fach == "Informatik") %>%
+  select(region, jahr, geschlecht, indikator, wert)
+
+ingenieur_ohne_informatik <- ingenieur_incl_informatik %>%
+  left_join(informatik, by = c("region", "jahr", "geschlecht", "indikator"), suffix = c(".ingenieur", ".informatik")) %>%
+  mutate(wert = wert.ingenieur - wert.informatik) %>%
+  select(region, jahr, geschlecht, indikator, wert) %>%
+  mutate(fach = "Ingenieurwissenschaften (ohne Informatik)")
+
+df_all <- bind_rows(df_all, ingenieur_ohne_informatik)
+
+# Entferne doppelte Zeilen
+df_all<- df_all %>%
+  distinct(region, fachbereich, fach, jahr, bereich, indikator, mint_select, typ, geschlecht, wert)
+
+
+
+
 studierende_detailliert <- df_all
+
+
+load("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/studierende_absolventen.rda")
+
+studierende_detailliert <- rbind(studierende_detailliert, studierende_absolventen)
 
 ## Export
 
@@ -887,6 +918,8 @@ setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTverne
 
 save(studierende_detailliert, file = "studierende_detailliert.rda")
 
+
+#################BEI absolventen auch noch studierende!
 
 #### alt - kann raus ----
 

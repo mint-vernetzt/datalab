@@ -136,7 +136,7 @@ mod_international_top10_mint_arb_ui <- function(id){
     # br(),
     # br(),
     shinyBS::bsPopover(id="ih_international_arbeitsmarkt_tab3", title="",
-                       content = paste0("Aus dieser Darstellung heraus liest sich, dass Deutschland im europäischen Vergleich zu den 10 Ländenr zählt, die den geringsten Anteil an MINT-Ausgebildeten an allen Ausgebildeten aufweisen."),
+                       content = paste0("Aus dieser Darstellung heraus liest sich, dass Deutschland im europäischen Vergleich zu den 10 Ländern zählt, die den geringsten Anteil an MINT-Ausgebildeten an allen Ausgebildeten aufweisen."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_international_arbeitsmarkt_tab3")

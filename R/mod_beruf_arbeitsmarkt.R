@@ -32,7 +32,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           p(style = "text-align: left; font-size = 16px",
             "Auf dieser Seite zeigen wir statistische Kennzahlen rund um MINT im Bereich Arbeitsmarkt.
            Dabei unterscheiden wir zwischen Auszubildenden und (sozialversicherungspflichtigen) Beschäftigten.
-           Die Kategorisierungen der MINT-Fächer entspricht den Klassifikationen der Bundesagentur für Arbeit.
+           Die Kategorisierung der MINT-Fächer entspricht den Klassifikationen der Bundesagentur für Arbeit.
             Weitere Informationen dazu finden Sie auf der Unterseite \"Hinweise & Datenquellen\".")
         ),
 
@@ -40,7 +40,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           title = "Fragen oder Feedback?",
           width = 5,
           p(style = "text-align: left; font-size = 16px",
-            "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
+            "Sind alle Zahlen und Grafiken verständlich dargestellt?", br(), "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über eine Teilnahme an unserer kurzen",
             tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
           ))
       ),
@@ -53,7 +53,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
             span(tags$b(span("MINT-Anteil:")))),"Etwa ein Viertel arbeitet in MINT-Berufen."
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_fach",
-            span(tags$b(span("M-I-N-T:")))),"MINT oder I/T - über 90 % sind in Informatik- oder Technikberufen tätig."
+            span(tags$b(span("M-I-N-T:")))),"MINT oder IT - über 90 % sind in Informatik- oder Technikberufen tätig."
 
             ),
           p(style = "text-align: left; font-size = 16px",tags$a(href="#beruf_frauen",
@@ -67,11 +67,11 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           title = "Datenquellen",
           width = 5,
           p(style = "text-align: left; font-size = 16px",
-            "Auszubildenden- und Beschäftigenzahlen in Deutschland: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
+            "Auszubildenden- und Beschäftigtenzahlen in Deutschland: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
 
         )
       ),
-
+###h
 
       # Box 1 ----
 
@@ -84,7 +84,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         p("Im Jahr 2023 arbeiten 23 % der sozialversicherungspflichtig Beschäftigten in einem MINT-Beruf und 77 % in anderen Bereichen.
         Bei den Auszubildenden ist der Anteil derer, die in einem MINT-Beruf lernen, sogar bei 30 %."),
         p("Die Zahl an MINT-Beschäftigten ist in den letzten 10 Jahren leicht gestiegen,
-          von 7 Mio. im Jahr 2014 auf 7,9 Mio. 2023. Die Zahl der Auszubildenden hat im selben Zeitraum etwas abgenommen,
+          von 7 Mio. im Jahr 2014 auf 7,9 Mio. im Jahr 2023. Die Zahl der Auszubildenden hat im selben Zeitraum etwas abgenommen,
           von rund 406.000 auf 390.000.")
         ),
         column(
@@ -92,7 +92,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
         tabsetPanel(type = "tabs",
                     # Tab 1
-                    tabPanel("aktueller MINT-Anteil", br(),
+                    tabPanel("Aktueller MINT-Anteil", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
@@ -147,31 +147,12 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                )
                     ),
                     # tabPanel("Pie (RAUS)", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            tags$style(".well {background-color:#FFFFFF;}"),
-                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #            mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            htmlOutput(ns("plot_einstieg_pie"))
-                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
-                    #          )
-                    # ),
-                    #br(),
-                    # Bundeslandvergleich - bis jetzt nur Zeitdiagramm
+
                     tabPanel("Bundeslandvergleich", br(),
 
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_mint_bula_ui("mod_beruf_arbeitsmarkt_mint_bula_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_beruf_arbeitsmarkt_bl_verlauf"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -204,19 +185,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                     # ,
                     # tabPanel("Datensatz", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            tags$style(".well {background-color:#FFFFFF;}"),
-                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #            mod_beruf_arbeitsmarkt_einstieg_ui("mod_beruf_arbeitsmarkt_einstieg_ui_1")
-                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
-                    #            ),
-                    #          shiny::mainPanel(
-                    #            div(DT::dataTableOutput(ns("data_table_einstieg")),
-                    #                style = "font-size: 75%; width: 75%"),
-                    #            shiny::downloadButton(ns("download_data_box1"), label = "",
+
                     #                                  class = "butt",
                     #                                  icon = shiny::icon("download")))
                     # )
@@ -229,8 +198,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         p(br(),"KURZANALYSE", br()),
         p(style = "font-size = 24",
           strong("Die Anzahl an MINT-Auszubildenden ist in den letzten Jahren rückläufig gewesen.
-          Während es 2020 rund 450.000 Auszubildenden in MINT gab, sind es 2022 noch 400.000.
-          Auch die Zahl an Studienanfänger:innen hat in den letzten Jahren stetig abgenommen.
+          Während es 2020 rund 450.000 Auszubildende in MINT gab, sind es 2022 noch 400.000.
+          Auch die Zahl der Studienanfänger:innen hat in den letzten Jahren stetig abgenommen.
           In einer Kurzanalyse fassen wir die Entwicklungen im MINT-Nachwuchs zusammen."),
           br(), br(),
           tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Interesse_final.pdf",
@@ -247,7 +216,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("Zoomt man auf den MINT-Fachbereich, arbeiten rund 80 % der MINT-Beschäftigten in einem technischen oder Ingenieurberuf.
+        p("Zoomt man auf den MINT-Fachbereich, sieht man, dass rund 80 % der MINT-Beschäftigten in einem technischen oder Ingenieurberuf arbeiten.
           Weitere gut 14 % sind beruflich im Bereich Informatik tätig. Die restlichen 6 % arbeiten in Mathematik oder Naturwissenschaft.")
         ),
         column(
@@ -255,7 +224,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
         tabsetPanel(type = "tabs",
                     # Tab Boxen Fächer
-                    tabPanel("aktueller Anteil MINT-Disziplinen", br(),
+                    tabPanel("Aktueller Anteil MINT-Disziplinen", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -287,11 +256,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_faecher_verlauf_ui("mod_beruf_arbeitsmarkt_faecher_verlauf_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -311,15 +275,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_bula_faecher_ui("mod_beruf_arbeitsmarkt_bula_faecher_ui_1"),
-                               # br(),br()
-                               # ,
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_1"),
-                               #   label = "Download (links)",
-                               #   icon = icon("download")),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_2"),
-                               #   label = "Download (rechts)",
+
                                #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
@@ -349,8 +305,8 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           width = 8,
         p("Der Frauenanteil in MINT-Berufen liegt bei nur 17 %, in Ausbildungen sogar nur bei 13 %.
         In \"Nicht-MINT\"-Berufen und -Ausbildungen sind Frauen dagegen die Mehrheit.
-        In den letzten 10 Jahren ist dieser niedrige Frauenanteil nur leicht gestiegen.
-        Blick man auf die absolute Anzahl an weiblichen MINT-Beschäftigten, ist diese in den letzten 10 Jahren allerdings durchaus gewachsen
+        In den letzten zehn Jahren ist dieser niedrige Frauenanteil nur leicht gestiegen.
+        Blickt man auf die absolute Anzahl an weiblichen MINT-Beschäftigten, ist diese in den letzten zehn Jahren allerdings durchaus gewachsen
         - um knapp 300.000. Das spricht dafür, dass zwar mehr Frauen, aber auch mehr Menschen insgesamt in MINT-Berufen arbeiten."),
         p("Manche MINT-Ausbildungen sind bei Frauen besonders beliebt.
           2022 waren die Top-Ausbildungsberufe unter neuen weiblichen Azubis Augenoptiker:in, Mediengestalter:in und Bauzeichner:in (in absoluten Zahlen).")
@@ -387,11 +343,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui("mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_einstieg_verlauf_gender"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
+
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -509,7 +461,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
             #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_6")
             #          )
             # ),
-            tabPanel("Top MINT-Ausbildungsberufe nach Geschlecht", br(),
+            tabPanel("Top-MINT-Ausbildungsberufe nach Geschlecht", br(),
 
                      shiny::sidebarPanel(
                        width = 3,
@@ -532,7 +484,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                        p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                        shinyBS::bsPopover(id = "h_beruf_fach_4", title = "",
-                                          content = paste0("Hier gezeigt werden nur neue Auszubildende im Fachbereich MINT des jeweiligen Jahres. Ausbidlungsberufe mit weniger als 10 neuen Vertragsabschlüssen für das betrachtete Jahr wurden ausgeschlossen. <br><br>In manchen Fällen weisen mehr als 10 Berufe einen Männeranteil von 100 % auf. In diesen Fällen sind die 10 Berufe mit 100 % Männeranteil angezeigt, welche die meisten Neu-Auszubildenden haben.", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                          content = paste0("Hier gezeigt werden nur neue Auszubildende im Fachbereich MINT des jeweiligen Jahres. Ausbildungsberufe mit weniger als zehn neuen Vertragsabschlüssen für das betrachtete Jahr wurden ausgeschlossen. <br><br>In manchen Fällen weisen mehr als zehn Berufe einen Männeranteil von 100 % auf. In diesen Fällen sind die zehn Berufe mit einem Männeranteil von 100 % angezeigt, welche die meisten Neu-Auszubildenden haben.", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                           placement = "top",
                                           trigger = "hover"),
                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_4")
@@ -546,7 +498,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         div(class = "inner-box",
         p(br(),"KURZANALYSE", br()),
         p(style = "font-size = 24",
-          strong("Nur 8 Prozent der Frauen üben einen MINT-Beruf aus, bei Männern sind es über ein Drittel.
+          strong("Nur 8 % der Frauen üben einen MINT-Beruf aus, bei Männern sind es über ein Drittel.
        Außerdem sinkt der Frauenanteil entlang der Bildungskette.
       Diese Zahlen werden in unserer Kurzanalyse \"Arbeitswelt: Frauen & MINT\" eingeordnet und mit Empfehlungen, was man
               für einen höheren Frauenanteil tun könnte, verknüpft."),
@@ -633,7 +585,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                 color = "#154194"),
 
                                shinyBS::bsPopover(id = "h_beruf_regional_23", title = "",
-                                                  content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br> <br>In die Kategorie &quotAuszubildende mit neuem Lehrvertrag&quot fallen sowohl neue Auszubilndende als auch Auszubildende nach Vertragswechsel."),
+                                                  content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br> <br>In die Kategorie &quotAuszubildende mit neuem Lehrvertrag&quot fallen sowohl neue Auszubildende als auch Auszubildende nach Vertragswechsel."),
                                                   placement = "top",
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_regional_23")

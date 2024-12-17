@@ -81,7 +81,7 @@ mod_betaversion_ui <- function(id){
           Diese werden wir demnächst in das MINT-DataLab integrieren können. Außerdem wollen wir Möglichkeiten ausloten, auch darüber hinaus die MINT-Bildungslandschaft darzustellen.",
           br(),
          tags$b(span("Mehr inhaltliche Dimensionen:")),
-          "Zu den Anteilen von MINT und Frauen in MINT sind Daten von internationalen Studierenden und Arbeitskräften, Kompetenzdaten von Schüler*innen sowie erste Arbeitsmarkt-Daten für verschiedenen Altersgruppen hinzugekommen.
+          "Zu den Anteilen von MINT und Frauen in MINT sind Daten von internationalen Studierenden und Arbeitskräften, Kompetenzdaten von Schüler:innen sowie erste Arbeitsmarkt-Daten für verschiedenen Altersgruppen hinzugekommen.
          Wir wollen hier noch weiter ausbauen und z. B. Absolvent*innen-Daten und Stundentafeln der MINT-Schulfächer ergänzen.",
          br(),
           # tags$b(span("Fokus auf Fachkräfte:")),

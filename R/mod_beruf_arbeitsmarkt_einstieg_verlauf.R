@@ -61,7 +61,7 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_ui <- function(id){
     ),
     p("Beschäftigtengruppe:"),
     shinyWidgets::pickerInput(
-      inputId = ns("indikator_arbeitsmarkt_einstieg_verlauf"),
+      inputId = ns("indikator_arbeitsmarkt_einstieg_verlauf_2"),
       choices = c("Auszubildende",
                   "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
                   "Beschäftigte",
