@@ -676,22 +676,39 @@ mod_fachkraft_start_server <- function(id, r){
     # })
 
     output$plot_fachkraft_epa_item_1 <- renderUI({
-      plot_list <- plot_fachkraft_epa_item(r)
-      r$plot_fachkraft_epa_item_1_left <- plot_list[[1]]
-      r$plot_fachkraft_epa_item_1_right <- plot_list[[2]]
+      # plot_list <- plot_fachkraft_epa_item(r)
+      # r$plot_fachkraft_epa_item_1_left <- plot_list[[1]]
+      # r$plot_fachkraft_epa_item_1_right <- plot_list[[2]]
+      #
+      # r$plot_fachkraft_epa_item_1_left_title <- get_plot_title(
+      #   plot = r$plot_fachkraft_epa_item_1_left
+      # )
+      # r$plot_fachkraft_epa_item_1_right_title <- get_plot_title(
+      #   plot = r$plot_fachkraft_epa_item_1_right
+      # )
+      #
+      # # return plots
+      # out <- highcharter::hw_grid(
+      #   plot_list,
+      #   ncol = 2)
+      # out
 
-      r$plot_fachkraft_epa_item_1_left_title <- get_plot_title(
-        plot = r$plot_fachkraft_epa_item_1_left
-      )
-      r$plot_fachkraft_epa_item_1_right_title <- get_plot_title(
-        plot = r$plot_fachkraft_epa_item_1_right
-      )
+      plots <- plot_fachkraft_epa_item(r)
+      if(length(plots)==2){
+        div(
+          style = "width: 1000px;",
+          out <- highcharter::hw_grid(
+            plots,
+            ncol = 2
+          )
+        )
+      }else{
+        div(
+          style = "width: 500px;",
+          plots
+        )
+      }
 
-      # return plots
-      out <- highcharter::hw_grid(
-        plot_list,
-        ncol = 2)
-      out
 
     })
     #

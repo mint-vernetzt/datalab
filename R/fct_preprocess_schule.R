@@ -49,7 +49,7 @@ prep_kurse_proportion <- function(df, indikator_choice) {
 
 prep_kurse_east_west <- function(df, type = "no_subjects") {
   #berechnet war Falsch - hat Deutschland in Osten enthalten
-  browser()
+
   df_incl <- df
 
   # create dummy variable to indicate east or west

@@ -924,7 +924,6 @@ plot_international_top10_gender <- function(r) {
 
 plot_international_mint_top_10 <- function(r){
 
-
 # Überschriften anpassen, einheitlich mit anderen plots
 
 # ui inputs laden
@@ -938,7 +937,8 @@ inpy <- r$map_y_ti
                     anforderung %in% c("Bachelor oder vergleichbar (ISCED 6)",
                                        "Master oder vergleichbar (ISCED 7)",
                                        "Promotion (ISCED 8)") &
-                    fach== "MINT")%>%
+                    fach== "MINT" &
+                    is.na(kommentar))%>%
     dplyr::collect()
   data1 <- data1 %>%
     dplyr::group_by(fach,geschlecht,
