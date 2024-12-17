@@ -9,7 +9,7 @@ mod_ausserschulisch_cp_orgas_ui <- function(id){
     shinyWidgets::pickerInput(
       inputId = ns("chara_cp_orgas"),
       label = NULL,
-      choices = c("Organisationstyp", "Fokus", "Region"),
+      choices = c("Organisationstyp", "Arbeitsfokus" = "Fokus", "Aktivitätsgebiet" = "Region"),
       selected = "Organisationstyp"
     ),
     conditionalPanel(condition = "input.chara_cp_orgas != 'Region'",
@@ -61,7 +61,7 @@ mod_ausserschulisch_cp_orgas_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_ausserschulisch_cp1", title="",
-                       content = paste0("Text fehlt noch"),
+                       content = paste0("Die erste Darstellung zeigt: Ein Drittel der Organisationen sind gemeinnützige Organisationen, etwas mehr als jede fünfte ist eine Bildungseinrichtung. Dabei können Organisationen auch sowohl gemeinnützige Organisation als auch Bildungseinrichtung sein, denn der eigenen Organisation konnten auch mehrere passenden Organisationstypen zugeordnet werden."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_ausserschulisch_cp1")
 

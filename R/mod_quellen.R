@@ -13,14 +13,15 @@ mod_quellen_ui <- function(id){
 
     # Banner
     fluidRow(
-      shinydashboard::box(
-        width = 12,
-        img(src='www/Banner_Hinweise.jpg',
-            class = "img-responsive",
-            #height = "150px", width = "150px",
-            alt = "Banner Quellen",
-            style="display: block; margin-left: auto; margin-right: auto;"
-        ))),
+      div(class = "clean-box",
+          column(
+            width = 12,
+            img(src='www/Banner_Hinweise.jpg',
+                class = "img-responsive",
+                #height = "150px", width = "150px",
+                alt = "Banner Quellen",
+                style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px;"
+            )))),
 
     fluidRow(
       shinydashboard::box(
@@ -99,7 +100,8 @@ mod_quellen_ui <- function(id){
       width = 3,
       title = "Weitere Datengeber:innen",
       #tags$b(span("Weitere Datengeber:", style = "color:#154194")),
-
+      tags$a(href="https://www.bibb.de/", "Bundesinstitut für Berufsbildung", target = "_blank"),
+      br(),
       tags$a(href="https://www.iqb.hu-berlin.de/", "Seite des Instituts zur Qualitätsentwicklung im Bildungswesen.(IQB)", target = "_blank"),
       br(),
       tags$a(href="https://www.oecd.org/pisa/", "Seite des Pisa-Programms der OECD", target = "_blank"),
@@ -135,12 +137,15 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 9,
-        title = "Nutzungsbedingungen der Daten",
+        title = "Nutzungsbedingungen der Daten und Quellenangabe",
         p(style = "text-align: justify; font-size = 16px",
           "Die Nutzungsbedingungen der Datengeber:innen erlauben die Verwendung der Daten und die grafische Aufbereitung
           sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet.
           Bei Interesse an den kompletten Datensätzen müssen die Datengeber:innen direkt kontaktiert werden."
-        )
+        ),
+        p("Inhalte des MINT-DataLab können mit folgender Quellenangabe weitergenutzt werden:
+          \"MINT-DataLab von MINTvernetzt. https://www.mint-vernetzt.de/mint-datalab/\". Unter den interaktiven Grafiken sind jeweils eigene Quellenangaben
+          mit Verweis auf die Datenquelle angegeben.")
       )),
 
 

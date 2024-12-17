@@ -39,15 +39,25 @@ app_ui <- function(request) {
           style = "position: fixed;",
           id = "tabs",
           shinydashboard::menuItem("Startseite",  tabName = "startseite"),
+
+          p("MINT nach Bereichen:", style = "color: #154194; font-size: 16px; font-weight: 600;
+          margin: 5px 0px 0px 10px;"),
+          hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
           shinydashboard::menuItem("Alle Bildungsbereiche",  tabName = "home"),
           shinydashboard::menuItem("Schule",  tabName = "schule"),
           shinydashboard::menuItem("Studium",  tabName = "studium"),
           # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
-          # shinydashboard::menuItem("Außerschulische MINT-Bildung", tabName = "ausserschulisch"),
-          shinydashboard::menuItem("Fokus: MINT International", tabName = "international"),
-          shinydashboard::menuItem("Fokus: MINT-Fachkräfte",  tabName = "fachkraft"),
+
+          p("Fokusseiten:", style = "color: #00A87A; font-size: 16px; font-weight: 600;
+          margin: 5px 0px 0px 10px;"),
+          hr(style = "border-top: 2px solid #00A87A; margin-top: 5px; margin-bottom: 5px;"),
+          shinydashboard::menuItem("Außerschulische MINT-Bildung", tabName = "ausserschulisch"),
+          shinydashboard::menuItem("MINT-Fachkräfte",  tabName = "fachkraft"),
+          shinydashboard::menuItem("MINT International", tabName = "international"),
+
         # shinydashboard::menuItem("BETA: Suche",  tabName = "suche"),
+          hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen")
         #,
           #shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION")
@@ -97,7 +107,7 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
           # shinydashboard::tabItem(tabName ="ausbildung", mod_ausbildung_ui("ausbildung_ui_1")),
           shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
-          # shinydashboard::tabItem(tabName = "ausserschulisch", mod_ausserschulisch_ui("ausserschulisch_ui_1")),
+          shinydashboard::tabItem(tabName = "ausserschulisch", mod_ausserschulisch_ui("ausserschulisch_ui_1")),
           shinydashboard::tabItem(tabName = "international", mod_international_ui("mod_international_ui_1")),
           shinydashboard::tabItem(tabName ="fachkraft", mod_fachkraft_ui("fachkraft_ui_1")),
 

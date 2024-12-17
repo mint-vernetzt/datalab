@@ -67,10 +67,6 @@ mod_schule_server <- function(id, r){
   mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_server("mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui_1", r)
   mod_schule_kurse_iqb_fragen_server("mod_schule_kurse_iqb_fragen_ui_1", r)
 
-  #Box SKf
-  mod_ausserschulisch_skf_einrichtungen_server("mod_ausserschulisch_skf_einrichtungen_ui_1", r)
-  mod_ausserschulisch_skf_personal_server("mod_ausserschulisch_skf_personal_ui_1", r)
-
 
 }
 

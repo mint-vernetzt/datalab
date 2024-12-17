@@ -20,7 +20,7 @@ orgas <- subset(orgas, select=-c(X) )
 # Datenaufbereitung
 total_N <- length(unique(orgas$name))
 orgas <- subset(orgas, !(is.na(orgas$area)) | !(is.na(orgas$organizationType)) |
-                  is.na(orgas$focus))
+                  !is.na(orgas$focus))
 any_value_N <- length(unique(orgas$name))
 
 # Gesamt
@@ -227,6 +227,7 @@ type <- c("discipline",  "additionalDiscipline", "projectTargetGroup", "specialT
           "format", "financing")
 indi <- c("MINT-Disziplin",  "weitere Disziplin", "Zielgruppe", "weitere Zielgruppe",
           "Format", "Finanzierung")
+
 daten_schnittmenge_aufbereiten <- function(pros, vek, indi){
 
   var <- sym(vek)
@@ -343,6 +344,145 @@ save(ausserschulisch_cp_projekte, file = "ausserschulisch_cp_projekte.rda")
 ## Envir. aufräumen
 rm(list=ls())
 
+## Profile -----
+
+profs <- read.csv(paste0(pfad, "/CP003_Profile.csv"))
+profs <- subset(profs, select=-c(X) )
+
+# Datenaufbereitung
+total_N <- length(unique(profs$id))
+profs <- subset(profs, !(is.na(profs$area)) | !(is.na(profs$offer)) |
+                  !is.na(profs$seekingsseeking_offer))
+any_value_N <- length(unique(profs$id))
+
+# Gesamt
+area <- subset(profs, select = c(id, area))
+area <- area[!duplicated(area), ]
+area <- na.omit(area)
+N_area <- length(unique(area$id))
+area <- area %>%
+  mutate(area = as.factor(area)) %>%
+  count(area) %>%
+  rename(wert = n,
+         indikator = area)
+area$typ <- "Region"
+area$region <- "Gesamt"
+area <- area[, c("region", "typ", "indikator", "wert")]
+
+offer <- subset(profs, select = c(id, offer))
+offer <- offer[!duplicated(offer), ]
+offer <- na.omit(offer)
+offer <- offer %>% filter(offer != "")
+N_offer <- length(unique(offer$id))
+offer <- offer %>%
+  mutate(offer = as.factor(offer)) %>%
+  count(offer) %>%
+  rename(wert = n,
+         indikator = offer)
+offer$typ <- "Angebote"
+offer$region <- "Gesamt"
+offer <- offer[, c("region", "typ", "indikator", "wert")]
+
+seeking <- subset(profs, select = c(id, seekingsseeking_offer))
+seeking <- seeking[!duplicated(seeking), ]
+seeking <- na.omit(seeking)
+seeking <- seeking %>% filter(seekingsseeking_offer != "")
+N_seeking <- length(unique(seeking$id))
+seeking <- seeking %>%
+  mutate(seekingsseeking_offer = as.factor(seekingsseeking_offer)) %>%
+  count(seekingsseeking_offer) %>%
+  rename(wert = n,
+         indikator = seekingsseeking_offer)
+seeking$typ <- "Gesucht"
+seeking$region <- "Gesamt"
+seeking <- seeking[, c("region", "typ", "indikator", "wert")]
+
+# Schnittmengen
+bundeslaender_string <- c(
+  "Baden-Württemberg", "Bayern", "Berlin", "Brandenburg",
+  "Bremen", "Hamburg", "Hessen", "Mecklenburg-Vorpommern",
+  "Niedersachsen", "Nordrhein-Westfalen", "Rheinland-Pfalz",
+  "Saarland", "Sachsen", "Sachsen-Anhalt", "Schleswig-Holstein", "Thüringen"
+)
+
+offer_area <- subset(profs, select = c(id, offer, area))
+offer_area <- offer_area[!duplicated(offer_area), ]
+offer_area <- na.omit(offer_area)
+offer_area <- offer_area %>% filter(offer != "")
+offer_area <- offer_area %>%
+  filter(area %in% c(bundeslaender_string, "Bundesweit"))
+N_offer_area <-  offer_area %>%
+  group_by(area) %>%
+  summarize(count = n_distinct(id))
+offer_area <- offer_area %>%
+  mutate(offer = as.factor(offer)) %>%
+  group_by(area) %>%
+  count(offer) %>%
+  ungroup() %>%
+  rename(wert = n,
+         indikator = offer,
+         region = area)
+offer_area$typ <- "Angebote"
+offer_area <- offer_area[, c("region", "typ", "indikator", "wert")]
+
+seeking_area <- subset(profs, select = c(id, seekingsseeking_offer, area))
+seeking_area <- seeking_area[!duplicated(seeking_area), ]
+seeking_area <- na.omit(seeking_area)
+seeking_area <- seeking_area %>% filter(seekingsseeking_offer != "")
+seeking_area <- seeking_area %>%
+  filter(area %in% c(bundeslaender_string, "Bundesweit"))
+N_seeking_area <-  seeking_area %>%
+  group_by(area) %>%
+  summarize(count = n_distinct(id))
+seeking_area <- seeking_area %>%
+  mutate(seekingsseeking_offer = as.factor(seekingsseeking_offer)) %>%
+  group_by(area) %>%
+  count(seekingsseeking_offer) %>%
+  ungroup() %>%
+  rename(wert = n,
+         indikator = seekingsseeking_offer,
+         region = area)
+seeking_area$typ <- "Gesucht"
+seeking_area <- seeking_area[, c("region", "typ", "indikator", "wert")]
+
+# zusammenhängen
+cp_profile <- rbind(area, offer, offer_area, seeking, seeking_area)
+cp_profile$indikator <- as.character(cp_profile$indikator)
+
+#Ns anhängen
+alle <- c(region ="Gesamt", typ = "Gesamt", indikator = "Alle",  wert= total_N)
+ges <- c(region ="Gesamt", typ = "Gesamt", indikator = "Gesamt",  wert = any_value_N)
+ges_area <- c(region = "Gesamt", typ = "Region", indikator = "Gesamt", wert = N_area)
+ges_offer <- c(region = "Gesamt", typ = "Angebote", indikator = "Gesamt", wert = N_offer)
+ges_seeking <- c(region = "Gesamt", typ = "Gesucht", indikator = "Gesamt", wert = N_seeking)
+N_offer_area <- N_offer_area %>%
+  rename(region = area,
+         wert = count) %>%
+  mutate(typ = "Angebote",
+         indikator = "Gesamt")
+N_seeking_area <- N_seeking_area %>%
+  rename(region = area,
+         wert = count) %>%
+  mutate(typ = "Gesucht",
+         indikator = "Gesamt")
+
+cp_profile <- rbind(cp_profile, alle, ges, ges_area, ges_offer, ges_seeking,
+                    N_offer_area, N_seeking_area)
+
+#Speichern
+ausserschulisch_cp_profile <- cp_profile
+
+#setwd("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+save(ausserschulisch_cp_profile, file = "ausserschulisch_cp_profile.rda")
+setwd("~/datalab2")
+
+## Envir. aufräumen
+all <- ls()
+keep <- c("pfad")
+delete <- setdiff(all, keep)
+rm(list=delete)
+
 
 # MINTvernetzt-Befragungen ------------------------------------------------
 
@@ -369,6 +509,16 @@ df_stimm <- readxl::read_excel(paste0(pfad,"/CP004_MINTvernetzt_Befragungsdaten.
 ausserschulisch_stimmungsbarometer <- df_stimm
 setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
 save(ausserschulisch_stimmungsbarometer, file = "ausserschulisch_stimmungsbarometer.rda")
+rm(list=ls())
+
+## Genderbefragung ----
+df_gen <- readxl::read_excel(paste0(pfad,"/CP004_MINTvernetzt_Befragungsdaten.xlsx"),
+                                sheet = "Genderbefragung", col_names = TRUE)
+
+# Speichern
+ausserschulisch_genderbefragung <- df_gen
+setwd("C:/Users/kbr/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/")
+save(ausserschulisch_genderbefragung, file = "ausserschulisch_genderbefragung.rda")
 rm(list=ls())
 
 # Stiftung Kinder Forschen ------------------------------------------------
