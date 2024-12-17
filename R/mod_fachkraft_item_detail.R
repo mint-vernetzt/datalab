@@ -15,7 +15,7 @@ mod_fachkraft_item_detail_ui <- function(id){
       inputId = ns("map_y_fachkraft_arbeit_detail"),
       label = NULL,
       choices = fachkraft_ui_years(),
-      selected = "2022"
+      selected = "2023"
     ),
 
     p("Berufslevel:"),
@@ -83,7 +83,7 @@ mod_fachkraft_item_detail_server <- function(id, r){
         #                  ifelse(level == "Spezialist*innen", fachkraft_ui_berufe(level = "Spezialist*innen"),
         #                         fachkraft_ui_berufe(level = "Expert*innen"))),
         choices = fachkraft_ui_berufe(level, zeitpunkt),
-        selected = "Gesamt"
+        selected = "Berufe Sanitär-, Heizungs-, Klimatechnik"
       )
     })
 

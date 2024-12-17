@@ -310,9 +310,11 @@ mod_fachkraft_start_ui <- function(id){
           width = 12,
           column(
             width = 8,
-          p("In dieser Box blicken wir auf den Fachkräftebedarf im Bereich MINT.
-          Dabei bleiben wir zunächst auf der Ebene der Berufsbereiche MINT bzw. der MINT-Disziplinen
-          und vergleichen diese Bereiche mit \"Nicht-MINT\" bzw. allen Berufen."),
+          p("
+          Vergleicht man die Berufsgruppen zeigt sich: Der Fachkräfteengpass in MINT-Berufen ist höher als im Nicht-MINT-Bereich.
+            Während 39 % der MINT-Berufe einen Fachkräfteengpass aufweisen, und weiter 34 % Anzeichen für einen Fachkräfteengpass zeigen,
+            sind es in den Nicht-MINT-Berufen nur jeweils 32 %. Auch die Indikatoren der Arbeitslosen-Stellen-Relation und
+            Vakanzzeit weisen auf einen erhöhten Fachkräftebedarf in den MINT-Berufen hin."),
           p("Die hier betrachteten Indikatoren des Fachkräftebedarfs sind die Ergebnisse der
             Engpassanalyse der Bundesagentur für Arbeit, der Arbeitslosen-Stellen-Relation und der Vakanzzeit.
             Was diese Indikatoren bedeuten, erklären wir in den Infoboxen, die sich beim Klicken auf
@@ -468,10 +470,12 @@ mod_fachkraft_start_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("In dieser Box blicken wir auf den Fachkräftebedarf in einzelnen Berufen.
-          Die interaktiven Darstellungen ermöglichen es, den Fachkräftebedarf der einzelnen Berufsgattungen,
-          z. B. Mechatronik oder Gesundheits- und Krankenpflege, zu betrachten. Außerdem zeigen wir ein Ranking der
-          MINT-Berufe mit dem aktuell höchsten und geringsten Fachkräftebedarf."),
+        p("
+          Diese interaktive Darstellung ermöglichen es, den Fachkräftebedarf der einzelnen Berufsgattungen,
+          z. B. Mechatronik oder Gesundheits- und Krankenpflege, zu betrachten.
+          So liegt als ein Beispiel in den Berufen der Sanitär-, Heizungs- und Klimatechnik ein akuter Fachkräfteengpass vor (Wert über 2,0).
+          Gründe, die zu dieser Beurteilung führen, sind hohe Vakanzzeiten, eine ungünstige Arbeitslosen-Stellen-Relation,
+          die hohe berufsspezifische Arbeitslosenquote sowie niedrige Abgangsrate aus der Arbeitslosigkeit."), #Außerdem zeigen wir ein Ranking der MINT-Berufe mit dem aktuell höchsten und geringsten Fachkräftebedarf.
         p("Die hier betrachteten Indikatoren des Fachkräftebedarfs sind die Ergebnisse der
             Engpassanalyse der Bundesagentur für Arbeit, der Arbeitslosen-Stellen-Relation und der Vakanzzeit.
             Was diese Indikatoren bedeuten, erklären wir in den Infoboxen, die sich beim Klicken auf
