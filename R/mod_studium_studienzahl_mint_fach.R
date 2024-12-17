@@ -22,8 +22,8 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("jahr_mint_fach"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
 
     p("Region:"),
@@ -69,7 +69,9 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
                     "Studierende (Lehramt)",
                     "internationale Studierende",
                     "Studienanfänger:innen (1. Hochschulsemester)",
-                    "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
+                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                    "Absolvent:innen",
+                    "internationale Absolvent:innen"),
         selected = c("Studierende"),
         multiple = FALSE
         # ,
@@ -80,13 +82,13 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
       br(),
       shinyBS::bsPopover(id="dh_studium_mint_fach_1", title = "",
                                 content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                trigger = "hover"),
+                                trigger = "hover", placement = "top"),
       tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_mint_fach_1"),
       br(),
       br(),
       shinyBS::bsPopover(id="ih_studium_mint_fach_2", title="",
-                         content = paste0("In der ersten Darstellung zeigt die rechte Grafik: 37 % der Studierenden lernen eine MINT-Disziplin. Der Großteil der MINT-Studierenden (26 %) studiert dabei eine Ingenieurwissenschaft, wozu auch ein Informatik-Studium zählt."),
-                         trigger = "hover"),
+                         content = paste0("Die erste Darstellung zeigt: Zusammen gerechnet knapp 37 % der Studierenden belegen ein MINT-Fach. Der Großteil davon (26 %) studiert eine Ingenieurwissenschaft, wozu auch ein Informatikstudium zählt."),
+                         trigger = "hover", placement = "top"),
       tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_fach_2")
     ),
 
@@ -101,13 +103,15 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
                                   "Studierende (Lehramt)",
                                   "internationale Studierende",
                                   "Studienanfänger:innen (1. Hochschulsemester)",
-                                  "internationale Studienanfänger:innen (1. Hochschulsemester)" ),
+                                  "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                  "Absolvent:innen",
+                                  "internationale Absolvent:innen"),
                        selected = c("Studierende"),
                        multiple = FALSE
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_fach_3", title="",
-                                        content = paste0("Die Darstellung zeigt, wie groß der Anteil Studierender in einzelnen MINT-Fächern an allen Studierenden ist. In der ersten Einstellung sieht man beispielsweise, 2021 studieren in Rheinland-Pfalz 9.085 Personen (7,5 %) Informatik."),
+                                        content = paste0("Die Darstellung zeigt, wie groß der Anteil Studierender in einzelnen MINT-Fächern an allen Studierenden ist. In der ersten Einstellung sieht man beispielsweise, 2023 studieren in Deutschland 128.000 Personen (25,5 %) eine Ingenieurwissenschaft."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_fach_3")

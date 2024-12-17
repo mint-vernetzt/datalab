@@ -25,7 +25,7 @@ mod_fachkraft_item_prog_alle_ui <- function(id){
     br(),
 
     shinyBS::bsPopover(id="ih_fachkraft_prog_alle_2", title="",
-                       content = paste0("Die erste Darstellung zeigt: Wenn sich die Zahl an jungen MINT-Fachkräften, z. B. durch erfolgreiche MINT-Bildungsangebote, noch einmal positiver weiterentwickelt, als in den letzten 10 Jahren, können rund 700.000 zusätzliche MINT-Fachkräfte gewonnen werden. Ein Einbruch in der Zunahme junger Menschen in MINT könnte dagegen einen Verlust von rund 800.000 Fachkräften bis 2037 bedeuten."),
+                       content = paste0("Die erste Darstellung zeigt: Wenn sich die Zahl an jungen MINT-Fachkräften, z. B. durch erfolgreiche MINT-Bildungsangebote, noch einmal positiver weiterentwickelt als in den letzten 10 Jahren, können rund 700.000 zusätzliche MINT-Fachkräfte gewonnen werden. Ein Einbruch in der Zunahme junger Menschen in MINT könnte dagegen einen Verlust von rund 800.000 Fachkräften bis 2037 bedeuten."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_prog_alle_2")

@@ -303,3 +303,14 @@ background-color:#FCFCFD;
   100% { transform: rotate(360deg); }
 }
 
+/* Remove spacing between fluidRow elements */
+.row {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Adjust box spacing */
+.box {
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+}

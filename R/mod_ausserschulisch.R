@@ -32,9 +32,9 @@ mod_ausserschulisch_server <- function(id, r){
   mod_ausserschulisch_mvb_stimmungsb_server("mod_ausserschulisch_mvb_stimmungsb_ui", r)
   mod_ausserschulisch_mvb_genderb_server("mod_ausserschulisch_mvb_genderb_ui")
 
-  #Box SKf
-  mod_ausserschulisch_skf_einrichtungen_server("mod_ausserschulisch_skf_einrichtungen_ui_1", r)
-  mod_ausserschulisch_skf_personal_server("mod_ausserschulisch_skf_personal_ui_1", r)
+  # #Box SKf
+  # mod_ausserschulisch_skf_einrichtungen_server("mod_ausserschulisch_skf_einrichtungen_ui_1", r)
+  # mod_ausserschulisch_skf_personal_server("mod_ausserschulisch_skf_personal_ui_1", r)
 
 }
 

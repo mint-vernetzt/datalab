@@ -1147,8 +1147,8 @@ skf_personal <- function(r){
 
 
   # Labels anpassen
-  df$indikator[df$indikator == "neu fortgebildete Fach- / Lehrkräfte"] <- "in diesem Jahr fortgebildet"
-  df$indikator[df$indikator == "insgesamt fortgebildete Fach- / Lehrkräfte"] <- "bis jetzt insgesamt fortgebildet"
+  df$indikator[df$indikator == "neu fortgebildete Fach- / Lehrkräfte"] <- "In diesem Jahr fortgebildet"
+  df$indikator[df$indikator == "insgesamt fortgebildete Fach- / Lehrkräfte"] <- "Bis jetzt insgesamt fortgebildet"
 
   # Plot
   out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group=indikator))%>%

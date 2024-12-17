@@ -93,10 +93,15 @@ mod_startseite_start_ui <- function(id){
     #                 ))
     # ),
 
+
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    ),
+
     fluidRow(
       shinydashboard::box(
         width = 10,
-        img(src='www/howto_turan_neu_1.png',
+        img(src='www/ht1.png',
             class = "img-responsive",
             # height = "800px",
             #width = "150px",
@@ -105,12 +110,14 @@ mod_startseite_start_ui <- function(id){
             max-width: 80%;"
         ))
     ),
+    br(),
 
     fluidRow(
       shinydashboard::box(
 
         width = 10,
-        img(src='www/howto_turan_neu_2.png',
+        style = "margin-top: 0; padding: 0;",
+        img(src='www/ht2_neu.png',
             class = "img-responsive",
             # height = "800px",
             #width = "150px",

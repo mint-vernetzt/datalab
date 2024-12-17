@@ -35,8 +35,8 @@ mod_studium_studienzahl_anteil_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("studium_anteil_y"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -76,16 +76,29 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                                    "internationale Studierende",
                                    "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)"),
-                       selected = c("Studierende"
-                                    , "Studienanfänger:innen (1. Hochschulsemester)"
-                       ),
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "Absolvent:innen",
+                                   "internationale Absolvent:innen"),
+                       selected = c("Studierende"),
                        multiple = TRUE,
                        options =  list(
                          "max-options" = 2,
                          "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
                      ),
                      br(),
+
+
+#
+#                      conditionalPanel(condition = "input-studium_anteil_i =='Absolventen'",
+#                                       ns = ns,
+#
+#                                       p("Erweiterte Absolventenauswahl (max. 2)"),
+#                                       inputId = ns("absolventen_auswahl_i"),
+#                                       choices = c("internationale Absolventen",
+#                                                   "ausländische Absolventen",
+#                                                   "Weibliche Absolventen")
+#                      ),
+
                      shinyBS::bsPopover(id="dh_studium_mint_1", title = "",
                                         content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                                         trigger = "hover"),
@@ -93,7 +106,7 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_1", title="",
-                                        content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland 38 % der Studienanfänger:innen (1. FS) ein MINT-Fach wählen, bei den Studierenden ist dieser Anteil mit 37 % in 2021 etwas geringer, was bedeutet, dass die Abbruchsquote in MINT höher liegt als in anderen Fachbereichen."),
+                                        content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland im Jahr 2023 rund 37 % der Studierenden ein MINT-Fach belegen. Blickt man dazu auf die Studierendengruppe der Absolvent:innen sieht man: Der MINT-Anteil hier ist mit 36 % etwas geringer, was auf Studienabbrüche in den MINT-Fächern hindeutet."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_1")
 
@@ -109,7 +122,9 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                                               "internationale Studierende",
                                               "Studierende (Lehramt)",
                                               "Studienanfänger:innen (1. Hochschulsemester)",
-                                              "internationale Studienanfänger:innen (1. Hochschulsemester)"),
+                                              "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                              "Absolvent:innen",
+                                    "internationale Absolvent:innen"),
                        multiple = TRUE,
                        options = list(`actions-box` = TRUE,
                                       `deselect-all-text` = "Alle abwählen",
@@ -124,11 +139,13 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                                                "internationale Studierende",
                                                "Studierende (Lehramt)",
                                                "Studienanfänger:innen (1. Hochschulsemester)",
-                                               "internationale Studienanfänger:innen (1. Hochschulsemester)")
+                                               "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                               "Absolvent:innen",
+                                    "internationale Absolvent:innen")
                      ),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_6", title="",
-                                        content = paste0("Über die Studierendengruppen hinweg liegt der Anteil an MINT-Studierenden in Deutschland 2021 zwischen 35 % - 39 %. Die einzige Ausnahme hierbei sind Lehramtstudierende: Weniger als ein Drittel der Lehramtstudierenden deutschlandweit belegen ein MINT-Fach als Hauptfach."),
+                                        content = paste0("Der MINT-Anteil variiert zwischen den Studierendengruppen. MINT wird von internationalen Studierenden besonders oft belegt (47 % - 54 %). Dagegen belegt nur etwas weniger als ein viertel der Lehramstudierenden ein MINT-Fach als Hauptfach."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_6")
 

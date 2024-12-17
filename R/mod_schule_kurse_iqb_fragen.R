@@ -36,7 +36,7 @@ mod_schule_kurse_iqb_fragen_ui <- function(id){
     br(),
     br(),
     shinyBS::bsPopover(id="ih_schule_kompetenz_3", title="",
-                       content = paste0("Die erste Darstellung zeigt, dass sowohl das Interesse als auch die Einschätzung der eignene Fähigkeiten in Mathematik bei Mädchen geinger als bei Jungen ist. Betrachtet man zum Vergleich Interesse und Einschätung der Fähigkeiten für das Fach Deutsch, sieht man eine gegenteilige Tendenz. Hier geben Mädchen ein höheres Interesse an und schätzen sich als komptetenter ein."),
+                       content = paste0("Die erste Darstellung zeigt, dass sowohl das Interesse als auch die Einschätzung der eignenen Fähigkeiten in Mathematik bei Mädchen geringer als bei Jungen ist. Betrachtet man zum Vergleich Interesse und Einschätzung der Fähigkeiten für das Fach Deutsch, sieht man eine gegenteilige Tendenz. Hier geben Mädchen ein höheres Interesse an und schätzen sich als kompetenter ein."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_kompetenz_3")
   )

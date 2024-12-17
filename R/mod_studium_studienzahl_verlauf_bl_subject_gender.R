@@ -15,8 +15,8 @@ mod_studium_studienzahl_verlauf_bl_subject_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("choice_V_y"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2016,2022)
+      choices = 2013:2023,
+      selected = c(2016,2023)
     ),
     p("Studierendengruppen:"),
     shinyWidgets::pickerInput(

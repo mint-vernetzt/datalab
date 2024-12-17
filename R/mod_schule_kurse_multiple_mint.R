@@ -68,7 +68,7 @@ mod_schule_kurse_multiple_mint_ui <- function(id){
         ),
         br(),
         shinyBS::bsPopover(id="ih_schule_mint_1", title="",
-                           content = paste0("In der ersten Einstellung (d.h. Kursniveau = &quotLeistungskurs&quot, Region = &quotDeutschland&quot, Fächer-Ebene = &quotMINT-Fachbereiche&quot) ist zu sehen, dass z.B. von allen Leistungskursbelegungen nur 1% dem Fach Informatik entspricht. Weitere 16% sind naturwissenschaftliche Fächer (z.B. Physik)."),
+                           content = paste0("In der ersten Einstellung (d.h. Kursniveau = &quotLeistungskurs&quot, Region = &quotDeutschland&quot, Fächer-Ebene = &quotMINT-Fachbereiche&quot) ist zu sehen, dass z.B. von allen Leistungskursbelegungen nur 1 % dem Fach Informatik entspricht. Weitere 16 % sind naturwissenschaftliche Fächer (z.B. Physik)."),
                            trigger = "hover"),
         tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_1")
       ),
@@ -78,7 +78,7 @@ mod_schule_kurse_multiple_mint_ui <- function(id){
                      ns = ns,
                      br(),
                      shinyBS::bsPopover(id="balken_mint_1", title="",
-                                        content = paste0("In der ersten Einstellung erkennt man, dass MINT-Fächer in Deutschland insgesamt 33% aller Leistungskursbelegungen ausmachen. Davon entfallen 17 Prozentpunkte auf die Mathematik, 1 Prozentpunkt auf die Informatik, etc."),
+                                        content = paste0("In der ersten Einstellung erkennt man, dass MINT-Fächer in Deutschland insgesamt 33 % aller Leistungskursbelegungen ausmachen. Davon entfallen 17 Prozentpunkte auf die Mathematik, 1 Prozentpunkt auf die Informatik, etc."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="balken_mint_1")
     ),

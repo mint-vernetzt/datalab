@@ -21,8 +21,8 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("gen_y"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
 
     conditionalPanel(condition = "input.ansicht_gen_mint == 'Einzelansicht - Kuchendiagramm'",
@@ -33,7 +33,8 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
           inputId = ns("gen_l"),
           choices = c("Studierende",
                       "Studierende (Lehramt)",
-                      "Studienanfänger:innen (1. Hochschulsemester)"
+                      "Studienanfänger:innen (1. Hochschulsemester)",
+                      "Absolvent:innen"
 
           ),
           selected = "Studierende",
@@ -121,13 +122,13 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
         br(),
         shinyBS::bsPopover(id="dh_studium_frauen_1", title = "",
                            content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                           trigger = "hover"),
+                           trigger = "hover", placement = "top"),
         tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_frauen_1"),
         br(),
         br(),
         shinyBS::bsPopover(id="ih_studium_frauen_1", title="",
-                           content = paste0("In der ersten interaktiven Grafik ist zu sehen, dass deutschlandweit 2022 der Anteil von Frauen unter den Studienanfänger:innen in MINT-Fächern 35.1 % ausmacht. Unter den Studierenden liegt der Frauenanteil in MINT-Fächern bei 32.4% etwas darunter. Dies deutet darauf hin, dass bei weiblichen Studierenden die Abbruchquote in MINT höher ist als bei männlichen Studierenden."),
-                           trigger = "hover"),
+                           content = paste0("In der ersten interaktiven Grafik ist zu sehen, dass deutschlandweit im Jahr 2023 der Anteil von Frauen unter den Studierenden in MINT-Fächern 32,6 % ausmacht."),
+                           trigger = "hover", placement = "top"),
         tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_frauen_1")
       ),
 
@@ -279,7 +280,7 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
     ),
     br(),
                      shinyBS::bsPopover(id="ih_studium_frauen_3", title="",
-                                        content = paste0("In der ersten Einstellung ist zu sehen, dass in Hamburg 2021 der Frauenanteil von Lehramtstudierenden mit einem Hauptfach in MINT mit 54 % über der Hälfte liegt. Dagegen sind nur ein Drittel der allgemeinen MINT-Studierenden in Hambrug weiblich."),
+                                        content = paste0("Die Übersicht zeigt unter anderem, dass deutschlandweit 2023 der Frauenanteil von Lehramtstudierenden mit einem Hauptfach in MINT bei 54 % liegt. Dagegen ist nur ein Drittel der allgemeinen MINT-Studierenden weiblich."),
                                         placement = "top",
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_frauen_3")

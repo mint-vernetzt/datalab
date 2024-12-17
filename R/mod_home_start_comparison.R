@@ -88,7 +88,7 @@ mod_home_start_comparison_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_alle_frauen_2", title="",
-                       content = paste0("Der Frauenanteil im MINT-Fachbereich hat sich sowohl in Schule, Studium, Ausbildung wie Beschäftigung in den 9 Jahren von 2013 bis 2021 nur geringfügig erhöht (1-3 Prozentpunkte)."),
+                       content = paste0("Der Frauenanteil im MINT-Fachbereich hat sich sowohl in Schule, Studium, Ausbildung wie auch Beschäftigung in den 9 Jahren von 2013 bis 2021 nur geringfügig erhöht (1-3 Prozentpunkte)."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_alle_frauen_2")
   )

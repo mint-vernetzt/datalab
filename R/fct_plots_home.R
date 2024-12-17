@@ -199,6 +199,8 @@ home_einstieg <- function(r) {
    if(zeit == 2023){subtitel <- paste0("Schüler:innendaten für 2023 liegen noch nicht vor.")}else{
      subtitel <- ""
    }
+
+   df <- df[with(df, order(prop, decreasing = TRUE)), ] ################################
    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = indikator, group = "fachbereich"))%>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
@@ -546,6 +548,32 @@ home_einstieg_gender <- function(r) {
     dplyr::select(bereich, indikator, fachbereich, geschlecht, wert) %>%
     dplyr::collect()
 
+  if("Leistungskurse" %in% indi & regio == "Deutschland"){
+
+    #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
+    df_alle_bw <- dplyr::tbl(con, from = "zentral") %>%
+      dplyr::filter(jahr == zeit,
+                    region == "Baden-Württemberg",
+                    geschlecht == "Gesamt",
+                    fachbereich %in% c("MINT", "Nicht MINT"),
+                    bereich == "Schule") %>%
+      # dplyr::select(bereich, region, indikator, geschlecht, fachbereich, jahr, wert) %>%
+      dplyr::select(bereich, indikator, fachbereich, geschlecht, wert) %>%
+      dplyr::collect()
+
+    df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
+      dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich",
+                                          "geschlecht")) %>%
+      dplyr::mutate(wert.x = wert.x - wert.y) %>%
+      dplyr::select(-wert.y) %>%
+      dplyr::rename(wert = wert.x)
+
+    df_alle <- df_alle %>%
+      dplyr::filter(bereich != "Schule") %>%
+      rbind(df_alle_schule)
+
+  }
+
   df <- df %>%
     dplyr::left_join(df_alle, by = c("bereich", "indikator", "fachbereich")) %>%
     dplyr::rename(wert = wert.x,
@@ -877,6 +905,8 @@ home_einstieg_gender <- function(r) {
       # !fachbereich %in% c("Schüler:innen Grundkurse in MINT",
       #                     "Schüler:innen Leistungskurse in MINT")
 
+      df <- df[with(df, order(prop, decreasing = TRUE)), ]###############################################
+
       out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=prop, group = geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
@@ -1032,17 +1062,42 @@ home_comparison_line <- function(r) {
     df_alle <- dplyr::tbl(con, from = "zentral") %>%
       dplyr::filter(jahr %in% t,
                     region %in% regio,
-                    geschlecht == "Frauen",
-                    fachbereich == "Alle") %>%
+                    geschlecht == "Gesamt",
+                    fachbereich == "MINT") %>%
       dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
       dplyr::collect()
 
+    if("Schülerinnen Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
+
+      #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
+      df_alle_bw <- dplyr::tbl(con, from = "zentral") %>%
+        dplyr::filter(jahr %in% t,
+                      region == "Baden-Württemberg",
+                      geschlecht == "Gesamt",
+                      fachbereich == "MINT",
+                      bereich == "Schule") %>%
+        dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
+        dplyr::collect()
+
+      df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
+        dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich",
+                                            "jahr", "geschlecht")) %>%
+        dplyr::mutate(wert.x = wert.x - wert.y) %>%
+        dplyr::select(-wert.y) %>%
+        dplyr::rename(wert = wert.x)
+
+      df_alle <- df_alle %>%
+        dplyr::filter(bereich != "Schule") %>%
+        rbind(df_alle_schule)
+
+    }
+
     df <- df %>%
-      dplyr::left_join(df_alle, by = c("indikator", "jahr", "geschlecht", "bereich")) %>%
+      dplyr::left_join(df_alle, by = c("indikator", "jahr", "fachbereich", "bereich")) %>%
       dplyr::mutate(prop = round(wert.x/wert.y * 100, 1)) %>%
-      dplyr::rename(fachbereich = fachbereich.x,
+      dplyr::rename(geschlecht = geschlecht.x,
                     wert = wert.x) %>%
-      dplyr::select(-c(wert.y, fachbereich.y))
+      dplyr::select(-c(wert.y, geschlecht.y))
 
     df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
 

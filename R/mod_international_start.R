@@ -32,16 +32,16 @@ mod_international_start_ui <- function(id){
         title = "Auf dieser Seite",
         width = 7,
         p(style = "text-align: left; font-size = 16px",
-          "Auf dieser Fokus-Seite blicken wir über Deutschland hinaus. Hier können Sie in den Bereichen 'Schule',
-          'Studium' und 'Beruf' internationale Vergleiche anstellen. Betrachten Sie zum Beispiel, in welchen Ländern
+          "Auf dieser Fokus-Seite blicken wir über Deutschland hinaus. Hier können Sie in den Bereichen ''Schule'',
+          ''Studium'' und ''Beruf' internationale Vergleiche anstellen. Betrachten Sie zum Beispiel, in welchen Ländern
           der MINT-Anteil besonders hoch ist oder wo ein verhältnismäßig hoher Frauenanteil in MINT erreicht wird.
-          Wenn Sie sich für den MINT-Nachwuchs interessieren, können Sie die Ergebnisse der internationalen MINT-Kompetenzerhebungen Pisa und TIMSS betrachten.")),
+          Wenn Sie sich für den MINT-Nachwuchs interessieren, können Sie die Ergebnisse der internationalen MINT-Kompetenzerhebungen PISA und TIMSS betrachten.")),
       shinydashboard::box(
         title = "Fragen oder Feedback?",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
           "Sind alle Zahlen und Grafiken verständlich?", br(),
-          "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über unsere kurze",
+          "Wir freuen uns über Rückfragen oder Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über die Teilnahme an unserer kurzen",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
         ))
     ),
@@ -52,7 +52,7 @@ mod_international_start_ui <- function(id){
         width = 7,
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_international",
                                                               span(tags$b(span("MINT-Kompetenzen im internationalen Vergleich:")))),
-          "Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests Pisa und TIMSS ab?"
+          "Wie schneidet Deutschland im internationalen Vergleich in den MINT-Kompetenztests PISA und TIMSS ab?"
           ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_international",
                                                               span(tags$b(span("MINT-Studierende im internationalen Vergleich:")))),
@@ -70,10 +70,10 @@ mod_international_start_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Schüler:innen-Kompetenz-Daten: OECD 2023, freier Download (Pisa); IEA 2023, freier Download (TIMSS)."),
-        p("Vergleichszahlen europaweit: Eurostat 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
-        p("Vergleichszahlen der OECD-Staaten: OECD 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
-        p("Vergleichszahlen weltweit: UNESCO 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
+          "Schüler:innen-Kompetenz-Daten: OECD, 2023, freier Download (PISA); IEA, 2023, freier Download (TIMSS)."),
+        p("Vergleichszahlen europaweit: Eurostat, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
+        p("Vergleichszahlen der OECD-Staaten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
+        p("Vergleichszahlen weltweit: UNESCO, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
 
       )
 
@@ -88,14 +88,14 @@ mod_international_start_ui <- function(id){
                  width = 8,
                p("In dieser Box blicken wir auf die Kompetenzdaten der PISA-Studie und der TIMSS-Erhebung.
                Bei beiden Erhebungen werden unter anderem Kompetenztests in Mathematik und Naturwissenschaften in 4. und 9. Klassen weltweit durchgeführt.
-               Außerdem betrachten die Grafiken Kompetenz-Unterschiede zwischen Jungen und Mädchen und Unterschiede in Abhängigkeit der sozialen Herkunft der Kinder."),
+               Außerdem betrachten die Grafiken Kompetenzunterschiede zwischen Jungen und Mädchen und Unterschiede in Abhängigkeit der sozialen Herkunft der Kinder."),
                p(),
                p(),
                shinyBS::bsPopover(id="i_schule_international_1", title = "",
                                   content = paste0("Eine Einordnung sowie weitere Ergebnisse der TIMSS-Erhebung finden Sie hier: <br> <a>https://timss2019.org/reports/</a> <br><br> Weitere Informationen zur PISA-Studie und ihren Ergebnissen finden Sie hier:. <br> <a> https://www.oecd.org/pisa/ </a>"),
                                   placement = "right",
                                   trigger = "click"),
-               tags$a(paste0("Um zu den original Ergebnisberichten von TIMSS und PISA zu kommen, klicken Sie hier:"), icon("info-circle"), id = "i_schule_international_1"),
+               tags$a(paste0("Um zu den Original-Ergebnisberichten von TIMSS und PISA zu kommen, klicken Sie hier:"), icon("info-circle"), id = "i_schule_international_1"),
                p(),
                p()
                ),
@@ -123,10 +123,10 @@ mod_international_start_ui <- function(id){
                                                                    color = "#154194"),
 
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: IEA, 2023; OECD, 2023, feier Download, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_schule_1", title="",
-                                                         content = paste0("Regionen, die nicht als unabhängige Staaten anerkannt werden (z. B. Taiwan, Hongkong) können aus technischen Gründen nicht in den Karten dargestellt werden. Daten dieser Regionen sind in den weiteren Grafiken enthalten."),
+                                                         content = paste0("Regionen, die nicht als unabhängige Staaten anerkannt werden (z. B. Taiwan, Hongkong), können aus technischen Gründen nicht in den Karten dargestellt werden. Daten dieser Regionen sind in den weiteren Grafiken enthalten."),
                                                          placement = "top",
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_1")
@@ -158,10 +158,10 @@ mod_international_start_ui <- function(id){
 
                                       br(),
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: IEA, 2023; OECD, 2023, feier Download, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_schule_2", title="",
-                                                         content = paste0("Test-Leistungen der Schüler:innen werden nur dann als unterschiedlich dargestellt, wenn das mittlere Ergebnis der Mädchen im Vergelich zu den Jungen signifikant unterschiedlich ist.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                                         content = paste0("Test-Leistungen der Schüler:innen werden nur dann als unterschiedlich dargestellt, wenn das mittlere Ergebnis der Mädchen im Vergleich zu den Jungen signifikant unterschiedlich ist.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                                          placement = "top",
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_schule_2")
@@ -190,7 +190,7 @@ mod_international_start_ui <- function(id){
                                                                    color = "#154194"),
 
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: IEA, 2023; OECD, 2023, feier Download, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_schule_3", title="",
                                                          content = paste0("Das Bildungskapital wurde über die Anzahl der Bücher im Zuhause der Kinder operationalisiert. Zur einfacheren Darstellung wird in dieser Abbildung nur eine Auswahl der vorliegenden Untergruppen betrachtet."),
@@ -214,7 +214,7 @@ mod_international_start_ui <- function(id){
                width = 12,
                column(
                  width = 8,
-               p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich Studium für den internationalen Vergleich.
+               p("Diese Box zeigt eine Übersicht über MINT-Statistiken aus dem Bereich Studium für den internationalen Vergleich.
                Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU, die OECD oder die UNESCO gesammelt wurden.
                  Zum einen zeigen wir, wie groß der Anteil von MINT-Studierenden an allen Studierenden in verschiedenen Ländern ist. Außerdem ist zu sehen,
                  in welchen Ländern der Frauenanteil oder der Anteil an internationalen Studierenden in MINT-Studiengängen besonders groß oder klein ist.")
@@ -248,7 +248,7 @@ mod_international_start_ui <- function(id){
                                         "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_vergl_1", title="",
-                                                         content = paste0("In den Europa-Daten sowie den &quotweltweit&quot-Daten der UNESCO wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung)."),
+                                                         content = paste0("In den Europa-Daten sowie den &quotWeltweit&quot-Daten der UNESCO wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung)."),
                                                          placement = "top",
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_1") )
@@ -270,7 +270,7 @@ mod_international_start_ui <- function(id){
                                                                    color = "#154194"),
 
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; feier Download, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_vergl_2", title="",
                                                          content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung)."),
@@ -281,7 +281,7 @@ mod_international_start_ui <- function(id){
                            ),
 # tab 3
 
-                           tabPanel("Top 10 MINT-Länder", br(),
+                           tabPanel("Top 10 der MINT-Länder", br(),
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
@@ -316,7 +316,7 @@ mod_international_start_ui <- function(id){
                            ),
 # tab 4
 
-                           tabPanel("Top 10 Länder Frauen in MINT", br(),
+                           tabPanel("Top 10 der Länder Frauen in MINT", br(),
 
                                     #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                     # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -343,10 +343,10 @@ mod_international_start_ui <- function(id){
 
                                       p(style="font-size:12px;color:grey",
 
-                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; freies Download, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
                                       shinyBS::bsPopover(id="h_international_vergl_4", title="",
-                                                         content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung).", "<br><br>Lichtenstein und San Marino sind in dieser Betrachtung ausgeschlossen, da in beiden Ländern nur eine Hochschule für MINT-Fächer ansässig ist und das die Vergleichbarkeit verzerren könnte."),
+                                                         content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung).", "<br><br>Liechtenstein und San Marino sind in dieser Betrachtung ausgeschlossen, da in beiden Ländern nur eine Hochschule für MINT-Fächer ansässig ist und das die Vergleichbarkeit verzerren könnte."),
                                                          placement = "top",
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_vergl_4") )
@@ -378,7 +378,7 @@ mod_international_start_ui <- function(id){
                                                                    color = "#154194"),
 
                                       p(style="font-size:12px;color:grey",
-                                        "Quelle der Daten: Eurostat, 2023; freies Download, eigene Berechnungen durch MINTvernetzt."),
+                                        "Quelle der Daten: Eurostat, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
 
 
                                       shinyBS::bsPopover(id="h_international_vergl_5", title="",
@@ -401,11 +401,11 @@ mod_international_start_ui <- function(id){
                width = 12,
                column(
                  width = 8,
-               p("Diese Box zeigt eine Übersicht von MINT-Statistiken aus dem Bereich des Arbeitsmarkts für den internationalen Vergleich.
+               p("Diese Box zeigt eine Übersicht über MINT-Statistiken aus dem Bereich des Arbeitsmarkts für den internationalen Vergleich.
                  Die Grafiken basieren auf öffentlichen Statistiken, die durch die EU und die OECD gesammelt wurden.
                  Zum einen zeigen wir, wie groß der Anteil von MINT-Auszubildenden und Beschäftigten in verschiedenen Ländern ist.
                  Außerdem ist zu sehen, in welchen Ländern der Frauenanteil besonders groß oder klein ist.
-                 Darüber hinaus werfen wir einen Blick auf Studiums- bzw. Ausbildungs-Anfänger*innen und Absolvent*innen in MINT
+                 Darüber hinaus werfen wir einen Blick auf Studiums- bzw. Ausbildungs-Anfänger:innen und Absolvent:innen in MINT
                  im Ländervergleich.")
                ),
                column(
@@ -432,7 +432,7 @@ mod_international_start_ui <- function(id){
                                       p(style="font-size:12px;color:grey",
                                         "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
                                       shinyBS::bsPopover(id = "h_beruf_international_1", title = "",
-                                                         content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler*innen und Ingenieur*innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
+                                                         content = paste0("Ausgebildete umfassen alle Personen mit einem tertiären Bildungsabschluss im Bereich MINT, inkl. Studienabschlüssen.", "<br><br>Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise & Datenquellen&quot.", "<br><br>Da Eurostat den Begriff &quotBeschäftigte in MINT&quot sehr breit fasst (z. B. inkl. des Gesundheitswesens), betrachten wir hier nur die kleinere Gruppe an Naturwissenschaftler:innen und Ingenieur:innen.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet."),
                                                          placement = "top",
                                                          trigger = "hover"),
                                       tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_1")
@@ -465,7 +465,7 @@ mod_international_start_ui <- function(id){
 
                        ),
       # Tab 3
-      tabPanel("Top 10 MINT-Länder", br(),
+      tabPanel("Top 10 der MINT-Länder", br(),
 
                                       #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                       # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -498,7 +498,7 @@ mod_international_start_ui <- function(id){
                                                            trigger = "hover"),
                                         tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_3")
                                       )
-                           ),tabPanel("Top 10 Länder Frauen in MINT", br(),
+                           ),tabPanel("Top 10 der Länder Frauen in MINT", br(),
 
                                       #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                       # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -532,7 +532,7 @@ mod_international_start_ui <- function(id){
                                                            trigger = "hover"),
                                         tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_4")
                                       )
-                           ),tabPanel("MINT-Anfänger:innen und Absolvent:innen", br(),
+                           ),tabPanel("MINT-Anfänger:innen und -Absolvent:innen", br(),
 
                                       #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                       # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
@@ -555,6 +555,14 @@ mod_international_start_ui <- function(id){
 
                                         p(style="font-size:12px;color:grey",
                                           "Quelle der Daten: OECD, 2023, als Download, eigene Berechnungen durch MINTvernetzt."),
+
+                                        p(style="font-size:12px;color:grey",
+                                          "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."),
+                                        shinyBS::bsPopover(id = "h_beruf_international_ho", title = "",
+                                                           content = paste0("Aufgrund unterschiedlicher Definitionen von &quotMINT&quot zwischen den datengebenden Organisationen können die Zahlen voneinander abweichen. Näheres dazu unter &quotHinweise und Datenquellen&quot.", "<br><br>In den OECD-Daten ist für die Zuordnung zu &quotMINT&quot ausschließlich eine Ausbildung oder ein Studium in MINT entscheidend. Der tatsächlich ausgeübte Beruf wird nicht betrachtet"),
+                                                           placement = "top",
+                                                           trigger = "hover"),
+                                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_ho")
 
                                         # shinyBS::bsPopover(id="h_international_arbeit_3", title="",
                                         #                    content = paste0("POPUP INFO TEXT HERE"),

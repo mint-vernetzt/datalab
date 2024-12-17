@@ -199,7 +199,7 @@ plot_fachkraft_prognose_alle  <- function(r) {
     plot_data$indikator <- factor(plot_data$indikator, levels = c("starke Verbesserung",
                                                                   "Verbesserung",
                                                                   "Status-quo"))
-    levels(plot_data$indikator) <- c("kombiniertes Szenario", "positives Szenario",
+    levels(plot_data$indikator) <- c("kombiniertes Szenario", "Positives Szenario",
                                      "aktuelles Szenario")
     color_vec <- c("#b16fab", "#D0A9CD", "#8893a7" )
 
@@ -209,7 +209,7 @@ plot_fachkraft_prognose_alle  <- function(r) {
                                                                   "Verschlechterung",
                                                                   "Stillstand",
                                                                   "Status-quo"))
-    levels(plot_data$indikator) <- c("positives Szenario", "Rückgang im Positivtrend der Zuwanderung",
+    levels(plot_data$indikator) <- c("Positives Szenario", "Rückgang im Positivtrend der Zuwanderung",
                                      "vollständiger Stillstand der Zuwanderung", "aktuelles Szenario")
 
     color_vec <- c("#b16fab", "#D0A9CD", "#DCBED9", "#8893a7" )
@@ -218,7 +218,7 @@ plot_fachkraft_prognose_alle  <- function(r) {
 
     plot_data$indikator <- factor(plot_data$indikator, levels = c("Verbesserung",
                                                                   "Status-quo"))
-    levels(plot_data$indikator) <- c("positives Szenario",
+    levels(plot_data$indikator) <- c("Positives Szenario",
                                      "aktuelles Szenario")
     color_vec <- c("#b16fab", "#8893a7" )
 
@@ -227,7 +227,7 @@ plot_fachkraft_prognose_alle  <- function(r) {
     plot_data$indikator <- factor(plot_data$indikator, levels = c("Verbesserung",
                                                                   "Verschlechterung",
                                                                   "Status-quo"))
-    levels(plot_data$indikator) <- c("positives Szenario",
+    levels(plot_data$indikator) <- c("Positives Szenario",
                                      "negatives Szenario",
                                      "aktuelles Szenario")
     color_vec <- c("#b16fab", "#D0A9CD", "#8893a7" )
@@ -247,11 +247,15 @@ plot_fachkraft_prognose_alle  <- function(r) {
                    Frauen in MINT", titel)
   titel <- ifelse(filter_wirkhebel[2] == "Internationale MINT-Fachkräfte",
                   "Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
-                   bei unterschiedlichen Entwicklungen in der Integration internatoinaler MINT-Fachkräfte",
+                   bei unterschiedlichen Entwicklungen in der Integration internationaler MINT-Fachkräfte",
                   titel)
   titel <- ifelse(filter_wirkhebel[2] == "MINT-Nachwuchs fördern",
                   "Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
                    bei unterschiedlichen Entwicklungen in der Förderung des MINT-Nachwuchses",
+                  titel)
+  titel <- ifelse(filter_wirkhebel[2] == "Gesamteffekt",
+                  "Mögliche Zukunftsszenarien für die MINT-Fachkräftezahlen
+                   bei unterschiedlichen Entwicklungen der Gesamteffekte",
                   titel)
 
   # plot
@@ -462,7 +466,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     dplyr::slice(-row_to_move) %>%
     dplyr::bind_rows(uebersicht_data[row_to_move, ]) %>%
     dplyr::mutate(basis_label = paste0("Basis-Szenario"),
-                  improvement_label = paste0("positives Szenario: ", wirkhebel),
+                  improvement_label = paste0("Positives Szenario: ", wirkhebel),
 
                   basis_wert_txt = prettyNum(basis_wert, big.mark = ".", decimal.mark = ","),
                   wert_txt = prettyNum(wert, big.mark = ".", decimal.mark = ","),
@@ -492,7 +496,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     plotly::add_markers(
       x = ~wert,
       y = ~wirkhebel,
-      name = paste0("positives Szenario ",year_filter),
+      name = paste0("Positives Szenario ",year_filter),
       color = I("#b16fab"),
       symbol = I("square"),
       size = I(50),
@@ -503,7 +507,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
       title = list(
         text = paste0(
           "Übersicht über die potentielle Wirkung der Hebel MINT-Nachwuchs und Mädchen und Frauen in MINT fördern,
-          Zuwanderung internationaler und Verbleib älterer MINT-Fachkäfte"
+          Zuwanderung internationaler und Verbleib älterer MINT-Fachkräfte"
         )
       ),
       xaxis = list(
@@ -557,7 +561,6 @@ plot_fachkraft_epa_item <- function(r) {
     bf <- bf_label
   }
 
-
   plot_data_raw <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail")%>%
     # plot_data_raw <- arbeitsmarkt_epa_detail %>%
     dplyr::filter(jahr == timerange &
@@ -565,10 +568,7 @@ plot_fachkraft_epa_item <- function(r) {
                     anforderung %in% bf)%>%
     dplyr::collect()
 
-  if ("Alle Berufe" %in% fach) {
-    fach[fach == "Alle Berufe"] <- "Gesamt"
-  }
-  if ("MINT gesamt" %in% fach) {
+   if ("MINT gesamt" %in% fach) {
     plot_data_raw <- plot_data_raw %>%
       dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
       dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
@@ -579,7 +579,7 @@ plot_fachkraft_epa_item <- function(r) {
   # enthält den Text für den plot
   epa_kat_levels <- c("Engpassberuf",
                       "Anzeichen eines Engpassberufs",
-                      "kein Engpassberuf")
+                      "Kein Engpassberuf")
   group_col_dt <- data.frame(
     epa_kat = factor(x = epa_kat_levels,
                      levels = epa_kat_levels),
@@ -613,18 +613,29 @@ plot_fachkraft_epa_item <- function(r) {
     dplyr::group_by(epa_kat, mint_zuordnung)  %>%
     dplyr::summarise(beruf_num = dplyr::n()) %>%
     dplyr::group_by(mint_zuordnung)  %>%
-    dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,1)) %>%
+    dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,0)) %>%
     dplyr::left_join(group_col_dt, by = "epa_kat") %>%
     dplyr::arrange(epa_group_order)
 
+  if("Gesamt" %in% fach){
+    plot_data_ges <- plot_data_raw %>%
+      dplyr::filter(!is.na(epa_kat)) %>%
+      dplyr::group_by(epa_kat) %>%
+      dplyr::summarise(beruf_num = dplyr::n()) %>%
+      dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,0)) %>%
+      dplyr::left_join(group_col_dt, by = "epa_kat") %>%
+      dplyr::arrange(epa_group_order) %>%
+      dplyr::mutate(mint_zuordnung = "Gesamt")
 
+    plot_data <- rbind(plot_data, plot_data_ges)
+  }
 
   # expand data for heatmap
   expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
     dplyr::arrange(mint_zuordnung, epa_group_order) %>%
     # the order of XX and YY determines if the plot is shown right to left or bottom to top
-    dplyr::mutate(XX = rep(c(1:10), each = 10)[1:99],
-                  YY = rep(c(1:10), times = 10)[1:99],
+    dplyr::mutate(XX = rep(c(1:10), each = 10),
+                  YY = rep(c(1:10), times = 10),
                   epa_kat = factor(x = epa_kat,
                                    levels = epa_kat_levels))
 
@@ -648,14 +659,12 @@ plot_fachkraft_epa_item <- function(r) {
     fach[1] == "Nicht MINT" ~ "allen Berufen außer MINT",
     T ~ fach[1]
   )
-  fach_2 <- dplyr::case_when(
-    fach[2] == "MINT gesamt" ~ "MINT",
-    fach[2] == "Gesamt" ~ "allen Berufen",
-    fach[2] == "Nicht MINT" ~ "allen Berufen außer MINT",
-    T ~ fach[2]
-  )
+
   titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1," (", level, timerange, ")")
-  titel_2 <- paste0("Engpassrisiko in ", fach_2," (", level,timerange, ")")
+
+  # Entfernen aller Zeilen, bei denen group_col NA ist
+  expanded_dt <- expanded_dt[!is.na(expanded_dt$group_col), ]
+
 
 
   plot_left <- highcharter::hchart(
@@ -696,8 +705,17 @@ plot_fachkraft_epa_item <- function(r) {
       style = list(fontFamily = "SourceSans3-Regular")
     )
 
-
   if (length(fach) == 2) {
+
+    fach_2 <- dplyr::case_when(
+      fach[2] == "MINT gesamt" ~ "MINT",
+      fach[2] == "Gesamt" ~ "allen Berufen",
+      fach[2] == "Nicht MINT" ~ "allen Berufen außer MINT",
+      T ~ fach[2]
+    )
+
+    titel_2 <- paste0("Engpassrisiko in ", fach_2," (", level,timerange, ")")
+
     used_colors <- group_col_dt %>%
       dplyr::filter(epa_kat %in% (expanded_dt %>%
                                     dplyr::filter(mint_zuordnung == fach[2]) %>%
@@ -741,8 +759,17 @@ plot_fachkraft_epa_item <- function(r) {
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       )
-  } else {
-    plot_right <- NULL
+
+    # out <- highcharter::hw_grid(
+    #   plot_left, plot_right,
+    #   ncol = 2
+    # )
+    out <- list(plot_left, plot_right)
+
+    return(out)
+
+  }else{
+    return(plot_left)
   }
 
 
@@ -799,8 +826,8 @@ plot_fachkraft_mint_item  <- function(r) {
                       "Nicht MINT - Engpassberuf",
                       "MINT gesamt - Anzeichen eines Engpassberufs",
                       "Nicht MINT - Anzeichen eines Engpassberufs",
-                      "MINT gesamt - kein Engpassberuf",
-                      "Nicht MINT - kein Engpassberuf")
+                      "MINT gesamt - Kein Engpassberuf",
+                      "Nicht MINT - Kein Engpassberuf")
   group_col_dt <- data.frame(
     mint_epa_kat = factor(x = epa_kat_levels,
                           levels = epa_kat_levels),
@@ -1147,8 +1174,17 @@ plot_fachkraft_detail_item  <- function(r) {
                    useHTML = TRUE,
                    fontFamily = "SourceSans3-Regular",
                    fontSize = "20px")
+    ) %>%
+    highcharter::hc_caption(
+      text = paste0("Werte < 1,5                : kein Fachkräfteengpass", br(),
+                    "Werte zwischen 1,5 und 1,9 : Anzeichen eines Fachkräfteengpasses", br(),
+                    "Werte >= 2,0               : Fachkräfteengpass"),
+      align = "left",
+      style = list(color = "grey",
+                   useHTML = TRUE,
+                   fontFamily = "SourceSans3-Regular",
+                   fontSize = "14px")
     )
-
 
   # count "Engpassanalyse" to add line afterward
   sep_line_risiko <- sum(plot_bar_data$kategorie == "Engpassanalyse") - 0.4

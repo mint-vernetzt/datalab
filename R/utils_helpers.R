@@ -687,7 +687,7 @@ add_caption_and_download <- function(
   # install.packages(packageurl, repos=NULL, type="source")
   #
   # packageVersion("webshot2")
-
+  #
 
   # set chromote, determine chromium variant
   # Sys.setenv(

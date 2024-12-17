@@ -460,7 +460,6 @@ mod_ausserschulisch_start_ui <- function(id){
     hr(style = "border-top: 3px solid #00A87A; margin-top: 5px"),
 
     # SKf ----
-
     fluidRow(id="ausserschulisch_skf",
              shinydashboard::box(
                title = "Frühkindliche Bildung: Zahl der MINT-aktiven Einrichtungen bei Stiftung Kinder forschen wächst stetig.",
@@ -543,6 +542,7 @@ mod_ausserschulisch_start_ui <- function(id){
              )
     ),
 
+
     funct_footer()
   )
 }
@@ -589,69 +589,69 @@ mod_ausserschulisch_start_server <- function(id, r){
     #   skf_einrichtungen(r)
     # })
 
-    output$plot_skf_einrichtungen <- renderUI({
-      plot_list <- skf_einrichtungen(r)
-      r$plot_skf_einrichtungen <- plot_list
-
-      r$plot_skf_einrichtungen_title <- get_plot_title(
-        plot = r$plot_skf_einrichtungen
-      )
-
-      plot_list
-
-    })
-
-    output$download_btn_plot_skf_einrichtungen <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_skf_einrichtungen_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_skf_einrichtungen,
-          filename =  r$plot_skf_einrichtungen_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_skf_einrichtungen_title, file)
-        file.remove(r$plot_skf_einrichtungen_title)
-      }
-    )
-
-    # Tab 2
-
-    # output$plot_skf_personal <- highcharter::renderHighchart({
-    #   skf_personal(r)
+    # output$plot_skf_einrichtungen <- renderUI({
+    #   plot_list <- skf_einrichtungen(r)
+    #   r$plot_skf_einrichtungen <- plot_list
+    #
+    #   r$plot_skf_einrichtungen_title <- get_plot_title(
+    #     plot = r$plot_skf_einrichtungen
+    #   )
+    #
+    #   plot_list
+    #
     # })
-
-    output$plot_skf_personal <- renderUI({
-      plot_list <- skf_personal(r)
-      r$plot_skf_personal <- plot_list
-
-      r$plot_skf_personal_title <- get_plot_title(
-        plot = r$plot_skf_personal
-      )
-
-      plot_list
-
-    })
-
-    output$download_btn_plot_skf_personal <- downloadHandler(
-      contentType = "image/png",
-      filename = function() {r$plot_skf_personal_title},
-      content = function(file) {
-        # creating the file with the screenshot and prepare it to download
-
-        add_caption_and_download(
-          hc = r$plot_skf_personal,
-          filename =  r$plot_skf_personal_title,
-          width = 700,
-          height = 400)
-
-        file.copy(r$plot_skf_personal_title, file)
-        file.remove(r$plot_skf_personal_title)
-      }
-    )
+    #
+    # output$download_btn_plot_skf_einrichtungen <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_skf_einrichtungen_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_skf_einrichtungen,
+    #       filename =  r$plot_skf_einrichtungen_title,
+    #       width = 700,
+    #       height = 400)
+    #
+    #     file.copy(r$plot_skf_einrichtungen_title, file)
+    #     file.remove(r$plot_skf_einrichtungen_title)
+    #   }
+    # )
+    #
+    # # Tab 2
+    #
+    # # output$plot_skf_personal <- highcharter::renderHighchart({
+    # #   skf_personal(r)
+    # # })
+    #
+    # output$plot_skf_personal <- renderUI({
+    #   plot_list <- skf_personal(r)
+    #   r$plot_skf_personal <- plot_list
+    #
+    #   r$plot_skf_personal_title <- get_plot_title(
+    #     plot = r$plot_skf_personal
+    #   )
+    #
+    #   plot_list
+    #
+    # })
+    #
+    # output$download_btn_plot_skf_personal <- downloadHandler(
+    #   contentType = "image/png",
+    #   filename = function() {r$plot_skf_personal_title},
+    #   content = function(file) {
+    #     # creating the file with the screenshot and prepare it to download
+    #
+    #     add_caption_and_download(
+    #       hc = r$plot_skf_personal,
+    #       filename =  r$plot_skf_personal_title,
+    #       width = 700,
+    #       height = 400)
+    #
+    #     file.copy(r$plot_skf_personal_title, file)
+    #     file.remove(r$plot_skf_personal_title)
+    #   }
+    # )
 
 
 

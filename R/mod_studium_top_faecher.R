@@ -14,8 +14,8 @@ mod_studium_top_faecher_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_top_faecher"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
     # Region
     p("Region:"),
@@ -50,6 +50,7 @@ mod_studium_top_faecher_ui <- function(id){
       selected = "MINT-Fächer",
       multiple = FALSE
     ),
+
     p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("subject_abs_rel"),
@@ -60,7 +61,7 @@ mod_studium_top_faecher_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_studium_fach_1", title="",
-                       content = paste0("In der ersten Einstellung sind die TOP-10-Fächer in Bayern in MINT bezogen auf den Frauen- bzw. Männeranteil zu sehen. Die Fächer mit dem höchsten Frauenanteil in MINT sind Pharmazie (73.1 % Frauen) und Biologie (64.5 % Frauen). Die Fächer mit dem höchsten Männeranteil in MINT sind dagegen Verkehrstechnik / Nautik mit 86.4 % Männern und Elektrotechnik und Informationstechnik mit 84 %."),
+                       content = paste0("In der ersten Einstellung sind die TOP-10-MINT-Fächer in Deutschland 2023 für weibliche bzw. männliche Studierende gezeigt. Die MINT-Fächer mit dem höchsten Frauenanteil sind Pharmazie (73.1 % Frauen) und Biologie (64.5 %). Die MINT-Fächer mit dem höchsten Männeranteil sind Verkehrstechnik/Nautik (86.4 %  Männern) und Elektrotechnik und Informationstechnik (84 %)."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_1")
@@ -89,6 +90,7 @@ mod_studium_top_faecher_server <- function(id, r){
     observeEvent(input$subject_abs_rel, {
       r$subject_abs_rel <- input$subject_abs_rel
     })
+
 
 
   })

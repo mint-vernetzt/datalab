@@ -42,7 +42,7 @@ mod_ausserschulisch_skf_einrichtungen_ui <- function(id){
 
     br(),
     shinyBS::bsPopover(id="ih_schule_ausserschulisch_1", title="",
-                       content = paste0("Die erste Einstellung der Grafik zeigt, wie die Anzahl an Kitas, die bei der Stiftung Kinder forschen aktiv sind, kontinuierlich steigt. Im Jahr 2022 sind 28.120 Kitas bei SKf aktiv. Davon haben 22.638 Kitas Fachpersonal, dass sich bei SKf in MINT-Bildung weitergebildet hat."),
+                       content = paste0("Die erste Einstellung der Grafik zeigt, wie die Anzahl an Kitas, die bei der Stiftung Kinder forschen aktiv sind, kontinuierlich steigt. Im Jahr 2022 sind 28.120 Kitas bei SKf aktiv. Davon haben 22.638 Kitas Fachpersonal, das sich bei SKf in MINT-Bildung weitergebildet hat."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_ausserschulisch_1")
   )

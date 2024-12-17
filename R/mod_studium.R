@@ -83,7 +83,7 @@ mod_studium_server <- function(id,
   mod_international_top10_mint_gender_server("international_top10_mint_gender_1", r)
   mod_international_map_fem_server("international_map_fem_ui_1", r)
   mod_international_top10_mint_intl_server("mod_international_top10_mint_intl_ui_1", r)
-
+  mod_studium_studienzahl_international_bundeslandvergleich_server("mod_studium_studienzahl_international_bundeslandvergleich_ui", r)
 }
 
 ## To be copied in the UI
