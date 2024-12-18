@@ -36,12 +36,14 @@ mod_ausserschulisch_start_ui <- function(id){
           "Auf dieser Seite zeigen wir Daten aus dem außerschulischen MINT-Bildungsbereich.
           Amtliche Statistiken für den außerschulischen Bereich liegen nicht vor. Hier wollen wir
           schrittweise immer mehr weiße Flecken der außerschulischen MINT-Bildungslandschaft füllen."),
-        p("Wir zeigen Daten von MINTvernetzt. Hierzu nutzen wir die Daten der Community-Plattform und
+        p("Wir zeigen zum einen Daten von MINTvernetzt. Hierzu nutzen wir die Daten der MINTvernetzt-Community-Plattform und
           stellen dar, wie viele Organsiationen, Projekte und Personen in welchen Bereichen der außerschulischen MINT-Bildung
-          tätig sind. Außerdem zeigen wir eine Auswahl an Ergebnisse von Befragungen durch MINTvernetzt."),
-        p("Zweitens zeigen wir Daten aus der außerschulischen MINT-Bildungscommunity. Aktuell sind das Zahlen der Stiftung
+          tätig sind. Außerdem zeigen wir eine Auswahl an Ergebnisse der Befragungen von MINTvernetzt."),
+        p("Zum anderen zeigen wir Daten aus der außerschulischen MINT-Bildungscommunity. Aktuell sind das Zahlen der Stiftung
           Kinder forschen. Liegen in Ihrem Projekt Daten vor, die für die außerschulische MINT-Bildungslandschaft interessant
-          sein könnten, kommen Sie gerne per E-Mail auf uns zu.")
+          sein könnten, kommen Sie gerne per ",
+          tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= ausserschulische Daten MINT-Datalab", "E-Mail"),
+          " auf uns zu.")
       ),
 
       shinydashboard::box(
@@ -101,15 +103,15 @@ mod_ausserschulisch_start_ui <- function(id){
                 column(
                   width = 8,
                   p("Die Community-Plattform von MINTvernetzt ist eine Plattform für
-                    das Vernetzen, Austauschen und dem Teilen von Wissen zwischen MINT-Bildungsakteur:innen. Die Plattform
+                    das Vernetzen, Austauschen und zum Teilen von Wissen zwischen MINT-Bildungsakteur:innen. Die Plattform
                     wurde im Herbst 2022 livegeschaltet und wird seitdem stetig weiterentwickelt.
                     Auf der Community Plattform können Profile für Personen, Projekte, Organisationen oder
                     Netzwerke angelegt werden, die Informationen über Themenbereiche, Zielgruppen, Aktivitätsgebiete und vielem mehr
                     enthalten."),
                   br(),
-                  p("Für die folgenden Darstellungen wurden die Daten der MINTvernetzt Community-Plattform aggregiert und ausgewertet.
+                  p("Für die folgenden Darstellungen wurden die Daten der MINTvernetzt-Community-Plattform anonymisiert ausgewertet.
                     Entsprechend bilden die folgenden Grafiken nur die Akteur:innen, Projekte und Organsiationen ab, die
-                    Teil des MINTvernetzt-Netzwerks sind. Diese Angaben können nicht das vollständige Angebot der außerschulischen
+                    Teil des MINTvernetzt-Netzwerks sind. Diese Angaben sind freiwillig und können nicht das vollständige Angebot der außerschulischen
                     MINT-Bildung abdecken. Sie können allerdings einen Einblick geben, in welchen Themenbereichen, für welche Zielgruppen und in welchen Regionen
                     MINT-Akteur:innen besonders aktiv sind."),
                   br(),
@@ -259,11 +261,11 @@ mod_ausserschulisch_start_ui <- function(id){
                   p("MINTvernetzt führt verschiedene Befragungen unter MINT-Akteur:innen durch.
                     Hier wird eine Auswahl dieser Befragungsergebnisse dargestellt. Die vollständigen Berichte
                     zu den Befragungen finden sich auf der MINTvernetzt-Website. Weitere Hinweise und Verlinkungen finden
-                    sich unter den jeweiligen Befragungsergebnissen und unter \"Informationen zu den Befragungen\"."),
+                    sich unter den jeweiligen Befragungsergebnissen und unter dem Reiter \"Informationen zu den Befragungen\"."),
                   br(),
                   p("Die Ergebnisse der MINTvernetzt-Akteursbefragung zeigen, dass z.B. vier von fünf der Befragten
                     MINT-Bildungsakteur:innen hauptberuflich tätig sind. Etwas mehr als ein Drittel haben, trotz ihres
-                    Engagement in MINT, keinen MINT-Bildungshintergrund.",
+                    Engagements in MINT, keinen MINT-Bildungshintergrund.",
                     "Eine der hier dargestellten Fragen des MINT-Stimmungsbarometers zeigt, dass die Befragten
                     das Ganztagsangebot an Schulen besonders als Bildungsort unter Einbezug außerschulischer Angebote nutzen wollen würden.",
                     "In der MINTvernetzt-Genderbefragung von 2023 wurde ein Blick in die Vernetzung außerschulischer MINT-Bildungsakteur:innen
@@ -377,7 +379,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                         style = "top: 15px;",
                                         width = 8,
                                         div(
-                                          p(strong("MINTvernetzt-Akteursbefragung:", style = "color: #FCC433;")),
+                                          p(strong("MINTvernetzt-Akteursbefragung 2024:", style = "color: #FCC433;")),
                                           p(tags$b("Ziel der Umfrage:"), "Übersicht über die MINT-Bildungsakteur:innen und ihre Bedarfe und Herausforderungen herstellen.", br(),
                                             tags$b("Teilnehmendenzahl:"), "221 Personen haben an der Umfrage teilgenommen.",br(),
                                             tags$b("Befragung:"), "Durchgeführt zwischen Juni und Juli 2024. Die Umfrage wurde über Kanäle von MINTvernetzt geteilt.")
@@ -402,11 +404,11 @@ mod_ausserschulisch_start_ui <- function(id){
                                     style = "top: 15px;",
                                     width = 8,
                                     div(
-                                      p(strong("MINT-Stimmungsbarometer:", style = "color: #00A87A;")),
+                                      p(strong("MINT-Stimmungsbarometer 2024:", style = "color: #00A87A;")),
                                       p(tags$b("Ziel der Umfrage:"), "Einblicke in die Stimmung zur Qualität der MINT-Bildung in Deutschland erlangen.", br(),
                                         tags$b("Teilnehmendenzahl:"), "454 Personen haben an der Umfrage teilgenommen.",br(),
                                         tags$b("Befragung:"), "Durchgeführt zwischen August und September 2024. Die Umfrage wurde über Kanäle von MINTvernetzt und
-                                                              des Stifterverbands an Vertreter:innen von Bildung, Wirtschaft und Wissenschaft versandt.")
+                                                              dem Stifterverband an Vertreter:innen von Bildung, Wirtschaft und Wissenschaft versandt.")
                                     )
                                   ),
                                   column(
@@ -428,7 +430,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                     style = "top: 15px;",
                                     width = 8,
                                     div(
-                                      p(strong("MINTvernetzt-Genderbefragung:", style = "color: #b16fab;")),
+                                      p(strong("MINTvernetzt-Genderbefragung 2023:", style = "color: #b16fab;")),
                                       p(tags$b("Ziel der Umfrage:"), "Synergien und nachhaltige Fördereffekte für Mädchen in MINT schaffen, aufbauend auf den
                                                                       Erfahrungen der MINT-Bildungsanbieter:innen.", br(),
                                         tags$b("Teilnehmendenzahl:"), "456 Personen haben an der Umfrage teilgenommen.",br(),
