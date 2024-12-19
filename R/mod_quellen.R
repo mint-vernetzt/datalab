@@ -134,6 +134,18 @@ mod_quellen_ui <- function(id){
           Wir bauen dabei unsere Datengrundlage stetig weiter aus."
         ))),
 
+
+    fluidRow(
+      shinydashboard::box(
+        width = 9,
+        title = "Zitationshinweis",
+        p(style = "text-align: justify; font-size = 16px",
+          "Inhalte des MINT-DataLab können mit folgender Quellenangabe weitergenutzt werden:
+          \"MINT-DataLab von MINTvernetzt. https://www.mint-vernetzt.de/mint-datalab/\" (mit Abrufdatum). Unter den interaktiven Grafiken sind jeweils eigene Quellenangaben
+          mit Verweis auf die Datenquelle angegeben."
+        ))),
+
+
     fluidRow(
       shinydashboard::box(
         width = 9,
@@ -142,11 +154,7 @@ mod_quellen_ui <- function(id){
           "Die Nutzungsbedingungen der Datengeber:innen erlauben die Verwendung der Daten und die grafische Aufbereitung
           sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet.
           Bei Interesse an den kompletten Datensätzen müssen die Datengeber:innen direkt kontaktiert werden."
-        ),
-        p("Inhalte des MINT-DataLab können mit folgender Quellenangabe weitergenutzt werden:
-          \"MINT-DataLab von MINTvernetzt. https://www.mint-vernetzt.de/mint-datalab/\". Unter den interaktiven Grafiken sind jeweils eigene Quellenangaben
-          mit Verweis auf die Datenquelle angegeben.")
-      )),
+        ))),
 
 
 
