@@ -114,7 +114,7 @@ plot_cp_orgas <- function(r){
     }
     titel <- paste0("Anteile der Organisationen der Community-Plattform von MINTvernetzt nach ",
                     charas, regio_angabe)
-    subtitel <- paste0("Angaben wurden von ", ges, " Organisationen gemacht. Mehrfachangabe möglich.")
+    subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Organisationen gemacht. Mehrfachangabe möglich.")
 
 
     # Plot
@@ -170,7 +170,7 @@ plot_cp_orgas <- function(r){
     }
     titel <- paste0("Organisationen der Community-Plattform von MINTvernetzt nach ",
                     charas, regio_angabe)
-    subtitel <- paste0("Angaben wurden von ", ges, " Organisationen gemacht. Mehrfachangabe möglich.")
+    subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Organisationen gemacht. Mehrfachangabe möglich.")
 
     # Plot
     out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = indikator))%>%
@@ -324,7 +324,7 @@ plot_cp_projekte <- function(r){
 
     titel <- paste0("Anteil der Projekte der Community-Plattform von MINTvernetzt nach ",
                     charas, regio_angabe)
-    subtitel <- paste0("Angaben wurden von ", ges, " Projekten gemacht. Mehrfachangabe möglich.")
+    subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Projekten gemacht. Mehrfachangabe möglich.")
 
 
     # Plot
@@ -384,7 +384,7 @@ plot_cp_projekte <- function(r){
 
     titel <- paste0("Projekte der Community-Plattform von MINTvernetzt nach ",
                     charas, regio_angabe)
-    subtitel <- paste0("Angaben wurden von ", ges, " Projekten gemacht. Mehrfachangabe möglich.")
+    subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Projekten gemacht. Mehrfachangabe möglich.")
 
     # Plot
     out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = indikator))%>%
@@ -531,8 +531,8 @@ plot_cp_profile <- function(r){
       }
       titel <- paste0("Anteil der Profile der Community-Plattform von MINTvernetzt nach Angeboten und Gesuchen",
                       regio_angabe)
-      subtitel <- paste0("Angaben zu ", charas[1], " wurden von ", ges[1], " Personen gemacht.
-                         Angaben zu ", charas[2], " von ", ges[2], ". Mehrfachangaben möglich.")
+      subtitel <- paste0("Angaben zu ", charas[1], " wurden von <b>", ges[1], "</b> Personen gemacht.
+                         Angaben zu ", charas[2], " von <b>", ges[2], "</b>. Mehrfachangaben möglich.")
 
 
       # Plot
@@ -578,7 +578,7 @@ plot_cp_profile <- function(r){
       if(charas == "Angebote") charas <- "Angeboten"
       titel <- paste0("Anteil der Profile der Community-Plattform von MINTvernetzt nach ",
                       charas, regio_angabe)
-      subtitel <- paste0("Angaben wurden von ", ges, " Personen gemacht. Mehrfachangabe möglich.")
+      subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Personen gemacht. Mehrfachangabe möglich.")
 
 
       # Plot
@@ -639,8 +639,8 @@ plot_cp_profile <- function(r){
       }
       titel <- paste0("Profile der Community-Plattform von MINTvernetzt nach Angeboten und Gesuchen",
                       regio_angabe)
-      subtitel <- paste0("Angaben zu ", charas[1], " wurden von ", ges[1], " Personen gemacht.
-                         Angaben zu ", charas[2], " von ", ges[2], ". Mehrfachangaben möglich.")
+      subtitel <- paste0("Angaben zu ", charas[1], " wurden von <b>", ges[1], "</b> Personen gemacht.
+                         Angaben zu ", charas[2], " von <b>", ges[2], "</b>. Mehrfachangaben möglich.")
 
 
       # Plot
@@ -683,7 +683,7 @@ plot_cp_profile <- function(r){
       if(charas == "Angebote") charas <- "Angeboten"
       titel <- paste0("Profile der Community-Plattform von MINTvernetzt nach ",
                       charas, regio_angabe)
-      subtitel <- paste0("Angaben wurden von ", ges, " Personen gemacht. Mehrfachangabe möglich.")
+      subtitel <- paste0("Angaben wurden von <b>", ges, "</b> Personen gemacht. Mehrfachangabe möglich.")
 
 
       # Plot
