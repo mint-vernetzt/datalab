@@ -3,7 +3,6 @@ plot_fachkraft_prognose  <- function(r) {
 
   filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_wirkhebel)
   filter_indikator <- c("Status-quo", r$fachkraft_item_prog_scenario)
-  #filter_berufslevel <- r$fachkraft_item_prog_berufslevel
   filter_berufslevel <- "Gesamt"
 
   plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
@@ -146,7 +145,6 @@ plot_fachkraft_prognose  <- function(r) {
                             return Highcharts.numberFormat(this.value, 0, '.', '.');
                           }
                         "))) %>%
-   # highcharter::hc_yAxis(title = list(text = " ")) %>%
     highcharter::hc_tooltip(shared = FALSE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
 
     highcharter::hc_credits(enabled = FALSE) %>%
@@ -264,15 +262,10 @@ plot_fachkraft_prognose_alle  <- function(r) {
     highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_xAxis(title = list(text = ""), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
     highcharter::hc_title(text = titel,
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    # highcharter::hc_subtitle(text = subtitel,
-    #                       margin = 45,
-    #                       align = "center",
-    #                       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
     highcharter::hc_colors(color_vec) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
@@ -430,11 +423,6 @@ plot_fachkraft_prognose_detail  <- function(r) {
 
 plot_fachkraft_wirkhebel_analyse  <- function(r) {
   year_filter <- r$fachkraft_item_wirkhebel_analyse
-  #year_filter <- 2037
-
-
-  # basis <-  dplyr::tbl(con, from = "fachkraefte_prognose") %>%
-  #   dplyr::collect()
 
   basis_wert <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
     dplyr::filter(wirkhebel == "Basis-Szenario") %>%
@@ -562,7 +550,6 @@ plot_fachkraft_epa_item <- function(r) {
   }
 
   plot_data_raw <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail")%>%
-    # plot_data_raw <- arbeitsmarkt_epa_detail %>%
     dplyr::filter(jahr == timerange &
                     indikator == "Engpassindikator" &
                     anforderung %in% bf)%>%
@@ -605,7 +592,6 @@ plot_fachkraft_epa_item <- function(r) {
                                              ))
   )
 
-  # plot_data_raw <- subset(plot_data_raw, !is.na(plot_data_raw$berufsgruppe_schlüssel))
 
   plot_data <- plot_data_raw %>%
     dplyr::filter(mint_zuordnung %in% fach &
@@ -633,7 +619,7 @@ plot_fachkraft_epa_item <- function(r) {
   # expand data for heatmap
   expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
     dplyr::arrange(mint_zuordnung, epa_group_order) %>%
-    # the order of XX and YY determines if the plot is shown right to left or bottom to top
+    #
     dplyr::mutate(XX = rep(c(1:10), each = 10),
                   YY = rep(c(1:10), times = 10),
                   epa_kat = factor(x = epa_kat,
@@ -678,10 +664,8 @@ plot_fachkraft_epa_item <- function(r) {
     highcharter::hc_colorAxis(
       stops = highcharter::color_stops(colors = group_col_dt$group_col),
       showInLegend = FALSE) %>%
-    #hc_legend(enabled = FALSE) %>% # Remove color legend
     highcharter::hc_colors(used_colors) %>%
     highcharter::hc_tooltip(
-      # headerFormat = '{point.group}',
       pointFormat = 'Anteil: {point.value} % <br/> Anzahl betroffener Berufe: {point.beruf_num}'
     ) %>%
     highcharter::hc_xAxis(visible = FALSE) %>%
@@ -733,10 +717,8 @@ plot_fachkraft_epa_item <- function(r) {
                                    group = epa_kat)) %>%
       highcharter::hc_colorAxis(stops = highcharter::color_stops(colors = group_col_dt$group_col),
                                 showInLegend = FALSE) %>%
-      #hc_legend(enabled = FALSE) %>% # Remove color legend
       highcharter::hc_colors(used_colors) %>%
       highcharter::hc_tooltip(
-        # headerFormat = '{point.group}',
         pointFormat = 'Anteil: {point.value} % <br/> Anzahl betroffener Berufe: {point.beruf_num}'
       ) %>%
       highcharter::hc_xAxis(visible = FALSE) %>%
@@ -760,10 +742,6 @@ plot_fachkraft_epa_item <- function(r) {
         style = list(fontFamily = "SourceSans3-Regular")
       )
 
-    # out <- highcharter::hw_grid(
-    #   plot_left, plot_right,
-    #   ncol = 2
-    # )
     out <- list(plot_left, plot_right)
 
     return(out)
@@ -772,11 +750,6 @@ plot_fachkraft_epa_item <- function(r) {
     return(plot_left)
   }
 
-
-  # out <- highcharter::hw_grid(
-  #   plot_left,
-  #   plot_right,
-  #   ncol = 2)
   out <- list(plot_left, plot_right)
 
   return(out)
@@ -846,12 +819,6 @@ plot_fachkraft_mint_item  <- function(r) {
                   percent_epa = dplyr::if_else(is.na(percent_epa), 0, percent_epa)) %>%
     dplyr::ungroup()
 
-  # used_colors <- group_col_dt %>%
-  #   dplyr::filter(mint_epa_kat %in% (expanded_dt %>%
-  #                                 dplyr::filter(mint_zuordnung == fach[1]) %>%
-  #                                 dplyr::pull(epa_kat) %>%
-  #                                 unique())) %>%
-  #   dplyr::pull(group_col)
 
   plot_data$mint_zuordnung <- ifelse(
     plot_data$mint_zuordnung == "MINT gesamt",
@@ -877,10 +844,6 @@ plot_fachkraft_mint_item  <- function(r) {
     # name = "group",
     showInLegend = TRUE
   ) %>%
-    # highcharter::hc_caption(
-    #   text = paste0(plot_legend_data$legend_text, collapse = "<br>"),
-    #   useHTML = TRUE
-    # ) %>%
     highcharter::hc_tooltip(
       pointFormat = paste0(
 
@@ -907,57 +870,11 @@ plot_fachkraft_mint_item  <- function(r) {
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>%
-     # highcharter::hc_size(1000, 600) %>%
+
     highcharter::hc_credits(enabled = FALSE) %>%
-    # highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                        verticalAlign = "bottom")
+
      highcharter::hc_legend(enabled = FALSE)
 
-
-  # leeren Plot mit individuell angepasster Legende erstellen
-
-  # # Erstelle eine Liste von Kategorien für die Legende
-  # categories <- c("MINT gesamt - Engpassberuf",
-  #                 "MINT gesamt - Anzeichen eines Engpassberufs",
-  #                 "MINT gesamt - kein Engpassberuf",
-  #                 "Nicht MINT - Engpassberuf",
-  #                 "Nicht MINT - Anzeichen eines Engpassberufs",
-  #                 "Nicht MINT - kein Engpassberuf")
-  #
-  # # Farben für jede Kategorie
-  # colors <- c("#EE7775",  "#Fcc433", "#00a87a", "#f5adac", "#fdd670", "#66cbaf")
-  #
-  # # Erstelle einen 'leeren' Plot mit einer Serie für jede Kategorie
-  # legend_plot <- highcharter::highchart() %>%
-  #   highcharter::hc_chart(type = 'bar', height = 100) %>% # Reduziere die Höhe
-  #   highcharter::hc_add_series(name = categories[1], data = list(NULL), color = colors[1]) %>%
-  #   highcharter::hc_add_series(name = categories[2], data = list(NULL), color = colors[2]) %>%
-  #   highcharter::hc_add_series(name = categories[3], data = list(NULL), color = colors[3]) %>%
-  #   highcharter::hc_add_series(name = categories[4], data = list(NULL), color = colors[4]) %>%
-  #   highcharter::hc_add_series(name = categories[5], data = list(NULL), color = colors[5]) %>%
-  #   highcharter::hc_add_series(name = categories[6], data = list(NULL), color = colors[6]) %>%
-  #   highcharter::hc_legend(enabled = TRUE,
-  #                          layout = 'horizontal',
-  #                          align = 'center',
-  #                          verticalAlign = 'bottom',
-  #                          itemMarginTop = 5, # Erhöhe den oberen Rand der Legendenpunkte
-  #                          itemMarginBottom = 5, # Erhöhe den unteren Rand der Legendenpunkte
-  #                          itemStyle = list(
-  #                            lineHeight = '14px' # Kontrolliert die Zeilenhöhe innerhalb der Legendenpunkte
-  #                          )) %>%
-  #   highcharter::hc_title(text = NULL) %>%
-  #   highcharter::hc_subtitle(text = NULL) %>%
-  #   highcharter::hc_xAxis(visible = FALSE) %>%
-  #   highcharter::hc_yAxis(visible = FALSE) %>%
-  #   highcharter::hc_credits(enabled = FALSE) %>%
-  #   highcharter::hc_chart(margin = 0, spacing = c(0, 0, 0, 0))  # Reduziere Margen und Abstand
-  # # highcharter::hc_size(1000, 600)
-  #
-  #  plot_list <- list(plot, legend_plot)
-  #
-  #  out <- highcharter::hw_grid(
-  #   plot_list,
-  #   ncol=1)
 
   out <- plot
 
@@ -965,12 +882,7 @@ plot_fachkraft_mint_item  <- function(r) {
 }
 
 plot_fachkraft_bar_vakanz  <- function(r) {
-  # logger::log_debug("plot_fachkraft_bar_vakanz")
-  # this_indikator <- "Abgeschlossene Vakanzzeit"
-  # timerange <- 2021
-  # bf_label <- "Spezialist*innen"
-  # this_region <-"Deutschland"
-  #this_indikator <- "Arbeitslosen-Stellen-Relation"; timerange <- 2022; bf_label <- "Gesamt"; this_region <-"Deutschland"
+
 
   this_indikator <- r$map_ind_fachkraft_arbeit_bar
   timerange <- r$map_y_fachkraft_arbeit_bar
@@ -1236,7 +1148,6 @@ plot_fachkraft_detail_item  <- function(r) {
               x = 5, # Horizontal position offset for the label
               style = list(
                 color = 'grey'#,
-                #fontWeight = 'bold'
               )
             ),
             zIndex = 5 # Ensure the plot line is above the grid lines
@@ -1251,7 +1162,6 @@ plot_fachkraft_detail_item  <- function(r) {
               x = 5, # Horizontal position offset for the label
               style = list(
                 color = 'grey'#,
-                #fontWeight = 'bold'
               )
             ),
             zIndex = 5 # Ensure the plot line is above the grid lines
@@ -1261,13 +1171,6 @@ plot_fachkraft_detail_item  <- function(r) {
 
   }
 
-
-
-
-  # out <- highcharter::hw_grid(
-  #   plot_left,
-  #   plot_right,
-  #   ncol = 2)
   out <- list(plot_left, plot_right)
 
   return(out)

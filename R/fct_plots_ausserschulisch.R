@@ -82,9 +82,6 @@ plot_cp_orgas <- function(r){
     titel <- paste0("Für die gewählten Eingaben hat keine Organisation eine Angabe gemacht.")
 
     out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(indikator, wert), y = wert, group = region)) %>%
-      # highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-      # highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      # highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
@@ -129,8 +126,6 @@ plot_cp_orgas <- function(r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f} %"),
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"), pointsWidth=100) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
-      # highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-      #                          "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a")) %>%
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
@@ -288,9 +283,6 @@ plot_cp_projekte <- function(r){
     titel <- paste0("Für die gewählten Eingaben hat kein Projekt eine Angabe gemacht.")
 
     out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(indikator, wert), y = wert, group = region)) %>%
-      # highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-      # highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      # highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
@@ -329,8 +321,7 @@ plot_cp_projekte <- function(r){
 
     # Plot
     out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = prop, x = indikator))%>%
-      highcharter::hc_plotOptions(column = list(#pointWidth = 50,
-                                                colorByPoint = TRUE,
+      highcharter::hc_plotOptions(column = list( colorByPoint = TRUE,
                                                 colors =  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
                                                             "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
                                                             "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc"))
@@ -339,8 +330,6 @@ plot_cp_projekte <- function(r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f} %"),
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"), pointsWidth=100) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
-      # highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-      #                          "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a")) %>%
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
@@ -388,8 +377,7 @@ plot_cp_projekte <- function(r){
 
     # Plot
     out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = indikator))%>%
-      highcharter::hc_plotOptions(column = list(#pointWidth = 50,
-                                                colorByPoint = TRUE,
+      highcharter::hc_plotOptions(column = list(colorByPoint = TRUE,
                                                 colors =  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
                                                             "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
                                                             "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc"))
@@ -542,8 +530,6 @@ plot_cp_profile <- function(r){
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f} %"),
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"), pointsWidth=100) %>%
         highcharter::hc_xAxis(title = list(text = "")) %>%
-        # highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-        #                          "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a")) %>%
         highcharter::hc_title(text = titel,
                               margin = 45,
                               align = "center",
@@ -593,8 +579,6 @@ plot_cp_profile <- function(r){
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f} %"),
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"), pointsWidth=100) %>%
         highcharter::hc_xAxis(title = list(text = "")) %>%
-        # highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-        #                          "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a")) %>%
         highcharter::hc_title(text = titel,
                               margin = 45,
                               align = "center",
@@ -808,8 +792,6 @@ plot_mv_akteursb <- function(r){
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = label),
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"), pointsWidth=100) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
-      # highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-      #                          "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a")) %>%
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
@@ -941,10 +923,6 @@ plot_mv_stimmung <- function(r){
           marginLeft = 100,    # Platz links für Labels
           marginRight = 100   # Platz rechts für Labels
         )
-        # highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        # highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-        #                                        dataLabels = list(enabled = TRUE,  format='{point.wert} %'), showInLegend = TRUE))
-
   }
 
 
@@ -954,9 +932,6 @@ plot_mv_stimmung <- function(r){
 
 plot_mv_genderb <- function(){
 
- # thema_wahl <- r$thema_wahl_gender
-
-  #if(thema_wahl == "Vernetzungswunsch"){
 
     df <- dplyr::tbl(con, "ausserschulisch_genderbefragung") %>%
       dplyr::filter(thema == "Vernetzungswunsch") %>%
@@ -1007,51 +982,6 @@ plot_mv_genderb <- function(){
           )
         )
       )
-    # %>%
-    #   highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px"))
-
-
-  # }else if(thema_wahl == "Netzwerk"){
-  #
-  #   df <- dplyr::tbl(con, "ausserschulisch_genderbefragung") %>%
-  #     dplyr::filter(thema %in% thema_wahl) %>%
-  #     dplyr::collect()
-  #
-  #   # Title und Texte vorbereiten
-  #   titel <- "Vertrautheit mit dem MINT-Bildungsnetzwerk und Rahmenbedingungen für Vernetzung"
-  #   subtitel <- paste0("Mittelwert auf einer Skala von 1 (stimme gar nicht zu) und 4 (stimme voll zu) \n\n\n
-  #                      Angaben von 456 MINT-Bildungsanbieter:innen mit Interesse oder Angeboten im Bereich MINT-Förderung für Mädchen und Frauen")
-  #
-  #   plot <- df %>%
-  #     highcharter::hchart(
-  #       "bar", highcharter::hcaes(x = gruppe, y = wert)
-  #     )%>%
-  #     highcharter::hc_tooltip(
-  #       pointFormat=paste('Mittelwert: {point.wert}')) %>%
-  #     highcharter::hc_plotOptions(bar = list(
-  #       colorByPoint = TRUE,
-  #       colors =  c("#b16fab", "#154194")))%>%
-  #     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
-  #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"),
-  #                           pointsWidth=100, min = 1, max = 4, tickInterval = 1) %>%
-  #     highcharter::hc_xAxis(title = list(text = "")) %>%
-  #     highcharter::hc_title(text = titel,
-  #                           margin = 45,
-  #                           align = "center",
-  #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  #     highcharter::hc_subtitle(text = subtitel,
-  #                              align = "center",
-  #                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
-  #     highcharter::hc_chart(
-  #       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-  #     highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-  #     highcharter::hc_caption(text = "Im Mittel betrachtet stimmen die Befragten dem zu, dass sie mit
-  #                             ihrem MINT-Bildungsnetzwerk vertraut sind. Noch stärker fällt die mittlerer
-  #                             Zustimmung dafür aus, dass die Bildungsakteur:innen von ihren Institutionen
-  #                             durch günstige Rahmenbedingungen bei der Vernetzung unterstützt werden.")
-  #
-  # }
-
 
   return(plot)
 }
@@ -1073,9 +1003,7 @@ skf_einrichtungen <- function(r){
   # reactive values einlesen
   timerange <- r$date_skf_einrichtungen
   t <- as.numeric(timerange[1]:timerange[2])
-
   ort_select <- r$ort_skf_einrichtungen
-
 
   # Alle Einrichtungen berechnen und gewählte Einrichtung filtern
   if(ort_select == "Alle Einrichtungen"){
@@ -1124,7 +1052,6 @@ skf_einrichtungen <- function(r){
   # Plot erstellem
   out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
     highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> Anzahl: {point.y} <br> aktive Einrichtungen gesamt: {point.gesamt}")%>%
-    # highcharter::hc_size(height = 1000)%>%
     highcharter::hc_yAxis(title = list(text = "")
                           , labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")
     ) %>%
@@ -1206,7 +1133,6 @@ skf_personal <- function(r){
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"),
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"), pointsWidth=100) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
-    #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#66cbaf","#8893a7")) %>%
     highcharter::hc_title(text = paste0("Geschätzte Anzahl an Fach- und Lehrkräften, die an einer SKf-Fortbildung teilgenommen haben"),
                           margin = 45,

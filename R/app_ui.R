@@ -22,13 +22,6 @@ app_ui <- function(request) {
           "           MINT-DataLab",
           style = "text-align: justify; color:#154194; font-size: 22; font-family: SourceSans3-Bold;"
         )
-        #,
-
-        # shiny::tags$li(
-        #   class = "dropdown",
-        #   id = "search-input-all",
-        #   mod_suche_eingabe_ui("suche_eingabe_1")
-        # )
       ),
 
 
@@ -46,7 +39,6 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Alle Bildungsbereiche",  tabName = "home"),
           shinydashboard::menuItem("Schule",  tabName = "schule"),
           shinydashboard::menuItem("Studium",  tabName = "studium"),
-          # shinydashboard::menuItem("Ausbildung", icon = shiny::icon("pencil-ruler"), tabName = "ausbildung"),
           shinydashboard::menuItem("Ausbildung & Beruf",  tabName = "beruf"),
 
           p("Fokusseiten:", style = "color: #00A87A; font-size: 16px; font-weight: 600;
@@ -56,13 +48,10 @@ app_ui <- function(request) {
           shinydashboard::menuItem("MINT-Fachkräfte",  tabName = "fachkraft"),
           shinydashboard::menuItem("MINT International", tabName = "international"),
 
-        # shinydashboard::menuItem("BETA: Suche",  tabName = "suche"),
           hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen")
         #,
-          #shinydashboard::menuItem("BETAVERSION", tabName = "BETAVERSION")
-          #shinydashboard::menuItem("Impressum",  tabName = "impressum")
-          #shinydashboard::menuItem("Datenschutz", tabName = "datenschutz")
+
 
 
         )
@@ -105,16 +94,11 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="home", mod_home_ui("home_ui_1")),
           shinydashboard::tabItem(tabName ="schule", mod_schule_ui("schule_ui_1")),
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
-          # shinydashboard::tabItem(tabName ="ausbildung", mod_ausbildung_ui("ausbildung_ui_1")),
           shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
           shinydashboard::tabItem(tabName = "ausserschulisch", mod_ausserschulisch_ui("ausserschulisch_ui_1")),
           shinydashboard::tabItem(tabName = "international", mod_international_ui("mod_international_ui_1")),
           shinydashboard::tabItem(tabName ="fachkraft", mod_fachkraft_ui("fachkraft_ui_1")),
-
-          # shinydashboard::tabItem(tabName ="suche", mod_suche_ui("suche_1")),
           shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
-          #shinydashboard::tabItem(tabName ="BETAVERSION", mod_betaversion_ui("betaversion_ui_1")),
-
           shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
           shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),
           shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))

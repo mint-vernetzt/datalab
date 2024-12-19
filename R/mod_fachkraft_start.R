@@ -522,7 +522,7 @@ mod_fachkraft_start_ui <- function(id){
         tabsetPanel(
           type = "tabs",
           tabPanel(
-            "Engpassanalyse für MINT-Berufe", br(),
+            "Engpassanalyse für MINT-Berufsgattungen", br(),
             shiny::sidebarPanel(
               width = 3,
               mod_fachkraft_item_detail_ui("fachkraft_item_detail_1"),
