@@ -1344,7 +1344,7 @@ usethis::use_data(pisa, overwrite = T)
 ### Gender ----
 #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
-
+pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 # funktion
 timss_gender_transform <- function(dat){
 
@@ -1390,6 +1390,10 @@ timss_gender_transform <- function(dat){
 
   colnames(timss_g1)[1] <- "land"
 
+  #genauer fehler:
+  timss_g1 <- timss_g1 %>%
+    select(-matches("^1995_Boys_Signifikanz$"))
+
   timss_g2 <- timss_g1%>%
     slice(which(if_any(everything(), ~. == "Girls"))+1 : nrow(.))%>%
     pivot_longer(-"land", values_to = "dummy", names_to = "indikator")%>%
@@ -1427,10 +1431,14 @@ timss_gender_transform <- function(dat){
   return(timss_g3)
 }
 
-l <- timss_gender_transform("TIMSS002_achievement-gender-trends-M4.xlsx")
-k <- timss_gender_transform("TIMSS005_achievement-gender-trends-S4.xlsx")
+# l <- timss_gender_transform("TIMSS002_achievement-gender-trends-M4.xlsx")
+# k <- timss_gender_transform("TIMSS005_achievement-gender-trends-S4.xlsx")
 
-timss_gender <- bind_rows(l,k)
+m23 <- timss_gender_transform("TIMSS009_ach-g4m-trend-gender.xlsx")
+s23 <- timss_gender_transform("TIMSS010_sam.xlsx")
+
+# timss_gender <- bind_rows(l,k)
+timmss_gender <- bind_rows(m23, s23)
 
 ### Achievement ----
 
@@ -1516,7 +1524,7 @@ timss_achievement <- bind_rows(j,h)
 
 timss_res_extract <- function(dat3, jahr, fach){
 
-  file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+  #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
   dat2 <- read_excel(paste0(pfad, dat3))
@@ -1616,6 +1624,7 @@ o <- timss_res_extract("TIMSS007_home-resources-M4.xlsx", "2019", "Mathematik")
 p <- timss_res_extract("TIMSS008_home-resources-S4.xlsx" ,"2019", "Naturwissenschaften")
 
 
+
 timss_res_dat <- bind_rows(o,p)
 
 ### Benchmarks-----
@@ -1624,7 +1633,7 @@ timss_res_dat <- bind_rows(o,p)
 # funktion
 
 timss_benchmarks_extract <- function(dat7){
-  file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+  #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
   dat8 <- read_excel(paste0(pfad, dat7))
