@@ -33,6 +33,51 @@ helper_title_home <- function(indikator){
 }
 
 
+#' helpers
+#'
+#' @description A utils function
+#'
+#' @return The return value, if any, from executing the utility.
+#'
+#' @noRd
+#'
+#'
+#'
+# gruppe, " im ", regio, " (", timerange, ")
+
+ist_saarland <- function(gruppe="Gruppe", optional=NULL,regio, timerange=0){
+
+  if (timerange != 0){
+    if(regio == "Saarland"){
+      title = paste0(gruppe, " im ", optional, regio, " (", timerange, ")")
+    } else {
+      title = paste0(gruppe, " in ", optional, regio, " (", timerange, ")")
+    }
+  } else {
+    if(regio == "Saarland"){
+      title = paste0(gruppe, optional, " im ", regio)
+    } else {
+      title = paste0(gruppe, optional, " in ", regio)
+    }
+  }
+  return(title)
+}
+
+
+ist_saarland2 <- function(indi, regio, optional1= NULL, optional2=NULL){
+  if (is.null(optional1) && is.null(optional2)){}
+  else{
+    if(regio=="Saarland"){
+      title = paste0(optional1, indi, optional2, " im ",regio)
+    } else {
+      title = paste0(optional1, indi, optional2, " in ",regio)
+    }
+
+  }
+  return(title)
+}
+
+
 
 #' helpers
 #'
