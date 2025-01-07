@@ -17,9 +17,6 @@ mod_international_map_arb_gender_ui <- function(id) {
       choices = c("Europa" = "EU", "OECD"),
       selected = "Europa",
       multiple = FALSE#,
-      # options =  list(
-      #   "max-options" = 2,
-      #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
     ),
 
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
@@ -83,9 +80,7 @@ mod_international_map_arb_gender_ui <- function(id) {
                                     "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
                        selected = c("MINT"),
                        multiple = FALSE#,
-                       # options =  list(
-                       #   "max-options" = 2,
-                       #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+
                      )),
                      conditionalPanel(condition = "input.map_pers_oecd_arb_gender == 'Auszubildende (ISCED 45)'|input.map_pers_oecd_arb_gender == 'Auszubildende in Erstausbildung (ISCED 35)'|input.map_pers_oecd_arb_gender =='In Meisterlehre (< 880 Std. Vorbereitung, ISCED 55)'|input.map_pers_oecd_arb_gender == 'In Meister-/Technikerlehre (> 880 Std. Vorbereitung, ISCED 65)' ",
                                       ns = ns,
@@ -106,9 +101,6 @@ mod_international_map_arb_gender_ui <- function(id) {
                                                      "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
                                         selected = c("MINT"),
                                         multiple = FALSE#,
-                                        # options =  list(
-                                        #   "max-options" = 2,
-                                        #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
                                       ),
                                       p("Darstellungsart:"),
                                       shinyWidgets::pickerInput(
@@ -121,15 +113,6 @@ mod_international_map_arb_gender_ui <- function(id) {
 
     br(),
 
-    # # TODO extract into own module, since this is repeated on a lot of modules
-    #
-    # shinyBS::bsPopover(id="dh_international_map", title = "",
-    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
-    # br(),
-    # br(),
     shinyBS::bsPopover(id="ih_international_arbeitsmarkt_map2", title="",
                        content = paste0("Die erste Karte zeigt beispielsweise, dass der Anteil an Frauen unter den MINT-Ausgebildeten in den skandinavischen Ländern höher liegt als in Deutschland oder Südosteuropa."),
                        placement = "top",
@@ -153,7 +136,6 @@ mod_international_map_arb_gender_server <- function(id, r){
       if (input$map_l_arb_gender == "EU") {
         r$map_y_arb_gender <- input$map_y_eu_arb_gender
         r$map_pers_arb_gender <- input$map_pers_eu_arb_gender
-        #r$map_f_arb <- input$map_f_eu
       }
       if (input$map_l_arb_gender == "OECD") {
         r$map_pers_arb_gender <- input$map_pers_oecd_arb_gender

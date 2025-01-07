@@ -17,9 +17,7 @@ mod_international_map_fem_ui <- function(id) {
       choices = c("Europa" = "EU", "OECD"),
       selected = "Europa",
       multiple = FALSE#,
-      # options =  list(
-      #   "max-options" = 2,
-      #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+
     ),
 
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen

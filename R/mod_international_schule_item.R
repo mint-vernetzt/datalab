@@ -9,7 +9,6 @@
 #' @importFrom shiny NS tagList
 mod_international_schule_item_ui <- function(id){
 
-  # logger::log_debug("start mod_international_schule_item_ui")
 
   ns <- NS(id)
   tagList(

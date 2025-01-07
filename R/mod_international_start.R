@@ -465,8 +465,6 @@ mod_international_start_ui <- function(id){
       # Tab 3
       tabPanel("Top 10 der MINT-Länder", br(),
 
-                                      #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                      # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
                                       shiny::sidebarPanel(
                                         width = 3,
@@ -498,8 +496,6 @@ mod_international_start_ui <- function(id){
                                       )
                            ),tabPanel("Top 10 der Länder Frauen in MINT", br(),
 
-                                      #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                      # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
                                       shiny::sidebarPanel(
                                         width = 3,
@@ -532,8 +528,6 @@ mod_international_start_ui <- function(id){
                                       )
                            ),tabPanel("MINT-Anfänger:innen und -Absolvent:innen", br(),
 
-                                      #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                      # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
                                       shiny::sidebarPanel(
                                         width = 3,
@@ -562,11 +556,6 @@ mod_international_start_ui <- function(id){
                                                            trigger = "hover"),
                                         tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_international_ho")
 
-                                        # shinyBS::bsPopover(id="h_international_arbeit_3", title="",
-                                        #                    content = paste0("POPUP INFO TEXT HERE"),
-                                        #                    placement = "top",
-                                        #                    trigger = "hover"),
-                                        # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_international_arbeit_3")
                                       )
                            )
                )
@@ -641,31 +630,11 @@ mod_international_start_server <- function(id, r){
 
     output$plot_international_schule_map_1 <- renderUI({
       plot_list <- plot_international_schule_map(r)
-      # r$plot_international_schule_map_1 <- plot_list
-      #
-      # r$plot_international_schule_map_1_title <- get_plot_title(
-      #   plot = r$plot_international_schule_map_1
-      # )
+
 
       plot_list
     })
 
-    # output$download_btn_plot_international_schule_map_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_international_schule_map_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_international_schule_map_1,
-    #       filename =  r$plot_international_schule_map_1_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_international_schule_map_1_title, file)
-    #     file.remove(r$plot_international_schule_map_1_title)
-    #   }
-    # )
 
     # tab 2
 
@@ -680,52 +649,17 @@ mod_international_start_server <- function(id, r){
       plot_list
     })
 
-    # output$download_btn_plot_international_schule_item_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_international_schule_item_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_international_schule_item_1,
-    #       filename =  r$plot_international_schule_item_1_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_international_schule_item_1_title, file)
-    #     file.remove(r$plot_international_schule_item_1_title)
-    #   }
-    # )
+
 
     # tab 3
 
     output$plot_international_schule_migration_1 <- renderUI({
       plot_list <- plot_international_schule_migration(r)
-      # r$plot_international_schule_migration_1 <- plot_list
-      #
-      # r$plot_international_schule_migration_1_title <- get_plot_title(
-      #   plot = r$plot_international_schule_migration_1
-      # )
+
 
       plot_list
     })
 
-    # output$download_btn_plot_international_schule_migration_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_international_schule_migration_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_international_schule_migration_1,
-    #       filename =  r$plot_international_schule_migration_1_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_international_schule_migration_1_title, file)
-    #     file.remove(r$plot_international_schule_migration_1_title)
-    #   }
-    # )
 
 
 
@@ -734,31 +668,12 @@ mod_international_start_server <- function(id, r){
 
     output$plot_international_studienzahl_map_1 <- renderUI({
       plot_list <- plot_international_map(r)
-      # r$plot_international_studienzahl_map_1 <- plot_list
-      #
-      # r$plot_international_studienzahl_map_1_title <- get_plot_title(
-      #   plot = r$plot_international_studienzahl_map_1
-      # )
+
 
       plot_list
     })
 
-    # output$download_btn_plot_international_studienzahl_map_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_international_studienzahl_map_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_international_studienzahl_map_1,
-    #       filename =  r$plot_international_studienzahl_map_1_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_international_studienzahl_map_1_title, file)
-    #     file.remove(r$plot_international_studienzahl_map_1_title)
-    #   }
-    # )
+
 
 
     # tab 2
@@ -766,31 +681,11 @@ mod_international_start_server <- function(id, r){
 
     output$plot_international_map_fem_1 <- renderUI({
       plot_list <- plot_international_map_fem(r)
-      # r$plot_international_map_fem_1 <- plot_list
-      #
-      # r$plot_international_map_fem_1_title <- get_plot_title(
-      #   plot = r$plot_international_map_fem_1
-      # )
+
 
       plot_list
     })
 
-    # output$download_btn_plot_international_map_fem_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_international_map_fem_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_international_map_fem_1,
-    #       filename =  r$plot_international_map_fem_1_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_international_map_fem_1_title, file)
-    #     file.remove(r$plot_international_map_fem_1_title)
-    #   }
-    # )
 
 
 
@@ -979,62 +874,23 @@ mod_international_start_server <- function(id, r){
 
     output$plot_international_studienzahl_map_arb_1 <- renderUI({
       plot_list <- plot_international_map_arb(r)
-      # r$plot_international_studienzahl_map_arb_1 <- plot_list
-      #
-      # r$plot_international_studienzahl_map_arb_1_title <- get_plot_title(
-      #   plot = r$plot_international_studienzahl_map_arb_1
-      # )
+
 
       plot_list
     })
 
-    # output$download_btn_plot_international_studienzahl_map_arb_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_international_studienzahl_map_arb_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_international_studienzahl_map_arb_1,
-    #       filename =  r$plot_international_studienzahl_map_arb_1_title ,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_international_studienzahl_map_arb_1_title , file)
-    #     file.remove(r$plot_international_studienzahl_map_arb_1_title )
-    #   }
-    # )
+
 
 
     # tab 2
 
     output$plot_international_map_arb_gender_1 <- renderUI({
       plot_list <- plot_international_map_arb_gender(r)
-      # r$plot_international_map_arb_gender_1 <- plot_list
-      #
-      # r$plot_international_map_arb_gender_1_title <- get_plot_title(
-      #   plot = r$plot_international_map_arb_gender_1
-      # )
+
 
       plot_list
     })
 
-    # output$download_btn_plot_international_map_arb_gender_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_international_map_arb_gender_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_international_map_arb_gender_1,
-    #       filename =  r$plot_international_map_arb_gender_1_title ,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_international_map_arb_gender_1_title , file)
-    #     file.remove(r$plot_international_map_arb_gender_1_title )
-    #   }
-    # )
 
 
     # tab 3

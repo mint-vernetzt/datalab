@@ -19,9 +19,7 @@ mod_international_map_ui <- function(id) {
       choices = c("Europa" = "EU", "OECD", "Weltweit"),
       selected = "Europa",
       multiple = FALSE#,
-      # options =  list(
-      #   "max-options" = 2,
-      #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+
     ),
 
     #Conditional Panel
@@ -42,9 +40,7 @@ mod_international_map_ui <- function(id) {
                        choices = international_ui_faecher(region = "EU"),
                        selected = c("Alle MINT-Fächer"),
                        multiple = FALSE#,
-                       # options =  list(
-                       #   "max-options" = 2,
-                       #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+
                      )),
     conditionalPanel(condition = "input.map_l_int_studium == 'OECD' ",
                      ns = ns,
@@ -61,10 +57,8 @@ mod_international_map_ui <- function(id) {
                        inputId = ns("map_f_oecd"),
                        choices = international_ui_faecher(region = "OECD"),
                        selected = c("MINT"),
-                       multiple = FALSE#,
-                       # options =  list(
-                       #   "max-options" = 2,
-                       #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+                       multiple = FALSE,
+
                      )),
     conditionalPanel(condition = "input.map_l_int_studium == 'Weltweit' ",
                      ns = ns,

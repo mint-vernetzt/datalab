@@ -84,9 +84,6 @@ mod_international_top10_mint_arb_ui <- function(id){
                                                      "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
                                         selected = c("MINT"),
                                         multiple = FALSE#,
-                                        # options =  list(
-                                        #   "max-options" = 2,
-                                        #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
                                       )),
                      conditionalPanel(condition = "input.map_pers_oecd_top10_mint_arb == 'Auszubildende (ISCED 45)'|
                                       input.map_pers_oecd_top10_mint_arb == 'Auszubildende in Erstausbildung (ISCED 35)'|
@@ -110,9 +107,6 @@ mod_international_top10_mint_arb_ui <- function(id){
                                                      "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
                                         selected = c("MINT"),
                                         multiple = FALSE#,
-                                        # options =  list(
-                                        #   "max-options" = 2,
-                                        #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
                                       ))),
 
                      p("Durchschnitt anzeigen:"),

@@ -74,10 +74,6 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
                     "internationale Absolvent:innen"),
         selected = c("Studierende"),
         multiple = FALSE
-        # ,
-        # options =  list(
-        #   "max-options" = 2,
-        #   "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
       ),
       br(),
       shinyBS::bsPopover(id="dh_studium_mint_fach_1", title = "",

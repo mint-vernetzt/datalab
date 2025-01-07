@@ -18,9 +18,6 @@ mod_international_top10_mint_arb_gender_ui <- function(id){
       choices = c("Europa" = "EU", "OECD"),
       selected = "Europa",
       multiple = FALSE#,
-      # options =  list(
-      #   "max-options" = 2,
-      #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
     ),
 
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
@@ -87,9 +84,6 @@ mod_international_top10_mint_arb_gender_ui <- function(id){
                                                      "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
                                         selected = c("MINT"),
                                         multiple = FALSE#,
-                                        # options =  list(
-                                        #   "max-options" = 2,
-                                        #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
                                       )),
                      conditionalPanel(condition = "input.map_pers_oecd_top10_mint_arb_gender == 'Auszubildende (ISCED 45)'|
                                       input.map_pers_oecd_top10_mint_arb_gender == 'Auszubildende in Erstausbildung (ISCED 35)'|
@@ -113,9 +107,6 @@ mod_international_top10_mint_arb_gender_ui <- function(id){
                                                      "---Naturwissenschaften, Mathematik und Statistik" = "Naturwissenschaften, Mathematik und Statistik"),
                                         selected = c("MINT"),
                                         multiple = FALSE#,
-                                        # options =  list(
-                                        #   "max-options" = 2,
-                                        #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
                                       ),
                                       p("Darstellungsart:"),
                                       shinyWidgets::pickerInput(

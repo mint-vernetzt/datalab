@@ -69,26 +69,10 @@ mod_international_schule_map_ui <- function(id){
                        multiple = FALSE
                      ),
 
-                     # p("Leistungsindikator"),
-                     # shinyWidgets::pickerInput(
-                     #   inputId = ns("map_li_pisa_int_schule"),
-                     #   choices = c("Test-Punktzahl"),
-                     #   selected = c("Test-Punktzahl"),
-                     #   multiple = FALSE
-                     # )
                      ),
 
     br(),
 
-    # TODO extract into own module, since this is repeated on a lot of modules
-
-    # shinyBS::bsPopover(id="dh_international_schule_map", title = "",
-    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_schule_map"),
-    # br(),
-    # br(),
     shinyBS::bsPopover(id="ih_international_schule_map", title="",
                        content = paste0("Die erste Einstellung der Karte zeigt, dass Schüler:innen in Deutschland 2019 im Durchschnitt 521 Punkte im Mathematiktest von TIMSS erzielen. Damit liegen sie z. B. etwas hinter Schüler:innen aus den Niederlanden oder den USA."),
                        placement = "top",
@@ -119,7 +103,6 @@ mod_international_schule_map_server <- function(id, r){
       if (input$map_l_int_schule == "PISA") {
         r$map_y_int_schule <- input$map_y_pisa_int_schule
         r$map_f_int_schule <- input$map_f_pisa_int_schule
-        # r$map_li_int_schule <- input$map_li_pisa_int_schule
       }
     })
 
@@ -130,10 +113,6 @@ mod_international_schule_map_server <- function(id, r){
     observeEvent(input$map_f_pisa_int_schule, {
       r$map_f_int_schule <- input$map_f_pisa_int_schule
     })
-
-    # observeEvent(input$map_li_pisa_int_schule, {
-    #   r$map_li_int_schule <- input$map_li_pisa_int_schule
-    # })
 
     # eu check should be after oecd check, since it is the default and will
     # otherwise be overwritten on initial load up

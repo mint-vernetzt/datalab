@@ -19,9 +19,6 @@ mod_international_top10_mint_ui <- function(id){
       choices = c("Europa"="EU", "OECD", "Weltweit"),
       selected = "Europa",
       multiple = FALSE#,
-      # options =  list(
-      #   "max-options" = 2,
-      #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
     ),
 
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
@@ -42,9 +39,7 @@ mod_international_top10_mint_ui <- function(id){
                        choices = international_ui_faecher(region = "EU"),
                        selected = c("Alle MINT-Fächer"),
                        multiple = FALSE#,
-                       # options =  list(
-                       #   "max-options" = 2,
-                       #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+
                      )),
     conditionalPanel(condition = "input.map_l_int_top10 == 'OECD' ",
                      ns = ns,
@@ -62,9 +57,7 @@ mod_international_top10_mint_ui <- function(id){
                        choices = international_ui_faecher(region = "OECD"),
                        selected = c("MINT"),
                        multiple = FALSE#,
-                       # options =  list(
-                       #   "max-options" = 2,
-                       #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+
                      )),
     conditionalPanel(condition = "input.map_l_int_top10 == 'Weltweit' ",
                      ns = ns,

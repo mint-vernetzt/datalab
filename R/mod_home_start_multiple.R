@@ -69,10 +69,7 @@ mod_home_start_multiple_ui <- function(id){
                      `select-all-text` = "Alle auswählen"),
       selected = c("Leistungskurse", "Studierende",
                    "Auszubildende", "Beschäftigte"),
-      # options =  list(
-      #   "max-options" = 3,
-      #   "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
-      # ),
+
       multiple = T
     ),
 
