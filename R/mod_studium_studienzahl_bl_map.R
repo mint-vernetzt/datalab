@@ -75,11 +75,7 @@ mod_studium_studienzahl_bl_map_ui <- function(id){
                          "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
                      )),
     br(),
-    shinyBS::bsPopover(id="dh_studium_fach_2", title = "",
-                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                       placement = "top",
-                       trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_fach_2"),
+    darstellung(id="dh_studium_fach_2"),
     br(),
     br(),
     shinyBS::bsPopover(id="ih_studium_fach_2", title="",

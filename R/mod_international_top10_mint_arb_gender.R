@@ -128,15 +128,9 @@ mod_international_top10_mint_arb_gender_ui <- function(id){
 
     br(),
 
-    # # TODO extract into own module, since this is repeated on a lot of modules
-    #
-    # shinyBS::bsPopover(id="dh_international_map", title = "",
-    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
-    # br(),
-    # br(),
+    darstellung(id="dh_international_map_6"),
+    br(),
+    br(),
     shinyBS::bsPopover(id="ih_international_arbeitsmarkt_tap4", title="",
                        content = paste0("In der ersten Einstellung ist zu sehen, dass Deutschland mit knapp 31 % einen der niedrigsten Frauenanteile von MINT-Ausgebildeten im europäischen Vergleich aufweist."),
                        placement = "top",

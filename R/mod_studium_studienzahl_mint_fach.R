@@ -76,10 +76,7 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
         multiple = FALSE
       ),
       br(),
-      shinyBS::bsPopover(id="dh_studium_mint_fach_1", title = "",
-                                content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                trigger = "hover", placement = "top"),
-      tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_mint_fach_1"),
+      darstellung("dh_studium_mint_fachh1"),
       br(),
       br(),
       shinyBS::bsPopover(id="ih_studium_mint_fach_2", title="",

@@ -119,16 +119,9 @@ mod_international_top10_mint_arb_ui <- function(id){
                      ),
 
     br(),
-
-    # # TODO extract into own module, since this is repeated on a lot of modules
-    #
-    # shinyBS::bsPopover(id="dh_international_map", title = "",
-    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
-    # br(),
-    # br(),
+    darstellung(id="dh_map_international_4"),
+    br(),
+    br(),
     shinyBS::bsPopover(id="ih_international_arbeitsmarkt_tab3", title="",
                        content = paste0("Aus dieser Darstellung heraus liest sich, dass Deutschland im europäischen Vergleich zu den 10 Ländern zählt, die den geringsten Anteil an MINT-Ausgebildeten an allen Ausgebildeten aufweisen."),
                        placement = "top",

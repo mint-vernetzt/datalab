@@ -91,14 +91,9 @@ mod_international_map_fem_ui <- function(id) {
     ),
 
     br(),
-
-    # shinyBS::bsPopover(id="dh_international_map", title = "",
-    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
-    # br(),
-    # br(),
+    darstellung(id="dh_international_map"),
+    br(),
+    br(),
     shinyBS::bsPopover(id="ih_international_map2", title="",
                        content = paste0("Die Karte zeigt den Frauenanteil unter MINT-Studierenden im Ländervergleich. In der ersten Einstellung sieht man beispielsweise, dass der Frauenanteil in MINT in den baltischen Staaten und Schweden etwas höher liegt als in den Ländern Mitteleuropas."),
                        placement = "top",

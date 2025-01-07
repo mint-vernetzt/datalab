@@ -175,11 +175,7 @@ mod_schule_kurse_iqb_mathe_mittel_zeitverlauf_ui <- function(id){
                    ),
 
   br(),
-  shinyBS::bsPopover(id="dh_schule_kompetenz_2", title = "",
-                     content = paste0("Falls die Grafiken nicht dargestellt werden, bitte wechseln Sie bitte in den Auswahlmöglichkeiten der Darstellung zu &quot4. Klasse&quot zur Region &quotDeutschland&quot zurück. Wählen Sie jetzt &quotTest-Punktzahl&quot als Leistungsindikator aus. Da uns dieser Indikator nur für die 4. Klassen deutschlandweit vorliegt, lässt sich diese Einstellung nicht auf andere Auswahloptionen übertragen."),
-                     placement = "top",
-                     trigger = "hover"),
-  tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_schule_kompetenz_2"),
+  darstellung(id = "dh_schule_kompetenz_2"),
   br(),
   br(),
   shinyBS::bsPopover(id="ih_schule_kompetenz_2", title="",

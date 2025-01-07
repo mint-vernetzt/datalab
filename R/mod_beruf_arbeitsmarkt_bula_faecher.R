@@ -69,11 +69,7 @@ mod_beruf_arbeitsmarkt_bula_faecher_ui <- function(id){
                        selected = "Technik (gesamt)"
                      ),
                      br(),
-                     shinyBS::bsPopover(id="dh_beruf_fach_1", title = "",
-                                        content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                        trigger = "hover"),
-                     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_beruf_fach_1"),
-
+                     darstellung(id="dh_beruf_fach_1"),
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_fach_1", title="",

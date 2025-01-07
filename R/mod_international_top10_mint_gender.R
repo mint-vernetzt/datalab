@@ -77,15 +77,9 @@ mod_international_top10_mint_gender_ui <- function(id){
 
     br(),
 
-    # # TODO extract into own module, since this is repeated on a lot of modules
-    #
-    # shinyBS::bsPopover(id="dh_international_map", title = "",
-    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
-    # br(),
-    # br(),
+    darstellung(id="international_dh_map_3"),
+    br(),
+    br(),
     shinyBS::bsPopover(id="ih_international_map4", title="",
                        content = paste0("Hier sieht man, dass Liechtenstein mit über 60 % einen außergewöhnlich hohen Frauenanteil aufweist. Deutschland dagegen hat den neuntkleinsten Frauenanteil in MINT (29 %)."),
                        placement = "top",

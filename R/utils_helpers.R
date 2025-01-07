@@ -1019,12 +1019,12 @@ get_lks <- function(bula = "Sachsen"){
 
 
 
-darstellung <- function(id, content = NULL, title = NULL) {
+darstellung <- function(id, title = NULL) {
   tagList(
     shinyBS::bsPopover(
       id = id,
       title = title,
-      content = content %||% paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+      content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
       trigger = "hover"
     ),
     tags$a(
@@ -1032,7 +1032,6 @@ darstellung <- function(id, content = NULL, title = NULL) {
       icon("question-circle"),
       id = id
     ),
-    br()
   )
 }
 

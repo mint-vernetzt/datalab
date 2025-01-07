@@ -87,10 +87,7 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                      ),
                      br(),
 
-                     shinyBS::bsPopover(id="dh_studium_mint_1", title = "",
-                                        content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                        trigger = "hover"),
-                     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_mint_1"),
+                     darstellung(id="dh_studium_mint_1"),
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_mint_1", title="",

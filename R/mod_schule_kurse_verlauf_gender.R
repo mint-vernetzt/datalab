@@ -65,10 +65,7 @@ mod_schule_kurse_verlauf_gender_ui <- function(id){
    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="popoverbox3_1"),
    br(),
    br(),
-   shinyBS::bsPopover(id="popoverdarstellung_1", title = "",
-                      content = paste0("Falls die Grafik abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                      trigger = "hover"),
-   tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "popoverdarstellung_1"),
+   darstellung(id="popoverdarstellung_1"),
    br()
 
   )

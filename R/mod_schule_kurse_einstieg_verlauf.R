@@ -58,10 +58,7 @@ mod_schule_kurse_einstieg_verlauf_ui <- function(id){
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_3"),
     br(),
     br(),
-    shinyBS::bsPopover(id="dh_schule_fach_neu", title = "",
-                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                       trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_schule_fach_neu"),
+    darstellung(id="dh_schule_fach_neu1"),
     br(),
 
   )

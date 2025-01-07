@@ -34,12 +34,7 @@ mod_ausserschulisch_skf_einrichtungen_ui <- function(id){
     ),
 
     br(),
-    # shinyBS::bsPopover(id="sfk_pop1", title = "",
-    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-    #                    trigger = "hover"),
-    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "sfk_pop1"),
-
-    darstellung(id="sfk_pop1")
+    darstellung(id="sfk_pop1"),
     br(),
 
     br(),
