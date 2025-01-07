@@ -114,13 +114,6 @@ mod_studium_studienzahl_bl_map_server <- function(id, r){
       r$map_f <- input$map_f
     })
 
-    # observeEvent(input$hochschulform_studium_studienzahl_bl_map2, {
-    #   r$hochschulform_studium_studienzahl_bl_map2 <- input$hochschulform_studium_studienzahl_bl_map2
-    # })
-    #
-    # observeEvent(input$subject_studium_studienzahl_bl_map, {
-    #   r$subject_studium_studienzahl_bl_map <- input$subject_studium_studienzahl_bl_map
-    # })
 
   })
 }

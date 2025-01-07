@@ -5,7 +5,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){ ###DIESE SEITE IST NICHT INTERNATIONAL GRADE
+mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 

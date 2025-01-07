@@ -48,13 +48,7 @@ mod_fachkraft_server <- function(id,
 
 
   # box 5 International Table
-  # mod_international_table_input_server("international_table_input_1", r)
 
-
-
-
-
-  #logger::log_debug("Seiten-Module INTERNATIONAL done")
 }
 
 ## To be copied in the UI

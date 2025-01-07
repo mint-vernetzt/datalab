@@ -87,18 +87,6 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                      ),
                      br(),
 
-
-#
-#                      conditionalPanel(condition = "input-studium_anteil_i =='Absolventen'",
-#                                       ns = ns,
-#
-#                                       p("Erweiterte Absolventenauswahl (max. 2)"),
-#                                       inputId = ns("absolventen_auswahl_i"),
-#                                       choices = c("internationale Absolventen",
-#                                                   "ausländische Absolventen",
-#                                                   "Weibliche Absolventen")
-#                      ),
-
                      shinyBS::bsPopover(id="dh_studium_mint_1", title = "",
                                         content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
                                         trigger = "hover"),
@@ -129,12 +117,6 @@ mod_studium_studienzahl_anteil_ui <- function(id){
                        options = list(`actions-box` = TRUE,
                                       `deselect-all-text` = "Alle abwählen",
                                       `select-all-text` = "Alle auswählen"),
-                       # selected = c("Studienanfänger:innen (1.Fachsemester)",
-                       #              "Studierende",
-                       #              "Studierende (Lehramt, Universität)",
-                       #              "Studierende (Universität)",
-                       #              "Studierende (Fachhochschulen)"
-                       # )
                        selected = c("Studierende",
                                                "internationale Studierende",
                                                "Studierende (Lehramt)",
@@ -154,60 +136,6 @@ mod_studium_studienzahl_anteil_ui <- function(id){
     )
 
 }
-
-#moment
-# p("Regionen:"),
-# shinyWidgets::pickerInput(
-#   inputId = ns("bulas_balken_regio_faecher"),
-#   choices = c("Deutschland",
-#               "Baden-Württemberg",
-#               "Bayern",
-#               "Berlin",
-#               "Brandenburg",
-#               "Bremen",
-#               "Hamburg",
-#               "Hessen",
-#               "Mecklenburg-Vorpommern",
-#               "Niedersachsen",
-#               "Nordrhein-Westfalen",
-#               "Rheinland-Pfalz",
-#               "Saarland",
-#               "Sachsen",
-#               "Sachsen-Anhalt",
-#               "Schleswig-Holstein",
-#               "Thüringen"
-#               ,
-#               "Westdeutschland (o. Berlin)",
-#               "Ostdeutschland (inkl. Berlin)"),
-#   selected = c("Deutschland",
-#                "Baden-Württemberg",
-#                "Bayern",
-#                "Berlin",
-#                "Brandenburg",
-#                "Bremen",
-#                "Hamburg",
-#                "Hessen",
-#                "Mecklenburg-Vorpommern",
-#                "Niedersachsen",
-#                "Nordrhein-Westfalen",
-#                "Rheinland-Pfalz",
-#                "Saarland",
-#                "Sachsen",
-#                "Sachsen-Anhalt",
-#                "Schleswig-Holstein",
-#                "Thüringen"
-#                ,
-#                "Westdeutschland (o. Berlin)",
-#                "Ostdeutschland (inkl. Berlin)"),
-#   options = list(`actions-box` = TRUE,
-#                  `deselect-all-text` = "Alle abwählen",
-#                  `select-all-text` = "Alle auswählen"),
-#   multiple = TRUE
-# ),
-
-
-
-
 
 
 

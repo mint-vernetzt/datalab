@@ -66,16 +66,6 @@ mod_studium_studienzahl_bl_vergleich_ui <- function(id){
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_fach_5")
 
 
-    # ,
-    # p("Status der Student:innen:"),
-    # shinyWidgets::radioGroupButtons(
-    #   inputId = ns("level_studium_studienzahl_bl_vergleich"),
-    #   choices = c("Studienanfänger:innen"="Studienanfänger:innen", "Studierende"),
-    #   direction = "vertical",
-    #   justified = TRUE,
-    #   checkIcon = list(yes = icon("ok",
-    #                               lib = "glyphicon"))
-    # )
   )
 }
 
@@ -102,17 +92,6 @@ mod_studium_studienzahl_bl_vergleich_server <- function(id, r){
       r$bl_date <- input$bl_date
     })
 
-    # observeEvent(input$hochschulform_studium_studienzahl_bl_vergleich2, {
-    #   r$hochschulform_studium_studienzahl_bl_vergleich2 <- input$hochschulform_studium_studienzahl_bl_vergleich2
-    # })
-    #
-    # observeEvent(input$subject_studium_studienzahl_bl_vergleich, {
-    #   r$subject_studium_studienzahl_bl_vergleich <- input$subject_studium_studienzahl_bl_vergleich
-    # })
-    #
-    # observeEvent(input$level_studium_studienzahl_bl_vergleich, {
-    #   r$level_studium_studienzahl_bl_vergleich <- input$level_studium_studienzahl_bl_vergleich
-    # })
 
   })
 }

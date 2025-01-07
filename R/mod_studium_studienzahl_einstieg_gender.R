@@ -51,39 +51,7 @@ mod_studium_studienzahl_einstieg_gender_ui <- function(id){
 
           selected = "Alle MINT-Fächer"
         ),
-        #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
-        # p("Fächergruppe:"),
-        # conditionalPanel(condition = sprintf("input['%s'] == 'Studierende (Lehramt)'",
-        #                                      ns("gen_l")),
-        #                  ns = ns,
-        #                  p(ns("gen_l")),
-        #                  shinyWidgets::pickerInput(
-        #                    inputId = ns("gen_f_lehr"),
-        #                    choices = studi_det_ui_faecher(spezif_i ='Studierende (Lehramt)'),
-        #
-        #                    selected = "Alle MINT-Fächer"
-        #                  )),
-        #
-        # conditionalPanel(condition = sprintf("input['%s'] == 'Internationale Studienanfänger:innen (1. Hochschulsemester)' ||
-        #                  input['%s'] == 'Studienanfänger:innen (1. Fachsemester)' ||
-        #                  input['%s'] == 'Studierende' ||
-        #                  input['%s'] == 'Internationale Studierende' ||
-        #                  input['%s'] == 'Studienanfänger:innen (1. Hochschulsemester)'",
-        #                                      ns("gen_l"), ns("gen_l"), ns("gen_l"),
-        #                                      ns("gen_l"),ns("gen_l")),
-        #                  ns = ns,
-        #                  p(ns("gen_l")),
-        #                  shinyWidgets::pickerInput(
-        #                    inputId = ns("gen_f_alle"),
-        #
-        #                    choices = studi_det_ui_faecher(spezif_i =c('Internationale Studienanfänger:innen (1. Hochschulsemester)',
-        #                                                               'Studienanfänger:innen (1. Fachsemester)',
-        #                                                               'Studierende',
-        #                                                               'Internationale Studierende',
-        #                                                               'Studienanfänger:innen (1. Hochschulsemester)')),
-        #
-        #                    selected = "Alle MINT-Fächer"
-        #                  )),
+
         p("Region:"),
         shinyWidgets::pickerInput(
           inputId = ns("gen_region_mint"),
@@ -307,12 +275,7 @@ mod_studium_studienzahl_einstieg_gender_server <- function(id, r){
     observeEvent(input$gen_f, {
       r$gen_f <- input$gen_f
     })
-    # observeEvent(input$gen_f_lehr, {
-    #   r$gen_f_lehr <- input$gen_f_lehr
-    # })
-    # observeEvent(input$gen_f_alle, {
-    #   r$gen_f_alle <- input$gen_f_alle
-    # })
+
     observeEvent(input$gen_region_mint, {
       r$gen_region_mint <- input$gen_region_mint
     })

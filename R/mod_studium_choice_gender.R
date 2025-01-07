@@ -110,9 +110,6 @@ mod_studium_choice_gender_ui <- function(id){
                        multiple = T,
                        options =  list(
                          "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
-                       # options = list(`actions-box` = TRUE,
-                       #                `deselect-all-text` = "Alle abwählen",
-                       #                `select-all-text` = "Alle auswählen")
                      ),
                      p("Fächergruppe:"),
                      shinyWidgets::pickerInput(
