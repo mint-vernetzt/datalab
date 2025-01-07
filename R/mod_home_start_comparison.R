@@ -70,11 +70,6 @@ mod_home_start_comparison_ui <- function(id){
                      `select-all-text` = "Alle auswählen"),
       selected = c("Schülerinnen Leistungskurse", "Studierende",
                    "Auszubildende",  "Beschäftigte"),
-      # brauchts nicht, gibt nur 4
-      # options =  list(
-      #   "max-options" = 3,
-      #   "max-options-text" = "Bitte nur maximal 3 Bereiche auswählen"
-      # ),
       multiple = TRUE
 
     ),
