@@ -1036,6 +1036,19 @@ darstellung <- function(id, title = NULL) {
 }
 
 
+inthelp <- function(id, content, title = "", label = "Interpretationshilfe zur Grafik") {
+  tagList(
+    shinyBS::bsPopover(
+      id = id,
+      title = title,
+      content = content,
+      trigger = "hover"
+    ),
+    tags$a(label, icon("info-circle"), id = id)
+  )
+}
+
+
 
 
 
