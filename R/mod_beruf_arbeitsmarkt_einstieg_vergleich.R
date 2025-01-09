@@ -42,23 +42,6 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_ui <- function(id){
       choices = 2013:2023,
       selected = 2023
     ),
-    p("Beschäftigtengruppe:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("indikator_arbeitsmarkt_einstieg_verlauf"),
-      choices = c("Auszubildende",
-                  "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
-                  "Beschäftigte",
-                  "ausländische Auszubildende",
-                  "ausländische Beschäftigte",
-                  "Beschäftigte 25-55",
-                  "Beschäftigte u25",
-                  "Beschäftigte ü55"),
-      multiple = TRUE,
-      options = list(`actions-box` = TRUE,
-                     `deselect-all-text` = "Alle abwählen",
-                     `select-all-text` = "Alle auswählen"),
-      selected = c("Beschäftigte", "Auszubildende"),
-    ),
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("region_arbeitsmarkt_einstieg_vergleich"),
@@ -90,7 +73,7 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_ui <- function(id){
                      ns = ns,
          p("Beschäftigtengruppe:"),
          shinyWidgets::pickerInput(
-           inputId = ns("indikator_arbeitsmarkt_einsteig_vergleich"),
+           inputId = ns("indikator_arbeitsmarkt_einsteig_vergleich_kuchen"),
            choices = c("Auszubildende",
                        "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
                        "Beschäftigte",
@@ -109,6 +92,23 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_ui <- function(id){
     ),
     conditionalPanel(condition = "input.ansicht_arbeitsmarkt_einsteig_vergleich == 'Gruppenvergleich - Balkendiagramm'",
                      ns = ns,
+                     p("Beschäftigtengruppe:"),
+                     shinyWidgets::pickerInput(
+                       inputId = ns("indikator_arbeitsmarkt_einsteig_vergleich_balken"),
+                       choices = c("Auszubildende",
+                                   "Auszubildende mit neuem Lehrvertrag" = "Auszubildende (1. Jahr)",
+                                   "Beschäftigte",
+                                   "ausländische Auszubildende",
+                                   "ausländische Beschäftigte",
+                                   "Beschäftigte 25-55",
+                                   "Beschäftigte u25",
+                                   "Beschäftigte ü55"),
+                       multiple = TRUE,
+                       options = list(`actions-box` = TRUE,
+                                      `deselect-all-text` = "Alle abwählen",
+                                      `select-all-text` = "Alle auswählen"),
+                       selected = c("Beschäftigte", "Auszubildende"),
+                     ),
                      shinyBS::bsPopover(id="ih_beruf_mint_3", title="",
                                         content = paste0("Die Darstellung zeigt, dass der MINT-Anteil in der Gruppe der Auszubildenden mit einem Drittel vergleichsweise hoch ist. Am wenigsten groß ist der Anteil an Beschäftigungen in MINT im Minijob."),
                                         trigger = "hover"),
@@ -133,8 +133,11 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_server <- function(id, r){
     observeEvent(input$region_arbeitsmarkt_einstieg_vergleich, {
       r$region_arbeitsmarkt_einstieg_vergleich <- input$region_arbeitsmarkt_einstieg_vergleich
     })
-    observeEvent(input$indikator_arbeitsmarkt_einsteig_vergleich, {
-      r$indikator_arbeitsmarkt_einsteig_vergleich <- input$indikator_arbeitsmarkt_einsteig_vergleich
+    observeEvent(input$indikator_arbeitsmarkt_einsteig_vergleich_balken, {
+      r$indikator_arbeitsmarkt_einsteig_vergleich_balken <- input$indikator_arbeitsmarkt_einsteig_vergleich_balken
+    })
+    observeEvent(input$indikator_arbeitsmarkt_einsteig_vergleich_kuchen, {
+      r$indikator_arbeitsmarkt_einsteig_vergleich_kuchen <- input$indikator_arbeitsmarkt_einsteig_vergleich_kuchen
     })
 
   })
