@@ -805,41 +805,39 @@ plot_international_top10_gender <- function(r) {
       dplyr::mutate(wert = round(wert / total * 100, 1))
 
   }
+  if (label_m == "EU" & art == "höchster Frauenanteil in MINT") {
+    # höchster Frauenanteil
 
+    df <- dplyr::tbl(con, from = "studierende_europa") %>%
+      dplyr::filter(geschlecht == "Frauen" &
+                      jahr == timerange &
+                      (mint_select == "mint" |
+                         (mint_select == "nicht mint" &
+                            fach_m == "Alle MINT-Fächer")) &
+                      fach == fach_m &
+                      indikator == "Frauen-/Männeranteil" &
+                      !(land %in% c("EU (27), seit 2020", "Liechtenstein"))
+                    ) %>%
+      dplyr::select(land, wert) %>%
+      dplyr::collect()
 
-  # if (label_m == "EU" & art == "höchster Frauenanteil in MINT") {
-  #   # höchster Frauenanteil
-  #
-  #   df <- dplyr::tbl(con, from = "studierende_europa") %>%
-  #     dplyr::filter(geschlecht == "Frauen" &
-  #                     jahr == timerange &
-  #                     (mint_select == "mint" |
-  #                        (mint_select == "nicht mint" &
-  #                           fach_m == "Alle MINT-Fächer")) &
-  #                     fach == fach_m &
-  #                     indikator == "Frauen-/Männeranteil" &
-  #                     !(land %in% c("EU (27), seit 2020", "Liechtenstein"))
-  #                   ) %>%
-  #     dplyr::select(land, wert) %>%
-  #     dplyr::collect()
-  #
-  # }
-  # if (label_m == "EU" & art == "meisten Frauen wählen MINT") {
-  #   # meiste Frauen wählen MINT
-  #
-  #   df <- dplyr::tbl(con, from = "studierende_europa") %>%
-  #     dplyr::filter(geschlecht == "Frauen" &
-  #                     jahr == timerange &
-  #                     (mint_select == "mint" |
-  #                        (mint_select == "nicht mint" &
-  #                           fach_m == "Alle MINT-Fächer")) &
-  #                     fach == fach_m &
-  #                     indikator == "Fächerwahl"&
-  #                     !(land %in% c("EU (27), seit 2020", "Lichtenstein"))
-  #                   ) %>%
-  #     dplyr::select(land, wert) %>%
-  #     dplyr::collect()
-  # }
+  }
+  if (label_m == "EU" & art == "meisten Frauen wählen MINT") {
+    # meiste Frauen wählen MINT
+
+    df <- dplyr::tbl(con, from = "studierende_europa") %>%
+      dplyr::filter(geschlecht == "Frauen" &
+                      jahr == timerange &
+                      (mint_select == "mint" |
+                         (mint_select == "nicht mint" &
+                            fach_m == "Alle MINT-Fächer")) &
+                      fach == fach_m &
+                      indikator == "Fächerwahl"&
+                      !(land %in% c("EU (27), seit 2020", "Lichtenstein"))
+                    ) %>%
+      dplyr::select(land, wert) %>%
+      dplyr::collect()
+  }
 
   # Grenze für die X-Achse ist immer etwas größer als der maximale wert
   # aber nie größer als 100%
