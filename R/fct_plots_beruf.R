@@ -17,7 +17,6 @@ beruf_einstieg_vergleich <- function(r) {
   regio <- r$region_arbeitsmarkt_einstieg_vergleich
   faecher <- r$fachbereich_arbeitsmarkt_einstieg_gender
 
-
   # if(betrachtung == "Einzelansicht - Kuchendiagramm"){
   #   gruppe <- r$indikator_arbeitsmarkt_einsteig_vergleich
   # } else {
@@ -33,10 +32,9 @@ beruf_einstieg_vergleich <- function(r) {
 
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
-    gruppe <- r$indikator_arbeitsmarkt_einsteig_vergleich
+    gruppe <- r$indikator_arbeitsmarkt_einsteig_vergleich_kuchen
   }else if (betrachtung == "Gruppenvergleich - Balkendiagramm"){
-   # gruppe <- DBI::dbGetQuery(con, "SELECT DISTINCT indikator FROM arbeitsmarkt_detail")$indikator
-    gruppe <- r$indikator_arbeitsmarkt_einsteig_vergleich
+    gruppe <- r$indikator_arbeitsmarkt_einsteig_vergleich_balken
   } else {
     gruppe <- c("Auszubildende",
                 "Auszubildende (1. Jahr)",
@@ -92,10 +90,10 @@ beruf_einstieg_vergleich <- function(r) {
   df <- rbind(df, df_andere)
 
   #Umbennen von MINT/Andere Berufe
-  df$fachbereich[df$fachbereich=="MINT"]<-"Beschäftigt in MINT"
-  df$fachbereich[df$fachbereich=="Andere Berufe"]<-"Beschäftigt in allen Bereichen außer MINT"
-  df$fachbereich <- factor(df$fachbereich, levels = c("Beschäftigt in allen Bereichen außer MINT",
-                                                      "Beschäftigt in MINT"))
+  # df$fachbereich[df$fachbereich=="MINT"]<-"Beschäftigt in MINT"
+  # df$fachbereich[df$fachbereich=="Andere Berufe"]<-"Beschäftigt in allen Bereichen außer MINT"
+  # df$fachbereich <- factor(df$fachbereich, levels = c("Beschäftigt in allen Bereichen außer MINT",
+  #                                                     "Beschäftigt in MINT"))
 
   #Trennpunkte für lange Zahlen ergänzen
   df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
@@ -131,9 +129,9 @@ beruf_einstieg_vergleich <- function(r) {
     #                                             "Beschäftigte 25-55",
     #                                             "Beschäftigte ü55",
     #                                             "in Minijobs"))
-    df <- df %>% dplyr::filter(indikator %in% gruppe)
+    #df <- df %>% dplyr::filter(indikator %in% gruppe)
 
-    indikator = gruppe
+    #indikator = gruppe
 
     df <- df[with(df, order(proportion, decreasing = TRUE)), ] #############################################
 
@@ -141,7 +139,7 @@ beruf_einstieg_vergleich <- function(r) {
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = indikator, group = "fachbereich")) %>%
       highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-      highcharter::hc_xAxis(title = list(text = ""), categories = indikator) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>% #, categories = indikator
       highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
       highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
       highcharter::hc_title(text = ifelse(regio == "Saarland",
