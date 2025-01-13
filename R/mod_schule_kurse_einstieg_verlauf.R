@@ -14,8 +14,8 @@ mod_schule_kurse_einstieg_verlauf_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_einstieg_verlauf"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2016, 2022)
+      choices = 2013:2023,
+      selected = c(2017, 2023)
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -53,7 +53,7 @@ mod_schule_kurse_einstieg_verlauf_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_schule_mint_3", title="",
-                       content = paste0("Die erste Einstellung der Grafik zeigt z. B., dass der Anteil an MINT-Belegungen in den Oberstufenbelegungen über die Jahre ziemlich konstant ist (26%). Seit 2018 sind die MINT-Leistungskursbelegungen etwas gesunken (2 Prozentpunkte). Dagegen ist der MINT-Anteil der Grundkursbelegungen von 2020 auf 2021 um einen Prozentpunkt gestiegen."),
+                       content = paste0("Die erste Einstellung der Grafik zeigt z. B., dass der Anteil an MINT-Belegungen in den Oberstufenbelegungen über die Jahre ziemlich konstant ist (26%). Seit 2018 sind die MINT-Leistungskursbelegungen etwas gesunken (3 Prozentpunkte). Dagegen ist der MINT-Anteil der Grundkursbelegungen von 2018 auf 2023 um einen Prozentpunkt gestiegen."),
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_3"),
     br(),
