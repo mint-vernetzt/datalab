@@ -109,6 +109,15 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_ui <- function(id){
                                       `select-all-text` = "Alle auswählen"),
                        selected = c("Beschäftigte", "Auszubildende"),
                      ),
+
+                     p("Darstellungsart:"),
+                     shinyWidgets::radioGroupButtons(
+                       inputId = ns("abs_zahlen_arbeitsmarkt_einstieg_vergleich"),
+                       choices = c("In Prozent", "Anzahl"),
+                       justified = TRUE,
+                       checkIcon = list(yes = icon("ok",
+                                                   lib = "glyphicon"))
+                     ),
                      shinyBS::bsPopover(id="ih_beruf_mint_3", title="",
                                         content = paste0("Die Darstellung zeigt, dass der MINT-Anteil in der Gruppe der Auszubildenden mit einem Drittel vergleichsweise hoch ist. Am wenigsten groß ist der Anteil an Beschäftigungen in MINT im Minijob."),
                                         trigger = "hover"),
@@ -138,6 +147,9 @@ mod_beruf_arbeitsmarkt_einstieg_vergleich_server <- function(id, r){
     })
     observeEvent(input$indikator_arbeitsmarkt_einsteig_vergleich_kuchen, {
       r$indikator_arbeitsmarkt_einsteig_vergleich_kuchen <- input$indikator_arbeitsmarkt_einsteig_vergleich_kuchen
+    })
+    observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_vergleich, {
+      r$abs_zahlen_arbeitsmarkt_einstieg_vergleich <- input$abs_zahlen_arbeitsmarkt_einstieg_vergleich
     })
 
   })
