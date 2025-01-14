@@ -1943,7 +1943,6 @@ plot_studierende_bula_faecher <- function(r){
       dplyr::collect()
 
 
-
     alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
       dplyr::filter(jahr == timerange,
                     !(region %in% c("Deutschland", "Ostdeutschland (inkl. Berlin)",
@@ -2064,7 +2063,7 @@ plot_studierende_bula_faecher <- function(r){
       dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ)) %>%
       dplyr::collect()
 
-
+    browser()
 
     if (absolut_selector == "In Prozent") {
 
@@ -2076,6 +2075,7 @@ plot_studierende_bula_faecher <- function(r){
                       fach == "Alle Fächer") %>%
         dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ)) %>%
         dplyr::collect()
+
 
       df <- df %>%
         dplyr::left_join(alle, dplyr::join_by(region, jahr)) %>%

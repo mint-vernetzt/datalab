@@ -20,24 +20,6 @@ mod_fachkraft_bar_vakanz_ui <- function(id){
       multiple = FALSE
     ),
 
-    #Conditional Panel, da verschiede Datensätze zu Grunde liegen
-    # conditionalPanel(condition = "input.map_ind %in% c('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')",
-    #                  ns = ns,
-    #                  p("Jahr:"),
-    #                  shinyWidgets::sliderTextInput(
-    #                    inputId = ns("map_y_vakanz_fachkraft_arbeit_bar"),
-    #                    label = NULL,
-    #                    choices = arbeit_fachkraft_ui_years(),
-    #                    selected = "2022"
-    #                  ),
-    #
-    #                  p("Region:"),
-    #                  shinyWidgets::pickerInput(
-    #                    inputId = ns("map_reg_vakanz_fachkraft_arbeit_bar"),
-    #                    choices = arbeit_fachkraft_ui_region(),
-    #                    selected = c("Deutschland"),
-    #                    multiple = FALSE
-    #                  )),
     p("Jahr:"),
      shinyWidgets::sliderTextInput(
        inputId = ns("map_y_vakanz_fachkraft_arbeit_bar"),

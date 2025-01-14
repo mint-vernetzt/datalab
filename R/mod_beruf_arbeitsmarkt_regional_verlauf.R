@@ -123,22 +123,6 @@ mod_beruf_arbeitsmarkt_regional_verlauf_server <- function(id, r){
       input$states_beruf_arbeitsmarkt_landkreis_verlauf
     })
 
-    # output$lk_auswahl <- renderUI({
-    #
-    #   regio <- selected_region()
-    #   lk_auswahl <- get_lks(regio)
-    #
-    #     shinyWidgets::pickerInput(
-    #       inputId = "kreise_beruf_arbeitsmarkt_landkreis_verlauf",
-    #       choices = lk_auswahl,
-    #       multiple = TRUE,
-    #       options = list(`actions-box` = TRUE,
-    #                      `deselect-all-text` = "Alle abwählen",
-    #                      `select-all-text` = "Alle auswählen"),
-    #       selected = lk_auswahl
-    #     )
-    #
-    # })
 
     observeEvent(input$date_beruf_arbeitsmarkt_landkreis_verlauf, {
       r$date_beruf_arbeitsmarkt_landkreis_verlauf <- input$date_beruf_arbeitsmarkt_landkreis_verlauf

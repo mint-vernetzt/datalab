@@ -366,7 +366,6 @@ plot_international_map_fem <- function(r){
 
 
     # Daten in richtige Form bringen und runden
-
     df_filtered <- dplyr::tbl(con, from = "studierende_anzahl_oecd") %>%
       dplyr::filter(geschlecht %in% c("Frauen", "Gesamt") &
                       jahr == timerange &
@@ -379,7 +378,7 @@ plot_international_map_fem <- function(r){
 
     df_filtered <- df_filtered %>%
       tidyr::pivot_wider(names_from = anforderung, values_from = wert)%>%
-      # Zahl d. Studierenden ist hier Summe aus master + bachelor + promovenden
+      # Zahl d. Studierenden ist hier Summe aus master + bachelor + Promovierende
       dplyr::mutate(wert = rowSums(dplyr::select(., "Bachelor oder vergleichbar (akademisch)",
                                                  "Master oder vergleichbar (akademisch)",
                                                  "Promotion (ISCED 8)"), na.rm= T ))%>%
@@ -1215,6 +1214,9 @@ plot_international_schule_item <- function(r) {
       out <- "Jungen signifikant besser"
     } else if (diff[gender == "Mädchen"] == "Ja") {
       out <- "Mädchen signifikant besser"
+    } else if(is.na(diff)){
+
+      out <- "No data"
     }
 
     return(out)
@@ -1239,7 +1241,7 @@ plot_international_schule_item <- function(r) {
   plot_data <- df %>%
     dplyr::group_by(land) %>%
     dplyr::summarise(group = set_group(gender = indikator,
-                                       diff = geschlecht_diff),
+                                       diff = `signifikant höher gegenüber anderem geschlecht`),
                      count = 1) %>%
     dplyr::left_join(y = group_col_dt, by = "group") %>%
     dplyr::left_join(y = wert_dt, by = "land") %>%

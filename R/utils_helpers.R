@@ -1,36 +1,4 @@
-#' helpers
-#'
-#' @description A utils function
-#'
-#' @return The return value, if any, from executing the utility.
-#'
-#' @noRd
 
-helper_title_home <- function(indikator){
-
-  if ((indikator == "Auszubildende" | indikator == "Beschäftigte")) {
-
-    title_help_sub <- "andere Berufszweige"
-
-    title_help <- paste0("anderen Berufszweigen bei<br> ", indikator,"n")
-
-  } else {
-
-    title_help_sub <- "andere Fächer"
-
-    if ((indikator == "Habilitationen" | indikator == "Promotionen (angestrebt)")){
-
-      title_help <- paste0("anderen Fächern bei<br> ", indikator)
-
-    }else{
-
-      title_help <- paste0("anderen Fächern bei<br> ", indikator,"n")
-    }
-  }
-
-  return(title_help)
-
-}
 
 
 #' helpers
@@ -77,42 +45,6 @@ ist_saarland2 <- function(indi, regio, optional1= NULL, optional2=NULL){
   return(title)
 }
 
-
-
-#' helpers
-#'
-#' @description A utils function
-#'
-#' @return The return value, if any, from executing the utility.
-#'
-#' @noRd
-
-`%!in%` <- Negate(`%in%`)
-
-
-#' helpers
-#'
-#' @description A utils function
-#'
-#' @return The return value, if any, from executing the utility.
-#'
-#' @noRd
-
-dictionary_title_studium_studentenzahl <- list("eingeschrieben" = "die insgesamt eingeschrieben sind",
-                                               "1hs" = "die im 1. Hochschulsemester eingeschrieben sind",
-                                               "1fs" = "die im 1. Fachsemester eingeschrieben sind")
-
-
-#' helpers
-#'
-#' @description A utils function
-#'
-#' @return The return value, if any, from executing the utility.
-#'
-#' @noRd
-
-dictionary_title_studium <- list("Mathe" = "in Mathematik",
-                                 "Ingenieur" = "am Ingenieurswesen")
 
 
 #' helpers
@@ -169,102 +101,11 @@ states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Ham
                                   "Sachsen-Anhalt", "Thüringen", "Berlin"))
 
 
-#' @description A function to create the value box
-#'
-#' @return The return is a value box
-#' @param value The value to display in the box. Usually a number or short text.
-#' @param title Title of the value box
-#' @param subtitle Subtitle below the big number
-#' @param icon An icon tag
-#' @param color color of the box
-#' @param width Width of the box
-#' @param href An optional URL to link to.
-#' @param info Text of information helper.
-#' @noRd
-#'
-valueBox2 <- function(value, title, subtitle, icon = NULL, color = "aqua", width = 4, href = NULL,
-                      info = NULL, type = "andere"){
 
-  if (type == "Frauen"){
 
-    style <- paste0("background-color: ", "#f5adac; color:white;")
 
-  } else {
 
-    style <- paste0("background-color: ", "#b1b5c3; color:white;")
 
-  }
-
-  if (!is.null(icon))
-    shinydashboard:::tagAssert(icon, type = "i")
-
-  info_icon <- tags$small(
-    tags$i(
-      class = "fa fa-info-circle fa-lg",
-      title = info,
-      `data-toggle` = "tooltip",
-      style = "color: rgba(255, 255, 255, 0.75);"
-    ),
-    class = "pull-right"
-  )
-
-  boxContent <- div(
-    class = "small-box",
-    style = style,
-    div(
-      class = "inner",
-      info_icon,
-      tags$small(title),
-      h3(value),
-      p(subtitle)
-    ),
-    if (!is.null(icon)) div(class = "icon-large", icon, style = "z-index; 0")
-  )
-
-  if (!is.null(href))
-    boxContent <- a(href = href, boxContent)
-
-  div(
-    class = if (!is.null(width)) paste0("col-sm-", width),
-    boxContent
-  )
-}
-
-#' preprocess_schule
-#'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
-#'
-#' @noRd
-
-share_pie <- function(df) {
-  # calculate proportions
-  df$props <- sum(df$wert)
-
-  df <- df %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df$proportion <- df$proportion * 100
-
-  df$proportion <- round_preserve_sum(as.numeric(df$proportion),0)
-
-  return(df)
-}
-
-share_pie_neu <- function(df) {
-  # calculate proportions
-  df$props <- sum(df$wert)
-
-  df <- df %>% dplyr::group_by(fachbereich, geschlecht) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df$proportion <- df$proportion * 100
-
-  df$proportion <- round_preserve_sum(as.numeric(df$proportion),0)
-
-  return(df)
-}
 
 # funktion zur ordnung der fachauswahl für studierende_detailliert
 studi_det_ui_faecher <-function(spezif_i, spezif_r){
@@ -519,14 +360,6 @@ fachkraft_ui_faecher <- function(exclude = c()) {
 
 
   selection <- NULL
-
-  # selection <- arbeitsmarkt_epa_detail %>%
-  #   dplyr::filter(indikator == "Engpassindikator") %>%
-  #   dplyr::pull(mint_zuordnung) %>%
-  #   unique() %>%
-  #   append("MINT")
-
-  # manual selection to have correct order and naming
   selection <- c(
    "Alle Berufe" ="Gesamt",
     "MINT gesamt", #"MINT",
@@ -552,13 +385,6 @@ fachkraft_ui_berufslevel <- function() {
 
 
   selection <- NULL
-
-  # selection <- arbeitsmarkt_epa_detail %>%
-  #   dplyr::filter(indikator == "Engpassindikator") %>%
-  #   dplyr::pull(anforderung) %>%
-  #   unique() %>%
-  #   append("Gesamt")
-  # manual selection to have correct order and adding "gesamt"
   selection <- c(
     "Gesamt",
     "Fachkräfte",
@@ -645,18 +471,7 @@ fachkraft_ui_scenario <- function(wirkhebel) {
   return(selection)
 }
 
-fachkraft_ui_prognose_gruppen <- function() {
 
-  selection <- NULL
-
-  selection <- c(
-    "Berufslevel",
-    "Geschlecht",
-    "Nationalität"
-  )
-
-  return(selection)
-}
 
 
 # function to extract a plot title from a highcharter object
@@ -1018,7 +833,7 @@ get_lks <- function(bula = "Sachsen"){
 }
 
 
-
+#zusammenfasser
 darstellung <- function(id, title = NULL) {
   tagList(
     shinyBS::bsPopover(
@@ -1036,19 +851,112 @@ darstellung <- function(id, title = NULL) {
 }
 
 
-inthelp <- function(id, content, title = "", label = "Interpretationshilfe zur Grafik") {
-  tagList(
-    shinyBS::bsPopover(
-      id = id,
-      title = title,
-      content = content,
-      trigger = "hover"
-    ),
-    tags$a(label, icon("info-circle"), id = id)
-  )
+
+# test des funktionszusammenfasser
+
+
+piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"), format = '{point.prop_besr}%'){
+
+  out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y))) %>%
+    highcharter::hc_tooltip(
+      pointFormat=tooltip) %>%
+    highcharter::hc_colors(color) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+    highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                           dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE))
+  return(out)
 }
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+#df, titel, x, y, tooltip
+linebuilder <- function(df, titel, x = "jahr", y, tooltip, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24")){
+
+  out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = indikator)) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = " "), labels = list(format = "{value}%"),
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(color) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+  return(out)
+
+}
+
+
+
+
+
+
+
+
+balkenbuilder <- function(df123, titel, subtitel ,group = "fachbereich"){
+
+  out <- highcharter::hchart(df123, 'bar', highcharter::hcaes(y = prop, x = indikator, group = !!rlang::sym(group)))%>%
+    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+    highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_subtitle(text = subtitel,
+                             margin = 20,
+                             align = "center",
+                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+  return(out)
+
+}
 

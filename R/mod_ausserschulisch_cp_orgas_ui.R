@@ -60,11 +60,11 @@ mod_ausserschulisch_cp_orgas_ui <- function(id){
                                   lib = "glyphicon"))
     ),
     br(),
-    inthelp(
-      id = "ih_ausserschulisch_cp1",
-      content = "Die erste Darstellung zeigt: Ein Drittel der Organisationen sind gemeinnützige Organisationen, etwas mehr als jede fünfte ist eine Bildungseinrichtung. Dabei können Organisationen auch sowohl gemeinnützige Organisation als auch Bildungseinrichtung sein, denn der eigenen Organisation konnten auch mehrere passenden Organisationstypen zugeordnet werden."
-    ),
 
+    shinyBS::bsPopover(id="ih_ausserschulisch_cp1", title="",
+                       content = paste0("Die erste Darstellung zeigt: Ein Drittel der Organisationen sind gemeinnützige Organisationen, etwas mehr als jede fünfte ist eine Bildungseinrichtung. Dabei können Organisationen auch sowohl gemeinnützige Organisation als auch Bildungseinrichtung sein, denn der eigenen Organisation konnten auch mehrere passenden Organisationstypen zugeordnet werden."),
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_ausserschulisch_cp1")
 
     )
 }
