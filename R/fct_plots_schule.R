@@ -86,22 +86,11 @@ kurse_waffle_mint <- function(r) {
     titel_help <- ifelse(indika == "Oberstufenbelegungen", "der Oberstufe",
                          titel_help)
 
-    out <- df %>%
-      highcharter::hchart(
-        "pie", highcharter::hcaes(x = fachbereich , y = proportion)
-      )%>%
-      highcharter::hc_tooltip(
-        pointFormat=paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')) %>%
-      highcharter::hc_colors(as.character(df$color)) %>%
-      highcharter::hc_title(text = paste0("MINT-Fächeranteile in ", titel_help , " in ", regio, " (", timerange, ")"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                             dataLabels = list(enabled = TRUE,  format='{point.proportion}%'), showInLegend = TRUE))
+    titel = paste0("MINT-Fächeranteile in ", titel_help , " in ", regio, " (", timerange, ")")
+    tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
+    color = as.character(df$color)
+
+    out <- piebuilder(df, titel, x = "fachbereich", y = "proportion", tooltip, color, format='{point.proportion}%')
 
   } else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
@@ -2090,22 +2079,6 @@ kurse_comparison_gender <- function(r) {
       titel = paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")")
       tooltip = paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
 
-      # out <- df1 %>%
-      #   highcharter::hchart(
-      #     "pie", highcharter::hcaes(x = anzeige_geschlecht , y = round(proportion,1))
-      #   )%>%
-      #   highcharter::hc_tooltip(
-      #     pointFormat=paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')) %>%
-      #   highcharter::hc_colors(c("#154194" ,"#efe8e6")) %>%
-      #   highcharter::hc_title(text = paste0("Mädchen-Anteil in MINT-", titel_help,  " in ", regio, " (", timerange, ")"),
-      #                         margin = 45,
-      #                         align = "center",
-      #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      #   highcharter::hc_chart(
-      #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      #   highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      #   highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-      #                                          dataLabels = list(enabled = TRUE,  format='{point.proportion}%'), showInLegend = TRUE))
 
       out <- piebuilder(df1, titel, x = "anzeige_geschlecht", y = "proportion", tooltip, color = c("#154194" ,"#efe8e6"), format = '{point.proportion}%')
 
