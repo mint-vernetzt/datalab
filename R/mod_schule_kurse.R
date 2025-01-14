@@ -63,7 +63,7 @@ mod_schule_kurse_ui <- function(id){
                                                               span(tags$b(span("MINT-Anteil:")))),"Ein Drittel der Leistungskursbelegungen sind in MINT."
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_fach",
-                                                              span(tags$b(span("M-I-N-T:")))), "70 % der MINT-Leistungskurse sind Mathematik."
+                                                              span(tags$b(span("M-I-N-T:")))), "Die Hälfte der MINT-Leistungskurse sind in Mathematik."
 
         ),
         p(style = "text-align: left; font-size = 16px",tags$a(href="#schule_frauen",
@@ -94,9 +94,9 @@ mod_schule_kurse_ui <- function(id){
         width = 12,
         column(
           width = 8,
-        p("Im Jahr 2022 entfallen 24 % der Grundkursbelegungen auf ein MINT-Fach.
+        p("Im Jahr 2023 entfallen 24 % der Grundkursbelegungen auf ein MINT-Fach.
         Der MINT-Anteil an Leistungskursbelegungen ist noch einmal etwas höher:
-        33 % der Belegungen sind in MINT."),
+        knapp 32 % der Belegungen sind in MINT."),
         p("Wie viel MINT in grundlegendem und gehobenem Leistungsniveau belegt werden kann,
         ist von den Wahlmöglichkeiten in den Bundesländern abhängig. Das ist bei einer Betrachtung
         einzelner Bundesländer zu berücksichtigen."),
@@ -285,12 +285,13 @@ mod_schule_kurse_ui <- function(id){
 
     fluidRow(id="schule_fach",
       shinydashboard::box(
-        title = "M-I-N-T: 70 % der MINT-Leistungskursbelegungen sind Mathematik.",
+        title = "M-I-N-T: Die Hälfte der MINT-Leistungskursbelegungen sind in Mathematik.",
         width = 12,
         column(
           width = 8,
         p("Zoomt man auf die MINT-Fächer, zeigt sich: In den Leistungskursen heißt
-          MINT zum Großteil Mathematik. 70 % der MINT-Leistungskursbelegungen sind in Mathematik.
+          MINT zum Großteil Mathematik. 47 % der MINT-Leistungskursbelegungen sind in Mathematik, gefolgt von Biologie (30 %)
+          und Physik (11 %).
           Kaum Oberstufenbelegungen entfallen dagegen auf Informatik."),
         p("Das hängt mit den Wahlmöglichkeiten in der Oberstufe zusammen.
           Während Mathematik oft ein Pflichtfach für das Abitur ist und auf gehobenem Leistungsniveau
