@@ -22,8 +22,8 @@ mod_schule_kurse_einstieg_comparison_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_einstieg_comparison"),
       label = NULL,
-      choices = 2013:2022,
-      selected = 2022
+      choices = 2013:2023,
+      selected = 2023
     ),
     p("Region:"),
     shinyWidgets::pickerInput(
@@ -67,7 +67,7 @@ mod_schule_kurse_einstieg_comparison_ui <- function(id){
 
                      br(),
                      shinyBS::bsPopover(id="ih_schule_mint_2", title="",
-                                        content = paste0("In der ersten Einstellung ist zu sehen, dass im Jahr 2022 in Deutschland 33 % aller gewählten Leistungskurse aus dem Bereich MINT sind."),
+                                        content = paste0("In der ersten Einstellung ist zu sehen, dass im Jahr 2023 in Deutschland rund 32 % aller gewählten Leistungskurse aus dem Bereich MINT sind."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_2")
 
@@ -79,7 +79,7 @@ mod_schule_kurse_einstieg_comparison_ui <- function(id){
 
                      br(),
                      shinyBS::bsPopover(id="ih_schule_mint_2b", title="",
-                                        content = paste0("In der ersten Einstellung ist zu sehen, dass im Jahr 2022 in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2022 bei 33 %."),
+                                        content = paste0("In der ersten Einstellung ist zu sehen, dass im Jahr 2023 in Deutschland 24 % aller gewählten Grundkurse aus dem Bereich MINT sind. Bei Leistungskursen liegt der Anteil im Jahr 2022 bei 32 %."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_mint_2b")
     ),

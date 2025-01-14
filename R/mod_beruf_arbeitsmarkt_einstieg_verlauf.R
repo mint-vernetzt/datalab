@@ -108,8 +108,8 @@ mod_beruf_arbeitsmarkt_einstieg_verlauf_server <- function(id, r){
       r$region_arbeitsmarkt_einstieg_verlauf <- input$region_arbeitsmarkt_einstieg_verlauf
     })
 
-    observeEvent(input$indikator_arbeitsmarkt_einstieg_verlauf, {
-      r$indikator_arbeitsmarkt_einstieg_verlauf <- input$indikator_arbeitsmarkt_einstieg_verlauf
+    observeEvent(input$indikator_arbeitsmarkt_einstieg_verlauf_2, {
+      r$indikator_arbeitsmarkt_einstieg_verlauf_2 <- input$indikator_arbeitsmarkt_einstieg_verlauf_2
     })
 
     observeEvent(input$abs_zahlen_arbeitsmarkt_einstieg_verlauf, {
