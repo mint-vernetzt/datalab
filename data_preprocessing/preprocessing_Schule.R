@@ -23,7 +23,7 @@ library(stringr)
 # wd <- getwd()
 # setwd(wd)
 # akro <- "kab"
-# akro <- "kbr"
+#  akro <- "kbr"
 # setwd(paste0("C:/Users/", akro,
 #       "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten"))
 # wd <- getwd() #für Datensatz einlesen später nötig
@@ -148,6 +148,43 @@ data22_GK_ST <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "ST", 2022
 data22_GK_SH <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "SH", 2022, "Grundkurse")
 data22_GK_TH <- read_data(paste0(pfad, "KMK024_Aus_Kurse_2022.xlsx"), "TH", 2022, "Grundkurse")
 
+# daten für 2023
+
+data23_LK_D  <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "D" , 2023, "Leistungskurse")
+data23_LK_BW <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "BW", 2023, "Leistungskurse")
+data23_LK_BY <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "BY", 2023, "Leistungskurse")
+data23_LK_BE <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "BE", 2023, "Leistungskurse")
+data23_LK_BB <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "BB", 2023, "Leistungskurse")
+data23_LK_HB <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "HB", 2023, "Leistungskurse")
+data23_LK_HH <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "HH", 2023, "Leistungskurse")
+data23_LK_HE <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "HE", 2023, "Leistungskurse")
+data23_LK_MV <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "MV", 2023, "Leistungskurse")
+data23_LK_NI <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "NI", 2023, "Leistungskurse")
+data23_LK_NW <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "NW", 2023, "Leistungskurse")
+data23_LK_RP <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "RP", 2023, "Leistungskurse")
+data23_LK_SL <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "SL", 2023, "Leistungskurse")
+data23_LK_SN <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "SN", 2023, "Leistungskurse")
+data23_LK_ST <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "ST", 2023, "Leistungskurse")
+data23_LK_SH <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "SH", 2023, "Leistungskurse")
+data23_LK_TH <- read_data(paste0(pfad,"KNK025_Aus_Kurse_2023.xlsx"), "TH", 2023, "Leistungskurse")
+data23_GK_D  <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "D" , 2023, "Grundkurse")
+data23_GK_BW <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "BW", 2023, "Grundkurse")
+data23_GK_BY <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "BY", 2023, "Grundkurse")
+data23_GK_BE <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "BE", 2023, "Grundkurse")
+data23_GK_BB <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "BB", 2023, "Grundkurse")
+data23_GK_HB <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "HB", 2023, "Grundkurse")
+data23_GK_HH <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "HH", 2023, "Grundkurse")
+data23_GK_HE <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "HE", 2023, "Grundkurse")
+data23_GK_MV <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "MV", 2023, "Grundkurse")
+data23_GK_NI <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "NI", 2023, "Grundkurse")
+data23_GK_NW <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "NW", 2023, "Grundkurse")
+data23_GK_RP <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "RP", 2023, "Grundkurse")
+data23_GK_SL <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "SL", 2023, "Grundkurse")
+data23_GK_SN <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "SN", 2023, "Grundkurse")
+data23_GK_ST <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "ST", 2023, "Grundkurse")
+data23_GK_SH <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "SH", 2023, "Grundkurse")
+data23_GK_TH <- read_data(paste0(pfad, "KNK025_Aus_Kurse_2023.xlsx"), "TH", 2023, "Grundkurse")
+
 # Zwischen-DFs zusammenfassen
 data <- rbind( data_LK_D     ,
                    data_LK_BW ,
@@ -222,6 +259,42 @@ data22 <- rbind(data22_LK_D     ,
 
 
 data <- rbind(data, data22)
+
+#nur neues Jahr:
+data <- rbind(data23_LK_D     ,
+              data23_LK_BW ,
+              data23_LK_BY ,
+              data23_LK_BE ,
+              data23_LK_BB ,
+              data23_LK_HB ,
+              data23_LK_HH ,
+              data23_LK_HE ,
+              data23_LK_MV ,
+              data23_LK_NI ,
+              data23_LK_NW ,
+              data23_LK_RP ,
+              data23_LK_SL ,
+              data23_LK_SN ,
+              data23_LK_ST ,
+              data23_LK_SH ,
+              data23_LK_TH ,
+              data23_GK_D  ,
+              data23_GK_BW ,
+              data23_GK_BY ,
+              data23_GK_BE ,
+              data23_GK_BB ,
+              data23_GK_HB ,
+              data23_GK_HH ,
+              data23_GK_HE ,
+              data23_GK_MV ,
+              data23_GK_NI ,
+              data23_GK_NW ,
+              data23_GK_RP ,
+              data23_GK_SL ,
+              data23_GK_SN ,
+              data23_GK_ST ,
+              data23_GK_SH ,
+              data23_GK_TH)
 
 ## Datensatz in gewünschte From bringe -------------------------------------
 
@@ -300,6 +373,7 @@ data <- data[,c("bereich", "hinweise", "quelle", "indikator", "fachbereich", "an
 
 ## Datensatz zusammenfügen, anpassen und exportieren --------------------------------------
 
+
 data_z <- readxl::read_excel(paste0(pfad,"Kurse_21_10_22.xlsx"), col_names = T)
 
 #Spalten in gleiche Reihenfolge bringen
@@ -335,8 +409,6 @@ kurse <- data_z %>%
   dplyr::filter(!fachbereich %in% c("Nicht MINT", "MINT"))
 
 kurse <- kurse %>% dplyr::filter(jahr >= 2010)
-
-kurse$wert <- round(kurse$wert)
 
 #kurse <- kurse %>% dplyr::filter(region != "Baden-Württemberg")
 
@@ -424,14 +496,17 @@ kurse <- kurse %>%
 
 
 #usethis::use_data(kurse, overwrite = T)
-kurse <- dbGetQuery(con, "SELECT * FROM kurse")
-kurse <- kurse %>% dplyr::mutate(
-  region = dplyr::case_when(
-    region == "Westen" ~ "Westdeutschland (o. Berlin)",
-    region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
-    T ~ region
-  )
-)
+#kurse <- dbGetQuery(con, "SELECT * FROM kurse")
+# kurse <- kurse %>% dplyr::mutate(
+#   region = dplyr::case_when(
+#     region == "Westen" ~ "Westdeutschland (o. Berlin)",
+#     region == "Osten" ~ "Ostdeutschland (inkl. Berlin)",
+#     T ~ region
+#   )
+# )
+kurse_neu <- kurse
+load("kurse.rda")
+kurse <- rbind(kurse, kurse_neu)
 save(kurse, file="kurse.rda")
 
 

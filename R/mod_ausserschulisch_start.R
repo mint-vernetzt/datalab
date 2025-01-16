@@ -242,7 +242,7 @@ mod_ausserschulisch_start_ui <- function(id){
         href = "https://community.mint-vernetzt.de/",
         target = "_blank",
         tags$img(
-          src = "www/Banner_CP_Absprung.png",
+          src = "www/Ausserschulisch_CP_Absprung.png",
           alt = "Community Plattform Aufruf",
           style = "max-width: 100%; height: auto; cursor: pointer;
           margin-bottom: 20px; margin-top: 20px;"

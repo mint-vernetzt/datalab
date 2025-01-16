@@ -137,12 +137,23 @@ mod_quellen_ui <- function(id){
     fluidRow(
       shinydashboard::box(
         width = 9,
+        title = "Zitationshinweis",
+        p("Inhalte des MINT-DataLab können mit folgender Quellenangabe zitiert werden:
+          \"MINT-DataLab von MINTvernetzt. https://www.mint-vernetzt.de/mint-datalab/\". Unter den interaktiven Grafiken sind jeweils eigene Quellenangaben
+          mit Verweis auf die Datenquelle angegeben.")
+      )
+    ),
+    fluidRow(
+      shinydashboard::box(
+        width = 9,
         title = "Nutzungsbedingungen der Daten und Quellenangabe",
         p(style = "text-align: justify; font-size = 16px",
           "Die Nutzungsbedingungen der Datengeber:innen erlauben die Verwendung der Daten und die grafische Aufbereitung
           sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet.
           Bei Interesse an den kompletten Datensätzen müssen die Datengeber:innen direkt kontaktiert werden."
+
         ))),
+
 
 
 

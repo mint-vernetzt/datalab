@@ -40,13 +40,13 @@ mod_schule_kurse_mint_map_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("date_mint_map"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = 2022
+                       choices = 2013:2023,
+                       selected = 2023
                        ),
 
                      br(),
                      shinyBS::bsPopover(id="box1_neu", title="",
-                                        content = paste0("In der ersten Einstellung ist zu sehen, dass der Anteil von MINT-Fächern an den Grundkursbelegungen mit 29 % in Sachsen deutschlandweit am höchsten ist. Bei den Leistungskursbelegungen ist der Anteil der MINT-Fächer in Sachsen-Anhalt mit 50 % am höchsten. Die Vergleiche zwischen den Bundesländern sind jedoch schwierig, da die Regelungen für die Wahl der Kurse in den Bundesländern sehr unterschiedlich sind."),
+                                        content = paste0("In der ersten Einstellung ist zu sehen, dass der Anteil von MINT-Fächern an den Grundkursbelegungen mit 29 % in Sachsen deutschlandweit am höchsten ist. Bei den Leistungskursbelegungen ist der Anteil der MINT-Fächer in Sachsen-Anhalt mit 48 % am höchsten. Die Vergleiche zwischen den Bundesländern sind jedoch schwierig, da die Regelungen für die Wahl der Kurse in den Bundesländern sehr unterschiedlich sind."),
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="box1_neu")
 
@@ -57,8 +57,8 @@ mod_schule_kurse_mint_map_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("date_kurse_verlauf_mint"),
                        label = NULL,
-                       choices = 2013:2022,
-                       selected = c(2016, 2022)
+                       choices = 2013:2023,
+                       selected = c(2017, 2023)
                      ),
                      p("Kursart:"),
                      shinyWidgets::pickerInput(

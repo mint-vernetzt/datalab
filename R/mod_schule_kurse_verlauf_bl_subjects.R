@@ -29,8 +29,8 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_kurse_verlauf_subject_bl"),
       label = NULL,
-      choices = 2013:2022,
-      selected = c(2016, 2022)
+      choices = 2013:2023,
+      selected = c(2017, 2023)
     ),
     p("Kursart:"),
     shinyWidgets::pickerInput(
@@ -89,7 +89,7 @@ mod_schule_kurse_verlauf_bl_subjects_ui <- function(id){
     ),
     br(),
     shinyBS::bsPopover(id="ih_schule_fach_3", title="",
-                       content = paste0("In dieser Grafik ist bei den voreingestellten Kategorien (Kursart = &quotGrundkurs&quot, Region = &quotDeutschland&quot, Fächer/Fächergruppen = &quotMathematik&quot etc., Betrachtung = &quotProzent&quot) zu sehen, dass z.B. im Jahr 2022 die Mathematik mit 8 % den größten Anteil an den Grundkursbelegungen hat."),
+                       content = paste0("In dieser Grafik ist bei den voreingestellten Kategorien ist z. B. zu sehen, dass im Jahr 2023 die Mathematik mit 8 % den größten Anteil an den Grundkursbelegungen hat."),
                        placement = "top",
                        trigger = "hover"),
     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_schule_fach_3"),

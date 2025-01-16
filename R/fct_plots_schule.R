@@ -751,21 +751,22 @@ kurse_map <- function(r) {
   betrachtung <- r$ansicht_map
   timerange <- r$date_map
   subjects <- r$subject_map
+
   color_fach <- c(
-    "MINT-Fächer (gesamt)" = "#fca5a5",
+    "MINT-Fächer (gesamt)" = "#b16fab",
     "Informatik" = "#00a87a",
     "Naturwissenschaften" = "#fcc433",
-    "Biologie" = "#B45309",
+    "Biologie" = "#fbbf24",
     "Chemie" = "#D97706",
-    "Physik" = "#5f94f9",
-    "andere naturwiss.-technische Fächer" = "#fde68a",
+    "Physik" = "#F59E0B",
+    "andere naturwiss.-technische Fächer" =  "#fde68a",
     "Mathematik" = "#ee7775",
-    "andere Fächer (gesamt)" = "#5d335a",
-    "Deutsch"= "#007655",
-    "Fremdsprachen"= "#dc2626",
-    "Gesellschaftswissenschaften" ="#b16fab",
-    "Musik/Kunst" = "#D4C1BB",
-    "Religion/Ethik"= "#d0a9cd",
+    "andere Fächer (gesamt)" = "#D4C1BB",
+    "Deutsch"= "#9D7265",
+    "Fremdsprachen"= "#112C5F",
+    "Gesellschaftswissenschaften" = "#D4C1BB",
+    "Musik/Kunst" = "#5f94f9",
+    "Religion/Ethik"= "#725249",
     "Sport"= "#154194"
   )
 
@@ -1360,23 +1361,22 @@ kurse_verlauf_subjects_bl <- function(r) {
   subjects_select <- r$subject_selected_bl_sub
 
   color_fach <- c(
-    "MINT-Fächer (gesamt)" = "#D4C1BB",
-    "Mathematik" = "#ee7775",
-    "Informatik" = "#8893a7",
-    "Physik" = "#F59E0B",
+    "MINT-Fächer (gesamt)" = "#b16fab",
+    "Informatik" = "#00a87a",
+    "Naturwissenschaften" = "#fcc433",
+    "Biologie" = "#fbbf24",
     "Chemie" = "#D97706",
-    "Physik" = "#b16fab",
-    "andere naturwiss.-technische Fächer" = "#9d7265",
-    "andere Fächer (gesamt)"  = "#5f94f9",
-    "Deutsch"= "#66cbaf",
-    "Fremdsprachen"= "#007655",
-    "Gesellschaftswissenschaften" = "#d0a9cd",
-    "Musik/Kunst" = "#fde68a",
-    "Religion/Ethik"= "#efe8e6",
-    "Sport"= "#fca5a5"
+    "Physik" = "#F59E0B",
+    "andere naturwiss.-technische Fächer" =  "#fde68a",
+    "Mathematik" = "#ee7775",
+    "andere Fächer (gesamt)" = "#D4C1BB",
+    "Deutsch"= "#9D7265",
+    "Fremdsprachen"= "#112C5F",
+    "Gesellschaftswissenschaften" = "#D4C1BB",
+    "Musik/Kunst" = "#5f94f9",
+    "Religion/Ethik"= "#725249",
+    "Sport"= "#154194"
   )
-
-
 
   # filter dataset based on UI inputs
   df <- dplyr::tbl(con, from = "kurse") %>%
