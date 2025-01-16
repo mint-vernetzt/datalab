@@ -335,6 +335,14 @@ international_ui_country <- function(type = "arbeit", n = NA) {
       sort()
   }
 
+  if(type=="TIMSS"){
+    selection <- dplyr::tbl(con, from = "schule_timss") %>%
+      dplyr::distinct(land) %>%  # Eindeutige Werte direkt in der Datenbank abrufen
+      dplyr::arrange(land) %>%   # Alphabetisch sortieren (in der DB)
+      dplyr::pull(land)          # Extrahiert die Spalte 'land'
+
+  }
+
 }
 
 # Funktion zur Jahresauswahl bei Fachkraft Daten

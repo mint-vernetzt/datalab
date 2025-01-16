@@ -1565,8 +1565,6 @@ plot_international_schule_migration <- function(r) {
   }
   if (label_m == "PISA") {
 
-    browser()
-
     this_bereich <- switch(
       leistungsindikator_m,
       "nach Geschlecht" = "Ländermittel",
@@ -1647,7 +1645,6 @@ plot_international_schule_migration <- function(r) {
     )
 
 
-    browser()
     if (label_m == "TIMSS" && leistungsindikator_m == "nach sozialem Status") {
 
       plot_data <- plot_data %>%
@@ -1661,7 +1658,78 @@ plot_international_schule_migration <- function(r) {
         filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
 
       plot_data <- plot_data %>%
-        mutate(mittel_wert = ifelse(!"mittel_wert" %in% colnames(.), 1, mittel_wert))
+        filter(land %in% lander)
+
+      ####
+      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+        plotly::add_segments(
+          x = ~basis_wert,
+          xend = ~mittel_wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
+                         paste0("Basis: ", basis_wert, "<br>Mittel: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_segments(
+          x = ~mittel_wert,
+          xend = ~wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
+                         paste0("Mittel: ", mittel_wert, "<br>Positiv: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~basis_wert,
+          y = ~land,
+          name = "Niedriger Status",
+          marker = list(
+            size = 12,
+            color = "#D0A9CD"
+          ),
+          text = ~ifelse(is.na(basis_wert), NA, paste0("Niedriger Status: ", basis_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~mittel_wert,
+          y = ~land,
+          name = "Mittlerer Status",
+          marker = list(
+            size = 12,
+            color = "#66cbaf"
+          ),
+          text = ~ifelse(is.na(mittel_wert), NA, paste0("Mittlerer Status: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~wert,
+          y = ~land,
+          name = "Hoher Status",
+          marker = list(
+            size = 12,
+            color = "#b16fab"
+          ),
+          text = ~ifelse(is.na(wert), NA, paste0("Hoher Status: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        # Layout anpassen
+        plotly::layout(
+          title = "Vergleich der sozialen Statuswerte",
+          xaxis = list(title = "Wert"),
+          yaxis = list(title = "Land"),
+          margin = list(l = 100, r = 50, t = 50, b = 50),
+          hoverlabel = list(bgcolor = "white"),
+          legend = list(
+            orientation = "h",
+            x = 0.5,
+            y = -0.2,
+            xanchor = "center",
+            yanchor = "top"
+          )
+        )
 
 
     } else if (label_m == "TIMSS" && leistungsindikator_m == "nach Geschlecht") {
@@ -1676,7 +1744,58 @@ plot_international_schule_migration <- function(r) {
         filter(!is.na(wert) | !is.na(basis_wert))
 
       plot_data <- plot_data %>%
-        mutate(mittel_wert = ifelse(!"mittel_wert" %in% colnames(.), 1, mittel_wert))
+        filter(land %in% lander)
+
+      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+        plotly::add_segments(
+          x = ~basis_wert,
+          xend = ~wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(basis_wert) | is.na(wert), NA,
+                         paste0("Jungen: ", basis_wert, "<br>Mädchen: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~basis_wert,
+          y = ~land,
+          name = "Jungen",
+          marker = list(
+            size = 12,
+            color = "#D0A9CD"
+          ),
+          text = ~ifelse(is.na(basis_wert), NA, paste0("Jungen: ", basis_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~wert,
+          y = ~land,
+          name = "Mädchen",
+          marker = list(
+            size = 12,
+            color = "#b16fab"
+          ),
+          text = ~ifelse(is.na(wert), NA, paste0("Mädchen: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        # Layout anpassen
+        plotly::layout(
+          title = "Vergleich der Geschlechter",
+          xaxis = list(title = "Wert"),
+          yaxis = list(title = "Land"),
+          margin = list(l = 100, r = 50, t = 50, b = 50),
+          hoverlabel = list(bgcolor = "white"),
+          legend = list(
+            orientation = "h",
+            x = 0.5,
+            y = -0.2,
+            xanchor = "center",
+            yanchor = "top"
+          )
+        )
+
+
 
     } else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
       plot_data <- plot_data %>%
@@ -1689,23 +1808,145 @@ plot_international_schule_migration <- function(r) {
         filter(!is.na(wert) | !is.na(basis_wert))
 
       plot_data <- plot_data %>%
-        mutate(mittel_wert = ifelse(!"mittel_wert" %in% colnames(.), 1, mittel_wert))
+        filter(land %in% lander)
+
+      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+        plotly::add_segments(
+          x = ~basis_wert,
+          xend = ~wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(basis_wert) | is.na(wert), NA,
+                         paste0("Jungen: ", basis_wert, "<br>Mädchen: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~basis_wert,
+          y = ~land,
+          name = "Jungen",
+          marker = list(
+            size = 12,
+            color = "#D0A9CD"
+          ),
+          text = ~ifelse(is.na(basis_wert), NA, paste0("Jungen: ", basis_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~wert,
+          y = ~land,
+          name = "Mädchen",
+          marker = list(
+            size = 12,
+            color = "#b16fab"
+          ),
+          text = ~ifelse(is.na(wert), NA, paste0("Mädchen: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        # Layout anpassen
+        plotly::layout(
+          title = "Vergleich der Geschlechter",
+          xaxis = list(title = "Wert"),
+          yaxis = list(title = "Land"),
+          margin = list(l = 100, r = 50, t = 50, b = 50),
+          hoverlabel = list(bgcolor = "white"),
+          legend = list(
+            orientation = "h",
+            x = 0.5,
+            y = -0.2,
+            xanchor = "center",
+            yanchor = "top"
+          )
+        )
+
+
 
     } else if (label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte") {
       plot_data <- plot_data %>%
         rename(
-          basis_wert = Keiner,
-          mittel_wert = `Zweite Generation`,
-          wert = `Erste Generation`
+          basis_wert = `ohne Zuwanderungsgeschichte`,
+          mittel_wert = `nur Eltern zugewandert`,
+          wert = `Kind selbst zugewandert`
         )
+
 
       plot_data <- plot_data %>%
         filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
 
-      if (!"mittel_wert" %in% colnames(plot_data)) {
-        plot_data <- plot_data %>%
-          mutate(mittel_wert = NA)
-      }
+      plot_data <- plot_data %>%
+        filter(land %in% lander)
+
+      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+        plotly::add_segments(
+          x = ~basis_wert,
+          xend = ~mittel_wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
+                         paste0("Ohne Zuwanderungsgeschichte: ", basis_wert, "<br>Erste Generation: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_segments(
+          x = ~mittel_wert,
+          xend = ~wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
+                         paste0("Erste Generation: ", mittel_wert, "<br>Zweite Generation: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~basis_wert,
+          y = ~land,
+          name = "Ohne Zuwanderungsgeschichte",
+          marker = list(
+            size = 12,
+            color = "#D0A9CD"
+          ),
+          text = ~ifelse(is.na(basis_wert), NA, paste0("Ohne Zuwanderungsgeschichte: ", basis_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~mittel_wert,
+          y = ~land,
+          name = "Erste Generation",
+          marker = list(
+            size = 12,
+            color = "#66cbaf"
+          ),
+          text = ~ifelse(is.na(mittel_wert), NA, paste0("Erste Generation: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~wert,
+          y = ~land,
+          name = "Zweite Generation",
+          marker = list(
+            size = 12,
+            color = "#b16fab"
+          ),
+          text = ~ifelse(is.na(wert), NA, paste0("Zweite Generation: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        # Layout anpassen
+        plotly::layout(
+          title = "Vergleich der Zuwanderungsgeschichte",
+          xaxis = list(title = "Wert"),
+          yaxis = list(title = "Land"),
+          margin = list(l = 100, r = 50, t = 50, b = 50),
+          hoverlabel = list(bgcolor = "white"),
+          legend = list(
+            orientation = "h",
+            x = 0.5,
+            y = -0.2,
+            xanchor = "center",
+            yanchor = "top"
+          )
+        )
+
+
     } else if (label_m == "PISA" && leistungsindikator_m == "nach Bildungskapital") {
       plot_data <- plot_data %>%
         rename(
@@ -1718,14 +1959,81 @@ plot_international_schule_migration <- function(r) {
         filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
 
       plot_data <- plot_data %>%
-        mutate(mittel_wert = ifelse(!"mittel_wert" %in% colnames(.), 1, mittel_wert))
+        filter(land %in% lander)
+
+      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+        plotly::add_segments(
+          x = ~basis_wert,
+          xend = ~mittel_wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
+                         paste0("Sehr niedriges Bildungskapital: ", basis_wert, "<br>Sehr niedriges Bildungskapital: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_segments(
+          x = ~mittel_wert,
+          xend = ~wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
+                         paste0("Niedriges Bildungskapital: ", mittel_wert, "<br>Hohes Bildungskapital: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~basis_wert,
+          y = ~land,
+          name = "Sehr niedriges Bildungskapital",
+          marker = list(
+            size = 12,
+            color = "#D0A9CD"
+          ),
+          text = ~ifelse(is.na(basis_wert), NA, paste0("Sehr niedriges Bildungskapital: ", basis_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~mittel_wert,
+          y = ~land,
+          name = "Sehr niedriges Bildungskapital",
+          marker = list(
+            size = 12,
+            color = "#66cbaf"
+          ),
+          text = ~ifelse(is.na(mittel_wert), NA, paste0("Sehr niedriges Bildungskapital: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~wert,
+          y = ~land,
+          name = "Hohes Bildungskapital",
+          marker = list(
+            size = 12,
+            color = "#b16fab"
+          ),
+          text = ~ifelse(is.na(wert), NA, paste0("Hohes Bildungskapital: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        # Layout anpassen
+        plotly::layout(
+          title = "Vergleich des Bildungskapitals",
+          xaxis = list(title = "Wert"),
+          yaxis = list(title = "Land"),
+          margin = list(l = 100, r = 50, t = 50, b = 50),
+          hoverlabel = list(bgcolor = "white"),
+          legend = list(
+            orientation = "h",
+            x = 0.5,
+            y = -0.2,
+            xanchor = "center",
+            yanchor = "top"
+          )
+        )
     } else {
 
     }
 
-
-  plot_data <- plot_data %>%
-    filter(land %in% lander)
 
 
 
@@ -1734,75 +2042,75 @@ plot_international_schule_migration <- function(r) {
 
 #####
 
-  fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-    plotly::add_segments(
-      x = ~basis_wert,
-      xend = ~mittel_wert,
-      y = ~land,
-      yend = ~land,
-      showlegend = FALSE,
-      text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
-                     paste0("Basis: ", basis_wert, "<br>Mittel: ", mittel_wert)),
-      hoverinfo = "text"
-    ) %>%
-    plotly::add_segments(
-      x = ~mittel_wert,
-      xend = ~wert,
-      y = ~land,
-      yend = ~land,
-      showlegend = FALSE,
-      text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
-                     paste0("Mittel: ", mittel_wert, "<br>Positiv: ", wert)),
-      hoverinfo = "text"
-    ) %>%
-    plotly::add_markers(
-      x = ~basis_wert,
-      y = ~land,
-      name = "Niedriger Status",
-      marker = list(
-        size = 12,
-        color = "#D0A9CD"
-      ),
-      text = ~ifelse(is.na(basis_wert), NA, paste0("Niedriger Status: ", basis_wert)),
-      hoverinfo = "text"
-    ) %>%
-    plotly::add_markers(
-      x = ~mittel_wert,
-      y = ~land,
-      name = "Mittlerer Status",
-      marker = list(
-        size = 12,
-        color = "#66cbaf"
-      ),
-      text = ~ifelse(is.na(mittel_wert), NA, paste0("Mittlerer Status: ", mittel_wert)),
-      hoverinfo = "text"
-    ) %>%
-    plotly::add_markers(
-      x = ~wert,
-      y = ~land,
-      name = "Hoher Status",
-      marker = list(
-        size = 12,
-        color = "#b16fab"
-      ),
-      text = ~ifelse(is.na(wert), NA, paste0("Hoher Status: ", wert)),
-      hoverinfo = "text"
-    ) %>%
-    # Layout anpassen
-    plotly::layout(
-      title = "Vergleich der sozialen Statuswerte",
-      xaxis = list(title = "Wert"),
-      yaxis = list(title = "Land"),
-      margin = list(l = 100, r = 50, t = 50, b = 50),
-      hoverlabel = list(bgcolor = "white"),
-      legend = list(
-        orientation = "h",
-        x = 0.5,
-        y = -0.2,
-        xanchor = "center",
-        yanchor = "top"
-      )
-    )
+  # fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+  #   plotly::add_segments(
+  #     x = ~basis_wert,
+  #     xend = ~mittel_wert,
+  #     y = ~land,
+  #     yend = ~land,
+  #     showlegend = FALSE,
+  #     text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
+  #                    paste0("Basis: ", basis_wert, "<br>Mittel: ", mittel_wert)),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   plotly::add_segments(
+  #     x = ~mittel_wert,
+  #     xend = ~wert,
+  #     y = ~land,
+  #     yend = ~land,
+  #     showlegend = FALSE,
+  #     text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
+  #                    paste0("Mittel: ", mittel_wert, "<br>Positiv: ", wert)),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   plotly::add_markers(
+  #     x = ~basis_wert,
+  #     y = ~land,
+  #     name = "Niedriger Status",
+  #     marker = list(
+  #       size = 12,
+  #       color = "#D0A9CD"
+  #     ),
+  #     text = ~ifelse(is.na(basis_wert), NA, paste0("Niedriger Status: ", basis_wert)),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   plotly::add_markers(
+  #     x = ~mittel_wert,
+  #     y = ~land,
+  #     name = "Mittlerer Status",
+  #     marker = list(
+  #       size = 12,
+  #       color = "#66cbaf"
+  #     ),
+  #     text = ~ifelse(is.na(mittel_wert), NA, paste0("Mittlerer Status: ", mittel_wert)),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   plotly::add_markers(
+  #     x = ~wert,
+  #     y = ~land,
+  #     name = "Hoher Status",
+  #     marker = list(
+  #       size = 12,
+  #       color = "#b16fab"
+  #     ),
+  #     text = ~ifelse(is.na(wert), NA, paste0("Hoher Status: ", wert)),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   # Layout anpassen
+  #   plotly::layout(
+  #     title = "Vergleich der sozialen Statuswerte",
+  #     xaxis = list(title = "Wert"),
+  #     yaxis = list(title = "Land"),
+  #     margin = list(l = 100, r = 50, t = 50, b = 50),
+  #     hoverlabel = list(bgcolor = "white"),
+  #     legend = list(
+  #       orientation = "h",
+  #       x = 0.5,
+  #       y = -0.2,
+  #       xanchor = "center",
+  #       yanchor = "top"
+  #     )
+  #   )
 
 
   fig
