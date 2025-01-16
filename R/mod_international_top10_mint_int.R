@@ -20,35 +20,6 @@ mod_international_top10_mint_intl_ui <- function(id){
                        selected = "2021"
                      ),
 
-                     # p("Fachbereich:"),
-                     # shinyWidgets::pickerInput(
-                     #   inputId = ns("map_f_ti"),
-                     #   choices = c("Allgemeine Bildungsgänge und Qualifikationen","Pädagogik",
-                     #               "Geisteswissenschaften und Künste",
-                     #               "Sozialwissenschaften, Journalismus und Informationswesen",
-                     #               "Wirtschaft, Verwaltung und Recht",
-                     #               "Informatik & Kommunikationstechnologie",
-                     #               "Informatik & Kommunikationstechnologie allgemein",
-                     #               "Interdisziplinäre Programme mit Schwerpunkt Informatik & Kommunikationstechnologie",
-                     #               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-                     #               "Landwirtschaft, Forstwirtschaft, Fischerei und Tiermedizin",
-                     #               "Gesundheit, Medizin und Sozialwesen",
-                     #               "Dienstleistungen",
-                     #               "Naturwissenschaften, Mathematik und Statistik nicht näher definiert",
-                     #               "Biologie und verwandte Wissenschaften",
-                     #               "Umwelt",
-                     #               "Exakte Naturwissenschaften",
-                     #               "Mathematik und Statistik",
-                     #               "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Naturwissenschaften,
-                     #               Mathematik und Statistik",
-                     #               "Ingenieurwesen und Technische Berufe",
-                     #               "Verarbeitendes Gewerbe und Bergbau",
-                     #               "Architektur und Baugewerbe",
-                     #               "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen",
-                     #               "MINT", "Nicht MINT"),
-                     #   selected = c("MINT"),
-                     #   multiple = FALSE
-                     # ),
 
 
     p("Durchschnitt anzeigen:"),
@@ -62,16 +33,9 @@ mod_international_top10_mint_intl_ui <- function(id){
 
 
     br(),
-
-    # # TODO extract into own module, since this is repeated on a lot of modules
-    #
-    # shinyBS::bsPopover(id="dh_international_map", title = "",
-    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
-    # br(),
-    # br(),
+    darstellung(id="dh_international_map_8"),
+    br(),
+    br(),
     shinyBS::bsPopover(id="ih_international_map5", title="",
                        content = paste0("Diese Grafik gibt eine Übersicht über die Länder mit den höchsten und geringsten Zahlen internationaler Studierender in MINT. Deutschland ist hier Spitzenreiter, wobei dies unter anderem auch mit der Gesamtstudierendenzahl Deutschlands zusammenhängt."),
                        placement = "top",

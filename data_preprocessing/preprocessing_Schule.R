@@ -1419,7 +1419,7 @@ usethis::use_data(pisa, overwrite = T)
 ### Gender ----
 #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
-
+pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 # funktion
 timss_gender_transform <- function(dat){
 
@@ -1465,6 +1465,10 @@ timss_gender_transform <- function(dat){
 
   colnames(timss_g1)[1] <- "land"
 
+  #genauer fehler:
+  timss_g1 <- timss_g1 %>%
+    select(-matches("^1995_Boys_Signifikanz$"))
+
   timss_g2 <- timss_g1%>%
     slice(which(if_any(everything(), ~. == "Girls"))+1 : nrow(.))%>%
     pivot_longer(-"land", values_to = "dummy", names_to = "indikator")%>%
@@ -1502,10 +1506,14 @@ timss_gender_transform <- function(dat){
   return(timss_g3)
 }
 
-l <- timss_gender_transform("TIMSS002_achievement-gender-trends-M4.xlsx")
-k <- timss_gender_transform("TIMSS005_achievement-gender-trends-S4.xlsx")
+#l <- timss_gender_transform("TIMSS002_achievement-gender-trends-M4.xlsx")
+#k <- timss_gender_transform("TIMSS005_achievement-gender-trends-S4.xlsx")
 
-timss_gender <- bind_rows(l,k)
+m23 <- timss_gender_transform("TIMSS009_ach-g4m-trend-gender.xlsx")
+s23 <- timss_gender_transform("TIMSS010_sam.xlsx")
+
+#timss_gender_old <- bind_rows(l,k)
+timmss_gender <- bind_rows(m23, s23)
 
 ### Achievement ----
 
@@ -1584,6 +1592,75 @@ h <- timss_achv_extract("TIMSS004_achievement-trends-S4.xlsx")
 
 timss_achievement <- bind_rows(j,h)
 
+
+# addition of TIMSS 2023 data for it
+
+achie_23 <- function(pfad, file, fach){
+
+  dat1 <- read_excel(paste0(pfad, file))
+
+  timss_a1<- dat1 %>%
+    slice(1:which(dat1[1]==	"Benchmarking Participants")-1)%>%
+    janitor::remove_empty("cols")%>%
+    select(-1)
+
+
+  timss_a_colnames1 <- timss_a1 %>%
+    slice(which(if_any(everything(), ~ .=="Country")))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()%>%
+    zoo::na.locf()
+
+
+  timss_a_colnames2 <- timss_a1 %>%
+    slice(which(if_any(everything(), ~ .=="Country")))%>%
+    mutate(across(everything(), ~case_when(
+      is.na(.)~"standardfehler"
+    )))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()
+
+  timss_a_colnames_fn <- paste0(timss_a_colnames1, "_", timss_a_colnames2)%>%
+    str_remove_all(., "_NA")
+
+  colnames(timss_a1) <- timss_a_colnames_fn
+
+  extract <- timss_a1 %>% select(1:3)
+  extract <- extract %>% slice(-c(1:4))
+  extract <- extract %>% slice(-59)
+  extract <- extract %>% mutate(jahr = 2023)
+  extract <- extract %>% mutate(jahr = as.character(jahr))
+  extract <- extract %>% mutate(fach = fach)
+  extract <- extract %>% mutate(typ = "Test-Punktahl")
+  extract <- extract %>% mutate(ordnung = "Achievement")
+  extract <- extract %>% mutate(indikator = "Insgesamt")
+  colnames(extract)[1] <- "land"
+  colnames(extract)[2] <- "wert"
+  extract <- extract %>% mutate(wert = as.double(wert))
+  colnames(extract)[3] <- "standardfehler"
+
+  extract$land <- countrycode::countrycode(extract$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England', "Northern Ireland" = "Nordirland") )
+
+  return(extract)
+}
+
+w = achie_23(pfad, "TIMSS012_ach-g4m-dist.xlsx", "Mathematik")
+u = achie_23(pfad, "TIMSS015_ach-g4s-dist.xlsx", "Naturwissenschaften")
+
+dat2023a <- rbind(w,u)
+
+
+timss_achievement <- bind_rows(timss_achievement, dat2023a)
+
+
+
+
+
+
+
+
 ### Home resources ----
 
 
@@ -1591,7 +1668,7 @@ timss_achievement <- bind_rows(j,h)
 
 timss_res_extract <- function(dat3, jahr, fach){
 
-  file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+  #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
   dat2 <- read_excel(paste0(pfad, dat3))
@@ -1689,9 +1766,129 @@ timss_res_extract <- function(dat3, jahr, fach){
 
 o <- timss_res_extract("TIMSS007_home-resources-M4.xlsx", "2019", "Mathematik")
 p <- timss_res_extract("TIMSS008_home-resources-S4.xlsx" ,"2019", "Naturwissenschaften")
+timss_res_dat_2 <- bind_rows(o,p)
 
 
-timss_res_dat <- bind_rows(o,p)
+
+
+timss_res_extract <- function(dat3, jahr, fach, sheet){
+
+  #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+
+
+  dat2 <- read_excel(paste0(pfad, dat3), sheet = sheet)
+
+  dat2 <- cbind(dat2[1:3], ..4 = NA, dat2[4:ncol(dat2)])
+
+  # Spaltennamen anpassen
+  colnames(dat2) <- paste0("...", seq_len(ncol(dat2)))
+
+  timss_res_sub<- colnames(dat2)[1]
+  timss_res_sub<- stringr::str_extract(timss_res_sub, "Mathematics|Science")
+
+  timss_res<- dat2 %>%
+    slice(1:which(dat2[1]==	"Benchmarking Participants")-1)%>%
+    select(-c(1,2,4))%>%
+    janitor::remove_empty()
+
+  timss_res_coln <- timss_res %>%
+    filter(if_any(everything(),~ . =="Country"))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()
+
+
+
+  bem <- which(str_detect(timss_res_coln, "Country"))
+
+  timss_res_coln[bem+1]<- "bemerkung"
+
+  timss_res_coln1 <- zoo::na.locf(timss_res_coln)
+
+  timss_res_coln2 <- timss_res %>%
+    slice(which(if_any(everything(),~. =="Percent of Students")))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()%>%
+    zoo::na.locf(na.rm = F)
+
+  timss_res_coln2 <- rev(timss_res_coln2)
+
+  timss_res_coln1 <- rev(timss_res_coln1)
+
+  timss_res_coln2[1:2] <- timss_res_coln1[1:2]
+
+  timss_res_coln2 <- rev(timss_res_coln2)
+
+  timss_res_coln1 <- rev(timss_res_coln1)
+
+
+  timss_res_coln3 <- timss_res %>%
+    slice(which(if_any(everything(),~. =="Percent of Students")))%>%
+    mutate(across(-c("...3", "...5","...25"),~case_when(
+      is.na(.)~"standardfehler"
+    )))%>%
+    as.vector()%>%
+    unlist()%>%
+    unname()
+
+
+  timss_res_coln_fn <- paste0(timss_res_coln1,"_",timss_res_coln2, "_" ,timss_res_coln3)
+
+  colnames(timss_res) <-timss_res_coln_fn
+
+  timss_res2 <- timss_res %>%
+    filter(!if_any(everything(), ~ .%in%c("Percent of Students", "Country")))
+
+  colnames(timss_res2) <- str_remove(colnames(timss_res2), "_NA")
+  colnames(timss_res2) <- str_remove(colnames(timss_res2), "_NA")
+
+  timss_res2 <- timss_res2 %>%
+    rename(land = Country)
+
+  timss_res3 <- timss_res2 %>%
+    pivot_longer(-c(land, bemerkung), values_to = "wert", names_to="indikator")%>%
+    separate(indikator, sep="_", into=c("gruppe", "indikator", "typ"))%>%
+    mutate(typ = case_when(
+      is.na(typ) ~"wert",
+      T~.$typ))%>%
+    pivot_wider(names_from = typ, values_from = wert)%>%
+    mutate("fach" = fach,
+           "jahr" =jahr)%>%
+    mutate(across(c("wert", "standardfehler"), ~ as.numeric(.)))%>%
+    rename(typ = indikator, indikator = gruppe, fußnote_zu_n = bemerkung)%>%
+    mutate(typ = case_when(typ == "Average Achievement" ~ "Gemittelte Test-Punktzahl",
+                           typ == "Percent of Students" ~ "Prozentsatz der Schüler:innen",
+                           T ~ .$typ),
+           indikator = case_when(indikator =="Some Resources"~ "Einige Ressourcen",
+                                 indikator =="Few Resources"~ "Wenige Ressourcen",
+                                 indikator =="Many Resources"~ "Viele Ressourcen",
+                                 T~ .$indikator),
+           ordnung = "Ressourcen")
+
+  timss_res3$land <- countrycode::countrycode(timss_res3$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England',
+                                                                                                                                          "Northern Ireland" = "Nordirland",
+                                                                                                                                          "International Average" = "Interantionaler Durchschnitt") )
+
+  return(timss_res3)
+}
+
+
+
+o_neu <- timss_res_extract("TIMSS011_con-hom-ses.xlsx", "2023", "Mathematik", sheet = 2)
+p_neu <- timss_res_extract("TIMSS011_con-hom-ses.xlsx", "2023", "Naturwissenschaften", sheet = 3)
+
+timss_res_dat <- bind_rows(o_neu,p_neu)
+
+timss_res_dat$indikator[timss_res_dat$indikator == "Higher \r\nSocioeconomic Status"] <- "Viele Ressourcen"
+timss_res_dat$indikator[timss_res_dat$indikator == "Middle \r\nSocioeconomic Status"] <- "Einige Ressourcen"
+timss_res_dat$indikator[timss_res_dat$indikator == "Lower\r\n Socioeconomic Status"] <- "Wenige Ressourcen"
+
+timss_res_dat <- rbind(timss_res_dat_2, timss_res_dat)
+
+
+
+
 
 ### Benchmarks-----
 
@@ -1699,7 +1896,7 @@ timss_res_dat <- bind_rows(o,p)
 # funktion
 
 timss_benchmarks_extract <- function(dat7){
-  file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
+  #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
 
 
   dat8 <- read_excel(paste0(pfad, dat7))
@@ -1779,7 +1976,7 @@ timss_benchmarks_extract <- function(dat7){
                                 indikator == "Intermediate \r\nInternational Benchmark \r\n(475)" ~ "Mittlerer int'l. Maßstab (475)",
                                 indikator == "Low \r\nInternational Benchmark \r\n(400)" ~ "Niedriger int'l. Maßstab (400)",
                                 T ~ .$indikator))%>%
-    rename( "atktuell signifikant" = signifikant)%>%
+    rename( "aktuell_signifikant" = signifikant)%>%
     mutate(fach =case_when(timss_b_sub1 == "Mathematics"~ "Mathematik",
                            timss_b_sub1 == "Science"~ "Naturwissenschaften"))
 
@@ -1811,17 +2008,159 @@ y <- timss_benchmarks_extract("TIMSS006_benchmarks-trends-S4.xlsx")
 
 timss_benchmarks <- bind_rows(x,y)
 
+
+
+new_benchmark <- function(pfad, file, fach){
+
+  dat8 <- read_excel(paste0(pfad, file))
+
+  timss_b_sub<- colnames(dat8)[1]
+
+  timss_b_sub1<- stringr::str_extract(timss_b_sub, "Mathematics|Science")
+
+  dat8 <- dat8[,c("...3", "...5", "...6", "...7", "...8")]
+
+
+  colnames(dat8) <- dat8[6, ]
+  dat8 <- dat8[6:62,]
+  dat8 <- dat8[-1, ]
+  colnames(dat8)[1] <- "land"
+
+  dat8_long <- dat8 %>%
+    pivot_longer(
+      cols = starts_with("Advanced (625)"):ends_with("Low \r\n(400)"),
+      names_to = "indikator",
+      values_to = "wert"
+    )
+
+  dat8_long$typ <- "Prozentsatz der Schüler:innen"
+  dat8_long$aktuell_signifikant <- NA #diese info fehlt in dem neuen datensatz
+  dat8_long$ordnung <- "Benchmarks"
+  dat8_long$bereich <- "Schule"
+  dat8_long$fach <- fach
+  dat8_long$jahr <- 2023
+
+  dat8_long$indikator[dat8_long$indikator == "Advanced (625)"] <- "Höchster int'l. Maßstab (625)"
+  dat8_long$indikator[dat8_long$indikator == "High \r\n(550)"] <- "Hoher int'l. Maßstab (550)"
+  dat8_long$indikator[dat8_long$indikator == "Intermediate (475)"] <- "Mittlerer int'l. Maßstab (475)"
+  dat8_long$indikator[dat8_long$indikator == "Low \r\n(400)" ] <- "Niedriger int'l. Maßstab (400)"
+
+  indikator_reihenfolge <- unique(timss_benchmarks$indikator)
+  dat8_long <- dat8_long %>%
+    mutate(indikator = factor(indikator, levels = indikator_reihenfolge)) %>%
+    arrange(indikator)
+
+
+  dat8_long$land <- countrycode::countrycode(dat8_long$land,
+                                              origin = 'country.name',
+                                              destination = 'country.name.de',
+                                              custom_match = c('England' = 'England',
+                                                               "Northern Ireland" = "Nordirland",
+                                                               "Ontario, Canada" = "Ontario, Kanada",
+                                                               "Quebec, Canada" = "Quebec, Kanada",
+                                                               "Abu Dhabi, UAE" = "Abu Dhabi, UAE",
+                                                               "Dubai, UAE" = "Dubai, UAE"))
+
+  dat8_long <- dat8_long %>%
+    filter(!is.na(land))
+
+}
+
+a <- new_benchmark(pfad, "TIMSS013_ach-g4m-bmk-trend.xlsx", "Mathematics")
+b <- new_benchmark(pfad, "TIMSS014_ach-g4s-bmk-trend.xlsx", "Naturwissenschaften")
+
+benchmark_temp <- rbind(a, b)
+
+
+timss_benchmarks <- rbind(timss_benchmarks, benchmark_temp)
+
+
+
+###scienza
+
+
+
+# dat8 <- read_excel(paste0(pfad, "TIMSS014_ach-g4s-bmk-trend.xlsx"))
+#
+# timss_b_sub<- colnames(dat8)[1]
+#
+# timss_b_sub1<- stringr::str_extract(timss_b_sub, "Mathematics|Science")
+#
+# dat8 <- dat8[,c("...3", "...5", "...6", "...7", "...8")]
+#
+#
+# colnames(dat8) <- dat8[6, ]
+# dat8 <- dat8[6:62,]
+# dat8 <- dat8[-1, ]
+# colnames(dat8)[1] <- "land"
+#
+# dat8_long <- dat8 %>%
+#   pivot_longer(
+#     cols = starts_with("Advanced (625)"):ends_with("Low \r\n(400)"),
+#     names_to = "indikator",
+#     values_to = "wert"
+#   )
+#
+# dat8_long$typ <- "Prozentsatz der Schüler:innen"
+# dat8_long$aktuell_signifikant <- NA #diese info fehlt in dem neuen datensatz
+# dat8_long$ordnung <- "Benchmarks"
+# dat8_long$bereich <- "Schule"
+# dat8_long$fach <- "Naturwissenschaften"
+# dat8_long$jahr <- 2023
+#
+# dat8_long$indikator[dat8_long$indikator == "Advanced (625)"] <- "Höchster int'l. Maßstab (625)"
+# dat8_long$indikator[dat8_long$indikator == "High \r\n(550)"] <- "Hoher int'l. Maßstab (550)"
+# dat8_long$indikator[dat8_long$indikator == "Intermediate (475)"] <- "Mittlerer int'l. Maßstab (475)"
+# dat8_long$indikator[dat8_long$indikator == "Low \r\n(400)" ] <- "Niedriger int'l. Maßstab (400)"
+#
+# indikator_reihenfolge <- unique(timss_benchmarks$indikator)
+# dat8_long <- dat8_long %>%
+#   mutate(indikator = factor(indikator, levels = indikator_reihenfolge)) %>%
+#   arrange(indikator)
+#
+#
+# dat8_long$land <- countrycode::countrycode(dat8_long$land,
+#                                            origin = 'country.name',
+#                                            destination = 'country.name.de',
+#                                            custom_match = c('England' = 'England',
+#                                                             "Northern Ireland" = "Nordirland",
+#                                                             "Ontario, Canada" = "Ontario, Kanada",
+#                                                             "Quebec, Canada" = "Quebec, Kanada",
+#                                                             "Abu Dhabi, UAE" = "Abu Dhabi, UAE",
+#                                                             "Dubai, UAE" = "Dubai, UAE"))
+#
+# dat8_long <- dat8_long %>%
+#   filter(!is.na(land))
+#
+#
+# timss_benchmarks <- rbind(timss_benchmarks, dat8_long)
+
+
+
+
+
+
+
+
 ### TIMSS Merger ----
 
 timss <- bind_rows(
   timss_benchmarks %>% mutate(across(wert,~ as.numeric(.))),
   timss_res_dat %>% mutate(across(wert,~ as.numeric(.))),
   timss_achievement %>% mutate(across(wert,~ as.numeric(.))),
-  timss_gender %>% mutate(across(wert,~ as.numeric(.)))
+  timmss_gender %>% mutate(across(wert,~ as.numeric(.)))
 )
+
+# timss <- bind_rows(
+#   timss_benchmarks %>% mutate(across(wert,~ as.numeric(.))),
+#   timss_res_dat %>% mutate(across(wert,~ as.numeric(.))),
+#   timss_achievement %>% mutate(across(wert,~ as.numeric(.))),
+#   timss_gender %>% mutate(across(wert,~ as.numeric(.)))
+# )
 
 usethis::use_data(timss, overwrite=T)
 
+save(timss, file = "schule_timss.rda")
 
 
 

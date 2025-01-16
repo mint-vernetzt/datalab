@@ -83,10 +83,11 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                        selected = "Deutschland"
                      ),
 
-                     shinyBS::bsPopover(id="poppp123", title = "",
-                                        content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                        trigger = "hover", placement = "top"),
-                     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "poppp123"),
+                     # shinyBS::bsPopover(id="poppp123", title = "",
+                     #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+                     #                    trigger = "hover", placement = "top"),
+                     # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "poppp123"),
+                    darstellung(id="poppp123"),
                     br(),
                     br(),
                     shinyBS::bsPopover(id="ih_beruf_mint_4", title="",
@@ -130,11 +131,7 @@ mod_beruf_arbeitsmarkt_anforderungen_gender_ui <- function(id){
                        multiple = FALSE,
                        selected = "MINT"),
                      br(),
-                     shinyBS::bsPopover(id="dh_beruf_mint_5", title = "",
-                                        content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                        trigger = "hover"),
-                     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_beruf_mint_5"),
-
+                     darstellung(id="dh_beruf_mint_5"),
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_mint_5", title="",

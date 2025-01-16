@@ -113,10 +113,7 @@ mod_schule_kurse_multiple_ui <- function(id){
     ),
 
     br(),
-    shinyBS::bsPopover(id="popoverdarstellung_3", title = "",
-                       content = paste0("Falls die Grafik abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                       trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "popoverdarstellung_3"),
+    darstellung(id="popoverdarstellung_3"),
     br()
   )
 }

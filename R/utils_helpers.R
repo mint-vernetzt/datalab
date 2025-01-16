@@ -1,3 +1,6 @@
+
+
+
 #' helpers
 #'
 #' @description A utils function
@@ -5,68 +8,43 @@
 #' @return The return value, if any, from executing the utility.
 #'
 #' @noRd
+#'
+#'
+#'
+# gruppe, " im ", regio, " (", timerange, ")
 
-helper_title_home <- function(indikator){
+ist_saarland <- function(gruppe="Gruppe", optional=NULL,regio, timerange=0){
 
-  if ((indikator == "Auszubildende" | indikator == "Beschäftigte")) {
-
-    title_help_sub <- "andere Berufszweige"
-
-    title_help <- paste0("anderen Berufszweigen bei<br> ", indikator,"n")
-
+  if (timerange != 0){
+    if(regio == "Saarland"){
+      title = paste0(gruppe, " im ", optional, regio, " (", timerange, ")")
+    } else {
+      title = paste0(gruppe, " in ", optional, regio, " (", timerange, ")")
+    }
   } else {
-
-    title_help_sub <- "andere Fächer"
-
-    if ((indikator == "Habilitationen" | indikator == "Promotionen (angestrebt)")){
-
-      title_help <- paste0("anderen Fächern bei<br> ", indikator)
-
-    }else{
-
-      title_help <- paste0("anderen Fächern bei<br> ", indikator,"n")
+    if(regio == "Saarland"){
+      title = paste0(gruppe, optional, " im ", regio)
+    } else {
+      title = paste0(gruppe, optional, " in ", regio)
     }
   }
-
-  return(title_help)
-
+  return(title)
 }
 
 
-#' helpers
-#'
-#' @description A utils function
-#'
-#' @return The return value, if any, from executing the utility.
-#'
-#' @noRd
+ist_saarland2 <- function(indi, regio, optional1= NULL, optional2=NULL){
+  if (is.null(optional1) && is.null(optional2)){}
+  else{
+    if(regio=="Saarland"){
+      title = paste0(optional1, indi, optional2, " im ",regio)
+    } else {
+      title = paste0(optional1, indi, optional2, " in ",regio)
+    }
 
-`%!in%` <- Negate(`%in%`)
+  }
+  return(title)
+}
 
-
-#' helpers
-#'
-#' @description A utils function
-#'
-#' @return The return value, if any, from executing the utility.
-#'
-#' @noRd
-
-dictionary_title_studium_studentenzahl <- list("eingeschrieben" = "die insgesamt eingeschrieben sind",
-                                               "1hs" = "die im 1. Hochschulsemester eingeschrieben sind",
-                                               "1fs" = "die im 1. Fachsemester eingeschrieben sind")
-
-
-#' helpers
-#'
-#' @description A utils function
-#'
-#' @return The return value, if any, from executing the utility.
-#'
-#' @noRd
-
-dictionary_title_studium <- list("Mathe" = "in Mathematik",
-                                 "Ingenieur" = "am Ingenieurswesen")
 
 
 #' helpers
@@ -123,102 +101,11 @@ states_east_west <- list(west = c("Baden-Württemberg", "Bayern", "Bremen", "Ham
                                   "Sachsen-Anhalt", "Thüringen", "Berlin"))
 
 
-#' @description A function to create the value box
-#'
-#' @return The return is a value box
-#' @param value The value to display in the box. Usually a number or short text.
-#' @param title Title of the value box
-#' @param subtitle Subtitle below the big number
-#' @param icon An icon tag
-#' @param color color of the box
-#' @param width Width of the box
-#' @param href An optional URL to link to.
-#' @param info Text of information helper.
-#' @noRd
-#'
-valueBox2 <- function(value, title, subtitle, icon = NULL, color = "aqua", width = 4, href = NULL,
-                      info = NULL, type = "andere"){
 
-  if (type == "Frauen"){
 
-    style <- paste0("background-color: ", "#f5adac; color:white;")
 
-  } else {
 
-    style <- paste0("background-color: ", "#b1b5c3; color:white;")
 
-  }
-
-  if (!is.null(icon))
-    shinydashboard:::tagAssert(icon, type = "i")
-
-  info_icon <- tags$small(
-    tags$i(
-      class = "fa fa-info-circle fa-lg",
-      title = info,
-      `data-toggle` = "tooltip",
-      style = "color: rgba(255, 255, 255, 0.75);"
-    ),
-    class = "pull-right"
-  )
-
-  boxContent <- div(
-    class = "small-box",
-    style = style,
-    div(
-      class = "inner",
-      info_icon,
-      tags$small(title),
-      h3(value),
-      p(subtitle)
-    ),
-    if (!is.null(icon)) div(class = "icon-large", icon, style = "z-index; 0")
-  )
-
-  if (!is.null(href))
-    boxContent <- a(href = href, boxContent)
-
-  div(
-    class = if (!is.null(width)) paste0("col-sm-", width),
-    boxContent
-  )
-}
-
-#' preprocess_schule
-#'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
-#'
-#' @noRd
-
-share_pie <- function(df) {
-  # calculate proportions
-  df$props <- sum(df$wert)
-
-  df <- df %>% dplyr::group_by(fachbereich, anzeige_geschlecht) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df$proportion <- df$proportion * 100
-
-  df$proportion <- round_preserve_sum(as.numeric(df$proportion),0)
-
-  return(df)
-}
-
-share_pie_neu <- function(df) {
-  # calculate proportions
-  df$props <- sum(df$wert)
-
-  df <- df %>% dplyr::group_by(fachbereich, geschlecht) %>%
-    dplyr::summarize(proportion = wert/props)
-
-  df$proportion <- df$proportion * 100
-
-  df$proportion <- round_preserve_sum(as.numeric(df$proportion),0)
-
-  return(df)
-}
 
 # funktion zur ordnung der fachauswahl für studierende_detailliert
 studi_det_ui_faecher <-function(spezif_i, spezif_r){
@@ -448,6 +335,15 @@ international_ui_country <- function(type = "arbeit", n = NA) {
       sort()
   }
 
+  if(type=="TIMSS"){
+    selection <- dplyr::tbl(con, from = "schule_timss") %>%
+      dplyr::filter(!is.na(wert)) %>%
+      dplyr::distinct(land) %>%  # Eindeutige Werte direkt in der Datenbank abrufen
+      dplyr::arrange(land) %>%   # Alphabetisch sortieren (in der DB)
+      dplyr::pull(land)          # Extrahiert die Spalte 'land'
+
+  }
+
 }
 
 # Funktion zur Jahresauswahl bei Fachkraft Daten
@@ -473,14 +369,6 @@ fachkraft_ui_faecher <- function(exclude = c()) {
 
 
   selection <- NULL
-
-  # selection <- arbeitsmarkt_epa_detail %>%
-  #   dplyr::filter(indikator == "Engpassindikator") %>%
-  #   dplyr::pull(mint_zuordnung) %>%
-  #   unique() %>%
-  #   append("MINT")
-
-  # manual selection to have correct order and naming
   selection <- c(
    "Alle Berufe" ="Gesamt",
     "MINT gesamt", #"MINT",
@@ -506,13 +394,6 @@ fachkraft_ui_berufslevel <- function() {
 
 
   selection <- NULL
-
-  # selection <- arbeitsmarkt_epa_detail %>%
-  #   dplyr::filter(indikator == "Engpassindikator") %>%
-  #   dplyr::pull(anforderung) %>%
-  #   unique() %>%
-  #   append("Gesamt")
-  # manual selection to have correct order and adding "gesamt"
   selection <- c(
     "Gesamt",
     "Fachkräfte",
@@ -599,18 +480,7 @@ fachkraft_ui_scenario <- function(wirkhebel) {
   return(selection)
 }
 
-fachkraft_ui_prognose_gruppen <- function() {
 
-  selection <- NULL
-
-  selection <- c(
-    "Berufslevel",
-    "Geschlecht",
-    "Nationalität"
-  )
-
-  return(selection)
-}
 
 
 # function to extract a plot title from a highcharter object
@@ -775,4 +645,334 @@ add_caption_and_download <- function(
   return(NULL)
 }
 
+
+
+
+#' preprocess_beruf on landkreis level
+#'
+#' @description Function calculates the shares on landkreis level
+#'
+#' @return a dataframe.
+#'
+#' @noRd
+calculate_landkreis <- function(df, states, category, domain, indikator_azubi, indikator_besch, region = "") {
+
+  # filter dataset based on UI inputs
+  df_filtered <- df %>% dplyr::filter(bundesland == states,
+                                      anforderung == "Gesamt",
+                                      kategorie == category) # dropdown 1 - Azubis oder Beschäftigte
+
+  # dropdown 2 auf Gesamt --> kein Fachbereich ausgewählt, nur Indikator
+  if (domain == "Alle") {
+    df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == "Alle",
+                                               indikator == category,
+                                               geschlecht == "Gesamt")
+    #titel_gesamt_1 <- paste0(" an allen ")
+    titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
+
+
+  } else {
+    # dropdown 2 nicht auf Gesamt
+
+    # dropdown 3 auf Gesamt --> nach folgendem filter selbes wie drüber
+    if ((category == indikator_besch) |
+        (category == indikator_azubi)) {
+      df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == "Alle",
+                                                 indikator == category,
+                                                 geschlecht == "Gesamt")
+
+      # titel_gesamt_1 <- paste0(" an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
+
+
+    } else {
+      # dropdown 3 nicht auf Gesamt --> Fachbereich und Indikator ausgewählt
+
+      df_gesamt <- df_filtered %>% dplyr::filter(fachbereich == domain,
+                                                 indikator == category,
+                                                 geschlecht == "Gesamt")
+
+      # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
+
+    }
+
+  }
+
+  df_sub <- df_filtered %>% dplyr::filter(fachbereich == domain)
+
+  # dropdown 3
+  if(category == "Beschäftigte"){
+
+    titel_sub <- indikator_besch
+
+    if(indikator_besch != "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == indikator_besch,
+                                         geschlecht == "Gesamt")
+
+      titel_sub <- paste0(indikator_besch)
+      titel_sub <- ifelse(grepl("ausl", indikator_besch), "ausländischer Beschäftigter", titel_sub)
+      titel_sub <- ifelse(grepl("u25", indikator_besch), "Beschäftigter unter 25 Jahren", titel_sub)
+      titel_sub <- ifelse(grepl("25-55", indikator_besch), "Beschäftigter zwischen 25 und 55 Jahren", titel_sub)
+      titel_sub <- ifelse(grepl("ü55", indikator_besch), "Beschäftigter über 55 Jahren", titel_sub)
+      titel_sub2 <- paste0(indikator_besch, "n")
+      titel_sub2 <- ifelse(grepl("ausl", indikator_besch), "ausländischen Beschäftigten", titel_sub2)
+      titel_sub2 <- ifelse(grepl("u25", indikator_besch), "Beschäftigten unter 25 Jahren", titel_sub2)
+      titel_sub2 <- ifelse(grepl("25-55", indikator_besch), "Beschäftigten zwischen 25 und 55 Jahren", titel_sub2)
+      titel_sub2 <- ifelse(grepl("ü55", indikator_besch), "Beschäftigten über 55 Jahren", titel_sub2)
+      # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
+      titel_gesamt_2 <- ifelse(titel_sub %in% c("ausländischer Beschäftigter",
+                                                "Beschäftigter unter 25 Jahren",
+                                                "Beschäftigter zwischen 25 und 55 Jahren",
+                                                "Beschäftigter über 55 Jahren"), paste0("Beschäftigten in ", domain), "Beschäftigten")
+      titel_gesamt_2 <- ifelse(domain == "Alle", "Beschäftigten in allen Berufsbereichen", titel_gesamt_2)
+
+
+    } else if(indikator_besch == "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == category,
+                                         geschlecht == indikator_besch)
+
+      titel_sub <- paste0(" weiblicher ", category, "r")
+      titel_sub2 <- paste0(" weiblichen ", category, "n")
+      # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
+      titel_gesamt_2 <- paste0("Beschäftigten in ", domain)
+      titel_gesamt_2 <- ifelse(domain == "Alle", "Beschäftigten in allen Berufsbereichen", titel_gesamt_2)
+
+
+    }
+
+  } else if(category == "Auszubildende"){
+
+    titel_sub <- indikator_azubi
+
+    if(indikator_azubi != "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == indikator_azubi,
+                                         geschlecht == "Gesamt")
+
+      titel_sub <- paste0(indikator_azubi)
+      titel_sub <- ifelse(grepl("ausl", indikator_azubi), "ausländischer Auszubildender", titel_sub)
+      titel_sub <- ifelse(grepl("(1. Jahr)", indikator_azubi), "Auszubildender mit neuem Lehrvertrag", titel_sub)
+      titel_sub2 <- paste0(indikator_azubi, "n")
+      titel_sub2 <- ifelse(grepl("ausl", indikator_azubi), "ausländischen Auszubildenden", titel_sub2)
+      titel_sub2 <- ifelse(grepl("(1. Jahr)", indikator_azubi), "Auszubildenden mit neuem Lehrvertrag", titel_sub2)
+      # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
+      titel_gesamt_2 <- ifelse(titel_sub %in% c("ausländischer Auszubildender",
+                                                "Auszubildender mit neuem Lehrvertrag"), paste0("Auszubildenden in ", domain), "Auszubildenden")
+      titel_gesamt_2 <- ifelse(domain == "Alle", "Auszubildende in allen Berufsbereichen", titel_gesamt_2)
+
+
+
+    } else if(indikator_azubi == "Frauen"){
+
+      df_sub <- df_sub %>% dplyr::filter(indikator == category,
+                                         geschlecht == indikator_azubi)
+      titel_sub <- paste0(" weiblicher ", category, "r")
+      titel_sub2 <- paste0(" weiblichen ", category, "n")
+      # titel_gesamt_1 <- paste0(" in ", domain, " an allen ")
+      titel_gesamt_1 <- ifelse(domain == "Alle", " an allen ", paste0(" in ", domain, " an allen "))
+      titel_gesamt_2 <- paste0("Auszubildenden in ", domain)
+      titel_gesamt_2 <- ifelse(domain == "Alle", "Auszubildende in allen Berufsbereichen", titel_gesamt_2)
+    }
+  }
+
+  # merge dataframes and compute prob
+  df_compare <- df_sub %>%
+    dplyr::left_join(df_gesamt,
+                     by = c(
+                       "kategorie",
+                       "bundesland",
+                       "landkreis",
+                       "landkreis_nummer",
+                       "jahr",
+                       "anforderung"))
+
+  if(region == "Gesamt"){
+    df_compare <- df_compare %>%
+      dplyr::group_by(bereich,
+                      kategorie,
+                      bundesland,
+                      jahr,
+                      anforderung) %>%
+      dplyr::summarise(wert.x = sum(wert.x),
+                       wert.y = sum(wert.y)) %>%
+      dplyr::mutate(prob = round((wert.x/wert.y)*100,1)) %>%
+      dplyr::rename(wert = wert.x) %>%
+      dplyr::select(-wert.y) %>%
+      dplyr::ungroup()
+
+  } else {
+    df_compare <- df_compare %>%
+      dplyr::mutate(prob = round((wert.x/wert.y)*100,1)) %>%
+      dplyr::rename(wert = wert.x,
+                    geschlecht = geschlecht.x) %>%
+      dplyr::select(-c(wert.y, geschlecht.y))
+
+  }
+
+  # return relevant values as a list
+
+  return_list <- list()
+  return_list[[1]] <- df_compare
+  return_list[[2]] <- titel_gesamt_1
+  return_list[[3]] <- titel_gesamt_2
+  return_list[[4]] <- titel_sub
+  return_list[[5]] <- titel_sub2
+
+  return(return_list)
+}
+
+
+
+get_lks <- function(bula = "Sachsen"){
+
+  lks <- DBI::dbGetQuery(con,
+                         paste0("SELECT DISTINCT landkreis
+                       FROM arbeitsmarkt_detail
+                       WHERE bundesland = '", bula, "'"))$landkreis
+  lks <- setdiff(lks, "alle Landkreise")
+  lks <- c("Landesdurchschnitt", lks)
+
+  return(lks)
+}
+
+
+#zusammenfasser
+darstellung <- function(id, title = NULL) {
+  tagList(
+    shinyBS::bsPopover(
+      id = id,
+      title = title,
+      content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
+      trigger = "hover"
+    ),
+    tags$a(
+      "Probleme bei der Darstellung",
+      icon("question-circle"),
+      id = id
+    ),
+  )
+}
+
+
+
+# test des funktionszusammenfasser
+
+
+piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"), format = '{point.prop_besr}%', subtitel = NULL){
+
+  if (is.null(subtitel)){
+    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y))) %>%
+      highcharter::hc_tooltip(
+        pointFormat=tooltip) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                             dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE))
+  } else {
+    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y))) %>%
+      highcharter::hc_tooltip(
+        pointFormat=tooltip) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+                                             dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE))
+
+  }
+
+  return(out)
+}
+
+
+
+
+#df, titel, x, y, tooltip
+linebuilder <- function(df, titel, x = "jahr", y, tooltip, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24")){
+
+  out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = indikator)) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = " "), labels = list(format = "{value}%"),
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(color) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+  return(out)
+
+}
+
+
+
+
+
+
+
+
+balkenbuilder <- function(df123, titel, subtitel ,group = "fachbereich"){
+
+  out <- highcharter::hchart(df123, 'bar', highcharter::hcaes(y = prop, x = indikator, group = !!rlang::sym(group)))%>%
+    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+    highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_subtitle(text = subtitel,
+                             margin = 20,
+                             align = "center",
+                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+  return(out)
+
+}
 

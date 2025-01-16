@@ -73,11 +73,7 @@ mod_home_start_einstieg_ui <- function(id){
             )
           ),
           br(),
-
-          shinyBS::bsPopover(id="dh", title = "",
-                             content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                             trigger = "hover"),
-          tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh"),
+          darstellung(id="dh"),
           br(),
           br(),
           shinyBS::bsPopover(id="ih_alle_mint_1", title="",

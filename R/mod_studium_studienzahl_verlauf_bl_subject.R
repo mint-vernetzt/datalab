@@ -18,24 +18,7 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
       choices = 2013:2023,
       selected = c(2016, 2023)
     ),
-    # p("Nur Lehramt anzeigen:"),
-    # tags$div(
-    #   shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_verlauf_bl_subject"), label = "Nein", inline = TRUE),
-    #   tags$span("Ja"),
-    #   p("Auswahl der Hochschulform:"),
-    #   conditionalPanel(condition = "input.nurLehramt_studierende_verlauf_bl_subject == false",
-    #                    ns = ns,
-    #                    shinyWidgets::pickerInput(
-    #                      inputId = ns("hochschulform_studierende_verlauf_1"),
-    #                      choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
-    #                    )),
-    #   conditionalPanel(condition = "input.nurLehramt_studierende_verlauf_bl_subject != false",
-    #                    ns = ns,
-    #                    shinyWidgets::pickerInput(
-    #                      inputId = ns("hochschulform_studierende_verlauf_2"),
-    #                      choices = "Uni"
-    #                    ))
-    # ),
+
     p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("verl_l"),
@@ -59,14 +42,6 @@ mod_studium_studienzahl_verlauf_bl_subject_ui <- function(id){
         "max-options" = 2,
         "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
     ),
-    # p("Auswahl der Fächer:"),
-    # shinyWidgets::pickerInput(
-    #   inputId = ns("subject_selected_bl"),
-    #   choices = c("MINT-Fächer (gesamt)" = "MINT", "Mathematik/Naturwissenschaften" = "Mathematik/Naturwissenschaften",
-    #               "Ingenieurwissenschaften" = "Ingenieurwissenschaften"),
-    #   selected = c("MINT", "Ingenieurwissenschaften"),
-    #   multiple = TRUE
-    # ),
     p("Region:"),
     shinyWidgets::pickerInput(
       inputId = ns("states_verlauf_subject_bl"),
@@ -131,25 +106,12 @@ mod_studium_studienzahl_verlauf_bl_subject_server <- function(id, r){
       r$abs_zahlen_verlauf_subject_bl <- input$abs_zahlen_verlauf_subject_bl
     })
 #
-#     observeEvent(input$subject_selected_bl, {
-#       r$subject_selected_bl <- input$subject_selected_bl
-#     })
+
 
     observeEvent(input$states_verlauf_subject_bl, {
       r$states_verlauf_subject_bl <- input$states_verlauf_subject_bl
     })
 
-    # observeEvent(input$nurLehramt_studierende_verlauf_bl_subject, {
-    #   r$nurLehramt_studierende_verlauf_bl_subject <- input$nurLehramt_studierende_verlauf_bl_subject
-    # })
-    #
-    # observeEvent(input$hochschulform_studierende_verlauf_1, {
-    #   r$hochschulform_studierende_verlauf_1 <- input$hochschulform_studierende_verlauf_1
-    # })
-    #
-    # observeEvent(input$hochschulform_studierende_verlauf_2, {
-    #   r$hochschulform_studierende_verlauf_2 <- input$hochschulform_studierende_verlauf_2
-    # })
 
 
   })

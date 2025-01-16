@@ -66,13 +66,6 @@ mod_studium_studienzahl_choice_1_server <- function(id, r){
     })
 
 
-    # observeEvent(input$hochschulform_studierende_1, {
-    #   r$hochschulform_studierende_1 <- input$hochschulform_studierende_1
-    # })
-    #
-    # observeEvent(input$hochschulform_studierende_2, {
-    #   r$hochschulform_studierende_2 <- input$hochschulform_studierende_2
-    # })
 
 
   })

@@ -204,6 +204,7 @@ mod_schule_kurse_map_ui <- function(id){
                            content = paste0("In dieser Grafik werden die Länder direkt miteinander verglichen. Blicken wir auf die Leistungskurse: In Sachsen-Anhalt entfallen nahezu die Hälfte (48 %) der Leistungskursbelegungen auf den MINT-Bereich, womit das Bundesland eine Spitzenposition einnimmt."),
                            trigger = "hover"),
         tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="popover3_box2")
+
     )
   )
 }

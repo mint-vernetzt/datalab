@@ -32,23 +32,7 @@ mod_studium_studienzahl_bl_verlauf_ui <- function(id){
       choices = 2013:2023,
       selected = c(2015, 2023)
     ),
-    # p("Nur Lehramt anzeigen:"),
-    # tags$div(
-    #   shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studium_studienzahl_bl_verlauf"), label = "Nein", inline = TRUE),
-    #   tags$span("Ja"),
-    #   p("Auswahl der Hochschulform:"),
-    #   conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_verlauf == false",
-    #                    ns = ns,
-    #                    shinyWidgets::pickerInput(
-    #                      inputId = ns("hochschulform_studium_studienzahl_bl_verlauf1"),
-    #                      choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
-    #                    )),
-    #   conditionalPanel(condition = "input.nurLehramt_studium_studienzahl_bl_verlauf != false",
-    #                    ns = ns,
-    #                    shinyWidgets::pickerInput(
-    #                      inputId = ns("hochschulform_studium_studienzahl_bl_verlauf2"),
-    #                      choices = "Uni"
-    #                    )),
+
       p("Fächergruppe:"),
       shinyWidgets::pickerInput(
         inputId = ns("subject_studium_studienzahl_bl_verlauf"),

@@ -18,7 +18,6 @@ mod_quellen_ui <- function(id){
             width = 12,
             img(src='www/Banner_Hinweise.jpg',
                 class = "img-responsive",
-                #height = "150px", width = "150px",
                 alt = "Banner Quellen",
                 style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px;"
             )))),
@@ -36,7 +35,6 @@ mod_quellen_ui <- function(id){
         ), br(),
         img(src='www/Definition_MINT_Bild.png',
             class = "img-responsive",
-            #height = "150px", width = "150px",
             alt = "Def MINT",
             style="display: block; margin-left: auto; margin-right: auto;"
         )
@@ -46,7 +44,6 @@ mod_quellen_ui <- function(id){
         title = "Unsere Datengeber:innen",
         img(src='www/Logo_BA.png',
             class = "img-responsive",
-            #height = "150px", width = "150px",
             alt = "Logo BA",
             style="display: block; margin-left: auto; margin-right: auto;"
         ), br(),
@@ -56,7 +53,6 @@ mod_quellen_ui <- function(id){
         br(),
         img(src='www/Logo_Destatis.png',
             class = "img-responsive",
-            #height = "150px", width = "150px",
             alt = "Logo Destatis",
             style="display: block; margin-left: auto; margin-right: auto;"
         ),
@@ -67,7 +63,6 @@ mod_quellen_ui <- function(id){
         br(), br(),
         img(src='www/Logo_KMK.png',
             class = "img-responsive",
-            #height = "150px", width = "150px",
             alt = "Logo KMK",
             style="display: block; margin-left: auto; margin-right: auto;"
         ),br(),
@@ -99,7 +94,6 @@ mod_quellen_ui <- function(id){
     shinydashboard::box(
       width = 3,
       title = "Weitere Datengeber:innen",
-      #tags$b(span("Weitere Datengeber:", style = "color:#154194")),
       tags$a(href="https://www.bibb.de/", "Bundesinstitut für Berufsbildung", target = "_blank"),
       br(),
       tags$a(href="https://www.iqb.hu-berlin.de/", "Seite des Instituts zur Qualitätsentwicklung im Bildungswesen.(IQB)", target = "_blank"),
@@ -112,12 +106,6 @@ mod_quellen_ui <- function(id){
       br(),
       tags$a(href="https://www.oecd-ilibrary.org/statistics", "Datenportal der OECD", target = "_blank"),
 
-      # img(src='www/Logo_IQB.png',
-      #     class = "img-responsive",
-      #     #height = "150px", width = "150px",
-      #     alt = "Logo IQB",
-      #     style="display: block; margin-left: auto; margin-right: auto;"
-      # ),
     )
     ),
 
@@ -133,6 +121,18 @@ mod_quellen_ui <- function(id){
           Im schulischen/außerschulischen Bereich zeigen wir außerdem Daten des IQB und der Stiftung Kinder forschen.
           Wir bauen dabei unsere Datengrundlage stetig weiter aus."
         ))),
+
+
+    fluidRow(
+      shinydashboard::box(
+        width = 9,
+        title = "Zitationshinweis",
+        p(style = "text-align: justify; font-size = 16px",
+          "Inhalte des MINT-DataLab können mit folgender Quellenangabe weitergenutzt werden:
+          \"MINT-DataLab von MINTvernetzt. https://www.mint-vernetzt.de/mint-datalab/\" (mit Abrufdatum). Unter den interaktiven Grafiken sind jeweils eigene Quellenangaben
+          mit Verweis auf die Datenquelle angegeben."
+        ))),
+
 
     fluidRow(
       shinydashboard::box(
@@ -151,8 +151,9 @@ mod_quellen_ui <- function(id){
           "Die Nutzungsbedingungen der Datengeber:innen erlauben die Verwendung der Daten und die grafische Aufbereitung
           sowie die auszugsweise Weitergabe. Eine vollständige Weitergabe der überlassenen Datensätze ist nicht gestattet.
           Bei Interesse an den kompletten Datensätzen müssen die Datengeber:innen direkt kontaktiert werden."
-        )
-      )),
+
+        ))),
+
 
 
 
@@ -166,66 +167,7 @@ mod_quellen_ui <- function(id){
 
 
 
-# "Zu den MINT-Studienfächern werden folgende Fächergruppen bzw. Studienbereiche der Hoschulstatistik gezählt:",
-# br(),
-# tags$ul(
-#   tags$li("Ingenieurwissenschaften"),
-#   "Ingenieurwissenschaften allgemein, Bergbau/Hüttenwesen, Maschinenbau/Verfahrenstechnik, Elektrotechnik,
-#           Verkehrstechnik/Nautik, Architektur/Innenarchitektur, Raumplanung, Bauingenieurwesen, Vermessungswesen,
-#           Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem. Schwerpunkt",
-#   tags$li("Informatik"),
-#   tags$li("Mathematik & Naturwissenschaften"),
-#   "Mathematik/Naturwissenschaften allgemein, Mathematik, Informatik, Physik/Astronomie, Chemie, Pharmazie, Biologie, Geowissenschaften, Geographie"
-# ), br()
 
-# fluidRow(
-#   shinydashboard::box(
-#     #title = span("Quellen und Hinweise", style = "color:#154194; font-size: 50px"),
-#     width = 12,
-#     # column(width = 9,
-#     tags$h2("Quellen & Hinweise"),
-#     p(style = "text-align: justify; font-size = 16px",
-#       "Hier finden Sie Verweise zu den den Institutionen, wo die im MINT-Datalab verwendeten Daten angefragt wurden. Darüber hinaus listen wir Links zu interesanten weiterführenden Quellen auf.")
-#   )),
-# fluidRow(
-#   shinydashboard::box(
-#     title = "Quellen",
-#     width = 12,
-#     # p(style = "text-align: justify; font-size = 16px",
-#     #   span(tags$b(span("Quelle der Daten:", style = "color:#b16fab")))),
-#
-#     p(style = "text-align: justify; font-size = 16px",
-#       tags$ul(
-#         tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Statisitisches Bundesamt", target="_blank"), " : Zahlen zum Studium"),
-#         tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Kultusministerkonferenz", target="_blank"), " : Zahlen zur Schulbildung"),
-#         tags$li(tags$a(href="https://statistik.arbeitsagentur.de/DE/Home/home_node.html;jsessionid=B2B7423A23D5B6A5A4C301096D0ABDAB", "Bundesagentur für Arbeit", target="_blank"), " : Arbeitsmarktdaten")
-#       )
-#     )
-#
-#   )),
-#
-# fluidRow(
-#   shinydashboard::box(
-#     title = "Hinweise",
-#     width = 12,
-#     # p(style = "text-align: justify; font-size = 16px","Test"),
-#
-#     p(style = "text-align: justify; font-size = 16px",
-#       tags$ul(
-#         tags$li(tags$a(href="https://informatik-monitor.de/", "Informatik-Monitor", target="_blank"), " : Daten Zum Status von Informatik als Pflichtfach"),
-#         tags$li(tags$a(href="https://www.iqb.hu-berlin.de/bt/BT2018/", "IQB-Bildungstrend 2018", target="_blank"), " : Erhebung und Vergelich von Kompetenzen in Mathe und Naturwissenschaften von Schülern "),
-#         tags$li("")
-#       )
-#     )
-#
-#   ))
-
-# p(style = "text-align: justify; font-size = 16px",
-#   tags$ul(
-#     tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Statistisches Bundesamt", target="_blank"), " : Zahlen zum Studium"),
-#     tags$li(tags$a(href="https://www.destatis.de/DE/Home/_inhalt.html", "Kultusministerkonferenz", target="_blank"), " : Zahlen zur Schulbildung"),
-#     tags$li(tags$a(href="https://statistik.arbeitsagentur.de/DE/Home/home_node.html;jsessionid=B2B7423A23D5B6A5A4C301096D0ABDAB", "Bundesagentur für Arbeit", target="_blank"), " : Arbeitsmarktdaten")
-#   )),
 
 
 ## To be copied in the UI

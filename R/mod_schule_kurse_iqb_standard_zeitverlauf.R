@@ -84,10 +84,7 @@ mod_schule_kurse_iqb_standard_zeitverlauf_ui <- function(id){
     ),
 
     br(),
-    shinyBS::bsPopover(id="leistungsschwache_schueler1", title = "",
-                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                       trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "leistungsschwache_schueler1"),
+    darstellung(id = "leistungsschwache_schueler1"),
     br(),
     br(),
     shinyBS::bsPopover(id="ih_schule_kompetenzen_1", title="",

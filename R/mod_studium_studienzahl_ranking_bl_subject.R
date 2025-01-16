@@ -31,33 +31,7 @@ mod_studium_studienzahl_ranking_bl_subject_ui <- function(id){
                   "Studierende (Lehramt)"
       ),
       selected = "Studierende"),
-    # p("Nur Lehramt azeigen:"),
-    # tags$div(
-    #   shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_ranking_bl_subject"), label = "Nein", inline = TRUE),
-    #   tags$span("Ja"),
-    #   p("Auswahl der Hochschulform:"),
-    #   conditionalPanel(condition = "input.nurLehramt_studierende_ranking_bl_subject == false",
-    #                    ns = ns,
-    #                    shinyWidgets::pickerInput(
-    #                      inputId = ns("hochschulform_studierende_ranking_bl_1"),
-    #                      choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
-    #                    )),
-    #   conditionalPanel(condition = "input.nurLehramt_studierende_ranking_bl_subject != false",
-    #                    ns = ns,
-    #                    shinyWidgets::pickerInput(
-    #                      inputId = ns("hochschulform_studierende_ranking_bl_2"),
-    #                      choices = "Uni"
-    #                    ))
-    # ),
-    # p("Status der Student:innen:"),
-    # shinyWidgets::radioGroupButtons(
-    #   inputId = ns("topic_selected_subject_bl"),
-    #   choices = c("Studienanfänger:innen"="Studienanfänger:innen", "Studierende"),
-    #   direction = "vertical",
-    #   justified = TRUE,
-    #   checkIcon = list(yes = icon("ok",
-    #                               lib = "glyphicon"))
-    # ),
+
     p("Auswahl des Bundeslands:"),
     shinyWidgets::pickerInput(
       inputId = ns("rank_states"),
@@ -109,9 +83,6 @@ mod_studium_studienzahl_ranking_bl_subject_server <- function(id, r){
       r$rank_states <- input$rank_states
     })
 
-    # observeEvent(input$subject_selected_bl, {
-    #   r$subject_selected_bl <- input$subject_selected_bl
-    # })
 
     observeEvent(input$rank_y, {
       r$rank_y <- input$rank_y

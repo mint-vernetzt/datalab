@@ -30,9 +30,7 @@ mod_studium_server <- function(id,
                                  r)
 
   # Box 1
-  #mod_studium_studienzahl_einstieg_server("mod_studium_studienzahl_einstieg_ui_1", r)
   mod_studium_studienzahl_einstieg_verlauf_server("mod_studium_studienzahl_einstieg_verlauf_ui_1", r)
-  #mod_studium_studienzahl_einstieg_comparison_server("mod_studium_studienzahl_einstieg_comparison_ui_1", r)
   mod_studium_studienzahl_anteil_server("mod_studium_studienzahl_anteil_ui_1",  r)
   mod_studium_studienzahl_bundeslandvergleich_server("mod_studium_studienzahl_bundeslandvergleich_ui_1", r)
 
@@ -54,7 +52,6 @@ mod_studium_server <- function(id,
   # Box 5
   mod_studium_choice_gender_server("mod_studium_studienzahl_choice_gender_ui",r)
   mod_studium_studienzahl_verlauf_bl_subject_gender_server("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1",r)
-  #mod_studium_studienzahl_ranking_bl_subject_gender_server("mod_studium_studienzahl_ranking_bl_subject_gender_ui_1", r)
 
   # Box 6
   mod_studium_studienzahl_bl_map_server("mod_studium_studienzahl_bl_map", r)
@@ -62,9 +59,9 @@ mod_studium_server <- function(id,
   mod_studium_studienzahl_bl_vergleich_server("studium_studienzahl_bl_vergleich", r)
 
   # Box 7
-  #mod_studium_studienzahl_bl_map_gender_server("mod_studium_studienzahl_bl_map_gender", r)
-  #mod_studium_studienzahl_bl_verlauf_gender_server("mod_studium_studienzahl_bl_verlauf_gender", r)
-  #mod_studium_studienzahl_bl_vergleich_gender_server("mod_studium_studienzahl_bl_vergleich_gender_ui", r)
+
+  #
+
 
   # Box 8
   mod_studium_top_faecher_server("mod_studium_top_faecher", r)

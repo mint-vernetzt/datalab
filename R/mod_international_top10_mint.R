@@ -19,9 +19,6 @@ mod_international_top10_mint_ui <- function(id){
       choices = c("Europa"="EU", "OECD", "Weltweit"),
       selected = "Europa",
       multiple = FALSE#,
-      # options =  list(
-      #   "max-options" = 2,
-      #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
     ),
 
     #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
@@ -42,9 +39,7 @@ mod_international_top10_mint_ui <- function(id){
                        choices = international_ui_faecher(region = "EU"),
                        selected = c("Alle MINT-Fächer"),
                        multiple = FALSE#,
-                       # options =  list(
-                       #   "max-options" = 2,
-                       #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+
                      )),
     conditionalPanel(condition = "input.map_l_int_top10 == 'OECD' ",
                      ns = ns,
@@ -62,9 +57,7 @@ mod_international_top10_mint_ui <- function(id){
                        choices = international_ui_faecher(region = "OECD"),
                        selected = c("MINT"),
                        multiple = FALSE#,
-                       # options =  list(
-                       #   "max-options" = 2,
-                       #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+
                      )),
     conditionalPanel(condition = "input.map_l_int_top10 == 'Weltweit' ",
                      ns = ns,
@@ -87,16 +80,9 @@ mod_international_top10_mint_ui <- function(id){
 
 
     br(),
-
-    # # TODO extract into own module, since this is repeated on a lot of modules
-    #
-    # shinyBS::bsPopover(id="dh_international_map", title = "",
-    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
-    # br(),
-    # br(),
+    darstellung(id="dh_international_map_3"),
+    br(),
+    br(),
     shinyBS::bsPopover(id="ih_international_map3", title="",
                        content = paste0("Die Darstellung zeigt, dass Deutschland im europäischen Vergleich den höchsten Anteil MINT-Studierender verzeichnet, gefolgt von Serbien und Finnland. Deutschland liegt mit ca. 36 % MINT-Studierenden deutlich über dem Europa-Durchschnitt von ca. 26 %."),
                        placement = "top",

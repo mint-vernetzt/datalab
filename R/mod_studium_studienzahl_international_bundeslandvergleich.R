@@ -5,7 +5,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){ ###DIESE SEITE IST NICHT INTERNATIONAL GRADE
+mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){
   ns <- NS(id)
   tagList(
 
@@ -56,11 +56,7 @@ mod_studium_studienzahl_international_bundeslandvergleich_ui <- function(id){ ##
                          "max-options-text" = "<span style='color: red;'>Maximal 2 Gruppen auswählen</span>")
                      ),
                      br(),
-                     shinyBS::bsPopover(id="international_dh_studium_fach_2", title = "",
-                                        content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                        placement = "top",
-                                        trigger = "hover"),
-                     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "international_dh_studium_fach_2"),
+                     darstellung(id="international_dh_studium_fach_2"),
                      br(),
                      br(),
                      shinyBS::bsPopover(id="international_ih_studium_fach_2neu", title="",

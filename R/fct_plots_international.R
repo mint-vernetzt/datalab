@@ -1,3 +1,6 @@
+library(dplyr)
+library(tidyr)
+
 #' A function to plot a graph.
 #'
 #' @description A function to create a map for the first box
@@ -70,8 +73,6 @@ add_avg_to_hc <- function(hc, hc_mean, type) {
 ## studium ----
 plot_international_map <- function(r) {
 
-  #r <- list(map_y_int_studium = "2019", map_l_int_studium = "OECD", map_f_int_studium = "Umwelt")
-  # load UI inputs from reactive value
   timerange <- r$map_y_int_studium
   label_m <- r$map_l_int_studium
   fach_m <- r$map_f_int_studium
@@ -80,7 +81,6 @@ plot_international_map <- function(r) {
 
 
   if (label_m == "Weltweit") {
-    #map_selection <- golem::get_golem_options("world_map")
     map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
     fach_m <- "Alle MINT-Fächer"
@@ -94,8 +94,6 @@ plot_international_map <- function(r) {
 
 
   } else if (label_m == "OECD") {
-   # map_selection <- golem::get_golem_options("world_map")
-  #map_selection <-"custom/world"
     map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
     # filter for selection
@@ -137,7 +135,6 @@ plot_international_map <- function(r) {
 
 
   } else if (label_m == "EU") {
-    # map_selection <- golem::get_golem_options("europa_map")
     map_selection <- highcharter::download_map_data(url = "custom/europe", showinfo = FALSE)
 
     df <- dplyr::tbl(con, from = "studierende_europa") %>%
@@ -216,7 +213,6 @@ plot_international_map <- function(r) {
 
   highcharter::highchart(type = "map") %>%
     highcharter::hc_add_series_map(
-      #"countries/de/de-all",
       map = map_selection,
       df = data_map_1,
       value = "wert",
@@ -235,9 +231,6 @@ plot_international_map <- function(r) {
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
     ) %>%
-    # highcharter::hc_caption(
-    #   text = "...",  style = list(color= "white", fontSize = "12px")
-    # ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>% highcharter::hc_size(size_width, size_hight) %>%
@@ -279,7 +272,6 @@ plot_international_map_fem <- function(r){
 
       # daten in richtige form bringen und runden
       df1 <- dplyr::tbl(con, from = "studierende_europa") %>%
-        #dplyr::filter(!is.na(.$wert))%>% # NAs raus
         dplyr::filter(ebene == "1" &
                         indikator == "Frauen-/Männeranteil"&
                         mint_select == "mint")%>%
@@ -377,7 +369,6 @@ plot_international_map_fem <- function(r){
 
 
     # Daten in richtige Form bringen und runden
-
     df_filtered <- dplyr::tbl(con, from = "studierende_anzahl_oecd") %>%
       dplyr::filter(geschlecht %in% c("Frauen", "Gesamt") &
                       jahr == timerange &
@@ -390,7 +381,7 @@ plot_international_map_fem <- function(r){
 
     df_filtered <- df_filtered %>%
       tidyr::pivot_wider(names_from = anforderung, values_from = wert)%>%
-      # Zahl d. Studierenden ist hier Summe aus master + bachelor + promovenden
+      # Zahl d. Studierenden ist hier Summe aus master + bachelor + Promovierende
       dplyr::mutate(wert = rowSums(dplyr::select(., "Bachelor oder vergleichbar (akademisch)",
                                                  "Master oder vergleichbar (akademisch)",
                                                  "Promotion (ISCED 8)"), na.rm= T ))%>%
@@ -526,7 +517,6 @@ plot_international_map_fem <- function(r){
 
     # plot
     highcharter::hcmap(
-      #"countries/de/de-all",
       map = map_selection,
       data = map_data_1,
       value = "wert",
@@ -550,9 +540,6 @@ plot_international_map_fem <- function(r){
         align = "center",
         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
       ) %>%
-      # highcharter::hc_caption(
-      #   text = capt_dyn,  style = list(color= "grey", fontSize = "12px")
-      # ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
       ) %>%  highcharter::hc_size(size_width, size_hight) %>%
@@ -568,9 +555,6 @@ plot_international_map_fem <- function(r){
 
 
 plot_international_top10 <- function(r) {
-  #r <- list(map_y = "2019", map_l = "OECD", map_f = "MINT")
-  # load UI inputs from reactive value
-
 
   timerange <- r$map_y_m
   label_m <- r$map_l_m
@@ -582,7 +566,6 @@ plot_international_top10 <- function(r) {
   if (is.null(fach_m)) { fach_m <- ""}
 
   if (label_m == "Weltweit") {
-    #fach_m <- "Alle MINT-Fächer"
 
     df <- dplyr::tbl(con, from = "studierende_absolventen_weltweit")  %>%
       dplyr::filter(fach == "Alle MINT-Fächer" &
@@ -593,7 +576,6 @@ plot_international_top10 <- function(r) {
       dplyr::collect()
   }
   else if (label_m == "OECD") {
-    # filter for selection
 
     df_filtered <- dplyr::tbl(con, from = "studierende_anzahl_oecd")  %>%
       dplyr::filter(geschlecht == "Gesamt" &
@@ -712,8 +694,7 @@ return(out)
 
 
 plot_international_top10_gender <- function(r) {
-  #r <- list(map_y_int_studium_gender = "2021", map_l_int_studium_gender = "EU", map_f_int_studium_gender = "Interdisziplinäre Programme und Qualifikationen mit dem Schwerpunkt Ingenieurwesen,\n verarbeitendes Gewerbe und Baugewerbe",show_avg_top10_mint_line = "Ja", show_avg_int_studium_gender = "meisten Frauen wählen MINT")
-  # load UI inputs from reactive value
+
 
   timerange <- r$map_y_g
   label_m <- r$map_l_g
@@ -808,6 +789,7 @@ plot_international_top10_gender <- function(r) {
   if (label_m == "EU" & art == "höchster Frauenanteil in MINT") {
     # höchster Frauenanteil
 
+
     df <- dplyr::tbl(con, from = "studierende_europa") %>%
       dplyr::filter(geschlecht == "Frauen" &
                       jahr == timerange &
@@ -838,6 +820,7 @@ plot_international_top10_gender <- function(r) {
       dplyr::select(land, wert) %>%
       dplyr::collect()
   }
+
 
   # Grenze für die X-Achse ist immer etwas größer als der maximale wert
   # aber nie größer als 100%
@@ -1115,9 +1098,6 @@ if (avg_line == "Ja"){
 ## schule ----
 plot_international_schule_map <- function(r) {
 
-  #r <- list(map_y_int_schule = "2019", map_l_int_schule = "TIMSS", map_f_int_schule = "Mathematik", map_li_int_schule = "Test-Punktzahl")
-  # load UI inputs from reactive value
-
   timerange <- r$map_y_int_schule
   label_m <- r$map_l_int_schule
   fach_m <- r$map_f_int_schule
@@ -1201,7 +1181,6 @@ plot_international_schule_map <- function(r) {
   # plot
   highcharter::highchart(type = "map") %>%
     highcharter::hc_add_series_map(
-      #"countries/de/de-all",
       map = map_selection,
       df = data_map_1,
       value = "wert",
@@ -1229,9 +1208,6 @@ plot_international_schule_map <- function(r) {
                    fontFamily = "SourceSans3-Regular",
                    fontSize = "20px")
     ) %>%
-    # highcharter::hc_caption(
-    #   text = "...",  style = list(color= "white", fontSize = "12px")
-    # ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>% highcharter::hc_size(1000, 600) %>%
@@ -1252,9 +1228,6 @@ plot_international_schule_map <- function(r) {
 
 plot_international_schule_item <- function(r) {
 
-  #r <- list(map_y = "2019", map_l = "TIMSS", map_f = "Mathematik", map_li = "Test-Punktzahl")
-  #r <- list(map_y = "2018", map_l = "PISA", map_f = "Mathematik",  map_li = "Test-Punktzahl")
-  # load UI inputs from reactive value
 
   timerange <- r$item_y_int_schule
   label_m <- "TIMSS"
@@ -1270,25 +1243,41 @@ plot_international_schule_item <- function(r) {
                     ordnung == "Gender") %>%
     dplyr::collect()
 
-  set_group <- function(gender, diff) {
-    # Anhanme, dass nie zweimal "Ja" kommt, sonst kein Unterschied
-    # gender <- c("Jungen", "Mädchen")
-    # gender <- c("Mädchen", "Jungen")
-    # diff <- c("Nein", "Ja")
-    # diff <- c("Nein", "Nein")
-    # diff <- c("Ja", "Nein")
-    # diff <- c("Ja", "Ja")
 
-    if (all(diff == "Nein") | all(diff == "Ja")) {
+  set_group <- function(gender, diff) {
+    # Prüfen, ob alle Werte "
+    if (all(is.na(diff))) {
       out <- "kein signifikanter Unterschied"
-    } else if (diff[gender == "Jungen"] == "Ja") {
+
+    } else if (any(diff[gender == "Jungen"] == "Ja", na.rm = TRUE)) {
       out <- "Jungen signifikant besser"
-    } else if (diff[gender == "Mädchen"] == "Ja") {
+
+    } else if (any(diff[gender == "Mädchen"] == "Ja", na.rm = TRUE)) {
       out <- "Mädchen signifikant besser"
+
+    } else {
+      out <- "kein signifikanter Unterschied"
     }
 
     return(out)
   }
+
+  # set_group <- function(gender, diff) {
+  #
+  #
+  #   if (all(diff == "Nein", na.rm = TRUE) | all(diff == "Ja", na.rm = TRUE)) {
+  #     out <- "kein signifikanter Unterschied"
+  #   } else if (diff[gender == "Jungen"] == "Ja") {
+  #     out <- "Jungen signifikant besser"
+  #   } else if (diff[gender == "Mädchen"] == "Ja") {
+  #     out <- "Mädchen signifikant besser"
+  #   } else if(is.na(diff)){
+  #
+  #     out <- "No data"
+  #   }
+  #
+  #   return(out)
+  # }
 
   # enthält den Text für den plot
   group_col_dt <- data.frame(
@@ -1309,7 +1298,7 @@ plot_international_schule_item <- function(r) {
   plot_data <- df %>%
     dplyr::group_by(land) %>%
     dplyr::summarise(group = set_group(gender = indikator,
-                                       diff = geschlecht_diff),
+                                       diff = `signifikant höher gegenüber anderem geschlecht`),
                      count = 1) %>%
     dplyr::left_join(y = group_col_dt, by = "group") %>%
     dplyr::left_join(y = wert_dt, by = "land") %>%
@@ -1374,25 +1363,201 @@ plot_international_schule_item <- function(r) {
     ) %>%
     highcharter::hc_size(580, 450) %>%
     highcharter::hc_credits(enabled = FALSE)
-  #%>%
-  # highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-  #                        verticalAlign = "bottom")
+
 
 
   return(out)
 }
 
 
+# plot_international_schule_migration <- function(r) {
+#
+#
+#   timerange <- r$line_y_int_schule
+#   label_m <- r$line_l_int_schule
+#   fach_m <- r$line_f_int_schule
+#   leistungsindikator_m <- r$line_li_int_schule
+#
+#
+#   if (is.null(fach_m)) { fach_m <- ""}
+#
+#   if (label_m == "TIMSS") {
+#     this_ordnung <- switch(
+#       leistungsindikator_m,
+#       "nach Geschlecht" = "Gender",
+#       "nach sozialem Status" = "Ressourcen"
+#     )
+#     this_indikator <- switch(
+#       leistungsindikator_m,
+#       "nach Geschlecht" = c("Jungen", "Mädchen"),
+#       "nach sozialem Status" = c("Viele Ressourcen",
+#                                  "Einige Ressourcen",
+#                                  "Wenige Ressourcen")
+#     )
+#     this_typ <- switch(
+#       leistungsindikator_m,
+#       "nach Geschlecht" = "Test-Punktzahl",
+#       "nach sozialem Status" = "Gemittelte Test-Punktzahl"
+#     )
+#
+#
+#
+#     df <- dplyr::tbl(con, from = "schule_timss") %>%
+#       dplyr::filter(ordnung == this_ordnung &
+#                       indikator %in% this_indikator &
+#                       typ == this_typ) %>%
+#       dplyr::collect()
+#
+#     help_l <- "4. Klasse"
+#
+#     # Labels anpassen
+#
+#     df$indikator[df$indikator == "Viele Ressourcen"] <- "hoher sozialer Status"
+#     df$indikator[df$indikator == "Einige Ressourcen"] <- "mittlerer sozialer Status"
+#     df$indikator[df$indikator == "Wenige Ressourcen"] <- "niedriger sozialer Status"
+#
+#   }
+#   if (label_m == "PISA") {
+#
+#     this_bereich <- switch(
+#       leistungsindikator_m,
+#       "nach Geschlecht" = "Ländermittel",
+#       "nach Zuwanderungsgeschichte" = "Migrationshintergrund",
+#       "nach Bildungskapital" = "Bücher im Haushalt"
+#     )
+#
+#     this_indikator <- switch(
+#       leistungsindikator_m,
+#       "nach Geschlecht" = c("Jungen", "Mädchen"),
+#       "nach Zuwanderungsgeschichte" = c("Keiner",
+#                                         "Zweite Generation",
+#                                         "Erste Generation"),
+#       "nach Bildungskapital" = c("0-10", "1-10", "26-100", "Mehr als 500")
+#     )
+#
+#
+#
+#
+#     df <- dplyr::tbl(con, from = "schule_pisa") %>%
+#       dplyr::filter(bereich == this_bereich &
+#                       indikator %in% this_indikator) %>%
+#       dplyr::collect()
+#
+#     # Labels anpassen
+#     df$indikator[df$indikator == "Keiner"] <- "ohne Zuwanderungsgeschichte"
+#     df$indikator[df$indikator == "Zweite Generation"] <- "nur Eltern zugewandert"
+#     df$indikator[df$indikator == "Erste Generation"] <- "Kind selbst zugewandert"
+#     df$indikator[df$indikator == "0-10"] <- "sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)"
+#     df$indikator[df$indikator == "26-100"] <- "niedriges Bildungskapital (bis zu 100 Bücher zuhause)"
+#     df$indikator[df$indikator == "Mehr als 500"] <- "hohes Bildungskapital (über 500 Bücher zuhause)"
+#     df$indikator[df$indikator == "1-10"] <- "sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)"
+#
+#     help_l <- "9. & 10. Klasse"
+#   }
+#
+#
+#   # filter dataset based on UI inputs
+#
+#
+#   dfs <- df %>%
+#     dplyr::filter(jahr == timerange &
+#                     fach == fach_m)
+#
+#   used_lands <- dfs %>%
+#     dplyr::filter(!is.na(wert)) %>%
+#     dplyr::pull(land) %>%
+#     unique()
+#
+#   dfs <- dfs %>%
+#     dplyr::filter(land %in% used_lands)
+#
+#   #Trennpunkte für lange Zahlen ergänzen
+#   dfs$display_wert <- prettyNum(round(dfs$wert, 1),
+#                                 big.mark = ".",
+#                                 decimal.mark = ",")
+#
+#
+#   data_line <- dfs %>%
+#     dplyr::select(land, wert, display_wert, indikator)
+#
+#   line_colors <- c("#B16FAB", "#154194", "#35BD97",
+#                    "#8893A7", "#FBBF24", "#9D7265")
+#   color <- line_colors[seq_along(this_indikator)]
+#
+#   # plot
+#   highcharter::hchart(
+#     object = data_line,
+#     type = 'line',
+#     highcharter::hcaes(y = wert, x = land, group = indikator)
+#   ) %>%
+#     highcharter::hc_plotOptions(column = list(pointWidth = 90)) %>%
+#     highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> {point.display_wert} Pkt") %>%
+#     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth = 100) %>%
+#     highcharter::hc_xAxis(
+#       title = list(text = ""),
+#       labels = list(
+#         rotation = 310,
+#         formatter = highcharter::JS(
+#           "function () {
+#           if ('Deutschland' === this.value) {
+#             return '<span style=\"font-weight: bold;\">' + this.value + '</span>';
+#           } else {
+#             return this.value;
+#           }
+#         }"
+#         )
+#       ),
+#       categories = unique(data_line$land),
+#       min = 0,
+#       max = 15,
+#       scrollbar = list(enabled = TRUE, liveRedraw = TRUE)
+#   ) %>%
+#     highcharter::hc_colors(color) %>%
+#     highcharter::hc_title(
+#       text = paste0(
+#         "Durchschnittliche Leistung von Schüler:innen der ", help_l,
+#         " im ", fach_m, "-Kompetenztest von ", label_m, " ",
+#         leistungsindikator_m, " (", timerange, ")"
+#       ),
+#       margin = 45,
+#       align = "center",
+#       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+#     ) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+#     ) %>%
+#     highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+#     highcharter::hc_exporting(
+#       enabled = FALSE,
+#       buttons = list(contextButton = list(
+#         symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+#         onclick = highcharter::JS("function () {
+#                                         this.exportChart({ type: 'image/png' }); }"),
+#         align = 'right',
+#         verticalAlign = 'bottom',
+#         theme = list(states = list(hover = list(fill = '#FFFFFF')))
+#       )
+#       )
+#     )
+#
+#
+#
+#
+# }
+
+
+
+## dumbbell versuch :D
+
+
 plot_international_schule_migration <- function(r) {
 
-  #r <- list(line_y_int_schule = "2019", line_l_int_schule = "TIMSS", line_f_int_schule = "Mathematik", line_li_int_schule = "nach Geschlecht")
-  # r <- list(line_y_int_schule = "2018", line_l_int_schule = "PISA", line_f_int_schule = "Mathematik", line_li_int_schule = "nach Zuwanderungsgeschichte")
-  # load UI inputs from reactive value
 
   timerange <- r$line_y_int_schule
   label_m <- r$line_l_int_schule
   fach_m <- r$line_f_int_schule
   leistungsindikator_m <- r$line_li_int_schule
+  lander <- r$regio_international_schule
 
 
   if (is.null(fach_m)) { fach_m <- ""}
@@ -1452,10 +1617,7 @@ plot_international_schule_migration <- function(r) {
     )
 
 
-# this_bereich <<- "Migrationshintergrund"
-# this_indikator <<- c("Keiner",
-#                      "Zweite Generation",
-#                      "Erste Generation")
+
 
     df <- dplyr::tbl(con, from = "schule_pisa") %>%
       dplyr::filter(bereich == this_bereich &
@@ -1503,104 +1665,499 @@ plot_international_schule_migration <- function(r) {
                    "#8893A7", "#FBBF24", "#9D7265")
   color <- line_colors[seq_along(this_indikator)]
 
-  # plot
-  highcharter::hchart(
-    object = data_line,
-    type = 'line',
-    highcharter::hcaes(y = wert, x = land, group = indikator)
-  ) %>%
-    highcharter::hc_plotOptions(column = list(pointWidth = 90)) %>%
-    highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> {point.display_wert} Pkt") %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth = 100) %>%
-    highcharter::hc_xAxis(
-      title = list(text = ""),
-      labels = list(
-        rotation = 310,
-        formatter = highcharter::JS(
-          "function () {
-          if ('Deutschland' === this.value) {
-            return '<span style=\"font-weight: bold;\">' + this.value + '</span>';
-          } else {
-            return this.value;
-          }
-        }"
-        )
-      ),
-      categories = unique(data_line$land),
-      min = 0,
-      max = 15,
-      scrollbar = list(enabled = TRUE, liveRedraw = TRUE)
-  ) %>%
-    highcharter::hc_colors(color) %>%
-    highcharter::hc_title(
-      text = paste0(
-        "Durchschnittliche Leistung von Schüler:innen der ", help_l,
-        " im ", fach_m, "-Kompetenztest von ", label_m, " ",
-        leistungsindikator_m, " (", timerange, ")"
-      ),
-      margin = 45,
-      align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-    highcharter::hc_exporting(
-      enabled = FALSE,
-      buttons = list(contextButton = list(
-        symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-        onclick = highcharter::JS("function () {
-                                        this.exportChart({ type: 'image/png' }); }"),
-        align = 'right',
-        verticalAlign = 'bottom',
-        theme = list(states = list(hover = list(fill = '#FFFFFF')))
-      )
-      )
+  dfs <- dfs %>%
+    group_by(land, indikator) %>%
+    summarise(wert = mean(wert, na.rm = TRUE), .groups = "drop")
+  # browser()
+
+  plot_data <- data_line %>%
+    select(land, indikator, wert) %>%
+    pivot_wider(
+      names_from = indikator,
+      values_from = wert,
+      values_fn = mean,#??????????????????????????????????????????????
+      values_fill = NA
     )
 
-  # highcharter::hchart(
-  #   object = data_line,
-  #   type = 'line',
-  #   highcharter::hcaes(y = wert, x = land, group = indikator)
-  # ) %>%
-  #   highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
-  #   highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> {point.display_wert} Pkt")%>%
-  #   highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth=100) %>%
-  #   highcharter::hc_xAxis(title = list(text = ""), labels = list(rotation = 270,
-  #                                                                style = list(
-  #                                                                  fontWeight = ifelse(data_line$land == "Deutschland", "bold", "normal")
-  #                                                                )),
-  #                         categories = data_line$land) %>%
-  #   #  highcharter::hc_plotOptions(column = list(stacking = "percent")) %>%
-  #   #highcharter::hc_colors(c("#efe8e6","#D0A9CD", "#b16fab")) %>%
-  #   highcharter::hc_colors(color) %>%
-  #   highcharter::hc_title(
-  #     text = paste0("Durchschnittliche Leistung von Schüler:innen der ", help_l,
-  #                   " im ", fach_m, "-Kompetenztest von ",label_m, " ",
-  #                   leistungsindikator_m, " (", timerange, ")"),
-  #     margin = 45,
-  #     align = "center",
-  #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  #   highcharter::hc_chart(
-  #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+
+    if (label_m == "TIMSS" && leistungsindikator_m == "nach sozialem Status") {
+
+      plot_data <- plot_data %>%
+        rename(
+          basis_wert = `niedriger sozialer Status`,
+          mittel_wert = `mittlerer sozialer Status`,
+          wert = `hoher sozialer Status`
+        )
+
+      plot_data <- plot_data %>%
+        filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
+
+      plot_data <- plot_data %>%
+        filter(land %in% lander)
+
+      plot_data <- plot_data %>%
+        arrange(desc(basis_wert))  # Sortieren absteigend nach `basis_wert`
+
+
+      ####
+      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+        plotly::add_segments(
+          x = ~basis_wert,
+          xend = ~mittel_wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
+                         paste0("Basis: ", basis_wert, "<br>Mittel: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_segments(
+          x = ~mittel_wert,
+          xend = ~wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
+                         paste0("Mittel: ", mittel_wert, "<br>Positiv: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~basis_wert,
+          y = ~land,
+          name = "Niedriger Status",
+          marker = list(
+            size = 12,
+            color = "#D0A9CD"
+          ),
+          text = ~ifelse(is.na(basis_wert), NA, paste0("Niedriger Status: ", basis_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~mittel_wert,
+          y = ~land,
+          name = "Mittlerer Status",
+          marker = list(
+            size = 12,
+            color = "#66cbaf"
+          ),
+          text = ~ifelse(is.na(mittel_wert), NA, paste0("Mittlerer Status: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~wert,
+          y = ~land,
+          name = "Hoher Status",
+          marker = list(
+            size = 12,
+            color = "#b16fab"
+          ),
+          text = ~ifelse(is.na(wert), NA, paste0("Hoher Status: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        # Layout anpassen
+        plotly::layout(
+          title = "Vergleich der sozialen Statuswerte",
+          xaxis = list(title = "Wert"),
+          yaxis = list(title = "Land"),
+          margin = list(l = 100, r = 50, t = 50, b = 50),
+          hoverlabel = list(bgcolor = "white"),
+          legend = list(
+            orientation = "h",
+            x = 0.5,
+            y = -0.2,
+            xanchor = "center",
+            yanchor = "top"
+          )
+        )
+
+
+    } else if (label_m == "TIMSS" && leistungsindikator_m == "nach Geschlecht") {
+
+      plot_data <- plot_data %>%
+        rename(
+          basis_wert = Jungen,
+          wert = Mädchen
+        )
+
+      plot_data <- plot_data %>%
+        filter(!is.na(wert) | !is.na(basis_wert))
+
+      plot_data <- plot_data %>%
+        filter(land %in% lander)
+
+      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+        plotly::add_segments(
+          x = ~basis_wert,
+          xend = ~wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(basis_wert) | is.na(wert), NA,
+                         paste0("Jungen: ", basis_wert, "<br>Mädchen: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~basis_wert,
+          y = ~land,
+          name = "Jungen",
+          marker = list(
+            size = 12,
+            color = "#D0A9CD"
+          ),
+          text = ~ifelse(is.na(basis_wert), NA, paste0("Jungen: ", basis_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~wert,
+          y = ~land,
+          name = "Mädchen",
+          marker = list(
+            size = 12,
+            color = "#b16fab"
+          ),
+          text = ~ifelse(is.na(wert), NA, paste0("Mädchen: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        # Layout anpassen
+        plotly::layout(
+          title = "Vergleich der Geschlechter",
+          xaxis = list(title = "Wert"),
+          yaxis = list(title = "Land"),
+          margin = list(l = 100, r = 50, t = 50, b = 50),
+          hoverlabel = list(bgcolor = "white"),
+          legend = list(
+            orientation = "h",
+            x = 0.5,
+            y = -0.2,
+            xanchor = "center",
+            yanchor = "top"
+          )
+        )
+
+
+
+    } else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
+      plot_data <- plot_data %>%
+        rename(
+          basis_wert = Jungen,
+          wert = Mädchen
+        )
+
+      plot_data <- plot_data %>%
+        filter(!is.na(wert) | !is.na(basis_wert))
+
+      plot_data <- plot_data %>%
+        filter(land %in% lander)
+
+      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+        plotly::add_segments(
+          x = ~basis_wert,
+          xend = ~wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(basis_wert) | is.na(wert), NA,
+                         paste0("Jungen: ", basis_wert, "<br>Mädchen: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~basis_wert,
+          y = ~land,
+          name = "Jungen",
+          marker = list(
+            size = 12,
+            color = "#D0A9CD"
+          ),
+          text = ~ifelse(is.na(basis_wert), NA, paste0("Jungen: ", basis_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~wert,
+          y = ~land,
+          name = "Mädchen",
+          marker = list(
+            size = 12,
+            color = "#b16fab"
+          ),
+          text = ~ifelse(is.na(wert), NA, paste0("Mädchen: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        # Layout anpassen
+        plotly::layout(
+          title = "Vergleich der Geschlechter",
+          xaxis = list(title = "Wert"),
+          yaxis = list(title = "Land"),
+          margin = list(l = 100, r = 50, t = 50, b = 50),
+          hoverlabel = list(bgcolor = "white"),
+          legend = list(
+            orientation = "h",
+            x = 0.5,
+            y = -0.2,
+            xanchor = "center",
+            yanchor = "top"
+          )
+        )
+
+
+
+    } else if (label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte") {
+      plot_data <- plot_data %>%
+        rename(
+          basis_wert = `ohne Zuwanderungsgeschichte`,
+          mittel_wert = `nur Eltern zugewandert`,
+          wert = `Kind selbst zugewandert`
+        )
+
+
+      plot_data <- plot_data %>%
+        filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
+
+      plot_data <- plot_data %>%
+        filter(land %in% lander)
+
+      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+        plotly::add_segments(
+          x = ~basis_wert,
+          xend = ~mittel_wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
+                         paste0("Ohne Zuwanderungsgeschichte: ", basis_wert, "<br>Erste Generation: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_segments(
+          x = ~mittel_wert,
+          xend = ~wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
+                         paste0("Erste Generation: ", mittel_wert, "<br>Zweite Generation: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~basis_wert,
+          y = ~land,
+          name = "Ohne Zuwanderungsgeschichte",
+          marker = list(
+            size = 12,
+            color = "#D0A9CD"
+          ),
+          text = ~ifelse(is.na(basis_wert), NA, paste0("Ohne Zuwanderungsgeschichte: ", basis_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~mittel_wert,
+          y = ~land,
+          name = "Erste Generation",
+          marker = list(
+            size = 12,
+            color = "#66cbaf"
+          ),
+          text = ~ifelse(is.na(mittel_wert), NA, paste0("Erste Generation: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~wert,
+          y = ~land,
+          name = "Zweite Generation",
+          marker = list(
+            size = 12,
+            color = "#b16fab"
+          ),
+          text = ~ifelse(is.na(wert), NA, paste0("Zweite Generation: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        # Layout anpassen
+        plotly::layout(
+          title = "Vergleich der Zuwanderungsgeschichte",
+          xaxis = list(title = "Wert"),
+          yaxis = list(title = "Land"),
+          margin = list(l = 100, r = 50, t = 50, b = 50),
+          hoverlabel = list(bgcolor = "white"),
+          legend = list(
+            orientation = "h",
+            x = 0.5,
+            y = -0.2,
+            xanchor = "center",
+            yanchor = "top"
+          )
+        )
+
+
+    } else if (label_m == "PISA" && leistungsindikator_m == "nach Bildungskapital") {
+      plot_data <- plot_data %>%
+        rename(
+          basis_wert = `sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)`,
+          mittel_wert = `niedriges Bildungskapital (bis zu 100 Bücher zuhause)`,
+          wert = `hohes Bildungskapital (über 500 Bücher zuhause)`
+        )
+
+      plot_data <- plot_data %>%
+        filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
+
+      plot_data <- plot_data %>%
+        filter(land %in% lander)
+
+      fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+        plotly::add_segments(
+          x = ~basis_wert,
+          xend = ~mittel_wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
+                         paste0("Sehr niedriges Bildungskapital: ", basis_wert, "<br>Sehr niedriges Bildungskapital: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_segments(
+          x = ~mittel_wert,
+          xend = ~wert,
+          y = ~land,
+          yend = ~land,
+          showlegend = FALSE,
+          text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
+                         paste0("Niedriges Bildungskapital: ", mittel_wert, "<br>Hohes Bildungskapital: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~basis_wert,
+          y = ~land,
+          name = "Sehr niedriges Bildungskapital",
+          marker = list(
+            size = 12,
+            color = "#D0A9CD"
+          ),
+          text = ~ifelse(is.na(basis_wert), NA, paste0("Sehr niedriges Bildungskapital: ", basis_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~mittel_wert,
+          y = ~land,
+          name = "Sehr niedriges Bildungskapital",
+          marker = list(
+            size = 12,
+            color = "#66cbaf"
+          ),
+          text = ~ifelse(is.na(mittel_wert), NA, paste0("Sehr niedriges Bildungskapital: ", mittel_wert)),
+          hoverinfo = "text"
+        ) %>%
+        plotly::add_markers(
+          x = ~wert,
+          y = ~land,
+          name = "Hohes Bildungskapital",
+          marker = list(
+            size = 12,
+            color = "#b16fab"
+          ),
+          text = ~ifelse(is.na(wert), NA, paste0("Hohes Bildungskapital: ", wert)),
+          hoverinfo = "text"
+        ) %>%
+        # Layout anpassen
+        plotly::layout(
+          title = "Vergleich des Bildungskapitals",
+          xaxis = list(title = "Wert"),
+          yaxis = list(title = "Land"),
+          margin = list(l = 100, r = 50, t = 50, b = 50),
+          hoverlabel = list(bgcolor = "white"),
+          legend = list(
+            orientation = "h",
+            x = 0.5,
+            y = -0.2,
+            xanchor = "center",
+            yanchor = "top"
+          )
+        )
+    } else {
+
+    }
+
+
+
+
+
+
+
+#####
+
+  # fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
+  #   plotly::add_segments(
+  #     x = ~basis_wert,
+  #     xend = ~mittel_wert,
+  #     y = ~land,
+  #     yend = ~land,
+  #     showlegend = FALSE,
+  #     text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
+  #                    paste0("Basis: ", basis_wert, "<br>Mittel: ", mittel_wert)),
+  #     hoverinfo = "text"
   #   ) %>%
-  #   highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-  #   highcharter::hc_exporting(
-  #     enabled = FALSE,
-  #     buttons = list(contextButton = list(
-  #       symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-  #       onclick = highcharter::JS("function () {
-  #                                                           this.exportChart({ type: 'image/png' }); }"),
-  #       align = 'right',
-  #       verticalAlign = 'bottom',
-  #       theme = list(states = list(hover = list(fill = '#FFFFFF')))
-  #     )
+  #   plotly::add_segments(
+  #     x = ~mittel_wert,
+  #     xend = ~wert,
+  #     y = ~land,
+  #     yend = ~land,
+  #     showlegend = FALSE,
+  #     text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
+  #                    paste0("Mittel: ", mittel_wert, "<br>Positiv: ", wert)),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   plotly::add_markers(
+  #     x = ~basis_wert,
+  #     y = ~land,
+  #     name = "Niedriger Status",
+  #     marker = list(
+  #       size = 12,
+  #       color = "#D0A9CD"
+  #     ),
+  #     text = ~ifelse(is.na(basis_wert), NA, paste0("Niedriger Status: ", basis_wert)),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   plotly::add_markers(
+  #     x = ~mittel_wert,
+  #     y = ~land,
+  #     name = "Mittlerer Status",
+  #     marker = list(
+  #       size = 12,
+  #       color = "#66cbaf"
+  #     ),
+  #     text = ~ifelse(is.na(mittel_wert), NA, paste0("Mittlerer Status: ", mittel_wert)),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   plotly::add_markers(
+  #     x = ~wert,
+  #     y = ~land,
+  #     name = "Hoher Status",
+  #     marker = list(
+  #       size = 12,
+  #       color = "#b16fab"
+  #     ),
+  #     text = ~ifelse(is.na(wert), NA, paste0("Hoher Status: ", wert)),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   # Layout anpassen
+  #   plotly::layout(
+  #     title = "Vergleich der sozialen Statuswerte",
+  #     xaxis = list(title = "Wert"),
+  #     yaxis = list(title = "Land"),
+  #     margin = list(l = 100, r = 50, t = 50, b = 50),
+  #     hoverlabel = list(bgcolor = "white"),
+  #     legend = list(
+  #       orientation = "h",
+  #       x = 0.5,
+  #       y = -0.2,
+  #       xanchor = "center",
+  #       yanchor = "top"
   #     )
   #   )
 
 
+  fig
+  return(fig)
+
 }
+
+
 
 
 ## arbeitsmarkt ----
@@ -1796,7 +2353,6 @@ plot_international_map_arb <- function(r) {
 
         # plot
         highcharter::hcmap(
-          #"countries/de/de-all",
           map = map_selection,
           data = data_map,
           value = "wert",
@@ -1820,9 +2376,6 @@ plot_international_map_arb <- function(r) {
             align = "center",
             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
           ) %>%
-          # highcharter::hc_caption(
-          #   text = "...",  style = list(color= "white", fontSize = "12px")
-          # ) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular")
           ) %>% highcharter::hc_size(1000, 600) %>%
@@ -1934,7 +2487,6 @@ plot_international_map_arb <- function(r) {
 
         # plot
         highcharter::hcmap(
-          #"countries/de/de-all",
           map = map_selection,
           data = data_map,
           value = "wert",
@@ -1958,9 +2510,6 @@ plot_international_map_arb <- function(r) {
             align = "center",
             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
           ) %>%
-          # highcharter::hc_caption(
-          #   text = "...",  style = list(color= "white", fontSize = "12px")
-          # ) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular")
           ) %>% highcharter::hc_size(1000, 600) %>%
@@ -2042,7 +2591,6 @@ plot_international_map_arb_gender <- function(r) {
 
       # plot
       highcharter::hcmap(
-        #"countries/de/de-all",
         map = map_selection,
         data = data_map,
         value = "wert",
@@ -2066,9 +2614,6 @@ plot_international_map_arb_gender <- function(r) {
           align = "center",
           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
         ) %>%
-        # highcharter::hc_caption(
-        #   text = "...",  style = list(color= "white", fontSize = "12px")
-        # ) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "SourceSans3-Regular")
         ) %>% highcharter::hc_size(800, 600) %>%
@@ -2188,7 +2733,6 @@ plot_international_map_arb_gender <- function(r) {
 
         # plot
         highcharter::hcmap(
-          #"countries/de/de-all",
           map = map_selection,
           data = data_map,
           value = "wert",
@@ -2212,9 +2756,6 @@ plot_international_map_arb_gender <- function(r) {
             align = "center",
             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
           ) %>%
-          # highcharter::hc_caption(
-          #   text = "...",  style = list(color= "white", fontSize = "12px")
-          # ) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular")
           ) %>% highcharter::hc_size(1000, 600) %>%
@@ -2400,9 +2941,6 @@ plot_international_map_arb_gender <- function(r) {
             align = "center",
             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
           ) %>%
-          # highcharter::hc_caption(
-          #   text = "...",  style = list(color= "white", fontSize = "12px")
-          # ) %>%
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular")
           ) %>% highcharter::hc_size(1000, 600) %>%
@@ -2769,8 +3307,6 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-        # highcharter::hc_caption(
-        #   text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
 
       plot_bottom <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
@@ -2806,8 +3342,6 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-        # highcharter::hc_caption(
-        #   text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
 
 
 
@@ -2843,8 +3377,6 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-        # highcharter::hc_caption(
-        #   text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
 
 
 
@@ -2874,14 +3406,10 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-        # highcharter::hc_caption(
-        #   text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
+
 
       out <- list(plot_top, plot_bottom)
-      # highcharter::hw_grid(
-      #   plot_top,
-      #   plot_bottom,
-      #   ncol = 2)
+
 
 
     }
@@ -3372,8 +3900,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-      # highcharter::hc_caption(
-      #   text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
 
     out <- list(plot_top, plot_bottom)
 
@@ -3408,8 +3934,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-      # highcharter::hc_caption(
-      #   text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
+
 
 
 
@@ -3439,8 +3964,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-      # highcharter::hc_caption(
-      #   text = "capt_dyn",  style = list(color= "grey", fontSize = "12px"))
 
 
     out <- list(plot_top, plot_bottom)
@@ -3455,8 +3978,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
-  #r <- list(vergleich_y_int_arbeitsmarkt = 2012,vergleich_l_int_arbeitsmarkt = c("Australien", "Ungarn", "Deutschland"),vergleich_f_int_arbeitsmarkt = "MINT")
-  # load UI inputs from reactive value
 
   timerange <- r$vergleich_y_int_arbeitsmarkt
   land_m <- r$vergleich_l_int_arbeitsmarkt
@@ -3548,7 +4069,6 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
           style = list(color = 'black'),
           backgroundColor = 'none', # Remove background color
           borderWidth = 0#, # Remove box
-          #shadow = FALSE,
         )
       )
     )
