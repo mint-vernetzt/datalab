@@ -14,6 +14,21 @@ mod_international_schule_migration_ui <- function(id){
   ns <- NS(id)
   tagList(
 
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
+
+
     p("Erhebung:"),
     shinyWidgets::radioGroupButtons(
       inputId = ns("line_l_int_schule"),
@@ -28,7 +43,7 @@ mod_international_schule_migration_ui <- function(id){
                        inputId = ns("line_y_timss_int_schule"),
                        label = NULL,
                        choices = international_ui_years(region = "TIMSS"),
-                       selected = "2019"
+                       selected = "2023"
                      ),
 
                      p("Fachbereich:"),
@@ -75,7 +90,80 @@ mod_international_schule_migration_ui <- function(id){
                        multiple = FALSE
                      )),
 
-    br(),
+    ###
+
+    p("Länder:"),
+      shinyWidgets::pickerInput(
+        inputId = ns("regio_int_schule"),
+        label = NULL,
+        choices = c(
+          "Interantionaler Durchschnitt",
+          "Deutschland",
+          "Korea, Republik von",
+          "Schweden",
+          "Dänemark",
+          "Kanada",
+          "Nordirland",
+          "Finnland",
+          "Irland",
+          "Norwegen",
+          "Singapur",
+          "Zypern",
+          "Frankreich",
+          "Ungarn",
+          "Belgien",
+          "Hongkong",
+          "Malta",
+          "Tschechische Republik",
+          "Österreich",
+          "Polen",
+          "Spanien",
+          "Taiwan",
+          "Lettland",
+          "Portugal",
+          "Slowakei",
+          "Litauen",
+          "Georgien",
+          "Russische Föderation",
+          "Bulgarien",
+          "Serbien",
+          "Japan",
+          "Katar",
+          "Kroatien",
+          "Italien",
+          "Montenegro",
+          "Bahrain",
+          "Nordmazedonien",
+          "Kasachstan",
+          "Türkei",
+          "Armenien",
+          "Albanien",
+          "Bosnien und Herzegowina",
+          "Iran",
+          "Oman",
+          "Chile",
+          "Kuwait",
+          "Kosovo",
+          "Saudi Arabien",
+          "Aserbaidschan",
+          "Südafrika",
+          "Marokko",
+          "Pakistan",
+          "Philippinen",
+          "Australien",
+          "England",
+          "Niederlande",
+          "Vereinigte Staaten",
+          "Neuseeland",
+          "Vereinigte Arabische Emirate"
+        ),
+        multiple = TRUE,
+        options =  list(
+          "max-options" = 10,
+          "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"),
+        selected = c("Interantionaler Durchschnitt", "Deutschland","Schweden", "Italien", "Türkei","Vereinigte Staaten" )
+                       ),
+    ##
 
     # TODO extract into own module, since this is repeated on a lot of modules
 
@@ -140,6 +228,11 @@ mod_international_schule_migration_server <- function(id, r){
     observeEvent(input$line_li_timss_int_schule, {
       r$line_li_int_schule <- input$line_li_timss_int_schule
     })
+
+    observeEvent(input$regio_int_schule, {
+      r$regio_international_schule <- input$regio_int_schule
+    })
+
 
 
   })

@@ -26,7 +26,7 @@ mod_international_schule_item_ui <- function(id){
       inputId = ns("item_y_timss_int_schule"),
       label = NULL,
       choices = international_ui_years(region = "TIMSS"),
-      selected = "2019"
+      selected = "2023"
     ),
   br(),
   shinyBS::bsPopover(id="ih_international_schule_item", title="",
