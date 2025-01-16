@@ -1660,6 +1660,10 @@ plot_international_schule_migration <- function(r) {
       plot_data <- plot_data %>%
         filter(land %in% lander)
 
+      plot_data <- plot_data %>%
+        arrange(desc(basis_wert))  # Sortieren absteigend nach `basis_wert`
+
+
       ####
       fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
         plotly::add_segments(
