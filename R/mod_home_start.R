@@ -67,7 +67,7 @@ mod_home_start_ui <- function(id){
         p(
           #style = "text-align: left; font-size = 16px",
           "Studierendenzahlen: Destatis 2024, auf Anfrage"),
-         p("Schülerzahlen: KMK 2023, auf Anfrage"),
+         p("Schülerzahlen: KMK 2024, auf Anfrage"),
           p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2024, auf Anfrage")
         )
       ),
@@ -86,8 +86,7 @@ mod_home_start_ui <- function(id){
           Unter den Beschäftigten ist der MINT-Anteil geringer. Hier üben Stand 2023 rund 23 %
           der sozialversicherungspflichtigen Beschäftigten eine MINT-Tätigkeit aus.
           In den letzten zehn Jahren sind die prozentualen Anteile relativ konstant geblieben.
-          Leichte Veränderungen sieht man in den absoluten Zahlen."),
-          p("Die Belegungszahlen der Schüler:innen für 2023 liegen noch nicht vor.")
+          Leichte Veränderungen sieht man in den absoluten Zahlen.")
         ),
         column(
           width = 12,
@@ -104,7 +103,7 @@ mod_home_start_ui <- function(id){
                                                             color = "#154194"),
                                br(),
                                p(style="font-size:12px;color:grey",
-                                 "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                 "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
                         shinyBS::bsPopover(id="h_alle_mint_1", title = "",
                                            content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
@@ -128,7 +127,7 @@ mod_home_start_ui <- function(id){
                           shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_1")),
                                                        color = "#154194"),
                           br(),
-                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_mint_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
                                              placement = "top",
@@ -154,7 +153,7 @@ mod_home_start_ui <- function(id){
                    #             shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_mint")),
                    #                                          color = "#154194"),
                    #             br(),
-                   #             p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                   #             p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                    #             shinyBS::bsPopover(id="h_alle_mint_3", title = "",
                    #                                content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
                    #                                placement = "top",
@@ -177,9 +176,7 @@ mod_home_start_ui <- function(id){
           In den MINT-Berufen sind nur 17 % Frauen vertreten. Im Vergleich dazu liegt der Frauenanteil in \"Nicht-MINT\"-Berufen bei 55 %,
           in \"Nicht-MINT\"-Studiengängen sogar bei über 60 %.", br(),
             "In den letzten zehn Jahren gab es diesbezüglich nur geringe Veränderungen.
-        Es kam zu leichten Zunahmen des Frauenanteils im Studium und im Beruf."),
-          p("Die Belegungszahlen der Schüler:innen für 2023 liegen noch nicht vor.")
-
+        Es kam zu leichten Zunahmen des Frauenanteils im Studium und im Beruf.")
         ),
         column(
           width = 12,
@@ -196,7 +193,7 @@ mod_home_start_ui <- function(id){
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey",
-                                  "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                  "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_frauen_1", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. <br><br>Baden-Württemberg erfasst keine geschelchterspezifischen Kursbelegungszahlen von Schüler:innen."),
                                                   placement = "top",
@@ -220,7 +217,7 @@ mod_home_start_ui <- function(id){
                           shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_mint")),
                                                        color = "#154194"),
 
-                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_frauen_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.<br><br>Baden-Württemberg erfasst keine geschelchterspezifischen Kursbelegungszahlen von Schüler:innen."),
                                              placement = "top",
@@ -243,7 +240,7 @@ mod_home_start_ui <- function(id){
                     #            shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_gender")),
                     #                                         color = "#154194"),
                     #
-                    #            p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                    #            p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                     #            shinyBS::bsPopover(id="h_alle_frauen_3", title = "",
                     #                               content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                     #                               placement = "top",

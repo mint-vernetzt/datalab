@@ -77,7 +77,7 @@ mod_schule_kurse_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Schüler:innenzahlen der Oberstufe: Kultusministerkonferenz (KMK), 2023, auf Anfrage"),
+          "Schüler:innenzahlen der Oberstufe: Kultusministerkonferenz (KMK), 2024, auf Anfrage"),
         p(style = "text-align: left; font-size = 16px",
           "Kompetenzdaten in Deutschland: Institut zur Qualitätsentwicklung im Bildungswesen (IQB), 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
         p(style = "text-align: left; font-size = 16px",
