@@ -42,21 +42,21 @@ mod_studium_server <- function(id,
   # Box 3
   mod_studium_studienzahl_einstieg_gender_server("mod_studium_studienzahl_einstieg_gender_ui_1", r)
   mod_studium_studienzahl_einstieg_verlauf_gender_server("mod_studium_studienzahl_einstieg_verlauf_gender_ui_1", r)
-  mod_studium_studienzahl_einstieg_comparison_gender_server("mod_studium_studienzahl_einstieg_comparison_gender_ui_1", r)
+  #mod_studium_studienzahl_einstieg_comparison_gender_server("mod_studium_studienzahl_einstieg_comparison_gender_ui_1", r)
 
   # Box 4
-  mod_studium_studienzahl_choice_1_server("mod_studium_studienzahl_choice_ui_1_1", r)
-  mod_studium_studienzahl_verlauf_bl_subject_server("mod_studium_studienzahl_verlauf_bl_subject_ui_1", r)
-  mod_studium_studienzahl_ranking_bl_subject_server("mod_studium_studienzahl_ranking_bl_subject_ui_1", r)
+  #mod_studium_studienzahl_choice_1_server("mod_studium_studienzahl_choice_ui_1_1", r)
+  #mod_studium_studienzahl_verlauf_bl_subject_server("mod_studium_studienzahl_verlauf_bl_subject_ui_1", r)
+  #mod_studium_studienzahl_ranking_bl_subject_server("mod_studium_studienzahl_ranking_bl_subject_ui_1", r)
 
   # Box 5
   mod_studium_choice_gender_server("mod_studium_studienzahl_choice_gender_ui",r)
-  mod_studium_studienzahl_verlauf_bl_subject_gender_server("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1",r)
+  #mod_studium_studienzahl_verlauf_bl_subject_gender_server("mod_studium_studienzahl_verlauf_bl_subject_gender_ui_1",r)
 
   # Box 6
-  mod_studium_studienzahl_bl_map_server("mod_studium_studienzahl_bl_map", r)
-  mod_studium_studienzahl_bl_verlauf_server("mod_studium_studienzahl_bl_verlauf", r)
-  mod_studium_studienzahl_bl_vergleich_server("studium_studienzahl_bl_vergleich", r)
+  #mod_studium_studienzahl_bl_map_server("mod_studium_studienzahl_bl_map", r)
+  #mod_studium_studienzahl_bl_verlauf_server("mod_studium_studienzahl_bl_verlauf", r)
+  #mod_studium_studienzahl_bl_vergleich_server("studium_studienzahl_bl_vergleich", r)
 
   # Box 7
 
