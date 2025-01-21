@@ -386,7 +386,7 @@ mod_fachkraft_start_ui <- function(id){
 
 
               p(style="font-size:12px;color:grey",
-                "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
               shinyBS::bsPopover(
                 id="h_fachkraft-berufsgruppen_1", title="",
                 content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
@@ -415,7 +415,7 @@ mod_fachkraft_start_ui <- function(id){
 
 
               p(style="font-size:12px;color:grey",
-                "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
               shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",
                                  content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
                                  placement = "top",
@@ -448,7 +448,7 @@ mod_fachkraft_start_ui <- function(id){
                                              color = "#154194"),
 
                 p(style="font-size:12px;color:grey",
-                  "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                  "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                 shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_4", title="",
                                    content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung der Vakanzzeit und der Arbeitslosen-Stellen-Relation finden Sie in der jeweiligen Infobox. Diese sind in der Beschreibung über der Grafik verlinkt."),
                                    placement = "top",
@@ -540,7 +540,7 @@ mod_fachkraft_start_ui <- function(id){
                                            color = "#154194"),
 
               p(style="font-size:12px;color:grey",
-                "Quelle der Daten: Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
               shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
                                  content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
