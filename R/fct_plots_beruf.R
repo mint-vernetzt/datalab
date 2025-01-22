@@ -2295,7 +2295,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
 
       # plot
-      out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = region)) %>%
+      out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = bundesland)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
         highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
