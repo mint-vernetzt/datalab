@@ -71,11 +71,6 @@ mod_fachkraft_start_ui <- function(id){
         p(style = "text-align: left; font-size = 16px",tags$a(href="#fachkraft-berufe",
                                                               span(tags$b(span("Berufsebene:")))), "aktueller Fachkräftebedarf in MINT"
         )
-        #,
-        # p(style = "text-align: left; font-size = 16px",tags$a(href="#studium_international",
-        #                                                       span(tags$b(span("Internationale Studierende in MINT:")))), "Wie hoch ist der Anteil von internationalen Studierenden in den MINT-Fächern?"
-        #
-        # )
       ),
 
       shinydashboard::box(
@@ -361,9 +356,6 @@ mod_fachkraft_start_ui <- function(id){
             tabPanel(
             title = "Engpassrisiko im MINT-Bereich", br(),
 
-            # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-            # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
             shiny::sidebarPanel(
               width = 3,
               mod_fachkraft_item_epa_ui("fachkraft_item_epa_1"),
@@ -399,9 +391,6 @@ mod_fachkraft_start_ui <- function(id){
           ),
           tabPanel(
             "Verteilung MINT-Bereich nach Engpassrisiko", br(),
-
-            # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-            # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
             shiny::sidebarPanel(
               width = 3,
@@ -486,7 +475,6 @@ mod_fachkraft_start_ui <- function(id){
         br(),
         column(width = 2,
         shinyBS::bsPopover(id="i_engpass_analyse_def_2", title = "",
-
                            placement = "right",
                            trigger = "click",
                            options = list(container = "body",
@@ -588,17 +576,7 @@ mod_fachkraft_start_server <- function(id, r){
       plot_fachkraft_prognose(r)
     })
 
-    # # Plot-List erstellen für Output
-    # output$plot_fachkraft_prog_item_1 <- renderUI({
-    #   plot_list <- plot_fachkraft_prognose(r)
-    #   r$plot_fachkraft_prog_item_1 <- plot_list
-    #
-    #   r$plot_fachkraft_prog_item_1_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_prog_item_1
-    #   )
-    #
-    #   plot_list
-    # })
+
     # # Download erstellen
     # output$download_btn_plot_fachkraft_prog_item_1 <- downloadHandler(
     #   contentType = "image/png",
@@ -627,30 +605,12 @@ mod_fachkraft_start_server <- function(id, r){
       plot_fachkraft_prognose_detail(r)
       })
 
-    # output$plot_fachkraft_prog_detail_item_1 <- renderUI({
-    #
-    #   plot_list <- plot_fachkraft_prognose_detail(r)
-    #   r$plot_fachkraft_prog_detail_item_1 <- plot_list
-    #
-    #   r$plot_fachkraft_prog_detail_item_1_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_prog_detail_item_1
-    #   )
-    #
-    #   plot_list
-    # })
 
     # ohne Download
     output$plot_fachkraft_wirkhebel_analyse_1 <- plotly::renderPlotly({
       plot_fachkraft_wirkhebel_analyse(r)
       })
 
-    # output$plot_fachkraft_wirkhebel_analyse_1 <- plotly::renderPlotly({
-    #
-    #   plot_list <- plot_fachkraft_wirkhebel_analyse(r)
-    #   r$plot_fachkraft_wirkhebel_analyse_1 <- plot_list
-    #
-    #   plot_list
-    # })
 
 
 
@@ -666,37 +626,9 @@ mod_fachkraft_start_server <- function(id, r){
 
   # Box 2 - Fachkraft - Berufsgruppen-Ebene ----
 
-    ## EPA nach MINT
 
-    # Download kurz mal raus
-    # output$plot_fachkraft_epa_item_1 <- highcharter::renderHighchart({
-    #   plot_list <- plot_fachkraft_epa_item(r)
-    #
-    #   # return plots
-    #   out <- highcharter::hw_grid(
-    #     plot_list,
-    #     ncol = 2)
-    #   out
-    #
-    # })
 
     output$plot_fachkraft_epa_item_1 <- renderUI({
-      # plot_list <- plot_fachkraft_epa_item(r)
-      # r$plot_fachkraft_epa_item_1_left <- plot_list[[1]]
-      # r$plot_fachkraft_epa_item_1_right <- plot_list[[2]]
-      #
-      # r$plot_fachkraft_epa_item_1_left_title <- get_plot_title(
-      #   plot = r$plot_fachkraft_epa_item_1_left
-      # )
-      # r$plot_fachkraft_epa_item_1_right_title <- get_plot_title(
-      #   plot = r$plot_fachkraft_epa_item_1_right
-      # )
-      #
-      # # return plots
-      # out <- highcharter::hw_grid(
-      #   plot_list,
-      #   ncol = 2)
-      # out
 
       plots <- plot_fachkraft_epa_item(r)
       if(length(plots)==2){
@@ -766,17 +698,7 @@ mod_fachkraft_start_server <- function(id, r){
       plot_fachkraft_bar_vakanz(r)
     })
 
-    #  output$plot_fachkraft_bar_vakanz_1 <- highcharter::renderHighchart({
-    #   plot_list <- plot_fachkraft_bar_vakanz(r)
-    #   r$plot_fachkraft_bar_vakanz_1 <- plot_list
-    #
-    #   r$plot_fachkraft_bar_vakanz_1_title <- get_plot_title(
-    #     plot = r$plot_fachkraft_bar_vakanz_1
-    #   )
-    #
-    #   plot_list
-    # })
-    #
+
     # output$download_btn_plot_fachkraft_bar_vakanz_1 <- downloadHandler(
     #   contentType = "image/png",
     #   filename = function() {r$plot_fachkraft_bar_vakanz_1_title},

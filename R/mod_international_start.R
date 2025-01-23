@@ -357,7 +357,7 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
-                                      mod_international_top10_mint_intl_ui("mod_international_top10_mint_intl_ui_1"),
+                                      mod_international_top10_mint_int_ui("mod_international_top10_mint_int_ui_1"),
                                     # br(),br()
                                     # ,
                                     # downloadButton(

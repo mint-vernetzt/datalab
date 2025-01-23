@@ -166,13 +166,6 @@ mod_studium_studienzahl_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_2")
                              )
                     ),
-
-                    # tabPanel("Vergleich Anteil MINT nach Bundesländern im Zeitverlauf", br(),
-                    #
-
-                  #                                  class = "butt",
-                  #                                  icon = shiny::icon("download")))
-                  # )
         )
         ))),
 
@@ -255,7 +248,6 @@ mod_studium_studienzahl_ui <- function(id){
                                                   placement = "top",
                                                   trigger = "hover"),
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_4")
-                               #plotOutput(ns("plot_ranking_bl_subject")),p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen.")
                              )
                     ),
                     tabPanel("Bundeslandvergleich MINT-Fächer", br(),
@@ -281,10 +273,7 @@ mod_studium_studienzahl_ui <- function(id){
                              )
                     ),
 
-                   #  tabPanel("Vergleich Anteil MINT nach Studierendengruppen II", br(),
-                   #
 
-                   #  )
         )
         ))),
 
@@ -361,26 +350,6 @@ mod_studium_studienzahl_ui <- function(id){
                                )
 
                   ),
-                  # tabPanel("MINT-Wahlverhalten nach Geschlecht", br(),
-                  #
-                  #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                  #                          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                  #          shiny::sidebarPanel(
-                  #            width = 3,
-                  #            mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
-                  #          shiny::mainPanel(
-                  #            width = 9,
-                  #            shinycssloaders::withSpinner(htmlOutput(ns("plot_wahl")),
-                  #                                         color = "#154194"),
-                  #
-                  #            p(style="font-size:12px;color:grey", br(),"Quelle der Daten: KMK, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                  #            shinyBS::bsPopover(id="h_schule_mint_4", title = "",
-                  #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden." , "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen."),
-                  #                               placement = "top",
-                  #                               trigger = "hover"),
-                  #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_mint_4")
-                  #          )
-                  # ),
 
                   tabPanel("MINT-Wahlverhalten nach Geschlecht", br(),
 
@@ -409,10 +378,6 @@ mod_studium_studienzahl_ui <- function(id){
                            shiny::sidebarPanel(
                              width = 3,
                              mod_studium_top_faecher_ui("mod_studium_top_faecher"),
-                             # br()
-                             # ,
-
-                             #   icon = icon("download")),
                            ),
                            shiny::mainPanel(
                              width = 9,
@@ -469,12 +434,6 @@ mod_studium_studienzahl_ui <- function(id){
                                     shinycssloaders::withSpinner(htmlOutput(ns("plot_auslaender_test"), height = "650px"),
                                                                  color = "#154194"),
                                     p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                                    # shinyBS::bsPopover(id="d_studium_international_1", title = "",
-                                    #                    content = paste0("internationale Studierende = Studierende, die in Deutschland studieren aber keine deutsche Staatsbürgerschaft besitzen."),
-                                    #                    placement = "top",
-                                    #                    trigger = "hover"),
-                                    # tags$a(paste0("Definition der Begriffe"), icon("info-circle"), id = "d_studium_international_1"),
-                                    # p(),
                                     shinyBS::bsPopover(id="h_studium_international_1", title="",
                                                        content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die vorhandenen Studienfachgruppen angezeigt.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                        placement = "top",
@@ -502,12 +461,6 @@ mod_studium_studienzahl_ui <- function(id){
                                                                  color = "#154194"),
 
                                     p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                                    # shinyBS::bsPopover(id="d_studium_international_2", title = "",
-                                    #                    content = paste0("internationale Studierende = Studierende, die in deutschland studieren aber keine deutsche Staatsbürgerschaft besitzen."),
-                                    #                    placement = "top",
-                                    #                    trigger = "hover"),
-                                    # tags$a(paste0("Definition der Begriffe"), icon("info-circle"), id = "d_studium_international_2"),
-                                    # p(),
                                     shinyBS::bsPopover(id="h_studium_international_2", title="",
                                                        content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die vorhandenen Studienfachgruppen angezeigt.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
                                                        placement = "top",
@@ -540,18 +493,6 @@ mod_studium_studienzahl_ui <- function(id){
                                     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="p_auslaender_bula_1")
                                   )
                          ),
-
-                         # tabPanel("Anteil von internationalen Studierenden im Zeitgergleich", br(),
-                         #          shiny::sidebarPanel(
-                         #            width = 3,
-                         #            tags$style(".well {background-color:#FFFFFF;}"),
-                         #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                         #            mod_studium_studienzahl_ausl_zeit_ui("mod_studium_studienzahl_ausl_zeit_ui_1")),
-                         #          shiny::mainPanel(
-                         #            width = 9,
-                         #            tags$head(tags$style(HTML(".small-box {height: 400px}"))),
-                         #            highcharter::highchartOutput(ns("plot_auslaender_zeit")), p(style="font-size:12px;color:grey", "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."))
-
 
               )
              ))),

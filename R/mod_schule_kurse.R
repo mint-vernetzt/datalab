@@ -228,57 +228,7 @@ mod_schule_kurse_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_1")
                              )
                     )
-                    # ,
-                    # tabPanel("Vergleich Bundesländer im Zeitverlauf", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            mod_schule_kurse_verlauf_mint_ui("mod_schule_kurse_verlauf_mint_ui_1"),
-                    #            # br(), br(),
-                    #            # downloadButton(
-                    #            #   outputId = ns("download_btn_plot_verlauf_mint"),
-                    #            #   label = "Download",
-                    #            #   icon = icon("download"))
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_mint")),
-                    #                                         color = "#154194"),
-                    #
-                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                    #            shinyBS::bsPopover(id="h_schule_fach_2", title = "",
-                    #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In Bayern gibt es keine frei wählbaren Leistungskurse: Die Grundlagenfächer Deutsch, Mathematik und eine fortgeführte Fremdsprache sind für alle Schülerinnen und Schüler an Gymnasien in Bayern verpflichtende Abiturfächer und werden hier als Leistungskurse gezählt."),
-                    #                               placement = "top",
-                    #                               trigger = "hover"),
-                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_fach_2")
-                    #          )
-                    # )
 
-                    # tabPanel("Vergleich (Bundesländer)", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            mod_schule_kurse_verlauf_ui("mod_schule_kurse_verlauf_ui_1")),
-                    #          shiny::mainPanel(
-                    #
-                    #            highcharter::highchartOutput(ns("plot_verlauf_kurse")))
-                    # ),
-
-                    #,
-                    #  tabPanel("Datensatz", br(),
-                    #
-                    #   tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #   shiny::sidebarPanel(
-                    #     tags$style(".well {background-color:#FFFFFF;}"),
-                    #     tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #     mod_schule_kurse_einstieg_ui("mod_schule_kurse_einstieg_ui_1")),
-                    #   shiny::mainPanel(
-                    #     div(DT::dataTableOutput(ns("data_table_einstieg")),
-                    #         style = "font-size: 75%; width: 75%"),
-                    #     shiny::downloadButton(ns("download_data_box1"), label = "",
-                    #                           class = "butt",
-                    #                           icon = shiny::icon("download")))
-                    #         )
       )))),
 
   # Box 2 ----
@@ -437,21 +387,6 @@ mod_schule_kurse_ui <- function(id){
           width = 12,
         tabsetPanel(type = "tabs",
 
-                    # tabPanel("Frauenanteil in MINT-Kursen", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #                        .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            tags$style(".well {background-color:#FFFFFF;}"),
-                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #            mod_schule_kurse_pie_gender_ui("mod_schule_kurse_pie_gender_ui_1")),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            htmlOutput(ns("plot_pie_gender"))
-                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."))
-                    # ),
-
                     tabPanel("Aktueller Anteil Mädchen in MINT", br(),
 
 
@@ -506,36 +441,6 @@ mod_schule_kurse_ui <- function(id){
                              )
                     ),
 
-                    # Fehler drin: erstmal raus:
-                    # tabPanel("Zeitverlauf", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            mod_schule_kurse_verlauf_bl_ui("mod_schule_kurse_verlauf_bl_ui_1")),
-                    #          shiny::mainPanel(
-                    #            highcharter::highchartOutput(ns("plot_verlauf_kurse_bl"))
-                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."))
-                    # ),
-                    # tabPanel("Vergleich Grund- und Leistungskursen nach einzelnen Fächern", br(),
-                    #
-                    #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                    #          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            mod_schule_kurse_ranking_ui("mod_schule_kurse_ranking_ui_1"), br(),
-                    #           ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            shinycssloaders::withSpinner(plotOutput(ns("plot_ranking_2")),
-                    #                                         color = "#154194"),
-                    #
-                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                    #            shinyBS::bsPopover(id="h_schule_frauen_2", title = "",
-                    #                               content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotnicht MINT&quot bezieht sich auf die Belegungszaheln in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. Baden-Württemberg erfasst das Geschlecht von Schüler*innen nicht und kann deshalb nicht angezeigt werden."),
-                    #                               placement = "top",
-                    #                               trigger = "hover"),
-                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_schule_frauen_2")
-                    #            )
-                    #          ),
                     tabPanel("MINT-Wahlverhalten nach Geschlecht", br(),
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
@@ -782,14 +687,6 @@ mod_schule_kurse_server <- function(id, r){
         file.remove(r$plot_einstieg_comparison_title)
       }
     )
-    # output$plot_einstieg_comparison <- highcharter::renderHighchart({
-    #   kurse_einstieg_comparison(r)
-    # })
-
-    ## Zeitverlauf
-    # output$plot_einstieg_verlauf <- highcharter::renderHighchart({
-    #   kurse_verlauf_single(r)
-    # })
 
     output$plot_einstieg_verlauf <- renderUI({
       plot_list <- kurse_verlauf_single(r)
@@ -829,15 +726,6 @@ mod_schule_kurse_server <- function(id, r){
 
     output$plot_map_kurse_gender <- renderUI({
       plot_list <- kurse_map_gender(r)
-      # r$plot_map_kurse_gender_left <- plot_list[[1]]
-      # r$plot_map_kurse_gender_right <- plot_list[[2]]
-      #
-      # r$plot_map_kurse_gender_left_title <- get_plot_title(
-      #   plot = r$plot_map_kurse_gender_left
-      # )
-      # r$plot_map_kurse_gender_right_title <- get_plot_title(
-      #   plot = r$plot_map_kurse_gender_right
-      # )
 
       # return plots
       out <- highcharter::hw_grid(
@@ -885,17 +773,7 @@ mod_schule_kurse_server <- function(id, r){
 
     output$plot_mint_map_kurse <- renderUI({
       plot_list <- kurse_mint_map(r)
-      # r$plot_mint_map_kurse_left <- plot_list[[1]]
-      # r$plot_mint_map_kurse_right <- plot_list[[2]]
-      #
-      # r$plot_mint_map_kurse_left_title <- get_plot_title(
-      #   plot = r$plot_mint_map_kurse_left
-      # )
-      # r$plot_mint_map_kurse_right_title <- get_plot_title(
-      #   plot = r$plot_mint_map_kurse_right
-      # )
 
-      # return plots
 
       plot_list
 
@@ -944,23 +822,6 @@ mod_schule_kurse_server <- function(id, r){
     })
 
     ## Karte Fächer
-    # output$plot_map_kurse <- renderUI({
-    #   out <- kurse_map(r)
-    #   # r$plot_map_kurse_left <- plot_list[[1]]
-    #   # r$plot_map_kurse_right <- plot_list[[2]]
-    #   #
-    #   # r$plot_map_kurse_left_title <- get_plot_title(
-    #   #   plot = r$plot_map_kurse_left
-    #   # )
-    #   # r$plot_map_kurse_right_title <- get_plot_title(
-    #   #   plot = r$plot_map_kurse_right
-    #   # )
-    #
-    #   # return plots
-    #
-    #   out
-    #
-    # })
 
     # output$download_btn_plot_map_kurse_item_1 <- downloadHandler(
     #   contentType = "image/png",
