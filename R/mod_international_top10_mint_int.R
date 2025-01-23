@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_international_top10_mint_intl_ui <- function(id){
+mod_international_top10_mint_int_ui <- function(id){
 
   ns <- NS(id)
   tagList(
@@ -47,7 +47,7 @@ mod_international_top10_mint_intl_ui <- function(id){
 #' international_top10_mint_gender Server Functions
 #'
 #' @noRd
-mod_international_top10_mint_intl_server <- function(id, r){
+mod_international_top10_mint_int_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 

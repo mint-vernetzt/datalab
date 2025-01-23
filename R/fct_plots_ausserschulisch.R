@@ -81,11 +81,16 @@ plot_cp_orgas <- function(r){
 
     titel <- paste0("Für die gewählten Eingaben hat keine Organisation eine Angabe gemacht.")
 
+    ##hier noch net
     out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(indikator, wert), y = wert, group = region)) %>%
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+
+
+    # out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region")
+
 
   }else if(abs_rel_select == "In Prozent"){
 

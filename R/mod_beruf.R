@@ -30,39 +30,25 @@ mod_beruf_server <- function(id,
   mod_beruf_arbeitsmarkt_server("mod_beruf_arbeitsmarkt_ui_1", r)
 
   # Box 1
-  #mod_beruf_arbeitsmarkt_einstieg_server("mod_beruf_arbeitsmarkt_einstieg_ui_1", r)
-  mod_beruf_arbeitsmarkt_einstieg_verlauf_server("mod_beruf_arbeitsmarkt_einstieg_verlauf_ui_1", r)
   mod_beruf_arbeitsmarkt_einstieg_vergleich_server("mod_beruf_arbeitsmarkt_einstieg_vergleich_ui_1", r)
+  mod_beruf_arbeitsmarkt_einstieg_verlauf_server("mod_beruf_arbeitsmarkt_einstieg_verlauf_ui_1", r)
+  mod_beruf_arbeitsmarkt_mint_bula_server("mod_beruf_arbeitsmarkt_mint_bula_ui_1", r)
 
   # Box 2
-  #mod_beruf_arbeitsmarkt_bl_server("mod_beruf_arbeitsmarkt_bl_ui_1", r)
-  mod_beruf_arbeitsmarkt_mint_bula_server("mod_beruf_arbeitsmarkt_mint_bula_ui_1", r)
-  mod_beruf_arbeitsmarkt_bl_vergleich_server("beruf_arbeitsmarkt_bl_vergleich_ui_1", r)
-  mod_beruf_arbeitsmarkt_bula_faecher_server("mod_beruf_arbeitsmarkt_bula_faecher_ui_1", r)
   mod_beruf_arbeitsmarkt_anforderungen_server("mod_beruf_arbeitsmarkt_anforderungen_ui_1", r)
   mod_beruf_arbeitsmarkt_faecher_verlauf_server("mod_beruf_arbeitsmarkt_faecher_verlauf_ui_1", r)
+  mod_beruf_arbeitsmarkt_bula_faecher_server("mod_beruf_arbeitsmarkt_bula_faecher_ui_1", r)
 
   # Box 3
   mod_beruf_arbeitsmarkt_einstieg_gender_server("mod_beruf_arbeitsmarkt_einstieg_gender_ui_1", r)
   mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_server("mod_beruf_arbeitsmarkt_einstieg_verlauf_gender_ui_1", r)
-  mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_server("mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui_1", r)
   mod_beruf_arbeitsmarkt_anforderungen_gender_server("mod_beruf_arbeitsmarkt_anforderungen_gender_ui_1", r)
   mod_beruf_arbeitsmarkt_top10_server("mod_beruf_arbeitsmarkt_top10_ui_1", r)
-  mod_beruf_arbeitsmarkt_bl_gender_server("mod_beruf_arbeitsmarkt_bl_gender_ui_1", r)
-  mod_beruf_arbeitsmarkt_bl_gender_verlauf_server("mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui_1", r)
 
   # Box 4 regional
   mod_beruf_arbeitsmarkt_landkreis_map_server("mod_beruf_arbeitsmarkt_landkreis_map_ui_1", r)
   mod_beruf_arbeitsmarkt_landkreis_vergleich_server("mod_beruf_arbeitsmarkt_landkreis_vergleich_ui_1", r)
   mod_beruf_arbeitsmarkt_regional_verlauf_server("mod_beruf_arbeitsmarkt_regional_verlauf_ui_1", r)
-
-  # Box international
-  mod_international_map_arb_server("mod_international_map_arb_ui_1",r)
-  mod_international_map_arb_gender_server("mod_international_map_arb_gender_ui_1",r)
-  mod_international_top10_mint_arb_server("mod_international_top10_mint_arb_ui_1", r)
-  mod_international_top10_mint_arb_gender_server("mod_international_top10_mint_arb_gender_ui_1", r)
-  mod_international_arbeitsmarkt_vergleich_server("international_arbeitsmarkt_vergleich_1", r)
-
 
 }
 

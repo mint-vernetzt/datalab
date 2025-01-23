@@ -39,10 +39,10 @@ mod_international_server <- function(id, r){
 
   # Box 2 - Studium
   mod_international_map_server("mod_international_map_ui_1", r)
+  mod_international_map_fem_server("international_map_fem_ui_1", r)
   mod_international_top10_mint_server("international_top10_mint_1", r)
   mod_international_top10_mint_gender_server("international_top10_mint_gender_1", r)
-  mod_international_map_fem_server("international_map_fem_ui_1", r)
-  mod_international_top10_mint_intl_server("mod_international_top10_mint_intl_ui_1", r)
+  mod_international_top10_mint_int_server("mod_international_top10_mint_int_ui_1", r)
 
   # Box 3 - Ausbildung
   #mod_international_start_server("mod_international_start_ui_1", r)

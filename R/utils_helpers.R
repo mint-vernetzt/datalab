@@ -906,61 +906,30 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
 
 
 #df, titel, x, y, tooltip
-# linebuilder <- function(df, titel, x = "jahr", y, tooltip, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24")){
-#
-#   out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = indikator)) %>%
-#     highcharter::hc_tooltip(pointFormat = tooltip) %>%
-#     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = "{value}%"),
-#                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-#     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-#     highcharter::hc_title(text = titel,
-#                           margin = 45,
-#                           align = "center",
-#                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#     highcharter::hc_colors(color) %>%
-#     highcharter::hc_chart(
-#       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-#     ) %>%
-#     highcharter::hc_exporting(enabled = FALSE,
-#                               buttons = list(contextButton = list(
-#                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-#                                 onclick = highcharter::JS("function () {
-#                                                               this.exportChart({ type: 'image/png' }); }"),
-#                                 align = 'right',
-#                                 verticalAlign = 'bottom',
-#                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-#
-#
-#   return(out)
-#
-# }
 
-linebuilder <- function(df, titel, x, y, group, tooltip, yformat, color = c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a","#5f94f9", "#007655", "#d0a9cd") )
+linebuilder <- function(df, titel, x , y, group, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24")){
 
-highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = !!rlang::sym(group))) %>%
-  highcharter::hc_tooltip(pointFormat = tooltip) %>%
-  highcharter::hc_yAxis(title = list(text = ""), labels = list(format = yformat), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-  highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-  highcharter::hc_title(text = titel,
-                        margin = 45,
-                        align = "center",
-                        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-  highcharter::hc_colors(color)%>%
-  highcharter::hc_chart(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-  highcharter::hc_exporting(enabled = FALSE,
-                            buttons = list(contextButton = list(
-                              symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                              onclick = highcharter::JS("function () {
+  out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = !!rlang::sym(group))) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(color) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
                                                               this.exportChart({ type: 'image/png' }); }"),
                               align = 'right',
                               verticalAlign = 'bottom',
                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-
-
-
-
-
 
 
 

@@ -1,4 +1,7 @@
 # Box 1 ----
+#
+#
+
 plot_fachkraft_prognose  <- function(r) {
 
   filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_wirkhebel)
@@ -258,26 +261,12 @@ plot_fachkraft_prognose_alle  <- function(r) {
 
   # plot
 
-  hc <- highcharter::hchart(plot_data, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
-    highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_xAxis(title = list(text = ""), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_title(text = titel,
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_colors(color_vec) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  titel <- titel
+  tooltip <- "Anzahl: {point.y}"
+  format <- "{value:, f}"
+  color <- color_vec
+  hc <- linebuilder(plot_data, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
 
 
   return(hc)
