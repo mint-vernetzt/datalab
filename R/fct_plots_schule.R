@@ -233,6 +233,13 @@ kurse_waffle_mint <- function(r) {
                                   verticalAlign = 'bottom',
                                   theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
+    titel <- paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")")
+    tooltip <- "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
+    format <- "{value}%"
+    color <- as.character(color_fach)
+
+    out <- balkenbuilder(df, titel, x = )
+
 
   }
 
