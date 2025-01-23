@@ -931,6 +931,7 @@ linebuilder <- function(df, titel, x , y, group, tooltip, format, color = c("#b1
                               verticalAlign = 'bottom',
                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
+}
 
 
 balkenbuilder <- function(df123, titel, subtitel ,group = "fachbereich"){
