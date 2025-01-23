@@ -58,9 +58,9 @@ home_einstieg <- function(r) {
     if(nrow(df) == 0){
 
       tooltip <- "Anzahl: {point.display_abs}"
-      # titel <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
-      # df$jahr <- NA
-      # tooltip <- "Anzahl: {point.display_abs}"
+      titel <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
+      df$jahr <- NA
+      yformat <- "{value:, f}"
       # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
       #   highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
       #   highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -69,8 +69,8 @@ home_einstieg <- function(r) {
       #                         margin = 45,
       #                         align = "center",
       #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
-
-      out <- linebuilder(df, titel, x = "reorder(jahr, wert)", y = "wert", tooltip = tooltip)
+      # out <- linebuilder(df, titel, x = "reorder(jahr, wert)", y = "wert", tooltip = tooltip)
+      out <- linebuilder(df, titel, x = "reorder(jahr, wert)", y = "wert", group = "indikator", tooltip, yformat)
 
     }else{
 
@@ -78,24 +78,7 @@ home_einstieg <- function(r) {
     titel <- paste0(indikator_choice_1, " in ", regio, " (", zeit, ")")
     tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
 
-
-      # out <-  highcharter::hchart(
-      #     df, "pie", highcharter::hcaes(x = fachbereich, y = prop)
-      #   ) %>%
-      #   highcharter::hc_tooltip(
-      #     pointFormat=paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')) %>%
-      #   highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
-      #   highcharter::hc_title(text = titel,
-      #                         margin = 45,
-      #                         align = "center",
-      #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      #   highcharter::hc_chart(
-      #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      #   highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      #   highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-      #                                          dataLabels = list(enabled = TRUE,  format='{point.prop_besr}%'), showInLegend = TRUE))
-
-      out <- piebuilder(df,titel,  x = "fachbereich", y = "prop", tooltip)
+    out <- piebuilder(df,titel,  x = "fachbereich", y = "prop", tooltip)
 
     }
   } else if(length(indikator_choice_1) == 2) {
@@ -490,22 +473,6 @@ home_einstieg_gender <- function(r) {
     if(gegenwert == "Ja"){
 
      titel <- paste0(df_mint$titel_help2[1], " in ", regio, " (", zeit, ")")
-     # nmint1 <- highcharter::hchart(df_rest, size = 150,
-     #                      "pie", highcharter::hcaes(x = geschlecht, y = prop)
-     #  ) %>%
-     #    highcharter::hc_tooltip(
-     #      pointFormat=paste('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}')) %>%
-     #    highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
-     #    highcharter::hc_title(text = paste0(df_mint$titel_help2[1], " in ", regio, " (", zeit, ")"),
-     #                          margin = 45,
-     #                          align = "center",
-     #                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-     #    highcharter::hc_chart(
-     #      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-     #    highcharter::hc_legend(enabled = TRUE, y = -120) %>%
-     #    highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-     #                                           dataLabels = list(enabled = TRUE,  format='{point.prop_besr}%'), showInLegend = TRUE,
-     #                                           opacity = 0.7))
 
      nmint1 <- piebuilder(df:rest, titel, x = "geschlecht", y = "prop", tooltip, color)
 

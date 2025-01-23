@@ -906,6 +906,7 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
 
 
 #df, titel, x, y, tooltip
+
 linebuilder <- function(df, titel, x , y, group, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24")){
 
   out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = !!rlang::sym(group))) %>%
@@ -926,19 +927,9 @@ linebuilder <- function(df, titel, x , y, group, tooltip, format, color = c("#b1
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
                                 onclick = highcharter::JS("function () {
                                                               this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-
-  return(out)
-
-}
-
-
-
-
-
+                              align = 'right',
+                              verticalAlign = 'bottom',
+                              theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
 
