@@ -65,7 +65,7 @@ studienzahl_mint <- function(r){
 
           highcharter::hw_grid(
 
-            out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#efe8e6", "#b16fab"), format = format),
+            out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#b16fab", "#efe8e6"), format = format),
 
             ncol = 1,
             browsable = TRUE)
@@ -106,7 +106,7 @@ studienzahl_mint <- function(r){
          df <- df[with(df, order(proportion, decreasing = TRUE)), ]
 
          highcharter::hchart(df, 'bar', highcharter::hcaes(y = proportion, x = indikator, group =forcats::fct_rev(fach)))%>%
-           highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.proportion} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
+           highcharter::hc_tooltip(pointFormat = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  F) %>%
            highcharter::hc_xAxis(title = list(text = "")) %>%
            highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%

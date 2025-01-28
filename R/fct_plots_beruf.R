@@ -107,64 +107,28 @@ beruf_einstieg_vergleich <- function(r) {
       df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
       df <- df[with(df, order(proportion, decreasing = TRUE)), ]
+      titel <- ifelse(regio == "Saarland",
+                      paste0("MINT-Anteil unterschiedlicher Beschäftigtengruppen im ", regio, " (", timerange, ")"),
+                      paste0("MINT-Anteil unterschiedlicher Beschäftigtengruppen in ", regio, " (", timerange, ")"))
+      format <- "{value}%"
+      color <- c("#efe8e6","#b16fab")
+      tooltip <- "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
+      optional = list(bar = list(stacking = "percent"))
+
+      out <- balkenbuilder(df, titel, x="indikator", y = "proportion", group = "fachbereich", tooltip, format, color, optional)
 
 
-      # plot
-      out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = indikator, group = "fachbereich")) %>%
-        highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-        highcharter::hc_xAxis(title = list(text = "")) %>% #, categories = indikator
-        highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-        highcharter::hc_colors(c("#efe8e6","#b16fab")) %>%
-        highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                            paste0("MINT-Anteil unterschiedlicher Beschäftigtengruppen im ", regio, " (", timerange, ")"),
-                                            paste0("MINT-Anteil unterschiedlicher Beschäftigtengruppen in ", regio, " (", timerange, ")")),
-                              margin = 45, # o. war vorher /
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
     }else{
 
       #Trennpunkte für lange Zahlen ergänzen
       df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
       df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
-      # plot
-      out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = wert, x = indikator)) %>%
-        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert_disp}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}")) %>%
-        highcharter::hc_xAxis(title = list(text = "")) %>%
-        highcharter::hc_colors("#b16fab") %>%
-        highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                            paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen im ", regio, " (", timerange, ")"),
-                                            paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen in ", regio, " (", timerange, ")")),
-                              margin = 45, # o. war vorher /
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+      titel <- ifelse(regio == "Saarland",
+                      paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen im ", regio, " (", timerange, ")"),
+                      paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen in ", regio, " (", timerange, ")"))
+      out <- balkenbuilder(df, titel, x="indikator", y="wert",group=NULL, tooltip = "Anzahl: {point.wert_disp}", format = "{value:, f}", color = "#b16fab")
     }
 
   }
@@ -424,35 +388,16 @@ arbeitsmarkt_mint_bulas <- function(r) {
     title_h2 <- ifelse(grepl("ausländischen Auszu", title_help), "ausländischen Auszubildenden", title_h2)
     title_h2 <- ifelse(grepl("ländischen B", title_help), "ausländischen Beschäftigten", title_h2)
 
-    # plot
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = bundesland)) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-      highcharter::hc_xAxis(title = list(text = "")
-      ) %>%
 
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors = ifelse(df$bundesland == "Deutschland", "#b16fab",
-                        ifelse(df$bundesland == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
-                               ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))%>%
-      highcharter::hc_title(text = paste0( "Anteil von ", title_help, " in MINT an allen ", title_h2, " in ", timerange,
-                                           "<br><br><br>"),
-                            margin = 20,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(feld = list(hover = list(fill = '#FFFFFF'))))))
+    titel <- paste0( "Anteil von ", title_help, " in MINT an allen ", title_h2, " in ", timerange,"<br><br><br>")
+    optional <- list(bar = list(
+      colorByPoint = TRUE,
+      colors = ifelse(df$bundesland == "Deutschland", "#b16fab",
+                      ifelse(df$bundesland == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
+                             ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))
+
+    out <- balkenbuilder(df, titel, x="bundesland", y="prop", group = NULL, tooltip = "{point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}", format = "{value}%", color = "#b16fab", optional = optional)
+
 
   }
   else if(betrachtung == "Zeitverlauf - Liniendiagramm"){
@@ -537,30 +482,6 @@ arbeitsmarkt_mint_bulas <- function(r) {
       df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
 
-      # plot
-      # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = bundesland)) %>%
-      #   highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-      #   highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      #   highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      #   highcharter::hc_title(text =paste0("Anzahl von ", title_help, " in MINT-Berufen"
-      #   ),
-      #   margin = 45,
-      #   align = "center",
-      #   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      #   highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-      #                            "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
-      #   highcharter::hc_chart(
-      #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      #   ) %>%
-      #   highcharter::hc_exporting(enabled = FALSE,
-      #                             buttons = list(contextButton = list(
-      #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-      #                               onclick = highcharter::JS("function () {
-      #                                                         this.exportChart({ type: 'image/png' }); }"),
-      #                               align = 'right',
-      #                               verticalAlign = 'bottom',
-      #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-      #
 
 
 
@@ -1340,32 +1261,16 @@ arbeitsmarkt_faecher_anteil <- function(r) {
     hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl {point.indikator}: {point.wert}"
     if(indikator_choice == "Auszubildende (1. Jahr)") hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl Auszubildende mit neuem Lehrvertrag: {point.wert}"
 
-    # plot
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = fachbereich)) %>%
-      highcharter::hc_tooltip(pointFormat = hover) %>%
-      highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>%
-      highcharter::hc_xAxis(title = list(text="")) %>%
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors = as.character(df$color)
-      )) %>%
-      highcharter::hc_title(text = paste0( "Überblick über die Berufsfelder von ", title_help,
-                                           br(), "in ",regio, " (", timerange, ")"),
-                            margin = 20,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    titel <- paste0( "Überblick über die Berufsfelder von ", title_help, br(), "in ",regio, " (", timerange, ")")
+    format <- "{value}%"
+    color <- c("#efe8e6","#b16fab")
+    tooltip <- hover
+    optional = list(bar = list(
+      colorByPoint = TRUE,
+      colors = as.character(df$color)
+    ))
+
+    out <- balkenbuilder(df, titel, x="fachbereich", y = "prop", group=NULL, tooltip, format, color, optional)
 
   }
 
@@ -1638,7 +1543,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
     #df <- df[with(df, order(fachbereich, jahr, decreasing = TRUE)), ]
-    df <- df[with(df, order(prop, decreasing = FALSE)),]
+    df <- df[with(df, order(prop, decreasing = T)),]
 
 
 
@@ -1652,53 +1557,17 @@ arbeitsmarkt_bula_faecher <- function(r) {
     title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
 
 
+    tooltip <- "{point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}"
+    format <- "{value}%"
+    color <- "#b16fab"
+    titel <- paste0("Anteil von ", title_help, " im Berufsfeld ", faecher, " an allen ", title_help, " in ", timerange)
+    optional <- list(bar = list(
+      colorByPoint = TRUE,
+      colors = ifelse(df$bundesland == "Deutschland", "#b16fab",
+                      ifelse(df$bundesland == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
+                             ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))
 
-
-    # plot
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = bundesland)) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-      highcharter::hc_xAxis(title = list(text = ""), categories =c("Deutschland",
-                                                                   "Westdeutschland (o. Berlin)",
-                                                                   "Ostdeutschland (inkl. Berlin)",
-                                                                   "Baden-Württemberg",
-                                                                   "Bayern",
-                                                                   "Berlin",
-                                                                   "Brandenburg",
-                                                                   "Bremen",
-                                                                   "Hamburg",
-                                                                   "Hessen",
-                                                                   "Mecklenburg-Vorpommern",
-                                                                   "Niedersachsen",
-                                                                   "Nordrhein-Westfalen",
-                                                                   "Rheinland-Pfalz",
-                                                                   "Saarland",
-                                                                   "Sachsen",
-                                                                   "Sachsen-Anhalt",
-                                                                   "Schleswig-Holstein",
-                                                                   "Thüringen")) %>%
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors = ifelse(df$bundesland == "Deutschland", "#b16fab",
-                        ifelse(df$bundesland == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
-                               ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
-      highcharter::hc_title(
-        text = paste0("Anteil von ", title_help, " im Berufsfeld ", faecher, " an allen ", title_help, " in ", timerange),
-        margin = 20,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_exporting(enabled = FALSE, buttons = list(
-        contextButton = list(
-          symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-          onclick = highcharter::JS("function () { this.exportChart({ type: 'image/png' }); }"),
-          align = 'right',
-          verticalAlign = 'bottom',
-          theme = list(states = list(hover = list(fill = '#FFFFFF')))
-        )
-      ))
+    out <- balkenbuilder(df, titel, x= "bundesland", y="prop", group=NULL, tooltip, format, color, optional=optional)
 
 
   }
@@ -1936,129 +1805,6 @@ arbeitsmarkt_überblick_fächer <- function( r) {
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 }
 
-#' A function to plot time series
-#'
-#' @description A function to plot the time series
-#'
-#' @return The return value, if any, from executing the function.
-#' @param data The dataframe "Kurse.xlsx" needs to be used for this function
-#' @param r Reactive variable that stores all the inputs from the UI
-#' @noRd
-
-arbeitsmarkt_bl_vergleich <- function(r) {
-
-  # load UI inputs from reactive value
-  timerange <- r$date_bl_vergl
-
-  if(timerange == 2021) indikator_choice <- r$indikator_bl_vergl_21
-  if(timerange == 2022) indikator_choice <- r$indikator_bl_vergl_22
-
-  feld <- r$feld_bl_vergl
-
-  df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    dplyr::filter(
-      jahr == timerange &
-        indikator == indikator_choice &
-        landkreis == "alle Landkreise" &
-        anforderung == "Gesamt" &
-        geschlecht == "Gesamt")%>%
-    dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)%>%
-    dplyr::collect()
-
-
-  # Alle als extra Spalte anhängen und Anteil berechnen
-  df_ges <- df %>%
-    dplyr::filter(fachbereich == "Alle") %>%
-    dplyr::rename(wert_ges = wert) %>%
-    dplyr::ungroup()%>%
-    dplyr::select(indikator, fachbereich, jahr, bundesland, wert_ges)
-
-  df <- df %>%
-    dplyr::left_join(df_ges, by = c("indikator", "jahr", "bundesland")) %>%
-    dplyr::rename(fachbereich = "fachbereich.x")%>%
-    dplyr::ungroup()%>%
-    dplyr::select(-c("fachbereich.y")) %>%
-    dplyr::mutate(prop = (wert/wert_ges)*100)%>%
-    dplyr::mutate(prop = round(prop,1))
-
-  #Trennpunkte für lange Zahlen in absolutem Wert ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-  df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
-
-
-  df <- df%>%
-    dplyr::filter(indikator==indikator_choice &
-                    fachbereich==feld)
-
-  df <- df[with(df, order(fachbereich, jahr, decreasing = FALSE)), ]
-
-
-  # titel-helper
-  title_help <- paste0(indikator_choice, "n")
-  title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen Beschäftigten", title_help)
-  title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischen Auszubildenden", title_help)
-  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden im ersten Lehrjahr", title_help)
-  title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
-  title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
-  title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
-
-
-  title_h2 <- ifelse(grepl("Auszu", title_help), "Auszubildenden", "Beschäftigten")
-  title_h2 <- ifelse(grepl("25 Jahr", title_help), "Beschäftigten U25", title_h2)
-  title_h2 <- ifelse(grepl("25 und 55", title_help), "Beschäftigten zwischen 25 und 55 Jahren", title_h2)
-  title_h2 <- ifelse(grepl("über 55", title_help), "Beschäftigten Ü55", title_h2)
-  title_h2 <- ifelse(grepl("jahr", title_help), "Auszubildenden im ersten Lehrjahr", title_h2)
-  title_h2 <- ifelse(grepl("ausländischen Auszu", title_help), "ausländischen Auszubildenden", title_h2)
-  title_h2 <- ifelse(grepl("ländischen B", title_help), "ausländischen Beschäftigten", title_h2)
-
-
-  # plot
-  highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = bundesland)) %>%
-    highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-    highcharter::hc_xAxis(title = list(text = ""), categories =c("Deutschland",
-                                                                 "Westdeutschland (o. Berlin)",
-                                                                 "Ostdeutschland (einschl. Berlin)",
-                                                                 "Baden-Württemberg",
-                                                                 "Bayern",
-                                                                 "Berlin",
-                                                                 "Brandenburg",
-                                                                 "Bremen",
-                                                                 "Hamburg",
-                                                                 "Hessen",
-                                                                 "Mecklenburg-Vorpommern",
-                                                                 "Niedersachsen",
-                                                                 "Nordrhein-Westfalen",
-                                                                 "Rheinland-Pfalz",
-                                                                 "Saarland",
-                                                                 "Sachsen",
-                                                                 "Sachsen-Anhalt",
-                                                                 "Schleswig-Holstein",
-                                                                 "Thüringen")
-    ) %>%
-    highcharter::hc_plotOptions(bar = list(
-      colorByPoint = TRUE,
-      colors = ifelse(df$bundesland %in% c("Deutschland","Westdeutschland (o. Berlin)",
-                                           "Ostdeutschland (inkl. Berlin)"), "#d0a9cd", "#b16fab")
-    )) %>%
-    highcharter::hc_title(text = paste0( "Anteil von ", title_help, " in ", feld, " an allen ", title_h2, " in ", timerange,
-                                         "<br><br><br>"),
-                          margin = 20,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(feld = list(hover = list(fill = '#FFFFFF'))))))
-}
 
 # Frauen in MINT ----
 ### Tab 1 ----
@@ -2261,7 +2007,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
        p1g <- piebuilder(df1_g, titel1, x="geschlecht", y = "proportion", tooltip, color, format)
        p2g <- piebuilder(df2_g, titel2, x="geschlecht", y = "proportion", tooltip, color, format)
 
-       
+
        out <- highcharter::hw_grid(p1, p2,
                                    p1g, p2g,
                                    ncol = 2,
@@ -2286,29 +2032,12 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
     }
 
 
-    # plot
-   out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indi_fach, y=proportion, group = geschlecht)) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.geschlecht}-Anteil: {point.y} % <br> Anzahl: {disp_wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
-      highcharter::hc_xAxis(title = list(text = "") ) %>%
-      highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 25,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    #
+   tooltip <- "{point.geschlecht}-Anteil: {point.y} % <br> Anzahl: {disp_wert}"
+   format <- "{value}%"
+   optional = list(bar = list(stacking = "percent"))
+
+   out <- balkenbuilder2(TF = FALSE, df, titel, x="indi_fach", y="proportion", group="geschlecht", tooltip, format, color = c("#154194", "#efe8e6"))
 
  }
 
@@ -2439,28 +2168,6 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
                          paste0("Entwicklung der Anzahl an Frauen im Berufsfeld ", faecher, " im ", regio),
                          paste0("Entwicklung der Anzahl an Frauen im Berufsfeld ", faecher, "in ", regio))
     }
-
-    highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
-      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert_disp}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      highcharter::hc_title(text = titel_text,   # Verwende den dynamisch generierten Titel
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-                               "#bfc6d3", "#5f94f9")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
     titel <-  titel_text
@@ -2945,6 +2652,8 @@ arbeitsmarkt_top10 <- function( r){
       dplyr::arrange(desc(wert)) %>%
       dplyr::slice(1:10)
 
+    # das bleibt ohne verallgemeinerung da es spezialisierter ist.
+
     # Create female plot
     plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -2965,7 +2674,6 @@ arbeitsmarkt_top10 <- function( r){
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-
 
     # Create male plot
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
@@ -3078,7 +2786,6 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
       dplyr::filter(selector =="In Prozent")
 
 
-
     # order years for plot
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
@@ -3092,10 +2799,6 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
-
-
-
-
 
 
   }else if(absolut_selector=="Anzahl"){
@@ -3347,24 +3050,22 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
 
 
   # create plot
-  highcharter::hchart(df_compare, 'bar', highcharter::hcaes(y = display_value, x = landkreis)) %>%
-    highcharter::hc_tooltip(pointFormat = legende) %>%
-    highcharter::hc_yAxis(title = list(text = paste0(br(), br(),"Quelle der Daten: Bundesagentur für Arbeit, 2022, auf Anfrage, eigene Berechnungen.") , align="left"), labels = list(format = yAxis)) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_plotOptions(bar = list(
-      colorByPoint = TRUE,
-      colors = ifelse(df_compare$landkreis == "alle Landkreise", "#b16fab",
-                      ifelse(df_compare$landkreis == search_val, "#00A87A", "#154194"))
-    )) %>%
-    highcharter::hc_size(height = 80*plt.add$höhe[plt.add$länder == states]) %>%
-    highcharter::hc_title(text = paste0(titel, "<br><br>"),
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+  titel <- paste0(titel, "<br><br>")
+  tooltip <- legende
+  format <- yAxis
+  color <- "#00A87A"
+  optional <- list(bar = list(
+    colorByPoint = TRUE,
+    colors = ifelse(df_compare$landkreis == "alle Landkreise", "#b16fab",
+                    ifelse(df_compare$landkreis == search_val, "#00A87A", "#154194"))
+  ))
+
+  my_hc_size <- function(hc) {
+    hc %>% highcharter::hc_size(height = 80 * plt.add$höhe[plt.add$länder == states])
+  }
+
+
+  out <- balkenbuilder3(df_compare, titel, x="landkreis", y="display_value", tooltip, format, color, optional = optional, optional2 = my_hc_size)
 
 
 }
