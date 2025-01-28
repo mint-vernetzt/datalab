@@ -762,16 +762,16 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
 
 
-    output$plot_arbeitsmarkt_bl_vergleich  <- renderUI({
-      plot_list <- arbeitsmarkt_bl_vergleich(r)
-      r$plot_arbeitsmarkt_bl_vergleich <- plot_list
-
-      r$plot_arbeitsmarkt_bl_vergleich_title <- get_plot_title(
-        plot = r$plot_arbeitsmarkt_bl_vergleich
-      )
-
-      plot_list
-    })
+    # output$plot_arbeitsmarkt_bl_vergleich  <- renderUI({
+    #   plot_list <- arbeitsmarkt_bl_vergleich(r)
+    #   r$plot_arbeitsmarkt_bl_vergleich <- plot_list
+    #
+    #   r$plot_arbeitsmarkt_bl_vergleich_title <- get_plot_title(
+    #     plot = r$plot_arbeitsmarkt_bl_vergleich
+    #   )
+    #
+    #   plot_list
+    # })
 
     output$download_btn_plot_arbeitsmarkt_bl_vergleich <- downloadHandler(
       contentType = "image/png",
