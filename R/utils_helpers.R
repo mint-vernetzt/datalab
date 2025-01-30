@@ -1110,3 +1110,46 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
 
 
 }
+
+
+#mapbuilder
+
+mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor){
+
+
+  out<- highcharter::hcmap(
+    "countries/de/de-all",
+    data = df,
+    value = "proportion",
+    joinBy = joinby,
+    borderColor = "#FAFAFA",
+    name = name,
+    borderWidth = 0.1,
+    nullColor = "#A9A9A9",
+    tooltip = list(
+      valueDecimals = 0,
+      valueSuffix = "%"
+    )) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_colorAxis(min=0,minColor= mincolor, maxColor=maxcolor, labels = list(format = "{text}%")) %>%
+    highcharter::hc_title(
+      text = titel,
+      margin = 10,
+      align = "center",
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular")
+    ) %>% highcharter::hc_size(600, 550) %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                           verticalAlign = "bottom")
+
+  return(out)
+}
+
+
+
+
+
+

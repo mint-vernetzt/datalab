@@ -297,37 +297,47 @@ arbeitsmarkt_mint_bulas <- function(r) {
     title_h2 <- ifelse(grepl("ländischen B", title_help), "ausländischen Beschäftigten", title_h2)
 
     # plot
-    out <- highcharter::hcmap(
-      "countries/de/de-all",
-      data = df,
-      value = "proportion",
-      joinBy = c("name", "bundesland"),
-      borderColor = "#FAFAFA",
-      name = paste0("MINT"),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      # ,
-      # download_map_data = FALSE
-    ) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = paste0("Anteil von ",  title_help, " in MINT an allen ",  title_help, " (", timerange, ")"
-        ),
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
+    # out <- highcharter::hcmap(
+    #   "countries/de/de-all",
+    #   data = df,
+    #   value = "proportion",
+    #   joinBy = c("name", "bundesland"),
+    #   borderColor = "#FAFAFA",
+    #   name = paste0("MINT"),
+    #   borderWidth = 0.1,
+    #   nullColor = "#A9A9A9",
+    #   tooltip = list(
+    #     valueDecimals = 0,
+    #     valueSuffix = "%"
+    #   )
+    #   # ,
+    #   # download_map_data = FALSE
+    # ) %>%
+    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
+    #   highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
+    #   highcharter::hc_title(
+    #     text = paste0("Anteil von ",  title_help, " in MINT an allen ",  title_help, " (", timerange, ")"
+    #     ),
+    #     margin = 10,
+    #     align = "center",
+    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    #   ) %>%
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular")
+    #   ) %>% highcharter::hc_size(600, 550) %>%
+    #   highcharter::hc_credits(enabled = FALSE) %>%
+    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+    #                          verticalAlign = "bottom")
+
+
+    df <-df
+    joinby <- c("name", "bundesland")
+    name <- paste0("MINT")
+    tooltip <- "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}"
+    titel <- paste0("Anteil von ",  title_help, " in MINT an allen ",  title_help, " (", timerange, ")")
+    mincolor <- "#f4f5f6"
+    maxcolor <- "#b16fab"
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor)
 
 
   }
@@ -727,66 +737,84 @@ arbeitsmarkt_bl_gender <- function(r) {
 
 
     # plot
-    out_1 <- highcharter::hcmap(
-      "countries/de/de-all",
-      data = values_female,
-      value = "proportion",
-      joinBy = c("name", "bundesland"),
-      borderColor = "#FAFAFA",
-      name = paste0(fachbereich_choice),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      #,
-      #download_map_data = FALSE
-    ) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = titel_w,
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
+    # out_1 <- highcharter::hcmap(
+    #   "countries/de/de-all",
+    #   data = values_female,
+    #   value = "proportion",
+    #   joinBy = c("name", "bundesland"),
+    #   borderColor = "#FAFAFA",
+    #   name = paste0(fachbereich_choice),
+    #   borderWidth = 0.1,
+    #   nullColor = "#A9A9A9",
+    #   tooltip = list(
+    #     valueDecimals = 0,
+    #     valueSuffix = "%"
+    #   )
+    #   #,
+    #   #download_map_data = FALSE
+    # ) %>%
+    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
+    #   highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
+    #   highcharter::hc_title(
+    #     text = titel_w,
+    #     margin = 10,
+    #     align = "center",
+    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    #   ) %>%
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular")
+    #   ) %>% highcharter::hc_size(600, 550) %>%
+    #   highcharter::hc_credits(enabled = FALSE) %>%
+    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+    #                          verticalAlign = "bottom")
 
-    out_2 <- highcharter::hcmap(
-      "countries/de/de-all",
-      data = values_male,
-      value = "proportion",
-      joinBy = c("name", "bundesland"),
-      borderColor = "#FAFAFA",
-      name = paste0(fachbereich_choice),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      #,
-      #download_map_data = FALSE
-    ) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = titel_m,
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
+    df <-values_female
+    joinby <- c("name", "bundesland")
+    name <- paste0(fachbereich_choice)
+    tooltip <- "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+    titel <-titel_w
+    mincolor <- "#f4f5f6"
+    maxcolor <- "#b16fab"
+    out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor)
+
+    # out_2 <- highcharter::hcmap(
+    #   "countries/de/de-all",
+    #   data = values_male,
+    #   value = "proportion",
+    #   joinBy = c("name", "bundesland"),
+    #   borderColor = "#FAFAFA",
+    #   name = paste0(fachbereich_choice),
+    #   borderWidth = 0.1,
+    #   nullColor = "#A9A9A9",
+    #   tooltip = list(
+    #     valueDecimals = 0,
+    #     valueSuffix = "%"
+    #   )
+    #   #,
+    #   #download_map_data = FALSE
+    # ) %>%
+    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
+    #   highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
+    #   highcharter::hc_title(
+    #     text = titel_m,
+    #     margin = 10,
+    #     align = "center",
+    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    #   ) %>%
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular")
+    #   ) %>% highcharter::hc_size(600, 550) %>%
+    #   highcharter::hc_credits(enabled = FALSE) %>%
+    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
+
+    df <-values_male
+    joinby <- c("name", "bundesland")
+    name <- paste0(fachbereich_choice)
+    tooltip <- "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+    titel <-titel_m
+    mincolor <- "#f4f5f6"
+    maxcolor <- "#b16fab"
+    out2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor)
 
 
     out <- list(out_1, out_2)
@@ -1467,37 +1495,47 @@ arbeitsmarkt_bula_faecher <- function(r) {
     title_help <- ifelse(grepl("Beschäftigte u25", indi), "Beschäftigten unter 25 Jahren", title_help)
 
     # plot
-    out <- highcharter::hcmap(
-      "countries/de/de-all",
-      data = df,
-      value = "proportion",
-      joinBy = c("name", "bundesland"),
-      borderColor = "#FAFAFA",
-      name = paste0("MINT"),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      # ,
-      # download_map_data = FALSE
-    ) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = paste0("Anteil von ",  title_help, " in ", faecher, " an allen ",  title_help, " (", timerange, ")" #, title_help_sub
-        ),
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
+    # out <- highcharter::hcmap(
+    #   "countries/de/de-all",
+    #   data = df,
+    #   value = "proportion",
+    #   joinBy = c("name", "bundesland"),
+    #   borderColor = "#FAFAFA",
+    #   name = paste0("MINT"),
+    #   borderWidth = 0.1,
+    #   nullColor = "#A9A9A9",
+    #   tooltip = list(
+    #     valueDecimals = 0,
+    #     valueSuffix = "%"
+    #   )
+    #   # ,
+    #   # download_map_data = FALSE
+    # ) %>%
+    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
+    #   highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
+    #   highcharter::hc_title(
+    #     text = paste0("Anteil von ",  title_help, " in ", faecher, " an allen ",  title_help, " (", timerange, ")" #, title_help_sub
+    #     ),
+    #     margin = 10,
+    #     align = "center",
+    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    #   ) %>%
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular")
+    #   ) %>% highcharter::hc_size(600, 550) %>%
+    #   highcharter::hc_credits(enabled = FALSE) %>%
+    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+    #                          verticalAlign = "bottom")
+
+    df <-values_female
+    joinby <- c("name", "bundesland")
+    name <- paste0("MINT")
+    tooltip <- "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}"
+    titel <- paste0("Anteil von ",  title_help, " in ", faecher, " an allen ",  title_help, " (", timerange, ")")
+    mincolor <- "#f4f5f6"
+    maxcolor <- "#b16fab"
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor)
+
 
 
   }
@@ -2376,6 +2414,9 @@ arbeitsmarkt_wahl_gender <- function(r) {
        highcharter::hc_credits(enabled = FALSE) %>%
        highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                               verticalAlign = "bottom")
+
+
+
 
      out_2 <- highcharter::hcmap(
        "countries/de/de-all",
