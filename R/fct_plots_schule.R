@@ -827,7 +827,8 @@ kurse_map <- function(r) {
     titel <- paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")")
     mincolor <- "#fcfcfd"
     maxcolor <- col
-    map1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor)
+    map_selection <- 1
+    map1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
     # Leistungskurs läuft
     df <- df[df$indikator == "Leistungskurse",]
@@ -837,7 +838,7 @@ kurse_map <- function(r) {
     titel <- paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")")
     mincolor <- "#fcfcfd"
     maxcolor <- col
-    map2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor)
+    map2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
 
     plot_list <- list(map1,map2)

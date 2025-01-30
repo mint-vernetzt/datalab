@@ -513,42 +513,45 @@ plot_international_map_fem <- function(r){
     size_hight <- 600
   }
 
-
-
     # plot
-    highcharter::hcmap(
-      map = map_selection,
-      data = map_data_1,
-      value = "wert",
-      joinBy = c("hc-a2", "alpha2"),
-      borderColor = "#FAFAFA",
-      name = paste0(fach_m),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      #,
-      #download_map_data = FALSE
-    )%>%
-      highcharter::hc_tooltip(pointFormat = hoverplot) %>%
-      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#154194",labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = title_dyn,
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>%  highcharter::hc_size(size_width, size_hight) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
+    # highcharter::hcmap(
+    #   map = map_selection,
+    #   data = map_data_1,
+    #   value = "wert",
+    #   joinBy = c("hc-a2", "alpha2"),
+    #   borderColor = "#FAFAFA",
+    #   name = paste0(fach_m),
+    #   borderWidth = 0.1,
+    #   nullColor = "#A9A9A9",
+    #   tooltip = list(
+    #     valueDecimals = 0,
+    #     valueSuffix = "%"
+    #   )
+    # )%>%
+    #   highcharter::hc_tooltip(pointFormat = hoverplot) %>%
+    #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#154194",labels = list(format = "{text}%")) %>%
+    #   highcharter::hc_title(
+    #     text = title_dyn,
+    #     margin = 10,
+    #     align = "center",
+    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    #   ) %>%
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular")
+    #   ) %>%  highcharter::hc_size(size_width, size_hight) %>%
+    #   highcharter::hc_credits(enabled = FALSE) %>%
+    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+    #                          verticalAlign = "bottom")
 
 
-
+      df <- map_data_1
+      joinby <- c("hc-a2", "alpha2")
+      name <- paste0(fach_m)
+      tooltip <-hoverplot
+      titel <-titel_dyn
+      mincolor <- "#f4f5f6"
+      maxcolor <- "#154194"
+      out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection)
 
 
 }
@@ -2224,40 +2227,50 @@ plot_international_map_arb <- function(r) {
 
 
       # plot
-      highcharter::hcmap(
-        #"countries/de/de-all",
-        map = map_selection,
-        data = data_map,
-        value = "wert",
-        joinBy = c("hc-a2", "alpha2"),
-        borderColor = "#FAFAFA",
-        name = paste0(inpp),
-        borderWidth = 0.1,
-        nullColor = "#A9A9A9",
-        tooltip = list(
-          valueDecimals = 0,
-          valueSuffix = "%"
-        )
-        ,
-        download_map_data = T
-      )%>%
-        highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
-        highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-        highcharter::hc_title(
-          text = paste0("Anteil von ", title_eu, " in Europa"),
-          margin = 10,
-          align = "center",
-          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-        ) %>%
-        # highcharter::hc_caption(
-        #   text = "...",  style = list(color= "white", fontSize = "12px")
-        # ) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular")
-        ) %>% highcharter::hc_size(800, 600) %>%
-        highcharter::hc_credits(enabled = FALSE) %>%
-        highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                               verticalAlign = "bottom")
+      # highcharter::hcmap(
+      #   #"countries/de/de-all",
+      #   map = map_selection,
+      #   data = data_map,
+      #   value = "wert",
+      #   joinBy = c("hc-a2", "alpha2"),
+      #   borderColor = "#FAFAFA",
+      #   name = paste0(inpp),
+      #   borderWidth = 0.1,
+      #   nullColor = "#A9A9A9",
+      #   tooltip = list(
+      #     valueDecimals = 0,
+      #     valueSuffix = "%"
+      #   )
+      #   ,
+      #   download_map_data = T
+      # )%>%
+      #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
+      #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+      #   highcharter::hc_title(
+      #     text = paste0("Anteil von ", title_eu, " in Europa"),
+      #     margin = 10,
+      #     align = "center",
+      #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      #   ) %>%
+      #   # highcharter::hc_caption(
+      #   #   text = "...",  style = list(color= "white", fontSize = "12px")
+      #   # ) %>%
+      #   highcharter::hc_chart(
+      #     style = list(fontFamily = "SourceSans3-Regular")
+      #   ) %>% highcharter::hc_size(800, 600) %>%
+      #   highcharter::hc_credits(enabled = FALSE) %>%
+      #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+      #                          verticalAlign = "bottom")
+      #
+      df <- data_map
+      joinby <- c("hc-a2", "alpha2")
+      name <- paste0(inpp)
+      tooltip <-"{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+      titel <- paste0("Anteil von ", title_eu, " in Europa")
+      mincolor <- "#f4f5f6"
+      maxcolor <- "#b16fab"
+      map <- map_selection
+      out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map)
 
   }
 
@@ -2352,36 +2365,46 @@ plot_international_map_arb <- function(r) {
 
 
         # plot
-        highcharter::hcmap(
-          map = map_selection,
-          data = data_map,
-          value = "wert",
-          joinBy = c("hc-a2", "alpha2"),
-          borderColor = "#FAFAFA",
-          name = paste0(inpp),
-          borderWidth = 0.1,
-          nullColor = "#A9A9A9",
-          tooltip = list(
-            valueDecimals = 0,
-            valueSuffix = "%"
-          )
-          ,
-          download_map_data = T
-        )%>%
-          highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}%") %>%
-          highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-          highcharter::hc_title(
-            text = paste0("Anteil von ", title_oecd_1_1, " in ", inpf, " ", inpy, " weltweit (OECD)" ),
-            margin = 10,
-            align = "center",
-            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-          ) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "SourceSans3-Regular")
-          ) %>% highcharter::hc_size(1000, 600) %>%
-          highcharter::hc_credits(enabled = FALSE) %>%
-          highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                                 verticalAlign = "bottom")
+        # highcharter::hcmap(
+        #   map = map_selection,
+        #   data = data_map,
+        #   value = "wert",
+        #   joinBy = c("hc-a2", "alpha2"),
+        #   borderColor = "#FAFAFA",
+        #   name = paste0(inpp),
+        #   borderWidth = 0.1,
+        #   nullColor = "#A9A9A9",
+        #   tooltip = list(
+        #     valueDecimals = 0,
+        #     valueSuffix = "%"
+        #   )
+        #   ,
+        #   download_map_data = T
+        # )%>%
+        #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}%") %>%
+        #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+        #   highcharter::hc_title(
+        #     text = paste0("Anteil von ", title_oecd_1_1, " in ", inpf, " ", inpy, " weltweit (OECD)" ),
+        #     margin = 10,
+        #     align = "center",
+        #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+        #   ) %>%
+        #   highcharter::hc_chart(
+        #     style = list(fontFamily = "SourceSans3-Regular")
+        #   ) %>% highcharter::hc_size(1000, 600) %>%
+        #   highcharter::hc_credits(enabled = FALSE) %>%
+        #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+        #                          verticalAlign = "bottom")
+
+
+        df <- data_map
+        joinby <- c("hc-a2", "alpha2")
+        name <- paste0(inpp)
+        tooltip <-"{point.land} <br> Anteil: {point.display_rel}%"
+        titel <- paste0("Anteil von ", title_oecd_1_1, " in ", inpf, " ", inpy, " weltweit (OECD)" )
+        mincolor <- "#f4f5f6"
+        maxcolor <- "#b16fab"
+        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection)
 
 
 
@@ -2486,36 +2509,45 @@ plot_international_map_arb <- function(r) {
 
 
         # plot
-        highcharter::hcmap(
-          map = map_selection,
-          data = data_map,
-          value = "wert",
-          joinBy = c("hc-a2", "alpha2"),
-          borderColor = "#FAFAFA",
-          name = paste0(inpp),
-          borderWidth = 0.1,
-          nullColor = "#A9A9A9",
-          tooltip = list(
-            valueDecimals = 0,
-            valueSuffix = "%"
-          )
-          ,
-          download_map_data = T
-        ) %>%
-          highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
-          highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-          highcharter::hc_title(
-            text = paste0("Anteil von ", title_oecd_2_1, " in ", inpf, " ",  inpy," weltweit (OECD)" ),
-            margin = 10,
-            align = "center",
-            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-          ) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "SourceSans3-Regular")
-          ) %>% highcharter::hc_size(1000, 600) %>%
-          highcharter::hc_credits(enabled = FALSE) %>%
-          highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                                 verticalAlign = "bottom")
+        # highcharter::hcmap(
+        #   map = map_selection,
+        #   data = data_map,
+        #   value = "wert",
+        #   joinBy = c("hc-a2", "alpha2"),
+        #   borderColor = "#FAFAFA",
+        #   name = paste0(inpp),
+        #   borderWidth = 0.1,
+        #   nullColor = "#A9A9A9",
+        #   tooltip = list(
+        #     valueDecimals = 0,
+        #     valueSuffix = "%"
+        #   )
+        #   ,
+        #   download_map_data = T
+        # ) %>%
+        #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
+        #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+        #   highcharter::hc_title(
+        #     text = paste0("Anteil von ", title_oecd_2_1, " in ", inpf, " ",  inpy," weltweit (OECD)" ),
+        #     margin = 10,
+        #     align = "center",
+        #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+        #   ) %>%
+        #   highcharter::hc_chart(
+        #     style = list(fontFamily = "SourceSans3-Regular")
+        #   ) %>% highcharter::hc_size(1000, 600) %>%
+        #   highcharter::hc_credits(enabled = FALSE) %>%
+        #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+        #                          verticalAlign = "bottom")
+
+        df <- data_map
+        joinby <- c("hc-a2", "alpha2")
+        name <- paste0(inpp)
+        tooltip <- "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+        titel <- paste0("Anteil von ", title_oecd_2_1, " in ", inpf, " ",  inpy," weltweit (OECD)" )
+        mincolor <- "#f4f5f6"
+        maxcolor <- "#b16fab"
+        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection)
 
 
 
@@ -2590,36 +2622,47 @@ plot_international_map_arb_gender <- function(r) {
 
 
       # plot
-      highcharter::hcmap(
-        map = map_selection,
-        data = data_map,
-        value = "wert",
-        joinBy = c("hc-a2", "alpha2"),
-        borderColor = "#FAFAFA",
-        name = paste0(inpp),
-        borderWidth = 0.1,
-        nullColor = "#A9A9A9",
-        tooltip = list(
-          valueDecimals = 0,
-          valueSuffix = "%"
-        )
-        ,
-        download_map_data = T
-      )%>%
-        highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
-        highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-        highcharter::hc_title(
-          text = paste0("Anteil von Frauen an allen ", title_eu, " in Europa"),
-          margin = 10,
-          align = "center",
-          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-        ) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular")
-        ) %>% highcharter::hc_size(800, 600) %>%
-        highcharter::hc_credits(enabled = FALSE) %>%
-        highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                               verticalAlign = "bottom")
+      # highcharter::hcmap(
+      #   map = map_selection,
+      #   data = data_map,
+      #   value = "wert",
+      #   joinBy = c("hc-a2", "alpha2"),
+      #   borderColor = "#FAFAFA",
+      #   name = paste0(inpp),
+      #   borderWidth = 0.1,
+      #   nullColor = "#A9A9A9",
+      #   tooltip = list(
+      #     valueDecimals = 0,
+      #     valueSuffix = "%"
+      #   )
+      #   ,
+      #   download_map_data = T
+      # )%>%
+      #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
+      #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+      #   highcharter::hc_title(
+      #     text = paste0("Anteil von Frauen an allen ", title_eu, " in Europa"),
+      #     margin = 10,
+      #     align = "center",
+      #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      #   ) %>%
+      #   highcharter::hc_chart(
+      #     style = list(fontFamily = "SourceSans3-Regular")
+      #   ) %>% highcharter::hc_size(800, 600) %>%
+      #   highcharter::hc_credits(enabled = FALSE) %>%
+      #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+      #                          verticalAlign = "bottom")
+
+
+      df <- data_map
+      joinby <- c("hc-a2", "alpha2")
+      name <- paste0(inpp)
+      tooltip <- "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+      titel <- paste0("Anteil von Frauen an allen ", title_eu, " in Europa")
+      mincolor <- "#f4f5f6"
+      maxcolor <- "#b16fab"
+      map <- map_selection
+      out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map)
 
 
 
@@ -2732,36 +2775,49 @@ plot_international_map_arb_gender <- function(r) {
 
 
         # plot
-        highcharter::hcmap(
-          map = map_selection,
-          data = data_map,
-          value = "wert",
-          joinBy = c("hc-a2", "alpha2"),
-          borderColor = "#FAFAFA",
-          name = paste0(inpp),
-          borderWidth = 0.1,
-          nullColor = "#A9A9A9",
-          tooltip = list(
-            valueDecimals = 0,
-            valueSuffix = "%"
-          )
-          ,
-          download_map_data = T
-        ) %>%
-          highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}%") %>%
-          highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-          highcharter::hc_title(
-            text = paste0("Anteil von Frauen an allen ", title_oecd_1_1, " in ", inpf, " ", inpy, " weltweit (OECD)"),
-            margin = 10,
-            align = "center",
-            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-          ) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "SourceSans3-Regular")
-          ) %>% highcharter::hc_size(1000, 600) %>%
-          highcharter::hc_credits(enabled = FALSE) %>%
-          highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                                 verticalAlign = "bottom")
+        # highcharter::hcmap(
+        #   map = map_selection,
+        #   data = data_map,
+        #   value = "wert",
+        #   joinBy = c("hc-a2", "alpha2"),
+        #   borderColor = "#FAFAFA",
+        #   name = paste0(inpp),
+        #   borderWidth = 0.1,
+        #   nullColor = "#A9A9A9",
+        #   tooltip = list(
+        #     valueDecimals = 0,
+        #     valueSuffix = "%"
+        #   )
+        #   ,
+        #   download_map_data = T
+        # ) %>%
+        #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}%") %>%
+        #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+        #   highcharter::hc_title(
+        #     text = paste0("Anteil von Frauen an allen ", title_oecd_1_1, " in ", inpf, " ", inpy, " weltweit (OECD)"),
+        #     margin = 10,
+        #     align = "center",
+        #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+        #   ) %>%
+        #   highcharter::hc_chart(
+        #     style = list(fontFamily = "SourceSans3-Regular")
+        #   ) %>% highcharter::hc_size(1000, 600) %>%
+        #   highcharter::hc_credits(enabled = FALSE) %>%
+        #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+        #                          verticalAlign = "bottom")
+
+
+
+        df <- data_map
+        joinby <- c("hc-a2", "alpha2")
+        name <- paste0(inpp)
+        tooltip <- "{point.land} <br> Anteil: {point.display_rel}%"
+        titel <- paste0("Anteil von Frauen an allen ", title_oecd_1_1, " in ", inpf, " ", inpy, " weltweit (OECD)")
+        mincolor <- "#f4f5f6"
+        maxcolor <- "#b16fab"
+        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection)
+
+
 
 
 
@@ -2916,37 +2972,48 @@ plot_international_map_arb_gender <- function(r) {
 
 
         # plot
-        highcharter::hcmap(
-          #"countries/de/de-all",
-          map = map_selection,
-          data = data_map,
-          value = "wert",
-          joinBy = c("hc-a2", "alpha2"),
-          borderColor = "#FAFAFA",
-          name = paste0(inpp),
-          borderWidth = 0.1,
-          nullColor = "#A9A9A9",
-          tooltip = list(
-            valueDecimals = 0,
-            valueSuffix = "%"
-          )
-          ,
-          download_map_data = T
-        )%>%
-          highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
-          highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-          highcharter::hc_title(
-            text = paste0("Anteil von ", title_oecd_2_1, " ", inpy, " weltweit (OECD)" ),
-            margin = 10,
-            align = "center",
-            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-          ) %>%
-          highcharter::hc_chart(
-            style = list(fontFamily = "SourceSans3-Regular")
-          ) %>% highcharter::hc_size(1000, 600) %>%
-          highcharter::hc_credits(enabled = FALSE) %>%
-          highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                                 verticalAlign = "bottom")
+        # highcharter::hcmap(
+        #   #"countries/de/de-all",
+        #   map = map_selection,
+        #   data = data_map,
+        #   value = "wert",
+        #   joinBy = c("hc-a2", "alpha2"),
+        #   borderColor = "#FAFAFA",
+        #   name = paste0(inpp),
+        #   borderWidth = 0.1,
+        #   nullColor = "#A9A9A9",
+        #   tooltip = list(
+        #     valueDecimals = 0,
+        #     valueSuffix = "%"
+        #   )
+        #   ,
+        #   download_map_data = T
+        # )%>%
+        #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
+        #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+        #   highcharter::hc_title(
+        #     text = paste0("Anteil von ", title_oecd_2_1, " ", inpy, " weltweit (OECD)" ),
+        #     margin = 10,
+        #     align = "center",
+        #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+        #   ) %>%
+        #   highcharter::hc_chart(
+        #     style = list(fontFamily = "SourceSans3-Regular")
+        #   ) %>% highcharter::hc_size(1000, 600) %>%
+        #   highcharter::hc_credits(enabled = FALSE) %>%
+        #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+        #                          verticalAlign = "bottom")
+
+
+
+        df <- data_map
+        joinby <- c("hc-a2", "alpha2")
+        name <- paste0(inpp)
+        tooltip <- "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
+        titel <- paste0("Anteil von ", title_oecd_2_1, " ", inpy, " weltweit (OECD)" )
+        mincolor <- "#f4f5f6"
+        maxcolor <- "#b16fab"
+        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection)
 
 
     }

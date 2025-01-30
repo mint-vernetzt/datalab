@@ -336,8 +336,9 @@ arbeitsmarkt_mint_bulas <- function(r) {
     tooltip <- "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}"
     titel <- paste0("Anteil von ",  title_help, " in MINT an allen ",  title_help, " (", timerange, ")")
     mincolor <- "#f4f5f6"
+    map_selection <- 1
     maxcolor <- "#b16fab"
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor)
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
 
   }
@@ -775,7 +776,8 @@ arbeitsmarkt_bl_gender <- function(r) {
     titel <-titel_w
     mincolor <- "#f4f5f6"
     maxcolor <- "#b16fab"
-    out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor)
+    map_selection <- 1
+    out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
     # out_2 <- highcharter::hcmap(
     #   "countries/de/de-all",
@@ -814,7 +816,8 @@ arbeitsmarkt_bl_gender <- function(r) {
     titel <-titel_m
     mincolor <- "#f4f5f6"
     maxcolor <- "#b16fab"
-    out2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor)
+    map_selection <- 1
+    out2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
 
     out <- list(out_1, out_2)
@@ -1527,14 +1530,15 @@ arbeitsmarkt_bula_faecher <- function(r) {
     #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
     #                          verticalAlign = "bottom")
 
-    df <-values_female
+    df <- df
     joinby <- c("name", "bundesland")
     name <- paste0("MINT")
     tooltip <- "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}"
     titel <- paste0("Anteil von ",  title_help, " in ", faecher, " an allen ",  title_help, " (", timerange, ")")
     mincolor <- "#f4f5f6"
     maxcolor <- "#b16fab"
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor)
+    map_selection <- 1
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
 
 
@@ -2384,36 +2388,46 @@ arbeitsmarkt_wahl_gender <- function(r) {
                        paste0("Anteil männlicher ", title_help, ", die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
 
      # plot
-     out_1 <- highcharter::hcmap(
-       "countries/de/de-all",
-       data = values_female,
-       value = "prop",
-       joinBy = c("name", "bundesland"),
-       borderColor = "#FAFAFA",
-       name = paste0(faecher),
-       borderWidth = 0.1,
-       nullColor = "#A9A9A9",
-       tooltip = list(
-         valueDecimals = 0,
-         valueSuffix = "%"
-       )
-       #,
-       #download_map_data = FALSE
-     ) %>%
-       highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop_disp} % <br> Anzahl: {point.wert_disp}") %>%
-       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-       highcharter::hc_title(
-         text = titel_w,
-         margin = 10,
-         align = "center",
-         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-       ) %>%
-       highcharter::hc_chart(
-         style = list(fontFamily = "SourceSans3-Regular")
-       ) %>% highcharter::hc_size(600, 550) %>%
-       highcharter::hc_credits(enabled = FALSE) %>%
-       highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                              verticalAlign = "bottom")
+     # out_1 <- highcharter::hcmap(
+     #   "countries/de/de-all",
+     #   data = values_female,
+     #   value = "prop",
+     #   joinBy = c("name", "bundesland"),
+     #   borderColor = "#FAFAFA",
+     #   name = paste0(faecher),
+     #   borderWidth = 0.1,
+     #   nullColor = "#A9A9A9",
+     #   tooltip = list(
+     #     valueDecimals = 0,
+     #     valueSuffix = "%"
+     #   )
+     #   #,
+     #   #download_map_data = FALSE
+     # ) %>%
+     #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop_disp} % <br> Anzahl: {point.wert_disp}") %>%
+     #   highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
+     #   highcharter::hc_title(
+     #     text = titel_w,
+     #     margin = 10,
+     #     align = "center",
+     #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+     #   ) %>%
+     #   highcharter::hc_chart(
+     #     style = list(fontFamily = "SourceSans3-Regular")
+     #   ) %>% highcharter::hc_size(600, 550) %>%
+     #   highcharter::hc_credits(enabled = FALSE) %>%
+     #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+     #                          verticalAlign = "bottom")
+
+     df <- values_female
+     joinby <- c("name", "bundesland")
+     name <- paste0(faecher)
+     tooltip <-"{point.bundesland} <br> Anteil: {point.prop_disp} % <br> Anzahl: {point.wert_disp}"
+     titel <- titel_w
+     mincolor <- "#fcfcfd"
+     maxcolor <- "#b16fab"
+     map_selection <- 1
+     out_1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection)
 
 
 
@@ -2448,11 +2462,26 @@ arbeitsmarkt_wahl_gender <- function(r) {
        highcharter::hc_credits(enabled = FALSE) %>%
        highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
 
+
+     df <- values_male
+     joinby <- c("name", "bundesland")
+     name <- paste0(faecher)
+     tooltip <-"{point.bundesland} <br> Anteil: {point.prop_disp} % <br> Anzahl: {point.wert_disp}"
+     titel <- titel_m
+     mincolor <- "#fcfcfd"
+     maxcolor <- "#b16fab"
+     map_selection <- 1
+     out_1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection)
+
+
+
      out <- highcharter::hw_grid(
        out_1, out_2,
        ncol = 2,
        browsable = TRUE
      )
+
+
 
      }else
        if(betrachtung == "Zeitverlauf - Liniendiagramm"){
@@ -3002,6 +3031,8 @@ arbeitsmarkt_lk_detail_map <- function(r) {
                                 align = 'right',
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
 
 
 
