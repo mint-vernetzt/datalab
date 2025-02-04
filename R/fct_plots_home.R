@@ -277,31 +277,33 @@ home_rest_mint_verlauf <- function(r) {
     tooltip <- paste("Anteil MINT <br> Indikator: {point.indikator} <br> Anteil: {point.prop_besr} %")
 
     # plot
+    # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
+    #   highcharter::hc_tooltip(pointFormat = "Anteil MINT <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
+    #   highcharter::hc_yAxis(title = list(text = " "), labels = list(format = "{value}%"),
+    #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    #   highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    #   #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
+    #   highcharter::hc_title(text = "Anteil von MINT nach Bildungsbereichen",
+    #                         margin = 45,
+    #                         align = "center",
+    #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    #   highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24" )) %>%
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    #   ) %>%
+    #   highcharter::hc_exporting(enabled = FALSE,
+    #                             buttons = list(contextButton = list(
+    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #                               onclick = highcharter::JS("function () {
+    #                                                           this.exportChart({ type: 'image/png' }); }"),
+    #                               align = 'right',
+    #                               verticalAlign = 'bottom',
+    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
-      highcharter::hc_tooltip(pointFormat = "Anteil MINT <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
-      highcharter::hc_yAxis(title = list(text = " "), labels = list(format = "{value}%"),
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = "Anteil von MINT nach Bildungsbereichen",
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24" )) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    format <- "{value}%"
+    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
-    # out <- linebuilder2c(df, titel1,x="jahr", y="prop", tooltip = tooltip)
+    out <- linebuilder(df, titel1,x="jahr", y="prop", group="indikator", tooltip = tooltip, format, color)
 
   } else if (absolut_selector=="Anzahl") {
 
@@ -327,28 +329,31 @@ home_rest_mint_verlauf <- function(r) {
     tooltip <- paste("Anteil MINT <br> Indikator: {point.indikator} <br> Anzahl: {point.wert_besr}")
 
     # plot
-    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
-      highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = "Anzahl von Personen in MINT nach Bildungsbereichen",
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24" )) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-    # out <- linebuilder(df, titel, x = "jahr", y="wert", tooltip = tooltip)
+    # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
+    #   highcharter::hc_tooltip(pointFormat = "Anzahl: {point.y}") %>%
+    #   highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    #   highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    #   #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
+    #   highcharter::hc_title(text = "Anzahl von Personen in MINT nach Bildungsbereichen",
+    #                         margin = 45,
+    #                         align = "center",
+    #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    #   highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24" )) %>%
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    #   ) %>%
+    #   highcharter::hc_exporting(enabled = FALSE,
+    #                             buttons = list(contextButton = list(
+    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+    #                               onclick = highcharter::JS("function () {
+    #                                                           this.exportChart({ type: 'image/png' }); }"),
+    #                               align = 'right',
+    #                               verticalAlign = 'bottom',
+    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+    format <- "{value:, f}"
+    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
+    out <- linebuilder(df, titel, x = "jahr", y="wert", group = "indikator", tooltip = tooltip, format, color)
 
 
   }
@@ -485,7 +490,7 @@ home_einstieg_gender <- function(r) {
     df_mint <- df %>% dplyr::filter(fachbereich == "MINT")
     df_rest <- df %>% dplyr::filter(fachbereich == "Nicht MINT")
 
-    titel <- paste0(df_mint$titel_help[1], " in ", regio, "(", zeit, ")")
+    titel <- paste0(df_mint$titel_help[1], " in ", regio, " (", zeit, ")")
     tooltip <- paste('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}')
     color = c("#efe8e6", "#154194")
 
@@ -517,7 +522,7 @@ home_einstieg_gender <- function(r) {
 
      titel <- paste0(df_mint$titel_help2[1], " in ", regio, " (", zeit, ")")
 
-     nmint1 <- piebuilder(df:rest, titel, x = "geschlecht", y = "prop", tooltip, color)
+     nmint1 <- piebuilder(df, rest, titel, x = "geschlecht", y = "prop", tooltip, color)
 
      out <- highcharter::hw_grid(
         mint1, nmint1,
@@ -767,12 +772,13 @@ home_einstieg_gender <- function(r) {
       #                               verticalAlign = 'bottom',
       #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
+
       titel = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
       tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
       format <- "{value}%"
       color <- c("#154194", "#efe8e6")
 
-      out <- balkenbuilder(df, titel , x = "indikator", y = "prop", group = "geschlecht", tooltip, format, color, optional = FALSE)
+      out <- balkenbuilder(df, titel , x = "indikator", y = "prop", group = "geschlecht", tooltip, format, color)
 
 
 
@@ -821,7 +827,7 @@ home_einstieg_gender <- function(r) {
       format <- "{value}%"
       color <- c("#efe8e6", "#154194")
 
-      out <- balkenbuilder(df, titel , x = "indikator", y = "prop", group = "geschlecht", tooltip, format, color, optional=FALSE)
+      out <- balkenbuilder(df, titel , x = "indikator", y = "prop", group = "geschlecht", tooltip, format, color)
 
     }
 
@@ -921,32 +927,10 @@ home_comparison_line <- function(r) {
     titel <- "Anteil von Frauen in MINT nach Bildungsbereichen"
     tooltip <- "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.prop_besr} %"
     format <- "{value}%"
+    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
-    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert, 1), group = indikator))%>%
-      highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"),
-                            min = 10, max = 45) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"), reversed = T) %>%
-      #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = "Anteil von Frauen in MINT nach Bildungsbereichen",
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24" )) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-    #out <- linebuilder(df, titel, x = "jahr", y = "prop", tooltip, format)
+    out <- linebuilder(df, titel, x = "jahr", y = "prop", group="indikator",tooltip, format)
 
 
   } else if (abs_selector =="Anzahl"){
@@ -967,34 +951,12 @@ home_comparison_line <- function(r) {
     df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
     titel <- "Anzahl von Frauen in MINT nach Bildungsbereichen"
-    tooltip <- "Anzahl Frauen <br> Indikator: {point.indikator} <br> Anzahl: {point.wert_besr} "
-    format <- "{value}%"
+    tooltip <- "Anzahl Frauen <br> Indikator: {point.indikator} <br> Anzahl: {point.y} "
+    format <- "{value}"
 
-    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert, 1), group = indikator))%>%
-      highcharter::hc_tooltip(pointFormat = "Anteil Frauen <br> Indikator: {point.indikator} <br> Anteil: {point.y} %") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"),
-                            min = 10, max = 45) %>%
-      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular"), reversed = T) %>%
-      #highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2021; Bundesagentur für Arbeit, 2021; KMK, 2021, alle auf Anfrage, eigene Berechnungen.",  style = list(fontSize = "12px") ) %>%
-      highcharter::hc_title(text = "Anteil von Frauen in MINT nach Bildungsbereichen",
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(c("#b16fab", "#154194","#66cbaf", "#fbbf24" )) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24" )
 
-    # out <- linebuilder(df,titel,x="jahr", y="wert", tooltip, format)
+    out <- linebuilder(df,titel,x="jahr", y="wert", group="indikator", tooltip, format, color)
 
 
 

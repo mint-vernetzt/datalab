@@ -4106,6 +4106,9 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
   tmp_df$variable <- factor(tmp_df$variable, levels = c("Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern",
                                                         "Anteil Absolvent*innen nach Fach an allen Fächern"))
+
+  browser()
+
   # Create the plot
   plot <- highcharter::hchart(object = tmp_df,
                       type = "column",

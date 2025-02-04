@@ -909,6 +909,9 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
 
 linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24")){
 
+  df <- df %>%
+    dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
+
   out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = !!rlang::sym(group))) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
@@ -1176,7 +1179,7 @@ if(prop==FALSE && wert == FALSE){
 
 } else if(wert==TRUE){
 
-  highcharter::hcmap(
+  out <- highcharter::hcmap(
     map = map,
     data = df,
     value = "wert",

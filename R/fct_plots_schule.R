@@ -94,7 +94,7 @@ kurse_waffle_mint <- function(r) {
     titel <- paste0("MINT-Fächeranteile in ", titel_help , " in ", regio, " (", timerange, ")")
     tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
     color <- as.character(df$color)
-    format <-"{value}%"
+    format <-"{point.proportion}  %"
 
     out <- piebuilder(df, titel, x = "fachbereich", y = "proportion", tooltip, color, format)
 
@@ -211,44 +211,45 @@ kurse_waffle_mint <- function(r) {
     #   dplyr::mutate(color = color_fach[fachbereich])
 
     # # plot
-    # out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-    #   highcharter::hc_xAxis(title = list(text = ""), categories = c
-    #   ) %>%
-    #   highcharter::hc_plotOptions(bar = list(
-    #     colorByPoint = TRUE,
-    #    colors = as.character(color_fach)
-    #     #colors = ifelse(df$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (gesamt)"), "#b16fab", "#d0a9cd")
-    #   )) %>%
-    #   highcharter::hc_title(text = paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")"
-    #   ),
-    #   margin = 45,
-    #   align = "center",
-    #   style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    #   ) %>%
-    #   highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    #   highcharter::hc_exporting(enabled = FALSE,
-    #                             buttons = list(contextButton = list(
-    #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-    #                               onclick = highcharter::JS("function () {
-    #                                                           this.exportChart({ type: 'image/png' }); }"),
-    #                               align = 'right',
-    #                               verticalAlign = 'bottom',
-    #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
+      highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
+      highcharter::hc_xAxis(title = list(text = ""), categories = c
+      ) %>%
+      highcharter::hc_plotOptions(bar = list(
+        colorByPoint = TRUE,
+       colors = as.character(color_fach)
+        #colors = ifelse(df$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (gesamt)"), "#b16fab", "#d0a9cd")
+      )) %>%
+      highcharter::hc_title(text = paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")"
+      ),
+      margin = 45,
+      align = "center",
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-    titel <- paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")")
-    tooltip <- "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
-    format <- "{value}%"
-    color <- as.character(color_fach)
-    optional <- list(bar = list(
-      colorByPoint = TRUE,
-      colors = as.character(color_fach)
-    ))
-
-    out <- balkenbuilder(df, titel, x = "fachbereich", y="proportion", group=NULL, tooltip, color, format, optional)
+    #noch machen
+    # titel <- paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")")
+    # tooltip <- "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
+    # format <- "{value}%"
+    # color <- as.character(color_fach)
+    # optional <- list(bar = list(
+    #   colorByPoint = TRUE,
+    #   colors = as.character(color_fach)
+    # ))
+    #
+    # out <- balkenbuilder(df, titel, x = "fachbereich", y="proportion", group=NULL, tooltip, color, format, optional)
 
 
   }
@@ -356,9 +357,12 @@ kurse_einstieg_comparison <- function(r) {
     titel_help <- ifelse(indika == "Oberstufenbelegungen", "der Oberstufe",
                          titel_help)
 
+    df1$wert <- as.numeric(as.character(df1$wert)) #wert ist charakter
+
     titel <- paste0("MINT-Anteil in ", titel_help,  " in ", regio, " (", timerange, ")")
-    tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
-    format <- "{value}%"
+    tooltip <- paste('Anteil: {point.proportion} % <br> Anzahl: {point.wert}')
+    format <- "{point.proportion} %"
+
 
     out <- piebuilder(df1, titel, x = "fachbereich", y = "proportion", tooltip,  color =  c("#b16fab", "#efe8e6"), format)
   }
@@ -415,7 +419,6 @@ kurse_verlauf_single <- function(r) {
 
     # plot
     # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(prop,1), group = indikator)) %>%
-    #   highcharter::hc_tooltip(pointFormat = "Anteil: {point.indikator} <br> Wert: {point.y} %") %>%
 
 
 
@@ -423,6 +426,8 @@ kurse_verlauf_single <- function(r) {
     tooltip <- "Anteil: {point.indikator} <br> Wert: {point.y} %"
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf")
+
+
     out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color)
 
 
@@ -435,14 +440,13 @@ kurse_verlauf_single <- function(r) {
     # order years for plot
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
-    # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = indikator)) %>%
 
 
     titel <- paste0("Anzahl an MINT-Belegungen in der Schule in ", regio)
     tooltip <- "Anzahl: {point.y}"
     format <-  "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf")
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color)
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
 
 
 
@@ -785,6 +789,8 @@ kurse_map <- function(r) {
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     col <- as.character(color_fach[unique(df$fachbereich)])
 
+    browser()
+
     # plots
     # map1<- highcharter::hcmap(
     #   "countries/de/de-all",
@@ -820,7 +826,7 @@ kurse_map <- function(r) {
     #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
     #                          verticalAlign = "bottom")
 
-    df <- df[df$indikator == "Grundkurse",]
+    df1 <- df[df$indikator == "Grundkurse",]
     joinby <- c("name", "region")
     name <- paste0(subjects)
     tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
@@ -828,17 +834,22 @@ kurse_map <- function(r) {
     mincolor <- "#fcfcfd"
     maxcolor <- col
     map_selection <- 1
-    map1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+
+
+    df$proportion <- as.numeric(as.character(df$proportion))
+    df$wert <- as.numeric(as.character(df$wert))
 
     # Leistungskurs läuft
-    df <- df[df$indikator == "Leistungskurse",]
+    df2 <- df[df$indikator == "Leistungskurse",]
     joinby <- c("name", "region")
     name <- paste0(subjects)
     tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
     titel <- paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")")
     mincolor <- "#fcfcfd"
     maxcolor <- col
-    map2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    map_selection <- 1
+    map2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
 
     plot_list <- list(map1,map2)
@@ -1911,7 +1922,7 @@ kurse_comparison_gender <- function(r) {
                                                                     "Oberstufenbelegungen MINT-Fächer",
                                                                     "Oberstufenbelegungen andere Fächer")) %>%
         highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-        highcharter::hc_colors(unique(df$farbe)) %>%
+        highcharter::hc_colors(c("#efe8e6", "#154194")) %>%
         highcharter::hc_title(text = paste0("Anteil von Mädchen in MINT- und anderen Fächern in ",regio, " (", timerange, ")"),
                               margin = 25,
                               align = "center",

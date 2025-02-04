@@ -2382,42 +2382,12 @@ arbeitsmarkt_wahl_gender <- function(r) {
      title_help <- ifelse(grepl("ausländische Auszubildende", indi), "ausländischer Auszubildender", title_help)
      title_help <- ifelse(grepl("Jahr", indi), "Auszubildender mit neuem Lehrvertrag", title_help)
 
-     titel_w <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil weiblicher ", title_help, ", die kein MINT-Berufsfeld wählen (", timerange, ")"),
-                       paste0("Anteil weiblicher ", title_help, ", die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
-     titel_m <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil männlicher ", title_help, ", die kein MINT-Berufsfeld wählen (", timerange, ")"),
-                       paste0("Anteil männlicher ", title_help, ", die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
+     titel_w <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil weiblicher ", title_help, ", die kein <br> MINT-Berufsfeld wählen (", timerange, ")"),
+                       paste0("Anteil weiblicher ", title_help, ", die das Berufsfeld <br>", faecher, " wählen (", timerange, ")"))
+     titel_m <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil männlicher ", title_help, ", die kein <br> MINT-Berufsfeld wählen (", timerange, ")"),
+                       paste0("Anteil männlicher ", title_help, ", die das Berufsfeld <br>", faecher, " wählen (", timerange, ")"))
 
      # plot
-     # out_1 <- highcharter::hcmap(
-     #   "countries/de/de-all",
-     #   data = values_female,
-     #   value = "prop",
-     #   joinBy = c("name", "bundesland"),
-     #   borderColor = "#FAFAFA",
-     #   name = paste0(faecher),
-     #   borderWidth = 0.1,
-     #   nullColor = "#A9A9A9",
-     #   tooltip = list(
-     #     valueDecimals = 0,
-     #     valueSuffix = "%"
-     #   )
-     #   #,
-     #   #download_map_data = FALSE
-     # ) %>%
-     #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop_disp} % <br> Anzahl: {point.wert_disp}") %>%
-     #   highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-     #   highcharter::hc_title(
-     #     text = titel_w,
-     #     margin = 10,
-     #     align = "center",
-     #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-     #   ) %>%
-     #   highcharter::hc_chart(
-     #     style = list(fontFamily = "SourceSans3-Regular")
-     #   ) %>% highcharter::hc_size(600, 550) %>%
-     #   highcharter::hc_credits(enabled = FALSE) %>%
-     #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-     #                          verticalAlign = "bottom")
 
      df <- values_female
      joinby <- c("name", "bundesland")
@@ -2430,39 +2400,6 @@ arbeitsmarkt_wahl_gender <- function(r) {
      out_1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection)
 
 
-
-
-     out_2 <- highcharter::hcmap(
-       "countries/de/de-all",
-       data = values_male,
-       value = "prop",
-       joinBy = c("name", "bundesland"),
-       borderColor = "#FAFAFA",
-       name = paste0(faecher),
-       borderWidth = 0.1,
-       nullColor = "#A9A9A9",
-       tooltip = list(
-         valueDecimals = 0,
-         valueSuffix = "%"
-       )
-       #,
-       #download_map_data = FALSE
-     ) %>%
-       highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop_disp} % <br> Anzahl: {point.wert_disp}") %>%
-       highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-       highcharter::hc_title(
-         text = titel_m,
-         margin = 10,
-         align = "center",
-         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-       ) %>%
-       highcharter::hc_chart(
-         style = list(fontFamily = "SourceSans3-Regular")
-       ) %>% highcharter::hc_size(600, 550) %>%
-       highcharter::hc_credits(enabled = FALSE) %>%
-       highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
-
-
      df <- values_male
      joinby <- c("name", "bundesland")
      name <- paste0(faecher)
@@ -2471,7 +2408,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
      mincolor <- "#fcfcfd"
      maxcolor <- "#b16fab"
      map_selection <- 1
-     out_1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection)
+     out_2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection)
 
 
 
@@ -2540,7 +2477,7 @@ arbeitsmarkt_wahl_gender <- function(r) {
        # plot
 
        titel <-  titel_w
-       tooltip <-  "{point.region} <br> Anteil: {point.prop_disp} %"
+       tooltip <-  "{Anteil: {point.prop_disp} %"
        format <- "{value}%"
        color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                   "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
@@ -3195,7 +3132,7 @@ arbeitsmarkt_lk_verlauf <- function(r){
                     wert_ges = wert.y) %>%
       dplyr::mutate(prop = round(wert/wert_ges *100, 1))
 
-    df$landkreis[df$landkreis == "alle Landkreise"] <- "Landesdurchschnitt"
+    df$landkreis[df$landkreis == "alle Landkreise"] <- "Insgesamt"
 
     df$prop_disp <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
