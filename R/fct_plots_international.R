@@ -514,41 +514,14 @@ plot_international_map_fem <- function(r){
   }
 
     # plot
-    # highcharter::hcmap(
-    #   map = map_selection,
-    #   data = map_data_1,
-    #   value = "wert",
-    #   joinBy = c("hc-a2", "alpha2"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0(fach_m),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    # )%>%
-    #   highcharter::hc_tooltip(pointFormat = hoverplot) %>%
-    #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#154194",labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = title_dyn,
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>%  highcharter::hc_size(size_width, size_hight) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
+##################
 
 
       df <- map_data_1
       joinby <- c("hc-a2", "alpha2")
       name <- paste0(fach_m)
       tooltip <-hoverplot
-      titel <-titel_dyn
+      titel <-title_dyn
       mincolor <- "#f4f5f6"
       maxcolor <- "#154194"
       out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection)
@@ -1180,6 +1153,8 @@ plot_international_schule_map <- function(r) {
 
 
  map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
+
+ browser()
 
   # plot
   highcharter::highchart(type = "map") %>%
@@ -4045,10 +4020,14 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
+  #r <- list(vergleich_y_int_arbeitsmarkt = 2012,vergleich_l_int_arbeitsmarkt = c("Australien", "Ungarn", "Deutschland"),vergleich_f_int_arbeitsmarkt = "MINT")
+  # load UI inputs from reactive value
 
   timerange <- r$vergleich_y_int_arbeitsmarkt
   land_m <- r$vergleich_l_int_arbeitsmarkt
   fach_m <- r$vergleich_f_int_arbeitsmarkt
+
+  browser()
 
   variable_set <- c("Anteil Absolvent*innen nach Fach an allen Fächern",
                     "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
@@ -4094,10 +4073,10 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
       out <- NULL
     } else {
       out <- list(point = list(x = x -1,
-                        y = tooltip_data$max[x],
-                        xAxis = 0,
-                        yAxis = 0),
-           text = as.character(tooltip_data$Difference[x]))
+                               y = tooltip_data$max[x],
+                               xAxis = 0,
+                               yAxis = 0),
+                  text = as.character(tooltip_data$Difference[x]))
     }
     return(out)
   })
@@ -4106,13 +4085,10 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
   tmp_df$variable <- factor(tmp_df$variable, levels = c("Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern",
                                                         "Anteil Absolvent*innen nach Fach an allen Fächern"))
-
-  browser()
-
   # Create the plot
   plot <- highcharter::hchart(object = tmp_df,
-                      type = "column",
-                      mapping = highcharter::hcaes(x = land, y = wert, group = variable))  %>%
+                              type = "column",
+                              mapping = highcharter::hcaes(x = land, y = wert, group = variable))  %>%
     highcharter::hc_xAxis(title="Land") %>%
     highcharter::hc_yAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(
@@ -4139,6 +4115,7 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
           style = list(color = 'black'),
           backgroundColor = 'none', # Remove background color
           borderWidth = 0#, # Remove box
+          #shadow = FALSE,
         )
       )
     )
@@ -4146,6 +4123,5 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
   return(plot)
 }
-
 
 
