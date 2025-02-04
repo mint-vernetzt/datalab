@@ -489,23 +489,20 @@ studierende_bula_mint <- function(r) {
 
     df <- df[with(df, order(proportion, decreasing = TRUE)),]
 
+    browser()
+
     # Plot
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
-      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
+      highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.proportion} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
       highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
       highcharter::hc_xAxis(title= list(text="")) %>% #Y-Achse - keine Beschriftung
 
       #Anpassung der Farben
-
       highcharter::hc_plotOptions(bar = list(
         colorByPoint = TRUE,
         colors = ifelse(df$region == "Deutschland", "#b16fab",
                         ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
                                ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
-
-
-
-
       highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in MINT-Fächern an allen ", help_l,  " (", timerange, ")"),
                             margin = 25,
                             align = "center",
@@ -2944,9 +2941,10 @@ studienzahl_choice_gender <- function(r) {
       dplyr::select(region, fach, jahr, indikator, geschlecht, wert) %>%
       dplyr::collect()
 
+
     titel <- ifelse(states == "Saarland",
-                    paste0("Weibliche Studierende oder Absolvent:innen im ", states, " nach Fach"),
-                    paste0("Weibliche Studierende oder Absolvent:innen in ", states, " nach Fach"))
+                    paste0("Weibliche ",  paste(v_lab, collapse = " & "), " im ", states, " nach Fach"),
+                    paste0("Weibliche ",  paste(v_lab, collapse = " & "), " in ", states, " nach Fach"))
 
     if (absolut_selector=="In Prozent"){
 
@@ -4156,7 +4154,7 @@ studierende_international_bula_mint <- function(r) {
       df$display_diff <- prettyNum(df$diff, big.mark = ".", decimal.mark = ",")
       df$display_diff <- ifelse(df$diff < 0, paste0("-", df$display_diff), paste0("+", df$display_diff))
 
-
+      browser()
 
 
       titel <-  paste0("MINT-Anteil von ", label, " im Zeitverlauf")
@@ -4165,7 +4163,7 @@ studierende_international_bula_mint <- function(r) {
       format <- "{value}%"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color)
 
 
 
@@ -4194,31 +4192,6 @@ studierende_international_bula_mint <- function(r) {
       df$display_diff <- prettyNum(df$diff, big.mark = ".", decimal.mark = ",")
       df$display_diff <- ifelse(df$diff < 0, paste0("-", df$display_diff), paste0("+", df$display_diff))
 
-
-
-      # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = region))%>%
-      #   highcharter::hc_tooltip(pointFormat = paste0("{point.region} <br> Wert: {point.display_abs} <br>Veränderung zwischen ", timerange[1],
-      #                                                " und ", timerange[2], ": {point.display_diff} %")) %>%
-      #   highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      #   highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      #   #highcharter::hc_caption(text = "Quelle: ",  style = list(fontSize = "12px") ) %>%
-      #   highcharter::hc_title(text = paste0("Anzahl der ", label, " in MINT im Zeitverlauf"),
-      #                         margin = 45,
-      #                         align = "center",
-      #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      #   highcharter::hc_colors(c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-      #                            "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")) %>%
-      #   highcharter::hc_chart(
-      #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      #   ) %>%
-      #   highcharter::hc_exporting(enabled = FALSE,
-      #                             buttons = list(contextButton = list(
-      #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-      #                               onclick = highcharter::JS("function () {
-      #                                                         this.exportChart({ type: 'image/png' }); }"),
-      #                               align = 'right',
-      #                               verticalAlign = 'bottom',
-      #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
 
       titel <-paste0("Anzahl der ", label, " in MINT im Zeitverlauf")

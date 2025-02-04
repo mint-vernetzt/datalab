@@ -1154,7 +1154,6 @@ plot_international_schule_map <- function(r) {
 
  map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
- browser()
 
   # plot
   highcharter::highchart(type = "map") %>%
@@ -1646,7 +1645,6 @@ plot_international_schule_migration <- function(r) {
   dfs <- dfs %>%
     group_by(land, indikator) %>%
     summarise(wert = mean(wert, na.rm = TRUE), .groups = "drop")
-  # browser()
 
   plot_data <- data_line %>%
     select(land, indikator, wert) %>%
@@ -1735,8 +1733,8 @@ plot_international_schule_migration <- function(r) {
         # Layout anpassen
         plotly::layout(
           title = "Vergleich der sozialen Statuswerte",
-          xaxis = list(title = "Wert"),
-          yaxis = list(title = "Land"),
+          xaxis = list(title = ""),
+          yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
           hoverlabel = list(bgcolor = "white"),
           legend = list(
@@ -1799,8 +1797,8 @@ plot_international_schule_migration <- function(r) {
         # Layout anpassen
         plotly::layout(
           title = "Vergleich der Geschlechter",
-          xaxis = list(title = "Wert"),
-          yaxis = list(title = "Land"),
+          xaxis = list(title = ""),
+          yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
           hoverlabel = list(bgcolor = "white"),
           legend = list(
@@ -1863,8 +1861,8 @@ plot_international_schule_migration <- function(r) {
         # Layout anpassen
         plotly::layout(
           title = "Vergleich der Geschlechter",
-          xaxis = list(title = "Wert"),
-          yaxis = list(title = "Land"),
+          xaxis = list(title = ""),
+          yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
           hoverlabel = list(bgcolor = "white"),
           legend = list(
@@ -1950,8 +1948,8 @@ plot_international_schule_migration <- function(r) {
         # Layout anpassen
         plotly::layout(
           title = "Vergleich der Zuwanderungsgeschichte",
-          xaxis = list(title = "Wert"),
-          yaxis = list(title = "Land"),
+          xaxis = list(title = ""),
+          yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
           hoverlabel = list(bgcolor = "white"),
           legend = list(
@@ -2035,8 +2033,8 @@ plot_international_schule_migration <- function(r) {
         # Layout anpassen
         plotly::layout(
           title = "Vergleich des Bildungskapitals",
-          xaxis = list(title = "Wert"),
-          yaxis = list(title = "Land"),
+          xaxis = list(title = ""),
+          yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
           hoverlabel = list(bgcolor = "white"),
           legend = list(
@@ -2128,6 +2126,19 @@ plot_international_schule_migration <- function(r) {
   #       yanchor = "top"
   #     )
   #   )
+
+  fig <- fig %>%
+    plotly::config(
+      modeBarButtonsToRemove = c(
+        "zoom2d", "pan2d", "select2d", "lasso2d",
+        "autoScale2d", "resetScale2d",
+        "toggleSpikelines", "hoverClosestCartesian", "hoverCompareCartesian"
+      ),
+      displaylogo = FALSE,  # Entfernt das Plotly-Logo
+      showLink = FALSE
+    )
+
+
 
 
   fig
@@ -4026,8 +4037,6 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
   timerange <- r$vergleich_y_int_arbeitsmarkt
   land_m <- r$vergleich_l_int_arbeitsmarkt
   fach_m <- r$vergleich_f_int_arbeitsmarkt
-
-  browser()
 
   variable_set <- c("Anteil Absolvent*innen nach Fach an allen Fächern",
                     "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
