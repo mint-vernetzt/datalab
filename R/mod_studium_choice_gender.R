@@ -10,6 +10,24 @@
 mod_studium_choice_gender_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
+
+
+
+
     p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_studi_gen_wahl"),
@@ -105,11 +123,16 @@ mod_studium_choice_gender_ui <- function(id){
                          "Studienanfänger:innen (1. Hochschulsemester)",
                          "Absolvent:innen"
                        ),
+                       # selected = c("Studierende", "Studienanfänger:innen (1. Hochschulsemester)")
+                       # ,
+                       # multiple = T,
+                       # options =  list(
+                       #   "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
+                       multiple = TRUE,
+                       options = list(`actions-box` = TRUE,
+                                      `deselect-all-text` = "Alle abwählen",
+                                      `select-all-text` = "Alle auswählen"),
                        selected = c("Studierende", "Studienanfänger:innen (1. Hochschulsemester)")
-                       ,
-                       multiple = T,
-                       options =  list(
-                         "max-options-text" = "Maximal 2 Studierendengruppen auswählen")
                      ),
                      p("Fächergruppe:"),
                      shinyWidgets::pickerInput(

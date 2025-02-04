@@ -2158,9 +2158,12 @@ timss <- bind_rows(
 #   timss_gender %>% mutate(across(wert,~ as.numeric(.)))
 # )
 
+
+timss$fach <- replace(timss$fach, timss$fach == "Mathematics", "Mathematik")
+
 usethis::use_data(timss, overwrite=T)
 
 save(timss, file = "schule_timss.rda")
-
+save(timss, file = "timss.rda")
 
 

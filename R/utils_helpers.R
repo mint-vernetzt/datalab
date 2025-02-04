@@ -907,7 +907,10 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
 
 #df, titel, x, y, tooltip
 
-linebuilder <- function(df, titel, x , y, group, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24")){
+linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24")){
+
+  df <- df %>%
+    dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
 
   out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = !!rlang::sym(group))) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -933,27 +936,135 @@ linebuilder <- function(df, titel, x , y, group, tooltip, format, color = c("#b1
 
 }
 
+}
 
-balkenbuilder <- function(df123, titel, subtitel ,group = "fachbereich"){
 
-  out <- highcharter::hchart(df123, 'bar', highcharter::hcaes(y = prop, x = indikator, group = !!rlang::sym(group)))%>%
-    highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}") %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color, optional=NULL){
+
+  if(is.null(group) && is.null(optional)){
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
+      highcharter::hc_tooltip(pointFormat = tooltip) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45, # o. war vorher /
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  } else if (!is.null(group) && is.null(optional)){
+
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
+      highcharter::hc_tooltip(pointFormat = tooltip) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45, # o. war vorher /
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  } else if (is.null(group) && !is.null(optional)) {
+
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
+      highcharter::hc_tooltip(pointFormat = tooltip) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      {do.call(highcharter::hc_plotOptions,  c(list(.), optional))} %>% #keine ahnung wieso chatgpt help
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45, # o. war vorher /
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+  } else if (!is.null(group) && !is.null(optional)){
+
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
+      highcharter::hc_tooltip(pointFormat = tooltip) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      {do.call(highcharter::hc_plotOptions,  c(list(.), optional))} %>% #keine ahnung wieso chatgpt help
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45, # o. war vorher /
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = FALSE,
+                                buttons = list(contextButton = list(
+                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                  onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                  align = 'right',
+                                  verticalAlign = 'bottom',
+                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+
+  } else {
+    return(1)
+  }
+
+
+  return(out)
+
+}
+
+
+balkenbuilder2 <- function(TF, df, titel , x, y, group, tooltip, format, color){
+
+  out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format), reversedStacks = TF) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-    highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+    highcharter::hc_colors(color) %>%
     highcharter::hc_title(text = titel,
-                          margin = 45,
+                          margin = 45, # o. war vorher /
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_subtitle(text = subtitel,
-                             margin = 20,
-                             align = "center",
-                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
     highcharter::hc_exporting(enabled = FALSE,
                               buttons = list(contextButton = list(
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
@@ -963,8 +1074,147 @@ balkenbuilder <- function(df123, titel, subtitel ,group = "fachbereich"){
                                 verticalAlign = 'bottom',
                                 theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-
   return(out)
 
 }
+
+balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, optional2){
+
+  out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    {do.call(highcharter::hc_plotOptions,  c(list(.), optional))} %>% #keine ahnung wieso chatgpt help
+    {
+      if (!is.null(optional2)) {
+        optional2(.)
+      } else {
+        .
+      }
+    } %>%
+    highcharter::hc_colors(color) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45, # o. war vorher /
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = FALSE,
+                              buttons = list(contextButton = list(
+                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
+                                onclick = highcharter::JS("function () {
+                                                              this.exportChart({ type: 'image/png' }); }"),
+                                align = 'right',
+                                verticalAlign = 'bottom',
+                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+  return(out)
+
+
+}
+
+
+#mapbuilder
+
+mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = map_selection){
+
+if(prop==FALSE && wert == FALSE){
+  out<- highcharter::hcmap(
+    "countries/de/de-all",
+    data = df,
+    value = "proportion",
+    joinBy = joinby,
+    borderColor = "#FAFAFA",
+    name = name,
+    borderWidth = 0.1,
+    nullColor = "#A9A9A9",
+    tooltip = list(
+      valueDecimals = 0,
+      valueSuffix = "%"
+    )) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_colorAxis(min=0,minColor= mincolor, maxColor=maxcolor, labels = list(format = "{text}%")) %>%
+    highcharter::hc_title(
+      text = titel,
+      margin = 10,
+      align = "center",
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular")
+    ) %>% highcharter::hc_size(600, 550) %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                           verticalAlign = "bottom")
+
+} else if(prop == TRUE){
+  out<- highcharter::hcmap(
+    "countries/de/de-all",
+    data = df,
+    value = "prop",
+    joinBy = joinby,
+    borderColor = "#FAFAFA",
+    name = name,
+    borderWidth = 0.1,
+    nullColor = "#A9A9A9",
+    tooltip = list(
+      valueDecimals = 0,
+      valueSuffix = "%"
+    )) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_colorAxis(min=0,minColor= mincolor, maxColor=maxcolor, labels = list(format = "{text}%")) %>%
+    highcharter::hc_title(
+      text = titel,
+      margin = 10,
+      align = "center",
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular")
+    ) %>% highcharter::hc_size(600, 550) %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                           verticalAlign = "bottom")
+
+} else if(wert==TRUE){
+
+  out <- highcharter::hcmap(
+    map = map,
+    data = df,
+    value = "wert",
+    joinBy = joinby,
+    borderColor = "#FAFAFA",
+    name = name,
+    borderWidth = 0.1,
+    nullColor = "#A9A9A9",
+    tooltip = list(
+      valueDecimals = 0,
+      valueSuffix = "%"
+    )) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_colorAxis(min=0, minColor= mincolor, maxColor=maxcolor,labels = list(format = "{text}%")) %>%
+    highcharter::hc_title(
+      text = titel,
+      margin = 10,
+      align = "center",
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular")
+    ) %>% highcharter::hc_size(1000, 600) %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                           verticalAlign = "bottom")
+
+}
+
+  return(out)
+}
+
+
+
+
+
 
