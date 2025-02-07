@@ -1533,11 +1533,12 @@ plot_international_schule_migration <- function(r) {
   label_m <- r$line_l_int_schule
   fach_m <- r$line_f_int_schule
   leistungsindikator_m <- r$line_li_int_schule
+   # lander <- r$regio_int_schule
 
-  # if(label_m == "TIMSS") {lander <- r$regio_int_schule} else{
-  #   lander <- r$regio_int_schule_pisa
-  # }
-  #
+  if(label_m == "TIMSS") {lander <- r$regio_int_schule_timss} else{
+    lander <- r$regio_int_schule_pisa
+  }
+
 
   if (is.null(fach_m)) { fach_m <- ""}
 
@@ -2141,9 +2142,6 @@ plot_international_schule_migration <- function(r) {
     )
 
 
-
-
-  fig
   return(fig)
 
 }
