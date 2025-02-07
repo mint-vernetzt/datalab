@@ -936,8 +936,6 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
 
 }
 
-}
-
 
 balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color, optional=NULL){
 
