@@ -2470,12 +2470,12 @@ library(dplyr)
 
 
 #### Rohdaten einlesen -------------------------------------------------------
-# akro <- "kbr"
-# pfad <- paste0("C:/Users/", akro,
-#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 
-pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+#pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 epa_einlesen <- function(name, sheet_s){
   df <- readxl::read_excel(paste0(pfad, name),
                            sheet = sheet_s)
@@ -2585,6 +2585,7 @@ epa23$jahr <- 2023
 
 # alles zusammen
 epa <- rbind(epa20, epa21, epa22, epa23)
+rm(list = ls()[-(1:2)]) # zwischen-Aufräumen
 
 # Bezeichnungen von Berufen in Text und Code trennen
 epa$beruf_schlüssel <- stringr::str_extract(epa$beruf, "[[:digit:]]+") #zahlen übertragen
@@ -2606,16 +2607,16 @@ epa <- epa %>%
   ))
 
 # in shinyapp:
-usethis::use_data(epa, overwrite = T)
+#usethis::use_data(epa, overwrite = T)
 
 
 ### Detaillierte Daten für DE ####
 
 
 #### Rohdaten einlesen -------------------------------------------------------
-# akro <- "kbr"
-# pfad <- paste0("C:/Users/", akro,
-#                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 
 
@@ -3489,7 +3490,6 @@ epa_detail <- epa_detail %>%
   dplyr::left_join(fachgruppen, by = "berufsgruppe_schlüssel",
                    relationship = "many-to-many")
 
-
 # MINT Aggregat zuweisen/berechnen
 mint_f <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Fachkräfte", col_names = TRUE)
 mint_s <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Spezialisten", col_names = TRUE)
@@ -3658,10 +3658,56 @@ epa_detail <- epa_detail %>%
 epa_detail$epa_kat <- ifelse(epa_detail$indikator == "Engpassindikator", epa_detail$epa_kat, NA)
 
 
-# in shinyapp:
-# arbeitsmarkt_epa_detail <- epa_detail
-# usethis::use_data(arbeitsmarkt_epa_detail, overwrite = T)
+## Einschub - epa anhängen
+mint$Code <- substr(mint$Code, 1, 3)
+mint <- mint %>% rename(beruf_schlüssel = Code)
+mint <- unique(mint)
+epa <- epa %>% left_join(mint, by = "beruf_schlüssel")
+epa$mint_select[is.na(epa$mint_select)] <- "Nicht MINT"
 
+epa_aggs <- epa %>%
+  select(-epa_kat) %>%
+  group_by(jahr, region, anforderung, mint_select) %>%
+  summarise(wert = mean(wert, na.rm = TRUE)) %>%
+  ungroup()
+
+epa_aggs$epa_kat <- ifelse(epa_aggs$wert >= 2.0, "Engpassberuf",
+                           ifelse(epa_aggs$wert < 1.5, "Kein Engpassberuf",
+                                  "Anzeichen eines Engpassberufs")
+                           )
+epa_aggs <- epa_aggs %>%
+  mutate(bereich = "Arbeitsmakrt",
+         berufsgruppe_schlüssel = NA,
+         beruf = mint_select) %>%
+  rename(beruf_schlüssel = berufsgruppe_schlüssel)
+epa_aggs <- epa_aggs[, c("bereich", "beruf",
+           "beruf_schlüssel", "region", "anforderung", "jahr", "wert",
+           "epa_kat", "mint_select"
+)]
+epa <- rbind(epa, epa_aggs)
+
+## epa anhängen an epa_detail
+epa <- epa %>%
+  rename(berufsgruppe_schlüssel = beruf_schlüssel,
+         berufsgruppe = beruf,
+         mint_zuordnung = mint_select) %>%
+  mutate(beruf_schlüssel = NA,
+         beruf = NA,
+         kategorie = "Engpassanalyse",
+         anzahl_beschäftigte = NA,
+         indikator = "Engpassindikator",
+         indikator_anzahl = NA)
+
+epa <- epa[,c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf", "beruf_schlüssel",
+              "anzahl_beschäftigte", "mint_zuordnung", "region", "anforderung",
+              "jahr", "kategorie", "indikator_anzahl", "indikator",
+              "wert", "epa_kat")]
+
+#epa_detail <- rbind(epa_detail, epa)
+arbeitsmarkt_epa_detail <- epa_detail
+arbeitsmarkt_epa <- epa
+save(arbeitsmarkt_epa_detail, file = "arbeitsmarkt_epa_detail.rda")
+save(arbeitsmarkt_epa, file = "arbeitsmarkt_epa.rda")
 
 
 ## Arbeitslosten-Stellen-Relation + Vakanzzeit -----------------------------

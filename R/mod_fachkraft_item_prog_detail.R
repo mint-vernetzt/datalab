@@ -33,7 +33,9 @@ mod_fachkraft_item_prog_detail_ui <- function(id){
     p("Beschäftigte betrachtet nach:"),
     shinyWidgets::pickerInput(
       inputId = ns("fachkraft_item_prog_detail_gruppe"),
-      choices = fachkraft_ui_prognose_gruppen(),
+      choices = c("Berufslevel", "Geschlecht",
+        "Nationalität"
+      ),
       selected = c("Nationalität"),
       multiple = FALSE
     ),

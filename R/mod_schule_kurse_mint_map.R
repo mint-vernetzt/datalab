@@ -113,10 +113,7 @@ mod_schule_kurse_mint_map_ui <- function(id){
     ),
 
     br(),
-    shinyBS::bsPopover(id="dh_schule_fach_neu2", title = "",
-                       content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                       trigger = "hover"),
-    tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_schule_fach_neu2"),
+    darstellung(id = "dh_schule_fach_neu2"),
     br(),
 
   )

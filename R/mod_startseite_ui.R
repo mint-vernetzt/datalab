@@ -21,7 +21,6 @@ mod_startseite_start_ui <- function(id){
         img(src='www/Banner_Willkommen.jpg',
             class = "img-responsive",
             height = "300px",
-            # width = "150px",
             alt = "Banner Start",
             style="display: block; margin-left: auto; margin-right: auto;"
         )))),
@@ -66,32 +65,6 @@ mod_startseite_start_ui <- function(id){
       )
     ),
 
-    # How-To
-    # fluidRow(
-    #   shinydashboard::box(
-    #     width = 10,
-    #     img(src='www/How-To_MINT-DataLab_2.png',
-    #         class = "img-responsive",
-    #         # height = "800px",
-    #         #width = "150px",
-    #         alt = "How to",
-    #         style="display: block; margin-left: auto; margin-right: auto;"
-    #     ))
-    # ),
-
-
-    # # How-To
-    # fluidRow(
-    #      shinydashboard::box(
-    #         width = 10,
-    #        img(src='www/How-To_MINT-DataLab_2.png',
-    #                     class = "img-responsive",
-    #                    # height = "800px",
-    #                     #width = "150px",
-    #                     alt = "How to",
-    #                     style="display: block; margin-left: auto; margin-right: auto;"
-    #                 ))
-    # ),
 
 
     tags$head(
@@ -103,38 +76,18 @@ mod_startseite_start_ui <- function(id){
         width = 10,
         img(src='www/HowToMINTDataLab1.png',
             class = "img-responsive",
-            # height = "800px",
-            #width = "150px",
             alt = "How to",
             style="display: block; margin-left: auto; margin-right: auto;
             max-width: 80%;"
         ),
         img(src='www/HowToMINTDataLab2.png',
             class = "img-responsive",
-            # height = "800px",
-            #width = "150px",
             alt = "How to",
             style="display: block; margin-left: auto; margin-right: auto;
             max-width: 80%;"
         )
         )
     ),
-    # br(),
-    #
-    # fluidRow(
-    #   shinydashboard::box(
-    #
-    #     width = 10,
-    #     style = "margin-top: 0; padding: 0;",
-    #     img(src='www/ht2_neu.png',
-    #         class = "img-responsive",
-    #         # height = "800px",
-    #         #width = "150px",
-    #         alt = "How to",
-    #         style="display: block; margin-left: auto; margin-right: auto;
-    #         max-width: 80%;"
-    #     ))
-    # ),
 
 
     # Footer
@@ -163,10 +116,6 @@ mod_startseite_start_server <- function(id){
         height = 450,
         width = "95%"
       )
-      # +
-      #   settings(
-      #     autoplay = TRUE
-      #   )
     })
 
   })

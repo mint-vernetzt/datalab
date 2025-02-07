@@ -106,11 +106,7 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
                                                    lib = "glyphicon"))
                      ),
                      br(),
-                     shinyBS::bsPopover(id="dh_beruf_frauen_1", title = "",
-                                        content = paste0("Falls die Grafik abgeschnitten dargestellt wird, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                        trigger = "hover", placement = "top"),
-                     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_beruf_frauen_1"),
-
+                     darstellung(id="dh_beruf_frauen_1"),
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_beruf_frauen_1", title="",

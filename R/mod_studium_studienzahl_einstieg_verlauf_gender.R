@@ -33,11 +33,7 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
       choices = 2013:2023,
       selected = c(2017, 2023)
     ),
-    # p("Nur Lehramt anzeigen:"),
-    # tags$div(
-    #   shinyWidgets::materialSwitch(inputId = ns("nurLehramt_studierende_einstieg_verlauf_gender"), label = "Nein", inline = TRUE),
-    #   tags$span("Ja")
-    # ),
+
     p("Studierendengruppen:"),
     shinyWidgets::pickerInput(
       inputId = ns("genzl"),
@@ -89,19 +85,6 @@ mod_studium_studienzahl_einstieg_verlauf_gender_ui <- function(id){
       selected = "Alle MINT-Fächer",
       multiple = FALSE),
 
-    # p("Auswahl der Hochschulform:"),
-    # conditionalPanel(condition = "input.nurLehramt_studierende_einstieg_verlauf_gender == false",
-    #                  ns = ns,
-    #                  shinyWidgets::pickerInput(
-    #                    inputId = ns("hochschulform_studierende_einstieg_verlauf_gender_1"),
-    #                    choices = c("Alle Hochschulen"="insgesamt", "Universität" = "Uni", "Fachhochschule" = "FH")
-    #                  )),
-    # conditionalPanel(condition = "input.nurLehramt_studierende_einstieg_verlauf_gender != false",
-    #                  ns = ns,
-    #                  shinyWidgets::pickerInput(
-    #                    inputId = ns("hochschulform_studierende_einstieg_verlauf_gender_2"),
-    #                    choices = "Uni"
-    #                  ))
 
     p("Darstellungsart:"),
     shinyWidgets::radioGroupButtons(
@@ -148,14 +131,6 @@ mod_studium_studienzahl_einstieg_verlauf_gender_server <- function(id, r){
       r$gen_z_region <- input$gen_z_region
     })
 
-    # observeEvent(input$hochschulform_studierende_einstieg_verlauf_gender_1, {
-    #   r$hochschulform_studierende_einstieg_verlauf_gender_1 <- input$hochschulform_studierende_einstieg_verlauf_gender_1
-    # })
-    #
-    #
-    # observeEvent(input$hochschulform_studierende_einstieg_verlauf_gender_2, {
-    #   r$hochschulform_studierende_einstieg_verlauf_gender_2 <- input$hochschulform_studierende_einstieg_verlauf_gender_2
-    # })
 
   })
 }

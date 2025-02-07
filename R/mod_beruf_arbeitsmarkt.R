@@ -169,27 +169,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              )
                     ),
 
-                    # erstmal raus, weil so kompliziert
-                    # tabPanel("Berufswahl MINT Frauen, nach Bundesländer (RAUS))", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            mod_beruf_arbeitsmarkt_bl_gender_vergleich_ui("beruf_arbeitsmarkt_bl_gender_vergleich_ui_1")
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            plotOutput(ns("plot_arbeitsmarkt_bl_gender_vergleich"))
-                    #            ,p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."))
-                    #
-                    # )
-
-
-                    # ,
-                    # tabPanel("Datensatz", br(),
-
-                    #                                  class = "butt",
-                    #                                  icon = shiny::icon("download")))
-                    # )
         )
                     ))),
 
@@ -358,33 +337,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_frauen_2")
                              )
                     ),
-            # tab 3 Balken
-                    # tabPanel("Anteil Frauen an verschiedenen MINT-Berufsgruppen", br(),
-                    #
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            tags$style(".well {background-color:#FFFFFF;}"),
-                    #            tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                    #            mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui("mod_beruf_arbeitsmarkt_einstieg_vergleich_gender_ui_1"),
-                    #            # br(),br(),
-                    #            # downloadButton(
-                    #            #   outputId = ns("download_btn_plot_einstieg_vergleich_gender"),
-                    #            #   label = "Download",
-                    #            #   icon = icon("download")),
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_vergleich_gender")),
-                    #                                         color = "#154194"),
-                    #
-                    #            p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                    #            shinyBS::bsPopover(id = "h_beruf_frauen_3", title = "",
-                    #                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
-                    #                               placement = "top",
-                    #                               trigger = "hover"),
-                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_frauen_3")
-                    #            )
-                    # ),
+
             # Wahl nach Geschlecht in Boxen
             tabPanel("Berufswahlverhalten nach Geschlecht", br(),
 
@@ -408,60 +361,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_4")
                      )
             ),
-            # Berufswahl nach Geschlecht Karte
-            # tabPanel("Vergleich Anteil von Frauen & Männer (Karte)", br(),
-            #
-            #          shiny::sidebarPanel(
-            #            width = 3,
-            #            mod_beruf_arbeitsmarkt_bl_gender_ui("mod_beruf_arbeitsmarkt_bl_gender_ui_1"),
-            #            # br(),br()
-            #            # ,
-            #            # downloadButton(
-            #            #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_gender_1"),
-            #            #   label = "Download (links)",
-            #            #   icon = icon("download")),
-            #            # downloadButton(
-            #            #   outputId = ns("download_btn_plot_arbeitsmarkt_bl_gender_2"),
-            #            #   label = "Download (rechts)",
-            #            #   icon = icon("download")),
-            #          ),
-            #          shiny::mainPanel(
-            #            width = 9,
-            #            shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_bl_gender")),
-            #                                         color = "#154194"),
-            #            p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-            #            shinyBS::bsPopover(id = "h_beruf_mint_5", title = "",
-            #                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
-            #                               placement = "top",
-            #                               trigger = "hover"),
-            #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_5")
-            #          )
-            # ),
-            # Berufswahl nach Geschlecht Zeitverlauf
-            # tabPanel("Vergleich Anteil MINT bei Frauen nach Bundesländern im Zeitverlauf", br(),
-            #
-            #          shiny::sidebarPanel(
-            #            width = 3,
-            #            mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui("mod_beruf_arbeitsmarkt_bl_gender_verlauf_ui_1"),
-            #            # br(),br(),
-            #            # downloadButton(
-            #            #   outputId = ns("download_btn_plot_beruf_arbeitsmarkt_bl_gender_verlauf"),
-            #            #   label = "Download",
-            #            #   icon = icon("download")),
-            #          ),
-            #          shiny::mainPanel(
-            #            width = 9,
-            #            shinycssloaders::withSpinner(htmlOutput(ns("plot_beruf_arbeitsmarkt_bl_gender_verlauf")),
-            #                                         color = "#154194"),
-            #
-            #            p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-            #            shinyBS::bsPopover(id = "h_beruf_mint_6", title = "",
-            #                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
-            #                               placement = "top",
-            #                               trigger = "hover"),
-            #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_6")
-            #          )
-            # ),
             tabPanel("Top-MINT-Ausbildungsberufe nach Geschlecht", br(),
 
                      shiny::sidebarPanel(
@@ -659,54 +558,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
             )))
 
-    # ,
-    # fluidRow(
-    #   shinydashboard::box(
-    #     title = "Reste",
-    #     width = 12,
-    #     p("Lorem ipsum dolor sit amet"),
-    #     tabsetPanel(type = "tabs",
-    #                 tabPanel("Überblick (Anforderungsniveau)", br(),
-    #
-    #                                   tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-    #                                   .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-    #                                   shiny::sidebarPanel(
-    #                                     mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_vergleich_ui_1")
-    #                                   ),
-    #                                   shiny::mainPanel(
-    #                                     plotOutput(ns("plot_arbeitsmarkt_vergleich"))
-    #                                   )
-    #                          ),
-    #                 tabPanel("Überblick (Anforderungsniveau)", br(),
-    #
-    #                          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-    #                          .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-    #                          shiny::sidebarPanel(
-    #                            mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_vergleich_ui_1")
-    #                          ),
-    #                          shiny::mainPanel(
-    #                            plotOutput(ns("plot_arbeitsmarkt_vergleich_gender"))
-    #                          )
-    #                 ),
-    #                 tabPanel("Vergleich (Beschäftigungsform)", br(),
-    #
-    #                          shiny::sidebarPanel(
-    #                            mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_gender_verlauf_ui_1")
-    #                          ),
-    #                          shiny::mainPanel(
-    #                            highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf_gender")))
-    #                 ),
-    #                 tabPanel("Vergleich (Anforderungsniveaus)", br(),
-    #
-    #                          shiny::sidebarPanel(
-    #                            mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui("mod_beruf_arbeitsmarkt_anforderungen_verlauf_ui_1")
-    #                          ),
-    #                          shiny::mainPanel(
-    #                            highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf"))
-    #                          )
-    #                 )
-    #
-    # )
     ,funct_footer()
     )
 }
@@ -724,20 +575,6 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     output$plot_arbeitsmarkt_faecher_anteil <- renderUI({
       arbeitsmarkt_faecher_anteil(r)
     })
-    # plot_arbeitsmarkt_waffle_react <- reactive({
-    #   arbeitsmarkt_anforderungen(r)
-    # })
-    #
-    #
-    # output$plot_arbeitsmarkt_waffle <- renderPlot({
-    #   plot_arbeitsmarkt_waffle_react()
-    # })
-
-    # Tab 2
-
-    # output$plot_einstieg_verlauf <- highcharter::renderHighchart({
-    #   beruf_verlauf_single(r)
-    # })
 
     output$plot_einstieg_verlauf <- renderUI({
       plot_list <- beruf_verlauf_single(r)
@@ -770,37 +607,12 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Tab 3
 
-    # output$plot_einstieg_vergleich <- highcharter::renderHighchart({
-    #   beruf_einstieg_vergleich(r)
-    # })
-
     output$plot_einstieg_vergleich <- renderUI({
       plot_list <- beruf_einstieg_vergleich(r)
-      # r$plot_einstieg_vergleich <- plot_list
-      #
-      # r$plot_einstieg_vergleich_title <- get_plot_title(
-      #   plot = r$plot_einstieg_vergleich
-      # )
-
       plot_list
     })
 
-    # output$download_btn_plot_einstieg_vergleich <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_einstieg_vergleich_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_einstieg_vergleich,
-    #       filename =  r$plot_einstieg_vergleich_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_einstieg_vergleich_title, file)
-    #     file.remove(r$plot_einstieg_vergleich_title)
-    #   }
-    # )
+
 
     # Tab 4
     output$plot_arbeitsmarkt_waffle_gender <- renderPlot({
@@ -811,15 +623,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     output$plot_arbeitsmarkt_bl_gender <- renderUI({
       plot_list <- arbeitsmarkt_bl_gender(r)
-      # r$plot_arbeitsmarkt_bl_gender_left <- plot_list[[1]]
-      # r$plot_arbeitsmarkt_bl_gender_right <- plot_list[[2]]
-      #
-      # r$plot_arbeitsmarkt_bl_gender_left_title <- get_plot_title(
-      #   plot = r$plot_arbeitsmarkt_bl_gender_left
-      # )
-      # r$plot_arbeitsmarkt_bl_gender_right_title <- get_plot_title(
-      #   plot = r$plot_arbeitsmarkt_bl_gender_right
-      # )
+
 
       # return plots
       out <- highcharter::hw_grid(
@@ -829,45 +633,10 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     })
 
-    # output$download_btn_plot_arbeitsmarkt_bl_gender_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_arbeitsmarkt_bl_gender_left_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_arbeitsmarkt_bl_gender_left,
-    #       filename =  r$plot_arbeitsmarkt_bl_gender_left_title,
-    #       width = 700,
-    #       height = 400,
-    #       with_labels = FALSE)
-    #
-    #     file.copy(r$plot_arbeitsmarkt_bl_gender_left_title, file)
-    #     file.remove(r$plot_arbeitsmarkt_bl_gender_left_title)
-    #   }
-    # )
-    #
-    # output$download_btn_plot_arbeitsmarkt_bl_gender_2 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_arbeitsmarkt_bl_gender_right_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #     add_caption_and_download(
-    #       hc = r$plot_arbeitsmarkt_bl_gender_right,
-    #       filename =  r$plot_arbeitsmarkt_bl_gender_right_title,
-    #       width = 700,
-    #       height = 400,
-    #       with_labels = FALSE)
-    #
-    #     file.copy(r$plot_arbeitsmarkt_bl_gender_right_title, file)
-    #     file.remove(r$plot_arbeitsmarkt_bl_gender_right_title)
-    #   }
-    # )
+
 
     # Tab 6
 
-    # output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- highcharter::renderHighchart({
-    #   arbeitsmarkt_bl_gender_verlauf(r)
 
       output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- renderUI({
         plot_list <- arbeitsmarkt_bl_gender_verlauf(r)
@@ -949,61 +718,17 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     output$plot_arbeitsmarkt_faecher_bl <- renderUI({
       plot_list <- arbeitsmarkt_bula_faecher(r)
-      # r$plot_arbeitsmarkt_bl_left <- plot_list[[1]]
-      # r$plot_arbeitsmarkt_bl_right <- plot_list[[2]]
-      #
-      # r$plot_arbeitsmarkt_bl_left_title <- get_plot_title(
-      #   plot = r$plot_arbeitsmarkt_bl_left
-      # )
-      # r$plot_arbeitsmarkt_bl_right_title <- get_plot_title(
-      #   plot = r$plot_arbeitsmarkt_bl_right
-      # )
+
 
       # return plots
       plot_list
 
     })
 
-    # output$download_btn_plot_arbeitsmarkt_bl_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_arbeitsmarkt_bl_left_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_arbeitsmarkt_bl_left,
-    #       filename =  r$plot_arbeitsmarkt_bl_left_title,
-    #       width = 700,
-    #       height = 400,
-    #       with_labels = FALSE)
-    #
-    #     file.copy(r$plot_arbeitsmarkt_bl_left_title, file)
-    #     file.remove(r$plot_arbeitsmarkt_bl_left_title)
-    #   }
-    # )
-    #
-    # output$download_btn_plot_arbeitsmarkt_bl_2 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_arbeitsmarkt_bl_right_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #     add_caption_and_download(
-    #       hc = r$plot_arbeitsmarkt_bl_right,
-    #       filename =  r$plot_arbeitsmarkt_bl_right_title,
-    #       width = 700,
-    #       height = 400,
-    #       with_labels = FALSE)
-    #
-    #     file.copy(r$plot_arbeitsmarkt_bl_right_title, file)
-    #     file.remove(r$plot_arbeitsmarkt_bl_right_title)
-    #   }
-    # )
 
 
     # tab 2
-    # output$plot_arbeitsmarkt_überblick_fächer <- highcharter::renderHighchart({
-    #   arbeitsmarkt_überblick_fächer(r)
-    # })
+
 
     output$plot_arbeitsmarkt_überblick_fächer  <- renderUI({
       plot_list <- arbeitsmarkt_überblick_fächer(r)
@@ -1035,20 +760,18 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Tab 3
 
-    # output$plot_arbeitsmarkt_bl_vergleich <- highcharter::renderHighchart({
-    #   arbeitsmarkt_bl_vergleich(r)
+
+
+    # output$plot_arbeitsmarkt_bl_vergleich  <- renderUI({
+    #   plot_list <- arbeitsmarkt_bl_vergleich(r)
+    #   r$plot_arbeitsmarkt_bl_vergleich <- plot_list
+    #
+    #   r$plot_arbeitsmarkt_bl_vergleich_title <- get_plot_title(
+    #     plot = r$plot_arbeitsmarkt_bl_vergleich
+    #   )
+    #
+    #   plot_list
     # })
-
-    output$plot_arbeitsmarkt_bl_vergleich  <- renderUI({
-      plot_list <- arbeitsmarkt_bl_vergleich(r)
-      r$plot_arbeitsmarkt_bl_vergleich <- plot_list
-
-      r$plot_arbeitsmarkt_bl_vergleich_title <- get_plot_title(
-        plot = r$plot_arbeitsmarkt_bl_vergleich
-      )
-
-      plot_list
-    })
 
     output$download_btn_plot_arbeitsmarkt_bl_vergleich <- downloadHandler(
       contentType = "image/png",
@@ -1069,9 +792,6 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Tab 4
 
-    # output$plot_arbeitsmarkt_top10 <- renderUI({
-    #   arbeitsmarkt_top10(r)
-    # })
 
     output$plot_arbeitsmarkt_top10 <- renderUI({
       plot_list <- arbeitsmarkt_top10(r)
@@ -1138,12 +858,6 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     })
 
 
-
-    # tab 2
-    # output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
-    #   arbeitsmarkt_einstieg_verlauf_gender( r)
-    # })
-
     output$plot_einstieg_verlauf_gender  <- renderUI({
       plot_list <- arbeitsmarkt_einstieg_verlauf_gender(r)
       r$plot_einstieg_verlauf_gender <- plot_list
@@ -1179,9 +893,6 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
       arbeitsmarkt_wahl_gender(r)
     })
 
-    # output$plot_einstieg_vergleich_gender <- highcharter::renderHighchart({
-    #   arbeitsmarkt_einstieg_vergleich_gender(r)
-    # })
 
     output$plot_einstieg_vergleich_gender  <- renderUI({
       plot_list <- arbeitsmarkt_einstieg_vergleich_gender(r)
@@ -1218,63 +929,15 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     output$plot_arbeitsmarkt_detail_map <- renderUI({
      arbeitsmarkt_lk_detail_map(r)
-      # r$plot_arbeitsmarkt_detail_map_left <- plot_list[[1]]
-      # r$plot_arbeitsmarkt_detail_map_right <- plot_list[[2]]
-      #
-      # r$plot_arbeitsmarkt_detail_map_left_title <- get_plot_title(
-      #   plot = r$plot_arbeitsmarkt_detail_map_left
-      # )
-      # r$plot_arbeitsmarkt_detail_map_right_title <- get_plot_title(
-      #   plot = r$plot_arbeitsmarkt_detail_map_right
-      # )
-
-      # return plots
 
 
     })
 
-    # output$download_btn_plot_arbeitsmarkt_detail_map_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_arbeitsmarkt_detail_map_left_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_arbeitsmarkt_detail_map_left,
-    #       filename =  r$plot_arbeitsmarkt_detail_map_left_title,
-    #       width = 700,
-    #       height = 400,
-    #       with_labels = FALSE)
-    #
-    #     file.copy(r$plot_arbeitsmarkt_detail_map_left_title, file)
-    #     file.remove(r$plot_arbeitsmarkt_detail_map_left_title)
-    #   }
-    # )
-    #
-    # output$download_btn_plot_arbeitsmarkt_detail_map_2 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_arbeitsmarkt_detail_map_right_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #     add_caption_and_download(
-    #       hc = r$plot_arbeitsmarkt_detail_map_right,
-    #       filename =  r$plot_arbeitsmarkt_detail_map_right_title,
-    #       width = 700,
-    #       height = 400,
-    #       with_labels = FALSE)
-    #
-    #     file.copy(r$plot_arbeitsmarkt_detail_map_right_title, file)
-    #     file.remove(r$plot_arbeitsmarkt_detail_map_right_title)
-    #   }
-    # )
 
 
 
     # tab 2
 
-    # observeEvent(input$search_in_bar_chart, {
-    #   r$search_in_bar_chart <- input$search_in_bar_chart
-    # })
 
 
     observeEvent(input$search_in_bar_chart, {
@@ -1295,101 +958,6 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
    })
 
 
-    # output$plot_arbeitsmarkt_detail_vergleich  <- renderUI({
-    #   plot_list <- arbeitsmarkt_lk_detail_vergleich(r)
-    #   r$plot_arbeitsmarkt_detail_vergleich <- plot_list
-    #
-    #   r$plot_arbeitsmarkt_detail_vergleich_title <- get_plot_title(
-    #     plot = r$plot_arbeitsmarkt_detail_vergleich
-    #   )
-    #
-    #   plot_list
-    # })
-    #
-    # output$download_btn_plot_arbeitsmarkt_detail_vergleich <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_arbeitsmarkt_detail_vergleich_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_arbeitsmarkt_detail_vergleich,
-    #       filename =  r$plot_arbeitsmarkt_detail_vergleich_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_arbeitsmarkt_detail_vergleich_title, file)
-    #     file.remove(r$plot_arbeitsmarkt_detail_vergleich_title)
-    #
-    #   })
-
-
-
-
-    # Rest
-    # plot_einstieg_pie_react <- reactive({
-    #   arbeitsmarkt_einstieg_pie(data_arbeitsmarkt,r)
-    # })
-    #
-    # output$plot_einstieg_pie <- renderUI({
-    #   plot_einstieg_pie_react()
-    # })
-    #
-    # data_table_einstieg_react <- reactive({
-    #   data_einstieg_beruf(data_arbeitsmarkt, r)
-    # })
-    #
-    # output$data_table_einstieg <- DT::renderDT({
-    #   data_table_einstieg_react()
-    # })
-    #
-    # output$plot_arbeitsmarkt_verlauf <- highcharter::renderHighchart({
-    #   arbeitsmarkt_anforderungen_verlauf(data_arbeitsmarkt, r)
-    # })
-    #
-    # output$plot_arbeitsmarkt_vergleich <- renderPlot({
-    #   arbeitsmarkt_anforderungen_vergleich(data_arbeitsmarkt, r)
-    # })
-    #
-    # output$plot_arbeitsmarkt_verlauf_gender <- highcharter::renderHighchart({
-    #   arbeitsmarkt_anforderungen_verlauf_gender(data_arbeitsmarkt, r)
-    # })
-    #
-    # output$plot_arbeitsmarkt_vergleich_gender <- renderPlot({
-    #   arbeitsmarkt_anforderungen_vergleich_gender(data_arbeitsmarkt, r)
-    # })
-    #
-    # output$plot_arbeitsmarkt_bl_gender_vergleich <- renderPlot({
-    #   arbeitsmarkt_bl_gender_vergleich(data_arbeitsmarkt,r)
-    # })
-    #
-    #
-    # table_lk_analysis_react <- reactive({
-    #   arbeitsmarkt_lk_detail_table(data_arbeitsmarkt_detail, input, r)
-    # })
-    #
-    # observeEvent(input$runBtn, {
-    #   output$table_lk_analysis <- DT::renderDT({
-    #     DT::datatable(isolate(table_lk_analysis_react()),
-    #                   style = "bootstrap",
-    #                   selection = "none",
-    #                   rownames = FALSE,
-    #                   options = list(dom = 't',
-    #                                  columnDefs = list(list(className = "dt-center", targets = "_all"))),
-    #                   escape = FALSE
-    #                   )
-    #     })
-    # })
-    #
-    # # downloader
-    # output$download_data_box1 <- shiny::downloadHandler(
-    #   filename = function() {
-    #     paste("data_kurse", "csv", sep = ".")
-    #   },
-    #   content = function(file){
-    #     write.csv(data_table_einstieg_react(), file)
-    #   }
-    # )
   })
 }
 

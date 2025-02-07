@@ -9,11 +9,25 @@
 #' @importFrom shiny NS tagList
 mod_international_schule_migration_ui <- function(id){
 
-  # logger::log_debug("start mod_international_schule_migration_ui")
 
 
   ns <- NS(id)
   tagList(
+
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
+
 
     p("Erhebung:"),
     shinyWidgets::radioGroupButtons(
@@ -29,7 +43,7 @@ mod_international_schule_migration_ui <- function(id){
                        inputId = ns("line_y_timss_int_schule"),
                        label = NULL,
                        choices = international_ui_years(region = "TIMSS"),
-                       selected = "2019"
+                       selected = "2023"
                      ),
 
                      p("Fachbereich:"),
@@ -46,7 +60,20 @@ mod_international_schule_migration_ui <- function(id){
                        choices = c("nach Geschlecht", "nach sozialem Status"),
                        selected = c("nach sozialem Status"),
                        multiple = FALSE
-                     )),
+                     ),
+
+                     p("Länder:"),
+                     shinyWidgets::pickerInput(
+                       inputId = ns("regio_int_schule_timss"),
+                       label = NULL,
+                       choices = int_schule_ui_country("TIMSS"),
+                       multiple = TRUE,
+                       options =  list(
+                         "max-options" = 10,
+                         "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"),
+                       selected = c("Interantionaler Durchschnitt", "Deutschland","Schweden", "Italien", "Türkei","Vereinigte Staaten" )
+                     )
+                     ),
 
     conditionalPanel(condition = "input.line_l_int_schule == 'PISA'",
                      ns = ns,
@@ -74,9 +101,96 @@ mod_international_schule_migration_ui <- function(id){
                                    "nach Bildungskapital"),
                        selected = c("nach Bildungskapital"),
                        multiple = FALSE
-                     )),
+                     ),
 
-    br(),
+                     p("Länder:"),
+                     shinyWidgets::pickerInput(
+                       inputId = ns("regio_int_schule_pisa"),
+                       label = NULL,
+                       choices = int_pisa_ui_country("PISA"),
+                       multiple = TRUE,
+                       options =  list(
+                         "max-options" = 10,
+                         "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"),
+                       selected = c("OECD Durchschnitt", "Deutschland","Schweden", "Italien", "Türkei","Vereinigte Staaten" )
+                     )
+                     ),
+
+    ###
+
+    # p("Länder:"),
+    #   shinyWidgets::pickerInput(
+    #     inputId = ns("regio_int_schule"),
+    #     label = NULL,
+    #     choices = int_schule_ui_country("TIMSS"),
+    #     # choices = c(
+    #     #   "Interantionaler Durchschnitt",
+    #     #   "Deutschland",
+    #     #   "Korea, Republik von",
+    #     #   "Schweden",
+    #     #   "Dänemark",
+    #     #   "Kanada",
+    #     #   "Nordirland",
+    #     #   "Finnland",
+    #     #   "Irland",
+    #     #   "Norwegen",
+    #     #   "Singapur",
+    #     #   "Zypern",
+    #     #   "Frankreich",
+    #     #   "Ungarn",
+    #     #   "Belgien",
+    #     #   "Hongkong",
+    #     #   "Malta",
+    #     #   "Tschechische Republik",
+    #     #   "Österreich",
+    #     #   "Polen",
+    #     #   "Spanien",
+    #     #   "Taiwan",
+    #     #   "Lettland",
+    #     #   "Portugal",
+    #     #   "Slowakei",
+    #     #   "Litauen",
+    #     #   "Georgien",
+    #     #   "Russische Föderation",
+    #     #   "Bulgarien",
+    #     #   "Serbien",
+    #     #   "Japan",
+    #     #   "Katar",
+    #     #   "Kroatien",
+    #     #   "Italien",
+    #     #   "Montenegro",
+    #     #   "Bahrain",
+    #     #   "Nordmazedonien",
+    #     #   "Kasachstan",
+    #     #   "Türkei",
+    #     #   "Armenien",
+    #     #   "Albanien",
+    #     #   "Bosnien und Herzegowina",
+    #     #   "Iran",
+    #     #   "Oman",
+    #     #   "Chile",
+    #     #   "Kuwait",
+    #     #   "Kosovo",
+    #     #   "Saudi Arabien",
+    #     #   "Aserbaidschan",
+    #     #   "Südafrika",
+    #     #   "Marokko",
+    #     #   "Pakistan",
+    #     #   "Philippinen",
+    #     #   "Australien",
+    #     #   "England",
+    #     #   "Niederlande",
+    #     #   "Vereinigte Staaten",
+    #     #   "Neuseeland",
+    #     #   "Vereinigte Arabische Emirate"
+    #     # ),
+    #     multiple = TRUE,
+    #     options =  list(
+    #       "max-options" = 10,
+    #       "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"),
+    #     selected = c("Interantionaler Durchschnitt", "Deutschland","Schweden", "Italien", "Türkei","Vereinigte Staaten" )
+    #                    ),
+
 
     # TODO extract into own module, since this is repeated on a lot of modules
 
@@ -108,11 +222,13 @@ mod_international_schule_migration_server <- function(id, r){
         r$line_y_int_schule <- input$line_y_timss_int_schule
         r$line_f_int_schule <- input$line_f_timss_int_schule
         r$line_li_int_schule <- input$line_li_timss_int_schule
+        r$regio_int_schule_timss  <- input$regio_int_schule_timss
       }
       if (input$line_l_int_schule == "PISA") {
         r$line_y_int_schule <- input$line_y_pisa_int_schule
         r$line_f_int_schule <- input$line_f_pisa_int_schule
         r$line_li_int_schule <- input$line_li_pisa_int_schule
+        r$regio_int_schule_pisa <- input$regio_int_schule_pisa
       }
     })
 
@@ -140,6 +256,18 @@ mod_international_schule_migration_server <- function(id, r){
 
     observeEvent(input$line_li_timss_int_schule, {
       r$line_li_int_schule <- input$line_li_timss_int_schule
+    })
+
+    # observeEvent(input$regio_int_schule, {
+    #   r$regio_int_schule <- input$regio_int_schule
+    # })
+
+    observeEvent(input$regio_int_schule_timss, {
+      r$regio_int_schule_timss <- input$regio_int_schule_timss
+    })
+
+    observeEvent(input$regio_int_schule_pisa, {
+      r$regio_int_schule_pisa <- input$regio_int_schule_pisa
     })
 
 

@@ -72,9 +72,6 @@ mod_betaversion_ui <- function(id){
           p(style = "text-align: justify; font-size = 18px",
           tags$b(span("Neue Datensätze", style = "color:#154194"))),
           p(style = "text-align: justify; font-size = 16px",
-          # tags$b(span("Regionale Daten:")),
-          # "Bisher zeigen wir Daten auf Bundes- und Landesebene. Unser Ziel ist es, auch Vergleiche bzw. Auswertungen auf regionaler Ebene zu ermöglichen.",
-          # br(),
           tags$b(span("Mehr Bereiche abdecken:")),
           "Frühkindliche Bildung, außerschulische Bildung und Weiterbildung fehlen noch zum größten Teil im MINT-DataLab.
           Je nach Datenverfügbarkeit bemühen wir uns, diese Bereiche ebenfalls hier zu beleuchten. Bei MINTvernetzt erheben wir selbst Daten zum Bereich außerschulische Bildung.
@@ -84,16 +81,9 @@ mod_betaversion_ui <- function(id){
           "Zu den Anteilen von MINT und Frauen in MINT sind Daten von internationalen Studierenden und Arbeitskräften, Kompetenzdaten von Schüler:innen sowie erste Arbeitsmarkt-Daten für verschiedenen Altersgruppen hinzugekommen.
          Wir wollen hier noch weiter ausbauen und z. B. Absolvent*innen-Daten und Stundentafeln der MINT-Schulfächer ergänzen.",
          br(),
-          # tags$b(span("Fokus auf Fachkräfte:")),
-          # "Die Kennzahlen um Beschäftige werden wir noch um differenziertere Kennzahlen zu Fachkräften erweitern. Diese sind aktuell schon in Bearbeitung."),
           ),
          p(style = "text-align: justify; font-size = 18px",
           tags$b(span("Neue Darstellungen", style = "color:#154194"))),
-          # p(style = "text-align: justify; font-size = 16px",
-          # tags$b(span("Absolute Zahlen:")),
-          #       "Bisher zeigen wir nur Prozentangaben. In der nächsten Entwicklungsphase werden wir
-          #         auch die absoluten Zahlen integrieren.",
-          # br(),
           tags$b(span("Download-Option für Diagramme:")),
           "Unser Ziel ist es, dass unsere Diagramme bestmöglich weiterverwendet werden können. Deshalb werden wir die Download-Option Schrittweise weiter ausbauen.",
           br(),
@@ -117,7 +107,6 @@ mod_betaversion_ui <- function(id){
              p(br()),
              img(src='www/wordcloud.jpg',
                  class = "img-responsive",
-                 #height = "150px", width = "150px",
                  alt = "wordcloud",
                  style="display: block; margin-left: auto; margin-right: auto;"
              ))

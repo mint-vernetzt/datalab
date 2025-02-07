@@ -67,7 +67,7 @@ mod_home_start_ui <- function(id){
         p(
           #style = "text-align: left; font-size = 16px",
           "Studierendenzahlen: Destatis 2024, auf Anfrage"),
-         p("Schülerzahlen: KMK 2023, auf Anfrage"),
+         p("Schülerzahlen: KMK 2024, auf Anfrage"),
           p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2024, auf Anfrage")
         )
       ),
@@ -86,8 +86,7 @@ mod_home_start_ui <- function(id){
           Unter den Beschäftigten ist der MINT-Anteil geringer. Hier üben Stand 2023 rund 23 %
           der sozialversicherungspflichtigen Beschäftigten eine MINT-Tätigkeit aus.
           In den letzten zehn Jahren sind die prozentualen Anteile relativ konstant geblieben.
-          Leichte Veränderungen sieht man in den absoluten Zahlen."),
-          p("Die Belegungszahlen der Schüler:innen für 2023 liegen noch nicht vor.")
+          Leichte Veränderungen sieht man in den absoluten Zahlen.")
         ),
         column(
           width = 12,
@@ -104,7 +103,7 @@ mod_home_start_ui <- function(id){
                                                             color = "#154194"),
                                br(),
                                p(style="font-size:12px;color:grey",
-                                 "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                 "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
 
                         shinyBS::bsPopover(id="h_alle_mint_1", title = "",
                                            content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
@@ -128,7 +127,7 @@ mod_home_start_ui <- function(id){
                           shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_1")),
                                                        color = "#154194"),
                           br(),
-                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_mint_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
                                              placement = "top",
@@ -137,31 +136,6 @@ mod_home_start_ui <- function(id){
                           )
 
                         )
-
-                   # ,
-                   #  tabPanel("Überblick", br(),
-                   #           shiny::sidebarPanel(
-                   #             width = 3,
-                   #             mod_home_start_comparison_mint_ui("mod_home_start_comparison_mint_ui_1"),
-                   #             # br(),br(),
-                   #             # downloadButton(
-                   #             #   outputId = ns("download_btn_plot_comparison_mint"),
-                   #             #   label = "Download",
-                   #             #   icon = icon("download"))
-                   #             ),
-                   #           shiny::mainPanel(
-                   #             width = 9,
-                   #             shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_mint")),
-                   #                                          color = "#154194"),
-                   #             br(),
-                   #             p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                   #             shinyBS::bsPopover(id="h_alle_mint_3", title = "",
-                   #                                content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
-                   #                                placement = "top",
-                   #                                trigger = "hover"),
-                   #             tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_alle_mint_3")
-                   #           )
-                   #  )
 
          ))
          )),
@@ -177,9 +151,7 @@ mod_home_start_ui <- function(id){
           In den MINT-Berufen sind nur 17 % Frauen vertreten. Im Vergleich dazu liegt der Frauenanteil in \"Nicht-MINT\"-Berufen bei 55 %,
           in \"Nicht-MINT\"-Studiengängen sogar bei über 60 %.", br(),
             "In den letzten zehn Jahren gab es diesbezüglich nur geringe Veränderungen.
-        Es kam zu leichten Zunahmen des Frauenanteils im Studium und im Beruf."),
-          p("Die Belegungszahlen der Schüler:innen für 2023 liegen noch nicht vor.")
-
+        Es kam zu leichten Zunahmen des Frauenanteils im Studium und im Beruf.")
         ),
         column(
           width = 12,
@@ -196,7 +168,7 @@ mod_home_start_ui <- function(id){
                                                             color = "#154194"),
 
                                p(style="font-size:12px;color:grey",
-                                  "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                                  "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_frauen_1", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. <br><br>Baden-Württemberg erfasst keine geschelchterspezifischen Kursbelegungszahlen von Schüler:innen."),
                                                   placement = "top",
@@ -220,7 +192,7 @@ mod_home_start_ui <- function(id){
                           shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_mint")),
                                                        color = "#154194"),
 
-                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_frauen_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.<br><br>Baden-Württemberg erfasst keine geschelchterspezifischen Kursbelegungszahlen von Schüler:innen."),
                                              placement = "top",
@@ -228,29 +200,6 @@ mod_home_start_ui <- function(id){
                           tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_alle_frauen_2")
                                         )
                             ),
-                    # tabPanel("Überblick", br(),
-                    #          shiny::sidebarPanel(
-                    #            width = 3,
-                    #            mod_home_start_comparison_mint_gender_ui("mod_home_start_comparison_mint_gender_ui_1"),
-                    #          # br(),br(),
-                    #          # downloadButton(
-                    #          #   outputId = ns("download_btn_plot_comparison_gender"),
-                    #          #   label = "Download",
-                    #          #   icon = icon("download"))
-                    #          ),
-                    #          shiny::mainPanel(
-                    #            width = 9,
-                    #            shinycssloaders::withSpinner(htmlOutput(ns("plot_comparison_gender")),
-                    #                                         color = "#154194"),
-                    #
-                    #            p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt,2023; Bundesagentur für Arbeit,2023; KMK, 2023, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                    #            shinyBS::bsPopover(id="h_alle_frauen_3", title = "",
-                    #                               content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotnicht MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
-                    #                               placement = "top",
-                    #                               trigger = "hover"),
-                    #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_alle_frauen_3"))
-                    #
-                    #          )
                     )
           )
         )
@@ -293,22 +242,6 @@ mod_home_start_server <- function(id,r){
     })
 
 
-    # output$plot_verlauf_mint <- highcharter::renderHighchart({
-    #   home_comparison_line(r)
-    # })
-
-    # output$plot_comparison_gender <- highcharter::renderHighchart({
-    #   home_stacked_comparison_gender(r)
-    # })
-
-    # output$plot_mint_1 <- highcharter::renderHighchart({
-    #   home_rest_mint_verlauf(r)
-    # })
-
-    # output$plot_comparison_mint <- highcharter::renderHighchart({
-    #   home_stacked_comparison_mint( r)
-    # })
-
     output$plot_pie_mint_gender <- renderUI({
       home_einstieg_gender( r)
     })
@@ -345,36 +278,6 @@ mod_home_start_server <- function(id,r){
         file.remove(r$plot_mint_1_title)
       }
     )
-
-    # tab 3
-
-    # output$plot_comparison_mint <- renderUI({
-    #   plot_list <-home_stacked_comparison_mint( r)
-    #   r$plot_comparison_mint <- plot_list
-    #
-    #   r$plot_comparison_mint_title <- get_plot_title(
-    #     plot = r$plot_comparison_mint
-    #   )
-    #
-    #   plot_list
-    # })
-    #
-    # output$download_btn_plot_comparison_mint <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_comparison_mint_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_comparison_mint,
-    #       filename =  r$plot_comparison_mint_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_comparison_mint_title, file)
-    #     file.remove(r$plot_comparison_mint_title)
-    #   }
-    # )
 
 
     #### Box 2 ----

@@ -102,21 +102,6 @@ mod_studium_studienzahl_ausl_server <- function(id, r){
       r$ebene_ausl <- input$ebene_ausl
     })
 
-    # observeEvent(input$abs_zahlen_studium_studienzahl_ausl, {
-    #   r$abs_zahlen_studium_studienzahl_ausl <- input$abs_zahlen_studium_studienzahl_ausl
-    # })
-
-    # observeEvent(input$status_ausl, {
-    #   r$status_ausl <- input$status_ausl
-    # })
-
-    # observeEvent(input$subject_studium_studienzahl_bl_gender_map, {
-    #   r$subject_studium_studienzahl_bl_gender_map <- input$subject_studium_studienzahl_bl_gender_map
-    # })
-    #
-    # observeEvent(input$level_studium_choice_gender, {
-    #   r$level_studium_choice_gender <- input$level_studium_choice_gender
-    # })
 
   })
 }

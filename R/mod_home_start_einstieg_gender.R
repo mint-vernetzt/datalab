@@ -84,16 +84,13 @@ mod_home_start_einstieg_gender_ui <- function(id){
       conditionalPanel("input.ansicht_start_comparison_mint_gender == 'Einzelansicht - Kuchendiagramm'",
                        ns = ns,
             br(),
-            shinyBS::bsPopover(id="dh_alle_frauen_1", title = "",
-                               content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                               trigger = "hover"),
-            tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_alle_frauen_1"),
+            darstellung(id="dh_alle_frauen_1"),
             br(),
             br(),
-            shinyBS::bsPopover(id="ih_alle_frauen_1", title="",
+            shinyBS::bsPopover(id="dh_alle_frauen_1", title="",
                                content = paste0("Betrachtet man hier beispielsweise die MINT-Beschäftigten, sieht man, dass deutschlandweit im Jahr 2021 17 % der MINT-Beschäftigten Frauen sind. Betrachtet man dagegen alle Berufsgruppen außer MINT zusammen, machen Frauen sogar die Mehrheit der Beschäftigten aus (55 %)."),
                                trigger = "hover"),
-            tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_alle_frauen_1")
+            tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="dh_alle_frauen_1")
 
   ),
 

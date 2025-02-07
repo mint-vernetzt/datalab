@@ -19,9 +19,7 @@ mod_international_map_ui <- function(id) {
       choices = c("Europa" = "EU", "OECD", "Weltweit"),
       selected = "Europa",
       multiple = FALSE#,
-      # options =  list(
-      #   "max-options" = 2,
-      #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+
     ),
 
     #Conditional Panel
@@ -42,9 +40,7 @@ mod_international_map_ui <- function(id) {
                        choices = international_ui_faecher(region = "EU"),
                        selected = c("Alle MINT-Fächer"),
                        multiple = FALSE#,
-                       # options =  list(
-                       #   "max-options" = 2,
-                       #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+
                      )),
     conditionalPanel(condition = "input.map_l_int_studium == 'OECD' ",
                      ns = ns,
@@ -61,10 +57,8 @@ mod_international_map_ui <- function(id) {
                        inputId = ns("map_f_oecd"),
                        choices = international_ui_faecher(region = "OECD"),
                        selected = c("MINT"),
-                       multiple = FALSE#,
-                       # options =  list(
-                       #   "max-options" = 2,
-                       #   "max-options-text" = "Maximal 2 Indikatoren auswählen")
+                       multiple = FALSE,
+
                      )),
     conditionalPanel(condition = "input.map_l_int_studium == 'Weltweit' ",
                      ns = ns,
@@ -77,16 +71,9 @@ mod_international_map_ui <- function(id) {
                      )),
 
     br(),
-
-    # TODO extract into own module, since this is repeated on a lot of modules
-
-    # shinyBS::bsPopover(id="dh_international_map", title = "",
-    #                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_international_map"),
-    # br(),
-    # br(),
+    darstellung(id="dh_international_map2"),
+    br(),
+    br(),
     shinyBS::bsPopover(id="ih_international_map1", title="",
                        content = paste0("Die Karte zeigt, dass Deutschland im Vergleich zu anderen Ländern Europas einen relativ hohen Anteil an MINT-Studierenden aufweist."),
                        placement = "top",

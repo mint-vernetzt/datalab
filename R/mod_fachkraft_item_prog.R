@@ -26,27 +26,9 @@ mod_fachkraft_item_prog_ui <- function(id){
       multiple = FALSE
     ),
 
-    # uiOutput(ns("prog_scenario_picker_ui")),
-
-    # p("Berufslevel:"),
-    # shinyWidgets::pickerInput(
-    #   inputId = ns("fachkraft_item_prog_berufslevel"),
-    #   choices = fachkraft_ui_berufslevel(),
-    #   selected = c("Gesamt"),
-    #   multiple = FALSE
-    # )
-    # ,
-
     br(),
 
-    # shinyBS::bsPopover(id="erkl_fachkraft_prog_1", title="",
-    #                    content = paste0("Positives Szenario = positiver Zuwachs im MINT-Nachwuchs der letzten 10 Jahre setzt sich fort und verdoppelt sich bei den Mädchen und jungen Frauen. Auch der positive Zuwachs in der Weiterbeschäftigung von Arbeitskräften ü60 der letzten 10 Jahre setzt sich fort. Für ausländische MINT-Fachkräfte zeigt sich das „hohe Zuwanderung“-Szenario der 15. Koordinierten Bevölkerungsvorausberechnung des statistischen Bundesamts.", br(), br(), "Negatives Szenario = Umkehr des Wachstumstrends im MINT-Nachwuchs, von jungen Frauen in MINT und in der Weiterbeschäftigung von Arbeitskräften ü60 der letzten 10 Jahre. Für ausländische MINT-Fachkräfte zeigt sich das „niedrige Zuwanderung“-Szenario der 15. Koordinierten Bevölkerungsvorausberechnung des statistischen Bundesamts."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Was bedeuten die Szenarien"), icon("info-circle"), id="erkl_fachkraft_prog_1"),
-
     uiOutput(ns("dynamic_popover")),
-    # tags$a(paste0("Was bedeuten die Szenarien"), icon("info-circle"), id="dynamic_popover"),
 
     br(),
 

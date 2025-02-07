@@ -92,11 +92,7 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                                         selected = "Alle MINT-Fächer"
                                       )),
                      br(),
-                     shinyBS::bsPopover(id="dh_studium_fach_2b", title = "",
-                                        content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, bitte das gesamte Ansichtsfenster einmal verkleinern und dann wieder maximieren. Dann stellt sich das Seitenverhältnis des Desktops richtig ein."),
-                                        placement = "top",
-                                        trigger = "hover"),
-                     tags$a(paste0("Probleme bei der Darstellung"), icon("question-circle"), id = "dh_studium_fach_2b"),
+                     darstellung(id="dh_studium_fach_2b"),
                      br(),
                      br(),
                      shinyBS::bsPopover(id="ih_studium_fach_2neub", title="",
