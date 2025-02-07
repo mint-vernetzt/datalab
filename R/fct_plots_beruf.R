@@ -86,14 +86,14 @@ beruf_einstieg_vergleich <- function(r) {
   #Graifken
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
-
-
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    titel <- ist_saarland(gruppe, regio, timerange)
+    #titel <- ist_saarland(gruppe, regio, timerange)
+    titel <- ifelse(region != "Saarland",
+                    paste0(indikator, " in ", region, " (", jahr, ")"),
+                    paste0(indikator, " im ", region, " (", jahr, ")"))
     tooltip <- paste('Anteil: {point.percentage:.0f} % <br> Anzahl: {point.wert}')
     format <- '{point.percentage:.0f}%'
     color <- c("#b16fab","#efe8e6")
-
 
    out <- piebuilder(df, titel, x="fachbereich", y = "proportion", tooltip, color, format)
 

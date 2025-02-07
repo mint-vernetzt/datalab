@@ -62,6 +62,18 @@ mod_international_schule_migration_ui <- function(id){
                        multiple = FALSE
                      )),
 
+                     # p("Länder:"),
+                     # shinyWidgets::pickerInput(
+                     #   inputId = ns("regio_int_schule"),
+                     #   label = NULL,
+                     #   choices = international_ui_country("TIMSS"),
+                     #   multiple = TRUE,
+                     #   options =  list(
+                     #     "max-options" = 10,
+                     #     "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"),
+                     #   selected = c("Interantionaler Durchschnitt", "Deutschland","Schweden", "Italien", "Türkei","Vereinigte Staaten" )
+                     # )),
+
     conditionalPanel(condition = "input.line_l_int_schule == 'PISA'",
                      ns = ns,
                      p("Jahr:"),
@@ -74,7 +86,7 @@ mod_international_schule_migration_ui <- function(id){
 
                      p("Fachbereich:"),
                      shinyWidgets::pickerInput(
-                       inputId = ns("line_f_pisa_int_schule"),
+                       inputId = ns("line_f_pisa_int_schule_timss"),
                        choices = c("Mathematik", "Naturwissenschaften"),
                        selected = c("Mathematik"),
                        multiple = FALSE
@@ -89,6 +101,18 @@ mod_international_schule_migration_ui <- function(id){
                        selected = c("nach Bildungskapital"),
                        multiple = FALSE
                      )),
+
+                     # p("Länder:"),
+                     # shinyWidgets::pickerInput(
+                     #   inputId = ns("regio_int_schule_pisa"),
+                     #   label = NULL,
+                     #   choices = international_ui_country("PISA"),
+                     #   multiple = TRUE,
+                     #   options =  list(
+                     #     "max-options" = 10,
+                     #     "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"),
+                     #   selected = c("OECD Durchschnitt", "Deutschland","Schweden", "Italien", "Türkei","Vereinigte Staaten" )
+                     # )),
 
     ###
 
@@ -196,11 +220,13 @@ mod_international_schule_migration_server <- function(id, r){
         r$line_y_int_schule <- input$line_y_timss_int_schule
         r$line_f_int_schule <- input$line_f_timss_int_schule
         r$line_li_int_schule <- input$line_li_timss_int_schule
+        # r$regio_int_schule  <- input$regio_int_schule
       }
       if (input$line_l_int_schule == "PISA") {
         r$line_y_int_schule <- input$line_y_pisa_int_schule
         r$line_f_int_schule <- input$line_f_pisa_int_schule
         r$line_li_int_schule <- input$line_li_pisa_int_schule
+        # r$regio_int_schule_pisa <- input$regio_int_schule_pisa
       }
     })
 
@@ -231,9 +257,12 @@ mod_international_schule_migration_server <- function(id, r){
     })
 
     observeEvent(input$regio_int_schule, {
-      r$regio_international_schule <- input$regio_int_schule
+      r$regio_int_schule <- input$regio_int_schule
     })
 
+    # observeEvent(input$regio_int_schule_pisa, {
+    #   r$regio_int_schule_pisa <- input$regio_int_schule_pisa
+    # })
 
 
   })

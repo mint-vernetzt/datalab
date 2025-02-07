@@ -344,6 +344,13 @@ international_ui_country <- function(type = "arbeit", n = NA) {
 
   }
 
+  if(type == "PISA"){
+
+    selection <- DBI::dbGetQuery(con,
+                                 "SELECT DISTINCT land
+                                 FROM schule_pisa")$land
+  }
+
 }
 
 # Funktion zur Jahresauswahl bei Fachkraft Daten

@@ -489,7 +489,7 @@ studierende_bula_mint <- function(r) {
 
     df <- df[with(df, order(proportion, decreasing = TRUE)),]
 
-    browser()
+
 
     # Plot
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
@@ -4137,24 +4137,22 @@ studierende_international_bula_mint <- function(r) {
 
       df_start <- df %>%
         dplyr::filter(jahr == timerange[1]) %>%
-        dplyr::select(region, wert) %>%
-        dplyr::rename(wert_alt =wert)
+        dplyr::select(region, prop) %>%
+        dplyr::rename(prop_alt =prop)
       df_ende <- df %>%
         dplyr::filter(jahr == timerange[2]) %>%
-        dplyr::select(region, wert) %>%
-        dplyr::rename(wert_neu =wert)
+        dplyr::select(region, prop) %>%
+        dplyr::rename(prop_neu =prop)
       df <- df %>%
         dplyr::left_join(df_start, by = c("region")) %>%
         dplyr::left_join(df_ende, by = c("region")) %>%
-        dplyr::mutate(diff = round(((wert_neu - wert_alt)/wert_alt)*100,1))
+        dplyr::mutate(diff = round(((prop_neu - prop_alt)/prop_alt)*100,1))
 
 
       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
       df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
       df$display_diff <- prettyNum(df$diff, big.mark = ".", decimal.mark = ",")
       df$display_diff <- ifelse(df$diff < 0, paste0("-", df$display_diff), paste0("+", df$display_diff))
-
-      browser()
 
 
       titel <-  paste0("MINT-Anteil von ", label, " im Zeitverlauf")
