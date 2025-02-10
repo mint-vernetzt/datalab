@@ -88,9 +88,9 @@ beruf_einstieg_vergleich <- function(r) {
 
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     #titel <- ist_saarland(gruppe, regio, timerange)
-    titel <- ifelse(region != "Saarland",
-                    paste0(indikator, " in ", region, " (", jahr, ")"),
-                    paste0(indikator, " im ", region, " (", jahr, ")"))
+    titel <- ifelse(regio != "Saarland",
+                    paste0(gruppe, " in ", regio, " (", timerange, ")"),
+                    paste0(gruppe, " im ", regio, " (", timerange, ")"))
     tooltip <- paste('Anteil: {point.percentage:.0f} % <br> Anzahl: {point.wert}')
     format <- '{point.percentage:.0f}%'
     color <- c("#b16fab","#efe8e6")
