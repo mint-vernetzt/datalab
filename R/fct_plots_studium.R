@@ -65,7 +65,7 @@ studienzahl_mint <- function(r){
 
           highcharter::hw_grid(
 
-            out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#b16fab", "#efe8e6"), format = format),
+            out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#efe8e6","#b16fab"), format = format),
 
             ncol = 1,
             browsable = TRUE)
