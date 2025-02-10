@@ -498,7 +498,7 @@ pfad <- paste0("C:/Users/", akro,
                "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 #akro turan
-pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+#pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
 
 
 # Daten einlesen
@@ -818,11 +818,13 @@ df_all <- df_all %>%
 #                       "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
 #                       "Weitere ingenieurwissenschaftliche Fächer"))
 
-#Dublikate entfernen
-df_all <- df_all %>%
-  group_by(region, fachbereich, fach, jahr, bereich, indikator, mint_select, typ, geschlecht) %>%
-  summarise(wert = sum(wert, na.rm = TRUE), .groups = "drop")
 
+#Dublikate entfernen
+# SUMME ZUM ENTFERNEN ??? WARUM? ERZEUGT FEHLER!!
+
+# df_all <- df_all %>%
+#   group_by(region, fachbereich, fach, jahr, bereich, indikator, mint_select, typ, geschlecht) %>%
+#   summarise(wert = sum(wert, na.rm = TRUE), .groups = "drop")
 
 
 # ###############################################
@@ -832,18 +834,13 @@ df_all <- df_all %>%
 #   summarise(wert = sum(wert, na.rm = TRUE), .groups = "drop")
 
 
-
-
 # Entferne doppelte Zeilen
 df_all<- df_all %>%
   distinct(region, fachbereich, fach, jahr, bereich, indikator, mint_select, typ, geschlecht, wert)
 
-
-
 # df_all <- df_all %>%
 #   group_by(region, fachbereich, jahr, indikator, mint_select, geschlecht) %>%
 #   summarise(wert = sum(wert, na.rm = TRUE), .groups = "drop")
-
 
 
 df_all <- df_all %>%
@@ -901,11 +898,7 @@ df_all <- bind_rows(df_all, ingenieur_ohne_informatik)
 df_all<- df_all %>%
   distinct(region, fachbereich, fach, jahr, bereich, indikator, mint_select, typ, geschlecht, wert)
 
-
-
-
 studierende_detailliert <- df_all
-
 
 load("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/02_data/data/studierende_absolventen.rda")
 
