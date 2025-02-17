@@ -63,12 +63,13 @@ mod_home_start_comparison_ui <- function(id){
     p("Bereich:"),
     shinyWidgets::pickerInput(
       inputId = ns("indikator_start_comparison"),
-      choices = c("Schülerinnen Leistungskurse", "Studierende",
+      choices = c("Schüler:innen Leistungskurse" = "Leistungskurse",
+                  "Studierende",
                   "Auszubildende", "Beschäftigte"),
       options = list(`actions-box` = TRUE,
                      `deselect-all-text` = "Alle abwählen",
                      `select-all-text` = "Alle auswählen"),
-      selected = c("Schülerinnen Leistungskurse", "Studierende",
+      selected = c("Leistungskurse", "Studierende",
                    "Auszubildende",  "Beschäftigte"),
       multiple = TRUE
 
