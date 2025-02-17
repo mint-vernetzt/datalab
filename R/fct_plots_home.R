@@ -398,7 +398,8 @@ home_einstieg_gender <- function(r) {
     dplyr::select(bereich, indikator, fachbereich, geschlecht, wert) %>%
     dplyr::collect()
 
-  if("Leistungskurse" %in% indi & regio == "Deutschland"){
+  if("Leistungskurse" %in% indi & regio == "Deutschland" |
+     betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
     #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
     df_alle_bw <- dplyr::tbl(con, from = "zentral") %>%
@@ -858,7 +859,8 @@ home_comparison_line <- function(r) {
     dplyr::filter(jahr %in% t,
                   region %in% regio,
                   geschlecht == "Frauen",
-                  fachbereich == "MINT") %>%
+                  fachbereich == "MINT",
+                  indikator %in% indikator_choice) %>%
     dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
     dplyr::collect()
 
@@ -868,11 +870,12 @@ home_comparison_line <- function(r) {
       dplyr::filter(jahr %in% t,
                     region %in% regio,
                     geschlecht == "Gesamt",
-                    fachbereich == "MINT") %>%
+                    fachbereich == "MINT",
+                    indikator %in% indikator_choice) %>%
       dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
       dplyr::collect()
 
-    if("Schülerinnen Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
+    if("Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
 
       #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
       df_alle_bw <- dplyr::tbl(con, from = "zentral") %>%
