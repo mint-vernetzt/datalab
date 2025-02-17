@@ -398,7 +398,8 @@ home_einstieg_gender <- function(r) {
     dplyr::select(bereich, indikator, fachbereich, geschlecht, wert) %>%
     dplyr::collect()
 
-  if("Leistungskurse" %in% indi & regio == "Deutschland"){
+  if("Leistungskurse" %in% indi & regio == "Deutschland" |
+     betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
     #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
     df_alle_bw <- dplyr::tbl(con, from = "zentral") %>%
