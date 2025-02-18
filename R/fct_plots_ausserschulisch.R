@@ -81,15 +81,12 @@ plot_cp_orgas <- function(r){
 
     titel <- paste0("Für die gewählten Eingaben hat keine Organisation eine Angabe gemacht.")
 
-    ##hier noch net
-    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(indikator, wert), y = wert, group = region)) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+    tooltip <- "{point.indikator} <br> Anteil: {point.prop_disp} %"
+    format <- "{value}%"
+    color <- c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a",
+               "#5f94f9", "#007655", "#d0a9cd")
 
-
-    # out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region")
+    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", tooltip, format, color)
 
 
   }else if(abs_rel_select == "In Prozent"){
@@ -285,13 +282,17 @@ plot_cp_projekte <- function(r){
 
   if(length(df$wert) == 0){
 
-    titel <- paste0("Für die gewählten Eingaben hat kein Projekt eine Angabe gemacht.")
+    titel <- paste0("Für die gewählten Eingaben hat keine Organisation eine Angabe gemacht.")
 
-    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(indikator, wert), y = wert, group = region)) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+    tooltip <- "{point.indikator} <br> Anteil: {point.prop_disp} %"
+    format <- "{value}%"
+    color <- c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a",
+               "#5f94f9", "#007655", "#d0a9cd")
+
+
+
+    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", tooltip, format, color)
+
 
   }else if(abs_rel_select == "In Prozent"){
 
@@ -749,27 +750,15 @@ plot_mv_akteursb <- function(r){
 
   if(frage %in% c("Arbeitsverhältnis", "Kategorie", "Sektor")){
 
-    plot <- df %>%
-      highcharter::hchart(
-        "pie", highcharter::hcaes(x = indikator , y = wert)
-      )%>%
-      highcharter::hc_tooltip(
-        pointFormat=paste('Anteil: {point.prop}%')) %>%
-      highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-                                "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-                                "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                             dataLabels = list(enabled = TRUE,  format='{point.prop} %'), showInLegend = TRUE))
+    # plot <- df %>%
+
+    color <-  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+                "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+                "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")
+    format <- '{point.prop} %'
+
+
+    plot <- piebuilder(df, titel, x="indikator", y="wert", tooltip = paste('Anteil: {point.prop}%'), color, format)
 
   }else{
 

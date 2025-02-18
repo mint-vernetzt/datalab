@@ -418,10 +418,6 @@ kurse_verlauf_single <- function(r) {
    df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
     # plot
-    # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(prop,1), group = indikator)) %>%
-
-
-
     titel <- paste0("Anteil von MINT-Belegungen an allen Belegungen in ", regio)
     tooltip <- "Anteil: {point.indikator} <br> Wert: {point.y} %"
     format <- "{value}%"
@@ -550,7 +546,6 @@ kurse_mint_map <- function(r) {
       help_title <-  "MINT-Fächern"
 
       # plot
-      # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = region)) %>%
 
       titel <- paste0("Anteil von ", help_title, " an allen ", title_help)
       tooltip <- "Anteil {point.region} <br> Wert: {point.y} %"
@@ -586,9 +581,6 @@ kurse_mint_map <- function(r) {
       help_title <- "in MINT"
 
       # plot
-      # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = region)) %>%
-
-
 
       titel <- paste0("Anzahl an ", title_help ,help_title)
       tooltip <- "Anzahl: {point.y}"
@@ -1993,15 +1985,12 @@ kurse_verlauf_gender <- function(r){
     options(highcharter.lang = hcoptslang)
 
     # plot
-    # highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
-
 
     titel <- paste0("Anzahl von Mädchen in MINT-Oberstufenkursen")
     tooltip <-  "Anzahl: {point.indikator} <br> Wert: {point.wert_anzeige}"
     format <-  "{value:, f}"
     color <- colors_mint_vernetzt$general
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
-
 
 
 

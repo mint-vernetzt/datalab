@@ -936,8 +936,6 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
 
 
     # plot
-    # highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = region)) %>%
-
     titel <- paste0("Anzahl weiblicher ", title_help, ", die MINT-Berufe wählen")
     tooltip <- "Anzahl: {point.y}"
     format <-  "{value:, f}"
