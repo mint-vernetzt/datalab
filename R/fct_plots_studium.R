@@ -71,9 +71,7 @@ studienzahl_mint <- function(r){
             browsable = TRUE)
 
 
-
         } else if(length(testl1) == 2) {
-
 
           # Filterung für den ausgewählten Indikator
           df_1_pie <- df %>% dplyr::filter(indikator == testl1[1])
@@ -93,7 +91,6 @@ studienzahl_mint <- function(r){
             ncol = 2,
             browsable = TRUE
           )
-
 
         }
 
@@ -232,12 +229,6 @@ studienzahl_verlauf_single <- function(r) {
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
-
-
-
-
-
-
 
 
   }
@@ -410,8 +401,6 @@ studierende_bula_mint <- function(r) {
                  "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
       out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color)
 
-
-
     } else if(absolut_selector=="Anzahl"){
 
 
@@ -485,10 +474,7 @@ studierende_bula_mint <- function(r) {
     help_l <- ifelse(r_lab1 == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
 
 
-
-
     df <- df[with(df, order(proportion, decreasing = TRUE)),]
-
 
 
 
@@ -782,11 +768,6 @@ studienzahl_waffle_mint <- function(r) {
     ggpubr::ggarrange(waffle_a ,waffle_b, waffle_c,
                       widths = c(1, 1, 1), nrow=1)
 
-
-
-
-
-
   }
 
 
@@ -1002,10 +983,7 @@ studierende_verlauf_multiple_bl <- function(r) {
                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
 
-
-
   } else if(absolut_selector=="Anzahl"){
-
 
     hcoptslang <- getOption("highcharter.lang")
     hcoptslang$thousandsSep <- "."
@@ -1095,9 +1073,7 @@ studienzahl_einstieg_comparison <- function(r) {
   )
 
 
-
   # plot
-
 
   df <- within(df, proportion <- factor(proportion, levels=c("Nicht MINT", "MINT (Gesamt)")))
 
@@ -3438,13 +3414,6 @@ plot_auslaender_mint <- function(r){
                                       theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
       }
-
-
-
-
-
-
-
 
 
     } else if(absolut_selector =="Anzahl"){

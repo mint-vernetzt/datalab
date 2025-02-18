@@ -751,13 +751,10 @@ plot_mv_akteursb <- function(r){
   if(frage %in% c("Arbeitsverhältnis", "Kategorie", "Sektor")){
 
     # plot <- df %>%
-
     color <-  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
                 "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
                 "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")
     format <- '{point.prop} %'
-
-
     plot <- piebuilder(df, titel, x="indikator", y="wert", tooltip = paste('Anteil: {point.prop}%'), color, format)
 
   }else{
@@ -905,17 +902,17 @@ plot_mv_stimmung <- function(r){
               enabled = TRUE,
               distance = 50,
               style = list(
-                fontSize = "13px",  # Schriftgröße für die Labels anpassen
+                fontSize = "13px",
                 fontFamily = "SourceSans3-Regular"
               )
             )
           )
         ) %>%
         highcharter::hc_chart(
-          marginTop = 80,      # Mehr Platz oben
-          marginBottom = 80,   # Mehr Platz unten
-          marginLeft = 100,    # Platz links für Labels
-          marginRight = 100   # Platz rechts für Labels
+          marginTop = 80,
+          marginBottom = 80,
+          marginLeft = 100,
+          marginRight = 100
         )
   }
 

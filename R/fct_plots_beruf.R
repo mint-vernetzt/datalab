@@ -300,38 +300,6 @@ arbeitsmarkt_mint_bulas <- function(r) {
     title_h2 <- ifelse(grepl("ländischen B", title_help), "ausländischen Beschäftigten", title_h2)
 
     # plot
-    # out <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = df,
-    #   value = "proportion",
-    #   joinBy = c("name", "bundesland"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0("MINT"),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   # ,
-    #   # download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0("Anteil von ",  title_help, " in MINT an allen ",  title_help, " (", timerange, ")"
-    #     ),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
-
 
     df <-df
     joinby <- c("name", "bundesland")
@@ -476,12 +444,6 @@ arbeitsmarkt_mint_bulas <- function(r) {
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color)
-
-
-
-      # plot
-
-
 
 
 
@@ -741,36 +703,6 @@ arbeitsmarkt_bl_gender <- function(r) {
 
 
     # plot
-    # out_1 <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = values_female,
-    #   value = "proportion",
-    #   joinBy = c("name", "bundesland"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0(fachbereich_choice),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   #,
-    #   #download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = titel_w,
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
 
     df <-values_female
     joinby <- c("name", "bundesland")
@@ -782,35 +714,7 @@ arbeitsmarkt_bl_gender <- function(r) {
     map_selection <- 1
     out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
-    # out_2 <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = values_male,
-    #   value = "proportion",
-    #   joinBy = c("name", "bundesland"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0(fachbereich_choice),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   #,
-    #   #download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = titel_m,
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
+
 
     df <-values_male
     joinby <- c("name", "bundesland")
@@ -917,10 +821,6 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
 
 
-    # plot
-
-
-
   }else if(absolut_selector=="Anzahl"){
 
     title_help <- paste0(indikator_choice, "r")
@@ -1019,10 +919,7 @@ arbeitsmarkt_bl_verlauf <- function(r) {
 
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
-
-
     # plot
-
 
     titel <- paste0("Anteil von ", title_help, " in MINT-Berufen an allen ", title_help)
     tooltip <- "Anteil <br> Bundesland: {point.region} <br> Wert: {point.display_rel} %"
@@ -1499,37 +1396,6 @@ arbeitsmarkt_bula_faecher <- function(r) {
     title_help <- ifelse(grepl("Beschäftigte u25", indi), "Beschäftigten unter 25 Jahren", title_help)
 
     # plot
-    # out <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = df,
-    #   value = "proportion",
-    #   joinBy = c("name", "bundesland"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0("MINT"),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   # ,
-    #   # download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0("Anteil von ",  title_help, " in ", faecher, " an allen ",  title_help, " (", timerange, ")" #, title_help_sub
-    #     ),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
 
     df <- df
     joinby <- c("name", "bundesland")
@@ -1585,7 +1451,6 @@ arbeitsmarkt_bula_faecher <- function(r) {
     #Trennpunkte für lange Zahlen in absolutem Wert ergänzen
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
-    #df <- df[with(df, order(fachbereich, jahr, decreasing = TRUE)), ]
     df <- df[with(df, order(prop, decreasing = T)),]
 
 
@@ -1924,7 +1789,6 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
                       landkreis == "alle Landkreise" &
                       bundesland == regio &
                       anforderung == "Gesamt" &
-                     # geschlecht != "Gesamt" &
                       indikator %in% indi &
                       fachbereich == "Alle")%>%
       dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert") %>%
@@ -2592,11 +2456,11 @@ arbeitsmarkt_top10 <- function( r){
       dplyr::slice(1:10)
 
 
-    if(sum(berufe_maenner$prop)==1000){ #falls alle 10 Berufe 100 % sind
+    if(sum(berufe_maenner$prop)==1000){
       berufe_maenner <- df %>%
         dplyr::filter(geschlecht == "Männer") %>%
-        dplyr::filter(prop == 100) %>% #diese 100% Jobs auswählen
-        dplyr::arrange(desc(wert)) %>% #und die anzeigen, die am stärksten besetzt sind von diesen
+        dplyr::filter(prop == 100) %>%
+        dplyr::arrange(desc(wert)) %>%
         dplyr::slice(1:10)
     }
 

@@ -207,9 +207,6 @@ kurse_waffle_mint <- function(r) {
       indika <- "Oberstufen"
     }
 
-    # df <- df %>%
-    #   dplyr::mutate(color = color_fach[fachbereich])
-
     # # plot
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
@@ -219,7 +216,6 @@ kurse_waffle_mint <- function(r) {
       highcharter::hc_plotOptions(bar = list(
         colorByPoint = TRUE,
        colors = as.character(color_fach)
-        #colors = ifelse(df$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (gesamt)"), "#b16fab", "#d0a9cd")
       )) %>%
       highcharter::hc_title(text = paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")"
       ),
@@ -896,7 +892,6 @@ kurse_map <- function(r) {
       # order years for plot
       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
-
       help_title <- ifelse(subjects_select == "MINT-Fächer (gesamt)", "MINT-Fächern", subjects_select)
       help_title <- ifelse(help_title == "andere Fächer (gesamt)", "allen Fächern außer MINT", help_title)
 
@@ -908,7 +903,6 @@ kurse_map <- function(r) {
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
 
     } else if(absolut_selector =="Anzahl"){
-
       hcoptslang <- getOption("highcharter.lang")
       hcoptslang$thousandsSep <- "."
       options(highcharter.lang = hcoptslang)
@@ -916,16 +910,10 @@ kurse_map <- function(r) {
       df <- df %>%
         dplyr::filter(selector=="Anzahl")
 
-
-
       if(indikator_select == "Grundkurse") {
-
         title_help <- "Grundkursbelegungen "
-
       }else {
-
         title_help <- "Leistungskursbelegungen "
-
       }
 
       # order years for plot
@@ -982,11 +970,7 @@ kurse_map <- function(r) {
       dplyr::ungroup()%>%
       dplyr::filter(fachbereich != "Alle Fächer")
 
-
-    # df <- rbind(df, df_sub)
-
-    df <- df %>% dplyr::filter(fachbereich == subject) #%>%
-    #   dplyr::filter(!region %in% c("Westen", "Osten"))
+    df <- df %>% dplyr::filter(fachbereich == subject)
 
     # nötig für stacked
 
@@ -1121,18 +1105,12 @@ kurse_verlauf_multiple_bl <- function(r) {
     df <- df %>%
       dplyr::filter(selector=="In Prozent")
 
-
     df$wert <- df$wert * 100
 
-
     if(indikator_select == "Grundkurse") {
-
       title_help <- "Grundkursbelegungen"
-
     }else {
-
       title_help <- "Leistungskursbelegungen"
-
     }
 
     # order years for plot
@@ -1164,13 +1142,9 @@ kurse_verlauf_multiple_bl <- function(r) {
 
 
     if(indikator_select == "Grundkurse") {
-
       title_help <- "Grundkursbelegungen "
-
     }else {
-
       title_help <- "Leistungskursbelegungen "
-
     }
 
     # order years for plot
@@ -1279,7 +1253,6 @@ kurse_verlauf_subjects_bl <- function(r) {
 
 
   # fitler states
- # df <- df %>% dplyr::filter(region %in% states)
 
   #titel hilfe für Plot
   kurs_help <- ifelse(indikator_kurse == "Grundkurse", "Grundkursbelegungen", "Leistungskursbelegungen")

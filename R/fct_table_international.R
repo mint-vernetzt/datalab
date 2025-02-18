@@ -60,7 +60,6 @@ create_filter_row <- function(
       shinyWidgets::pickerInput(
         inputId = ns(paste0("map_int_table_fachbereich_", i_input)),
         label = NULL,
-        #choices = international_zentral_get_unique_values(var = "fach"),
         choices = c(),
         selected = NULL,
         options = list(title = "Fachbereich wählen"),
@@ -126,13 +125,6 @@ create_filter_rule <- function(filter_list = list()) {
   return(out)
 }
 
-# TEST
-# test_df <- data.frame(Jahr = c(2011, 2012, 2013),
-#                       Gruppe = c("AA", "BB", "AA"),
-#                       Indikator = c("AA", "BB", "BB"))
-# test_df %>% dplyr::filter(eval(parse(text = create_filter_rule(
-#  list(Jahr = c(2013, 2015), Gruppe = "AA", Indikator = "BB")))))
-
 
 #' A function to get unique values from the international lookup data
 #'
@@ -140,7 +132,6 @@ create_filter_rule <- function(filter_list = list()) {
 #' @param var The name of the column
 #' @noRd
 international_zentral_get_unique_values <- function(var, filter = NULL) {
-  # var <- "jahr"
   if (!var %in% names(international_zentral)) {
     #logger::log_warn("Column '", var, "' not in the data!")
     return(NULL)

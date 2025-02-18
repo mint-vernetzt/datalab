@@ -237,7 +237,7 @@ plot_international_map <- function(r) {
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom") %>%
-    highcharter::hc_exporting(enabled = FALSE, #noch kein Download bis jetzt
+    highcharter::hc_exporting(enabled = FALSE,
                               buttons = list(contextButton = list(
                                 symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
                                 onclick = highcharter::JS("function () {
@@ -1239,23 +1239,6 @@ plot_international_schule_item <- function(r) {
     return(out)
   }
 
-  # set_group <- function(gender, diff) {
-  #
-  #
-  #   if (all(diff == "Nein", na.rm = TRUE) | all(diff == "Ja", na.rm = TRUE)) {
-  #     out <- "kein signifikanter Unterschied"
-  #   } else if (diff[gender == "Jungen"] == "Ja") {
-  #     out <- "Jungen signifikant besser"
-  #   } else if (diff[gender == "Mädchen"] == "Ja") {
-  #     out <- "Mädchen signifikant besser"
-  #   } else if(is.na(diff)){
-  #
-  #     out <- "No data"
-  #   }
-  #
-  #   return(out)
-  # }
-
   # enthält den Text für den plot
   group_col_dt <- data.frame(
     group = c("kein signifikanter Unterschied", "Jungen signifikant besser", "Mädchen signifikant besser"),
@@ -1347,184 +1330,9 @@ plot_international_schule_item <- function(r) {
 }
 
 
-# plot_international_schule_migration <- function(r) {
-#
-#
-#   timerange <- r$line_y_int_schule
-#   label_m <- r$line_l_int_schule
-#   fach_m <- r$line_f_int_schule
-#   leistungsindikator_m <- r$line_li_int_schule
-#
-#
-#   if (is.null(fach_m)) { fach_m <- ""}
-#
-#   if (label_m == "TIMSS") {
-#     this_ordnung <- switch(
-#       leistungsindikator_m,
-#       "nach Geschlecht" = "Gender",
-#       "nach sozialem Status" = "Ressourcen"
-#     )
-#     this_indikator <- switch(
-#       leistungsindikator_m,
-#       "nach Geschlecht" = c("Jungen", "Mädchen"),
-#       "nach sozialem Status" = c("Viele Ressourcen",
-#                                  "Einige Ressourcen",
-#                                  "Wenige Ressourcen")
-#     )
-#     this_typ <- switch(
-#       leistungsindikator_m,
-#       "nach Geschlecht" = "Test-Punktzahl",
-#       "nach sozialem Status" = "Gemittelte Test-Punktzahl"
-#     )
-#
-#
-#
-#     df <- dplyr::tbl(con, from = "schule_timss") %>%
-#       dplyr::filter(ordnung == this_ordnung &
-#                       indikator %in% this_indikator &
-#                       typ == this_typ) %>%
-#       dplyr::collect()
-#
-#     help_l <- "4. Klasse"
-#
-#     # Labels anpassen
-#
-#     df$indikator[df$indikator == "Viele Ressourcen"] <- "hoher sozialer Status"
-#     df$indikator[df$indikator == "Einige Ressourcen"] <- "mittlerer sozialer Status"
-#     df$indikator[df$indikator == "Wenige Ressourcen"] <- "niedriger sozialer Status"
-#
-#   }
-#   if (label_m == "PISA") {
-#
-#     this_bereich <- switch(
-#       leistungsindikator_m,
-#       "nach Geschlecht" = "Ländermittel",
-#       "nach Zuwanderungsgeschichte" = "Migrationshintergrund",
-#       "nach Bildungskapital" = "Bücher im Haushalt"
-#     )
-#
-#     this_indikator <- switch(
-#       leistungsindikator_m,
-#       "nach Geschlecht" = c("Jungen", "Mädchen"),
-#       "nach Zuwanderungsgeschichte" = c("Keiner",
-#                                         "Zweite Generation",
-#                                         "Erste Generation"),
-#       "nach Bildungskapital" = c("0-10", "1-10", "26-100", "Mehr als 500")
-#     )
-#
-#
-#
-#
-#     df <- dplyr::tbl(con, from = "schule_pisa") %>%
-#       dplyr::filter(bereich == this_bereich &
-#                       indikator %in% this_indikator) %>%
-#       dplyr::collect()
-#
-#     # Labels anpassen
-#     df$indikator[df$indikator == "Keiner"] <- "ohne Zuwanderungsgeschichte"
-#     df$indikator[df$indikator == "Zweite Generation"] <- "nur Eltern zugewandert"
-#     df$indikator[df$indikator == "Erste Generation"] <- "Kind selbst zugewandert"
-#     df$indikator[df$indikator == "0-10"] <- "sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)"
-#     df$indikator[df$indikator == "26-100"] <- "niedriges Bildungskapital (bis zu 100 Bücher zuhause)"
-#     df$indikator[df$indikator == "Mehr als 500"] <- "hohes Bildungskapital (über 500 Bücher zuhause)"
-#     df$indikator[df$indikator == "1-10"] <- "sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)"
-#
-#     help_l <- "9. & 10. Klasse"
-#   }
-#
-#
-#   # filter dataset based on UI inputs
-#
-#
-#   dfs <- df %>%
-#     dplyr::filter(jahr == timerange &
-#                     fach == fach_m)
-#
-#   used_lands <- dfs %>%
-#     dplyr::filter(!is.na(wert)) %>%
-#     dplyr::pull(land) %>%
-#     unique()
-#
-#   dfs <- dfs %>%
-#     dplyr::filter(land %in% used_lands)
-#
-#   #Trennpunkte für lange Zahlen ergänzen
-#   dfs$display_wert <- prettyNum(round(dfs$wert, 1),
-#                                 big.mark = ".",
-#                                 decimal.mark = ",")
-#
-#
-#   data_line <- dfs %>%
-#     dplyr::select(land, wert, display_wert, indikator)
-#
-#   line_colors <- c("#B16FAB", "#154194", "#35BD97",
-#                    "#8893A7", "#FBBF24", "#9D7265")
-#   color <- line_colors[seq_along(this_indikator)]
-#
-#   # plot
-#   highcharter::hchart(
-#     object = data_line,
-#     type = 'line',
-#     highcharter::hcaes(y = wert, x = land, group = indikator)
-#   ) %>%
-#     highcharter::hc_plotOptions(column = list(pointWidth = 90)) %>%
-#     highcharter::hc_tooltip(pointFormat = "{point.indikator} <br> {point.display_wert} Pkt") %>%
-#     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}"), pointsWidth = 100) %>%
-#     highcharter::hc_xAxis(
-#       title = list(text = ""),
-#       labels = list(
-#         rotation = 310,
-#         formatter = highcharter::JS(
-#           "function () {
-#           if ('Deutschland' === this.value) {
-#             return '<span style=\"font-weight: bold;\">' + this.value + '</span>';
-#           } else {
-#             return this.value;
-#           }
-#         }"
-#         )
-#       ),
-#       categories = unique(data_line$land),
-#       min = 0,
-#       max = 15,
-#       scrollbar = list(enabled = TRUE, liveRedraw = TRUE)
-#   ) %>%
-#     highcharter::hc_colors(color) %>%
-#     highcharter::hc_title(
-#       text = paste0(
-#         "Durchschnittliche Leistung von Schüler:innen der ", help_l,
-#         " im ", fach_m, "-Kompetenztest von ", label_m, " ",
-#         leistungsindikator_m, " (", timerange, ")"
-#       ),
-#       margin = 45,
-#       align = "center",
-#       style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-#     ) %>%
-#     highcharter::hc_chart(
-#       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-#     ) %>%
-#     highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-#     highcharter::hc_exporting(
-#       enabled = FALSE,
-#       buttons = list(contextButton = list(
-#         symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-#         onclick = highcharter::JS("function () {
-#                                         this.exportChart({ type: 'image/png' }); }"),
-#         align = 'right',
-#         verticalAlign = 'bottom',
-#         theme = list(states = list(hover = list(fill = '#FFFFFF')))
-#       )
-#       )
-#     )
-#
-#
-#
-#
-# }
 
 
 
-## dumbbell versuch :D
 
 
 plot_international_schule_migration <- function(r) {
@@ -1654,7 +1462,7 @@ plot_international_schule_migration <- function(r) {
     pivot_wider(
       names_from = indikator,
       values_from = wert,
-      values_fn = mean,#??????????????????????????????????????????????
+      values_fn = mean,#?????????????????????????????????????????????? wieso mean? das hat chatgpt empfohle
       values_fill = NA
     )
 
@@ -2055,81 +1863,6 @@ plot_international_schule_migration <- function(r) {
 
 
 
-
-
-
-#####
-
-  # fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
-  #   plotly::add_segments(
-  #     x = ~basis_wert,
-  #     xend = ~mittel_wert,
-  #     y = ~land,
-  #     yend = ~land,
-  #     showlegend = FALSE,
-  #     text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
-  #                    paste0("Basis: ", basis_wert, "<br>Mittel: ", mittel_wert)),
-  #     hoverinfo = "text"
-  #   ) %>%
-  #   plotly::add_segments(
-  #     x = ~mittel_wert,
-  #     xend = ~wert,
-  #     y = ~land,
-  #     yend = ~land,
-  #     showlegend = FALSE,
-  #     text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
-  #                    paste0("Mittel: ", mittel_wert, "<br>Positiv: ", wert)),
-  #     hoverinfo = "text"
-  #   ) %>%
-  #   plotly::add_markers(
-  #     x = ~basis_wert,
-  #     y = ~land,
-  #     name = "Niedriger Status",
-  #     marker = list(
-  #       size = 12,
-  #       color = "#D0A9CD"
-  #     ),
-  #     text = ~ifelse(is.na(basis_wert), NA, paste0("Niedriger Status: ", basis_wert)),
-  #     hoverinfo = "text"
-  #   ) %>%
-  #   plotly::add_markers(
-  #     x = ~mittel_wert,
-  #     y = ~land,
-  #     name = "Mittlerer Status",
-  #     marker = list(
-  #       size = 12,
-  #       color = "#66cbaf"
-  #     ),
-  #     text = ~ifelse(is.na(mittel_wert), NA, paste0("Mittlerer Status: ", mittel_wert)),
-  #     hoverinfo = "text"
-  #   ) %>%
-  #   plotly::add_markers(
-  #     x = ~wert,
-  #     y = ~land,
-  #     name = "Hoher Status",
-  #     marker = list(
-  #       size = 12,
-  #       color = "#b16fab"
-  #     ),
-  #     text = ~ifelse(is.na(wert), NA, paste0("Hoher Status: ", wert)),
-  #     hoverinfo = "text"
-  #   ) %>%
-  #   # Layout anpassen
-  #   plotly::layout(
-  #     title = "Vergleich der sozialen Statuswerte",
-  #     xaxis = list(title = "Wert"),
-  #     yaxis = list(title = "Land"),
-  #     margin = list(l = 100, r = 50, t = 50, b = 50),
-  #     hoverlabel = list(bgcolor = "white"),
-  #     legend = list(
-  #       orientation = "h",
-  #       x = 0.5,
-  #       y = -0.2,
-  #       xanchor = "center",
-  #       yanchor = "top"
-  #     )
-  #   )
-
   fig <- fig %>%
     plotly::config(
       modeBarButtonsToRemove = c(
@@ -2137,7 +1870,7 @@ plot_international_schule_migration <- function(r) {
         "autoScale2d", "resetScale2d",
         "toggleSpikelines", "hoverClosestCartesian", "hoverCompareCartesian"
       ),
-      displaylogo = FALSE,  # Entfernt das Plotly-Logo
+      displaylogo = FALSE,
       showLink = FALSE
     )
 
@@ -2213,41 +1946,6 @@ plot_international_map_arb <- function(r) {
 
 
       # plot
-      # highcharter::hcmap(
-      #   #"countries/de/de-all",
-      #   map = map_selection,
-      #   data = data_map,
-      #   value = "wert",
-      #   joinBy = c("hc-a2", "alpha2"),
-      #   borderColor = "#FAFAFA",
-      #   name = paste0(inpp),
-      #   borderWidth = 0.1,
-      #   nullColor = "#A9A9A9",
-      #   tooltip = list(
-      #     valueDecimals = 0,
-      #     valueSuffix = "%"
-      #   )
-      #   ,
-      #   download_map_data = T
-      # )%>%
-      #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
-      #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-      #   highcharter::hc_title(
-      #     text = paste0("Anteil von ", title_eu, " in Europa"),
-      #     margin = 10,
-      #     align = "center",
-      #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      #   ) %>%
-      #   # highcharter::hc_caption(
-      #   #   text = "...",  style = list(color= "white", fontSize = "12px")
-      #   # ) %>%
-      #   highcharter::hc_chart(
-      #     style = list(fontFamily = "SourceSans3-Regular")
-      #   ) %>% highcharter::hc_size(800, 600) %>%
-      #   highcharter::hc_credits(enabled = FALSE) %>%
-      #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-      #                          verticalAlign = "bottom")
-      #
       df <- data_map
       joinby <- c("hc-a2", "alpha2")
       name <- paste0(inpp)
@@ -2347,40 +2045,7 @@ plot_international_map_arb <- function(r) {
     paste0("Absolvent*innen der Erstausbildung (ISCED 35)")
   }
 
-
-
-
         # plot
-        # highcharter::hcmap(
-        #   map = map_selection,
-        #   data = data_map,
-        #   value = "wert",
-        #   joinBy = c("hc-a2", "alpha2"),
-        #   borderColor = "#FAFAFA",
-        #   name = paste0(inpp),
-        #   borderWidth = 0.1,
-        #   nullColor = "#A9A9A9",
-        #   tooltip = list(
-        #     valueDecimals = 0,
-        #     valueSuffix = "%"
-        #   )
-        #   ,
-        #   download_map_data = T
-        # )%>%
-        #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}%") %>%
-        #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-        #   highcharter::hc_title(
-        #     text = paste0("Anteil von ", title_oecd_1_1, " in ", inpf, " ", inpy, " weltweit (OECD)" ),
-        #     margin = 10,
-        #     align = "center",
-        #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-        #   ) %>%
-        #   highcharter::hc_chart(
-        #     style = list(fontFamily = "SourceSans3-Regular")
-        #   ) %>% highcharter::hc_size(1000, 600) %>%
-        #   highcharter::hc_credits(enabled = FALSE) %>%
-        #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-        #                          verticalAlign = "bottom")
 
 
         df <- data_map
@@ -2493,38 +2158,8 @@ plot_international_map_arb <- function(r) {
 
 
 
-
         # plot
-        # highcharter::hcmap(
-        #   map = map_selection,
-        #   data = data_map,
-        #   value = "wert",
-        #   joinBy = c("hc-a2", "alpha2"),
-        #   borderColor = "#FAFAFA",
-        #   name = paste0(inpp),
-        #   borderWidth = 0.1,
-        #   nullColor = "#A9A9A9",
-        #   tooltip = list(
-        #     valueDecimals = 0,
-        #     valueSuffix = "%"
-        #   )
-        #   ,
-        #   download_map_data = T
-        # ) %>%
-        #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
-        #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-        #   highcharter::hc_title(
-        #     text = paste0("Anteil von ", title_oecd_2_1, " in ", inpf, " ",  inpy," weltweit (OECD)" ),
-        #     margin = 10,
-        #     align = "center",
-        #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-        #   ) %>%
-        #   highcharter::hc_chart(
-        #     style = list(fontFamily = "SourceSans3-Regular")
-        #   ) %>% highcharter::hc_size(1000, 600) %>%
-        #   highcharter::hc_credits(enabled = FALSE) %>%
-        #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-        #                          verticalAlign = "bottom")
+
 
         df <- data_map
         joinby <- c("hc-a2", "alpha2")
@@ -2608,36 +2243,6 @@ plot_international_map_arb_gender <- function(r) {
 
 
       # plot
-      # highcharter::hcmap(
-      #   map = map_selection,
-      #   data = data_map,
-      #   value = "wert",
-      #   joinBy = c("hc-a2", "alpha2"),
-      #   borderColor = "#FAFAFA",
-      #   name = paste0(inpp),
-      #   borderWidth = 0.1,
-      #   nullColor = "#A9A9A9",
-      #   tooltip = list(
-      #     valueDecimals = 0,
-      #     valueSuffix = "%"
-      #   )
-      #   ,
-      #   download_map_data = T
-      # )%>%
-      #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
-      #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-      #   highcharter::hc_title(
-      #     text = paste0("Anteil von Frauen an allen ", title_eu, " in Europa"),
-      #     margin = 10,
-      #     align = "center",
-      #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      #   ) %>%
-      #   highcharter::hc_chart(
-      #     style = list(fontFamily = "SourceSans3-Regular")
-      #   ) %>% highcharter::hc_size(800, 600) %>%
-      #   highcharter::hc_credits(enabled = FALSE) %>%
-      #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-      #                          verticalAlign = "bottom")
 
 
       df <- data_map
@@ -2759,39 +2364,7 @@ plot_international_map_arb_gender <- function(r) {
       }
 
 
-
         # plot
-        # highcharter::hcmap(
-        #   map = map_selection,
-        #   data = data_map,
-        #   value = "wert",
-        #   joinBy = c("hc-a2", "alpha2"),
-        #   borderColor = "#FAFAFA",
-        #   name = paste0(inpp),
-        #   borderWidth = 0.1,
-        #   nullColor = "#A9A9A9",
-        #   tooltip = list(
-        #     valueDecimals = 0,
-        #     valueSuffix = "%"
-        #   )
-        #   ,
-        #   download_map_data = T
-        # ) %>%
-        #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}%") %>%
-        #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-        #   highcharter::hc_title(
-        #     text = paste0("Anteil von Frauen an allen ", title_oecd_1_1, " in ", inpf, " ", inpy, " weltweit (OECD)"),
-        #     margin = 10,
-        #     align = "center",
-        #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-        #   ) %>%
-        #   highcharter::hc_chart(
-        #     style = list(fontFamily = "SourceSans3-Regular")
-        #   ) %>% highcharter::hc_size(1000, 600) %>%
-        #   highcharter::hc_credits(enabled = FALSE) %>%
-        #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-        #                          verticalAlign = "bottom")
-
 
 
         df <- data_map
@@ -2958,39 +2531,6 @@ plot_international_map_arb_gender <- function(r) {
 
 
         # plot
-        # highcharter::hcmap(
-        #   #"countries/de/de-all",
-        #   map = map_selection,
-        #   data = data_map,
-        #   value = "wert",
-        #   joinBy = c("hc-a2", "alpha2"),
-        #   borderColor = "#FAFAFA",
-        #   name = paste0(inpp),
-        #   borderWidth = 0.1,
-        #   nullColor = "#A9A9A9",
-        #   tooltip = list(
-        #     valueDecimals = 0,
-        #     valueSuffix = "%"
-        #   )
-        #   ,
-        #   download_map_data = T
-        # )%>%
-        #   highcharter::hc_tooltip(pointFormat = "{point.land} <br> Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}") %>%
-        #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-        #   highcharter::hc_title(
-        #     text = paste0("Anteil von ", title_oecd_2_1, " ", inpy, " weltweit (OECD)" ),
-        #     margin = 10,
-        #     align = "center",
-        #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-        #   ) %>%
-        #   highcharter::hc_chart(
-        #     style = list(fontFamily = "SourceSans3-Regular")
-        #   ) %>% highcharter::hc_size(1000, 600) %>%
-        #   highcharter::hc_credits(enabled = FALSE) %>%
-        #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-        #                          verticalAlign = "bottom")
-
-
 
         df <- data_map
         joinby <- c("hc-a2", "alpha2")
