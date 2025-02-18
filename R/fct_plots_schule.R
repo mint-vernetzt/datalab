@@ -207,7 +207,7 @@ kurse_waffle_mint <- function(r) {
       indika <- "Oberstufen"
     }
 
-    # # plot
+    # # # plot
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -235,7 +235,6 @@ kurse_waffle_mint <- function(r) {
                                   verticalAlign = 'bottom',
                                   theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
-    #noch machen
     # titel <- paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")")
     # tooltip <- "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
     # format <- "{value}%"
