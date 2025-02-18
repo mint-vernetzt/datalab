@@ -489,7 +489,6 @@ studierende_bula_mint <- function(r) {
 
     df <- df[with(df, order(proportion, decreasing = TRUE)),]
 
-    browser()
 
     # Plot
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%

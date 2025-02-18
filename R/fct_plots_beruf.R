@@ -89,7 +89,8 @@ beruf_einstieg_vergleich <- function(r) {
 
 
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-    titel <- ist_saarland(gruppe, regio, timerange)
+   # titel <- ist_saarland(gruppe, regio, timerange)
+    titel <- paste0("Anteil von der Gruppe ", gruppe, " in ", regio , " (", timerange, ")")
     tooltip <- paste('Anteil: {point.percentage:.0f} % <br> Anzahl: {point.wert}')
     format <- '{point.percentage:.0f}%'
     color <- c("#b16fab","#efe8e6")
