@@ -1262,7 +1262,7 @@ plot_international_schule_item <- function(r) {
     group_text = c(" mit keinem signifikaten Unterschied zwischen Jungen und Mädchen",
                    ", in denen Jungen signifikant besser abschneiden als Mädchen",
                    ", in denen Mädchen signifikant besser abscheniden als Jungen"),
-    group_col = c("#66cbaf", "#b16fab", "#154194")
+    group_col = c("#66cbaf", "#D0A9CD", "#EFE8E6")
   )
 
   # reshape long to wide for later merge
@@ -1294,9 +1294,9 @@ plot_international_schule_item <- function(r) {
     dplyr::filter(!is.na(count))
 
   # Farbe für Deutschland
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#d9a0cd", plot_data$group_col )
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#5F94F9", plot_data$group_col )
-  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "kein signifikanter Unterschied", "#00a87a", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Jungen signifikant besser", "#703D6B", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "Mädchen signifikant besser", "#9D7265", plot_data$group_col )
+  plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "kein signifikanter Unterschied", "#008F68", plot_data$group_col )
 
 
   out <- highcharter::hchart(
@@ -1332,7 +1332,7 @@ plot_international_schule_item <- function(r) {
     ) %>%
     highcharter::hc_subtitle(
       text= paste0("Jeder Punkt repräsentiert ein Land.", br(),
-      "Deutschland ist als etwas blasser hervorgehoben."),
+      "Deutschland ist als dunkler hervorgehoben."),
       align = "left"
     )%>%
     highcharter::hc_chart(
@@ -1529,12 +1529,15 @@ plot_international_schule_item <- function(r) {
 
 plot_international_schule_migration <- function(r) {
 
-
   timerange <- r$line_y_int_schule
   label_m <- r$line_l_int_schule
   fach_m <- r$line_f_int_schule
   leistungsindikator_m <- r$line_li_int_schule
-  lander <- r$regio_international_schule
+   # lander <- r$regio_int_schule
+
+  if(label_m == "TIMSS") {lander <- r$regio_int_schule_timss} else{
+    lander <- r$regio_int_schule_pisa
+  }
 
 
   if (is.null(fach_m)) { fach_m <- ""}
@@ -2139,9 +2142,6 @@ plot_international_schule_migration <- function(r) {
     )
 
 
-
-
-  fig
   return(fig)
 
 }

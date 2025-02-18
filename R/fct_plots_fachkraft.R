@@ -676,7 +676,9 @@ plot_fachkraft_epa_item <- function(r) {
     ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
-    )
+    ) %>%
+    highcharter::hc_size(380, 480)
+
 
   if (length(fach) == 2) {
 
@@ -729,7 +731,9 @@ plot_fachkraft_epa_item <- function(r) {
       ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular")
-      )
+      )%>%
+      highcharter::hc_size(380, 480)
+
 
     out <- list(plot_left, plot_right)
 
@@ -738,10 +742,6 @@ plot_fachkraft_epa_item <- function(r) {
   }else{
     return(plot_left)
   }
-
-  out <- list(plot_left, plot_right)
-
-  return(out)
 
 }
 

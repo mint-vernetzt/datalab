@@ -601,7 +601,8 @@ kurse_mint_map <- function(r) {
 
     return(out)
 
-  }else if(betrachtung == "Übersicht - Kartendiagramm"){
+  }
+  else if(betrachtung == "Übersicht - Kartendiagramm"){
 
     # load UI inputs from reactive value
     timerange <- r$date_mint_map
@@ -826,7 +827,8 @@ kurse_map <- function(r) {
 
     return(out)
 
-  }else if(betrachtung == "Zeitverlauf - Liniendiagramm"){
+  }
+  else if(betrachtung == "Zeitverlauf - Liniendiagramm"){
     absolut_selector <- r$abs_zahlen_kurse_verlauf_multiple
 
     timerange <- r$date_kurse_verlauf_multiple
@@ -952,7 +954,8 @@ kurse_map <- function(r) {
 
     return(out)
 
-  }else if(betrachtung == "Vergleich - Balkendiagramm"){
+  }
+  else if(betrachtung == "Vergleich - Balkendiagramm"){
 
     timerange <- r$date_comparison_bl
 
@@ -971,7 +974,7 @@ kurse_map <- function(r) {
     # filter dataset based on UI inputs
     df <- dplyr::tbl(con, from = "kurse") %>%
       dplyr::filter(jahr == timerange,
-                    region != "Deutschland",
+                   # region != "Deutschland",
                     anzeige_geschlecht == "Gesamt",
                     indikator == indikator_comparison) %>%
       dplyr::select(-jahr, -bereich) %>%
@@ -990,8 +993,8 @@ kurse_map <- function(r) {
 
     # df <- rbind(df, df_sub)
 
-    df <- df %>% dplyr::filter(fachbereich == subject)%>%
-      dplyr::filter(!region %in% c("Westen", "Osten"))
+    df <- df %>% dplyr::filter(fachbereich == subject) #%>%
+    #   dplyr::filter(!region %in% c("Westen", "Osten"))
 
     # nötig für stacked
 

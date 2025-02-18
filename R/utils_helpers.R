@@ -335,6 +335,51 @@ international_ui_country <- function(type = "arbeit", n = NA) {
       sort()
   }
 
+}
+
+int_schule_ui_country <- function(type = "TIMSS", n = NA) {
+
+
+  selection <- NULL
+
+  for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+    dplyr::filter(
+      geschlecht == "Gesamt"
+    ) %>%
+    dplyr::collect()
+  year <- max(for_year$jahr)
+
+  # for studium international
+  if (type == "arbeit") {
+    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
+
+    tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+      dplyr::filter(geschlecht == "Gesamt" &
+                      jahr == year &
+                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+      ) %>%
+      dplyr::collect()
+
+
+
+    if (!is.na(n)) {
+      tmp_df <- tmp_df %>%
+        dplyr::filter(
+          fachbereich == "MINT" &
+            variable == "Anteil Absolvent*innen nach Fach an allen Fächern") %>%
+        dplyr::group_by(land) %>%
+        dplyr::summarise(wert = sum(wert)) %>%
+        dplyr::arrange(desc(wert)) %>%
+        head(n = 10)
+    }
+
+    selection <- tmp_df %>%
+      dplyr::pull(land) %>%
+      unique() %>%
+      sort()
+  }
+
   if(type=="TIMSS"){
     selection <- dplyr::tbl(con, from = "schule_timss") %>%
       dplyr::filter(!is.na(wert)) %>%
@@ -342,6 +387,57 @@ international_ui_country <- function(type = "arbeit", n = NA) {
       dplyr::arrange(land) %>%   # Alphabetisch sortieren (in der DB)
       dplyr::pull(land)          # Extrahiert die Spalte 'land'
 
+  }
+
+}
+
+int_pisa_ui_country <- function(type = "TIMSS", n = NA) {
+
+  selection <- NULL
+
+  for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+    dplyr::filter(
+      geschlecht == "Gesamt"
+    ) %>%
+    dplyr::collect()
+  year <- max(for_year$jahr)
+
+  # for studium international
+  if (type == "arbeit") {
+    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
+
+    tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+      dplyr::filter(geschlecht == "Gesamt" &
+                      jahr == year &
+                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+      ) %>%
+      dplyr::collect()
+
+
+
+    if (!is.na(n)) {
+      tmp_df <- tmp_df %>%
+        dplyr::filter(
+          fachbereich == "MINT" &
+            variable == "Anteil Absolvent*innen nach Fach an allen Fächern") %>%
+        dplyr::group_by(land) %>%
+        dplyr::summarise(wert = sum(wert)) %>%
+        dplyr::arrange(desc(wert)) %>%
+        head(n = 10)
+    }
+
+    selection <- tmp_df %>%
+      dplyr::pull(land) %>%
+      unique() %>%
+      sort()
+  }
+
+  if(type == "PISA"){
+
+    selection <- DBI::dbGetQuery(con,
+                                 "SELECT DISTINCT land
+                                 FROM schule_pisa")$land
   }
 
 }

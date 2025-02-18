@@ -86,15 +86,17 @@ beruf_einstieg_vergleich <- function(r) {
   #Graifken
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
-
-
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-   # titel <- ist_saarland(gruppe, regio, timerange)
-    titel <- paste0("Anteil von der Gruppe ", gruppe, " in ", regio , " (", timerange, ")")
+
+
+    #titel <- ist_saarland(gruppe, regio, timerange)
+    titel <- ifelse(regio != "Saarland",
+                    paste0(gruppe, " in ", regio, " (", timerange, ")"),
+                    paste0(gruppe, " im ", regio, " (", timerange, ")"))
+
     tooltip <- paste('Anteil: {point.percentage:.0f} % <br> Anzahl: {point.wert}')
     format <- '{point.percentage:.0f}%'
     color <- c("#b16fab","#efe8e6")
-
 
    out <- piebuilder(df, titel, x="fachbereich", y = "proportion", tooltip, color, format)
 
@@ -1698,13 +1700,13 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
 
       # plot
-
       titel <-  paste0("Anzahl von ", title_help, " in MINT-Berufen im Berufsfeld ", faecher)
       tooltip <-  "Anzahl: {point.display_abs}"
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color)
+
 
     }
   }

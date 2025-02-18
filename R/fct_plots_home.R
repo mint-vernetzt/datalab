@@ -169,9 +169,6 @@ home_einstieg <- function(r) {
     }
   }
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
-   if(zeit == 2023){subtitel <- paste0("Schüler:innendaten für 2023 liegen noch nicht vor.")}else{
-     subtitel <- ""
-   }
 
    df <- df[with(df, order(prop, decreasing = TRUE)), ] ####
    titel <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
@@ -186,10 +183,10 @@ home_einstieg <- function(r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-     highcharter::hc_subtitle(text = subtitel,
-                              margin = 20,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+     # highcharter::hc_subtitle(text = subtitel,
+     #                          margin = 20,
+     #                          align = "center",
+     #                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
      highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
@@ -401,7 +398,8 @@ home_einstieg_gender <- function(r) {
     dplyr::select(bereich, indikator, fachbereich, geschlecht, wert) %>%
     dplyr::collect()
 
-  if("Leistungskurse" %in% indi & regio == "Deutschland"){
+  if("Leistungskurse" %in% indi & regio == "Deutschland" |
+     betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
     #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
     df_alle_bw <- dplyr::tbl(con, from = "zentral") %>%
@@ -825,7 +823,7 @@ home_einstieg_gender <- function(r) {
       titel = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
       tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
       format <- "{value}%"
-      color <- c("#efe8e6", "#154194")
+      color <- c("#154194", "#efe8e6")
 
       out <- balkenbuilder(df, titel , x = "indikator", y = "prop", group = "geschlecht", tooltip, format, color)
 
@@ -861,7 +859,8 @@ home_comparison_line <- function(r) {
     dplyr::filter(jahr %in% t,
                   region %in% regio,
                   geschlecht == "Frauen",
-                  fachbereich == "MINT") %>%
+                  fachbereich == "MINT",
+                  indikator %in% indikator_choice) %>%
     dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
     dplyr::collect()
 
@@ -871,11 +870,12 @@ home_comparison_line <- function(r) {
       dplyr::filter(jahr %in% t,
                     region %in% regio,
                     geschlecht == "Gesamt",
-                    fachbereich == "MINT") %>%
+                    fachbereich == "MINT",
+                    indikator %in% indikator_choice) %>%
       dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
       dplyr::collect()
 
-    if("Schülerinnen Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
+    if("Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
 
       #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
       df_alle_bw <- dplyr::tbl(con, from = "zentral") %>%
