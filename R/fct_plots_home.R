@@ -19,29 +19,36 @@ home_einstieg <- function(r) {
 
   # filter dataset based on UI input
 
-  df <- dplyr::tbl(con, from = "zentral") %>%
-    dplyr::filter(jahr == zeit,
-                  region == regio,
-                  geschlecht=="Gesamt",
-                  fachbereich %in% c("MINT", "Nicht MINT")) %>%
-    dplyr::select(bereich, indikator, fachbereich, wert) %>%
-    dplyr::collect()
+  query_df <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, wert
+  FROM zentral
+  WHERE jahr = {zeit}
+    AND region = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fachbereich IN ('MINT', 'Nicht MINT')
+", .con = con)
 
-  df_alle <- dplyr::tbl(con, from = "zentral") %>%
-    dplyr::filter(jahr == zeit,
-                  region == regio,
-                  geschlecht=="Gesamt",
-                  fachbereich == "Alle") %>%
-    dplyr::select(bereich, indikator, fachbereich, wert) %>%
-    dplyr::collect()
+  df <- DBI::dbGetQuery(con, query_df)
+
+  query_df_alle <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, wert
+  FROM zentral
+  WHERE jahr = {zeit}
+    AND region = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = 'Alle'
+", .con = con)
+
+  df_alle <- DBI::dbGetQuery(con, query_df_alle)
 
   df <- df %>%
     dplyr::left_join(df_alle, by = c("bereich", "indikator")) %>%
     dplyr::rename(wert = wert.x,
                   wert_ges = wert.y,
                   fachbereich = fachbereich.x) %>%
-    dplyr::mutate(prop = round(wert/wert_ges*100,1)) %>%
+    dplyr::mutate(prop = round(wert / wert_ges * 100, 1)) %>%
     dplyr::select(-fachbereich.y, -wert_ges)
+
 
 
   #Trennpunkte für lange Zahlen ergänzen
@@ -227,33 +234,40 @@ home_rest_mint_verlauf <- function(r) {
   indikator_choice_1 <- r$indikator_start_multiple_1
   regio <- r$region_start_multiple
 
-  df <- dplyr::tbl(con, from = "zentral") %>%
-    dplyr::filter(jahr %in% t,
-                  region == regio,
-                  geschlecht=="Gesamt",
-                  fachbereich %in% c("MINT"),
-                  indikator %in% indikator_choice_1) %>%
-    dplyr::select(bereich, indikator, fachbereich, jahr, wert) %>%
-    dplyr::collect()
+  query_df <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, jahr, wert
+  FROM zentral
+  WHERE jahr IN ({t*})
+    AND region = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = 'MINT'
+    AND indikator IN ({indikator_choice_1*})
+", .con = con)
+
+  df <- DBI::dbGetQuery(con, query_df)
 
   if(absolut_selector=="In Prozent"){
 
-    df_alle <- dplyr::tbl(con, from = "zentral") %>%
-      dplyr::filter(jahr %in% t,
-                    region == regio,
-                    geschlecht=="Gesamt",
-                    fachbereich == "Alle",
-                    indikator %in% indikator_choice_1) %>%
-      dplyr::select(bereich, indikator, fachbereich, jahr, wert) %>%
-      dplyr::collect()
+    query_df_alle <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, jahr, wert
+  FROM zentral
+  WHERE jahr IN ({t*})
+    AND region = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = 'Alle'
+    AND indikator IN ({indikator_choice_1*})
+", .con = con)
+
+    df_alle <- DBI::dbGetQuery(con, query_df_alle)
 
     df <- df %>%
       dplyr::left_join(df_alle, by = c("bereich", "indikator", "jahr")) %>%
       dplyr::rename(wert = wert.x,
                     wert_ges = wert.y,
                     fachbereich = fachbereich.x) %>%
-      dplyr::mutate(prop = round(wert/wert_ges*100,1)) %>%
+      dplyr::mutate(prop = round(wert / wert_ges * 100, 1)) %>%
       dplyr::select(-fachbereich.y, -wert_ges)
+
 
     df <- df[with(df, order(fachbereich, jahr, decreasing = FALSE)), ]
     #Trennpunkte für lange Zahlen ergänzen
@@ -339,38 +353,48 @@ home_einstieg_gender <- function(r) {
 
   # filter dataset based on UI input
 
-  df <- dplyr::tbl(con, from = "zentral") %>%
-    dplyr::filter(jahr == zeit,
-                  region == regio,
-                  geschlecht %in% c("Frauen", "Männer"),
-                  fachbereich %in% c("MINT", "Nicht MINT")) %>%
-    dplyr::select(bereich, indikator, fachbereich, geschlecht, wert) %>%
-    dplyr::collect()
+  query_df <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, geschlecht, wert
+  FROM zentral
+  WHERE jahr = {zeit}
+    AND region = {regio}
+    AND geschlecht IN ('Frauen', 'Männer')
+    AND fachbereich IN ('MINT', 'Nicht MINT')
+", .con = con)
 
-  df_alle <- dplyr::tbl(con, from = "zentral") %>%
-    dplyr::filter(jahr == zeit,
-                  region == regio,
-                  geschlecht == "Gesamt",
-                  fachbereich %in% c("MINT", "Nicht MINT")) %>%
-    dplyr::select(bereich, indikator, fachbereich, geschlecht, wert) %>%
-    dplyr::collect()
+  df <- DBI::dbGetQuery(con, query_df)
+
+  query_df_alle <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, geschlecht, wert
+  FROM zentral
+  WHERE jahr = {zeit}
+    AND region = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fachbereich IN ('MINT', 'Nicht MINT')
+", .con = con)
+
+  df_alle <- DBI::dbGetQuery(con, query_df_alle)
+
 
   if("Leistungskurse" %in% indi & regio == "Deutschland" |
      betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
     #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
-    df_alle_bw <- dplyr::tbl(con, from = "zentral") %>%
-      dplyr::filter(jahr == zeit,
-                    region == "Baden-Württemberg",
-                    geschlecht == "Gesamt",
-                    fachbereich %in% c("MINT", "Nicht MINT"),
-                    bereich == "Schule") %>%
-      dplyr::select(bereich, indikator, fachbereich, geschlecht, wert) %>%
-      dplyr::collect()
+    query_df_alle_bw <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, geschlecht, wert
+  FROM zentral
+  WHERE jahr = {zeit}
+    AND region = 'Baden-Württemberg'
+    AND geschlecht = 'Gesamt'
+    AND fachbereich IN ('MINT', 'Nicht MINT')
+    AND bereich = 'Schule'
+", .con = con)
+
+    df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
+
 
     df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
-      dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich",
-                                          "geschlecht")) %>%
+      dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "geschlecht")) %>%
       dplyr::mutate(wert.x = wert.x - wert.y) %>%
       dplyr::select(-wert.y) %>%
       dplyr::rename(wert = wert.x)
@@ -386,7 +410,7 @@ home_einstieg_gender <- function(r) {
     dplyr::rename(wert = wert.x,
                   wert_ges = wert.y,
                   geschlecht = geschlecht.x) %>%
-    dplyr::mutate(prop = round(wert/wert_ges*100,1)) %>%
+    dplyr::mutate(prop = round(wert / wert_ges * 100, 1)) %>%
     dplyr::select(-geschlecht.y, -wert_ges)
 
   if("Leistungskurse" %in% indi){
@@ -742,40 +766,6 @@ home_einstieg_gender <- function(r) {
       df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
       # out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = indikator, y = prop, group = geschlecht)) %>%
-      #   highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht} Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
-      #   highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"), reversedStacks = FALSE) %>%
-      #   highcharter::hc_xAxis(
-      #     title = list(text = ""),
-      #     categories = c(
-      #       "Schüler:innen Leistungskurse in MINT",
-      #       "Schüler:innen Leistungskurse in anderen Bereichen",
-      #       "Studierende in MINT",
-      #       "Studierende in anderen Bereichen",
-      #       "Auszubildende in MINT",
-      #       "Auszubildende in anderen Bereichen",
-      #       "Beschäftigte in MINT",
-      #       "Beschäftigte in anderen Bereichen"
-      #     )
-      #   ) %>%
-      #   highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-      #   highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-      #
-      #   highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")"),
-      #                         margin = 25,
-      #                         align = "center",
-      #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      #   highcharter::hc_chart(
-      #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-      #   ) %>%
-      #   highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-      #   highcharter::hc_exporting(enabled = FALSE,
-      #                             buttons = list(contextButton = list(
-      #                               symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-      #                               onclick = highcharter::JS("function () {
-      #                           this.exportChart({ type: 'image/png' }); }"),
-      #                               align = 'right',
-      #                               verticalAlign = 'bottom',
-      #                               theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
 
       titel = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
       tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
@@ -792,6 +782,7 @@ home_einstieg_gender <- function(r) {
 
   return(out)
 }
+
 
 
 #' A function to plot a graph.
@@ -811,42 +802,62 @@ home_comparison_line <- function(r) {
   indikator_choice <- r$indikator_start_comparison
   abs_selector <- r$abs_zahlen_start_comparison
 
-  # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "zentral") %>%
-    dplyr::filter(jahr %in% t,
-                  region %in% regio,
-                  geschlecht == "Frauen",
-                  fachbereich == "MINT",
-                  indikator %in% indikator_choice) %>%
-    dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
-    dplyr::collect()
+
+  # # filter dataset based on UI inputs
+  # df <- dplyr::tbl(con, from = "zentral") %>%
+  #   dplyr::filter(jahr %in% t,
+  #                 region %in% regio,
+  #                 geschlecht == "Frauen",
+  #                 fachbereich == "MINT",
+  #                 indikator %in% indikator_choice) %>%
+  #   dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
+  #   dplyr::collect()
+
+
+  query <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
+  FROM zentral
+  WHERE jahr IN ({t*})
+    AND region IN ({regio*})
+    AND geschlecht = 'Frauen'
+    AND fachbereich = 'MINT'
+    AND indikator IN ({indikator_choice*})
+", .con = con)
+
+  df <- DBI::dbGetQuery(con, query)
+
 
   if(abs_selector=="In Prozent"){
 
-    df_alle <- dplyr::tbl(con, from = "zentral") %>%
-      dplyr::filter(jahr %in% t,
-                    region %in% regio,
-                    geschlecht == "Gesamt",
-                    fachbereich == "MINT",
-                    indikator %in% indikator_choice) %>%
-      dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
-      dplyr::collect()
+
+    query_df_alle <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
+  FROM zentral
+  WHERE jahr IN ({t*})
+    AND region IN ({regio*})
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = 'MINT'
+    AND indikator IN ({indikator_choice*})
+", .con = con)
+
+    df_alle <- DBI::dbGetQuery(con, query_df_alle)
 
     if("Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
 
-      #Baden-Würrtemberg rausrechnen, da dort keine Geschlechter erfasst werden
-      df_alle_bw <- dplyr::tbl(con, from = "zentral") %>%
-        dplyr::filter(jahr %in% t,
-                      region == "Baden-Württemberg",
-                      geschlecht == "Gesamt",
-                      fachbereich == "MINT",
-                      bereich == "Schule") %>%
-        dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
-        dplyr::collect()
+      query_df_alle_bw <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
+  FROM zentral
+  WHERE jahr IN ({t*})
+    AND region = 'Baden-Württemberg'
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = 'MINT'
+    AND bereich = 'Schule'
+", .con = con)
+
+      df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
 
       df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
-        dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich",
-                                            "jahr", "geschlecht")) %>%
+        dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "jahr", "geschlecht")) %>%
         dplyr::mutate(wert.x = wert.x - wert.y) %>%
         dplyr::select(-wert.y) %>%
         dplyr::rename(wert = wert.x)
@@ -864,14 +875,15 @@ home_comparison_line <- function(r) {
                     wert = wert.x) %>%
       dplyr::select(-c(wert.y, geschlecht.y))
 
+
     df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
 
-    # Ordnen der Legende
     sorted_indicators <- df %>%
       dplyr::group_by(indikator) %>%
       dplyr::summarize(m_value = mean(round(prop, 1), na.rm = TRUE)) %>%
       dplyr::arrange(desc(m_value)) %>%
       dplyr::pull(indikator)
+
 
     df$indikator <- factor(df$indikator, levels = sorted_indicators)
 
