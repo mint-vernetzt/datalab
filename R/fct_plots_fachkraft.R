@@ -745,13 +745,12 @@ plot_fachkraft_epa_item <- function(r) {
 
 }
 
+plot_fachkraft_epa_bulas <- function(r) {
 
-
-plot_fachkraft_mint_item  <- function(r) {
-
-
-  timerange <- r$map_y_fachkraft_arbeit_mint
-  bf_label <- r$map_bl_fachkraft_arbeit_mint
+  timerange <- r$y_fachkraft_epa_bulas
+  regio <- r$regio_fachkraft_epa_bulas
+  fach <- r$f_fachkraft_epa_bulas
+  bf_label <- r$bl_fachkraft_epa_bulas
 
   if (bf_label == "Gesamt") {
     bf <- fachkraft_ui_berufslevel()
@@ -759,90 +758,136 @@ plot_fachkraft_mint_item  <- function(r) {
     bf <- bf_label
   }
 
-
-
-   plot_data_raw <- dplyr::tbl(con, from ="arbeitsmarkt_epa_detail") %>%
+  plot_data_raw <- dplyr::tbl(con, from = "arbeitsmarkt_epa")%>%
     dplyr::filter(jahr == timerange &
                     indikator == "Engpassindikator" &
-                    anforderung %in% bf) %>%
-     dplyr::collect()
+                    anforderung %in% bf &
+                    region == regio)%>%
+    dplyr::collect()
 
-   plot_data_raw <- plot_data_raw %>%
-     dplyr::mutate(mint_zuordnung = dplyr::if_else(
-      !mint_zuordnung %in% c("Nicht MINT", "Gesamt"),
-      "MINT gesamt",
-      mint_zuordnung)) %>%
-    dplyr::filter(mint_zuordnung %in% c("Nicht MINT", "MINT gesamt")) %>%
-    dplyr::group_by(mint_zuordnung, epa_kat) %>%
-    dplyr::summarise(berufe = dplyr::n()) %>%
-    dplyr::mutate(mint_epa_kat = paste0(mint_zuordnung, " - ", epa_kat)) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(percent_total = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100,1)) %>%
-    dplyr::group_by(epa_kat) %>%
-    dplyr::mutate(percent_epa = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100,1)) %>%
-    dplyr::ungroup()
+  if ("MINT gesamt" %in% fach) {
+    plot_data_raw <- plot_data_raw %>%
+      dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
+      dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
+      rbind(plot_data_raw)
+  }
 
 
   # enthält den Text für den plot
-  epa_kat_levels <- c("MINT gesamt - Engpassberuf",
-                      "Nicht MINT - Engpassberuf",
-                      "MINT gesamt - Anzeichen eines Engpassberufs",
-                      "Nicht MINT - Anzeichen eines Engpassberufs",
-                      "MINT gesamt - Kein Engpassberuf",
-                      "Nicht MINT - Kein Engpassberuf")
+  epa_kat_levels <- c("Engpassberuf",
+                      "Anzeichen eines Engpassberufs",
+                      "Kein Engpassberuf")
   group_col_dt <- data.frame(
-    mint_epa_kat = factor(x = epa_kat_levels,
-                          levels = epa_kat_levels),
-    epa_group_order = c(1:6),
-    group_col = c("#EE7775","#f5adac",
-                  "#Fcc433", "#fdd670",
-                  "#00a87a", "#66cbaf")
+    epa_kat = factor(x = epa_kat_levels,
+                     levels = epa_kat_levels),
+    epa_group_order = c(1:3),
+    group_text = c("Text A",
+                   "Text B",
+                   "Text C"),
+    group_col = c("#EE7775", "#FBBF24", "#35BD97")
   )
+
+  # Aggregate rausfiltern
+  plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
+                                             c("Gesamt",
+                                               "MINT",
+                                               "Informatik",
+                                               "Landtechnik",
+                                               "Produktionstechnik",
+                                               "Bau- und Gebäudetechnik",
+                                               "Mathematik, Naturwissenschaften",
+                                               "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                                               "Gesundheitstechnik",
+                                               "Nicht MINT"
+                                             ))
+  )
+
 
   plot_data <- plot_data_raw %>%
-    dplyr::right_join(group_col_dt, by = "mint_epa_kat") %>%
-    dplyr::arrange(epa_group_order) %>%
-    dplyr::group_by(mint_epa_kat) %>%
-    dplyr::mutate(berufe = dplyr::if_else(is.na(berufe), 0, berufe),
-                  percent_total = dplyr::if_else(is.na(percent_total), 0, percent_total),
-                  percent_epa = dplyr::if_else(is.na(percent_epa), 0, percent_epa)) %>%
-    dplyr::ungroup()
+    dplyr::filter(mint_zuordnung %in% fach &
+                    !is.na(epa_kat)) %>%
+    dplyr::group_by(epa_kat, mint_zuordnung)  %>%
+    dplyr::summarise(beruf_num = dplyr::n()) %>%
+    dplyr::group_by(mint_zuordnung)  %>%
+    dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,0)) %>%
+    dplyr::left_join(group_col_dt, by = "epa_kat") %>%
+    dplyr::arrange(epa_group_order)
 
+  if("Gesamt" %in% fach){
+    plot_data_ges <- plot_data_raw %>%
+      dplyr::filter(!is.na(epa_kat)) %>%
+      dplyr::group_by(epa_kat) %>%
+      dplyr::summarise(beruf_num = dplyr::n()) %>%
+      dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,0)) %>%
+      dplyr::left_join(group_col_dt, by = "epa_kat") %>%
+      dplyr::arrange(epa_group_order) %>%
+      dplyr::mutate(mint_zuordnung = "Gesamt")
 
-  plot_data$mint_zuordnung <- ifelse(
-    plot_data$mint_zuordnung == "MINT gesamt",
-    "MINT-Berufe", "Nicht-MINT-Berufe"
-  )
+    plot_data <- rbind(plot_data, plot_data_ges)
+  }
 
-  # Titel vorbereiten
+  # expand data for heatmap
+  expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
+    dplyr::arrange(mint_zuordnung, epa_group_order) %>%
+    #
+    dplyr::mutate(XX = rep(c(1:10), each = 10),
+                  YY = rep(c(1:10), times = 10),
+                  epa_kat = factor(x = epa_kat,
+                                   levels = epa_kat_levels))
+
+  used_colors <- group_col_dt %>%
+    dplyr::filter(epa_kat %in% (expanded_dt %>%
+                                  dplyr::filter(mint_zuordnung == fach[1]) %>%
+                                  dplyr::pull(epa_kat) %>%
+                                  unique())) %>%
+    dplyr::pull(group_col)
+
+  # titel zusammenbauen
   level <- dplyr::case_when(
     bf_label == "Gesamt" ~ "",
     bf_label == "Fachkräfte" ~ "Nur Beschäftigte in Ausbildungsberufen, ",
     bf_label == "Spezialist*innen" ~ "Nur Beschäftigte in Meister-/Technikerstellen o.ä., ",
     bf_label == "Expert*innen" ~ "Nur Beschäftigten in Akademikerberufen, ",
   )
+  fach_1 <- dplyr::case_when(
+    fach[1] == "MINT gesamt" ~ "MINT",
+    fach[1] == "Gesamt" ~ "allen Berufen",
+    fach[1] == "Nicht MINT" ~ "allen Berufen außer MINT",
+    T ~ fach[1]
+  )
 
-  plot <- highcharter::hchart(
-    plot_data,
-    "item",
-    highcharter::hcaes(
-      name = mint_epa_kat,
-      y = berufe,
-      # label = group,
-      color = group_col),
-    # name = "group",
-    showInLegend = TRUE
-  ) %>%
+  titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1," (", level, timerange, ")")
+
+  # Entfernen aller Zeilen, bei denen group_col NA ist
+  expanded_dt <- expanded_dt[!is.na(expanded_dt$group_col), ]
+
+
+
+  plot_left <- highcharter::hchart(
+    object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[1]),
+    type = "heatmap",
+    mapping = highcharter::hcaes(x = XX,
+                                 y = YY,
+                                 value = value,
+                                 color = group_col,
+                                 group = epa_kat)) %>%
+    highcharter::hc_colorAxis(
+      stops = highcharter::color_stops(colors = group_col_dt$group_col),
+      showInLegend = FALSE) %>%
+    highcharter::hc_colors(used_colors) %>%
     highcharter::hc_tooltip(
-      pointFormat = paste0(
-
-        " {point.percent_epa}% der {point.epa_kat}<br>",
-        " sind Berufe in {point.mint_zuordnung}<br>",
-        " Anzahl: {point.berufe}<br>"
-        )) %>%
+      pointFormat = 'Anteil: {point.value} % <br/> Anzahl betroffener Berufe: {point.beruf_num}'
+    ) %>%
+    highcharter::hc_xAxis(visible = FALSE) %>%
+    highcharter::hc_yAxis(visible = FALSE) %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        borderColor = "white",
+        borderWidth = 1
+      )
+    ) %>%
     highcharter::hc_title(
-      text = paste0("Verteilung der Berufe in MINT vs. Nicht-MINT nach ihrem Engpassrisiko",
-                    " <br>(", level, timerange, ")"),
+      text = titel_1,
       margin = 10,
       align = "center",
       style = list(color = "black",
@@ -850,25 +895,199 @@ plot_fachkraft_mint_item  <- function(r) {
                    fontFamily = "SourceSans3-Regular",
                    fontSize = "20px")
     ) %>%
-    highcharter::hc_subtitle(
-      text = "Jeder Punkt steht für einen Beruf.
-      Die dunkleren Punkte sind Berufe im Bereich \"MINT\", die helleren Punkte sind Berufe,
-      die nicht in den MINT-Bereich zählen.",
-      align = "left"
-    ) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular")
     ) %>%
-
-    highcharter::hc_credits(enabled = FALSE) %>%
-
-     highcharter::hc_legend(enabled = FALSE)
+    highcharter::hc_size(380, 480)
 
 
-  out <- plot
+  if (length(fach) == 2) {
 
-  return(out)
+    fach_2 <- dplyr::case_when(
+      fach[2] == "MINT gesamt" ~ "MINT",
+      fach[2] == "Gesamt" ~ "allen Berufen",
+      fach[2] == "Nicht MINT" ~ "allen Berufen außer MINT",
+      T ~ fach[2]
+    )
+
+    titel_2 <- paste0("Engpassrisiko in ", fach_2," (", level,timerange, ")")
+
+    used_colors <- group_col_dt %>%
+      dplyr::filter(epa_kat %in% (expanded_dt %>%
+                                    dplyr::filter(mint_zuordnung == fach[2]) %>%
+                                    dplyr::pull(epa_kat) %>%
+                                    unique())) %>%
+      dplyr::pull(group_col)
+
+    plot_right <- highcharter::hchart(
+      object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[2]),
+      type = "heatmap",
+      mapping = highcharter::hcaes(x = XX,
+                                   y = YY,
+                                   value = value,
+                                   color = group_col,
+                                   group = epa_kat)) %>%
+      highcharter::hc_colorAxis(stops = highcharter::color_stops(colors = group_col_dt$group_col),
+                                showInLegend = FALSE) %>%
+      highcharter::hc_colors(used_colors) %>%
+      highcharter::hc_tooltip(
+        pointFormat = 'Anteil: {point.value} % <br/> Anzahl betroffener Berufe: {point.beruf_num}'
+      ) %>%
+      highcharter::hc_xAxis(visible = FALSE) %>%
+      highcharter::hc_yAxis(visible = FALSE) %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          borderColor = "white",
+          borderWidth = 1
+        )
+      ) %>%
+      highcharter::hc_title(
+        text = titel_2,
+        margin = 10,
+        align = "center",
+        style = list(color = "black",
+                     useHTML = TRUE,
+                     fontFamily = "SourceSans3-Regular",
+                     fontSize = "20px")
+      ) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular")
+      )%>%
+      highcharter::hc_size(380, 480)
+
+
+    out <- list(plot_left, plot_right)
+
+    return(out)
+
+  }else{
+    return(plot_left)
+  }
+
 }
+
+# plot_fachkraft_mint_item  <- function(r) {
+#
+#
+#   timerange <- r$map_y_fachkraft_arbeit_mint
+#   bf_label <- r$map_bl_fachkraft_arbeit_mint
+#
+#   if (bf_label == "Gesamt") {
+#     bf <- fachkraft_ui_berufslevel()
+#   } else {
+#     bf <- bf_label
+#   }
+#
+#
+#
+#    plot_data_raw <- dplyr::tbl(con, from ="arbeitsmarkt_epa_detail") %>%
+#     dplyr::filter(jahr == timerange &
+#                     indikator == "Engpassindikator" &
+#                     anforderung %in% bf) %>%
+#      dplyr::collect()
+#
+#    plot_data_raw <- plot_data_raw %>%
+#      dplyr::mutate(mint_zuordnung = dplyr::if_else(
+#       !mint_zuordnung %in% c("Nicht MINT", "Gesamt"),
+#       "MINT gesamt",
+#       mint_zuordnung)) %>%
+#     dplyr::filter(mint_zuordnung %in% c("Nicht MINT", "MINT gesamt")) %>%
+#     dplyr::group_by(mint_zuordnung, epa_kat) %>%
+#     dplyr::summarise(berufe = dplyr::n()) %>%
+#     dplyr::mutate(mint_epa_kat = paste0(mint_zuordnung, " - ", epa_kat)) %>%
+#     dplyr::ungroup() %>%
+#     dplyr::mutate(percent_total = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100,1)) %>%
+#     dplyr::group_by(epa_kat) %>%
+#     dplyr::mutate(percent_epa = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100,1)) %>%
+#     dplyr::ungroup()
+#
+#
+#   # enthält den Text für den plot
+#   epa_kat_levels <- c("MINT gesamt - Engpassberuf",
+#                       "Nicht MINT - Engpassberuf",
+#                       "MINT gesamt - Anzeichen eines Engpassberufs",
+#                       "Nicht MINT - Anzeichen eines Engpassberufs",
+#                       "MINT gesamt - Kein Engpassberuf",
+#                       "Nicht MINT - Kein Engpassberuf")
+#   group_col_dt <- data.frame(
+#     mint_epa_kat = factor(x = epa_kat_levels,
+#                           levels = epa_kat_levels),
+#     epa_group_order = c(1:6),
+#     group_col = c("#EE7775","#f5adac",
+#                   "#Fcc433", "#fdd670",
+#                   "#00a87a", "#66cbaf")
+#   )
+#
+#   plot_data <- plot_data_raw %>%
+#     dplyr::right_join(group_col_dt, by = "mint_epa_kat") %>%
+#     dplyr::arrange(epa_group_order) %>%
+#     dplyr::group_by(mint_epa_kat) %>%
+#     dplyr::mutate(berufe = dplyr::if_else(is.na(berufe), 0, berufe),
+#                   percent_total = dplyr::if_else(is.na(percent_total), 0, percent_total),
+#                   percent_epa = dplyr::if_else(is.na(percent_epa), 0, percent_epa)) %>%
+#     dplyr::ungroup()
+#
+#
+#   plot_data$mint_zuordnung <- ifelse(
+#     plot_data$mint_zuordnung == "MINT gesamt",
+#     "MINT-Berufe", "Nicht-MINT-Berufe"
+#   )
+#
+#   # Titel vorbereiten
+#   level <- dplyr::case_when(
+#     bf_label == "Gesamt" ~ "",
+#     bf_label == "Fachkräfte" ~ "Nur Beschäftigte in Ausbildungsberufen, ",
+#     bf_label == "Spezialist*innen" ~ "Nur Beschäftigte in Meister-/Technikerstellen o.ä., ",
+#     bf_label == "Expert*innen" ~ "Nur Beschäftigten in Akademikerberufen, ",
+#   )
+#
+#   plot <- highcharter::hchart(
+#     plot_data,
+#     "item",
+#     highcharter::hcaes(
+#       name = mint_epa_kat,
+#       y = berufe,
+#       # label = group,
+#       color = group_col),
+#     # name = "group",
+#     showInLegend = TRUE
+#   ) %>%
+#     highcharter::hc_tooltip(
+#       pointFormat = paste0(
+#
+#         " {point.percent_epa}% der {point.epa_kat}<br>",
+#         " sind Berufe in {point.mint_zuordnung}<br>",
+#         " Anzahl: {point.berufe}<br>"
+#         )) %>%
+#     highcharter::hc_title(
+#       text = paste0("Verteilung der Berufe in MINT vs. Nicht-MINT nach ihrem Engpassrisiko",
+#                     " <br>(", level, timerange, ")"),
+#       margin = 10,
+#       align = "center",
+#       style = list(color = "black",
+#                    useHTML = TRUE,
+#                    fontFamily = "SourceSans3-Regular",
+#                    fontSize = "20px")
+#     ) %>%
+#     highcharter::hc_subtitle(
+#       text = "Jeder Punkt steht für einen Beruf.
+#       Die dunkleren Punkte sind Berufe im Bereich \"MINT\", die helleren Punkte sind Berufe,
+#       die nicht in den MINT-Bereich zählen.",
+#       align = "left"
+#     ) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "SourceSans3-Regular")
+#     ) %>%
+#
+#     highcharter::hc_credits(enabled = FALSE) %>%
+#
+#      highcharter::hc_legend(enabled = FALSE)
+#
+#
+#   out <- plot
+#
+#   return(out)
+# }
 
 plot_fachkraft_bar_vakanz  <- function(r) {
 
