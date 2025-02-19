@@ -2492,17 +2492,17 @@ epa20_f <- epa_einlesen(name[1], sheets[1])
 epa20_s <- epa_einlesen(name[1], sheets[2])
 epa20_e <- epa_einlesen(name[1], sheets[3])
 
-epa21_f <- epa_einlesen(name[1], sheets[1])
-epa21_s <- epa_einlesen(name[1], sheets[2])
-epa21_e <- epa_einlesen(name[1], sheets[3])
+epa21_f <- epa_einlesen(name[2], sheets[1])
+epa21_s <- epa_einlesen(name[2], sheets[2])
+epa21_e <- epa_einlesen(name[2], sheets[3])
 
-epa22_f <- epa_einlesen(name[1], sheets[1])
-epa22_s <- epa_einlesen(name[1], sheets[2])
-epa22_e <- epa_einlesen(name[1], sheets[3])
+epa22_f <- epa_einlesen(name[3], sheets[1])
+epa22_s <- epa_einlesen(name[3], sheets[2])
+epa22_e <- epa_einlesen(name[3], sheets[3])
 
-epa23_f <- epa_einlesen(name[1], sheets[1])
-epa23_s <- epa_einlesen(name[1], sheets[2])
-epa23_e <- epa_einlesen(name[1], sheets[3])
+epa23_f <- epa_einlesen(name[4], sheets[1])
+epa23_s <- epa_einlesen(name[4], sheets[2])
+epa23_e <- epa_einlesen(name[4], sheets[3])
 
 #### Datensatz in passende Form aufbereiten ----------------------------------
 
@@ -2511,7 +2511,7 @@ epa_zuschneiden <- function(df){
   header <- as.character(df[5,])
   header[1] <- "beruf"
   colnames(df) <- header
-  df <- na.omit(df)
+  df <- df[-(1:6),]
 
   return(df)
 }
@@ -2527,6 +2527,16 @@ epa21_e <- epa_zuschneiden(epa21_e)
 epa22_f <- epa_zuschneiden(epa22_f)
 epa22_s <- epa_zuschneiden(epa22_s)
 epa22_e <- epa_zuschneiden(epa22_e)
+
+epa_zuschneiden <- function(df){
+  df <- df %>% select(-"...2")
+  header <- as.character(df[5,])
+  header[1] <- "beruf"
+  colnames(df) <- header
+  df <- df[-(1:6),]
+
+  return(df)
+}
 
 epa23_f <- epa_zuschneiden(epa23_f)
 epa23_s <- epa_zuschneiden(epa23_s)
@@ -3702,6 +3712,11 @@ epa <- epa[,c("bereich", "berufsgruppe", "berufsgruppe_schlüssel", "beruf", "be
               "anzahl_beschäftigte", "mint_zuordnung", "region", "anforderung",
               "jahr", "kategorie", "indikator_anzahl", "indikator",
               "wert", "epa_kat")]
+
+epa <- epa[!is.na(epa$berufsgruppe_schlüssel),]
+
+epa <- epa[!is.na(epa$wert),]
+epa_detail <- epa_detail[!is.na(epa_detail$wert),]
 
 #epa_detail <- rbind(epa_detail, epa)
 arbeitsmarkt_epa_detail <- epa_detail
