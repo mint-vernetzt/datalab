@@ -16,19 +16,43 @@ plot_cp_orgas <- function(r){
   if(charas != "Region"){
     regio <- r$regio_cp_orgas
 
-    df <- dplyr::tbl(con, "ausserschulisch_cp_organisationen") %>%
-      dplyr::filter(region == regio,
-                    typ == charas) %>%
-      dplyr::mutate(wert = as.numeric(wert)) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, "ausserschulisch_cp_organisationen") %>%
+    #   dplyr::filter(region == regio,
+    #                 typ == charas) %>%
+    #   dplyr::mutate(wert = as.numeric(wert)) %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM ausserschulisch_cp_organisationen
+    WHERE region = {regio}
+    AND typ = {charas}
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::mutate(wert = as.numeric(wert))
+
   }else{
     bula_anzeigen <- r$bula_cp_orgas
 
-    df <- dplyr::tbl(con, "ausserschulisch_cp_organisationen") %>%
-      dplyr::filter(region == "Gesamt",
-                    typ == charas) %>%
-      dplyr::mutate(wert = as.numeric(wert)) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, "ausserschulisch_cp_organisationen") %>%
+    #   dplyr::filter(region == "Gesamt",
+    #                 typ == charas) %>%
+    #   dplyr::mutate(wert = as.numeric(wert)) %>%
+    #   dplyr::collect()
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM ausserschulisch_cp_organisationen
+    WHERE region = 'Gesamt'
+    AND typ = {charas}
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::mutate(wert = as.numeric(wert))
 
     bula_de <- c("Gesamt",
                  "Bundesweit",
@@ -216,20 +240,46 @@ plot_cp_projekte <- function(r){
   abs_rel_select <- r$abs_rel_cp_pros
   if(charas != "Region"){
     regio <- r$regio_cp_pros
+#
+#     df <- dplyr::tbl(con, "ausserschulisch_cp_projekte") %>%
+#       dplyr::filter(region == regio,
+#                     typ == charas) %>%
+#       dplyr::mutate(wert = as.numeric(wert)) %>%
+#       dplyr::collect()
 
-    df <- dplyr::tbl(con, "ausserschulisch_cp_projekte") %>%
-      dplyr::filter(region == regio,
-                    typ == charas) %>%
-      dplyr::mutate(wert = as.numeric(wert)) %>%
-      dplyr::collect()
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM ausserschulisch_cp_projekte
+    WHERE region = {regio}
+    AND typ = {charas}
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::mutate(wert = as.numeric(wert))
+
+
   }else{
     bula_anzeigen<- r$bula_cp_pros
     regio <- ""
-    df <- dplyr::tbl(con, "ausserschulisch_cp_projekte") %>%
-      dplyr::filter(region == "Gesamt",
-                    typ == charas) %>%
-      dplyr::mutate(wert = as.numeric(wert)) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, "ausserschulisch_cp_projekte") %>%
+    #   dplyr::filter(region == "Gesamt",
+    #                 typ == charas) %>%
+    #   dplyr::mutate(wert = as.numeric(wert)) %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM ausserschulisch_cp_projekte
+    WHERE region = 'Gesamt'
+    AND typ = {charas}
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::mutate(wert = as.numeric(wert))
 
     bula_de <- c("Gesamt",
                  "Bundesweit",
@@ -434,11 +484,24 @@ plot_cp_profile <- function(r){
     if(anz == "Nur Gesuche anzeigen") charas <- "Gesucht"
     if(anz == "Nur Angebote anzeigen") charas <- "Angebote"
 
-    df <- dplyr::tbl(con, "ausserschulisch_cp_profile") %>%
-      dplyr::filter(region == regio,
-                    typ %in% charas) %>%
-      dplyr::mutate(wert = as.numeric(wert)) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, "ausserschulisch_cp_profile") %>%
+    #   dplyr::filter(region == regio,
+    #                 typ %in% charas) %>%
+    #   dplyr::mutate(wert = as.numeric(wert)) %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM ausserschulisch_cp_profile
+    WHERE region = {regio}
+    AND typ IN ({charas*})
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::mutate(wert = as.numeric(wert))
+
 
     df$typ[df$typ == "Gesucht"] <- "Gesuche"
   }else{
@@ -730,9 +793,18 @@ plot_mv_akteursb <- function(r){
   frage_typ <- ifelse(frage == "Berufshintergrund", "berufshintergrund",
                       ifelse(frage == "Zielgruppen", "zielgruppen", frage_typ))
 
-  df <- dplyr::tbl(con, "ausserschulisch_akteursbefragung") %>%
-    dplyr::filter(typ == frage_typ) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, "ausserschulisch_akteursbefragung") %>%
+  #   dplyr::filter(typ == frage_typ) %>%
+  #   dplyr::collect()
+  #
+
+  df_query <- glue::glue_sql("
+    SELECT *
+    FROM ausserschulisch_akteursbefragung
+    WHERE typ = {frage_typ}
+                               ", .con = con)
+  df <- DBI::dbGetQuery(con, df_query)
+
 
   df_ges <- df %>%
     dplyr::filter(indikator == "Gesamt") %>%
@@ -817,10 +889,18 @@ plot_mv_stimmung <- function(r){
                     "Der Ganztag sollte als Bildungsort genutzt werden und dabei auch MINT-Bildungsangebote einbinden.")
 
 
-    df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
-      dplyr::filter(typ %in% frage_typ,
-                    indikator == gruppe) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
+    #   dplyr::filter(typ %in% frage_typ,
+    #                 indikator == gruppe) %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM ausserschulisch_stimmungsbarometer
+    WHERE indikator = {gruppe}
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
 
     df$antwort <- factor(df$antwort, levels = c("Kann ich nicht beurteilen",
                                                 "Stimme nicht zu",
@@ -924,9 +1004,17 @@ plot_mv_stimmung <- function(r){
 plot_mv_genderb <- function(){
 
 
-    df <- dplyr::tbl(con, "ausserschulisch_genderbefragung") %>%
-      dplyr::filter(thema == "Vernetzungswunsch") %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, "ausserschulisch_genderbefragung") %>%
+    #   dplyr::filter(thema == "Vernetzungswunsch") %>%
+    #   dplyr::collect()
+    #
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM ausserschulisch_genderbefragung
+    WHERE thema = 'Vernetzungswunsch'
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
 
     # Title und Texte vorbereiten
     titel <- "Aktivität und Vernetzung in MINT-Bildungsnetzwerken zum Thema MINT-Förderung
@@ -998,15 +1086,30 @@ skf_einrichtungen <- function(r){
 
   # Alle Einrichtungen berechnen und gewählte Einrichtung filtern
   if(ort_select == "Alle Einrichtungen"){
-    df <- dplyr::tbl(con, from = "ausserschulisch_skf") %>%
-      dplyr::filter(indikator %in% c("Einrichtungen mit SKf-Fortbildung",
-                                     "zertifizierte Einrichtungen"),
-                    jahr %in% t) %>%
+    # df <- dplyr::tbl(con, from = "ausserschulisch_skf") %>%
+    #   dplyr::filter(indikator %in% c("Einrichtungen mit SKf-Fortbildung",
+    #                                  "zertifizierte Einrichtungen"),
+    #                 jahr %in% t) %>%
+    #   dplyr::select(-bereich) %>%
+    #   dplyr::group_by(indikator, jahr) %>%
+    #   dplyr::summarise(wert = sum(wert)) %>%
+    #   dplyr::ungroup() %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM ausserschulisch_skf
+    WHERE indikator IN ('Einrichtungen mit SKf-Fortbildung', 'zertifizierte Einrichtungen')
+    AND jahr IN ({t*})
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
       dplyr::select(-bereich) %>%
       dplyr::group_by(indikator, jahr) %>%
       dplyr::summarise(wert = sum(wert)) %>%
-      dplyr::ungroup() %>%
-      dplyr::collect()
+      dplyr::ungroup()
 
     df$einrichtung <- "Alle Einrichtungen"
   }else{
@@ -1090,15 +1193,30 @@ skf_personal <- function(r){
   # Datensatz filtern
   # Alle Einrichtungen berechnen und gewählte Einrichtung filtern
   if(ort_select == "Alle Einrichtungen"){
-    df <- dplyr::tbl(con, from = "ausserschulisch_skf") %>%
-      dplyr::filter(indikator %in% c("insgesamt fortgebildete Fach- / Lehrkräfte",
-                                     "neu fortgebildete Fach- / Lehrkräfte"),
-                    jahr %in% t) %>%
+    # df <- dplyr::tbl(con, from = "ausserschulisch_skf") %>%
+    #   dplyr::filter(indikator %in% c("insgesamt fortgebildete Fach- / Lehrkräfte",
+    #                                  "neu fortgebildete Fach- / Lehrkräfte"),
+    #                 jahr %in% t) %>%
+    #   dplyr::select(-bereich) %>%
+    #   dplyr::group_by(indikator, jahr) %>%
+    #   dplyr::summarise(wert = sum(wert)) %>%
+    #   dplyr::ungroup() %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM ausserschulisch_skf
+    WHERE indikator IN ('insgesamt fortgebildete Fach- / Lehrkräfte', 'neu fortgebildete Fach- / Lehrkräfte')
+    AND jahr In ({t*})
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
       dplyr::select(-bereich) %>%
       dplyr::group_by(indikator, jahr) %>%
       dplyr::summarise(wert = sum(wert)) %>%
       dplyr::ungroup() %>%
-      dplyr::collect()
 
     df$einrichtung <- "Alle Einrichtungen"
   }else{

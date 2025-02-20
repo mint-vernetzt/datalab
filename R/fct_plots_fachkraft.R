@@ -8,14 +8,30 @@ plot_fachkraft_prognose  <- function(r) {
   filter_indikator <- c("Status-quo", r$fachkraft_item_prog_scenario)
   filter_berufslevel <- "Gesamt"
 
-  plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
-    dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
-    dplyr::filter(indikator %in% filter_indikator) %>%
-    dplyr::filter(anforderung == filter_berufslevel) %>%
-    dplyr::filter(geschlecht == "Gesamt") %>%
-    dplyr::filter(nationalitaet == "Gesamt") %>%
-    dplyr::filter(jahr <= 2037) %>%
-    dplyr::collect()
+  # plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
+  #   dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
+  #   dplyr::filter(indikator %in% filter_indikator) %>%
+  #   dplyr::filter(anforderung == filter_berufslevel) %>%
+  #   dplyr::filter(geschlecht == "Gesamt") %>%
+  #   dplyr::filter(nationalitaet == "Gesamt") %>%
+  #   dplyr::filter(jahr <= 2037) %>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM fachkraefte_prognose
+  WHERE wirkhebel IN ({filter_wirkhebel*})
+  AND indikator IN ({filter_indikator*})
+  AND geschlecht = 'Gesamt'
+  AND nationalitaet = 'Gesamt'
+  AND jahr <= 2037
+  AND anforderung = {filter_berufslevel}
+                               ", .con = con)
+
+
+
+  plot_data <- DBI::dbGetQuery(con, df_query)
+
 
   plot_data <- plot_data %>%
     dplyr::group_by("jahr") %>%
@@ -186,14 +202,30 @@ plot_fachkraft_prognose  <- function(r) {
 plot_fachkraft_prognose_alle  <- function(r) {
 
   filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_alle_wirkhebel)
+#
+#   plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
+#     dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
+#     dplyr::filter(anforderung == "Gesamt") %>%
+#     dplyr::filter(geschlecht == "Gesamt") %>%
+#     dplyr::filter(nationalitaet == "Gesamt") %>%
+#     dplyr::filter(jahr <= 2037) %>%
+#     dplyr::collect()
 
-  plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
-    dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
-    dplyr::filter(anforderung == "Gesamt") %>%
-    dplyr::filter(geschlecht == "Gesamt") %>%
-    dplyr::filter(nationalitaet == "Gesamt") %>%
-    dplyr::filter(jahr <= 2037) %>%
-    dplyr::collect()
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM fachkraefte_prognose
+  WHERE wirkhebel IN ({filter_wirkhebel*})
+  AND geschlecht = 'Gesamt'
+  AND nationalitaet = 'Gesamt'
+  AND jahr <= 2037
+  AND anforderung = 'Gesamt'
+                               ", .con = con)
+
+
+  plot_data <- DBI::dbGetQuery(con, df_query)
+
 
   if(filter_wirkhebel[2] == "Frauen in MINT"){
 
@@ -296,17 +328,33 @@ plot_fachkraft_prognose_detail  <- function(r) {
 
   not_focused_column <- c("anforderung", "geschlecht", "nationalitaet")[c("anforderung", "geschlecht", "nationalitaet") != focused_column]
 
-  plot_data <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
-    dplyr::filter(wirkhebel %in% filter_wirkhebel,
-                  indikator %in% filter_indikator,
-                  jahr <= 2037) %>%
-    dplyr::filter(if_all(all_of(not_focused_column), ~ .x == "Gesamt")) %>%
-    dplyr::select(all_of(c("wirkhebel", "indikator", "jahr", focused_column, "wert"))) %>%
-    dplyr::filter(!!dplyr::sym(focused_column) != "Gesamt") %>%
-    dplyr::collect()
+  # plot_data <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
+  #   dplyr::filter(wirkhebel %in% filter_wirkhebel,
+  #                 indikator %in% filter_indikator,
+  #                 jahr <= 2037) %>%
+  #   dplyr::filter(if_all(all_of(not_focused_column), ~ .x == "Gesamt")) %>%
+  #   dplyr::select(all_of(c("wirkhebel", "indikator", "jahr", focused_column, "wert"))) %>%
+  #   dplyr::filter(!!dplyr::sym(focused_column) != "Gesamt") %>%
+  #   dplyr::collect()
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM fachkraefte_prognose
+  WHERE wirkhebel IN ({filter_wirkhebel*})
+  AND indikator IN ({filter_indikator*})
+  AND jahr <= 2037
+                               ", .con = con)
+
+
+
+  plot_data <- DBI::dbGetQuery(con, df_query)
 
 
   plot_data <-plot_data %>%
+    dplyr::filter(if_all(all_of(not_focused_column), ~ .x == "Gesamt")) %>%
+    dplyr::select(all_of(c("wirkhebel", "indikator", "jahr", focused_column, "wert"))) %>%
+    dplyr::filter(!!dplyr::sym(focused_column) != "Gesamt") %>%
     dplyr::mutate(dplyr::across(all_of(focused_column), ~ factor(.x, levels = c(sort(unique(.x)))))) %>%
     dplyr::arrange(dplyr::across(all_of(focused_column)), jahr)%>%
     dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Mädchen und Frauen in MINT fördern",
@@ -408,25 +456,62 @@ plot_fachkraft_prognose_detail  <- function(r) {
 
   return(hc)
 }
-
+########################################################## bis hierin
 
 plot_fachkraft_wirkhebel_analyse  <- function(r) {
   year_filter <- r$fachkraft_item_wirkhebel_analyse
 
-  basis_wert <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
-    dplyr::filter(wirkhebel == "Basis-Szenario") %>%
-    dplyr::filter(geschlecht == "Gesamt") %>%
-    dplyr::filter(nationalitaet == "Gesamt") %>%
-    dplyr::filter(anforderung == "Gesamt") %>%
-    dplyr::filter(jahr == 2022) %>%
+  # basis_wert <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
+  #   dplyr::filter(wirkhebel == "Basis-Szenario") %>%
+  #   dplyr::filter(geschlecht == "Gesamt") %>%
+  #   dplyr::filter(nationalitaet == "Gesamt") %>%
+  #   dplyr::filter(anforderung == "Gesamt") %>%
+  #   dplyr::filter(jahr == 2022) %>%
+  #   dplyr::pull(wert)
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM fachkraefte_prognose
+  WHERE wirkhebel = 'Basis-Szenario'
+  AND geschlecht = 'Gesamt'
+  AND nationalitaet = 'Gesamt'
+  AND anforderung = 'Gesamt'
+  AND jahr = 2022
+                               ", .con = con)
+  basis_wert <- DBI::dbGetQuery(con, df_query)
+
+  basis_wert <- basis_wert %>%
     dplyr::pull(wert)
 
-  uebersicht_data <-  dplyr::tbl(con, from = "fachkraefte_prognose") %>%
-    dplyr::filter(jahr == year_filter) %>%
-    dplyr::filter(indikator %in% c("Verbesserung")) %>%
-    dplyr::filter(geschlecht == "Gesamt") %>%
-    dplyr::filter(nationalitaet == "Gesamt") %>%
-    dplyr::filter(anforderung == "Gesamt") %>%
+  # uebersicht_data <-  dplyr::tbl(con, from = "fachkraefte_prognose") %>%
+  #   dplyr::filter(jahr == year_filter) %>%
+  #   dplyr::filter(indikator %in% c("Verbesserung")) %>%
+  #   dplyr::filter(geschlecht == "Gesamt") %>%
+  #   dplyr::filter(nationalitaet == "Gesamt") %>%
+  #   dplyr::filter(anforderung == "Gesamt") %>%
+  #   dplyr::mutate(basis_wert = basis_wert) %>%
+  #   dplyr::select(wirkhebel, basis_wert, wert)%>%
+  #   dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Mädchen und Frauen in MINT fördern",
+  #                                              wirkhebel == "MINT-Bildung" ~ "MINT-Nachwuchs fördern",
+  #                                              wirkhebel == "Internationale MINT-Fachkräfte" ~ "Zuwanderung MINT-Fachkräfte",
+  #                                              wirkhebel == "Beteiligung älterer MINT-Fachkräfte" ~ "Verbleib älterer MINT-Fachkräfte",
+  #                                              T ~ wirkhebel),
+  #                 diff = wert - basis_wert) %>%
+  #   dplyr::collect()
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM fachkraefte_prognose
+  WHERE jahr = {year_filter}
+  AND indikator IN ('Verbesserung')
+  AND geschlecht = 'Gesamt'
+  AND nationalitaet = 'Gesamt'
+  AND anforderung = 'Gesamt'
+                               ", .con = con)
+  uebersicht_data <- DBI::dbGetQuery(con, df_query)
+
+  uebersicht_data <- uebersicht_data %>%
     dplyr::mutate(basis_wert = basis_wert) %>%
     dplyr::select(wirkhebel, basis_wert, wert)%>%
     dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Mädchen und Frauen in MINT fördern",
@@ -434,8 +519,8 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
                                                wirkhebel == "Internationale MINT-Fachkräfte" ~ "Zuwanderung MINT-Fachkräfte",
                                                wirkhebel == "Beteiligung älterer MINT-Fachkräfte" ~ "Verbleib älterer MINT-Fachkräfte",
                                                T ~ wirkhebel),
-                  diff = wert - basis_wert) %>%
-    dplyr::collect()
+                  diff = wert - basis_wert)
+
 
   row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
 
@@ -538,11 +623,21 @@ plot_fachkraft_epa_item <- function(r) {
     bf <- bf_label
   }
 
-  plot_data_raw <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail")%>%
-    dplyr::filter(jahr == timerange &
-                    indikator == "Engpassindikator" &
-                    anforderung %in% bf)%>%
-    dplyr::collect()
+  # plot_data_raw <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail")%>%
+  #   dplyr::filter(jahr == timerange &
+  #                   indikator == "Engpassindikator" &
+  #                   anforderung %in% bf)%>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_epa_detail
+  WHERE jahr = {timerange}
+  AND indikator = 'Engpassindikator'
+  AND anforderung IN ({bf*})
+                               ", .con = con)
+
+  plot_data_raw <- DBI::dbGetQuery(con, df_query)
 
    if ("MINT gesamt" %in% fach) {
     plot_data_raw <- plot_data_raw %>%
@@ -746,6 +841,9 @@ plot_fachkraft_epa_item <- function(r) {
 }
 
 
+#ignorieren
+
+
 
 plot_fachkraft_mint_item  <- function(r) {
 
@@ -880,16 +978,28 @@ plot_fachkraft_bar_vakanz  <- function(r) {
 
 
   berufe_order <- c("Insgesamt", "Keine MINT-Berufe", "MINT-Berufe")
+#
+#
+#
+#   plot_data <- dplyr::tbl(con, from ="arbeitsmarkt_fachkraefte") %>%
+#     dplyr::filter(jahr == timerange &
+#                     indikator == this_indikator &
+#                     anforderung == bf_label &
+#                     region == this_region) %>%
+#
+#     dplyr::collect()
+#
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_fachkraefte
+  WHERE jahr = {timerange}
+  AND indikator = {this_indikator}
+  AND anforderung = {bf_label}
+  AND region = {this_region}
+                               ", .con = con)
 
+  plot_data <- DBI::dbGetQuery(con, df_query)
 
-
-  plot_data <- dplyr::tbl(con, from ="arbeitsmarkt_fachkraefte") %>%
-    dplyr::filter(jahr == timerange &
-                    indikator == this_indikator &
-                    anforderung == bf_label &
-                    region == this_region) %>%
-
-    dplyr::collect()
 
   plot_data <- plot_data %>%
     dplyr::group_by(fachbereich) %>%
@@ -966,12 +1076,23 @@ plot_fachkraft_detail_item  <- function(r) {
   bf_label <- r$map_bl_fachkraft_arbeit_detail
   this_beruf <- r$map_b_fachkraft_arbeit_detail
 
-  plot_solidgauge_data <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
-    dplyr::filter(jahr == timerange &
-                    indikator == "Engpassindikator" &
-                    anforderung == bf_label &
-                    beruf %in% this_beruf) %>%
-    dplyr::collect()
+  # plot_solidgauge_data <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
+  #   dplyr::filter(jahr == timerange &
+  #                   indikator == "Engpassindikator" &
+  #                   anforderung == bf_label &
+  #                   beruf %in% this_beruf) %>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_epa_detail
+  WHERE jahr = {timerange}
+  AND indikator = 'Engpassindikator'
+  AND anforderung = {bf_label}
+  AND beruf IN ({this_beruf*})
+                               ", .con = con)
+
+  plot_solidgauge_data <- DBI::dbGetQuery(con, df_query)
 
   used_kategories <- switch(
     EXPR = plot_solidgauge_data$epa_kat[1],
