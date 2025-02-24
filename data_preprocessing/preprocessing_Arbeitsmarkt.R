@@ -2595,7 +2595,6 @@ epa23$jahr <- 2023
 
 # alles zusammen
 epa <- rbind(epa20, epa21, epa22, epa23)
-rm(list = ls()[-(1:2)]) # zwischen-Aufräumen
 
 # Bezeichnungen von Berufen in Text und Code trennen
 epa$beruf_schlüssel <- stringr::str_extract(epa$beruf, "[[:digit:]]+") #zahlen übertragen
@@ -3492,13 +3491,43 @@ epa_detail$beruf <- stringr::str_trim(epa_detail$beruf) #Leerzeichen entfernen
 
 # übergeordnete Berufsgruppen ergänzen
 epa_detail$berufsgruppe_schlüssel <- substr(epa_detail$beruf_schlüssel, 1, 3)
-fachgruppen <- epa[,c("beruf", "beruf_schlüssel")]
-fachgruppen <- fachgruppen %>% dplyr::rename(berufsgruppe_schlüssel = beruf_schlüssel,
+# fachgruppen nach Berufslevel
+epa_f <- epa %>% filter(anforderung == "Fachkräfte")
+fachgruppen_f <- epa_f[,c("beruf", "beruf_schlüssel")]
+fachgruppen_f <- fachgruppen_f %>% dplyr::rename(berufsgruppe_schlüssel = beruf_schlüssel,
                                              berufsgruppe = beruf)
-fachgruppen <- unique(fachgruppen)
-epa_detail <- epa_detail %>%
-  dplyr::left_join(fachgruppen, by = "berufsgruppe_schlüssel",
+fachgruppen_f <- fachgruppen_f %>%
+  filter(!grepl("\\(F", berufsgruppe))
+fachgruppen_f <- unique(fachgruppen_f)
+
+epa_s <- epa %>% filter(anforderung == "Spezialist*innen")
+fachgruppen_s <- epa_s[,c("beruf", "beruf_schlüssel")]
+fachgruppen_s <- fachgruppen_s %>% dplyr::rename(berufsgruppe_schlüssel = beruf_schlüssel,
+                                                 berufsgruppe = beruf)
+fachgruppen_s <- fachgruppen_s %>%
+  filter(!grepl("\\(F", berufsgruppe))
+fachgruppen_s <- unique(fachgruppen_s)
+
+epa_e <- epa %>% filter(anforderung == "Expert*innen")
+fachgruppen_e <- epa_e[,c("beruf", "beruf_schlüssel")]
+fachgruppen_e <- fachgruppen_e %>% dplyr::rename(berufsgruppe_schlüssel = beruf_schlüssel,
+                                                 berufsgruppe = beruf)
+fachgruppen_e <- unique(fachgruppen_e)
+
+epa_detail_f <- epa_detail %>%
+  filter(anforderung == "Fachkräfte") %>%
+  dplyr::left_join(fachgruppen_f, by = "berufsgruppe_schlüssel",
                    relationship = "many-to-many")
+epa_detail_s <- epa_detail %>%
+  filter(anforderung == "Spezialist*innen") %>%
+  dplyr::left_join(fachgruppen_s, by = "berufsgruppe_schlüssel",
+                   relationship = "many-to-many")
+epa_detail_e <- epa_detail %>%
+  filter(anforderung == "Expert*innen") %>%
+  dplyr::left_join(fachgruppen_e, by = "berufsgruppe_schlüssel",
+                   relationship = "many-to-many")
+
+epa_detail <- rbind(epa_detail_f, epa_detail_s, epa_detail_e)
 
 # MINT Aggregat zuweisen/berechnen
 mint_f <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Fachkräfte", col_names = TRUE)
@@ -3506,11 +3535,12 @@ mint_s <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Sp
 mint_e <- readxl::read_excel(paste0(pfad, "BA018_MINT-Berufe.xlsx"), sheet = "Experten", col_names = TRUE)
 mint <- rbind(mint_f, mint_s, mint_e)
 mint <- na.omit(mint)
-mint$indikator <- mint$Code
-mint$indikator <- ifelse(grepl("[[:digit:]]", mint$indikator), NA, mint$indikator)
+# mint$indikator <- mint$Code
+# mint$indikator <- ifelse(grepl("[[:digit:]]", mint$indikator), NA, mint$indikator)
 mint$Code <- ifelse(grepl("[[:digit:]]", mint$Code), mint$Code, NA)
-mint$indikator <- stats::ave(mint$indikator, cumsum(!is.na(mint$indikator)), FUN=function(x) x[1])
+# mint$indikator <- stats::ave(mint$indikator, cumsum(!is.na(mint$indikator)), FUN=function(x) x[1])
 mint <- mint %>%
+  rename(indikator = Bereich) %>%
   dplyr::mutate(indikator = dplyr::case_when(
     indikator == "MN" ~ "Mathematik, Naturwissenschaften",
     indikator == "I" ~ "Informatik",
@@ -3522,14 +3552,20 @@ mint <- mint %>%
     T ~ indikator
   ))
 mint <- na.omit(mint)
+mint <- mint %>%
+  mutate(anforderung = case_when(
+    substr(Code, 5, 5) == "2" ~ "Fachkräfte",
+    substr(Code, 5, 5) == "3" ~ "Spezialist*innen",
+    substr(Code, 5, 5) == "4" ~ "Expert*innen",
+  ))
 mint$Code <- substr(mint$Code, 1, 4)
 
 mint <- mint %>%
   dplyr::select(-`MINT-Tätigkeiten`) %>%
   dplyr::rename(mint_select = indikator)
 mint <- unique(mint)
-epa_detail <- epa_detail %>%
-  dplyr::left_join(mint, by = join_by(beruf_schlüssel == Code), relationship = "many-to-many")
+epa_detail_t <- epa_detail %>%
+  dplyr::left_join(mint, by = join_by(beruf_schlüssel == Code, anforderung), relationship = "many-to-many")
 epa_detail$mint_select <- ifelse(is.na(epa_detail$mint_select), "Nicht MINT", epa_detail$mint_select)
 
 ## Sortieren
@@ -3672,7 +3708,7 @@ epa_detail$epa_kat <- ifelse(epa_detail$indikator == "Engpassindikator", epa_det
 mint$Code <- substr(mint$Code, 1, 3)
 mint <- mint %>% rename(beruf_schlüssel = Code)
 mint <- unique(mint)
-epa <- epa %>% left_join(mint, by = "beruf_schlüssel")
+epa <- epa %>% left_join(mint, by = c("beruf_schlüssel", "anforderung"))
 epa$mint_select[is.na(epa$mint_select)] <- "Nicht MINT"
 
 epa_aggs <- epa %>%
@@ -3717,6 +3753,8 @@ epa <- epa[!is.na(epa$berufsgruppe_schlüssel),]
 
 epa <- epa[!is.na(epa$wert),]
 epa_detail <- epa_detail[!is.na(epa_detail$wert),]
+
+
 
 #epa_detail <- rbind(epa_detail, epa)
 arbeitsmarkt_epa_detail <- epa_detail
