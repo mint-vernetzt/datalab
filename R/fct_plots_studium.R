@@ -65,7 +65,7 @@ studienzahl_mint <- function(r){
 
           highcharter::hw_grid(
 
-            out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#b16fab", "#efe8e6"), format = format),
+            out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#efe8e6", "#b16fab"), format = format),
 
             ncol = 1,
             browsable = TRUE)
@@ -82,12 +82,15 @@ studienzahl_mint <- function(r){
           titel = ifelse(regio == "Saarland",
                          paste0(testl1[1], " im ", regio, " (", testy1, ")"),
                          paste0(testl1[1], " in ", regio, " (", testy1, ")"))
+          titel2 = ifelse(regio == "Saarland",
+                         paste0(testl1[2], " im ", regio, " (", testy1, ")"),
+                         paste0(testl1[2], " in ", regio, " (", testy1, ")"))
           tooltip <- paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')
 
            highcharter::hw_grid(
 
-            out <- piebuilder(df_1_pie, titel,x = "fach", y = "proportion", tooltip, color = c("#b16fab","#efe8e6"), format = '{point.display_rel}%'),
-            out <- piebuilder(df_2_pie, titel,x = "fach", y = "proportion", tooltip, color = c("#b16fab","#efe8e6"), format = '{point.display_rel}%'),
+            out <- piebuilder(df_1_pie, titel,x = "fach", y = "proportion", tooltip, color = c("#efe8e6", "#b16fab"), format = '{point.display_rel}%'),
+            out <- piebuilder(df_2_pie, titel2,x = "fach", y = "proportion", tooltip, color = c("#efe8e6", "#b16fab"), format = '{point.display_rel}%'),
 
 
             ncol = 2,
