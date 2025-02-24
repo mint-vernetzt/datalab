@@ -354,7 +354,7 @@ mod_fachkraft_start_ui <- function(id){
             type = "tabs",
 
             tabPanel(
-            title = "Engpassrisiko im MINT-Bereich", br(),
+            title = "Fachkräfteengpass in MINT-Berufen", br(),
 
             shiny::sidebarPanel(
               width = 3,
@@ -373,6 +373,8 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
+              p("Auf Bundesebene liegen Daten zum Fachkräfteengpass in den einzelnen Berufen bzw.
+                genauer Berufsgattungen, z. B. Mechatronik, vor."),
               shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_item_1")),
                                            color = "#154194"),
 
@@ -389,29 +391,62 @@ mod_fachkraft_start_ui <- function(id){
                      id = "h_fachkraft-berufsgruppen_1")
             )
           ),
+
           tabPanel(
-            "Verteilung MINT-Bereich nach Engpassrisiko", br(),
+            title = "Fachkräfteengpass der Bundesländer", br(),
 
             shiny::sidebarPanel(
               width = 3,
-              mod_fachkraft_item_mint_ui("fachkraft_item_mint_1")
-
+              mod_fachkraft_item_epa_bulas_ui("fachkraft_item_epa_bulas"),
+              br(),
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_mint_item_1")),
+              p("Für die einzelnen Bundesländer liegen weniger detaillierte Daten vor als für
+                Deutschland. Hier sehen wir Informationen zum mittleren Fachkräfteengpass in den
+                verschiedenen, MINT-dominierten Berufsgruppen, z. B. Mechatronik und Automatisierungstechnik.
+                Die Berufsgrattungen werden zu Berufsgruppen zusammengefasst und gemeinsam betrachtet."),
+              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_bulas")),
                                            color = "#154194"),
 
 
               p(style="font-size:12px;color:grey",
-                "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-              shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",
-                                 content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
-                                 placement = "top",
-                                 trigger = "hover"),
-              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft-berufsgruppen_2")
+                "Quelle der Daten: Bundesagentur für Arbeit, 2024, freier Download, eigene Berechnungen durch MINTvernetzt."),
+              shinyBS::bsPopover(
+                id="h_fachkraft-berufsgruppen_2", title="",
+                content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Berufliche Tätigkeiten können nur auf Ebene der Berufsgattungen trennscharf als MINT klassifiziert werden. Als Annäherung werden hier die von MINT-Berufsgattungen dominierten Berufsgruppen unter MINT und den unterschiedlichen MINT-Bereichen zusammengefasst. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+                placement = "top",
+                trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"),
+                     icon("info-circle"),
+                     id = "h_fachkraft-berufsgruppen_2")
             )
           ),
+
+          # Alternative Darstellung der selben Daten wie in Tab 1, reduziert
+          # tabPanel(
+          #   "Verteilung MINT-Bereich nach Engpassrisiko", br(),
+          #
+          #   shiny::sidebarPanel(
+          #     width = 3,
+          #     mod_fachkraft_item_mint_ui("fachkraft_item_mint_1")
+          #
+          #   ),
+          #   shiny::mainPanel(
+          #     width = 9,
+          #     shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_mint_item_1")),
+          #                                  color = "#154194"),
+          #
+          #
+          #     p(style="font-size:12px;color:grey",
+          #       "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+          #     shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",
+          #                        content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+          #                        placement = "top",
+          #                        trigger = "hover"),
+          #     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft-berufsgruppen_2")
+          #   )
+          # ),
 
             tabPanel(
               "Arbeitslosen-Stellen-Relation und Vakanzzeit in MINT", br(),
@@ -684,10 +719,15 @@ mod_fachkraft_start_server <- function(id, r){
     #   }
     # )
 
-    ## MINT an EPA
-    output$plot_fachkraft_mint_item_1 <- highcharter::renderHighchart({
-      plot_fachkraft_mint_item(r)
+    ## MINT an EPA 2. Datstellung, aktuell reduziert
+    # output$plot_fachkraft_mint_item_1 <- highcharter::renderHighchart({
+    #   plot_fachkraft_mint_item(r)
+    #
+    # })
 
+    ## Fachkräfteegpass Bulas
+    output$plot_fachkraft_epa_bulas <- renderUI({
+      plot_fachkraft_epa_bulas(r)
     })
 
     ## Bar Vakanz

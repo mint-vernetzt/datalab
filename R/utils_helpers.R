@@ -443,17 +443,29 @@ int_pisa_ui_country <- function(type = "TIMSS", n = NA) {
 }
 
 # Funktion zur Jahresauswahl bei Fachkraft Daten
-fachkraft_ui_years <- function() {
+fachkraft_ui_years <- function(reg = "DE") {
 
 
   selection <- NULL
 
+if(reg == "DE"){
 
   selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
     dplyr::filter(indikator == "Engpassindikator") %>%
     dplyr::pull(jahr) %>%
     unique() %>%
     sort()
+
+}else if(reg== "BULA"){
+
+  selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa") %>%
+    dplyr::filter(indikator == "Engpassindikator") %>%
+    dplyr::pull(jahr) %>%
+    unique() %>%
+    sort()
+
+}
+
 
 
   return(selection)
@@ -466,15 +478,16 @@ fachkraft_ui_faecher <- function(exclude = c()) {
 
   selection <- NULL
   selection <- c(
-   "Alle Berufe" ="Gesamt",
     "MINT gesamt", #"MINT",
+    "Mathematik, Naturwissenschaften",
     "Informatik",
+    "Technik gesamt",
     "Landtechnik",
     "Produktionstechnik",
     "Bau- und Gebäudetechnik",
-    "Mathematik, Naturwissenschaften",
     "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
     "Gesundheitstechnik",
+    "Alle Berufe" ="Gesamt",
     "Nicht MINT"
   )
 

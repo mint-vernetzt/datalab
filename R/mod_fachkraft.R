@@ -39,7 +39,8 @@ mod_fachkraft_server <- function(id,
 
   # box 2
   mod_fachkraft_item_epa_server("fachkraft_item_epa_1", r)
-  mod_fachkraft_item_mint_server("fachkraft_item_mint_1", r)
+  mod_fachkraft_item_epa_bulas_server("fachkraft_item_epa_bulas", r)
+ # mod_fachkraft_item_mint_server("fachkraft_item_mint_1", r)
   mod_fachkraft_bar_vakanz_server("fachkraft_bar_vakanz_1", r)
 
   # box 3
