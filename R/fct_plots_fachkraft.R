@@ -549,6 +549,17 @@ plot_fachkraft_epa_item <- function(r) {
       dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
       dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
       rbind(plot_data_raw)
+   }
+
+  if ("Technik gesamt" %in% fach) {
+    plot_data_raw <- plot_data_raw %>%
+      dplyr::filter(mint_zuordnung %in% c("Landtechnik",
+                                          "Produktionstechnik",
+                                          "Bau- und Gebäudetechnik",
+                                          "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                                          "Gesundheitstechnik")) %>%
+      dplyr::mutate(mint_zuordnung = "Technik gesamt") %>%
+      rbind(plot_data_raw)
   }
 
 
@@ -748,7 +759,6 @@ plot_fachkraft_epa_item <- function(r) {
 plot_fachkraft_epa_bulas <- function(r) {
 
   timerange <- r$y_fachkraft_epa_bulas
-  regio <- r$regio_fachkraft_epa_bulas
   fach <- r$f_fachkraft_epa_bulas
   bf_label <- r$bl_fachkraft_epa_bulas
 
@@ -756,6 +766,14 @@ plot_fachkraft_epa_bulas <- function(r) {
     bf <- fachkraft_ui_berufslevel()
   } else {
     bf <- bf_label
+  }
+
+  if (timerange %in% 2020:2021){
+    regio <- r$regio_fachkraft_epa_bulas20_21
+  } else if(timerange == 2022){
+    regio <- r$regio_fachkraft_epa_bulas22
+  }else if(timerange == 2023){
+    regio <- r$regio_fachkraft_epa_bulas23
   }
 
   plot_data_raw <- dplyr::tbl(con, from = "arbeitsmarkt_epa")%>%
@@ -772,6 +790,16 @@ plot_fachkraft_epa_bulas <- function(r) {
       rbind(plot_data_raw)
   }
 
+  if ("Technik gesamt" %in% fach) {
+    plot_data_raw <- plot_data_raw %>%
+      dplyr::filter(mint_zuordnung %in% c("Landtechnik",
+                                          "Produktionstechnik",
+                                          "Bau- und Gebäudetechnik",
+                                          "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                                          "Gesundheitstechnik")) %>%
+      dplyr::mutate(mint_zuordnung = "Technik gesamt") %>%
+      rbind(plot_data_raw)
+  }
 
   # enthält den Text für den plot
   epa_kat_levels <- c("Engpassberuf",
@@ -790,7 +818,7 @@ plot_fachkraft_epa_bulas <- function(r) {
   # Aggregate rausfiltern
   plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
                                              c("Gesamt",
-                                               "MINT",
+                                               "MINT gesamt",
                                                "Informatik",
                                                "Landtechnik",
                                                "Produktionstechnik",
@@ -956,7 +984,9 @@ plot_fachkraft_epa_bulas <- function(r) {
       highcharter::hc_size(380, 480)
 
 
-    out <- list(plot_left, plot_right)
+    out <- highcharter::hw_grid(
+      plot_left, plot_right,
+      ncol = 2)
 
     return(out)
 

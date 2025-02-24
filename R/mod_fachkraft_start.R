@@ -373,6 +373,8 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
+              p("Auf Bundesebene liegen Daten zum Fachkräfteengpass in den einzelnen Berufen bzw.
+                genauer Berufsgattungen, z. B. Mechatronik, vor."),
               shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_item_1")),
                                            color = "#154194"),
 
@@ -389,6 +391,7 @@ mod_fachkraft_start_ui <- function(id){
                      id = "h_fachkraft-berufsgruppen_1")
             )
           ),
+
           tabPanel(
             title = "Fachkräfteengpass der Bundesländer", br(),
 
@@ -399,7 +402,11 @@ mod_fachkraft_start_ui <- function(id){
             ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_epa_bulas")),
+              p("Für die einzelnen Bundesländer liegen weniger detaillierte Daten vor als für
+                Deutschland. Hier sehen wir Informationen zum mittleren Fachkräfteengpass in den
+                verschiedenen, MINT-dominierten Berufsgruppen, z. B. Mechatronik und Automatisierungstechnik.
+                Die Berufsgrattungen werden zu Berufsgruppen zusammengefasst und gemeinsam betrachtet."),
+              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_bulas")),
                                            color = "#154194"),
 
 
@@ -407,7 +414,7 @@ mod_fachkraft_start_ui <- function(id){
                 "Quelle der Daten: Bundesagentur für Arbeit, 2024, freier Download, eigene Berechnungen durch MINTvernetzt."),
               shinyBS::bsPopover(
                 id="h_fachkraft-berufsgruppen_2", title="",
-                content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+                content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Berufliche Tätigkeiten können nur auf Ebene der Berufsgattungen trennscharf als MINT klassifiziert werden. Als Annäherung werden hier die von MINT-Berufsgattungen dominierten Berufsgruppen unter MINT und den unterschiedlichen MINT-Bereichen zusammengefasst. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
                 placement = "top",
                 trigger = "hover"),
               tags$a(paste0("Hinweis zu den Daten"),
@@ -719,7 +726,7 @@ mod_fachkraft_start_server <- function(id, r){
     # })
 
     ## Fachkräfteegpass Bulas
-    output$plot_fachkraft_epa_bulas <- highcharter::renderHighchart({
+    output$plot_fachkraft_epa_bulas <- renderUI({
       plot_fachkraft_epa_bulas(r)
     })
 

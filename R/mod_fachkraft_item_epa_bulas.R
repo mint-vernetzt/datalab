@@ -15,31 +15,85 @@ mod_fachkraft_item_epa_bulas_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("y_fachkraft_epa_bulas"),
       label = NULL,
-      choices = fachkraft_ui_years(),
+      choices = fachkraft_ui_years(reg="BULA"),
       selected = "2023"
     ),
 
-    p("Bundesland:"),
-    shinyWidgets::pickerInput(
-      inputId = ns("regio_fachkraft_epa_bulas"),
-      choices = c("Baden-Württemberg",
-                  "Bayern",
-                  "Berlin / Brandenburg",
-                  "Brandenburg / Berlin",
-                  "Hamburg",
-                  "Hessen",
-                  "Mecklenburg-Vorpommern",
-                  "Niedersachsen / Bremen",
-                  "Nordrhein-Westfalen",
-                  "Rheinland-Pfalz / Saarland",
-                  "Sachsen",
-                  "Sachsen-Anhalt",
-                  "Schleswig-Holstein",
-                  "Schleswig-Holstein / Hamburg",
-                  "Thüringen"
-      ),
-      multiple = FALSE,
-      selected = c("Mecklenburg-Vorpommern")
+    conditionalPanel(
+      condition = "input.y_fachkraft_epa_bulas == '2020' |
+      input.y_fachkraft_epa_bulas == '2021'",
+      ns = ns,
+      p("Bundesland:"),
+      shinyWidgets::pickerInput(
+        inputId = ns("regio_fachkraft_epa_bulas20_21"),
+        choices = c("Baden-Württemberg",
+                    "Bayern",
+                    "Berlin / Brandenburg",
+                    "Hamburg",
+                    "Hessen",
+                    "Mecklenburg-Vorpommern",
+                    "Niedersachsen / Bremen",
+                    "Nordrhein-Westfalen",
+                    "Rheinland-Pfalz / Saarland",
+                    "Sachsen",
+                    "Sachsen-Anhalt",
+                    "Schleswig-Holstein",
+                    "Thüringen"
+        ),
+        multiple = FALSE,
+        selected = c("Mecklenburg-Vorpommern")
+      )
+
+    ),
+
+    conditionalPanel(
+      condition = "input.y_fachkraft_epa_bulas == '2022'",
+      ns = ns,
+      p("Bundesland:"),
+      shinyWidgets::pickerInput(
+        inputId = ns("regio_fachkraft_epa_bulas22"),
+        choices = c("Baden-Württemberg",
+                    "Bayern",
+                    "Berlin / Brandenburg",
+                    "Hessen",
+                    "Mecklenburg-Vorpommern",
+                    "Niedersachsen / Bremen",
+                    "Nordrhein-Westfalen",
+                    "Rheinland-Pfalz / Saarland",
+                    "Sachsen",
+                    "Sachsen-Anhalt",
+                    "Schleswig-Holstein / Hamburg",
+                    "Thüringen"
+        ),
+        multiple = FALSE,
+        selected = c("Mecklenburg-Vorpommern")
+      )
+
+    ),
+
+    conditionalPanel(
+      condition = "input.y_fachkraft_epa_bulas == '2023'",
+      ns = ns,
+      p("Bundesland:"),
+      shinyWidgets::pickerInput(
+        inputId = ns("regio_fachkraft_epa_bulas23"),
+        choices = c("Baden-Württemberg",
+                    "Bayern",
+                    "Brandenburg / Berlin",
+                    "Hessen",
+                    "Mecklenburg-Vorpommern",
+                    "Niedersachsen / Bremen",
+                    "Nordrhein-Westfalen",
+                    "Rheinland-Pfalz / Saarland",
+                    "Sachsen",
+                    "Sachsen-Anhalt",
+                    "Schleswig-Holstein / Hamburg",
+                    "Thüringen"
+        ),
+        multiple = FALSE,
+        selected = c("Mecklenburg-Vorpommern")
+      )
+
     ),
 
     p("Fachbereich:"),
@@ -84,8 +138,16 @@ mod_fachkraft_item_epa_bulas_server <- function(id, r){
       r$y_fachkraft_epa_bulas <- input$y_fachkraft_epa_bulas
     })
 
-    observeEvent(input$regio_fachkraft_epa_bulas, {
-      r$regio_fachkraft_epa_bulas <- input$regio_fachkraft_epa_bulas
+    observeEvent(input$regio_fachkraft_epa_bulas20_21, {
+      r$regio_fachkraft_epa_bulas20_21 <- input$regio_fachkraft_epa_bulas20_21
+    })
+
+    observeEvent(input$regio_fachkraft_epa_bulas22, {
+      r$regio_fachkraft_epa_bulas22 <- input$regio_fachkraft_epa_bulas22
+    })
+
+    observeEvent(input$regio_fachkraft_epa_bulas23, {
+      r$regio_fachkraft_epa_bulas23 <- input$regio_fachkraft_epa_bulas23
     })
 
     observeEvent(input$f_fachkraft_epa_bulas, {
