@@ -1008,32 +1008,31 @@ mod_schule_kurse_server <- function(id, r){
     #   kurse_comparison_gender(r)
     # })
 
+    # output$plot_comparison_gender <- renderUI({
+    #   if(r$ansicht_kurse_comparison_gender ==
+    #      "Kursvergleich - Hanteldiagramm"){
+    #     htmlOutput(ns("plot_ranking_3"))
+    #   }else {
+    #   htmlOutput(ns("plot_comparison_gender_2"))
+    #
+    #   }
+    # })
+
     output$plot_comparison_gender <- renderUI({
-      if(r$ansicht_kurse_comparison_gender ==
-         "Kursvergleich - Hanteldiagramm"){
-        plotOutput(ns("plot_ranking_3"))
-      }else {
-      htmlOutput(ns("plot_comparison_gender_2"))
-
-      }
-    })
-
-    output$plot_comparison_gender_2 <- renderUI({
-      plot_list <- kurse_comparison_gender(r)
+      kurse_comparison_gender(r)
     # r$plot_comparison_gender <- plot_list
     #
     # r$plot_comparison_gender_title <- get_plot_title(
     #   plot = r$plot_comparison_gender
     # )
 
-    plot_list
     })
 
-    output$plot_ranking_3 <- renderPlot({
-     # plot_ranking_react()
-      kurse_comparison_gender(r)
-    })
-    # plot_ranking_react <- reactive({
+    # output$plot_ranking_3 <- renderPlot({
+    #  # plot_ranking_react()
+    #   kurse_comparison_gender(r)
+    # })
+    # # plot_ranking_react <- reactive({
     #   kurse_ranking(r) # type = "other"
     # })
 

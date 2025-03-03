@@ -124,14 +124,13 @@ studienzahl_mint <- function(r){
              style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
            ) %>%
            highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-           highcharter::hc_exporting(enabled = FALSE,
-                                     buttons = list(contextButton = list(
-                                       symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                       onclick = highcharter::JS("function () {
-                                                                  this.exportChart({ type: 'image/png' }); }"),
-                                       align = 'right',
-                                       verticalAlign = 'bottom',
-                                       theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+           highcharter::hc_exporting(enabled = TRUE,
+                                     buttons = list(
+                                       contextButton = list(
+                                         menuItems = list("downloadPNG", "downloadCSV")
+                                       )
+                                     )
+           )
        }
 }
 
@@ -309,40 +308,49 @@ studierende_bula_mint <- function(r) {
     help_l <- ifelse(label_m == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
 
 
-
     # plot
-    out <- highcharter::hcmap(
-      "countries/de/de-all",
-      data = df[df$fachbereich == "MINT",],
-      value = "proportion",
-      joinBy = c("name", "region"),
-      borderColor = "#FAFAFA",
-      name = paste0(label_m, " in MINT"),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      #,
-      #download_map_data = FALSE
-    ) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
-      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = paste0("Anteil von ", label_m, " in MINT-Fächern an allen ", help_l, " (", timerange, ")"),
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
+    # out <- highcharter::hcmap(
+    #   "countries/de/de-all",
+    #   data = df[df$fachbereich == "MINT",],
+    #   value = "proportion",
+    #   joinBy = c("name", "region"),
+    #   borderColor = "#FAFAFA",
+    #   name = paste0(label_m, " in MINT"),
+    #   borderWidth = 0.1,
+    #   nullColor = "#A9A9A9",
+    #   tooltip = list(
+    #     valueDecimals = 0,
+    #     valueSuffix = "%"
+    #   )
+    #   #,
+    #   #download_map_data = FALSE
+    # ) %>%
+    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
+    #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+    #   highcharter::hc_title(
+    #     text = paste0("Anteil von ", label_m, " in MINT-Fächern an allen ", help_l, " (", timerange, ")"),
+    #     margin = 10,
+    #     align = "center",
+    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    #   ) %>%
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular")
+    #   ) %>% highcharter::hc_size(600, 550) %>%
+    #   highcharter::hc_credits(enabled = FALSE) %>%
+    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+    #                          verticalAlign = "bottom")
 
+    df <- df[df$fachbereich == "MINT",]
+    joinby <- c("name", "region")
+    name <- paste0(label_m, " in MINT")
+    tooltip <- "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
+    titel <- paste0("Anteil von ", label_m, " in MINT-Fächern an allen ", help_l, " (", timerange, ")")
+    mincolor <- "#f4f5f6"
+    map_selection <- 1
+    maxcolor <- "#b16fab"
 
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+
 
   }
 
@@ -510,8 +518,14 @@ studierende_bula_mint <- function(r) {
       highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in MINT-Fächern an allen ", help_l,  " (", timerange, ")"),
                             margin = 25,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))   #Schrift-Formatierung Überschrift
-
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%  #Schrift-Formatierung Überschrift
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
   }
 
@@ -1119,14 +1133,13 @@ studienzahl_einstieg_comparison <- function(r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 
 }
@@ -1493,7 +1506,14 @@ plot_mint_faecher <- function(r){
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
   }
 
@@ -1781,37 +1801,51 @@ plot_studierende_bula_faecher <- function(r){
       }else{
         titel <- paste0("Anteil von ", label_m, " in ", titel_help, " an allen ", help_l, " (", timerange, ")")
       }
+
     # plot
-    out <- highcharter::hcmap(
-      "countries/de/de-all",
-      data = df,
-      value = "prop",
-      joinBy = c("name", "region"),
-      borderColor = "#FAFAFA",
-      name = paste0(label_m, " in MINT"),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      # ,
-      # download_map_data = FALSE
-    ) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
-      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = titel,
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
+    # out <- highcharter::hcmap(
+    #   "countries/de/de-all",
+    #   data = df,
+    #   value = "prop",
+    #   joinBy = c("name", "region"),
+    #   borderColor = "#FAFAFA",
+    #   name = paste0(label_m, " in MINT"),
+    #   borderWidth = 0.1,
+    #   nullColor = "#A9A9A9",
+    #   tooltip = list(
+    #     valueDecimals = 0,
+    #     valueSuffix = "%"
+    #   )
+    #   # ,
+    #   # download_map_data = FALSE
+    # ) %>%
+    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
+    #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+    #   highcharter::hc_title(
+    #     text = titel,
+    #     margin = 10,
+    #     align = "center",
+    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    #   ) %>%
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular")
+    #   ) %>% highcharter::hc_size(600, 550) %>%
+    #   highcharter::hc_credits(enabled = FALSE) %>%
+    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+    #                          verticalAlign = "bottom")
+
+    joinby <- c("name", "region")
+    name <- paste0(label_m, " in MINT")
+    tooltip <- "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
+    titel <- titel
+    mincolor <- "#f4f5f6"
+    map_selection <- 1
+    maxcolor <- "#b16fab"
+
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE,
+                      wert=FALSE, map=map_selection)
+
+
 
   }
   else if(betrachtung == "Zeitverlauf - Liniendiagramm"){
@@ -2038,7 +2072,14 @@ plot_studierende_bula_faecher <- function(r){
       highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")"),
                             margin = 25,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))   #Schrift-Formatierung Überschrift
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
     }
 
@@ -2152,7 +2193,14 @@ ranking_bl_subject <- function(r) {
     highcharter::hc_title(text = paste0( "Anteil einzelner Fächer an allen Fächern ", "(", r_lab, ")" , " in ",states," ", timerange),
                           margin = 45,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 
   return(out)
@@ -2241,7 +2289,14 @@ studierende_mint_vergleich_bl <- function(r) {
     highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in ", help_s," an allen ", help,  " (", timerange, ")"),
                           margin = 25,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))   #Schrift-Formatierung Überschrift
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))   %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 
 
@@ -2593,14 +2648,13 @@ studienzahl_einstieg_gender <- function(r) {
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
     }
   }
 
@@ -3125,7 +3179,14 @@ plot_ranking_top_faecher <- function(r) {
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
 
@@ -3148,7 +3209,14 @@ plot_ranking_top_faecher <- function(r) {
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
   } else if(abs_rel == "Anzahl"){
@@ -3190,7 +3258,14 @@ plot_ranking_top_faecher <- function(r) {
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
 
@@ -3213,7 +3288,14 @@ plot_ranking_top_faecher <- function(r) {
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
   }
@@ -3395,14 +3477,13 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_exporting(enabled = FALSE,
-                                    buttons = list(contextButton = list(
-                                      symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                      onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                      align = 'right',
-                                      verticalAlign = 'bottom',
-                                      theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+          highcharter::hc_exporting(enabled = TRUE,
+                                    buttons = list(
+                                      contextButton = list(
+                                        menuItems = list("downloadPNG", "downloadCSV")
+                                      )
+                                    )
+          )
 
       } else {
         out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
@@ -3431,14 +3512,13 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_exporting(enabled = FALSE,
-                                    buttons = list(contextButton = list(
-                                      symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                      onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                      align = 'right',
-                                      verticalAlign = 'bottom',
-                                      theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+          highcharter::hc_exporting(enabled = TRUE,
+                                    buttons = list(
+                                      contextButton = list(
+                                        menuItems = list("downloadPNG", "downloadCSV")
+                                      )
+                                    )
+          )
 
       }
 
@@ -3489,14 +3569,13 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_exporting(enabled = FALSE,
-                                    buttons = list(contextButton = list(
-                                      symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                      onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                      align = 'right',
-                                      verticalAlign = 'bottom',
-                                      theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+          highcharter::hc_exporting(enabled = TRUE,
+                                    buttons = list(
+                                      contextButton = list(
+                                        menuItems = list("downloadPNG", "downloadCSV")
+                                      )
+                                    )
+          )
 
       }else{
 
@@ -3525,14 +3604,13 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_exporting(enabled = FALSE,
-                                    buttons = list(contextButton = list(
-                                      symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                      onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                      align = 'right',
-                                      verticalAlign = 'bottom',
-                                      theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+          highcharter::hc_exporting(enabled = TRUE,
+                                    buttons = list(
+                                      contextButton = list(
+                                        menuItems = list("downloadPNG", "downloadCSV")
+                                      )
+                                    )
+          )
 
       }
 
@@ -3569,14 +3647,13 @@ plot_auslaender_mint <- function(r){
              style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
            ) %>%
            highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-           highcharter::hc_exporting(enabled = FALSE,
-                                     buttons = list(contextButton = list(
-                                       symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                       onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                       align = 'right',
-                                       verticalAlign = 'bottom',
-                                       theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+           highcharter::hc_exporting(enabled = TRUE,
+                                     buttons = list(
+                                       contextButton = list(
+                                         menuItems = list("downloadPNG", "downloadCSV")
+                                       )
+                                     )
+           )
 
        } else {
 
@@ -3598,14 +3675,13 @@ plot_auslaender_mint <- function(r){
              style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
            ) %>%
            highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-           highcharter::hc_exporting(enabled = FALSE,
-                                     buttons = list(contextButton = list(
-                                       symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                       onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                       align = 'right',
-                                       verticalAlign = 'bottom',
-                                       theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+           highcharter::hc_exporting(enabled = TRUE,
+                                     buttons = list(
+                                       contextButton = list(
+                                         menuItems = list("downloadPNG", "downloadCSV")
+                                       )
+                                     )
+           )
        }
 
 
@@ -3642,14 +3718,13 @@ plot_auslaender_mint <- function(r){
               style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-            highcharter::hc_exporting(enabled = FALSE,
-                                      buttons = list(contextButton = list(
-                                        symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                        onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                        align = 'right',
-                                        verticalAlign = 'bottom',
-                                        theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+            highcharter::hc_exporting(enabled = TRUE,
+                                      buttons = list(
+                                        contextButton = list(
+                                          menuItems = list("downloadPNG", "downloadCSV")
+                                        )
+                                      )
+            )
 
         } else {
 
@@ -3667,14 +3742,13 @@ plot_auslaender_mint <- function(r){
               style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-            highcharter::hc_exporting(enabled = FALSE,
-                                      buttons = list(contextButton = list(
-                                        symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                        onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                        align = 'right',
-                                        verticalAlign = 'bottom',
-                                        theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+            highcharter::hc_exporting(enabled = TRUE,
+                                      buttons = list(
+                                        contextButton = list(
+                                          menuItems = list("downloadPNG", "downloadCSV")
+                                        )
+                                      )
+            )
         }
 
 
@@ -3843,14 +3917,12 @@ plot_auslaender_mint_zeit <- function(r){
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_exporting(enabled = FALSE,
-                                    buttons = list(contextButton = list(
-                                      symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                      onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                      align = 'right',
-                                      verticalAlign = 'bottom',
-                                      theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+          highcharter::hc_exporting(enabled = TRUE,
+                                    buttons = list(
+                                      contextButton = list(
+                                        menuItems = list("downloadPNG", "downloadCSV")
+                                      )
+                                    ))
 
 
       } else {
@@ -3873,15 +3945,13 @@ plot_auslaender_mint_zeit <- function(r){
           highcharter::hc_chart(
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
-          highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_exporting(enabled = FALSE,
-                                    buttons = list(contextButton = list(
-                                      symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                      onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                      align = 'right',
-                                      verticalAlign = 'bottom',
-                                      theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+          highcharter::hc_legend(enabled = TRUE, reversed = T)%>%
+          highcharter::hc_exporting(enabled = TRUE,
+                                    buttons = list(
+                                      contextButton = list(
+                                        menuItems = list("downloadPNG", "downloadCSV")
+                                      )
+                                    ))
       }
 
     }
@@ -3939,14 +4009,12 @@ plot_auslaender_mint_zeit <- function(r){
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_exporting(enabled = FALSE,
-                                    buttons = list(contextButton = list(
-                                      symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                      onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                      align = 'right',
-                                      verticalAlign = 'bottom',
-                                      theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+          highcharter::hc_exporting(enabled = TRUE,
+                                    buttons = list(
+                                      contextButton = list(
+                                        menuItems = list("downloadPNG", "downloadCSV")
+                                      )
+                                    ))
 
       } else {
 
@@ -3967,14 +4035,12 @@ plot_auslaender_mint_zeit <- function(r){
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-          highcharter::hc_exporting(enabled = FALSE,
-                                    buttons = list(contextButton = list(
-                                      symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                      onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                      align = 'right',
-                                      verticalAlign = 'bottom',
-                                      theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+          highcharter::hc_exporting(enabled = TRUE,
+                                    buttons = list(
+                                      contextButton = list(
+                                        menuItems = list("downloadPNG", "downloadCSV")
+                                      )
+                                    ))
 
       }
     }
@@ -4051,36 +4117,50 @@ studierende_international_bula_mint <- function(r) {
 
 
     # plot
-    out <- highcharter::hcmap(
-      "countries/de/de-all",
-      data = df[df$fachbereich == "MINT",],
-      value = "proportion",
-      joinBy = c("name", "region"),
-      borderColor = "#FAFAFA",
-      name = paste0(label_m, " in MINT"),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      #,
-    ) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
-      highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = paste0("MINT-Anteil von ", label_m, " (", timerange, ")"),
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
+    # out <- highcharter::hcmap(
+    #   "countries/de/de-all",
+    #   data = df[df$fachbereich == "MINT",],
+    #   value = "proportion",
+    #   joinBy = c("name", "region"),
+    #   borderColor = "#FAFAFA",
+    #   name = paste0(label_m, " in MINT"),
+    #   borderWidth = 0.1,
+    #   nullColor = "#A9A9A9",
+    #   tooltip = list(
+    #     valueDecimals = 0,
+    #     valueSuffix = "%"
+    #   )
+    #   #,
+    # ) %>%
+    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
+    #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+    #   highcharter::hc_title(
+    #     text = paste0("MINT-Anteil von ", label_m, " (", timerange, ")"),
+    #     margin = 10,
+    #     align = "center",
+    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    #   ) %>%
+    #
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular")
+    #   ) %>% highcharter::hc_size(600, 550) %>%
+    #   highcharter::hc_credits(enabled = FALSE) %>%
+    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+    #                          verticalAlign = "bottom")
+    #
 
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
+    df <- df[df$fachbereich == "MINT",]
+    joinby <- c("name", "region")
+    name <- paste0(label_m, " in MINT")
+    tooltip <- "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
+    titel <- paste0("MINT-Anteil von ", label_m, " (", timerange, ")")
+    mincolor <- "#f4f5f6"
+    map_selection <- 1
+    maxcolor <- "#b16fab"
+
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+
+
 
   }
 
@@ -4276,7 +4356,14 @@ studierende_international_bula_mint <- function(r) {
       highcharter::hc_title(text = paste0( "MINT-Anteil unter den ", r_lab1 , " (", timerange, ")"),
                             margin = 25,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))   #Schrift-Formatierung Überschrift
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))   %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
   }
 
