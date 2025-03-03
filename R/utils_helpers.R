@@ -1063,7 +1063,8 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
 #}
 
 
-balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color, optional=NULL){
+balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
+                          optional=NULL, reverse = TRUE){
 
   if(is.null(group) && is.null(optional)){
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
@@ -1078,7 +1079,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color, 
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)  %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1101,7 +1102,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color, 
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)  %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1125,7 +1126,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color, 
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)  %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1150,7 +1151,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color, 
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)  %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(

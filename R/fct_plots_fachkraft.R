@@ -2,6 +2,138 @@
 #
 #
 
+
+plot_fachkraft_wirkhebel_analyse  <- function(r) {
+  year_filter <- r$fachkraft_item_wirkhebel_analyse
+
+  basis_wert <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
+    dplyr::filter(wirkhebel == "Basis-Szenario") %>%
+    dplyr::filter(geschlecht == "Gesamt") %>%
+    dplyr::filter(nationalitaet == "Gesamt") %>%
+    dplyr::filter(anforderung == "Gesamt") %>%
+    dplyr::filter(jahr == 2022) %>%
+    dplyr::pull(wert)
+
+  uebersicht_data <-  dplyr::tbl(con, from = "fachkraefte_prognose") %>%
+    dplyr::filter(jahr == year_filter) %>%
+    dplyr::filter(indikator %in% c("Verbesserung")) %>%
+    dplyr::filter(geschlecht == "Gesamt") %>%
+    dplyr::filter(nationalitaet == "Gesamt") %>%
+    dplyr::filter(anforderung == "Gesamt") %>%
+    dplyr::mutate(basis_wert = basis_wert) %>%
+    dplyr::select(wirkhebel, basis_wert, wert)%>%
+    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Mädchen und Frauen in MINT fördern",
+                                               wirkhebel == "MINT-Bildung" ~ "MINT-Nachwuchs fördern",
+                                               wirkhebel == "Internationale MINT-Fachkräfte" ~ "Zuwanderung MINT-Fachkräfte",
+                                               wirkhebel == "Beteiligung älterer MINT-Fachkräfte" ~ "Verbleib älterer MINT-Fachkräfte",
+                                               T ~ wirkhebel),
+                  diff = wert - basis_wert) %>%
+    dplyr::collect()
+
+  row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
+
+  uebersicht_data <- uebersicht_data %>%
+    dplyr::slice(-row_to_move) %>%
+    dplyr::bind_rows(uebersicht_data[row_to_move, ]) %>%
+    dplyr::mutate(basis_label = paste0("Basis-Szenario"),
+                  improvement_label = paste0("Positives Szenario: ", wirkhebel),
+
+                  basis_wert_txt = prettyNum(basis_wert, big.mark = ".", decimal.mark = ","),
+                  wert_txt = prettyNum(wert, big.mark = ".", decimal.mark = ","),
+                  diff_txt = prettyNum(diff, big.mark = ".", decimal.mark = ",")) %>%
+    dplyr::arrange(diff)
+
+  fig <- plotly::plot_ly(uebersicht_data, color = I("gray80")) %>%
+    plotly::add_segments(
+      x = ~basis_wert,
+      xend = ~wert,
+      y = ~wirkhebel,
+      yend = ~wirkhebel,
+      showlegend = FALSE,
+      text = ~paste0("MINT-Fachkräfteanzahl im Basis: ", basis_wert, "<br>Wert: ", wert_txt, "<br>: ", diff_txt),
+      hoverinfo = "text"
+    ) %>%
+    plotly::add_markers(
+      x = ~basis_wert,
+      y = ~wirkhebel,
+      name = "Basis-Szenario 2022",
+      color = I("#D0A9CD"),
+      symbol = I("square"),
+      size = I(50),
+      text = ~paste0("Basis-Szenario 2022: ", basis_wert_txt),
+      hoverinfo = "text"
+    ) %>%
+    plotly::add_markers(
+      x = ~wert,
+      y = ~wirkhebel,
+      name = paste0("Positives Szenario ",year_filter),
+      color = I("#b16fab"),
+      symbol = I("square"),
+      size = I(50),
+      text = ~paste0("Positives Szenario für Wirkhebel ", wirkhebel, ": ", wert_txt, "<br>Zunahme der MINT-Fachkräfte seit 2022: ", diff_txt),
+      hoverinfo = "text"
+    ) %>%
+    plotly::layout(
+      title = list(
+        text = paste0(
+          "Übersicht über die potentielle Wirkung der Hebel MINT-Nachwuchs und Mädchen und Frauen in MINT fördern,
+          Zuwanderung internationaler und Verbleib älterer MINT-Fachkräfte"
+        )
+      ),
+      xaxis = list(
+        title = "Anzahl MINT-Fachkräfte",
+        tickformat = ",",
+        range = c(7500000, 9500000)
+      ),
+      yaxis = list(
+        title = "",
+        categoryorder = "array",
+        categoryarray = unique(uebersicht_data$wirkhebel)
+      ),
+      margin = list(l = 100, r = 50, t = 80, b = 50),
+      hoverlabel = list(bgcolor = "white"),
+      legend = list(
+        orientation = "h",
+        x = 0.5,
+        y = -0.5,
+        xanchor = "center",
+        yanchor = "top"
+      )
+    ) %>%
+    plotly::config(displaylogo = FALSE,  modeBarButtonsToRemove = c(
+      'sendDataToCloud', 'autoScale2d', 'resetScale2d', 'toggleSpikelines',
+      'hoverClosestCartesian', 'hoverCompareCartesian',
+      'zoom2d','pan2d','select2d','lasso2d','zoomIn2d','zoomOut2d'
+    ),modeBarButtonsToAdd = list(
+      list(
+        name = "Download CSV",
+        icon = list(
+          path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+          width = 24,
+          height = 24
+        ),
+        click = htmlwidgets::JS("
+              function(gd) {
+                var csv = 'x,y\\n';
+                var data = gd.data[0];
+                for (var i = 0; i < data.x.length; i++) {
+                  csv += data.x[i] + ',' + data.y[i] + '\\n';
+                }
+                var blob = new Blob([csv], { type: 'text/csv' });
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'data.csv';
+                a.click();
+              }
+            ")
+      )
+    )
+    )
+
+  return(fig)
+}
+
+
 plot_fachkraft_prognose  <- function(r) {
 
   filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_wirkhebel)
@@ -179,6 +311,15 @@ plot_fachkraft_prognose  <- function(r) {
       list(dashStyle = 'Dash')
     )
   )
+
+  hc <- hc  %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
   return(hc)
 }
@@ -406,114 +547,18 @@ plot_fachkraft_prognose_detail  <- function(r) {
     )
   }
 
+  hc <- hc  %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
+
   return(hc)
 }
 
-
-plot_fachkraft_wirkhebel_analyse  <- function(r) {
-  year_filter <- r$fachkraft_item_wirkhebel_analyse
-
-  basis_wert <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
-    dplyr::filter(wirkhebel == "Basis-Szenario") %>%
-    dplyr::filter(geschlecht == "Gesamt") %>%
-    dplyr::filter(nationalitaet == "Gesamt") %>%
-    dplyr::filter(anforderung == "Gesamt") %>%
-    dplyr::filter(jahr == 2022) %>%
-    dplyr::pull(wert)
-
-  uebersicht_data <-  dplyr::tbl(con, from = "fachkraefte_prognose") %>%
-    dplyr::filter(jahr == year_filter) %>%
-    dplyr::filter(indikator %in% c("Verbesserung")) %>%
-    dplyr::filter(geschlecht == "Gesamt") %>%
-    dplyr::filter(nationalitaet == "Gesamt") %>%
-    dplyr::filter(anforderung == "Gesamt") %>%
-    dplyr::mutate(basis_wert = basis_wert) %>%
-    dplyr::select(wirkhebel, basis_wert, wert)%>%
-    dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Mädchen und Frauen in MINT fördern",
-                                               wirkhebel == "MINT-Bildung" ~ "MINT-Nachwuchs fördern",
-                                               wirkhebel == "Internationale MINT-Fachkräfte" ~ "Zuwanderung MINT-Fachkräfte",
-                                               wirkhebel == "Beteiligung älterer MINT-Fachkräfte" ~ "Verbleib älterer MINT-Fachkräfte",
-                                               T ~ wirkhebel),
-                  diff = wert - basis_wert) %>%
-    dplyr::collect()
-
-  row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
-
-  uebersicht_data <- uebersicht_data %>%
-    dplyr::slice(-row_to_move) %>%
-    dplyr::bind_rows(uebersicht_data[row_to_move, ]) %>%
-    dplyr::mutate(basis_label = paste0("Basis-Szenario"),
-                  improvement_label = paste0("Positives Szenario: ", wirkhebel),
-
-                  basis_wert_txt = prettyNum(basis_wert, big.mark = ".", decimal.mark = ","),
-                  wert_txt = prettyNum(wert, big.mark = ".", decimal.mark = ","),
-                  diff_txt = prettyNum(diff, big.mark = ".", decimal.mark = ",")) %>%
-    dplyr::arrange(diff)
-
-  fig <- plotly::plot_ly(uebersicht_data, color = I("gray80")) %>%
-    plotly::add_segments(
-      x = ~basis_wert,
-      xend = ~wert,
-      y = ~wirkhebel,
-      yend = ~wirkhebel,
-      showlegend = FALSE,
-      text = ~paste0("MINT-Fachkräfteanzahl im Basis: ", basis_wert, "<br>Wert: ", wert_txt, "<br>: ", diff_txt),
-      hoverinfo = "text"
-    ) %>%
-    plotly::add_markers(
-      x = ~basis_wert,
-      y = ~wirkhebel,
-      name = "Basis-Szenario 2022",
-      color = I("#D0A9CD"),
-      symbol = I("square"),
-      size = I(50),
-      text = ~paste0("Basis-Szenario 2022: ", basis_wert_txt),
-      hoverinfo = "text"
-    ) %>%
-    plotly::add_markers(
-      x = ~wert,
-      y = ~wirkhebel,
-      name = paste0("Positives Szenario ",year_filter),
-      color = I("#b16fab"),
-      symbol = I("square"),
-      size = I(50),
-      text = ~paste0("Positives Szenario für Wirkhebel ", wirkhebel, ": ", wert_txt, "<br>Zunahme der MINT-Fachkräfte seit 2022: ", diff_txt),
-      hoverinfo = "text"
-    ) %>%
-    plotly::layout(
-      title = list(
-        text = paste0(
-          "Übersicht über die potentielle Wirkung der Hebel MINT-Nachwuchs und Mädchen und Frauen in MINT fördern,
-          Zuwanderung internationaler und Verbleib älterer MINT-Fachkräfte"
-        )
-      ),
-      xaxis = list(
-        title = "Anzahl MINT-Fachkräfte",
-        tickformat = ",",
-        range = c(7500000, 9500000)
-      ),
-      yaxis = list(
-        title = "",
-        categoryorder = "array",
-        categoryarray = unique(uebersicht_data$wirkhebel)
-      ),
-      margin = list(l = 100, r = 50, t = 80, b = 50),
-      hoverlabel = list(bgcolor = "white"),
-      legend = list(
-        orientation = "h",
-        x = 0.5,
-        y = -0.5,
-        xanchor = "center",
-        yanchor = "top"
-      )
-    )
-
-
-fig <- fig %>%
-    plotly::config(fig, displayModeBar = FALSE)
-fig
-  return(fig)
-}
 
 
 # Box 2 ----
@@ -682,13 +727,20 @@ plot_fachkraft_epa_item <- function(r) {
       align = "center",
       style = list(color = "black",
                    useHTML = TRUE,
-                   fontFamily = "SourceSans3-Regular",
+                   fontFamily = "Calibri Regular",
                    fontSize = "20px")
     ) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular")
+      style = list(fontFamily = "Calibri Regular")
     ) %>%
-    highcharter::hc_size(380, 480)
+    highcharter::hc_size(380, 480) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 
   if (length(fach) == 2) {
@@ -737,13 +789,20 @@ plot_fachkraft_epa_item <- function(r) {
         align = "center",
         style = list(color = "black",
                      useHTML = TRUE,
-                     fontFamily = "SourceSans3-Regular",
+                     fontFamily = "Calibri Regular",
                      fontSize = "20px")
       ) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
+        style = list(fontFamily = "Calibri Regular")
       )%>%
-      highcharter::hc_size(380, 480)
+      highcharter::hc_size(380, 480) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
     out <- list(plot_left, plot_right)
@@ -920,13 +979,20 @@ plot_fachkraft_epa_bulas <- function(r) {
       align = "center",
       style = list(color = "black",
                    useHTML = TRUE,
-                   fontFamily = "SourceSans3-Regular",
+                   fontFamily = "Calibri Regular",
                    fontSize = "20px")
     ) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular")
+      style = list(fontFamily = "Calibri Regular")
     ) %>%
-    highcharter::hc_size(380, 480)
+    highcharter::hc_size(380, 480) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 
   if (length(fach) == 2) {
@@ -975,13 +1041,20 @@ plot_fachkraft_epa_bulas <- function(r) {
         align = "center",
         style = list(color = "black",
                      useHTML = TRUE,
-                     fontFamily = "SourceSans3-Regular",
+                     fontFamily = "Calibri Regular",
                      fontSize = "20px")
       ) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
+        style = list(fontFamily = "Calibri Regular")
       )%>%
-      highcharter::hc_size(380, 480)
+      highcharter::hc_size(380, 480) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
     out <- highcharter::hw_grid(
@@ -1187,7 +1260,7 @@ plot_fachkraft_bar_vakanz  <- function(r) {
       align = "center",
       style = list(color = "black",
                    useHTML = TRUE,
-                   fontFamily = "SourceSans3-Regular",
+                   fontFamily = "Calibri Regular",
                    fontSize = "20px")
     ) %>%
     highcharter::hc_subtitle(
@@ -1200,7 +1273,14 @@ plot_fachkraft_bar_vakanz  <- function(r) {
                            'Eine ausgeschriebene Stelle steht {point.wert} Tage leer, bis sie besetzt werden kann.'
       )) %>%
     highcharter::hc_yAxis(title = list(text = "")) %>%
-    highcharter::hc_xAxis(title = list(text = ""))
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
   out <- plot
   return(out)
@@ -1311,7 +1391,7 @@ plot_fachkraft_detail_item  <- function(r) {
         borderWidth = 0,
         useHTML = TRUE,
         style = list(
-          fontFamily = "SourceSans3-Regular",
+          fontFamily = "Calibri Regular",
           fontSize = "20px")
       )
     ) %>%
@@ -1322,7 +1402,7 @@ plot_fachkraft_detail_item  <- function(r) {
       align = "center",
       style = list(color = "black",
                    useHTML = TRUE,
-                   fontFamily = "SourceSans3-Regular",
+                   fontFamily = "Calibri Regular",
                    fontSize = "20px")
     ) %>%
     highcharter::hc_caption(
@@ -1332,8 +1412,15 @@ plot_fachkraft_detail_item  <- function(r) {
       align = "left",
       style = list(color = "grey",
                    useHTML = TRUE,
-                   fontFamily = "SourceSans3-Regular",
+                   fontFamily = "Calibri Regular",
                    fontSize = "14px")
+    ) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
     )
 
   # count "Engpassanalyse" to add line afterward
@@ -1366,11 +1453,18 @@ plot_fachkraft_detail_item  <- function(r) {
                     ") für Beruf ", this_beruf, " (", timerange, ")"),
       margin = 45,
       align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
   if ("Risikoanalyse" %in% plot_bar_data$kategorie) {
     plot_right <- plot_right %>%
@@ -1405,7 +1499,14 @@ plot_fachkraft_detail_item  <- function(r) {
             zIndex = 5 # Ensure the plot line is above the grid lines
           )
         ),
-        title = list(text = ""))
+        title = list(text = "")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
   }
 

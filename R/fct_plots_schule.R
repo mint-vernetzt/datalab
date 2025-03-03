@@ -1754,40 +1754,90 @@ kurse_comparison_gender <- function(r) {
     # spread column
     df <- tidyr::spread(df, indikator, proportion)
 
-    df <- df %>% tidyr::drop_na()
+    df <- df %>%
+      tidyr::drop_na() %>%
+      dplyr::mutate(
+        Grundkurse = round(Grundkurse, 1),
+        Leistungskurse = round(Leistungskurse, 1)
+      )
 
-    df2 <- tidyr::gather(df, group, value, -fachbereich)
-
-    #df2$fachbereich <- reorder(df2$fachbereich, df2$Leistungskurse)
-
-    df2$fachbereich <- factor(df2$fachbereich, levels = levels(df2$fachbereich))
-
-#nicht interaktiv
-    out <- ggplot2::ggplot(df,
-                    ggplot2::aes(y = fachbereich)) +
-      ggplot2::geom_point(data = df2, ggplot2::aes(x = value, color = group), size = 5) +
-      ggalt::geom_dumbbell(
-        ggplot2::aes(x = Grundkurse, xend = Leistungskurse),
-        size = 0.5,
-        size_x = 5,
-        size_xend = 5,
-        colour = "black",
-        colour_x = "#bfc6d3",
-        colour_xend = "#66cbaf",
-        dot_guide=TRUE) +
-      ggplot2::theme_minimal() +
-      ggplot2::scale_color_manual(name = "", values = c("#bfc6d3", "#66cbaf")) +
-      ggplot2::theme(legend.position="top",
-                     #legend.text= ggplot2::element_text(family = 'SourceSans3-Regular'),
-                     panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
-                     plot.title = ggtext::element_markdown(hjust = 0.5),
-                     axis.text.y = ggplot2::element_text(size = 11)) +
-      ggplot2::ylab("") + ggplot2::xlab("") +
-      ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                   "Mädchen-Anteil nach Fächern in ", regio, " (",timerange,")",
-                                   "<br><br>"),
-                    color = "") +
-      ggplot2::scale_x_continuous(n.breaks = 7, labels = function(x) paste0(x, "%"))
+    out <- plotly::plot_ly(data = df, color = I("gray80")) %>%
+      plotly::add_segments(
+        x = ~Grundkurse,
+        xend = ~Leistungskurse,
+        y = ~fachbereich,
+        yend = ~fachbereich,
+        showlegend = FALSE,
+        # text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
+        #                paste0("Mittel: ", mittel_wert, "<br>Positiv: ", wert)),
+        hoverinfo = "text"
+      ) %>%
+      plotly::add_markers(
+        x = ~Grundkurse,
+        y = ~fachbereich,
+        name = "Grundkurse",
+        marker = list(
+          size = 12,
+          color = "#bfc6d3"
+        ),
+        text = ~ifelse(is.na(Grundkurse), NA, paste0("Grundkurse: ", Grundkurse)),
+        hoverinfo = "text"
+      ) %>%
+      plotly::add_markers(
+        x = ~Leistungskurse,
+        y = ~fachbereich,
+        name = "Leistungskurse",
+        marker = list(
+          size = 12,
+          color = "#66CBAF"
+        ),
+        text = ~ifelse(is.na(Leistungskurse), NA, paste0("Leistungskurse: ", Leistungskurse)),
+        hoverinfo = "text"
+      ) %>%
+      # Layout anpassen
+      plotly::layout(
+        title = paste0("Mädchen-Anteil nach Fächern in ",regio, " (", timerange, ")"),
+        xaxis = list(title = ""),
+        yaxis = list(title = ""),
+        margin = list(l = 100, r = 50, t = 50, b = 50),
+        hoverlabel = list(bgcolor = "white"),
+        legend = list(
+          orientation = "h",
+          x = 0.5,
+          y = -0.2,
+          xanchor = "center",
+          yanchor = "top"
+        )
+      )%>%
+      plotly::config(displaylogo = FALSE,  modeBarButtonsToRemove = c(
+        'sendDataToCloud', 'autoScale2d', 'resetScale2d', 'toggleSpikelines',
+        'hoverClosestCartesian', 'hoverCompareCartesian',
+        'zoom2d','pan2d','select2d','lasso2d','zoomIn2d','zoomOut2d'
+      ),modeBarButtonsToAdd = list(
+        list(
+          name = "Download CSV",
+          icon = list(
+            path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+            width = 24,
+            height = 24
+          ),
+          click = htmlwidgets::JS("
+              function(gd) {
+                var csv = 'x,y\\n';
+                var data = gd.data[0];
+                for (var i = 0; i < data.x.length; i++) {
+                  csv += data.x[i] + ',' + data.y[i] + '\\n';
+                }
+                var blob = new Blob([csv], { type: 'text/csv' });
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'data.csv';
+                a.click();
+              }
+            ")
+        )
+      )
+      )
 
   }else {
 
