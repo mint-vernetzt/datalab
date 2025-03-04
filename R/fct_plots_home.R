@@ -567,7 +567,7 @@ home_einstieg_gender <- function(r) {
                          c("#efe8e6", "#154194"))
 
 
-      mint2 <- piebuilder(df_2_mint, paste0(df_2_mint$titel_help2[1], " in ", regio, " (", zeit, ")"),
+      mint2 <- piebuilder(df_2_mint, paste0(df_2_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
                          x = "geschlecht", y = "prop",
                          paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
                          c("#efe8e6", "#154194"))
@@ -602,7 +602,7 @@ home_einstieg_gender <- function(r) {
 
         }else if(indi[2] == "Schüler:innen im Leistungskurs" & nrow(df_2_rest) == 0){
 
-          nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help[1], " in ", regio, " (", zeit, ")"),
+          nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
                                x = "geschlecht", y = "prop",
                                paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
                                c("#efe8e6", "#154194"))
@@ -621,7 +621,7 @@ home_einstieg_gender <- function(r) {
 
         }else{
 
-      nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help[1], " in ", regio, " (", zeit, ")"),
+      nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
                            x = "geschlecht", y = "prop",
                            paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
                            c("#efe8e6", "#154194"))
@@ -695,8 +695,8 @@ home_einstieg_gender <- function(r) {
         highcharter::hc_xAxis(
           title = list(text = ""),
           categories = c(
-            "Schüler:innen Leistungskurse in MINT",
-            "Schüler:innen Leistungskurse in anderen Bereichen",
+            "Leistungskurse in MINT",
+            "Leistungskurse in anderen Bereichen",
             "Studierende in MINT",
             "Studierende in anderen Bereichen",
             "Auszubildende in MINT",
