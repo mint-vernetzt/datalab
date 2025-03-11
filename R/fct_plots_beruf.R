@@ -2605,14 +2605,38 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
   t <- as.character(timerange[1]:timerange[2])
 
 
-  df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
-    dplyr::filter(jahr %in% t,
-                  indikator == indikator_choice,
-                  region %in% states,
-                  anforderung %in% "Gesamt",
-                  geschlecht == "Frauen",
-                  fachbereich %in% c("Alle", "MINT")
-    )%>%
+  # df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
+  #   dplyr::filter(jahr %in% t,
+  #                 indikator == indikator_choice,
+  #                 region %in% states,
+  #                 anforderung %in% "Gesamt",
+  #                 geschlecht == "Frauen",
+  #                 fachbereich %in% c("Alle", "MINT")
+  #   )%>%
+  #   dplyr::select("bereich",
+  #                 "indikator",
+  #                 "fachbereich",
+  #                 "geschlecht",
+  #                 "region",
+  #                 "jahr",
+  #                 "anforderung",
+  #                 "wert" ) %>%
+  #   dplyr::collect()
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt
+  WHERE jahr IN ({t*})
+  AND region IN ({states*})
+  AND anforderung = 'Gesamt'
+  AND geschlecht = 'Frauen'
+  AND fachbereich IN ('Alle', 'MINT')
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
     dplyr::select("bereich",
                   "indikator",
                   "fachbereich",
@@ -2620,9 +2644,7 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
                   "region",
                   "jahr",
                   "anforderung",
-                  "wert" ) %>%
-    dplyr::collect()
-
+                  "wert" )
 
   df <- df %>% dplyr::filter(anforderung != "Keine Zuordnung möglich")
 
@@ -2715,11 +2737,22 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   indikator_besch_1 <- r$indikator2_beruf_arbeitsmarkt_landkreis_karte1
 
 
-  df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    dplyr::filter(
-      jahr == timerange)%>%
-    dplyr::select(-bereich)%>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
+  #   dplyr::filter(
+  #     jahr == timerange)%>%
+  #   dplyr::select(-bereich)%>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_detail
+  where jahr = {timerange}
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::select(-bereich)
 
 
   # map states for state codes
@@ -2856,11 +2889,24 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
   search_val <- r$search_in_bar_chart
 
   # filtern nach Zeit
-  df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    dplyr::filter(
-      jahr == timerange)%>%
-    dplyr::select(-bereich)%>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
+  #   dplyr::filter(
+  #     jahr == timerange)%>%
+  #   dplyr::select(-bereich)%>%
+  #   dplyr::collect()
+  #
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_detail
+  WHERE jahr = {timerange}
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::select(-bereich)
+
 
   # input values
   category <- r$kategorie_beruf_arbeitsmarkt_landkreis_vergleich
