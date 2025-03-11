@@ -859,11 +859,21 @@ plot_fachkraft_mint_item  <- function(r) {
 
 
 
-   plot_data_raw <- dplyr::tbl(con, from ="arbeitsmarkt_epa_detail") %>%
-    dplyr::filter(jahr == timerange &
-                    indikator == "Engpassindikator" &
-                    anforderung %in% bf) %>%
-     dplyr::collect()
+   # plot_data_raw <- dplyr::tbl(con, from ="arbeitsmarkt_epa_detail") %>%
+   #  dplyr::filter(jahr == timerange &
+   #                  indikator == "Engpassindikator" &
+   #                  anforderung %in% bf) %>%
+   #   dplyr::collect()
+
+   df_query <- glue::glue_sql("
+   SELECT *
+   FROM arbeitsmarkt_epa_detail
+   WHERE jahr = {timerange}
+   AND indikator = 'Engpassindikator'
+   AND anforderung IN ({bf*})
+                               ", .con = con)
+   plot_data_raw <- DBI::dbGetQuery(con, df_query)
+
 
    plot_data_raw <- plot_data_raw %>%
      dplyr::mutate(mint_zuordnung = dplyr::if_else(
@@ -879,6 +889,9 @@ plot_fachkraft_mint_item  <- function(r) {
     dplyr::group_by(epa_kat) %>%
     dplyr::mutate(percent_epa = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100,1)) %>%
     dplyr::ungroup()
+
+
+
 
 
   # enthält den Text für den plot
@@ -1101,17 +1114,34 @@ plot_fachkraft_detail_item  <- function(r) {
     "kein Engpassberuf" = c("Engpassanalyse")
   )
 
-  plot_bar_data <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
-    dplyr::filter(jahr == timerange &
-                    #indikator == "Engpassindikator" &
-                    anforderung == bf_label &
-                    indikator != "Engpassindikator" &
-                    beruf %in% this_beruf &
-                    kategorie %in% used_kategories &
-                    !is.na(wert)) %>%
+  # plot_bar_data <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
+  #   dplyr::filter(jahr == timerange &
+  #                   #indikator == "Engpassindikator" &
+  #                   anforderung == bf_label &
+  #                   indikator != "Engpassindikator" &
+  #                   beruf %in% this_beruf &
+  #                   kategorie %in% used_kategories &
+  #                   !is.na(wert)) %>%
+  #   dplyr::select(indikator, kategorie, wert) %>%
+  #   dplyr::mutate(wert = round(wert, 1)) %>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_epa_detail
+  WHERE jahr = {timerange}
+  AND anforderung = {bf_label}
+  AND NOT indikator = 'Engpassindikator'
+  AND beruf IN ({this_beruf*})
+  AND kategorie IN ({used_kategories*})
+  AND wert is NOT NULL
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  plot_bar_data <- df %>%
     dplyr::select(indikator, kategorie, wert) %>%
-    dplyr::mutate(wert = round(wert, 1)) %>%
-    dplyr::collect()
+    dplyr::mutate(wert = round(wert, 1))
 
   # color change on 0.01. level, since data labels are also rounded to 2 decimal places
   col_stops <- data.frame(
