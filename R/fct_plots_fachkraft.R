@@ -568,8 +568,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
     plotly::layout(
       title = list(
         text = paste0(
-          "Übersicht über die potentielle Wirkung der Hebel MINT-Nachwuchs und Mädchen und Frauen in MINT fördern,
-          Zuwanderung internationaler und Verbleib älterer MINT-Fachkräfte"
+          "Wie wirken sich die unten gelisteten Wirkhebel auf die Anzahl der MINT-Fachkräfte aus?"
         )
       ),
       xaxis = list(
