@@ -36,13 +36,24 @@ kurse_waffle_mint <- function(r) {
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(jahr == timerange,
-                    region == regio,
-                    anzeige_geschlecht == "Gesamt",
-                    indikator == indika) %>%
-      dplyr::select(indikator, fachbereich, anzeige_geschlecht, wert) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region == regio,
+    #                 anzeige_geschlecht == "Gesamt",
+    #                 indikator == indika) %>%
+    #   dplyr::select(indikator, fachbereich, anzeige_geschlecht, wert) %>%
+    #   dplyr::collect()
+
+    query_df <- glue::glue_sql("
+    SELECT indikator, fachbereich, anzeige_geschlecht, wert
+    FROM kurse
+    WHERE jahr IN ({timerange*})
+    AND region = {regio}
+    AND anzeige_geschlecht = 'Gesamt'
+    AND indikator = {indika}
+    ", .con = con)
+
+    df <- DBI::dbGetQuery(con, query_df)
 
     if(ebene == "MINT-Fachbereiche"){
 
@@ -101,13 +112,22 @@ kurse_waffle_mint <- function(r) {
   } else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(anzeige_geschlecht == "Gesamt",
-                    jahr == timerange) %>%
-      dplyr::select(-bereich)%>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(anzeige_geschlecht == "Gesamt",
+    #                 jahr == timerange) %>%
+    #   dplyr::select(-bereich)%>%
+    #   dplyr::collect()
+
+    df_query <- glue::glue_sql("
+                               SELECT *
+                               FROM kurse
+                               WHERE anzeige_geschlecht = 'Gesamt'
+                               AND jahr IN ({timerange*})
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
 
     df <- df %>%
+      dplyr::select(-bereich) %>%
       dplyr::mutate(fachbereich = dplyr::case_when(fachbereich == "MINT"~ "MINT-Fächer (gesamt)",
                                                    fachbereich == "andere Fächer" ~ "andere Fächer (gesamt)",
                                                    T~ fachbereich))%>%
@@ -207,10 +227,7 @@ kurse_waffle_mint <- function(r) {
       indika <- "Oberstufen"
     }
 
-    # df <- df %>%
-    #   dplyr::mutate(color = color_fach[fachbereich])
-
-    # # plot
+    # # # plot
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -219,7 +236,6 @@ kurse_waffle_mint <- function(r) {
       highcharter::hc_plotOptions(bar = list(
         colorByPoint = TRUE,
        colors = as.character(color_fach)
-        #colors = ifelse(df$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (gesamt)"), "#b16fab", "#d0a9cd")
       )) %>%
       highcharter::hc_title(text = paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")"
       ),
@@ -238,7 +254,6 @@ kurse_waffle_mint <- function(r) {
                                 )
       )
 
-    #noch machen
     # titel <- paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")")
     # tooltip <- "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
     # format <- "{value}%"
@@ -277,17 +292,29 @@ kurse_einstieg_comparison <- function(r) {
 
 
 
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(jahr == timerange,
-                    region == regio,
-                    fachbereich %in% c( "MINT", "andere Fächer" ),
-                    anzeige_geschlecht == "Gesamt") %>%
-      dplyr::select(-region, -jahr, - bereich) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region == regio,
+    #                 fachbereich %in% c( "MINT", "andere Fächer" ),
+    #                 anzeige_geschlecht == "Gesamt") %>%
+    #   dplyr::select(-region, -jahr, - bereich) %>%
+    #   dplyr::collect()
 
-  df <- df %>%
-    dplyr::group_by(indikator) %>%
-    dplyr::mutate(sum_wert = sum(wert))
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM kurse
+    WHERE jahr IN ({timerange*})
+    AND region = {regio}
+    AND fachbereich IN ('MINT', 'andere Fächer')
+    AND anzeige_geschlecht = 'Gesamt'
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(-region, -jahr, -bereich) %>%
+      dplyr::group_by(indikator) %>%
+      dplyr::mutate(sum_wert = sum(wert))
 
 
   # calculate proportions
@@ -387,14 +414,29 @@ kurse_verlauf_single <- function(r) {
   absolut_selector <- r$abs_zahlen_kurse_einstieg_verlauf
 
   # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(jahr %in% t,
-                    region == regio,
-                    anzeige_geschlecht == "Gesamt",
-                    fachbereich %in% c( "MINT", "Alle Fächer" )
-                    ) %>%
-      dplyr::select(-bereich, -region, -anzeige_geschlecht)%>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(jahr %in% t,
+    #                 region == regio,
+    #                 anzeige_geschlecht == "Gesamt",
+    #                 fachbereich %in% c( "MINT", "Alle Fächer" )
+    #                 ) %>%
+    #   dplyr::select(-bereich, -region, -anzeige_geschlecht)%>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+                               SELECT *
+                               FROM kurse
+                               WHERE jahr IN ({t*})
+                               AND region = {regio}
+                               AND anzeige_geschlecht = 'Gesamt'
+                               AND fachbereich IN ('MINT', 'Alle Fächer')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(-bereich, -region, -anzeige_geschlecht)
 
   df_alle <- subset(df, df$fachbereich == "Alle Fächer")
   df_alle <- df_alle %>%
@@ -416,10 +458,6 @@ kurse_verlauf_single <- function(r) {
    df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
     # plot
-    # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(prop,1), group = indikator)) %>%
-
-
-
     titel <- paste0("Anteil von MINT-Belegungen an allen Belegungen in ", regio)
     tooltip <- "Anteil: {point.indikator} <br> Wert: {point.y} %"
     format <- "{value}%"
@@ -482,13 +520,25 @@ kurse_mint_map <- function(r) {
     indikator_select <- r$topic_selected_mint
 
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(jahr %in% t,
-                    indikator == indikator_select,
-                    anzeige_geschlecht == "Gesamt",
-                    fachbereich %in% c("MINT", "Alle Fächer")) %>%
-      dplyr::select(indikator, fachbereich, anzeige_geschlecht, region, jahr, wert)%>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(jahr %in% t,
+    #                 indikator == indikator_select,
+    #                 anzeige_geschlecht == "Gesamt",
+    #                 fachbereich %in% c("MINT", "Alle Fächer")) %>%
+    #   dplyr::select(indikator, fachbereich, anzeige_geschlecht, region, jahr, wert)%>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+                               SELECT indikator, fachbereich, anzeige_geschlecht, region, jahr, wert
+                               FROM kurse
+                               WHERE jahr IN ({t*})
+                               AND indikator = {indikator_select}
+                               AND anzeige_geschlecht = 'Gesamt'
+                               AND fachbereich IN ('MINT', 'Alle Fächer')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
 
     # include "Osten" und "Westen" in Dataframe
     #df <- prep_kurse_east_west(df)
@@ -548,7 +598,6 @@ kurse_mint_map <- function(r) {
       help_title <-  "MINT-Fächern"
 
       # plot
-      # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = region)) %>%
 
       titel <- paste0("Anteil von ", help_title, " an allen ", title_help)
       tooltip <- "Anteil {point.region} <br> Wert: {point.y} %"
@@ -584,9 +633,6 @@ kurse_mint_map <- function(r) {
       help_title <- "in MINT"
 
       # plot
-      # out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = region)) %>%
-
-
 
       titel <- paste0("Anzahl an ", title_help ,help_title)
       tooltip <- "Anzahl: {point.y}"
@@ -607,13 +653,26 @@ kurse_mint_map <- function(r) {
 
     # SQL: DONE
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(jahr == timerange,
-                    region != "Deutschland",
-                    anzeige_geschlecht == "Gesamt",
-                    fachbereich %in% c("MINT", "Alle Fächer")) %>%
-      dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr,wert)%>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region != "Deutschland",
+    #                 anzeige_geschlecht == "Gesamt",
+    #                 fachbereich %in% c("MINT", "Alle Fächer")) %>%
+    #   dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr,wert)%>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+                               SELECT fachbereich, indikator, anzeige_geschlecht, region, jahr,wert
+                               FROM kurse
+                               WHERE jahr IN ({timerange*})
+                               AND NOT region = 'Deutschland'
+                               AND anzeige_geschlecht = 'Gesamt'
+                               AND fachbereich IN ('MINT', 'Alle Fächer')
+                               ", .con =con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
 
     df <- df %>%
       dplyr::mutate(fachbereich = dplyr::case_when(fachbereich == "MINT"~ "MINT-Fächer (gesamt)",
@@ -779,12 +838,22 @@ kurse_map <- function(r) {
 
   if(betrachtung == "Übersicht - Kartendiagramm"){
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(jahr == timerange,
-                    region != "Deutschland",
-                    anzeige_geschlecht == "Gesamt") %>%
-      dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr,wert)%>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region != "Deutschland",
+    #                 anzeige_geschlecht == "Gesamt") %>%
+    #   dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr,wert)%>%
+    #   dplyr::collect()
+
+    df_query <- glue::glue_sql("
+                               SELECT fachbereich, indikator, anzeige_geschlecht, region, jahr,wert
+                               FROM kurse
+                               WHERE jahr IN ({timerange*})
+                               AND NOT region = 'Deutschland'
+                               AND anzeige_geschlecht = 'Gesamt'
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
 
 
     df <- df %>%
@@ -865,12 +934,23 @@ kurse_map <- function(r) {
     indikator_select <- r$topic_selected_multiple
 
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(jahr %in% t,
-                    indikator == indikator_select,
-                    anzeige_geschlecht == "Gesamt") %>%
-      dplyr::select(indikator, fachbereich, anzeige_geschlecht, region, jahr, wert)%>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(jahr %in% t,
+    #                 indikator == indikator_select,
+    #                 anzeige_geschlecht == "Gesamt") %>%
+    #   dplyr::select(indikator, fachbereich, anzeige_geschlecht, region, jahr, wert)%>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+    SELECT indikator, fachbereich, anzeige_geschlecht, region, jahr, wert
+    FROM kurse
+    WHERE jahr IN ({t*})
+    AND indikator = {indikator_select}
+    AND anzeige_geschlecht = 'Gesamt'
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
 
     # include "Osten" und "Westen" in Dataframe
     #df <- prep_kurse_east_west(df)
@@ -928,7 +1008,6 @@ kurse_map <- function(r) {
       # order years for plot
       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
-
       help_title <- ifelse(subjects_select == "MINT-Fächer (gesamt)", "MINT-Fächern", subjects_select)
       help_title <- ifelse(help_title == "andere Fächer (gesamt)", "allen Fächern außer MINT", help_title)
 
@@ -940,7 +1019,6 @@ kurse_map <- function(r) {
       out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
 
     } else if(absolut_selector =="Anzahl"){
-
       hcoptslang <- getOption("highcharter.lang")
       hcoptslang$thousandsSep <- "."
       options(highcharter.lang = hcoptslang)
@@ -948,16 +1026,10 @@ kurse_map <- function(r) {
       df <- df %>%
         dplyr::filter(selector=="Anzahl")
 
-
-
       if(indikator_select == "Grundkurse") {
-
         title_help <- "Grundkursbelegungen "
-
       }else {
-
         title_help <- "Leistungskursbelegungen "
-
       }
 
       # order years for plot
@@ -996,16 +1068,28 @@ kurse_map <- function(r) {
     }
 
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(jahr == timerange,
-                   # region != "Deutschland",
-                    anzeige_geschlecht == "Gesamt",
-                    indikator == indikator_comparison) %>%
-      dplyr::select(-jahr, -bereich) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                # region != "Deutschland",
+    #                 anzeige_geschlecht == "Gesamt",
+    #                 indikator == indikator_comparison) %>%
+    #   dplyr::select(-jahr, -bereich) %>%
+    #   dplyr::collect()
+    #
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM kurse
+    WHERE jahr = {timerange}
+    AND anzeige_geschlecht = 'Gesamt'
+    AND indikator = {indikator_comparison}
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
 
     # aggregate all subjects to calculate proportion later
     df <- df %>%
+      dplyr::select(-jahr, -bereich) %>%
       dplyr::mutate(fachbereich = dplyr::case_when(fachbereich == "MINT"~ "MINT-Fächer (gesamt)",
                                                    fachbereich == "andere Fächer" ~ "andere Fächer (gesamt)",
                                                    T~ fachbereich))%>%
@@ -1014,11 +1098,7 @@ kurse_map <- function(r) {
       dplyr::ungroup()%>%
       dplyr::filter(fachbereich != "Alle Fächer")
 
-
-    # df <- rbind(df, df_sub)
-
-    df <- df %>% dplyr::filter(fachbereich == subject) #%>%
-    #   dplyr::filter(!region %in% c("Westen", "Osten"))
+    df <- df %>% dplyr::filter(fachbereich == subject)
 
     # nötig für stacked
 
@@ -1104,12 +1184,22 @@ kurse_verlauf_multiple_bl <- function(r) {
 
   # SQL: DONE
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "kurse") %>%
-    dplyr::filter(jahr %in% t,
-                  indikator == indikator_select,
-                  anzeige_geschlecht == "Gesamt") %>%
-    dplyr::select(indikator, fachbereich, anzeige_geschlecht, region, jahr, wert)%>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "kurse") %>%
+  #   dplyr::filter(jahr %in% t,
+  #                 indikator == indikator_select,
+  #                 anzeige_geschlecht == "Gesamt") %>%
+  #   dplyr::select(indikator, fachbereich, anzeige_geschlecht, region, jahr, wert)%>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT indikator, fachbereich, anzeige_geschlecht, region, jahr, wert
+  FROM kurse
+  WHERE jahr IN ({t*})
+  AND indikator = {indikator_select}
+  AND anzeige_geschlecht = 'Gesamt'
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
 
   # include "Osten" und "Westen" in Dataframe
   #df <- prep_kurse_east_west(df)
@@ -1150,18 +1240,12 @@ kurse_verlauf_multiple_bl <- function(r) {
     df <- df %>%
       dplyr::filter(selector=="In Prozent")
 
-
     df$wert <- df$wert * 100
 
-
     if(indikator_select == "Grundkurse") {
-
       title_help <- "Grundkursbelegungen"
-
     }else {
-
       title_help <- "Leistungskursbelegungen"
-
     }
 
     # order years for plot
@@ -1193,13 +1277,9 @@ kurse_verlauf_multiple_bl <- function(r) {
 
 
     if(indikator_select == "Grundkurse") {
-
       title_help <- "Grundkursbelegungen "
-
     }else {
-
       title_help <- "Leistungskursbelegungen "
-
     }
 
     # order years for plot
@@ -1264,12 +1344,25 @@ kurse_verlauf_subjects_bl <- function(r) {
   )
 
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "kurse") %>%
-    dplyr::filter(jahr %in% t,
-                  indikator == indikator_kurse,
-                  region %in% states) %>%
-    dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr, wert)%>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "kurse") %>%
+  #   dplyr::filter(jahr %in% t,
+  #                 indikator == indikator_kurse,
+  #                 region %in% states) %>%
+  #   dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr, wert)%>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT fachbereich, indikator, anzeige_geschlecht, region, jahr, wert
+  FROM kurse
+  WHERe jahr IN ({t*})
+  AND indikator = {indikator_kurse}
+  AND region IN ({states*})
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+
+
 
    df <- df %>%
     dplyr::mutate(fachbereich = dplyr::case_when(fachbereich == "MINT"~ "MINT-Fächer (gesamt)",
@@ -1308,7 +1401,6 @@ kurse_verlauf_subjects_bl <- function(r) {
 
 
   # fitler states
- # df <- df %>% dplyr::filter(region %in% states)
 
   #titel hilfe für Plot
   kurs_help <- ifelse(indikator_kurse == "Grundkurse", "Grundkursbelegungen", "Leistungskursbelegungen")
@@ -1388,15 +1480,23 @@ kurse_ranking_gender <- function(r) {
 
   #SQL: DONE
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "kurse") %>%
-    dplyr::filter(jahr == timerange,
-                  region != "Deutschland",
-                  region != "Baden-Württemberg") %>%
-    dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr, wert)%>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "kurse") %>%
+  #   dplyr::filter(jahr == timerange,
+  #                 region != "Deutschland",
+  #                 region != "Baden-Württemberg") %>%
+  #   dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr, wert)%>%
+  #   dplyr::collect()
 
 
+  df_query <- glue::glue_sql("
+  SELECT fachbereich, indikator, anzeige_geschlecht, region, jahr, wert
+  FROM kurse
+  WHERE jahr = {timerange}
+  AND NOT region = {Deutschland}
+  AND NOT region = {Deutschland}
+                               ", .con = con)
 
+  df <- DBI::dbGetQuery(con, df_query)
 
 
   df <- df %>%
@@ -1478,13 +1578,23 @@ kurse_mint_comparison <- function(r) {
   indikator_comparison <- r$indikator_comparison_subject
 
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "kurse") %>%
-    dplyr::filter(anzeige_geschlecht == "Gesamt",
-                  jahr == timerange) %>%
-    dplyr::select(-bereich)%>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "kurse") %>%
+  #   dplyr::filter(anzeige_geschlecht == "Gesamt",
+  #                 jahr == timerange) %>%
+  #   dplyr::select(-bereich)%>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM kurse
+  WHERE anzeige_geschlecht = 'Gesamt'
+  AND jahr = {timerange}
+                               ", .con = con)
+  df <- DBI::dbGetQuery(con, df_query)
+
 
   df <- df %>%
+    dplyr::select(-bereich)%>%
     dplyr::mutate(fachbereich = dplyr::case_when(fachbereich == "MINT"~ "MINT-Fächer (gesamt)",
                                                  fachbereich == "andere Fächer" ~ "andere Fächer (gesamt)",
                                                  T~ fachbereich))%>%
@@ -1611,16 +1721,27 @@ kurse_mint_comparison_bl <- function(r) {
   }
 
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "kurse") %>%
-    dplyr::filter(jahr == timerange,
-                  region != "Deutschland",
-                  anzeige_geschlecht == "Gesamt",
-                  indikator == indikator_comparison) %>%
-    dplyr::select(-jahr, -bereich) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "kurse") %>%
+  #   dplyr::filter(jahr == timerange,
+  #                 region != "Deutschland",
+  #                 anzeige_geschlecht == "Gesamt",
+  #                 indikator == indikator_comparison) %>%
+  #   dplyr::select(-jahr, -bereich) %>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM kurse
+  WHERE jahr = {timerange}
+  AND anzeige_geschlecht = 'Gesamt'
+  AND indikator = {indikator_comparison}
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
 
   # aggregate all subjects to calculate proportion later
   df <- df %>%
+    dplyr::select(-jahr, -bereich) %>%
     dplyr::mutate(fachbereich = dplyr::case_when(fachbereich == "MINT"~ "MINT-Fächer (gesamt)",
                                                  fachbereich == "andere Fächer" ~ "andere Fächer (gesamt)",
                                                  T~ fachbereich))%>%
@@ -1713,12 +1834,21 @@ kurse_comparison_gender <- function(r) {
 
   if (betrachtung == "Kursvergleich - Hanteldiagramm"){
 
-    # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(jahr == timerange,
-                    fachbereich != "Alle Fächer",
-                    indikator != "Oberstufenbelegungen") %>%
-      dplyr::collect()
+    # # filter dataset based on UI inputs
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 fachbereich != "Alle Fächer",
+    #                 indikator != "Oberstufenbelegungen") %>%
+    #   dplyr::collect()
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM kurse
+    WHERE jahr = {timerange}
+    AND NOT fachbereich = 'Alle Fächer'
+    AND NOT indikator = 'Oberstufenbelegungen'
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
 
     # include "Osten" und "Westen" in Dataframe
     #df <- prep_kurse_east_west(df)
@@ -1842,12 +1972,24 @@ kurse_comparison_gender <- function(r) {
   }else {
 
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "kurse") %>%
-    dplyr::filter(jahr == timerange,
-                  region == regio&
-                    fachbereich %in% c("MINT", "andere Fächer")) %>%
-    dplyr::select(region, fachbereich, anzeige_geschlecht, indikator, jahr, wert)%>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "kurse") %>%
+  #   dplyr::filter(jahr == timerange,
+  #                 region == regio&
+  #                   fachbereich %in% c("MINT", "andere Fächer")) %>%
+  #   dplyr::select(region, fachbereich, anzeige_geschlecht, indikator, jahr, wert)%>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT region, fachbereich, anzeige_geschlecht, indikator, jahr, wert
+  FROM kurse
+  WHERE jahr = {timerange}
+  AND region = {regio}
+  AND fachbereich IN ('MINT', 'andere Fächer')
+                               ", .con = con)
+
+
+  df <- DBI::dbGetQuery(con, df_query)
+
 
   # aggregate to MINT
   #df <- share_mint_kurse(df)
@@ -2024,13 +2166,23 @@ kurse_verlauf_gender <- function(r){
   abs_rel <- r$abs_rel_kurse_verlauf_gender
 
 
-  df <- dplyr::tbl(con, "kurse") %>%
-    dplyr::filter(region == regio,
-                  fachbereich =="MINT",
-                  jahr %in% t,
-                  anzeige_geschlecht != "Gesamt") %>%
-    dplyr::select(-region, - bereich) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, "kurse") %>%
+  #   dplyr::filter(region == regio,
+  #                 fachbereich =="MINT",
+  #                 jahr %in% t,
+  #                 anzeige_geschlecht != "Gesamt") %>%
+  #   dplyr::select(-region, - bereich) %>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM kurse
+        WHERE region = {regio}
+        AND fachbereich = 'MINT'
+        AND jahr IN ({t*})
+        AND NOT anzeige_geschlecht = 'Gesamt'
+                               ", .con = con)#
+  df <- DBI::dbGetQuery(con, df_query)
 
   df <-  df %>%
     dplyr::group_by(fachbereich, indikator, jahr) %>%
@@ -2060,15 +2212,12 @@ kurse_verlauf_gender <- function(r){
     options(highcharter.lang = hcoptslang)
 
     # plot
-    # highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = wert, group = indikator)) %>%
-
 
     titel <- paste0("Anzahl von Mädchen in MINT-Oberstufenkursen")
     tooltip <-  "Anzahl: {point.indikator} <br> Wert: {point.wert_anzeige}"
     format <-  "{value:, f}"
     color <- colors_mint_vernetzt$general
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
-
 
 
 
@@ -2118,13 +2267,24 @@ kurse_wahl <- function(r) {
     )
 
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(jahr == timerange,
-                    region == regio,
-                    indikator == indikator_gender,
-                    anzeige_geschlecht != "Gesamt") %>%
-      dplyr::select(indikator, fachbereich, anzeige_geschlecht, wert) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region == regio,
+    #                 indikator == indikator_gender,
+    #                 anzeige_geschlecht != "Gesamt") %>%
+    #   dplyr::select(indikator, fachbereich, anzeige_geschlecht, wert) %>%
+    #   dplyr::collect()
+
+    df_query <- glue::glue_sql("
+    SELECT indikator, fachbereich, anzeige_geschlecht, wert
+    FROM kurse
+    WHERE jahr = {timerange}
+    AND region = {regio}
+    AND indikator = {indikator_gender}
+    AND NOT anzeige_geschlecht = 'Gesamt'
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
 
 
     # combine subjects to get numbers on share of MINT
@@ -2221,12 +2381,21 @@ kurse_wahl <- function(r) {
       "Sport"= "#D4C1BB"
     )
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "kurse") %>%
-      dplyr::filter(jahr == timerange,
-                    !(region %in% c("Deutschland", "Westen", "Osten")),
-                    indikator == kurs_select) %>%
-      dplyr::select(bereich, fachbereich, indikator, anzeige_geschlecht, region, jahr, wert)%>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "kurse") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 !(region %in% c("Deutschland", "Westen", "Osten")),
+    #                 indikator == kurs_select) %>%
+    #   dplyr::select(bereich, fachbereich, indikator, anzeige_geschlecht, region, jahr, wert)%>%
+    #   dplyr::collect()
+    #
+    df_query <- glue::glue_sql("SELECT bereich, fachbereich, indikator, anzeige_geschlecht, region, jahr, wert
+    FROM kurse
+    WHERE jahr = {timerange}
+    AND NOT region IN ('Deutschland', 'Westen', 'Osten')
+    AND indikator = {kurs_select}
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
 
     df <- df %>%
       dplyr::mutate(fachbereich = dplyr::case_when(fachbereich == "MINT"~ "MINT-Fächer (gesamt)",
@@ -2394,14 +2563,24 @@ iqb_standard_zeitverlauf <- function(r){
   }
 
   # Region, Geschlecht und Klasse filtern
-  df <- dplyr::tbl(con, from = "iqb") %>%
-    dplyr::filter(region %in% bl_select,
-                  klasse == kl_select,
-                  geschlecht == "gesamt",
-                  indikator == "Mindeststandard nicht erreicht") %>%
-    dplyr::select(jahr, indikator, fach, region, wert) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "iqb") %>%
+  #   dplyr::filter(region %in% bl_select,
+  #                 klasse == kl_select,
+  #                 geschlecht == "gesamt",
+  #                 indikator == "Mindeststandard nicht erreicht") %>%
+  #   dplyr::select(jahr, indikator, fach, region, wert) %>%
+  #   dplyr::collect()
+  #
 
+  df_query <- glue::glue_sql("
+  SELECT jahr, indikator, fach, region, wert
+  FROM iqb
+  WHERE klasse = {kl_select}
+  AND region IN ({bl_select*})
+  AND geschlecht = 'gesamt'
+  AND indikator = 'Mindeststandard nicht erreicht'
+                               ", .con = con)
+  df <- DBI::dbGetQuery(con, df_query)
   df <- df %>%
     dplyr::mutate(display_rel = prettyNum(df$wert, big.mark = ".", decimal.mark = ","))
 
@@ -2482,11 +2661,20 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
 
 
   # filtern
-  df <- dplyr::tbl(con, from = "iqb") %>%
-    dplyr::filter(region == bl_select,
-                  klasse == klasse_select) %>%
-    dplyr::select(jahr, indikator, fach, region, geschlecht, wert) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "iqb") %>%
+  #   dplyr::filter(region == bl_select,
+  #                 klasse == klasse_select) %>%
+  #   dplyr::select(jahr, indikator, fach, region, geschlecht, wert) %>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT jahr, indikator, fach, region, geschlecht, wert
+  FROM iqb
+  WHERE region = {bl_select}
+  AND klasse = {klasse_select}
+                               ", .con = con)
+  df <- DBI::dbGetQuery(con, df_query)
+
 
   # für 9 Klassen Fach filtern
   if(klasse_select == "9. Klasse"){
@@ -2794,19 +2982,31 @@ iqb_fragebogen <- function(r){
   fach_select <- r$fach_iqb_fragebogen
 
   # df filtern
-  df <- dplyr::tbl(con, from = "iqb") %>%
-    dplyr::filter(typ == "fragen",
-                  jahr == jahr_select,
-                  fach == fach_select,
-                  geschlecht != "Gesamt") %>%
+  # df <- dplyr::tbl(con, from = "iqb") %>%
+  #   dplyr::filter(typ == "fragen",
+  #                 jahr == jahr_select,
+  #                 fach == fach_select,
+  #                 geschlecht != "Gesamt") %>%
+
+
+    df_query <- glue::glue_sql("
+    SELECT fach, indikator, geschlecht, jahr, wert
+    FROM iqb
+    WHERE typ = 'fragen'
+    AND jahr = {jahr_select}
+    AND fach = {fach_select}
+    AND NOT geschlecht = 'Gesamt'
+                               ", .con = con)
+  df <- DBI::dbGetQuery(con, df_query)
+
+
     # als Faktor speichern für Reihenfolge und Selbstkonzept umbennenen
-    dplyr::mutate(
-      indikator = dplyr::case_when(
-        indikator == "Selbstkonzept" ~ "Selbsteinschätzung der eigenen Fähigkeiten",
-        indikator == "Interesse" ~ "Interesse für das Fach"
-      )) %>%
-    dplyr::select(fach, indikator, geschlecht, jahr, wert) %>%
-    dplyr::collect()
+    df <- df %>%
+      dplyr::mutate(
+          indikator = dplyr::case_when(
+            indikator == "Selbstkonzept" ~ "Selbsteinschätzung der eigenen Fähigkeiten",
+            indikator == "Interesse" ~ "Interesse für das Fach"
+          ))
 
   df <- df %>%
     dplyr::mutate(display_rel = prettyNum(round(df$wert,1), big.mark = ".", decimal.mark = ","))

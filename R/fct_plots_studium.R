@@ -18,24 +18,58 @@ studienzahl_mint <- function(r){
     testl1 <- if (betrachtung == "Einzelansicht - Kuchendiagramm") r$studium_anteil_i else r$studium_anteil_i_balken
 
 
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == testy1,
-                    geschlecht == "Gesamt",
-                    region == regio,
-                    indikator %in% testl1,
-                    fach %in% c("Alle Nicht MINT-Fächer", "Alle MINT-Fächer")) %>%
-      dplyr::select(region, jahr, indikator, fach, wert) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == testy1,
+    #                 geschlecht == "Gesamt",
+    #                 region == regio,
+    #                 indikator %in% testl1,
+    #                 fach %in% c("Alle Nicht MINT-Fächer", "Alle MINT-Fächer")) %>%
+    #   dplyr::select(region, jahr, indikator, fach, wert) %>%
+    #   dplyr::collect()
 
-    alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == testy1,
-                    geschlecht == "Gesamt",
-                    region == regio,
-                    indikator %in% testl1,
-                    fach == "Alle Fächer") %>%
-      dplyr::select(region, jahr, indikator, fach, wert) %>%
-      dplyr::rename(wert_ges = wert) %>%
-      dplyr::collect()
+
+    df_query <- glue::glue_sql("
+    SELECT region, jahr, indikator, fach, wert
+    FROM studierende_detailliert
+    WHERE jahr = {testy1}
+    AND geschlecht = 'Gesamt'
+    AND region = {regio}
+    AND indikator in ({testl1*})
+    AND fach IN ('Alle Nicht MINT-Fächer','Alle MINT-Fächer')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+#
+#     df <- df %>%
+#       dplyr::select(region, jahr, indikator, fach, wert)
+
+    # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == testy1,
+    #                 geschlecht == "Gesamt",
+    #                 region == regio,
+    #                 indikator %in% testl1,
+    #                 fach == "Alle Fächer") %>%
+    #   dplyr::select(region, jahr, indikator, fach, wert) %>%
+    #   dplyr::rename(wert_ges = wert) %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+    SELECT region, jahr, indikator, fach, wert as wert_ges
+    FROM studierende_detailliert
+    WHERE jahr = {testy1}
+    AND geschlecht = 'Gesamt'
+    AND region = {regio}
+    AND indikator in ({testl1*})
+    AND fach = 'Alle Fächer'
+                               ", .con = con)
+
+    alle <- DBI::dbGetQuery(con, df_query)
+
+    # alle <- alle %>%
+    #   dplyr::select(region, jahr, indikator, fach, wert) %>%
+    #   dplyr::rename(wert_ges = wert)
+
 
 
     df <- df %>%
@@ -65,15 +99,15 @@ studienzahl_mint <- function(r){
 
           highcharter::hw_grid(
 
+
             out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#efe8e6", "#b16fab"), format = format),
+
 
             ncol = 1,
             browsable = TRUE)
 
 
-
         } else if(length(testl1) == 2) {
-
 
           # Filterung für den ausgewählten Indikator
           df_1_pie <- df %>% dplyr::filter(indikator == testl1[1])
@@ -96,7 +130,6 @@ studienzahl_mint <- function(r){
             ncol = 2,
             browsable = TRUE
           )
-
 
         }
 
@@ -163,29 +196,61 @@ studienzahl_verlauf_single <- function(r) {
   ###
 
   # # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(jahr %in% t,
-                  geschlecht == "Gesamt",
-                  region == regio,
-                  indikator %in% indi_selct,
-                  fach == "Alle MINT-Fächer") %>%
-    dplyr::select(jahr, fach, indikator, wert)%>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+  #   dplyr::filter(jahr %in% t,
+  #                 geschlecht == "Gesamt",
+  #                 region == regio,
+  #                 indikator %in% indi_selct,
+  #                 fach == "Alle MINT-Fächer") %>%
+  #   dplyr::select(jahr, fach, indikator, wert)%>%
+  #   dplyr::collect()
+  #
+
+  df_query <- glue::glue_sql("
+    SELECT jahr, fach, indikator, wert
+    FROM studierende_detailliert
+    WHERE jahr IN ({t*})
+    AND geschlecht = 'Gesamt'
+    AND region = {regio}
+    AND indikator in ({indi_selct*})
+    AND fach = 'Alle MINT-Fächer'
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
 
 
 
   if(abs_zahlen_selector == "In Prozent"){
+#
+#
+#     alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+#       dplyr::filter(jahr %in% t,
+#                     geschlecht == "Gesamt",
+#                     region == regio,
+#                     indikator %in% indi_selct,
+#                     fach == "Alle Fächer")%>%
+#       dplyr::select(jahr, fach, indikator, wert)%>%
+#       dplyr::rename(wert_ges = wert) %>%
+#       dplyr::collect()
+#
+
+    df_query <- glue::glue_sql("
+    SELECT jahr, fach, indikator, wert as wert_ges
+    FROM studierende_detailliert
+    WHERE jahr IN ({t*})
+    AND geschlecht = 'Gesamt'
+    AND region = {regio}
+    AND indikator in ({indi_selct*})
+    AND fach = 'Alle Fächer'
+                               ", .con = con)
+
+    alle <- DBI::dbGetQuery(con, df_query)
+
+    # alle <- alle %>%
+    #   dplyr::select(jahr, fach, indikator, wert)%>%
+    #   dplyr::rename(wert_ges = wert)
 
 
-    alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr %in% t,
-                    geschlecht == "Gesamt",
-                    region == regio,
-                    indikator %in% indi_selct,
-                    fach == "Alle Fächer")%>%
-      dplyr::select(jahr, fach, indikator, wert)%>%
-      dplyr::rename(wert_ges = wert) %>%
-      dplyr::collect()
 
     df <- df %>% dplyr::left_join(alle, by = c( "jahr", "indikator")) %>%
       dplyr::rename(fach = fach.x) %>%
@@ -236,12 +301,6 @@ studienzahl_verlauf_single <- function(r) {
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
 
 
-
-
-
-
-
-
   }
 
 
@@ -271,13 +330,28 @@ studierende_bula_mint <- function(r) {
     label_m <- r$bulas_map_l
 
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == timerange,
-                    region != "Deutschland",
-                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-                    indikator == label_m,
-                    geschlecht == "Gesamt") %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region != "Deutschland",
+    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
+    #                 indikator == label_m,
+    #                 geschlecht == "Gesamt") %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM studierende_detailliert
+    WHERE jahr = {timerange}
+    AND geschlecht = 'Gesamt'
+    AND NOT region = 'Deutschland'
+    AND indikator  = {label_m}
+    AND fach In ('Alle MINT-Fächer','Alle Fächer')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+
 
 
     df <- df %>%
@@ -363,15 +437,31 @@ studierende_bula_mint <- function(r) {
     bl_label <- r$bulas_verlauf_l
     states <- r$bulas_verlauf_regio
 
-    # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr %in% t,
-                    geschlecht == "Gesamt",
-                    region %in% states,
-                    indikator == bl_label,
-                    fach == "Alle MINT-Fächer") %>%
-      dplyr::select(jahr, fach, indikator, region, wert)%>%
-      dplyr::collect()
+    # # filter dataset based on UI inputs
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr %in% t,
+    #                 geschlecht == "Gesamt",
+    #                 region %in% states,
+    #                 indikator == bl_label,
+    #                 fach == "Alle MINT-Fächer") %>%
+    #   dplyr::select(jahr, fach, indikator, region, wert)%>%
+    #   dplyr::collect()
+
+
+
+    df_query <- glue::glue_sql("
+    SELECT jahr, fach, indikator, region, wert
+    FROM studierende_detailliert
+    WHERE jahr IN ({t*})
+    AND geschlecht = 'Gesamt'
+    AND region IN ({states*})
+    AND indikator  = {bl_label}
+    AND fach = 'Alle MINT-Fächer'
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+
 
 
 
@@ -392,15 +482,28 @@ studierende_bula_mint <- function(r) {
 
     if (absolut_selector=="In Prozent"){
 
-      alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-        dplyr::filter(jahr %in% t,
-                      geschlecht == "Gesamt",
-                      region %in% states,
-                      indikator == bl_label,
-                      fach == "Alle Fächer")%>%
-        dplyr::select(jahr, fach, indikator, wert, region)%>%
-        dplyr::rename(wert_ges = wert) %>%
-        dplyr::collect()
+      # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      #   dplyr::filter(jahr %in% t,
+      #                 geschlecht == "Gesamt",
+      #                 region %in% states,
+      #                 indikator == bl_label,
+      #                 fach == "Alle Fächer")%>%
+      #   dplyr::select(jahr, fach, indikator, wert, region)%>%
+      #   dplyr::rename(wert_ges = wert) %>%
+      #   dplyr::collect()
+
+
+      df_query <- glue::glue_sql("
+        SELECT jahr, fach, indikator, wert AS wert_ges, region
+        FROM studierende_detailliert
+        WHERE jahr IN ({t*})
+        AND geschlecht = 'Gesamt'
+        AND region IN ({states*})
+        AND indikator  = {bl_label}
+        AND fach = 'Alle Fächer'
+                               ", .con = con)
+
+      alle <- DBI::dbGetQuery(con, df_query)
 
 
 
@@ -420,8 +523,6 @@ studierende_bula_mint <- function(r) {
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
       out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color)
-
-
 
     } else if(absolut_selector=="Anzahl"){
 
@@ -451,22 +552,51 @@ studierende_bula_mint <- function(r) {
     r_lab1 <- r$bulas_balken_l
 
 
-    df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(geschlecht=="Gesamt",
-                    jahr %in% timerange,
-                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-                    indikator == r_lab1) %>%
-      dplyr::collect()
+    # df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(geschlecht=="Gesamt",
+    #                 jahr %in% timerange,
+    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
+    #                 indikator == r_lab1) %>%
+    #   dplyr::collect()
 
 
 
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(geschlecht=="Gesamt",
-                    jahr %in% timerange,
-                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-                    indikator == r_lab1) %>%
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr IN ({timerange*})
+        AND geschlecht = 'Gesamt'
+        AND indikator  = {r_lab1}
+        AND fach IN ('Alle MINT-Fächer','Alle Fächer')
+                               ", .con = con)
+
+    df_ges <- DBI::dbGetQuery(con, df_query)
+
+
+
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(geschlecht=="Gesamt",
+    #                 jahr %in% timerange,
+    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
+    #                 indikator == r_lab1) %>%
+    #   dplyr::select(-fachbereich,- mint_select, -typ )%>%
+    #   dplyr::collect()
+
+
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr IN ({timerange*})
+        AND geschlecht = 'Gesamt'
+        AND indikator  = {r_lab1}
+        AND fach IN ('Alle MINT-Fächer','Alle Fächer')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
       dplyr::select(-fachbereich,- mint_select, -typ )%>%
-      dplyr::collect() %>%
       tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
       dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
       tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
@@ -496,10 +626,7 @@ studierende_bula_mint <- function(r) {
     help_l <- ifelse(r_lab1 == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
 
 
-
-
     df <- df[with(df, order(proportion, decreasing = TRUE)),]
-
 
 
 
@@ -555,12 +682,27 @@ studienzahl_waffle_mint <- function(r) {
 
 
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "studierende") %>%
-    dplyr::filter(jahr == timerange,
-                  region== "Deutschland",
-                  geschlecht== "Gesamt")%>%
-    dplyr::select(-region, -geschlecht, - jahr)%>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "studierende") %>%
+  #   dplyr::filter(jahr == timerange,
+  #                 region== "Deutschland",
+  #                 geschlecht== "Gesamt")%>%
+  #   dplyr::select(-region, -geschlecht, - jahr)%>%
+  #   dplyr::collect()
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende
+        WHERE jahr = {timerange}
+        AND region = 'Deutschland'
+        AND geschlecht = 'Gesamt'
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::select(-region, -geschlecht, - jahr)
+
+
 
   df <- df %>%
     tidyr::pivot_wider(names_from = fachbereich, values_from = wert)%>%
@@ -799,11 +941,6 @@ studienzahl_waffle_mint <- function(r) {
     ggpubr::ggarrange(waffle_a ,waffle_b, waffle_c,
                       widths = c(1, 1, 1), nrow=1)
 
-
-
-
-
-
   }
 
 
@@ -837,12 +974,26 @@ studienzahl_verlauf_bl_subject <- function(r) {
 
   label_select <- r$verl_l
 
-  df <- dplyr::tbl(con, from = "studierende") %>%
-    dplyr::filter(jahr %in% t,
-                  geschlecht=="Gesamt",
-                  region == states,
-                  indikator==label_select) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "studierende") %>%
+  #   dplyr::filter(jahr %in% t,
+  #                 geschlecht=="Gesamt",
+  #                 region == states,
+  #                 indikator==label_select) %>%
+  #   dplyr::collect()
+  #
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende
+        WHERE jahr in ({t*})
+        AND region = {states}
+        AND indikator = {label_select}
+        AND geschlecht = 'Gesamt'
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+
 
   df <- df %>%
     tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
@@ -955,11 +1106,23 @@ studierende_verlauf_multiple_bl <- function(r) {
   states <- r$states_studium_studienzahl_bl_verlauf
 
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "studierende") %>%
-    dplyr::filter(jahr %in% t,
-                  geschlecht == "Gesamt",
-                  indikator==bl_label) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "studierende") %>%
+  #   dplyr::filter(jahr %in% t,
+  #                 geschlecht == "Gesamt",
+  #                 indikator==bl_label) %>%
+  #   dplyr::collect()
+
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende
+        WHERE jahr in ({t*})
+        AND indikator = {bl_label}
+        AND geschlecht = 'Gesamt'
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
 
   df <- df %>%
     dplyr::select(-geschlecht)%>%
@@ -1019,10 +1182,7 @@ studierende_verlauf_multiple_bl <- function(r) {
                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
 
-
-
   } else if(absolut_selector=="Anzahl"){
-
 
     hcoptslang <- getOption("highcharter.lang")
     hcoptslang$thousandsSep <- "."
@@ -1066,11 +1226,29 @@ studienzahl_einstieg_comparison <- function(r) {
   timerange <- r$date_kurse_einstieg_comparison
 
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "studierende") %>%
-    dplyr::filter(jahr == timerange,
-                  geschlecht == "Gesamt",
-                  region== "Deutschland")%>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "studierende") %>%
+  #   dplyr::filter(jahr == timerange,
+  #                 geschlecht == "Gesamt",
+  #                 region== "Deutschland")%>%
+  #   dplyr::collect()
+  #
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende
+        WHERE jahr = {timerange}
+        AND indikator = {bl_label}
+        AND region='Deutschland'
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+
+
+
+
+
+
   df <- df %>%
     tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
     dplyr::select( -region, -Ingenieurwissenschaften,- `Mathematik, Naturwissenschaften`)
@@ -1112,9 +1290,7 @@ studienzahl_einstieg_comparison <- function(r) {
   )
 
 
-
   # plot
-
 
   df <- within(df, proportion <- factor(proportion, levels=c("Nicht MINT", "MINT (Gesamt)")))
 
@@ -1167,12 +1343,27 @@ studierende_verlauf_single_bl_gender <- function(r) {
 
   states <- r$choice_states
 
-  df <- dplyr::tbl(con, from = "studierende") %>%
-    dplyr::filter(jahr %in% t,
-                  geschlecht=="Frauen",
-                  region == states,
-                  indikator %in%v_lab) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "studierende") %>%
+  #   dplyr::filter(jahr %in% t,
+  #                 geschlecht=="Frauen",
+  #                 region == states,
+  #                 indikator %in%v_lab) %>%
+  #   dplyr::collect()
+
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende
+        WHERE jahr in ({t*})
+        AND geschlecht = 'Frauen'
+        AND indikator in ({v_lab*})
+        AND region = {states}
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+
+
 
   df <- df %>%
     tidyr::pivot_wider(names_from=fachbereich, values_from = wert)%>%
@@ -1356,47 +1547,121 @@ plot_mint_faecher <- function(r){
 
   # filter dataset based on UI inputs
   if(ebene == "MINT-Fachbereiche"){
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == timerange,
-                    region== regio,
-                    geschlecht== "Gesamt",
-                    indikator %in% label_w,
-                    (mint_select == "MINT" & typ == "Aggregat") |
-                      fachbereich == "Nicht MINT")%>%
-      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)%>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region== regio,
+    #                 geschlecht== "Gesamt",
+    #                 indikator %in% label_w,
+    #                 (mint_select == "MINT" & typ == "Aggregat") |
+    #                   fachbereich == "Nicht MINT")%>%
+    #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)%>%
+    #   dplyr::collect()
+
+    if (length(label_w) == 0) {
+      stop("Fehler: label_w ist leer und verursacht eine ungültige SQL-Abfrage.")
+    }
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr == {timerange}
+        AND geschlecht = 'Gesamt'
+        AND indikator IN ({label_w*})
+        AND region = {regio}
+        AND ((mint_select = 'MINT' AND typ = 'Aggregat') OR fachbereich = 'Nicht MINT')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
 
 
-    alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == timerange,
-                    region== regio,
-                    geschlecht== "Gesamt",
-                    indikator %in% label_w,
-                    fachbereich == "Gesamt")%>%
-      dplyr::select(-region, -geschlecht, - jahr, -fach, -bereich, -mint_select, -typ)%>%
-      dplyr::collect()
+
+    # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region== regio,
+    #                 geschlecht== "Gesamt",
+    #                 indikator %in% label_w,
+    #                 fachbereich == "Gesamt")%>%
+    #   dplyr::select(-region, -geschlecht, - jahr, -fach, -bereich, -mint_select, -typ)%>%
+    #   dplyr::collect()
+
+
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr == {timerange}
+        AND geschlecht = 'Gesamt'
+        AND indikator IN ({label_w*})
+        AND region = {regio}
+        AND fachbereich = 'Gesamt'
+                               ", .con = con)
+
+    alle <- DBI::dbGetQuery(con, df_query)
+
+    alle <- alle %>%
+      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach)
 
 
   }
     else{
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == timerange,
-                    region== regio,
-                    geschlecht== "Gesamt",
-                    indikator %in% label_w,
-                    (mint_select == "MINT" & typ != "Aggregat"))%>%
-      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)%>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region== regio,
+    #                 geschlecht== "Gesamt",
+    #                 indikator %in% label_w,
+    #                 (mint_select == "MINT" & typ != "Aggregat"))%>%
+    #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)%>%
+    #   dplyr::collect()
+
+      if (length(label_w) == 0) {
+        stop("Fehler: label_w ist leer und verursacht eine ungültige SQL-Abfrage.")
+      }
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {timerange}
+        AND geschlecht = 'Gesamt'
+        AND indikator IN ({label_w*})
+        AND region = {regio}
+        AND mint_select = 'MINT'
+        AND NOT typ = 'Aggregat'
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
 
 
-    alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == timerange,
-                    region== regio,
-                    geschlecht== "Gesamt",
-                    indikator %in% label_w,
-                    fachbereich == "MINT")%>%
-      dplyr::select(-region, -geschlecht, - jahr, -fach, -bereich, -mint_select, -typ)%>%
-      dplyr::collect()
+
+    # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region== regio,
+    #                 geschlecht== "Gesamt",
+    #                 indikator %in% label_w,
+    #                 fachbereich == "MINT")%>%
+    #   dplyr::select(-region, -geschlecht, - jahr, -fach, -bereich, -mint_select, -typ)%>%
+    #   dplyr::collect()
+    #
+
+    df_query2 <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {timerange}
+        AND geschlecht = 'Gesamt'
+        AND indikator IN ({label_w*})
+        AND region = {regio}
+        AND fachbereich = 'MINT'
+                               ", .con = con)
+
+    alle <- DBI::dbGetQuery(con, df_query2)
+
+    alle <- alle %>%
+      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach) #wieso -fah
 
 
   }
@@ -1590,12 +1855,27 @@ mint_anteile <- function(r) {
   fachbereiche_filter <- c("Ingenieurwissenschaften (ohne Informatik)", "Mathematik, Naturwissenschaften", "Informatik")
 
   # Grunddatensatz aus der Datenbank laden
-  df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(geschlecht == "Gesamt",
-                  jahr %in% t,
-                  indikator == indi,
-                  region == states) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+  #   dplyr::filter(geschlecht == "Gesamt",
+  #                 jahr %in% t,
+  #                 indikator == indi,
+  #                 region == states) %>%
+  #   dplyr::collect()
+
+
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr IN ({t*})
+        AND geschlecht = 'Gesamt'
+        AND indikator == {indi}
+        AND region = {states}
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+
 
   # Gesamtwerte (Alle MINT-Fächer) vorbereiten
   df_ges <- df %>%
@@ -1727,26 +2007,63 @@ plot_studierende_bula_faecher <- function(r){
     }
 
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == timerange,
-                    !(region %in% c("Deutschland", "Ostdeutschland (inkl. Berlin)",
-                                    "Westdeutschland (o. Berlin)")),
-                    fach == faecher,
-                    indikator == label_m,
-                    geschlecht == "Gesamt") %>%
-      dplyr::select(-c(bereich, jahr, geschlecht, fachbereich, mint_select, typ)) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 !(region %in% c("Deutschland", "Ostdeutschland (inkl. Berlin)",
+    #                                 "Westdeutschland (o. Berlin)")),
+    #                 fach == faecher,
+    #                 indikator == label_m,
+    #                 geschlecht == "Gesamt") %>%
+    #   dplyr::select(-c(bereich, jahr, geschlecht, fachbereich, mint_select, typ)) %>%
+    #   dplyr::collect()
+    #
 
 
-    alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == timerange,
-                    !(region %in% c("Deutschland", "Ostdeutschland (inkl. Berlin)",
-                                    "Westdeutschland (o. Berlin)")),
-                    fach == "Alle Fächer",
-                    indikator == label_m,
-                    geschlecht == "Gesamt") %>%
-      dplyr::select(-c(bereich, jahr, geschlecht, fachbereich, mint_select, typ)) %>%
-      dplyr::collect()
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr == {timerange}
+        AND geschlecht = 'Gesamt'
+        AND indikator == {label_m}
+        AND NOT region IN ('Deutschland','Ostdeutschland (inkl. Berlin)','Westdeutschland (o. Berlin)')
+        AND fach = {faecher}
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(-c(bereich, jahr, geschlecht, fachbereich, mint_select, typ))
+
+
+
+
+
+    # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 !(region %in% c("Deutschland", "Ostdeutschland (inkl. Berlin)",
+    #                                 "Westdeutschland (o. Berlin)")),
+    #                 fach == "Alle Fächer",
+    #                 indikator == label_m,
+    #                 geschlecht == "Gesamt") %>%
+    #   dplyr::select(-c(bereich, jahr, geschlecht, fachbereich, mint_select, typ)) %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {timerange}
+        AND geschlecht = 'Gesamt'
+        AND indikator = {label_m}
+        AND NOT region IN ('Deutschland','Ostdeutschland (inkl. Berlin)','Westdeutschland (o. Berlin)')
+        AND fach = 'Alle Fächer'
+                               ", .con = con)
+
+    alle <- DBI::dbGetQuery(con, df_query)
+
+    alle <- alle %>%
+      dplyr::select(-c(bereich, jahr, geschlecht, fachbereich, mint_select, typ))
 
 
 
@@ -1863,26 +2180,62 @@ plot_studierende_bula_faecher <- function(r){
       fach_select <-  r$bl_verlauf_alle_faecher
     }
 
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr %in% t,
-                    geschlecht=="Gesamt",
-                    region %in% states,
-                    indikator==label_select,
-                    fach == fach_select) %>%
-      dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ)) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr %in% t,
+    #                 geschlecht=="Gesamt",
+    #                 region %in% states,
+    #                 indikator==label_select,
+    #                 fach == fach_select) %>%
+    #   dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ)) %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr IN ({t*})
+        AND geschlecht = 'Gesamt'
+        AND indikator == {label_select}
+        AND region IN ({states*})
+        AND fach ={fach_select}
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ))
+
+
+
 
 
     if (absolut_selector == "In Prozent") {
 
-      alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-        dplyr::filter(jahr %in% t,
-                      geschlecht=="Gesamt",
-                      region %in% states,
-                      indikator==label_select,
-                      fach == "Alle Fächer") %>%
-        dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ)) %>%
-        dplyr::collect()
+#
+#       alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+#         dplyr::filter(jahr %in% t,
+#                       geschlecht=="Gesamt",
+#                       region %in% states,
+#                       indikator==label_select,
+#                       fach == "Alle Fächer") %>%
+#         dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ)) %>%
+#         dplyr::collect()
+
+
+      df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr IN ({t*})
+        AND geschlecht = 'Gesamt'
+        AND indikator == {label_select}
+        AND region IN ({states*})
+        AND fach = 'Alle Fächer'
+                               ", .con = con)
+
+      alle <- DBI::dbGetQuery(con, df_query)
+
+      alle <- alle %>%
+        dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ))
 
 
       df <- df %>%
@@ -1987,29 +2340,70 @@ plot_studierende_bula_faecher <- function(r){
       fach_bl <- r$bl_balken_alle_faecher
     }
 
-    df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(geschlecht=="Gesamt",
-                    jahr %in% timerange,
-                    region %in% regio,
-                    indikator == r_lab1) %>%
-      dplyr::collect()
+    # df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(geschlecht=="Gesamt",
+    #                 jahr %in% timerange,
+    #                 region %in% regio,
+    #                 indikator == r_lab1) %>%
+    #   dplyr::collect()
 
 
 
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr IN ({timerange*})
+        AND geschlecht = 'Gesamt'
+        AND indikator == {r_lab1}
+        AND region IN ({regio*})
+                               ", .con = con)
+
+    df_ges <- DBI::dbGetQuery(con, df_query)
 
 
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(geschlecht=="Gesamt",
-                    jahr %in% timerange,
-                    region %in% regio,
-                    indikator == r_lab1) %>%
+
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(geschlecht=="Gesamt",
+    #                 jahr %in% timerange,
+    #                 region %in% regio,
+    #                 indikator == r_lab1) %>%
+    #   dplyr::select(-fachbereich,- mint_select, -typ )%>%
+    #   dplyr::collect() %>%
+    #   tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+    #   dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
+    #   tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
+    #   dplyr::right_join(df_ges)%>%
+    #   dplyr::collect()
+    #
+
+
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr IN ({timerange*})
+        AND geschlecht = 'Gesamt'
+        AND indikator == {r_lab1}
+        AND region IN ({regio*})
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
       dplyr::select(-fachbereich,- mint_select, -typ )%>%
       dplyr::collect() %>%
       tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
       dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
       tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
-      dplyr::right_join(df_ges)%>%
-      dplyr::collect()
+      dplyr::right_join(df_ges)
+
+
+
+
+
+
+
+
 
     #Trennpunkte für lange Zahlen ergänzen
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
@@ -2110,15 +2504,38 @@ ranking_bl_subject <- function(r) {
 
   r_lab <- r$rank_l
 
-  df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(jahr == timerange,
-                  mint_select == "MINT" | fach %in% c("Alle MINT-Fächer",
-                                                      "Alle Fächer",
-                                                      "Alle Nicht MINT-Fächer"),
-                  geschlecht == "Gesamt",
-                  region == states)%>%
-    dplyr::select(-bereich,- fachbereich) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+  #   dplyr::filter(jahr == timerange,
+  #                 mint_select == "MINT" | fach %in% c("Alle MINT-Fächer",
+  #                                                     "Alle Fächer",
+  #                                                     "Alle Nicht MINT-Fächer"),
+  #                 geschlecht == "Gesamt",
+  #                 region == states)%>%
+  #   dplyr::select(-bereich,- fachbereich) %>%
+  #   dplyr::collect()
+  #
+
+
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {timerange}
+        AND (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer','Alle Fächer','Alle Nicht MINT-Fächer'))
+        AND geschlecht = 'Gesamt'
+        AND region = {states}
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::select(-bereich,- fachbereich)
+
+
+
+
+
+
 
   df_ges <- df %>% dplyr::filter(fach == "Alle Fächer")%>%
     tidyr::pivot_wider(names_from=fach, values_from = wert)%>%
@@ -2231,22 +2648,52 @@ studierende_mint_vergleich_bl <- function(r) {
   if(r_lab1 != "Studierende (Lehramt)")  fach_bl <- r$bl_f_alle
 
 
-  df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(geschlecht=="Gesamt",
-                  jahr %in% timerange) %>%
-    dplyr::collect()
+  # df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+  #   dplyr::filter(geschlecht=="Gesamt",
+  #                 jahr %in% timerange) %>%
+  #   dplyr::collect()
+  #
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr IN ({timerange*})
+        AND geschlecht = 'Gesamt'
+                               ", .con = con)
 
-  df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(geschlecht=="Gesamt",
-                  jahr %in% timerange) %>%
-    dplyr::select(-fachbereich,- mint_select, -typ )%>%
-    dplyr::collect() %>%
+  df_ges <- DBI::dbGetQuery(con, df_query)
+
+
+
+  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+  #   dplyr::filter(geschlecht=="Gesamt",
+  #                 jahr %in% timerange) %>%
+  #   dplyr::select(-fachbereich,- mint_select, -typ )%>%
+  #   dplyr::collect() %>%
+  #   tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+  #   dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
+  #   tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
+  #   dplyr::right_join(df_ges)%>%
+  #   dplyr::collect()
+
+
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr IN ({timerange*})
+        AND geschlecht = 'Gesamt'
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::select(-fachbereich,- mint_select, -typ) %>%
     tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
     dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
     tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
-    dplyr::right_join(df_ges)%>%
+    dplyr::right_join(df_ges)
 
-    dplyr::collect()
+
 
 
   #Trennpunkte für lange Zahlen ergänzen
@@ -2330,26 +2777,62 @@ studienzahl_einstieg_gender <- function(r) {
 
         if(gegenwert == "Ja") gen_f <- c(gen_f, "Alle Nicht MINT-Fächer")
 
-        df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-          dplyr::filter(jahr == timerange,
-                        region== regio,
-                        fach %in% gen_f,
-                        geschlecht != "Gesamt",
-                        indikator %in% genl) %>%
-          dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
-          dplyr::collect()
+        # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+        #   dplyr::filter(jahr == timerange,
+        #                 region== regio,
+        #                 fach %in% gen_f,
+        #                 geschlecht != "Gesamt",
+        #                 indikator %in% genl) %>%
+        #   dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
+        #   dplyr::collect()
 
 
 
+        df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {timerange}
+        AND geschlecht != 'Gesamt'
+        AND region = {regio}
+        AND fach IN ({gen_f*})
+        AND indikator IN ({genl*})
+                               ", .con = con)
 
-        alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-          dplyr::filter(jahr == timerange,
-                        region== regio,
-                        fach %in% gen_f,
-                        geschlecht == "Gesamt",
-                        indikator %in% genl) %>%
-          dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
-          dplyr::collect()
+        df <- DBI::dbGetQuery(con, df_query)
+
+        df <- df %>%
+          dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)
+
+
+
+#
+#
+#         alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+#           dplyr::filter(jahr == timerange,
+#                         region== regio,
+#                         fach %in% gen_f,
+#                         geschlecht == "Gesamt",
+#                         indikator %in% genl) %>%
+#                         dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
+#           dplyr::collect()
+
+
+
+        df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {timerange}
+        AND geschlecht = 'Gesamt'
+        AND region = {regio}
+        AND fach IN ({gen_f*})
+        AND indikator IN ({genl*})
+                               ", .con = con)
+
+        alle <- DBI::dbGetQuery(con, df_query)
+
+        alle <- alle %>%
+          dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)
+
 
 
         df <- df %>%
@@ -2569,12 +3052,24 @@ studienzahl_einstieg_gender <- function(r) {
     gegenwert <- r$gen_gegenwert_balken
     if(gegenwert == "Ja") sel_f1 <- c(sel_f1, "Alle Nicht MINT-Fächer")
 
-    # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr %in% timerange,
-                    region==sel_bl1,
-                    fach %in% sel_f1)%>%
-      dplyr::collect()
+    # # filter dataset based on UI inputs
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr %in% timerange,
+    #                 region==sel_bl1,
+    #                 fach %in% sel_f1)%>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+      SELECT region, fach, jahr, indikator, geschlecht, wert
+      FROM studierende_detailliert
+      WHERE jahr = ({timerange*})
+      AND region = {sel_bl1}
+      AND fach IN ({sel_f1*})
+      ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
 
 
 
@@ -2682,12 +3177,27 @@ studienzahl_verlauf_single_gender <- function(r) {
   faecher <- r$gen_z_faecher
 
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(jahr %in% t,
-                  region== regio,
-                  fach == faecher,
-                  indikator %in% label_sel) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+  #   dplyr::filter(jahr %in% t,
+  #                 region== regio,
+  #                 fach == faecher,
+  #                 indikator %in% label_sel) %>%
+  #   dplyr::collect()
+  #
+
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr IN ({t*})
+        AND region = {regio}
+        AND fach = {faecher}
+        AND indikator IN ({label_sel*})
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+
 
 
 
@@ -2903,23 +3413,59 @@ studienzahl_choice_gender <- function(r) {
     }
 
     # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == timerange,
-                    region==regio,
-                    geschlecht %in% gen,
-                    indikator == lab_cho,
-                    (fach %in% c("Mathematik, Naturwissenschaften", "Alle Nicht MINT-Fächer",
-                                 "Ingenieurwissenschaften (inkl. Informatik)"))) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region==regio,
+    #                 geschlecht %in% gen,
+    #                 indikator == lab_cho,
+    #                 (fach %in% c("Mathematik, Naturwissenschaften", "Alle Nicht MINT-Fächer",
+    #                              "Ingenieurwissenschaften (inkl. Informatik)"))) %>%
+    #   dplyr::collect()
 
-    df_alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == timerange,
-                    region==regio,
-                    geschlecht %in% gen,
-                    indikator == lab_cho,
-                    fach == "Alle Fächer") %>%
-      dplyr::rename(wert_ges = wert) %>%
-      dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {timerange}
+        AND geschlecht IN ({gen*})
+        AND region = {regio}
+        AND indikator = {lab_cho}
+        AND fach IN ('Mathematik, Naturwissenschaften','Alle Nicht MINT-Fächer','Ingenieurwissenschaften (inkl. Informatik)')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+
+
+
+
+    # df_alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region==regio,
+    #                 geschlecht %in% gen,
+    #                 indikator == lab_cho,
+    #                 fach == "Alle Fächer") %>%
+    #   dplyr::rename(wert_ges = wert) %>%
+    #   dplyr::collect()
+    #
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {timerange}
+        AND geschlecht IN ({gen*})
+        AND region = {regio}
+        AND indikator = {lab_cho}
+        AND fach = 'Alle Fächer'
+                               ", .con = con)
+
+    df_alle <- DBI::dbGetQuery(con, df_query)
+
+    df_alle <- df_alle %>%
+      dplyr::rename(wert_ges = wert)
+
+
 
     df <- df %>%
       dplyr::left_join(df_alle, dplyr::join_by(jahr, indikator, geschlecht, region)) %>%
@@ -2990,14 +3536,29 @@ studienzahl_choice_gender <- function(r) {
     subjects_select <- r$choice_v_f
     states <- r$choice_states
 
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr %in% t,
-                    region==states,
-                    geschlecht == "Frauen",
-                    indikator %in% v_lab,
-                    fach == subjects_select) %>%
-      dplyr::select(region, fach, jahr, indikator, geschlecht, wert) %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr %in% t,
+    #                 region==states,
+    #                 geschlecht == "Frauen",
+    #                 indikator %in% v_lab,
+    #                 fach == subjects_select) %>%
+    #   dplyr::select(region, fach, jahr, indikator, geschlecht, wert) %>%
+    #   dplyr::collect()
+
+
+
+    df_query <- glue::glue_sql("
+        SELECT region, jahr, indikator, fach, wert, geschlecht
+        FROM studierende_detailliert
+        WHERE jahr In ({t*})
+        AND geschlecht = 'Frauen'
+        AND region = {states}
+        AND indikator IN ({v_lab*})
+        AND fach = {subjects_select}
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
 
 
     titel <- ifelse(states == "Saarland",
@@ -3006,15 +3567,30 @@ studienzahl_choice_gender <- function(r) {
 
     if (absolut_selector=="In Prozent"){
 
-      df_alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-        dplyr::filter(jahr %in% t,
-                      region == states,
-                      geschlecht == "Frauen",
-                      indikator %in% v_lab,
-                      fach == "Alle Fächer") %>%
-        dplyr::select(region, fach, jahr, indikator, geschlecht, wert) %>%
-        dplyr::rename(wert_ges = wert) %>%
-        dplyr::collect()
+      # df_alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      #   dplyr::filter(jahr %in% t,
+      #                 region == states,
+      #                 geschlecht == "Frauen",
+      #                 indikator %in% v_lab,
+      #                 fach == "Alle Fächer") %>%
+      #   dplyr::select(region, fach, jahr, indikator, geschlecht, wert) %>%
+      #   dplyr::rename(wert_ges = wert) %>%
+      #   dplyr::collect()
+
+      df_query <- glue::glue_sql("
+        SELECT region, fach, jahr, indikator, geschlecht, wert AS wert_ges
+        FROM studierende_detailliert
+        WHERE jahr in ({t*})
+        AND region = {states}
+        AND geschlecht = 'Frauen'
+        AND indikator IN ({v_lab*})
+        AND fach = 'Alle Fächer'
+                               ", .con = con)
+
+      df_alle <- DBI::dbGetQuery(con, df_query)
+
+
+
 
       df <- df %>%
         dplyr::left_join(df_alle, by = c("jahr", "indikator", "geschlecht", "region")) %>%
@@ -3097,17 +3673,28 @@ plot_ranking_top_faecher <- function(r) {
   abs_rel <- r$subject_abs_rel
 
   # filter dataset based on UI inputs
-  df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(jahr == timerange,
-                  indikator == "Studierende",
-                  region == states,
-                  !fach %in% c(
-                    "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
-                    "Weitere ingenieurwissenschaftliche Fächer",
-                    "Weitere naturwissenschaftliche und mathematische Fächer"
-                  )) %>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+  #   dplyr::filter(jahr == timerange,
+  #                 indikator == "Studierende",
+  #                 region == states,
+  #                 !fach %in% c(
+  #                   "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
+  #                   "Weitere ingenieurwissenschaftliche Fächer",
+  #                   "Weitere naturwissenschaftliche und mathematische Fächer"
+  #                 )) %>%
+  #   dplyr::collect()
 
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {timerange}
+        AND region = {states}
+        AND indikator = 'Studierende'
+        AND fach NOT IN ('Außerhalb der Studienbereichsgliederung/Sonstige Fächer','Weitere ingenieurwissenschaftliche Fächer','Weitere naturwissenschaftliche und mathematische Fächer')
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
 
 
   df_props <- df %>%
@@ -3337,15 +3924,57 @@ plot_auslaender_mint <- function(r){
   betr_ebene <- r$ebene_ausl
 
 
-  df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(indikator %in% c("internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studierende",
-                                   "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "Studierende","Absolvent:innen",
-                                      "internationale Absolvent:innen"),
-                  geschlecht == "Gesamt",
-                  region==bl_select,
-                  jahr ==year_select )%>%
+  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+  #   dplyr::filter(indikator %in% c("internationale Studienanfänger:innen (1. Hochschulsemester)",
+  #                                  "internationale Studierende",
+  #                                  "Studienanfänger:innen (1. Hochschulsemester)",
+  #                                  "Studierende","Absolvent:innen",
+  #                                     "internationale Absolvent:innen"),
+  #                 geschlecht == "Gesamt",
+  #                 region==bl_select,
+  #                 jahr ==year_select )%>%
+  #   dplyr::select(-mint_select,- fachbereich)%>%
+  #   dplyr::collect() %>%
+  #   tidyr::pivot_wider(names_from=indikator, values_from = wert)%>%
+  #   dplyr::mutate("deutsche Studierende" =`Studierende` - `internationale Studierende`,
+  #                 "deutsche Studienanfänger:innen (1. Hochschulsemester)"=`Studienanfänger:innen (1. Hochschulsemester)`-
+  #                   `internationale Studienanfänger:innen (1. Hochschulsemester)`)%>%
+  #   dplyr::mutate("deutsche Studierende_p" =`deutsche Studierende`/`Studierende`,
+  #                 "internationale Studierende_p"= `internationale Studierende`/`Studierende`,
+  #                 "deutsche Studienanfänger:innen (1. Hochschulsemester)_p" =`deutsche Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`,
+  #                 "internationale Studienanfänger:innen (1. Hochschulsemester)_p"=`internationale Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`)%>%
+  #   dplyr::mutate("deutsche Absolvent:innen" =`Absolvent:innen`-`internationale Absolvent:innen`,
+  #                 "internationale Absolvent:innen"=`Absolvent:innen`-`deutsche Absolvent:innen`)%>%
+  #   dplyr::mutate("deutsche Absolvent:innen_p" =`deutsche Absolvent:innen`/`Absolvent:innen`,
+  #                 "internationale Absolvent:innen_p"= `internationale Absolvent:innen`/`Absolvent:innen`) %>%
+  #   dplyr::select(-c(Studierende, `Studienanfänger:innen (1. Hochschulsemester)` ))%>%
+  #   tidyr::pivot_longer(c(7:ncol(.)), names_to="indikator", values_to="wert")%>%
+  #   dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p")~"Relativ",
+  #                                           T~"Asolut"))%>%
+  #   dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p") ~ "In Prozent",
+  #                                           T ~ "Anzahl"))%>%
+  #   dplyr::mutate(ausl_detect=dplyr::case_when(stringr::str_detect(.$indikator, "international")~"International",
+  #                                              T~ "Deutsch"))%>%
+  #   dplyr::filter(!fach %in% c("Weitere ingenieurwissenschaftliche Fächer",
+  #                              "Weitere naturwissenschaftliche und mathematische Fächer",
+  #                              "Außerhalb der Studienbereichsgliederung/Sonstige Fächer"))
+  #
+
+
+
+  df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {year_select}
+        AND geschlecht = 'Gesamt'
+        AND region = {bl_select}
+        AND indikator IN ('internationale Studienanfänger:innen (1. Hochschulsemester)','internationale Studierende','Studienanfänger:innen (1. Hochschulsemester)','Studierende','Absolvent:innen','internationale Absolvent:innen')
+
+                                                    ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
     dplyr::select(-mint_select,- fachbereich)%>%
     dplyr::collect() %>%
     tidyr::pivot_wider(names_from=indikator, values_from = wert)%>%
@@ -3371,6 +4000,7 @@ plot_auslaender_mint <- function(r){
     dplyr::filter(!fach %in% c("Weitere ingenieurwissenschaftliche Fächer",
                                "Weitere naturwissenschaftliche und mathematische Fächer",
                                "Außerhalb der Studienbereichsgliederung/Sonstige Fächer"))
+
 
 
 
@@ -3521,13 +4151,6 @@ plot_auslaender_mint <- function(r){
           )
 
       }
-
-
-
-
-
-
-
 
 
     } else if(absolut_selector =="Anzahl"){
@@ -3808,18 +4431,55 @@ plot_auslaender_mint_zeit <- function(r){
     if(bl_select == "Thüringen")fach_select <- r$fach9_studium_studienzahl_ausl_zeit
   }
 
-  df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    dplyr::filter(  indikator %in% c("internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                     "internationale Studierende",
-                                     "Studienanfänger:innen (1. Hochschulsemester)",
-                                     "Studierende",
-                                     "Absolvent:innen", "internationale Absolvent:innen"),
-                  geschlecht == "Gesamt",
-                  region==bl_select,
-                  fach ==fach_select,
-                  jahr %in% t)%>%
-    dplyr::select(-mint_select,- fachbereich)%>%
-    dplyr::collect() %>%
+  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+  #   dplyr::filter(  indikator %in% c("internationale Studienanfänger:innen (1. Hochschulsemester)",
+  #                                    "internationale Studierende",
+  #                                    "Studienanfänger:innen (1. Hochschulsemester)",
+  #                                    "Studierende",
+  #                                    "Absolvent:innen", "internationale Absolvent:innen"),
+  #                 geschlecht == "Gesamt",
+  #                 region==bl_select,
+  #                 fach ==fach_select,
+  #                 jahr %in% t)%>%
+  #   dplyr::select(-mint_select,- fachbereich)%>%
+  #   dplyr::collect() %>%
+  #   tidyr::pivot_wider(names_from=indikator, values_from = wert)%>%
+  #   dplyr::mutate("deutsche Studierende" =`Studierende`-`internationale Studierende`,
+  #                 "deutsche Studienanfänger:innen (1. Hochschulsemester)"=`Studienanfänger:innen (1. Hochschulsemester)`-
+  #                   `internationale Studienanfänger:innen (1. Hochschulsemester)`)%>%
+  #   dplyr::mutate("deutsche Studierende_p" =`deutsche Studierende`/Studierende,
+  #                 "internationale Studierende_p"= `internationale Studierende`/`Studierende`,
+  #                 "deutsche Studienanfänger:innen (1. Hochschulsemester)_p" =`deutsche Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`,
+  #                 "internationale Studienanfänger:innen (1. Hochschulsemester)_p"=`internationale Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`)%>%
+  #   dplyr::mutate("deutsche Absolvent:innen" =`Absolvent:innen`-`internationale Absolvent:innen`,
+  #                 "internationale Absolvent:innen"=`Absolvent:innen`-`deutsche Absolvent:innen`)%>%
+  #   dplyr::mutate("deutsche Absolvent:innen_p" =`deutsche Absolvent:innen`/`Absolvent:innen`,
+  #                 "internationale Absolvent:innen_p"= `internationale Absolvent:innen`/`Absolvent:innen`) %>%
+  #   dplyr::select(-c(`Studierende`, `Studienanfänger:innen (1. Hochschulsemester)` ))%>%
+  #   #  dplyr::filter(geschlecht=="Gesamt")%>%
+  #   tidyr::pivot_longer(c(7:ncol(.)), names_to="indikator", values_to="wert")%>%
+  #   dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p")~"Relativ",
+  #                                           T~"Absolut"))%>%
+  #   dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p") ~ "In Prozent",
+  #                                           T ~ "Anzahl"))%>%
+  #   dplyr::mutate(ausl_detect=dplyr::case_when(stringr::str_detect(.$indikator, "international")~"international",
+  #                                              T~ "deutsch"))
+  #
+  #####
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM studierende_detailliert
+  WHERE jahr IN ({t*})
+  AND fach = {fach_select}
+  AND geschlecht = 'Gesamt'
+  AND region = {bl_select}
+  AND indikator IN ('internationale Studienanfänger:innen (1. Hochschulsemester)','internationale Studierende','Studienanfänger:innen (1. Hochschulsemester)','Studierende','Absolvent:innen','internationale Absolvent:innen')
+      ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::select(-mint_select,- fachbereich) %>%
     tidyr::pivot_wider(names_from=indikator, values_from = wert)%>%
     dplyr::mutate("deutsche Studierende" =`Studierende`-`internationale Studierende`,
                   "deutsche Studienanfänger:innen (1. Hochschulsemester)"=`Studienanfänger:innen (1. Hochschulsemester)`-
@@ -3841,6 +4501,7 @@ plot_auslaender_mint_zeit <- function(r){
                                             T ~ "Anzahl"))%>%
     dplyr::mutate(ausl_detect=dplyr::case_when(stringr::str_detect(.$indikator, "international")~"international",
                                                T~ "deutsch"))
+
 
 
 
@@ -4083,13 +4744,30 @@ studierende_international_bula_mint <- function(r) {
     timerange <- r$international_bulas_map_y
     label_m <- r$international_bulas_map_l
 
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr == timerange,
-                    region != "Deutschland",
-                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-                    indikator == label_m,
-                    geschlecht == "Gesamt") %>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr == timerange,
+    #                 region != "Deutschland",
+    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
+    #                 indikator == label_m,
+    #                 geschlecht == "Gesamt") %>%
+    #   dplyr::collect()
+
+
+
+    df_query <- glue::glue_sql("
+      SELECT *
+      FROM studierende_detailliert
+      WHERE jahr = {timerange}
+      AND fach IN ('Alle MINT-Fächer','Alle Fächer')
+      AND region != 'Deutschland'
+      AND geschlecht = 'Gesamt'
+      AND indikator = {label_m}
+      ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+
+
 
     df <- df %>%
       dplyr::select(-fachbereich,- mint_select, -typ )%>%
@@ -4173,15 +4851,26 @@ studierende_international_bula_mint <- function(r) {
     bl_label <- r$international_bulas_verlauf_l
     states <- r$international_bulas_verlauf_regio
 
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(jahr %in% t,
-                    geschlecht == "Gesamt",
-                    region %in% states,
-                    indikator == bl_label,
-                    fach == "Alle MINT-Fächer") %>%
-      dplyr::select(jahr, fach, indikator, region, wert)%>%
-      dplyr::collect()
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(jahr %in% t,
+    #                 geschlecht == "Gesamt",
+    #                 region %in% states,
+    #                 indikator == bl_label,
+    #                 fach == "Alle MINT-Fächer") %>%
+    #   dplyr::select(jahr, fach, indikator, region, wert)%>%
+    #   dplyr::collect()
 
+    df_query <- glue::glue_sql("
+      SELECT fach, jahr, indikator, region, wert
+      FROM studierende_detailliert
+      WHERE jahr in ({t*})
+      AND fach = 'Alle MINT-Fächer'
+      AND region IN ({states*})
+      AND indikator = {bl_label}
+      AND geschlecht = 'Gesamt'
+      ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
 
 
     # Vorbereitung Überschrift
@@ -4202,15 +4891,32 @@ studierende_international_bula_mint <- function(r) {
     if (absolut_selector=="In Prozent"){
 
 
-      alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-        dplyr::filter(jahr %in% t,
-                      geschlecht == "Gesamt",
-                      region %in% states,
-                      indikator == bl_label,
-                      fach == "Alle Fächer")%>%
-        dplyr::select(jahr, fach, indikator, wert, region)%>%
-        dplyr::rename(wert_ges = wert) %>%
-        dplyr::collect()
+      # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+      #   dplyr::filter(jahr %in% t,
+      #                 geschlecht == "Gesamt",
+      #                 region %in% states,
+      #                 indikator == bl_label,
+      #                 fach == "Alle Fächer")%>%
+      #   dplyr::select(jahr, fach, indikator, wert, region)%>%
+      #   dplyr::rename(wert_ges = wert) %>%
+      #   dplyr::collect()
+
+
+
+      df_query <- glue::glue_sql("
+      SELECT fach, jahr, indikator, region, wert AS wert_ges
+      FROM studierende_detailliert
+      WHERE jahr in ({t*})
+      AND fach = 'Alle Fächer'
+      AND region IN ({states*})
+      AND indikator = {bl_label}
+      AND geschlecht = 'Gesamt'
+      ", .con = con)
+
+      alle <- DBI::dbGetQuery(con, df_query)
+
+
+
 
       df <- df %>% dplyr::left_join(alle, by = c( "jahr", "indikator", "region")) %>%
         dplyr::rename(fach = fach.x) %>%
@@ -4295,25 +5001,64 @@ studierende_international_bula_mint <- function(r) {
     timerange <- r$international_bulas_balken_date
     r_lab1 <- r$international_bulas_balken_l
 
-    df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(geschlecht=="Gesamt",
-                    jahr %in% timerange,
-                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-                    indikator == r_lab1) %>%
-      dplyr::collect()
+    # df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(geschlecht=="Gesamt",
+    #                 jahr %in% timerange,
+    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
+    #                 indikator == r_lab1) %>%
+    #   dplyr::collect()
 
-    df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(geschlecht=="Gesamt",
-                    jahr %in% timerange,
-                    fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-                    indikator == r_lab1) %>%
-      dplyr::select(-fachbereich,- mint_select, -typ )%>%
-      dplyr::collect() %>%
+
+
+    df_query <- glue::glue_sql("
+      SELECT *
+      FROM studierende_detailliert
+      WHERE jahr in ({timerange*})
+      AND fach IN ('Alle MINT-Fächer','Alle Fächer')
+      AND indikator = {r_lab1}
+      AND geschlecht = 'Gesamt'
+      ", .con = con)
+
+    df_ges <- DBI::dbGetQuery(con, df_query)
+
+
+
+
+    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(geschlecht=="Gesamt",
+    #                 jahr %in% timerange,
+    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
+    #                 indikator == r_lab1) %>%
+    #   dplyr::select(-fachbereich,- mint_select, -typ )%>%
+    #   dplyr::collect() %>%
+    #   tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
+    #   dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
+    #   tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
+    #   dplyr::right_join(df_ges)%>%
+    #   dplyr::filter(fach == "Alle MINT-Fächer")
+
+
+
+    df_query <- glue::glue_sql("
+      SELECT *
+      FROM studierende_detailliert
+      WHERE jahr in ({timerange*})
+      AND fach IN ('Alle MINT-Fächer','Alle Fächer')
+      AND indikator = {r_lab1}
+      AND geschlecht = 'Gesamt'
+      ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(-fachbereich,- mint_select, -typ ) %>%
       tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
       dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
       tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
       dplyr::right_join(df_ges)%>%
       dplyr::filter(fach == "Alle MINT-Fächer")
+
+
 
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
