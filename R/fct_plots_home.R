@@ -64,6 +64,8 @@ home_einstieg <- function(r) {
 
     if(nrow(df) == 0){
 
+      #bleibt hier da leer
+
       tooltip <- "Anzahl: {point.display_abs}"
       titel <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df$jahr <- NA
@@ -101,6 +103,9 @@ home_einstieg <- function(r) {
     tooltip <- paste('MINT <br> Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
 
     if(nrow(df_1) == 0){
+
+
+      #es soll kein plot erstellt werden daher hier ein leeres lineplot, pie wurde übernommen unten
       titel1 <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df_1$jahr <- NA
       out1 <- highcharter::hchart(df_1, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
@@ -111,22 +116,38 @@ home_einstieg <- function(r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
-      out2 <- highcharter::hchart(df_2, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = prop)) %>%
-        highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')) %>%
-        highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
-        highcharter::hc_title(text = titel_2,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE, format='{point.prop_besr}%'), showInLegend = TRUE))
+
+
+      y <- "prop"
+      titel <- titel_2
+      x <- "fachbereich"
+      tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
+      color <-c("#b16fab", "#efe8e6")
+      format <- '{point.prop_besr}%'
+      subtitel <- NULL
+
+      out2 <- piebuilder(df_2, titel, x, y, tooltip, color, format, subtitel)
+
+
+      # out2 <- highcharter::hchart(df_2, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = prop)) %>%
+      #   highcharter::hc_tooltip(
+      #     pointFormat=paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')) %>%
+      #   highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
+      #   highcharter::hc_title(text = titel_2,
+      #                         margin = 45,
+      #                         align = "center",
+      #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      #   highcharter::hc_chart(
+      #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+      #   highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      #   highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+      #                                          dataLabels = list(enabled = TRUE, format='{point.prop_besr}%'), showInLegend = TRUE))
 
 
     }else if(nrow(df_2) == 0){
+
+    #empty plot
+
       titel2 <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df_2$jahr <- NA
       out2 <- highcharter::hchart(df_2, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
@@ -137,19 +158,27 @@ home_einstieg <- function(r) {
                               margin = 45,
                               align = "center",
                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
-      out1 <- highcharter::hchart(df_1, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = prop)) %>%
-        highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')) %>%
-        highcharter::hc_colors(c( "#b16fab", "#efe8e6")) %>%
-        highcharter::hc_title(text = titel_1,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.prop_besr}%'), showInLegend = TRUE))
+
+
+
+      tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
+      color <- c( "#b16fab", "#efe8e6")
+      format <- '{point.prop_besr}%'
+      out1 = piebuilder(df_1, titel_1, x="fachbereich", y="prop", tooltip, color, format)
+
+      # out1 <- highcharter::hchart(df_1, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = prop)) %>%
+      #   highcharter::hc_tooltip(
+      #     pointFormat=paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')) %>%
+      #   highcharter::hc_colors(c( "#b16fab", "#efe8e6")) %>%
+      #   highcharter::hc_title(text = titel_1,
+      #                         margin = 45,
+      #                         align = "center",
+      #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      #   highcharter::hc_chart(
+      #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+      #   highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      #   highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+      #                                          dataLabels = list(enabled = TRUE,  format='{point.prop_besr}%'), showInLegend = TRUE))
 
 
     }else{
@@ -450,6 +479,8 @@ home_einstieg_gender <- function(r) {
       titel <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df$jahr <- NA
 
+
+      ##LINE leer plot
       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -507,6 +538,9 @@ home_einstieg_gender <- function(r) {
     if(indi[1] == "Schüler:innen im Leistungskurs" & nrow(df_1_mint) == 0){
       titel1 <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df_1_mint$jahr <- NA
+
+
+      #nrow 0 daher empty line
       mint1 <- highcharter::hchart(df_1_mint, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -526,6 +560,7 @@ home_einstieg_gender <- function(r) {
       titel2 <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df_2_mint$jahr <- NA
 
+      ##empty line plot
       mint2 <- highcharter::hchart(df_2_mint, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
@@ -563,6 +598,9 @@ home_einstieg_gender <- function(r) {
         )
       } else if(gegenwert == "Ja"){
 
+
+
+        #leer line plot
         if(indi[1] == "Schüler:innen im Leistungskurs" & nrow(df_1_rest) == 0){
           titel1 <- ""
           df_1_rest$jahr <- NA
@@ -583,6 +621,7 @@ home_einstieg_gender <- function(r) {
 
         }else if(indi[2] == "Schüler:innen im Leistungskurs" & nrow(df_2_rest) == 0){
 
+          #leerer line
           nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
                                x = "geschlecht", y = "prop",
                                paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),

@@ -1238,7 +1238,7 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
 
 #mapbuilder
 
-mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = map_selection){
+mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = map_selection, landkarten = FALSE, states=NULL){
 
 if(prop==FALSE && wert == FALSE){
   out<- highcharter::hcmap(
@@ -1276,7 +1276,7 @@ if(prop==FALSE && wert == FALSE){
                               )
     )
 
-} else if(prop == TRUE){
+} else if(prop == TRUE && landkarten == FALSE){
   out<- highcharter::hcmap(
     "countries/de/de-all",
     data = df,
@@ -1348,6 +1348,97 @@ if(prop==FALSE && wert == FALSE){
                                 )
                               )
     )
+
+} else if (landkarten == TRUE && prop == TRUE && !is.null(states))
+{
+
+  useless <- map
+  mincolor1 <- mincolor
+  maxcolor1 <- maxcolor
+
+
+
+  state_codes <- data.frame(
+    state = c(
+      "Baden-Württemberg",
+      "Bayern",
+      "Berlin",
+      "Brandenburg",
+      "Bremen",
+      "Hamburg",
+      "Hessen",
+      "Mecklenburg-Vorpommern",
+      "Niedersachsen",
+      "Nordrhein-Westfalen",
+      "Rheinland-Pfalz",
+      "Saarland",
+      "Sachsen",
+      "Sachsen-Anhalt",
+      "Schleswig-Holstein",
+      "Thüringen"
+    ),
+    short = c(
+      "bw",
+      "by",
+      "be",
+      "bb",
+      "hb",
+      "hh",
+      "he",
+      "mv",
+      "ni",
+      "nw",
+      "rp",
+      "sl",
+      "sn",
+      "st",
+      "sh",
+      "th"
+    )
+  )
+
+  state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
+
+  out <- highcharter::hcmap(
+    paste0("countries/de/de-", state_code ,"-all"),
+    data = df,
+    value = "prob",
+    joinBy = joinby,
+    borderColor = "#FAFAFA",
+    name = name,
+    borderWidth = 0.1,
+    nullColor = "#A9A9A9",
+    tooltip = list(
+      valueDecimals = 0,
+      valueSuffix = "%"
+    )
+    #,
+    # download_map_data = FALSE
+  ) %>%
+    highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
+    highcharter::hc_title(
+      text = titel,
+      margin = 10,
+      align = "center",
+      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular")
+    ) %>% #highcharter::hc_size(600, 550) %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                           verticalAlign = "bottom"
+    ) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
+
+
+
 
 }
 

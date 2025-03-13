@@ -861,7 +861,7 @@ plot_mv_akteursb <- function(r){
        #                         )
       #)
 
-    
+
 
   }else{
 
@@ -1011,49 +1011,61 @@ plot_mv_stimmung <- function(r){
       subtitel <- ifelse(gruppe == "Schule", "N = 18", ifelse(gruppe == "außerschulische Akteur:innen",
                                                               "N = 24", subtitel))
 
-      plot <- df %>%
-        highcharter::hchart(
-          "pie", highcharter::hcaes(x = antwort, y = wert)
-        )%>%
-        highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.wert}%')) %>%
-        highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf","#fbbf24")) %>%
-        highcharter::hc_title(text = titel,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_subtitle(text = subtitel,
-                                 align = "center",
-                                 style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
 
-        highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_plotOptions(
-          pie = list(
-            dataLabels = list(
-              enabled = TRUE,
-              distance = 50,
-              style = list(
-                fontSize = "13px",
-                fontFamily = "SourceSans3-Regular"
-              )
-            )
-          )
-        ) %>%
-        highcharter::hc_chart(
 
-          marginTop = 80,      # Mehr Platz oben
-          marginBottom = 80,   # Mehr Platz unten
-          marginLeft = 100,    # Platz links für Labels
-          marginRight = 100   # Platz rechts für Labels
-        ) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
-                                    )
-                                  )
+      colors<-  c("#b16fab", "#154194", "#66cbaf","#fbbf24")
+      tooltip <- paste('Anteil: {point.wert}%')
+      x = antwort
+      y = wert
+      titel <- titel
+      subtitel <- subtitel
 
-        )
+      plot <- piebuilder(df, titel, x, y, tooltip, colors, format = '{point.prop_besr}%', subtitel)
+
+
+      # plot <- df %>%
+      #   highcharter::hchart(
+      #     "pie", highcharter::hcaes(x = antwort, y = wert)
+      #   )%>%
+      #   highcharter::hc_tooltip(
+      #     pointFormat=paste('Anteil: {point.wert}%')) %>%
+      #   highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf","#fbbf24")) %>%
+      #   highcharter::hc_title(text = titel,
+      #                         margin = 45,
+      #                         align = "center",
+      #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      #   highcharter::hc_subtitle(text = subtitel,
+      #                            align = "center",
+      #                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      #
+      #   highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+      #   highcharter::hc_plotOptions(
+      #     pie = list(
+      #       dataLabels = list(
+      #         enabled = TRUE,
+      #         distance = 50,
+      #         style = list(
+      #           fontSize = "13px",
+      #           fontFamily = "SourceSans3-Regular"
+      #         )
+      #       )
+      #     )
+      #   ) %>%
+      #   highcharter::hc_chart(
+      #
+      #     marginTop = 80,      # Mehr Platz oben
+      #     marginBottom = 80,   # Mehr Platz unten
+      #     marginLeft = 100,    # Platz links für Labels
+      #     marginRight = 100   # Platz rechts für Labels
+      #   ) %>%
+      #   highcharter::hc_exporting(enabled = TRUE,
+      #                             buttons = list(
+      #                               contextButton = list(
+      #                                 menuItems = list("downloadPNG", "downloadCSV")
+      #                               )
+      #                             )
+      #
+      #   )
   }
 
 
@@ -1090,45 +1102,20 @@ plot_mv_genderb <- function(){
         )
       )
 
-    plot <- df %>%
-      highcharter::hchart(
-        "pie", highcharter::hcaes(x = gruppe, y = wert)
-      )%>%
-      highcharter::hc_tooltip(
-        pointFormat=paste('Anteil: {point.wert} %')) %>%
-      highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      highcharter::hc_caption(text =  "Die Gruppe der bislang moderat aktiven MINT-Bildungsanbieter:innen zeichnet
-                              sich durch einen großen Vernetzungswunsch und eine hohe Motivation aus,
-                              sich aktiv in Netzwerke zum Thema MINT-Förderung für Mädchen einzubringen,
-                              was auf ein großes Aktivierungspotenzial hinweist.
-                              Die Gruppe der hoch Aktiven ist bereits sehr motiviert und engagiert in ihrem Netzwerk. Die kleinste Gruppe der Befragten nimmt lieber passiv an Netzwerkaktivitäten teil.") %>%
-      highcharter::hc_plotOptions(
-        pie = list(
-          dataLabels = list(
-            style = list(
-              fontSize = "14px",  # Schriftgröße für die Labels anpassen
-              fontFamily = "SourceSans3-Regular"
-            )
-          )
-        )
-      ) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
-      )
+    tooltip <- paste('Anteil: {point.wert} %')
+    color <- c("#b16fab", "#154194", "#66cbaf")
+    titel <- titel
+    subtitel <- subtitel
+    format <- '{point.wert}%'
 
+    x = "gruppe"
+    y = "wert"
+
+
+    plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel)
+
+#
+#
   return(plot)
 }
 

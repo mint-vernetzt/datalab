@@ -3535,44 +3535,12 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   domain_1 <- ifelse(domain_1 == "Alle", "alle Berufsbereiche", domain_1)
 
 
+
   # create plots
-  highcharter::hcmap(
-    paste0("countries/de/de-", state_code ,"-all"),
-    data = df1_map,
-    value = "prob",
-    joinBy = c("hc-key","landkreis_nummer"),
-    borderColor = "#FAFAFA",
-    name = paste0( domain_1, "<br>", titel_sub1_2),
-    borderWidth = 0.1,
-    nullColor = "#A9A9A9",
-    tooltip = list(
-      valueDecimals = 0,
-      valueSuffix = "%"
-    )
-    #,
-    # download_map_data = FALSE
-  ) %>%
-    highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-    highcharter::hc_title(
-      text = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")"),
-      margin = 10,
-      align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular")
-    ) %>% #highcharter::hc_size(600, 550) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom"
-    ) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
-    )
+
+  out <- mapbuilder(df1_map,c("hc-key","landkreis_nummer"),paste0( domain_1, "<br>", titel_sub1_2), tooltip = 12, paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")"),12, 12, prop=TRUE, wert=FALSE, map = 1, landkarten = TRUE, states = states
+  )
+
 
 
 }

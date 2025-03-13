@@ -697,37 +697,7 @@ kurse_mint_map <- function(r) {
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
     # plots
-    # map1<- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = df[df$indikator == "Grundkurse",],
-    #   value = "proportion",
-    #   joinBy = c("name", "region"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0("MINT-Anteil"),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   # ,
-    #   #download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")"),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   # highch
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
+
 
     df1 <- df[df$indikator == "Grundkurse",]
     joinby <- c("name", "region")
@@ -741,38 +711,6 @@ kurse_mint_map <- function(r) {
     map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
 
-
-    # Leistungskurs läuft
-    # map2 <-highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = df[df$indikator == "Leistungskurse",],
-    #   value = "proportion",
-    #   joinBy = c("name", "region"),
-    #   borderColor = "#FAFAFA",
-    #    name = paste0( "MINT-Anteil"),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   # ,
-    #   # download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")"),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
-    #
     df2 <- df[df$indikator == "Leistungskurse",]
     joinby <- c("name", "region")
     name <- paste0("MINT-Anteil")
@@ -2433,43 +2371,13 @@ kurse_wahl <- function(r) {
 
 
     # Plots
-    # out1 <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #
-    #   data = df_f[df_f$indikator == kurs_select,],
-    #   value = "proportion",
-    #   joinBy = c("name", "region"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0(subjects),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   #,
-    #   #download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor= as.character(color_fach[subjects]), labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0(help_kurs, "elegungen von Mädchen in ", help_title, " (", timerange, ")"),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
+
 
     df1 <- df_f[df_f$indikator == kurs_select,]
     joinby <- c("name", "region")
     name <- paste0(subjects)
     tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
-    titel <- paste0(help_kurs, "elegungen von Mädchen in ", help_title, " (", timerange, ")")
+    titel <- paste0(help_kurs, "belegungen von Mädchen in ", help_title, " (", timerange, ")")
     mincolor <- "#fcfcfd"
     maxcolor <- as.character(color_fach[subjects])
     map_selection <- 1
@@ -2479,43 +2387,12 @@ kurse_wahl <- function(r) {
 
     if(vergleich =="Ja"){
 
-      out2 <- highcharter::hcmap(
-        "countries/de/de-all",
-        data = df_m[df_m$indikator == kurs_select,],
-        value = "proportion",
-        joinBy = c("name", "region"),
-        borderColor = "#FAFAFA",
-        name = paste0(subjects),
-        borderWidth = 0.1,
-        nullColor = "#A9A9A9",
-        tooltip = list(
-          valueDecimals = 0,
-          valueSuffix = "%"
-        )
-        #,
-        #download_map_data = FALSE
-      ) %>%
-        highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-        highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor=as.character(color_fach[subjects]), labels = list(format = "{text}%")) %>%
-        highcharter::hc_title(
-          text = paste0(help_kurs, "elegungen von Jungen in ", help_title," (", timerange, ")"),
-          margin = 10,
-          align = "center",
-          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-        ) %>%
-
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular")
-        ) %>% highcharter::hc_size(600, 550) %>%
-        highcharter::hc_credits(enabled = FALSE) %>%
-        highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
-
 
       df2 <- df_m[df_m$indikator == kurs_select,]
       joinby <- c("name", "region")
       name <- paste0(subjects)
       tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
-      titel <- paste0(help_kurs, "elegungen von Jungen in ", help_title," (", timerange, ")")
+      titel <- paste0(help_kurs, "belegungen von Jungen in ", help_title," (", timerange, ")")
       mincolor <- "#fcfcfd"
       maxcolor <- as.character(color_fach[subjects])
       map_selection <- 1

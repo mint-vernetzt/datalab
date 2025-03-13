@@ -383,36 +383,7 @@ studierende_bula_mint <- function(r) {
 
 
     # plot
-    # out <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = df[df$fachbereich == "MINT",],
-    #   value = "proportion",
-    #   joinBy = c("name", "region"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0(label_m, " in MINT"),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   #,
-    #   #download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
-    #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0("Anteil von ", label_m, " in MINT-Fächern an allen ", help_l, " (", timerange, ")"),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
+
 
     df <- df[df$fachbereich == "MINT",]
     joinby <- c("name", "region")
@@ -436,16 +407,6 @@ studierende_bula_mint <- function(r) {
     absolut_selector <- r$bulas_verlauf_abs_rel
     bl_label <- r$bulas_verlauf_l
     states <- r$bulas_verlauf_regio
-
-    # # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr %in% t,
-    #                 geschlecht == "Gesamt",
-    #                 region %in% states,
-    #                 indikator == bl_label,
-    #                 fach == "Alle MINT-Fächer") %>%
-    #   dplyr::select(jahr, fach, indikator, region, wert)%>%
-    #   dplyr::collect()
 
 
 
@@ -2120,36 +2081,7 @@ plot_studierende_bula_faecher <- function(r){
       }
 
     # plot
-    # out <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = df,
-    #   value = "prop",
-    #   joinBy = c("name", "region"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0(label_m, " in MINT"),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   # ,
-    #   # download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
-    #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = titel,
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
+       #                          verticalAlign = "bottom")
 
     joinby <- c("name", "region")
     name <- paste0(label_m, " in MINT")
@@ -2180,14 +2112,6 @@ plot_studierende_bula_faecher <- function(r){
       fach_select <-  r$bl_verlauf_alle_faecher
     }
 
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr %in% t,
-    #                 geschlecht=="Gesamt",
-    #                 region %in% states,
-    #                 indikator==label_select,
-    #                 fach == fach_select) %>%
-    #   dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ)) %>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -2212,14 +2136,6 @@ plot_studierende_bula_faecher <- function(r){
     if (absolut_selector == "In Prozent") {
 
 #
-#       alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-#         dplyr::filter(jahr %in% t,
-#                       geschlecht=="Gesamt",
-#                       region %in% states,
-#                       indikator==label_select,
-#                       fach == "Alle Fächer") %>%
-#         dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ)) %>%
-#         dplyr::collect()
 
 
       df_query <- glue::glue_sql("
@@ -4795,37 +4711,7 @@ studierende_international_bula_mint <- function(r) {
 
 
     # plot
-    # out <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = df[df$fachbereich == "MINT",],
-    #   value = "proportion",
-    #   joinBy = c("name", "region"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0(label_m, " in MINT"),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   #,
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
-    #   highcharter::hc_colorAxis(min=0, minColor= "#f4f5f6", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0("MINT-Anteil von ", label_m, " (", timerange, ")"),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
-    #
+
 
     df <- df[df$fachbereich == "MINT",]
     joinby <- c("name", "region")
@@ -4851,14 +4737,6 @@ studierende_international_bula_mint <- function(r) {
     bl_label <- r$international_bulas_verlauf_l
     states <- r$international_bulas_verlauf_regio
 
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr %in% t,
-    #                 geschlecht == "Gesamt",
-    #                 region %in% states,
-    #                 indikator == bl_label,
-    #                 fach == "Alle MINT-Fächer") %>%
-    #   dplyr::select(jahr, fach, indikator, region, wert)%>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
       SELECT fach, jahr, indikator, region, wert
@@ -4889,18 +4767,6 @@ studierende_international_bula_mint <- function(r) {
     # Plot
 
     if (absolut_selector=="In Prozent"){
-
-
-      # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      #   dplyr::filter(jahr %in% t,
-      #                 geschlecht == "Gesamt",
-      #                 region %in% states,
-      #                 indikator == bl_label,
-      #                 fach == "Alle Fächer")%>%
-      #   dplyr::select(jahr, fach, indikator, wert, region)%>%
-      #   dplyr::rename(wert_ges = wert) %>%
-      #   dplyr::collect()
-
 
 
       df_query <- glue::glue_sql("
