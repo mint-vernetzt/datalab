@@ -163,14 +163,13 @@ plot_cp_orgas <- function(r){
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
   }else{
 
     ges <- df$wert[df$indikator == "Gesamt"]
@@ -215,14 +214,13 @@ plot_cp_orgas <- function(r){
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
   }
@@ -397,14 +395,13 @@ plot_cp_projekte <- function(r){
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
   }else{
 
     ges <- df$wert[df$indikator == "Gesamt"]
@@ -452,14 +449,13 @@ plot_cp_projekte <- function(r){
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
   }
@@ -621,14 +617,13 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+        )
 
     }else{
 
@@ -670,14 +665,13 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+        )
     }
 
 
@@ -724,15 +718,13 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+        )
     }else{
 
       # Titel
@@ -772,14 +764,13 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+        )
     }
 
 
@@ -833,12 +824,44 @@ plot_mv_akteursb <- function(r){
 
   if(frage %in% c("Arbeitsverhältnis", "Kategorie", "Sektor")){
 
+
     # plot <- df %>%
     color <-  c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
                 "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
                 "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")
     format <- '{point.prop} %'
     plot <- piebuilder(df, titel, x="indikator", y="wert", tooltip = paste('Anteil: {point.prop}%'), color, format)
+
+   # plot <- df %>%
+   #   highcharter::hchart(
+   #     "pie", highcharter::hcaes(x = indikator , y = wert)
+   #   )%>%
+    ##  highcharter::hc_tooltip(
+    #    pointFormat=paste('Anteil: {point.prop}%')) %>%
+    #  highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
+    #                            "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
+    #                            "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")) %>%
+    #  highcharter::hc_title(text = titel,
+    #                        margin = 45,
+    #                        align = "center",
+    #                        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    #  highcharter::hc_subtitle(text = subtitel,
+    #                           align = "center",
+    #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+     # highcharter::hc_chart(
+    #    style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+     # highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+     # highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
+      #                                       dataLabels = list(enabled = TRUE,  format='{point.prop} %'), showInLegend = TRUE)) %>%
+      #highcharter::hc_exporting(enabled = TRUE,
+      #                          buttons = list(
+      #                            contextButton = list(
+      #                              menuItems = list("downloadPNG", "downloadCSV")
+      #                            )
+       #                         )
+      #)
+
+    
 
   }else{
 
@@ -877,14 +900,13 @@ plot_mv_akteursb <- function(r){
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
   }
   return(plot)
@@ -953,7 +975,14 @@ plot_mv_stimmung <- function(r){
       highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = T)
+      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
     }else{
 
@@ -1011,10 +1040,19 @@ plot_mv_stimmung <- function(r){
           )
         ) %>%
         highcharter::hc_chart(
-          marginTop = 80,
-          marginBottom = 80,
-          marginLeft = 100,
-          marginRight = 100
+
+          marginTop = 80,      # Mehr Platz oben
+          marginBottom = 80,   # Mehr Platz unten
+          marginLeft = 100,    # Platz links für Labels
+          marginRight = 100   # Platz rechts für Labels
+        ) %>%
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+
         )
   }
 
@@ -1082,6 +1120,13 @@ plot_mv_genderb <- function(){
             )
           )
         )
+      ) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
       )
 
   return(plot)
@@ -1197,14 +1242,13 @@ skf_einrichtungen <- function(r){
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
   return(out)
 }
@@ -1299,14 +1343,13 @@ skf_personal <- function(r){
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
   return(out)
 }

@@ -41,7 +41,14 @@ get_top10_hc_plot_options <- function(hc,
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
   return(out)
 }
@@ -278,22 +285,23 @@ plot_international_map <- function(r) {
       text = title_m,
       margin = 10,
       align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
     ) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular")
+      style = list(fontFamily = "Calibri Regular")
     ) %>% highcharter::hc_size(size_width, size_hight) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom") %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/jpeg' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
+
 
 }
 
@@ -1181,12 +1189,19 @@ if (avg_line == "Ja"){
       highcharter::hc_title(text = title_dyn_top,
                             margin = 10,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
                             ) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
 
@@ -1219,12 +1234,19 @@ if (avg_line == "Ja"){
       highcharter::hc_title(text =  title_dyn_bot,
                             margin = 10,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
       ) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
 
@@ -1252,12 +1274,19 @@ if (avg_line == "Ja"){
     highcharter::hc_title(text = title_dyn_top,
                           margin = 10,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
     ) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 
 
@@ -1281,16 +1310,19 @@ if (avg_line == "Ja"){
     highcharter::hc_title(text =  title_dyn_bot,
                           margin = 10,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
     ) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
-
-
-
-
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 }
 
@@ -1431,23 +1463,22 @@ plot_international_schule_map <- function(r) {
       align = "center",
       style = list(color = "black",
                    useHTML = TRUE,
-                   fontFamily = "SourceSans3-Regular",
+                   fontFamily = "Calibri Regular",
                    fontSize = "20px")
     ) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular")
+      style = list(fontFamily = "Calibri Regular")
     ) %>% highcharter::hc_size(1000, 600) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom") %>%
-    highcharter::hc_exporting(enabled = FALSE, #noch kein Download bis jetzt
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/jpeg' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 }
 
@@ -1569,7 +1600,7 @@ plot_international_schule_item <- function(r) {
       align = "center",
       style = list(color = "black",
                    useHTML = TRUE,
-                   fontFamily = "SourceSans3-Regular",
+                   fontFamily = "Calibri Regular",
                    fontSize = "20px")
     ) %>%
     highcharter::hc_subtitle(
@@ -1578,10 +1609,17 @@ plot_international_schule_item <- function(r) {
       align = "left"
     )%>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular")
+      style = list(fontFamily = "Calibri Regular")
     ) %>%
     highcharter::hc_size(580, 450) %>%
-    highcharter::hc_credits(enabled = FALSE)
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 
 
@@ -1836,6 +1874,35 @@ plot_international_schule_migration <- function(r) {
             xanchor = "center",
             yanchor = "top"
           )
+        ) %>%
+        plotly::config(displaylogo = FALSE,  modeBarButtonsToRemove = c(
+          'sendDataToCloud', 'autoScale2d', 'resetScale2d', 'toggleSpikelines',
+          'hoverClosestCartesian', 'hoverCompareCartesian',
+          'zoom2d','pan2d','select2d','lasso2d','zoomIn2d','zoomOut2d'
+        ),modeBarButtonsToAdd = list(
+          list(
+            name = "Download CSV",
+            icon = list(
+              path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+              width = 24,
+              height = 24
+            ),
+            click = htmlwidgets::JS("
+              function(gd) {
+                var csv = 'x,y\\n';
+                var data = gd.data[0];
+                for (var i = 0; i < data.x.length; i++) {
+                  csv += data.x[i] + ',' + data.y[i] + '\\n';
+                }
+                var blob = new Blob([csv], { type: 'text/csv' });
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'data.csv';
+                a.click();
+              }
+            ")
+          )
+        )
         )
 
 
@@ -3424,10 +3491,10 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_title(text = title_top,
                               margin = 10,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
         ) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
 
@@ -3459,12 +3526,19 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_title(text =  title_bot,
                               margin = 10,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
         ) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+        )
 
 
 
@@ -3494,12 +3568,19 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_title(text = title_top,
                               margin = 10,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
         ) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+        )
 
 
 
@@ -3523,12 +3604,19 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_title(text =  title_bot,
                               margin = 10,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
         ) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+        )
 
 
       out <- list(plot_top, plot_bottom)
@@ -4090,12 +4178,20 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_title(text = title_top,
                             margin = 10,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
       ) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
+
 
     plot_bottom <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
@@ -4125,12 +4221,19 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_title(text =  title_bot,
                             margin = 10,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
       ) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
     out <- list(plot_top, plot_bottom)
 
@@ -4159,12 +4262,19 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_title(text = title_top,
                             margin = 10,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
       ) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
 
@@ -4189,12 +4299,19 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_title(text =  title_bot,
                             margin = 10,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
       ) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
     out <- list(plot_top, plot_bottom)
@@ -4324,6 +4441,13 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
           #shadow = FALSE,
         )
       )
+    ) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
     )
 
 

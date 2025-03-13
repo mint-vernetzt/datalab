@@ -246,14 +246,13 @@ kurse_waffle_mint <- function(r) {
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
     # titel <- paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")")
     # tooltip <- "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
@@ -350,14 +349,13 @@ kurse_einstieg_comparison <- function(r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+   highcharter::hc_exporting(enabled = TRUE,
+                             buttons = list(
+                               contextButton = list(
+                                 menuItems = list("downloadPNG", "downloadCSV")
+                               )
+                             )
+   )
 
  # titel <- paste0("Anteil von MINT-Belegungen an allen Belegungen in ", regio, " (", timerange,")")
  # tooltip <- "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
@@ -699,68 +697,94 @@ kurse_mint_map <- function(r) {
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
     # plots
-    map1<- highcharter::hcmap(
-      "countries/de/de-all",
-      data = df[df$indikator == "Grundkurse",],
-      value = "proportion",
-      joinBy = c("name", "region"),
-      borderColor = "#FAFAFA",
-      name = paste0("MINT-Anteil"),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      # ,
-      #download_map_data = FALSE
-    ) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")"),
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      # highch
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
+    # map1<- highcharter::hcmap(
+    #   "countries/de/de-all",
+    #   data = df[df$indikator == "Grundkurse",],
+    #   value = "proportion",
+    #   joinBy = c("name", "region"),
+    #   borderColor = "#FAFAFA",
+    #   name = paste0("MINT-Anteil"),
+    #   borderWidth = 0.1,
+    #   nullColor = "#A9A9A9",
+    #   tooltip = list(
+    #     valueDecimals = 0,
+    #     valueSuffix = "%"
+    #   )
+    #   # ,
+    #   #download_map_data = FALSE
+    # ) %>%
+    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
+    #   highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
+    #   highcharter::hc_title(
+    #     text = paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")"),
+    #     margin = 10,
+    #     align = "center",
+    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    #   ) %>%
+    #   # highch
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular")
+    #   ) %>% highcharter::hc_size(600, 550) %>%
+    #   highcharter::hc_credits(enabled = FALSE) %>%
+    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+    #                          verticalAlign = "bottom")
+
+    df1 <- df[df$indikator == "Grundkurse",]
+    joinby <- c("name", "region")
+    name <- paste0("MINT-Anteil")
+    tooltip <- "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+    titel <- paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")")
+    mincolor <- "#f4f5f6"
+    map_selection <- 1
+    maxcolor <- "#b16fab"
+
+    map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+
+
 
     # Leistungskurs läuft
-    map2 <-highcharter::hcmap(
-      "countries/de/de-all",
-      data = df[df$indikator == "Leistungskurse",],
-      value = "proportion",
-      joinBy = c("name", "region"),
-      borderColor = "#FAFAFA",
-      # name = paste0( subjects),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      # ,
-      # download_map_data = FALSE
-    ) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")"),
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
+    # map2 <-highcharter::hcmap(
+    #   "countries/de/de-all",
+    #   data = df[df$indikator == "Leistungskurse",],
+    #   value = "proportion",
+    #   joinBy = c("name", "region"),
+    #   borderColor = "#FAFAFA",
+    #    name = paste0( "MINT-Anteil"),
+    #   borderWidth = 0.1,
+    #   nullColor = "#A9A9A9",
+    #   tooltip = list(
+    #     valueDecimals = 0,
+    #     valueSuffix = "%"
+    #   )
+    #   # ,
+    #   # download_map_data = FALSE
+    # ) %>%
+    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
+    #   highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
+    #   highcharter::hc_title(
+    #     text = paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")"),
+    #     margin = 10,
+    #     align = "center",
+    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    #   ) %>%
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular")
+    #   ) %>% highcharter::hc_size(600, 550) %>%
+    #   highcharter::hc_credits(enabled = FALSE) %>%
+    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
+    #
+    df2 <- df[df$indikator == "Leistungskurse",]
+    joinby <- c("name", "region")
+    name <- paste0("MINT-Anteil")
+    tooltip <- "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+    titel <- paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")")
+    mincolor <- "#f4f5f6"
+    map_selection <- 1
+    maxcolor <- "#b16fab"
+
+    map2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+
+
 
     list <- list(map1,map2)
     out <- highcharter::hw_grid(
@@ -1103,8 +1127,6 @@ kurse_map <- function(r) {
       highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
-
-
       highcharter::hc_plotOptions(bar = list(
         colorByPoint = TRUE,
         colors = ifelse(df$region == "Deutschland", "#b16fab",
@@ -1120,14 +1142,13 @@ kurse_map <- function(r) {
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_exporting(enabled = FALSE,
-                                buttons = list(contextButton = list(
-                                  symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                  onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                  align = 'right',
-                                  verticalAlign = 'bottom',
-                                  theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
     return(out)
 
@@ -1655,14 +1676,13 @@ kurse_mint_comparison <- function(r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 
 
@@ -1772,14 +1792,13 @@ kurse_mint_comparison_bl <- function(r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 
 
@@ -1865,40 +1884,90 @@ kurse_comparison_gender <- function(r) {
     # spread column
     df <- tidyr::spread(df, indikator, proportion)
 
-    df <- df %>% tidyr::drop_na()
+    df <- df %>%
+      tidyr::drop_na() %>%
+      dplyr::mutate(
+        Grundkurse = round(Grundkurse, 1),
+        Leistungskurse = round(Leistungskurse, 1)
+      )
 
-    df2 <- tidyr::gather(df, group, value, -fachbereich)
-
-    #df2$fachbereich <- reorder(df2$fachbereich, df2$Leistungskurse)
-
-    df2$fachbereich <- factor(df2$fachbereich, levels = levels(df2$fachbereich))
-
-#nicht interaktiv
-    out <- ggplot2::ggplot(df,
-                    ggplot2::aes(y = fachbereich)) +
-      ggplot2::geom_point(data = df2, ggplot2::aes(x = value, color = group), size = 5) +
-      ggalt::geom_dumbbell(
-        ggplot2::aes(x = Grundkurse, xend = Leistungskurse),
-        size = 0.5,
-        size_x = 5,
-        size_xend = 5,
-        colour = "black",
-        colour_x = "#bfc6d3",
-        colour_xend = "#66cbaf",
-        dot_guide=TRUE) +
-      ggplot2::theme_minimal() +
-      ggplot2::scale_color_manual(name = "", values = c("#bfc6d3", "#66cbaf")) +
-      ggplot2::theme(legend.position="top",
-                     #legend.text= ggplot2::element_text(family = 'SourceSans3-Regular'),
-                     panel.grid.major.y = ggplot2::element_line(colour = "#D3D3D3"),
-                     plot.title = ggtext::element_markdown(hjust = 0.5),
-                     axis.text.y = ggplot2::element_text(size = 11)) +
-      ggplot2::ylab("") + ggplot2::xlab("") +
-      ggplot2::labs(title = paste0("<span style='font-size:20.5pt; color:black'>",
-                                   "Mädchen-Anteil nach Fächern in ", regio, " (",timerange,")",
-                                   "<br><br>"),
-                    color = "") +
-      ggplot2::scale_x_continuous(n.breaks = 7, labels = function(x) paste0(x, "%"))
+    out <- plotly::plot_ly(data = df, color = I("gray80")) %>%
+      plotly::add_segments(
+        x = ~Grundkurse,
+        xend = ~Leistungskurse,
+        y = ~fachbereich,
+        yend = ~fachbereich,
+        showlegend = FALSE,
+        # text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
+        #                paste0("Mittel: ", mittel_wert, "<br>Positiv: ", wert)),
+        hoverinfo = "text"
+      ) %>%
+      plotly::add_markers(
+        x = ~Grundkurse,
+        y = ~fachbereich,
+        name = "Grundkurse",
+        marker = list(
+          size = 12,
+          color = "#bfc6d3"
+        ),
+        text = ~ifelse(is.na(Grundkurse), NA, paste0("Grundkurse: ", Grundkurse)),
+        hoverinfo = "text"
+      ) %>%
+      plotly::add_markers(
+        x = ~Leistungskurse,
+        y = ~fachbereich,
+        name = "Leistungskurse",
+        marker = list(
+          size = 12,
+          color = "#66CBAF"
+        ),
+        text = ~ifelse(is.na(Leistungskurse), NA, paste0("Leistungskurse: ", Leistungskurse)),
+        hoverinfo = "text"
+      ) %>%
+      # Layout anpassen
+      plotly::layout(
+        title = paste0("Mädchen-Anteil nach Fächern in ",regio, " (", timerange, ")"),
+        xaxis = list(title = ""),
+        yaxis = list(title = ""),
+        margin = list(l = 100, r = 50, t = 50, b = 50),
+        hoverlabel = list(bgcolor = "white"),
+        legend = list(
+          orientation = "h",
+          x = 0.5,
+          y = -0.2,
+          xanchor = "center",
+          yanchor = "top"
+        )
+      )%>%
+      plotly::config(displaylogo = FALSE,  modeBarButtonsToRemove = c(
+        'sendDataToCloud', 'autoScale2d', 'resetScale2d', 'toggleSpikelines',
+        'hoverClosestCartesian', 'hoverCompareCartesian',
+        'zoom2d','pan2d','select2d','lasso2d','zoomIn2d','zoomOut2d'
+      ),modeBarButtonsToAdd = list(
+        list(
+          name = "Download CSV",
+          icon = list(
+            path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+            width = 24,
+            height = 24
+          ),
+          click = htmlwidgets::JS("
+              function(gd) {
+                var csv = 'x,y\\n';
+                var data = gd.data[0];
+                for (var i = 0; i < data.x.length; i++) {
+                  csv += data.x[i] + ',' + data.y[i] + '\\n';
+                }
+                var blob = new Blob([csv], { type: 'text/csv' });
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'data.csv';
+                a.click();
+              }
+            ")
+        )
+      )
+      )
 
   }else {
 
@@ -2042,14 +2111,13 @@ kurse_comparison_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+        )
     }else if(gegenwert == "Nein"){
 
       df1 <- df1 %>% dplyr::filter(indikator %in%
@@ -2073,14 +2141,13 @@ kurse_comparison_gender <- function(r) {
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+        )
     }
 
   }
@@ -2366,37 +2433,47 @@ kurse_wahl <- function(r) {
 
 
     # Plots
-    out1 <- highcharter::hcmap(
-      "countries/de/de-all",
+    # out1 <- highcharter::hcmap(
+    #   "countries/de/de-all",
+    #
+    #   data = df_f[df_f$indikator == kurs_select,],
+    #   value = "proportion",
+    #   joinBy = c("name", "region"),
+    #   borderColor = "#FAFAFA",
+    #   name = paste0(subjects),
+    #   borderWidth = 0.1,
+    #   nullColor = "#A9A9A9",
+    #   tooltip = list(
+    #     valueDecimals = 0,
+    #     valueSuffix = "%"
+    #   )
+    #   #,
+    #   #download_map_data = FALSE
+    # ) %>%
+    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
+    #   highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor= as.character(color_fach[subjects]), labels = list(format = "{text}%")) %>%
+    #   highcharter::hc_title(
+    #     text = paste0(help_kurs, "elegungen von Mädchen in ", help_title, " (", timerange, ")"),
+    #     margin = 10,
+    #     align = "center",
+    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+    #   ) %>%
+    #   highcharter::hc_chart(
+    #     style = list(fontFamily = "SourceSans3-Regular")
+    #   ) %>% highcharter::hc_size(600, 550) %>%
+    #   highcharter::hc_credits(enabled = FALSE) %>%
+    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+    #                          verticalAlign = "bottom")
 
-      data = df_f[df_f$indikator == kurs_select,],
-      value = "proportion",
-      joinBy = c("name", "region"),
-      borderColor = "#FAFAFA",
-      name = paste0(subjects),
-      borderWidth = 0.1,
-      nullColor = "#A9A9A9",
-      tooltip = list(
-        valueDecimals = 0,
-        valueSuffix = "%"
-      )
-      #,
-      #download_map_data = FALSE
-    ) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor= as.character(color_fach[subjects]), labels = list(format = "{text}%")) %>%
-      highcharter::hc_title(
-        text = paste0(help_kurs, "elegungen von Mädchen in ", help_title, " (", timerange, ")"),
-        margin = 10,
-        align = "center",
-        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-      ) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular")
-      ) %>% highcharter::hc_size(600, 550) %>%
-      highcharter::hc_credits(enabled = FALSE) %>%
-      highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                             verticalAlign = "bottom")
+    df1 <- df_f[df_f$indikator == kurs_select,]
+    joinby <- c("name", "region")
+    name <- paste0(subjects)
+    tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+    titel <- paste0(help_kurs, "elegungen von Mädchen in ", help_title, " (", timerange, ")")
+    mincolor <- "#fcfcfd"
+    maxcolor <- as.character(color_fach[subjects])
+    map_selection <- 1
+    out1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
     out <- out1
 
@@ -2434,6 +2511,16 @@ kurse_wahl <- function(r) {
         highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
 
 
+      df2 <- df_m[df_m$indikator == kurs_select,]
+      joinby <- c("name", "region")
+      name <- paste0(subjects)
+      tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+      titel <- paste0(help_kurs, "elegungen von Jungen in ", help_title," (", timerange, ")")
+      mincolor <- "#fcfcfd"
+      maxcolor <- as.character(color_fach[subjects])
+      map_selection <- 1
+      out2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+
       out <- highcharter::hw_grid(
         out1, out2,
         ncol = 2,
@@ -2465,7 +2552,6 @@ return(out)
 #' @noRd
 
 iqb_standard_zeitverlauf <- function(r){
-
 
 
   # reactive values übergeben
@@ -2527,14 +2613,13 @@ iqb_standard_zeitverlauf <- function(r){
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
   return(out)
 
@@ -2721,14 +2806,13 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+       highcharter::hc_exporting(enabled = TRUE,
+                                 buttons = list(
+                                   contextButton = list(
+                                     menuItems = list("downloadPNG", "downloadCSV")
+                                   )
+                                 )
+       )
     } else{
       df$wert <- round(df$wert,1)
 
@@ -2752,14 +2836,13 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+        )
     }
   }
 
@@ -2786,14 +2869,13 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_exporting(enabled = FALSE,
-                                  buttons = list(contextButton = list(
-                                    symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                    onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                    align = 'right',
-                                    verticalAlign = 'bottom',
-                                    theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
+                                  )
+        )
     }else {
       if(klasse_select == "4. Klasse") {
 
@@ -2816,14 +2898,13 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
             style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-          highcharter::hc_exporting(enabled = FALSE,
-                                    buttons = list(contextButton = list(
-                                      symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                      onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                      align = 'right',
-                                      verticalAlign = 'bottom',
-                                      theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+          highcharter::hc_exporting(enabled = TRUE,
+                                    buttons = list(
+                                      contextButton = list(
+                                        menuItems = list("downloadPNG", "downloadCSV")
+                                      )
+                                    )
+          )
       }else{
         if(bl_select %in% c("Berlin", "Bremen", "Saarland")){
           df <- df %>% dplyr::filter(jahr == "2018")
@@ -2843,14 +2924,13 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
               style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-            highcharter::hc_exporting(enabled = FALSE,
-                                      buttons = list(contextButton = list(
-                                        symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                        onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                        align = 'right',
-                                        verticalAlign = 'bottom',
-                                        theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+            highcharter::hc_exporting(enabled = TRUE,
+                                      buttons = list(
+                                        contextButton = list(
+                                          menuItems = list("downloadPNG", "downloadCSV")
+                                        )
+                                      )
+            )
         }else{
           df$wert <- round(df$wert,1)
 
@@ -2869,14 +2949,13 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
               style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-            highcharter::hc_exporting(enabled = FALSE,
-                                      buttons = list(contextButton = list(
-                                        symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                        onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                        align = 'right',
-                                        verticalAlign = 'bottom',
-                                        theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+            highcharter::hc_exporting(enabled = TRUE,
+                                      buttons = list(
+                                        contextButton = list(
+                                          menuItems = list("downloadPNG", "downloadCSV")
+                                        )
+                                      )
+            )
         }
 
       }}
@@ -2954,14 +3033,13 @@ iqb_fragebogen <- function(r){
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                            this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
   return(out)
 

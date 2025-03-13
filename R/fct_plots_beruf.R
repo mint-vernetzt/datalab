@@ -396,6 +396,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
     mincolor <- "#f4f5f6"
     map_selection <- 1
     maxcolor <- "#b16fab"
+
     out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
 
@@ -2124,14 +2125,13 @@ arbeitsmarkt_überblick_fächer <- function( r) {
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = FALSE,
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/png' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 }
 
 
@@ -2435,9 +2435,38 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
     #
    tooltip <- "{point.geschlecht}-Anteil: {point.y} % <br> Anzahl: {disp_wert}"
    format <- "{value}%"
-   optional = list(bar = list(stacking = "percent"))
+   optional <- list(bar = list(stacking = "percent"))
+   reverse <- FALSE
 
-   out <- balkenbuilder2(TF = FALSE, df, titel, x="indi_fach", y="proportion", group="geschlecht", tooltip, format, color = c("#154194", "#efe8e6"))
+       out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = indi_fach, y=proportion, group = geschlecht))%>%
+
+      highcharter::hc_tooltip(pointFormat = tooltip)%>%
+
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+      highcharter::hc_xAxis(title = list(text = "")
+      ) %>%
+      highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+      highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 25,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
+
+       # damit aktuell noch falschrum - bräuchte noch ein
+       # out <- balkenbuilder(df, titel, x="indi_fach", y="proportion", group="geschlecht",
+       #                  tooltip, format, color = c("#154194", "#efe8e6"),
+       #                  optional = optional, reverse = reverse)
 
  }
 
@@ -3135,7 +3164,14 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
     # Create male plot
@@ -3158,7 +3194,14 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
   } else if(abs_rel == "Anzahl"){
 
@@ -3197,7 +3240,14 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
     # Create male plot
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
@@ -3218,7 +3268,14 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
+      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
 
   }
@@ -3509,18 +3566,13 @@ arbeitsmarkt_lk_detail_map <- function(r) {
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom"
     ) %>%
-
-    highcharter::hc_exporting(enabled = FALSE, #noch kein Download bis jetzt
-                              buttons = list(contextButton = list(
-                                symbol = 'url(https://upload.wikimedia.org/wikipedia/commons/f/f7/Font_Awesome_5_solid_download.svg)',
-                                onclick = highcharter::JS("function () {
-                                                              this.exportChart({ type: 'image/jpeg' }); }"),
-                                align = 'right',
-                                verticalAlign = 'bottom',
-                                theme = list(states = list(hover = list(fill = '#FFFFFF'))))))
-
-
-
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
 
 
 }

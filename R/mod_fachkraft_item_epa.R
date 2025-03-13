@@ -15,7 +15,7 @@ mod_fachkraft_item_epa_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("map_y_fachkraft_arbeit_epa"),
       label = NULL,
-      choices = fachkraft_ui_years(),
+      choices = fachkraft_ui_years(reg="DE"),
       selected = "2023"
     ),
 
