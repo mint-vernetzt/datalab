@@ -603,6 +603,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
         xanchor = "center",
         yanchor = "top"
       )
+    )#####################################################################################
   hc <- hc  %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
