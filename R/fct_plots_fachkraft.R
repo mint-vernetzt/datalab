@@ -504,7 +504,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
   SELECT *
   FROM fachkraefte_prognose
   WHERE jahr = {year_filter}
-  AND indikator IN ('Verbesserung')
+  AND indikator = 'Verbesserung'
   AND geschlecht = 'Gesamt'
   AND nationalitaet = 'Gesamt'
   AND anforderung = 'Gesamt'
@@ -1127,7 +1127,7 @@ plot_fachkraft_detail_item  <- function(r) {
   #   dplyr::collect()
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT indikator, kategorie, wert
   FROM arbeitsmarkt_epa_detail
   WHERE jahr = {timerange}
   AND anforderung = {bf_label}
@@ -1140,7 +1140,6 @@ plot_fachkraft_detail_item  <- function(r) {
   df <- DBI::dbGetQuery(con, df_query)
 
   plot_bar_data <- df %>%
-    dplyr::select(indikator, kategorie, wert) %>%
     dplyr::mutate(wert = round(wert, 1))
 
   # color change on 0.01. level, since data labels are also rounded to 2 decimal places
