@@ -228,6 +228,8 @@ kurse_waffle_mint <- function(r) {
     }
 
     # # # plot
+
+    #nicht in bar wegen categories
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -241,9 +243,9 @@ kurse_waffle_mint <- function(r) {
       ),
       margin = 45,
       align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
       highcharter::hc_exporting(enabled = TRUE,
@@ -335,6 +337,8 @@ kurse_einstieg_comparison <- function(r) {
 
    df1 <- df1[with(df1, order(round(proportion,1), decreasing = FALSE)),]
 
+
+   #forcats, daher nicht in balkenbuilder
  out <-  highcharter::hchart(df1, 'bar', highcharter::hcaes(y = round(proportion,1), x = indikator, group = forcats::fct_rev(fachbereich))) %>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -344,9 +348,9 @@ kurse_einstieg_comparison <- function(r) {
     highcharter::hc_title(text = paste0("Anteil von MINT-Belegungen an allen Belegungen in ", regio, " (", timerange,")"),
                           margin = 45,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
    highcharter::hc_exporting(enabled = TRUE,
@@ -697,37 +701,7 @@ kurse_mint_map <- function(r) {
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
     # plots
-    # map1<- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = df[df$indikator == "Grundkurse",],
-    #   value = "proportion",
-    #   joinBy = c("name", "region"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0("MINT-Anteil"),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   # ,
-    #   #download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0("Anteil von ", help_title, "<br> an allen Grundkursbelegungen ", "(",timerange, ")"),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   # highch
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
+
 
     df1 <- df[df$indikator == "Grundkurse",]
     joinby <- c("name", "region")
@@ -741,38 +715,6 @@ kurse_mint_map <- function(r) {
     map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
 
-
-    # Leistungskurs läuft
-    # map2 <-highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = df[df$indikator == "Leistungskurse",],
-    #   value = "proportion",
-    #   joinBy = c("name", "region"),
-    #   borderColor = "#FAFAFA",
-    #    name = paste0( "MINT-Anteil"),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   # ,
-    #   # download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0, minColor= "#fcfcfd", maxColor="#b16fab",labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0("Anteil von ", help_title, "<br> an allen Leistungskursbelegungen ", "(",timerange, ")"),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
-    #
     df2 <- df[df$indikator == "Leistungskurse",]
     joinby <- c("name", "region")
     name <- paste0("MINT-Anteil")
@@ -1123,6 +1065,7 @@ kurse_map <- function(r) {
     df <- df %>% dplyr::arrange(desc(proportion))
 
     #Plot
+    #net verwendet da kein color
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
       highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -1137,9 +1080,9 @@ kurse_map <- function(r) {
       ),
       margin = 20,
       align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
       highcharter::hc_exporting(enabled = TRUE,
@@ -1149,6 +1092,22 @@ kurse_map <- function(r) {
                                   )
                                 )
       )
+
+
+    # format <- "{value}%"
+    # tooltip <- "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
+    # y = "proportion"
+    # x = "region"
+    # optional = list(bar = list(
+    #   colorByPoint = TRUE,
+    #   colors = ifelse(df$region == "Deutschland", "#b16fab",
+    #                   ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
+    #                          ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))
+    # titel = paste0( "Anteil von ", kurs_help, "-Belegungen in ", help_title, " nach Bundesländern (",  timerange, ")")
+    #
+    #
+    # out <- balkenbuilder(df, titel, x, y, tooltip = tooltip, color = )
+    #
 
     return(out)
 
@@ -1658,6 +1617,7 @@ kurse_mint_comparison <- function(r) {
   }
 
   # plot
+  #net verwendet da kein color explizit und komplexer
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
     highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -1671,9 +1631,9 @@ kurse_mint_comparison <- function(r) {
                                          ),
                           margin = 45,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
     highcharter::hc_exporting(enabled = TRUE,
@@ -1776,6 +1736,7 @@ kurse_mint_comparison_bl <- function(r) {
   kurs_help <- ifelse(indikator_comparison == "Grundkurse", "Grundkurs", "Leistungskurs")
 
   #Plot
+  #net verwendet da kein color explizit und komplexer
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -1787,9 +1748,9 @@ kurse_mint_comparison_bl <- function(r) {
                                         ),
                           margin = 20,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
     highcharter::hc_exporting(enabled = TRUE,
@@ -2092,6 +2053,7 @@ kurse_comparison_gender <- function(r) {
     if(gegenwert == "Ja"){
 
 
+      #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
       out <- highcharter::hchart(df1, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,1), group = anzeige_geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}-Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  TRUE) %>%
@@ -2106,9 +2068,9 @@ kurse_comparison_gender <- function(r) {
         highcharter::hc_title(text = paste0("Anteil von Mädchen in MINT- und anderen Fächern in ",regio, " (", timerange, ")"),
                               margin = 25,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_exporting(enabled = TRUE,
@@ -2116,8 +2078,9 @@ kurse_comparison_gender <- function(r) {
                                     contextButton = list(
                                       menuItems = list("downloadPNG", "downloadCSV")
                                     )
-                                  )
-        )
+                                  ))
+
+
     }else if(gegenwert == "Nein"){
 
       df1 <- df1 %>% dplyr::filter(indikator %in%
@@ -2136,9 +2099,9 @@ kurse_comparison_gender <- function(r) {
         highcharter::hc_title(text = paste0("Anteil von Mädchen in MINT-Fächern in ",regio, " (", timerange, ")"),
                               margin = 25,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
         highcharter::hc_exporting(enabled = TRUE,
@@ -2433,43 +2396,13 @@ kurse_wahl <- function(r) {
 
 
     # Plots
-    # out1 <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #
-    #   data = df_f[df_f$indikator == kurs_select,],
-    #   value = "proportion",
-    #   joinBy = c("name", "region"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0(subjects),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   #,
-    #   #download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor= as.character(color_fach[subjects]), labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0(help_kurs, "elegungen von Mädchen in ", help_title, " (", timerange, ")"),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
+
 
     df1 <- df_f[df_f$indikator == kurs_select,]
     joinby <- c("name", "region")
     name <- paste0(subjects)
     tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
-    titel <- paste0(help_kurs, "elegungen von Mädchen in ", help_title, " (", timerange, ")")
+    titel <- paste0(help_kurs, "belegungen von Mädchen in ", help_title, " (", timerange, ")")
     mincolor <- "#fcfcfd"
     maxcolor <- as.character(color_fach[subjects])
     map_selection <- 1
@@ -2479,43 +2412,12 @@ kurse_wahl <- function(r) {
 
     if(vergleich =="Ja"){
 
-      out2 <- highcharter::hcmap(
-        "countries/de/de-all",
-        data = df_m[df_m$indikator == kurs_select,],
-        value = "proportion",
-        joinBy = c("name", "region"),
-        borderColor = "#FAFAFA",
-        name = paste0(subjects),
-        borderWidth = 0.1,
-        nullColor = "#A9A9A9",
-        tooltip = list(
-          valueDecimals = 0,
-          valueSuffix = "%"
-        )
-        #,
-        #download_map_data = FALSE
-      ) %>%
-        highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-        highcharter::hc_colorAxis(min=0,minColor= "#fcfcfd", maxColor=as.character(color_fach[subjects]), labels = list(format = "{text}%")) %>%
-        highcharter::hc_title(
-          text = paste0(help_kurs, "elegungen von Jungen in ", help_title," (", timerange, ")"),
-          margin = 10,
-          align = "center",
-          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-        ) %>%
-
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular")
-        ) %>% highcharter::hc_size(600, 550) %>%
-        highcharter::hc_credits(enabled = FALSE) %>%
-        highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
-
 
       df2 <- df_m[df_m$indikator == kurs_select,]
       joinby <- c("name", "region")
       name <- paste0(subjects)
       tooltip <-"{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
-      titel <- paste0(help_kurs, "elegungen von Jungen in ", help_title," (", timerange, ")")
+      titel <- paste0(help_kurs, "belegungen von Jungen in ", help_title," (", timerange, ")")
       mincolor <- "#fcfcfd"
       maxcolor <- as.character(color_fach[subjects])
       map_selection <- 1
@@ -2608,9 +2510,9 @@ iqb_standard_zeitverlauf <- function(r){
     highcharter::hc_title(text = paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")"),
                           margin = 45,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
     highcharter::hc_exporting(enabled = TRUE,
@@ -2801,9 +2703,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
         highcharter::hc_title(text = paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen, nach Geschlecht in " , bl_select, " (", klasse_select, ")"),
                               margin = 45,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
        highcharter::hc_exporting(enabled = TRUE,
@@ -2831,9 +2733,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
         highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")"),
                               margin = 45,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
         highcharter::hc_exporting(enabled = TRUE,
@@ -2864,9 +2766,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
         highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")"),
                               margin = 45,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
         highcharter::hc_exporting(enabled = TRUE,
@@ -2893,9 +2795,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
                                 margin = 45,
                                 align = "center",
-                                style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                                style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
           highcharter::hc_chart(
-            style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+            style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
           highcharter::hc_exporting(enabled = TRUE,
@@ -2919,9 +2821,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
             highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
                                   margin = 45,
                                   align = "center",
-                                  style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                                  style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
             highcharter::hc_chart(
-              style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
             highcharter::hc_exporting(enabled = TRUE,
@@ -2944,9 +2846,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
             highcharter::hc_title(text = paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")"),
                                   margin = 45,
                                   align = "center",
-                                  style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                                  style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
             highcharter::hc_chart(
-              style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
             highcharter::hc_exporting(enabled = TRUE,
@@ -3028,9 +2930,9 @@ iqb_fragebogen <- function(r){
     ),
     margin = 45,
     align = "center",
-    style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
     highcharter::hc_exporting(enabled = TRUE,

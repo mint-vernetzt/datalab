@@ -11,47 +11,6 @@ library(tidyr)
 #' @noRd
 
 
-get_top10_hc_plot_options <- function(hc,
-                                      hc_title = "",
-                                      hc_tooltip = "",
-                                      max_percent_used = 100,
-                                      col = "#B16FAB") {
-  out <- hc %>%
-    highcharter::hc_plotOptions(
-      series = list(
-        boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert} %",
-                          style = list(textOutline = "none"))
-      )) %>%
-    highcharter::hc_tooltip(pointFormat = hc_tooltip) %>%
-    highcharter::hc_yAxis(title = list(text = ""),
-                          labels = list(format = "{value} %"),
-                          min = 0,
-                          max = max_percent_used,
-                          tickInterval = 10) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(c(col)) %>%
-    highcharter::hc_title(text = hc_title,
-                          margin = 45,
-                          align = "center",
-                          style = list(color = "black",
-                                       useHTML = TRUE,
-                                       fontFamily = "SourceSans3-Regular",
-                                       fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
-    )
-
-  return(out)
-}
 
 add_avg_to_hc <- function(hc, hc_mean, type) {
 
@@ -265,8 +224,12 @@ plot_international_map <- function(r) {
   }
 
 
+
+  #
   data_map_1 <- df7
 
+
+  #zu komplex / different
   highcharter::highchart(type = "map") %>%
     highcharter::hc_add_series_map(
       map = map_selection,
@@ -778,6 +741,8 @@ df <- df %>%
 
 
   # Create top 10 plot
+
+  #dies ist schon als funktion automatisiert, too complex
   plot_top <- highcharter::hchart(
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
     'bar',
@@ -788,6 +753,7 @@ df <- df %>%
       max_percent_used = max_percent_used)
 
   # Create bottom 10 plot
+  #dies ist schon als funktion automatisiert, too complex
   plot_bottom <- highcharter::hchart(
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
     'bar',
@@ -1058,7 +1024,9 @@ plot_international_top10_gender <- function(r) {
                      t_fach, " (", timerange, ")")
   }
 
+
   # Create top 10 plot
+  #dies ist schon als funktion automatisiert, too complex
   plot_top <- highcharter::hchart(
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
     'bar',
@@ -1072,6 +1040,7 @@ plot_international_top10_gender <- function(r) {
 
 
   # Create bottom 10 plot
+  #dies ist schon als funktion automatisiert, too complex
   plot_bottom <- highcharter::hchart(
     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
     'bar',
@@ -1163,6 +1132,7 @@ if (avg_line == "Ja"){
 
   data_avg <- round(mean(data1$wert, na.rm = T),1)
 
+  #dies ist schon als funktion automatisiert, too complex
     plot_top <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
       'bar',
@@ -1206,7 +1176,7 @@ if (avg_line == "Ja"){
 
 
 
-
+    #dies ist schon als funktion automatisiert, too complex
     plot_bottom <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
       'bar',
@@ -1254,7 +1224,7 @@ if (avg_line == "Ja"){
 } else if (avg_line == "Nein"){
 
 
-
+  #dies ist schon als funktion automatisiert, too complex
   plot_top <- highcharter::hchart(
     data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
     'bar',
@@ -1290,7 +1260,7 @@ if (avg_line == "Ja"){
 
 
 
-
+  #dies ist schon als funktion automatisiert, too complex
   plot_bottom <- highcharter::hchart(
     data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
     'bar',
@@ -1435,7 +1405,7 @@ plot_international_schule_map <- function(r) {
 
  map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
-
+ #zu komplex / different
   # plot
   highcharter::highchart(type = "map") %>%
     highcharter::hc_add_series_map(
@@ -3463,7 +3433,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
     if (avg_line == "Ja"){
 
       data_avg <- round(mean(data_fn$wert, na.rm = T),1)
-
+      #dies ist schon als funktion automatisiert, too complex
       plot_top <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
         'bar',
@@ -3498,6 +3468,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
 
+      #dies ist schon als funktion automatisiert, too complex
       plot_bottom <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
         'bar',
@@ -3547,7 +3518,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
     } else if (avg_line == "Nein"){
 
 
-
+      #dies ist schon als funktion automatisiert, too complex
       plot_top <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
         'bar',
@@ -3583,7 +3554,7 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         )
 
 
-
+      #dies ist schon als funktion automatisiert, too complex
       plot_bottom <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
         'bar',
@@ -4151,6 +4122,9 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
     data_avg <- round(mean(data1$wert, na.rm = T),1)
 
+
+
+    #dies ist schon als funktion automatisiert, too complex
     plot_top <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
       'bar',
@@ -4192,7 +4166,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
                                 )
       )
 
-
+    #dies ist schon als funktion automatisiert, too complex
     plot_bottom <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
       'bar',
@@ -4236,7 +4210,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
       )
 
     out <- list(plot_top, plot_bottom)
-
+    #dies ist schon als funktion automatisiert, too complex
 
   } else if (avg_line == "Nein"){
 
@@ -4278,7 +4252,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 
 
-
+    #dies ist schon als funktion automatisiert, too complex
     plot_bottom <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
       'bar',
