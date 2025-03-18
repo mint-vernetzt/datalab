@@ -209,6 +209,9 @@ home_einstieg <- function(r) {
    df <- df[with(df, order(prop, decreasing = TRUE)), ] ####
    titel <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
 
+
+   #dies kann nicht als systemvariable übergeben werden also group
+
    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = indikator, group = "fachbereich"))%>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
@@ -673,27 +676,43 @@ home_einstieg_gender <- function(r) {
 
       df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
-      out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=prop, group = geschlecht)) %>%
-        highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
-        highcharter::hc_xAxis(title = list(text = "")) %>%
-        highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-        highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")"),
-                              margin = 25,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
-                                    )
-                                  )
-        )
+
+
+      x = "indikator"
+      y = "prop"
+      group = "geschlecht"
+      tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
+      stacking = "percent"
+      titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
+      reversed = FALSE
+      format <- "{value}%"
+
+      colors <- c("#154194", "#efe8e6")
+
+      out <- balkenbuilder(df, titel, x, y, group, tooltip, format="{value}%", color = colors, reverse=reversed, stacking = stacking)
+
+#
+#       out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=prop, group = geschlecht)) %>%
+#         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
+#         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+#         highcharter::hc_xAxis(title = list(text = "")) %>%
+#         highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+#         highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
+#         highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")"),
+#                               margin = 25,
+#                               align = "center",
+#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+#         highcharter::hc_chart(
+#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+#         ) %>%
+#         highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+#         highcharter::hc_exporting(enabled = TRUE,
+#                                   buttons = list(
+#                                     contextButton = list(
+#                                       menuItems = list("downloadPNG", "downloadCSV")
+#                                     )
+#                                   )
+#         )
 
 
       # titel = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
@@ -709,6 +728,9 @@ home_einstieg_gender <- function(r) {
 
       df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
+
+
+      ##balkenbuilder nicht verwendet wegen dem sonderfall Kateogirne
 
       out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = indikator, y = prop, group = geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht} Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%

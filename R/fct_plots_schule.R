@@ -228,6 +228,8 @@ kurse_waffle_mint <- function(r) {
     }
 
     # # # plot
+
+    #nicht in bar wegen categories
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -335,6 +337,8 @@ kurse_einstieg_comparison <- function(r) {
 
    df1 <- df1[with(df1, order(round(proportion,1), decreasing = FALSE)),]
 
+
+   #forcats, daher nicht in balkenbuilder
  out <-  highcharter::hchart(df1, 'bar', highcharter::hcaes(y = round(proportion,1), x = indikator, group = forcats::fct_rev(fachbereich))) %>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -1061,6 +1065,7 @@ kurse_map <- function(r) {
     df <- df %>% dplyr::arrange(desc(proportion))
 
     #Plot
+    #net verwendet da kein color
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
       highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -1087,6 +1092,22 @@ kurse_map <- function(r) {
                                   )
                                 )
       )
+
+
+    # format <- "{value}%"
+    # tooltip <- "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
+    # y = "proportion"
+    # x = "region"
+    # optional = list(bar = list(
+    #   colorByPoint = TRUE,
+    #   colors = ifelse(df$region == "Deutschland", "#b16fab",
+    #                   ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
+    #                          ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))
+    # titel = paste0( "Anteil von ", kurs_help, "-Belegungen in ", help_title, " nach Bundesländern (",  timerange, ")")
+    #
+    #
+    # out <- balkenbuilder(df, titel, x, y, tooltip = tooltip, color = )
+    #
 
     return(out)
 
@@ -1596,6 +1617,7 @@ kurse_mint_comparison <- function(r) {
   }
 
   # plot
+  #net verwendet da kein color explizit und komplexer
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
     highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -1714,6 +1736,7 @@ kurse_mint_comparison_bl <- function(r) {
   kurs_help <- ifelse(indikator_comparison == "Grundkurse", "Grundkurs", "Leistungskurs")
 
   #Plot
+  #net verwendet da kein color explizit und komplexer
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
     highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -2030,6 +2053,7 @@ kurse_comparison_gender <- function(r) {
     if(gegenwert == "Ja"){
 
 
+      #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
       out <- highcharter::hchart(df1, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,1), group = anzeige_geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}-Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  TRUE) %>%
@@ -2054,8 +2078,9 @@ kurse_comparison_gender <- function(r) {
                                     contextButton = list(
                                       menuItems = list("downloadPNG", "downloadCSV")
                                     )
-                                  )
-        )
+                                  ))
+
+
     }else if(gegenwert == "Nein"){
 
       df1 <- df1 %>% dplyr::filter(indikator %in%

@@ -954,35 +954,56 @@ plot_mv_stimmung <- function(r){
     subtitel <- ifelse(gruppe == "Schule", "N = 18", ifelse(gruppe == "außerschulische Akteur:innen",
                                                             "N = 24", subtitel))
 
-    plot <- df %>%
-      highcharter::hchart(
-        "bar", highcharter::hcaes(group = antwort , y = wert, x = typ)
-      )%>%
-      highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-      highcharter::hc_tooltip(
-        pointFormat=paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')) %>%
-      highcharter::hc_colors( c("#efe8e6",
-                                "#ee7775", "#fca5a5",
-                                "#66cbaf", "#35bd97" )) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      highcharter::hc_subtitle(text = subtitel,
-                               align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
-      highcharter::hc_yAxis(title = list(text = "")) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
-      )
+    group = "antwort"
+    y = "wert"
+    x = "typ"
+
+    color <-  c("#efe8e6",
+                "#ee7775", "#fca5a5",
+                "#66cbaf", "#35bd97" )
+    tooltip <- paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')
+
+
+    plot <- balkenbuilder(df, titel, x, y, group=group, tooltip, format = "1", color = color, stacking = "percent", subtitel = subtitel)
+
+
+    # df, titel , x, y, group=NULL, tooltip, format, color,
+    # optional=NULL, reverse = TRUE, TF=FALSE, stacking=NULL, subtitel = NULL){
+
+
+
+
+
+
+    # plot <- df %>%
+    #   highcharter::hchart(
+    #     "bar", highcharter::hcaes(group = antwort , y = wert, x = typ)
+    #   )%>%
+    #   highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+    #   highcharter::hc_tooltip(
+    #     pointFormat=paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')) %>%
+    #   highcharter::hc_colors( c("#efe8e6",
+    #                             "#ee7775", "#fca5a5",
+    #                             "#66cbaf", "#35bd97" )) %>%
+    #   highcharter::hc_title(text = titel,
+    #                         margin = 45,
+    #                         align = "center",
+    #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    #   highcharter::hc_subtitle(text = subtitel,
+    #                            align = "center",
+    #                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
+    #   highcharter::hc_yAxis(title = list(text = "")) %>%
+    #   highcharter::hc_xAxis(title = list(text = "")) %>%
+    # highcharter::hc_chart(
+    #   style = list(fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
+    #   highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+    #   highcharter::hc_exporting(enabled = TRUE,
+    #                             buttons = list(
+    #                               contextButton = list(
+    #                                 menuItems = list("downloadPNG", "downloadCSV")
+    #                               )
+    #                             )
+    #   )
 
     }else{
 

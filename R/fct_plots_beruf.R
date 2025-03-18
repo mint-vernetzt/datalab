@@ -152,9 +152,9 @@ beruf_einstieg_vergleich <- function(r) {
       format <- "{value}%"
       color <- c("#efe8e6","#b16fab")
       tooltip <- "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
-      optional = list(bar = list(stacking = "percent"))
+      # optional = list(bar = list(stacking = "percent"))
 
-      out <- balkenbuilder(df, titel, x="indikator", y = "proportion", group = "fachbereich", tooltip, format, color, optional)
+      out <- balkenbuilder(df, titel, x="indikator", y = "proportion", group = "fachbereich", tooltip, format, color, stacking = "percent")
 
 
     }else{
@@ -2103,6 +2103,8 @@ arbeitsmarkt_überblick_fächer <- function( r) {
   if(indikator_choice == "Auszubildende (1. Jahr)") hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl Auszubildende mit neuem Lehrvertrag: {point.wert}"
 
   # plot
+
+  #balkenbuilder wird hier nicht verwendet, weil das wieder so specialized ist
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = fachbereich)) %>%
     highcharter::hc_tooltip(pointFormat = hover) %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -2435,33 +2437,41 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
     #
    tooltip <- "{point.geschlecht}-Anteil: {point.y} % <br> Anzahl: {disp_wert}"
    format <- "{value}%"
-   optional <- list(bar = list(stacking = "percent"))
+   # optional <- list(bar = list(stacking = "percent"))
    reverse <- FALSE
 
-       out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = indi_fach, y=proportion, group = geschlecht))%>%
+   stacking = "percent"
 
-      highcharter::hc_tooltip(pointFormat = tooltip)%>%
+   color = c("#154194", "#efe8e6")
 
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
-      highcharter::hc_xAxis(title = list(text = "")
-      ) %>%
-      highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 25,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
-      )
+
+
+   out <- balkenbuilder(df, titel, x = "indi_fach", y="proportion", group = "geschlecht", tooltip = tooltip, format = format, color = color, reverse = FALSE, stacking = stacking, TF=FALSE)
+   #
+   #     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = indi_fach, y=proportion, group = geschlecht))%>%
+   #
+   #    highcharter::hc_tooltip(pointFormat = tooltip)%>%
+   #
+   #    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+   #    highcharter::hc_xAxis(title = list(text = "")
+   #    ) %>%
+   #    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+   #    highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
+   #    highcharter::hc_title(text = titel,
+   #                          margin = 25,
+   #                          align = "center",
+   #                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+   #    highcharter::hc_chart(
+   #      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+   #    ) %>%
+   #    highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+   #    highcharter::hc_exporting(enabled = TRUE,
+   #                              buttons = list(
+   #                                contextButton = list(
+   #                                  menuItems = list("downloadPNG", "downloadCSV")
+   #                                )
+   #                              )
+   #    )
 
        # damit aktuell noch falschrum - bräuchte noch ein
        # out <- balkenbuilder(df, titel, x="indi_fach", y="proportion", group="geschlecht",
@@ -3145,6 +3155,9 @@ arbeitsmarkt_top10 <- function( r){
         dplyr::slice(1:10)
     }
 
+
+
+    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create female plot
     plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -3173,7 +3186,7 @@ arbeitsmarkt_top10 <- function( r){
                                 )
       )
 
-
+    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create male plot
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -3221,6 +3234,8 @@ arbeitsmarkt_top10 <- function( r){
 
     # das bleibt ohne verallgemeinerung da es spezialisierter ist.
 
+
+    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create female plot
     plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -3249,6 +3264,9 @@ arbeitsmarkt_top10 <- function( r){
                                 )
       )
 
+
+
+    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create male plot
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(

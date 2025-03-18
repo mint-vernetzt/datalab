@@ -604,7 +604,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
         yanchor = "top"
       )
     )#####################################################################################
-  hc <- hc  %>%
+  hc <- fig %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1358,6 +1358,20 @@ plot_fachkraft_bar_vakanz  <- function(r) {
   }
 
 
+  tooltip <- ifelse(this_indikator == "Arbeitslosen-Stellen-Relation",
+                    'Auf eine ausgeschriebene Stelle kommen {point.wert} Arbeitslose & -suchende.',
+                    'Eine ausgeschriebene Stelle steht {point.wert} Tage leer, bis sie besetzt werden kann.')
+  titel <- paste0(this_indikator, " in den MINT-Bereichen in ", this_region,
+                    " (", level, timerange, ")")
+  x = "fachbereich"
+  y = "wert"
+  color_hcaes <- "group_color"
+
+  subtitel <- subtitel
+  format <- "1"
+
+
+  ##NICHT IN BALKENBUILDER DA ES eine andere struktur hat, und komplizierter is
   plot<- highcharter::hchart(
     object = plot_data,
     type = "bar",
@@ -1564,6 +1578,9 @@ plot_fachkraft_detail_item  <- function(r) {
   sep_line_risiko <- sum(plot_bar_data$kategorie == "Engpassanalyse") - 0.4
   sep_line_engpass <-  -0.4
 
+
+
+  ##NICHT IN BALKENBUILDER DA ES eine andere struktur hat, und komplizierter is
   plot_right <- highcharter::hchart(
     object = plot_bar_data,
     type =  'bar',

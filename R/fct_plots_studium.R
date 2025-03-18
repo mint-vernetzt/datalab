@@ -141,6 +141,8 @@ studienzahl_mint <- function(r){
          df <- df %>% dplyr::filter(indikator %in% testl1)
          df <- df[with(df, order(proportion, decreasing = TRUE)), ]
 
+
+         #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
          highcharter::hchart(df, 'bar', highcharter::hcaes(y = proportion, x = indikator, group =forcats::fct_rev(fach)))%>%
            highcharter::hc_tooltip(pointFormat = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  F) %>%
@@ -592,6 +594,7 @@ studierende_bula_mint <- function(r) {
 
 
     # Plot
+    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
       highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.proportion} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
       highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
@@ -1255,7 +1258,7 @@ studienzahl_einstieg_comparison <- function(r) {
 
   df <- within(df, proportion <- factor(proportion, levels=c("Nicht MINT", "MINT (Gesamt)")))
 
-
+  #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = indikator, group = forcats::fct_rev(proportion)))%>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.proportion} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  F) %>%
@@ -1720,6 +1723,7 @@ plot_mint_faecher <- function(r){
 
     }
 
+    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
       highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
@@ -2369,6 +2373,7 @@ plot_studierende_bula_faecher <- function(r){
 
 
     }else{
+      #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
       highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
       highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
@@ -2511,6 +2516,9 @@ ranking_bl_subject <- function(r) {
   df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
   df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
+
+
+  #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
     highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
     highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
@@ -2644,6 +2652,7 @@ studierende_mint_vergleich_bl <- function(r) {
   df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
 
   # Plot
+  #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
     highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
     highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
@@ -3042,6 +3051,9 @@ studienzahl_einstieg_gender <- function(r) {
       dplyr::filter(!is.na(proportion), !is.na(wert))
 
 
+
+
+    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = fach_indikator, y=proportion, group = geschlecht))%>%
 
       highcharter::hc_tooltip(pointFormat = "{point.geschlecht}-Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}")%>%
@@ -3651,12 +3663,15 @@ plot_ranking_top_faecher <- function(r) {
     df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
+
+    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
     # female
     studierende_faecher_frauen <- df %>%
       dplyr::filter(geschlecht == "Frauen")%>%
       dplyr::arrange(desc(prop))%>%
       dplyr::slice(1:10)
 
+    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
     # male
     studierende_faecher_maenner <- df %>%
       dplyr::filter(geschlecht == "Männer") %>%
@@ -3727,7 +3742,7 @@ plot_ranking_top_faecher <- function(r) {
     df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
 
-
+    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
     # female
     studierende_faecher_frauen <- df %>%
       dplyr::filter(geschlecht == "Frauen") %>%
@@ -3735,6 +3750,7 @@ plot_ranking_top_faecher <- function(r) {
       dplyr::slice(1:10)
 
     # male
+    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
     studierende_faecher_maenner <- df %>%
       dplyr::filter(geschlecht == "Männer") %>%
       dplyr::arrange(desc(wert)) %>%
@@ -3997,6 +4013,8 @@ plot_auslaender_mint <- function(r){
 
       if (status_select == "Absolvent:innen"){
 
+
+        #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
         out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
           highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
@@ -4032,6 +4050,8 @@ plot_auslaender_mint <- function(r){
           )
 
       } else {
+
+        #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
         out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
           highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
@@ -4083,6 +4103,7 @@ plot_auslaender_mint <- function(r){
 
       if (status_select == "Absolvent:innen"){
 
+        #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
         out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
           highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
@@ -4118,6 +4139,7 @@ plot_auslaender_mint <- function(r){
 
       }else{
 
+        #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
         out <- highcharter::hchart(df_fachbereich, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
           highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
           highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
@@ -4169,6 +4191,8 @@ plot_auslaender_mint <- function(r){
 
        if (status_select == "Absolvent:innen"){
 
+
+         #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
          out <- highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
            highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
            highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
@@ -4196,6 +4220,9 @@ plot_auslaender_mint <- function(r){
 
        } else {
 
+
+
+         #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
          out <- highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
            highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anteil: {point.display_rel} %")%>%
            highcharter::hc_size(height = 60*plt.add$höhe[plt.add$ebene == betr_ebene])%>%
@@ -4242,6 +4269,9 @@ plot_auslaender_mint <- function(r){
         df_faecher <- df_faecher[order(-df_faecher$wert),]
 
         if(status_select == "Absolvent:innen"){
+          #
+          #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
+          #
 
           out <- highcharter::hchart(df_faecher, 'bar', highcharter::hcaes(y = wert, x = fach, group = ausl_detect))%>%
             highcharter::hc_tooltip(pointFormat = "{point.ausl_detect} <br> Anzahl: {point.display_abs}")%>%
@@ -4952,7 +4982,7 @@ studierende_international_bula_mint <- function(r) {
                      "internationalen Studienanfänger:innen", help_l)
     help_l <- ifelse(r_lab1 == "Studienanfänger:innen (1. Hochschulsemester)", "Studienanfänger:innen", help_l)
 
-
+    #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
     # Plot
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x= region, y = proportion))%>%
       highcharter::hc_tooltip(pointFormat = "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}") %>% #Inhalt für Hover-Box
