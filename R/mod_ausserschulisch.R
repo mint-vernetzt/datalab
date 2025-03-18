@@ -6,7 +6,10 @@ mod_ausserschulisch_ui <- function(id){
   tagList(
     fluidPage(
       fluidRow(
-        mod_ausserschulisch_start_ui("mod_ausserschulisch_start_ui_1")
+        start_time <- Sys.time(),
+        mod_ausserschulisch_start_ui("mod_ausserschulisch_start_ui_1"),
+        end_time <- Sys.time(),
+        message("Ausser schulische wurde in ", round(end_time - start_time, 2), " Sekunden berechnet.")
       )
     )
   )
