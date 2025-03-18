@@ -983,7 +983,7 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>% #SourceSans3-Regular
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>% #Calibri Regular
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
@@ -1006,11 +1006,11 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
       highcharter::hc_subtitle(text = subtitel,
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                              dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE)) %>%
@@ -1041,7 +1041,7 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
     highcharter::hc_title(text = titel,
                           margin = 45,
                           align = "center",
@@ -1238,14 +1238,14 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
       highcharter::hc_subtitle(text = subtitel,
                                align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "18px")) %>%
       highcharter::hc_yAxis(title = list(text = "")) %>% #######NO FORMAT
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
+        style = list(fontFamily = "Calibri Regular", fontSize = "18px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -1266,14 +1266,14 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
       highcharter::hc_subtitle(text = subtitel,
                                align = "center",
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "18px")) %>%
       highcharter::hc_yAxis(title = list(text = ""),  labels = list(format = "{value}%"), reversedStacks =  FALSE) %>%
       highcharter::hc_xAxis(title = list(text = "")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
+        style = list(fontFamily = "Calibri Regular", fontSize = "18px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -1324,10 +1324,10 @@ get_top10_hc_plot_options <- function(hc,
                           align = "center",
                           style = list(color = "black",
                                        useHTML = TRUE,
-                                       fontFamily = "SourceSans3-Regular",
+                                       fontFamily = "Calibri Regular",
                                        fontSize = "20px")) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
     highcharter::hc_exporting(enabled = TRUE,
@@ -1586,10 +1586,10 @@ if(prop==FALSE && wert == FALSE){
       text = titel,
       margin = 10,
       align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
+      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
     ) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular")
+      style = list(fontFamily = "Calibri Regular")
     ) %>% #highcharter::hc_size(600, 550) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
