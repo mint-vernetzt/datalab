@@ -482,6 +482,21 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
   #   dplyr::filter(jahr == 2022) %>%
   #   dplyr::pull(wert)
 
+  if (is.null(year_filter) || !is.numeric(year_filter)) {
+    stop("Fehler: `year_filter` ist NULL oder kein numerisches Jahr!")
+  }
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM fachkraefte_prognose
+  WHERE jahr = {year_filter}
+  AND indikator = 'Verbesserung'
+  AND geschlecht = 'Gesamt'
+  AND nationalitaet = 'Gesamt'
+  AND anforderung = 'Gesamt'
+", .con = con)
+
+
   df_query <- glue::glue_sql("
   SELECT *
   FROM fachkraefte_prognose
@@ -603,16 +618,10 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
         xanchor = "center",
         yanchor = "top"
       )
-    )#####################################################################################
-  hc <- fig %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
 
     )
+
+  hc <- fig
 
   return(hc)
 }
