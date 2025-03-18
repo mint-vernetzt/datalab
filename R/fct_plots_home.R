@@ -603,7 +603,7 @@ home_einstieg_gender <- function(r) {
 
 
 
-        #leer line plot
+        #leer line plot daher nicht fkt
         if(indi[1] == "Schüler:innen im Leistungskurs" & nrow(df_1_rest) == 0){
           titel1 <- ""
           df_1_rest$jahr <- NA

@@ -228,6 +228,8 @@ plot_international_map <- function(r) {
   #
   data_map_1 <- df7
 
+
+  #zu komplex / different
   highcharter::highchart(type = "map") %>%
     highcharter::hc_add_series_map(
       map = map_selection,
@@ -1403,7 +1405,7 @@ plot_international_schule_map <- function(r) {
 
  map_selection <- highcharter::download_map_data(url = "custom/world", showinfo = FALSE)
 
-
+ #zu komplex / different
   # plot
   highcharter::highchart(type = "map") %>%
     highcharter::hc_add_series_map(
