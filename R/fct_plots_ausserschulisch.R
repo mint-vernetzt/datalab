@@ -1065,7 +1065,7 @@ plot_mv_genderb <- function(){
     x = "gruppe"
     y = "wert"
 
-    quelle <- "1"
+    quelle <- "Quelle der Daten: MINTvernetzt 2024"
 
 
     plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel, quelle = quelle )
