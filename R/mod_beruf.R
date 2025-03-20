@@ -12,7 +12,10 @@ mod_beruf_ui <- function(id){
   tagList(
     fluidPage(
       fluidRow(
-        mod_beruf_arbeitsmarkt_ui("mod_beruf_arbeitsmarkt_ui_1")
+        start_time <- Sys.time(),
+        mod_beruf_arbeitsmarkt_ui("mod_beruf_arbeitsmarkt_ui_1"),
+        end_time <- Sys.time(),
+        message("Beruf wurde in ", round(end_time - start_time, 2), " Sekunden berechnet.")
       )
     )
   )
