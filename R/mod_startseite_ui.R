@@ -27,20 +27,37 @@ mod_startseite_start_ui <- function(id){
 
     # Einleitungstext
     fluidRow(
-        div(class = "clean-box",
+      div(class = "clean-box",
           column(
-          width = 10,
-          h1("Willkommen im MINT-DataLab von MINTvernetzt!"),
-          p(style = "text-align: justify; font-size = 20px",
-            "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
-            Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
-                  für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver
-          Diagramme einen intuitiven und informativen Zugang zu gewähren. Dabei entwickeln wir das MINT-DataLab stetig weiter.",
-            br()
+            width = 7,
+            h1("Willkommen im MINT-DataLab von MINTvernetzt!"),
+            p(style = "text-align: justify; font-size: 14px;",
+              "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
+          Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
+          für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver
+          Diagramme einen intuitiven und informativen Zugang zu gewähren. Dabei entwickeln wir das MINT-DataLab stetig weiter."
+            )
+          ),
+          column(
+            width = 5,
+            h1("Was es seit dem neuesten Update gibt:"),
+            p(style = "text-align: justify; font-size: 14px;",
+              "1.    Grafikdownload (CSV, PNG)", br(),
+              "2.    Aktualisierte Daten, z.B. TIMSS 2024",br(),
+              "3.    Strukturiertere Aufgliederung der Daten",br(),
+              "4.   Bugfixes & Prozessoptimierung"
+            ),
+            h2("Woran wir aktuell arbeiten:"),
+            p(style = "text-align: justify; font-size: 14px;",
+              "1.    Argumentationshilfeseite mit Erklärungen und Beispielen",br(),
+              "2.    Schnelleres Laden der Website",br(),
+              "3.     Mehr Daten und Datenaufschlüsselungen, z.B. Absolvent:innen im Lehramt"
+            )
           )
-        )
-        )
+      )
     ),
+
+
 
     # Dynamische Grafiken
     fluidRow(

@@ -96,11 +96,14 @@ studienzahl_mint <- function(r){
           tooltip <-paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')
           format <- '{point.display_rel}%'
 
+          quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
 
           highcharter::hw_grid(
 
 
-            out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#efe8e6", "#b16fab"), format = format),
+            out <- piebuilder(df_pie, titel, x = "fach", y = "proportion", tooltip, color =  c("#efe8e6", "#b16fab"), format = format, quelle=quelle),
 
 
             ncol = 1,
