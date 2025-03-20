@@ -286,11 +286,6 @@ mod_ausserschulisch_start_ui <- function(id){
                                          tags$style(".well {background-color:#FFFFFF;}"),
                                          tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                          mod_ausserschulisch_mvb_akteursbefragung_ui("mod_ausserschulisch_mvb_akteursbefragung_ui_1"),
-                                         # br(),br(),
-                                         # downloadButton(
-                                         #   outputId = ns("download_btn_plot___"),
-                                         #   label = "Download",
-                                         #   icon = icon("download")),
                                        ),
                                        shiny::mainPanel(
                                          width = 9,
@@ -317,10 +312,6 @@ mod_ausserschulisch_start_ui <- function(id){
                                          tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                          mod_ausserschulisch_mvb_stimmungsb_ui("mod_ausserschulisch_mvb_stimmungsb_ui"),
                                          # br(),br(),
-                                         # downloadButton(
-                                         #   outputId = ns("download_btn_plot___"),
-                                         #   label = "Download",
-                                         #   icon = icon("download")),
                                        ),
                                        shiny::mainPanel(
                                          width = 9,
@@ -343,9 +334,6 @@ mod_ausserschulisch_start_ui <- function(id){
                               tabPanel("MINTvernetzt-Genderbefragung: Aktive Vernetzung", br(),
                                        column(
                                          width = 3,
-                                         # tags$style(".well {background-color:#FFFFFF;}"),
-                                         # tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                                         # mod_ausserschulisch_mvb_genderb_ui("mod_ausserschulisch_mvb_genderb_ui"),
                                          tags$img(src = "www/Ausserschulisch_Gender_Tabelle2.png",
                                                   style = "margin-top: 90px;")
                                        ),

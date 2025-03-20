@@ -830,36 +830,11 @@ plot_mv_akteursb <- function(r){
                 "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
                 "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")
     format <- '{point.prop} %'
-    plot <- piebuilder(df, titel, x="indikator", y="wert", tooltip = paste('Anteil: {point.prop}%'), color, format)
 
-   # plot <- df %>%
-   #   highcharter::hchart(
-   #     "pie", highcharter::hcaes(x = indikator , y = wert)
-   #   )%>%
-    ##  highcharter::hc_tooltip(
-    #    pointFormat=paste('Anteil: {point.prop}%')) %>%
-    #  highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
-    #                            "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a",
-    #                            "#007655", "#dc6262", "#5d335a", "#112c7f", "#f59e0b", "#bbd1fc")) %>%
-    #  highcharter::hc_title(text = titel,
-    #                        margin = 45,
-    #                        align = "center",
-    #                        style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    #  highcharter::hc_subtitle(text = subtitel,
-    #                           align = "center",
-    #                           style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
-     # highcharter::hc_chart(
-    #    style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-     # highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-     # highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-      #                                       dataLabels = list(enabled = TRUE,  format='{point.prop} %'), showInLegend = TRUE)) %>%
-      #highcharter::hc_exporting(enabled = TRUE,
-      #                          buttons = list(
-      #                            contextButton = list(
-      #                              menuItems = list("downloadPNG", "downloadCSV")
-      #                            )
-       #                         )
-      #)
+    quelle <- "Quelle der Daten: MINTvernetzt 2024."
+
+    plot <- piebuilder(df, titel, x="indikator", y="wert", tooltip = paste('Anteil: {point.prop}%'), color, format, quelle = quelle)
+
 
 
 
@@ -1036,57 +1011,15 @@ plot_mv_stimmung <- function(r){
 
       colors<-  c("#b16fab", "#154194", "#66cbaf","#fbbf24")
       tooltip <- paste('Anteil: {point.wert}%')
-      x = antwort
-      y = wert
+      x = "antwort"
+      y = "wert"
       titel <- titel
       subtitel <- subtitel
 
-      plot <- piebuilder(df, titel, x, y, tooltip, colors, format = '{point.prop_besr}%', subtitel)
+      quelle <- "Quelle der Daten: MINTvernetzt 2024."
 
+      plot <- piebuilder(df, titel, x, y, tooltip, colors, format = '{point.wert}%', subtitel, quelle = quelle)
 
-      # plot <- df %>%
-      #   highcharter::hchart(
-      #     "pie", highcharter::hcaes(x = antwort, y = wert)
-      #   )%>%
-      #   highcharter::hc_tooltip(
-      #     pointFormat=paste('Anteil: {point.wert}%')) %>%
-      #   highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf","#fbbf24")) %>%
-      #   highcharter::hc_title(text = titel,
-      #                         margin = 45,
-      #                         align = "center",
-      #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      #   highcharter::hc_subtitle(text = subtitel,
-      #                            align = "center",
-      #                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
-      #
-      #   highcharter::hc_labels(style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      #   highcharter::hc_plotOptions(
-      #     pie = list(
-      #       dataLabels = list(
-      #         enabled = TRUE,
-      #         distance = 50,
-      #         style = list(
-      #           fontSize = "13px",
-      #           fontFamily = "SourceSans3-Regular"
-      #         )
-      #       )
-      #     )
-      #   ) %>%
-      #   highcharter::hc_chart(
-      #
-      #     marginTop = 80,      # Mehr Platz oben
-      #     marginBottom = 80,   # Mehr Platz unten
-      #     marginLeft = 100,    # Platz links für Labels
-      #     marginRight = 100   # Platz rechts für Labels
-      #   ) %>%
-      #   highcharter::hc_exporting(enabled = TRUE,
-      #                             buttons = list(
-      #                               contextButton = list(
-      #                                 menuItems = list("downloadPNG", "downloadCSV")
-      #                               )
-      #                             )
-      #
-      #   )
   }
 
 
@@ -1132,8 +1065,10 @@ plot_mv_genderb <- function(){
     x = "gruppe"
     y = "wert"
 
+    quelle <- "1"
 
-    plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel)
+
+    plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel, quelle = quelle )
 
 #
 #

@@ -987,8 +987,6 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      # highcharter::hc_caption(text = "Quelle der Daten: auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-      #                         style = list(fontSize = "11px")) %>%
       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                              dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE)) %>%
       highcharter::hc_caption(text = quelle,
