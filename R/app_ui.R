@@ -32,7 +32,7 @@ app_ui <- function(request) {
           style = "position: fixed;",
           id = "tabs",
           shinydashboard::menuItem("Startseite",  tabName = "startseite"),
-
+          shinydashboard::menuItem("Argumentationshilfe",  tabName = "argumentationshilfe"),
           p("MINT nach Bereichen:", style = "color: #154194; font-size: 16px; font-weight: 600;
           margin: 5px 0px 0px 10px;"),
           hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
@@ -50,9 +50,6 @@ app_ui <- function(request) {
 
           hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen")
-        #,
-
-
 
         )
       ),
@@ -91,6 +88,7 @@ app_ui <- function(request) {
 
           shinydashboard::tabItems(
           shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
+          shinydashboard::tabItem(tabName ="argumentationshilfe", mod_argumentation_ui("argumentationshilfe_ui_1")),
           shinydashboard::tabItem(tabName ="home", mod_home_ui("home_ui_1")),
           shinydashboard::tabItem(tabName ="schule", mod_schule_ui("schule_ui_1")),
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
