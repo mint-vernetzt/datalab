@@ -874,10 +874,6 @@ plot_mv_stimmung <- function(r){
                     "Der Ganztag sollte als Bildungsort genutzt werden und dabei auch MINT-Bildungsangebote einbinden.")
 
 
-    # df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
-    #   dplyr::filter(typ %in% frage_typ,
-    #                 indikator == gruppe) %>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -914,59 +910,16 @@ plot_mv_stimmung <- function(r){
                 "#ee7775", "#fca5a5",
                 "#66cbaf", "#35bd97" )
     tooltip <- paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')
+    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."
+
+    plot <- balkenbuilder(df, titel, x, y, group=group, tooltip, format = "1", color = color, stacking = "percent", subtitel = subtitel, quelle =quelle)
 
 
-    plot <- balkenbuilder(df, titel, x, y, group=group, tooltip, format = "1", color = color, stacking = "percent", subtitel = subtitel)
-
-
-    # df, titel , x, y, group=NULL, tooltip, format, color,
-    # optional=NULL, reverse = TRUE, TF=FALSE, stacking=NULL, subtitel = NULL){
-
-
-
-
-
-
-    # plot <- df %>%
-    #   highcharter::hchart(
-    #     "bar", highcharter::hcaes(group = antwort , y = wert, x = typ)
-    #   )%>%
-    #   highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-    #   highcharter::hc_tooltip(
-    #     pointFormat=paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')) %>%
-    #   highcharter::hc_colors( c("#efe8e6",
-    #                             "#ee7775", "#fca5a5",
-    #                             "#66cbaf", "#35bd97" )) %>%
-    #   highcharter::hc_title(text = titel,
-    #                         margin = 45,
-    #                         align = "center",
-    #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    #   highcharter::hc_subtitle(text = subtitel,
-    #                            align = "center",
-    #                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
-    #   highcharter::hc_yAxis(title = list(text = "")) %>%
-    #   highcharter::hc_xAxis(title = list(text = "")) %>%
-    # highcharter::hc_chart(
-    #   style = list(fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
-    #   highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-    #   highcharter::hc_exporting(enabled = TRUE,
-    #                             buttons = list(
-    #                               contextButton = list(
-    #                                 menuItems = list("downloadPNG", "downloadCSV")
-    #                               )
-    #                             )
-    #   )
 
     }else{
 
       frage_typ <- "Lernrückstände"
-      # df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
-      #   dplyr::filter(typ %in% frage_typ,
-      #                 indikator == gruppe) %>%
-      #   dplyr::collect()
-
-
-      df_query <- glue::glue_sql("
+     df_query <- glue::glue_sql("
       SELECT *
       FROM ausserschulisch_stimmungsbarometer
       WHERE typ IN ({frage_typ*})
@@ -1007,10 +960,6 @@ plot_mv_stimmung <- function(r){
 plot_mv_genderb <- function(){
 
 
-    # df <- dplyr::tbl(con, "ausserschulisch_genderbefragung") %>%
-    #   dplyr::filter(thema == "Vernetzungswunsch") %>%
-    #   dplyr::collect()
-    #
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -1073,17 +1022,6 @@ skf_einrichtungen <- function(r){
 
   # Alle Einrichtungen berechnen und gewählte Einrichtung filtern
   if(ort_select == "Alle Einrichtungen"){
-    # df <- dplyr::tbl(con, from = "ausserschulisch_skf") %>%
-    #   dplyr::filter(indikator %in% c("Einrichtungen mit SKf-Fortbildung",
-    #                                  "zertifizierte Einrichtungen"),
-    #                 jahr %in% t) %>%
-    #   dplyr::select(-bereich) %>%
-    #   dplyr::group_by(indikator, jahr) %>%
-    #   dplyr::summarise(wert = sum(wert)) %>%
-    #   dplyr::ungroup() %>%
-    #   dplyr::collect()
-
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM ausserschulisch_skf
@@ -1100,13 +1038,7 @@ skf_einrichtungen <- function(r){
 
     df$einrichtung <- "Alle Einrichtungen"
   }else{
-    # df <- dplyr::tbl(con, from = "ausserschulisch_skf") %>%
-    #   dplyr::filter(indikator %in% c("Einrichtungen mit SKf-Fortbildung",
-    #                                  "zertifizierte Einrichtungen"),
-    #                 jahr %in% t,
-    #                 einrichtung == ort_select) %>%
-    #   dplyr::select(-bereich) %>%
-    #   dplyr::collect()
+
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -1193,15 +1125,6 @@ skf_personal <- function(r){
   # Datensatz filtern
   # Alle Einrichtungen berechnen und gewählte Einrichtung filtern
   if(ort_select == "Alle Einrichtungen"){
-    # df <- dplyr::tbl(con, from = "ausserschulisch_skf") %>%
-    #   dplyr::filter(indikator %in% c("insgesamt fortgebildete Fach- / Lehrkräfte",
-    #                                  "neu fortgebildete Fach- / Lehrkräfte"),
-    #                 jahr %in% t) %>%
-    #   dplyr::select(-bereich) %>%
-    #   dplyr::group_by(indikator, jahr) %>%
-    #   dplyr::summarise(wert = sum(wert)) %>%
-    #   dplyr::ungroup() %>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -1220,13 +1143,6 @@ skf_personal <- function(r){
 
     df$einrichtung <- "Alle Einrichtungen"
   }else{
-    # df <- dplyr::tbl(con, from = "ausserschulisch_skf") %>%
-    #   dplyr::filter(indikator %in% c("insgesamt fortgebildete Fach- / Lehrkräfte",
-    #                                  "neu fortgebildete Fach- / Lehrkräfte"),
-    #                 jahr %in% t,
-    #                 einrichtung == ort_select) %>%
-    #   dplyr::select(-bereich) %>%
-    #   dplyr::collect()
 
 
     df_query <- glue:::glue_sql("

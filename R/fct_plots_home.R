@@ -132,7 +132,7 @@ home_einstieg <- function(r) {
 
       quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out2 <- piebuilder(df_2, titel, x, y, tooltip, color, format, subtitel, quelle)
+      out2 <- piebuilder(df_2, titel, x, y, tooltip, color, format, subtitel, quelle = quelle)
 
 
       # out2 <- highcharter::hchart(df_2, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = prop)) %>%
@@ -230,14 +230,12 @@ home_einstieg <- function(r) {
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-     # highcharter::hc_subtitle(text = subtitel,
-     #                          margin = 20,
-     #                          align = "center",
-     #                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
      highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+     highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                             style = list(fontSize = "11px", color = "gray")) %>%
      highcharter::hc_exporting(enabled = TRUE,
                                buttons = list(
                                  contextButton = list(
@@ -246,7 +244,6 @@ home_einstieg <- function(r) {
                                )
      )
 
-   # out <- balkenbuilder(df, titel, subtitel ,group = "fachbereich")
 
   }
 
@@ -331,7 +328,10 @@ home_rest_mint_verlauf <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
-    out <- linebuilder(df, titel1,x="jahr", y="prop", group="indikator", tooltip = tooltip, format, color)
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
+    out <- linebuilder(df, titel1,x="jahr", y="prop", group="indikator", tooltip = tooltip, format, color, quelle = quelle)
 
   } else if (absolut_selector=="Anzahl") {
 
@@ -360,7 +360,8 @@ home_rest_mint_verlauf <- function(r) {
 
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
-    out <- linebuilder(df, titel, x = "jahr", y="wert", group = "indikator", tooltip = tooltip, format, color)
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y="wert", group = "indikator", tooltip = tooltip, format, color, quelle = quelle)
 
 
   }
@@ -704,38 +705,10 @@ home_einstieg_gender <- function(r) {
 
       colors <- c("#154194", "#efe8e6")
 
-      out <- balkenbuilder(df, titel, x, y, group, tooltip, format="{value}%", color = colors, reverse=reversed, stacking = stacking)
+      quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-#
-#       out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=prop, group = geschlecht)) %>%
-#         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
-#         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
-#         highcharter::hc_xAxis(title = list(text = "")) %>%
-#         highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-#         highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-#         highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")"),
-#                               margin = 25,
-#                               align = "center",
-#                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-#         highcharter::hc_chart(
-#           style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-#         ) %>%
-#         highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-#         highcharter::hc_exporting(enabled = TRUE,
-#                                   buttons = list(
-#                                     contextButton = list(
-#                                       menuItems = list("downloadPNG", "downloadCSV")
-#                                     )
-#                                   )
-#         )
+      out <- balkenbuilder(df, titel, x, y, group, tooltip, format="{value}%", color = colors, reverse=reversed, stacking = stacking, quelle = quelle)
 
-
-      # titel = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
-      # tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
-      # format <- "{value}%"
-      # color <- c("#154194", "#efe8e6")
-      #
-      # out <- balkenbuilder(df, titel , x = "indikator", y = "prop", group = "geschlecht", tooltip, format, color)
 
 
 
@@ -774,6 +747,8 @@ home_einstieg_gender <- function(r) {
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+        highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -913,8 +888,8 @@ home_comparison_line <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
-
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group="indikator",tooltip, format)
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "prop", group="indikator",tooltip, format, quelle = quelle)
 
 
   } else if (abs_selector =="Anzahl"){
@@ -939,8 +914,9 @@ home_comparison_line <- function(r) {
     format <- "{value}"
 
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24" )
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- linebuilder(df,titel,x="jahr", y="wert", group="indikator", tooltip, format, color)
+    out <- linebuilder(df,titel,x="jahr", y="wert", group="indikator", tooltip, format, color, quelle = quelle)
 
 
 

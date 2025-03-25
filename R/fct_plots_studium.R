@@ -236,7 +236,10 @@ studienzahl_verlauf_single <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "proportion", group = "indikator", tooltip, format, color)
+
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+    out <- linebuilder(df, titel, x = "jahr", y = "proportion", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
 
@@ -258,9 +261,10 @@ studienzahl_verlauf_single <- function(r) {
                     paste0("Anzahl an Studierenden in MINT in ", regio))
     tooltip <- "Anzahl: {point.display_abs}"
     format <- "{value:, f}"
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
   }
@@ -427,7 +431,8 @@ studierende_bula_mint <- function(r) {
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
 
     } else if(absolut_selector=="Anzahl"){
 
@@ -446,7 +451,8 @@ studierende_bula_mint <- function(r) {
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
     }
 
   }
@@ -911,8 +917,9 @@ studienzahl_verlauf_bl_subject <- function(r) {
     titel <- paste0("Anteil von ", label_select, " in MINT an allen ", titel_help, " in ",states )
     tooltip <- "Anteil {point.display_rel}%"
     format <- "{value}%"
-    color <- c("#b16fab", "#154194","#66cbaf")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "var", tooltip, format, color)
+    color <- c("#b16fab", "#154194","#66cbaf")####++
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "var", tooltip, format, color, quelle = quelle)
 
   } else if (absolut_selector == "Anzahl") {
 
@@ -944,7 +951,8 @@ studienzahl_verlauf_bl_subject <- function(r) {
     tooltip <- "Anzahl: {point.display_abs}"
     format <- "Anzahl: {point.display_abs}"
     color <- c("#b16fab", "#154194","#66cbaf")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "var", tooltip, format, color)
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "var", tooltip, format, color, quelle = quelle)
 
 
 
@@ -1048,7 +1056,9 @@ studierende_verlauf_multiple_bl <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
+
 
   } else if(absolut_selector=="Anzahl"){
 
@@ -1067,7 +1077,8 @@ studierende_verlauf_multiple_bl <- function(r) {
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
 
 
 
@@ -1270,7 +1281,8 @@ studierende_verlauf_single_bl_gender <- function(r) {
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24",
                "#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
   }else if(absolut_selector=="Anzahl"){
@@ -1307,7 +1319,8 @@ studierende_verlauf_single_bl_gender <- function(r) {
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24","#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
 
@@ -1761,7 +1774,8 @@ mint_anteile <- function(r) {
     tooltip <- "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
     format <- "{value} %"
     color <- as.character(colors)
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "fach", tooltip, format, color)
+    que <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "fach", tooltip, format, color, quelle=que)
 
 
 
@@ -1797,7 +1811,8 @@ mint_anteile <- function(r) {
     tooltip <- "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
     format <- "{value}"
     color <- as.character(colors)
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fach", tooltip, format, color)
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fach", tooltip, format, color, quelle = quelle)
 
   }
 
@@ -2030,7 +2045,8 @@ plot_studierende_bula_faecher <- function(r){
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#d0a9cd",
                  "#bfc6d3", "#5f94f9", "#B45309")
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
 
 
     }
@@ -2074,7 +2090,10 @@ plot_studierende_bula_faecher <- function(r){
       tooltip <- "Anzahl: {point.display_abs}"
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194", "#66cbaf")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+
+
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
 
 
     }
@@ -2177,8 +2196,9 @@ plot_studierende_bula_faecher <- function(r){
       titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
         Bitte wählen Sie eine andere Komination oder Fächergruppe aus."
 
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out <- linebuilder(df, titel = titel, x = "jahr", y = "wert", group = "region", tooltip = "Anzahl: {point.display_abs}", format = "{value:, f}")
+      out <- linebuilder(df, titel = titel, x = "jahr", y = "wert", group = "region", tooltip = "Anzahl: {point.display_abs}", format = "{value:, f}", quelle = quelle)
 
 
 
@@ -2943,7 +2963,9 @@ studienzahl_verlauf_single_gender <- function(r) {
       tooltip <- "Anteil {point.indikator} <br> Wert: {point.display_rel} %"
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
     } else if(length(label_sel)==2){
 
@@ -2957,7 +2979,8 @@ studienzahl_verlauf_single_gender <- function(r) {
       tooltip <- "Anteil {point.indikator} <br> Wert: {point.display_rel} %"
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
 
@@ -2973,7 +2996,8 @@ studienzahl_verlauf_single_gender <- function(r) {
       tooltip <- "Anteil {point.indikator} <br> Wert: {point.display_rel} %"
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
     } else if(length(label_sel) == 4){
@@ -2986,7 +3010,8 @@ studienzahl_verlauf_single_gender <- function(r) {
       tooltip <- "Anteil {point.indikator} <br> Wert: {point.display_rel} %"
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
     } }else if(absolut_selector=="Anzahl"){
@@ -3016,7 +3041,8 @@ studienzahl_verlauf_single_gender <- function(r) {
         tooltip <- "Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+        quell <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quell)
 
       } else if(length(label_sel)==2){
 
@@ -3029,7 +3055,8 @@ studienzahl_verlauf_single_gender <- function(r) {
         tooltip <- "Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
       } else if(length(label_sel) == 3){
 
@@ -3268,7 +3295,8 @@ studienzahl_choice_gender <- function(r) {
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24",
                  "#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
 
@@ -3292,7 +3320,8 @@ studienzahl_choice_gender <- function(r) {
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24","#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
     }
@@ -4131,7 +4160,8 @@ plot_auslaender_mint_zeit <- function(r){
         tooltip <- "{point.ausl_detect} <br> Anteil: {point.display_rel} %"
         format <- "{value} %"
         color <- c("#154194", "#66cbaf")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color)
+        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
 
 
       } else {
@@ -4139,8 +4169,9 @@ plot_auslaender_mint_zeit <- function(r){
         titel <-  paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select )
         tooltip <- "{point.ausl_detect} <br> Anteil: {point.display_rel} %"
         format <- "{value} %"
+        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         color <- c("#154194", "#66cbaf")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color)
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
       }
 
     }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
@@ -4225,7 +4256,8 @@ plot_auslaender_mint_zeit <- function(r){
         tooltip <- "{point.ausl_detect} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#154194", "#66cbaf")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color)
+        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
 
       } else {
 
@@ -4233,7 +4265,8 @@ plot_auslaender_mint_zeit <- function(r){
         tooltip <- "{point.ausl_detect} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#154194", "#66cbaf")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color)
+        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
       }
 
     }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
@@ -4480,9 +4513,10 @@ studierende_international_bula_mint <- function(r) {
       tooltip <- paste0("{point.region} <br> Wert: {point.display_rel} % <br>Veränderung zwischen ", timerange[1],
                         " und ", timerange[2], ": {point.display_diff} %")
       format <- "{value}%"
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color)
+      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
 
 
 
@@ -4519,7 +4553,8 @@ studierende_international_bula_mint <- function(r) {
       format <-  "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+      quel123 <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quel123)
 
 
 

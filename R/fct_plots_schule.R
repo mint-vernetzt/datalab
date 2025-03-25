@@ -36,13 +36,6 @@ kurse_waffle_mint <- function(r) {
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region == regio,
-    #                 anzeige_geschlecht == "Gesamt",
-    #                 indikator == indika) %>%
-    #   dplyr::select(indikator, fachbereich, anzeige_geschlecht, wert) %>%
-    #   dplyr::collect()
 
     query_df <- glue::glue_sql("
     SELECT indikator, fachbereich, anzeige_geschlecht, wert
@@ -113,12 +106,6 @@ kurse_waffle_mint <- function(r) {
 
   } else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
-    # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(anzeige_geschlecht == "Gesamt",
-    #                 jahr == timerange) %>%
-    #   dplyr::select(-bereich)%>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
                                SELECT *
@@ -250,6 +237,8 @@ kurse_waffle_mint <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -257,19 +246,6 @@ kurse_waffle_mint <- function(r) {
                                   )
                                 )
       )
-
-    # titel <- paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")")
-    # tooltip <- "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
-    # format <- "{value}%"
-    # color <- as.character(color_fach)
-    # optional <- list(bar = list(
-    #   colorByPoint = TRUE,
-    #   colors = as.character(color_fach)
-    # ))
-    #
-    # out <- balkenbuilder(df, titel, x = "fachbereich", y="proportion", group=NULL, tooltip, color, format, optional)
-
-
   }
 
 
@@ -294,15 +270,6 @@ kurse_einstieg_comparison <- function(r) {
   regio <- r$region_kurse_einstieg_comparison
   betrachtung <- r$ansicht_kurse_einstieg_comparison
 
-
-
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region == regio,
-    #                 fachbereich %in% c( "MINT", "andere Fächer" ),
-    #                 anzeige_geschlecht == "Gesamt") %>%
-    #   dplyr::select(-region, -jahr, - bereich) %>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -470,8 +437,8 @@ kurse_verlauf_single <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf")
 
-
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color)
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
   } else if (absolut_selector=="Anzahl") {
@@ -489,7 +456,8 @@ kurse_verlauf_single <- function(r) {
     tooltip <- "Anzahl: {point.y}"
     format <-  "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
 
@@ -611,7 +579,9 @@ kurse_mint_map <- function(r) {
       format <-  "{value}%"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+
+      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
 
     } else if(absolut_selector =="Anzahl"){
 
@@ -646,7 +616,8 @@ kurse_mint_map <- function(r) {
       format <-  "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
     }
 
 
@@ -961,7 +932,8 @@ kurse_map <- function(r) {
       format <-  "{value}%"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
 
     } else if(absolut_selector =="Anzahl"){
       hcoptslang <- getOption("highcharter.lang")
@@ -990,7 +962,8 @@ kurse_map <- function(r) {
       format <-  "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
     }
 
     return(out)
@@ -1225,7 +1198,8 @@ kurse_verlauf_multiple_bl <- function(r) {
     format <-  "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
 
   } else if(absolut_selector =="Anzahl"){
 
@@ -1259,7 +1233,8 @@ kurse_verlauf_multiple_bl <- function(r) {
     format <-  "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
   }
 
 
@@ -1388,12 +1363,12 @@ kurse_verlauf_subjects_bl <- function(r) {
     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
     # plot
-
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     titel <- paste0("Anteil einzelner Fächer an den ", kurs_help ," in ", states)
     tooltip <-  "{point.fachbereich} <br> Anteil: {point.y} %"
     format <-  "{value}%"
     color <- as.character(df$color)
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fachbereich", tooltip, format, color)
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fachbereich", tooltip, format, color, quelle = quelle)
 
 
 
@@ -1413,7 +1388,8 @@ kurse_verlauf_subjects_bl <- function(r) {
     format <-  "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#d0a9cd",
                "#bfc6d3", "#5f94f9", "#B45309")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fachbereich", tooltip, format, color)
+    quelle2 <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fachbereich", tooltip, format, color, quelle=quelle2)
 
 
 
@@ -2187,7 +2163,8 @@ kurse_verlauf_gender <- function(r){
     tooltip <-  "Anzahl: {point.indikator} <br> Wert: {point.wert_anzeige}"
     format <-  "{value:, f}"
     color <- colors_mint_vernetzt$general
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
 
@@ -2201,7 +2178,8 @@ kurse_verlauf_gender <- function(r){
     tooltip <-  "Anzahl: {point.indikator} <br> Wert: {point.y}%"
     format <-  "{value}%"
     color <- colors_mint_vernetzt$general
-    out <- linebuilder(df, titel, x = "jahr", y = "proportion", group = "indikator", tooltip, format, color)
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "proportion", group = "indikator", tooltip, format, color, quelle = quelle)
 
   }
 }

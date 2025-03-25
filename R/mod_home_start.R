@@ -13,8 +13,6 @@ mod_home_start_ui <- function(id){
 
 
 
-
-
     # Banner
        fluidRow(
          div(class = "clean-box",
@@ -22,7 +20,6 @@ mod_home_start_ui <- function(id){
                width = 12,
                img(src='www/Banner_Alle_Bereiche.jpg',
                    class = "img-responsive",
-                   #height = "150px", width = "150px",
                    alt = "Banner MINT entlang der Bildungskette",
                    style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px;"
                )))),
@@ -34,7 +31,6 @@ mod_home_start_ui <- function(id){
         title = "Auf dieser Seite",
         width = 7,
         p(
-          #style = "text-align: left; font-size = 16px",
            "Auf dieser Überblickseite geben wir einen ersten Einblick in die vorhandenen Daten und vergleichen die
              Bildungsbereiche miteinander. Auf den folgenden bereichsspezifischen Unterseiten gehen wir je Bildungsbereich
              mehr ins Detail und bieten zusätzlich Vergleiche auf Fächer- und Bundeslandebene.")),
@@ -42,7 +38,6 @@ mod_home_start_ui <- function(id){
         title = "Fragen oder Feedback?",
         width = 5,
         p(
-          #style = "text-align: left; font-size = 16px",
           "Sind alle Zahlen und Grafiken verständlich? Gibt es Darstellungsschwierigkeiten? Wünschen Sie sich weitere Daten?", br(),
           "Wir freuen uns über Rückfragen und Feedback ", tags$a(href = "mailto:katharina.brunner@mint-vernetzt.de?subject= Feedback MINT-Datalab", "per E-Mail"),"oder über eine Teilnahme an unserer kurzen",
           tags$a(href="https://survey.lamapoll.de/MINT-DataLab_Feedback/", "Umfrage", target="_blank"), "!"
@@ -65,7 +60,6 @@ mod_home_start_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(
-          #style = "text-align: left; font-size = 16px",
           "Studierendenzahlen: Destatis 2024, auf Anfrage"),
          p("Schülerzahlen: KMK 2024, auf Anfrage"),
           p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2024, auf Anfrage")
@@ -101,10 +95,6 @@ mod_home_start_ui <- function(id){
                                width = 9,
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_rest_einstieg_1")),
                                                             color = "#154194"),
-                               br(),
-                               p(style="font-size:12px;color:grey",
-                                 "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-
                         shinyBS::bsPopover(id="h_alle_mint_1", title = "",
                                            content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
                                            placement = "top",
@@ -116,18 +106,11 @@ mod_home_start_ui <- function(id){
                         shiny::sidebarPanel(
                           width = 3,
                           mod_home_start_multiple_ui("mod_home_start_multiple_ui_1"),
-                          # br(),br(),
-                          # downloadButton(
-                          #   outputId = ns("download_btn_plot_mint_1"),
-                          #   label = "Download",
-                          #   icon = icon("download")),
                           ),
                         shiny::mainPanel(
                           width = 9,
                           shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_1")),
                                                        color = "#154194"),
-                          br(),
-                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_mint_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
                                              placement = "top",
@@ -166,9 +149,6 @@ mod_home_start_ui <- function(id){
                                width = 9,
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_pie_mint_gender")),
                                                             color = "#154194"),
-
-                               p(style="font-size:12px;color:grey",
-                                  "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                                shinyBS::bsPopover(id="h_alle_frauen_1", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. <br><br>Baden-Württemberg erfasst keine geschelchterspezifischen Kursbelegungszahlen von Schüler:innen."),
                                                   placement = "top",
@@ -181,18 +161,11 @@ mod_home_start_ui <- function(id){
                         shiny::sidebarPanel(
                           width = 3,
                           mod_home_start_comparison_ui("mod_home_start_comparison_ui_1"),
-                          # br(),br(),
-                          # downloadButton(
-                          #   outputId = ns("download_btn_plot_verlauf_mint"),
-                          #   label = "Download",
-                          #   icon = icon("download"))
                           ),
                         shiny::mainPanel(
                           width = 9,
                           shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_mint")),
                                                        color = "#154194"),
-
-                          p(style="font-size:12px;color:grey", "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
                           shinyBS::bsPopover(id="h_alle_frauen_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.<br><br>Baden-Württemberg erfasst keine geschelchterspezifischen Kursbelegungszahlen von Schüler:innen."),
                                              placement = "top",
@@ -362,43 +335,6 @@ mod_home_start_server <- function(id,r){
 
 
 # Alte Start-Box
-
-
-# fluidRow(
-#   shinydashboard::box(
-#     #title = span("Willkommen im MINT-DataLab von MINTvernetzt", style = "color:#154194; font-size: 50px"),
-#     width = 12,
-#     column(width = 9,
-#            tags$h1("WILLKOMMEN IM MINT-DATALAB"),
-#            #tags$h1("Willkommen im MINT-DataLab"),
-#            #p(style = "color:#154194; font-size: 50px", "Willkommen im MINT-DataLab"),
-#            p(style = "text-align: justify; font-size = 16px",
-#              "Im MINT-DataLab zeigen wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule,
-#                     Ausbildung und Arbeitsmarkt in Deutschland."
-#            ),
-#            p(style = "text-align: justify; font-size = 16px",
-#              span("Unser", tags$b(span("Datenpool", style = "color:#b16fab")), "besteht aktuell aus Statistiken der Bundesagentur für Arbeit, des
-#                          Statistischen Bundesamtes und der Kulturministerkonferenz. Weitere Datenquellen werden im Laufe
-#                          der Zeit integriert. (Weitere Infos unter: Quellen & Hinweise)")
-#            ),
-#
-#            p(style = "text-align: justify; font-size = 16px",
-#              span("Wir freuen uns über ", tags$a(href = "mailto:antonia.kroeger@mint-vernetzt.de?subject=MINT-Datalab", "Feedback"),"!")
-#            ),
-#     ),
-#     #solidHeader = TRUE,
-#     #collapsible = FALSE,
-#     #br(),
-#     column(width = 3, href = "https://mint-vernetzt.de/", rel="noopener", target="_blank",
-#            img(src='www/mint_logo_gross.jpg',
-#                class = "img-responsive",
-#                height = "180px", width = "180px",
-#                alt = "Logo MINT",
-#                style="display: block; margin-left: auto; margin-right: auto;"
-#
-#            ))
-#   )
-# )
 
 
 
