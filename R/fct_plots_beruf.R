@@ -53,6 +53,8 @@ beruf_einstieg_vergleich <- function(r) {
 
   df1 <- DBI::dbGetQuery(con, df_query)
 
+
+
   df <- df1 %>%
     dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
                    "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert")
@@ -79,22 +81,26 @@ beruf_einstieg_vergleich <- function(r) {
                      "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert") %>%
       dplyr::rename(wert_gesamt = "wert")
 
+    browser()
 
-    df <- df %>%
+
+    df3 <- df %>%
       dplyr::left_join(df_new_gesamt, by = c("indikator", "bundesland", "landkreis",
                                              "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht")) %>%
-      #dplyr::rename(fachbereich = "fachbereich.x") %>%
-      #dplyr::select(-fachbereich.y) %>%
+      dplyr::rename(fachbereich = "fachbereich.x") %>%
+      dplyr::select(-fachbereich.y) %>%
       dplyr::group_by(indikator) %>%
       dplyr::mutate(proportion = round((wert/wert_gesamt)*100,1))
 
     #andere Berufe berechnen:
     df_andere <- df %>%
+      dplyr::left_join(df_new_gesamt, by = c("indikator", "bundesland", "landkreis",
+                                             "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht")) %>%
       dplyr::mutate(fachbereich = "Andere Berufe") %>%
       dplyr::mutate(wert = wert_gesamt-wert) %>%
       dplyr::mutate(proportion = round((wert/wert_gesamt)*100,1))
 
-    df <- rbind(df, df_andere)
+    df <- rbind(df3, df_andere)
   }
 
   #Graifken
@@ -112,6 +118,7 @@ beruf_einstieg_vergleich <- function(r) {
     format <- '{point.percentage:.0f}%'
     color <- c("#b16fab","#efe8e6")
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
 
    out <- piebuilder(df, titel, x="fachbereich", y = "proportion", tooltip, color, format, quelle=quelle)
 
