@@ -86,7 +86,9 @@ home_einstieg <- function(r) {
     titel <- paste0(indikator_choice_1, " in ", regio, " (", zeit, ")")
     tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
 
-    out <- piebuilder(df,titel,  x = "fachbereich", y = "prop", tooltip)
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+    out <- piebuilder(df,titel,  x = "fachbereich", y = "prop", tooltip, quelle = quelle)
 
     }
   } else if(length(indikator_choice_1) == 2) {
@@ -95,12 +97,14 @@ home_einstieg <- function(r) {
     df_1 <- df %>% dplyr::filter(indikator == indikator_choice_1[1])
     if(indikator_choice_1[1] == "Leistungskurse") indikator_choice_1[1] <- "Schüler:innen im Leistungskurs"
     titel_1 <- paste0(indikator_choice_1[1], " in ", regio, " (", zeit, ")")
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     df_2 <- df %>% dplyr::filter(indikator == indikator_choice_1[2])
     if(indikator_choice_1[2] == "Leistungskurse") indikator_choice_1[2] <- "Schüler:innen im Leistungskurs"
     titel_2 <- paste0(indikator_choice_1[2], " in ", regio, " (", zeit, ")")
 
     tooltip <- paste('MINT <br> Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     if(nrow(df_1) == 0){
 
@@ -126,7 +130,9 @@ home_einstieg <- function(r) {
       format <- '{point.prop_besr}%'
       subtitel <- NULL
 
-      out2 <- piebuilder(df_2, titel, x, y, tooltip, color, format, subtitel)
+      quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+      out2 <- piebuilder(df_2, titel, x, y, tooltip, color, format, subtitel, quelle)
 
 
       # out2 <- highcharter::hchart(df_2, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = prop)) %>%
@@ -164,7 +170,8 @@ home_einstieg <- function(r) {
       tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
       color <- c( "#b16fab", "#efe8e6")
       format <- '{point.prop_besr}%'
-      out1 = piebuilder(df_1, titel_1, x="fachbereich", y="prop", tooltip, color, format)
+      quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out1 = piebuilder(df_1, titel_1, x="fachbereich", y="prop", tooltip, color, format, quelle = quelle)
 
       # out1 <- highcharter::hchart(df_1, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = prop)) %>%
       #   highcharter::hc_tooltip(
@@ -183,12 +190,13 @@ home_einstieg <- function(r) {
 
     }else{
 
-      out_1 <- piebuilder(df_1, titel = titel_1, x = "fachbereich", y = "prop", tooltip)
-      out_2 <- piebuilder(df_2, titel = titel_2, x = "fachbereich", y = "prop", tooltip)
+      out_1 <- piebuilder(df_1, titel = titel_1, x = "fachbereich", y = "prop", tooltip, quelle = quelle)
+      out_2 <- piebuilder(df_2, titel = titel_2, x = "fachbereich", y = "prop", tooltip, quelle = quelle)
 
     }
 
     if(exists("out_1") && exists("out_2")){
+
       out <- highcharter::hw_grid(out_1, out_2, ncol = 2, browsable = TRUE)
 
     } else if(exists("out_1") && !exists("out_2")){
@@ -505,8 +513,9 @@ home_einstieg_gender <- function(r) {
     titel <- paste0(df_mint$titel_help[1], " in ", regio, " (", zeit, ")")
     tooltip <- paste('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}')
     color = c("#efe8e6", "#154194")
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    mint1 <- piebuilder(df_mint, titel, x = "geschlecht", y = "prop", tooltip, color)
+    mint1 <- piebuilder(df_mint, titel, x = "geschlecht", y = "prop", tooltip, color, quelle = quelle)
 
     if(gegenwert == "Nein"){
 
@@ -517,7 +526,9 @@ home_einstieg_gender <- function(r) {
 
      titel <- paste0(df_mint$titel_help2[1], " in ", regio, " (", zeit, ")")
 
-     nmint1 <- piebuilder(df_rest, titel, x = "geschlecht", y = "prop", tooltip, color)
+     quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+     nmint1 <- piebuilder(df_rest, titel, x = "geschlecht", y = "prop", tooltip, color, quelle = quelle)
 
      out <- highcharter::hw_grid(
         mint1, nmint1,
@@ -580,16 +591,18 @@ home_einstieg_gender <- function(r) {
 
       }else{
 
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
      mint1 <- piebuilder(df_1_mint, paste0(df_1_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
                          x = "geschlecht", y = "prop",
                          paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
-                         c("#efe8e6", "#154194"))
+                         c("#efe8e6", "#154194"),quelle = quelle)
 
 
       mint2 <- piebuilder(df_2_mint, paste0(df_2_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
                          x = "geschlecht", y = "prop",
                          paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
-                         c("#efe8e6", "#154194"))
+                         c("#efe8e6", "#154194"), quelle = quelle)
       }
 
       if(gegenwert == "Nein"){
@@ -644,15 +657,17 @@ home_einstieg_gender <- function(r) {
 
         }else{
 
+      quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
       nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
                            x = "geschlecht", y = "prop",
                            paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
-                           c("#efe8e6", "#154194"))
+                           c("#efe8e6", "#154194"), quelle = quelle)
 
      nmint2 <- piebuilder(df_2_rest, paste0(df_2_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
                           x = "geschlecht", y = "prop",
                           paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
-                          c("#efe8e6", "#154194"))
+                          c("#efe8e6", "#154194"), quelle = quelle)
         }
 
      out <-  highcharter::hw_grid(

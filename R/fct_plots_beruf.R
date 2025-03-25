@@ -37,20 +37,10 @@ beruf_einstieg_vergleich <- function(r) {
                 "Beschäftigte ü55")
   }
 
-  # df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-  #   dplyr::filter(jahr == timerange &
-  #                   landkreis == "alle Landkreise" &
-  #                   bundesland == regio &
-  #                   anforderung == "Gesamt" &
-  #                   geschlecht == "Gesamt" &
-  #                   indikator %in% gruppe &
-  #                   fachbereich == faecher)%>%
-  #   dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
-  #                  "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert") %>%
-  #   dplyr::collect()
+
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT indikator, bundesland, landkreis, fachbereich, landkreis_zusatz, landkreis_nummer, jahr, anforderung, geschlecht, wert
   FROM arbeitsmarkt_detail
   WHERE jahr = {timerange}
   AND landkreis = 'alle Landkreise'
@@ -63,29 +53,17 @@ beruf_einstieg_vergleich <- function(r) {
 
   df1 <- DBI::dbGetQuery(con, df_query)
 
-  df <- df1 %>%
-    dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
-                   "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert")
-  #
+  # df <- df1 %>%
+  #   dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
+  #                  "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert")
+  # #
 
   if(is.null(abs_rel) | abs_rel == "In Prozent"){
     #Anteil MINT berechnen
-    # df_new_gesamt <- dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    #   dplyr::filter(jahr == timerange &
-    #                   landkreis == "alle Landkreise" &
-    #                   bundesland == regio &
-    #                   anforderung == "Gesamt" &
-    #                   geschlecht == "Gesamt" &
-    #                   indikator %in% gruppe &
-    #                   fachbereich == "Alle")%>%
-    #   dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
-    #                  "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert") %>%
-    #   dplyr::rename(wert_gesamt = "wert") %>%
-    #   dplyr::select(-fachbereich) %>%
-    #   dplyr::collect()
+
 
     df_query <- glue::glue_sql("
-    SELECT *
+    SELECT indikator, bundesland, landkreis, fachbereich, landkreis_zusatz, landkreis_nummer, jahr, anforderung, geschlecht, wert
     FROM arbeitsmarkt_detail
     WHERE landkreis = 'alle Landkreise'
     AND bundesland = {regio}
@@ -97,8 +75,8 @@ beruf_einstieg_vergleich <- function(r) {
     df_new_gesamt <- DBI::dbGetQuery(con, df_query)
 
     df_new_gesamt <- df_new_gesamt %>%
-      dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
-                     "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert") %>%
+      # dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
+      #                "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert") %>%
       dplyr::rename(wert_gesamt = "wert")
 
 
@@ -133,8 +111,9 @@ beruf_einstieg_vergleich <- function(r) {
     tooltip <- paste('Anteil: {point.percentage:.0f} % <br> Anzahl: {point.wert}')
     format <- '{point.percentage:.0f}%'
     color <- c("#b16fab","#efe8e6")
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-   out <- piebuilder(df, titel, x="fachbereich", y = "proportion", tooltip, color, format)
+   out <- piebuilder(df, titel, x="fachbereich", y = "proportion", tooltip, color, format, quelle=quelle)
 
   }
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
@@ -194,16 +173,6 @@ beruf_verlauf_single <- function(r) {
   indi <- r$indikator_arbeitsmarkt_einstieg_verlauf_2
 
   # df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-  #   dplyr::filter(jahr %in% t &
-  #                   bundesland == regio &
-  #                   landkreis == "alle Landkreise" &
-  #                   geschlecht == "Gesamt" &
-  #                   anforderung == "Gesamt" &
-  #                   fachbereich == "MINT" &
-  #                   indikator %in% indi
-  #   )%>%
-  #   dplyr::select(indikator, bundesland, fachbereich, jahr, wert) %>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
   SELECT indikator, bundesland, fachbereich, jahr, wert
@@ -219,22 +188,8 @@ beruf_verlauf_single <- function(r) {
                                ", .con = con)
   df <- DBI::dbGetQuery(con, df_query)
 
-  # df <- df %>%
-  #   dplyr::select(indikator, bundesland, fachbereich, jahr, wert)
-
   if (absolut_selector == "In Prozent"){
 
-    # df_alle <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    #   dplyr::filter(jahr %in% t &
-    #                   bundesland == regio &
-    #                   landkreis == "alle Landkreise" &
-    #                   geschlecht == "Gesamt" &
-    #                   anforderung == "Gesamt" &
-    #                   fachbereich == "Alle" &
-    #                   indikator %in% indi
-    #   )%>%
-    #   dplyr::select(indikator, bundesland, fachbereich, jahr, wert) %>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT indikator, bundesland, fachbereich, jahr, wert
@@ -248,10 +203,6 @@ beruf_verlauf_single <- function(r) {
     AND indikator IN ({indi*})
                                ", .con = con)
     df_alle <- DBI::dbGetQuery(con, df_query)
-#
-#     df_alle <- df_alle %>%
-#       dplyr::select(indikator, bundesland, fachbereich, jahr, wert)
-#
 
     df <- df %>%
       dplyr::left_join(df_alle, dplyr::join_by(indikator, bundesland, jahr)) %>%
@@ -324,18 +275,6 @@ arbeitsmarkt_mint_bulas <- function(r) {
     timerange <- r$zeit_beruf_mint_bula_karte
     indi <- r$indikator_beruf_mint_bula_karte
 
-    # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    #   dplyr::filter(
-    #     jahr == timerange &
-    #       indikator == indi &
-    #       landkreis == "alle Landkreise" &
-    #       anforderung == "Gesamt" &
-    #       geschlecht == "Gesamt"&
-    #       fachbereich %in% c("MINT", "Alle") &
-    #       !(bundesland %in% c("Deutschland", "Westdeutschland (o. Berlin)", "Ostdeutschland (einschl. Berlin)")))%>%
-    #   dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-    #   dplyr::collect()
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM arbeitsmarkt_detail
@@ -405,16 +344,6 @@ arbeitsmarkt_mint_bulas <- function(r) {
     timerange <- r$zeit_beruf_mint_bula_balken
     indikator_choice <- r$indikator_beruf_mint_bula_balken
 
-    # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    #   dplyr::filter(
-    #     jahr == timerange &
-    #       indikator == indikator_choice &
-    #       landkreis == "alle Landkreise" &
-    #       anforderung == "Gesamt" &
-    #       geschlecht == "Gesamt" &
-    #       fachbereich %in% c("MINT", "Alle"))%>%
-    #   dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)%>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -492,30 +421,12 @@ arbeitsmarkt_mint_bulas <- function(r) {
     aniveau <- r$indikator_beruf_mint_bula_verlauf
     states <- r$region_beruf_mint_bula_verlauf
     absolut_selector <- r$abs_beruf_mint_bula_verlauf
-#
-#     # filter dataset based on UI inputs
-#     df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-#       dplyr::filter(jahr %in% t,
-#                     landkreis == "alle Landkreise",
-#                     geschlecht == "Gesamt",
-#                     anforderung == "Gesamt",
-#                     fachbereich %in% c("Alle", "MINT"),
-#                     bundesland %in% states,
-#                     indikator == aniveau
-#       )%>%
-#       dplyr::select(
-#         "indikator",
-#         "fachbereich",
-#         #"geschlecht",
-#         "bundesland",
-#         "jahr",
-#         #"anforderung",
-#         "wert" ) %>%
-#       dplyr::collect()
+
+
 
 
     df_query <- glue::glue_sql("
-    SELECT *
+    SELECT indikator, fachbereich, bundesland, jahr, wert
     FROM arbeitsmarkt_detail
     WHERE jahr IN ({t*})
     AND landkreis = 'alle Landkreise'
@@ -528,15 +439,15 @@ arbeitsmarkt_mint_bulas <- function(r) {
 
     df <- DBI::dbGetQuery(con, df_query)
 
-    df <- df %>%
-      dplyr::select(
-        "indikator",
-        "fachbereich",
-        #"geschlecht",
-        "bundesland",
-        "jahr",
-        #"anforderung",
-        "wert" )
+    # df <- df %>%
+    #   dplyr::select(
+    #     "indikator",
+    #     "fachbereich",
+    #     #"geschlecht",
+    #     "bundesland",
+    #     "jahr",
+    #     #"anforderung",
+    #     "wert" )
 
 
 
@@ -623,21 +534,6 @@ arbeitsmarkt_anforderungen_gender <- function(r) {
   if(timerange ==2022) indikator_choice <- r$level_arbeitsmarkt_anforderungen_gender_22
 
 
-  # df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-  #   dplyr::filter(jahr %in% timerange &
-  #                   bundesland == "Deutschland" &
-  #                   geschlecht != "Gesamt"&
-  #                   anforderung == "Gesamt" &
-  #                   indikator %in% c("Auszubildende",
-  #                                    "Auszubildende (1. Jahr)",
-  #                                    "Beschäftigte",
-  #                                    "ausländische Auszubildende",
-  #                                    "ausländische Beschäftigte")&
-  #                   fachbereich %in% c("Alle", "MINT", "Mathematik, Naturwissenschaften",
-  #                                      "Informatik", "Technik (gesamt)"))%>%
-  #   dplyr::select(indikator, fachbereich, wert, geschlecht) %>%
-  #   dplyr::collect()
-
 
   df_query <- glue::glue_sql("
   SELECT indikator, fachbereich, geschlecht, wert
@@ -651,9 +547,6 @@ arbeitsmarkt_anforderungen_gender <- function(r) {
                                ", .con = con)
 
   df <- DBI::dbGetQuery(con, df_query)
-
-  # df <- df %>%
-  #   dplyr::select(indikator, fachbereich, wert, geschlecht)
 
 
 
@@ -787,18 +680,8 @@ arbeitsmarkt_bl_gender <- function(r) {
   if(timerange == 2022) indikator_choice <- r$level_arbeitsmarkt_bl_gender_22
 
   fachbereich_choice <- r$fach_arbeitsmarkt_bl_gender
-#
-#   df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-#     dplyr::filter(jahr %in% timerange &
-#                     !bundesland %in% c("Deutschland",
-#                                         "Westdeutschland (o. Berlin)",
-#                                         "Ostdeutschland (einschl. Berlin)") &
-#                     landkreis == "alle Landkreise" &
-#                     geschlecht != "Gesamt"&
-#                     anforderung == "Gesamt" )%>%
-#     dplyr::select(indikator, fachbereich, wert, geschlecht, bundesland, jahr) %>%
-#     dplyr::collect()
-#
+
+
 #
   df_query <- glue::glue_sql("
   SELECT indikator, fachbereich, wert, geschlecht, bundesland, jahr
@@ -919,23 +802,7 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
   t <- as.character(timerange[1]:timerange[2])
 #
 #
-#   df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
-#     dplyr::filter(jahr %in% t,
-#                   indikator == indikator_choice,
-#                   region %in% states,
-#                   anforderung %in% "Gesamt",
-#                   geschlecht == "Frauen",
-#                   fachbereich %in% c("Alle", "MINT")
-#     )%>%
-#   dplyr::select("bereich",
-#   "indikator",
-#   "fachbereich",
-#   "geschlecht",
-#   "region",
-#   "jahr",
-#   "anforderung",
-#   "wert" ) %>%
-#     dplyr::collect()
+
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -1059,23 +926,7 @@ arbeitsmarkt_bl_verlauf <- function(r) {
 
   # filter dataset based on UI inputs
 
-  # df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
-  #   dplyr::filter(jahr %in% t &
-  #                   geschlecht == "Gesamt" &
-  #                   anforderung == "Gesamt",
-  #                 fachbereich %in% c("Alle", "MINT"),
-  #                 region %in% states,
-  #                 indikator == aniveau
-  #   )%>%
-  #   dplyr::select(
-  #                 "indikator",
-  #                 "fachbereich",
-  #                 #"geschlecht",
-  #                 "region",
-  #                 "jahr",
-  #                 #"anforderung",
-  #                 "wert" ) %>%
-  #   dplyr::collect()
+
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -1205,18 +1056,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
     indikator_choice <- r$indikator_arbeitsmarkt_fach_vergleich_pies
 
     if(nicht_mint == "Nein"){
-      # df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-      #   dplyr::filter(jahr %in% timerange &
-      #                   landkreis == "alle Landkreise" &
-      #                   bundesland == regio &
-      #                   geschlecht == "Gesamt" &
-      #                   anforderung == "Gesamt" &
-      #                   fachbereich %in% c(
-      #                     "Mathematik, Naturwissenschaften",
-      #                     "Informatik", "Technik (gesamt)") &
-      #                   indikator %in% indikator_choice)%>%
-      #   dplyr::select(indikator, jahr, bundesland, fachbereich, wert) %>%
-      #   dplyr::collect()
+
       #
 
       df_query <- glue::glue_sql("
@@ -1259,18 +1099,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       df$prop_disp <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
     }
     else{
-      # df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-      #   dplyr::filter(jahr %in% timerange &
-      #                   landkreis == "alle Landkreise" &
-      #                   bundesland == regio &
-      #                   geschlecht == "Gesamt" &
-      #                   anforderung == "Gesamt" &
-      #                   fachbereich %in% c("Alle", "MINT",
-      #                                      "Mathematik, Naturwissenschaften",
-      #                                      "Informatik", "Technik (gesamt)") &
-      #                   indikator %in% indikator_choice)%>%
-      #   dplyr::select(indikator, jahr, bundesland, fachbereich, wert) %>%
-      #   dplyr::collect()
+
 
       df_query <- glue::glue_sql("
       SELECT indikator, jahr, bundesland, fachbereich, wert
@@ -1329,7 +1158,9 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       format <- '{point.prop_disp}%'
       color <- as.character(df$color)
 
-      out <- piebuilder(df, titel, x="fachbereich", y = "prop", tooltip, color, format)
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+      out <- piebuilder(df, titel, x="fachbereich", y = "prop", tooltip, color, format, quelle = quelle)
 
     } else if(length(indikator_choice) == 2) {
 
@@ -1350,9 +1181,12 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       color1 <- as.character(df_1$color)
       color2 <- as.character(df_2$color)
 
+      #
+      quelle_eins <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle_zwei <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out_1 <- piebuilder(df_1, titel1, x="fachbereich", y = "prop", tooltip, color1, format)
-      out_2 <- piebuilder(df_2, titel2, x="fachbereich", y = "prop", tooltip, color2, format)
+      out_1 <- piebuilder(df_1, titel1, x="fachbereich", y = "prop", tooltip, color1, format, quelle= quelle_eins)
+      out_2 <- piebuilder(df_2, titel2, x="fachbereich", y = "prop", tooltip, color2, format, quelle = quelle_zwei)
 
 
       out <- highcharter::hw_grid(
@@ -1367,19 +1201,6 @@ arbeitsmarkt_faecher_anteil <- function(r) {
 
     indikator_choice <- r$indikator_arbeitsmarkt_fach_vergleich_balken
 
-    # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    #   dplyr::filter(
-    #     jahr == timerange &
-    #       indikator == indikator_choice &
-    #       landkreis == "alle Landkreise" &
-    #       anforderung == "Gesamt" &
-    #       geschlecht == "Gesamt"&
-    #       bundesland == regio &
-    #       fachbereich %in% c("Alle", "MINT",
-    #                          "Mathematik, Naturwissenschaften",
-    #                          "Informatik", "Technik (gesamt)"))%>%
-    #   dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -1405,17 +1226,6 @@ arbeitsmarkt_faecher_anteil <- function(r) {
     df <- rbind(df, df_andere)
     df <- df %>% dplyr::filter(fachbereich != "Alle")
 
-    # df_alle <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    #   dplyr::filter(
-    #     jahr == timerange &
-    #       indikator == indikator_choice &
-    #       landkreis == "alle Landkreise" &
-    #       anforderung == "Gesamt" &
-    #       geschlecht == "Gesamt"&
-    #       bundesland == regio &
-    #       fachbereich == "Alle")%>%
-    #   dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -1513,19 +1323,6 @@ beruf_verlauf_faecher <- function(r) {
   absolut_selector <- r$abs_zahlen_arbeitsmarkt_faecher_verlauf
 
   # Daten abrufen
-  # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-  #   dplyr::filter(
-  #     jahr %in% t &
-  #       indikator == indi &
-  #       landkreis == "alle Landkreise" &
-  #       anforderung == "Gesamt" &
-  #       geschlecht == "Gesamt"&
-  #       bundesland == regio &
-  #       fachbereich %in% c(
-  #                          "Mathematik, Naturwissenschaften",
-  #                          "Informatik", "Technik (gesamt)"))%>%
-  #   dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -1546,17 +1343,6 @@ beruf_verlauf_faecher <- function(r) {
 
   if (absolut_selector == "In Prozent"){
 
-    # df_alle <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    #   dplyr::filter(
-    #     jahr %in% t &
-    #       indikator == indi &
-    #       landkreis == "alle Landkreise" &
-    #       anforderung == "Gesamt" &
-    #       geschlecht == "Gesamt"&
-    #       bundesland == regio &
-    #       fachbereich == "Alle")%>%
-    #   dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -1673,17 +1459,6 @@ arbeitsmarkt_bula_faecher <- function(r) {
     indi <- r$indikator_beruf_faecher_bula_karte
     faecher <- r$fachbereich_beruf_faecher_bula_karte
 
-    # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    #   dplyr::filter(
-    #     jahr == timerange &
-    #       indikator == indi &
-    #       landkreis == "alle Landkreise" &
-    #       anforderung == "Gesamt" &
-    #       geschlecht == "Gesamt"&
-    #       fachbereich %in% c(faecher, "Alle") &
-    #       !(bundesland %in% c("Deutschland", "Westdeutschland (o. Berlin)", "Ostdeutschland (inkl. Berlin)")))%>%
-    #   dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -1748,18 +1523,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
     timerange <- r$zeit_beruf_faecher_bula_balken
     indikator_choice <- r$indikator_beruf_faecher_bula_balken
     faecher <- r$fachbereich_beruf_faecher_bula_balken
-#
-#     df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-#       dplyr::filter(
-#         jahr == timerange &
-#           indikator == indikator_choice &
-#           landkreis == "alle Landkreise" &
-#           anforderung == "Gesamt" &
-#           geschlecht == "Gesamt" &
-#           fachbereich == faecher) %>%
-#       dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)%>%
-#       dplyr::collect()
-#
+
 #
     df_query <- glue::glue_sql("
     SELECT *
@@ -1857,19 +1621,6 @@ arbeitsmarkt_bula_faecher <- function(r) {
     absolut_selector <- r$abs_beruf_faecher_bula_verlauf
     faecher <- r$fachbereich_beruf_faecher_bula_verlauf
 
-    # # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    #   dplyr::filter(
-    #     jahr %in% t &
-    #       indikator == indi &
-    #       landkreis == "alle Landkreise" &
-    #       bundesland %in% states &
-    #       anforderung == "Gesamt" &
-    #       geschlecht == "Gesamt" &
-    #       fachbereich == faecher) %>%
-    #   dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)%>%
-    #   dplyr::collect()
-
     df_query <- glue::glue_sql("
 
     SELECT *
@@ -1900,21 +1651,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
     if(absolut_selector=="In Prozent"){
 #
-#       # Alle als extra Spalte anhängen und Anteil berechnen
-#       df_ges <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-#         dplyr::filter(
-#           jahr %in% t &
-#             indikator == indi &
-#             landkreis == "alle Landkreise" &
-#             bundesland %in% states &
-#             anforderung == "Gesamt" &
-#             geschlecht == "Gesamt" &
-#             fachbereich == "Alle") %>%
-#         dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)%>%
-#         dplyr::rename(wert_ges = wert) %>%
-#         dplyr::ungroup()%>%
-#         dplyr::collect()
-#
+#       # Alle
       df_query <- glue::glue_sql("
       SELECT *
       FROM arbeitsmarkt_detail
@@ -2001,17 +1738,6 @@ arbeitsmarkt_überblick_fächer <- function( r) {
 
   if(timerange == 2021) indikator_choice <- r$indikator_arbeitsmarkt_überblick_fächer_21
   if(timerange == 2022) indikator_choice <- r$indikator_arbeitsmarkt_überblick_fächer_22
-
-  # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-  #   dplyr::filter(
-  #     jahr == timerange &
-  #       indikator == indikator_choice &
-  #       landkreis == "alle Landkreise" &
-  #       anforderung == "Gesamt" &
-  #       geschlecht == "Gesamt"&
-  #       bundesland == state)%>%
-  #   dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -2164,16 +1890,6 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
     gegenwert <- r$arbeitsmarkt_gender_gegenwert_balken
   }
 
-  # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-  #   dplyr::filter(jahr == timerange &
-  #                   landkreis == "alle Landkreise" &
-  #                   bundesland == regio &
-  #                   anforderung == "Gesamt" &
-  #                   geschlecht != "Gesamt" &
-  #                   indikator %in% indi &
-  #                   fachbereich == faecher)%>%
-  #   dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert") %>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -2192,18 +1908,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
   df <- df %>%
     dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert")
 
-  #
-  # df_alle <- dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-  #   dplyr::filter(jahr == timerange &
-  #                   landkreis == "alle Landkreise" &
-  #                   bundesland == regio &
-  #                   anforderung == "Gesamt" &
-  #                   geschlecht == "Gesamt" &
-  #                   indikator %in% indi &
-  #                   fachbereich == faecher)%>%
-  #   dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert") %>%
-  #   dplyr::rename(wert_gesamt = "wert") %>%
-  #   dplyr::collect()
+
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -2233,16 +1938,6 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
 
   if(gegenwert == "Ja"){
 
-    # df_andere <- dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    #   dplyr::filter(jahr == timerange &
-    #                   landkreis == "alle Landkreise" &
-    #                   bundesland == regio &
-    #                   anforderung == "Gesamt" &
-    #                #   geschlecht != "Gesamt" &
-    #                   indikator %in% indi &
-    #                   fachbereich == faecher)%>%
-    #   dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert") %>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -2261,16 +1956,6 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
     df_andere <- df_andere %>%
       dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert")
 
-    # df_alle_faecher <- dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    #   dplyr::filter(jahr == timerange &
-    #                   landkreis == "alle Landkreise" &
-    #                   bundesland == regio &
-    #                   anforderung == "Gesamt" &
-    #                   indikator %in% indi &
-    #                   fachbereich == "Alle")%>%
-    #   dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert") %>%
-    #   dplyr::rename(wert_gesamt = "wert") %>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -2338,7 +2023,9 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
      tooltip <- 'Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}'
      format <- '{point.prop_disp}%'
 
-     p1 <- piebuilder(df_p, titel, x="geschlecht", y = "proportion", tooltip, color, format)
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+     p1 <- piebuilder(df_p, titel, x="geschlecht", y = "proportion", tooltip, color, format, quelle = quelle)
      out <- p1
 
      if(gegenwert == "Ja"){
@@ -2351,7 +2038,9 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
        format <- '{point.prop_disp}%'
        color <- c("#efe8e6", "#154194")
 
-       p1g <- piebuilder(df_g, titel1, x="geschlecht", y = "proportion", tooltip, color, format)
+       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+       p1g <- piebuilder(df_g, titel1, x="geschlecht", y = "proportion", tooltip, color, format, quelle = quelle)
 
        out <- highcharter::hw_grid(p1, p1g,
                                    ncol = 2,
@@ -2384,8 +2073,10 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
      color <- c("#efe8e6", "#154194")
      format <- '{point.prop_disp}%'
 
-     p1 <- piebuilder(df_1_pie, titel1, x="geschlecht", y = "proportion", tooltip, color, format)
-     p2 <- piebuilder(df_2_pie, titel2, x="geschlecht", y = "proportion", tooltip, color, format)
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+     p1 <- piebuilder(df_1_pie, titel1, x="geschlecht", y = "proportion", tooltip, color, format, quelle=quelle)
+     p2 <- piebuilder(df_2_pie, titel2, x="geschlecht", y = "proportion", tooltip, color, format, quelle = quelle)
 
      out<- highcharter::hw_grid(
        p1, p2,
@@ -2406,8 +2097,10 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
        color <- c("#efe8e6", "#154194")
        format <- '{point.prop_disp}%'
 
-       p1g <- piebuilder(df1_g, titel1, x="geschlecht", y = "proportion", tooltip, color, format)
-       p2g <- piebuilder(df2_g, titel2, x="geschlecht", y = "proportion", tooltip, color, format)
+       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+       p1g <- piebuilder(df1_g, titel1, x="geschlecht", y = "proportion", tooltip, color, format, quelle=quelle)
+       p2g <- piebuilder(df2_g, titel2, x="geschlecht", y = "proportion", tooltip, color, format, quelle=quelle)
 
 
        out <- highcharter::hw_grid(p1, p2,
@@ -2448,35 +2141,7 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
 
    out <- balkenbuilder(df, titel, x = "indi_fach", y="proportion", group = "geschlecht", tooltip = tooltip, format = format, color = color, reverse = FALSE, stacking = stacking, TF=FALSE)
    #
-   #     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = indi_fach, y=proportion, group = geschlecht))%>%
-   #
-   #    highcharter::hc_tooltip(pointFormat = tooltip)%>%
-   #
-   #    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
-   #    highcharter::hc_xAxis(title = list(text = "")
-   #    ) %>%
-   #    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-   #    highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-   #    highcharter::hc_title(text = titel,
-   #                          margin = 25,
-   #                          align = "center",
-   #                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-   #    highcharter::hc_chart(
-   #      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-   #    ) %>%
-   #    highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-   #    highcharter::hc_exporting(enabled = TRUE,
-   #                              buttons = list(
-   #                                contextButton = list(
-   #                                  menuItems = list("downloadPNG", "downloadCSV")
-   #                                )
-   #                              )
-   #    )
 
-       # damit aktuell noch falschrum - bräuchte noch ein
-       # out <- balkenbuilder(df, titel, x="indi_fach", y="proportion", group="geschlecht",
-       #                  tooltip, format, color = c("#154194", "#efe8e6"),
-       #                  optional = optional, reverse = reverse)
 
  }
 
@@ -2505,17 +2170,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
   regio <- r$region_arbeitsmarkt_verlauf_gender
   absolut_selector <- r$abs_zahlen_arbeitsmarkt_verlauf_gender
 
-  # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-  #   dplyr::filter(jahr %in% t,
-  #                 landkreis == "alle Landkreise",
-  #                 bundesland == regio,
-  #                 anforderung == "Gesamt",
-  #                 fachbereich == faecher,
-  #                 indikator %in% indi,
-  #                 geschlecht == "Frauen")%>%
-  #   dplyr::select(jahr, indikator, geschlecht, bundesland, wert, fachbereich)%>%
-  #   dplyr::collect()
-  #
+
   df_query <- glue::glue_sql("
   SELECT jahr, indikator, geschlecht, bundesland, wert, fachbereich
   FROM arbeitsmarkt_detail
@@ -2536,17 +2191,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
 
   if(absolut_selector=="In Prozent"){
 
-    # df_gen_alle <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    #   dplyr::filter(jahr %in% t,
-    #                 landkreis == "alle Landkreise",
-    #                 bundesland == regio,
-    #                 anforderung == "Gesamt",
-    #                 fachbereich == faecher,
-    #                 indikator %in% indi,
-    #                 geschlecht == "Gesamt")%>%
-    #   dplyr::select(jahr, indikator, geschlecht, bundesland, wert, fachbereich)%>%
-    #   dplyr::rename(wert_ges = wert) %>%
-    #   dplyr::collect()
+
 
     df_query <- glue::glue_sql("
     SELECT jahr, indikator, geschlecht, bundesland, wert AS wert_ges, fachbereich
@@ -2562,9 +2207,6 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
 
     df_gen_alle <- DBI::dbGetQuery(con, df_query)
 
-    # df_gen_alle <- df_gen_alle %>%
-    #   dplyr::select(jahr, indikator, geschlecht, bundesland, wert, fachbereich)%>%
-    #   dplyr::rename(wert_ges = wert)
 
     df <- df %>% dplyr::left_join(df_gen_alle,
                                   by = c("jahr", "indikator", "bundesland", "fachbereich")) %>%
@@ -2681,18 +2323,6 @@ arbeitsmarkt_wahl_gender <- function(r) {
     indi <- r$level_arbeitsmarkt_wahl_gender_pie
     regio <- r$region_arbeitsmarkt_wahl_gender_pie
 
-    # df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    #  dplyr::filter(jahr %in% timerange &
-    #                landkreis == "alle Landkreise",
-    #                bundesland == regio &
-    #                geschlecht != "Gesamt"&
-    #                anforderung == "Gesamt" &
-    #                indikator == indi,
-    #                fachbereich %in% c("Alle", "MINT", "Mathematik, Naturwissenschaften",
-    #                                     "Informatik", "Technik (gesamt)"))%>%
-    #  dplyr::select(jahr, bundesland, indikator, fachbereich, wert, geschlecht) %>%
-    #  dplyr::collect()
-    #
 
 
     df_query <- glue::glue_sql("
@@ -2721,17 +2351,6 @@ arbeitsmarkt_wahl_gender <- function(r) {
     df <- df %>% dplyr::filter(fachbereich != "MINT")
 
      # Anteil berechnen
-    # df_alle <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    #   dplyr::filter(jahr %in% timerange &
-    #                   landkreis == "alle Landkreise",
-    #                 bundesland == regio &
-    #                   geschlecht != "Gesamt"&
-    #                   anforderung == "Gesamt" &
-    #                   indikator == indi,
-    #                 fachbereich == "Alle")%>%
-    #   dplyr::select(jahr, bundesland, indikator, fachbereich, wert, geschlecht) %>%
-    #   dplyr::rename(wert_ges = wert) %>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT jahr, bundesland, indikator, fachbereich, geschlecht, wert as wert_ges
@@ -2746,10 +2365,6 @@ arbeitsmarkt_wahl_gender <- function(r) {
                                ", .con = con)
 
     df_alle <- DBI::dbGetQuery(con, df_query)
-
-    # df_alle <- df_alle %>%
-    #   dplyr::select(jahr, bundesland, indikator, fachbereich, wert, geschlecht) %>%
-    #   dplyr::rename(wert_ges = wert)
 
 
      df <- df %>% dplyr::left_join(df_alle, by = c("jahr", "bundesland", "indikator",
@@ -2790,8 +2405,10 @@ arbeitsmarkt_wahl_gender <- function(r) {
      tooltip <- paste('Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}')
      format <- '{point.prop_disp}%'
 
-     out_1 <- piebuilder(df_f, titel1, x="fachbereich", y = "prop", tooltip, color1, format, subtitel = subtitel1)
-     out_2 <- piebuilder(df_m, titel2, x="fachbereich", y = "prop", tooltip, color2, format, subtitel = subtitel2)
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+     out_1 <- piebuilder(df_f, titel1, x="fachbereich", y = "prop", tooltip, color1, format, subtitel = subtitel1, quelle=quelle)
+     out_2 <- piebuilder(df_m, titel2, x="fachbereich", y = "prop", tooltip, color2, format, subtitel = subtitel2, quelle=quelle)
 
 
      out <- highcharter::hw_grid(
@@ -2806,18 +2423,6 @@ arbeitsmarkt_wahl_gender <- function(r) {
      indi <- r$level_arbeitsmarkt_wahl_gender_karte
      faecher <- r$fach_arbeitsmarkt_wahl_gender_karte
 
-     # df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-     #   dplyr::filter(jahr %in% timerange &
-     #                   !bundesland %in% c("Deutschland",
-     #                                      "Westdeutschland (o. Berlin)",
-     #                                      "Ostdeutschland (inkl. Berlin)") &
-     #                   landkreis == "alle Landkreise" &
-     #                   geschlecht != "Gesamt"&
-     #                   anforderung == "Gesamt",
-     #                 indikator == indi,
-     #                 fachbereich == faecher)%>%
-     #   dplyr::select(indikator, fachbereich, wert, geschlecht, bundesland, jahr) %>%
-     #   dplyr::collect()
 
      df_query <- glue::glue_sql("
      SELECT indikator, fachbereich, wert, geschlecht, bundesland, jahr
@@ -2832,23 +2437,6 @@ arbeitsmarkt_wahl_gender <- function(r) {
 
      df <- DBI::dbGetQuery(con, df_query)
 
-     # df <- df %>%
-     #   dplyr::select(indikator, fachbereich, wert, geschlecht, bundesland, jahr)
-
-#
-#      df_alle <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-#        dplyr::filter(jahr %in% timerange &
-#                        !bundesland %in% c("Deutschland",
-#                                           "Westdeutschland (o. Berlin)",
-#                                           "Ostdeutschland (inkl. Berlin)") &
-#                        landkreis == "alle Landkreise" &
-#                        geschlecht != "Gesamt"&
-#                        anforderung == "Gesamt",
-#                      indikator == indi,
-#                      fachbereich == "Alle")%>%
-#        dplyr::select(indikator, fachbereich, wert, geschlecht, bundesland, jahr) %>%
-#        dplyr::rename(wert_ges = wert) %>%
-#        dplyr::collect()
 
      df_query <- glue::glue_sql("
      SELECT indikator, fachbereich, geschlecht, bundesland, wert as wert_ges, jahr
@@ -2862,10 +2450,6 @@ arbeitsmarkt_wahl_gender <- function(r) {
                                ", .con = con)
 
      df_alle <- DBI::dbGetQuery(con, df_query)
-
-     # df_alle <- df_alle %>%
-     #   dplyr::select(indikator, fachbereich, wert, geschlecht, bundesland, jahr) %>%
-     #   dplyr::rename(wert_ges = wert)
 
      df <- df %>%
        dplyr::left_join(df_alle, by = c("bundesland", "jahr", "geschlecht", "indikator")) %>%
@@ -2934,18 +2518,6 @@ arbeitsmarkt_wahl_gender <- function(r) {
     faecher <- r$fach_arbeitsmarkt_wahl_gender_verlauf
     absolut_selector <- r$abs_zahlen_arbeitsmarkt_wahl_gender_verlauf
 
-     # df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-     #   dplyr::filter(jahr %in% t,
-     #                 indikator == indi,
-     #                 landkreis == "alle Landkreise",
-     #                 bundesland %in% regio,
-     #                 anforderung == "Gesamt",
-     #                 geschlecht == "Frauen",
-     #                 fachbereich == faecher)%>%
-     #   dplyr::select("indikator", "fachbereich", "geschlecht", "bundesland",
-     #                 "jahr", "wert" ) %>%
-     #   dplyr::collect()
-
      df_query <- glue::glue_sql("
      SELECT *
      FROM arbeitsmarkt_detail
@@ -2965,19 +2537,6 @@ arbeitsmarkt_wahl_gender <- function(r) {
                      "jahr", "wert" )
 
      if(absolut_selector=="In Prozent"){
-
-       # df_alle <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-       #   dplyr::filter(jahr %in% t,
-       #                 indikator == indi,
-       #                 landkreis == "alle Landkreise",
-       #                 bundesland %in% regio,
-       #                 anforderung == "Gesamt",
-       #                 geschlecht == "Frauen",
-       #                 fachbereich == "Alle")%>%
-       #   dplyr::select("indikator", "fachbereich", "geschlecht", "bundesland",
-       #                 "jahr", "wert" ) %>%
-       #   dplyr::rename(wert_ges = wert) %>%
-       #   dplyr::collect()
 
        df_query <- glue::glue_sql("
 
@@ -3074,14 +2633,6 @@ arbeitsmarkt_top10 <- function( r){
   abs_rel <- r$betr_abs_rel
   fb <- r$FB_top_beruf
 
-
-  # df <- dplyr::tbl(con, from = "data_naa") %>%
-  #   dplyr::filter(
-  #     jahr == time &
-  #       ebene == "Ebene 3" &
-  #       region == bula )%>%
-  #   dplyr::select(-code)%>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -3332,23 +2883,6 @@ arbeitsmarkt_bl_gender_verlauf <- function(r) {
   t <- as.character(timerange[1]:timerange[2])
 
 
-  # df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
-  #   dplyr::filter(jahr %in% t,
-  #                 indikator == indikator_choice,
-  #                 region %in% states,
-  #                 anforderung %in% "Gesamt",
-  #                 geschlecht == "Frauen",
-  #                 fachbereich %in% c("Alle", "MINT")
-  #   )%>%
-  #   dplyr::select("bereich",
-  #                 "indikator",
-  #                 "fachbereich",
-  #                 "geschlecht",
-  #                 "region",
-  #                 "jahr",
-  #                 "anforderung",
-  #                 "wert" ) %>%
-  #   dplyr::collect()
 
 
   df_query <- glue::glue_sql("
@@ -3465,10 +2999,7 @@ arbeitsmarkt_lk_detail_map <- function(r) {
 
 
   # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-  #   dplyr::filter(
-  #     jahr == timerange)%>%
-  #   dplyr::select(-bereich)%>%
-  #   dplyr::collect()
+
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -3578,13 +3109,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
   states <- r$states_beruf_arbeitsmarkt_landkreis_vergleich
   search_val <- r$search_in_bar_chart
 
-  # filtern nach Zeit
-  # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-  #   dplyr::filter(
-  #     jahr == timerange)%>%
-  #   dplyr::select(-bereich)%>%
-  #   dplyr::collect()
-  #
+
 
   df_query <- glue::glue_sql("
   SELECT *

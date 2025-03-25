@@ -107,7 +107,9 @@ kurse_waffle_mint <- function(r) {
     color <- as.character(df$color)
     format <-"{point.proportion}  %"
 
-    out <- piebuilder(df, titel, x = "fachbereich", y = "proportion", tooltip, color, format)
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+    out <- piebuilder(df, titel, x = "fachbereich", y = "proportion", tooltip, color, format, quelle = quelle)
 
   } else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
@@ -392,8 +394,9 @@ kurse_einstieg_comparison <- function(r) {
     tooltip <- paste('Anteil: {point.proportion} % <br> Anzahl: {point.wert}')
     format <- "{point.proportion} %"
 
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- piebuilder(df1, titel, x = "fachbereich", y = "proportion", tooltip,  color =  c("#b16fab", "#efe8e6"), format)
+    out <- piebuilder(df1, titel, x = "fachbereich", y = "proportion", tooltip,  color =  c("#b16fab", "#efe8e6"), format, quelle = quelle)
   }
 
  return (out)
@@ -2011,9 +2014,11 @@ kurse_comparison_gender <- function(r) {
       titelg <- paste0("Mädchen-Anteil in anderen ", titel_help,  " in ", regio, " (", timerange, ")")
       tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
 
-      mint <- piebuilder(df_mint, titel, x = "anzeige_geschlecht", y = "proportion", tooltip, color = c("#154194" ,"#efe8e6"), format='{point.proportion}%')
+      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      rest <- piebuilder(df_rest, titelg, x = "anzeige_geschlecht", y = "proportion", tooltip, color = c("#154194" ,"#efe8e6"), format='{point.proportion}%')
+      mint <- piebuilder(df_mint, titel, x = "anzeige_geschlecht", y = "proportion", tooltip, color = c("#154194" ,"#efe8e6"), format='{point.proportion}%', quelle = quelle)
+
+      rest <- piebuilder(df_rest, titelg, x = "anzeige_geschlecht", y = "proportion", tooltip, color = c("#154194" ,"#efe8e6"), format='{point.proportion}%', quelle = quelle)
 
 
       out <- highcharter::hw_grid(
@@ -2033,7 +2038,9 @@ kurse_comparison_gender <- function(r) {
       tooltip = paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
 
 
-      out <- piebuilder(df1, titel, x = "anzeige_geschlecht", y = "proportion", tooltip, color = c("#154194" ,"#efe8e6"), format = '{point.proportion}%')
+      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+      out <- piebuilder(df1, titel, x = "anzeige_geschlecht", y = "proportion", tooltip, color = c("#154194" ,"#efe8e6"), format = '{point.proportion}%', quelle = quelle)
 
     }
 
@@ -2297,9 +2304,10 @@ kurse_wahl <- function(r) {
       tooltip <- paste('Anteil: {point.proportion}% <br> Anzahl: {point.wert}')
       color = as.character(df_f$col)
 
-      frauen <- piebuilder(df_f, titelf, x = "fachbereich", y = "proportion", tooltip, color, format = '{point.proportion}%')
-      männer <- piebuilder(df_m, titelm, x = "fachbereich", y = "proportion", tooltip, color, format = '{point.proportion}%')
+      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
+      frauen <- piebuilder(df_f, titelf, x = "fachbereich", y = "proportion", tooltip, color, format = '{point.proportion}%', quelle = quelle)
+      männer <- piebuilder(df_m, titelm, x = "fachbereich", y = "proportion", tooltip, color, format = '{point.proportion}%', quelle = quelle)
       out <- highcharter::hw_grid(
         frauen, männer,
         ncol = 2,
@@ -2317,8 +2325,9 @@ kurse_wahl <- function(r) {
       format = '{point.proportion}%'
       color = as.character(df_f$col)
 
+      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out <- piebuilder(df_f, titel, x = "fachbereich", y = "proportion", tooltip, color, format)
+      out <- piebuilder(df_f, titel, x = "fachbereich", y = "proportion", tooltip, color, format, quelle=quelle)
 
     }
   }else if(betrachtung == "Bundeslandvergleich - Kartendiagramm"){

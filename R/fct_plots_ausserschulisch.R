@@ -16,13 +16,6 @@ plot_cp_orgas <- function(r){
   if(charas != "Region"){
     regio <- r$regio_cp_orgas
 
-    # df <- dplyr::tbl(con, "ausserschulisch_cp_organisationen") %>%
-    #   dplyr::filter(region == regio,
-    #                 typ == charas) %>%
-    #   dplyr::mutate(wert = as.numeric(wert)) %>%
-    #   dplyr::collect()
-
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM ausserschulisch_cp_organisationen
@@ -37,11 +30,6 @@ plot_cp_orgas <- function(r){
   }else{
     bula_anzeigen <- r$bula_cp_orgas
 
-    # df <- dplyr::tbl(con, "ausserschulisch_cp_organisationen") %>%
-    #   dplyr::filter(region == "Gesamt",
-    #                 typ == charas) %>%
-    #   dplyr::mutate(wert = as.numeric(wert)) %>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -112,6 +100,7 @@ plot_cp_orgas <- function(r){
 
     out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", tooltip, format, color)
 
+    #keine quelle weil net relevant
 
   }else if(abs_rel_select == "In Prozent"){
 
@@ -238,12 +227,6 @@ plot_cp_projekte <- function(r){
   abs_rel_select <- r$abs_rel_cp_pros
   if(charas != "Region"){
     regio <- r$regio_cp_pros
-#
-#     df <- dplyr::tbl(con, "ausserschulisch_cp_projekte") %>%
-#       dplyr::filter(region == regio,
-#                     typ == charas) %>%
-#       dplyr::mutate(wert = as.numeric(wert)) %>%
-#       dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -261,12 +244,6 @@ plot_cp_projekte <- function(r){
   }else{
     bula_anzeigen<- r$bula_cp_pros
     regio <- ""
-    # df <- dplyr::tbl(con, "ausserschulisch_cp_projekte") %>%
-    #   dplyr::filter(region == "Gesamt",
-    #                 typ == charas) %>%
-    #   dplyr::mutate(wert = as.numeric(wert)) %>%
-    #   dplyr::collect()
-
 
     df_query <- glue::glue_sql("
     SELECT *

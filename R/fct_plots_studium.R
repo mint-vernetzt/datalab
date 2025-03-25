@@ -18,15 +18,6 @@ studienzahl_mint <- function(r){
     testl1 <- if (betrachtung == "Einzelansicht - Kuchendiagramm") r$studium_anteil_i else r$studium_anteil_i_balken
 
 
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == testy1,
-    #                 geschlecht == "Gesamt",
-    #                 region == regio,
-    #                 indikator %in% testl1,
-    #                 fach %in% c("Alle Nicht MINT-Fächer", "Alle MINT-Fächer")) %>%
-    #   dplyr::select(region, jahr, indikator, fach, wert) %>%
-    #   dplyr::collect()
-
 
     df_query <- glue::glue_sql("
     SELECT region, jahr, indikator, fach, wert
@@ -40,18 +31,7 @@ studienzahl_mint <- function(r){
 
     df <- DBI::dbGetQuery(con, df_query)
 #
-#     df <- df %>%
-#       dplyr::select(region, jahr, indikator, fach, wert)
 
-    # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == testy1,
-    #                 geschlecht == "Gesamt",
-    #                 region == regio,
-    #                 indikator %in% testl1,
-    #                 fach == "Alle Fächer") %>%
-    #   dplyr::select(region, jahr, indikator, fach, wert) %>%
-    #   dplyr::rename(wert_ges = wert) %>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -65,10 +45,6 @@ studienzahl_mint <- function(r){
                                ", .con = con)
 
     alle <- DBI::dbGetQuery(con, df_query)
-
-    # alle <- alle %>%
-    #   dplyr::select(region, jahr, indikator, fach, wert) %>%
-    #   dplyr::rename(wert_ges = wert)
 
 
 
@@ -124,10 +100,14 @@ studienzahl_mint <- function(r){
                          paste0(testl1[2], " in ", regio, " (", testy1, ")"))
           tooltip <- paste('Anteil: {point.display_rel}% <br> Anzahl: {point.wert}')
 
+
+          ####---
+          quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
            highcharter::hw_grid(
 
-            out <- piebuilder(df_1_pie, titel,x = "fach", y = "proportion", tooltip, color = c("#efe8e6", "#b16fab"), format = '{point.display_rel}%'),
-            out <- piebuilder(df_2_pie, titel2,x = "fach", y = "proportion", tooltip, color = c("#efe8e6", "#b16fab"), format = '{point.display_rel}%'),
+            out <- piebuilder(df_1_pie, titel,x = "fach", y = "proportion", tooltip, color = c("#efe8e6", "#b16fab"), format = '{point.display_rel}%', quelle = quelle),
+            out <- piebuilder(df_2_pie, titel2,x = "fach", y = "proportion", tooltip, color = c("#efe8e6", "#b16fab"), format = '{point.display_rel}%', quelle = quelle),
 
 
             ncol = 2,
@@ -198,17 +178,7 @@ studienzahl_verlauf_single <- function(r) {
 
   abs_zahlen_selector <- r$abs_zahlen_einstieg_verlauf_indi
 
-  ###
 
-  # # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-  #   dplyr::filter(jahr %in% t,
-  #                 geschlecht == "Gesamt",
-  #                 region == regio,
-  #                 indikator %in% indi_selct,
-  #                 fach == "Alle MINT-Fächer") %>%
-  #   dplyr::select(jahr, fach, indikator, wert)%>%
-  #   dplyr::collect()
   #
 
   df_query <- glue::glue_sql("
@@ -227,16 +197,7 @@ studienzahl_verlauf_single <- function(r) {
 
   if(abs_zahlen_selector == "In Prozent"){
 #
-#
-#     alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-#       dplyr::filter(jahr %in% t,
-#                     geschlecht == "Gesamt",
-#                     region == regio,
-#                     indikator %in% indi_selct,
-#                     fach == "Alle Fächer")%>%
-#       dplyr::select(jahr, fach, indikator, wert)%>%
-#       dplyr::rename(wert_ges = wert) %>%
-#       dplyr::collect()
+
 #
 
     df_query <- glue::glue_sql("
@@ -250,10 +211,6 @@ studienzahl_verlauf_single <- function(r) {
                                ", .con = con)
 
     alle <- DBI::dbGetQuery(con, df_query)
-
-    # alle <- alle %>%
-    #   dplyr::select(jahr, fach, indikator, wert)%>%
-    #   dplyr::rename(wert_ges = wert)
 
 
 
@@ -335,14 +292,6 @@ studierende_bula_mint <- function(r) {
     label_m <- r$bulas_map_l
 
     # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region != "Deutschland",
-    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-    #                 indikator == label_m,
-    #                 geschlecht == "Gesamt") %>%
-    #   dplyr::collect()
-
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -448,16 +397,6 @@ studierende_bula_mint <- function(r) {
 
     if (absolut_selector=="In Prozent"){
 
-      # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      #   dplyr::filter(jahr %in% t,
-      #                 geschlecht == "Gesamt",
-      #                 region %in% states,
-      #                 indikator == bl_label,
-      #                 fach == "Alle Fächer")%>%
-      #   dplyr::select(jahr, fach, indikator, wert, region)%>%
-      #   dplyr::rename(wert_ges = wert) %>%
-      #   dplyr::collect()
-
 
       df_query <- glue::glue_sql("
         SELECT jahr, fach, indikator, wert AS wert_ges, region
@@ -518,15 +457,6 @@ studierende_bula_mint <- function(r) {
     r_lab1 <- r$bulas_balken_l
 
 
-    # df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(geschlecht=="Gesamt",
-    #                 jahr %in% timerange,
-    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-    #                 indikator == r_lab1) %>%
-    #   dplyr::collect()
-
-
-
     df_query <- glue::glue_sql("
         SELECT *
         FROM studierende_detailliert
@@ -538,15 +468,6 @@ studierende_bula_mint <- function(r) {
 
     df_ges <- DBI::dbGetQuery(con, df_query)
 
-
-
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(geschlecht=="Gesamt",
-    #                 jahr %in% timerange,
-    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-    #                 indikator == r_lab1) %>%
-    #   dplyr::select(-fachbereich,- mint_select, -typ )%>%
-    #   dplyr::collect()
 
 
 
@@ -646,15 +567,6 @@ studienzahl_waffle_mint <- function(r) {
   timerange <- r$waffle_y
 
   label_w <- r$waffle_l
-
-
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "studierende") %>%
-  #   dplyr::filter(jahr == timerange,
-  #                 region== "Deutschland",
-  #                 geschlecht== "Gesamt")%>%
-  #   dplyr::select(-region, -geschlecht, - jahr)%>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
         SELECT *
@@ -941,12 +853,6 @@ studienzahl_verlauf_bl_subject <- function(r) {
 
   label_select <- r$verl_l
 
-  # df <- dplyr::tbl(con, from = "studierende") %>%
-  #   dplyr::filter(jahr %in% t,
-  #                 geschlecht=="Gesamt",
-  #                 region == states,
-  #                 indikator==label_select) %>%
-  #   dplyr::collect()
   #
 
   df_query <- glue::glue_sql("
@@ -1072,12 +978,7 @@ studierende_verlauf_multiple_bl <- function(r) {
 
   states <- r$states_studium_studienzahl_bl_verlauf
 
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "studierende") %>%
-  #   dplyr::filter(jahr %in% t,
-  #                 geschlecht == "Gesamt",
-  #                 indikator==bl_label) %>%
-  #   dplyr::collect()
+
 
 
   df_query <- glue::glue_sql("
@@ -1192,13 +1093,6 @@ studienzahl_einstieg_comparison <- function(r) {
   # load UI inputs from reactive value
   timerange <- r$date_kurse_einstieg_comparison
 
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "studierende") %>%
-  #   dplyr::filter(jahr == timerange,
-  #                 geschlecht == "Gesamt",
-  #                 region== "Deutschland")%>%
-  #   dplyr::collect()
-  #
 
   df_query <- glue::glue_sql("
         SELECT *
@@ -1309,13 +1203,6 @@ studierende_verlauf_single_bl_gender <- function(r) {
   subjects_select <- r$choice_v_f
 
   states <- r$choice_states
-
-  # df <- dplyr::tbl(con, from = "studierende") %>%
-  #   dplyr::filter(jahr %in% t,
-  #                 geschlecht=="Frauen",
-  #                 region == states,
-  #                 indikator %in%v_lab) %>%
-  #   dplyr::collect()
 
 
   df_query <- glue::glue_sql("
@@ -1514,15 +1401,6 @@ plot_mint_faecher <- function(r){
 
   # filter dataset based on UI inputs
   if(ebene == "MINT-Fachbereiche"){
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region== regio,
-    #                 geschlecht== "Gesamt",
-    #                 indikator %in% label_w,
-    #                 (mint_select == "MINT" & typ == "Aggregat") |
-    #                   fachbereich == "Nicht MINT")%>%
-    #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)%>%
-    #   dplyr::collect()
 
     if (length(label_w) == 0) {
       stop("Fehler: label_w ist leer und verursacht eine ungültige SQL-Abfrage.")
@@ -1545,14 +1423,7 @@ plot_mint_faecher <- function(r){
 
 
 
-    # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region== regio,
-    #                 geschlecht== "Gesamt",
-    #                 indikator %in% label_w,
-    #                 fachbereich == "Gesamt")%>%
-    #   dplyr::select(-region, -geschlecht, - jahr, -fach, -bereich, -mint_select, -typ)%>%
-    #   dplyr::collect()
+
 
 
 
@@ -1574,14 +1445,7 @@ plot_mint_faecher <- function(r){
 
   }
     else{
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region== regio,
-    #                 geschlecht== "Gesamt",
-    #                 indikator %in% label_w,
-    #                 (mint_select == "MINT" & typ != "Aggregat"))%>%
-    #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)%>%
-    #   dplyr::collect()
+
 
       if (length(label_w) == 0) {
         stop("Fehler: label_w ist leer und verursacht eine ungültige SQL-Abfrage.")
@@ -1603,17 +1467,6 @@ plot_mint_faecher <- function(r){
     df <- df %>%
       dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
 
-
-
-    # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region== regio,
-    #                 geschlecht== "Gesamt",
-    #                 indikator %in% label_w,
-    #                 fachbereich == "MINT")%>%
-    #   dplyr::select(-region, -geschlecht, - jahr, -fach, -bereich, -mint_select, -typ)%>%
-    #   dplyr::collect()
-    #
 
     df_query2 <- glue::glue_sql("
         SELECT *
@@ -1686,7 +1539,9 @@ plot_mint_faecher <- function(r){
     tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
     color = as.character(df$color)
 
-    out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format='{point.prop}%')
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+    out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format='{point.prop}%', quelle = quelle)
 
 
     } else if(length(label_w)==2){
@@ -1697,7 +1552,10 @@ plot_mint_faecher <- function(r){
       tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
       color = as.character(df[df$indikator == label_w[1],]$color)
 
-      p1 <- piebuilder(df[df$indikator == label_w[1],], titel, x = "fach", y ="prop", tooltip, color, format='{point.prop}%')
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
+      p1 <- piebuilder(df[df$indikator == label_w[1],], titel, x = "fach", y ="prop", tooltip, color, format='{point.prop}%', quelle = quelle)
 
       #noch nutzen?
 
@@ -1822,13 +1680,6 @@ mint_anteile <- function(r) {
   # Filter-Optionen für MINT-Fachbereiche
   fachbereiche_filter <- c("Ingenieurwissenschaften (ohne Informatik)", "Mathematik, Naturwissenschaften", "Informatik")
 
-  # Grunddatensatz aus der Datenbank laden
-  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-  #   dplyr::filter(geschlecht == "Gesamt",
-  #                 jahr %in% t,
-  #                 indikator == indi,
-  #                 region == states) %>%
-  #   dplyr::collect()
 
 
 
@@ -1974,17 +1825,6 @@ plot_studierende_bula_faecher <- function(r){
       faecher <- r$bl_f_alle_faecher
     }
 
-    # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 !(region %in% c("Deutschland", "Ostdeutschland (inkl. Berlin)",
-    #                                 "Westdeutschland (o. Berlin)")),
-    #                 fach == faecher,
-    #                 indikator == label_m,
-    #                 geschlecht == "Gesamt") %>%
-    #   dplyr::select(-c(bereich, jahr, geschlecht, fachbereich, mint_select, typ)) %>%
-    #   dplyr::collect()
-    #
 
 
 
@@ -2004,18 +1844,6 @@ plot_studierende_bula_faecher <- function(r){
       dplyr::select(-c(bereich, jahr, geschlecht, fachbereich, mint_select, typ))
 
 
-
-
-
-    # alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 !(region %in% c("Deutschland", "Ostdeutschland (inkl. Berlin)",
-    #                                 "Westdeutschland (o. Berlin)")),
-    #                 fach == "Alle Fächer",
-    #                 indikator == label_m,
-    #                 geschlecht == "Gesamt") %>%
-    #   dplyr::select(-c(bereich, jahr, geschlecht, fachbereich, mint_select, typ)) %>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -2263,13 +2091,6 @@ plot_studierende_bula_faecher <- function(r){
       fach_bl <- r$bl_balken_alle_faecher
     }
 
-    # df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(geschlecht=="Gesamt",
-    #                 jahr %in% timerange,
-    #                 region %in% regio,
-    #                 indikator == r_lab1) %>%
-    #   dplyr::collect()
-
 
 
     df_query <- glue::glue_sql("
@@ -2284,20 +2105,6 @@ plot_studierende_bula_faecher <- function(r){
     df_ges <- DBI::dbGetQuery(con, df_query)
 
 
-
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(geschlecht=="Gesamt",
-    #                 jahr %in% timerange,
-    #                 region %in% regio,
-    #                 indikator == r_lab1) %>%
-    #   dplyr::select(-fachbereich,- mint_select, -typ )%>%
-    #   dplyr::collect() %>%
-    #   tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-    #   dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
-    #   tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
-    #   dplyr::right_join(df_ges)%>%
-    #   dplyr::collect()
-    #
 
 
 
@@ -2427,18 +2234,6 @@ ranking_bl_subject <- function(r) {
   states <- r$rank_states
 
   r_lab <- r$rank_l
-
-  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-  #   dplyr::filter(jahr == timerange,
-  #                 mint_select == "MINT" | fach %in% c("Alle MINT-Fächer",
-  #                                                     "Alle Fächer",
-  #                                                     "Alle Nicht MINT-Fächer"),
-  #                 geschlecht == "Gesamt",
-  #                 region == states)%>%
-  #   dplyr::select(-bereich,- fachbereich) %>%
-  #   dplyr::collect()
-  #
-
 
 
   df_query <- glue::glue_sql("
@@ -2591,18 +2386,6 @@ studierende_mint_vergleich_bl <- function(r) {
 
 
 
-  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-  #   dplyr::filter(geschlecht=="Gesamt",
-  #                 jahr %in% timerange) %>%
-  #   dplyr::select(-fachbereich,- mint_select, -typ )%>%
-  #   dplyr::collect() %>%
-  #   tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-  #   dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
-  #   tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
-  #   dplyr::right_join(df_ges)%>%
-  #   dplyr::collect()
-
-
 
   df_query <- glue::glue_sql("
         SELECT *
@@ -2705,14 +2488,6 @@ studienzahl_einstieg_gender <- function(r) {
 
         if(gegenwert == "Ja") gen_f <- c(gen_f, "Alle Nicht MINT-Fächer")
 
-        # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-        #   dplyr::filter(jahr == timerange,
-        #                 region== regio,
-        #                 fach %in% gen_f,
-        #                 geschlecht != "Gesamt",
-        #                 indikator %in% genl) %>%
-        #   dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
-        #   dplyr::collect()
 
 
 
@@ -2730,19 +2505,6 @@ studienzahl_einstieg_gender <- function(r) {
 
         df <- df %>%
           dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)
-
-
-
-#
-#
-#         alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-#           dplyr::filter(jahr == timerange,
-#                         region== regio,
-#                         fach %in% gen_f,
-#                         geschlecht == "Gesamt",
-#                         indikator %in% genl) %>%
-#                         dplyr::select(-fachbereich, -region, - jahr, -bereich, -mint_select, -typ)%>%
-#           dplyr::collect()
 
 
 
@@ -2806,7 +2568,9 @@ studienzahl_einstieg_gender <- function(r) {
           tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
           color <- c("#efe8e6", "#154194")
 
-          p1 <- piebuilder(df_p, titel, x = "geschlecht", y ="prop", tooltip, color = color, format = '{point.prop}%')
+          quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+          p1 <- piebuilder(df_p, titel, x = "geschlecht", y ="prop", tooltip, color = color, format = '{point.prop}%', quelle = quelle)
 
           out <- p1
 
@@ -2828,8 +2592,10 @@ studienzahl_einstieg_gender <- function(r) {
              color <- c("#efe8e6", "#154194")
              format <- '{point.prop}%'
 
+             quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-             p1g <- piebuilder(df_g, titel, x = "geschlecht", y = "prop", tooltip, color, format)
+
+             p1g <- piebuilder(df_g, titel, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
 
              out <- highcharter::hw_grid(p1, p1g, ncol = 2,    browsable = TRUE)
 
@@ -2862,8 +2628,10 @@ studienzahl_einstieg_gender <- function(r) {
           format = '{point.prop}%'
           color = c("#efe8e6", "#154194")
 
-          p1 <- piebuilder(df_1_pie, titel1, x = "geschlecht", y = "prop", tooltip, color, format)
-          p2 <- piebuilder(df_2_pie, titel2, x = "geschlecht", y = "prop", tooltip, color, format)
+          quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+          p1 <- piebuilder(df_1_pie, titel1, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
+          p2 <- piebuilder(df_2_pie, titel2, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
 
 
 
@@ -2889,15 +2657,18 @@ studienzahl_einstieg_gender <- function(r) {
 
             tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
             format <- '{point.prop}%'
+
+            quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
             color = c("#efe8e6", "#154194")
 
-            p1g <- piebuilder(df1_g, titel, x = "geschlecht", y = "prop", tooltip, color, format)
+            p1g <- piebuilder(df1_g, titel, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
 
             titel2 <- ifelse(regio == "Saarland",
                              paste0("Frauenanteil unter ", title_n2, " in Nicht-MINT-Fächern im ", regio, " (", timerange, ")"),
                              paste0("Frauenanteil unter ", title_n2, " in Nicht-MINT-Fächern im ", regio, " (", timerange, ")"))
 
-            p2g <- piebuilder(df2_g, titel2, x = "geschlecht", y = "prop", tooltip, color, format)
+            p2g <- piebuilder(df2_g, titel2, x = "geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
 
             out <- highcharter::hw_grid(p1, p2, p1g, p2g, ncol = 2, browsable = TRUE)
 
@@ -2919,9 +2690,11 @@ studienzahl_einstieg_gender <- function(r) {
           color <- c("#efe8e6", "#154194")
           format <- '{point.prop}%'
 
-          p1 <- piebuilder(df_1_pie, titel1, x ="geschlecht", y = "prop", tooltip, color, format)
-          p2 <- piebuilder(df_2_pie, titel2, x ="geschlecht", y = "prop", tooltip, color, format)
-          p3 <- piebuilder(df_3_pie, titel3, x ="geschlecht", y = "prop", tooltip, color, format)
+          quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+          p1 <- piebuilder(df_1_pie, titel1, x ="geschlecht", y = "prop", tooltip, color, format, quelle = quelle)
+          p2 <- piebuilder(df_2_pie, titel2, x ="geschlecht", y = "prop", tooltip, color, format, quelle=quelle)
+          p3 <- piebuilder(df_3_pie, titel3, x ="geschlecht", y = "prop", tooltip, color, format, quelle=quelle)
 
 
       out <- highcharter::hw_grid(p1, p2, p3, ncol = 3,browsable = TRUE)
@@ -2938,9 +2711,11 @@ studienzahl_einstieg_gender <- function(r) {
         tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.display_abs}')
         color <- c("#efe8e6", "#154194")
 
-        p1g <- piebuilder(df1_g, titel1, x = "geschlecht", y ="prop", tooltip, color, format= '{point.prop}%')
-        p2g <- piebuilder(df2_g, titel2, x = "geschlecht", y ="prop", tooltip, color, format= '{point.prop}%')
-        p3g <- piebuilder(df3_g, titel3, x = "geschlecht", y ="prop", tooltip, color, format= '{point.prop}%')
+        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+        p1g <- piebuilder(df1_g, titel1, x = "geschlecht", y ="prop", tooltip, color, format= '{point.prop}%', quelle= quelle)
+        p2g <- piebuilder(df2_g, titel2, x = "geschlecht", y ="prop", tooltip, color, format= '{point.prop}%', quelle = quelle)
+        p3g <- piebuilder(df3_g, titel3, x = "geschlecht", y ="prop", tooltip, color, format= '{point.prop}%', quelle = quelle)
 
         out <- highcharter::hw_grid(p1, p2, p3,p1g, p2g, p3g,ncol = 3,browsable = TRUE)
 
@@ -2980,12 +2755,6 @@ studienzahl_einstieg_gender <- function(r) {
     gegenwert <- r$gen_gegenwert_balken
     if(gegenwert == "Ja") sel_f1 <- c(sel_f1, "Alle Nicht MINT-Fächer")
 
-    # # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr %in% timerange,
-    #                 region==sel_bl1,
-    #                 fach %in% sel_f1)%>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -3106,15 +2875,6 @@ studienzahl_verlauf_single_gender <- function(r) {
   label_sel <- r$genzl
   regio <- r$gen_z_region
   faecher <- r$gen_z_faecher
-
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-  #   dplyr::filter(jahr %in% t,
-  #                 region== regio,
-  #                 fach == faecher,
-  #                 indikator %in% label_sel) %>%
-  #   dplyr::collect()
-  #
 
 
   df_query <- glue::glue_sql("
@@ -3343,16 +3103,6 @@ studienzahl_choice_gender <- function(r) {
       gen <- "Frauen"
     }
 
-    # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region==regio,
-    #                 geschlecht %in% gen,
-    #                 indikator == lab_cho,
-    #                 (fach %in% c("Mathematik, Naturwissenschaften", "Alle Nicht MINT-Fächer",
-    #                              "Ingenieurwissenschaften (inkl. Informatik)"))) %>%
-    #   dplyr::collect()
-
 
 
     df_query <- glue::glue_sql("
@@ -3368,18 +3118,6 @@ studienzahl_choice_gender <- function(r) {
     df <- DBI::dbGetQuery(con, df_query)
 
 
-
-
-
-    # df_alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region==regio,
-    #                 geschlecht %in% gen,
-    #                 indikator == lab_cho,
-    #                 fach == "Alle Fächer") %>%
-    #   dplyr::rename(wert_ges = wert) %>%
-    #   dplyr::collect()
-    #
 
     df_query <- glue::glue_sql("
         SELECT *
@@ -3442,8 +3180,10 @@ studienzahl_choice_gender <- function(r) {
 
       format <- '{point.prop}%'
 
-      p1 <- piebuilder(df_f, titel, x="fach", y="prop", tooltip, color, format, subtitel)
-      p2 <- piebuilder(df_m, titelm, x="fach", y="prop", tooltip, color, format, subtitelm)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+      p1 <- piebuilder(df_f, titel, x="fach", y="prop", tooltip, color, format, subtitel, quelle = quelle)
+      p2 <- piebuilder(df_m, titelm, x="fach", y="prop", tooltip, color, format, subtitelm, quelle = quelle)
 
 
       out <- highcharter::hw_grid(p1, p2, ncol = 2, browsable = TRUE)
@@ -3467,15 +3207,6 @@ studienzahl_choice_gender <- function(r) {
     subjects_select <- r$choice_v_f
     states <- r$choice_states
 
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr %in% t,
-    #                 region==states,
-    #                 geschlecht == "Frauen",
-    #                 indikator %in% v_lab,
-    #                 fach == subjects_select) %>%
-    #   dplyr::select(region, fach, jahr, indikator, geschlecht, wert) %>%
-    #   dplyr::collect()
-
 
 
     df_query <- glue::glue_sql("
@@ -3498,15 +3229,6 @@ studienzahl_choice_gender <- function(r) {
 
     if (absolut_selector=="In Prozent"){
 
-      # df_alle <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      #   dplyr::filter(jahr %in% t,
-      #                 region == states,
-      #                 geschlecht == "Frauen",
-      #                 indikator %in% v_lab,
-      #                 fach == "Alle Fächer") %>%
-      #   dplyr::select(region, fach, jahr, indikator, geschlecht, wert) %>%
-      #   dplyr::rename(wert_ges = wert) %>%
-      #   dplyr::collect()
 
       df_query <- glue::glue_sql("
         SELECT region, fach, jahr, indikator, geschlecht, wert AS wert_ges
@@ -3602,18 +3324,6 @@ plot_ranking_top_faecher <- function(r) {
   subject <- r$subject_top_faecher
 
   abs_rel <- r$subject_abs_rel
-
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-  #   dplyr::filter(jahr == timerange,
-  #                 indikator == "Studierende",
-  #                 region == states,
-  #                 !fach %in% c(
-  #                   "Außerhalb der Studienbereichsgliederung/Sonstige Fächer",
-  #                   "Weitere ingenieurwissenschaftliche Fächer",
-  #                   "Weitere naturwissenschaftliche und mathematische Fächer"
-  #                 )) %>%
-  #   dplyr::collect()
 
 
   df_query <- glue::glue_sql("
@@ -3858,41 +3568,6 @@ plot_auslaender_mint <- function(r){
 
   betr_ebene <- r$ebene_ausl
 
-
-  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-  #   dplyr::filter(indikator %in% c("internationale Studienanfänger:innen (1. Hochschulsemester)",
-  #                                  "internationale Studierende",
-  #                                  "Studienanfänger:innen (1. Hochschulsemester)",
-  #                                  "Studierende","Absolvent:innen",
-  #                                     "internationale Absolvent:innen"),
-  #                 geschlecht == "Gesamt",
-  #                 region==bl_select,
-  #                 jahr ==year_select )%>%
-  #   dplyr::select(-mint_select,- fachbereich)%>%
-  #   dplyr::collect() %>%
-  #   tidyr::pivot_wider(names_from=indikator, values_from = wert)%>%
-  #   dplyr::mutate("deutsche Studierende" =`Studierende` - `internationale Studierende`,
-  #                 "deutsche Studienanfänger:innen (1. Hochschulsemester)"=`Studienanfänger:innen (1. Hochschulsemester)`-
-  #                   `internationale Studienanfänger:innen (1. Hochschulsemester)`)%>%
-  #   dplyr::mutate("deutsche Studierende_p" =`deutsche Studierende`/`Studierende`,
-  #                 "internationale Studierende_p"= `internationale Studierende`/`Studierende`,
-  #                 "deutsche Studienanfänger:innen (1. Hochschulsemester)_p" =`deutsche Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`,
-  #                 "internationale Studienanfänger:innen (1. Hochschulsemester)_p"=`internationale Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`)%>%
-  #   dplyr::mutate("deutsche Absolvent:innen" =`Absolvent:innen`-`internationale Absolvent:innen`,
-  #                 "internationale Absolvent:innen"=`Absolvent:innen`-`deutsche Absolvent:innen`)%>%
-  #   dplyr::mutate("deutsche Absolvent:innen_p" =`deutsche Absolvent:innen`/`Absolvent:innen`,
-  #                 "internationale Absolvent:innen_p"= `internationale Absolvent:innen`/`Absolvent:innen`) %>%
-  #   dplyr::select(-c(Studierende, `Studienanfänger:innen (1. Hochschulsemester)` ))%>%
-  #   tidyr::pivot_longer(c(7:ncol(.)), names_to="indikator", values_to="wert")%>%
-  #   dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p")~"Relativ",
-  #                                           T~"Asolut"))%>%
-  #   dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p") ~ "In Prozent",
-  #                                           T ~ "Anzahl"))%>%
-  #   dplyr::mutate(ausl_detect=dplyr::case_when(stringr::str_detect(.$indikator, "international")~"International",
-  #                                              T~ "Deutsch"))%>%
-  #   dplyr::filter(!fach %in% c("Weitere ingenieurwissenschaftliche Fächer",
-  #                              "Weitere naturwissenschaftliche und mathematische Fächer",
-  #                              "Außerhalb der Studienbereichsgliederung/Sonstige Fächer"))
   #
 
 
@@ -4380,41 +4055,6 @@ plot_auslaender_mint_zeit <- function(r){
     if(bl_select == "Thüringen")fach_select <- r$fach9_studium_studienzahl_ausl_zeit
   }
 
-  # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-  #   dplyr::filter(  indikator %in% c("internationale Studienanfänger:innen (1. Hochschulsemester)",
-  #                                    "internationale Studierende",
-  #                                    "Studienanfänger:innen (1. Hochschulsemester)",
-  #                                    "Studierende",
-  #                                    "Absolvent:innen", "internationale Absolvent:innen"),
-  #                 geschlecht == "Gesamt",
-  #                 region==bl_select,
-  #                 fach ==fach_select,
-  #                 jahr %in% t)%>%
-  #   dplyr::select(-mint_select,- fachbereich)%>%
-  #   dplyr::collect() %>%
-  #   tidyr::pivot_wider(names_from=indikator, values_from = wert)%>%
-  #   dplyr::mutate("deutsche Studierende" =`Studierende`-`internationale Studierende`,
-  #                 "deutsche Studienanfänger:innen (1. Hochschulsemester)"=`Studienanfänger:innen (1. Hochschulsemester)`-
-  #                   `internationale Studienanfänger:innen (1. Hochschulsemester)`)%>%
-  #   dplyr::mutate("deutsche Studierende_p" =`deutsche Studierende`/Studierende,
-  #                 "internationale Studierende_p"= `internationale Studierende`/`Studierende`,
-  #                 "deutsche Studienanfänger:innen (1. Hochschulsemester)_p" =`deutsche Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`,
-  #                 "internationale Studienanfänger:innen (1. Hochschulsemester)_p"=`internationale Studienanfänger:innen (1. Hochschulsemester)`/`Studienanfänger:innen (1. Hochschulsemester)`)%>%
-  #   dplyr::mutate("deutsche Absolvent:innen" =`Absolvent:innen`-`internationale Absolvent:innen`,
-  #                 "internationale Absolvent:innen"=`Absolvent:innen`-`deutsche Absolvent:innen`)%>%
-  #   dplyr::mutate("deutsche Absolvent:innen_p" =`deutsche Absolvent:innen`/`Absolvent:innen`,
-  #                 "internationale Absolvent:innen_p"= `internationale Absolvent:innen`/`Absolvent:innen`) %>%
-  #   dplyr::select(-c(`Studierende`, `Studienanfänger:innen (1. Hochschulsemester)` ))%>%
-  #   #  dplyr::filter(geschlecht=="Gesamt")%>%
-  #   tidyr::pivot_longer(c(7:ncol(.)), names_to="indikator", values_to="wert")%>%
-  #   dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p")~"Relativ",
-  #                                           T~"Absolut"))%>%
-  #   dplyr::mutate(selector=dplyr::case_when(stringr::str_ends(.$indikator, "_p") ~ "In Prozent",
-  #                                           T ~ "Anzahl"))%>%
-  #   dplyr::mutate(ausl_detect=dplyr::case_when(stringr::str_detect(.$indikator, "international")~"international",
-  #                                              T~ "deutsch"))
-  #
-  #####
   df_query <- glue::glue_sql("
   SELECT *
   FROM studierende_detailliert
@@ -4693,14 +4333,6 @@ studierende_international_bula_mint <- function(r) {
     timerange <- r$international_bulas_map_y
     label_m <- r$international_bulas_map_l
 
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region != "Deutschland",
-    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-    #                 indikator == label_m,
-    #                 geschlecht == "Gesamt") %>%
-    #   dplyr::collect()
-
 
 
     df_query <- glue::glue_sql("
@@ -4900,12 +4532,6 @@ studierende_international_bula_mint <- function(r) {
     timerange <- r$international_bulas_balken_date
     r_lab1 <- r$international_bulas_balken_l
 
-    # df_ges <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(geschlecht=="Gesamt",
-    #                 jahr %in% timerange,
-    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-    #                 indikator == r_lab1) %>%
-    #   dplyr::collect()
 
 
 
@@ -4919,22 +4545,6 @@ studierende_international_bula_mint <- function(r) {
       ", .con = con)
 
     df_ges <- DBI::dbGetQuery(con, df_query)
-
-
-
-
-    # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-    #   dplyr::filter(geschlecht=="Gesamt",
-    #                 jahr %in% timerange,
-    #                 fach %in% c("Alle MINT-Fächer", "Alle Fächer"),
-    #                 indikator == r_lab1) %>%
-    #   dplyr::select(-fachbereich,- mint_select, -typ )%>%
-    #   dplyr::collect() %>%
-    #   tidyr::pivot_wider(names_from = fach, values_from = wert)%>%
-    #   dplyr::mutate(dplyr::across(c(6:ncol(.)), ~round(./`Alle Fächer`*100,1)))%>%
-    #   tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
-    #   dplyr::right_join(df_ges)%>%
-    #   dplyr::filter(fach == "Alle MINT-Fächer")
 
 
 
