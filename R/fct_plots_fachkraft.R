@@ -618,7 +618,35 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
         xanchor = "center",
         yanchor = "top"
       )
-
+    )%>%
+    plotly::config(displaylogo = FALSE,  modeBarButtonsToRemove = c(
+      'sendDataToCloud', 'autoScale2d', 'resetScale2d', 'toggleSpikelines',
+      'hoverClosestCartesian', 'hoverCompareCartesian',
+      'zoom2d','pan2d','select2d','lasso2d','zoomIn2d','zoomOut2d'
+    ),modeBarButtonsToAdd = list(
+      list(
+        name = "Download CSV",
+        icon = list(
+          path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+          width = 24,
+          height = 24
+        ),
+        click = htmlwidgets::JS("
+              function(gd) {
+                var csv = 'x,y\\n';
+                var data = gd.data[0];
+                for (var i = 0; i < data.x.length; i++) {
+                  csv += data.x[i] + ',' + data.y[i] + '\\n';
+                }
+                var blob = new Blob([csv], { type: 'text/csv' });
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'data.csv';
+                a.click();
+              }
+            ")
+      )
+    )
     )
 
   hc <- fig
