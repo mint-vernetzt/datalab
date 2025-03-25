@@ -1109,7 +1109,7 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       AND bundesland = {regio}
       AND geschlecht = 'Gesamt'
       AND anforderung = 'Gesamt'
-      AND fachbereich IN ('Alle', 'MINT', 'Mathematik, Naturwissenschaften', 'Informatik", "Technik (gesamt)')
+      AND fachbereich IN ('Alle', 'MINT', 'Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
       AND indikator IN ({indikator_choice*})
                                ", .con = con)
 
@@ -2179,7 +2179,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
   AND bundesland = {regio}
   AND anforderung = 'Gesamt'
   AND fachbereich = {faecher}
-  AND indikator IN ({faecher*})
+  AND indikator IN ({indi*})
   AND geschlecht = 'Frauen'
                              ", .con = con)
 

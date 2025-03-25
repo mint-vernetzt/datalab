@@ -59,7 +59,8 @@ background-color: #FFFFFF;
 
   /* active selected tab in the sidebarmenu */
 .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
-background-color: #FFFFFF;
+background-color: #EDF3FF;
+border-left-color: #EDF3FF;
 }
 
   /* other links in the sidebarmenu */
@@ -71,9 +72,9 @@ color: #000000;
   /* other links in the sidebarmenu when hovered */
 .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
 background-color: #154194;
+border-left-color: #154194;
 color: #FFFFFF;
 }
-
 
   /* toggle button passive  */
 .skin-blue .main-header .navbar .sidebar-toggle{
@@ -89,6 +90,18 @@ background-color: #154194;
   /*body*/
 .content-wrapper, .right-side {
 background-color:#FCFCFD;
+}
+
+
+/*Tabset*/
+.nav-tabs>li>a {
+  border:1px solid #ddd;
+  border-bottom-color: transparent;
+}
+
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus {
+  color: #ddd;
 }
 
 

@@ -72,8 +72,9 @@ mod_studium_studienzahl_ui <- function(id){
       shinydashboard::box(
         title = "Datenquellen",
         width = 5,
-        p(style = "text-align: left; font-size = 16px",
-          "Studierendenzahlen in Deutschland: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
+        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2023."),
+        p(tags$b(span("Studierendenzahlen: Destatis 2024, auf Anfrage. ")),
+          "Daten des Berichtsjahres 2024 ca. ab September 2025 verfügbar."),
 
       )
     ),

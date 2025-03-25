@@ -76,12 +76,15 @@ mod_schule_kurse_ui <- function(id){
       shinydashboard::box(
         title = "Datenquellen",
         width = 5,
+        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2023."),
         p(style = "text-align: left; font-size = 16px",
-          "Schüler:innenzahlen der Oberstufe: Kultusministerkonferenz (KMK), 2024, auf Anfrage"),
+          tags$b(span("Schüler:innenzahlen der Oberstufe: Kultusministerkonferenz (KMK), 2024, auf Anfrage")),
+          "Daten des Berichtjahres 2024 ca. ab Dezember 2025 verfügbar."),
         p(style = "text-align: left; font-size = 16px",
-          "Kompetenzdaten in Deutschland: Institut zur Qualitätsentwicklung im Bildungswesen (IQB), 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+          tags$b(span("Kompetenzdaten in Deutschland: Institut zur Qualitätsentwicklung im Bildungswesen (IQB), 2023, freier Download.")),
+          "Die Auswertung des IQB-Bildungstends 2024 mit Fokus auf MINT wird voraussichtlich im Herbst 2025 veröffentlicht."),
         p(style = "text-align: left; font-size = 16px",
-          "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen liegen uns derzeit nicht vor.")
+          "Weitere Statistiken über die Belegung von MINT-Fächern in anderen Klassenstufen oder Schulformen liegen uns derzeit nicht vor.")
         )
 
       ),

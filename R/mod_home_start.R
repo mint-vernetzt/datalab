@@ -64,11 +64,11 @@ mod_home_start_ui <- function(id){
       shinydashboard::box(
         title = "Datenquellen",
         width = 5,
-        p(
-          #style = "text-align: left; font-size = 16px",
-          "Studierendenzahlen: Destatis 2024, auf Anfrage"),
-         p("Schülerzahlen: KMK 2024, auf Anfrage"),
-          p("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2024, auf Anfrage")
+        p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2023."),
+        p(tags$b(span("Studierendenzahlen: Destatis 2024, auf Anfrage. ")),"Daten des Berichtsjahres 2024 ca. ab September 2025 verfügbar."),
+        p(tags$b(span("Schülerzahlen: KMK 2024, auf Anfrage. ")), "Daten des Berichtjahres 2024 ca. ab Dezember 2025 verfügbar."),
+        p(tags$b(span("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2024, auf Anfrage. ")), "Daten des Berichtsjahres
+            2024 ca. ab Juli 2025 verfügbar.")
         )
       ),
 
