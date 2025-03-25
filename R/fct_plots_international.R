@@ -1742,17 +1742,11 @@ plot_international_schule_migration <- function(r) {
                    "#8893A7", "#FBBF24", "#9D7265")
   color <- line_colors[seq_along(this_indikator)]
 
-  dfs <- dfs %>%
-    group_by(land, indikator) %>%
-    summarise(wert = mean(wert, na.rm = TRUE), .groups = "drop")
-
   plot_data <- data_line %>%
     select(land, indikator, wert) %>%
     pivot_wider(
       names_from = indikator,
-      values_from = wert,
-      values_fn = mean,#?????????????????????????????????????????????? wieso mean? das hat chatgpt empfohle
-      values_fill = NA
+      values_from = wert
     )
 
 
@@ -1844,39 +1838,10 @@ plot_international_schule_migration <- function(r) {
             xanchor = "center",
             yanchor = "top"
           )
-        ) %>%
-        plotly::config(displaylogo = FALSE,  modeBarButtonsToRemove = c(
-          'sendDataToCloud', 'autoScale2d', 'resetScale2d', 'toggleSpikelines',
-          'hoverClosestCartesian', 'hoverCompareCartesian',
-          'zoom2d','pan2d','select2d','lasso2d','zoomIn2d','zoomOut2d'
-        ),modeBarButtonsToAdd = list(
-          list(
-            name = "Download CSV",
-            icon = list(
-              path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
-              width = 24,
-              height = 24
-            ),
-            click = htmlwidgets::JS("
-              function(gd) {
-                var csv = 'x,y\\n';
-                var data = gd.data[0];
-                for (var i = 0; i < data.x.length; i++) {
-                  csv += data.x[i] + ',' + data.y[i] + '\\n';
-                }
-                var blob = new Blob([csv], { type: 'text/csv' });
-                var a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'data.csv';
-                a.click();
-              }
-            ")
-          )
-        )
         )
 
-
-    } else if (label_m == "TIMSS" && leistungsindikator_m == "nach Geschlecht") {
+    }
+  else if (label_m == "TIMSS" && leistungsindikator_m == "nach Geschlecht") {
 
       plot_data <- plot_data %>%
         rename(
@@ -1940,8 +1905,8 @@ plot_international_schule_migration <- function(r) {
         )
 
 
-
-    } else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
+    }
+  else if (label_m == "PISA" && leistungsindikator_m == "nach Geschlecht") {
       plot_data <- plot_data %>%
         rename(
           basis_wert = Jungen,
@@ -2004,8 +1969,8 @@ plot_international_schule_migration <- function(r) {
         )
 
 
-
-    } else if (label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte") {
+    }
+  else if (label_m == "PISA" && leistungsindikator_m == "nach Zuwanderungsgeschichte") {
       plot_data <- plot_data %>%
         rename(
           basis_wert = `ohne Zuwanderungsgeschichte`,
@@ -2091,72 +2056,74 @@ plot_international_schule_migration <- function(r) {
         )
 
 
-    } else if (label_m == "PISA" && leistungsindikator_m == "nach Bildungskapital") {
-      plot_data <- plot_data %>%
+    }
+  else if (label_m == "PISA" && leistungsindikator_m == "nach Bildungskapital") {
+
+     plot_data <- plot_data %>%
         rename(
-          basis_wert = `sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)`,
-          mittel_wert = `niedriges Bildungskapital (bis zu 100 Bücher zuhause)`,
-          wert = `hohes Bildungskapital (über 500 Bücher zuhause)`
+          sehr_niedrig = `sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)`,
+          niedrig = `niedriges Bildungskapital (bis zu 100 Bücher zuhause)`,
+          hoch = `hohes Bildungskapital (über 500 Bücher zuhause)`
         )
 
       plot_data <- plot_data %>%
-        filter(!is.na(mittel_wert) | !is.na(wert) | !is.na(basis_wert))
+        filter(!is.na(niedrig) | !is.na(hoch) | !is.na(sehr_niedrig))
 
       plot_data <- plot_data %>%
         filter(land %in% lander)
 
       fig <- plotly::plot_ly(data = plot_data, color = I("gray80")) %>%
         plotly::add_segments(
-          x = ~basis_wert,
-          xend = ~mittel_wert,
+          x = ~sehr_niedrig,
+          xend = ~niedrig,
           y = ~land,
           yend = ~land,
           showlegend = FALSE,
-          text = ~ifelse(is.na(basis_wert) | is.na(mittel_wert), NA,
-                         paste0("Sehr niedriges Bildungskapital: ", basis_wert, "<br>Sehr niedriges Bildungskapital: ", mittel_wert)),
+          text = ~ifelse(is.na(sehr_niedrig) | is.na(niedrig), NA,
+                         paste0("Sehr niedriges Bildungskapital: ", sehr_niedrig, "<br>Sehr niedriges Bildungskapital: ", sehr_niedrig)),
           hoverinfo = "text"
         ) %>%
         plotly::add_segments(
-          x = ~mittel_wert,
-          xend = ~wert,
+          x = ~niedrig,
+          xend = ~hoch,
           y = ~land,
           yend = ~land,
           showlegend = FALSE,
-          text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
-                         paste0("Niedriges Bildungskapital: ", mittel_wert, "<br>Hohes Bildungskapital: ", wert)),
+          text = ~ifelse(is.na(niedrig) | is.na(hoch), NA,
+                         paste0("Niedriges Bildungskapital: ", niedrig, "<br>Hohes Bildungskapital: ", hoch)),
           hoverinfo = "text"
         ) %>%
         plotly::add_markers(
-          x = ~basis_wert,
+          x = ~sehr_niedrig,
           y = ~land,
-          name = "Sehr niedriges Bildungskapital",
+          name = "Sehr niedriges Bildungskapital (bis zu 10 Bücher zuhause)",
           marker = list(
             size = 12,
             color = "#D0A9CD"
           ),
-          text = ~ifelse(is.na(basis_wert), NA, paste0("Sehr niedriges Bildungskapital: ", basis_wert)),
+          text = ~ifelse(is.na(sehr_niedrig), NA, paste0("Sehr niedriges Bildungskapital: ", sehr_niedrig)),
           hoverinfo = "text"
         ) %>%
         plotly::add_markers(
-          x = ~mittel_wert,
+          x = ~niedrig,
           y = ~land,
-          name = "Sehr niedriges Bildungskapital",
+          name = "Niedriges Bildungskapital (bis zu 100 Bücher zuhause)",
           marker = list(
             size = 12,
             color = "#66cbaf"
           ),
-          text = ~ifelse(is.na(mittel_wert), NA, paste0("Sehr niedriges Bildungskapital: ", mittel_wert)),
+          text = ~ifelse(is.na(niedrig), NA, paste0("Niedriges Bildungskapital: ", niedrig)),
           hoverinfo = "text"
         ) %>%
         plotly::add_markers(
-          x = ~wert,
+          x = ~hoch,
           y = ~land,
-          name = "Hohes Bildungskapital",
+          name = "Hohes Bildungskapital (über 500 Bücher zuhause)",
           marker = list(
             size = 12,
             color = "#b16fab"
           ),
-          text = ~ifelse(is.na(wert), NA, paste0("Hohes Bildungskapital: ", wert)),
+          text = ~ifelse(is.na(hoch), NA, paste0("Hohes Bildungskapital: ", hoch)),
           hoverinfo = "text"
         ) %>%
         # Layout anpassen
@@ -2174,22 +2141,41 @@ plot_international_schule_migration <- function(r) {
             yanchor = "top"
           )
         )
+
     } else {
 
     }
 
 
-
-
   fig <- fig %>%
-    plotly::config(
-      modeBarButtonsToRemove = c(
-        "zoom2d", "pan2d", "select2d", "lasso2d",
-        "autoScale2d", "resetScale2d",
-        "toggleSpikelines", "hoverClosestCartesian", "hoverCompareCartesian"
-      ),
-      displaylogo = FALSE,
-      showLink = FALSE
+    plotly::config(displaylogo = FALSE,  modeBarButtonsToRemove = c(
+      'sendDataToCloud', 'autoScale2d', 'resetScale2d', 'toggleSpikelines',
+      'hoverClosestCartesian', 'hoverCompareCartesian',
+      'zoom2d','pan2d','select2d','lasso2d','zoomIn2d','zoomOut2d'
+    ),modeBarButtonsToAdd = list(
+      list(
+        name = "Download CSV",
+        icon = list(
+          path = "M16,2H8C6.9,2,6,2.9,6,4v16c0,1.1,0.9,2,2,2h8c1.1,0,2-0.9,2-2V4C18,2.9,17.1,2,16,2z M16,20H8V4h8V20z M14.5,14h-2v3h-1v-3h-2l2.5-3.5L14.5,14z",
+          width = 24,
+          height = 24
+        ),
+        click = htmlwidgets::JS("
+              function(gd) {
+                var csv = 'x,y\\n';
+                var data = gd.data[0];
+                for (var i = 0; i < data.x.length; i++) {
+                  csv += data.x[i] + ',' + data.y[i] + '\\n';
+                }
+                var blob = new Blob([csv], { type: 'text/csv' });
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'data.csv';
+                a.click();
+              }
+            ")
+      )
+    )
     )
 
 

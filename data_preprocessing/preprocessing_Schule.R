@@ -1418,9 +1418,16 @@ usethis::use_data(pisa, overwrite = T)
 
 ### Gender ----
 #file_path <- paste0("C:/Users/", akro, "/OneDrive - Stifterverband/AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten")
-
 pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+akro <- "kbr"
+pfad <- paste0("C:/Users/", akro,
+               "/OneDrive - Stifterverband/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/02_Alle Daten/")
+
+
 # funktion
+library(readxl)
+library(stringr)
+
 timss_gender_transform <- function(dat){
 
   timss_g <- read_xlsx(paste0(pfad, dat))
@@ -1501,8 +1508,17 @@ timss_gender_transform <- function(dat){
 
 
 
-  timss_g3$land <- countrycode::countrycode(timss_g3$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England',
-                                                                                                                                      "Northern Ireland" = "Nordirland") )
+  timss_g3$land <- countrycode::countrycode(timss_g3$land, origin = 'country.name',
+                                            destination = 'country.name.de',
+                                            custom_match = c('England' = 'England',
+                                                             "Northern Ireland" = "Nordirland",
+                                                             "Ontario, Canada" = "Ontario, Kanada",
+                                                             "Quebec, Canada" = "Quebec, Kanada",
+                                                             "Abu Dhabi, UAE" = "Abu Dhabi, UAE",
+                                                             "Dubai, UAE" = "Dubai, UAE",
+                                                             "Belgium (Flemish)" = "Belgien (Flemisch)",
+                                                             "Belgium (French)" = "Belgien (Französisch)",
+                                                             "International Average" = "Interantionaler Durchschnitt"))
   return(timss_g3)
 }
 
@@ -1565,8 +1581,17 @@ timss_achv_extract<-function(dat){
     rename(land = Country)%>%
     mutate(indikator = "Score")
 
-   timss_a2$land <- countrycode::countrycode(timss_a2$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England',
-                                                                                                                                       "Northern Ireland" = "Nordirland") )
+   timss_a2$land <- countrycode::countrycode(timss_a2$land, origin = 'country.name',
+                                             destination = 'country.name.de',
+                                             custom_match = c('England' = 'England',
+                                                              "Northern Ireland" = "Nordirland",
+                                                              "Ontario, Canada" = "Ontario, Kanada",
+                                                              "Quebec, Canada" = "Quebec, Kanada",
+                                                              "Abu Dhabi, UAE" = "Abu Dhabi, UAE",
+                                                              "Dubai, UAE" = "Dubai, UAE",
+                                                              "Belgium (Flemish)" = "Belgien (Flemisch)",
+                                                              "Belgium (French)" = "Belgien (Französisch)",
+                                                              "International Average" = "Interantionaler Durchschnitt"))
 
    timss_a2$fach <-  timss_a_sub1
 
@@ -1641,7 +1666,17 @@ achie_23 <- function(pfad, file, fach){
   extract <- extract %>% mutate(wert = as.double(wert))
   colnames(extract)[3] <- "standardfehler"
 
-  extract$land <- countrycode::countrycode(extract$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England', "Northern Ireland" = "Nordirland") )
+  extract$land <- countrycode::countrycode(extract$land, origin = 'country.name',
+                                           destination = 'country.name.de',
+                                           custom_match = c('England' = 'England',
+                                                            "Northern Ireland" = "Nordirland",
+                                                            "Ontario, Canada" = "Ontario, Kanada",
+                                                            "Quebec, Canada" = "Quebec, Kanada",
+                                                            "Abu Dhabi, UAE" = "Abu Dhabi, UAE",
+                                                            "Dubai, UAE" = "Dubai, UAE",
+                                                            "Belgium (Flemish)" = "Belgien (Flemisch)",
+                                                            "Belgium (French)" = "Belgien (Französisch)",
+                                                            "International Average" = "Interantionaler Durchschnitt"))
 
   return(extract)
 }
@@ -1653,12 +1688,6 @@ dat2023a <- rbind(w,u)
 
 
 timss_achievement <- bind_rows(timss_achievement, dat2023a)
-
-
-
-
-
-
 
 
 ### Home resources ----
@@ -1757,9 +1786,17 @@ timss_res_extract <- function(dat3, jahr, fach){
                                  T~ .$indikator),
            ordnung = "Ressourcen")
 
-  timss_res3$land <- countrycode::countrycode(timss_res3$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England',
-                                                                                                                                      "Northern Ireland" = "Nordirland",
-                                                                                                                                      "International Average" = "Interantionaler Durchschnitt") )
+  timss_res3$land <- countrycode::countrycode(timss_res3$land, origin = 'country.name',
+                                              destination = 'country.name.de',
+                                              custom_match = c('England' = 'England',
+                                                               "Northern Ireland" = "Nordirland",
+                                                               "Ontario, Canada" = "Ontario, Kanada",
+                                                               "Quebec, Canada" = "Quebec, Kanada",
+                                                               "Abu Dhabi, UAE" = "Abu Dhabi, UAE",
+                                                               "Dubai, UAE" = "Dubai, UAE",
+                                                               "Belgium (Flemish)" = "Belgien (Flemisch)",
+                                                               "Belgium (French)" = "Belgien (Französisch)",
+                                                               "International Average" = "Interantionaler Durchschnitt"))
 
   return(timss_res3)
 }
@@ -1767,8 +1804,6 @@ timss_res_extract <- function(dat3, jahr, fach){
 o <- timss_res_extract("TIMSS007_home-resources-M4.xlsx", "2019", "Mathematik")
 p <- timss_res_extract("TIMSS008_home-resources-S4.xlsx" ,"2019", "Naturwissenschaften")
 timss_res_dat_2 <- bind_rows(o,p)
-
-
 
 
 timss_res_extract <- function(dat3, jahr, fach, sheet){
@@ -1866,14 +1901,20 @@ timss_res_extract <- function(dat3, jahr, fach, sheet){
                                  T~ .$indikator),
            ordnung = "Ressourcen")
 
-  timss_res3$land <- countrycode::countrycode(timss_res3$land, origin = 'country.name', destination = 'country.name.de', custom_match = c('England' = 'England',
-                                                                                                                                          "Northern Ireland" = "Nordirland",
-                                                                                                                                          "International Average" = "Interantionaler Durchschnitt") )
+  timss_res3$land <- countrycode::countrycode(timss_res3$land, origin = 'country.name',
+                                              destination = 'country.name.de',
+                                              custom_match = c('England' = 'England',
+                                                               "Northern Ireland" = "Nordirland",
+                                                               "Ontario, Canada" = "Ontario, Kanada",
+                                                               "Quebec, Canada" = "Quebec, Kanada",
+                                                               "Abu Dhabi, UAE" = "Abu Dhabi, UAE",
+                                                               "Dubai, UAE" = "Dubai, UAE",
+                                                               "Belgium (Flemish)" = "Belgien (Flemisch)",
+                                                               "Belgium (French)" = "Belgien (Französisch)",
+                                                               "International Average" = "Interantionaler Durchschnitt"))
 
   return(timss_res3)
 }
-
-
 
 o_neu <- timss_res_extract("TIMSS011_con-hom-ses.xlsx", "2023", "Mathematik", sheet = 2)
 p_neu <- timss_res_extract("TIMSS011_con-hom-ses.xlsx", "2023", "Naturwissenschaften", sheet = 3)
@@ -1887,11 +1928,7 @@ timss_res_dat$indikator[timss_res_dat$indikator == "Lower\r\n Socioeconomic Stat
 timss_res_dat <- rbind(timss_res_dat_2, timss_res_dat)
 
 
-
-
-
 ### Benchmarks-----
-
 
 # funktion
 
@@ -1984,7 +2021,14 @@ timss_benchmarks_extract <- function(dat7){
                                               origin = 'country.name',
                                               destination = 'country.name.de',
                                               custom_match = c('England' = 'England',
-                                                               "Northern Ireland" = "Nordirland") )
+                                                               "Northern Ireland" = "Nordirland",
+                                                               "Ontario, Canada" = "Ontario, Kanada",
+                                                               "Quebec, Canada" = "Quebec, Kanada",
+                                                               "Abu Dhabi, UAE" = "Abu Dhabi, UAE",
+                                                               "Dubai, UAE" = "Dubai, UAE",
+                                                               "Belgium (Flemish)" = "Belgien (Flemisch)",
+                                                               "Belgium (French)" = "Belgien (Französisch)",
+                                                               "International Average" = "Interantionaler Durchschnitt"))
 
 
 return(dat_bench2)
@@ -2059,7 +2103,10 @@ new_benchmark <- function(pfad, file, fach){
                                                                "Ontario, Canada" = "Ontario, Kanada",
                                                                "Quebec, Canada" = "Quebec, Kanada",
                                                                "Abu Dhabi, UAE" = "Abu Dhabi, UAE",
-                                                               "Dubai, UAE" = "Dubai, UAE"))
+                                                               "Dubai, UAE" = "Dubai, UAE",
+                                                               "Belgium (Flemish)" = "Belgien (Flemisch)",
+                                                               "Belgium (French)" = "Belgien (Französisch)",
+                                                               "International Average" = "Interantionaler Durchschnitt"))
 
   dat8_long <- dat8_long %>%
     filter(!is.na(land))
@@ -2077,8 +2124,6 @@ timss_benchmarks <- rbind(timss_benchmarks, benchmark_temp)
 
 
 ###scienza
-
-
 
 # dat8 <- read_excel(paste0(pfad, "TIMSS014_ach-g4s-bmk-trend.xlsx"))
 #
@@ -2136,12 +2181,6 @@ timss_benchmarks <- rbind(timss_benchmarks, benchmark_temp)
 # timss_benchmarks <- rbind(timss_benchmarks, dat8_long)
 
 
-
-
-
-
-
-
 ### TIMSS Merger ----
 
 timss <- bind_rows(
@@ -2160,10 +2199,11 @@ timss <- bind_rows(
 
 
 timss$fach <- replace(timss$fach, timss$fach == "Mathematics", "Mathematik")
+timss$jahr <- as.numeric(timss$jahr)
 
-usethis::use_data(timss, overwrite=T)
+#usethis::use_data(timss, overwrite=T)
 
 save(timss, file = "schule_timss.rda")
-save(timss, file = "timss.rda")
+
 
 
