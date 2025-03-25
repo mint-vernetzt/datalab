@@ -131,7 +131,6 @@ beruf_einstieg_vergleich <- function(r) {
       format <- "{value}%"
       color <- c("#efe8e6","#b16fab")
       tooltip <- "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
-      # optional = list(bar = list(stacking = "percent"))
 
       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
@@ -144,7 +143,7 @@ beruf_einstieg_vergleich <- function(r) {
       df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
-
+      color <- c("#efe8e6","#b16fab")
       titel <- ifelse(regio == "Saarland",
                       paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen im ", regio, " (", timerange, ")"),
                       paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen in ", regio, " (", timerange, ")"))
@@ -779,7 +778,9 @@ arbeitsmarkt_bl_gender <- function(r) {
     maxcolor <- "#b16fab"
     map_selection <- 1
 
-    out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+    out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
 
@@ -791,8 +792,8 @@ arbeitsmarkt_bl_gender <- function(r) {
     mincolor <- "#f4f5f6"
     maxcolor <- "#b16fab"
     map_selection <- 1
-    quelle <- ""
-    out2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
     out <- list(out_1, out_2)
@@ -1546,7 +1547,9 @@ arbeitsmarkt_bula_faecher <- function(r) {
     mincolor <- "#f4f5f6"
     maxcolor <- "#b16fab"
     map_selection <- 1
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
 
@@ -2522,7 +2525,8 @@ arbeitsmarkt_wahl_gender <- function(r) {
      mincolor <- "#fcfcfd"
      maxcolor <- "#b16fab"
      map_selection <- 1
-     out_1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection)
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     out_1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
      df <- values_male
@@ -2533,7 +2537,8 @@ arbeitsmarkt_wahl_gender <- function(r) {
      mincolor <- "#fcfcfd"
      maxcolor <- "#b16fab"
      map_selection <- 1
-     out_2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection)
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     out_2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
 
@@ -3126,12 +3131,11 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   df1_map$wert <- prettyNum(df1_map$wert, big.mark = ".", decimal.mark = ",")
   domain_1 <- ifelse(domain_1 == "Alle", "alle Berufsbereiche", domain_1)
 
-
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
   # create plots
 
-  out <- mapbuilder(df1_map,c("hc-key","landkreis_nummer"),paste0( domain_1, "<br>", titel_sub1_2), tooltip = 12, paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")"),12, 12, prop=TRUE, wert=FALSE, map = 1, landkarten = TRUE, states = states
-  )
+  out <- mapbuilder(df1_map,c("hc-key","landkreis_nummer"),paste0( domain_1, "<br>", titel_sub1_2), tooltip = 12, paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")"),12, 12, prop=TRUE, wert=FALSE, map = 1, landkarten = TRUE, states = states, quelle=quelle)
 
 
 

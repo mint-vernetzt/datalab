@@ -322,6 +322,8 @@ kurse_einstieg_comparison <- function(r) {
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+   highcharter::hc_caption(text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                           style = list(fontSize = "11px", color = "gray")) %>%
    highcharter::hc_exporting(enabled = TRUE,
                              buttons = list(
                                contextButton = list(
@@ -329,16 +331,6 @@ kurse_einstieg_comparison <- function(r) {
                                )
                              )
    )
-
- # titel <- paste0("Anteil von MINT-Belegungen an allen Belegungen in ", regio, " (", timerange,")")
- # tooltip <- "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
- # format <- "{value}%"
- # color <- c("#efe8e6", "#b16fab")
- # optional <- list(bar = list(stacking = "percent"))
- #
- # out <- balkenbuilder(df1, titel, x = "indikator", y="proportion", group="fachbereich", tooltip, color, format, optional)
-
-
 
 
   }else if(betrachtung == "Einzelansicht - Kuchendiagramm"){
@@ -386,17 +378,6 @@ kurse_verlauf_single <- function(r) {
   t <- as.numeric(timerange[1]:timerange[2])
   regio <- r$region_kurse_einstieg_verlauf
   absolut_selector <- r$abs_zahlen_kurse_einstieg_verlauf
-
-  # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr %in% t,
-    #                 region == regio,
-    #                 anzeige_geschlecht == "Gesamt",
-    #                 fachbereich %in% c( "MINT", "Alle Fächer" )
-    #                 ) %>%
-    #   dplyr::select(-bereich, -region, -anzeige_geschlecht)%>%
-    #   dplyr::collect()
-
 
     df_query <- glue::glue_sql("
                                SELECT *
@@ -450,15 +431,12 @@ kurse_verlauf_single <- function(r) {
     # order years for plot
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
-
-
     titel <- paste0("Anzahl an MINT-Belegungen in der Schule in ", regio)
     tooltip <- "Anzahl: {point.y}"
     format <-  "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf")
     quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
-
 
 
   }
@@ -685,8 +663,9 @@ kurse_mint_map <- function(r) {
     mincolor <- "#f4f5f6"
     map_selection <- 1
     maxcolor <- "#b16fab"
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
     df2 <- df[df$indikator == "Leistungskurse",]
@@ -697,8 +676,9 @@ kurse_mint_map <- function(r) {
     mincolor <- "#f4f5f6"
     map_selection <- 1
     maxcolor <- "#b16fab"
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    map2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    map2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
 
@@ -810,7 +790,8 @@ kurse_map <- function(r) {
     mincolor <- "#fcfcfd"
     maxcolor <- col
     map_selection <- 1
-    map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    map1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
     df$proportion <- as.numeric(as.character(df$proportion))
@@ -825,7 +806,8 @@ kurse_map <- function(r) {
     mincolor <- "#fcfcfd"
     maxcolor <- col
     map_selection <- 1
-    map2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    map2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
     plot_list <- list(map1,map2)
@@ -985,15 +967,6 @@ kurse_map <- function(r) {
 
     }
 
-    # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                # region != "Deutschland",
-    #                 anzeige_geschlecht == "Gesamt",
-    #                 indikator == indikator_comparison) %>%
-    #   dplyr::select(-jahr, -bereich) %>%
-    #   dplyr::collect()
-    #
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -1061,6 +1034,8 @@ kurse_map <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1069,21 +1044,6 @@ kurse_map <- function(r) {
                                 )
       )
 
-
-    # format <- "{value}%"
-    # tooltip <- "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
-    # y = "proportion"
-    # x = "region"
-    # optional = list(bar = list(
-    #   colorByPoint = TRUE,
-    #   colors = ifelse(df$region == "Deutschland", "#b16fab",
-    #                   ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
-    #                          ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))
-    # titel = paste0( "Anteil von ", kurs_help, "-Belegungen in ", help_title, " nach Bundesländern (",  timerange, ")")
-    #
-    #
-    # out <- balkenbuilder(df, titel, x, y, tooltip = tooltip, color = )
-    #
 
     return(out)
 
@@ -1117,14 +1077,6 @@ kurse_verlauf_multiple_bl <- function(r) {
 
   indikator_select <- r$topic_selected_multiple
 
-  # SQL: DONE
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "kurse") %>%
-  #   dplyr::filter(jahr %in% t,
-  #                 indikator == indikator_select,
-  #                 anzeige_geschlecht == "Gesamt") %>%
-  #   dplyr::select(indikator, fachbereich, anzeige_geschlecht, region, jahr, wert)%>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
   SELECT indikator, fachbereich, anzeige_geschlecht, region, jahr, wert
@@ -1136,8 +1088,6 @@ kurse_verlauf_multiple_bl <- function(r) {
 
   df <- DBI::dbGetQuery(con, df_query)
 
-  # include "Osten" und "Westen" in Dataframe
-  #df <- prep_kurse_east_west(df)
 
   df <- df %>%
     dplyr::mutate(fachbereich = dplyr::case_when(fachbereich == "MINT"~ "MINT-Fächer (gesamt)",
@@ -1280,14 +1230,6 @@ kurse_verlauf_subjects_bl <- function(r) {
     "Sport"= "#154194"
   )
 
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "kurse") %>%
-  #   dplyr::filter(jahr %in% t,
-  #                 indikator == indikator_kurse,
-  #                 region %in% states) %>%
-  #   dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr, wert)%>%
-  #   dplyr::collect()
-
   df_query <- glue::glue_sql("
   SELECT fachbereich, indikator, anzeige_geschlecht, region, jahr, wert
   FROM kurse
@@ -1416,14 +1358,6 @@ kurse_ranking_gender <- function(r) {
 
   subject <- r$subject_kurse_ranking_gender
 
-  #SQL: DONE
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "kurse") %>%
-  #   dplyr::filter(jahr == timerange,
-  #                 region != "Deutschland",
-  #                 region != "Baden-Württemberg") %>%
-  #   dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr, wert)%>%
-  #   dplyr::collect()
 
 
   df_query <- glue::glue_sql("
@@ -1515,12 +1449,7 @@ kurse_mint_comparison <- function(r) {
 
   indikator_comparison <- r$indikator_comparison_subject
 
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "kurse") %>%
-  #   dplyr::filter(anzeige_geschlecht == "Gesamt",
-  #                 jahr == timerange) %>%
-  #   dplyr::select(-bereich)%>%
-  #   dplyr::collect()
+
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -1659,14 +1588,6 @@ kurse_mint_comparison_bl <- function(r) {
 
   }
 
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "kurse") %>%
-  #   dplyr::filter(jahr == timerange,
-  #                 region != "Deutschland",
-  #                 anzeige_geschlecht == "Gesamt",
-  #                 indikator == indikator_comparison) %>%
-  #   dplyr::select(-jahr, -bereich) %>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -1774,13 +1695,6 @@ kurse_comparison_gender <- function(r) {
 
   if (betrachtung == "Kursvergleich - Hanteldiagramm"){
 
-    # # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 fachbereich != "Alle Fächer",
-    #                 indikator != "Oberstufenbelegungen") %>%
-    #   dplyr::collect()
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM kurse
@@ -1790,8 +1704,6 @@ kurse_comparison_gender <- function(r) {
                                ", .con = con)
     df <- DBI::dbGetQuery(con, df_query)
 
-    # include "Osten" und "Westen" in Dataframe
-    #df <- prep_kurse_east_west(df)
 
     # calcualte the new "Gesamt"
     df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -1838,8 +1750,6 @@ kurse_comparison_gender <- function(r) {
         y = ~fachbereich,
         yend = ~fachbereich,
         showlegend = FALSE,
-        # text = ~ifelse(is.na(mittel_wert) | is.na(wert), NA,
-        #                paste0("Mittel: ", mittel_wert, "<br>Positiv: ", wert)),
         hoverinfo = "text"
       ) %>%
       plotly::add_markers(
@@ -1877,8 +1787,18 @@ kurse_comparison_gender <- function(r) {
           y = -0.2,
           xanchor = "center",
           yanchor = "top"
+        ),
+        annotations = list(
+          list(
+            text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+            xref = "paper", yref = "paper",
+            x = 0, y = -0.3,
+            xanchor = "left", yanchor = "top",
+            showarrow = FALSE,
+            font = list(size = 10, color = "gray")
+          )
         )
-      )%>%
+      ) %>%
       plotly::config(displaylogo = FALSE,  modeBarButtonsToRemove = c(
         'sendDataToCloud', 'autoScale2d', 'resetScale2d', 'toggleSpikelines',
         'hoverClosestCartesian', 'hoverCompareCartesian',
@@ -1911,13 +1831,6 @@ kurse_comparison_gender <- function(r) {
 
   }else {
 
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "kurse") %>%
-  #   dplyr::filter(jahr == timerange,
-  #                 region == regio&
-  #                   fachbereich %in% c("MINT", "andere Fächer")) %>%
-  #   dplyr::select(region, fachbereich, anzeige_geschlecht, indikator, jahr, wert)%>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
   SELECT region, fachbereich, anzeige_geschlecht, indikator, jahr, wert
@@ -1930,9 +1843,6 @@ kurse_comparison_gender <- function(r) {
 
   df <- DBI::dbGetQuery(con, df_query)
 
-
-  # aggregate to MINT
-  #df <- share_mint_kurse(df)
 
   # calcualte the new "Gesamt"
   df <-  df %>% dplyr::filter(anzeige_geschlecht != "Gesamt") %>%
@@ -2033,6 +1943,10 @@ kurse_comparison_gender <- function(r) {
 
 
 
+
+
+
+
     if(gegenwert == "Ja"){
 
 
@@ -2056,6 +1970,8 @@ kurse_comparison_gender <- function(r) {
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -2087,6 +2003,8 @@ kurse_comparison_gender <- function(r) {
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -2111,14 +2029,6 @@ kurse_verlauf_gender <- function(r){
   regio <- r$region_kurse_verlauf_gender
   abs_rel <- r$abs_rel_kurse_verlauf_gender
 
-
-  # df <- dplyr::tbl(con, "kurse") %>%
-  #   dplyr::filter(region == regio,
-  #                 fachbereich =="MINT",
-  #                 jahr %in% t,
-  #                 anzeige_geschlecht != "Gesamt") %>%
-  #   dplyr::select(-region, - bereich) %>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
         SELECT *
@@ -2214,14 +2124,6 @@ kurse_wahl <- function(r) {
       "andere Fächer" = "#efe8e6"
     )
 
-    # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region == regio,
-    #                 indikator == indikator_gender,
-    #                 anzeige_geschlecht != "Gesamt") %>%
-    #   dplyr::select(indikator, fachbereich, anzeige_geschlecht, wert) %>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT indikator, fachbereich, anzeige_geschlecht, wert
@@ -2330,14 +2232,7 @@ kurse_wahl <- function(r) {
       "Religion/Ethik"= "#D4C1BB",
       "Sport"= "#D4C1BB"
     )
-    # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 !(region %in% c("Deutschland", "Westen", "Osten")),
-    #                 indikator == kurs_select) %>%
-    #   dplyr::select(bereich, fachbereich, indikator, anzeige_geschlecht, region, jahr, wert)%>%
-    #   dplyr::collect()
-    #
+
     df_query <- glue::glue_sql("SELECT bereich, fachbereich, indikator, anzeige_geschlecht, region, jahr, wert
     FROM kurse
     WHERE jahr = {timerange}
@@ -2393,7 +2288,8 @@ kurse_wahl <- function(r) {
     mincolor <- "#fcfcfd"
     maxcolor <- as.character(color_fach[subjects])
     map_selection <- 1
-    out1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out1 <- mapbuilder(df1, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
     out <- out1
 
@@ -2408,7 +2304,8 @@ kurse_wahl <- function(r) {
       mincolor <- "#fcfcfd"
       maxcolor <- as.character(color_fach[subjects])
       map_selection <- 1
-      out2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+      quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out2 <- mapbuilder(df2, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
       out <- highcharter::hw_grid(
         out1, out2,
@@ -2451,15 +2348,6 @@ iqb_standard_zeitverlauf <- function(r){
     bl_select <- r$land_iqb_standard_zeitverlauf_9
   }
 
-  # Region, Geschlecht und Klasse filtern
-  # df <- dplyr::tbl(con, from = "iqb") %>%
-  #   dplyr::filter(region %in% bl_select,
-  #                 klasse == kl_select,
-  #                 geschlecht == "gesamt",
-  #                 indikator == "Mindeststandard nicht erreicht") %>%
-  #   dplyr::select(jahr, indikator, fach, region, wert) %>%
-  #   dplyr::collect()
-  #
 
   df_query <- glue::glue_sql("
   SELECT jahr, indikator, fach, region, wert
@@ -2502,6 +2390,8 @@ iqb_standard_zeitverlauf <- function(r){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -2548,13 +2438,6 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
     if(indikator_select == "nach Zuwanderungsgeschichte") bl_select <- r$land_iqb_mathe_mittel_zeitverlauf_9_zwg
   }
 
-
-  # filtern
-  # df <- dplyr::tbl(con, from = "iqb") %>%
-  #   dplyr::filter(region == bl_select,
-  #                 klasse == klasse_select) %>%
-  #   dplyr::select(jahr, indikator, fach, region, geschlecht, wert) %>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
   SELECT jahr, indikator, fach, region, geschlecht, wert
@@ -2695,6 +2578,8 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+       highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                               style = list(fontSize = "11px", color = "gray")) %>%
        highcharter::hc_exporting(enabled = TRUE,
                                  buttons = list(
                                    contextButton = list(
@@ -2725,6 +2610,8 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -2758,6 +2645,8 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -2787,6 +2676,8 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
                                       contextButton = list(
@@ -2813,6 +2704,8 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
               style = list(fontFamily = "Calibri Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+            highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                    style = list(fontSize = "11px", color = "gray")) %>%
             highcharter::hc_exporting(enabled = TRUE,
                                       buttons = list(
                                         contextButton = list(
@@ -2838,6 +2731,8 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
               style = list(fontFamily = "Calibri Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+            highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                    style = list(fontSize = "11px", color = "gray")) %>%
             highcharter::hc_exporting(enabled = TRUE,
                                       buttons = list(
                                         contextButton = list(
@@ -2870,12 +2765,6 @@ iqb_fragebogen <- function(r){
   jahr_select <- r$jahr_iqb_fragebogen
   fach_select <- r$fach_iqb_fragebogen
 
-  # df filtern
-  # df <- dplyr::tbl(con, from = "iqb") %>%
-  #   dplyr::filter(typ == "fragen",
-  #                 jahr == jahr_select,
-  #                 fach == fach_select,
-  #                 geschlecht != "Gesamt") %>%
 
 
     df_query <- glue::glue_sql("
@@ -2922,6 +2811,8 @@ iqb_fragebogen <- function(r){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(

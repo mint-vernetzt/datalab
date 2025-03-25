@@ -14,10 +14,7 @@ mod_fachkraft_ui <- function(id){
   tagList(
     fluidPage(
       fluidRow(
-        start_time <- Sys.time(),
-        mod_fachkraft_start_ui("mod_fachkraft_start_ui_1"),
-        end_time <- Sys.time(),
-        message("fachkräfte^1 wurde in ", round(end_time - start_time, 2), " Sekunden berechnet.")
+        mod_fachkraft_start_ui("mod_fachkraft_start_ui_1")
 
       )
     )

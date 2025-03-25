@@ -12,11 +12,7 @@ mod_studium_ui <- function(id){
   tagList(
     fluidPage(
       fluidRow(
-        start_time <- Sys.time(),
-        mod_studium_studienzahl_ui("mod_studium_studienzahl_ui_1"),
-        end_time <- Sys.time(),
-        message("Studium wurde in ", round(end_time - start_time, 2), " Sekunden berechnet.")
-
+        mod_studium_studienzahl_ui("mod_studium_studienzahl_ui_1")
       )
     )
   )

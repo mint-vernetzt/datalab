@@ -351,8 +351,9 @@ studierende_bula_mint <- function(r) {
     mincolor <- "#f4f5f6"
     map_selection <- 1
     maxcolor <- "#b16fab"
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
   }
@@ -1930,8 +1931,7 @@ plot_studierende_bula_faecher <- function(r){
         titel <- paste0("Anteil von ", label_m, " in ", titel_help, " an allen ", help_l, " (", timerange, ")")
       }
 
-    # plot
-       #                          verticalAlign = "bottom")
+    #quelle null da kein input
 
     joinby <- c("name", "region")
     name <- paste0(label_m, " in MINT")
@@ -1940,9 +1940,10 @@ plot_studierende_bula_faecher <- function(r){
     mincolor <- "#f4f5f6"
     map_selection <- 1
     maxcolor <- "#b16fab"
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE,
-                      wert=FALSE, map=map_selection)
+                      wert=FALSE, map=map_selection, quelle = quelle)
 
 
 
@@ -4423,7 +4424,6 @@ studierende_international_bula_mint <- function(r) {
     out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
 
 
-
   }
 
   else if(betrachtung == "Zeitverlauf - Liniendiagramm"){###hier weiter
@@ -4478,8 +4478,6 @@ studierende_international_bula_mint <- function(r) {
       ", .con = con)
 
       alle <- DBI::dbGetQuery(con, df_query)
-
-
 
 
       df <- df %>% dplyr::left_join(alle, by = c( "jahr", "indikator", "region")) %>%
