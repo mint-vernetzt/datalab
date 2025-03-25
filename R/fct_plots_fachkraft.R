@@ -912,38 +912,15 @@ plot_fachkraft_epa_bulas <- function(r) {
     regio <- r$regio_fachkraft_epa_bulas23
   }
 
-
-
-   # plot_data_raw <- dplyr::tbl(con, from ="arbeitsmarkt_epa_detail") %>%
-   #  dplyr::filter(jahr == timerange &
-   #                  indikator == "Engpassindikator" &
-   #                  anforderung %in% bf) %>%
-   #   dplyr::collect()
-
-   df_query <- glue::glue_sql("
+  df_query <- glue::glue_sql("
    SELECT *
-   FROM arbeitsmarkt_epa_detail
+   FROM arbeitsmarkt_epa
    WHERE jahr = {timerange}
    AND indikator = 'Engpassindikator'
    AND anforderung IN ({bf*})
+   AND region = {regio}
                                ", .con = con)
-   plot_data_raw <- DBI::dbGetQuery(con, df_query)
-
-
-   plot_data_raw <- plot_data_raw %>%
-     dplyr::mutate(mint_zuordnung = dplyr::if_else(
-      !mint_zuordnung %in% c("Nicht MINT", "Gesamt"),
-      "MINT gesamt",
-      mint_zuordnung)) %>%
-    dplyr::filter(mint_zuordnung %in% c("Nicht MINT", "MINT gesamt")) %>%
-    dplyr::group_by(mint_zuordnung, epa_kat) %>%
-    dplyr::summarise(berufe = dplyr::n()) %>%
-    dplyr::mutate(mint_epa_kat = paste0(mint_zuordnung, " - ", epa_kat)) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(percent_total = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100,1)) %>%
-    dplyr::group_by(epa_kat) %>%
-    dplyr::mutate(percent_epa = round_preserve_sum(berufe / sum(berufe, na.rm = TRUE) * 100,1)) %>%
-    dplyr::ungroup()
+  plot_data_raw <- DBI::dbGetQuery(con, df_query)
 
 
   if ("MINT gesamt" %in% fach) {
@@ -963,9 +940,6 @@ plot_fachkraft_epa_bulas <- function(r) {
       dplyr::mutate(mint_zuordnung = "Technik gesamt") %>%
       rbind(plot_data_raw)
   }
-
-
-
 
   # enthält den Text für den plot
   epa_kat_levels <- c("Engpassberuf",
