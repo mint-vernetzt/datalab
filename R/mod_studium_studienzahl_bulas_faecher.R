@@ -48,12 +48,13 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("bulas_map_l_faecher"),
                        choices = c("Studierende",
-                                   "Studierende (Lehramt)",
-                                   "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
                                    "Absolvent:innen",
-                                   "internationale Absolvent:innen"),
+                                   "internationale Studierende",
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Absolvent:innen",
+                                   "Studierende im Lehramt" = "Studierende (Lehramt)",
+                                   "Absolvent:innen im Lehramt" ="Absolvent:innen (Lehramt)"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -63,11 +64,13 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      ),
                      #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
                      p("Fächergruppe:"),
-                     conditionalPanel(condition = "input.bulas_map_l_faecher == 'Studierende (Lehramt)'",
+                     conditionalPanel(condition = "input.bulas_map_l_faecher == 'Studierende (Lehramt)' |
+                                      input.bulas_map_l_faecher == 'Absolvent:innen (Lehramt)'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
                                         inputId = ns("bl_f_lehr_faecher"),
-                                        choices = studi_det_ui_faecher(spezif_i ='Studierende (Lehramt)'),
+                                        choices = studi_det_ui_faecher(spezif_i =c('Studierende (Lehramt)',
+                                                                                   'Absolvent:innen (Lehramt)')),
 
                                         selected = "Alle MINT-Fächer"
                                       )),
@@ -115,12 +118,13 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("bulas_verlauf_l_faecher"),
                        choices = c("Studierende",
-                                   "Studierende (Lehramt)",
-                                   "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
                                    "Absolvent:innen",
-                                   "internationale Absolvent:innen"),
+                                   "internationale Studierende",
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Absolvent:innen",
+                                   "Studierende im Lehramt" = "Studierende (Lehramt)",
+                                   "Absolvent:innen im Lehramt" ="Absolvent:innen (Lehramt)"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -130,11 +134,13 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      ),
                      #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
                      p("Fächergruppe:"),
-                     conditionalPanel(condition = "input.bulas_verlauf_l_faecher == 'Studierende (Lehramt)'",
+                     conditionalPanel(condition = "input.bulas_verlauf_l_faecher == 'Studierende (Lehramt)' |
+                                      input.bulas_verlauf_l_faecher == 'Absolvent:innen (Lehramt)'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
                                         inputId = ns("bl_verlauf_lehr_faecher"),
-                                        choices = studi_det_ui_faecher(spezif_i ='Studierende (Lehramt)'),
+                                        choices = studi_det_ui_faecher(spezif_i =c('Studierende (Lehramt)',
+                                                                       'Absolvent:innen (Lehramt)')),
 
                                         selected = "Alle MINT-Fächer"
                                       )),
@@ -143,8 +149,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      input.bulas_verlauf_l_faecher == 'Studierende' |
                      input.bulas_verlauf_l_faecher == 'internationale Studierende' |
                      input.bulas_verlauf_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'|
-                     input.bulas_map_l_faecher == 'Absolvent:innen' |
-                     input.bulas_map_l_faecher == 'internationale Absolvent:innen'",
+                     input.bulas_verlauf_l_faecher == 'Absolvent:innen' |
+                     input.bulas_verlauf_l_faecher == 'internationale Absolvent:innen'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
                                         inputId = ns("bl_verlauf_alle_faecher"),
@@ -221,21 +227,24 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("bulas_balken_l_faecher"),
                        choices = c("Studierende",
-                                   "Studierende (Lehramt)",
-                                   "internationale Studierende",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
                                    "Absolvent:innen",
-                                   "internationale Absolvent:innen"),
+                                   "internationale Studierende",
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Absolvent:innen",
+                                   "Studierende im Lehramt" = "Studierende (Lehramt)",
+                                   "Absolvent:innen im Lehramt" ="Absolvent:innen (Lehramt)"),
                        selected = "Studierende"),
 
                      #Conditional Panel, um für Lehramt nur sinnvollere Fächer auswählen zu lassen
                      p("Fächergruppe:"),
-                     conditionalPanel(condition = "input.bulas_balken_l_faecher == 'Studierende (Lehramt)'",
+                     conditionalPanel(condition = "input.bulas_balken_l_faecher == 'Studierende (Lehramt)' |
+                                      input.bulas_balken_l_faecher == 'Absolvent:innen (Lehramt)'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
                                         inputId = ns("bl_balken_lehr_faecher"),
-                                        choices = studi_det_ui_faecher(spezif_i ='Studierende (Lehramt)'),
+                                        choices = studi_det_ui_faecher(spezif_i =c('Studierende (Lehramt)',
+                                                                                   'Absolvent:innen (Lehramt)')),
 
                                         selected = "Alle MINT-Fächer"
                                       )),
@@ -244,8 +253,8 @@ mod_studium_studienzahl_bulas_faecher_ui <- function(id){
                      input.bulas_balken_l_faecher == 'Studierende' |
                      input.bulas_balken_l_faecher == 'internationale Studierende' |
                      input.bulas_balken_l_faecher == 'Studienanfänger:innen (1. Hochschulsemester)'|
-                     input.bulas_map_l_faecher == 'Absolvent:innen' |
-                     input.bulas_map_l_faecher == 'internationale Absolvent:innen'",
+                     input.bulas_balken_l_faecher == 'Absolvent:innen' |
+                     input.bulas_balken_l_faecher == 'internationale Absolvent:innen'",
                                       ns = ns,
                                       shinyWidgets::pickerInput(
                                         inputId = ns("bl_balken_alle_faecher"),

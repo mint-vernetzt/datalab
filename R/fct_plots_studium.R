@@ -17,8 +17,6 @@ studienzahl_mint <- function(r){
     regio <- r$region_studium_anteil
     testl1 <- if (betrachtung == "Einzelansicht - Kuchendiagramm") r$studium_anteil_i else r$studium_anteil_i_balken
 
-
-
     df_query <- glue::glue_sql("
     SELECT region, jahr, indikator, fach, wert
     FROM studierende_detailliert
@@ -30,8 +28,6 @@ studienzahl_mint <- function(r){
                                ", .con = con)
 
     df <- DBI::dbGetQuery(con, df_query)
-#
-
 
 
     df_query <- glue::glue_sql("
@@ -47,18 +43,15 @@ studienzahl_mint <- function(r){
     alle <- DBI::dbGetQuery(con, df_query)
 
 
-
     df <- df %>%
       dplyr::left_join(alle, by = c("region", "jahr", "indikator")) %>%
       dplyr::rename(fach = fach.x) %>%
       dplyr::mutate(proportion = round(wert / wert_ges * 100, 1)) %>%
       dplyr::select(-fach.y)
 
-
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
     df <- within(df, fach <- factor(fach, levels = c("Alle Nicht MINT-Fächer", "Alle MINT-Fächer")))
-
 
     if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
@@ -326,10 +319,10 @@ studierende_bula_mint <- function(r) {
 
     label_m <- ifelse(label_m == "Studierende", paste0(label_m, "n"), label_m)
     label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
-    label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
+    label_m <- ifelse(label_m == "Studierende (Lehramt)", "Studierenden im Lehramt", label_m)
+    label_m <- ifelse(label_m == "Absolvent:innen (Lehramt)", "Lehramts-Absolvent:innen", label_m)
     label_m <- ifelse(label_m == "internationale Studienanfänger:innen (1. Hochschulsemester)",
                       "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
-
     help_l <- label_m
     help_l <- ifelse(label_m == "internationalen Studienanfänger:innen (1. Hochschulsemester)",
                      "internationalen Studienanfänger:innen", help_l)
@@ -337,8 +330,6 @@ studierende_bula_mint <- function(r) {
 
 
     # plot
-
-
     df <- df[df$fachbereich == "MINT",]
     joinby <- c("name", "region")
     name <- paste0(label_m, " in MINT")
@@ -384,7 +375,8 @@ studierende_bula_mint <- function(r) {
 
     label <- ifelse(bl_label == "Studierende", paste0(bl_label, "n"), bl_label)
     label <- ifelse(label == "internationale Studierende", "internationalen Studierenden", label)
-    label <- ifelse(grepl("Lehram", label), "Studierenden (Lehramt)", label)
+    label <- ifelse(label == "Studierende (Lehramt)", "Studierenden im Lehramt", label)
+    label <- ifelse(label == "Absolvent:innen (Lehramt)", "Lehramts-Absolvent:innen", label)
     label <- ifelse(label == "internationale Studienanfänger:innen (1. Hochschulsemester)",
                       "internationalen Studienanfänger:innen (1. Hochschulsemester)", label)
 
@@ -503,7 +495,8 @@ studierende_bula_mint <- function(r) {
     # Vorbereitung Überschrift
     r_lab1 <- ifelse(r_lab1 == "Studierende", paste0(r_lab1, "n"), r_lab1)
     r_lab1 <- ifelse(r_lab1 == "internationale Studierende", "internationalen Studierenden", r_lab1)
-    r_lab1 <- ifelse(grepl("Lehram", r_lab1), "Studierenden (Lehramt)", r_lab1)
+    r_lab1 <- ifelse(r_lab1 == "Studierende (Lehramt)", "Studierenden im Lehramt", r_lab1)
+    r_lab1 <- ifelse(r_lab1 == "Absolvent:innen (Lehramt)", "Lehramts-Absolvent:innen", r_lab1)
     r_lab1 <- ifelse(r_lab1 == "internationale Studienanfänger:innen (1. Hochschulsemester)",
                     "internationalen Studienanfänger:innen (1. Hochschulsemester)", r_lab1)
 
@@ -1524,7 +1517,8 @@ plot_mint_faecher <- function(r){
     ueberschrift_fct <- function(label){
       titel_help <- ifelse(label == "Studierende", paste0(label, "n"), label)
       titel_help <- ifelse(titel_help == "internationale Studierende", "internationalen Studierenden", titel_help)
-      titel_help <- ifelse(grepl("Lehr", titel_help), "Studierenden (Lehramt)", titel_help)
+      titel_help <- ifelse(titel_help == "Studierende (Lehramt)", "Studierenden im Lehramt", titel_help)
+      titel_help <- ifelse(titel_help == "Absolvent:innen (Lehramt)", "Lehramts-Absolvent:innen", titel_help)
       titel_help <- ifelse(titel_help == "internationale Studienanfänger:innen (1. Hochschulsemester)",
                            "internationalenen Studienanfänger:innen (1. Hochschulsemester)", titel_help)
       return(titel_help)
@@ -1667,6 +1661,7 @@ mint_anteile <- function(r) {
     gruppe == "Studierende" ~ "Studierenden",
     gruppe == "internationale Studierende" ~ "internationalen Studierenden",
     gruppe == "Studierende (Lehramt)" ~ "Lehramtstudierenden",
+    gruppe == "Absolvent:innen (Lehramt)" ~ "Lehramts-Absolvent:innen",
     gruppe == "internationale Studienanfänger:innen (1. Hochschulsemester)" ~
       "internationalen Studienanfänger:innen (1. Hochschulsemester)",
     T ~ gruppe
@@ -1819,13 +1814,11 @@ plot_studierende_bula_faecher <- function(r){
     #UI nach Betrachtung
     timerange <- r$bulas_map_y_faecher
     label_m <- r$bulas_map_l_faecher
-    if(label_m == "Studierende (Lehramt)"){
+    if(label_m %in% c("Studierende (Lehramt)", "Absolvent:innen (Lehramt)")){
       faecher <- r$bl_f_lehr_faecher
     }else{
       faecher <- r$bl_f_alle_faecher
     }
-
-
 
 
     df_query <- glue::glue_sql("
@@ -1844,8 +1837,6 @@ plot_studierende_bula_faecher <- function(r){
       dplyr::select(-c(bereich, jahr, geschlecht, fachbereich, mint_select, typ))
 
 
-
-
     df_query <- glue::glue_sql("
         SELECT *
         FROM studierende_detailliert
@@ -1862,7 +1853,6 @@ plot_studierende_bula_faecher <- function(r){
       dplyr::select(-c(bereich, jahr, geschlecht, fachbereich, mint_select, typ))
 
 
-
     df <- df %>%
       dplyr::left_join(alle, dplyr::join_by("region")) %>%
       dplyr::select(-fach.y, -indikator.y) %>%
@@ -1873,19 +1863,16 @@ plot_studierende_bula_faecher <- function(r){
       dplyr::mutate(prop = round(wert/wert_ges * 100, 1))
 
 
-
     df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
-
 
 
     # Vorbereitung Überschrift
 
     label_m <- ifelse(label_m == "Studierende", paste0(label_m, "n"), label_m)
     label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
-    label_m <- ifelse(grepl("Lehramt", label_m), "Studierenden (Lehramt)", label_m)
-    label_m <- ifelse(label_m == "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                      "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m) #studienanfänger:innen wird net benötigt, da es grammatikalisch schon passt
+    label_m <- ifelse(label_m == "Studierende (Lehramt)", "Studierenden im Lehramt", label_m)
+    label_m <- ifelse(label_m == "Absolvent:innen (Lehramt)", "Lehramts-Absolvent:innen", label_m)
 
     help_l <- label_m
     help_l <- ifelse(label_m == "internationalen Studienanfänger:innen (1. Hochschulsemester)",
@@ -1894,7 +1881,7 @@ plot_studierende_bula_faecher <- function(r){
 
 
 
-    if(label_m == "Studierende (Lehramt)"){
+    if(grepl("(Lehramt)", label_m)){
       faecher <- r$bl_f_lehr_faecher
     }else{
       faecher <- r$bl_f_alle_faecher
@@ -1941,12 +1928,11 @@ plot_studierende_bula_faecher <- function(r){
     states <- r$bulas_verlauf_regio_faecher
     label_select <- r$bulas_verlauf_l_faecher
 
-    if("Studierende (Lehramt)" %in% label_select){
+    if(any(c("Studierende (Lehramt)", "Absolvent:innen (Lehramt)") %in% label_select)){
       fach_select <- r$bl_verlauf_lehr_faecher
     }else{
       fach_select <-  r$bl_verlauf_alle_faecher
     }
-
 
 
     df_query <- glue::glue_sql("
@@ -1965,13 +1951,7 @@ plot_studierende_bula_faecher <- function(r){
       dplyr::select(-c(bereich, geschlecht, fachbereich, mint_select, typ))
 
 
-
-
-
     if (absolut_selector == "In Prozent") {
-
-#
-
 
       df_query <- glue::glue_sql("
         SELECT *
@@ -1999,10 +1979,10 @@ plot_studierende_bula_faecher <- function(r){
       df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
 
 
-
       label_m <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
       label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
-      label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
+      label_m <- ifelse(label_m == "Studierende (Lehramt)", "Studierenden im Lehramt", label_m)
+      label_m <- ifelse(label_m == "Absolvent:innen (Lehramt)", "Lehramts-Absolvent:innen", label_m)
       label_m <- ifelse(label_m == "internationale Studienanfänger:innen (1. Hochschulsemester)",
                         "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
 
@@ -2036,10 +2016,7 @@ plot_studierende_bula_faecher <- function(r){
     }
 
 
-
-
     else if (absolut_selector == "Anzahl") {
-
 
       hcoptslang <- getOption("highcharter.lang")
       hcoptslang$thousandsSep <- "."
@@ -2050,7 +2027,8 @@ plot_studierende_bula_faecher <- function(r){
       # Überschrift vorbereiten
       label_m <- ifelse(label_select == "Studierende", paste0(label_select, "n"), label_select)
       label_m <- ifelse(label_m == "internationale Studierende", "internationalen Studierenden", label_m)
-      label_m <- ifelse(grepl("Lehram", label_m), "Studierenden (Lehramt)", label_m)
+      label_m <- ifelse(label_m == "Studierende (Lehramt)", "Studierenden im Lehramt", label_m)
+      label_m <- ifelse(label_m == "Absolvent:innen (Lehramt)", "Lehramts-Absolvent:innen", label_m)
       label_m <- ifelse(label_m == "internationale Studienanfänger:innen (1. Hochschulsemester)",
                         "internationalen Studienanfänger:innen (1. Hochschulsemester)", label_m)
 
@@ -2085,12 +2063,11 @@ plot_studierende_bula_faecher <- function(r){
     timerange <- r$bulas_balken_date_faecher
     r_lab1 <- r$bulas_balken_l_faecher
     regio <- r$bulas_balken_regio_faecher
-    if(r_lab1 == "Studierende (Lehramt)"){
+    if(r_lab1 %in% c("Studierende (Lehramt)", "Absolvent:innen (Lehramt)")){
       fach_bl <- r$bl_balken_lehr_faecher
     }else{
       fach_bl <- r$bl_balken_alle_faecher
     }
-
 
 
     df_query <- glue::glue_sql("
@@ -2103,9 +2080,6 @@ plot_studierende_bula_faecher <- function(r){
                                ", .con = con)
 
     df_ges <- DBI::dbGetQuery(con, df_query)
-
-
-
 
 
     df_query <- glue::glue_sql("
@@ -2127,20 +2101,11 @@ plot_studierende_bula_faecher <- function(r){
       tidyr::pivot_longer(c(6:ncol(.)), values_to = "proportion", names_to ="fach")%>%
       dplyr::right_join(df_ges)
 
-
-
-
-
-
-
-
-
     #Trennpunkte für lange Zahlen ergänzen
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
     df <- df %>%
       dplyr::select(indikator, region, jahr, fach, proportion, wert)
-
 
     df <- df %>%
       dplyr::filter(fach==fach_bl)
@@ -2158,7 +2123,8 @@ plot_studierende_bula_faecher <- function(r){
 
     r_lab1 <- ifelse(r_lab1 == "Studierende", paste0(r_lab1, "n"), r_lab1)
     r_lab1 <- ifelse(r_lab1 == "internationale Studierende", "internationalen Studierenden", r_lab1)
-    r_lab1 <- ifelse(grepl("Lehr", r_lab1), "Studierenden (Lehramt)", r_lab1)
+    r_lab1 <- ifelse(r_lab1 == "Studierende (Lehramt)", "Studierenden im Lehramt", r_lab1)
+    r_lab1 <- ifelse(r_lab1 == "Absolvent:innen (Lehramt)", "Lehramts-Absolvent:innen", r_lab1)
     r_lab1 <- ifelse(r_lab1 == "internationale Studienanfänger:innen (1. Hochschulsemester)",
                       "internationalenen Studienanfänger:innen (1. Hochschulsemester)", r_lab1)
     help <- r_lab1
@@ -2557,7 +2523,7 @@ studienzahl_einstieg_gender <- function(r) {
 
           title_n <- genl[1]
           title_n <- ifelse(title_n == "Studierende", "Studierenden", title_n)
-          title_n <- ifelse(title_n == "Studierende (Lehramt)", "Studierenden (Lehramt)", title_n)
+          title_n <- ifelse(title_n == "Studierende (Lehramt)", "Studierenden im Lehramt", title_n)
 
           df_p <- df[df$fach == gen_f[1],]
 
@@ -2580,7 +2546,7 @@ studienzahl_einstieg_gender <- function(r) {
 
              title_n <- genl[1]
              title_n <- ifelse(title_n == "Studierende", "Studierenden", title_n)
-             title_n <- ifelse(title_n == "Studierende (Lehramt)", "Studierenden (Lehramt)", title_n)
+             title_n <- ifelse(title_n == "Studierende (Lehramt)", "Studierenden im Lehramt", title_n)
 
              df_g <- df[df$fach == "Alle Nicht MINT-Fächer",]
 
@@ -2606,11 +2572,11 @@ studienzahl_einstieg_gender <- function(r) {
 
           title_n1 <- genl[1]
           title_n1 <- ifelse(title_n1 == "Studierende", "Studierenden", title_n1)
-          title_n1 <- ifelse(title_n1 == "Studierende (Lehramt)", "Studierenden (Lehramt)", title_n1)
+          title_n1 <- ifelse(title_n1 == "Studierende (Lehramt)", "Studierenden im Lehramt", title_n1)
 
           title_n2 <- genl[2]
           title_n2 <- ifelse(title_n2 == "Studierende", "Studierenden", title_n2)
-          title_n2 <- ifelse(title_n2 == "Studierende (Lehramt)", "Studierenden (Lehramt)", title_n2)
+          title_n2 <- ifelse(title_n2 == "Studierende (Lehramt)", "Studierenden im Lehramt", title_n2)
 
           #neu
           df_1_pie <- df %>% dplyr::filter(indikator == genl[1], fach != "Alle Nicht MINT-Fächer")
@@ -2642,11 +2608,13 @@ studienzahl_einstieg_gender <- function(r) {
 
             title_n1 <- genl[1]
             title_n1 <- ifelse(title_n1 == "Studierende", "Studierenden", titel_n1)
-            title_n1 <- ifelse(title_n1 == "Studierende (Lehramt)", "Studierenden (Lehramt)", title_n1)
+            title_n1 <- ifelse(title_n1 == "Studierende (Lehramt)", "Studierenden im Lehramt", title_n1)
+
 
             title_n2 <- genl[2]
             title_n2 <- ifelse(title_n2 == "Studierende", "Studierenden", title_n2)
-            title_n2 <- ifelse(title_n2 == "Studierende (Lehramt)", "Studierenden (Lehramt)", title_n2)
+            title_n2 <- ifelse(title_n2 == "Studierende (Lehramt)", "Studierenden im Lehramt", title_n2)
+
 
             df1_g <- df[df$fach == "Alle Nicht MINT-Fächer" & df$indikator == genl[1],]
             df2_g <- df[df$fach == "Alle Nicht MINT-Fächer" & df$indikator == genl[2],]
