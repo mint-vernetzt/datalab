@@ -68,10 +68,13 @@ mod_international_start_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Schüler:innen-Kompetenz-Daten: OECD, 2023, freier Download (PISA); IEA, 2023, freier Download (TIMSS)."),
-        p("Vergleichszahlen europaweit: Eurostat, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
-        p("Vergleichszahlen der OECD-Staaten: OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."),
-        p("Vergleichszahlen weltweit: UNESCO, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.")
+          span(tags$b(span("Schüler:innen-Kompetenz-Daten: OECD, 2023, freier Download (PISA); IEA, 2024, freier Download (TIMSS)."))),
+               "Die Ergebnisse der PISA-Erhebung 2025 werden Ende 2026 erwartet, die Ergebnisse von TIMSS 2027 Ende 2028."),
+        p( span(tags$b(span("Vergleichszahlen europaweit: Eurostat, 2023, freier Download.")))),
+        p(span(tags$b(span("Vergleichszahlen der OECD-Staaten: OECD, 2023, freier Download.")))),
+        p(span(tags$b(span("Vergleichszahlen weltweit: UNESCO, 2023, freier Download.")))),
+        p("Diese Themenseite wird demnächst überarbeitet, dabei werden die amtlichen
+          Statistiken der internationalen Studierenden- und Beschäftigtenzahlen aktualisiert.")
 
       )
 
