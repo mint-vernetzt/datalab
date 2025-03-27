@@ -77,12 +77,15 @@ mod_fachkraft_start_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Zukunftsszenarien der MINT-Fachkräfteentwicklung: Datengrundlage
+          tags$b(span("Zukunftsszenarien der MINT-Fachkräfteentwicklung: Datengrundlage
           Bundesagentur für Arbeit, 2023; Vorausberechnung durch IW Köln, 2024,
-          beauftragt durch MINTvernetzt"),
+          beauftragt durch MINTvernetzt"))),
         p(style = "text-align: left; font-size = 16px",
-          "MINT-Fachkräftedaten (Engpassanalyse, Vakanzzeit, Arbeitslosen-Stellen-Relation):
-          Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+          tags$b(span("Fachkräftedaten: Bundesagentur für Arbeit, 2024, auf Anfrage.")),
+        "Daten des Berichtsjahres 2024 ca. ab Juli 2025 verfügbar."),
+        p("Die amtlichen Statistiken der Fachkräftedaten
+          (Engpassanalyse, Vakanzzeit, Arbeitslosen-Stellen-Relation)
+          zeigen das aktuellste verfügbare Berichtsjahr 2023.")
 
       )
     ),
@@ -484,6 +487,22 @@ mod_fachkraft_start_ui <- function(id){
           )
         )
       ),
+
+# Kurzanalyse ----
+div(class = "content-box",
+    div(class = "inner-box",
+        p(br(),"KURZANALYSE", br()),
+        p(style = "font-size = 24",
+          strong("Im MINT-Bereich zeigt sich ein erhöhter Fachkräftemangel. Doch dabei unterscheidet sich die
+                 Lage der einzelnen MINT-Bereich deutlich voneinander. Vor allem der Bereich Technik hat
+                 einen besonders ausgeprägten Fachkräfteengpass. Wie es um Technik und die weitern MINT-Bereiche steht und
+                  was wirkvolle Ansätze gegen den Fachkräftemangel sein könnte, fasst diese Kurzanalyse zusammen."),
+          br(), br(),
+          tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2025/03/Fachkraeftemangel-MINT-Disziplinen.pdf", target = "_blank",
+                 "Link zu der Kurzanalyse"), br(),
+          br())
+    )
+),
 
     # Box 3 - Fachkräfte auf Berufslevel ----
 

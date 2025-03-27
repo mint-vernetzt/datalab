@@ -103,7 +103,7 @@ home_einstieg <- function(r) {
     if(indikator_choice_1[2] == "Leistungskurse") indikator_choice_1[2] <- "Schüler:innen im Leistungskurs"
     titel_2 <- paste0(indikator_choice_1[2], " in ", regio, " (", zeit, ")")
 
-    tooltip <- paste('MINT <br> Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
+    tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
     quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     if(nrow(df_1) == 0){
