@@ -12,10 +12,7 @@ mod_schule_ui <- function(id){
   tagList(
     fluidPage(
       fluidRow(
-        start_time <- Sys.time(),
-        mod_schule_kurse_ui("mod_schule_kurse_ui_1"),
-        end_time <- Sys.time(),
-        message("Schule wurde in ", round(end_time - start_time, 2), " Sekunden berechnet.")
+        mod_schule_kurse_ui("mod_schule_kurse_ui_1")
       )
     )
   )

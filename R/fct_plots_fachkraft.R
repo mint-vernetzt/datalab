@@ -310,7 +310,8 @@ plot_fachkraft_prognose_alle  <- function(r) {
   tooltip <- "Anzahl: {point.y}"
   format <- "{value:, f}"
   color <- color_vec
-  hc <- linebuilder(plot_data, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+  quelle <- "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"
+  hc <- linebuilder(plot_data, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
   return(hc)

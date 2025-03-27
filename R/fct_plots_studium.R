@@ -135,6 +135,8 @@ studienzahl_mint <- function(r){
              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
            ) %>%
            highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                   style = list(fontSize = "11px", color = "gray")) %>%
            highcharter::hc_exporting(enabled = TRUE,
                                      buttons = list(
                                        contextButton = list(
@@ -229,7 +231,10 @@ studienzahl_verlauf_single <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "proportion", group = "indikator", tooltip, format, color)
+
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+    out <- linebuilder(df, titel, x = "jahr", y = "proportion", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
 
@@ -251,9 +256,10 @@ studienzahl_verlauf_single <- function(r) {
                     paste0("Anzahl an Studierenden in MINT in ", regio))
     tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
     format <- "{value:, f}"
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
     color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
   }
@@ -338,8 +344,9 @@ studierende_bula_mint <- function(r) {
     mincolor <- "#f4f5f6"
     map_selection <- 1
     maxcolor <- "#b16fab"
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
   }
@@ -419,7 +426,8 @@ studierende_bula_mint <- function(r) {
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#AFF3E0", "#2D6BE1", "#008F68", "#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
 
     } else if(absolut_selector=="Anzahl"){
 
@@ -438,7 +446,8 @@ studierende_bula_mint <- function(r) {
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
     }
 
   }
@@ -526,7 +535,9 @@ studierende_bula_mint <- function(r) {
       highcharter::hc_title(text = paste0( "Anteil von ", r_lab1 ," in MINT-Fächern an allen ", help_l,  " (", timerange, ")"),
                             margin = 25,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%  #Schrift-Formatierung Überschrift
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>% #Schrift-Formatierung Überschrift
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -556,11 +567,13 @@ studierende_bula_mint <- function(r) {
 #'
 #' studienzahl_waffle_mint <- function(r) {
 #'
+
 #'   # load UI inputs from reactive value
 #'   timerange <- r$waffle_y
 #'
 #'   label_w <- r$waffle_l
 #'
+
 #'   df_query <- glue::glue_sql("
 #'         SELECT *
 #'         FROM studierende
@@ -571,6 +584,7 @@ studierende_bula_mint <- function(r) {
 #'
 #'   df <- DBI::dbGetQuery(con, df_query)
 #'
+
 #'   df <- df %>%
 #'     dplyr::select(-region, -geschlecht, - jahr)
 #'
@@ -1592,6 +1606,8 @@ plot_mint_faecher <- function(r){
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1756,7 +1772,8 @@ mint_anteile <- function(r) {
     tooltip <- "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
     format <- "{value} %"
     color <- as.character(colors)
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "fach", tooltip, format, color)
+    que <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "fach", tooltip, format, color, quelle=que)
 
 
 
@@ -1792,7 +1809,8 @@ mint_anteile <- function(r) {
     tooltip <- "{point.fach} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.display_abs}"
     format <- "{value}"
     color <- as.character(colors)
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fach", tooltip, format, color)
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fach", tooltip, format, color, quelle = quelle)
 
   }
 
@@ -1902,8 +1920,7 @@ plot_studierende_bula_faecher <- function(r){
         titel <- paste0("Anteil von ", label_m, " in ", titel_help, " an allen ", help_l, " (", timerange, ")")
       }
 
-    # plot
-       #                          verticalAlign = "bottom")
+    #quelle null da kein input
 
     joinby <- c("name", "region")
     name <- paste0(label_m, " in MINT")
@@ -1912,9 +1929,10 @@ plot_studierende_bula_faecher <- function(r){
     mincolor <- "#f4f5f6"
     map_selection <- 1
     maxcolor <- "#b16fab"
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE,
-                      wert=FALSE, map=map_selection)
+                      wert=FALSE, map=map_selection, quelle = quelle)
 
 
 
@@ -2010,7 +2028,8 @@ plot_studierende_bula_faecher <- function(r){
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#d0a9cd",
                  "#bfc6d3", "#5f94f9", "#B45309")
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
 
 
     }
@@ -2052,7 +2071,10 @@ plot_studierende_bula_faecher <- function(r){
       tooltip <- "{point.region} <br> Anzahl: {point.display_abs}"
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194", "#66cbaf")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+
+
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quelle)
 
 
     }
@@ -2143,8 +2165,9 @@ plot_studierende_bula_faecher <- function(r){
       titel <- "Für diese Kombination aus Fächergruppe und Bundesland bzw. Bundesländer liegen keine Daten vor.
         Bitte wählen Sie eine andere Komination oder Fächergruppe aus."
 
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out <- linebuilder(df, titel = titel, x = "jahr", y = "wert", group = "region", tooltip = "Anzahl: {point.display_abs}", format = "{value:, f}")
+      out <- linebuilder(df, titel = titel, x = "jahr", y = "wert", group = "region", tooltip = "Anzahl: {point.display_abs}", format = "{value:, f}", quelle = quelle)
 
 
 
@@ -2164,6 +2187,8 @@ plot_studierende_bula_faecher <- function(r){
                             margin = 25,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -2189,9 +2214,11 @@ plot_studierende_bula_faecher <- function(r){
 #' @return The return value is a bar plot
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
+
 #'
 #' ranking_bl_subject <- function(r) {
 #'
+
 #' #### fehler annotations ---- siehe downloaded image
 #'   # load UI inputs from reactive value
 #'
@@ -2426,7 +2453,6 @@ plot_studierende_bula_faecher <- function(r){
 #'
 #'   return(out)
 #' }
-
 
 # Frauen in MINT ----
 ### Tab 1 ----
@@ -2811,6 +2837,8 @@ studienzahl_einstieg_gender <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -2911,7 +2939,9 @@ studienzahl_verlauf_single_gender <- function(r) {
       tooltip <- "Frauenanteil {point.indikator} <br> Wert: {point.display_rel} %"
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
     } else if(length(label_sel)==2){
 
@@ -2925,7 +2955,8 @@ studienzahl_verlauf_single_gender <- function(r) {
       tooltip <- "Frauenanteil {point.indikator} <br> Wert: {point.display_rel} %"
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
 
@@ -2941,7 +2972,8 @@ studienzahl_verlauf_single_gender <- function(r) {
       tooltip <- "Frauenanteil {point.indikator} <br> Wert: {point.display_rel} %"
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
     } else if(length(label_sel) == 4){
@@ -2954,7 +2986,8 @@ studienzahl_verlauf_single_gender <- function(r) {
       tooltip <- "Frauenanteil {point.indikator} <br> Wert: {point.display_rel} %"
       format <- "{value}%"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
     } }else if(absolut_selector=="Anzahl"){
@@ -2984,7 +3017,8 @@ studienzahl_verlauf_single_gender <- function(r) {
         tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+        quell <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quell)
 
       } else if(length(label_sel)==2){
 
@@ -2997,7 +3031,8 @@ studienzahl_verlauf_single_gender <- function(r) {
         tooltip <- "{point.indikator} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#b16fab", "#154194", "#66cbaf", "#fcc433")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
       } else if(length(label_sel) == 3){
 
@@ -3161,7 +3196,9 @@ studienzahl_choice_gender <- function(r) {
       format <- '{point.prop}%'
       tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
 
-      out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+      out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format, quelle=quelle)
 
     }
 
@@ -3236,7 +3273,8 @@ studienzahl_choice_gender <- function(r) {
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24",
                  "#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
 
@@ -3260,7 +3298,8 @@ studienzahl_choice_gender <- function(r) {
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194", "#66cbaf", "#fbbf24","#AFF3E0","#2D6BE1","#008F68","#8893a7", "#ee7775", "#9d7265", "#35bd97",
                  "#bfc6d3", "#5f94f9",  "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
     }
@@ -3379,6 +3418,8 @@ plot_ranking_top_faecher <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -3409,6 +3450,8 @@ plot_ranking_top_faecher <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -3459,6 +3502,8 @@ plot_ranking_top_faecher <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -3489,6 +3534,8 @@ plot_ranking_top_faecher <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -3687,6 +3734,8 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
                                       contextButton = list(
@@ -3724,6 +3773,8 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
                                       contextButton = list(
@@ -3775,6 +3826,8 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
                                       contextButton = list(
@@ -3811,6 +3864,8 @@ plot_auslaender_mint <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
                                       contextButton = list(
@@ -3856,6 +3911,8 @@ plot_auslaender_mint <- function(r){
              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
            ) %>%
            highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                   style = list(fontSize = "11px", color = "gray")) %>%
            highcharter::hc_exporting(enabled = TRUE,
                                      buttons = list(
                                        contextButton = list(
@@ -3887,6 +3944,8 @@ plot_auslaender_mint <- function(r){
              style = list(fontFamily = "Calibri Regular", fontSize = "14px")
            ) %>%
            highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+           highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                   style = list(fontSize = "11px", color = "gray")) %>%
            highcharter::hc_exporting(enabled = TRUE,
                                      buttons = list(
                                        contextButton = list(
@@ -3933,6 +3992,8 @@ plot_auslaender_mint <- function(r){
               style = list(fontFamily = "Calibri Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+            highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                    style = list(fontSize = "11px", color = "gray")) %>%
             highcharter::hc_exporting(enabled = TRUE,
                                       buttons = list(
                                         contextButton = list(
@@ -3957,6 +4018,8 @@ plot_auslaender_mint <- function(r){
               style = list(fontFamily = "Calibri Regular", fontSize = "14px")
             ) %>%
             highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+            highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                    style = list(fontSize = "11px", color = "gray")) %>%
             highcharter::hc_exporting(enabled = TRUE,
                                       buttons = list(
                                         contextButton = list(
@@ -4099,7 +4162,8 @@ plot_auslaender_mint_zeit <- function(r){
         tooltip <- "{point.ausl_detect} <br> Anteil: {point.display_rel} %"
         format <- "{value} %"
         color <- c("#154194", "#66cbaf")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color)
+        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
 
 
       } else {
@@ -4107,8 +4171,9 @@ plot_auslaender_mint_zeit <- function(r){
         titel <-  paste0("Anteil internationaler ", help, " an allen ", help2, " in ", fach_help , " in ", bl_select )
         tooltip <- "{point.ausl_detect} <br> Anteil: {point.display_rel} %"
         format <- "{value} %"
+        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
         color <- c("#154194", "#66cbaf")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color)
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
       }
 
     }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
@@ -4135,6 +4200,8 @@ plot_auslaender_mint_zeit <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
                                       contextButton = list(
@@ -4164,6 +4231,8 @@ plot_auslaender_mint_zeit <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T)%>%
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
                                       contextButton = list(
@@ -4193,7 +4262,8 @@ plot_auslaender_mint_zeit <- function(r){
         tooltip <- "{point.ausl_detect} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#154194", "#66cbaf")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color)
+        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
 
       } else {
 
@@ -4201,7 +4271,8 @@ plot_auslaender_mint_zeit <- function(r){
         tooltip <- "{point.ausl_detect} <br> Anzahl: {point.display_abs}"
         format <- "{value:, f}"
         color <- c("#154194", "#66cbaf")
-        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color)
+        quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+        out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "ausl_detect", tooltip, format, color, quelle = quelle)
       }
 
     }else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
@@ -4227,6 +4298,8 @@ plot_auslaender_mint_zeit <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
                                       contextButton = list(
@@ -4253,6 +4326,8 @@ plot_auslaender_mint_zeit <- function(r){
             style = list(fontFamily = "Calibri Regular", fontSize = "14px")
           ) %>%
           highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+          highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                  style = list(fontSize = "11px", color = "gray")) %>%
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
                                       contextButton = list(
@@ -4355,8 +4430,9 @@ studierende_international_bula_mint <- function(r) {
     map_selection <- 1
     maxcolor <- "#b16fab"
 
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle=quelle)
 
 
   }
@@ -4415,8 +4491,6 @@ studierende_international_bula_mint <- function(r) {
       alle <- DBI::dbGetQuery(con, df_query)
 
 
-
-
       df <- df %>% dplyr::left_join(alle, by = c( "jahr", "indikator", "region")) %>%
         dplyr::rename(fach = fach.x) %>%
         dplyr::mutate(prop = round(wert/wert_ges*100,1)) %>%
@@ -4448,9 +4522,10 @@ studierende_international_bula_mint <- function(r) {
       tooltip <- paste0("{point.region} <br> Wert: {point.display_rel} % <br>Veränderung zwischen ", timerange[1],
                         " und ", timerange[2], ": {point.display_diff} %")
       format <- "{value}%"
+      quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color)
+      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "region", tooltip, format, color, quelle = quelle)
 
 
 
@@ -4487,7 +4562,8 @@ studierende_international_bula_mint <- function(r) {
       format <-  "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+      quel123 <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt"
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color, quelle = quel123)
 
 
 
@@ -4579,6 +4655,8 @@ studierende_international_bula_mint <- function(r) {
                             margin = 25,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))   %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(

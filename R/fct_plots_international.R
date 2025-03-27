@@ -420,18 +420,6 @@ plot_international_map_fem <- function(r){
     # Kartenabschnitt für hc definieren
     map_selection <- "custom/world"
 
-
-    # Daten in richtige Form bringen und runden
-    # df_filtered <- dplyr::tbl(con, from = "studierende_anzahl_oecd") %>%
-    #   dplyr::filter(geschlecht %in% c("Frauen", "Gesamt") &
-    #                   jahr == timerange &
-    #                   ebene == "1" &
-    #                   anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
-    #                                      "Master oder vergleichbar (akademisch)",
-    #                                      "Promotion (ISCED 8)")
-    #   )%>%
-    #   dplyr::collect()
-    #
     df_query <- glue::glue_sql("
     SELECT *
     FROM studierende_anzahl_oecd
@@ -589,7 +577,8 @@ plot_international_map_fem <- function(r){
       titel <-title_dyn
       mincolor <- "#f4f5f6"
       maxcolor <- "#154194"
-      out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection)
+      quelle <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+      out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection, quelle = quelle)
 
 
 }
@@ -621,15 +610,6 @@ plot_international_top10 <- function(r) {
 
   }
   else if (label_m == "OECD") {
-
-    # df_filtered <- dplyr::tbl(con, from = "studierende_anzahl_oecd")  %>%
-    #   dplyr::filter(geschlecht == "Gesamt" &
-    #                   jahr == timerange &
-    #                   ebene == "1" &
-    #                   anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
-    #                                      "Master oder vergleichbar (akademisch)",
-    #                                      "Promotion (ISCED 8)")) %>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -669,18 +649,7 @@ plot_international_top10 <- function(r) {
 
   }
   if (label_m == "EU") {
-    # df <- dplyr::tbl(con, from = "studierende_europa") %>%
-    #   dplyr::filter(geschlecht == "Gesamt" &
-    #                   jahr == timerange &
-    #                   (mint_select == "mint" |
-    #                      (mint_select == "nicht mint" &
-    #                         fach_m == "Alle MINT-Fächer")) &
-    #                   fach == fach_m &
-    #                   indikator == "Fächerwahl",
-    #                 land != "Lichtenstein") %>%
- #      dplyr::mutate(wert = round(wert, 1)) %>%
-  #     dplyr::select(land, wert) %>%
-    #   dplyr::collect()
+
 
     # Prüfe, ob mint_select existiert, falls nicht, setze Standardwert
     if (!exists("mint_select") || is.null(mint_select)) mint_select <- "mint"
@@ -799,18 +768,6 @@ plot_international_top10_gender <- function(r) {
   if (label_m == "OECD" & art == "meisten Frauen wählen MINT") {
     # meiste Frauen wählen MINT
 
-    # filter for selection
-    # df_filtered <- dplyr::tbl(con, from = "studierende_anzahl_oecd") %>%
-    #   dplyr::filter(geschlecht == "Frauen" &
-    #                   jahr == timerange &
-    #                   ebene == 1 &
-    #                   anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
-    #
-    #                                      "Master oder vergleichbar (akademisch)",
-    #                                      "Promotion (ISCED 8)"))%>%
-    #   dplyr::collect()
-
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM studierende_anzahl_oecd
@@ -853,17 +810,6 @@ plot_international_top10_gender <- function(r) {
   if (label_m == "OECD" & art == "höchster Frauenanteil in MINT") {
     # höchster Frauenanteil
 
-    # filter for selection
-    # df_filtered <- dplyr::tbl(con, from = "studierende_anzahl_oecd") %>%
-    #   dplyr::filter(fachbereich == fach_m &
-    #                   jahr == timerange &
-    #                   ebene == 1 &
-    #                   anforderung %in% c("Bachelor oder vergleichbar (akademisch)",
-    #
-    #                                      "Master oder vergleichbar (akademisch)",
-    #                                      "Promotion (ISCED 8)")) %>%
-    #   dplyr::collect()
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM studierende_anzahl_oecd
@@ -905,23 +851,7 @@ plot_international_top10_gender <- function(r) {
     # höchster Frauenanteil
 
 
-    # df <- dplyr::tbl(con, from = "studierende_europa") %>%
-    #   dplyr::filter(geschlecht == "Frauen" &
-    #                   jahr == timerange &
-    #                   (mint_select == "mint" |
-    #                      (mint_select == "nicht mint" &
-    #                         fach_m == "Alle MINT-Fächer")) &
-    #                   fach == fach_m &
-    #                   indikator == "Frauen-/Männeranteil" &
-    #                   !(land %in% c("EU (27), seit 2020", "Liechtenstein"))
-    #                 ) %>%
-    #   dplyr::select(land, wert) %>%
-    #   dplyr::collect()
-
     if (!exists("mint_select") || is.null(mint_select)) mint_select <- "mint"
-
-
-
 
 
     df_query <- glue::glue_sql("
@@ -947,20 +877,6 @@ plot_international_top10_gender <- function(r) {
   }
   if (label_m == "EU" & art == "meisten Frauen wählen MINT") {
     # meiste Frauen wählen MINT
-
-    # df <- dplyr::tbl(con, from = "studierende_europa") %>%
-    #   dplyr::filter(geschlecht == "Frauen" &
-    #                   jahr == timerange &
-    #                   (mint_select == "mint" |
-    #                      (mint_select == "nicht mint" &
-    #                         fach_m == "Alle MINT-Fächer")) &
-    #                   fach == fach_m &
-    #                   indikator == "Fächerwahl"&
-    #                   !(land %in% c("EU (27), seit 2020", "Lichtenstein"))
-    #                 ) %>%
-    #   dplyr::select(land, wert) %>%
-    #   dplyr::collect()
-
 
     df_query <- glue::glue_sql("
             SELECT land, wert
@@ -1078,16 +994,6 @@ plot_international_mint_top_10 <- function(r){
 avg_line <- r$show_avg_ti
 inpy <- r$map_y_ti
 
-# daten berechnen
-#
-#   data1 <- dplyr::tbl(con, from = "studierende_mobil_eu_absolut") %>%
-#     dplyr::filter(geschlecht=="Gesamt" &
-#                     anforderung %in% c("Bachelor oder vergleichbar (ISCED 6)",
-#                                        "Master oder vergleichbar (ISCED 7)",
-#                                        "Promotion (ISCED 8)") &
-#                     fach== "MINT" &
-#                     is.na(kommentar))%>%
-#     dplyr::collect()
 
 df_query <- glue::glue_sql("
   SELECT *
@@ -1326,11 +1232,6 @@ plot_international_schule_map <- function(r) {
       "Mittlerer int'l. Maßstab (475)",
       "Insgesamt")
 
-    # df <- dplyr::tbl(con, from = "schule_timss") %>%
-    #   dplyr::filter(ordnung == this_ordnung &
-    #                   indikator == this_indikator) %>%
-    #   dplyr::collect()
-    #
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -1344,10 +1245,6 @@ plot_international_schule_map <- function(r) {
     help_l <- "4. Klasse"
   }
   if (label_m == "PISA") {
-    # df <- dplyr::tbl(con, from = "schule_pisa") %>%
-    #   dplyr::filter(bereich == "Ländermittel" &
-    #                   indikator == "Insgesamt")%>%
-    #   dplyr::collect()
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -1462,13 +1359,6 @@ plot_international_schule_item <- function(r) {
 
   if (is.null(fach_m)) { fach_m <- ""}
 
-
-  # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "schule_timss") %>%
-  #   dplyr::filter(jahr == timerange &
-  #                   fach == fach_m &
-  #                   ordnung == "Gender") %>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -1637,13 +1527,6 @@ plot_international_schule_migration <- function(r) {
     )
 
 
-
-    # df <- dplyr::tbl(con, from = "schule_timss") %>%
-    #   dplyr::filter(ordnung == this_ordnung &
-    #                   indikator %in% this_indikator &
-    #                   typ == this_typ) %>%
-    #   dplyr::collect()
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM schule_timss
@@ -1680,15 +1563,6 @@ plot_international_schule_migration <- function(r) {
                                         "Erste Generation"),
       "nach Bildungskapital" = c("0-10", "1-10", "26-100", "Mehr als 500")
     )
-
-
-
-
-    # df <- dplyr::tbl(con, from = "schule_pisa") %>%
-    #   dplyr::filter(bereich == this_bereich &
-    #                   indikator %in% this_indikator) %>%
-    #   dplyr::collect()
-
 
 
     df_query <- glue::glue_sql("
@@ -2206,14 +2080,6 @@ plot_international_map_arb <- function(r) {
     # Kartenausschnitt für hc definieren
     map_selection <- "custom/europe"
 
-    # Daten filtern für Anteil
-    # data1 <- dplyr::tbl(con, from = "arbeitsmarkt_beschaeftigte_eu") %>%
-    #   dplyr::filter(geschlecht == "Gesamt"&
-    #                   jahr == inpy &
-    #                   indikator == inpp&
-    #                   variable == "Anteil an arbeitender Bevölkerung")%>%
-    #   dplyr::collect()
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM arbeitsmarkt_beschaeftigte_eu
@@ -2233,13 +2099,6 @@ plot_international_map_arb <- function(r) {
     # für hover vorbereiten
     data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
 
-    # Daten filtern für absolut
-    # data2 <- dplyr::tbl(con, from = "arbeitsmarkt_beschaeftigte_eu") %>%
-    #   dplyr::filter(geschlecht == "Gesamt"&
-    #                   jahr == inpy &
-    #                   indikator == inpp&
-    #                   variable == "Anzahl in Tsd.")%>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -2306,18 +2165,6 @@ plot_international_map_arb <- function(r) {
        "Anfänger*innen Erstausbildung (ISCED 35)",
        "Absolvent*innen Ausbildung (ISCED 45)",
        "Absolvent*innen Erstausbildung (ISCED 35)")){
-
-     # Relevante fachbereich filtern und wert runden und für hover vorbereiten
-      # data1 <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      #   dplyr::filter(jahr == inpy &
-      #                 fachbereich %in% c("MINT",
-      #                                    "Informatik & Kommunikationstechnologie",
-      #                                    "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                                    "Naturwissenschaften, Mathematik und Statistik",
-      #                                    "Alle")&
-      #                   geschlecht == "Gesamt") %>%
-      #   dplyr::collect()
-
 
       df_query <- glue::glue_sql("
       SELECT *
@@ -2405,18 +2252,6 @@ plot_international_map_arb <- function(r) {
     # Falls Indikatoren aus datensatz arbeitsmarkt_anzahl_azubis_oecd stammen
     else {
 
-      # Relevante fächer filtern
-      # data1 <- dplyr::tbl(con, from = "arbeitsmarkt_anzahl_azubis_oecd") %>%
-      #   dplyr::filter(geschlecht == "Gesamt" &
-      #            indikator == "berufsorientiert" &
-      #            jahr == inpy &
-      #            fach %in% c("MINT",
-      #                        "Informatik & Kommunikationstechnologie",
-      #                        "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                        "Naturwissenschaften, Mathematik und Statistik",
-      #                        "Alle"))%>%
-      #   dplyr::collect()
-
 
       df_query <- glue::glue_sql("
       SELECT *
@@ -2445,20 +2280,6 @@ plot_international_map_arb <- function(r) {
                             names_to = "fach") %>%
         # daten für hover vorbereiten
         dplyr::mutate(display_rel= prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
-
-      # # Filtern und absolute Häufigkeit für hover vorbereiten
-      # data2 <- dplyr::tbl(con, from = "arbeitsmarkt_anzahl_azubis_oecd") %>%
-      #   dplyr::filter(geschlecht == "Gesamt" &
-      #                   indikator == "berufsorientiert" &
-      #                   jahr == inpy &
-      #                   fach %in% c("MINT",
-      #                               "Informatik & Kommunikationstechnologie",
-      #                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                               "Naturwissenschaften, Mathematik und Statistik",
-      #                               "Alle"))%>%
-      #   dplyr::rename(display_total = wert)%>%
-      #   dplyr::collect()
-      #
 
       df_query <- glue::glue_sql("
       SELECT *
@@ -2570,16 +2391,6 @@ plot_international_map_arb_gender <- function(r) {
     map_selection <- "custom/europe"
 
 
-    # Filtern nach relativer Häufigkeit
-    # data1 <- dplyr::tbl(con, from = "arbeitsmarkt_beschaeftigte_eu") %>%
-    #   dplyr::filter(geschlecht %in% c("Gesamt", "Frauen")&
-    #                   jahr == inpy &
-    #                   indikator == inpp &
-    #                   variable == "Anteil an arbeitender Bevölkerung") %>%
-    #   dplyr::collect()
-
-
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM arbeitsmarkt_beschaeftigte_eu
@@ -2599,17 +2410,6 @@ plot_international_map_arb_gender <- function(r) {
 
     # Wert für hover vorbereiten
     data1$display_rel <- prettyNum(data1$wert, big.mark = ".", decimal.mark = ",")
-
-
-    # Filtern für absolute Häufigkeit, runden und für hover vorbereiten
-    # data2 <- dplyr::tbl(con, from = "arbeitsmarkt_beschaeftigte_eu") %>%
-    #    dplyr::filter(geschlecht == "Frauen"&
-    #                   jahr == inpy &
-    #                   indikator == inpp &
-    #                   variable == "Anzahl in Tsd.")%>%
-    #   dplyr::collect()
-    #
-
 
 
 
@@ -2678,19 +2478,7 @@ plot_international_map_arb_gender <- function(r) {
                     "Anfänger*innen Erstausbildung (ISCED 35)",
                     "Absolvent*innen Ausbildung (ISCED 45)",
                     "Absolvent*innen Erstausbildung (ISCED 35)")){
-#
-#       # Daten filtern
-#       data1 <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-#         dplyr::filter(jahr == inpy &
-#                         fachbereich %in% c("MINT",
-#                                            "Informatik & Kommunikationstechnologie",
-#                                            "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-#                                            "Naturwissenschaften, Mathematik und Statistik",
-#                                            "Alle")&
-#                         geschlecht =="Frauen")%>%
-#         dplyr::collect()
-#
-      #
+
       #
       df_query <- glue::glue_sql("
       SELECT *
@@ -2802,24 +2590,9 @@ plot_international_map_arb_gender <- function(r) {
       # ui input für Betrachtungsweise filtern
       inpbe <- r$map_betr_oecd_arb_gender
 
-      # # Filtern für Frauen von Allen
-      # data_fva <- dplyr::tbl(con, from = "arbeitsmarkt_anzahl_azubis_oecd") %>%
-      #   dplyr::filter(geschlecht %in% c("Gesamt", "Frauen") &
-      #                   indikator == "berufsorientiert" &
-      #                   jahr == inpy &
-      #                   fach %in% c("MINT",
-      #                               "Informatik & Kommunikationstechnologie",
-      #                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                               "Naturwissenschaften, Mathematik und Statistik",
-      #                               "Alle"))%>%
-      #   dplyr::collect()
+
+
       #
-
-
-
-
-
-
       df_query <- glue::glue_sql("
       SELECT *
       FROM arbeitsmarkt_anzahl_azubis_oecd
@@ -2843,20 +2616,6 @@ plot_international_map_arb_gender <- function(r) {
         # Mit geo mapping erweitern
         dplyr::inner_join(countries_names, by = "land") %>%
         dplyr::mutate(alpha2 = toupper(alpha2))
-
-
-
-      # Für Frauen von Frauen filtern und relative Häufigkeit errechnen
-      # data_fvf1 <- dplyr::tbl(con, from = "arbeitsmarkt_anzahl_azubis_oecd") %>%
-      #   dplyr::filter(geschlecht == "Frauen" &
-      #                   indikator == "berufsorientiert" &
-      #                   jahr == inpy &
-      #                   fach %in% c("MINT",
-      #                               "Informatik & Kommunikationstechnologie",
-      #                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                               "Naturwissenschaften, Mathematik und Statistik",
-      #                               "Alle"))%>%
-      #   dplyr::collect()
 
 
 
@@ -2886,22 +2645,6 @@ plot_international_map_arb_gender <- function(r) {
                             names_to = "fach") %>%
         # Wert für hover vorbereiten
         dplyr::mutate(display_rel= prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
-
-
-      # Für absolute Häufigkeit von Frauen von Frauen filtern
-      # data_fvf2 <- dplyr::tbl(con, from = "arbeitsmarkt_anzahl_azubis_oecd") %>%
-      #  dplyr::filter(geschlecht == "Frauen" &
-      #                   indikator == "berufsorientiert" &
-      #                   jahr == inpy &
-      #                   fach %in% c("MINT",
-      #                               "Informatik & Kommunikationstechnologie",
-      #                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                               "Naturwissenschaften, Mathematik und Statistik",
-      #                               "Alle"))%>%
-      #   dplyr::rename(display_total = wert)%>%
-      #   dplyr::collect()
-      #
-
 
 
       df_query <- glue::glue_sql("
@@ -3041,17 +2784,6 @@ plot_international_top10_mint_arb <- function(r) {
     # Kartenauschnitt für hc
     map_selection <- "custom/europe"
 
-    # Filtern für reltaive Häufigkeit und Wert für hover vorbereiten
-    # data1 <- dplyr::tbl(con, from = "arbeitsmarkt_beschaeftigte_eu") %>%
-    #   dplyr::filter(geschlecht == "Gesamt"&
-    #                   jahr == inpy &
-    #                   indikator == inpp &
-    #                   variable == "Anteil an arbeitender Bevölkerung")%>%
-    #   dplyr::collect()
-    #
-
-
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM arbeitsmarkt_beschaeftigte_eu
@@ -3067,15 +2799,6 @@ plot_international_top10_mint_arb <- function(r) {
       tidyr::pivot_wider(names_from = variable, values_from = wert)%>%
       dplyr::rename(wert="Anteil an arbeitender Bevölkerung")%>%
       dplyr::mutate(display_rel=prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
-
-
-    # # Filtern für absolute Häufigkeit und Wert für hover vorbereiten
-    # data2 <- dplyr::tbl(con, from = "arbeitsmarkt_beschaeftigte_eu") %>%
-    #   dplyr::filter(geschlecht == "Gesamt"&
-    #                   jahr == inpy &
-    #                   indikator == inpp&
-    #                   variable == "Anzahl in Tsd.")%>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -3140,19 +2863,6 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
       # hover vorbereiten
       plotopshov <- "Anteil: {point.display_rel}%"
-#
-#
-#       # Filtern für fachberich und relative Häufigkeit. Hover vorbereiten
-#       data1 <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-#         dplyr::filter(jahr == inpy &
-#                         fachbereich %in% c("MINT",
-#                                            "Informatik & Kommunikationstechnologie",
-#                                            "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-#                                            "Naturwissenschaften, Mathematik und Statistik",
-#                                            "Alle")&
-#                         geschlecht == "Gesamt")%>%
-#         dplyr::collect()
-#
 
 
       df_query <- glue::glue_sql("
@@ -3261,19 +2971,6 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
 
 
 
-      # Realtive Häufigkeit
-      # data1 <- dplyr::tbl(con, from = "arbeitsmarkt_anzahl_azubis_oecd") %>%
-      #   dplyr::filter(geschlecht == "Gesamt" &
-      #                   indikator == "berufsorientiert" &
-      #                   jahr == inpy &
-      #                   fach %in% c("MINT",
-      #                               "Informatik & Kommunikationstechnologie",
-      #                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                               "Naturwissenschaften, Mathematik und Statistik",
-      #                               "Alle"))%>%
-      #   dplyr::collect()
-
-
       df_query <- glue::glue_sql("
       SELECT *
       FROM arbeitsmarkt_anzahl_azubis_oecd
@@ -3299,18 +2996,6 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
                               "Naturwissenschaften, Mathematik und Statistik"), values_to = "wert",
                             names_to = "fach") %>%
         dplyr::mutate(display_rel= prettyNum(.$wert, big.mark = ".", decimal.mark = ","))
-
-      # Absolute Häufigkeit
-      # data2 <- dplyr::tbl(con, from = "arbeitsmarkt_anzahl_azubis_oecd") %>%
-      #   dplyr::filter(geschlecht == "Gesamt" &
-      #                   indikator == "berufsorientiert" &
-      #                   jahr == inpy &
-      #                   fach %in% c("MINT",
-      #                               "Informatik & Kommunikationstechnologie",
-      #                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                               "Naturwissenschaften, Mathematik und Statistik"))%>%
-      #   dplyr::rename(display_total = wert)%>%
-      #   dplyr::collect()
 
 
       df_query <- glue::glue_sql("
@@ -3607,16 +3292,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
     map_selection <- "custom/europe"
 
 
-    # Relative Häufigkeit
-    # data1 <- dplyr::tbl(con, from = "arbeitsmarkt_beschaeftigte_eu") %>%
-    #   dplyr::filter(geschlecht %in% c("Gesamt", "Frauen")&
-    #                   jahr == inpy &
-    #                   indikator == inpp &
-    #                   variable == "Anteil an arbeitender Bevölkerung")%>%
-    #   dplyr::collect()
-
-
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM arbeitsmarkt_beschaeftigte_eu
@@ -3638,15 +3313,7 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
     data1$display_rel <- prettyNum(round(data1$wert,1), big.mark = ".", decimal.mark = ",")
 #
-#
-#     # Absolute Häufigkeit
-#     data2 <- dplyr::tbl(con, from = "arbeitsmarkt_beschaeftigte_eu") %>%
-#       dplyr::filter(geschlecht == "Frauen"&
-#                       jahr == inpy &
-#                       indikator == inpp&
-#                       variable == "Anzahl in Tsd.")%>%
-#       dplyr::collect()
-#
+
 #
     df_query <- glue::glue_sql("
     SELECT *
@@ -3709,19 +3376,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
       # Hover vorbereiten
       plotopshov <- "Anteil: {point.display_rel}%"
-
-
-
-      # Realtive Häufigketit
-      # data1 <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      #   dplyr::filter(jahr == inpy &
-      #                   fachbereich %in% c("MINT",
-      #                                      "Informatik & Kommunikationstechnologie",
-      #                                      "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                                      "Naturwissenschaften, Mathematik und Statistik",
-      #                                      "Alle")&
-      #                   geschlecht =="Frauen")%>%
-      #   dplyr::collect()
 
 
       df_query <- glue::glue_sql("
@@ -3843,20 +3497,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
       plotopshov <- "Anteil: {point.display_rel}% <br> Anzahl: {point.display_total}"
 
 
-
-      # Anteil Fraune von Allen berechnen
-      # data_fva <- dplyr::tbl(con, from = "arbeitsmarkt_anzahl_azubis_oecd") %>%
-      #   dplyr::filter(geschlecht %in% c("Gesamt", "Frauen") &
-      #                   indikator == "berufsorientiert" &
-      #                   jahr == inpy &
-      #                   fach %in% c("MINT",
-      #                               "Informatik & Kommunikationstechnologie",
-      #                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                               "Naturwissenschaften, Mathematik und Statistik",
-      #                               "Alle"))%>%
-      #   dplyr::collect()
-      #
-
       df_query <- glue::glue_sql("
       SELECT *
       FROM arbeitsmarkt_anzahl_azubis_oecd
@@ -3882,22 +3522,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
         dplyr::select(-Gesamt, - Frauen)%>%
         dplyr::inner_join(countries_names, by = "land") %>%
         dplyr::mutate(alpha2 = toupper(alpha2))
-
-
-
-      # Anteil Frauen von Frauen berechnen
-
-      # Realtiv
-      # data_fvf1 <- dplyr::tbl(con, from = "arbeitsmarkt_anzahl_azubis_oecd") %>%
-      #   dplyr::filter(geschlecht == "Frauen" &
-      #                   indikator == "berufsorientiert" &
-      #                   jahr == inpy &
-      #                   fach %in% c("MINT",
-      #                               "Informatik & Kommunikationstechnologie",
-      #                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                               "Naturwissenschaften, Mathematik und Statistik",
-      #                               "Alle"))%>%
-      #   dplyr::collect()
 
 
       df_query <- glue::glue_sql("
@@ -3934,19 +3558,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
         dplyr::mutate(display_rel= prettyNum(round(.$wert,1), big.mark = ".", decimal.mark = ","))
 
 
-      # Absolut
-      # data_fvf2 <- dplyr::tbl(con, from = "arbeitsmarkt_anzahl_azubis_oecd") %>%
-      #   dplyr::filter(geschlecht == "Frauen" &
-      #                   indikator == "berufsorientiert" &
-      #                   jahr == inpy &
-      #                   fach %in% c("MINT",
-      #                               "Informatik & Kommunikationstechnologie",
-      #                               "Ingenieurwesen, verarbeitendes Gewerbe und Baugewerbe",
-      #                               "Naturwissenschaften, Mathematik und Statistik",
-      #                               "Alle"))%>%
-      #   dplyr::collect()
-
-
       df_query <- glue::glue_sql("
       SELECT *
       FROM arbeitsmarkt_anzahl_azubis_oecd
@@ -3957,14 +3568,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
                                ", .con = con)
 
       data_fvf2 <- DBI::dbGetQuery(con, df_query)
-
-
-
-
-
-
-
-
 
 
 
@@ -4286,8 +3889,6 @@ plot_international_top10_mint_arb_gender <- function(r) {
 
 plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
-  #r <- list(vergleich_y_int_arbeitsmarkt = 2012,vergleich_l_int_arbeitsmarkt = c("Australien", "Ungarn", "Deutschland"),vergleich_f_int_arbeitsmarkt = "MINT")
-  # load UI inputs from reactive value
 
   timerange <- r$vergleich_y_int_arbeitsmarkt
   land_m <- r$vergleich_l_int_arbeitsmarkt
@@ -4295,17 +3896,6 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
   variable_set <- c("Anteil Absolvent*innen nach Fach an allen Fächern",
                     "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-
-  # tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-  #   dplyr::filter(geschlecht == "Gesamt" &
-  #                   jahr == timerange &
-  #                   land %in% land_m &
-  #                   fachbereich == fach_m &
-  #                   anforderung == "tertiäre Bildung (gesamt)" &
-  #                   variable %in% variable_set
-  #   ) %>%
-  #   dplyr::collect()
-  #
 
 
   df_query <- glue::glue_sql("

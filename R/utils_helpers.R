@@ -1076,7 +1076,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
 
 
 
-  if(is.null(group) && is.null(optional) && is.null(hcaes_color)){
+  if(is.null(group) && is.null(optional)){
 
 
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%

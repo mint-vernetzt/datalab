@@ -14,10 +14,8 @@ mod_international_ui <- function(id){
   tagList(
     fluidPage(
       fluidRow(
-        start_time <- Sys.time(),
-        mod_international_start_ui("mod_international_start_ui_1"),
-        end_time <- Sys.time(),
-        message("International wurde in ", round(end_time - start_time, 2), " Sekunden berechnet.")
+
+        mod_international_start_ui("mod_international_start_ui_1")
       )
     )
   )

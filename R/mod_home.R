@@ -12,10 +12,7 @@ mod_home_ui <- function(id){
   tagList(
     fluidPage(
       fluidRow(
-        start_time <- Sys.time(),
-        mod_home_start_ui("mod_home_start_ui_1"),
-        end_time <- Sys.time(),
-        message("Home wurde in ", round(end_time - start_time, 2), " Sekunden berechnet.")
+        mod_home_start_ui("mod_home_start_ui_1")
 
       )
     )
