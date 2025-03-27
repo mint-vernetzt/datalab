@@ -344,7 +344,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
     mincolor <- "#f4f5f6"
     map_selection <- 1
     maxcolor <- "#b16fab"
-    quelle <- "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    quelle <- "uelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
@@ -447,15 +447,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
 
     df <- DBI::dbGetQuery(con, df_query)
 
-    # df <- df %>%
-    #   dplyr::select(
-    #     "indikator",
-    #     "fachbereich",
-    #     #"geschlecht",
-    #     "bundesland",
-    #     "jahr",
-    #     #"anforderung",
-    #     "wert" )
+
 
 
 
@@ -1557,19 +1549,6 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
 
     # Alle als extra Spalte anhängen und Anteil berechnen
-    # df_ges <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    #   dplyr::filter(
-    #     jahr == timerange &
-    #       indikator == indikator_choice &
-    #       landkreis == "alle Landkreise" &
-    #       anforderung == "Gesamt" &
-    #       geschlecht == "Gesamt" &
-    #       fachbereich == "Alle") %>%
-    #   dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)%>%
-    #   dplyr::rename(wert_ges = wert) %>%
-    #   dplyr::ungroup()%>%
-    #   dplyr::collect()
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM arbeitsmarkt_detail
@@ -2751,6 +2730,8 @@ arbeitsmarkt_top10 <- function( r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -2781,6 +2762,8 @@ arbeitsmarkt_top10 <- function( r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -2829,6 +2812,8 @@ arbeitsmarkt_top10 <- function( r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -2860,6 +2845,8 @@ arbeitsmarkt_top10 <- function( r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -3217,7 +3204,8 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
   }
 
 
-  out <- balkenbuilder3(df_compare, titel, x="landkreis", y="display_value", tooltip, format, color, optional = optional, optional2 = my_hc_size)
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  out <- balkenbuilder3(df_compare, titel, x="landkreis", y="display_value", tooltip, format, color, optional = optional, optional2 = my_hc_size, quelle= quelle)
 
 
 }
@@ -3322,7 +3310,8 @@ arbeitsmarkt_lk_verlauf <- function(r){
     color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
                "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a", "#007655", "#dc6262",
                "#9d7265", "#5d335a", "#bfc6d3",  "#B45309","#d4c1bb", "#112c5f", "#8893a7")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "landkreis", tooltip, format, color)
+    queleeee <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "landkreis", tooltip, format, color, quelle=queleeee)
 
   }
 }

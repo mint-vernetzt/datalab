@@ -140,7 +140,6 @@ mod_ausserschulisch_start_ui <- function(id){
                                      highcharter::highchartOutput(ns("plot_cp_orgas"), height = "500px"),
                                                                 color = "#154194"),
 
-                                   p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."),
                                    # shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
                                    #                    content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
                                    #                    placement = "top",
@@ -167,7 +166,6 @@ mod_ausserschulisch_start_ui <- function(id){
                                            highcharter::highchartOutput(ns("plot_cp_projekte"), height = "500px"),
                                                                       color = "#154194"),
 
-                                         p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."),
                                          # shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
                                          #                    content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
                                          #                    placement = "top",
@@ -194,7 +192,6 @@ mod_ausserschulisch_start_ui <- function(id){
                                            highcharter::highchartOutput(ns("plot_cp_profile"), height = "500px"),
                                                                       color = "#154194"),
 
-                                         p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."),
                                          # shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
                                          #                    content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
                                          #                    placement = "top",
@@ -293,7 +290,6 @@ mod_ausserschulisch_start_ui <- function(id){
                                            highcharter::highchartOutput(ns("plot_mvb_akteursbefragung"), height = "500px"),
                                                                       color = "#154194"),
 
-                                         p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt 2024."),
 
                                          p(style = "font-size:16px; font-weight: 600;",
                                            br(),
@@ -319,7 +315,6 @@ mod_ausserschulisch_start_ui <- function(id){
                                            highcharter::highchartOutput(ns("plot_mv_stimmung"), height = "500px"),
                                            color = "#154194"),
 
-                                         p(style="font-size:12px;color:grey", "Quelle der Daten: MINTvernetzt 2024."),
                                          p(style = "font-size:16px; font-weight: 600;",
                                            br(),
                                            "Im MINT-Stimmungsbarometer schätzen jährlich Vertreter:innen aus Bildung, Wissenschaft und Wirtschaft
@@ -343,8 +338,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                            highcharter::highchartOutput(ns("plot_mv_gender"), height = "600px"),
                                            color = "#154194"),
 
-                                         p(style="font-size:14px;color:grey", br(),
-                                           "Quelle der Daten: MINTvernetzt 2024."),
+
                                          p(style = "font-size:16px; font-weight: 600;",
                                            br(),
                                            "Die MINTvernetzt-Genderbefragungen untersuchen, inwieweit MINT-Bildungsangebote
@@ -490,8 +484,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                         shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_einrichtungen"), height = "500px"),
                                                                      color = "#154194"),
 
-                                        p(style="font-size:12px;color:grey",
-                                          "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+
                                         shinyBS::bsPopover(id="h_schule_ausserschulisch_1", title = "",
                                                            content = paste0("Zertifizierte Einrichtungen = Einrichtungen, die mindestens einmal als &quotHaus der Kleinen Forscher&quot ausgewiesen wurden.", "<br> <br> Einrichtungen mit SKf-Fortbildung = Einrichtungen, von welchen Fach- oder Lehrkräfte Fortbildungen der SKf besucht haben."),
                                                            placement = "top",
@@ -518,8 +511,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                         shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_skf_personal"), height = "500px"),
                                                                      color = "#154194"),
 
-                                        p(style="font-size:12px;color:grey",
-                                          "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+
                                         br(),
                                         shinyBS::bsPopover(id="h_schule_ausserschulisch_2", title = "",
                                                            content = paste0("Die Teilnehmendenzahlen sind von der SKf geschätzt und auf 1.000er-Stellen gerundet."),

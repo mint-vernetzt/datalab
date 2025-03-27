@@ -1323,7 +1323,16 @@ get_top10_hc_plot_options <- function(hc,
                                       hc_title = "",
                                       hc_tooltip = "",
                                       max_percent_used = 100,
-                                      col = "#B16FAB") {
+                                      col = "#B16FAB",
+                                      marker = "IEA") {
+  if(marker=="IEA"){
+    its <- "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
+  } else if (marker=="OECD"){
+    its <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+
+  }
+
+
   out <- hc %>%
     highcharter::hc_plotOptions(
       series = list(
@@ -1350,6 +1359,8 @@ get_top10_hc_plot_options <- function(hc,
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_caption(text = its,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(

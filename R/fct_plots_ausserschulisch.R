@@ -98,7 +98,9 @@ plot_cp_orgas <- function(r){
     color <- c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a",
                "#5f94f9", "#007655", "#d0a9cd")
 
-    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", tooltip, format, color)
+
+    quelke <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."
+    out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", tooltip, format, color, quelle = quelke)
 
     #keine quelle weil net relevant
 
@@ -152,6 +154,8 @@ plot_cp_orgas <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -203,6 +207,8 @@ plot_cp_orgas <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -372,6 +378,8 @@ plot_cp_projekte <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -426,6 +434,8 @@ plot_cp_projekte <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -457,11 +467,8 @@ plot_cp_profile <- function(r){
     if(anz == "Nur Gesuche anzeigen") charas <- "Gesucht"
     if(anz == "Nur Angebote anzeigen") charas <- "Angebote"
 
-    # df <- dplyr::tbl(con, "ausserschulisch_cp_profile") %>%
-    #   dplyr::filter(region == regio,
-    #                 typ %in% charas) %>%
-    #   dplyr::mutate(wert = as.numeric(wert)) %>%
-    #   dplyr::collect()
+
+
 
 
     df_query <- glue::glue_sql("
@@ -480,11 +487,9 @@ plot_cp_profile <- function(r){
   }else{
     bula_anzeigen<- r$bula_cp_prof
     regio <- ""
-    # df <- dplyr::tbl(con, "ausserschulisch_cp_projekte") %>%
-    #   dplyr::filter(region == "Gesamt",
-    #                 typ == charas) %>%
-    #   dplyr::mutate(wert = as.numeric(wert)) %>%
-    #   dplyr::collect()
+
+
+
 
     df_query <- glue::glue_sql("
 
@@ -594,6 +599,8 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -642,6 +649,8 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -695,6 +704,8 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -741,6 +752,8 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -772,9 +785,7 @@ plot_mv_akteursb <- function(r){
   frage_typ <- ifelse(frage == "Berufshintergrund", "berufshintergrund",
                       ifelse(frage == "Zielgruppen", "zielgruppen", frage_typ))
 
-  # df <- dplyr::tbl(con, "ausserschulisch_akteursbefragung") %>%
-  #   dplyr::filter(typ == frage_typ) %>%
-  #   dplyr::collect()
+  # df <-
   #
 
   df_query <- glue::glue_sql("
@@ -852,6 +863,8 @@ plot_mv_akteursb <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt 2024.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -910,7 +923,7 @@ plot_mv_stimmung <- function(r){
                 "#ee7775", "#fca5a5",
                 "#66cbaf", "#35bd97" )
     tooltip <- paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')
-    quelle <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."
+    quelle <- "Quelle der Daten: MINTvernetzt 2024."
 
     plot <- balkenbuilder(df, titel, x, y, group=group, tooltip, format = "1", color = color, stacking = "percent", subtitel = subtitel, quelle =quelle)
 
@@ -1094,6 +1107,8 @@ skf_einrichtungen <- function(r){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1179,6 +1194,8 @@ skf_personal <- function(r){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Stiftung Kinder forschen, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1189,3 +1206,4 @@ skf_personal <- function(r){
 
   return(out)
 }
+

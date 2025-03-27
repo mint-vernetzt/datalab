@@ -256,7 +256,8 @@ plot_international_map <- function(r) {
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom") %>%
-
+    highcharter::hc_caption(text = "    Quelle der Daten: Eurostat, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -577,7 +578,7 @@ plot_international_map_fem <- function(r){
       titel <-title_dyn
       mincolor <- "#f4f5f6"
       maxcolor <- "#154194"
-      quelle <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+      quelle <- "Quelle der Daten: Eurostat, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
       out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection, quelle = quelle)
 
 
@@ -719,7 +720,8 @@ df <- df %>%
     get_top10_hc_plot_options(
       hc_title = paste0(t_quelle1, "Länder mit dem größten Anteil an ", t_gruppe, t_fach, " in ", timerange, t_quelle),
       hc_tooltip = hover,
-      max_percent_used = max_percent_used)
+      max_percent_used = max_percent_used,
+      marker="OECD")
 
   # Create bottom 10 plot
   #dies ist schon als funktion automatisiert, too complex
@@ -730,7 +732,8 @@ df <- df %>%
     get_top10_hc_plot_options(
       hc_title = paste0(t_quelle1, "Länder mit dem niedrigsten Anteil an ", t_gruppe, t_fach, " in ", timerange, t_quelle),
       hc_tooltip = hover,
-      max_percent_used = max_percent_used)
+      max_percent_used = max_percent_used,
+      marker="OECD")
 
 
   if (show_avg == "Ja") {
@@ -951,7 +954,8 @@ plot_international_top10_gender <- function(r) {
       hc_title = titel1,
       hc_tooltip = hover,
       max_percent_used = max_percent_used,
-      col = "#154194"
+      col = "#154194",
+      marker="OECD"
       )
 
 
@@ -965,7 +969,8 @@ plot_international_top10_gender <- function(r) {
       hc_title = titel2,
       hc_tooltip = "Anteil: {point.wert} % <br> Anzahl: {point.wert_absolut}" ,
       max_percent_used = max_percent_used,
-      col = "#154194"
+      col = "#154194",
+      marker="OECD"
       )
 
 
@@ -1071,6 +1076,8 @@ if (avg_line == "Ja"){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1116,6 +1123,8 @@ if (avg_line == "Ja"){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1156,6 +1165,8 @@ if (avg_line == "Ja"){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1192,6 +1203,8 @@ if (avg_line == "Ja"){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1339,12 +1352,16 @@ plot_international_schule_map <- function(r) {
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom") %>%
+    highcharter::hc_caption(text = "Quelle der Daten: IEA, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
                                   menuItems = list("downloadPNG", "downloadCSV")
                                 )
                               )
+
+
     )
 
 }
@@ -1472,6 +1489,8 @@ plot_international_schule_item <- function(r) {
       style = list(fontFamily = "Calibri Regular")
     ) %>%
     highcharter::hc_size(580, 450) %>%
+    highcharter::hc_caption(text = "    Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -1711,6 +1730,19 @@ plot_international_schule_migration <- function(r) {
             y = -0.2,
             xanchor = "center",
             yanchor = "top"
+          ),
+          annotations = list(
+            list(
+              text = "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              x = 0,
+              y = -0.7,  # passt die vertikale Position (ggf. justieren!)
+              xref = "paper",
+              yref = "paper",
+              showarrow = FALSE,
+              xanchor = "left",
+              yanchor = "top",
+              font = list(size = 11, color = "gray")
+            )
           )
         )
 
@@ -1775,6 +1807,20 @@ plot_international_schule_migration <- function(r) {
             y = -0.2,
             xanchor = "center",
             yanchor = "top"
+          ),
+          ,
+          annotations = list(
+            list(
+              text = "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              x = 0,
+              y = -0.7,  # passt die vertikale Position (ggf. justieren!)
+              xref = "paper",
+              yref = "paper",
+              showarrow = FALSE,
+              xanchor = "left",
+              yanchor = "top",
+              font = list(size = 11, color = "gray")
+            )
           )
         )
 
@@ -1839,6 +1885,19 @@ plot_international_schule_migration <- function(r) {
             y = -0.2,
             xanchor = "center",
             yanchor = "top"
+          ),
+          annotations = list(
+            list(
+              text = "Quelle der Daten: IEA , 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              x = 0,
+              y = -0.7,  # passt die vertikale Position (ggf. justieren!)
+              xref = "paper",
+              yref = "paper",
+              showarrow = FALSE,
+              xanchor = "left",
+              yanchor = "top",
+              font = list(size = 11, color = "gray")
+            )
           )
         )
 
@@ -1926,6 +1985,19 @@ plot_international_schule_migration <- function(r) {
             y = -0.2,
             xanchor = "center",
             yanchor = "top"
+          ),
+          annotations = list(
+            list(
+              text = "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              x = 0,
+              y = -0.7,  # passt die vertikale Position (ggf. justieren!)
+              xref = "paper",
+              yref = "paper",
+              showarrow = FALSE,
+              xanchor = "left",
+              yanchor = "top",
+              font = list(size = 11, color = "gray")
+            )
           )
         )
 
@@ -2013,6 +2085,19 @@ plot_international_schule_migration <- function(r) {
             y = -0.2,
             xanchor = "center",
             yanchor = "top"
+          ),
+          annotations = list(
+            list(
+              text = "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",
+              x = 0,
+              y = -0.7,  # passt die vertikale Position (ggf. justieren!)
+              xref = "paper",
+              yref = "paper",
+              showarrow = FALSE,
+              xanchor = "left",
+              yanchor = "top",
+              font = list(size = 11, color = "gray")
+            )
           )
         )
 
@@ -2143,7 +2228,8 @@ plot_international_map_arb <- function(r) {
       mincolor <- "#f4f5f6"
       maxcolor <- "#b16fab"
       map <- map_selection
-      out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map)
+      quell <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+      out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map, quelle=quell)
 
   }
 
@@ -2243,7 +2329,8 @@ plot_international_map_arb <- function(r) {
         titel <- paste0("Anteil von ", title_oecd_1_1, " in ", inpf, " ", inpy, " weltweit (OECD)" )
         mincolor <- "#f4f5f6"
         maxcolor <- "#b16fab"
-        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection)
+        que <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection, quelle=que)
 
 
 
@@ -2359,7 +2446,8 @@ plot_international_map_arb <- function(r) {
         titel <- paste0("Anteil von ", title_oecd_2_1, " in ", inpf, " ",  inpy," weltweit (OECD)" )
         mincolor <- "#f4f5f6"
         maxcolor <- "#b16fab"
-        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection)
+        que <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection, quelle=que)
 
 
 
@@ -2454,7 +2542,8 @@ plot_international_map_arb_gender <- function(r) {
       mincolor <- "#f4f5f6"
       maxcolor <- "#b16fab"
       map <- map_selection
-      out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map)
+      quelle <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+      out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map, quelle = quelle)
 
 
 
@@ -2578,7 +2667,8 @@ plot_international_map_arb_gender <- function(r) {
         titel <- paste0("Anteil von Frauen an allen ", title_oecd_1_1, " in ", inpf, " ", inpy, " weltweit (OECD)")
         mincolor <- "#f4f5f6"
         maxcolor <- "#b16fab"
-        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection)
+        qk <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection, quelle=qk)
 
 
 
@@ -2755,7 +2845,8 @@ plot_international_map_arb_gender <- function(r) {
         titel <- paste0("Anteil von ", title_oecd_2_1, " ", inpy, " weltweit (OECD)" )
         mincolor <- "#f4f5f6"
         maxcolor <- "#b16fab"
-        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection)
+        quelle <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+        out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor, prop=FALSE, wert=TRUE, map=map_selection, quelle = quelle)
 
 
     }
@@ -3137,6 +3228,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_chart(
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
 
       #dies ist schon als funktion automatisiert, too complex
@@ -3174,6 +3267,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -3216,6 +3311,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -3252,6 +3349,8 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -3747,8 +3846,10 @@ plot_international_top10_mint_arb_gender <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
+                                buttons = list(#
                                   contextButton = list(
                                     menuItems = list("downloadPNG", "downloadCSV")
                                   )
@@ -3790,6 +3891,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -3831,6 +3934,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -3868,6 +3973,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -3992,6 +4099,8 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
         )
       )
     ) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Eurostat, 2023; OECD, 2023; freier Download, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(

@@ -197,8 +197,6 @@ mod_fachkraft_start_ui <- function(id){
               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
                                            color = "#154194"),
 
-              p(style="font-size:12px;color:grey",
-                "Vorausberechnung durch das IW Köln, 2024, beauftragt durch MINTvernetzt"),
               p(),
               shinyBS::bsPopover(
                 id="h_fachkraft-prognosen_3", title="",
@@ -236,8 +234,7 @@ mod_fachkraft_start_ui <- function(id){
               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_item_1"),
                                                                         height = "600px"),
                                                     color = "#154194"),
-              p(style="font-size:12px;color:grey",
-                "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+
               p(),
               tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
@@ -262,8 +259,7 @@ mod_fachkraft_start_ui <- function(id){
         shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_alle_1"),
                                                                   height = "600px"),
                                      color = "#154194"),
-        p(style="font-size:12px;color:grey",
-          "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+
         p(),
         tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
       )
@@ -284,8 +280,7 @@ mod_fachkraft_start_ui <- function(id){
                                                                         height = "600px"),
                                             color = "#154194"),
 
-              p(style="font-size:12px;color:grey",
-                "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+
               # shinyBS::bsPopover(id="h_fachkraft_prog_2", title="",
               #                    content = paste0("POPUP INFO TEXT HERE"),
               #                    placement = "top",
@@ -382,8 +377,7 @@ mod_fachkraft_start_ui <- function(id){
                                            color = "#154194"),
 
 
-              p(style="font-size:12px;color:grey",
-                "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+
               shinyBS::bsPopover(
                 id="h_fachkraft-berufsgruppen_1", title="",
                 content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
@@ -413,8 +407,7 @@ mod_fachkraft_start_ui <- function(id){
                                            color = "#154194"),
 
 
-              p(style="font-size:12px;color:grey",
-                "Quelle der Daten: Bundesagentur für Arbeit, 2024, freier Download, eigene Berechnungen durch MINTvernetzt."),
+
               shinyBS::bsPopover(
                 id="h_fachkraft-berufsgruppen_2", title="",
                 content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Berufliche Tätigkeiten können nur auf Ebene der Berufsgattungen trennscharf als MINT klassifiziert werden. Als Annäherung werden hier die von MINT-Berufsgattungen dominierten Berufsgruppen unter MINT und den unterschiedlichen MINT-Bereichen zusammengefasst. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
@@ -474,8 +467,7 @@ mod_fachkraft_start_ui <- function(id){
                 shinycssloaders::withSpinner(highcharter::highchartOutput(ns("fachkraft_bar_vakanz_1_plot")),
                                              color = "#154194"),
 
-                p(style="font-size:12px;color:grey",
-                  "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+
                 shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_4", title="",
                                    content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung der Vakanzzeit und der Arbeitslosen-Stellen-Relation finden Sie in der jeweiligen Infobox. Diese sind in der Beschreibung über der Grafik verlinkt."),
                                    placement = "top",
@@ -580,11 +572,7 @@ div(class = "content-box",
               width = 9,
               shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_detail_item_1")),
                                            color = "#154194"),
-
-              p(style="font-size:12px;color:grey",
-                "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-
-              shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
+             shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
                                  content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
                                  placement = "top",
                                  trigger = "hover"),

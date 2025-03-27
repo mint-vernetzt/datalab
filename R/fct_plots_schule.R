@@ -230,16 +230,6 @@ kurse_mint_map <- function(r) {
 
     indikator_select <- r$topic_selected_mint
 
-    # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr %in% t,
-    #                 indikator == indikator_select,
-    #                 anzeige_geschlecht == "Gesamt",
-    #                 fachbereich %in% c("MINT", "Alle Fächer")) %>%
-    #   dplyr::select(indikator, fachbereich, anzeige_geschlecht, region, jahr, wert)%>%
-    #   dplyr::collect()
-
-
     df_query <- glue::glue_sql("
                                SELECT indikator, fachbereich, anzeige_geschlecht, region, jahr, wert
                                FROM kurse
@@ -365,15 +355,7 @@ kurse_mint_map <- function(r) {
     # load UI inputs from reactive value
     timerange <- r$date_mint_map
 
-    # SQL: DONE
-    # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region != "Deutschland",
-    #                 anzeige_geschlecht == "Gesamt",
-    #                 fachbereich %in% c("MINT", "Alle Fächer")) %>%
-    #   dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr,wert)%>%
-    #   dplyr::collect()
+
 
 
     df_query <- glue::glue_sql("
@@ -482,13 +464,6 @@ kurse_waffle_mint <- function(r) {
 
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
 
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region == regio,
-    #                 anzeige_geschlecht == "Gesamt",
-    #                 indikator == indika) %>%
-    #   dplyr::select(indikator, fachbereich, anzeige_geschlecht, wert) %>%
-    #   dplyr::collect()
 
     query_df <- glue::glue_sql("
     SELECT indikator, fachbereich, anzeige_geschlecht, wert
@@ -502,7 +477,7 @@ kurse_waffle_mint <- function(r) {
     df <- DBI::dbGetQuery(con, query_df)
 
     if(ebene == "MINT-Fachbereiche"){
-      
+
       # combine subjects to get numbers on share of MINT
       # make a function out of it
       subjects_not <- c("Mathematik", "Informatik",  "Biologie", "Chemie",
@@ -561,12 +536,7 @@ kurse_waffle_mint <- function(r) {
   }
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
-    # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(anzeige_geschlecht == "Gesamt",
-    #                 jahr == timerange) %>%
-    #   dplyr::select(-bereich)%>%
-    #   dplyr::collect()
+
 
     df_query <- glue::glue_sql("
                                SELECT *
@@ -834,7 +804,7 @@ kurse_verlauf_subjects_bl <- function(r) {
     tooltip <-  "{point.fachbereich} <br> Anteil: {point.y} %"
     format <-  "{value}%"
     color <- as.character(df$color)
-    
+
     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fachbereich", tooltip, format, color, quelle = quelle)
 
   } else if (absolut_selector=="Anzahl"){
@@ -860,7 +830,7 @@ kurse_verlauf_subjects_bl <- function(r) {
 
   return(out)
 }
-   
+
 
 #' A function to plot the german map
 #'
@@ -899,12 +869,7 @@ kurse_map <- function(r) {
 
   if(betrachtung == "Übersicht - Kartendiagramm"){
     # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr == timerange,
-    #                 region != "Deutschland",
-    #                 anzeige_geschlecht == "Gesamt") %>%
-    #   dplyr::select(fachbereich, indikator, anzeige_geschlecht, region, jahr,wert)%>%
-    #   dplyr::collect()
+
 
     df_query <- glue::glue_sql("
                                SELECT fachbereich, indikator, anzeige_geschlecht, region, jahr,wert
@@ -995,13 +960,8 @@ kurse_map <- function(r) {
 
     indikator_select <- r$topic_selected_multiple
 
-    # filter dataset based on UI inputs
-    # df <- dplyr::tbl(con, from = "kurse") %>%
-    #   dplyr::filter(jahr %in% t,
-    #                 indikator == indikator_select,
-    #                 anzeige_geschlecht == "Gesamt") %>%
-    #   dplyr::select(indikator, fachbereich, anzeige_geschlecht, region, jahr, wert)%>%
-    #   dplyr::collect()
+
+
 
 
     df_query <- glue::glue_sql("
@@ -1071,7 +1031,7 @@ kurse_map <- function(r) {
 
       help_title <- ifelse(subjects_select == "MINT-Fächer (gesamt)", "MINT-Fächern", subjects_select)
       help_title <- ifelse(help_title == "andere Fächer (gesamt)", "allen Fächern außer MINT", help_title)
-      
+
     titel <- paste0("Anteil von ", help_title, " an allen ", title_help)
     tooltip <-  "MINT-Anteil in {point.region} <br> Wert: {point.y} %"
     format <-  "{value}%"

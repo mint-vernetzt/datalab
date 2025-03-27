@@ -135,21 +135,7 @@ home_einstieg <- function(r) {
       out2 <- piebuilder(df_2, titel, x, y, tooltip, color, format, subtitel, quelle = quelle)
 
 
-      # out2 <- highcharter::hchart(df_2, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = prop)) %>%
-      #   highcharter::hc_tooltip(
-      #     pointFormat=paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')) %>%
-      #   highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
-      #   highcharter::hc_title(text = titel_2,
-      #                         margin = 45,
-      #                         align = "center",
-      #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      #   highcharter::hc_chart(
-      #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      #   highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      #   highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-      #                                          dataLabels = list(enabled = TRUE, format='{point.prop_besr}%'), showInLegend = TRUE))
-
-
+      # ou
     }else if(nrow(df_2) == 0){
 
     #empty plot
@@ -172,20 +158,6 @@ home_einstieg <- function(r) {
       format <- '{point.prop_besr}%'
       quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
       out1 = piebuilder(df_1, titel_1, x="fachbereich", y="prop", tooltip, color, format, quelle = quelle)
-
-      # out1 <- highcharter::hchart(df_1, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = prop)) %>%
-      #   highcharter::hc_tooltip(
-      #     pointFormat=paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')) %>%
-      #   highcharter::hc_colors(c( "#b16fab", "#efe8e6")) %>%
-      #   highcharter::hc_title(text = titel_1,
-      #                         margin = 45,
-      #                         align = "center",
-      #                         style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-      #   highcharter::hc_chart(
-      #     style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-      #   highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      #   highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-      #                                          dataLabels = list(enabled = TRUE,  format='{point.prop_besr}%'), showInLegend = TRUE))
 
 
     }else{
@@ -757,12 +729,7 @@ home_einstieg_gender <- function(r) {
                                   )
         )
 
-      # titel = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
-      # tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
-      # format <- "{value}%"
-      # color <- c("#154194", "#efe8e6")
-      #
-      # out <- balkenbuilder(df, titel , x = "indikator", y = "prop", group = "geschlecht", tooltip, format, color)
+
 
     }
 
@@ -793,15 +760,6 @@ home_comparison_line <- function(r) {
   abs_selector <- r$abs_zahlen_start_comparison
 
 
-  # # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "zentral") %>%
-  #   dplyr::filter(jahr %in% t,
-  #                 region %in% regio,
-  #                 geschlecht == "Frauen",
-  #                 fachbereich == "MINT",
-  #                 indikator %in% indikator_choice) %>%
-  #   dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
-  #   dplyr::collect()
 
 
   query <- glue::glue_sql("

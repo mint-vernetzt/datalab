@@ -12,13 +12,6 @@ plot_fachkraft_prognose  <- function(r) {
   filter_berufslevel <- "Gesamt"
 
   # plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
-  #   dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
-  #   dplyr::filter(indikator %in% filter_indikator) %>%
-  #   dplyr::filter(anforderung == filter_berufslevel) %>%
-  #   dplyr::filter(geschlecht == "Gesamt") %>%
-  #   dplyr::filter(nationalitaet == "Gesamt") %>%
-  #   dplyr::filter(jahr <= 2037) %>%
-  #   dplyr::collect()
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -168,7 +161,8 @@ plot_fachkraft_prognose  <- function(r) {
                           }
                         "))) %>%
     highcharter::hc_tooltip(shared = FALSE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
-
+    highcharter::hc_caption(text = "Vorausberechnung durch das IW Köln, 2024, beauftragt durch MINTvernetzt",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_plotOptions(
       series = list(pointStart = 2012,
@@ -214,14 +208,6 @@ plot_fachkraft_prognose  <- function(r) {
 plot_fachkraft_prognose_alle  <- function(r) {
 
   filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_alle_wirkhebel)
-#
-#   plot_data <- dplyr::tbl(con, from ="fachkraefte_prognose") %>%
-#     dplyr::filter(wirkhebel %in% filter_wirkhebel) %>%
-#     dplyr::filter(anforderung == "Gesamt") %>%
-#     dplyr::filter(geschlecht == "Gesamt") %>%
-#     dplyr::filter(nationalitaet == "Gesamt") %>%
-#     dplyr::filter(jahr <= 2037) %>%
-#     dplyr::collect()
 
 
 
@@ -341,14 +327,6 @@ plot_fachkraft_prognose_detail  <- function(r) {
 
   not_focused_column <- c("anforderung", "geschlecht", "nationalitaet")[c("anforderung", "geschlecht", "nationalitaet") != focused_column]
 
-  # plot_data <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
-  #   dplyr::filter(wirkhebel %in% filter_wirkhebel,
-  #                 indikator %in% filter_indikator,
-  #                 jahr <= 2037) %>%
-  #   dplyr::filter(if_all(all_of(not_focused_column), ~ .x == "Gesamt")) %>%
-  #   dplyr::select(all_of(c("wirkhebel", "indikator", "jahr", focused_column, "wert"))) %>%
-  #   dplyr::filter(!!dplyr::sym(focused_column) != "Gesamt") %>%
-  #   dplyr::collect()
 
 
   df_query <- glue::glue_sql("
@@ -442,6 +420,8 @@ plot_fachkraft_prognose_detail  <- function(r) {
                           }
                         "))) %>%
     highcharter::hc_tooltip(shared = TRUE, headerFormat = "<b>Fachkräfte-Entwicklung {point.x}</b><br>") %>%
+    highcharter::hc_caption(text = "Vorausberechnung durch das IW Köln, 2024, beauftragt durch MINTvernetzt",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_plotOptions(
       series = list(pointStart = 2012,
@@ -475,13 +455,7 @@ plot_fachkraft_prognose_detail  <- function(r) {
 plot_fachkraft_wirkhebel_analyse  <- function(r) {
   year_filter <- r$fachkraft_item_wirkhebel_analyse
 
-  # basis_wert <- dplyr::tbl(con, from = "fachkraefte_prognose") %>%
-  #   dplyr::filter(wirkhebel == "Basis-Szenario") %>%
-  #   dplyr::filter(geschlecht == "Gesamt") %>%
-  #   dplyr::filter(nationalitaet == "Gesamt") %>%
-  #   dplyr::filter(anforderung == "Gesamt") %>%
-  #   dplyr::filter(jahr == 2022) %>%
-  #   dplyr::pull(wert)
+
 
   if (is.null(year_filter) || !is.numeric(year_filter)) {
     stop("Fehler: `year_filter` ist NULL oder kein numerisches Jahr!")
@@ -511,22 +485,6 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
 
   basis_wert <- basis_wert %>%
     dplyr::pull(wert)
-
-  # uebersicht_data <-  dplyr::tbl(con, from = "fachkraefte_prognose") %>%
-  #   dplyr::filter(jahr == year_filter) %>%
-  #   dplyr::filter(indikator %in% c("Verbesserung")) %>%
-  #   dplyr::filter(geschlecht == "Gesamt") %>%
-  #   dplyr::filter(nationalitaet == "Gesamt") %>%
-  #   dplyr::filter(anforderung == "Gesamt") %>%
-  #   dplyr::mutate(basis_wert = basis_wert) %>%
-  #   dplyr::select(wirkhebel, basis_wert, wert)%>%
-  #   dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Mädchen und Frauen in MINT fördern",
-  #                                              wirkhebel == "MINT-Bildung" ~ "MINT-Nachwuchs fördern",
-  #                                              wirkhebel == "Internationale MINT-Fachkräfte" ~ "Zuwanderung MINT-Fachkräfte",
-  #                                              wirkhebel == "Beteiligung älterer MINT-Fachkräfte" ~ "Verbleib älterer MINT-Fachkräfte",
-  #                                              T ~ wirkhebel),
-  #                 diff = wert - basis_wert) %>%
-  #   dplyr::collect()
 
 
   df_query <- glue::glue_sql("
@@ -618,6 +576,19 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
         y = -0.5,
         xanchor = "center",
         yanchor = "top"
+      ),
+      annotations = list(
+        list(
+          text = "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt",
+          x = 0,
+          y = -0.35,
+          xref = "paper",
+          yref = "paper",
+          showarrow = FALSE,
+          xanchor = "left",
+          yanchor = "top",
+          font = list(size = 11, color = "gray")
+        )
       )
     )%>%
     plotly::config(displaylogo = FALSE,  modeBarButtonsToRemove = c(
@@ -679,11 +650,8 @@ plot_fachkraft_epa_item <- function(r) {
     bf <- bf_label
   }
 
-  # plot_data_raw <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail")%>%
-  #   dplyr::filter(jahr == timerange &
-  #                   indikator == "Engpassindikator" &
-  #                   anforderung %in% bf)%>%
-  #   dplyr::collect()
+
+
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -840,6 +808,8 @@ plot_fachkraft_epa_item <- function(r) {
       style = list(fontFamily = "Calibri Regular")
     ) %>%
     highcharter::hc_size(380, 480) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -902,6 +872,8 @@ plot_fachkraft_epa_item <- function(r) {
         style = list(fontFamily = "Calibri Regular")
       )%>%
       highcharter::hc_size(380, 480) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1096,6 +1068,8 @@ plot_fachkraft_epa_bulas <- function(r) {
       style = list(fontFamily = "Calibri Regular")
     ) %>%
     highcharter::hc_size(380, 480) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, freier Download, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1158,6 +1132,8 @@ plot_fachkraft_epa_bulas <- function(r) {
         style = list(fontFamily = "Calibri Regular")
       )%>%
       highcharter::hc_size(380, 480) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, freier Download, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1165,7 +1141,6 @@ plot_fachkraft_epa_bulas <- function(r) {
                                   )
                                 )
       )
-
 
     out <- highcharter::hw_grid(
       plot_left, plot_right,
@@ -1315,13 +1290,7 @@ plot_fachkraft_bar_vakanz  <- function(r) {
 #
 #
 #
-#   plot_data <- dplyr::tbl(con, from ="arbeitsmarkt_fachkraefte") %>%
-#     dplyr::filter(jahr == timerange &
-#                     indikator == this_indikator &
-#                     anforderung == bf_label &
-#                     region == this_region) %>%
 #
-#     dplyr::collect()
 #
   df_query <- glue::glue_sql("
   SELECT *
@@ -1410,6 +1379,8 @@ plot_fachkraft_bar_vakanz  <- function(r) {
       )) %>%
     highcharter::hc_yAxis(title = list(text = "")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage; eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1431,55 +1402,60 @@ plot_fachkraft_detail_item  <- function(r) {
   bf_label <- r$map_bl_fachkraft_arbeit_detail
   this_beruf <- r$map_b_fachkraft_arbeit_detail
 
-  # plot_solidgauge_data <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
-  #   dplyr::filter(jahr == timerange &
-  #                   indikator == "Engpassindikator" &
-  #                   anforderung == bf_label &
-  #                   beruf %in% this_beruf) %>%
-  #   dplyr::collect()
+  if (length(this_beruf) == 0) {
+    stop("this_beruf ist leer – SQL-Abfrage kann nicht ausgeführt werden.")
+  }
 
-  df_query <- glue::glue_sql("
-  SELECT *
-  FROM arbeitsmarkt_epa_detail
-  WHERE jahr = {timerange}
-  AND indikator = 'Engpassindikator'
-  AND anforderung = {bf_label}
-  AND beruf IN ({this_beruf*})
-                               ", .con = con)
+  if (length(this_beruf) == 0) {
+    # Wenn keine Berufe, dann leerer Output und frühzeitig raus
+    plot_solidgauge_data <- data.frame()
+    df <- data.frame()
+  } else {
+    # Berufsteil bauen je nach Anzahl
+    if (length(this_beruf) > 1) {
+      beruf_sql <- glue::glue_sql("AND beruf IN ({this_beruf*})", .con = con)
+    } else {
+      beruf_sql <- glue::glue_sql("AND beruf = {this_beruf}", .con = con)
+    }
 
-  plot_solidgauge_data <- DBI::dbGetQuery(con, df_query)
+    # Erste Abfrage
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_epa_detail
+    WHERE jahr = {timerange}
+      AND indikator = 'Engpassindikator'
+      AND anforderung = {bf_label}
+      {beruf_sql}
+  ", .con = con)
 
-  used_kategories <- switch(
-    EXPR = plot_solidgauge_data$epa_kat[1],
-    "Anzeichen eines Engpassberufs" = c("Engpassanalyse", "Risikoanalyse"),
-    "Engpassberuf" = c("Engpassanalyse"),
-    "kein Engpassberuf" = c("Engpassanalyse")
-  )
+    plot_solidgauge_data <- DBI::dbGetQuery(con, df_query)
 
-  # plot_bar_data <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
-  #   dplyr::filter(jahr == timerange &
-  #                   #indikator == "Engpassindikator" &
-  #                   anforderung == bf_label &
-  #                   indikator != "Engpassindikator" &
-  #                   beruf %in% this_beruf &
-  #                   kategorie %in% used_kategories &
-  #                   !is.na(wert)) %>%
-  #   dplyr::select(indikator, kategorie, wert) %>%
-  #   dplyr::mutate(wert = round(wert, 1)) %>%
-  #   dplyr::collect()
+    used_kategories <- switch(
+      EXPR = plot_solidgauge_data$epa_kat[1],
+      "Anzeichen eines Engpassberufs" = c("Engpassanalyse", "Risikoanalyse"),
+      "Engpassberuf" = c("Engpassanalyse"),
+      "kein Engpassberuf" = c("Engpassanalyse")
+    )
+    if (nrow(plot_solidgauge_data) == 0) {
+      df <- data.frame()
+      return()
+    } else {
+    # Zweite Abfrage
+    df_query <- glue::glue_sql("
+    SELECT indikator, kategorie, wert
+    FROM arbeitsmarkt_epa_detail
+    WHERE jahr = {timerange}
+      AND anforderung = {bf_label}
+      AND NOT indikator = 'Engpassindikator'
+      AND kategorie IN ({used_kategories*})
+      AND wert IS NOT NULL
+      {beruf_sql}
+  ", .con = con)
 
-  df_query <- glue::glue_sql("
-  SELECT indikator, kategorie, wert
-  FROM arbeitsmarkt_epa_detail
-  WHERE jahr = {timerange}
-  AND anforderung = {bf_label}
-  AND NOT indikator = 'Engpassindikator'
-  AND beruf IN ({this_beruf*})
-  AND kategorie IN ({used_kategories*})
-  AND wert is NOT NULL
-                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+    }
+  }
 
-  df <- DBI::dbGetQuery(con, df_query)
 
   plot_bar_data <- df %>%
     dplyr::mutate(wert = round(wert, 1))
@@ -1571,12 +1547,13 @@ plot_fachkraft_detail_item  <- function(r) {
     highcharter::hc_caption(
       text = paste0("Werte < 1,5                : kein Fachkräfteengpass", br(),
                     "Werte zwischen 1,5 und 1,9 : Anzeichen eines Fachkräfteengpasses", br(),
-                    "Werte >= 2,0               : Fachkräfteengpass"),
+                    "Werte >= 2,0               : Fachkräfteengpass", br(),
+                    "<span style='font-size:11px; color:gray;'>Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.</span>"),
       align = "left",
       style = list(color = "grey",
                    useHTML = TRUE,
                    fontFamily = "Calibri Regular",
-                   fontSize = "14px")
+                   fontSize = "13px")
     ) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
@@ -1624,6 +1601,8 @@ plot_fachkraft_detail_item  <- function(r) {
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1666,6 +1645,8 @@ plot_fachkraft_detail_item  <- function(r) {
           )
         ),
         title = list(text = "")) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
