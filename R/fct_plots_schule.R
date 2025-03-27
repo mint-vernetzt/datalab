@@ -2094,6 +2094,9 @@ kurse_verlauf_gender <- function(r){
   }
 }
 
+
+
+
 #' A function to plot a waffle chart
 #'
 #' @description A function to create a waffle chart for the second box inside the

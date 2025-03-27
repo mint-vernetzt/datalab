@@ -81,7 +81,6 @@ beruf_einstieg_vergleich <- function(r) {
                      "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert") %>%
       dplyr::rename(wert_gesamt = "wert")
 
-    browser()
 
 
     df3 <- df %>%
