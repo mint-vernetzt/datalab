@@ -67,8 +67,9 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
         shinydashboard::box(
           title = "Datenquellen",
           width = 5,
-          p(style = "text-align: left; font-size = 16px",
-            "Auszubildenden- und Beschäftigtenzahlen in Deutschland: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.")
+          p("Die amtlichen Statistiken zeigen das aktuellste verfügbare Berichtsjahr 2023."),
+          p(tags$b(span("Auszubildenden- und Beschäftigtenzahlen: Bundesagentur für Arbeit 2024, auf Anfrage.")),
+          "Daten des Berichtsjahres 2024 ca. ab Juli 2025 verfügbar.")
 
         )
       ),
