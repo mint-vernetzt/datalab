@@ -48,12 +48,13 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("bulas_map_l"),
                        choices = c("Studierende",
-                                   "internationale Studierende",
-                                   "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
                                    "Absolvent:innen",
-                                   "internationale Absolvent:innen"),
+                                   "internationale Studierende",
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Absolvent:innen",
+                                   "Studierende im Lehramt" = "Studierende (Lehramt)",
+                                   "Absolvent:innen im Lehramt" ="Absolvent:innen (Lehramt)"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -85,12 +86,13 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("bulas_verlauf_l"),
                        choices = c("Studierende",
-                                   "internationale Studierende",
-                                   "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
                                    "Absolvent:innen",
-                                   "internationale Absolvent:innen"),
+                                   "internationale Studierende",
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Absolvent:innen",
+                                   "Studierende im Lehramt" = "Studierende (Lehramt)",
+                                   "Absolvent:innen im Lehramt" ="Absolvent:innen (Lehramt)"),
                        selected = c("Studierende")
                        ,
                        multiple = F,
@@ -160,12 +162,13 @@ mod_studium_studienzahl_bundeslandvergleich_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("bulas_balken_l"),
                        choices = c("Studierende",
-                                   "internationale Studierende",
-                                   "Studierende (Lehramt)",
                                    "Studienanfänger:innen (1. Hochschulsemester)",
-                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
                                    "Absolvent:innen",
-                                   "internationale Absolvent:innen"),
+                                   "internationale Studierende",
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Absolvent:innen",
+                                   "Studierende im Lehramt" = "Studierende (Lehramt)",
+                                   "Absolvent:innen im Lehramt" ="Absolvent:innen (Lehramt)"),
                        selected = "Studierende"),
 
 

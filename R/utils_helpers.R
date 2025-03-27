@@ -973,7 +973,7 @@ darstellung <- function(id, title = NULL) {
 # test des funktionszusammenfasser
 
 
-piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"), format = '{point.prop_besr}%', subtitel = NULL){
+piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"), format = '{point.prop_besr}%', subtitel = NULL, quelle="Quelle"){
 
   if (is.null(subtitel)){
     out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y))) %>%
@@ -983,14 +983,14 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>% #SourceSans3-Regular
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>% #Calibri Regular
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      # highcharter::hc_caption(text = "Quelle der Daten: auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-      #                         style = list(fontSize = "11px")) %>%
       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                              dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE)) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1006,14 +1006,16 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
       highcharter::hc_subtitle(text = subtitel,
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                              dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE)) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1032,7 +1034,7 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
 
 #df, titel, x, y, tooltip
 
-linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24")){
+linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24"), quelle="Quelle"){
 
   df <- df %>%
     dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
@@ -1041,15 +1043,17 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
     highcharter::hc_title(text = titel,
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
     highcharter::hc_colors(color) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+    style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     )  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1058,15 +1062,23 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
                               )
     )
 
+
 }
 
 #}
 
 
 balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
-                          optional=NULL, reverse = TRUE){
+                          optional=NULL, reverse = TRUE, TF=NULL, stacking=NULL, subtitel = NULL, quelle="Quelle"){
+
+  df <- df %>%
+    dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
+
+
 
   if(is.null(group) && is.null(optional)){
+
+
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
@@ -1080,6 +1092,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1088,7 +1102,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                                 )
       )
 
-  } else if (!is.null(group) && is.null(optional)){
+  } else if (!is.null(group) && is.null(optional) && is.null(stacking)){
 
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -1103,6 +1117,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1111,7 +1127,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                                 )
       )
 
-  } else if (is.null(group) && !is.null(optional)) {
+  } else if (is.null(group) && !is.null(optional) && is.null(stacking)) {
+
 
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -1127,6 +1144,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1136,7 +1155,9 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       )
 
 
-  } else if (!is.null(group) && !is.null(optional)){
+  } else if (!is.null(group) && !is.null(optional) && is.null(stacking)){
+
+
 
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -1152,6 +1173,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1161,7 +1184,129 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       )
 
 
-  } else {
+  } else if (!is.null(TF) && !is.null(group) && is.null(stacking)){
+
+
+
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
+      highcharter::hc_tooltip(pointFormat = tooltip) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format), reversedStacks = TF) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45, # o. war vorher /
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
+
+
+  } else if (!is.null(TF) && !is.null(group) && !is.null(stacking)){
+
+
+
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
+      highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
+      highcharter::hc_tooltip(pointFormat = tooltip) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format), reversedStacks = TF) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45, # o. war vorher /
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
+
+
+  }  else if(!is.null(stacking) && format == "1" ){
+
+    unused_format <- format
+
+
+
+    out <- df %>% highcharter::hchart("bar", highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group)))%>%
+      highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
+      highcharter::hc_tooltip(pointFormat=tooltip) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               align = "center",
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+      highcharter::hc_yAxis(title = list(text = "")) %>% #######NO FORMAT
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
+
+
+  } else if(!is.null(stacking) && !is.null(group) && format != "1"){
+
+
+    out <- df %>% highcharter::hchart("bar", highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group)))%>%
+      highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
+      highcharter::hc_tooltip(pointFormat=tooltip) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               align = "center",
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+      highcharter::hc_yAxis(title = list(text = ""),  labels = list(format = "{value}%"), reversedStacks =  FALSE) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
+
+
+  }
+
+  else {
     return(1)
   }
 
@@ -1171,21 +1316,51 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
 }
 
 
-balkenbuilder2 <- function(TF, df, titel , x, y, group, tooltip, format, color){
 
-  out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
-    highcharter::hc_tooltip(pointFormat = tooltip) %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format), reversedStacks = TF) %>%
+
+
+get_top10_hc_plot_options <- function(hc,
+                                      hc_title = "",
+                                      hc_tooltip = "",
+                                      max_percent_used = 100,
+                                      col = "#B16FAB",
+                                      marker = "IEA") {
+  if(marker=="IEA"){
+    its <- "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
+  } else if (marker=="OECD"){
+    its <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+
+  }
+
+
+  out <- hc %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        boderWidth = 0,
+        dataLabels = list(enabled = TRUE, format = "{point.wert} %",
+                          style = list(textOutline = "none"))
+      )) %>%
+    highcharter::hc_tooltip(pointFormat = hc_tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = ""),
+                          labels = list(format = "{value} %"),
+                          min = 0,
+                          max = max_percent_used,
+                          tickInterval = 10) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(color) %>%
-    highcharter::hc_title(text = titel,
-                          margin = 45, # o. war vorher /
+    highcharter::hc_colors(c(col)) %>%
+    highcharter::hc_title(text = hc_title,
+                          margin = 45,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+                          style = list(color = "black",
+                                       useHTML = TRUE,
+                                       fontFamily = "Calibri Regular",
+                                       fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_caption(text = its,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1195,10 +1370,33 @@ balkenbuilder2 <- function(TF, df, titel , x, y, group, tooltip, format, color){
     )
 
   return(out)
-
 }
 
-balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, optional2){
+
+
+#
+# international_balkenbuilder <- function(df, titel, x, y, ){
+#
+#   out <- highcharter::hchart(
+#     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10), 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
+#   get_top10_hc_plot_options(
+#     hc_title =titel,
+#     hc_tooltip = hover,
+#     max_percent_used = 100)
+
+
+
+  # return(out)}
+
+
+
+
+
+
+
+
+
+balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, optional2,  quelle="Quelle"){
 
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -1221,6 +1419,8 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE)  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1237,7 +1437,7 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
 
 #mapbuilder
 
-mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = map_selection){
+mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = map_selection, landkarten = FALSE, states=NULL,  quelle="Quelle"){
 
 if(prop==FALSE && wert == FALSE){
   out<- highcharter::hcmap(
@@ -1267,6 +1467,8 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom")  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1275,7 +1477,7 @@ if(prop==FALSE && wert == FALSE){
                               )
     )
 
-} else if(prop == TRUE){
+} else if(prop == TRUE && landkarten == FALSE){
   out<- highcharter::hcmap(
     "countries/de/de-all",
     data = df,
@@ -1303,6 +1505,8 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom")  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1340,6 +1544,8 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom")  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1348,12 +1554,159 @@ if(prop==FALSE && wert == FALSE){
                               )
     )
 
+} else if (landkarten == TRUE && prop == TRUE && !is.null(states))
+{
+
+  useless <- map
+  mincolor1 <- mincolor
+  maxcolor1 <- maxcolor
+
+
+
+  state_codes <- data.frame(
+    state = c(
+      "Baden-Württemberg",
+      "Bayern",
+      "Berlin",
+      "Brandenburg",
+      "Bremen",
+      "Hamburg",
+      "Hessen",
+      "Mecklenburg-Vorpommern",
+      "Niedersachsen",
+      "Nordrhein-Westfalen",
+      "Rheinland-Pfalz",
+      "Saarland",
+      "Sachsen",
+      "Sachsen-Anhalt",
+      "Schleswig-Holstein",
+      "Thüringen"
+    ),
+    short = c(
+      "bw",
+      "by",
+      "be",
+      "bb",
+      "hb",
+      "hh",
+      "he",
+      "mv",
+      "ni",
+      "nw",
+      "rp",
+      "sl",
+      "sn",
+      "st",
+      "sh",
+      "th"
+    )
+  )
+
+  state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
+
+  out <- highcharter::hcmap(
+    paste0("countries/de/de-", state_code ,"-all"),
+    data = df,
+    value = "prob",
+    joinBy = joinby,
+    borderColor = "#FAFAFA",
+    name = name,
+    borderWidth = 0.1,
+    nullColor = "#A9A9A9",
+    tooltip = list(
+      valueDecimals = 0,
+      valueSuffix = "%"
+    )
+    #,
+    # download_map_data = FALSE
+  ) %>%
+    highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
+    highcharter::hc_title(
+      text = titel,
+      margin = 10,
+      align = "center",
+      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri Regular")
+    ) %>% #highcharter::hc_size(600, 550) %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                           verticalAlign = "bottom"
+    ) %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
+
+
+
+
 }
 
   return(out)
 }
 
 
+
+
+
+
+#' A function to search relevants subpages
+#'
+#' @description A function that searches the given keywords and filters the lookup table to present suitable subpages and plots
+#'
+#' @return The return value is a plot
+#' @param term a string with the search term
+#' @noRd
+
+get_search_data <- function(term, session) {
+  # lookup table
+  # term <- "test"
+  # term <- ""
+
+  # term zu lower case
+  this_search <- tolower(term)
+  # stopwords raus, satzzeichen raus, stemming
+  # this_search <- tm::removeWords(this_search, tm::stopwords("german"))
+  # this_search <- quanteda::tokens(this_search, remove_punct = TRUE)
+  # this_search <- quanteda::tokens_wordstem(this_search, language = "de")
+  # this_search <- paste(this_search)
+
+
+  # this_search <- SnowballC::wordStem(this_search, language = "de")
+  # this_search <- paste0(unlist(strsplit(x = this_search, split = " ")))
+  # this_search <- "speed car distance"
+  search_text <- suchtabelle$term
+  # search for each term and then return any findings
+  search_idx <- lapply(
+    X = this_search,
+    FUN = function(term) {
+      grepl(pattern = term, search_text
+            #, max.distance = 2
+      )
+    }
+  )
+  # combine searches and only thos with all search terms present are used
+  search_idx <- Reduce("&", search_idx)
+
+  if (is.null(search_idx)) {
+    out <- suchtabelle
+  } else {
+    out <- suchtabelle[search_idx,]
+  }
+
+  out <- out %>%
+    dplyr::select(Bereich, Registerkarte, Plotart, menuItem..tabName, Box..ID)%>%
+    dplyr::mutate(Plotart = stringr::str_to_title(Plotart))
+
+  return(out)
+}
 
 
 

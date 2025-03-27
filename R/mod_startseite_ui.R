@@ -27,35 +27,56 @@ mod_startseite_start_ui <- function(id){
 
     # Einleitungstext
     fluidRow(
-        div(class = "clean-box",
+      div(class = "clean-box",
           column(
-          width = 10,
-          h1("Willkommen im MINT-DataLab von MINTvernetzt!"),
-          p(style = "text-align: justify; font-size = 20px",
-            "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
-            Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
-                  für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver
-          Diagramme einen intuitiven und informativen Zugang zu gewähren. Dabei entwickeln wir das MINT-DataLab stetig weiter.",
-            br()
+            width = 7,
+            h1("Willkommen im MINT-DataLab von MINTvernetzt!"),
+            p(style = "text-align: justify; font-size: 14px;",
+              "Hier präsentieren wir statistische Kennzahlen rund um MINT in den Bereichen Schule, Hochschule, Ausbildung und
+          Arbeitsmarkt in Deutschland. Unser Ziel ist es, mit dem MINT-DataLab einen zentralen Ort
+          für die wichtigsten Statistiken rund um MINT zu schaffen und mittels interaktiver
+          Diagramme einen intuitiven und informativen Zugang zu gewähren. Dabei entwickeln wir das MINT-DataLab stetig weiter."
+            )
+          ),
+          column(width =1),
+          column(
+            width = 4,
+           h1(style = "color: #00a87a; font-size: 20px;",
+             "Was ist Neu?"),
+            p(style = "text-align: justify; font-size: 14px;",
+              "-  Grafiken und Daten als Download", br(),
+              "-  Fachkräftedaten auf Bundesland-Level",br(),
+              "-  Neue Kurzanalyse: Fachkräftemangel in den MINT-Disziplinen", br(),
+              "-  Daten zu Lehramts-Absolvent:innen verfügbar"
+            ),
+            h1(style = "color: #00a87a; font-size: 20px;",
+               "Woran wir aktuell arbeiten:"),
+            p(style = "text-align: justify; font-size: 14px;",
+              "-  Argumentationshilfe mit Erklärungen und Beispielen",br(),
+              "-  Optimiertes Laden der Website", br()
+            )
           )
-        )
-        )
+      )
     ),
+
+
 
     # Dynamische Grafiken
     fluidRow(
       div(
         class = "clean-box",
         column(
-        width = 10,
-        title = "Was steckt hinter den MINT-Statistiken?",
+        width = 7,
+        h5("Was steckt hinter den MINT-Statistiken?"),
         p(style = "text-align: justify; font-size = 20px",
             "Ausgewählte Statistiken bereiten wir in Kurzanalysen auf.
            Die Kurzanalysen können auf der MINT-DataLab-Themenseite der MINTvernetzt-Website gelesen und
            zukünftig heruntergeladen werden. ",
-          # LINK ergänzen, wenn da (Nike)
+
           br()),
-        tags$a(href="https://www.mint-vernetzt.de/mint-datalab/#kurzanalysen", "Link zu den Kurzanalysen", target = "_blank"),
+        tags$a(href="https://www.mint-vernetzt.de/mint-datalab/#kurzanalysen",
+               "Link zu den Kurzanalysen",
+               target = "_blank"),
         p(br())
         ),
 

@@ -77,12 +77,15 @@ mod_fachkraft_start_ui <- function(id){
         title = "Datenquellen",
         width = 5,
         p(style = "text-align: left; font-size = 16px",
-          "Zukunftsszenarien der MINT-Fachkräfteentwicklung: Datengrundlage
+          tags$b(span("Zukunftsszenarien der MINT-Fachkräfteentwicklung: Datengrundlage
           Bundesagentur für Arbeit, 2023; Vorausberechnung durch IW Köln, 2024,
-          beauftragt durch MINTvernetzt"),
+          beauftragt durch MINTvernetzt"))),
         p(style = "text-align: left; font-size = 16px",
-          "MINT-Fachkräftedaten (Engpassanalyse, Vakanzzeit, Arbeitslosen-Stellen-Relation):
-          Bundesagentur für Arbeit, 2023, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+          tags$b(span("Fachkräftedaten: Bundesagentur für Arbeit, 2024, auf Anfrage.")),
+        "Daten des Berichtsjahres 2024 ca. ab Juli 2025 verfügbar."),
+        p("Die amtlichen Statistiken der Fachkräftedaten
+          (Engpassanalyse, Vakanzzeit, Arbeitslosen-Stellen-Relation)
+          zeigen das aktuellste verfügbare Berichtsjahr 2023.")
 
       )
     ),
@@ -194,8 +197,6 @@ mod_fachkraft_start_ui <- function(id){
               shinycssloaders::withSpinner(plotly::plotlyOutput(ns("plot_fachkraft_wirkhebel_analyse_1")),
                                            color = "#154194"),
 
-              p(style="font-size:12px;color:grey",
-                "Vorausberechnung durch das IW Köln, 2024, beauftragt durch MINTvernetzt"),
               p(),
               shinyBS::bsPopover(
                 id="h_fachkraft-prognosen_3", title="",
@@ -233,8 +234,7 @@ mod_fachkraft_start_ui <- function(id){
               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_item_1"),
                                                                         height = "600px"),
                                                     color = "#154194"),
-              p(style="font-size:12px;color:grey",
-                "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+
               p(),
               tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
@@ -259,8 +259,7 @@ mod_fachkraft_start_ui <- function(id){
         shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_prog_alle_1"),
                                                                   height = "600px"),
                                      color = "#154194"),
-        p(style="font-size:12px;color:grey",
-          "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+
         p(),
         tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
       )
@@ -281,8 +280,7 @@ mod_fachkraft_start_ui <- function(id){
                                                                         height = "600px"),
                                             color = "#154194"),
 
-              p(style="font-size:12px;color:grey",
-                "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"),
+
               # shinyBS::bsPopover(id="h_fachkraft_prog_2", title="",
               #                    content = paste0("POPUP INFO TEXT HERE"),
               #                    placement = "top",
@@ -379,8 +377,7 @@ mod_fachkraft_start_ui <- function(id){
                                            color = "#154194"),
 
 
-              p(style="font-size:12px;color:grey",
-                "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+
               shinyBS::bsPopover(
                 id="h_fachkraft-berufsgruppen_1", title="",
                 content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
@@ -410,8 +407,7 @@ mod_fachkraft_start_ui <- function(id){
                                            color = "#154194"),
 
 
-              p(style="font-size:12px;color:grey",
-                "Quelle der Daten: Bundesagentur für Arbeit, 2024, freier Download, eigene Berechnungen durch MINTvernetzt."),
+
               shinyBS::bsPopover(
                 id="h_fachkraft-berufsgruppen_2", title="",
                 content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Berufliche Tätigkeiten können nur auf Ebene der Berufsgattungen trennscharf als MINT klassifiziert werden. Als Annäherung werden hier die von MINT-Berufsgattungen dominierten Berufsgruppen unter MINT und den unterschiedlichen MINT-Bereichen zusammengefasst. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
@@ -471,8 +467,7 @@ mod_fachkraft_start_ui <- function(id){
                 shinycssloaders::withSpinner(highcharter::highchartOutput(ns("fachkraft_bar_vakanz_1_plot")),
                                              color = "#154194"),
 
-                p(style="font-size:12px;color:grey",
-                  "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+
                 shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_4", title="",
                                    content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung der Vakanzzeit und der Arbeitslosen-Stellen-Relation finden Sie in der jeweiligen Infobox. Diese sind in der Beschreibung über der Grafik verlinkt."),
                                    placement = "top",
@@ -484,6 +479,22 @@ mod_fachkraft_start_ui <- function(id){
           )
         )
       ),
+
+# Kurzanalyse ----
+div(class = "content-box",
+    div(class = "inner-box",
+        p(br(),"KURZANALYSE", br()),
+        p(style = "font-size = 24",
+          strong("Im MINT-Bereich zeigt sich ein erhöhter Fachkräftemangel. Doch dabei unterscheidet sich die
+                 Lage der einzelnen MINT-Bereich deutlich voneinander. Vor allem der Bereich Technik hat
+                 einen besonders ausgeprägten Fachkräfteengpass. Wie es um Technik und die weitern MINT-Bereiche steht und
+                  was wirkvolle Ansätze gegen den Fachkräftemangel sein könnte, fasst diese Kurzanalyse zusammen."),
+          br(), br(),
+          tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2025/03/Fachkraeftemangel-MINT-Disziplinen.pdf", target = "_blank",
+                 "Link zu der Kurzanalyse"), br(),
+          br())
+    )
+),
 
     # Box 3 - Fachkräfte auf Berufslevel ----
 
@@ -561,11 +572,7 @@ mod_fachkraft_start_ui <- function(id){
               width = 9,
               shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_detail_item_1")),
                                            color = "#154194"),
-
-              p(style="font-size:12px;color:grey",
-                "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-
-              shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
+             shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
                                  content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
                                  placement = "top",
                                  trigger = "hover"),

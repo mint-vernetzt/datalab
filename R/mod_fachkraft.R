@@ -15,6 +15,7 @@ mod_fachkraft_ui <- function(id){
     fluidPage(
       fluidRow(
         mod_fachkraft_start_ui("mod_fachkraft_start_ui_1")
+
       )
     )
   )

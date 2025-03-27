@@ -37,50 +37,67 @@ beruf_einstieg_vergleich <- function(r) {
                 "Beschäftigte ü55")
   }
 
-  df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    dplyr::filter(jahr == timerange &
-                    landkreis == "alle Landkreise" &
-                    bundesland == regio &
-                    anforderung == "Gesamt" &
-                    geschlecht == "Gesamt" &
-                    indikator %in% gruppe &
-                    fachbereich == faecher)%>%
-    dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
-                   "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert") %>%
-    dplyr::collect()
 
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_detail
+  WHERE jahr = {timerange}
+  AND landkreis = 'alle Landkreise'
+  AND bundesland = {regio}
+  AND anforderung = 'Gesamt'
+  AND geschlecht = 'Gesamt'
+  AND indikator IN ({gruppe*})
+  AND fachbereich = {faecher}
+                               ", .con = con)
+
+  df1 <- DBI::dbGetQuery(con, df_query)
+
+
+
+  df <- df1 %>%
+    dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
+                   "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert")
+  #
 
   if(is.null(abs_rel) | abs_rel == "In Prozent"){
     #Anteil MINT berechnen
-    df_new_gesamt <- dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-      dplyr::filter(jahr == timerange &
-                      landkreis == "alle Landkreise" &
-                      bundesland == regio &
-                      anforderung == "Gesamt" &
-                      geschlecht == "Gesamt" &
-                      indikator %in% gruppe &
-                      fachbereich == "Alle")%>%
+
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE landkreis = 'alle Landkreise'
+    AND bundesland = {regio}
+    AND anforderung = 'Gesamt'
+    AND geschlecht = 'Gesamt'
+    AND indikator In ({gruppe*})
+    AND fachbereich = 'Alle'", .con = con)
+
+    df_new_gesamt <- DBI::dbGetQuery(con, df_query)
+
+    df_new_gesamt <- df_new_gesamt %>%
       dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
                      "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert") %>%
-      dplyr::rename(wert_gesamt = "wert") %>%
-      dplyr::select(-fachbereich) %>%
-      dplyr::collect()
+      dplyr::rename(wert_gesamt = "wert")
 
-    df <- df %>%
+    df3 <- df %>%
       dplyr::left_join(df_new_gesamt, by = c("indikator", "bundesland", "landkreis",
                                              "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht")) %>%
-      #dplyr::rename(fachbereich = "fachbereich.x") %>%
-      #dplyr::select(-fachbereich.y) %>%
+      dplyr::rename(fachbereich = "fachbereich.x") %>%
+      dplyr::select(-fachbereich.y) %>%
       dplyr::group_by(indikator) %>%
       dplyr::mutate(proportion = round((wert/wert_gesamt)*100,1))
 
     #andere Berufe berechnen:
     df_andere <- df %>%
+      dplyr::left_join(df_new_gesamt, by = c("indikator", "bundesland", "landkreis",
+                                             "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht")) %>%
       dplyr::mutate(fachbereich = "Andere Berufe") %>%
       dplyr::mutate(wert = wert_gesamt-wert) %>%
       dplyr::mutate(proportion = round((wert/wert_gesamt)*100,1))
 
-    df <- rbind(df, df_andere)
+    df <- rbind(df3, df_andere)
   }
 
   #Graifken
@@ -97,8 +114,10 @@ beruf_einstieg_vergleich <- function(r) {
     tooltip <- paste('Anteil: {point.percentage:.0f} % <br> Anzahl: {point.wert}')
     format <- '{point.percentage:.0f}%'
     color <- c("#b16fab","#efe8e6")
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-   out <- piebuilder(df, titel, x="fachbereich", y = "proportion", tooltip, color, format)
+
+   out <- piebuilder(df, titel, x="fachbereich", y = "proportion", tooltip, color, format, quelle=quelle)
 
   }
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
@@ -110,15 +129,20 @@ beruf_einstieg_vergleich <- function(r) {
       df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
       df <- df[with(df, order(proportion, decreasing = TRUE)), ]
+      df <- df[with(df, order(indikator, decreasing = TRUE)), ]
+
       titel <- ifelse(regio == "Saarland",
                       paste0("MINT-Anteil unterschiedlicher Beschäftigtengruppen im ", regio, " (", timerange, ")"),
                       paste0("MINT-Anteil unterschiedlicher Beschäftigtengruppen in ", regio, " (", timerange, ")"))
       format <- "{value}%"
       color <- c("#efe8e6","#b16fab")
       tooltip <- "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
-      optional = list(bar = list(stacking = "percent"))
 
-      out <- balkenbuilder(df, titel, x="indikator", y = "proportion", group = "fachbereich", tooltip, format, color, optional)
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+      out <- balkenbuilder(df, titel, x="indikator", y = "proportion", group = "fachbereich",
+                           tooltip, format, color, stacking = "percent",
+                           TF=TRUE, quelle = quelle)
 
 
     }else{
@@ -127,11 +151,14 @@ beruf_einstieg_vergleich <- function(r) {
       df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
-
+      color <- c("#efe8e6","#b16fab")
       titel <- ifelse(regio == "Saarland",
                       paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen im ", regio, " (", timerange, ")"),
                       paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen in ", regio, " (", timerange, ")"))
-      out <- balkenbuilder(df, titel, x="indikator", y="wert",group=NULL, tooltip = "Anzahl: {point.wert_disp}", format = "{value:, f}", color = "#b16fab")
+
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+      out <- balkenbuilder(df, titel, x="indikator", y="wert",group=NULL, tooltip = "Anzahl: {point.wert_disp}", format = "{value:, f}", color = "#b16fab", quelle = quelle)
     }
 
   }
@@ -157,31 +184,37 @@ beruf_verlauf_single <- function(r) {
   regio <- r$region_arbeitsmarkt_einstieg_verlauf
   indi <- r$indikator_arbeitsmarkt_einstieg_verlauf_2
 
-  df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    dplyr::filter(jahr %in% t &
-                    bundesland == regio &
-                    landkreis == "alle Landkreise" &
-                    geschlecht == "Gesamt" &
-                    anforderung == "Gesamt" &
-                    fachbereich == "MINT" &
-                    indikator %in% indi
-    )%>%
-    dplyr::select(indikator, bundesland, fachbereich, jahr, wert) %>%
-    dplyr::collect()
+  # df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
+
+  df_query <- glue::glue_sql("
+  SELECT indikator, bundesland, fachbereich, jahr, wert
+  FROM arbeitsmarkt_detail
+  WHERE jahr IN ({t*})
+  AND bundesland = {regio}
+  AND landkreis = 'alle Landkreise'
+  AND geschlecht = 'Gesamt'
+  AND anforderung = 'Gesamt'
+  AND fachbereich = 'MINT'
+  AND indikator IN ({indi*})
+
+                               ", .con = con)
+  df <- DBI::dbGetQuery(con, df_query)
 
   if (absolut_selector == "In Prozent"){
 
-    df_alle <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-      dplyr::filter(jahr %in% t &
-                      bundesland == regio &
-                      landkreis == "alle Landkreise" &
-                      geschlecht == "Gesamt" &
-                      anforderung == "Gesamt" &
-                      fachbereich == "Alle" &
-                      indikator %in% indi
-      )%>%
-      dplyr::select(indikator, bundesland, fachbereich, jahr, wert) %>%
-      dplyr::collect()
+
+    df_query <- glue::glue_sql("
+    SELECT indikator, bundesland, fachbereich, jahr, wert
+    FROM arbeitsmarkt_detail
+    WHERE jahr IN ({t*})
+    AND bundesland = {regio}
+    AND landkreis = 'alle Landkreise'
+    AND geschlecht = 'Gesamt'
+    AND anforderung = 'Gesamt'
+    AND fachbereich = 'Alle'
+    AND indikator IN ({indi*})
+                               ", .con = con)
+    df_alle <- DBI::dbGetQuery(con, df_query)
 
     df <- df %>%
       dplyr::left_join(df_alle, dplyr::join_by(indikator, bundesland, jahr)) %>%
@@ -205,9 +238,10 @@ beruf_verlauf_single <- function(r) {
                "#5f94f9", "#007655", "#d0a9cd")
 
     # plot
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
 
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color)
+    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color, quelle = quelle)
 
   } else if(absolut_selector == "Anzahl") {
 
@@ -220,17 +254,15 @@ beruf_verlauf_single <- function(r) {
     # order years for plot
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
-    titel <- paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten o. Auszubildenden in ", regio)
-    tooltip <- "{point.indikator} <br> Anteil: {point.wert_disp}"
+    titel <- paste0("Anzahl unterschiedlicher Beschäftigtengruppen in ", regio)
+    tooltip <- "{point.indikator} <br> Anzahl: {point.wert_disp}"
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#35bd97", "#5d335a",
                "#5f94f9", "#007655", "#d0a9cd", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
 
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    # plot
-
-
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
   }
@@ -254,17 +286,22 @@ arbeitsmarkt_mint_bulas <- function(r) {
     timerange <- r$zeit_beruf_mint_bula_karte
     indi <- r$indikator_beruf_mint_bula_karte
 
-    df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-      dplyr::filter(
-        jahr == timerange &
-          indikator == indi &
-          landkreis == "alle Landkreise" &
-          anforderung == "Gesamt" &
-          geschlecht == "Gesamt"&
-          fachbereich %in% c("MINT", "Alle") &
-          !(bundesland %in% c("Deutschland", "Westdeutschland (o. Berlin)", "Ostdeutschland (einschl. Berlin)")))%>%
-      dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-      dplyr::collect()
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND indikator = {indi}
+    AND landkreis = 'alle Landkreise'
+    AND anforderung = 'Gesamt'
+    AND geschlecht = 'Gesamt'
+    AND fachbereich In ('MINT', 'Alle')
+    AND NOT bundesland IN ('Deutschland', 'Westdeutschland (o. Berlin)', 'Ostdeutschland (einschl. Berlin)')
+                               ", .con = con)
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)
+
 
     # Anteil berechnen
     df_gesamt <- df %>% dplyr::filter(fachbereich == "Alle")
@@ -300,37 +337,7 @@ arbeitsmarkt_mint_bulas <- function(r) {
     title_h2 <- ifelse(grepl("ländischen B", title_help), "ausländischen Beschäftigten", title_h2)
 
     # plot
-    # out <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = df,
-    #   value = "proportion",
-    #   joinBy = c("name", "bundesland"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0("MINT"),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   # ,
-    #   # download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0("Anteil von ",  title_help, " in MINT an allen ",  title_help, " (", timerange, ")"
-    #     ),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
+
 
 
     df <-df
@@ -341,8 +348,9 @@ arbeitsmarkt_mint_bulas <- function(r) {
     mincolor <- "#f4f5f6"
     map_selection <- 1
     maxcolor <- "#b16fab"
+    quelle <- "uelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
   }
@@ -350,16 +358,22 @@ arbeitsmarkt_mint_bulas <- function(r) {
     timerange <- r$zeit_beruf_mint_bula_balken
     indikator_choice <- r$indikator_beruf_mint_bula_balken
 
-    df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-      dplyr::filter(
-        jahr == timerange &
-          indikator == indikator_choice &
-          landkreis == "alle Landkreise" &
-          anforderung == "Gesamt" &
-          geschlecht == "Gesamt" &
-          fachbereich %in% c("MINT", "Alle"))%>%
-      dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)%>%
-      dplyr::collect()
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND indikator = {indikator_choice}
+    AND landkreis = 'alle Landkreise'
+    AND anforderung = 'Gesamt'
+    AND geschlecht = 'Gesamt'
+    AND fachbereich IN ('MINT', 'Alle')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)
 
     # Alle als extra Spalte anhängen und Anteil berechnen
     df_ges <- df %>%
@@ -411,8 +425,9 @@ arbeitsmarkt_mint_bulas <- function(r) {
                       ifelse(df$bundesland == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
                              ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))
 
-    out <- balkenbuilder(df, titel, x="bundesland", y="prop", group = NULL, tooltip = "{point.fachbereich} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}", format = "{value}%", color = "#b16fab", optional = optional)
 
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- balkenbuilder(df, titel, x="bundesland", y="prop", group = NULL, tooltip = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}", format = "{value}%", color = "#b16fab", optional = optional, quelle = quelle)
 
   }
   else if(betrachtung == "Zeitverlauf - Liniendiagramm"){
@@ -422,25 +437,22 @@ arbeitsmarkt_mint_bulas <- function(r) {
     states <- r$region_beruf_mint_bula_verlauf
     absolut_selector <- r$abs_beruf_mint_bula_verlauf
 
-    # filter dataset based on UI inputs
-    df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-      dplyr::filter(jahr %in% t,
-                    landkreis == "alle Landkreise",
-                    geschlecht == "Gesamt",
-                    anforderung == "Gesamt",
-                    fachbereich %in% c("Alle", "MINT"),
-                    bundesland %in% states,
-                    indikator == aniveau
-      )%>%
-      dplyr::select(
-        "indikator",
-        "fachbereich",
-        #"geschlecht",
-        "bundesland",
-        "jahr",
-        #"anforderung",
-        "wert" ) %>%
-      dplyr::collect()
+    df_query <- glue::glue_sql("
+    SELECT indikator, fachbereich, bundesland, jahr, wert
+    FROM arbeitsmarkt_detail
+    WHERE jahr IN ({t*})
+    AND landkreis = 'alle Landkreise'
+    AND geschlecht ='Gesamt'
+    AND anforderung = 'Gesamt'
+    AND fachbereich IN ('Alle', 'MINT')
+    AND bundesland IN ({states*})
+    AND indikator = {aniveau}
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+
+
 
 
     df <- df %>%
@@ -472,17 +484,14 @@ arbeitsmarkt_mint_bulas <- function(r) {
       df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
 
       titel <- paste0("Anteil von ", title_help, " in MINT-Berufen an allen ", title_help)
-      tooltip <-"Anteil <br> Bundesland: {point.region} <br> Wert: {point.display_rel} %"
+      tooltip <-"{point.bundesland} <br> Anteil: {point.display_rel} %"
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color)
 
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-
-      # plot
-
-
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color, quelle = quelle)
 
 
 
@@ -497,16 +506,14 @@ arbeitsmarkt_mint_bulas <- function(r) {
       df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
 
-
-
-
-
       titel <- paste0("Anzahl von ", title_help, " in MINT-Berufen")
-      tooltip <- "Anzahl: {point.display_abs}"
+      tooltip <- "{point.bundesland} <br> Anzahl: {point.display_abs}"
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color)
+
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color, quelle = quelle)
 
     }
   }
@@ -514,556 +521,508 @@ arbeitsmarkt_mint_bulas <- function(r) {
 }
 
 ### Nicht Box 1 ----
-#' A function to plot a waffle chart ::: b3
+#' #' A function to plot a waffle chart ::: b3
+#' #'
+#' #' @description A function to create a waffle chart for the tab "Beruf"
+#' #'
+#' #' @return The return value is a waffle chart
+#' #' @param df The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
+#' #' @param r Reactive variable that stores all the inputs from the UI
+#' #' @noRd
 #'
-#' @description A function to create a waffle chart for the tab "Beruf"
+#' arbeitsmarkt_anforderungen_gender <- function(r) {
 #'
-#' @return The return value is a waffle chart
-#' @param df The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
-#' @param r Reactive variable that stores all the inputs from the UI
-#' @noRd
-
-arbeitsmarkt_anforderungen_gender <- function(r) {
-
-
-  timerange <- r$date_arbeitsmarkt_anforderungen_gender
-
-  if(timerange ==2021) indikator_choice <- r$level_arbeitsmarkt_anforderungen_gender_21
-  if(timerange ==2022) indikator_choice <- r$level_arbeitsmarkt_anforderungen_gender_22
-
-
-  df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    dplyr::filter(jahr %in% timerange &
-                    bundesland == "Deutschland" &
-                    geschlecht != "Gesamt"&
-                    anforderung == "Gesamt" &
-                    indikator %in% c("Auszubildende",
-                                     "Auszubildende (1. Jahr)",
-                                     "Beschäftigte",
-                                     "ausländische Auszubildende",
-                                     "ausländische Beschäftigte")&
-                    fachbereich %in% c("Alle", "MINT", "Mathematik, Naturwissenschaften",
-                                       "Informatik", "Technik (gesamt)"))%>%
-    dplyr::select(indikator, fachbereich, wert, geschlecht) %>%
-    dplyr::collect()
-
-
-  # Berechnung von andere Fächergruppen
-  df[df$fachbereich == "Alle", "wert"] <- df[df$fachbereich == "Alle", "wert"]-
-    df[df$fachbereich == "MINT", "wert"]
-  df$fachbereich[df$fachbereich == "Alle"]<-"andere Fächergruppen"
-  df <- df %>% dplyr::filter(fachbereich != "MINT")
-
-
-
-  # Anteil berechnen
-  df <- df %>%
-    dplyr::group_by(indikator, geschlecht) %>%
-    dplyr::mutate(props = sum(wert))
-
-  df <- df %>% dplyr::group_by(fachbereich, indikator, geschlecht) %>%
-    dplyr::mutate(proportion = wert/props)
-
-  df$proportion <- df$proportion * 100
-
-
-  # Ausgewählte Indikatoren filtern
-  df <- df %>% dplyr::filter(indikator == indikator_choice)
-
-  # nach Geschlechtern trennen
-  # Frauen
-  df_fr <- df %>% dplyr::filter(geschlecht=="Frauen")
-
-  df_fr <- setNames(round_preserve_sum(as.numeric(df_fr$proportion),1),
-                    df_fr$fachbereich)
-  df_fr <- df_fr[order(factor(names(df_fr), levels = c("Mathematik, Naturwissenschaften",
-                                                       "Informatik", "Technik (gesamt)",
-                                                       'andere Fächergruppen')))]
-
-  # Männer
-  df_me <- df %>% dplyr::filter(geschlecht=="Männer")
-
-  df_me <- setNames(round_preserve_sum(as.numeric(df_me$proportion),1),
-                    df_me$fachbereich)
-  df_me <- df_me[order(factor(names(df_me), levels = c("Mathematik, Naturwissenschaften",
-                                                       "Informatik", "Technik (gesamt)",
-                                                       'andere Fächergruppen')))]
-
-  # Titel für Plots
-  title_help <- paste0(indikator_choice, "n <br>")
-  title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen <br> Beschäftigten", title_help)
-  title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischen <br> Auszubildenden", title_help)
-  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden <br> mit neuem Lehrvertrag <br>", title_help)
-
-  title_male <- paste0("Von männlichen ", title_help, " gewählte Berufsfelder <br> (", timerange, ")")
-  title_female <- paste0("Von weiblichen ", title_help, " gewählte Berufsfelder <br>(", timerange, ")")
-
-  #waffles
-  waffle_fr <- waffle::waffle(df_fr, keep = FALSE) +
-    ggplot2::labs(
-      fill = "",
-      title = paste0("<span style='color:black;'>", title_female, "<br>")) +
-    ggplot2::theme(plot.title = ggtext::element_markdown(),
-                   plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "bottom") +
-    ggplot2::scale_fill_manual(
-      values =  c("#ee7775",
-                  "#fbbf24",
-                  "#35bd97",
-                  '#8893a7'),
-      limits = c("Mathematik, Naturwissenschaften",
-                 "Informatik", "Technik (gesamt)",
-                 'Andere Fachbereiche'),
-      na.value='#8893a7',
-      guide = ggplot2::guide_legend(reverse = TRUE),
-      labels = c(
-        paste0("Mathematik, Naturwissenschaften",", ",df_fr[1], "%"),
-        paste0("Informatik",", ",df_fr[2], "%"),
-        paste0("Technik (gesamt)",", ",df_fr[3], "%"),
-        paste0("Andere Fachbereiche",", ",df_fr[4], "%")
-      )) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
-
-
-  waffle_me <- waffle::waffle(df_me, keep = FALSE) +
-    ggplot2::labs(
-      fill = "",
-      title = paste0("<span style='color:black;'>", title_male ,"<br>")) +
-    ggplot2::theme(plot.title = ggtext::element_markdown(),
-                   plot.subtitle = ggtext::element_markdown(),
-                   text = ggplot2::element_text(size = 14),
-                   plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
-                   legend.position = "bottom")+
-    ggplot2::scale_fill_manual(
-      values =  c("#ee7775",
-                  "#fbbf24",
-                  "#35bd97",
-                  '#8893a7'),
-      limits = c("Mathematik, Naturwissenschaften",
-                 "Informatik", "Technik (gesamt)",
-                 'Andere Fachbereiche'),
-      na.value='#8893a7',
-      guide = ggplot2::guide_legend(reverse = TRUE),
-      labels = c(
-        paste0("Mathematik, Naturwissenschaften",", ",df_me[1], "%"),
-        paste0("Informatik",", ",df_me[2], "%"),
-        paste0("Technik (gesamt)",", ",df_me[3], "%"),
-        paste0("Andere Fachbereiche",", ",df_me[4], "%")
-      )) +
-    ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
-
-  ggpubr::ggarrange(waffle_fr, NULL ,waffle_me, widths = c(1, 0.1, 1), nrow=1)
-
-
-}
-
-#' A function to plot the german map ::::box 6
 #'
-#' @description A function to plot the german map with all states that contain
-#' information about the share of women in STEM
+#'   timerange <- r$date_arbeitsmarkt_anforderungen_gender
 #'
-#' @return The return value is the german map with information
-#' @param data The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
-#' @param r Reactive variable that stores all the inputs from the UI
-#' @noRd
-
-arbeitsmarkt_bl_gender <- function(r) {
-
-  # load UI inputs from reactive value
-  timerange <- r$date_arbeitsmarkt_bl_gender
-
-  if(timerange == 2021) indikator_choice <- r$level_arbeitsmarkt_bl_gender_21
-  if(timerange == 2022) indikator_choice <- r$level_arbeitsmarkt_bl_gender_22
-
-  fachbereich_choice <- r$fach_arbeitsmarkt_bl_gender
-
-  df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    dplyr::filter(jahr %in% timerange &
-                    !bundesland %in% c("Deutschland",
-                                        "Westdeutschland (o. Berlin)",
-                                        "Ostdeutschland (einschl. Berlin)") &
-                    landkreis == "alle Landkreise" &
-                    geschlecht != "Gesamt"&
-                    anforderung == "Gesamt" )%>%
-    dplyr::select(indikator, fachbereich, wert, geschlecht, bundesland, jahr) %>%
-    dplyr::collect()
-
-
-  # Berechnung von andere Fächergruppen
-  df_andere <- df %>% dplyr::filter(fachbereich=="Alle")
-  df_mint <- df %>% dplyr::filter(fachbereich=="MINT")
-  df_andere$wert <- df_andere$wert - df_mint$wert
-  df_andere$fachbereich[df_andere$fachbereich == "Alle"]<-"Andere Berufsgruppen"
-
-  df <- rbind(df, df_andere)
-
-  #nicht nötig, da Männer schon in df berechnet
-  #df <- calc_arbeitsmarkt_males(df)
-
-  df <- df %>% dplyr::filter(indikator == indikator_choice)
-
-  df_gesamt <- df %>%
-    dplyr::filter(fachbereich == "Alle")
-  # ,
-  # anforderung == "Gesamt")
-
-  df <- df %>%
-    dplyr::left_join(df_gesamt, by = c("bundesland", "jahr", "geschlecht", "indikator")) %>%
-    dplyr::rename(fachbereich = fachbereich.x,
-                  wert = "wert.x",
-                  wert_sum = "wert.y") %>%
-    dplyr::select(-fachbereich.y) %>%
-    dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
-    dplyr::filter(fachbereich == fachbereich_choice)
-
-  #Gerundetes Prop für Hover:
-  df$prop <- round(df$proportion, 1)
-
-  #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
-  values_female <- df %>% dplyr::filter(geschlecht == "Frauen")
-  values_male <- df %>% dplyr::filter(geschlecht == "Männer")
-
-
-  #Überschrift erstellen
-  title_help <- paste0(indikator_choice, "r")
-  title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischer Beschäftigter", title_help)
-  title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischer Auszubildender", title_help)
-  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildender mit neuem Lehrvertrag", title_help)
-
-  titel_w <- ifelse(fachbereich_choice == "Andere Berufsgruppen", paste0("Anteil weiblicher ", title_help, ", die kein MINT-Berufsfeld wählen (", timerange, ")"),
-                    paste0("Anteil weiblicher ", title_help, ", die das Berufsfeld ", fachbereich_choice, " wählen (", timerange, ")"))
-  titel_m <- ifelse(fachbereich_choice == "Andere Berufsgruppen", paste0("Anteil männlicher ", title_help, ", die kein MINT-Berufsfeld wählen (", timerange, ")"),
-                    paste0("Anteil männlicher ", title_help, ", die das Berufsfeld ", fachbereich_choice, " wählen (", timerange, ")"))
-
-
-
-    # plot
-    # out_1 <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = values_female,
-    #   value = "proportion",
-    #   joinBy = c("name", "bundesland"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0(fachbereich_choice),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   #,
-    #   #download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = titel_w,
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
-
-    df <-values_female
-    joinby <- c("name", "bundesland")
-    name <- paste0(fachbereich_choice)
-    tooltip <- "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
-    titel <-titel_w
-    mincolor <- "#f4f5f6"
-    maxcolor <- "#b16fab"
-    map_selection <- 1
-    out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
-
-    # out_2 <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = values_male,
-    #   value = "proportion",
-    #   joinBy = c("name", "bundesland"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0(fachbereich_choice),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   #,
-    #   #download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = titel_m,
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE, verticalAlign = "bottom")
-
-    df <-values_male
-    joinby <- c("name", "bundesland")
-    name <- paste0(fachbereich_choice)
-    tooltip <- "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
-    titel <-titel_m
-    mincolor <- "#f4f5f6"
-    maxcolor <- "#b16fab"
-    map_selection <- 1
-    out2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
-
-
-    out <- list(out_1, out_2)
-
-    return (out)
-
-
-}
-
-
-#' A function to plot time series
+#'   if(timerange ==2021) indikator_choice <- r$level_arbeitsmarkt_anforderungen_gender_21
+#'   if(timerange ==2022) indikator_choice <- r$level_arbeitsmarkt_anforderungen_gender_22
 #'
-#' @description A function to plot the time series
 #'
-#' @return The return value, if any, from executing the function.
-#' @param data The dataframe "Kurse.xlsx" needs to be used for this function
-#' @param r Reactive variable that stores all the inputs from the UI
-#' @noRd
-
-arbeitsmarkt_bl_gender_verlauf <- function(r) {
-
-  # load UI inputs from reactive value
-
-  absolut_selector <- r$abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf
-  timerange <- r$date_beruf_arbeitsmarkt_bl_gender_verlauf
-  indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_gender_verlauf
-  states <- r$states_beruf_arbeitsmarkt_bl_gender_verlauf
-  t <- as.character(timerange[1]:timerange[2])
-
-
-  df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
-    dplyr::filter(jahr %in% t,
-                  indikator == indikator_choice,
-                  region %in% states,
-                  anforderung %in% "Gesamt",
-                  geschlecht == "Frauen",
-                  fachbereich %in% c("Alle", "MINT")
-    )%>%
-  dplyr::select("bereich",
-  "indikator",
-  "fachbereich",
-  "geschlecht",
-  "region",
-  "jahr",
-  "anforderung",
-  "wert" ) %>%
-    dplyr::collect()
-
-
-  df <- df %>% dplyr::filter(anforderung != "Keine Zuordnung möglich")
-
-  df_gesamt <- df %>%
-    dplyr::filter(fachbereich == "Alle",
-                  anforderung == "Gesamt")
-
-
-
-  df <- df %>%
-    dplyr::left_join(df_gesamt, by = c("region", "jahr", "geschlecht", "indikator", "bereich")) %>%
-    dplyr::rename(anforderung = "anforderung.x",
-                  fachbereich = "fachbereich.x",
-                  wert = "wert.x",
-                  wert_sum = "wert.y") %>%
-    dplyr::select(-c("fachbereich.y", "anforderung.y")) %>%
-    dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
-    dplyr::filter(anforderung == "Gesamt",
-                  fachbereich == "MINT")%>%
-    dplyr::select(-wert_sum)%>%
-    dplyr::rename(Relativ = proportion, Absolut=wert)%>%
-    tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
-    dplyr::mutate(selector = dplyr::case_when(
-      selector == "Relativ" ~ "In Prozent",
-      selector == "Absolut" ~ "Anzahl"
-    ))
-
-
-  df <- df %>% dplyr::filter(fachbereich == "MINT")
-
-  if(absolut_selector=="In Prozent"){
-
-    df <- df %>%
-      dplyr::filter(selector =="In Prozent")
-
-    # order years for plot
-    df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-
-    title_help <- paste0(indikator_choice, "r")
-
-    titel <- paste0("Anteil weiblicher ", title_help, ", die MINT-Berufe wählen")
-    tooltip <-"{point.region} <br> Anteil: {point.y} %"
-    format <- "{value}%"
-    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-               "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
-
-
-    # plot
-
-
-
-  }else if(absolut_selector=="Anzahl"){
-
-    title_help <- paste0(indikator_choice, "r")
-
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
-
-    df <- df %>%
-      dplyr::filter(selector == "Anzahl")
-
-    df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-
-
-    # plot
-    # highcharter::hchart(df, 'line', highcharter::hcaes(x = jahr, y = round(wert,1), group = region)) %>%
-
-    titel <- paste0("Anzahl weiblicher ", title_help, ", die MINT-Berufe wählen")
-    tooltip <- "Anzahl: {point.y}"
-    format <-  "{value:, f}"
-    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-               "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
-
-  }
-
-
-
-
-}
-
-
-#' A function to plot time series
+#'   df_query <- glue::glue_sql("
+#'   SELECT indikator, fachbereich, geschlecht, wert
+#'   FROM arbeitsmarkt_detail
+#'   WHERE jahr IN ({timerange*})
+#'   AND bundesland = 'Deutschland'
+#'   AND NOT geschlecht = 'Gesamt'
+#'   AND anforderung = 'Gesamt'
+#'   AND indikator IN ('Auszubildende', 'Auszubildende (1. Jahr)', 'Beschäftigte', 'ausländische Auszubildende', 'ausländische Beschäftigte')
+#'   AND fachbereich IN ('Alle', 'MINT', 'Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
+#'                                ", .con = con)
 #'
-#' @description A function to plot the time series
+#'   df <- DBI::dbGetQuery(con, df_query)
 #'
-#' @return The return value, if any, from executing the function.
-#' @param data The dataframe "Kurse.xlsx" needs to be used for this function
-#' @param r Reactive variable that stores all the inputs from the UI
-#' @noRd
-
-arbeitsmarkt_bl_verlauf <- function(r) {
-
-
-  absolut_selector <- r$abs_zahlen_4
-  aniveau <- r$niveau
-  # load UI inputs from reactive value
-  timerange <- r$date_beruf_arbeitsmarkt_bl_verlauf
-  t <- as.character(timerange[1]:timerange[2])
-  states <- r$states_beruf_arbeitsmarkt_bl_verlauf
-
-  # filter dataset based on UI inputs
-
-  df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
-    dplyr::filter(jahr %in% t &
-                    geschlecht == "Gesamt" &
-                    anforderung == "Gesamt",
-                  fachbereich %in% c("Alle", "MINT"),
-                  region %in% states,
-                  indikator == aniveau
-    )%>%
-    dplyr::select(
-                  "indikator",
-                  "fachbereich",
-                  #"geschlecht",
-                  "region",
-                  "jahr",
-                  #"anforderung",
-                  "wert" ) %>%
-    dplyr::collect()
-
-
-  df <- df%>%
-
-     tidyr::pivot_wider(values_from=wert, names_from=fachbereich)%>%
-    dplyr::mutate(MINT_p= round(MINT/Alle*100,1))%>%
-    dplyr::select(- "Alle")%>%
-    dplyr::rename(Absolut = MINT, Relativ = MINT_p)%>%
-    tidyr::pivot_longer(c(Absolut , Relativ), names_to="selector", values_to="wert")%>%
-    dplyr::mutate(selector = dplyr::case_when(
-      selector=="Relativ" ~ "In Prozent",
-      selector=="Absolut" ~ "Anzahl"
-    ))
-
-
-  # Hilfe für Titel
-  title_help <- paste0(aniveau, "n")
-
-  if(absolut_selector=="In Prozent"){
-
-    df <- df %>%
-      dplyr::filter(selector=="In Prozent")
-
-
-
-    df$display_rel <- prettyNum(round(df$wert,1), big.mark = ".", decimal.mark = ",")
-
-
-    df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-
-
-
-    # plot
-
-
-    titel <- paste0("Anteil von ", title_help, " in MINT-Berufen an allen ", title_help)
-    tooltip <- "Anteil <br> Bundesland: {point.region} <br> Wert: {point.display_rel} %"
-    format <- "{value}%"
-    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-               "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
-
-
-
-  } else if(absolut_selector=="Anzahl"){
-
-
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
-
-    df <- df %>%
-      dplyr::filter(selector=="Anzahl")
-
-    df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-
-    df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-
-
-    # plot
-
-    titel <- paste0("Anzahl von ", title_help, " in MINT-Berufen")
-    tooltip <- "Anzahl: {point.display_abs}"
-    format <-  "{value:, f}"
-    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-               "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
-
-
-  }
-
-}
+#'
+#'
+#'   # Berechnung von andere Fächergruppen
+#'   df[df$fachbereich == "Alle", "wert"] <- df[df$fachbereich == "Alle", "wert"]-
+#'     df[df$fachbereich == "MINT", "wert"]
+#'   df$fachbereich[df$fachbereich == "Alle"]<-"andere Fächergruppen"
+#'   df <- df %>% dplyr::filter(fachbereich != "MINT")
+#'
+#'
+#'
+#'   # Anteil berechnen
+#'   df <- df %>%
+#'     dplyr::group_by(indikator, geschlecht) %>%
+#'     dplyr::mutate(props = sum(wert))
+#'
+#'   df <- df %>% dplyr::group_by(fachbereich, indikator, geschlecht) %>%
+#'     dplyr::mutate(proportion = wert/props)
+#'
+#'   df$proportion <- df$proportion * 100
+#'
+#'
+#'   # Ausgewählte Indikatoren filtern
+#'   df <- df %>% dplyr::filter(indikator == indikator_choice)
+#'
+#'   # nach Geschlechtern trennen
+#'   # Frauen
+#'   df_fr <- df %>% dplyr::filter(geschlecht=="Frauen")
+#'
+#'   df_fr <- setNames(round_preserve_sum(as.numeric(df_fr$proportion),1),
+#'                     df_fr$fachbereich)
+#'   df_fr <- df_fr[order(factor(names(df_fr), levels = c("Mathematik, Naturwissenschaften",
+#'                                                        "Informatik", "Technik (gesamt)",
+#'                                                        'andere Fächergruppen')))]
+#'
+#'   # Männer
+#'   df_me <- df %>% dplyr::filter(geschlecht=="Männer")
+#'
+#'   df_me <- setNames(round_preserve_sum(as.numeric(df_me$proportion),1),
+#'                     df_me$fachbereich)
+#'   df_me <- df_me[order(factor(names(df_me), levels = c("Mathematik, Naturwissenschaften",
+#'                                                        "Informatik", "Technik (gesamt)",
+#'                                                        'andere Fächergruppen')))]
+#'
+#'   # Titel für Plots
+#'   title_help <- paste0(indikator_choice, "n <br>")
+#'   title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen <br> Beschäftigten", title_help)
+#'   title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischen <br> Auszubildenden", title_help)
+#'   title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden <br> mit neuem Lehrvertrag <br>", title_help)
+#'
+#'   title_male <- paste0("Von männlichen ", title_help, " gewählte Berufsfelder <br> (", timerange, ")")
+#'   title_female <- paste0("Von weiblichen ", title_help, " gewählte Berufsfelder <br>(", timerange, ")")
+#'
+#'   #waffles
+#'   waffle_fr <- waffle::waffle(df_fr, keep = FALSE) +
+#'     ggplot2::labs(
+#'       fill = "",
+#'       title = paste0("<span style='color:black;'>", title_female, "<br>")) +
+#'     ggplot2::theme(plot.title = ggtext::element_markdown(),
+#'                    plot.subtitle = ggtext::element_markdown(),
+#'                    text = ggplot2::element_text(size = 14),
+#'                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+#'                    legend.position = "bottom") +
+#'     ggplot2::scale_fill_manual(
+#'       values =  c("#ee7775",
+#'                   "#fbbf24",
+#'                   "#35bd97",
+#'                   '#8893a7'),
+#'       limits = c("Mathematik, Naturwissenschaften",
+#'                  "Informatik", "Technik (gesamt)",
+#'                  'Andere Fachbereiche'),
+#'       na.value='#8893a7',
+#'       guide = ggplot2::guide_legend(reverse = TRUE),
+#'       labels = c(
+#'         paste0("Mathematik, Naturwissenschaften",", ",df_fr[1], "%"),
+#'         paste0("Informatik",", ",df_fr[2], "%"),
+#'         paste0("Technik (gesamt)",", ",df_fr[3], "%"),
+#'         paste0("Andere Fachbereiche",", ",df_fr[4], "%")
+#'       )) +
+#'     ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+#'
+#'
+#'   waffle_me <- waffle::waffle(df_me, keep = FALSE) +
+#'     ggplot2::labs(
+#'       fill = "",
+#'       title = paste0("<span style='color:black;'>", title_male ,"<br>")) +
+#'     ggplot2::theme(plot.title = ggtext::element_markdown(),
+#'                    plot.subtitle = ggtext::element_markdown(),
+#'                    text = ggplot2::element_text(size = 14),
+#'                    plot.margin = ggplot2::unit(c(1.5,0,0,0), "lines"),
+#'                    legend.position = "bottom")+
+#'     ggplot2::scale_fill_manual(
+#'       values =  c("#ee7775",
+#'                   "#fbbf24",
+#'                   "#35bd97",
+#'                   '#8893a7'),
+#'       limits = c("Mathematik, Naturwissenschaften",
+#'                  "Informatik", "Technik (gesamt)",
+#'                  'Andere Fachbereiche'),
+#'       na.value='#8893a7',
+#'       guide = ggplot2::guide_legend(reverse = TRUE),
+#'       labels = c(
+#'         paste0("Mathematik, Naturwissenschaften",", ",df_me[1], "%"),
+#'         paste0("Informatik",", ",df_me[2], "%"),
+#'         paste0("Technik (gesamt)",", ",df_me[3], "%"),
+#'         paste0("Andere Fachbereiche",", ",df_me[4], "%")
+#'       )) +
+#'     ggplot2::guides(fill=ggplot2::guide_legend(nrow=2,byrow=TRUE))
+#'
+#'   ggpubr::ggarrange(waffle_fr, NULL ,waffle_me, widths = c(1, 0.1, 1), nrow=1)
+#'
+#'
+#' }
+#'
+#' #' A function to plot the german map ::::box 6
+#' #'
+#' #' @description A function to plot the german map with all states that contain
+#' #' information about the share of women in STEM
+#' #'
+#' #' @return The return value is the german map with information
+#' #' @param data The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
+#' #' @param r Reactive variable that stores all the inputs from the UI
+#' #' @noRd
+#'
+#' arbeitsmarkt_bl_gender <- function(r) {
+#'
+#'   # load UI inputs from reactive value
+#'   timerange <- r$date_arbeitsmarkt_bl_gender
+#'
+#'   if(timerange == 2021) indikator_choice <- r$level_arbeitsmarkt_bl_gender_21
+#'   if(timerange == 2022) indikator_choice <- r$level_arbeitsmarkt_bl_gender_22
+#'
+#'   fachbereich_choice <- r$fach_arbeitsmarkt_bl_gender
+#'
+#'
+#' #
+#'   df_query <- glue::glue_sql("
+#'   SELECT indikator, fachbereich, wert, geschlecht, bundesland, jahr
+#'   FROM arbeitsmarkt_detail
+#'   WHERE jahr IN ({timerange*})
+#'   AND NOT bundesland IN ('Deutschland', 'Westdeutschland (o. Berlin)', 'Ostdeutschland (einschl. Berlin)')
+#'   AND landkreis = 'alle Landkreise'
+#'   AND NOT geschlecht = 'Gesamt'
+#'   AND anforderung = 'Gesamt'
+#'                                ", .con = con)
+#'
+#'   df <- DBI::dbGetQuery(con, df_query)
+#'
+#'   # df <- df %>%
+#'   #   dplyr::select(indikator, fachbereich, wert, geschlecht, bundesland, jahr)
+#'
+#'
+#'   # Berechnung von andere Fächergruppen
+#'   df_andere <- df %>% dplyr::filter(fachbereich=="Alle")
+#'   df_mint <- df %>% dplyr::filter(fachbereich=="MINT")
+#'   df_andere$wert <- df_andere$wert - df_mint$wert
+#'   df_andere$fachbereich[df_andere$fachbereich == "Alle"]<-"Andere Berufsgruppen"
+#'
+#'   df <- rbind(df, df_andere)
+#'
+#'   #nicht nötig, da Männer schon in df berechnet
+#'   #df <- calc_arbeitsmarkt_males(df)
+#'
+#'   df <- df %>% dplyr::filter(indikator == indikator_choice)
+#'
+#'   df_gesamt <- df %>%
+#'     dplyr::filter(fachbereich == "Alle")
+#'   # ,
+#'   # anforderung == "Gesamt")
+#'
+#'   df <- df %>%
+#'     dplyr::left_join(df_gesamt, by = c("bundesland", "jahr", "geschlecht", "indikator")) %>%
+#'     dplyr::rename(fachbereich = fachbereich.x,
+#'                   wert = "wert.x",
+#'                   wert_sum = "wert.y") %>%
+#'     dplyr::select(-fachbereich.y) %>%
+#'     dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
+#'     dplyr::filter(fachbereich == fachbereich_choice)
+#'
+#'   #Gerundetes Prop für Hover:
+#'   df$prop <- round(df$proportion, 1)
+#'
+#'   #Trennpunkte für lange Zahlen ergänzen
+#'   df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+#'
+#'   values_female <- df %>% dplyr::filter(geschlecht == "Frauen")
+#'   values_male <- df %>% dplyr::filter(geschlecht == "Männer")
+#'
+#'
+#'   #Überschrift erstellen
+#'   title_help <- paste0(indikator_choice, "r")
+#'   title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischer Beschäftigter", title_help)
+#'   title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischer Auszubildender", title_help)
+#'   title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildender mit neuem Lehrvertrag", title_help)
+#'
+#'   titel_w <- ifelse(fachbereich_choice == "Andere Berufsgruppen", paste0("Anteil weiblicher ", title_help, ", die kein MINT-Berufsfeld wählen (", timerange, ")"),
+#'                     paste0("Anteil weiblicher ", title_help, ", die das Berufsfeld ", fachbereich_choice, " wählen (", timerange, ")"))
+#'   titel_m <- ifelse(fachbereich_choice == "Andere Berufsgruppen", paste0("Anteil männlicher ", title_help, ", die kein MINT-Berufsfeld wählen (", timerange, ")"),
+#'                     paste0("Anteil männlicher ", title_help, ", die das Berufsfeld ", fachbereich_choice, " wählen (", timerange, ")"))
+#'
+#'
+#'
+#'     # plot
+#'
+#'     df <-values_female
+#'     joinby <- c("name", "bundesland")
+#'     name <- paste0(fachbereich_choice)
+#'     tooltip <- "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+#'     titel <-titel_w
+#'     mincolor <- "#f4f5f6"
+#'     maxcolor <- "#b16fab"
+#'     map_selection <- 1
+#'     out1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+#'
+#'
+#'
+#'     df <-values_male
+#'     joinby <- c("name", "bundesland")
+#'     name <- paste0(fachbereich_choice)
+#'     tooltip <- "{point.bundesland} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}"
+#'     titel <-titel_m
+#'     mincolor <- "#f4f5f6"
+#'     maxcolor <- "#b16fab"
+#'     map_selection <- 1
+#'     out2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+#'
+#'
+#'     out <- list(out_1, out_2)
+#'
+#'     return (out)
+#'
+#'
+#' }
+#'
+#'
+#' #' A function to plot time series
+#' #'
+#' #' @description A function to plot the time series
+#' #'
+#' #' @return The return value, if any, from executing the function.
+#' #' @param data The dataframe "Kurse.xlsx" needs to be used for this function
+#' #' @param r Reactive variable that stores all the inputs from the UI
+#' #' @noRd
+#'
+#' arbeitsmarkt_bl_gender_verlauf <- function(r) {
+#'
+#'   # load UI inputs from reactive value
+#'
+#'   absolut_selector <- r$abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf
+#'   timerange <- r$date_beruf_arbeitsmarkt_bl_gender_verlauf
+#'   indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_gender_verlauf
+#'   states <- r$states_beruf_arbeitsmarkt_bl_gender_verlauf
+#'   t <- as.character(timerange[1]:timerange[2])
+#' #
+#' #
+#'
+#'
+#'   df_query <- glue::glue_sql("
+#'   SELECT *
+#'   FROM arbeitsmarkt
+#'   WHERE jahr IN ({t*})
+#'   AND indikator = {indikator_choice}
+#'   AND region IN {states}
+#'   AND anforderung = 'Gesamt'
+#'   AND geschlecht = 'Frauen'
+#'   AND fachbereich IN c('Alle', 'MINT')
+#'                                ", .con = con)
+#'
+#'   df <- DBI::dbGetQuery(con, df_query)
+#'
+#'   df <- df %>%
+#'     dplyr::select("bereich",
+#'                   "indikator",
+#'                   "fachbereich",
+#'                   "geschlecht",
+#'                   "region",
+#'                   "jahr",
+#'                   "anforderung",
+#'                   "wert" )
+#'
+#'
+#'   df <- df %>% dplyr::filter(anforderung != "Keine Zuordnung möglich")
+#'
+#'   df_gesamt <- df %>%
+#'     dplyr::filter(fachbereich == "Alle",
+#'                   anforderung == "Gesamt")
+#'
+#'
+#'
+#'   df <- df %>%
+#'     dplyr::left_join(df_gesamt, by = c("region", "jahr", "geschlecht", "indikator", "bereich")) %>%
+#'     dplyr::rename(anforderung = "anforderung.x",
+#'                   fachbereich = "fachbereich.x",
+#'                   wert = "wert.x",
+#'                   wert_sum = "wert.y") %>%
+#'     dplyr::select(-c("fachbereich.y", "anforderung.y")) %>%
+#'     dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
+#'     dplyr::filter(anforderung == "Gesamt",
+#'                   fachbereich == "MINT")%>%
+#'     dplyr::select(-wert_sum)%>%
+#'     dplyr::rename(Relativ = proportion, Absolut=wert)%>%
+#'     tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
+#'     dplyr::mutate(selector = dplyr::case_when(
+#'       selector == "Relativ" ~ "In Prozent",
+#'       selector == "Absolut" ~ "Anzahl"
+#'     ))
+#'
+#'
+#'   df <- df %>% dplyr::filter(fachbereich == "MINT")
+#'
+#'   if(absolut_selector=="In Prozent"){
+#'
+#'     df <- df %>%
+#'       dplyr::filter(selector =="In Prozent")
+#'
+#'     # order years for plot
+#'     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+#'
+#'     title_help <- paste0(indikator_choice, "r")
+#'
+#'     titel <- paste0("Anteil weiblicher ", title_help, ", die MINT-Berufe wählen")
+#'     tooltip <-"{point.region} <br> Anteil: {point.y} %"
+#'     format <- "{value}%"
+#'     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+#'                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
+#'     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+#'
+#'
+#'   }else if(absolut_selector=="Anzahl"){
+#'
+#'     title_help <- paste0(indikator_choice, "r")
+#'
+#'     hcoptslang <- getOption("highcharter.lang")
+#'     hcoptslang$thousandsSep <- "."
+#'     options(highcharter.lang = hcoptslang)
+#'
+#'     df <- df %>%
+#'       dplyr::filter(selector == "Anzahl")
+#'
+#'     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+#'
+#'
+#'     # plot
+#'     titel <- paste0("Anzahl weiblicher ", title_help, ", die MINT-Berufe wählen")
+#'     tooltip <- "Anzahl: {point.y}"
+#'     format <-  "{value:, f}"
+#'     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+#'                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
+#'     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+#'
+#'   }
+#'
+#'
+#'
+#'
+#' }
+#'
+#'
+#' #' A function to plot time series
+#' #'
+#' #' @description A function to plot the time series
+#' #'
+#' #' @return The return value, if any, from executing the function.
+#' #' @param data The dataframe "Kurse.xlsx" needs to be used for this function
+#' #' @param r Reactive variable that stores all the inputs from the UI
+#' #' @noRd
+#'
+#' arbeitsmarkt_bl_verlauf <- function(r) {
+#'
+#'
+#'   absolut_selector <- r$abs_zahlen_4
+#'   aniveau <- r$niveau
+#'   # load UI inputs from reactive value
+#'   timerange <- r$date_beruf_arbeitsmarkt_bl_verlauf
+#'   t <- as.character(timerange[1]:timerange[2])
+#'   states <- r$states_beruf_arbeitsmarkt_bl_verlauf
+#'
+#'   # filter dataset based on UI inputs
+#'
+#'
+#'
+#'   df_query <- glue::glue_sql("
+#'   SELECT *
+#'   FROM arbeitsmarkt
+#'   WHERE jahr IN ({t*})
+#'   AND geschlecht = 'Gesamt'
+#'   AND anforderung = 'Gesamt'
+#'   AND fachbereich IN ('Alle', 'MINT')
+#'   AND region IN ({states*})
+#'   AND indikator = {aniveau}
+#'
+#'                                ", .con = con)
+#'
+#'   df <- DBI::dbGetQuery(con, df_query)
+#'
+#'   df <- df %>%
+#'     dplyr::select(
+#'       "indikator",
+#'       "fachbereich",
+#'       #"geschlecht",
+#'       "region",
+#'       "jahr",
+#'       #"anforderung",
+#'       "wert" )
+#'
+#'
+#'   df <- df%>%
+#'     tidyr::pivot_wider(values_from=wert, names_from=fachbereich)%>%
+#'     dplyr::mutate(MINT_p= round(MINT/Alle*100,1))%>%
+#'     dplyr::select(- "Alle")%>%
+#'     dplyr::rename(Absolut = MINT, Relativ = MINT_p)%>%
+#'     tidyr::pivot_longer(c(Absolut , Relativ), names_to="selector", values_to="wert")%>%
+#'     dplyr::mutate(selector = dplyr::case_when(
+#'       selector=="Relativ" ~ "In Prozent",
+#'       selector=="Absolut" ~ "Anzahl"
+#'     ))
+#'
+#'
+#'   # Hilfe für Titel
+#'   title_help <- paste0(aniveau, "n")
+#'
+#'   if(absolut_selector=="In Prozent"){
+#'
+#'     df <- df %>%
+#'       dplyr::filter(selector=="In Prozent")
+#'
+#'
+#'
+#'     df$display_rel <- prettyNum(round(df$wert,1), big.mark = ".", decimal.mark = ",")
+#'
+#'
+#'     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+#'
+#'     # plot
+#'
+#'     titel <- paste0("Anteil von ", title_help, " in MINT-Berufen an allen ", title_help)
+#'     tooltip <- "Anteil <br> Bundesland: {point.region} <br> Wert: {point.display_rel} %"
+#'     format <- "{value}%"
+#'     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+#'                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
+#'     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+#'
+#'
+#'
+#'   } else if(absolut_selector=="Anzahl"){
+#'
+#'
+#'     hcoptslang <- getOption("highcharter.lang")
+#'     hcoptslang$thousandsSep <- "."
+#'     options(highcharter.lang = hcoptslang)
+#'
+#'     df <- df %>%
+#'       dplyr::filter(selector=="Anzahl")
+#'
+#'     df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+#'
+#'     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+#'
+#'
+#'     # plot
+#'
+#'     titel <- paste0("Anzahl von ", title_help, " in MINT-Berufen")
+#'     tooltip <- "Anzahl: {point.display_abs}"
+#'     format <-  "{value:, f}"
+#'     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+#'                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
+#'     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+#'
+#'
+#'   }
+#'
+#' }
 
 # M-I-N-T ----
 ### Tab 1 ----
@@ -1101,18 +1060,25 @@ arbeitsmarkt_faecher_anteil <- function(r) {
     indikator_choice <- r$indikator_arbeitsmarkt_fach_vergleich_pies
 
     if(nicht_mint == "Nein"){
-      df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-        dplyr::filter(jahr %in% timerange &
-                        landkreis == "alle Landkreise" &
-                        bundesland == regio &
-                        geschlecht == "Gesamt" &
-                        anforderung == "Gesamt" &
-                        fachbereich %in% c(
-                          "Mathematik, Naturwissenschaften",
-                          "Informatik", "Technik (gesamt)") &
-                        indikator %in% indikator_choice)%>%
-        dplyr::select(indikator, jahr, bundesland, fachbereich, wert) %>%
-        dplyr::collect()
+
+      #
+
+      df_query <- glue::glue_sql("
+      SELECT indikator, jahr, bundesland, fachbereich, wert
+      FROM arbeitsmarkt_detail
+      WHERE jahr IN ({timerange*})
+      AND landkreis = 'alle Landkreise'
+      AND bundesland = {regio}
+      AND geschlecht = 'Gesamt'
+      AND anforderung = 'Gesamt'
+      AND fachbereich IN ('Mathematik', 'Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
+      AND indikator IN ({indikator_choice*})
+                               ", .con = con)
+
+      df <- DBI::dbGetQuery(con, df_query)
+
+      # df <- df %>%
+      #   dplyr::select(indikator, jahr, bundesland, fachbereich, wert)
 
       # Anteil berechnen
       df <- df %>%
@@ -1137,19 +1103,25 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       df$prop_disp <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
     }
     else{
-      df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-        dplyr::filter(jahr %in% timerange &
-                        landkreis == "alle Landkreise" &
-                        bundesland == regio &
-                        geschlecht == "Gesamt" &
-                        anforderung == "Gesamt" &
-                        fachbereich %in% c("Alle", "MINT",
-                                           "Mathematik, Naturwissenschaften",
-                                           "Informatik", "Technik (gesamt)") &
-                        indikator %in% indikator_choice)%>%
-        dplyr::select(indikator, jahr, bundesland, fachbereich, wert) %>%
-        dplyr::collect()
 
+
+      df_query <- glue::glue_sql("
+      SELECT indikator, jahr, bundesland, fachbereich, wert
+      FROM arbeitsmarkt_detail
+      WHERE jahr IN ({timerange*})
+      AND landkreis = 'alle Landkreise'
+      AND bundesland = {regio}
+      AND geschlecht = 'Gesamt'
+      AND anforderung = 'Gesamt'
+      AND fachbereich IN ('Alle', 'MINT', 'Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
+      AND indikator IN ({indikator_choice*})
+                               ", .con = con)
+
+      df <- DBI::dbGetQuery(con, df_query)
+#
+#       df <- df %>%
+#         dplyr::select(indikator, jahr, bundesland, fachbereich, wert)
+#
       # Berechnung von andere Fächergruppen
       df[df$fachbereich == "Alle", "wert"] <- df[df$fachbereich == "Alle", "wert"]-
         df[df$fachbereich == "MINT", "wert"]
@@ -1190,7 +1162,9 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       format <- '{point.prop_disp}%'
       color <- as.character(df$color)
 
-      out <- piebuilder(df, titel, x="fachbereich", y = "prop", tooltip, color, format)
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+      out <- piebuilder(df, titel, x="fachbereich", y = "prop", tooltip, color, format, quelle = quelle)
 
     } else if(length(indikator_choice) == 2) {
 
@@ -1211,9 +1185,12 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       color1 <- as.character(df_1$color)
       color2 <- as.character(df_2$color)
 
+      #
+      quelle_eins <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      quelle_zwei <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out_1 <- piebuilder(df_1, titel1, x="fachbereich", y = "prop", tooltip, color1, format)
-      out_2 <- piebuilder(df_2, titel2, x="fachbereich", y = "prop", tooltip, color2, format)
+      out_1 <- piebuilder(df_1, titel1, x="fachbereich", y = "prop", tooltip, color1, format, quelle= quelle_eins)
+      out_2 <- piebuilder(df_2, titel2, x="fachbereich", y = "prop", tooltip, color2, format, quelle = quelle_zwei)
 
 
       out <- highcharter::hw_grid(
@@ -1228,19 +1205,23 @@ arbeitsmarkt_faecher_anteil <- function(r) {
 
     indikator_choice <- r$indikator_arbeitsmarkt_fach_vergleich_balken
 
-    df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-      dplyr::filter(
-        jahr == timerange &
-          indikator == indikator_choice &
-          landkreis == "alle Landkreise" &
-          anforderung == "Gesamt" &
-          geschlecht == "Gesamt"&
-          bundesland == regio &
-          fachbereich %in% c("Alle", "MINT",
-                             "Mathematik, Naturwissenschaften",
-                             "Informatik", "Technik (gesamt)"))%>%
-      dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-      dplyr::collect()
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND indikator = {indikator_choice}
+    AND landkreis = 'alle Landkreise'
+    AND anforderung = 'Gesamt'
+    AND geschlecht = 'Gesamt'
+    AND bundesland = {regio}
+    AND fachbereich IN ('Alle', 'MINT', 'Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)
 
     df_andere <- df %>% dplyr::filter(fachbereich=="Alle")
     df_mint <- df %>% dplyr::filter(fachbereich=="MINT")
@@ -1249,17 +1230,25 @@ arbeitsmarkt_faecher_anteil <- function(r) {
     df <- rbind(df, df_andere)
     df <- df %>% dplyr::filter(fachbereich != "Alle")
 
-    df_alle <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-      dplyr::filter(
-        jahr == timerange &
-          indikator == indikator_choice &
-          landkreis == "alle Landkreise" &
-          anforderung == "Gesamt" &
-          geschlecht == "Gesamt"&
-          bundesland == regio &
-          fachbereich == "Alle")%>%
-      dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-      dplyr::collect()
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND indikator = {indikator_choice}
+    AND landkreis = 'alle Landkreise'
+    AND anforderung = 'Gesamt'
+    AND geschlecht = 'Gesamt'
+    AND bundesland = {regio}
+    AND fachbereich = 'Alle'
+                               ", .con = con)
+
+    df_alle <- DBI::dbGetQuery(con, df_query)
+
+
+    df_alle <- df_alle %>%
+      dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)
+
 
     df <- df %>%
       dplyr::left_join(df_alle,
@@ -1305,7 +1294,9 @@ arbeitsmarkt_faecher_anteil <- function(r) {
       colors = as.character(df$color)
     ))
 
-    out <- balkenbuilder(df, titel, x="fachbereich", y = "prop", group=NULL, tooltip, format, color, optional)
+
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- balkenbuilder(df, titel, x="fachbereich", y = "prop", group=NULL, tooltip, format, color, optional, quelle = quelle)
 
   }
 
@@ -1338,34 +1329,44 @@ beruf_verlauf_faecher <- function(r) {
   absolut_selector <- r$abs_zahlen_arbeitsmarkt_faecher_verlauf
 
   # Daten abrufen
-  df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    dplyr::filter(
-      jahr %in% t &
-        indikator == indi &
-        landkreis == "alle Landkreise" &
-        anforderung == "Gesamt" &
-        geschlecht == "Gesamt"&
-        bundesland == regio &
-        fachbereich %in% c(
-                           "Mathematik, Naturwissenschaften",
-                           "Informatik", "Technik (gesamt)"))%>%
-    dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-    dplyr::collect()
 
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_detail
+  WHERE jahr IN ({t*})
+  AND indikator = {indi}
+  AND landkreis = 'alle Landkreise'
+  AND anforderung = 'Gesamt'
+  AND geschlecht = 'Gesamt'
+  AND bundesland = {regio}
+  AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)
 
   if (absolut_selector == "In Prozent"){
 
-    df_alle <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-      dplyr::filter(
-        jahr %in% t &
-          indikator == indi &
-          landkreis == "alle Landkreise" &
-          anforderung == "Gesamt" &
-          geschlecht == "Gesamt"&
-          bundesland == regio &
-          fachbereich == "Alle")%>%
-      dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-      dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_detail
+  WHERE jahr IN ({t*})
+  AND indikator = {indi}
+  AND landkreis = 'alle Landkreise'
+  AND anforderung = 'Gesamt'
+  AND geschlecht = 'Gesamt'
+  AND bundesland = {regio}
+  AND fachbereich = 'Alle'
+                               ", .con = con)
+
+    df_alle <- DBI::dbGetQuery(con, df_query)
+
+    df_alle <- df_alle %>%
+      dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)
 
     df <- df %>%
       dplyr::left_join(df_alle,
@@ -1401,10 +1402,11 @@ beruf_verlauf_faecher <- function(r) {
     # plot
 
     titel <- ist_saarland(gruppe="Entwicklung des MINT-Anteils unter ", optional = title_help ,regio, timerange=0)
-    tooltip <- "{point.indikator} <br> Anteil: {point.prop_disp} %"
+    tooltip <- "{point.fachbereich} <br> Anteil: {point.prop_disp} %"
     format <- "{value} %"
     color <- as.character(colors)
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "fachbereich", tooltip, format, color)
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "fachbereich", tooltip, format, color, quelle = quelle)
 
   } else if(absolut_selector == "Anzahl") {
 
@@ -1432,10 +1434,11 @@ beruf_verlauf_faecher <- function(r) {
 
     # plot
     titel <- ist_saarland2(optional1="Entwicklung der ", title_help, optional2=" in MINT", regio)
-    tooltip <- "{point.indikator} <br> Anzahl: {point.wert_disp}"
+    tooltip <- "{point.fachbereich} <br> Anzahl: {point.wert_disp}"
     format <- "{value:, f}"
     color <- as.character(colors)
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fachbereich", tooltip, format, color)
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "fachbereich", tooltip, format, color, quelle = quelle)
 
 
   }
@@ -1464,17 +1467,25 @@ arbeitsmarkt_bula_faecher <- function(r) {
     indi <- r$indikator_beruf_faecher_bula_karte
     faecher <- r$fachbereich_beruf_faecher_bula_karte
 
-    df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-      dplyr::filter(
-        jahr == timerange &
-          indikator == indi &
-          landkreis == "alle Landkreise" &
-          anforderung == "Gesamt" &
-          geschlecht == "Gesamt"&
-          fachbereich %in% c(faecher, "Alle") &
-          !(bundesland %in% c("Deutschland", "Westdeutschland (o. Berlin)", "Ostdeutschland (inkl. Berlin)")))%>%
-      dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-      dplyr::collect()
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND indikator = {indi}
+    AND landkreis = 'alle Landkreise'
+    AND anforderung = 'Gesamt'
+    AND geschlecht = 'Gesamt'
+    AND fachbereich IN ({faecher}, 'Alle')
+    AND NOT bundesland IN ('Deutschland', 'Westdeutschland (o. Berlin)', 'Ostdeutschland (inkl. Berlin)')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+
+
+    df <- df %>%
+      dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)
 
     # Anteil berechnen
     df_gesamt <- df %>% dplyr::filter(fachbereich == "Alle")
@@ -1502,37 +1513,6 @@ arbeitsmarkt_bula_faecher <- function(r) {
     title_help <- ifelse(grepl("Beschäftigte u25", indi), "Beschäftigten unter 25 Jahren", title_help)
 
     # plot
-    # out <- highcharter::hcmap(
-    #   "countries/de/de-all",
-    #   data = df,
-    #   value = "proportion",
-    #   joinBy = c("name", "bundesland"),
-    #   borderColor = "#FAFAFA",
-    #   name = paste0("MINT"),
-    #   borderWidth = 0.1,
-    #   nullColor = "#A9A9A9",
-    #   tooltip = list(
-    #     valueDecimals = 0,
-    #     valueSuffix = "%"
-    #   )
-    #   # ,
-    #   # download_map_data = FALSE
-    # ) %>%
-    #   highcharter::hc_tooltip(pointFormat = "{point.bundesland} <br> Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-    #   highcharter::hc_colorAxis(min=0,minColor= "#f4f5f6", maxColor="#b16fab", labels = list(format = "{text}%")) %>%
-    #   highcharter::hc_title(
-    #     text = paste0("Anteil von ",  title_help, " in ", faecher, " an allen ",  title_help, " (", timerange, ")" #, title_help_sub
-    #     ),
-    #     margin = 10,
-    #     align = "center",
-    #     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    #   ) %>%
-    #   highcharter::hc_chart(
-    #     style = list(fontFamily = "SourceSans3-Regular")
-    #   ) %>% highcharter::hc_size(600, 550) %>%
-    #   highcharter::hc_credits(enabled = FALSE) %>%
-    #   highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-    #                          verticalAlign = "bottom")
 
     df <- df
     joinby <- c("name", "bundesland")
@@ -1542,7 +1522,9 @@ arbeitsmarkt_bula_faecher <- function(r) {
     mincolor <- "#f4f5f6"
     maxcolor <- "#b16fab"
     map_selection <- 1
-    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection)
+
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=FALSE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
 
@@ -1552,30 +1534,42 @@ arbeitsmarkt_bula_faecher <- function(r) {
     indikator_choice <- r$indikator_beruf_faecher_bula_balken
     faecher <- r$fachbereich_beruf_faecher_bula_balken
 
-    df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-      dplyr::filter(
-        jahr == timerange &
-          indikator == indikator_choice &
-          landkreis == "alle Landkreise" &
-          anforderung == "Gesamt" &
-          geschlecht == "Gesamt" &
-          fachbereich == faecher) %>%
-      dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)%>%
-      dplyr::collect()
+#
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND indikator = {indikator_choice}
+    AND landkreis = 'alle Landkreise'
+    AND anforderung = 'Gesamt'
+    and geschlecht = 'Gesamt'
+    AND fachbereich = {faecher}
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)
+
 
     # Alle als extra Spalte anhängen und Anteil berechnen
-    df_ges <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-      dplyr::filter(
-        jahr == timerange &
-          indikator == indikator_choice &
-          landkreis == "alle Landkreise" &
-          anforderung == "Gesamt" &
-          geschlecht == "Gesamt" &
-          fachbereich == "Alle") %>%
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND indikator = {indikator_choice}
+    AND landkreis = 'alle Landkreise'
+    AND anforderung = 'Gesamt'
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = 'Alle'
+                               ", .con = con)
+
+    df_ges <- DBI::dbGetQuery(con, df_query)
+
+    df_ges <- df_ges %>%
       dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)%>%
-      dplyr::rename(wert_ges = wert) %>%
-      dplyr::ungroup()%>%
-      dplyr::collect()
+      dplyr::rename(wert_ges = wert)
+
 
     df <- df %>%
       dplyr::left_join(df_ges, by = c("indikator", "jahr", "bundesland")) %>%
@@ -1588,7 +1582,6 @@ arbeitsmarkt_bula_faecher <- function(r) {
     #Trennpunkte für lange Zahlen in absolutem Wert ergänzen
     df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
     df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
-    #df <- df[with(df, order(fachbereich, jahr, decreasing = TRUE)), ]
     df <- df[with(df, order(prop, decreasing = T)),]
 
 
@@ -1612,8 +1605,8 @@ arbeitsmarkt_bula_faecher <- function(r) {
       colors = ifelse(df$bundesland == "Deutschland", "#b16fab",
                       ifelse(df$bundesland == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
                              ifelse(df$bundesland == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9")))))
-
-    out <- balkenbuilder(df, titel, x= "bundesland", y="prop", group=NULL, tooltip, format, color, optional=optional)
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- balkenbuilder(df, titel, x= "bundesland", y="prop", group=NULL, tooltip, format, color, optional=optional, quelle = quelle)
 
 
   }
@@ -1625,19 +1618,24 @@ arbeitsmarkt_bula_faecher <- function(r) {
     absolut_selector <- r$abs_beruf_faecher_bula_verlauf
     faecher <- r$fachbereich_beruf_faecher_bula_verlauf
 
-    # filter dataset based on UI inputs
-    df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-      dplyr::filter(
-        jahr %in% t &
-          indikator == indi &
-          landkreis == "alle Landkreise" &
-          bundesland %in% states &
-          anforderung == "Gesamt" &
-          geschlecht == "Gesamt" &
-          fachbereich == faecher) %>%
-      dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)%>%
-      dplyr::collect()
+    df_query <- glue::glue_sql("
 
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr IN ({t*})
+    AND indikator = {indi}
+    AND landkreis = 'alle Landkreise'
+    AND bundesland IN ({states*})
+    AND anforderung = 'Gesamt'
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = {faecher}
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+
+    df <- df %>%
+      dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)
 
     # Hilfe für Titel
     title_help <- paste0(indi, "n")
@@ -1649,21 +1647,25 @@ arbeitsmarkt_bula_faecher <- function(r) {
     title_help <- ifelse(grepl("ü55", indi), "Beschäftigten über 55 Jahren", title_help)
 
     if(absolut_selector=="In Prozent"){
+#
+#       # Alle
+      df_query <- glue::glue_sql("
+      SELECT *
+      FROM arbeitsmarkt_detail
+      WHERE jahr IN ({t*})
+      AND indikator = {indi}
+      AND landkreis = 'alle Landkreise'
+      AND bundesland IN ({states*})
+      AND anforderung = 'Gesamt'
+      AND geschlecht = 'Gesamt'
+      AND fachbereich = 'Alle'
+                               ", .con = con)
 
-      # Alle als extra Spalte anhängen und Anteil berechnen
-      df_ges <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-        dplyr::filter(
-          jahr %in% t &
-            indikator == indi &
-            landkreis == "alle Landkreise" &
-            bundesland %in% states &
-            anforderung == "Gesamt" &
-            geschlecht == "Gesamt" &
-            fachbereich == "Alle") %>%
+      df_ges <- DBI::dbGetQuery(con, df_query)
+
+      df_ges <- df_ges %>%
         dplyr::select(`bundesland`, `jahr`, `indikator`, `fachbereich`, `wert`)%>%
-        dplyr::rename(wert_ges = wert) %>%
-        dplyr::ungroup()%>%
-        dplyr::collect()
+        dplyr::rename(wert_ges = wert)
 
       df <- df %>%
         dplyr::left_join(df_ges, by = c("indikator", "jahr", "bundesland")) %>%
@@ -1680,11 +1682,12 @@ arbeitsmarkt_bula_faecher <- function(r) {
       # plot
 
       titel <-  paste0("Anteil von ", title_help, " im Berufsfeld ", faecher, " im Berufsfeld ")
-      tooltip <-"Anteil <br> Bundesland: {point.region} <br> Wert: {point.display_rel} %"
+      tooltip <-"{point.bundesland} <br> Anteil: {point.display_rel} %"
       format <- "{value} %"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "bundesland", tooltip, format, color)
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "bundesland", tooltip, format, color, quelle = quelle)
 
 
 
@@ -1702,11 +1705,12 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
       # plot
       titel <-  paste0("Anzahl von ", title_help, " in MINT-Berufen im Berufsfeld ", faecher)
-      tooltip <-  "Anzahl: {point.display_abs}"
+      tooltip <-  "{point.bundesland} <br> Anzahl: {point.display_abs}"
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color)
+      quelle2 <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color, quelle = quelle2)
 
 
     }
@@ -1724,131 +1728,138 @@ arbeitsmarkt_bula_faecher <- function(r) {
 #' @param data The dataframe "Arbeitsmarkt_detailliert.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-
-arbeitsmarkt_überblick_fächer <- function( r) {
-  # load UI inputs from reactive value
-
-  timerange <- r$date_arbeitsmarkt_überblick_fächer
-  state <- r$state_arbeitsmarkt_überblick_fächer
-
-  if(timerange == 2021) indikator_choice <- r$indikator_arbeitsmarkt_überblick_fächer_21
-  if(timerange == 2022) indikator_choice <- r$indikator_arbeitsmarkt_überblick_fächer_22
-
-  df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    dplyr::filter(
-      jahr == timerange &
-        indikator == indikator_choice &
-        landkreis == "alle Landkreise" &
-        anforderung == "Gesamt" &
-        geschlecht == "Gesamt"&
-        bundesland == state)%>%
-    dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)%>%
-    dplyr::collect()
-
-
-  # MINT direkt berechnen und nicht-MINT berechnen
-  df[df$fachbereich == "MINT", "wert"] <- df[df$fachbereich == "Mathematik, Naturwissenschaften", "wert"]+
-    df[df$fachbereich == "Informatik", "wert"]+df[df$fachbereich == "Technik (gesamt)", "wert"]
-  df$fachbereich[df$fachbereich == "MINT"]<-"MINT-Berufsfelder (gesamt)"
-
-  df_andere <- df %>% dplyr::filter(fachbereich=="Alle")
-  df_mint <- df %>% dplyr::filter(fachbereich=="MINT-Berufsfelder (gesamt)")
-  df_andere$wert <- df_andere$wert - df_mint$wert
-  df_andere$fachbereich[df_andere$fachbereich == "Alle"]<-"Alle Berufsfelder außer MINT (gesamt)"
-
-  df <- rbind(df, df_andere)
-  df <- df %>% dplyr::filter(fachbereich != "Alle")
-
-  # Anteil Berechnen für aggregierte Werte MINT
-  mint_agg <- df %>%
-    dplyr::filter(fachbereich %in% c("MINT-Berufsfelder (gesamt)","Alle Berufsfelder außer MINT (gesamt)" )) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(prop = (wert/sum(wert))*100)%>%
-    dplyr::mutate(prop= round(prop,1))
-  mint_agg <-  mint_agg %>% dplyr::filter(fachbereich == "MINT-Berufsfelder (gesamt)")
-
-  #Anteil Berechnen für Technik (gesamt)
-  technik_agg <- df %>%
-    dplyr::filter(fachbereich %in% c("Mathematik, Naturwissenschaften",
-                                     "Informatik", "Technik (gesamt)", "Alle Berufsfelder außer MINT (gesamt)" )) %>%
-    dplyr::ungroup()%>%
-    dplyr::mutate(prop = (wert/sum(wert))*100)%>%
-    dplyr::mutate(prop= round(prop,1))
-  technik_agg <-  technik_agg %>% dplyr::filter(fachbereich == "Technik (gesamt)")
-
-  #Anteil Berechnen für Technik-Gruppen
-  df <- df %>%
-    dplyr::filter(!(fachbereich %in% c("MINT-Berufsfelder (gesamt)", "Technik (gesamt)"))) %>%
-    dplyr::ungroup()%>%
-    dplyr::mutate(prop = (wert/sum(wert))*100)%>%
-    dplyr::mutate(prop= round(prop,1))
-
-  #Alle Werte zusammenfügen
-  df <- rbind(df, mint_agg, technik_agg)
-
-  #Trennpunkte für lange Zahlen ergänzen
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-  df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
-
-  #für Überblick unterarten von Technik wieder raus
-  df <- df %>% dplyr::filter(fachbereich %in% c("Alle Berufsfelder außer MINT (gesamt)",
-                                                "MINT-Berufsfelder (gesamt)",
-                                                "Mathematik, Naturwissenschaften",
-                                                "Informatik",
-                                                "Technik (gesamt)"))
-
-  df$fachbereich[df$fachbereich == "Technik (gesamt)"]<-"Technik"
-
-  # Reihenfolge sortieren für Plot
-  df$fachbereich <- factor(df$fachbereich, levels = c("Alle Berufsfelder außer MINT (gesamt)",
-                                                      "MINT-Berufsfelder (gesamt)",
-                                                      "Mathematik, Naturwissenschaften",
-                                                      "Informatik",
-                                                      "Technik"))
-
-  # titel-helper
-  title_help <- paste0(indikator_choice, "n")
-  title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen Beschäftigten", title_help)
-  title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischen Auszubildenden", title_help)
-  title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden mit neuem Lehrvertrag", title_help)
-  title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
-  title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
-  title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
-
-  hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl {point.indikator}: {point.wert}"
-  if(indikator_choice == "Auszubildende (1. Jahr)") hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl Auszubildende mit neuem Lehrvertrag: {point.wert}"
-
-  # plot
-  highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = fachbereich)) %>%
-    highcharter::hc_tooltip(pointFormat = hover) %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-    highcharter::hc_xAxis(title = list(text = ""), categories =c("Alle Berufsfelder außer MINT (gesamt)",
-                                                                 "MINT-Berufsfelder (gesamt)",
-                                                                 "Mathematik, Naturwissenschaften",
-                                                                 "Informatik",
-                                                                 "Technik"
-    )) %>%
-    highcharter::hc_plotOptions(bar = list(
-      colorByPoint = TRUE,
-      colors = ifelse(df$fachbereich %in% c("Alle Berufsfelder außer MINT (gesamt)","MINT-Berufsfelder (gesamt)"), "#b16fab", "#d0a9cd")
-    )) %>%
-    highcharter::hc_title(text = paste0( "Überblick über die Berufsfelder von ", title_help,
-                                         br(), "in ",state, " (", timerange, ")"),
-                          margin = 20,
-                          align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
-    )
-}
+#
+# arbeitsmarkt_überblick_fächer <- function( r) {
+#   # load UI inputs from reactive value
+#
+#   timerange <- r$date_arbeitsmarkt_überblick_fächer
+#   state <- r$state_arbeitsmarkt_überblick_fächer
+#
+#   if(timerange == 2021) indikator_choice <- r$indikator_arbeitsmarkt_überblick_fächer_21
+#   if(timerange == 2022) indikator_choice <- r$indikator_arbeitsmarkt_überblick_fächer_22
+#
+#   df_query <- glue::glue_sql("
+#   SELECT *
+#   FROM arbeitsmarkt_detail
+#   WHERE jahr = {timerange}
+#   AND indikator = {indikator_choice}
+#   AND landkreis = 'alle Landkreise'
+#   AND anforderung = 'Gesamt'
+#   AND geschlecht = 'Gesamt'
+#   AND bundesland = {state}
+#                                ", .con = con)
+#
+#   df <- DBI::dbGetQuery(con, df_query)
+#
+#   df <- df %>%
+#     dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)
+#
+#
+#   # MINT direkt berechnen und nicht-MINT berechnen
+#   df[df$fachbereich == "MINT", "wert"] <- df[df$fachbereich == "Mathematik, Naturwissenschaften", "wert"]+
+#     df[df$fachbereich == "Informatik", "wert"]+df[df$fachbereich == "Technik (gesamt)", "wert"]
+#   df$fachbereich[df$fachbereich == "MINT"]<-"MINT-Berufsfelder (gesamt)"
+#
+#   df_andere <- df %>% dplyr::filter(fachbereich=="Alle")
+#   df_mint <- df %>% dplyr::filter(fachbereich=="MINT-Berufsfelder (gesamt)")
+#   df_andere$wert <- df_andere$wert - df_mint$wert
+#   df_andere$fachbereich[df_andere$fachbereich == "Alle"]<-"Alle Berufsfelder außer MINT (gesamt)"
+#
+#   df <- rbind(df, df_andere)
+#   df <- df %>% dplyr::filter(fachbereich != "Alle")
+#
+#   # Anteil Berechnen für aggregierte Werte MINT
+#   mint_agg <- df %>%
+#     dplyr::filter(fachbereich %in% c("MINT-Berufsfelder (gesamt)","Alle Berufsfelder außer MINT (gesamt)" )) %>%
+#     dplyr::ungroup() %>%
+#     dplyr::mutate(prop = (wert/sum(wert))*100)%>%
+#     dplyr::mutate(prop= round(prop,1))
+#   mint_agg <-  mint_agg %>% dplyr::filter(fachbereich == "MINT-Berufsfelder (gesamt)")
+#
+#   #Anteil Berechnen für Technik (gesamt)
+#   technik_agg <- df %>%
+#     dplyr::filter(fachbereich %in% c("Mathematik, Naturwissenschaften",
+#                                      "Informatik", "Technik (gesamt)", "Alle Berufsfelder außer MINT (gesamt)" )) %>%
+#     dplyr::ungroup()%>%
+#     dplyr::mutate(prop = (wert/sum(wert))*100)%>%
+#     dplyr::mutate(prop= round(prop,1))
+#   technik_agg <-  technik_agg %>% dplyr::filter(fachbereich == "Technik (gesamt)")
+#
+#   #Anteil Berechnen für Technik-Gruppen
+#   df <- df %>%
+#     dplyr::filter(!(fachbereich %in% c("MINT-Berufsfelder (gesamt)", "Technik (gesamt)"))) %>%
+#     dplyr::ungroup()%>%
+#     dplyr::mutate(prop = (wert/sum(wert))*100)%>%
+#     dplyr::mutate(prop= round(prop,1))
+#
+#   #Alle Werte zusammenfügen
+#   df <- rbind(df, mint_agg, technik_agg)
+#
+#   #Trennpunkte für lange Zahlen ergänzen
+#   df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+#   df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
+#
+#   #für Überblick unterarten von Technik wieder raus
+#   df <- df %>% dplyr::filter(fachbereich %in% c("Alle Berufsfelder außer MINT (gesamt)",
+#                                                 "MINT-Berufsfelder (gesamt)",
+#                                                 "Mathematik, Naturwissenschaften",
+#                                                 "Informatik",
+#                                                 "Technik (gesamt)"))
+#
+#   df$fachbereich[df$fachbereich == "Technik (gesamt)"]<-"Technik"
+#
+#   # Reihenfolge sortieren für Plot
+#   df$fachbereich <- factor(df$fachbereich, levels = c("Alle Berufsfelder außer MINT (gesamt)",
+#                                                       "MINT-Berufsfelder (gesamt)",
+#                                                       "Mathematik, Naturwissenschaften",
+#                                                       "Informatik",
+#                                                       "Technik"))
+#
+#   # titel-helper
+#   title_help <- paste0(indikator_choice, "n")
+#   title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen Beschäftigten", title_help)
+#   title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischen Auszubildenden", title_help)
+#   title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden mit neuem Lehrvertrag", title_help)
+#   title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
+#   title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
+#   title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
+#
+#   hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl {point.indikator}: {point.wert}"
+#   if(indikator_choice == "Auszubildende (1. Jahr)") hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl Auszubildende mit neuem Lehrvertrag: {point.wert}"
+#
+#   # plot
+#
+#   #balkenbuilder wird hier nicht verwendet, weil das wieder so specialized ist
+#   highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = fachbereich)) %>%
+#     highcharter::hc_tooltip(pointFormat = hover) %>%
+#     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
+#     highcharter::hc_xAxis(title = list(text = ""), categories =c("Alle Berufsfelder außer MINT (gesamt)",
+#                                                                  "MINT-Berufsfelder (gesamt)",
+#                                                                  "Mathematik, Naturwissenschaften",
+#                                                                  "Informatik",
+#                                                                  "Technik"
+#     )) %>%
+#     highcharter::hc_plotOptions(bar = list(
+#       colorByPoint = TRUE,
+#       colors = ifelse(df$fachbereich %in% c("Alle Berufsfelder außer MINT (gesamt)","MINT-Berufsfelder (gesamt)"), "#b16fab", "#d0a9cd")
+#     )) %>%
+#     highcharter::hc_title(text = paste0( "Überblick über die Berufsfelder von ", title_help,
+#                                          br(), "in ",state, " (", timerange, ")"),
+#                           margin = 20,
+#                           align = "center",
+#                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+#     highcharter::hc_chart(
+#       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+#     ) %>%
+#     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+#     highcharter::hc_exporting(enabled = TRUE,
+#                               buttons = list(
+#                                 contextButton = list(
+#                                   menuItems = list("downloadPNG", "downloadCSV")
+#                                 )
+#                               )
+#     )
+# }
 
 
 # Frauen in MINT ----
@@ -1878,28 +1889,44 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
     gegenwert <- r$arbeitsmarkt_gender_gegenwert_balken
   }
 
-  df <- dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    dplyr::filter(jahr == timerange &
-                    landkreis == "alle Landkreise" &
-                    bundesland == regio &
-                    anforderung == "Gesamt" &
-                    geschlecht != "Gesamt" &
-                    indikator %in% indi &
-                    fachbereich == faecher)%>%
-    dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert") %>%
-    dplyr::collect()
 
-  df_alle <- dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-    dplyr::filter(jahr == timerange &
-                    landkreis == "alle Landkreise" &
-                    bundesland == regio &
-                    anforderung == "Gesamt" &
-                    geschlecht == "Gesamt" &
-                    indikator %in% indi &
-                    fachbereich == faecher)%>%
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_detail
+  WHERE jahr = {timerange}
+  AND landkreis = 'alle Landkreise'
+  AND bundesland = {regio}
+  AND anforderung = 'Gesamt'
+  AND NOT geschlecht = 'Gesamt'
+  AND indikator IN ({indi*})
+  AND fachbereich = {faecher}
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert")
+
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_detail
+  WHERE jahr = {timerange}
+  AND landkreis = 'alle Landkreise'
+  AND bundesland = {regio}
+  AND anforderung = 'Gesamt'
+  AND geschlecht = 'Gesamt'
+  AND indikator IN ({indi*})
+  AND fachbereich = {faecher}
+
+                               ", .con = con)
+
+  df_alle <- DBI::dbGetQuery(con, df_query)
+
+  df_alle <- df_alle %>%
     dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert") %>%
-    dplyr::rename(wert_gesamt = "wert") %>%
-    dplyr::collect()
+    dplyr::rename(wert_gesamt = "wert")
 
   df <- df %>%
     dplyr::left_join(df_alle, by = c("indikator", "bundesland", "jahr", "fachbereich")) %>%
@@ -1910,28 +1937,42 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
 
   if(gegenwert == "Ja"){
 
-    df_andere <- dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-      dplyr::filter(jahr == timerange &
-                      landkreis == "alle Landkreise" &
-                      bundesland == regio &
-                      anforderung == "Gesamt" &
-                   #   geschlecht != "Gesamt" &
-                      indikator %in% indi &
-                      fachbereich == faecher)%>%
-      dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert") %>%
-      dplyr::collect()
 
-    df_alle_faecher <- dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-      dplyr::filter(jahr == timerange &
-                      landkreis == "alle Landkreise" &
-                      bundesland == regio &
-                      anforderung == "Gesamt" &
-                     # geschlecht != "Gesamt" &
-                      indikator %in% indi &
-                      fachbereich == "Alle")%>%
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND landkreis = 'alle Landkreise'
+    AND bundesland = {regio}
+    AND anforderung = 'Gesamt'
+    AND indikator IN ({indi*})
+    AND fachbereich = {faecher}
+
+                               ", .con = con)
+
+    df_andere <- DBI::dbGetQuery(con, df_query)
+
+    df_andere <- df_andere %>%
+      dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert")
+
+
+    df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND landkreis = 'alle Landkreise'
+    AND bundesland = {regio}
+    AND anforderung = 'Gesamt'
+    AND indikator IN ({indi*})
+    AND fachbereich = 'Alle'
+                               ", .con = con)
+
+    df_alle_faecher <- DBI::dbGetQuery(con, df_query)
+
+    df_alle_faecher <- df_alle_faecher %>%
       dplyr::select( "indikator", "bundesland", "fachbereich", "jahr", "geschlecht", "wert") %>%
-      dplyr::rename(wert_gesamt = "wert") %>%
-      dplyr::collect()
+      dplyr::rename(wert_gesamt = "wert")
+
 
     df_andere <- df_andere %>%
       dplyr::left_join(df_alle_faecher, by = c("indikator", "bundesland", "jahr", "geschlecht")) %>%
@@ -1981,7 +2022,9 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
      tooltip <- 'Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}'
      format <- '{point.prop_disp}%'
 
-     p1 <- piebuilder(df_p, titel, x="geschlecht", y = "proportion", tooltip, color, format)
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+     p1 <- piebuilder(df_p, titel, x="geschlecht", y = "proportion", tooltip, color, format, quelle = quelle)
      out <- p1
 
      if(gegenwert == "Ja"){
@@ -1994,7 +2037,9 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
        format <- '{point.prop_disp}%'
        color <- c("#efe8e6", "#154194")
 
-       p1g <- piebuilder(df_g, titel1, x="geschlecht", y = "proportion", tooltip, color, format)
+       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+       p1g <- piebuilder(df_g, titel1, x="geschlecht", y = "proportion", tooltip, color, format, quelle = quelle)
 
        out <- highcharter::hw_grid(p1, p1g,
                                    ncol = 2,
@@ -2027,8 +2072,10 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
      color <- c("#efe8e6", "#154194")
      format <- '{point.prop_disp}%'
 
-     p1 <- piebuilder(df_1_pie, titel1, x="geschlecht", y = "proportion", tooltip, color, format)
-     p2 <- piebuilder(df_2_pie, titel2, x="geschlecht", y = "proportion", tooltip, color, format)
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+     p1 <- piebuilder(df_1_pie, titel1, x="geschlecht", y = "proportion", tooltip, color, format, quelle=quelle)
+     p2 <- piebuilder(df_2_pie, titel2, x="geschlecht", y = "proportion", tooltip, color, format, quelle = quelle)
 
      out<- highcharter::hw_grid(
        p1, p2,
@@ -2049,8 +2096,10 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
        color <- c("#efe8e6", "#154194")
        format <- '{point.prop_disp}%'
 
-       p1g <- piebuilder(df1_g, titel1, x="geschlecht", y = "proportion", tooltip, color, format)
-       p2g <- piebuilder(df2_g, titel2, x="geschlecht", y = "proportion", tooltip, color, format)
+       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+       p1g <- piebuilder(df1_g, titel1, x="geschlecht", y = "proportion", tooltip, color, format, quelle=quelle)
+       p2g <- piebuilder(df2_g, titel2, x="geschlecht", y = "proportion", tooltip, color, format, quelle=quelle)
 
 
        out <- highcharter::hw_grid(p1, p2,
@@ -2080,38 +2129,18 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
     #
    tooltip <- "{point.geschlecht}-Anteil: {point.y} % <br> Anzahl: {disp_wert}"
    format <- "{value}%"
-   optional <- list(bar = list(stacking = "percent"))
+   # optional <- list(bar = list(stacking = "percent"))
    reverse <- FALSE
 
-       out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = indi_fach, y=proportion, group = geschlecht))%>%
+   stacking = "percent"
 
-      highcharter::hc_tooltip(pointFormat = tooltip)%>%
+   color = c("#154194", "#efe8e6")
 
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
-      highcharter::hc_xAxis(title = list(text = "")
-      ) %>%
-      highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-      highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-      highcharter::hc_title(text = titel,
-                            margin = 25,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
-      )
+   quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-       # damit aktuell noch falschrum - bräuchte noch ein
-       # out <- balkenbuilder(df, titel, x="indi_fach", y="proportion", group="geschlecht",
-       #                  tooltip, format, color = c("#154194", "#efe8e6"),
-       #                  optional = optional, reverse = reverse)
+   out <- balkenbuilder(df, titel, x = "indi_fach", y="proportion", group = "geschlecht", tooltip = tooltip, format = format, color = color, reverse = FALSE, stacking = stacking, TF=FALSE, quelle = quelle)
+   #
+
 
  }
 
@@ -2140,30 +2169,43 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
   regio <- r$region_arbeitsmarkt_verlauf_gender
   absolut_selector <- r$abs_zahlen_arbeitsmarkt_verlauf_gender
 
-  df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    dplyr::filter(jahr %in% t,
-                  landkreis == "alle Landkreise",
-                  bundesland == regio,
-                  anforderung == "Gesamt",
-                  fachbereich == faecher,
-                  indikator %in% indi,
-                  geschlecht == "Frauen")%>%
-    dplyr::select(jahr, indikator, geschlecht, bundesland, wert, fachbereich)%>%
-    dplyr::collect()
+
+  df_query <- glue::glue_sql("
+  SELECT jahr, indikator, geschlecht, bundesland, wert, fachbereich
+  FROM arbeitsmarkt_detail
+  WHERE jahr IN ({t*})
+  AND landkreis = 'alle Landkreise'
+  AND bundesland = {regio}
+  AND anforderung = 'Gesamt'
+  AND fachbereich = {faecher}
+  AND indikator IN ({indi*})
+  AND geschlecht = 'Frauen'
+                             ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  # df <- df %>%
+  #   dplyr::select(jahr, indikator, geschlecht, bundesland, wert, fachbereich)
+
 
   if(absolut_selector=="In Prozent"){
 
-    df_gen_alle <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-      dplyr::filter(jahr %in% t,
-                    landkreis == "alle Landkreise",
-                    bundesland == regio,
-                    anforderung == "Gesamt",
-                    fachbereich == faecher,
-                    indikator %in% indi,
-                    geschlecht == "Gesamt")%>%
-      dplyr::select(jahr, indikator, geschlecht, bundesland, wert, fachbereich)%>%
-      dplyr::rename(wert_ges = wert) %>%
-      dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+    SELECT jahr, indikator, geschlecht, bundesland, wert AS wert_ges, fachbereich
+    FROM arbeitsmarkt_detail
+    WHERE jahr IN ({t*})
+    AND landkreis = 'alle Landkreise'
+    AND bundesland = {regio}
+    AND anforderung = 'Gesamt'
+    AND fachbereich = {faecher}
+    AND indikator IN ({indi*})
+    AND geschlecht = 'Gesamt'
+                               ", .con = con)
+
+    df_gen_alle <- DBI::dbGetQuery(con, df_query)
+
 
     df <- df %>% dplyr::left_join(df_gen_alle,
                                   by = c("jahr", "indikator", "bundesland", "fachbereich")) %>%
@@ -2202,11 +2244,12 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
 
 
     titel <-  titel_text
-    tooltip <-  "Anteil Frauen  {point.indikator} <br> Wert: {point.prop_disp} %"
+    tooltip <-  "{point.indikator} <br> Frauenanteil: {point.prop_disp} %"
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9")
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color)
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
 
@@ -2245,11 +2288,12 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
 
 
     titel <-  titel_text
-    tooltip <-  "Anzahl: {point.wert_disp}"
+    tooltip <-  "{point.indikator} <br> Anzahl Frauen: {point.wert_disp}"
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                "#bfc6d3", "#5f94f9")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color)
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
   }
 }
@@ -2280,17 +2324,22 @@ arbeitsmarkt_wahl_gender <- function(r) {
     indi <- r$level_arbeitsmarkt_wahl_gender_pie
     regio <- r$region_arbeitsmarkt_wahl_gender_pie
 
-    df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-     dplyr::filter(jahr %in% timerange &
-                   landkreis == "alle Landkreise",
-                   bundesland == regio &
-                   geschlecht != "Gesamt"&
-                   anforderung == "Gesamt" &
-                   indikator == indi,
-                   fachbereich %in% c("Alle", "MINT", "Mathematik, Naturwissenschaften",
-                                        "Informatik", "Technik (gesamt)"))%>%
-     dplyr::select(jahr, bundesland, indikator, fachbereich, wert, geschlecht) %>%
-     dplyr::collect()
+    df_query <- glue::glue_sql("
+    SELECT jahr, bundesland, indikator, fachbereich, wert, geschlecht
+    FROM arbeitsmarkt_detail
+    WHERE jahr IN ({timerange*})
+    AND landkreis = 'alle Landkreise'
+    AND bundesland = {regio}
+    AND NOT geschlecht = 'Gesamt'
+    AND anforderung = 'Gesamt'
+    AND indikator = {indi}
+    AND fachbereich IN ('Alle', 'MINT', 'Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    # df <- df %>%
+    #   dplyr::select(jahr, bundesland, indikator, fachbereich, wert, geschlecht)
 
     # Berechnung von andere Fächergruppen
     df[df$fachbereich == "Alle" & df$geschlecht == "Frauen", "wert"] <- df[df$fachbereich == "Alle" & df$geschlecht == "Frauen", "wert"]-
@@ -2301,17 +2350,21 @@ arbeitsmarkt_wahl_gender <- function(r) {
     df <- df %>% dplyr::filter(fachbereich != "MINT")
 
      # Anteil berechnen
-    df_alle <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-      dplyr::filter(jahr %in% timerange &
-                      landkreis == "alle Landkreise",
-                    bundesland == regio &
-                      geschlecht != "Gesamt"&
-                      anforderung == "Gesamt" &
-                      indikator == indi,
-                    fachbereich == "Alle")%>%
-      dplyr::select(jahr, bundesland, indikator, fachbereich, wert, geschlecht) %>%
-      dplyr::rename(wert_ges = wert) %>%
-      dplyr::collect()
+
+    df_query <- glue::glue_sql("
+    SELECT jahr, bundesland, indikator, fachbereich, geschlecht, wert as wert_ges
+    FROM arbeitsmarkt_detail
+    WHERE jahr IN ({timerange*})
+    AND landkreis = 'alle Landkreise'
+    AND bundesland = {regio}
+    AND NOT geschlecht = 'Gesamt'
+    AND anforderung = 'Gesamt'
+    AND indikator = {indi}
+    AND fachbereich = 'Alle'
+                               ", .con = con)
+
+    df_alle <- DBI::dbGetQuery(con, df_query)
+
 
      df <- df %>% dplyr::left_join(df_alle, by = c("jahr", "bundesland", "indikator",
                                                   "geschlecht")) %>%
@@ -2351,8 +2404,10 @@ arbeitsmarkt_wahl_gender <- function(r) {
      tooltip <- paste('Anteil: {point.prop_disp}% <br> Anzahl: {point.wert_disp}')
      format <- '{point.prop_disp}%'
 
-     out_1 <- piebuilder(df_f, titel1, x="fachbereich", y = "prop", tooltip, color1, format, subtitel = subtitel1)
-     out_2 <- piebuilder(df_m, titel2, x="fachbereich", y = "prop", tooltip, color2, format, subtitel = subtitel2)
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+     out_1 <- piebuilder(df_f, titel1, x="fachbereich", y = "prop", tooltip, color1, format, subtitel = subtitel1, quelle=quelle)
+     out_2 <- piebuilder(df_m, titel2, x="fachbereich", y = "prop", tooltip, color2, format, subtitel = subtitel2, quelle=quelle)
 
 
      out <- highcharter::hw_grid(
@@ -2367,32 +2422,33 @@ arbeitsmarkt_wahl_gender <- function(r) {
      indi <- r$level_arbeitsmarkt_wahl_gender_karte
      faecher <- r$fach_arbeitsmarkt_wahl_gender_karte
 
-     df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-       dplyr::filter(jahr %in% timerange &
-                       !bundesland %in% c("Deutschland",
-                                          "Westdeutschland (o. Berlin)",
-                                          "Ostdeutschland (inkl. Berlin)") &
-                       landkreis == "alle Landkreise" &
-                       geschlecht != "Gesamt"&
-                       anforderung == "Gesamt",
-                     indikator == indi,
-                     fachbereich == faecher)%>%
-       dplyr::select(indikator, fachbereich, wert, geschlecht, bundesland, jahr) %>%
-       dplyr::collect()
 
-     df_alle <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-       dplyr::filter(jahr %in% timerange &
-                       !bundesland %in% c("Deutschland",
-                                          "Westdeutschland (o. Berlin)",
-                                          "Ostdeutschland (inkl. Berlin)") &
-                       landkreis == "alle Landkreise" &
-                       geschlecht != "Gesamt"&
-                       anforderung == "Gesamt",
-                     indikator == indi,
-                     fachbereich == "Alle")%>%
-       dplyr::select(indikator, fachbereich, wert, geschlecht, bundesland, jahr) %>%
-       dplyr::rename(wert_ges = wert) %>%
-       dplyr::collect()
+     df_query <- glue::glue_sql("
+     SELECT indikator, fachbereich, wert, geschlecht, bundesland, jahr
+     FROM arbeitsmarkt_detail
+     WHERE jahr IN ({timerange*})
+     AND NOT bundesland IN ('Deutschland', 'Westdeutschland (o. Berlin)', 'Ostdeutschland (inkl. Berlin)')
+     AND landkreis = 'alle Landkreise'
+     AND NOT geschlecht = 'Gesamt'
+     AND anforderung = 'Gesamt'
+     AND indikator = {indi}
+     AND fachbereich = {faecher}", .con = con)
+
+     df <- DBI::dbGetQuery(con, df_query)
+
+
+     df_query <- glue::glue_sql("
+     SELECT indikator, fachbereich, geschlecht, bundesland, wert as wert_ges, jahr
+     FROM arbeitsmarkt_detail
+     WHERE NOT bundesland IN ('Deutschland', 'Westdeutschland (o. Berlin)', 'Ostdeutschland (inkl. Berlin)')
+     AND landkreis = 'alle Landkreise'
+     AND NOT geschlecht = 'Gesamt'
+     AND anforderung = 'Gesamt'
+     AND indikator = {indi}
+     AND fachbereich = 'Alle'
+                               ", .con = con)
+
+     df_alle <- DBI::dbGetQuery(con, df_query)
 
      df <- df %>%
        dplyr::left_join(df_alle, by = c("bundesland", "jahr", "geschlecht", "indikator")) %>%
@@ -2429,7 +2485,8 @@ arbeitsmarkt_wahl_gender <- function(r) {
      mincolor <- "#fcfcfd"
      maxcolor <- "#b16fab"
      map_selection <- 1
-     out_1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection)
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     out_1 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
      df <- values_male
@@ -2440,7 +2497,8 @@ arbeitsmarkt_wahl_gender <- function(r) {
      mincolor <- "#fcfcfd"
      maxcolor <- "#b16fab"
      map_selection <- 1
-     out_2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection)
+     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+     out_2 <- mapbuilder(df, joinby,name, tooltip, titel, mincolor, maxcolor,prop=TRUE, wert=FALSE, map=map_selection, quelle = quelle)
 
 
 
@@ -2461,32 +2519,45 @@ arbeitsmarkt_wahl_gender <- function(r) {
     faecher <- r$fach_arbeitsmarkt_wahl_gender_verlauf
     absolut_selector <- r$abs_zahlen_arbeitsmarkt_wahl_gender_verlauf
 
-     df <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-       dplyr::filter(jahr %in% t,
-                     indikator == indi,
-                     landkreis == "alle Landkreise",
-                     bundesland %in% regio,
-                     anforderung == "Gesamt",
-                     geschlecht == "Frauen",
-                     fachbereich == faecher)%>%
+     df_query <- glue::glue_sql("
+     SELECT *
+     FROM arbeitsmarkt_detail
+     WHERE jahr IN ({t*})
+     AND indikator = {indi}
+     AND landkreis = 'alle Landkreise'
+     AND bundesland IN ({regio*})
+     AND anforderung = 'Gesamt'
+     AND geschlecht = 'Frauen'
+     AND fachbereich = {faecher}
+                               ", .con = con)
+
+     df <- DBI::dbGetQuery(con, df_query)
+
+     df <- df %>%
        dplyr::select("indikator", "fachbereich", "geschlecht", "bundesland",
-                     "jahr", "wert" ) %>%
-       dplyr::collect()
+                     "jahr", "wert" )
 
      if(absolut_selector=="In Prozent"){
 
-       df_alle <-  dplyr::tbl(con, from = "arbeitsmarkt_detail")%>%
-         dplyr::filter(jahr %in% t,
-                       indikator == indi,
-                       landkreis == "alle Landkreise",
-                       bundesland %in% regio,
-                       anforderung == "Gesamt",
-                       geschlecht == "Frauen",
-                       fachbereich == "Alle")%>%
+       df_query <- glue::glue_sql("
+
+       SELECT *
+       FROM arbeitsmarkt_detail
+       WHERE jahr IN ({t*})
+       AND indikator = {indi}
+       AND landkreis = 'alle Landkreise'
+       AND bundesland IN ({regio*})
+       AND anforderung = 'Gesamt'
+       AND geschlecht = 'Frauen'
+       AND fachbereich = 'Alle'
+                               ", .con = con)
+
+       df_alle <- DBI::dbGetQuery(con, df_query)
+
+       df_alle <- df_alle %>%
          dplyr::select("indikator", "fachbereich", "geschlecht", "bundesland",
                        "jahr", "wert" ) %>%
-         dplyr::rename(wert_ges = wert) %>%
-         dplyr::collect()
+         dplyr::rename(wert_ges = wert)
 
        df <- df %>%
          dplyr::left_join(df_alle, by = c("bundesland", "jahr", "geschlecht", "indikator")) %>%
@@ -2509,11 +2580,14 @@ arbeitsmarkt_wahl_gender <- function(r) {
        # plot
 
        titel <-  titel_w
-       tooltip <-  "{Anteil: {point.prop_disp} %"
+       tooltip <-  "Anteil: {point.prop} %"
        format <- "{value}%"
        color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                   "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-       out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "bundesland", tooltip, format, color)
+
+
+       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+       out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "bundesland", tooltip, format, color, quelle = quelle)
 
 
      }else if(absolut_selector=="Anzahl"){
@@ -2543,7 +2617,8 @@ arbeitsmarkt_wahl_gender <- function(r) {
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
                  "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color)
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "bundesland", tooltip, format, color, quelle = quelle)
 
      }
 
@@ -2564,13 +2639,18 @@ arbeitsmarkt_top10 <- function( r){
   fb <- r$FB_top_beruf
 
 
-  df <- dplyr::tbl(con, from = "data_naa") %>%
-    dplyr::filter(
-      jahr == time &
-        ebene == "Ebene 3" &
-        region == bula )%>%
-    dplyr::select(-code)%>%
-    dplyr::collect()
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM data_naa
+  WHERE jahr = {time}
+  AND ebene = 'Ebene 3'
+  AND region = {bula}
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::select(-code)
 
   df <- df %>% dplyr::ungroup() %>%
     dplyr::mutate(region = dplyr::case_when(
@@ -2623,14 +2703,17 @@ arbeitsmarkt_top10 <- function( r){
       dplyr::slice(1:10)
 
 
-    if(sum(berufe_maenner$prop)==1000){ #falls alle 10 Berufe 100 % sind
+    if(sum(berufe_maenner$prop)==1000){
       berufe_maenner <- df %>%
         dplyr::filter(geschlecht == "Männer") %>%
-        dplyr::filter(prop == 100) %>% #diese 100% Jobs auswählen
-        dplyr::arrange(desc(wert)) %>% #und die anzeigen, die am stärksten besetzt sind von diesen
+        dplyr::filter(prop == 100) %>%
+        dplyr::arrange(desc(wert)) %>%
         dplyr::slice(1:10)
     }
 
+
+
+    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create female plot
     plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -2646,11 +2729,13 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_title(text = paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")"),
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -2659,7 +2744,7 @@ arbeitsmarkt_top10 <- function( r){
                                 )
       )
 
-
+    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create male plot
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -2676,11 +2761,13 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_title(text = paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich ", fb ," in ", bula ," (", time, ")"),
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -2707,6 +2794,8 @@ arbeitsmarkt_top10 <- function( r){
 
     # das bleibt ohne verallgemeinerung da es spezialisierter ist.
 
+
+    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create female plot
     plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -2722,11 +2811,13 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb ,"  in ", bula ," (", time, ")"),
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -2735,6 +2826,9 @@ arbeitsmarkt_top10 <- function( r){
                                 )
       )
 
+
+
+    #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create male plot
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(
@@ -2750,11 +2844,13 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_title(text = paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich ",fb," in ", bula ," (", time, ")"),
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -2778,7 +2874,7 @@ arbeitsmarkt_top10 <- function( r){
 
 
 
-### Nicht Box 3 ----
+### Nicht Box 3 ----###################################################
 
 #' A function to plot time series
 #'
@@ -2788,113 +2884,116 @@ arbeitsmarkt_top10 <- function( r){
 #' @param data The dataframe "Kurse.xlsx" needs to be used for this function
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
-
-arbeitsmarkt_bl_gender_verlauf <- function(r) {
-
-  # load UI inputs from reactive value
-
-  absolut_selector <- r$abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf
-  timerange <- r$date_beruf_arbeitsmarkt_bl_gender_verlauf
-  indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_gender_verlauf
-  states <- r$states_beruf_arbeitsmarkt_bl_gender_verlauf
-  t <- as.character(timerange[1]:timerange[2])
-
-
-  df <-  dplyr::tbl(con, from = "arbeitsmarkt")%>%
-    dplyr::filter(jahr %in% t,
-                  indikator == indikator_choice,
-                  region %in% states,
-                  anforderung %in% "Gesamt",
-                  geschlecht == "Frauen",
-                  fachbereich %in% c("Alle", "MINT")
-    )%>%
-    dplyr::select("bereich",
-                  "indikator",
-                  "fachbereich",
-                  "geschlecht",
-                  "region",
-                  "jahr",
-                  "anforderung",
-                  "wert" ) %>%
-    dplyr::collect()
-
-
-  df <- df %>% dplyr::filter(anforderung != "Keine Zuordnung möglich")
-
-  df_gesamt <- df %>%
-    dplyr::filter(fachbereich == "Alle",
-                  anforderung == "Gesamt")
-
-
-  df <- df %>%
-    dplyr::left_join(df_gesamt, by = c("region", "jahr", "geschlecht", "indikator", "bereich")) %>%
-    dplyr::rename(anforderung = "anforderung.x",
-                  fachbereich = "fachbereich.x",
-                  wert = "wert.x",
-                  wert_sum = "wert.y") %>%
-    dplyr::select(-c("fachbereich.y", "anforderung.y")) %>%
-    dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
-    dplyr::filter(anforderung == "Gesamt",
-                  fachbereich == "MINT")%>%
-    dplyr::select(-wert_sum)%>%
-    dplyr::rename(Relativ = proportion, Absolut=wert)%>%
-    tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
-    dplyr::mutate(selector = dplyr::case_when(
-      selector == "Relativ" ~ "In Prozent",
-      selector == "Absolut" ~ "Anzahl"
-    ))
-
-
-  df <- df %>% dplyr::filter(fachbereich == "MINT")
-
-  if(absolut_selector=="In Prozent"){
-
-    df <- df %>%
-      dplyr::filter(selector =="In Prozent")
-
-
-    # order years for plot
-    df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-
-    title_help <- paste0(indikator_choice, "r")
-
-    # plot
-
-    titel <- paste0("Anteil weiblicher ", title_help, ", die MINT-Berufe wählen")
-    tooltip <- "{point.region} <br> Anteil: {point.y} %"
-    format <- "{value}%"
-    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-               "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
-
-
-  }else if(absolut_selector=="Anzahl"){
-
-    title_help <- paste0(indikator_choice, "r")
-
-    hcoptslang <- getOption("highcharter.lang")
-    hcoptslang$thousandsSep <- "."
-    options(highcharter.lang = hcoptslang)
-
-    df <- df %>%
-      dplyr::filter(selector == "Anzahl")
-
-    df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
-
-
-    # plot
-
-    titel <- paste0("Anzahl weiblicher ", title_help, ", die MINT-Berufe wählen")
-    tooltip <- "Anzahl: {point.y}"
-    format <- "{value:, f}"
-    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
-               "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
-
-  }
-
-}
-
+# arbeitsmarkt_bl_gender_verlauf <- function(r) {
+#
+#   # load UI inputs from reactive value
+#
+#   absolut_selector <- r$abs_zahlen_beruf_arbeitsmarkt_bl_gender_verlauf
+#   timerange <- r$date_beruf_arbeitsmarkt_bl_gender_verlauf
+#   indikator_choice <- r$indikator_beruf_arbeitsmarkt_bl_gender_verlauf
+#   states <- r$states_beruf_arbeitsmarkt_bl_gender_verlauf
+#   t <- as.character(timerange[1]:timerange[2])
+#
+#
+#
+#
+#   df_query <- glue::glue_sql("
+#   SELECT *
+#   FROM arbeitsmarkt
+#   WHERE jahr IN ({t*})
+#   AND region IN ({states*})
+#   AND anforderung = 'Gesamt'
+#   AND geschlecht = 'Frauen'
+#   AND fachbereich IN ('Alle', 'MINT')
+#                                ", .con = con)
+#
+#   df <- DBI::dbGetQuery(con, df_query)
+#
+#   df <- df %>%
+#     dplyr::select("bereich",
+#                   "indikator",
+#                   "fachbereich",
+#                   "geschlecht",
+#                   "region",
+#                   "jahr",
+#                   "anforderung",
+#                   "wert" )
+#
+#   df <- df %>% dplyr::filter(anforderung != "Keine Zuordnung möglich")
+#
+#   df_gesamt <- df %>%
+#     dplyr::filter(fachbereich == "Alle",
+#                   anforderung == "Gesamt")
+#
+#
+#   df <- df %>%
+#     dplyr::left_join(df_gesamt, by = c("region", "jahr", "geschlecht", "indikator", "bereich")) %>%
+#     dplyr::rename(anforderung = "anforderung.x",
+#                   fachbereich = "fachbereich.x",
+#                   wert = "wert.x",
+#                   wert_sum = "wert.y") %>%
+#     dplyr::select(-c("fachbereich.y", "anforderung.y")) %>%
+#     dplyr::mutate(proportion = (wert/wert_sum)*100)%>%
+#     dplyr::filter(anforderung == "Gesamt",
+#                   fachbereich == "MINT")%>%
+#     dplyr::select(-wert_sum)%>%
+#     dplyr::rename(Relativ = proportion, Absolut=wert)%>%
+#     tidyr::pivot_longer(c(Absolut, Relativ), names_to = "selector", values_to = "wert")%>%
+#     dplyr::mutate(selector = dplyr::case_when(
+#       selector == "Relativ" ~ "In Prozent",
+#       selector == "Absolut" ~ "Anzahl"
+#     ))
+#
+#
+#   df <- df %>% dplyr::filter(fachbereich == "MINT")
+#
+#   if(absolut_selector=="In Prozent"){
+#
+#     df <- df %>%
+#       dplyr::filter(selector =="In Prozent")
+#
+#
+#     # order years for plot
+#     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+#
+#     title_help <- paste0(indikator_choice, "r")
+#
+#     # plot
+#
+#     titel <- paste0("Anteil weiblicher ", title_help, ", die MINT-Berufe wählen")
+#     tooltip <- "{point.region} <br> Anteil: {point.y} %"
+#     format <- "{value}%"
+#     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+#                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
+#     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+#
+#
+#   }else if(absolut_selector=="Anzahl"){
+#
+#     title_help <- paste0(indikator_choice, "r")
+#
+#     hcoptslang <- getOption("highcharter.lang")
+#     hcoptslang$thousandsSep <- "."
+#     options(highcharter.lang = hcoptslang)
+#
+#     df <- df %>%
+#       dplyr::filter(selector == "Anzahl")
+#
+#     df <- df[with(df, order(region, jahr, decreasing = FALSE)), ]
+#
+#
+#     # plot
+#
+#     titel <- paste0("Anzahl weiblicher ", title_help, ", die MINT-Berufe wählen")
+#     tooltip <- "Anzahl: {point.y}"
+#     format <- "{value:, f}"
+#     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
+#                "#bfc6d3", "#5f94f9", "#B45309", "#007655", "#fde68a", "#dc2626", "#d4c1bb", "#d0a9cd", "#fca5a5", "#112c5f")
+#     out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "region", tooltip, format, color)
+#
+#   }
+#
+# }
 # Regionaler MINT Steckbrief ----
 
 arbeitsmarkt_lk_detail_map <- function(r) {
@@ -2910,11 +3009,19 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   indikator_besch_1 <- r$indikator2_beruf_arbeitsmarkt_landkreis_karte1
 
 
-  df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    dplyr::filter(
-      jahr == timerange)%>%
-    dplyr::select(-bereich)%>%
-    dplyr::collect()
+  # df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_detail
+  where jahr = {timerange}
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::select(-bereich)
 
 
   # map states for state codes
@@ -2987,45 +3094,12 @@ arbeitsmarkt_lk_detail_map <- function(r) {
   df1_map$wert <- prettyNum(df1_map$wert, big.mark = ".", decimal.mark = ",")
   domain_1 <- ifelse(domain_1 == "Alle", "alle Berufsbereiche", domain_1)
 
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
   # create plots
-  highcharter::hcmap(
-    paste0("countries/de/de-", state_code ,"-all"),
-    data = df1_map,
-    value = "prob",
-    joinBy = c("hc-key","landkreis_nummer"),
-    borderColor = "#FAFAFA",
-    name = paste0( domain_1, "<br>", titel_sub1_2),
-    borderWidth = 0.1,
-    nullColor = "#A9A9A9",
-    tooltip = list(
-      valueDecimals = 0,
-      valueSuffix = "%"
-    )
-    #,
-    # download_map_data = FALSE
-  ) %>%
-    highcharter::hc_colorAxis(min=0,labels = list(format = "{text}%")) %>%
-    highcharter::hc_title(
-      text = paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")"),
-      margin = 10,
-      align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")
-    ) %>%
-    highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular")
-    ) %>% #highcharter::hc_size(600, 550) %>%
-    highcharter::hc_credits(enabled = FALSE) %>%
-    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
-                           verticalAlign = "bottom"
-    ) %>%
-    highcharter::hc_exporting(enabled = TRUE,
-                              buttons = list(
-                                contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
-    )
+
+  out <- mapbuilder(df1_map,c("hc-key","landkreis_nummer"),paste0( domain_1, "<br>", titel_sub1_2), tooltip = 12, paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")"),12, 12, prop=TRUE, wert=FALSE, map = 1, landkarten = TRUE, states = states, quelle=quelle)
+
 
 
 }
@@ -3045,12 +3119,17 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
   states <- r$states_beruf_arbeitsmarkt_landkreis_vergleich
   search_val <- r$search_in_bar_chart
 
-  # filtern nach Zeit
-  df <- dplyr::tbl(con, from = "arbeitsmarkt_detail") %>%
-    dplyr::filter(
-      jahr == timerange)%>%
-    dplyr::select(-bereich)%>%
-    dplyr::collect()
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_detail
+  WHERE jahr = {timerange}
+                               ", .con = con)
+
+  df <- DBI::dbGetQuery(con, df_query)
+
+  df <- df %>%
+    dplyr::select(-bereich)
+
 
   # input values
   category <- r$kategorie_beruf_arbeitsmarkt_landkreis_vergleich
@@ -3075,7 +3154,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
       dplyr::mutate(display_value = prob) %>%
       dplyr::arrange(display_value)
 
-    legende <- paste0("{point.landkreis} <br> Anteil: {point.y} %")
+    legende <- paste0("Anteil: {point.y} %")
     yAxis <- "{value}%"
     titel <- paste0("Anteil von ", titel_sub2, titel_gesamt_1, titel_gesamt_2, " in ", states, " (", timerange, ")")
 
@@ -3085,7 +3164,7 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
       dplyr::arrange(display_value) %>%
       dplyr::filter(landkreis != "alle Landkreise")
 
-    legende <- paste0("{point.landkreis} <br> Wert: {point.y}")
+    legende <- paste0("Anzahl: {point.y}")
     yAxis <- "{value}"
     titel_gesamt_1 <- stringr::str_remove(titel_gesamt_1, "an allen")
     titel <- paste0("Anzahl ", titel_sub, titel_gesamt_1, " in ", states, " (", timerange, ")")
@@ -3129,7 +3208,8 @@ arbeitsmarkt_lk_detail_vergleich <- function(r){
   }
 
 
-  out <- balkenbuilder3(df_compare, titel, x="landkreis", y="display_value", tooltip, format, color, optional = optional, optional2 = my_hc_size)
+  quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+  out <- balkenbuilder3(df_compare, titel, x="landkreis", y="display_value", tooltip, format, color, optional = optional, optional2 = my_hc_size, quelle= quelle)
 
 
 }
@@ -3164,6 +3244,8 @@ arbeitsmarkt_lk_verlauf <- function(r){
     )%>%
     dplyr::select(indikator, bundesland, landkreis, fachbereich, jahr, wert) %>%
     dplyr::collect()
+
+
 
   if (absolut_selector == "In Prozent"){
 
@@ -3205,7 +3287,9 @@ arbeitsmarkt_lk_verlauf <- function(r){
     color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
                "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a", "#007655", "#dc6262",
                "#9d7265", "#5d335a", "#bfc6d3",  "#B45309","#d4c1bb", "#112c5f", "#8893a7")
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "landkreis", tooltip, format, color)
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "prop", group = "landkreis", tooltip, format, color, quelle = quelle)
+
 
   } else if(absolut_selector == "Anzahl") {
 
@@ -3225,12 +3309,13 @@ arbeitsmarkt_lk_verlauf <- function(r){
 
 
     titel <- paste0("Anzahl der ", gruppe ," in ", fach, " in ", regio)
-    tooltip <- "{point.landkreis} <br> Anteil: {point.wert_disp}"
+    tooltip <- "{point.landkreis} <br> Anzahl: {point.wert_disp}"
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194", "#66cbaf","#fbbf24", "#ee7775", "#35bd97",
                "#d0a9cd", "#5f94f0", "#fca5a5", "#fde68a", "#007655", "#dc6262",
                "#9d7265", "#5d335a", "#bfc6d3",  "#B45309","#d4c1bb", "#112c5f", "#8893a7")
-    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "landkreis", tooltip, format, color)
+    queleeee <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "wert", group = "landkreis", tooltip, format, color, quelle=queleeee)
 
   }
 }
