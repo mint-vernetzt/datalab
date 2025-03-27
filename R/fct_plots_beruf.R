@@ -129,6 +129,8 @@ beruf_einstieg_vergleich <- function(r) {
       df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
 
       df <- df[with(df, order(proportion, decreasing = TRUE)), ]
+      df <- df[with(df, order(indikator, decreasing = TRUE)), ]
+
       titel <- ifelse(regio == "Saarland",
                       paste0("MINT-Anteil unterschiedlicher Beschäftigtengruppen im ", regio, " (", timerange, ")"),
                       paste0("MINT-Anteil unterschiedlicher Beschäftigtengruppen in ", regio, " (", timerange, ")"))
@@ -138,7 +140,9 @@ beruf_einstieg_vergleich <- function(r) {
 
       quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-      out <- balkenbuilder(df, titel, x="indikator", y = "proportion", group = "fachbereich", tooltip, format, color, stacking = "percent", quelle = quelle)
+      out <- balkenbuilder(df, titel, x="indikator", y = "proportion", group = "fachbereich",
+                           tooltip, format, color, stacking = "percent",
+                           TF=TRUE, quelle = quelle)
 
 
     }else{

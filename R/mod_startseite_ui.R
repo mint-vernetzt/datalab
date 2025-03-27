@@ -38,20 +38,22 @@ mod_startseite_start_ui <- function(id){
           Diagramme einen intuitiven und informativen Zugang zu gewähren. Dabei entwickeln wir das MINT-DataLab stetig weiter."
             )
           ),
+          column(width =1),
           column(
-            width = 5,
-            h1("Was es seit dem neuesten Update gibt:"),
+            width = 4,
+           h1(style = "color: #00a87a; font-size: 20px;",
+             "Was ist Neu?"),
             p(style = "text-align: justify; font-size: 14px;",
-              "1.    Grafikdownload (CSV, PNG)", br(),
-              "2.    Aktualisierte Daten, z.B. TIMSS 2024",br(),
-              "3.    Strukturiertere Aufgliederung der Daten",br(),
-              "4.   Bugfixes & Prozessoptimierung"
+              "-  Grafiken und Daten als Download", br(),
+              "-  Fachkräftedaten auf Bundesland-Level",br(),
+              "-  Neue Kurzanalyse: Fachkräftemangel in den MINT-Disziplinen", br(),
+              "-  Daten zu Lehramts-Absolvent:innen verfügbar"
             ),
-            h2("Woran wir aktuell arbeiten:"),
+            h1(style = "color: #00a87a; font-size: 20px;",
+               "Woran wir aktuell arbeiten:"),
             p(style = "text-align: justify; font-size: 14px;",
-              "1.    Argumentationshilfeseite mit Erklärungen und Beispielen",br(),
-              "2.    Schnelleres Laden der Website",br(),
-              "3.     Mehr Daten und Datenaufschlüsselungen, z.B. Absolvent:innen im Lehramt"
+              "-  Argumentationshilfe mit Erklärungen und Beispielen",br(),
+              "-  Optimiertes Laden der Website", br()
             )
           )
       )
@@ -64,15 +66,17 @@ mod_startseite_start_ui <- function(id){
       div(
         class = "clean-box",
         column(
-        width = 10,
-        title = "Was steckt hinter den MINT-Statistiken?",
+        width = 7,
+        h5("Was steckt hinter den MINT-Statistiken?"),
         p(style = "text-align: justify; font-size = 20px",
             "Ausgewählte Statistiken bereiten wir in Kurzanalysen auf.
            Die Kurzanalysen können auf der MINT-DataLab-Themenseite der MINTvernetzt-Website gelesen und
            zukünftig heruntergeladen werden. ",
-          # LINK ergänzen, wenn da (Nike)
+
           br()),
-        tags$a(href="https://www.mint-vernetzt.de/mint-datalab/#kurzanalysen", "Link zu den Kurzanalysen", target = "_blank"),
+        tags$a(href="https://www.mint-vernetzt.de/mint-datalab/#kurzanalysen",
+               "Link zu den Kurzanalysen",
+               target = "_blank"),
         p(br())
         ),
 
