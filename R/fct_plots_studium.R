@@ -149,9 +149,6 @@ studienzahl_mint <- function(r){
 
 
 
-
-
-
 ### Tab 2 ----
 
 #' A function to plot time series
@@ -1556,18 +1553,23 @@ plot_mint_faecher <- function(r){
       titel_help1 <- ueberschrift_fct(label_w[1])
       titel_help2 <- ueberschrift_fct(label_w[2])
 
-      titel <- text = paste0("MINT-Fächeranteile von ", titel_help1 , " in ", regio, " (", timerange, ")")
+      titel1 <- paste0("MINT-Fächeranteile von ", titel_help1 , " in ", regio, " (", timerange, ")")
+      titel2 <- paste0("MINT-Fächeranteile von ", titel_help2 , " in ", regio, " (", timerange, ")")
       tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
-      color = as.character(df[df$indikator == label_w[1],]$color)
+      color1 = as.character(df[df$indikator == label_w[1],]$color)
+      color2 = as.character(df[df$indikator == label_w[2],]$color)
 
       quelle <- "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-
-      p1 <- piebuilder(df[df$indikator == label_w[1],], titel, x = "fach", y ="prop", tooltip, color, format='{point.prop}%', quelle = quelle)
-
       #noch nutzen?
 
-      out <- p1
+
+      out <- highcharter::hw_grid(
+        p1 <- piebuilder(df[df$indikator == label_w[1],], titel1, x = "fach", y ="prop", tooltip, color1, format='{point.prop}%', quelle = quelle),
+        p2 <- piebuilder(df[df$indikator == label_w[2],], titel2, x = "fach", y ="prop", tooltip, color2, format='{point.prop}%', quelle = quelle),
+        ncol = 2,
+        browsable = TRUE
+      )
 
 }
   }
