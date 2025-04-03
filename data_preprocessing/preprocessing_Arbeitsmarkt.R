@@ -1805,9 +1805,9 @@ data_naa_insgesamt <- data_naa %>% dplyr::group_by(ebene, fachrichtung, region, 
 # first create new data_frame (copy)
 data_naa_maennlich <- data_naa_insgesamt
 
-data_naa_insgesamt$anzahl <- as.numeric(data_naa_insgesamt$anzahl)
-data_naa_maennlich$anzahl <- as.numeric(data_naa_maennlich$anzahl)
-data_naa_weiblich$anzahl  <- as.numeric(data_naa_weiblich$anzahl)
+# data_naa_insgesamt$anzahl <- as.numeric(data_naa_insgesamt$anzahl)
+# data_naa_maennlich$anzahl <- as.numeric(data_naa_maennlich$anzahl)
+# data_naa_weiblich$anzahl  <- as.numeric(data_naa_weiblich$anzahl)
 
 
 # second subtract values##########################################################################################
@@ -1820,8 +1820,8 @@ data_naa <- rbind(data_naa_insgesamt, data_naa_weiblich, data_naa_maennlich)
 
 # läuft nicht durch
 # insert zero if NA
-data_naa <- data_naa %>%
-  dplyr::mutate(anzahl = tidyr::replace_na(anzahl, 0))
+# data_naa <- data_naa %>%
+#   dplyr::mutate(anzahl = tidyr::replace_na(anzahl, 0))
 
 data_naa <- data_naa %>%
   dplyr::rename(geschlecht = "geschlecht_aggregat",
@@ -1864,7 +1864,7 @@ data_naa <- rbind(data_naa_17, data_naa_20, data_naa_22, data_naa_24)
 
 
 
-setwd("C:/Users/tko/Documents/datalab/data/")
+#setwd("C:/Users/tko/Documents/datalab/data/")
 # für shinyapp:
 
 usethis::use_data(data_naa, overwrite = T)
