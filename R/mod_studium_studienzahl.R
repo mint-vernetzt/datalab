@@ -470,17 +470,28 @@ mod_studium_studienzahl_ui <- function(id){
 
 }
 
+
+
+
 #' studium_studienzahl Server Functions
 #'
 #' @noRd
-mod_studium_studienzahl_server <- function(id, r){
+mod_studium_studienzahl_server <- function(id, r, tab_input){
   moduleServer( id, function(input, output, session){
+
+    observe({
+      print(tab_input())
+    })
+
+
+
     ns <- session$ns
 
     # Box 1 - Wer Wählt MINT ----
 
     ## Pies MINT
     output$mint_anteil_studium <- renderUI({
+       req(tab_input() == "studium")
       studienzahl_mint(r)
     })
 
@@ -488,6 +499,7 @@ mod_studium_studienzahl_server <- function(id, r){
 
 
     output$plot_einstieg_verlauf <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- studienzahl_verlauf_single(r)
       r$plot_einstieg_verlauf <- plot_list
 
@@ -497,6 +509,12 @@ mod_studium_studienzahl_server <- function(id, r){
 
       plot_list
     })
+
+
+    observe({
+      print(tab_input())
+    })
+
 
     output$download_btn_plot_einstieg_verlauf <- downloadHandler(
       contentType = "image/png",
@@ -518,6 +536,7 @@ mod_studium_studienzahl_server <- function(id, r){
     ## Zeitverlauf BULAS Fächer
 
       output$plot_verlauf_studienzahl_bl_subject <- renderUI({
+         req(tab_input() == "studium")
         plot_list <- studienzahl_verlauf_bl_subject(r)
         r$plot_verlauf_studienzahl_bl_subject <- plot_list
 
@@ -550,6 +569,7 @@ mod_studium_studienzahl_server <- function(id, r){
 
 
     output$plot_studienzahl_bl_verlauf <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- studierende_verlauf_multiple_bl(r)
       r$plot_studienzahl_bl_verlauf <- plot_list
 
@@ -598,6 +618,7 @@ mod_studium_studienzahl_server <- function(id, r){
     )
 
     output$plot_choice_gender <- renderUI({
+       req(tab_input() == "studium")
       studienzahl_choice_gender(r)
     })
 
@@ -605,6 +626,7 @@ mod_studium_studienzahl_server <- function(id, r){
 
 
     output$plot_verlauf_studienzahl_bl_subject_gender <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- studierende_verlauf_single_bl_gender(r)
       r$plot_verlauf_studienzahl_bl_subject_gender <- plot_list
 
@@ -638,19 +660,24 @@ mod_studium_studienzahl_server <- function(id, r){
 
     ## MINT-Fächer-Anteil
 
-    output$plot_anteil_mint_faecher <- renderUI(
+    output$plot_anteil_mint_faecher <- renderUI({
+       req(tab_input() == "studium")
+     # req(r$ansicht_mint_fach)
       plot_mint_faecher(r)
-    )
+    })
 
-    output$plot_studienzahl_bula_faecher_mint <- renderUI(
+    output$plot_studienzahl_bula_faecher_mint <- renderUI({
+       req(tab_input() == "studium")
+     # req(r$ansicht_studium_bulas_faecher)
       plot_studierende_bula_faecher(r)
-    )
+    })
 
     ## Waffle
     plot_waffle_react <- reactive({
       studienzahl_waffle_mint(r)#
     })
     output$plot_waffle <- renderPlot({
+       req(tab_input() == "studium")
       plot_waffle_react()#
     })
 
@@ -660,6 +687,7 @@ mod_studium_studienzahl_server <- function(id, r){
 
 
     output$plot_top_faecher <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- plot_ranking_top_faecher(r)
       r$plot_top_faecher_left <- plot_list[[1]]
       r$plot_top_faecher_right <- plot_list[[2]]
@@ -716,12 +744,14 @@ mod_studium_studienzahl_server <- function(id, r){
 
     ## Karte
     output$plot_studienzahl_bula_mint <- renderUI({
+       req(tab_input() == "studium")
       studierende_bula_mint(r)
     })
 
     ## Zeitverlauf BuLas
 
     output$plot_verlauf_studienzahl_bl_subject1 <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- ranking_bl_subject(r)
       r$plot_verlauf_studienzahl_bl_subject1 <- plot_list
 
@@ -731,6 +761,11 @@ mod_studium_studienzahl_server <- function(id, r){
 
       plot_list
     })
+
+    observe({
+      print(tab_input())
+    })
+
 
     output$download_btn_plot_verlauf_studienzahl_bl_subject1 <- downloadHandler(
       contentType = "image/png",
@@ -753,6 +788,7 @@ mod_studium_studienzahl_server <- function(id, r){
 
 
     output$mint_anteil <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- mint_anteile(r)
       r$mint_anteil <- plot_list
 
@@ -784,6 +820,7 @@ mod_studium_studienzahl_server <- function(id, r){
     ## Balken MINT BULAs
 
     output$plot_vergleich_bl1 <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- studierende_mint_vergleich_bl(r)
       r$plot_vergleich_bl1 <- plot_list
 
@@ -819,6 +856,7 @@ mod_studium_studienzahl_server <- function(id, r){
 
     ## Pie Gender
     output$plot_einstieg_gender <- renderUI({
+       req(tab_input() == "studium")
       studienzahl_einstieg_gender(r)#
     })
 
@@ -827,6 +865,7 @@ mod_studium_studienzahl_server <- function(id, r){
     ## Verlauf Gender
 
     output$plot_einstieg_verlauf_gender <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- studienzahl_verlauf_single_gender(r)
       r$plot_einstieg_verlauf_gender <- plot_list
 
@@ -859,6 +898,7 @@ mod_studium_studienzahl_server <- function(id, r){
 
 
     output$plot_einstieg_comparison_gender <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- studienzahl_einstieg_comparison_gender(r)
       r$plot_einstieg_comparison_gender <- plot_list
 
@@ -894,6 +934,7 @@ mod_studium_studienzahl_server <- function(id, r){
     # })
 
     output$plot_auslaender_test <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- plot_auslaender_mint(r)
       r$plot_auslaender_test <- plot_list
 
@@ -925,6 +966,7 @@ mod_studium_studienzahl_server <- function(id, r){
 
 
     output$plot_auslaender_zeit <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- plot_auslaender_mint_zeit(r)
       r$plot_auslaender_zeit <- plot_list
 
@@ -958,6 +1000,7 @@ mod_studium_studienzahl_server <- function(id, r){
     # Tab 3
 
     output$plot_auslaender_international_bula <- renderUI({
+       req(tab_input() == "studium")
       plot_list <- studierende_international_bula_mint(r)
       r$plot_auslaender_international_bula <- plot_list
 
@@ -994,6 +1037,8 @@ mod_studium_studienzahl_server <- function(id, r){
 
   })
 }
+
+
 
 ## To be copied in the UI
 # mod_studium_studienzahl_ui("studium_studienzahl_1")

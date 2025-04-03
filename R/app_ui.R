@@ -60,8 +60,6 @@ app_ui <- function(request) {
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen")
         #,
 
-
-
         )
       ),
 
@@ -99,6 +97,10 @@ app_ui <- function(request) {
 
           shinydashboard::tabItems(
           shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
+
+
+
+
           shinydashboard::tabItem(tabName ="home", mod_home_ui("home_ui_1")),
           shinydashboard::tabItem(tabName ="schule", mod_schule_ui("schule_ui_1")),
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),

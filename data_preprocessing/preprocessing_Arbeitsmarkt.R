@@ -1732,12 +1732,12 @@ data_naa_20 <- data_naa
 
 
 data_naa_a <- readxl::read_excel(paste0(pfad, "BA027_2024_Ausbildungsmarkt-Frauenanteil.xlsx"),
-                               sheet  = "Verträge_Daten", range = "A4:SW238")
+                               sheet  = "Verträge_Daten", range = "A4:D245")
 
 
 
 data_naa <- readxl::read_excel(paste0(pfad, "BA027_2024_Ausbildungsmarkt-Frauenanteil.xlsx"),
-                               sheet  = "Verträge_Daten", range = "TA4:AMS238") #alles aus 2022, auch Regionen
+                               sheet  = "Verträge_Daten", range = "SI4:ALL245") #alles aus 2022, auch Regionen
 
 data_naa <- cbind(data_naa_a, data_naa)
 
@@ -1805,13 +1805,13 @@ data_naa_insgesamt <- data_naa %>% dplyr::group_by(ebene, fachrichtung, region, 
 # first create new data_frame (copy)
 data_naa_maennlich <- data_naa_insgesamt
 
-data_naa_insgesamt$anzahl <- as.numeric(data_naa_insgesamt$anzahl)
-data_naa_maennlich$anzahl <- as.numeric(data_naa_maennlich$anzahl)
-data_naa_weiblich$anzahl  <- as.numeric(data_naa_weiblich$anzahl)
+#data_naa_insgesamt$anzahl <- as.numeric(data_naa_insgesamt$anzahl)
+#data_naa_maennlich$anzahl <- as.numeric(data_naa_maennlich$anzahl)
+#data_naa_weiblich$anzahl  <- as.numeric(data_naa_weiblich$anzahl)
 
 
 # second subtract values##########################################################################################
-data_naa_maennlich$anzahl <- data_naa_maennlich$anzahl - data_naa_weiblich$anzahl
+data_naa_maennlich$anzahl <- data_naa_insgesamt$anzahl - data_naa_weiblich$anzahl
 # specify gender as "männlich"
 data_naa_maennlich$geschlecht_aggregat <- "Männer"
 
@@ -1820,8 +1820,8 @@ data_naa <- rbind(data_naa_insgesamt, data_naa_weiblich, data_naa_maennlich)
 
 # läuft nicht durch
 # insert zero if NA
-data_naa <- data_naa %>%
-  dplyr::mutate(anzahl = tidyr::replace_na(anzahl, 0))
+# data_naa <- data_naa %>%
+#   dplyr::mutate(anzahl = tidyr::replace_na(anzahl, 0))
 
 data_naa <- data_naa %>%
   dplyr::rename(geschlecht = "geschlecht_aggregat",
