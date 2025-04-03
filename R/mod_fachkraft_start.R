@@ -104,9 +104,15 @@ mod_fachkraft_start_ui <- function(id){
               br(), br(),
               tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/07/MINTvernetzt_Kurzanalyse_Zukunftsszenarien_MINT_Fachkraefte.pdf", target = "_blank",
                      "Link zu der Kurzanalyse über die Zukunftsszenarien allgemein"), br(),
+              p("Veröffentlichung: 16. Juli 2024",
+                br(),
+                "Zitiervorschlag: MINTvernetzt (2024). Kurzanalyse. Zukunftsszenarien MINT-Fachkräfte."),
               tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/07/MINTvernetzt_Kurzanalyse_Zukunftsszenarien_Zuwanderung.pdf", target = "_blank",
                      "Link zu der Kurzanalyse über die Zukunftsszenarien der Zuwanderung in MINT"), br(),
-              br())
+              br(),
+              p("Veröffentlichung: 16. Juli 2024",
+                br(),
+                "Zitiervorschlag: MINTvernetzt (2024). Kurzanalyse. Zukunftsszenarien Zuwanderung in MINT."))
         )
     ),
 
@@ -492,7 +498,10 @@ div(class = "content-box",
           br(), br(),
           tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2025/03/Fachkraeftemangel-MINT-Disziplinen.pdf", target = "_blank",
                  "Link zu der Kurzanalyse"), br(),
-          br())
+          br(),
+          p("Veröffentlichung: 05. März 2024",
+            br(),
+            "Zitiervorschlag: MINTvernetzt (2024). Kurzanalyse. Fachkräftemangel in MINT; Eine Frage der Disziplin?"))
     )
 ),
 
@@ -547,9 +556,6 @@ div(class = "content-box",
         p()
         )
         ),
-        # column(width = 5,
-        #        p(" ")
-        #        ),
 
         column(width = 12,
                br(),
@@ -561,11 +567,6 @@ div(class = "content-box",
               width = 3,
               mod_fachkraft_item_detail_ui("fachkraft_item_detail_1"),
               br(),
-              # br(),
-              # downloadButton(
-              #   outputId = ns("download_btn_plot_fachkraft_item_detail_1"),
-              #   label = "Download",
-              #   icon = icon("download"))
 
               ),
             shiny::mainPanel(
@@ -578,7 +579,39 @@ div(class = "content-box",
                                  trigger = "hover"),
               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_3")
             )
+            ),
+
+
+          ######################################################file mod fachkraft ranking epa steht aber server und so weiter fehlt
+          tabPanel(
+            title = "Ranking der Engpassrisiken", br(),
+
+            shiny::sidebarPanel(
+              width = 3,
+              mod_fachkraft_item_epa_ui("fachkraft_ranking_engpass"),
+              br(),
+            ),
+            shiny::mainPanel(
+              width = 9,
+              p("Auf Bundesebene liegen Daten zum Fachkräfteengpass in den einzelnen Berufen bzw.
+                genauer Berufsgattungen, z. B. Mechatronik, vor."),
+              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_ranking_engpass")),
+                                           color = "#154194"),
+              shinyBS::bsPopover(
+                id="fachkraft_engpaesse_ranks", title="",
+                content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+                placement = "top",
+                trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"),
+                     icon("info-circle"),
+                     id = "fachkraft_engpaesse_ranks")
             )
+          )
+
+
+
+
+
         )
       )
     ),
@@ -815,6 +848,8 @@ mod_fachkraft_start_server <- function(id, r){
     #     file.remove(r$plot_fachkraft_detail_item_1_right_title)
     #   }
     # )
+
+
 
 
   })

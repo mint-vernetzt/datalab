@@ -447,10 +447,17 @@ mod_schule_kurse_ui <- function(id){
                 beitragen kann."),
         br(), br(),
         tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Gender_final.pdf",
-               target = "_blank", "Link zu der Kurzanalyse Schule: Mädchen & MINT"), br(),
+               target = "_blank", "Link zu der Kurzanalyse Schule: Mädchen & MINT"),
+        p("Veröffentlichung: 16. März 2024",
+          br(),
+          "Zitiervorschlag: MINTvernetzt (2024). Kurzanalyse. Schule: Mädchen & MINT."),
+        br(),
         tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Teilhabe_final.pdf",
                target = "_blank", "Link zu der Kurzanalyse Mit MINT-Förderung zu mehr Chancengerechtigkeit"),
-        br(), br())
+        br(), br(),
+        p("Veröffentlichung: 16. Februar 2024",
+          br(),
+          "Zitiervorschlag: MINTvernetzt (2024). Kurzanalyse. Mit MINT-Förderung zu mehr Chancengerechtigkeit"))
       )
   ),
 

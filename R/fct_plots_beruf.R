@@ -2664,7 +2664,6 @@ arbeitsmarkt_top10 <- function( r){
     df <- df %>% dplyr::filter(fachbereich == fb)
   }
 
-  browser()
 
   # zu gering besetzte Ausbildungen ausfiltern
   df <- df %>% dplyr::filter(df$wert > 50)
