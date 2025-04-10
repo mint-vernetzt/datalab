@@ -90,10 +90,6 @@ mod_argumentation_ui <- function(id){
                   shiny::mainPanel(
                     shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_verlauf")),
                                                  color = "#154194"),
-                    br(),
-                    p(style="font-size:12px;color:grey",
-                      "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-
                     shinyBS::bsPopover(id="h_argument_1", title = "",
                                        content = paste0("Erklärung, wenn nötig."),
                                        placement = "top",
@@ -121,10 +117,6 @@ mod_argumentation_ui <- function(id){
           shiny::mainPanel(
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_fachkraft")),
                                          color = "#154194"),
-            br(),
-            p(style="font-size:12px;color:grey",
-              "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-
             shinyBS::bsPopover(id="h_argument_2", title = "",
                                content = paste0("Erklärung, wenn nötig."),
                                placement = "top",
@@ -151,10 +143,6 @@ mod_argumentation_ui <- function(id){
           shiny::mainPanel(
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_demografie")),
                                          color = "#154194"),
-            br(),
-            p(style="font-size:12px;color:grey",
-              "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-
             shinyBS::bsPopover(id="h_argument_3", title = "",
                                content = paste0("Erklärung, wenn nötig."),
                                placement = "top",
@@ -181,10 +169,6 @@ mod_argumentation_ui <- function(id){
           shiny::mainPanel(
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_nachwuchs")),
                                          color = "#154194"),
-            br(),
-            p(style="font-size:12px;color:grey",
-              "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-
             shinyBS::bsPopover(id="h_argument_4", title = "",
                                content = paste0("Erklärung, wenn nötig."),
                                placement = "top",
@@ -204,17 +188,13 @@ mod_argumentation_ui <- function(id){
         width = 12,
         column(
           width = 8,
-          p("Text - Allgemeine Erklärung für Grafik")
+          p("Diese Wirkhebel beziehen sich auf gesamtdeutsche Zahlen.")
         ),
         column(
           width = 12,
           shiny::mainPanel(
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_wirkhebel")),
                                          color = "#154194"),
-            br(),
-            p(style="font-size:12px;color:grey",
-              "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-
             shinyBS::bsPopover(id="h_argument_5", title = "",
                                content = paste0("Erklärung, wenn nötig."),
                                placement = "top",
@@ -241,10 +221,6 @@ mod_argumentation_ui <- function(id){
           shiny::mainPanel(
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_frauen")),
                                          color = "#154194"),
-            br(),
-            p(style="font-size:12px;color:grey",
-              "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-
             shinyBS::bsPopover(id="h_argument_6", title = "",
                                content = paste0("Erklärung, wenn nötig."),
                                placement = "top",

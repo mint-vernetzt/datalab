@@ -18,6 +18,7 @@ beruf_einstieg_vergleich <- function(r) {
   faecher <- r$fachbereich_arbeitsmarkt_einstieg_gender
 
 
+
   if(betrachtung == "Einzelansicht - Kuchendiagramm"){
     gruppe <- r$indikator_arbeitsmarkt_einsteig_vergleich_kuchen
     abs_rel <- "In Prozent"

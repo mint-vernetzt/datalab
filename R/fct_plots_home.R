@@ -741,7 +741,6 @@ home_comparison_line <- function(r) {
   indikator_choice <- r$indikator_start_comparison
   abs_selector <- r$abs_zahlen_start_comparison
 
-
   # # filter dataset based on UI inputs
   # df <- dplyr::tbl(con, from = "zentral") %>%
   #   dplyr::filter(jahr %in% t,

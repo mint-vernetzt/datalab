@@ -17,7 +17,6 @@ studienzahl_mint <- function(r){
     regio <- r$region_studium_anteil
     testl1 <- if (betrachtung == "Einzelansicht - Kuchendiagramm") r$studium_anteil_i else r$studium_anteil_i_balken
 
-
     # df <- dplyr::tbl(con, from = "studierende_detailliert") %>%
     #   dplyr::filter(jahr == testy1,
     #                 geschlecht == "Gesamt",
