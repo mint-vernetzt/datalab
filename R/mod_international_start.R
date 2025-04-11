@@ -120,7 +120,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_schule_map_1")),
+                                      shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_schule_map_1")),
                                                                    color = "#154194"),
 
                                       shinyBS::bsPopover(id="h_international_schule_1", title="",
@@ -151,7 +151,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_schule_item_1")),
+                                      shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_schule_item_1")),
                                                                    color = "#154194"),
 
 
@@ -181,7 +181,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_schule_migration_1")),
+                                      shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_schule_migration_1")),
                                                                    color = "#154194"),
 
 
@@ -233,7 +233,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_studienzahl_map_1")),
+                                      shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_studienzahl_map_1")),
                                                                    color = "#154194"),
 
                                       shinyBS::bsPopover(id="h_international_vergl_1", title="",
@@ -255,7 +255,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_map_fem_1")),
+                                      shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_map_fem_1")),
                                                                    color = "#154194"),
 
                                       shinyBS::bsPopover(id="h_international_vergl_2", title="",
@@ -285,7 +285,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_top10_mint_1")),
+                                      shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_top10_mint_1")),
                                                                    color = "#154194"),
 
                                       shinyBS::bsPopover(id="h_international_vergl_3", title="",
@@ -320,7 +320,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_top10_mint_gender_1")),
+                                      shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_top10_mint_gender_1")),
                                                                    color = "#154194"),
 
                                      shinyBS::bsPopover(id="h_international_vergl_4", title="",
@@ -352,7 +352,7 @@ mod_international_start_ui <- function(id){
 
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_mint_top_10_1")),
+                                      shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_mint_top_10_1")),
                                                                    color = "#154194"),
                                 shinyBS::bsPopover(id="h_international_vergl_5", title="",
                                                          content = paste0("In den Europa-Daten wird der ganze tertiäre Bildungsbereich betrachtet, also nicht nur die akademische Bildung (Bachelor, Master, Promotion), sondern auch vertiefende berufsorientierte Bildung (z. B. eine Technikerausbildung)."),
@@ -399,7 +399,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_studienzahl_map_arb_1")),
+                                      shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_studienzahl_map_arb_1")),
                                                                    color = "#154194"),
 
                                       shinyBS::bsPopover(id = "h_beruf_international_1", title = "",
@@ -422,7 +422,7 @@ mod_international_start_ui <- function(id){
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
-                                      shinycssloaders::withSpinner(htmlOutput(ns("plot_international_map_arb_gender_1")),
+                                      shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_map_arb_gender_1")),
                                                                    color = "#154194"),
 
                                       shinyBS::bsPopover(id = "h_beruf_international_2", title = "",
@@ -454,7 +454,7 @@ mod_international_start_ui <- function(id){
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(htmlOutput(ns("plot_international_top10_mint_arb_1")),
+                                        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_top10_mint_arb_1")),
                                                                      color = "#154194"),
 
 
@@ -485,7 +485,7 @@ mod_international_start_ui <- function(id){
                                         ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(htmlOutput(ns("plot_international_top10_mint_arb_gender_1")),
+                                        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_top10_mint_arb_gender_1")),
                                                                      color = "#154194"),
 
 
@@ -511,7 +511,7 @@ mod_international_start_ui <- function(id){
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
-                                        shinycssloaders::withSpinner(htmlOutput(ns("plot_international_arbeitsmarkt_vergleiche_1")),
+                                        shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_international_arbeitsmarkt_vergleiche_1")),
                                                                      color = "#154194"),
 
                                         shinyBS::bsPopover(id = "h_beruf_international_ho", title = "",
@@ -592,7 +592,7 @@ mod_international_start_server <- function(id, r){
 
     # tab 1
 
-    output$plot_international_schule_map_1 <- renderUI({
+    output$plot_international_schule_map_1 <- highcharter::renderHighchart({
       plot_list <- plot_international_schule_map(r)
 
 
@@ -602,7 +602,7 @@ mod_international_start_server <- function(id, r){
 
     # tab 2
 
-    output$plot_international_schule_item_1 <- renderUI({
+    output$plot_international_schule_item_1 <- highcharter::renderHighchart({
       plot_list <- plot_international_schule_item(r)
       r$plot_international_schule_item_1 <- plot_list
 
@@ -617,7 +617,7 @@ mod_international_start_server <- function(id, r){
 
     # tab 3
 
-    output$plot_international_schule_migration_1 <- renderUI({
+    output$plot_international_schule_migration_1 <- highcharter::renderHighchart({
       plot_list <- plot_international_schule_migration(r)
 
 
@@ -630,7 +630,7 @@ mod_international_start_server <- function(id, r){
     # Box 2 - Studium international ----
     # tab 1
 
-    output$plot_international_studienzahl_map_1 <- renderUI({
+    output$plot_international_studienzahl_map_1 <- highcharter::renderHighchart({
       plot_list <- plot_international_map(r)
 
 
@@ -643,7 +643,7 @@ mod_international_start_server <- function(id, r){
     # tab 2
 
 
-    output$plot_international_map_fem_1 <- renderUI({
+    output$plot_international_map_fem_1 <- highcharter::renderHighchart({
       plot_list <- plot_international_map_fem(r)
 
 
@@ -655,7 +655,7 @@ mod_international_start_server <- function(id, r){
 
     # tab 3
 
-    output$plot_international_top10_mint_1 <- renderUI({
+    output$plot_international_top10_mint_1 <- highcharter::renderHighchart({
       plot_list <- plot_international_top10(r)
       r$plot_international_top10_mint_1_left <- plot_list[[1]]
       r$plot_international_top10_mint_1_right <- plot_list[[2]]
@@ -714,7 +714,7 @@ mod_international_start_server <- function(id, r){
 
     # tab 4
 
-    output$plot_international_top10_mint_gender_1  <- renderUI({
+    output$plot_international_top10_mint_gender_1  <- highcharter::renderHighchart({
       plot_list <- plot_international_top10_gender(r)
       r$plot_international_top10_mint_gender_1_left <- plot_list[[1]]
       r$plot_international_top10_mint_gender_1_right <- plot_list[[2]]
@@ -774,7 +774,7 @@ mod_international_start_server <- function(id, r){
 
     # tab 5
 
-    output$plot_international_mint_top_10_1  <- renderUI({
+    output$plot_international_mint_top_10_1  <- highcharter::renderHighchart({
       plot_list <- plot_international_mint_top_10(r)
       r$plot_international_mint_top_10_1_left <- plot_list[[1]]
       r$plot_international_mint_top_10_1_right <- plot_list[[2]]
@@ -836,7 +836,7 @@ mod_international_start_server <- function(id, r){
 
     # Tab 1
 
-    output$plot_international_studienzahl_map_arb_1 <- renderUI({
+    output$plot_international_studienzahl_map_arb_1 <- highcharter::renderHighchart({
       plot_list <- plot_international_map_arb(r)
 
 
@@ -848,7 +848,7 @@ mod_international_start_server <- function(id, r){
 
     # tab 2
 
-    output$plot_international_map_arb_gender_1 <- renderUI({
+    output$plot_international_map_arb_gender_1 <- highcharter::renderHighchart({
       plot_list <- plot_international_map_arb_gender(r)
 
 
@@ -859,7 +859,7 @@ mod_international_start_server <- function(id, r){
 
     # tab 3
 
-    output$plot_international_top10_mint_arb_1  <- renderUI({
+    output$plot_international_top10_mint_arb_1  <- highcharter::renderHighchart({
       plot_list <- plot_international_top10_mint_arb(r)
       r$plot_international_top10_mint_arb_1_left <- plot_list[[1]]
       r$plot_international_top10_mint_arb_1_right <- plot_list[[2]]
@@ -916,7 +916,7 @@ mod_international_start_server <- function(id, r){
 
     # tab 4
 
-    output$plot_international_top10_mint_arb_gender_1 <- renderUI({
+    output$plot_international_top10_mint_arb_gender_1 <- highcharter::renderHighchart({
       plot_list <- plot_international_top10_mint_arb_gender(r)
       r$plot_international_top10_mint_arb_gender_left <- plot_list[[1]]
       r$plot_international_top10_mint_arb_gender_right <- plot_list[[2]]
@@ -972,7 +972,7 @@ mod_international_start_server <- function(id, r){
     )
 
     # tab 5
-    output$plot_international_arbeitsmarkt_vergleiche_1 <- renderUI({
+    output$plot_international_arbeitsmarkt_vergleiche_1 <- highcharter::renderHighchart({
       plot <- plot_international_arbeitsmarkt_vergleiche(r)
 
       r$plot_international_arbeitsmarkt_vergleiche_1 <- plot

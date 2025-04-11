@@ -85,7 +85,7 @@ mod_home_start_ui <- function(id){
         ),
         column(
           width = 12,
-        tabsetPanel(type = "tabs",
+        tabsetPanel(id = ns("TESTID_1"), type = "tabs",
                     tabPanel("aktueller MINT-Anteil", br(),
                              shiny::sidebarPanel(
                                width = 3,
@@ -94,7 +94,7 @@ mod_home_start_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_rest_einstieg_1")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_mint_rest_einstieg_1")),
                                                             color = "#154194"),
                         shinyBS::bsPopover(id="h_alle_mint_1", title = "",
                                            content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
@@ -110,7 +110,7 @@ mod_home_start_ui <- function(id){
                           ),
                         shiny::mainPanel(
                           width = 9,
-                          shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_1")),
+                          shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_mint_1")),
                                                        color = "#154194"),
                           shinyBS::bsPopover(id="h_alle_mint_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen."),
@@ -139,7 +139,8 @@ mod_home_start_ui <- function(id){
         ),
         column(
           width = 12,
-        tabsetPanel(type = "tabs",
+        tabsetPanel(id = ns("TABSID_2"),
+                    type = "tabs",
                     tabPanel("aktueller Anteil Frauen in MINT", br(),  # Verlgeich
                              shiny::sidebarPanel(
                                width = 3,
@@ -148,7 +149,7 @@ mod_home_start_ui <- function(id){
 
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_pie_mint_gender")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_pie_mint_gender")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_alle_frauen_1", title = "",
                                                   content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden. <br><br>Baden-Württemberg erfasst keine geschelchterspezifischen Kursbelegungszahlen von Schüler:innen."),
@@ -165,7 +166,7 @@ mod_home_start_ui <- function(id){
                           ),
                         shiny::mainPanel(
                           width = 9,
-                          shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_mint")),
+                          shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_mint")),
                                                        color = "#154194"),
                           shinyBS::bsPopover(id="h_alle_frauen_2", title = "",
                                              content = paste0("Anders als z. B. bei Studierenden wählen Schüler:innen mehrere Grund- und Leistungskurse. Um dennoch einen Anteil von &quotMINT&quot vs. &quotNicht-MINT&quot angeben zu können, nutzen wir die Kursbelegungszahlen der Schüler:innen.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.<br><br>Baden-Württemberg erfasst keine geschelchterspezifischen Kursbelegungszahlen von Schüler:innen."),
@@ -210,22 +211,29 @@ mod_home_start_server <- function(id,r){
 
     # Box 1, Tab1 ----
 
-
-    output$plot_mint_rest_einstieg_1 <- renderUI({
+    observeEvent(input$TESTID_1, {
+      if (input$TESTID_1 == "aktueller MINT-Anteil"){
+    output$plot_mint_rest_einstieg_1 <- highcharter::renderHighchart({
       home_einstieg( r)
     })
+      }
+    })
 
-
-    output$plot_pie_mint_gender <- renderUI({
+    observeEvent(input$TESTID_2, {
+      if (input$TESTID_1 == "aktueller Anteil Frauen in MINT"){
+    output$plot_pie_mint_gender <- highcharter::renderHighchart({
       home_einstieg_gender( r)
     })
+      }})
 
     ### Downloads ----
 
     #### Box 1 ----
 
     #tab 2
-    output$plot_mint_1 <- renderUI({
+    observeEvent(input$TESTID_1, {
+      if (input$TESTID_1 == "MINT-Anteil im Zeitverlauf"){
+    output$plot_mint_1 <- highcharter::renderHighchart({
       plot_list <- home_rest_mint_verlauf(r)
       r$plot_mint_1 <- plot_list
 
@@ -235,7 +243,11 @@ mod_home_start_server <- function(id,r){
 
       plot_list
     })
+      }
+    })
 
+    observeEvent(input$TESTID_1, {
+      if (input$TESTID_1 == "MINT-Anteil im Zeitverlauf"){
     output$download_btn_plot_mint_1 <- downloadHandler(
       contentType = "image/png",
       filename = function() {r$plot_mint_1_title},
@@ -252,6 +264,9 @@ mod_home_start_server <- function(id,r){
         file.remove(r$plot_mint_1_title)
       }
     )
+      }
+    })
+
 
 
     #### Box 2 ----
@@ -260,7 +275,10 @@ mod_home_start_server <- function(id,r){
 
     # tab 2
 
-    output$plot_verlauf_mint <- renderUI({
+
+    observeEvent(input$TESTID_2, {
+      if (input$TESTID_1 == "Zeitverlauf"){
+    output$plot_verlauf_mint <- highcharter::renderHighchart({
       plot_list <- home_comparison_line(r)
       r$plot_verlauf_mint <- plot_list
 
@@ -270,6 +288,10 @@ mod_home_start_server <- function(id,r){
 
       plot_list
     })
+      }})
+
+    observeEvent(input$TESTID_2, {
+      if (input$TESTID_1 == "Zeitverlauf"){
 
     output$download_btn_plot_verlauf_mint <- downloadHandler(
       contentType = "image/png",
@@ -287,9 +309,10 @@ mod_home_start_server <- function(id,r){
         file.remove(r$plot_verlauf_mint_title)
       }
     )
+      }})
 
     # tab 3
-    output$plot_comparison_gender <- renderUI({
+    output$plot_comparison_gender <- highcharter::renderHighchart({
       plot_list <-home_stacked_comparison_gender(r)
       r$plot_comparison_gender <- plot_list
 

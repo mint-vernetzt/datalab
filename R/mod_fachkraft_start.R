@@ -373,7 +373,7 @@ mod_fachkraft_start_ui <- function(id){
               width = 9,
               p("Auf Bundesebene liegen Daten zum Fachkräfteengpass in den einzelnen Berufen bzw.
                 genauer Berufsgattungen, z. B. Mechatronik, vor."),
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_item_1")),
+              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_epa_item_1")),
                                            color = "#154194"),
 
 
@@ -403,7 +403,7 @@ mod_fachkraft_start_ui <- function(id){
                 Deutschland. Hier sehen wir Informationen zum mittleren Fachkräfteengpass in den
                 verschiedenen, MINT-dominierten Berufsgruppen, z. B. Mechatronik und Automatisierungstechnik.
                 Die Berufsgrattungen werden zu Berufsgruppen zusammengefasst und gemeinsam betrachtet."),
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_epa_bulas")),
+              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_epa_bulas")),
                                            color = "#154194"),
 
 
@@ -570,7 +570,7 @@ div(class = "content-box",
               ),
             shiny::mainPanel(
               width = 9,
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_detail_item_1")),
+              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_detail_item_1")),
                                            color = "#154194"),
              shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
                                  content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
@@ -670,7 +670,7 @@ mod_fachkraft_start_server <- function(id, r){
 
 
 
-    output$plot_fachkraft_epa_item_1 <- renderUI({
+    output$plot_fachkraft_epa_item_1 <- highcharter::renderHighchart({
 
       plots <- plot_fachkraft_epa_item(r)
       if(length(plots)==2){
@@ -733,7 +733,7 @@ mod_fachkraft_start_server <- function(id, r){
     # })
 
     ## Fachkräfteegpass Bulas
-    output$plot_fachkraft_epa_bulas <- renderUI({
+    output$plot_fachkraft_epa_bulas <- highcharter::renderHighchart({
       plot_fachkraft_epa_bulas(r)
     })
 
@@ -764,7 +764,7 @@ mod_fachkraft_start_server <- function(id, r){
     # )
 
     # Download für JT kurz raus
-    output$plot_fachkraft_bar_vakanz_1 <- renderUI({
+    output$plot_fachkraft_bar_vakanz_1 <- highcharter::renderHighchart({
       plot_list <- plot_fachkraft_bar_vakanz(r)
       plot_list
     })
@@ -782,7 +782,7 @@ mod_fachkraft_start_server <- function(id, r){
     #     ncol = 2)
     # })
 
-    output$plot_fachkraft_detail_item_1 <- renderUI({
+    output$plot_fachkraft_detail_item_1 <- highcharter::renderHighchart({
       plot_list <- plot_fachkraft_detail_item(r)
       r$plot_fachkraft_detail_item_1_left <- plot_list[[1]]
       r$plot_fachkraft_detail_item_1_right <- plot_list[[2]]

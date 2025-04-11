@@ -75,7 +75,7 @@ mod_fachkraft_item_prog_server <- function(id, r){
         )
     })
 
-    output$dynamic_popover <- renderUI({
+    output$dynamic_popover <- highcharter::renderHighchart({
      # r$fachkraft_item_prog_wirkhebel <- input$fachkraft_item_prog_wirkhebel
       wirkhebel <- selected_prog_wirkhebel()
 

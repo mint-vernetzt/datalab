@@ -109,7 +109,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_vergleich")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_vergleich")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
@@ -135,7 +135,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_verlauf")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id = "h_beruf_mint_2", title = "",
@@ -156,7 +156,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_beruf_arbeitsmarkt_mint_bulas")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_beruf_arbeitsmarkt_mint_bulas")),
                                                             color = "#154194"),
 
 
@@ -214,7 +214,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_faecher_anteil")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_arbeitsmarkt_faecher_anteil")),
                                                             color = "#154194"),
 
 
@@ -238,7 +238,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_verlauf_faecher")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_arbeitsmarkt_verlauf_faecher")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id = "h_beruf_fach_mint_2", title = "",
@@ -258,7 +258,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_faecher_bl")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_arbeitsmarkt_faecher_bl")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id = "h_beruf_fach_1", title = "",
@@ -303,7 +303,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_pie_gender")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_pie_gender")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id = "h_beruf_frauen_1", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
@@ -323,7 +323,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf_gender")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id = "h_beruf_frauen_2", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
@@ -344,7 +344,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                      ),
                      shiny::mainPanel(
                        width = 9,
-                       shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_wahl_gender")),
+                       shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_arbeitsmarkt_wahl_gender")),
                                                     color = "#154194"),
 
 
@@ -373,7 +373,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                      ),
                      shiny::mainPanel(
                        width = 9,
-                       shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_top10")),
+                       shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_arbeitsmarkt_top10")),
                                                     color = "#154194"),
 
                        shinyBS::bsPopover(id = "h_beruf_fach_4", title = "",
@@ -439,7 +439,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_detail_map"),height = "1600px"),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_arbeitsmarkt_detail_map"),height = "1600px"),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id = "h_beruf_regional_1", title = "",
                                                   content = paste0("Manche Landkreise sind grau dargestellt oder fehlen in der Darstellung. Das liegt daran, dass die zugrundeliegenden Karten vereinzelt alte oder falsche Landkreiszuordnungen (in Niedersachen, Sachsen-Anhalt) enthalten oder einzelne Regionen gar nicht enthalten (Bremen, in Sachsen). Daten zu den fehlenden Regionen sind in der Darstellung im nächstne Tab zu finden.", "<br> <br> Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden.", "<br> <br>In die Kategorie &quotAuszubildende mit neuem Lehrvertrag&quot fallen sowohl neue Auszubilndende als auch Auszubildende nach Vertragswechsel."),
@@ -472,7 +472,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                #   options = list(`live-search` = TRUE)
                                # ),
                                shinycssloaders::withSpinner(
-                                 htmlOutput(ns("plot_arbeitsmarkt_detail_vergleich"),height = "1600px"),
+                                 highcharter::highchartOutput(ns("plot_arbeitsmarkt_detail_vergleich"),height = "1600px"),
                                 color = "#154194"),
 
                                shinyBS::bsPopover(id = "h_beruf_regional_23", title = "",
@@ -499,7 +499,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("fachbereich_beruf_arbeitsmarkt_landkreis_verlauf")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("fachbereich_beruf_arbeitsmarkt_landkreis_verlauf")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id = "h_beruf_fach_mint_2", title = "",
                                                   content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
@@ -561,11 +561,11 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Box 1 ----
     # Tab
-    output$plot_arbeitsmarkt_faecher_anteil <- renderUI({
+    output$plot_arbeitsmarkt_faecher_anteil <- highcharter::renderHighchart({
       arbeitsmarkt_faecher_anteil(r)
     })
 
-    output$plot_einstieg_verlauf <- renderUI({
+    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
       plot_list <- beruf_verlauf_single(r)
       r$plot_einstieg_verlauf <- plot_list
 
@@ -596,7 +596,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Tab 3
 
-    output$plot_einstieg_vergleich <- renderUI({
+    output$plot_einstieg_vergleich <- highcharter::renderHighchart({
       plot_list <- beruf_einstieg_vergleich(r)
       plot_list
     })
@@ -610,7 +610,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Tab 5
 
-    output$plot_arbeitsmarkt_bl_gender <- renderUI({
+    output$plot_arbeitsmarkt_bl_gender <- highcharter::renderHighchart({
       plot_list <- arbeitsmarkt_bl_gender(r)
 
 
@@ -627,7 +627,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # Tab 6
 
 
-      output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- renderUI({
+      output$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- highcharter::renderHighchart({
         plot_list <- arbeitsmarkt_bl_gender_verlauf(r)
         r$plot_beruf_arbeitsmarkt_bl_gender_verlauf <- plot_list
 
@@ -660,11 +660,11 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Tab 7
 
-    output$plot_beruf_arbeitsmarkt_mint_bulas <- renderUI({
+    output$plot_beruf_arbeitsmarkt_mint_bulas <- highcharter::renderHighchart({
       arbeitsmarkt_mint_bulas(r)
     })
 
-    output$plot_beruf_arbeitsmarkt_bl_verlauf  <- renderUI({
+    output$plot_beruf_arbeitsmarkt_bl_verlauf  <- highcharter::renderHighchart({
       plot_list <- arbeitsmarkt_bl_verlauf(r)
       r$plot_beruf_arbeitsmarkt_bl_verlauf <- plot_list
 
@@ -698,14 +698,14 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     #Tab 1
 
     #Tab 2
-    output$plot_arbeitsmarkt_verlauf_faecher <- renderUI({
+    output$plot_arbeitsmarkt_verlauf_faecher <- highcharter::renderHighchart({
       beruf_verlauf_faecher(r)
     })
 
     # ALT
     # Tab 1
 
-    output$plot_arbeitsmarkt_faecher_bl <- renderUI({
+    output$plot_arbeitsmarkt_faecher_bl <- highcharter::renderHighchart({
       plot_list <- arbeitsmarkt_bula_faecher(r)
 
 
@@ -719,7 +719,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # tab 2
 
 
-    output$plot_arbeitsmarkt_überblick_fächer  <- renderUI({
+    output$plot_arbeitsmarkt_überblick_fächer  <- highcharter::renderHighchart({
       plot_list <- arbeitsmarkt_überblick_fächer(r)
       r$plot_arbeitsmarkt_überblick_fächer <- plot_list
 
@@ -751,7 +751,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
 
 
-    # output$plot_arbeitsmarkt_bl_vergleich  <- renderUI({
+    # output$plot_arbeitsmarkt_bl_vergleich  <- highcharter::renderHighchart({
     #   plot_list <- arbeitsmarkt_bl_vergleich(r)
     #   r$plot_arbeitsmarkt_bl_vergleich <- plot_list
     #
@@ -782,7 +782,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # Tab 4
 
 
-    output$plot_arbeitsmarkt_top10 <- renderUI({
+    output$plot_arbeitsmarkt_top10 <- highcharter::renderHighchart({
       plot_list <- arbeitsmarkt_top10(r)
       r$plot_arbeitsmarkt_top10_left <- plot_list[[1]]
       r$plot_arbeitsmarkt_top10_right <- plot_list[[2]]
@@ -842,12 +842,12 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
     # Box3 ----
 
     # tab 1
-    output$plot_einstieg_pie_gender <- renderUI({
+    output$plot_einstieg_pie_gender <- highcharter::renderHighchart({
       arbeitsmarkt_einstieg_pie_gender(r)
     })
 
 
-    output$plot_einstieg_verlauf_gender  <- renderUI({
+    output$plot_einstieg_verlauf_gender  <- highcharter::renderHighchart({
       plot_list <- arbeitsmarkt_einstieg_verlauf_gender(r)
       r$plot_einstieg_verlauf_gender <- plot_list
 
@@ -878,12 +878,12 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # tab 3
 
-    output$plot_arbeitsmarkt_wahl_gender <- renderUI({
+    output$plot_arbeitsmarkt_wahl_gender <- highcharter::renderHighchart({
       arbeitsmarkt_wahl_gender(r)
     })
 
 
-    output$plot_einstieg_vergleich_gender  <- renderUI({
+    output$plot_einstieg_vergleich_gender  <- highcharter::renderHighchart({
       plot_list <- arbeitsmarkt_einstieg_vergleich_gender(r)
       r$plot_einstieg_vergleich_gender <- plot_list
 
@@ -916,7 +916,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # tab 1
 
-    output$plot_arbeitsmarkt_detail_map <- renderUI({
+    output$plot_arbeitsmarkt_detail_map <- highcharter::renderHighchart({
      arbeitsmarkt_lk_detail_map(r)
 
 
@@ -933,7 +933,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
       r$search_in_bar_chart <- input$search_in_bar_chart
     })
 
-    output$plot_arbeitsmarkt_detail_vergleich <- renderUI({
+    output$plot_arbeitsmarkt_detail_vergleich <- highcharter::renderHighchart({
       arbeitsmarkt_lk_detail_vergleich(r)
 
     })
@@ -942,7 +942,7 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
   # tab 3
 
-   output$fachbereich_beruf_arbeitsmarkt_landkreis_verlauf <- renderUI({
+   output$fachbereich_beruf_arbeitsmarkt_landkreis_verlauf <- highcharter::renderHighchart({
      arbeitsmarkt_lk_verlauf(r)
    })
 

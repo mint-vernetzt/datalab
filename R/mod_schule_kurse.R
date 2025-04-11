@@ -119,7 +119,7 @@ mod_schule_kurse_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_comparison")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_comparison")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_mint_2", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe. Es wird der Anteil von MINT-Belegungen an allen Belegungen betrachtet. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br><br> Mit Grundkursen sind nach der Definition der KMK Fächer mit bis zu 3 Wochenstunden gemeint.<br> Mit Leistungskursen Fächer mit mindestens 4 Wochenstunden."),
@@ -137,7 +137,7 @@ mod_schule_kurse_ui <- function(id){
                                ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_verlauf")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_mint_3", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe. Es wird der Anteil von MINT-Belegungen an allen Belegungen betrachtet. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br><br> Mit Grundkursen sind nach der Definition der KMK Fächer mit bis zu 3 Wochenstunden gemeint.<br> Mit Leistungskursen Fächer mit mindestens 4 Wochenstunden."),
@@ -155,7 +155,7 @@ mod_schule_kurse_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_mint_map_kurse")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_mint_map_kurse")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_fach_1", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei Vorgaben der Bundesländer", "<br> <br> In Bayern sind Deutsch & Mathematik vergleichbar mit Leistungskursen, weiter Kurse können, müssen aber nicht demselben Niveau entsprechen.", "<br><br> Mit Grundkursen sind nach der Definition der KMK Fächer mit bis zu 3 Wochenstunden gemeint.<br> Mit Leistungskursen Fächer mit mindestens 4 Wochenstunden."),
@@ -218,7 +218,7 @@ mod_schule_kurse_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_verlauf_kurse_bl_subjects")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_kurse_bl_subjects")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_fach_3", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe.", "<br><br> Mit Grundkursen sind nach der Definition der KMK Fächer mit bis zu 3 Wochenstunden gemeint.<br> Mit Leistungskursen Fächer mit mindestens 4 Wochenstunden."),
@@ -236,7 +236,7 @@ mod_schule_kurse_ui <- function(id){
                                ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_map_kurse")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_map_kurse")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_fach_1l", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe.", "<br><br> Mit Grundkursen sind nach der Definition der KMK Fächer mit bis zu 3 Wochenstunden gemeint.<br> Mit Leistungskursen Fächer mit mindestens 4 Wochenstunden."),
@@ -325,7 +325,7 @@ mod_schule_kurse_ui <- function(id){
                                mod_schule_kurse_multiple_ui("mod_schule_kurse_multiple_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_wahl")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_wahl")),
                                                             color = "#154194"),
                                shinyBS::bsPopover(id="h_schule_mint_4", title = "",
                                                   content = paste0("Der Anteil und die Anzahl von &quotMINT&quot vs. &quotNicht-MINT&quot bezieht sich auf die Belegungszahlen in den Grund- und Leistungskursen der Oberstufe. Die möglichen Belegungen sind dabei auch von den Vorgaben der Bundesländer und dem Angebot der Schulen abhängig.", "<br> <br> In den uns vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden." , "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen.", "<br><br> Mit Grundkursen sind nach der Definition der KMK Fächer mit bis zu 3 Wochenstunden gemeint.<br> Mit Leistungskursen Fächer mit mindestens 4 Wochenstunden."),
@@ -375,7 +375,7 @@ mod_schule_kurse_ui <- function(id){
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_iqb_standard_zeitverlauf")),
+                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_iqb_standard_zeitverlauf")),
                                                                  color = "#154194"),
                                     shinyBS::bsPopover(id="h_schule_kompetenz_1", title = "",
                                                        content = paste0("Für Mecklenburg-Vorpommern liegen keine Daten vor, da pandemiebedingt nicht genug Testungen realisiert werden konnten.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2018: 1.462 Schulen mit N = 44.941 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2012: 1.326 Schulen mit N = 44.584 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
@@ -395,7 +395,7 @@ mod_schule_kurse_ui <- function(id){
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_iqb_mathe_mittel_zeitverlauf")),
+                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_iqb_mathe_mittel_zeitverlauf")),
                                                                  color = "#154194"),
                                     shinyBS::bsPopover(id="def_schule_kompetenz_2", title = "",
                                                        content = paste0("Mit Zuwanderungsgeschichte = Kinder, deren beider Eltern nach Deutschland zugewandert sind. Zuwanderungsgeschichten 1. Generation (auch Kind ist nach Deutschland zugewandert) und 2. Generation (Kind ist in Deutschland geboren) werden zusammengefasst. <br> Ohne Zuwanderungsgeschichte = Kinder, deren beider Eltern in Deutschland geboren wurden.", "<br> <br> Bildungskapital = Ressourcen, Kinder durch (kulturelle) Bildung zu fördern, und Indikator für den sozialen Status der Eltern. Erfasst wurde das Bildungskapital durch die Anzahl an Büchern im Haushalt (hoch = mehr als 100 Bücher zuhause).", "<br><br>sozialer Status = die soziale Position der Eltern. Hier wurden sozialer Status und Anforderungen der Berufe betrachtet."),
@@ -422,7 +422,7 @@ mod_schule_kurse_ui <- function(id){
 
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_iqb_fragebogen")),
+                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_iqb_fragebogen")),
                                                                  color = "#154194"),
                                     shinyBS::bsPopover(id="h_schule_kompetenz_3", title = "",
                                                        content = paste0("Das Interesse und die Einschätzung der eigenen Fähigkeiten (fachspezifisches Selbstkonzept) wurden durch mehrere Fragen in einem Fragebogen erfasst, auf einer Skala von 1 bis 4.", "<br> <br> Gesamte realisierte Stichprobengröße:", "<br> 2021: 1.464 Schulen mit N = 26.844 Schüler:innen", "<br> 2016: 1.508 Schulen mit N = 29.259 Schüler:innen", "<br> 2011: 1.349 Schulen mit N = 27.081 Schüler:innen"),
@@ -470,13 +470,13 @@ mod_schule_kurse_server <- function(id, r){
 
     # Box 1 - Wer wählt MINT ----
     ## Waffle
-    output$plot_waffle_mint <- renderUI({
+    output$plot_waffle_mint <- highcharter::renderHighchart({
       kurse_waffle_mint(r)
     })
 
     ## Balkendiagramm
 
-    output$plot_einstieg_comparison <- renderUI({
+    output$plot_einstieg_comparison <- highcharter::renderHighchart({
       plot_list <- kurse_einstieg_comparison(r)
       r$plot_einstieg_comparison <- plot_list
 
@@ -505,7 +505,7 @@ mod_schule_kurse_server <- function(id, r){
       }
     )
 
-    output$plot_einstieg_verlauf <- renderUI({
+    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
       plot_list <- kurse_verlauf_single(r)
       r$plot_einstieg_verlauf <- plot_list
 
@@ -535,13 +535,13 @@ mod_schule_kurse_server <- function(id, r){
     )
 
     ## Waffle Geschlecht
-    output$plot_wahl <- renderUI({
+    output$plot_wahl <- highcharter::renderHighchart({
       kurse_wahl(r)
     })
 
     ## Karte Gender
 
-    output$plot_map_kurse_gender <- renderUI({
+    output$plot_map_kurse_gender <- highcharter::renderHighchart({
       plot_list <- kurse_map_gender(r)
 
       # return plots
@@ -553,7 +553,7 @@ mod_schule_kurse_server <- function(id, r){
     })
 
 
-    output$plot_mint_map_kurse <- renderUI({
+    output$plot_mint_map_kurse <- highcharter::renderHighchart({
       plot_list <- kurse_mint_map(r)
 
 
@@ -565,13 +565,13 @@ mod_schule_kurse_server <- function(id, r){
 
     # Box 2 -  M-I-N-T ----
 
-    output$plot_map_kurse <- renderUI({
+    output$plot_map_kurse <- highcharter::renderHighchart({
       kurse_map(r)
     })
 
     ## Karte Fächer
 
-    output$plot_verlauf_multiple <- renderUI({
+    output$plot_verlauf_multiple <- highcharter::renderHighchart({
       plot_list <- kurse_verlauf_multiple_bl(r)
       r$plot_verlauf_multiple <- plot_list
 
@@ -601,7 +601,7 @@ mod_schule_kurse_server <- function(id, r){
     )
 
 
-    output$plot_verlauf_kurse_bl_subjects <- renderUI({
+    output$plot_verlauf_kurse_bl_subjects <- highcharter::renderHighchart({
       plot_list <- kurse_verlauf_subjects_bl(r)
       r$plot_verlauf_kurse_bl_subject <- plot_list
 
@@ -635,7 +635,7 @@ mod_schule_kurse_server <- function(id, r){
       kurse_ranking_gender(r)
     })
 
-    output$plot_comparison_subjects <- renderUI({
+    output$plot_comparison_subjects <- highcharter::renderHighchart({
       plot_list <- kurse_mint_comparison(r)
       r$plot_comparison_subjects <- plot_list
 
@@ -667,7 +667,7 @@ mod_schule_kurse_server <- function(id, r){
 
     ## Balken Übersicht BuLas
 
-    output$plot_comparison_bl <- renderUI({
+    output$plot_comparison_bl <- highcharter::renderHighchart({
       plot_list <- kurse_mint_comparison_bl(r)
       r$plot_comparison_bl <- plot_list
 
@@ -699,7 +699,7 @@ mod_schule_kurse_server <- function(id, r){
 
     # Box 3 - Frauen ----
 
-    output$plot_comparison_gender <- renderUI({
+    output$plot_comparison_gender <- highcharter::renderHighchart({
       kurse_comparison_gender(r)
 
 
@@ -716,7 +716,7 @@ mod_schule_kurse_server <- function(id, r){
 
     # Tab 1
 
-    output$plot_iqb_standard_zeitverlauf <- renderUI({
+    output$plot_iqb_standard_zeitverlauf <- highcharter::renderHighchart({
       plot_list <- iqb_standard_zeitverlauf(r)
       r$plot_iqb_standard_zeitverlauf <- plot_list
 
@@ -748,7 +748,7 @@ mod_schule_kurse_server <- function(id, r){
 
 
 
-    output$plot_iqb_mathe_mittel_zeitverlauf <- renderUI({
+    output$plot_iqb_mathe_mittel_zeitverlauf <- highcharter::renderHighchart({
       plot_list <- iqb_mathe_mittel_zeitverlauf(r)
       r$plot_iqb_mathe_mittel_zeitverlauf <- plot_list
 
@@ -779,7 +779,7 @@ mod_schule_kurse_server <- function(id, r){
 
     # Tab 3
 
-    output$plot_iqb_fragebogen <- renderUI({
+    output$plot_iqb_fragebogen <- highcharter::renderHighchart({
       plot_list <- iqb_fragebogen(r)
       r$plot_iqb_fragebogen <- plot_list
 

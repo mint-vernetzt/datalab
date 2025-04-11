@@ -106,7 +106,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_anteil_ui("mod_studium_studienzahl_anteil_ui_1")
                                ),
                              shiny::mainPanel(width = 9,
-                              shinycssloaders::withSpinner(htmlOutput(ns("mint_anteil_studium")),
+                              shinycssloaders::withSpinner(highcharter::highchartOutput(ns("mint_anteil_studium")),
                                                            color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_mint_1", title = "",
@@ -125,7 +125,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_verlauf")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_mint_3", title = "",
@@ -145,7 +145,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_studienzahl_bula_mint")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_studienzahl_bula_mint")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_fach_2", title="",
@@ -201,7 +201,7 @@ mod_studium_studienzahl_ui <- function(id){
                                mod_studium_studienzahl_mint_fach_ui("mod_studium_studienzahl_mint_fach_ui_1")),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_anteil_mint_faecher")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_anteil_mint_faecher")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_mint_2", title = "",
@@ -220,7 +220,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("mint_anteil")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("mint_anteil")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_fach_4", title="",
@@ -239,7 +239,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_studienzahl_bula_faecher_mint")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_studienzahl_bula_faecher_mint")),
                                                             color = "#154194"),
 
 
@@ -286,7 +286,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_gender")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_gender")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_frauen_1", title="",
@@ -311,7 +311,7 @@ mod_studium_studienzahl_ui <- function(id){
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf_gender")),
+                               shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_einstieg_verlauf_gender")),
                                                             color = "#154194"),
 
                                shinyBS::bsPopover(id="h_studium_frauen_2", title="",
@@ -333,7 +333,7 @@ mod_studium_studienzahl_ui <- function(id){
                            ),
                            shiny::mainPanel(
                              width = 9,
-                             shinycssloaders::withSpinner(htmlOutput(ns("plot_choice_gender")),
+                             shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_choice_gender")),
                                                           color = "#154194"),
 
                              shinyBS::bsPopover(id="h_studium_mint_7", title = "",
@@ -352,7 +352,7 @@ mod_studium_studienzahl_ui <- function(id){
                            ),
                            shiny::mainPanel(
                              width = 9,
-                             shinycssloaders::withSpinner(htmlOutput(ns("plot_top_faecher")),
+                             shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_top_faecher")),
                                                           color = "#154194"),
 
                              br(),
@@ -400,7 +400,7 @@ mod_studium_studienzahl_ui <- function(id){
                                   shiny::mainPanel(
                                     width = 9,
                                     tags$head(tags$style(HTML(".small-box {height: 400px}"))),
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_auslaender_test"), height = "650px"),
+                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_auslaender_test"), height = "650px"),
                                                                  color = "#154194"),
                                     shinyBS::bsPopover(id="h_studium_international_1", title="",
                                                        content = paste0("In manchen Bundesländern sind einzelne Studienfachgruppen nicht definiert. In diesen Fällen werden nur die vorhandenen Studienfachgruppen angezeigt.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
@@ -421,7 +421,7 @@ mod_studium_studienzahl_ui <- function(id){
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_auslaender_zeit")),
+                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_auslaender_zeit")),
                                                                  color = "#154194"),
 
                                     shinyBS::bsPopover(id="h_studium_international_2", title="",
@@ -443,7 +443,7 @@ mod_studium_studienzahl_ui <- function(id){
                                   ),
                                   shiny::mainPanel(
                                     width = 9,
-                                    shinycssloaders::withSpinner(htmlOutput(ns("plot_auslaender_international_bula")),
+                                    shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_auslaender_international_bula")),
                                                                  color = "#154194"),
 
 
@@ -490,7 +490,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
     # Box 1 - Wer Wählt MINT ----
 
     ## Pies MINT
-    output$mint_anteil_studium <- renderUI({
+    output$mint_anteil_studium <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       studienzahl_mint(r)
     })
@@ -498,7 +498,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
     ## Zeitverlauf
 
 
-    output$plot_einstieg_verlauf <- renderUI({
+    output$plot_einstieg_verlauf <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- studienzahl_verlauf_single(r)
       r$plot_einstieg_verlauf <- plot_list
@@ -535,7 +535,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
 
     ## Zeitverlauf BULAS Fächer
 
-      output$plot_verlauf_studienzahl_bl_subject <- renderUI({
+      output$plot_verlauf_studienzahl_bl_subject <- highcharter::renderHighchart({
          req(tab_input() == "studium")
         plot_list <- studienzahl_verlauf_bl_subject(r)
         r$plot_verlauf_studienzahl_bl_subject <- plot_list
@@ -568,7 +568,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
     ## Fächer
 
 
-    output$plot_studienzahl_bl_verlauf <- renderUI({
+    output$plot_studienzahl_bl_verlauf <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- studierende_verlauf_multiple_bl(r)
       r$plot_studienzahl_bl_verlauf <- plot_list
@@ -617,7 +617,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
       }
     )
 
-    output$plot_choice_gender <- renderUI({
+    output$plot_choice_gender <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       studienzahl_choice_gender(r)
     })
@@ -625,7 +625,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
     ## Zeitverlauf Gender
 
 
-    output$plot_verlauf_studienzahl_bl_subject_gender <- renderUI({
+    output$plot_verlauf_studienzahl_bl_subject_gender <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- studierende_verlauf_single_bl_gender(r)
       r$plot_verlauf_studienzahl_bl_subject_gender <- plot_list
@@ -660,13 +660,13 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
 
     ## MINT-Fächer-Anteil
 
-    output$plot_anteil_mint_faecher <- renderUI({
+    output$plot_anteil_mint_faecher <- highcharter::renderHighchart({
        req(tab_input() == "studium")
      # req(r$ansicht_mint_fach)
       plot_mint_faecher(r)
     })
 
-    output$plot_studienzahl_bula_faecher_mint <- renderUI({
+    output$plot_studienzahl_bula_faecher_mint <- highcharter::renderHighchart({
        req(tab_input() == "studium")
      # req(r$ansicht_studium_bulas_faecher)
       plot_studierende_bula_faecher(r)
@@ -686,7 +686,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
     ## Top 10
 
 
-    output$plot_top_faecher <- renderUI({
+    output$plot_top_faecher <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- plot_ranking_top_faecher(r)
       r$plot_top_faecher_left <- plot_list[[1]]
@@ -743,14 +743,14 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
     )
 
     ## Karte
-    output$plot_studienzahl_bula_mint <- renderUI({
+    output$plot_studienzahl_bula_mint <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       studierende_bula_mint(r)
     })
 
     ## Zeitverlauf BuLas
 
-    output$plot_verlauf_studienzahl_bl_subject1 <- renderUI({
+    output$plot_verlauf_studienzahl_bl_subject1 <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- ranking_bl_subject(r)
       r$plot_verlauf_studienzahl_bl_subject1 <- plot_list
@@ -787,7 +787,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
     ## Balken MINT
 
 
-    output$mint_anteil <- renderUI({
+    output$mint_anteil <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- mint_anteile(r)
       r$mint_anteil <- plot_list
@@ -819,7 +819,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
 
     ## Balken MINT BULAs
 
-    output$plot_vergleich_bl1 <- renderUI({
+    output$plot_vergleich_bl1 <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- studierende_mint_vergleich_bl(r)
       r$plot_vergleich_bl1 <- plot_list
@@ -855,7 +855,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
     # Box 3 - Frauen -----
 
     ## Pie Gender
-    output$plot_einstieg_gender <- renderUI({
+    output$plot_einstieg_gender <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       studienzahl_einstieg_gender(r)#
     })
@@ -864,7 +864,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
 
     ## Verlauf Gender
 
-    output$plot_einstieg_verlauf_gender <- renderUI({
+    output$plot_einstieg_verlauf_gender <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- studienzahl_verlauf_single_gender(r)
       r$plot_einstieg_verlauf_gender <- plot_list
@@ -897,7 +897,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
     ## Balken Frauen
 
 
-    output$plot_einstieg_comparison_gender <- renderUI({
+    output$plot_einstieg_comparison_gender <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- studienzahl_einstieg_comparison_gender(r)
       r$plot_einstieg_comparison_gender <- plot_list
@@ -933,7 +933,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
     #   plot_auslaender_mint( r)
     # })
 
-    output$plot_auslaender_test <- renderUI({
+    output$plot_auslaender_test <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- plot_auslaender_mint(r)
       r$plot_auslaender_test <- plot_list
@@ -965,7 +965,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
     # Tab 2
 
 
-    output$plot_auslaender_zeit <- renderUI({
+    output$plot_auslaender_zeit <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- plot_auslaender_mint_zeit(r)
       r$plot_auslaender_zeit <- plot_list
@@ -999,7 +999,7 @@ mod_studium_studienzahl_server <- function(id, r, tab_input){
 
     # Tab 3
 
-    output$plot_auslaender_international_bula <- renderUI({
+    output$plot_auslaender_international_bula <- highcharter::renderHighchart({
        req(tab_input() == "studium")
       plot_list <- studierende_international_bula_mint(r)
       r$plot_auslaender_international_bula <- plot_list
