@@ -588,7 +588,7 @@ div(class = "content-box",
 
             shiny::sidebarPanel(
               width = 3,
-              mod_fachkraft_item_epa_ui("fachkraft_ranking_engpass"),
+              mod_fachkraft_ranking_epa_ui("fachkraft_ranking_engpass_epa"),
               br(),
             ),
             shiny::mainPanel(
@@ -848,6 +848,11 @@ mod_fachkraft_start_server <- function(id, r){
     #     file.remove(r$plot_fachkraft_detail_item_1_right_title)
     #   }
     # )
+
+    output$plot_fachkraft_ranking_engpass <- renderUI({
+      plot_list <- plot_fachkraft_ranking_epa(r)
+    })
+
 
 
 

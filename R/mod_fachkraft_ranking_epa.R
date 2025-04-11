@@ -9,17 +9,18 @@ mod_fachkraft_ranking_epa_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    # p("Jahr:"),
-    # shinyWidgets::sliderTextInput(
-    #   inputId = ns("map_y_fachkraft_arbeit_epa"),
-    #   label = NULL,
-    #   choices = fachkraft_ui_years(reg="DE"),
-    #   selected = "2023"
-    # ),
-    #
+
+    p("Jahr:"),
+    shinyWidgets::sliderTextInput(
+      inputId = ns("fachkraft_ranking_epa_1"),
+      label = NULL,
+      choices = fachkraft_ui_years(reg="DE"),
+      selected = "2023"
+    ),
+
     # p("Fachbereich:"),
     # shinyWidgets::pickerInput(
-    #   inputId = ns("map_f_fachkraft_arbeit_epa"),
+    #   inputId = ns("fachkraft_ranking_epa_2"),
     #   choices = fachkraft_ui_faecher(),
     #   selected = c("MINT gesamt", "Nicht MINT"),
     #   multiple = TRUE,
@@ -27,22 +28,18 @@ mod_fachkraft_ranking_epa_ui <- function(id){
     #     "max-options" = 2,
     #     "max-options-text" = "<span style='color: red;'>Maximal 2 Indikatoren auswählen</span>")
     # ),
-    #
-    # p("Berufslevel:"),
-    # shinyWidgets::pickerInput(
-    #   inputId = ns("map_bl_fachkraft_arbeit_epa"),
-    #   choices = fachkraft_ui_berufslevel(),
-    #   selected = c("Gesamt"),
-    #   multiple = FALSE
-    # ),
-    #
-    # br(),
-    #
-    # shinyBS::bsPopover(id="ih_fachkraft-berufsgruppen_1", title="",
-    #                    content = paste0("In der ersten Einstellung ist zu sehen, dass 47% der MINT-Berufe als Engpassberufe gezählt werden. <br>Dagegen liegt nur in 33% der \"Nicht-MINT-Berufe\" ein Fachkräfteengpass vor."),
-    #                    placement = "top",
-    #                    trigger = "hover"),
-    # tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft-berufsgruppen_1")
+
+    p("Berufslevel:"),
+    shinyWidgets::pickerInput(
+      inputId = ns("fachkraft_ranking_epa_3"),
+      choices = fachkraft_ui_berufslevel(),
+      selected = c("Gesamt"),
+      multiple = FALSE
+    ),
+
+    br(),
+
+
 
   )
 }
@@ -53,6 +50,19 @@ mod_fachkraft_ranking_epa_ui <- function(id){
 mod_fachkraft_ranking_epa_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+
+    observeEvent(input$fachkraft_ranking_epa_1, {
+      r$fachkraft_ranking_epa_1 <- input$fachkraft_ranking_epa_1
+    })
+
+    # observeEvent(input$fachkraft_ranking_epa_2, {
+    #   r$fachkraft_ranking_epa_2 <- input$fachkraft_ranking_epa_2
+    # })
+
+    observeEvent(input$fachkraft_ranking_epa_3, {
+      r$fachkraft_ranking_epa_3 <- input$fachkraft_ranking_epa_3
+    })
 
 
   })

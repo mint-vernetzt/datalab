@@ -1402,6 +1402,7 @@ plot_fachkraft_detail_item  <- function(r) {
   bf_label <- r$map_bl_fachkraft_arbeit_detail
   this_beruf <- r$map_b_fachkraft_arbeit_detail
 
+
   if (length(this_beruf) == 0) {
     stop("this_beruf ist leer – SQL-Abfrage kann nicht ausgeführt werden.")
   }
@@ -1661,4 +1662,61 @@ plot_fachkraft_detail_item  <- function(r) {
 
   return(out)
 }
+
+
+
+
+
+plot_fachkraft_ranking_epa  <- function(r) {
+
+  timerange <- r$fachkraft_ranking_epa_1
+  bf_label <- r$fachkraft_ranking_epa_3
+  #this_beruf <- r$fachkraft_ranking_epa_2
+
+  ###wenn Gesamt ausgewählt ist, kann man anforderung = Spezialist usw weglassen da man nach allem schaut
+
+  if(bf_label == "Gesamt"){
+
+    df_query <- glue::glue_sql("
+      SELECT *
+      FROM arbeitsmarkt_epa_detail
+      WHERE jahr = {timerange}
+      AND indikator = 'Engpassindikator'
+      ORDER BY wert DESC
+      LIMIT 10
+    ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+  }
+  else{
+
+    df_query <- glue::glue_sql("
+      SELECT *
+      FROM arbeitsmarkt_epa_detail
+      WHERE jahr = {timerange}
+        AND indikator = 'Engpassindikator'
+        AND anforderung = {bf_label}
+      ORDER BY wert DESC
+      LIMIT 10
+    ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+  }
+
+
+    titel <- "Die Berufe mit dem höchsten Engpassrisiko"
+    quelle <- "quelle noch nicht da"
+
+    out <- balkenbuilder(df, titel, x="beruf", y="wert",group=NULL, tooltip = "Anzahl: {point.wert}", format = "{value:, f}", color = "#b16fab", quelle = quelle)
+
+
+
+
+  return(out)
+}
+
+
+
 

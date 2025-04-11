@@ -1358,9 +1358,10 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
 balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                           optional=NULL, reverse = TRUE, TF=NULL, stacking=NULL, subtitel = NULL, quelle="Quelle"){
 
+  if (is.numeric(df[[y]])) {
   df <- df %>%
     dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
-
+  }
 
 
   if(is.null(group) && is.null(optional)){
