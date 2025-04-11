@@ -593,8 +593,6 @@ div(class = "content-box",
             ),
             shiny::mainPanel(
               width = 9,
-              p("Auf Bundesebene liegen Daten zum Fachkräfteengpass in den einzelnen Berufen bzw.
-                genauer Berufsgattungen, z. B. Mechatronik, vor."),
               shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_ranking_engpass")),
                                            color = "#154194"),
               shinyBS::bsPopover(

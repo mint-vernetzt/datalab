@@ -1402,7 +1402,6 @@ plot_fachkraft_detail_item  <- function(r) {
   bf_label <- r$map_bl_fachkraft_arbeit_detail
   this_beruf <- r$map_b_fachkraft_arbeit_detail
 
-
   if (length(this_beruf) == 0) {
     stop("this_beruf ist leer – SQL-Abfrage kann nicht ausgeführt werden.")
   }
@@ -1671,9 +1670,14 @@ plot_fachkraft_ranking_epa  <- function(r) {
 
   timerange <- r$fachkraft_ranking_epa_1
   bf_label <- r$fachkraft_ranking_epa_3
-  #this_beruf <- r$fachkraft_ranking_epa_2
+
+  this_beruf <- r$fachkraft_ranking_epa_2 #Alle Berufe, MINT-Berufe
 
   ###wenn Gesamt ausgewählt ist, kann man anforderung = Spezialist usw weglassen da man nach allem schaut
+
+
+  if(this_beruf == "Alle Berufe"){
+
 
   if(bf_label == "Gesamt"){
 
@@ -1687,6 +1691,8 @@ plot_fachkraft_ranking_epa  <- function(r) {
     ", .con = con)
 
     df <- DBI::dbGetQuery(con, df_query)
+
+    titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter allen Berufsleveln in allen Berufsgruppen")
 
   }
   else{
@@ -1703,13 +1709,52 @@ plot_fachkraft_ranking_epa  <- function(r) {
 
     df <- DBI::dbGetQuery(con, df_query)
 
+    titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter ", bf_label ," in allen Berufsgruppen")
+
+  }
+  } else if (this_beruf == "MINT-Berufe"){
+
+
+    if(bf_label == "Gesamt"){
+
+      df_query <- glue::glue_sql("
+      SELECT *
+      FROM arbeitsmarkt_epa_detail
+      WHERE jahr = {timerange}
+      AND indikator = 'Engpassindikator'
+      AND mint_zuordnung != 'Nicht MINT'
+      ORDER BY wert DESC
+      LIMIT 10
+    ", .con = con)
+      titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter allen Berufsleveln in MINT-Berufen")
+
+      df <- DBI::dbGetQuery(con, df_query)
+
+    }
+    else{
+
+      df_query <- glue::glue_sql("
+      SELECT *
+      FROM arbeitsmarkt_epa_detail
+      WHERE jahr = {timerange}
+        AND indikator = 'Engpassindikator'
+        AND anforderung = {bf_label}
+      AND mint_zuordnung != 'Nicht MINT'
+      ORDER BY wert DESC
+      LIMIT 10
+    ", .con = con)
+
+      titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter ", bf_label ," in MINT-Berufen")
+
+      df <- DBI::dbGetQuery(con, df_query)
+
+    }
+
   }
 
+    quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    titel <- "Die Berufe mit dem höchsten Engpassrisiko"
-    quelle <- "quelle noch nicht da"
-
-    out <- balkenbuilder(df, titel, x="beruf", y="wert",group=NULL, tooltip = "Anzahl: {point.wert}", format = "{value:, f}", color = "#b16fab", quelle = quelle)
+    out <- balkenbuilder(df, titel, x="beruf", y="wert",group=NULL, tooltip = "Anzahl: {point.wert}", format = "{value:, f}", color = "#dc2626", quelle = quelle)
 
 
 

@@ -18,16 +18,13 @@ mod_fachkraft_ranking_epa_ui <- function(id){
       selected = "2023"
     ),
 
-    # p("Fachbereich:"),
-    # shinyWidgets::pickerInput(
-    #   inputId = ns("fachkraft_ranking_epa_2"),
-    #   choices = fachkraft_ui_faecher(),
-    #   selected = c("MINT gesamt", "Nicht MINT"),
-    #   multiple = TRUE,
-    #   options =  list(
-    #     "max-options" = 2,
-    #     "max-options-text" = "<span style='color: red;'>Maximal 2 Indikatoren auswählen</span>")
-    # ),
+    p("Indikator"),
+    shinyWidgets::pickerInput(
+      inputId = ns("fachkraft_ranking_epa_2"),
+      choices = c("Alle Berufe", "MINT-Berufe"),
+      selected = "Alle Berufe",
+      multiple = FALSE
+    ),
 
     p("Berufslevel:"),
     shinyWidgets::pickerInput(
@@ -39,7 +36,11 @@ mod_fachkraft_ranking_epa_ui <- function(id){
 
     br(),
 
-
+    shinyBS::bsPopover(id="ih_fachkraft_epa", title="",
+                       content = paste0("Die erste Einstlellung zeigt "),
+                       placement = "top",
+                       trigger = "hover"),
+    tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_fachkraft_epa")
 
   )
 }
@@ -56,9 +57,9 @@ mod_fachkraft_ranking_epa_server <- function(id, r){
       r$fachkraft_ranking_epa_1 <- input$fachkraft_ranking_epa_1
     })
 
-    # observeEvent(input$fachkraft_ranking_epa_2, {
-    #   r$fachkraft_ranking_epa_2 <- input$fachkraft_ranking_epa_2
-    # })
+    observeEvent(input$fachkraft_ranking_epa_2, {
+      r$fachkraft_ranking_epa_2 <- input$fachkraft_ranking_epa_2
+    })
 
     observeEvent(input$fachkraft_ranking_epa_3, {
       r$fachkraft_ranking_epa_3 <- input$fachkraft_ranking_epa_3
