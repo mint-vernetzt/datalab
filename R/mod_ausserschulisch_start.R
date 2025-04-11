@@ -128,11 +128,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                    tags$style(".well {background-color:#FFFFFF;}"),
                                    tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                    mod_ausserschulisch_cp_orgas_ui("mod_ausserschulisch_cp_orgas_ui"),
-                                   # br(),br(),
-                                   # downloadButton(
-                                   #   outputId = ns("download_btn_plot___"),
-                                   #   label = "Download",
-                                   #   icon = icon("download")),
+
                                  ),
                                  shiny::mainPanel(
                                    width = 9,
@@ -140,11 +136,6 @@ mod_ausserschulisch_start_ui <- function(id){
                                      highcharter::highchartOutput(ns("plot_cp_orgas"), height = "500px"),
                                                                 color = "#154194"),
 
-                                   # shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
-                                   #                    content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
-                                   #                    placement = "top",
-                                   #                    trigger = "hover"),
-                                   # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_3")
                                  )
                               ),
                               tabPanel("Projekte der MINTvernetzt-Community", br(),
@@ -154,24 +145,14 @@ mod_ausserschulisch_start_ui <- function(id){
                                          tags$style(".well {background-color:#FFFFFF;}"),
                                          tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                          mod_ausserschulisch_cp_projekte_ui("mod_ausserschulisch_cp_projekte_ui"),
-                                         # br(),br(),
-                                         # downloadButton(
-                                         #   outputId = ns("download_btn_plot___"),
-                                         #   label = "Download",
-                                         #   icon = icon("download")),
+
                                        ),
                                        shiny::mainPanel(
                                          width = 9,
                                          shinycssloaders::withSpinner(
                                            highcharter::highchartOutput(ns("plot_cp_projekte"), height = "500px"),
                                                                       color = "#154194"),
-
-                                         # shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
-                                         #                    content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
-                                         #                    placement = "top",
-                                         #                    trigger = "hover"),
-                                         # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_3")
-                                       )
+    )
                               ),
                               tabPanel("Profile der MINTvernetzt-Community", br(),
 
@@ -180,11 +161,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                          tags$style(".well {background-color:#FFFFFF;}"),
                                          tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                          mod_ausserschulisch_cp_profile_ui("mod_ausserschulisch_cp_profile_ui"),
-                                         # br(),br(),
-                                         # downloadButton(
-                                         #   outputId = ns("download_btn_plot___"),
-                                         #   label = "Download",
-                                         #   icon = icon("download")),
+
                                        ),
                                        shiny::mainPanel(
                                          width = 9,
@@ -192,11 +169,6 @@ mod_ausserschulisch_start_ui <- function(id){
                                            highcharter::highchartOutput(ns("plot_cp_profile"), height = "500px"),
                                                                       color = "#154194"),
 
-                                         # shinyBS::bsPopover(id = "h_beruf_mint_3", title = "",
-                                         #                    content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Beschäftigte werden nur als MINT klassifiziert, wenn sie einer so definierten MINT-Tätigkeit nachgehen. Der akademische Hintergrund, z. B. ein Studium in einem MINT-Fach, ist nicht ausschlaggebend. Weitere Infos dazu unter &quotDatenquellen und Hinweise&quot"),
-                                         #                    placement = "top",
-                                         #                    trigger = "hover"),
-                                         # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_mint_3")
                                        )
                               ),
                               tabPanel("Informationen zu den Daten", br(),
@@ -208,7 +180,6 @@ mod_ausserschulisch_start_ui <- function(id){
                                            style = "display: flex; justify-content: center; align-items: center; margin-bottom: 25px;",
                                            img(src='www/Ausserschulisch_cp_Zahlen.png',
                                                class = "img-responsive",
-                                               #height = "150px", width = "150px",
                                                alt = "Bild Zahlen Nutzung Community Plattform",
                                                style = "max-width: 55%;")
                                          ),
@@ -219,7 +190,6 @@ mod_ausserschulisch_start_ui <- function(id){
                                            margin-top: 20px;",
                                            img(src='www/Ausserschulisch_cp_Ausfuellstatus.png',
                                                class = "img-responsive",
-                                               #width = "80%",
                                                alt = "Bild Ausfuellstatus Community Plattform",
                                                style = "max-width: 60%;"
                                            )
@@ -473,11 +443,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                       shiny::sidebarPanel(
                                         width = 3,
                                         mod_ausserschulisch_skf_einrichtungen_ui("mod_ausserschulisch_skf_einrichtungen_ui_1"),
-                                        # br(), br(),
-                                        # downloadButton(
-                                        #   outputId = ns("download_btn_plot_skf_einrichtungen"),
-                                        #   label = "Download",
-                                        #   icon = icon("download"))
+
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
@@ -500,11 +466,7 @@ mod_ausserschulisch_start_ui <- function(id){
                                       shiny::sidebarPanel(
                                         width = 3,
                                         mod_ausserschulisch_skf_personal_ui("mod_ausserschulisch_skf_personal_ui_1"),
-                                        # br(), br(),
-                                        # downloadButton(
-                                        #   outputId = ns("download_btn_plot_skf_personal"),
-                                        #   label = "Download",
-                                        #   icon = icon("download"))
+
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
@@ -572,34 +534,7 @@ mod_ausserschulisch_start_server <- function(id, r){
       skf_einrichtungen(r)
     })
 
-    # output$plot_skf_einrichtungen <- renderUI({
-    #   plot_list <- skf_einrichtungen(r)
-    #   r$plot_skf_einrichtungen <- plot_list
-    #
-    #   r$plot_skf_einrichtungen_title <- get_plot_title(
-    #     plot = r$plot_skf_einrichtungen
-    #   )
-    #
-    #   plot_list
-    #
-    # })
-    #
-    # output$download_btn_plot_skf_einrichtungen <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_skf_einrichtungen_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_skf_einrichtungen,
-    #       filename =  r$plot_skf_einrichtungen_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_skf_einrichtungen_title, file)
-    #     file.remove(r$plot_skf_einrichtungen_title)
-    #   }
-    # )
+
     #
     # Tab 2
 
@@ -607,34 +542,7 @@ mod_ausserschulisch_start_server <- function(id, r){
       skf_personal(r)
     })
     #
-    # output$plot_skf_personal <- renderUI({
-    #   plot_list <- skf_personal(r)
-    #   r$plot_skf_personal <- plot_list
-    #
-    #   r$plot_skf_personal_title <- get_plot_title(
-    #     plot = r$plot_skf_personal
-    #   )
-    #
-    #   plot_list
-    #
-    # })
-    #
-    # output$download_btn_plot_skf_personal <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_skf_personal_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_skf_personal,
-    #       filename =  r$plot_skf_personal_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_skf_personal_title, file)
-    #     file.remove(r$plot_skf_personal_title)
-    #   }
-    # )
+
 
 
 

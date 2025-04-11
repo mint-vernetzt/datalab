@@ -35,12 +35,7 @@ mod_schule_kurse_ui <- function(id){
           Je nach Bundesland wählen alle Oberstufen-Schüler:innen mehrere Grund- und Leistungskurse.
           Anhand dieser Belegungszahlen haben wir den Anteil von MINT-Fächern in der Schule berechnet. ")
 
-              # Text zu viel?
-              # Anders als bei Studierenden oder Auszubildenden wählen Schüler:innen mehrere Grund- und Leistungskurse und können entsprechend nicht
-              #  eindeutig als \"MINT\" oder \"nicht MINT\" eingruppiert werden. Um dennoch einen Anteil von MINT versus nicht MINT angeben zu können,
-              #  nutzen wir die Kursbelegungszahlen der Schüler:innen. Auf die Ausweisung absoluter Zahlen verzichten wir, da aus den Belegungszahlen
-              #  nicht die Gesamtzahl aller Schüler:innen abgeleitet werden kann. Der Vergleich auf dieser Seite erfolgt entsprechend den Belegungszahlen
-              #  der verschiedenen Kurse."
+
       ),
 
       shinydashboard::box(

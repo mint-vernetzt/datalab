@@ -1374,25 +1374,6 @@ get_top10_hc_plot_options <- function(hc,
 
 
 
-#
-# international_balkenbuilder <- function(df, titel, x, y, ){
-#
-#   out <- highcharter::hchart(
-#     df %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10), 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
-#   get_top10_hc_plot_options(
-#     hc_title =titel,
-#     hc_tooltip = hover,
-#     max_percent_used = 100)
-
-
-
-  # return(out)}
-
-
-
-
-
-
 
 
 
