@@ -101,11 +101,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_vergleich_ui("mod_beruf_arbeitsmarkt_einstieg_vergleich_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_einstieg_vergleich"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -127,11 +122,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                tags$style(".well {background-color:#FFFFFF;}"),
                                tags$head(tags$style(HTML(".small-box {height: 140px}"))),
                                mod_beruf_arbeitsmarkt_einstieg_verlauf_ui("mod_beruf_arbeitsmarkt_einstieg_verlauf_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_einstieg_verlauf"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -360,16 +350,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                      shiny::sidebarPanel(
                        width = 3,
                        mod_beruf_arbeitsmarkt_top10_ui("mod_beruf_arbeitsmarkt_top10_ui_1"),
-                       # br(),br()
-                       # ,
-                       # downloadButton(
-                       #   outputId = ns("download_btn_plot_arbeitsmarkt_top10_1"),
-                       #   label = "Download (links)",
-                       #   icon = icon("download")),
-                       # downloadButton(
-                       #   outputId = ns("download_btn_plot_arbeitsmarkt_top10_2"),
-                       #   label = "Download (rechts)",
-                       #   icon = icon("download")),
                      ),
                      shiny::mainPanel(
                        width = 9,
@@ -426,16 +406,6 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_landkreis_map_ui("mod_beruf_arbeitsmarkt_landkreis_map_ui_1"),
-                               # br(),br()
-                               # ,
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_arbeitsmarkt_detail_map_1"),
-                               #   label = "Download (links)",
-                               #   icon = icon("download")),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_arbeitsmarkt_detail_map_2"),
-                               #   label = "Download (rechts)",
-                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -454,22 +424,10 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_landkreis_vergleich_ui("mod_beruf_arbeitsmarkt_landkreis_vergleich_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_arbeitsmarkt_detail_vergleich"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
                              ),
                              shiny::mainPanel(
                                width = 9,
-                               # textInput("search_in_bar_chart", "Suchen Sie Ihren Landkreis:", ""),
-                               # shinyWidgets::pickerInput(
-                               #   inputId = "search_in_bar_chart",
-                               #   label = "Suchen Sie Ihren Landkreis:",
-                               #   choices = unique(df_compare$landkreis),  # Hier die Liste der Landkreise
-                               #   selected = NULL,  # Keine Vorauswahl
-                               #   multiple = FALSE,
-                               #   options = list(`live-search` = TRUE)
+
                                # ),
                                shinycssloaders::withSpinner(
                                  htmlOutput(ns("plot_arbeitsmarkt_detail_vergleich"),height = "1600px"),
@@ -491,11 +449,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                              shiny::sidebarPanel(
                                width = 3,
                                mod_beruf_arbeitsmarkt_regional_verlauf_ui("mod_beruf_arbeitsmarkt_regional_verlauf_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_arbeitsmarkt_überblick_fächer"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
+                               #
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -749,18 +703,6 @@ mod_beruf_arbeitsmarkt_server <- function(id, r){
 
     # Tab 3
 
-
-
-    # output$plot_arbeitsmarkt_bl_vergleich  <- renderUI({
-    #   plot_list <- arbeitsmarkt_bl_vergleich(r)
-    #   r$plot_arbeitsmarkt_bl_vergleich <- plot_list
-    #
-    #   r$plot_arbeitsmarkt_bl_vergleich_title <- get_plot_title(
-    #     plot = r$plot_arbeitsmarkt_bl_vergleich
-    #   )
-    #
-    #   plot_list
-    # })
 
     output$download_btn_plot_arbeitsmarkt_bl_vergleich <- downloadHandler(
       contentType = "image/png",

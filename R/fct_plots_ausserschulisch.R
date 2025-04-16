@@ -99,7 +99,7 @@ plot_cp_orgas <- function(r){
                "#5f94f9", "#007655", "#d0a9cd")
 
 
-    quelke <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024."
+    quelke <- "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024."
     out <- linebuilder(df, titel, x = "indikator", y = "wert", group = "region", tooltip, format, color, quelle = quelke)
 
     #keine quelle weil net relevant
@@ -154,7 +154,7 @@ plot_cp_orgas <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -207,7 +207,7 @@ plot_cp_orgas <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -378,7 +378,7 @@ plot_cp_projekte <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -434,7 +434,7 @@ plot_cp_projekte <- function(r){
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -599,7 +599,7 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -649,7 +649,7 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -704,7 +704,7 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
@@ -752,7 +752,7 @@ plot_cp_profile <- function(r){
           style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
-        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand November 2024.",
+        highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt Community Plattform, Stand 14. April 2024.",
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(

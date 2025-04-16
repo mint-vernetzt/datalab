@@ -106,17 +106,10 @@ mod_international_start_ui <- function(id){
         # tab 1
                            tabPanel("MINT-Kompetenz im Ländervergleich", br(),
 
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
                                     shiny::sidebarPanel(
                                       width = 3,
                                       mod_international_schule_map_ui("international_schule_map_1"),
-                                      # br(),br(),
-                                      # downloadButton(
-                                      #   outputId = ns("download_btn_plot_international_schule_map_1"),
-                                      #   label = "Download",
-                                      #   icon = icon("download")),
+
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -135,19 +128,13 @@ mod_international_start_ui <- function(id){
                            tabPanel("MINT-Kompetenz von Jungen und Mädchen", br(),
 
 
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
                                     shiny::sidebarPanel(
                                       width = 3,
                                       #p("LOREM"),
 
                                       mod_international_schule_item_ui("international_schule_item_1"),
                                       br(),br(),
-                                      # downloadButton(
-                                      #   outputId = ns("download_btn_plot_international_schule_item_1"),
-                                      #   label = "Download",
-                                      #   icon = icon("download")),
+
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -166,18 +153,12 @@ mod_international_start_ui <- function(id){
 
                            tabPanel("MINT-Kompetenz im Gruppenvergleich", br(),
 
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      #p("LOREM"),
+
                                       mod_international_schule_migration_ui("international_schule_migration_1"),
-                                      # br(),br(),
-                                      # downloadButton(
-                                      #   outputId = ns("download_btn_plot_international_schule_migration_1"),
-                                      #   label = "Download",
-                                      #   icon = icon("download")),
+
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -219,17 +200,10 @@ mod_international_start_ui <- function(id){
       # tab 1
                            tabPanel("Vergleich MINT-Anteil (Karte)", br(),
 
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
                                     shiny::sidebarPanel(
                                       width = 3,
                                       mod_international_map_ui("mod_international_map_ui_1"),
-                                      # br(),br(),
-                                      # downloadButton(
-                                      #   outputId = ns("download_btn_plot_international_studienzahl_map_1"),
-                                      #   label = "Download",
-                                      #   icon = icon("download")),
+
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -247,11 +221,7 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       mod_international_map_fem_ui("international_map_fem_ui_1"),
-                                      # br(),br(),
-                                      # downloadButton(
-                                      #   outputId = ns("download_btn_plot_international_map_fem_1"),
-                                      #   label = "Download",
-                                      #   icon = icon("download")),
+
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -270,18 +240,8 @@ mod_international_start_ui <- function(id){
                            tabPanel("Top 10 der MINT-Länder", br(),
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      #p("LOREM"),
                                       mod_international_top10_mint_ui("international_top10_mint_1"),
-                                      # br(),br()
-                                      # ,
-                                      # downloadButton(
-                                      #   outputId = ns("download_btn_plot_international_top10_mint_1_1"),
-                                      #   label = "Download (links)",
-                                      #   icon = icon("download")),
-                                      # downloadButton(
-                                      #   outputId = ns("download_btn_plot_international_top10_mint_1_2"),
-                                      #   label = "Download (rechts)",
-                                      #   icon = icon("download")),
+
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -300,23 +260,10 @@ mod_international_start_ui <- function(id){
 
                            tabPanel("Top 10 der Länder Frauen in MINT", br(),
 
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      #p("LOREM"),
                                       mod_international_top10_mint_gender_ui("international_top10_mint_gender_1"),
-                                      # br(),br()
-                                      # ,
-                                      # downloadButton(
-                                      #   outputId = ns("download_btn_plot_international_top10_mint_gender_1_1"),
-                                      #   label = "Download (links)",
-                                      #   icon = icon("download")),
-                                      # downloadButton(
-                                      #   outputId = ns("download_btn_plot_international_top10_mint_gender_1_2"),
-                                      #   label = "Download (rechts)",
-                                      #   icon = icon("download")),
+
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -331,23 +278,11 @@ mod_international_start_ui <- function(id){
                            ),
 # tab 5
                            tabPanel("Vergleich internationale Studierende", br(),
-                                    #        tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                                    # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      #p("LOREM"),
                                       mod_international_top10_mint_int_ui("mod_international_top10_mint_int_ui_1"),
-                                    # br(),br()
-                                    # ,
-                                    # downloadButton(
-                                    #   outputId = ns("download_btn_plot_international_mint_top_10_1_1"),
-                                    #   label = "Download (links)",
-                                    #   icon = icon("download")),
-                                    # downloadButton(
-                                    #   outputId = ns("download_btn_plot_international_mint_top_10_1_2"),
-                                    #   label = "Download (rechts)",
-                                    #   icon = icon("download"))
+
                                     ),
 
                                     shiny::mainPanel(
@@ -389,13 +324,9 @@ mod_international_start_ui <- function(id){
                            tabPanel("Vergleich MINT-Anteil (Karte)", br(),
                                     shiny::sidebarPanel(
                                       width = 3,
-                                      #p("LOREM"),
+
                                       mod_international_map_arb_ui("mod_international_map_arb_ui_1"),
-                                      # br(),br(),
-                                      # downloadButton(
-                                      #   outputId = ns("download_btn_plot_international_studienzahl_map_arb_1"),
-                                      #   label = "Download",
-                                      #   icon = icon("download")),
+
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -414,11 +345,6 @@ mod_international_start_ui <- function(id){
                                     shiny::sidebarPanel(
                                       width = 3,
                                       mod_international_map_arb_gender_ui("mod_international_map_arb_gender_ui_1"),
-                                      # br(),br(),
-                                      # downloadButton(
-                                      #   outputId = ns("download_btn_plot_international_map_arb_gender_1"),
-                                      #   label = "Download",
-                                      #   icon = icon("download")),
                                     ),
                                     shiny::mainPanel(
                                       width = 9,
@@ -439,18 +365,9 @@ mod_international_start_ui <- function(id){
 
                                       shiny::sidebarPanel(
                                         width = 3,
-                                        #p("LOREM"),
+
                                         mod_international_top10_mint_arb_ui("mod_international_top10_mint_arb_ui_1"),
-                                        # br(),br()
-                                        # ,
-                                        # downloadButton(
-                                        #   outputId = ns("download_btn_plot_international_top10_mint_arb_1_1"),
-                                        #   label = "Download (links)",
-                                        #   icon = icon("download")),
-                                        # downloadButton(
-                                        #   outputId = ns("download_btn_plot_international_top10_mint_arb_1_2"),
-                                        #   label = "Download (rechts)",
-                                        #   icon = icon("download"))
+
                                       ),
                                       shiny::mainPanel(
                                         width = 9,
@@ -469,18 +386,9 @@ mod_international_start_ui <- function(id){
 
                                       shiny::sidebarPanel(
                                         width = 3,
-                                        #p("LOREM"),
+
                                         mod_international_top10_mint_arb_gender_ui("mod_international_top10_mint_arb_gender_ui_1"),
                                         # br(),br()
-                                        # ,
-                                        # downloadButton(
-                                        #   outputId = ns("download_btn_plot_international_top10_mint_arb_gender_1_1"),
-                                        #   label = "Download (links)",
-                                        #   icon = icon("download")),
-                                        # downloadButton(
-                                        #   outputId = ns("download_btn_plot_international_top10_mint_arb_gender_1_2"),
-                                        #   label = "Download (rechts)",
-                                        #   icon = icon("download"))
 
                                         ),
                                       shiny::mainPanel(
@@ -502,12 +410,7 @@ mod_international_start_ui <- function(id){
                                         width = 3,
                                         #p("LOREM"),
                                         mod_international_arbeitsmarkt_vergleich_ui("international_arbeitsmarkt_vergleich_1"),
-                                        # br(),br()
-                                        # ,
-                                        # downloadButton(
-                                        #   outputId = ns("download_btn_plot_international_arbeitsmarkt_vergleiche_1"),
-                                        #   label = "Download",
-                                        #   icon = icon("download")),
+
                                       ),
                                       shiny::mainPanel(
                                         width = 9,

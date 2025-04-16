@@ -342,7 +342,10 @@ save(ausserschulisch_cp_projekte, file = "ausserschulisch_cp_projekte.rda")
 
 
 ## Envir. aufräumen
-rm(list=ls())
+all <- ls()
+keep <- c("pfad")
+delete <- setdiff(all, keep)
+rm(list=delete)
 
 ## Profile -----
 
