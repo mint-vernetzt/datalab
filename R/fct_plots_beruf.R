@@ -2713,40 +2713,68 @@ arbeitsmarkt_top10 <- function( r){
     }
 
 
-
     #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
+
     # Create female plot
-    plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
-      highcharter::hc_plotOptions(
-        series = list(
-          boderWidth = 0,
-          dataLabels = list(enabled = TRUE, format = "{point.prop} %",
-                            style = list(textOutline = "none"))
-        )) %>%
-      highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_colors(c("#154194")) %>%
-      highcharter::hc_title(text = paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")"),
-                            margin = 45,
-                            align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+    if(nrow(berufe_frauen) == 0){
+      #leerer ersatz-Plot
+      titel <- "Keine MINT-Ausbildung dieser Region hat in diesem Jahr mehr als 50 neue weibliche Auszubildende, weshalb kein Top-Ranking angezgeit werden kann."
+      plot_frau <- highcharter::hchart(berufe_frauen, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
+        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_title(text = titel,
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
+
+    }else{
+      plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
+        highcharter::hc_plotOptions(
+          series = list(
+            boderWidth = 0,
+            dataLabels = list(enabled = TRUE, format = "{point.prop} %",
+                              style = list(textOutline = "none"))
+          )) %>%
+        highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil an allen neuen MINT-Ausbildungsverträgen: {point.y} % <br> Anzahl der neu abgeschlossenen Ausbildugnsverträge: {point.wert}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value} %", rotation = -45), min = 0, max = 100, tickInterval = 10) %>%
+        highcharter::hc_xAxis(title = list(text = "")) %>%
+        highcharter::hc_colors(c("#154194")) %>%
+        highcharter::hc_title(text = paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")"),
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+        highcharter::hc_chart(
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+        ) %>%
+        highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+        highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
+        highcharter::hc_exporting(enabled = TRUE,
+                                  buttons = list(
+                                    contextButton = list(
+                                      menuItems = list("downloadPNG", "downloadCSV")
+                                    )
                                   )
-                                )
-      )
+        )
+    }
+
 
     #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create male plot
+    if(nrow(berufe_maenner) == 0){
+      #leerer ersatz-Plot
+      titel <- "Keine MINT-Ausbildung dieser Region hat in diesem Jahr mehr als 50 neue männliche Auszubildende, weshalb kein Top-Ranking angezgeit werden kann."
+      plot_mann <- highcharter::hchart(berufe_maenner, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
+        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_title(text = titel,
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
+
+    }else{
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
       highcharter::hc_plotOptions(
         series = list(
@@ -2776,7 +2804,7 @@ arbeitsmarkt_top10 <- function( r){
                                   )
                                 )
       )
-
+}
   } else if(abs_rel == "Anzahl"){
 
     df <- df %>%
@@ -2798,6 +2826,19 @@ arbeitsmarkt_top10 <- function( r){
 
     #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create female plot
+    if(nrow(berufe_frauen) == 0){
+      #leerer ersatz-Plot
+      titel <- "Keine MINT-Ausbildung dieser Region hat in diesem Jahr mehr als 50 neue weibliche Auszubildende, weshalb kein Top-Ranking angezgeit werden kann."
+      plot_frau <- highcharter::hchart(berufe_frauen, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
+        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_title(text = titel,
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
+
+    }else{
     plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(
         series = list(
@@ -2826,11 +2867,24 @@ arbeitsmarkt_top10 <- function( r){
                                   )
                                 )
       )
-
+    }
 
 
     #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
     # Create male plot
+    if(nrow(berufe_maenner) == 0){
+      #leerer ersatz-Plot
+      titel <- "Keine MINT-Ausbildung dieser Region hat in diesem Jahr mehr als 50 neue männliche Auszubildende, weshalb kein Top-Ranking angezgeit werden kann."
+      plot_mann <- highcharter::hchart(berufe_maenner, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
+        highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_title(text = titel,
+                              margin = 45,
+                              align = "center",
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
+
+    }else{
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(
         series = list(
@@ -2859,7 +2913,7 @@ arbeitsmarkt_top10 <- function( r){
                                   )
                                 )
       )
-
+}
 
   }
 
