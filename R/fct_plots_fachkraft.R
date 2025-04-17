@@ -1754,7 +1754,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
 
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- balkenbuilder(df, titel, x="beruf", y="wert",group=NULL, tooltip = "Anzahl: {point.wert}", format = "{value:, f}", color = "#EF4444", quelle = quelle)
+    out <- balkenbuilder(df, titel, x="beruf", y="wert",group=NULL, tooltip = "Anzahl: {point.wert}", format = "{value:, f}", color = "#EE7775", quelle = quelle)
 
 
 
