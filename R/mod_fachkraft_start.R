@@ -488,58 +488,53 @@ div(class = "content-box",
 
         column(width = 12,
                br(),
-        tabsetPanel(
-          type = "tabs",
-          tabPanel(
-            "Engpassanalyse für MINT-Berufsgattungen", br(),
-            shiny::sidebarPanel(
-              width = 3,
-              mod_fachkraft_item_detail_ui("fachkraft_item_detail_1"),
-              br(),
-              ),
-            shiny::mainPanel(
-              width = 9,
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_detail_item_1")),
-                                           color = "#154194"),
+       tabsetPanel(
+         type = "tabs",
+         tabPanel(
+           title = "Ranking der Engpassrisiken", br(),
+
+           shiny::sidebarPanel(
+             width = 3,
+             mod_fachkraft_ranking_epa_ui("fachkraft_ranking_engpass_epa"),
+             br(),
+           ),
+           shiny::mainPanel(
+             width = 9,
+             shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_ranking_engpass")),
+                                          color = "#154194"),
+             shinyBS::bsPopover(
+               id="fachkraft_engpaesse_ranks", title="",
+               content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt. Es werden lediglich die TOP 10 der Berufe mit dem größten Engpassrisiko angezeigt. Wenn der Engpasswert des zehnten Berufes auf mehrere Berufe entfällt, dann werden diese alle ausgeblendet, da es sich sonst um zu viele Berufe handelt. "),
+               placement = "top",
+               trigger = "hover"),
+             tags$a(paste0("Hinweis zu den Daten"),
+                    icon("info-circle"),
+                    id = "fachkraft_engpaesse_ranks")
+           )
+
+         ),
+
+         tabPanel(
+           "Engpassanalyse für MINT-Berufsgattungen", br(),
+           shiny::sidebarPanel(
+             width = 3,
+             mod_fachkraft_item_detail_ui("fachkraft_item_detail_1"),
+             br(),
+           ),
+           shiny::mainPanel(
+             width = 9,
+             shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_detail_item_1")),
+                                          color = "#154194"),
              shinyBS::bsPopover(id="h_fachkraft_arbeitsmarkt_3", title="",
-                                 content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
-                                 placement = "top",
-                                 trigger = "hover"),
-              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_3")
-            )
-            ),
+                                content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
+                                placement = "top",
+                                trigger = "hover"),
+             tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_3")
+           )
+         )
 
-
-          ######################################################file mod fachkraft ranking epa steht aber server und so weiter fehlt
-          tabPanel(
-            title = "Ranking der Engpassrisiken", br(),
-
-            shiny::sidebarPanel(
-              width = 3,
-              mod_fachkraft_ranking_epa_ui("fachkraft_ranking_engpass_epa"),
-              br(),
-            ),
-            shiny::mainPanel(
-              width = 9,
-              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_ranking_engpass")),
-                                           color = "#154194"),
-              shinyBS::bsPopover(
-                id="fachkraft_engpaesse_ranks", title="",
-                content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt. Es werden lediglich die TOP 10 der Berufe mit dem größten Engpassrisiko angezeigt. Wenn der Engpasswert des zehnten Berufes auf mehrere Berufe entfällt, dann werden diese alle ausgeblendet, da es sich sonst um zu viele Berufe handelt. "),
-                placement = "top",
-                trigger = "hover"),
-              tags$a(paste0("Hinweis zu den Daten"),
-                     icon("info-circle"),
-                     id = "fachkraft_engpaesse_ranks")
-            )
-          )
-
-
-
-
-
-        )
       )
+    )
     ),
 
 
