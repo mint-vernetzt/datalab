@@ -173,7 +173,6 @@ mod_fachkraft_start_ui <- function(id){
         tags$a(href = "www/Zukunftsszenarien_MINT-Fachkraefte.png", target = "_blank", "Download Grafik Szenarien des Gesamteffekts",
                title = "Die Grafik öffnet sich in einem neuen Browserfenster und kann mit Rechtsklick + \"Grafik speichern unter...\" heruntergeladen werden."),
 
-       # shiny::downloadLink(outputId = "download_wirkhebel", label = "Download Grafik Vergleich Wirkhebel"),
         ),
        column(
          width = 12,
@@ -190,12 +189,6 @@ mod_fachkraft_start_ui <- function(id){
 
               mod_fachkraft_wirkhebel_analyse_ui("fachkraft_item_wirkhebel_analyse_1"),
               br(),# TODO
-
-              # br(),
-              # downloadButton(
-              #   outputId = ns("download_btn_plot_fachkraft_prog_wirkhebel_analyse_1"),
-              #   label = "Download",
-              #   icon = icon("download"))
 
             ),
             shiny::mainPanel(
@@ -227,13 +220,6 @@ mod_fachkraft_start_ui <- function(id){
               mod_fachkraft_item_prog_ui("fachkraft_item_prog_1"),
               br(),
 
-              # br(),
-              # downloadButton(
-              #   outputId = ns("download_btn_plot_fachkraft_prog_item_1"),
-              #   br(),
-              #   label = "Download",
-              #   icon = icon("download")),
-
             ),
             shiny::mainPanel(
               width = 9,
@@ -253,12 +239,7 @@ mod_fachkraft_start_ui <- function(id){
         width = 3,
         mod_fachkraft_item_prog_alle_ui("fachkraft_item_prog_alle_1"),
         br(),
-        # br(),
-        # downloadButton(
-        #   outputId = ns("download_btn_plot_fachkraft_prog_item_1"),
-        #   br(),
-        #   label = "Download",
-        #   icon = icon("download")),
+
       ),
       shiny::mainPanel(
         width = 9,
@@ -286,13 +267,6 @@ mod_fachkraft_start_ui <- function(id){
                                                                         height = "600px"),
                                             color = "#154194"),
 
-
-              # shinyBS::bsPopover(id="h_fachkraft_prog_2", title="",
-              #                    content = paste0("POPUP INFO TEXT HERE"),
-              #                    placement = "top",
-              #                    trigger = "hover"),
-              # tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_prog_2"),
-              # p(),
               p(),
               tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf", target = "_blank", "Methodenbericht des IW Köln als PDF")
             )
@@ -364,16 +338,6 @@ mod_fachkraft_start_ui <- function(id){
               width = 3,
               mod_fachkraft_item_epa_ui("fachkraft_item_epa_1"),
               br(),
-              # br(),
-              #
-              # downloadButton(
-              #   outputId = ns("download_btn_plot_fachkraft_epa_item_1"),
-              #   label = "Download (links)",
-              #   icon = icon("download")),
-              # downloadButton(
-              #   outputId = ns("download_btn_plot_fachkraft_epa_item_2"),
-              #   label = "Download (rechts)",
-              #   icon = icon("download")),
             ),
             shiny::mainPanel(
               width = 9,
@@ -425,48 +389,13 @@ mod_fachkraft_start_ui <- function(id){
             )
           ),
 
-          # Alternative Darstellung der selben Daten wie in Tab 1, reduziert
-          # tabPanel(
-          #   "Verteilung MINT-Bereich nach Engpassrisiko", br(),
-          #
-          #   shiny::sidebarPanel(
-          #     width = 3,
-          #     mod_fachkraft_item_mint_ui("fachkraft_item_mint_1")
-          #
-          #   ),
-          #   shiny::mainPanel(
-          #     width = 9,
-          #     shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_fachkraft_mint_item_1")),
-          #                                  color = "#154194"),
-          #
-          #
-          #     p(style="font-size:12px;color:grey",
-          #       "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-          #     shinyBS::bsPopover(id="h_fachkraft-berufsgruppen_2", title="",
-          #                        content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt."),
-          #                        placement = "top",
-          #                        trigger = "hover"),
-          #     tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft-berufsgruppen_2")
-          #   )
-          # ),
-
             tabPanel(
               "Arbeitslosen-Stellen-Relation und Vakanzzeit in MINT", br(),
-
-              # tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-              # .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
 
               shiny::sidebarPanel(
                 width = 3,
                 mod_fachkraft_bar_vakanz_ui("fachkraft_bar_vakanz_1"),
                 br(),
-
-                # br(),
-                # downloadButton(
-                #   outputId = ns("download_btn_plot_fachkraft_bar_vakanz_1"),
-                #   label = "Download",
-                #   icon = icon("download"))
-
               ),
               shiny::mainPanel(
                 width = 9,
@@ -567,7 +496,6 @@ div(class = "content-box",
               width = 3,
               mod_fachkraft_item_detail_ui("fachkraft_item_detail_1"),
               br(),
-
               ),
             shiny::mainPanel(
               width = 9,
@@ -721,47 +649,8 @@ mod_fachkraft_start_server <- function(id, r){
 
 
     })
-    #
-    # output$download_btn_plot_fachkraft_epa_item_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_epa_item_1_left_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_epa_item_1_left,
-    #       filename =  r$plot_fachkraft_epa_item_1_left_title,
-    #       width = 700,
-    #       height = 400,
-    #       with_labels = FALSE)
-    #
-    #     file.copy(r$plot_fachkraft_epa_item_1_left_title, file)
-    #     file.remove(r$plot_fachkraft_epa_item_1_left_title)
-    #   }
-    # )
-    #
-    # output$download_btn_plot_fachkraft_epa_item_2 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_epa_item_1_right_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_epa_item_1_right,
-    #       filename =  r$plot_fachkraft_epa_item_1_right_title,
-    #       width = 700,
-    #       height = 400,
-    #       with_labels = FALSE)
-    #
-    #     file.copy(r$plot_fachkraft_epa_item_1_right_title, file)
-    #     file.remove(r$plot_fachkraft_epa_item_1_right_title)
-    #   }
-    # )
 
-    ## MINT an EPA 2. Datstellung, aktuell reduziert
-    # output$plot_fachkraft_mint_item_1 <- highcharter::renderHighchart({
-    #   plot_fachkraft_mint_item(r)
-    #
-    # })
+
 
     ## Fachkräfteegpass Bulas
     output$plot_fachkraft_epa_bulas <- renderUI({
@@ -777,22 +666,7 @@ mod_fachkraft_start_server <- function(id, r){
     })
 
 
-    # output$download_btn_plot_fachkraft_bar_vakanz_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_bar_vakanz_1_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_bar_vakanz_1,
-    #       filename =  r$plot_fachkraft_bar_vakanz_1_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_fachkraft_bar_vakanz_1_title, file)
-    #     file.remove(r$plot_fachkraft_bar_vakanz_1_title)
-    #   }
-    # )
+
 
     # Download für JT kurz raus
     output$plot_fachkraft_bar_vakanz_1 <- renderUI({
@@ -802,16 +676,6 @@ mod_fachkraft_start_server <- function(id, r){
 
 
     ## Detail Berufe
-
-
-    #Download kurz raus für JT
-    # output$plot_fachkraft_detail_item_1 <- highcharter::renderHighchart({
-    #   plot_list <- plot_fachkraft_detail_item(r)
-    #
-    #   highcharter::hw_grid(
-    #     plot_list,
-    #     ncol = 2)
-    # })
 
     output$plot_fachkraft_detail_item_1 <- renderUI({
       plot_list <- plot_fachkraft_detail_item(r)
@@ -829,23 +693,7 @@ mod_fachkraft_start_server <- function(id, r){
         plot_list,
         ncol = 2)
     })
-    #
-    # output$download_btn_plot_fachkraft_item_detail_1 <- downloadHandler(
-    #   contentType = "image/png",
-    #   filename = function() {r$plot_fachkraft_detail_item_1_right_title},
-    #   content = function(file) {
-    #     # creating the file with the screenshot and prepare it to download
-    #
-    #     add_caption_and_download(
-    #       hc = r$plot_fachkraft_detail_item_1_right,
-    #       filename =  r$plot_fachkraft_detail_item_1_right_title,
-    #       width = 700,
-    #       height = 400)
-    #
-    #     file.copy(r$plot_fachkraft_detail_item_1_right_title, file)
-    #     file.remove(r$plot_fachkraft_detail_item_1_right_title)
-    #   }
-    # )
+
 
     output$plot_fachkraft_ranking_engpass <- renderUI({
       plot_list <- plot_fachkraft_ranking_epa(r)
