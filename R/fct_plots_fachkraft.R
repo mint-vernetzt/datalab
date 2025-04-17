@@ -1687,7 +1687,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
       WHERE jahr = {timerange}
       AND indikator = 'Engpassindikator'
       ORDER BY wert DESC
-      LIMIT 10
+      LIMIT 30
     ", .con = con)
 
     df <- DBI::dbGetQuery(con, df_query)
@@ -1704,7 +1704,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
         AND indikator = 'Engpassindikator'
         AND anforderung = {bf_label}
       ORDER BY wert DESC
-      LIMIT 10
+      LIMIT 30
     ", .con = con)
 
     df <- DBI::dbGetQuery(con, df_query)
@@ -1724,7 +1724,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
       AND indikator = 'Engpassindikator'
       AND mint_zuordnung != 'Nicht MINT'
       ORDER BY wert DESC
-      LIMIT 10
+      LIMIT 30
     ", .con = con)
       titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter allen Berufsleveln in MINT-Berufen")
 
@@ -1741,7 +1741,7 @@ plot_fachkraft_ranking_epa  <- function(r) {
         AND anforderung = {bf_label}
       AND mint_zuordnung != 'Nicht MINT'
       ORDER BY wert DESC
-      LIMIT 10
+      LIMIT 30
     ", .con = con)
 
       titel <- paste0("Die Berufe mit dem höchsten Engpassrisiko unter ", bf_label ," in MINT-Berufen")
@@ -1751,6 +1751,18 @@ plot_fachkraft_ranking_epa  <- function(r) {
     }
 
   }
+  #weitere arbeit
+  wert <- df[10, "wert"]
+  if (wert == df[11, "wert"]){
+
+    df <- df[1:9,]
+  } else if (wert > df[11, "wert"]){
+
+    df <- df[1:10,]
+  }
+
+  browser()
+
 
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
