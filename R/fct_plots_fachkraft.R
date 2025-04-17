@@ -1761,7 +1761,6 @@ plot_fachkraft_ranking_epa  <- function(r) {
     df <- df[1:10,]
   }
 
-  browser()
 
 
     quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
