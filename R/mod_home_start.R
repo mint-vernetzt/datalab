@@ -191,7 +191,10 @@ mod_home_start_ui <- function(id){
        br(), br(),
        tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Frauen_Berufe_final.pdf",
               target = "_blank", "Link zur Kurzanalyse"),
-       br(), br())
+       br(), br(),
+       p("Veröffentlichung: 16. Februar 2024",
+         br(),
+         "Zitiervorschlag: MINTvernetzt (2024). Kurzanalyse. Arbeitswelt: Frauen & MINT."))
      )
  ),
 

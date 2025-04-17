@@ -192,15 +192,32 @@ international_ui_faecher <- function(region = "EU") {
   if (region == "arbeit") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      dplyr::filter(geschlecht == "Gesamt" &
-                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-      ) %>%
+    # selection <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+    #   dplyr::filter(geschlecht == "Gesamt" &
+    #                   variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+    #                                   "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+    #   ) %>%
+    #   dplyr::pull(fachbereich) %>%
+    #   unique() %>%
+    #   sort()
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern', 'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+", .con = con)
+
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+    selection <- selection %>%
       dplyr::pull(fachbereich) %>%
       unique() %>%
       sort()
-  }
+
+      }
+
+
 
   return(selection)
 
@@ -215,15 +232,48 @@ international_ui_years <- function(region = "EU") {
   if (region == "OECD") {
     #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    selection <- dplyr::tbl(con, from = "studierende_anzahl_oecd") %>%
-      dplyr::filter(geschlecht == "Gesamt") %>%
+    # selection <- dplyr::tbl(con, from = "studierende_anzahl_oecd") %>%
+    #   dplyr::filter(geschlecht == "Gesamt") %>%
+    #   dplyr::pull(jahr) %>%
+    #   unique() %>%
+    #   sort()
+    #
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM studierende_anzahl_oecd
+  WHERE geschlecht = 'Gesamt'
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+    selection <- selection %>%
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
+
+
   }
 
   if (region == "EU") {
     #load(file = system.file(package="datalab","data/studierende_europa.rda"))
+
+
+#     df_query <- glue::glue_sql("
+#   SELECT *
+#   FROM studierende_europa
+#   WHERE geschlecht = 'Gesamt'
+#   AND mint_select = 'MINT'
+#   AND indikator = 'Fächerwahl'
+# ", .con = con)
+#
+#     selection <- DBI::dbGetQuery(con, df_query)
+#
+#     selection <- selection %>%
+#       dplyr::pull(jahr) %>%
+#       unique() %>%
+#       sort()
+#     selection <- selection[-1]
 
     selection <- dplyr::tbl(con, from = "studierende_europa") %>%
       dplyr::filter(geschlecht == "Gesamt"  &
@@ -233,48 +283,98 @@ international_ui_years <- function(region = "EU") {
       unique() %>%
       sort()
     selection<- selection[-1]
+    #
   }
 
   if (region == "Weltweit"){
-    selection <- dplyr::tbl(con, from = "studierende_absolventen_weltweit") %>%
-      dplyr::filter(geschlecht == "Insgesamt") %>%
-      dplyr::filter(jahr != "2022") %>%
+    # selection <- dplyr::tbl(con, from = "studierende_absolventen_weltweit") %>%
+    #   dplyr::filter(geschlecht == "Insgesamt") %>%
+    #   dplyr::filter(jahr != "2022") %>%
+    #   dplyr::pull(jahr) %>%
+    #   unique() %>%
+    #   sort()
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM studierende_absolventen_weltweit
+  WHERE geschlecht = 'Insgesamt'
+  AND jahr != '2022'
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+    selection <- selection %>%
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
+
   }
 
   # for schule international
   if (region == "TIMSS") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- dplyr::tbl(con, from = "schule_timss") %>%
-      dplyr::filter(ordnung %in% c("Achievement",
-                                   "Benchmarks") &
-                      indikator %in% c("Mittlerer int'l. Maßstab (475)",
-                                       "Insgesamt")
-      ) %>%
+    # selection <- dplyr::tbl(con, from = "schule_timss") %>%
+    #   dplyr::filter(ordnung %in% c("Achievement",
+    #                                "Benchmarks") &
+    #                   indikator %in% c("Mittlerer int'l. Maßstab (475)",
+    #                                    "Insgesamt")
+    #   ) %>%
+    #   dplyr::pull(jahr) %>%
+    #   unique() %>%
+    #   sort()
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM schule_timss
+  WHERE ordnung IN ('Achievement', 'Benchmarks')
+  AND indikator IN ('Mittlerer int''l. Maßstab (475)', 'Insgesamt')
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+    selection <- selection %>%
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
+
+
   }
 
   if (region == "PISA") {
     #load(file = system.file(package="datalab","data/schule_pisa.rda"))
 
-    selection <- dplyr::tbl(con, from = "schule_pisa") %>%
-      dplyr::filter(bereich == "Ländermittel" &
-                      indikator == "Insgesamt" &
-                      !is.na(wert)) %>%
+    # selection <- dplyr::tbl(con, from = "schule_pisa") %>%
+    #   dplyr::filter(bereich == "Ländermittel" &
+    #                   indikator == "Insgesamt" &
+    #                   !is.na(wert)) %>%
+    #   dplyr::pull(jahr) %>%
+    #   unique() %>%
+    #   sort()
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM schule_pisa
+  WHERE bereich = 'Ländermittel'
+  AND indikator = 'Insgesamt'
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+    selection <- selection %>%
+      dplyr::filter(!is.na(wert))%>%
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
+
+
   }
 
   # for arbeitsmarkt international
   if (region == "arbeit") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
+#
     selection <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
       dplyr::filter(
         geschlecht == "Gesamt" &
@@ -287,6 +387,25 @@ international_ui_years <- function(region = "EU") {
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
+
+
+#     df_query <- glue::glue_sql("
+#   SELECT *
+#   FROM arbeitsmarkt_anfaenger_absolv_oecd
+#   WHERE bereich = 'Gesamt'
+#   AND jahr >= 2013
+#   AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern', 'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+# ", .con = con)
+#
+#     selection <- DBI::dbGetQuery(con, df_query)
+#
+#     selection <- selection %>%
+#       dplyr::pull(jahr) %>%
+#       unique() %>%
+#       sort()
+
+
+
   }
 
   return(selection)
@@ -297,10 +416,24 @@ international_ui_country <- function(type = "arbeit", n = NA) {
 
   selection <- NULL
 
-  for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-    dplyr::filter(
-      geschlecht == "Gesamt"
-    ) %>%
+  # for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+  #   dplyr::filter(
+  #     geschlecht == "Gesamt"
+  #   ) %>%
+  #   dplyr::collect()
+  # year <- max(for_year$jahr)
+
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+", .con = con)
+
+  for_year <- DBI::dbGetQuery(con, df_query)
+
+  for_year <- for_year %>%
     dplyr::collect()
   year <- max(for_year$jahr)
 
@@ -308,12 +441,28 @@ international_ui_country <- function(type = "arbeit", n = NA) {
   if (type == "arbeit") {
     #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      dplyr::filter(geschlecht == "Gesamt" &
-                      jahr == year &
-                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-      ) %>%
+    # tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+    #   dplyr::filter(geschlecht == "Gesamt" &
+    #                   jahr == year &
+    #                   variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+    #                                   "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+    #   ) %>%
+    #   dplyr::collect()
+    #
+
+
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+  AND jahr = {year}
+  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern','Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+", .con = con)
+
+    tmp_df <- DBI::dbGetQuery(con, df_query)
+
+    tmp_df <- tmp_df %>%
       dplyr::collect()
 
 
@@ -342,10 +491,24 @@ int_schule_ui_country <- function(type = "TIMSS", n = NA) {
 
   selection <- NULL
 
-  for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-    dplyr::filter(
-      geschlecht == "Gesamt"
-    ) %>%
+  # for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+  #   dplyr::filter(
+  #     geschlecht == "Gesamt"
+  #   ) %>%
+  #   dplyr::collect()
+  # year <- max(for_year$jahr)
+
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+", .con = con)
+
+  for_year <- DBI::dbGetQuery(con, df_query)
+
+  for_year <- for_year %>%
     dplyr::collect()
   year <- max(for_year$jahr)
 
@@ -353,12 +516,26 @@ int_schule_ui_country <- function(type = "TIMSS", n = NA) {
   if (type == "arbeit") {
     #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      dplyr::filter(geschlecht == "Gesamt" &
-                      jahr == year &
-                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-      ) %>%
+    # tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+    #   dplyr::filter(geschlecht == "Gesamt" &
+    #                   jahr == year &
+    #                   variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+    #                                   "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+    #   ) %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+  AND jahr = {year}
+  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern','Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+", .con = con)
+
+    tmp_df <- DBI::dbGetQuery(con, df_query)
+
+    tmp_df <- tmp_df %>%
       dplyr::collect()
 
 
@@ -381,11 +558,26 @@ int_schule_ui_country <- function(type = "TIMSS", n = NA) {
   }
 
   if(type=="TIMSS"){
-    selection <- dplyr::tbl(con, from = "schule_timss") %>%
+    # selection <- dplyr::tbl(con, from = "schule_timss") %>%
+    #   dplyr::filter(!is.na(wert)) %>%
+    #   dplyr::distinct(land) %>%  # Eindeutige Werte direkt in der Datenbank abrufen
+    #   dplyr::arrange(land) %>%   # Alphabetisch sortieren (in der DB)
+    #   dplyr::pull(land)          # Extrahiert die Spalte 'land'
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM schule_timss
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+    selection <- selection %>%
       dplyr::filter(!is.na(wert)) %>%
-      dplyr::distinct(land) %>%  # Eindeutige Werte direkt in der Datenbank abrufen
-      dplyr::arrange(land) %>%   # Alphabetisch sortieren (in der DB)
-      dplyr::pull(land)          # Extrahiert die Spalte 'land'
+      dplyr::distinct(land) %>%  #
+      dplyr::arrange(land) %>%   #
+      dplyr::pull(land)
+
+
 
   }
 
@@ -395,10 +587,24 @@ int_pisa_ui_country <- function(type = "TIMSS", n = NA) {
 
   selection <- NULL
 
-  for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-    dplyr::filter(
-      geschlecht == "Gesamt"
-    ) %>%
+  # for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+  #   dplyr::filter(
+  #     geschlecht == "Gesamt"
+  #   ) %>%
+  #   dplyr::collect()
+  # year <- max(for_year$jahr)
+
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+", .con = con)
+
+  for_year <- DBI::dbGetQuery(con, df_query)
+
+  for_year <- for_year %>%
     dplyr::collect()
   year <- max(for_year$jahr)
 
@@ -406,12 +612,25 @@ int_pisa_ui_country <- function(type = "TIMSS", n = NA) {
   if (type == "arbeit") {
     #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      dplyr::filter(geschlecht == "Gesamt" &
-                      jahr == year &
-                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-      ) %>%
+    # tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+    #   dplyr::filter(geschlecht == "Gesamt" &
+    #                   jahr == year &
+    #                   variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+    #                                   "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+    #   ) %>%
+    #   dplyr::collect()
+
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern','Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+", .con = con)
+
+    tmp_df <- DBI::dbGetQuery(con, df_query)
+
+    tmp_df <- tmp_df %>%
       dplyr::collect()
 
 
@@ -450,19 +669,45 @@ fachkraft_ui_years <- function(reg = "DE") {
 
 if(reg == "DE"){
 
-  selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
-    dplyr::filter(indikator == "Engpassindikator") %>%
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_epa_detail
+  WHERE indikator = 'Engpassindikator'
+", .con = con)
+
+  selection <- DBI::dbGetQuery(con, df_query)
+
+  selection <- selection %>%
     dplyr::pull(jahr) %>%
     unique() %>%
     sort()
+
+  # selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
+  #   dplyr::filter(indikator == "Engpassindikator") %>%
+  #   dplyr::pull(jahr) %>%
+  #   unique() %>%
+  #   sort()
 
 }else if(reg== "BULA"){
 
-  selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa") %>%
-    dplyr::filter(indikator == "Engpassindikator") %>%
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_epa
+  WHERE indikator = 'Engpassindikator'
+", .con = con)
+
+  selection <- DBI::dbGetQuery(con, df_query)
+
+  selection <- selection %>%
     dplyr::pull(jahr) %>%
     unique() %>%
     sort()
+
+  # selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa") %>%
+  #   dplyr::filter(indikator == "Engpassindikator") %>%
+  #   dplyr::pull(jahr) %>%
+  #   unique() %>%
+  #   sort()
 
 }
 
@@ -519,13 +764,28 @@ fachkraft_ui_berufe <- function(level = "Fachkräfte", zeitpunkt = 2023) {
 
   selection <- NULL
 
-  selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
-    dplyr::filter(indikator == "Engpassindikator" &
-                    anforderung == level &
-                    jahr == zeitpunkt &
-                    !is.na(wert)) %>%
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_epa_detail
+  WHERE indikator = 'Engpassindikator'
+  AND anforderung = {level}
+  AND jahr = {zeitpunkt}
+", .con = con)
+
+  selection <- DBI::dbGetQuery(con, df_query)
+
+  selection <- selection %>%
+    dplyr::filter(!is.na(wert)) %>%
     dplyr::pull(beruf) %>%
     unique()
+
+  # selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
+  #   dplyr::filter(indikator == "Engpassindikator" &
+  #                   anforderung == level &
+  #                   jahr == zeitpunkt &
+  #                   !is.na(wert)) %>%
+  #   dplyr::pull(beruf) %>%
+  #   unique()
 
 
   return(selection)
@@ -615,13 +875,28 @@ arbeit_fachkraft_ui_years <- function() {
 
   selection <- NULL
 
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_fachkraefte
+  WHERE indikator IN ('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')
+", .con = con)
 
-  selection <- dplyr::tbl(con, from = "arbeitsmarkt_fachkraefte") %>%
-    dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
-                                   "Arbeitslosen-Stellen-Relation")) %>%
+
+  selection <- DBI::dbGetQuery(con, df_query)
+
+  selection <- selection %>%
     dplyr::pull(jahr) %>%
     unique() %>%
     sort()
+
+
+
+  # selection <- dplyr::tbl(con, from = "arbeitsmarkt_fachkraefte") %>%
+  #   dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
+  #                                  "Arbeitslosen-Stellen-Relation")) %>%
+  #   dplyr::pull(jahr) %>%
+  #   unique() %>%
+  #   sort()
 
 
   return(selection)
@@ -632,12 +907,24 @@ arbeit_fachkraft_ui_region <- function() {
 
   selection <- NULL
 
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_fachkraefte
+  WHERE indikator IN ('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')
+", .con = con)
 
-  selection <- dplyr::tbl(con, from = "arbeitsmarkt_fachkraefte") %>%
-    dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
-                                   "Arbeitslosen-Stellen-Relation")) %>%
+
+  selection <- DBI::dbGetQuery(con, df_query)
+
+  selection <- selection %>%
     dplyr::pull(region) %>%
     unique()
+
+  # selection <- dplyr::tbl(con, from = "arbeitsmarkt_fachkraefte") %>%
+  #   dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
+  #                                  "Arbeitslosen-Stellen-Relation")) %>%
+  #   dplyr::pull(region) %>%
+  #   unique()
 
 
   return(selection)
@@ -1071,9 +1358,10 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
 balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                           optional=NULL, reverse = TRUE, TF=NULL, stacking=NULL, subtitel = NULL, quelle="Quelle"){
 
+  if (is.numeric(df[[y]])) {
   df <- df %>%
     dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
-
+  }
 
 
   if(is.null(group) && is.null(optional)){

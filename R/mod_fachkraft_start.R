@@ -104,9 +104,15 @@ mod_fachkraft_start_ui <- function(id){
               br(), br(),
               tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/07/MINTvernetzt_Kurzanalyse_Zukunftsszenarien_MINT_Fachkraefte.pdf", target = "_blank",
                      "Link zu der Kurzanalyse über die Zukunftsszenarien allgemein"), br(),
+              p("Veröffentlichung: 16. Juli 2024",
+                br(),
+                "Zitiervorschlag: MINTvernetzt (2024). Kurzanalyse. Zukunftsszenarien MINT-Fachkräfte."),
               tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/07/MINTvernetzt_Kurzanalyse_Zukunftsszenarien_Zuwanderung.pdf", target = "_blank",
                      "Link zu der Kurzanalyse über die Zukunftsszenarien der Zuwanderung in MINT"), br(),
-              br())
+              br(),
+              p("Veröffentlichung: 16. Juli 2024",
+                br(),
+                "Zitiervorschlag: MINTvernetzt (2024). Kurzanalyse. Zukunftsszenarien Zuwanderung in MINT."))
         )
     ),
 
@@ -421,7 +427,10 @@ div(class = "content-box",
           br(), br(),
           tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2025/03/Fachkraeftemangel-MINT-Disziplinen.pdf", target = "_blank",
                  "Link zu der Kurzanalyse"), br(),
-          br())
+          br(),
+          p("Veröffentlichung: 05. März 2024",
+            br(),
+            "Zitiervorschlag: MINTvernetzt (2024). Kurzanalyse. Fachkräftemangel in MINT; Eine Frage der Disziplin?"))
     )
 ),
 
@@ -476,6 +485,7 @@ div(class = "content-box",
         p()
         )
         ),
+
         column(width = 12,
                br(),
         tabsetPanel(
@@ -497,7 +507,37 @@ div(class = "content-box",
                                  trigger = "hover"),
               tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_fachkraft_arbeitsmarkt_3")
             )
+            ),
+
+
+          ######################################################file mod fachkraft ranking epa steht aber server und so weiter fehlt
+          tabPanel(
+            title = "Ranking der Engpassrisiken", br(),
+
+            shiny::sidebarPanel(
+              width = 3,
+              mod_fachkraft_ranking_epa_ui("fachkraft_ranking_engpass_epa"),
+              br(),
+            ),
+            shiny::mainPanel(
+              width = 9,
+              shinycssloaders::withSpinner(htmlOutput(ns("plot_fachkraft_ranking_engpass")),
+                                           color = "#154194"),
+              shinyBS::bsPopover(
+                id="fachkraft_engpaesse_ranks", title="",
+                content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. <br><br>Informationen zur Berechnung und Bedeutung des Engpassindikators finden Sie in der Infobox zur Engpassanalyse. Diese ist in der Beschreibung über der Grafik verlinkt. Es werden lediglich die TOP 10 der Berufe mit dem größten Engpassrisiko angezeigt. Wenn der Engpasswert des zehnten Berufes auf mehrere Berufe entfällt, dann werden diese alle ausgeblendet, da es sich sonst um zu viele Berufe handelt. "),
+                placement = "top",
+                trigger = "hover"),
+              tags$a(paste0("Hinweis zu den Daten"),
+                     icon("info-circle"),
+                     id = "fachkraft_engpaesse_ranks")
             )
+          )
+
+
+
+
+
         )
       )
     ),
@@ -653,6 +693,13 @@ mod_fachkraft_start_server <- function(id, r){
         plot_list,
         ncol = 2)
     })
+
+
+    output$plot_fachkraft_ranking_engpass <- renderUI({
+      plot_list <- plot_fachkraft_ranking_epa(r)
+    })
+
+
 
 
 
