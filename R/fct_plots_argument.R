@@ -43,7 +43,37 @@ argument_verlauf <- function(r){
 
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
-    out <- linebuilder(df, titel, x = "jahr", y="wert", group = "indikator", tooltip = tooltip, format, color)
+
+
+    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = "jahr", y = "wert", group = "indikator")) %>%
+      highcharter::hc_tooltip(pointFormat = tooltip) %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.wert_besr}",
+                            style = list(textOutline = "none"))
+        )) %>%
+      highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+      )  %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
+
+
+
 
   return (out)
 
@@ -530,6 +560,12 @@ argument_demografie <- function(r){
     x = !!sym("indikator"),
     color = !!sym("color")
   )) %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        boderWidth = 0,
+        dataLabels = list(enabled = TRUE, format = "{point.wert_disp}",
+                          style = list(textOutline = "none"))
+      )) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
