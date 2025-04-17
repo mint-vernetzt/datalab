@@ -64,6 +64,8 @@ beruf_einstieg_vergleich <- function(r) {
 
   df1 <- DBI::dbGetQuery(con, df_query)
 
+  browser()
+
   df <- df1 %>%
     dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
                    "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert")
@@ -1539,6 +1541,7 @@ beruf_verlauf_faecher <- function(r) {
   AND bundesland = {regio}
   AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
                                ", .con = con)
+
 
   df <- DBI::dbGetQuery(con, df_query)
 

@@ -475,12 +475,98 @@ argument_fachkraft <- function(r){
 
 argument_demografie <- function(r){
 
+
+
+  betrachtung <- "Gruppenvergleich - Balkendiagramm"
+  timerange <- 2023 #L
+  regio <- r$region_argumentationshilfe
+  faecher <- "MINT"
+
+  gruppe <- c(
+    "Beschäftigte",
+    "Beschäftigte u25",
+    "Beschäftigte 25-55",
+    "Beschäftigte ü55")
+
+
+
+  df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_detail
+  WHERE jahr = {timerange}
+  AND landkreis = 'alle Landkreise'
+  AND bundesland = {regio}
+  AND anforderung = 'Gesamt'
+  AND geschlecht = 'Gesamt'
+  AND indikator IN ({gruppe*})
+  AND fachbereich = {faecher}
+                               ", .con = con)
+
+  df1 <- DBI::dbGetQuery(con, df_query)
+
+  df <- df1 %>%
+    dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
+                   "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert")
+
+
+
+  df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+  df <- df[with(df, order(wert, decreasing = TRUE)), ]
+  tooltip = "Anzahl: {point.wert_disp}"
+  format = "{value:, f}"
+  df <- df[with(df, order(wert, decreasing = TRUE)), ]
+
+  # Farbzuweisung: "Beschäftigte" blau, alle anderen rosa
+  df$color <- ifelse(df$indikator == "Beschäftigte", "#154194", "#b16fab")
+
+
+  titel <- ifelse(regio == "Saarland",
+                  paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen im ", regio, " (", timerange, ")"),
+                  paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen in ", regio, " (", timerange, ")"))
+
+
+  out <- highcharter::hchart(df, 'bar', highcharter::hcaes(
+    y = !!sym("wert"),
+    x = !!sym("indikator"),
+    color = !!sym("color")
+  )) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    # hc_colors weglassen
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
+
+
+
+
+
+
+
+
+  return(out)
+
+
+
 }
 
 argument_nachwuchs <- function(r){
 
   betrachtung <- "Einzelansicht - Kuchendiagramm"
-  testy1 <- 2023 ####################################################################
+  testy1 <- 2023
   regio <- r$region_argumentationshilfe
   testl1 <- c("Studierende", "internationale Studierende", "Studierende (Lehramt)", "Studienanfänger:innen (1. Hochschulsemester)", "internationale Studienanfänger:innen (1. Hochschulsemester)", "Absolvent:innen", "internationale Absolvent:innen")  ################################
 
@@ -505,7 +591,8 @@ argument_nachwuchs <- function(r){
     AND geschlecht = 'Gesamt'
     AND region = {regio}
     AND indikator in ({testl1*})
-    AND fach = 'Alle Fächer'", .con = con)
+    AND fach = 'Alle Fächer'
+                                                      ", .con = con)
 
   alle <- DBI::dbGetQuery(con, df_query)
 
@@ -549,21 +636,14 @@ argument_nachwuchs <- function(r){
     )
 
 
-  #
-
-  #######
-
 
   betrachtung <- "Gruppenvergleich - Balkendiagramm"
   timerange <- 2023 #L
   regio <- r$region_argumentationshilfe
   faecher <- "MINT"
 
-  gruppe <- c("Auszubildende",
-                "Auszubildende (1. Jahr)",
-                "ausländische Auszubildende",
+  gruppe <- c(
                 "Beschäftigte",
-                "ausländische Beschäftigte",
                 "Beschäftigte u25",
                 "Beschäftigte 25-55",
                 "Beschäftigte ü55")
