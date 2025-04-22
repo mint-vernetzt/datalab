@@ -46,6 +46,7 @@ mod_fachkraft_server <- function(id,
 
   # box 3
   mod_fachkraft_item_detail_server("fachkraft_item_detail_1", r)
+  mod_fachkraft_ranking_epa_server("fachkraft_ranking_engpass_epa", r)######
 
 
 }

@@ -174,7 +174,10 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Interesse_final.pdf",
                  target = "_blank", "Link zur Kurzanalyse"),
           br(), br())
-        )
+        ),
+        p("Veröffentlichung: 16. Februar 2024",
+          br(),
+          "Zitiervorschlag: MINTvernetzt (2024). Kurzanalyse. Wird MINT unbeliebter?.")
     ),
 
     # Box 2 ----
@@ -357,7 +360,7 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                                                     color = "#154194"),
 
                        shinyBS::bsPopover(id = "h_beruf_fach_4", title = "",
-                                          content = paste0("Hier gezeigt werden nur neue Auszubildende im Fachbereich MINT des jeweiligen Jahres. Ausbildungsberufe mit weniger als zehn neuen Vertragsabschlüssen für das betrachtete Jahr wurden ausgeschlossen. <br><br>In manchen Fällen weisen mehr als zehn Berufe einen Männeranteil von 100 % auf. In diesen Fällen sind die zehn Berufe mit einem Männeranteil von 100 % angezeigt, welche die meisten Neu-Auszubildenden haben.", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+                                          content = paste0("Hier gezeigt werden nur neue Auszubildende im Fachbereich MINT des jeweiligen Jahres. Ausbildungsberufe mit weniger als 50 neuen Vertragsabschlüssen für das betrachtete Jahr wurden ausgeschlossen. <br><br>In manchen Fällen weisen mehr als zehn Berufe einen Männeranteil von 100 % auf. In diesen Fällen sind die zehn Berufe mit einem Männeranteil von 100 % angezeigt, welche die meisten Neu-Auszubildenden haben.", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
                                           placement = "top",
                                           trigger = "hover"),
                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_4")
@@ -378,7 +381,10 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
           br(), br(),
           tags$a(href = "https://www.mint-vernetzt.de/content/uploads/2024/02/MIN_Kurzanalyse_Frauen_Berufe_final.pdf",
                  target = "_blank", "Link zur Kurzanalyse"),
-          br(), br())
+          br(), br(),
+          p("Veröffentlichung: 16. Februar 2024",
+            br(),
+            "Zitiervorschlag: MINTvernetzt (2024). Kurzanalyse. Arbeitswelt: Frauen & MINT."))
         )
     ),
 
