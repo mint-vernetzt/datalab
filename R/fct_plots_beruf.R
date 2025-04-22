@@ -2718,7 +2718,7 @@ arbeitsmarkt_top10 <- function( r){
     # Create female plot
     if(nrow(berufe_frauen) == 0){
       #leerer ersatz-Plot
-      titel <- "Keine MINT-Ausbildung dieser Region hat in diesem Jahr mehr als 50 neue Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
+      titel <- "Keine MINT-Ausbildung dieser Region mit mehr als 50 neuen Auszubildenden hat in diesem Jahr neue weibliche Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
       plot_frau <- highcharter::hchart(berufe_frauen, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
@@ -2764,7 +2764,7 @@ arbeitsmarkt_top10 <- function( r){
     # Create male plot
     if(nrow(berufe_maenner) == 0){
       #leerer ersatz-Plot
-      titel <- "Keine MINT-Ausbildung dieser Region hat in diesem Jahr mehr als 50 neue Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
+      titel <- "Keine MINT-Ausbildung dieser Region mit mehr als 50 neuen Auszubildenden hat in diesem Jahr neue männliche Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
       plot_mann <- highcharter::hchart(berufe_maenner, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
@@ -2828,7 +2828,7 @@ arbeitsmarkt_top10 <- function( r){
     # Create female plot
     if(nrow(berufe_frauen) == 0){
       #leerer ersatz-Plot
-      titel <- "Keine MINT-Ausbildung dieser Region hat in diesem Jahr mehr als 50 neue Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
+      titel <- "Keine MINT-Ausbildung dieser Region mit mehr als 50 neuen Auszubildenden hat in diesem Jahr neue weibliche Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
       plot_frau <- highcharter::hchart(berufe_frauen, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
@@ -2874,7 +2874,7 @@ arbeitsmarkt_top10 <- function( r){
     # Create male plot
     if(nrow(berufe_maenner) == 0){
       #leerer ersatz-Plot
-      titel <- "Keine MINT-Ausbildung dieser Region hat in diesem Jahr mehr als 50 neue Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
+      titel <- "Keine MINT-Ausbildung dieser Region mit mehr als 50 neuen Auszubildenden hat in diesem Jahr neue männliche Auszubildende, weshalb kein Top-Ranking angezeigt werden kann."
       plot_mann <- highcharter::hchart(berufe_maenner, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = fachbereich)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.wert}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
