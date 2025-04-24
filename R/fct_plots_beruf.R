@@ -64,7 +64,6 @@ beruf_einstieg_vergleich <- function(r) {
 
   df1 <- DBI::dbGetQuery(con, df_query)
 
-  browser()
 
   df <- df1 %>%
     dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
