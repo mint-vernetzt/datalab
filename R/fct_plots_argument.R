@@ -13,39 +13,70 @@ argument_verlauf <- function(r){
     AND region = {regio}
     AND geschlecht = 'Gesamt'
     AND fachbereich = 'MINT'
+    AND indikator = 'Beschäftigte'
 ", .con = con)
 
-  df <- DBI::dbGetQuery(con, query_df)
+  df_beschäftigte <- DBI::dbGetQuery(con, query_df)
+
+  hcoptslang <- getOption("highcharter.lang")
+  hcoptslang$thousandsSep <- "."
+  options(highcharter.lang = hcoptslang)
+
+  df_beschäftigte <- df_beschäftigte[with(df_beschäftigte, order(fachbereich, jahr, decreasing = FALSE)), ]
+
+  #Trennpunkte für lange Zahlen ergänzen
+  df_beschäftigte$wert_besr <- prettyNum(df_beschäftigte$wert, big.mark = ".", decimal.mark = ",")
+
+  # Ordnen der Legende
+  sorted_indicators <- df_beschäftigte %>%
+    dplyr::group_by(indikator) %>%
+    dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+    dplyr::arrange(desc(m_value)) %>%
+    dplyr::pull(indikator)
+
+  df_beschäftigte$indikator <- factor(df_beschäftigte$indikator, levels = sorted_indicators)
+
+
+  query_df <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, jahr, wert
+  FROM zentral
+  WHERE jahr IN ({t*})
+    AND region = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = 'MINT'
+    AND indikator IN ('Studierende', 'Auszubildende')
+", .con = con)
+
+  df_andere <- DBI::dbGetQuery(con, query_df)
+
 
     hcoptslang <- getOption("highcharter.lang")
     hcoptslang$thousandsSep <- "."
     options(highcharter.lang = hcoptslang)
 
-    df <- df[with(df, order(fachbereich, jahr, decreasing = FALSE)), ]
+    df_andere <- df_andere[with(df_andere, order(fachbereich, jahr, decreasing = FALSE)), ]
 
     #Trennpunkte für lange Zahlen ergänzen
-    df$wert_besr <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+    df_andere$wert_besr <- prettyNum(df_andere$wert, big.mark = ".", decimal.mark = ",")
 
     # Ordnen der Legende
-    sorted_indicators <- df %>%
+    sorted_indicators <- df_andere %>%
       dplyr::group_by(indikator) %>%
       dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
       dplyr::arrange(desc(m_value)) %>%
       dplyr::pull(indikator)
 
-    df$indikator <- factor(df$indikator, levels = sorted_indicators)
+    df_andere$indikator <- factor(df_andere$indikator, levels = sorted_indicators)
 
     titel = paste0("Personen in MINT nach Bildungsbereichen in ", regio)
-
     tooltip <- paste("Anteil MINT <br> Indikator: {point.indikator} <br> Anzahl: {point.wert_besr}")
 
     # plot
-
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
 
-    out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = "jahr", y = "wert", group = "indikator")) %>%
+    out_beschäftigte <- highcharter::hchart(df_beschäftigte, 'line', highcharter::hcaes(x = "jahr", y = "wert", group = "indikator")) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
       highcharter::hc_plotOptions(
         series = list(
@@ -72,7 +103,36 @@ argument_verlauf <- function(r){
                                 )
       )
 
+    out_andere <- highcharter::hchart(df_andere, 'line', highcharter::hcaes(x = "jahr", y = "wert", group = "indikator")) %>%
+      highcharter::hc_tooltip(pointFormat = tooltip) %>%
+      highcharter::hc_plotOptions(
+        series = list(
+          boderWidth = 0,
+          dataLabels = list(enabled = TRUE, format = "{point.wert_besr}",
+                            style = list(textOutline = "none"))
+        )) %>%
+      highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+      highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+      )  %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV")
+                                  )
+                                )
+      )
 
+    out <- highcharter::hw_grid(
+      out_beschäftigte, out_andere,
+      ncol = 2)
 
 
   return (out)
@@ -601,68 +661,81 @@ argument_demografie <- function(r){
 
 argument_nachwuchs <- function(r){
 
-  betrachtung <- "Einzelansicht - Kuchendiagramm"
-  testy1 <- 2023
   regio <- r$region_argumentationshilfe
-  testl1 <- c("Studierende", "internationale Studierende", "Studierende (Lehramt)", "Studienanfänger:innen (1. Hochschulsemester)", "internationale Studienanfänger:innen (1. Hochschulsemester)", "Absolvent:innen", "internationale Absolvent:innen")  ################################
 
-
-
-  df_query <- glue::glue_sql("
-    SELECT region, jahr, indikator, fach, wert
-    FROM studierende_detailliert
-    WHERE jahr = {testy1}
-    AND geschlecht = 'Gesamt'
+  query_df <- glue::glue_sql("
+  SELECT region, fach, jahr, indikator, wert
+  FROM studierende_detailliert
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
     AND region = {regio}
-    AND indikator in ({testl1*})
-    AND fach IN ('Alle Nicht MINT-Fächer','Alle MINT-Fächer')", .con = con)
-
-  df <- DBI::dbGetQuery(con, df_query)
-
-
-  df_query <- glue::glue_sql("
-    SELECT region, jahr, indikator, fach, wert as wert_ges
-    FROM studierende_detailliert
-    WHERE jahr = {testy1}
     AND geschlecht = 'Gesamt'
-    AND region = {regio}
-    AND indikator in ({testl1*})
-    AND fach = 'Alle Fächer'
-                                                      ", .con = con)
+    AND fach IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Ingenieurwissenschaften (ohne Informatik)')
+    AND indikator = 'Studierende'
+", .con = con)
 
-  alle <- DBI::dbGetQuery(con, df_query)
+  df_studierende <- DBI::dbGetQuery(con, query_df)
+
+  query_df <- glue::glue_sql("
+  SELECT bundesland, fachbereich, jahr, kategorie, wert
+  FROM arbeitsmarkt_detail
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
+    AND bundesland = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
+    AND kategorie = 'Auszubildende'
+", .con = con)
+
+  df_auszubildende <- DBI::dbGetQuery(con, query_df)
 
 
-  df <- df %>%
-    dplyr::left_join(alle, by = c("region", "jahr", "indikator")) %>%
-    dplyr::rename(fach = fach.x) %>%
-    dplyr::mutate(proportion = round(wert / wert_ges * 100, 1)) %>%
-    dplyr::select(-fach.y)
+  df_azubi_clean <- df_auszubildende %>%
+    rename(region = bundesland, fach = fachbereich, indikator = kategorie) %>%
+    mutate(
+      fach = dplyr::case_when(
+        fach == "Technik (gesamt)" ~ "Ingenieurwissenschaften",
+        TRUE ~ fach
+      ),
+      indikator = "Nachwuchs"
+    )
 
-  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-  df$display_rel <- prettyNum(df$proportion, big.mark = ".", decimal.mark = ",")
-  df <- within(df, fach <- factor(fach, levels = c("Alle Nicht MINT-Fächer", "Alle MINT-Fächer")))
+  df_studi_clean <- df_studierende %>%
+    rename(fach = fach) %>%
+    mutate(
+      fach = dplyr::case_when(
+        fach == "Ingenieurwissenschaften (ohne Informatik)" ~ "Ingenieurwissenschaften",
+        TRUE ~ fach
+      ),
+      indikator = "Nachwuchs"
+    )
+
+  df_nachwuchs <- bind_rows(df_azubi_clean, df_studi_clean)
+
+  df_nachwuchs_agg <- df_nachwuchs %>%
+    group_by(region, fach, jahr, indikator) %>%
+    summarise(wert = sum(wert), .groups = "drop")
 
 
-  df <- df %>% dplyr::filter(indikator %in% testl1)
-  df <- df[with(df, order(proportion, decreasing = TRUE)), ]
 
-  out_1 <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = proportion, x = indikator, group =forcats::fct_rev(fach)))%>%
-    highcharter::hc_tooltip(pointFormat = "Anteil: {point.display_rel} % <br> Anzahl: {point.wert}") %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  F) %>%
-    highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-    highcharter::hc_colors(c( "#b16fab","#efe8e6")) %>%
-    highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                        paste0("Anteil von Studierenden in MINT an allen Studierenden im ", regio, " (", testy1, ")"),
-                                        paste0("Anteil von Studierenden in MINT an allen Studierenden in ", regio, " (", testy1, ")")),
+  tooltip <- "{point.fach}, Jahr: {point.jahr}, Wert: {point.wert}"
+  format <- "{value:,f}"
+  color <- c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a",
+              "#5f94f9", "#007655", "#d0a9cd")
+
+
+
+  out <- highcharter::hchart(df_nachwuchs_agg, 'line', highcharter::hcaes(x = jahr, y = wert, group = fach)) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_title(text = "Hier muss ich noch ne überschrift reinpacjen",
                           margin = 45,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(color) %>%
     highcharter::hc_chart(
-      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-    ) %>%
-    highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+    )  %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -670,58 +743,6 @@ argument_nachwuchs <- function(r){
                                 )
                               )
     )
-
-
-
-  betrachtung <- "Gruppenvergleich - Balkendiagramm"
-  timerange <- 2023 #L
-  regio <- r$region_argumentationshilfe
-  faecher <- "MINT"
-
-  gruppe <- c(
-                "Beschäftigte",
-                "Beschäftigte u25",
-                "Beschäftigte 25-55",
-                "Beschäftigte ü55")
-
-
-
-  df_query <- glue::glue_sql("
-  SELECT *
-  FROM arbeitsmarkt_detail
-  WHERE jahr = {timerange}
-  AND landkreis = 'alle Landkreise'
-  AND bundesland = {regio}
-  AND anforderung = 'Gesamt'
-  AND geschlecht = 'Gesamt'
-  AND indikator IN ({gruppe*})
-  AND fachbereich = {faecher}
-                               ", .con = con)
-
-  df1 <- DBI::dbGetQuery(con, df_query)
-
-  df <- df1 %>%
-    dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
-                   "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert")
-
-
-
-  df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
-  df <- df[with(df, order(wert, decreasing = TRUE)), ]
-
-
-  titel <- ifelse(regio == "Saarland",
-                  paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen im ", regio, " (", timerange, ")"),
-                  paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen in ", regio, " (", timerange, ")"))
-  out_2 <- balkenbuilder(df, titel, x="indikator", y="wert",group=NULL, tooltip = "Anzahl: {point.wert_disp}", format = "{value:, f}", color = "#b16fab")
-
-
-
-  out <- highcharter::hw_grid(
-    out_1, out_2,
-    ncol = 2)
-
-  return(out)
 
 
 }
@@ -740,6 +761,8 @@ argument_wirkhebel <- function(r){
   AND nationalitaet = 'Gesamt'
   AND anforderung = 'Gesamt'
 ", .con = con)
+
+  whatever_this_is <- DBI::dbGetQuery(con, df_query)
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -790,66 +813,103 @@ argument_wirkhebel <- function(r){
                   diff_txt = prettyNum(diff, big.mark = ".", decimal.mark = ",")) %>%
     dplyr::arrange(diff)
 
-  fig <- plotly::plot_ly(uebersicht_data, color = I("gray80")) %>%
-    plotly::add_segments(
-      x = ~basis_wert,
-      xend = ~wert,
-      y = ~wirkhebel,
-      yend = ~wirkhebel,
-      showlegend = FALSE,
-      text = ~paste0("MINT-Fachkräfteanzahl im Basis: ", basis_wert, "<br>Wert: ", wert_txt, "<br>: ", diff_txt),
-      hoverinfo = "text"
+
+  titel <- "Wie wirken sich die unten gelisteten Wirkhebel auf die Anzahl der MINT-Fachkräfte aus?"
+#  tooltip <- paste0("Während der Basiswert bei ", basis_wert, " liegt und der Effekt des Wirkhebels bei ", wert, " ergibt sich ein plus von ", diff, " für den Wirkhebel '", wirkhebel, "'")
+  format <- "{value:, f}"
+  color <- "#b16fab"
+
+  out <- highcharter::hchart(uebersicht_data, 'bar', highcharter::hcaes(
+    y = !!sym("wert"),
+    x = !!sym("wirkhebel")
+  )) %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        boderWidth = 0,
+        dataLabels = list(enabled = TRUE, format = "{point.wert}",
+                          style = list(textOutline = "none"))
+      )) %>%
+    highcharter::hc_tooltip(pointFormat = "The data is good") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_colors(color) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
-    plotly::add_markers(
-      x = ~basis_wert,
-      y = ~wirkhebel,
-      name = "Basis-Szenario 2022",
-      color = I("#D0A9CD"),
-      symbol = I("square"),
-      size = I(50),
-      text = ~paste0("Basis-Szenario 2022: ", basis_wert_txt),
-      hoverinfo = "text"
-    ) %>%
-    plotly::add_markers(
-      x = ~wert,
-      y = ~wirkhebel,
-      name = paste0("Positives Szenario ",year_filter),
-      color = I("#b16fab"),
-      symbol = I("square"),
-      size = I(50),
-      text = ~paste0("Positives Szenario für Wirkhebel ", wirkhebel, ": ", wert_txt, "<br>Zunahme der MINT-Fachkräfte seit 2022: ", diff_txt),
-      hoverinfo = "text"
-    ) %>%
-    plotly::layout(
-      title = list(
-        text = paste0(
-          "Wie wirken sich die unten gelisteten Wirkhebel auf die Anzahl der MINT-Fachkräfte aus?"
-        )
-      ),
-      xaxis = list(
-        title = "Anzahl MINT-Fachkräfte",
-        tickformat = ",",
-        range = c(7500000, 9500000)
-      ),
-      yaxis = list(
-        title = "",
-        categoryorder = "array",
-        categoryarray = unique(uebersicht_data$wirkhebel)
-      ),
-      margin = list(l = 100, r = 50, t = 80, b = 50),
-      hoverlabel = list(bgcolor = "white"),
-      legend = list(
-        orientation = "h",
-        x = 0.5,
-        y = -0.5,
-        xanchor = "center",
-        yanchor = "top"
-      )
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
     )
 
-  hc <- fig
 
-  return(hc)
+  # fig <- plotly::plot_ly(uebersicht_data, color = I("gray80")) %>%
+  #   plotly::add_segments(
+  #     x = ~basis_wert,
+  #     xend = ~wert,
+  #     y = ~wirkhebel,
+  #     yend = ~wirkhebel,
+  #     showlegend = FALSE,
+  #     text = ~paste0("MINT-Fachkräfteanzahl im Basis: ", basis_wert, "<br>Wert: ", wert_txt, "<br>: ", diff_txt),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   plotly::add_markers(
+  #     x = ~basis_wert,
+  #     y = ~wirkhebel,
+  #     name = "Basis-Szenario 2022",
+  #     color = I("#D0A9CD"),
+  #     symbol = I("square"),
+  #     size = I(50),
+  #     text = ~paste0("Basis-Szenario 2022: ", basis_wert_txt),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   plotly::add_markers(
+  #     x = ~wert,
+  #     y = ~wirkhebel,
+  #     name = paste0("Positives Szenario ",year_filter),
+  #     color = I("#b16fab"),
+  #     symbol = I("square"),
+  #     size = I(50),
+  #     text = ~paste0("Positives Szenario für Wirkhebel ", wirkhebel, ": ", wert_txt, "<br>Zunahme der MINT-Fachkräfte seit 2022: ", diff_txt),
+  #     hoverinfo = "text"
+  #   ) %>%
+  #   plotly::layout(
+  #     title = list(
+  #       text = paste0(
+  #         "Wie wirken sich die unten gelisteten Wirkhebel auf die Anzahl der MINT-Fachkräfte aus?"
+  #       )
+  #     ),
+  #     xaxis = list(
+  #       title = "Anzahl MINT-Fachkräfte",
+  #       tickformat = ",",
+  #       range = c(7500000, 9500000)
+  #     ),
+  #     yaxis = list(
+  #       title = "",
+  #       categoryorder = "array",
+  #       categoryarray = unique(uebersicht_data$wirkhebel)
+  #     ),
+  #     margin = list(l = 100, r = 50, t = 80, b = 50),
+  #     hoverlabel = list(bgcolor = "white"),
+  #     legend = list(
+  #       orientation = "h",
+  #       x = 0.5,
+  #       y = -0.5,
+  #       xanchor = "center",
+  #       yanchor = "top"
+  #     )
+  #   )
+  #
+  # hc <- fig
+
+  return(out)
 
   ###
 
@@ -857,58 +917,58 @@ argument_wirkhebel <- function(r){
 
 }
 
-argument_frauen <- function(r){
-
-
-  # load UI inputs from reactive value
-  timerange <- c(2013, 2025)
-  t<- timerange[1]:timerange[2]
-  regio <- r$region_argumentationshilfe
-  indikator_choice <- c("Leistungskurse", "Studierende", "Auszubildende", "Beschäftigte")
-  abs_selector <- "Anzahl"
-
-
-
-
-  query <- glue::glue_sql("
-  SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
-  FROM zentral
-  WHERE jahr IN ({t*})
-    AND region IN ({regio*})
-    AND geschlecht = 'Frauen'
-    AND fachbereich = 'MINT'
-    AND indikator IN ({indikator_choice*})
-", .con = con)
-
-  df <- DBI::dbGetQuery(con, query)
-
-
-
-
-  hcoptslang <- getOption("highcharter.lang")
-  hcoptslang$thousandsSep <- "."
-  options(highcharter.lang = hcoptslang)
-
-  df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
-
-  # Ordnen der Legende
-  sorted_indicators <- df %>%
-    dplyr::group_by(indikator) %>%
-    dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
-    dplyr::arrange(desc(m_value)) %>%
-    dplyr::pull(indikator)
-
-  df$indikator <- factor(df$indikator, levels = sorted_indicators)
-
-  titel <- "Anzahl von Frauen in MINT nach Bildungsbereichen"
-  tooltip <- "Anzahl Frauen <br> Indikator: {point.indikator} <br> Anzahl: {point.y} "
-  format <- "{value}"
-
-  color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24" )
-
-  out <- linebuilder(df,titel,x="jahr", y="wert", group="indikator", tooltip, format, color)
-
-
-
-
-}
+# argument_frauen <- function(r){
+#
+#
+#   # load UI inputs from reactive value
+#   timerange <- c(2013, 2025)
+#   t<- timerange[1]:timerange[2]
+#   regio <- r$region_argumentationshilfe
+#   indikator_choice <- c("Leistungskurse", "Studierende", "Auszubildende", "Beschäftigte")
+#   abs_selector <- "Anzahl"
+#
+#
+#
+#
+#   query <- glue::glue_sql("
+#   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
+#   FROM zentral
+#   WHERE jahr IN ({t*})
+#     AND region IN ({regio*})
+#     AND geschlecht = 'Frauen'
+#     AND fachbereich = 'MINT'
+#     AND indikator IN ({indikator_choice*})
+# ", .con = con)
+#
+#   df <- DBI::dbGetQuery(con, query)
+#
+#
+#
+#
+#   hcoptslang <- getOption("highcharter.lang")
+#   hcoptslang$thousandsSep <- "."
+#   options(highcharter.lang = hcoptslang)
+#
+#   df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
+#
+#   # Ordnen der Legende
+#   sorted_indicators <- df %>%
+#     dplyr::group_by(indikator) %>%
+#     dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+#     dplyr::arrange(desc(m_value)) %>%
+#     dplyr::pull(indikator)
+#
+#   df$indikator <- factor(df$indikator, levels = sorted_indicators)
+#
+#   titel <- "Anzahl von Frauen in MINT nach Bildungsbereichen"
+#   tooltip <- "Anzahl Frauen <br> Indikator: {point.indikator} <br> Anzahl: {point.y} "
+#   format <- "{value}"
+#
+#   color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24" )
+#
+#   out <- linebuilder(df,titel,x="jahr", y="wert", group="indikator", tooltip, format, color)
+#
+#
+#
+#
+# }

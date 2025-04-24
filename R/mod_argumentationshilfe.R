@@ -83,18 +83,23 @@ mod_argumentation_ui <- function(id){
                width = 12,
                column(
                  width = 8,
-                 p("Text - Allgemeine Erklärung für Grafik")
+                 p("Damit in Deutschland ")
                ),
                column(
                  width = 12,
                   shiny::mainPanel(
                     shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_verlauf")),
                                                  color = "#154194"),
-                    shinyBS::bsPopover(id="h_argument_1", title = "",
-                                       content = paste0("Erklärung, wenn nötig."),
+                    shinyBS::bsPopover(id="h_argument_11", title = "",
+                                       content = paste0(""),
                                        placement = "top",
                                        trigger = "hover"),
-                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_1")
+                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_11"),
+                    shinyBS::bsPopover(id="h_argument_1", title = "",
+                                       content = paste0("Die linke Grafik stellt den Zeitverlauf der Beschäftigen dar. Die sind in der ersten Einstellung, d.h. für Gesamtdeutschland im Jahr 2023 auf mehr als 7.8 Mio angestiegen, ein Plus von 500.000 gegenüber 2017. Rechts werden die Studierenden und Auszubildenden dargestellt. Diese waren für Gesamtdeutschland konstant."),
+                                       placement = "top",
+                                       trigger = "hover"),
+                    tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_1")
                   )
                ),
                column(
@@ -117,11 +122,16 @@ mod_argumentation_ui <- function(id){
           shiny::mainPanel(
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_fachkraft")),
                                          color = "#154194"),
-            shinyBS::bsPopover(id="h_argument_2", title = "",
-                               content = paste0("Erklärung, wenn nötig."),
+            shinyBS::bsPopover(id="h_argument_1", title = "",
+                               content = paste0(""),
                                placement = "top",
                                trigger = "hover"),
-            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_2")
+            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_21"),
+            shinyBS::bsPopover(id="h_argument_2", title = "",
+                               content = paste0("In der ersten Einstellung ist zu sehen, dass sowohol in MINT-Berufen als auch in Nicht-MINT-Berufen ca. ein Drittel jeweils als Engpassberufe galten. Schaut man sich die genauen Zahlen mit dem Hover an, dass dies in MINT-Berufen 36 % bzw. 69 Berufe betrifft, bei Nicht-MINT-Berufen auch 36 %, allerdings 122 Berufe."),
+                               placement = "top",
+                               trigger = "hover"),
+            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_2")
           )
         ),
         column(
@@ -143,11 +153,16 @@ mod_argumentation_ui <- function(id){
           shiny::mainPanel(
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_demografie")),
                                          color = "#154194"),
-            shinyBS::bsPopover(id="h_argument_3", title = "",
-                               content = paste0("Erklärung, wenn nötig."),
+            shinyBS::bsPopover(id="h_argument_31", title = "",
+                               content = paste0(""),
                                placement = "top",
                                trigger = "hover"),
-            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_3")
+            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_31"),
+            shinyBS::bsPopover(id="h_argument_3", title = "",
+                               content = paste0("In der ersten Einstellung ist zu sehen, dass es mehr als 7.8 Mio Beschäftigte im MINT-Bereich in Deutschland gab. Dabei macht die Altersgruppe ü55 1.8 Mio aus, es kommen aber nur knapp 800.000 der Altersgruppe u25 nach."),
+                               placement = "top",
+                               trigger = "hover"),
+            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_3")
           )
         ),
         column(
@@ -170,10 +185,15 @@ mod_argumentation_ui <- function(id){
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_nachwuchs")),
                                          color = "#154194"),
             shinyBS::bsPopover(id="h_argument_4", title = "",
-                               content = paste0("Erklärung, wenn nötig."),
+                               content = paste0("Mit Nachwuchs ist die Addition von sowohl Auszubildenden als auch Studierenden gemeint. Ingenieurswissenschaften in Bezug auf Auszubildende meint beispielsweiße Technische Berufe. "),
                                placement = "top",
                                trigger = "hover"),
-            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_4")
+            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_4"),
+            shinyBS::bsPopover(id="h_argument_41", title = "",
+                               content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland die Anzahl des Nachwuchses in den Ingenieurswissenschaften konsistent deutlich über der Informatik und den Mathematik + Naturwissenschaften liegt. "),
+                               placement = "top",
+                               trigger = "hover"),
+            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_41")
           )
         ),
         column(
@@ -199,33 +219,12 @@ mod_argumentation_ui <- function(id){
                                content = paste0("Erklärung, wenn nötig."),
                                placement = "top",
                                trigger = "hover"),
-            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_5")
-          )
-        ),
-        column(
-          width = 8,
-          p("Text/Boxen mit Interpretation, je nach Grafik")
-        )
-      )),
-
-    fluidRow(
-      shinydashboard::box(
-        title = "Frauen in MINT",
-        width = 12,
-        column(
-          width = 8,
-          p("Text - Allgemeine Erklärung für Grafik")
-        ),
-        column(
-          width = 12,
-          shiny::mainPanel(
-            shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_frauen")),
-                                         color = "#154194"),
-            shinyBS::bsPopover(id="h_argument_6", title = "",
-                               content = paste0("Erklärung, wenn nötig."),
+            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_5"),
+            shinyBS::bsPopover(id="h_argument_51", title = "",
+                               content = paste0(""),
                                placement = "top",
                                trigger = "hover"),
-            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_6")
+            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_51")
           )
         ),
         column(
@@ -233,6 +232,33 @@ mod_argumentation_ui <- function(id){
           p("Text/Boxen mit Interpretation, je nach Grafik")
         )
       ))
+    # ,
+    #
+    # fluidRow(
+    #   shinydashboard::box(
+    #     title = "Frauen in MINT",
+    #     width = 12,
+    #     column(
+    #       width = 8,
+    #       p("Text - Allgemeine Erklärung für Grafik")
+    #     ),
+    #     column(
+    #       width = 12,
+    #       shiny::mainPanel(
+    #         shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_frauen")),
+    #                                      color = "#154194"),
+    #         shinyBS::bsPopover(id="h_argument_6", title = "",
+    #                            content = paste0("Erklärung, wenn nötig."),
+    #                            placement = "top",
+    #                            trigger = "hover"),
+    #         tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_6")
+    #       )
+    #     ),
+    #     column(
+    #       width = 8,
+    #       p("Text/Boxen mit Interpretation, je nach Grafik")
+    #     )
+    #   ))
     )
 }
 
