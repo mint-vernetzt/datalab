@@ -861,7 +861,7 @@ plot_mv_akteursb <- function(r){
        #                         )
       #)
 
-    
+
 
   }else{
 
@@ -921,11 +921,6 @@ plot_mv_stimmung <- function(r){
                     "Der Ganztag sollte eher für Freizeitangebote wie Sport, Kunst und Mustik genutzt werden.",
                     "Der Ganztag sollte als Bildungsort genutzt werden und dabei auch MINT-Bildungsangebote einbinden.")
 
-
-    # df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
-    #   dplyr::filter(typ %in% frage_typ,
-    #                 indikator == gruppe) %>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -987,10 +982,7 @@ plot_mv_stimmung <- function(r){
     }else{
 
       frage_typ <- "Lernrückstände"
-      # df <- dplyr::tbl(con, "ausserschulisch_stimmungsbarometer") %>%
-      #   dplyr::filter(typ %in% frage_typ,
-      #                 indikator == gruppe) %>%
-      #   dplyr::collect()
+
 
 
       df_query <- glue::glue_sql("

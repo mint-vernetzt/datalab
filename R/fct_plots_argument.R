@@ -68,7 +68,8 @@ argument_verlauf <- function(r){
 
     df_andere$indikator <- factor(df_andere$indikator, levels = sorted_indicators)
 
-    titel = paste0("Personen in MINT nach Bildungsbereichen in ", regio)
+    titel_beschäftigte <- paste0("Zeitverlaufsentwicklung der Beschäftigten in MINT in ", regio)
+    titel_andere <- paste0("Zeitverlaufsentwicklung der Studierenden und Auszubildenden in MINT in ", regio)
     tooltip <- paste("Anteil MINT <br> Indikator: {point.indikator} <br> Anzahl: {point.wert_besr}")
 
     # plot
@@ -87,7 +88,7 @@ argument_verlauf <- function(r){
       highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      highcharter::hc_title(text = titel,
+      highcharter::hc_title(text = titel_beschäftigte,
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -116,7 +117,7 @@ argument_verlauf <- function(r){
       highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
       highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-      highcharter::hc_title(text = titel,
+      highcharter::hc_title(text = titel_andere,
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -734,10 +735,16 @@ argument_nachwuchs <- function(r){
 
   out <- highcharter::hchart(df_nachwuchs_agg, 'line', highcharter::hcaes(x = jahr, y = wert, group = fach)) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        boderWidth = 0,
+        dataLabels = list(enabled = TRUE, format = "{point.wert}",
+                          style = list(textOutline = "none"))
+      )) %>%
     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_title(text = "Hier muss ich noch ne überschrift reinpacjen",
+    highcharter::hc_title(text = "Zeitverlauf des Nachwuchses in der ausgewählten Region",
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -830,14 +837,19 @@ argument_wirkhebel <- function(r){
   format <- "{value:, f}"
   color <- "#b16fab"
 
-  out <- highcharter::hchart(uebersicht_data, 'bar', highcharter::hcaes(
-    y = !!sym("wert"),
+
+  final_data <- uebersicht_data %>%
+    dplyr::select(wirkhebel, diff)
+
+
+  out <- highcharter::hchart(final_data, 'bar', highcharter::hcaes(
+    y = !!sym("diff"),
     x = !!sym("wirkhebel")
   )) %>%
     highcharter::hc_plotOptions(
       series = list(
         boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert}",
+        dataLabels = list(enabled = TRUE, format = "{point.diff}",
                           style = list(textOutline = "none"))
       )) %>%
     highcharter::hc_tooltip(pointFormat = "The data is good") %>%

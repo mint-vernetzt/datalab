@@ -14,8 +14,8 @@ mod_beruf_arbeitsmarkt_anforderungen_ui <- function(id){
     shiny::radioButtons(
       inputId = ns("ansicht_arbeitsmarkt_fach_vergleich"),
       label = NULL,
-      choices = c("Einzelansicht - Kuchendiagramm", "Gruppenvergleich - Balkendiagramm"),
-      selected = "Einzelansicht - Kuchendiagramm"
+      choices = c("Gruppenvergleich - Balkendiagramm","Einzelansicht - Kuchendiagramm"),
+      selected = "Gruppenvergleich - Balkendiagramm"
     ),
     p("Auswahl des Jahres:"),
     shinyWidgets::sliderTextInput(

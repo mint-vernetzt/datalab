@@ -14,9 +14,9 @@ mod_schule_kurse_comparison_gender_ui <- function(id){
     shiny::radioButtons(
       inputId = ns("ansicht_kurse_comparison_gender"),
       label = NULL,
-      choices = c("Einzelansicht - Kuchendiagramm", "Gruppenvergleich - Balkendiagramm",
+      choices = c("Gruppenvergleich - Balkendiagramm","Einzelansicht - Kuchendiagramm",
                   "Kursvergleich - Hanteldiagramm"),
-      selected = "Einzelansicht - Kuchendiagramm"
+      selected = "Gruppenvergleich - Balkendiagramm"
     ),
     p("Jahr:"),
     shinyWidgets::sliderTextInput(
