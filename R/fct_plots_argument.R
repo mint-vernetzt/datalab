@@ -1,4 +1,399 @@
 
+daten_download <- function(r){
+
+  regio <- r$region_argumentationshilfe
+
+  ### Daten Verlauf MINT ----
+  t <- 2017:2023
+  absolut_selector <- "Anzahl"
+
+  query_df <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, jahr, wert
+  FROM zentral
+  WHERE jahr IN ({t*})
+    AND region = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = 'MINT'
+    AND indikator = 'Beschäftigte'
+", .con = con)
+
+  df_beschäftigte <- DBI::dbGetQuery(con, query_df)
+
+  ### Daten Fachkräfte ----
+  timerange <- 2023
+  fach <- c("MINT gesamt", "Nicht MINT")
+  bf <- fachkraft_ui_berufslevel()
+
+  #für Deutschland:
+
+  if(regio == "Deutschland"){
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_epa_detail
+  WHERE jahr = {timerange}
+  AND indikator = 'Engpassindikator'
+  AND anforderung IN ({bf*})
+                               ", .con = con)
+
+    plot_data_raw <- DBI::dbGetQuery(con, df_query)
+
+    if ("MINT gesamt" %in% fach) {
+      plot_data_raw <- plot_data_raw %>%
+        dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
+        dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
+        rbind(plot_data_raw)
+    }
+
+    # enthält den Text für den plot
+    epa_kat_levels <- c("Engpassberuf",
+                        "Anzeichen eines Engpassberufs",
+                        "Kein Engpassberuf")
+    group_col_dt <- data.frame(
+      epa_kat = factor(x = epa_kat_levels,
+                       levels = epa_kat_levels),
+      epa_group_order = c(1:3),
+      group_text = c("Text A",
+                     "Text B",
+                     "Text C"),
+      group_col = c("#EE7775", "#FBBF24", "#35BD97")
+    )
+
+    # Aggregate rausfiltern
+    plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
+                                               c("Gesamt",
+                                                 "MINT",
+                                                 "Informatik",
+                                                 "Landtechnik",
+                                                 "Produktionstechnik",
+                                                 "Bau- und Gebäudetechnik",
+                                                 "Mathematik, Naturwissenschaften",
+                                                 "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                                                 "Gesundheitstechnik",
+                                                 "Nicht MINT"
+                                               ))
+    )
+
+
+    plot_data <- plot_data_raw %>%
+      dplyr::filter(mint_zuordnung %in% fach &
+                      !is.na(epa_kat)) %>%
+      dplyr::group_by(epa_kat, mint_zuordnung)  %>%
+      dplyr::summarise(beruf_num = dplyr::n()) %>%
+      dplyr::group_by(mint_zuordnung)  %>%
+      dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,0)) %>%
+      dplyr::left_join(group_col_dt, by = "epa_kat") %>%
+      dplyr::arrange(epa_group_order)
+
+    # expand data for heatmap
+    expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
+      dplyr::arrange(mint_zuordnung, epa_group_order) %>%
+      #
+      dplyr::mutate(XX = rep(c(1:10), each = 10),
+                    YY = rep(c(1:10), times = 10),
+                    epa_kat = factor(x = epa_kat,
+                                     levels = epa_kat_levels))
+
+    }else if(regio != "Deutschland"){
+
+      regio <- dplyr::case_when(
+        regio == "Brandenburg" | regio == "Berlin" ~ "Brandenburg / Berlin",
+        regio == "Niedersachsen" | regio == "Bremen" ~ "Niedersachsen / Bremen",
+        regio == "Rheinland-Pfalz" | regio == "Saarland" ~ "Rheinland-Pfalz / Saarland",
+        regio == "Schleswig-Holstein" | regio == "Hamburg" ~ "Schleswig-Holstein / Hamburg",
+        T ~ regio
+      )
+
+      df_query <- glue::glue_sql("
+       SELECT *
+       FROM arbeitsmarkt_epa
+       WHERE jahr = {timerange}
+       AND indikator = 'Engpassindikator'
+       AND anforderung IN ({bf*})
+       AND region = {regio}
+                               ", .con = con)
+
+      plot_data_raw <- DBI::dbGetQuery(con, df_query)
+
+      # enthält den Text für den plot
+      epa_kat_levels <- c("Engpassberuf",
+                          "Anzeichen eines Engpassberufs",
+                          "Kein Engpassberuf")
+      group_col_dt <- data.frame(
+        epa_kat = factor(x = epa_kat_levels,
+                         levels = epa_kat_levels),
+        epa_group_order = c(1:3),
+        group_text = c("Text A",
+                       "Text B",
+                       "Text C"),
+        group_col = c("#EE7775", "#FBBF24", "#35BD97")
+      )
+
+      # Aggregate rausfiltern
+      plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$berufsgruppe %in%
+                                                 c("Gesamt",
+                                                   "MINT gesamt",
+                                                   "Informatik",
+                                                   "Landtechnik",
+                                                   "Produktionstechnik",
+                                                   "Bau- und Gebäudetechnik",
+                                                   "Mathematik, Naturwissenschaften",
+                                                   "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                                                   "Gesundheitstechnik",
+                                                   "Nicht MINT"
+                                                 ))
+      )
+
+      if ("MINT gesamt" %in% fach) {
+        plot_data_raw <- plot_data_raw %>%
+          dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
+          dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
+          rbind(plot_data_raw)
+      }
+
+      plot_data <- plot_data_raw %>%
+        dplyr::filter(mint_zuordnung %in% fach &
+                        !is.na(epa_kat)) %>%
+        dplyr::group_by(epa_kat, mint_zuordnung)  %>%
+        dplyr::summarise(beruf_num = dplyr::n()) %>%
+        dplyr::group_by(mint_zuordnung)  %>%
+        dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,0)) %>%
+        dplyr::left_join(group_col_dt, by = "epa_kat") %>%
+        dplyr::arrange(epa_group_order)
+
+      # expand data for heatmap
+      expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
+        dplyr::arrange(mint_zuordnung, epa_group_order) %>%
+        #
+        dplyr::mutate(XX = rep(c(1:10), each = 10),
+                      YY = rep(c(1:10), times = 10),
+                      epa_kat = factor(x = epa_kat,
+                                       levels = epa_kat_levels))
+    }
+
+    ### Daten Demografie ----
+    betrachtung <- "Gruppenvergleich - Balkendiagramm"
+    timerange <- 2023 #L
+    faecher <- "MINT"
+
+    gruppe <- c(
+      "Beschäftigte",
+      "Beschäftigte u25",
+      "Beschäftigte 25-55",
+      "Beschäftigte ü55")
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_detail
+  WHERE jahr = {timerange}
+  AND landkreis = 'alle Landkreise'
+  AND bundesland = {regio}
+  AND anforderung = 'Gesamt'
+  AND geschlecht = 'Gesamt'
+  AND indikator IN ({gruppe*})
+  AND fachbereich = {faecher}
+                               ", .con = con)
+
+    df1 <- DBI::dbGetQuery(con, df_query)
+
+    df <- df1 %>%
+      dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
+                     "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert")
+
+    ### Nachwuchs ----
+    query_df <- glue::glue_sql("
+  SELECT region, fach, jahr, indikator, wert
+  FROM studierende_detailliert
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
+    AND region = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fach IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Ingenieurwissenschaften (ohne Informatik)')
+    AND indikator = 'Studierende'
+", .con = con)
+
+    df_studierende <- DBI::dbGetQuery(con, query_df)
+
+    query_df <- glue::glue_sql("
+  SELECT bundesland, fachbereich, jahr, kategorie, wert
+  FROM arbeitsmarkt_detail
+  WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
+    AND bundesland = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
+    AND kategorie = 'Auszubildende'
+", .con = con)
+
+    df_auszubildende <- DBI::dbGetQuery(con, query_df)
+
+
+    df_azubi_clean <- df_auszubildende %>%
+      rename(region = bundesland, fach = fachbereich, indikator = kategorie) %>%
+      mutate(
+        fach = dplyr::case_when(
+          fach == "Technik (gesamt)" ~ "Technik (inkl. Ingenieurwesen)",
+          TRUE ~ fach
+        ),
+        indikator = "Nachwuchs"
+      )
+
+    df_studi_clean <- df_studierende %>%
+      rename(fach = fach) %>%
+      mutate(
+        fach = dplyr::case_when(
+          fach == "Ingenieurwissenschaften (ohne Informatik)" ~ "Technik (inkl. Ingenieurwesen)",
+          TRUE ~ fach
+        ),
+        indikator = "Nachwuchs"
+      )
+
+    df_nachwuchs <- bind_rows(df_azubi_clean, df_studi_clean)
+
+    df_nachwuchs_agg <- df_nachwuchs %>%
+      dplyr::group_by(region, fach, jahr, indikator) %>%
+      dplyr::summarise(wert = sum(wert), .groups = "drop") %>%
+      dplyr::ungroup()
+
+    # Entwicklung für Hover berechnen
+    df_start <- df_nachwuchs_agg %>%
+      dplyr::filter(jahr == min(df_nachwuchs_agg$jahr)) %>%
+      dplyr::select(fach, wert) %>%
+      dplyr::rename(wert_alt =wert)
+    df_ende <- df_nachwuchs_agg %>%
+      dplyr::filter(jahr == max(df_nachwuchs_agg$jahr)) %>%
+      dplyr::select(fach, wert) %>%
+      dplyr::rename(wert_neu =wert)
+    df_nachwuchs_agg <- df_nachwuchs_agg %>%
+      dplyr::left_join(df_start, by = c("fach")) %>%
+      dplyr::left_join(df_ende, by = c("fach")) %>%
+      dplyr::mutate(diff = round(((wert_neu - wert_alt)/wert_alt)*100,1))
+
+    df_nachwuchs_agg$display_diff <- ifelse(df_nachwuchs_agg$diff < 0,
+                                            paste0("-", df_nachwuchs_agg$diff),
+                                            paste0("+", df_nachwuchs_agg$diff))
+    ### Wirkhebel ----
+    year_filter <- 2037
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM fachkraefte_prognose
+  WHERE jahr = {year_filter}
+  AND indikator = 'Verbesserung'
+  AND geschlecht = 'Gesamt'
+  AND nationalitaet = 'Gesamt'
+  AND anforderung = 'Gesamt'
+", .con = con)
+
+    whatever_this_is <- DBI::dbGetQuery(con, df_query)
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM fachkraefte_prognose
+  WHERE wirkhebel = 'Basis-Szenario'
+  AND geschlecht = 'Gesamt'
+  AND nationalitaet = 'Gesamt'
+  AND anforderung = 'Gesamt'
+  AND jahr = 2022", .con = con)
+
+    basis_wert <- DBI::dbGetQuery(con, df_query)
+
+    basis_wert <- basis_wert %>%
+      dplyr::pull(wert)
+
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM fachkraefte_prognose
+  WHERE jahr = {year_filter}
+  AND indikator = 'Verbesserung'
+  AND geschlecht = 'Gesamt'
+  AND nationalitaet = 'Gesamt'
+  AND anforderung = 'Gesamt'", .con = con)
+
+    uebersicht_data <- DBI::dbGetQuery(con, df_query)
+
+    uebersicht_data <- uebersicht_data %>%
+      dplyr::mutate(basis_wert = basis_wert) %>%
+      dplyr::select(wirkhebel, basis_wert, wert)%>%
+      dplyr::mutate(wirkhebel = dplyr::case_when(wirkhebel == "Frauen in MINT" ~ "Mädchen und Frauen in MINT fördern",
+                                                 wirkhebel == "MINT-Bildung" ~ "MINT-Nachwuchs fördern",
+                                                 wirkhebel == "Internationale MINT-Fachkräfte" ~ "Zuwanderung MINT-Fachkräfte",
+                                                 wirkhebel == "Beteiligung älterer MINT-Fachkräfte" ~ "Verbleib älterer MINT-Fachkräfte",
+                                                 T ~ wirkhebel),diff = wert - basis_wert)
+
+
+    row_to_move <- which(uebersicht_data$wirkhebel == "Gesamteffekt")
+
+    uebersicht_data <- uebersicht_data %>%
+      dplyr::slice(-row_to_move) %>%
+      dplyr::bind_rows(uebersicht_data[row_to_move, ]) %>%
+      dplyr::mutate(basis_label = paste0("Basis-Szenario"),
+                    improvement_label = paste0("Positives Szenario: ", wirkhebel),
+
+                    basis_wert_txt = prettyNum(basis_wert, big.mark = ".", decimal.mark = ","),
+                    wert_txt = prettyNum(wert, big.mark = ".", decimal.mark = ","),
+                    diff_txt = prettyNum(diff, big.mark = ".", decimal.mark = ",")) %>%
+      dplyr::arrange(diff)
+
+    ### Zusammenfügen ----
+    # Alle Datensätze anpassen: Einheitliche Struktur und Bereichsangabe
+
+    # 1. Beschäftigte MINT
+    df_beschäftigte_clean <- df_beschäftigte %>%
+      mutate(Bereich = "Beschäftigte MINT")
+
+    # 2. Engpassindikator
+    expanded_dt_clean <- expanded_dt %>%
+      mutate(Bereich = "Engpassindikator")
+
+    # 3. Demografie MINT
+    df_demografie_clean <- df %>%
+      mutate(Bereich = "Demografie MINT")
+
+    # 4. Nachwuchs (Studierende + Azubis)
+    df_nachwuchs_clean <- df_nachwuchs_agg %>%
+      mutate(Bereich = "Nachwuchs MINT")
+
+    # 5. Wirkhebel (Prognosen)
+    uebersicht_data_clean <- uebersicht_data %>%
+      mutate(Bereich = "Wirkhebel MINT")
+
+    # Falls nötig: Nur gleiche Spaltennamen verwenden
+    # Dazu alle Datensätze auf einen gemeinsamen Satz von Spalten bringen
+    # (z.B. alle Spalten als Character, fehlende Spalten füllen)
+
+    # Einfügen einer Funktion, die alle Datensätze vereinheitlicht:
+    vereinheitlichen <- function(df) {
+      df %>%
+        mutate(across(everything(), as.character)) %>%
+        select(Bereich, everything())
+    }
+
+    # Alle Datensätze vereinheitlichen
+    df_list <- list(
+      vereinheitlichen(df_beschäftigte_clean),
+      vereinheitlichen(expanded_dt_clean),
+      vereinheitlichen(df_demografie_clean),
+      vereinheitlichen(df_nachwuchs_clean),
+      vereinheitlichen(uebersicht_data_clean)
+    )
+
+    # Alle Datensätze zusammenfügen
+    final_df <- bind_rows(df_list)
+
+    # Download-Format: TXT
+    # Hinweis: Schreibe Tabulator als Trenner ("\t"), weil TXT normalerweise tab-getrennt besser lesbar ist
+
+    # Beispiel: Direkt als String für Download vorbereiten
+    txt_output <- final_df %>%
+      readr::format_delim(delim = "\t")
+
+    # Oder falls du es direkt speichern willst (z. B. als Temp-Datei in Shiny)
+    # readr::write_delim(final_df, path = "dein_pfad/deindateiname.txt", delim = "\t")
+
+    return(txt_output)
+
+}
+
 argument_verlauf <- function(r){
 
   # load UI inputs from reactive value
@@ -68,13 +463,14 @@ argument_verlauf <- function(r){
 
     df_andere$indikator <- factor(df_andere$indikator, levels = sorted_indicators)
 
-    titel_beschäftigte <- paste0("Zeitverlaufsentwicklung der Beschäftigten in MINT in ", regio)
-    titel_andere <- paste0("Zeitverlaufsentwicklung der Studierenden und Auszubildenden in MINT in ", regio)
-    tooltip <- paste("Anteil MINT <br> Indikator: {point.indikator} <br> Anzahl: {point.wert_besr}")
+    titel_beschäftigte <- paste0("Entwicklung der Beschäftigtenzahlen in MINT in ", regio)
+    titel_andere <- paste0("Entwicklung der Studierenden- und Auszubildendenzahlen in MINT in ", regio)
+    tooltip <- paste("{point.indikator} <br> Anzahl: {point.wert_besr}")
 
     # plot
     format <- "{value:, f}"
-    color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
+    color1 <- c("#b16fab")
+    color2 <-  c("#154194","#66cbaf")
 
 
     out_beschäftigte <- highcharter::hchart(df_beschäftigte, 'line', highcharter::hcaes(x = "jahr", y = "wert", group = "indikator")) %>%
@@ -92,7 +488,7 @@ argument_verlauf <- function(r){
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(color) %>%
+      highcharter::hc_colors(color1) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       )  %>%
@@ -121,7 +517,7 @@ argument_verlauf <- function(r){
                             margin = 45,
                             align = "center",
                             style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_colors(color) %>%
+      highcharter::hc_colors(color2) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       )  %>%
@@ -573,8 +969,6 @@ argument_fachkraft <- function(r){
 
 argument_demografie <- function(r){
 
-
-
   betrachtung <- "Gruppenvergleich - Balkendiagramm"
   timerange <- 2023 #L
   regio <- r$region_argumentationshilfe
@@ -585,8 +979,6 @@ argument_demografie <- function(r){
     "Beschäftigte u25",
     "Beschäftigte 25-55",
     "Beschäftigte ü55")
-
-
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -607,20 +999,18 @@ argument_demografie <- function(r){
                    "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert")
 
 
-
   df$wert_disp <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
   df <- df[with(df, order(wert, decreasing = TRUE)), ]
   tooltip = "Anzahl: {point.wert_disp}"
   format = "{value:, f}"
-  df <- df[with(df, order(wert, decreasing = TRUE)), ]
 
   # Farbzuweisung: "Beschäftigte" blau, alle anderen rosa
   df$color <- ifelse(df$indikator == "Beschäftigte", "#154194", "#b16fab")
 
 
   titel <- ifelse(regio == "Saarland",
-                  paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen im ", regio, " (", timerange, ")"),
-                  paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen in ", regio, " (", timerange, ")"))
+                  paste0("Beschäftigte in MINT nach Altersgruppen im ", regio, " (", timerange, ")"),
+                  paste0("Beschäftigte in MINT nach Altersgruppen in ", regio, " (", timerange, ")"))
 
 
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(
@@ -702,7 +1092,7 @@ argument_nachwuchs <- function(r){
     rename(region = bundesland, fach = fachbereich, indikator = kategorie) %>%
     mutate(
       fach = dplyr::case_when(
-        fach == "Technik (gesamt)" ~ "Ingenieurwissenschaften",
+        fach == "Technik (gesamt)" ~ "Technik (inkl. Ingenieurwesen)",
         TRUE ~ fach
       ),
       indikator = "Nachwuchs"
@@ -712,7 +1102,7 @@ argument_nachwuchs <- function(r){
     rename(fach = fach) %>%
     mutate(
       fach = dplyr::case_when(
-        fach == "Ingenieurwissenschaften (ohne Informatik)" ~ "Ingenieurwissenschaften",
+        fach == "Ingenieurwissenschaften (ohne Informatik)" ~ "Technik (inkl. Ingenieurwesen)",
         TRUE ~ fach
       ),
       indikator = "Nachwuchs"
@@ -721,24 +1111,62 @@ argument_nachwuchs <- function(r){
   df_nachwuchs <- bind_rows(df_azubi_clean, df_studi_clean)
 
   df_nachwuchs_agg <- df_nachwuchs %>%
-    group_by(region, fach, jahr, indikator) %>%
-    summarise(wert = sum(wert), .groups = "drop")
+    dplyr::group_by(region, fach, jahr, indikator) %>%
+    dplyr::summarise(wert = sum(wert), .groups = "drop") %>%
+    dplyr::ungroup()
 
+  # Entwicklung für Hover berechnen
+  df_start <- df_nachwuchs_agg %>%
+    dplyr::filter(jahr == min(df_nachwuchs_agg$jahr)) %>%
+    dplyr::select(fach, wert) %>%
+    dplyr::rename(wert_alt =wert)
+  df_ende <- df_nachwuchs_agg %>%
+    dplyr::filter(jahr == max(df_nachwuchs_agg$jahr)) %>%
+    dplyr::select(fach, wert) %>%
+    dplyr::rename(wert_neu =wert)
+  df_nachwuchs_agg <- df_nachwuchs_agg %>%
+    dplyr::left_join(df_start, by = c("fach")) %>%
+    dplyr::left_join(df_ende, by = c("fach")) %>%
+    dplyr::mutate(diff = round(((wert_neu - wert_alt)/wert_alt)*100,1))
 
+  df_nachwuchs_agg$display_diff <- ifelse(df_nachwuchs_agg$diff < 0,
+                                          paste0("-", df_nachwuchs_agg$diff),
+                                          paste0("+", df_nachwuchs_agg$diff))
 
-  tooltip <- "{point.fach}, Jahr: {point.jahr}, Wert: {point.wert}"
+  # Wert für Anzeige formatieren
+  df_nachwuchs_agg$wert_disp <- prettyNum(df_nachwuchs_agg$wert, big.mark = ".", decimal.mark = ",")
+
+  tooltip <- "{point.fach}, Anzahl: {point.wert_disp}, <br>Veränderung seit 2017: {point.display_diff}"
   format <- "{value:,f}"
-  color <- c("#b16fab", "#154194","#66cbaf","#112c5f", "#35bd97", "#5d335a",
-              "#5f94f9", "#007655", "#d0a9cd")
 
+  #Farben zuweisen
+  sorted_indicators <- df_nachwuchs_agg %>%
+    dplyr::group_by(fach) %>%
+    dplyr::summarize(m_value = mean(round(wert, 1), na.rm = TRUE)) %>%
+    dplyr::arrange(desc(m_value)) %>%
+    dplyr::pull(fach)
 
+  df_nachwuchs_agg$fach <- factor(df_nachwuchs_agg$fach, levels = sorted_indicators)
+  color_fachbereich <- c(
+    "Informatik" = "#2D6BE1",
+    "Technik (inkl. Ingenieurwesen)" = "#00a87a",
+    "Mathematik, Naturwissenschaften" = "#fcc433"
+  )
+  colors <- as.character(color_fachbereich)
+  colors <- color_fachbereich[sorted_indicators]
+
+  df_nachwuchs_agg <- df_nachwuchs_agg[with(df_nachwuchs_agg, order(jahr)),]
+
+  hcoptslang <- getOption("highcharter.lang")
+  hcoptslang$thousandsSep <- "."
+  options(highcharter.lang = hcoptslang)
 
   out <- highcharter::hchart(df_nachwuchs_agg, 'line', highcharter::hcaes(x = jahr, y = wert, group = fach)) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
     highcharter::hc_plotOptions(
       series = list(
         boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.wert}",
+        dataLabels = list(enabled = TRUE, format = "{point.wert_disp}",
                           style = list(textOutline = "none"))
       )) %>%
     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
@@ -748,7 +1176,7 @@ argument_nachwuchs <- function(r){
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-    highcharter::hc_colors(color) %>%
+    highcharter::hc_colors(as.character(colors)) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     )  %>%
@@ -831,31 +1259,38 @@ argument_wirkhebel <- function(r){
                   diff_txt = prettyNum(diff, big.mark = ".", decimal.mark = ",")) %>%
     dplyr::arrange(diff)
 
+  hcoptslang <- getOption("highcharter.lang")
+  hcoptslang$thousandsSep <- "."
+  options(highcharter.lang = hcoptslang)
 
-  titel <- "Wie wirken sich die unten gelisteten Wirkhebel auf die Anzahl der MINT-Fachkräfte aus?"
-#  tooltip <- paste0("Während der Basiswert bei ", basis_wert, " liegt und der Effekt des Wirkhebels bei ", wert, " ergibt sich ein plus von ", diff, " für den Wirkhebel '", wirkhebel, "'")
+  titel <- "Einfluss diese vier Wirkhebel auf die Entwicklung der MINT-Fachkräfte bis 2037 <br>"
+  tooltip <- paste0("Anzahl an MINT-Fachkräften, die bis 2037
+                    gewonnen werden können: {point.diff_disp}")
   format <- "{value:, f}"
-  color <- "#b16fab"
-
 
   final_data <- uebersicht_data %>%
     dplyr::select(wirkhebel, diff)
 
+  final_data$color <- ifelse(final_data$wirkhebel == "Gesamteffekt", "#154194", "#b16fab")
+
+  final_data <- final_data[with(final_data, order(diff, decreasing = TRUE)),]
+  final_data$diff_disp <- prettyNum(final_data$diff, decimal.mark = ",", big.mark = ".")
 
   out <- highcharter::hchart(final_data, 'bar', highcharter::hcaes(
     y = !!sym("diff"),
-    x = !!sym("wirkhebel")
+    x = !!sym("wirkhebel"),
+    color = !!sym("color")
   )) %>%
     highcharter::hc_plotOptions(
       series = list(
         boderWidth = 0,
-        dataLabels = list(enabled = TRUE, format = "{point.diff}",
+        dataLabels = list(enabled = TRUE, format = "{point.diff_disp}",
                           style = list(textOutline = "none"))
       )) %>%
-    highcharter::hc_tooltip(pointFormat = "The data is good") %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(color) %>%
+    #highcharter::hc_colors(final_data$color) %>%
     highcharter::hc_title(text = titel,
                           margin = 45,
                           align = "center",
@@ -864,7 +1299,7 @@ argument_wirkhebel <- function(r){
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-    highcharter::hc_caption(text = "Vorausberechnung durch das IW Köln, 2024, beauftragt durch MINTvernetzt, ferner aus dem Methodenbericht des IW Köln im Auftrag von MINTvernetzt.",
+    highcharter::hc_caption(text = "Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt.",
                             style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(

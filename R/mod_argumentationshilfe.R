@@ -26,7 +26,7 @@ mod_argumentation_ui <- function(id){
                 style="display: block; margin-left: auto; margin-right: auto;"
             )))),
 
-    # Einleitungstext
+    ## Einleitungstext ----
     fluidRow(
       div(class = "clean-box",
           column(
@@ -43,6 +43,8 @@ mod_argumentation_ui <- function(id){
               in eine Argumentationskette für mehr MINT-Förderung umwandeln.",
               br()
               ),
+
+      ## Region-Filter ----
 
             p(style = "text-align: justify; font-size = 20px",
               "Wählen Sie bei Bedarf hier Ihre Region aus:"),
@@ -77,6 +79,14 @@ mod_argumentation_ui <- function(id){
           )
     ),
 
+    ## Download-Button ----
+
+    downloadButton(ns("download_txt"), "Alle Daten als txt Dokument herunterladen"),
+    br(),
+    br(),
+
+    ## Box Zeitverlauf MINT----
+
     fluidRow(
              shinydashboard::box(
                title = "MINT im Zeitverlauf",
@@ -90,16 +100,18 @@ mod_argumentation_ui <- function(id){
                   shiny::mainPanel(
                     shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_verlauf")),
                                                  color = "#154194"),
-                    shinyBS::bsPopover(id="h_argument_11", title = "",
-                                       content = paste0("Es gibt keine nennenswerten Hinweise zu diesen Daten. Für zusätzliche Schuldaten, sehen Sie bitte im Bereich alle Bildungsbereiche bzw. im Reiter Schule nach. "),
+
+                    shinyBS::bsPopover(id="h_argument_1a", title = "",
+                                       content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Weitere Informationen finden Sie unter dem Reiter \"Datenquellen und Hinweise\"."),
                                        placement = "top",
                                        trigger = "hover"),
-                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_11"),
-                    shinyBS::bsPopover(id="h_argument_1", title = "",
+                    tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_1a"),
+                    br(),
+                    shinyBS::bsPopover(id="i_argument_1", title = "",
                                        content = paste0("Die linke Grafik stellt den Zeitverlauf der Beschäftigen dar. Die sind in der ersten Einstellung, d.h. für Gesamtdeutschland im Jahr 2023 auf mehr als 7.8 Mio angestiegen, ein Plus von 500.000 gegenüber 2017. Rechts werden die Studierenden und Auszubildenden dargestellt. Diese waren für Gesamtdeutschland konstant."),
                                        placement = "top",
                                        trigger = "hover"),
-                    tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_1")
+                    tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "i_argument_1")
                   )
                ),
                column(
@@ -109,6 +121,7 @@ mod_argumentation_ui <- function(id){
                )
              )),
 
+    ## Box Fachkräftemagel ----
     fluidRow(
       shinydashboard::box(
         title = "MINT-Fachkräfte.",
@@ -122,16 +135,17 @@ mod_argumentation_ui <- function(id){
           shiny::mainPanel(
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_fachkraft")),
                                          color = "#154194"),
-            shinyBS::bsPopover(id="h_argument_21", title = "",
-                               content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. Informationen zur Berechnung und Bedeutung von Engpassindikatoren finden Sie in der Infobox zur Engpassanalyse (im Reiter MINT-Fachkräfte): Zweite Box 'Berufsgruppen: Aktueller Fachkräftebedarf in MINT'."),
+            shinyBS::bsPopover(id="h_argument_2", title = "",
+                               content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. Auf Bundesebene gibt es detaillierte Daten zu Fachkräfteengpässen in einzelnen Berufsgattungen, z. B. Mechatronik. Für die Bundesländer liegen nur zusammengefasste Informationen zu MINT-dominierten Berufsgruppen wie Mechatronik und Automatisierungstechnik vor. Mehr Infos dazu finden Sie unter der Seite \"MINT-Fachkräfte\"."),
                                placement = "top",
                                trigger = "hover"),
-            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_21"),
-            shinyBS::bsPopover(id="h_argument_2", title = "",
+            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_2"),
+            br(),
+            shinyBS::bsPopover(id="i_argument_2", title = "",
                                content = paste0("In der ersten Einstellung ist zu sehen, dass sowohol in MINT-Berufen als auch in Nicht-MINT-Berufen ca. ein Drittel jeweils als Engpassberufe galten. Schaut man sich die genauen Zahlen mit dem Hover an, dass dies in MINT-Berufen 36 % bzw. 69 Berufe betrifft, bei Nicht-MINT-Berufen auch 36 %, allerdings 122 Berufe."),
                                placement = "top",
                                trigger = "hover"),
-            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_2")
+            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "i_argument_2")
           )
         ),
         column(
@@ -139,6 +153,8 @@ mod_argumentation_ui <- function(id){
           p("Text/Boxen mit Interpretation, je nach Grafik")
         )
       )),
+
+    ## Box Demografie ----
 
     fluidRow(
       shinydashboard::box(
@@ -154,15 +170,16 @@ mod_argumentation_ui <- function(id){
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_demografie")),
                                          color = "#154194"),
             shinyBS::bsPopover(id="h_argument_31", title = "",
-                               content = paste0("Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Ferner werden Beschäftigte nur dann als MINT-Beschäftigte kategorisiert, wenn sie einer 'MINT'-Tätigkeit nachgehen. Nicht ausschlaggebend ist der akademische Hintergrund (d.h. ein Studium im MINT-Bereich bedeutet nicht, dass man als MINT-Beschäftigter gilt). Weitere Informationen finden Sie unter dem Reiter 'Datenquellen und Hinweise'."),
+                               content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Weitere Informationen finden Sie unter dem Reiter \"Datenquellen und Hinweise\"."),
                                placement = "top",
                                trigger = "hover"),
             tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_31"),
-            shinyBS::bsPopover(id="h_argument_3", title = "",
-                               content = paste0("In der ersten Einstellung ist zu sehen, dass es mehr als 7.8 Mio Beschäftigte im MINT-Bereich in Deutschland gab. Dabei macht die Altersgruppe ü55 1.8 Mio aus, es kommen aber nur knapp 800.000 der Altersgruppe u25 nach."),
+            br(),
+            shinyBS::bsPopover(id="i_argument_3", title = "",
+                               content = paste0("In der ersten Einstellung ist zu sehen, dass es 2023 mehr als 7.8 Mio Beschäftigte in MINT in Deutschland gab. Dabei macht die Altersgruppe ü55 1.8 Mio aus (23 % aller Beschäftigten), es kommen aber nur knapp 800.000 der Altersgruppe u25 nach (10 %)."),
                                placement = "top",
                                trigger = "hover"),
-            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_3")
+            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "i_argument_3")
           )
         ),
         column(
@@ -171,6 +188,7 @@ mod_argumentation_ui <- function(id){
         )
       )),
 
+    ## Box Nachwuchs ----
     fluidRow(
       shinydashboard::box(
         title = "MINT-Nachwuchs.",
@@ -185,12 +203,13 @@ mod_argumentation_ui <- function(id){
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_nachwuchs")),
                                          color = "#154194"),
             shinyBS::bsPopover(id="h_argument_4", title = "",
-                               content = paste0("Mit Nachwuchs ist die Addition von sowohl Auszubildenden als auch Studierenden gemeint. Ingenieurswissenschaften in Bezug auf Auszubildende meint beispielsweiße Technische Berufe. "),
+                               content = paste0("Nachwuchs bezeichnet hier die gemeinsame Betrachtung von Auszubildenden und Studierenden."),
                                placement = "top",
                                trigger = "hover"),
             tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_4"),
+            br(),
             shinyBS::bsPopover(id="h_argument_41", title = "",
-                               content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland die Anzahl des Nachwuchses in den Ingenieurswissenschaften konsistent deutlich über der Informatik und den Mathematik + Naturwissenschaften liegt. "),
+                               content = paste0("In der ersten Einstellung ist zu sehen, dass in Deutschland die Anzahl des Nachwuchses in den Ingenieurswissenschaften deutlich über der Informatik und den Mathematik/Naturwissenschaften liegt. Während der Nachwuchs in Informatik deutschlanweit zunimmt (+23,7 % sei 2017), nimmt er in den anderen Disziplinen ab (-6,6 % bzw. 5,7 %)."),
                                placement = "top",
                                trigger = "hover"),
             tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_41")
@@ -202,6 +221,7 @@ mod_argumentation_ui <- function(id){
         )
       )),
 
+    ## Box Wirkhebel Förderung ----
     fluidRow(
       shinydashboard::box(
         title = "Wirkhebel MINT-Förderung",
@@ -215,16 +235,23 @@ mod_argumentation_ui <- function(id){
           shiny::mainPanel(
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_wirkhebel")),
                                          color = "#154194"),
+            shinyBS::bsPopover(id="erkl_wirkhebel_argument", title="",
+                               content = paste0("Gesamteffekt: Wirkung aller Hebel kombiniert.", br(),br(), "MINT-Nachwuchs fördern: Zunahme von MINT-Fachkräften unter 35 zwischen 2012 und 2022 setzt sich so in den nächsten Jahren fort.", br(),br(), "Mädchen- und Frauen-Förderung in MINT: Zunahme von weiblichen MINT-Fachkräften unter 35 zwischen 2012 und 2022 setzt sich so in den nächsten Jahren fort.", br(),br(), "Zuwanderung MINT-Fachkräfte: „Hohe Zuwanderung“-Szenario der 15. koordinierten Bevölkerungsvorausberechnung des Statistischen Bundesamts.", br(),br(), "Verbleib älterer MINT-Fachkräfte: Anteil an erwerbstätigen MINT-Fachkräften unter den 55-59-, 60-64-, und 65-69-Jährigen wächst weiterhin so an wie zwischen 2012-2022."),
+                               placement = "top",
+                               trigger = "hover"),
+            tags$a(paste0("Das bedeuten die Wirkhebel"), icon("info-circle"), id="erkl_wirkhebel_argument"),
+            br(),
             shinyBS::bsPopover(id="h_argument_5", title = "",
-                               content = paste0("Der Effekt der Förderung von Frauen baut auf dem Effekt der MINT-Bildung auf. Das Szenario betrachtet eine erfolgreichere MINT-Bildung mit besonderen Erfolgen bei Mädchen und Frauen. "),
+                               content = paste0("Weitere Informationen zu den Berechnungen des IW Köln im Auftrag von MINTvernetzt lassen sich auf der Seite \"MINT-Fachkräfte\" nachlesen."),
                                placement = "top",
                                trigger = "hover"),
-            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_5"),
-            shinyBS::bsPopover(id="h_argument_51", title = "",
-                               content = paste0(""),
+            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_5"),
+            br(),
+            shinyBS::bsPopover(id="i_argument_5", title = "",
+                               content = paste0("Spielen alle Wirkhebel zusammen, können bis 2037 1,4 Mio. zusätzliche MINT-Fachkräfte gewonnen werden. Der stärkste Hebel, mit rund +670.000 MINT-Fachkräften ist die Förderung des MINT-Nachwuchses."),
                                placement = "top",
                                trigger = "hover"),
-            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_51")
+            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "i_argument_5")
           )
         ),
         column(
@@ -275,6 +302,20 @@ mod_argumentation_server <- function(id){
     })
 
     # Hier Funktionen eingebunden
+
+    output$download_txt <- downloadHandler(
+      filename = function() {
+        paste0("daten_export_", Sys.Date(), ".txt")
+      },
+      content = function(file) {
+        # Hier holst du die fertigen Daten
+        daten <- daten_download(r)
+
+        # Schreibe sie ins file (Shiny gibt 'file' automatisch an den Browser aus)
+        writeLines(daten, con = file)
+      },
+      contentType = "text/plain"
+    )
 
     output$plot_argument_verlauf <- renderUI({
       argument_verlauf(r)

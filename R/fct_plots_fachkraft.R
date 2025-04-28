@@ -922,6 +922,21 @@ plot_fachkraft_epa_bulas <- function(r) {
    plot_data_raw <- DBI::dbGetQuery(con, df_query)
 
 
+   # Aggregate rausfiltern
+   plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
+                                              c("Gesamt",
+                                                "MINT gesamt",
+                                                "Informatik",
+                                                "Landtechnik",
+                                                "Produktionstechnik",
+                                                "Bau- und Gebäudetechnik",
+                                                "Mathematik, Naturwissenschaften",
+                                                "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                                                "Gesundheitstechnik",
+                                                "Nicht MINT"
+                                              ))
+   )
+
    if ("MINT gesamt" %in% fach) {
      plot_data_raw <- plot_data_raw %>%
        dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
@@ -952,21 +967,6 @@ plot_fachkraft_epa_bulas <- function(r) {
                     "Text B",
                     "Text C"),
      group_col = c("#EE7775", "#FBBF24", "#35BD97")
-   )
-
-   # Aggregate rausfiltern
-   plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
-                                              c("Gesamt",
-                                                "MINT gesamt",
-                                                "Informatik",
-                                                "Landtechnik",
-                                                "Produktionstechnik",
-                                                "Bau- und Gebäudetechnik",
-                                                "Mathematik, Naturwissenschaften",
-                                                "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
-                                                "Gesundheitstechnik",
-                                                "Nicht MINT"
-                                              ))
    )
 
 
