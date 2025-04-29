@@ -85,15 +85,6 @@ daten_download <- function(r){
       dplyr::left_join(group_col_dt, by = "epa_kat") %>%
       dplyr::arrange(epa_group_order)
 
-    # expand data for heatmap
-    expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
-      dplyr::arrange(mint_zuordnung, epa_group_order) %>%
-      #
-      dplyr::mutate(XX = rep(c(1:10), each = 10),
-                    YY = rep(c(1:10), times = 10),
-                    epa_kat = factor(x = epa_kat,
-                                     levels = epa_kat_levels))
-
     }else if(regio != "Deutschland"){
 
       regio <- dplyr::case_when(
@@ -160,15 +151,6 @@ daten_download <- function(r){
         dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,0)) %>%
         dplyr::left_join(group_col_dt, by = "epa_kat") %>%
         dplyr::arrange(epa_group_order)
-
-      # expand data for heatmap
-      expanded_dt <- plot_data[rep(row.names(plot_data), plot_data$value),] %>%
-        dplyr::arrange(mint_zuordnung, epa_group_order) %>%
-        #
-        dplyr::mutate(XX = rep(c(1:10), each = 10),
-                      YY = rep(c(1:10), times = 10),
-                      epa_kat = factor(x = epa_kat,
-                                       levels = epa_kat_levels))
     }
 
     ### Daten Demografie ----
@@ -342,7 +324,7 @@ daten_download <- function(r){
       mutate(Bereich = "Beschäftigte MINT")
 
     # 2. Engpassindikator
-    expanded_dt_clean <- expanded_dt %>%
+    plot_data_clean <- plot_data %>%
       mutate(Bereich = "Engpassindikator")
 
     # 3. Demografie MINT
@@ -371,7 +353,7 @@ daten_download <- function(r){
     # Alle Datensätze vereinheitlichen
     df_list <- list(
       vereinheitlichen(df_beschäftigte_clean),
-      vereinheitlichen(expanded_dt_clean),
+      vereinheitlichen(plot_data_clean),
       vereinheitlichen(df_demografie_clean),
       vereinheitlichen(df_nachwuchs_clean),
       vereinheitlichen(uebersicht_data_clean)
