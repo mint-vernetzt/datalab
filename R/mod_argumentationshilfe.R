@@ -37,7 +37,7 @@ mod_argumentation_ui <- function(id){
               Daten helfen, überzeugend zu argumentieren.
               Sie wollen Ihre Arbeit mit starken Argumenten unterstreichen, zum Beispiel,
               um Finanzierungsgesuche zu unterstreichen, im Diskurs mit Politiker:innen MINT-Förderung
-              zu bestärken oder die Ausrichtung des eigenen Projekt wirksam auszurichten?"),
+              zu bestärken oder das eigene Projekt wirksam ausrichten?"),
             p(style = "text-align: justify; font-size = 20px",
             "Hier finden Sie die Werkzeuge dafür, eine starke Argumentationskette
             für die MINT-Bildungsförderung in Ihrer Region aufzubauen.",
@@ -49,14 +49,14 @@ mod_argumentation_ui <- function(id){
             h1("So geht´s"),
             tags$span(icon("1", style = "margin: 10px; font-size: 16px;"),
                       "Wählen Sie Ihre gewünschte Region aus."),
-            hr(),
+            hr(style="margin-top: 10px;margin-bottom: 10px;"),
             tags$span(icon("2", style = "margin: 10px; font-size: 16px;"),
                       "Laden Sie die Daten als Grundlager Ihrer Argumentation herunter."),
-            hr(),
+            hr(style="margin-top: 10px;margin-bottom: 10px;"),
             tags$span(icon("3", style = "margin: 10px; font-size: 16px;"),
             "Nutzen Sie den DataLab-GPT, der Ihnen basierend auf den Daten eine
               Argumentation passend zu Ihrer Region erstellt."),
-            hr(),
+            hr(style="margin-top: 10px;margin-bottom: 10px;"),
             tags$span(icon("4", style = "margin: 10px; font-size: 16px;"),
                       "Laden Sie hier die zugehörigen Grafiken herunter und
                       ergänzen Sie in Ihrem Bericht."),
@@ -66,50 +66,92 @@ mod_argumentation_ui <- function(id){
             hr(style = "border-top: 2px solid #154194;margin-top: 5px;"),
             br(),
 
-      ## Region-Filter ----
-
-
-            p(style = "text-align: justify; font-size = 20px",
-              "Wählen Sie Ihre Region aus:"),
-
-            div(
-              style = "margin-bottom: 30px",
-            shinyWidgets::pickerInput(
-              inputId = ns("region_argumentationshilfe"),
-              choices = c("Deutschland",
-                          "Baden-Württemberg",
-                          "Bayern",
-                          "Berlin",
-                          "Brandenburg",
-                          "Bremen",
-                          "Hamburg",
-                          "Hessen",
-                          "Mecklenburg-Vorpommern",
-                          "Niedersachsen",
-                          "Nordrhein-Westfalen",
-                          "Rheinland-Pfalz",
-                          "Saarland",
-                          "Sachsen",
-                          "Sachsen-Anhalt",
-                          "Schleswig-Holstein",
-                          "Thüringen",
-                          "Westdeutschland (o. Berlin)",
-                          "Ostdeutschland (inkl. Berlin)"
-              ),
-              multiple = FALSE,
-              selected = c("Deutschland")
-            )
-            )
-
-            )
+                )
           )
     ),
 
-    ## Download-Button ----
+    column(
+      width = 10,
 
-    downloadButton(ns("download_txt"), "Alle Daten als txt Dokument herunterladen"),
-    br(),
-    br(),
+      ## Region-Filter ----
+
+
+      p(strong(style = "text-align: justify; font-size = 24px",
+               "1. Wählen Sie Ihre Region aus:")),
+
+      div(
+        style = "margin-bottom: 30px",
+        shinyWidgets::pickerInput(
+          inputId = ns("region_argumentationshilfe"),
+          choices = c("Deutschland",
+                      "Baden-Württemberg",
+                      "Bayern",
+                      "Berlin",
+                      "Brandenburg",
+                      "Bremen",
+                      "Hamburg",
+                      "Hessen",
+                      "Mecklenburg-Vorpommern",
+                      "Niedersachsen",
+                      "Nordrhein-Westfalen",
+                      "Rheinland-Pfalz",
+                      "Saarland",
+                      "Sachsen",
+                      "Sachsen-Anhalt",
+                      "Schleswig-Holstein",
+                      "Thüringen",
+                      "Westdeutschland (o. Berlin)",
+                      "Ostdeutschland (inkl. Berlin)"
+          ),
+          multiple = FALSE,
+          selected = c("Deutschland")
+        )
+      ),
+
+      ## Download-Button ----
+
+      p(strong(style = "text-align: justify; font-size = 24px",
+               "2. Laden Sie hier die Daten der folgenden Grafiken herunter:")),
+      p("Als Format ist hier ein Text-Dokument gewählt, da Datenuploads von Excel-Datein
+      bei einer kostenfreien Nutzung von ChatGPT nur beschränkt möglich sind. Der für das
+      MINT-DataLab speziell konfigurierte MINT-DataLab-GPT nutz den Rahmen von OpenAI und deren
+      zugrundeliegende Chat-Programme. Hier können die Daten im Text-Format einfach hineinkopiert werden."),
+      div(
+        style = "margin-bottom: 30px;",
+        downloadButton(ns("download_txt"), " Gesammelte Daten herunterladen"),
+      ),
+
+      ## Absprung GPT + Beispielbericht ----
+
+      p(strong(style = "text-align: justify; font-size = 24px",
+               "3. MINT-DataLab-GPT zur automatischen Bericht-Erstellung:")),
+      p("Dieser speziell für das MINT-DataLab konfigurierte MINT-DataLab-GPT
+             führt Sie durch die Erstellung eines kurzen Berichts basierend auf den hier folgenden
+             Statistiken. Es wird eine kurze grundlegende Argumentationskette zusammen mit Ihnen erstellt."  ),
+
+      tags$a(href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
+             tags$span(icon("comments", style = "margin-right: 5px;"),"Zum MINT-DataLab-GPT"), target="_blank",
+             class = "btn btn-default",
+             style = "margin-bottom: 30px; margin-right: 10px;"),
+
+      tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf",
+             target = "_blank", tags$span(icon("file", style = "margin-right: 5px;"), " Beispiel-Bericht für Hamburg"),
+             class = "btn btn-default",
+             style = "margin-bottom: 30px;"),
+
+
+      p(strong(style = "text-align: justify; font-size = 24px;",
+               "4. Statistiken und Grafiken als Basis der Argumentationskette:")),
+      p("Hier wurde eine Auswahl an Statistiken getroffen, auf welchen sich ganz allgemein
+        für eine Argumentationskette für mehr MINT-Förderung eignen."),
+       p( "Alle Statistiken gibt es in ähnlicher Form, mit mehr Anpassungsmöglichkeiten, auf den weiteren
+         Unterseiten des MINT-DataLab. Hinweise dazu, welche Darstellungen aus dem MINT-DataLab über diese hinaus für eine starke Argumentationskette
+        genutzt werden können, finden sich in den blauen Boxen rechts der Grafiken."),
+      p("Die grünen Boxen unter den Grafiken geben beispielhaft Interpretationen, die für eine Argumentation im Sinne von
+        MINT-Bildungsförderung hinter den Statistiken stecken.",
+        style = "margin-bottom: 30px;")
+
+    ),
 
     ## Box Zeitverlauf MINT----
 
