@@ -36,19 +36,44 @@ mod_argumentation_ui <- function(id){
               "Ob für Förderanträge, Kommunikation oder strategische Entscheidungen -
               Daten helfen, überzeugend zu argumentieren.
               Sie wollen Ihre Arbeit mit starken Argumenten unterstreichen, zum Beispiel,
-              um Finanzierungsgesuche zu unterstreichen, im Diskurs mit Politiker*innen MINT-Förderung
+              um Finanzierungsgesuche zu unterstreichen, im Diskurs mit Politiker:innen MINT-Förderung
               zu bestärken oder die Ausrichtung des eigenen Projekt wirksam auszurichten?"),
             p(style = "text-align: justify; font-size = 20px",
-            "Wie zeigen hier exemplarisch 6 zentrale MINT-Statistiken, und wie sie diese
-              in eine Argumentationskette für mehr MINT-Förderung umwandeln.",
-              br()
+            "Hier finden Sie die Werkzeuge dafür, eine starke Argumentationskette
+            für die MINT-Bildungsförderung in Ihrer Region aufzubauen.",
+              br(),
+            br(),
               ),
+
+
+            h1("So geht´s"),
+            tags$span(icon("1", style = "margin: 10px; font-size: 16px;"),
+                      "Wählen Sie Ihre gewünschte Region aus."),
+            hr(),
+            tags$span(icon("2", style = "margin: 10px; font-size: 16px;"),
+                      "Laden Sie die Daten als Grundlager Ihrer Argumentation herunter."),
+            hr(),
+            tags$span(icon("3", style = "margin: 10px; font-size: 16px;"),
+            "Nutzen Sie den DataLab-GPT, der Ihnen basierend auf den Daten eine
+              Argumentation passend zu Ihrer Region erstellt."),
+            hr(),
+            tags$span(icon("4", style = "margin: 10px; font-size: 16px;"),
+                      "Laden Sie hier die zugehörigen Grafiken herunter und
+                      ergänzen Sie in Ihrem Bericht."),
+
+            br(),
+            br(),
+            hr(style = "border-top: 2px solid #154194;margin-top: 5px;"),
+            br(),
 
       ## Region-Filter ----
 
-            p(style = "text-align: justify; font-size = 20px",
-              "Wählen Sie bei Bedarf hier Ihre Region aus:"),
 
+            p(style = "text-align: justify; font-size = 20px",
+              "Wählen Sie Ihre Region aus:"),
+
+            div(
+              style = "margin-bottom: 30px",
             shinyWidgets::pickerInput(
               inputId = ns("region_argumentationshilfe"),
               choices = c("Deutschland",
@@ -74,6 +99,7 @@ mod_argumentation_ui <- function(id){
               multiple = FALSE,
               selected = c("Deutschland")
             )
+            )
 
             )
           )
@@ -89,19 +115,24 @@ mod_argumentation_ui <- function(id){
 
     fluidRow(
              shinydashboard::box(
-               title = "MINT im Zeitverlauf",
+               title = "1. Warum Ihre Region MINT braucht",
                width = 12,
                column(
-                 width = 8,
-                 p("Damit in Deutschland ")
+                 width = 9,
+                 p("Als Einstieg kann ein kurzer Überblick über die MINT-Strukturen
+                   der eigenen Region gegeben werden. Ergänzend dazu zeigt die
+                   Entwicklung der Beschäftigten, Studierenden und Auszubildenden
+                   in MINT, wie zentral der MINT-Sektor für eine Region ist und ob
+                   die Relevanz eher steigt oder der MINT-Bereich eher hinter anderen
+                   Bereichen zurück fällt.")
                ),
-               column(
-                 width = 12,
-                  shiny::mainPanel(
-                    shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_verlauf")),
-                                                 color = "#154194"),
-
-                    shinyBS::bsPopover(id="h_argument_1a", title = "",
+                 column(
+                   width = 9,
+                   shiny::mainPanel(
+                     width = 12,
+                     shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_verlauf")),
+                                                  color = "#154194"),
+                      shinyBS::bsPopover(id="h_argument_1a", title = "",
                                        content = paste0("Es werden nur sozialversicherungspflichtige Beschäftigte betrachtet. Die Kategorisierung in MINT entspricht der Zuordnung durch die Bundesagentur für Arbeit. Weitere Informationen finden Sie unter dem Reiter \"Datenquellen und Hinweise\"."),
                                        placement = "top",
                                        trigger = "hover"),
@@ -112,27 +143,97 @@ mod_argumentation_ui <- function(id){
                                        placement = "top",
                                        trigger = "hover"),
                     tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "i_argument_1")
-                  )
-               ),
+                   )
+                 ),
+                 column(
+                   width = 3,
+                   div(class = "content-box",
+                       style = "background-color: #15419430;
+                              color: #154194;
+                              border: 2px solid #154194;
+                              margin-left: 20px;
+                              width: 90%;
+                              border-radius: 10px;",
+                              p("Weiter Statistiken, die hier ergänzt werden könnten:"),
+                              p("MINT-Anteil:  \"Alle Bildungsbereiche\", aktueller MINT-Anteil + MINT-Anteil im Zeitverlauf"),
+                              p("Bundeslandvergleich: \"Ausbildung & Beruf\", aktueller MINT-Anteil + Bundeslandvergleich")
+                   )
+                 ),
                column(
-                 width = 8,
-                 br(),
-                 p("Text/Boxen mit Interpretation, je nach Grafik")
+                 width = 12,
+
+                 column(
+                   width = 3,
+                   br(),
+                   div(class = "content-box",
+                       style = "width: 250px;
+                              margin-left: 0;
+                              background-color: #00a87a30;
+                              border: 2px solid #00a87a;
+                              color: #154194;
+                              border-radius: 10px;",
+                       p(strong("Wenn die Anzahl steigt:")),
+                       p("Die Relevanz von MINT für die Region wächst.
+                     MINT-Kenntnisse müssen steigen, um steigenden Bedarfe an
+                     MINT-Kompetenzen begegnen zu können.
+                     In MINT-Angebote zu investieren heißt, in die Zukunft zu investieren.")
+                   )
+                 ),
+                 column(
+                   width = 3,
+                   br(),
+                   div(class = "content-box",
+                       style = "width: 250px;
+                              margin-left: 0;
+                              background-color: #00a87a30;
+                              border: 2px solid #00a87a;
+                              color: #154194;
+                              border-radius: 10px;",
+                       p(strong("Wenn die Anzahl gleich bleibt:")),
+                       p("Der MINT-Bereich ist konstant eine wichtige Säule der Region.
+                     Gleichzeitig werden MINT-Kompetenzen aufgrund von Digitalisierung
+                     und Technologisierung immer wichtiger. In MINT-Angebote zu
+                       investieren heißt, in die Zukunft zu investieren.")
+                   )
+                 ),
+                 column(
+                   width = 3,
+                   br(),
+                   div(class = "content-box",
+                       style = "width: 250px;
+                              margin-left: 0;
+                              background-color: #00a87a30;
+                              border: 2px solid #00a87a;
+                              color: #154194;
+                              border-radius: 10px;",
+                       p(strong("Wenn die Anzahl sinkt:")),
+                       p("Der MINT-Bereich der Region wird kleiner, obwohl aufgrund
+                    von Digitalisierung und Technologisierung MINT die Zukunft des
+                    Wirtschaft- und Bildungsbereichs prägt. Stärker in MINT-Angebote
+                      zu investieren ist nötig für die zukünftige Wettbewerbsfähigkeit
+                      der Region.")
+                   )
                )
-             )),
+               )
+             )
+            ),
 
     ## Box Fachkräftemagel ----
     fluidRow(
       shinydashboard::box(
-        title = "MINT-Fachkräfte.",
+        title = "2. Wo die MINT-Fachkräfte fehlen",
         width = 12,
         column(
           width = 8,
-          p("Text - Allgemeine Erklärung für Grafik")
+          p("Der Bedarf an MINT-Fachkräften ist bundesweit hoch.
+          Das unterstreicht, wie wichtig MINT-Förderung ist.
+          Die Engpassanalyse der Bundesagentur für Arbeit zeigt das Ausmaß des
+            akuten Fachkräfteengpasses:")
         ),
         column(
-          width = 12,
+          width = 9,
           shiny::mainPanel(
+            width=12,
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_fachkraft")),
                                          color = "#154194"),
             shinyBS::bsPopover(id="h_argument_2", title = "",
@@ -149,8 +250,60 @@ mod_argumentation_ui <- function(id){
           )
         ),
         column(
-          width = 8,
-          p("Text/Boxen mit Interpretation, je nach Grafik")
+          width = 3,
+          div(class = "content-box",
+              style = "background-color: #15419430;
+                              color: #154194;
+                              border: 2px solid #154194;
+                              margin-left: 20px;
+                              width: 90%;
+                              border-radius: 10px;",
+              p("Weiter Statistiken, die hier ergänzt werden könnten:"),
+              p("Fachkräfte-Engpass nach MINT-Disziplin: \"Fokusseite MINT-Fachkräfte\",
+                unter \"Berufsgruppen: aktueller Fachkräftebedarf in MINT\", Fachkräfteengpass der Bundesländer"),
+              p("Anteil und Entwicklung der MINT-Disziplinen: \"Ausbildung & Beruf\", unter M-I-N-T, aktueller Anteil MINT-Disziplinen")
+
+          )
+        ),
+        column(
+          width = 12,
+          column(
+            width = 3,
+            br(),
+            div(class = "content-box",
+                style = "width: 250px;
+                              margin-left: 0;
+                              background-color: #00a87a30;
+                              border: 2px solid #00a87a;
+                              color: #154194;
+                              border-radius: 10px;",
+                p(strong("Erhöhter Fachkräftemangel in MINT:")),
+                p("Während viele Branchen mit Fachkräftemangel zu kämpfen haben,
+                ist die Lage in MINT-Berufen, und insbesondere im Technik-Bereich,
+                besonders schlecht. Das unterstreicht, wir brauchen mehr Menschen,
+                  die sich für MINT interessieren und MINT-Kompetenzen entwickeln,
+                  z. B. durch MINT-Bildungsförderung.")
+            )
+          ),
+          column(
+            width = 3,
+            br(),
+            div(class = "content-box",
+                style = "width: 250px;
+                              margin-left: 0;
+                              background-color: #00a87a30;
+                              border: 2px solid #00a87a;
+                              color: #154194;
+                              border-radius: 10px;",
+                p(strong("Ähnlich hoher Fachkräftemangel in MINT und nicht MINT:")),
+                p("Viele Branchen haben mit Fachkräftemangel zu kämpfen,
+                so auch der MINT-Bereich. Damit man dem Fachkräftemangel in Zukunft
+                  begegnen kann, braucht es mehr Menschen, die sich für MINT
+                  interessieren und MINT-Kompetenzen entwickeln, z. B.
+                  durch MINT-Bildungsförderung.")
+            )
+          )
+
         )
       )),
 
@@ -158,15 +311,19 @@ mod_argumentation_ui <- function(id){
 
     fluidRow(
       shinydashboard::box(
-        title = "Demografische Entwicklung",
+        title = "3. Zukunftstrend: Die Fachkräftelücke wird größer",
         width = 12,
         column(
           width = 8,
-          p("Text - Allgemeine Erklärung für Grafik")
+          p("Schon heute fehlen in vielen Regionen im Besonderen MINT-Fachkräfte.
+            Der demografische Wandel wird die Situation weiter verschärfen,
+            da ein großer Teil der MINT-Beschäftigten in den nächsten Jahren aus
+            der Berufstätigkeit ausscheiden wird.")
         ),
         column(
-          width = 12,
+          width = 9,
           shiny::mainPanel(
+            width = 12,
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_demografie")),
                                          color = "#154194"),
             shinyBS::bsPopover(id="h_argument_31", title = "",
@@ -183,23 +340,57 @@ mod_argumentation_ui <- function(id){
           )
         ),
         column(
-          width = 8,
-          p("Text/Boxen mit Interpretation, je nach Grafik")
+          width = 3,
+          div(class = "content-box",
+              style = "background-color: #15419430;
+                              color: #154194;
+                              border: 2px solid #154194;
+                              margin-left: 20px;
+                              width: 90%;
+                              border-radius: 10px;",
+              p("Weiter Statistiken, die hier ergänzt werden könnten:"),
+              p("MINT-Anteil nach Gruppen: \"Ausbildung & Beruf\", aktueller MINT-Anteil + Gruppenvergleich – Balkendiagramm, Auswahl unter Berufsgruppen treffen"),
+
+          )
+        ),
+        column(
+          width = 12,
+          column(
+            width = 3,
+            br(),
+            div(class = "content-box",
+                style = "width: 250px;
+                              margin-left: 0;
+                              background-color: #00a87a30;
+                              border: 2px solid #00a87a;
+                              color: #154194;
+                              border-radius: 10px;",
+                p(strong("Mehr MINT-Beschäftigte scheiden aus dem Berufsleben aus als nachkommen:")),
+                p("Das wird den Fachkräftemangel verschärfen. Jetzt ist der letzte Moment,
+                  um mit gezielter MINT-Bildungsförderung junge Menschen für MINT zu interessiere,
+                  und die Folgen des demografischen Wandel noch abmildern zu können.")
+            )
+          )
+
         )
       )),
 
     ## Box Nachwuchs ----
     fluidRow(
       shinydashboard::box(
-        title = "MINT-Nachwuchs.",
+        title = "4. MINT-Nachwuchs stärken: Schlüssel zur Fachkräftesicherung",
         width = 12,
         column(
           width = 8,
-          p("Text - Allgemeine Erklärung für Grafik")
+          p("Viele Faktoren werden zusammen kommen müssen, um die Fachkräftelage
+            in MINT zu stabilisieren. Auch, weil der Bedarf an MINT steigt.
+            Ein Schlüssel ist, mehr MINT-Nachwuchs zu gewinnen, doch in vielen
+            MINT-Bereichen steht es aktuell nicht gut um Nachwuchs.")
         ),
         column(
-          width = 12,
+          width = 9,
           shiny::mainPanel(
+            width = 12,
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_nachwuchs")),
                                          color = "#154194"),
             shinyBS::bsPopover(id="h_argument_4", title = "",
@@ -216,23 +407,92 @@ mod_argumentation_ui <- function(id){
           )
         ),
         column(
-          width = 8,
-          p("Text/Boxen mit Interpretation, je nach Grafik")
+          width = 3,
+            div(class = "content-box",
+                style = "background-color: #15419430;
+                              color: #154194;
+                              border: 2px solid #154194;
+                              margin-left: 20px;
+                              width: 90%;
+                              border-radius: 10px;",
+                p("Weiter Statistiken, die hier ergänzt werden könnten:"),
+                p("Getrennte Betrachtung von Studierenden und Auszubildenden: \"Ausbildung & Beruf\" bzw. \"Studium\",
+                  M-I-N-T, Anteil MINT-Fächer im Zeitverlauf"),
+            )
+        ),
+        column(
+          width = 12,
+          column(
+            width = 3,
+            br(),
+            div(class = "content-box",
+                style = "width: 250px;
+                              margin-left: 0;
+                              background-color: #00a87a30;
+                              border: 2px solid #00a87a;
+                              color: #154194;
+                              border-radius: 10px;",
+                p(strong("Wenn die Anzahl steigt:")),
+                p("Mehr junge Menschen interessieren sich für diese Disziplin.
+                Doch in den meisten MINT-Bereichen herrscht bereits Fachkräftemangel,
+                welcher sich durch die demografische Entwicklung noch verschärfen wird.
+                Deshalb ist Förderung notwendig, um positive Tendenzen zu unterstreichen
+                und zu verstärken.")
+            )
+          ),
+          column(
+            width = 3,
+            br(),
+            div(class = "content-box",
+                style = "width: 250px;
+                              margin-left: 0;
+                              background-color: #00a87a30;
+                              border: 2px solid #00a87a;
+                              color: #154194;
+                              border-radius: 10px;",
+                p(strong("Wenn die Anzahl gleich bleibt:")),
+                p("Die Entwicklung des Nachwuchses in diesem MINT-Bereich ist stabil.
+                  Doch der Bedarf an Kompetenzen aus dieser Disziplin kann weiter
+                  steigen und somit auch der Bedarf an Nachwuchs. Ohne Förderinitiativen
+                  kann es auch hier zu einer Verschärfung der Fachkräftelage kommen.")
+            )
+          ),
+          column(
+            width = 3,
+            br(),
+            div(class = "content-box",
+                style = "width: 250px;
+                              margin-left: 0;
+                              background-color: #00a87a30;
+                              border: 2px solid #00a87a;
+                              color: #154194;
+                              border-radius: 10px;",
+                p(strong("Wenn die Anzahl sinkt")),
+                p("Weniger junge Menschen scheinen sich für diesen Bereich zu interessieren.
+                  Falls hier schon Fachkräftemangel besteht, wird sich dieser weiter verschärfen.
+                  Vor allem hier müssen jungen Menschen ihre Perspektiven gezeigt und Interesse geweckt werden.")
+            )
+          )
+
         )
       )),
 
     ## Box Wirkhebel Förderung ----
     fluidRow(
       shinydashboard::box(
-        title = "Wirkhebel MINT-Förderung",
+        title = "5. Wege aus der Kriese: So stark wirkt MINT-Nachwuchsförderung",
         width = 12,
         column(
           width = 8,
-          p("Diese Wirkhebel beziehen sich auf gesamtdeutsche Zahlen.")
+          p("Um dem Fachkräftemangel im MINT-Bereich wirksam zu begegnen,
+            sind verschiedene Maßnahmen nötig. Besonders entscheidend ist dabei
+            langfristig betrachtet die Förderung des MINT-Nachwuchses, aber auch
+            die gezielte Unterstützung von Frauen.")
         ),
         column(
-          width = 12,
+          width = 9,
           shiny::mainPanel(
+            width = 12,
             shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_wirkhebel")),
                                          color = "#154194"),
             shinyBS::bsPopover(id="erkl_wirkhebel_argument", title="",
@@ -255,10 +515,60 @@ mod_argumentation_ui <- function(id){
           )
         ),
         column(
-          width = 8,
-          p("Text/Boxen mit Interpretation, je nach Grafik")
+          width = 3,
+          div(class = "content-box",
+              style = "background-color: #15419430;
+                              color: #154194;
+                              border: 2px solid #154194;
+                              margin-left: 20px;
+                              width: 90%;
+                              border-radius: 10px;",
+              p("Weiter Statistiken, die hier ergänzt werden könnten:"),
+              p("Alle Ergebnisse der Zukunftsszenarien für MINT-Fachkräfte: “Fokusseite MINT-Fachkräfte“ Zukunftsszenarien + Wirkhebel"),
+          )
+        ),
+        column(
+          width = 12,
+          column(
+            width = 3,
+            br(),
+            div(class = "content-box",
+                style = "width: 250px;
+                              margin-left: 0;
+                              background-color: #00a87a30;
+                              border: 2px solid #00a87a;
+                              color: #154194;
+                              border-radius: 10px;",
+                p(strong("MINT-Nachwuchs Förderung")),
+                p("Der größte Wirkhebel, um dem akuten MINT-Fachkräftemangel entgegenzuwirken,
+                  sind mehr junge Menschen in MINT. Ohne Nachwuchsförderung, z. B. allein über Zuwanderung,
+                  wird die MINT-Lücke nicht schließbar sein. MINT-Bildungsförderung ist die beste Chance, die MINT-Industrie
+                  langfristig lebendig zu halten.")
+            )
+          ),
+          column(
+            width = 3,
+            br(),
+            div(class = "content-box",
+                style = "width: 250px;
+                              margin-left: 0;
+                              background-color: #00a87a30;
+                              border: 2px solid #00a87a;
+                              color: #154194;
+                              border-radius: 10px;",
+                p(strong("Mädchen und Frauen in MINT fördern")),
+                p("ist ein starker Hebel, um den Fachkräftemangel in MINT zu reduzieren.
+                  Mehr junge Frauen, die sich beruflich für MINT entscheiden,
+                  tragen außerdem zu diverseren Perspektiven in MINT bei und so zu
+                  einer höheren Qualität in MINT-Forschung und -Entwicklung.")
+            )
+          )
+
         )
+
       ))
+
+
     # ,
     #
     # fluidRow(
