@@ -227,14 +227,13 @@ mod_studium_studienzahl_ui <- function(id){
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                              .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
+                             column(
                                width = 3,
-                               mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui_1"),
-                               # br(),br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_mint_anteil"),
-                               #   label = "Download",
-                               #   icon = icon("download")),
+                               shiny::sidebarPanel(
+                                 width = 12,
+                                 mod_studium_studienzahl_mint_anteile_ui("mod_studium_studienzahl_mint_anteile_ui_1"),
+                               ),
+                               tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
                              ),
                              shiny::mainPanel(
                                width = 9,

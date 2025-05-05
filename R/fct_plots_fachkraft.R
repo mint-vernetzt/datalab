@@ -50,7 +50,7 @@ plot_fachkraft_prognose  <- function(r) {
                                                T ~ wirkhebel))
 
   plot_data <- plot_data %>%
-    dplyr::mutate(display_color = ifelse(indikator == "Status-quo", "#DCBED9", "#B16FAB"))
+    dplyr::mutate(display_color = ifelse(indikator == "Status-quo", "#DCBED9", "#154194"))
 
   data_list <- split(plot_data, plot_data$wirkhebel)
 
@@ -180,7 +180,7 @@ plot_fachkraft_prognose  <- function(r) {
   hc <- hc %>% highcharter::hc_add_series(
     name = filter_wirkhebel[2],
     data = plot_data %>% dplyr::filter(wirkhebel == filter_wirkhebel[2]) %>% dplyr::pull(wert),
-    color = "#B16FAB",
+    color = "#154194",
     zoneAxis = 'x',
     zones = list(
        list(value = 2022),
@@ -246,7 +246,7 @@ plot_fachkraft_prognose_alle  <- function(r) {
                                                                   "Status-quo"))
     levels(plot_data$indikator) <- c("kombiniertes Szenario", "Positives Szenario",
                                      "aktuelles Szenario")
-    color_vec <- c("#b16fab", "#D0A9CD", "#8893a7" )
+    color_vec <- c("#154194", "#D0A9CD", "#8893a7" )
 
   }else if (filter_wirkhebel[2] == "Internationale MINT-Fachkräfte"){
 
@@ -257,7 +257,7 @@ plot_fachkraft_prognose_alle  <- function(r) {
     levels(plot_data$indikator) <- c("Positives Szenario", "Rückgang im Positivtrend der Zuwanderung",
                                      "vollständiger Stillstand der Zuwanderung", "aktuelles Szenario")
 
-    color_vec <- c("#b16fab", "#D0A9CD", "#DCBED9", "#8893a7" )
+    color_vec <- c("#154194", "#D0A9CD", "#DCBED9", "#8893a7" )
 
   }else if (filter_wirkhebel[2] == "Beteiligung älterer MINT-Fachkräfte"){
 
@@ -265,7 +265,7 @@ plot_fachkraft_prognose_alle  <- function(r) {
                                                                   "Status-quo"))
     levels(plot_data$indikator) <- c("Positives Szenario",
                                      "aktuelles Szenario")
-    color_vec <- c("#b16fab", "#8893a7" )
+    color_vec <- c("#154194", "#8893a7" )
 
   }else{
 
@@ -275,7 +275,7 @@ plot_fachkraft_prognose_alle  <- function(r) {
     levels(plot_data$indikator) <- c("Positives Szenario",
                                      "negatives Szenario",
                                      "aktuelles Szenario")
-    color_vec <- c("#b16fab", "#D0A9CD", "#8893a7" )
+    color_vec <- c("#154194", "#D0A9CD", "#8893a7" )
 
   }
 
@@ -587,7 +587,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
       x = ~wert,
       y = ~wirkhebel,
       name = paste0("Positives Szenario ",year_filter),
-      color = I("#b16fab"),
+      color = I("#154194"),
       symbol = I("square"),
       size = I(50),
       text = ~paste0("Positives Szenario für Wirkhebel ", wirkhebel, ": ", wert_txt, "<br>Zunahme der MINT-Fachkräfte seit 2022: ", diff_txt),
@@ -922,6 +922,21 @@ plot_fachkraft_epa_bulas <- function(r) {
    plot_data_raw <- DBI::dbGetQuery(con, df_query)
 
 
+   # Aggregate rausfiltern
+   plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
+                                              c("Gesamt",
+                                                "MINT gesamt",
+                                                "Informatik",
+                                                "Landtechnik",
+                                                "Produktionstechnik",
+                                                "Bau- und Gebäudetechnik",
+                                                "Mathematik, Naturwissenschaften",
+                                                "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                                                "Gesundheitstechnik",
+                                                "Nicht MINT"
+                                              ))
+   )
+
    if ("MINT gesamt" %in% fach) {
      plot_data_raw <- plot_data_raw %>%
        dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
@@ -952,21 +967,6 @@ plot_fachkraft_epa_bulas <- function(r) {
                     "Text B",
                     "Text C"),
      group_col = c("#EE7775", "#FBBF24", "#35BD97")
-   )
-
-   # Aggregate rausfiltern
-   plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
-                                              c("Gesamt",
-                                                "MINT gesamt",
-                                                "Informatik",
-                                                "Landtechnik",
-                                                "Produktionstechnik",
-                                                "Bau- und Gebäudetechnik",
-                                                "Mathematik, Naturwissenschaften",
-                                                "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
-                                                "Gesundheitstechnik",
-                                                "Nicht MINT"
-                                              ))
    )
 
 

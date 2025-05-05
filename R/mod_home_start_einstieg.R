@@ -16,9 +16,8 @@ mod_home_start_einstieg_ui <- function(id){
     shiny::radioButtons(
       inputId = ns("ansicht_start_einstieg"),
       label = NULL,
-      choices = c("Einzelansicht - Kuchendiagramm",
-                  "Gruppenvergleich - Balkendiagramm"),
-      selected = "Einzelansicht - Kuchendiagramm"
+      choices = c("Gruppenvergleich - Balkendiagramm","Einzelansicht - Kuchendiagramm"),
+      selected = "Gruppenvergleich - Balkendiagramm"
     ),
 
     p("Jahr:"),

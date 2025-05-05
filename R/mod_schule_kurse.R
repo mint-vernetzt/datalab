@@ -173,17 +173,14 @@ mod_schule_kurse_ui <- function(id){
                     #         ),
 
                     tabPanel("MINT-Anteil im Zeitverlauf", br(),
-                             shiny::sidebarPanel(
+                             column(
                                width = 3,
-                               mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1"),
-                               # br(), br(),
-                               # downloadButton(
-                               #   outputId = ns("download_btn_plot_einstieg_verlauf"),
-                               #   label = "Download",
-                               #   icon = icon("download"))
-
-
+                               shiny::sidebarPanel(
+                                 width = 12,
+                                 mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1"),
                                ),
+                               tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
+                             ),
                              shiny::mainPanel(
                                width = 9,
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf")),
@@ -420,12 +417,17 @@ mod_schule_kurse_ui <- function(id){
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
+                             column(
                                width = 3,
-                               tags$style(".well {background-color:#FFFFFF;}"),
-                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_schule_kurse_verlauf_gender_ui("mod_schule_kurse_verlauf_gender_ui_1")
+                               shiny::sidebarPanel(
+                                 width = 12,
+                                 tags$style(".well {background-color:#FFFFFF;}"),
+                                 tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                 mod_schule_kurse_verlauf_gender_ui("mod_schule_kurse_verlauf_gender_ui_1")
                                ),
+                               tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
+                             ),###########
+
                              shiny::mainPanel(
                                width = 9,
                                shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_gender")),

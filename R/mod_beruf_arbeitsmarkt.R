@@ -233,9 +233,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
+                             column(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_faecher_verlauf_ui("mod_beruf_arbeitsmarkt_faecher_verlauf_ui_1"),
+                               shiny::sidebarPanel(
+                                 width = 12,
+                                 mod_beruf_arbeitsmarkt_faecher_verlauf_ui("mod_beruf_arbeitsmarkt_faecher_verlauf_ui_1"),
+                               ),
+                               tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
                              ),
                              shiny::mainPanel(
                                width = 9,
