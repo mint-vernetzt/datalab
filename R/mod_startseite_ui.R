@@ -70,7 +70,7 @@ mod_startseite_start_ui <- function(id){
               Hier schauen wir hinter die Zahlen und ordnen sie ein – erklärend,
               lösungsorientiert und wissenschaftlich fundiert.
            Die Kurzanalysen können auf den verschiedenen Bereichs- und Themenseiten
-              im MINT-DatatLab heruntergeladen werden.", br(),
+              im MINT-DataLab heruntergeladen werden.", br(),
               "Auf der MINTvernetzt-Website, auf der Themenseite des MINT-DataLabs,
               finden sich alle Kurzanalyen auf einen Blick.",
               br()),
