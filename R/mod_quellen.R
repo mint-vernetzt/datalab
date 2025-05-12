@@ -35,7 +35,7 @@ mod_quellen_ui <- function(id){
         ), br(),
         img(src='www/Definition_MINT_Bild.png',
             class = "img-responsive",
-            alt = "Def MINT",
+            alt = "Definition MINT",
             style="display: block; margin-left: auto; margin-right: auto;"
         )
       ),
@@ -117,9 +117,11 @@ mod_quellen_ui <- function(id){
           "Ziel dieses Projektes ist es, die vorhandenen Statistiken über MINT in Deutschland in einem Datenpools zu bündeln
           und über das MINT-DataLab zur weiteren Nutzung zur Verfügung zu stellen. Die Basis unseres Datenpool sind die amtlichen Statistiken aus Deutschland,
           also die Statistiken der Bundesagentur für Arbeit, des Statistischen Bundesamtes (Destatis) und der Kultusministerkonferenz (KMK).
-          Weitere Datenquellen aus dem internationalen Bereich sind Eurostat, die OECD und die IEA.
-          Im schulischen/außerschulischen Bereich zeigen wir außerdem Daten des IQB und der Stiftung Kinder forschen.
-          Wir bauen dabei unsere Datengrundlage stetig weiter aus."
+          Weitere Datenquellen aus dem internationalen Bereich sind Eurostat, die OECD und die IEA.", br(),
+          "Im außerschulischen Bereich zeigen wir außerdem Daten von MINTvernetzt und der Stiftung Kinder forschen.
+          Für die themenseite 'MINT-Fachkräfte' hat MINTvernetzt durch das IW Köln basierend auf amtlichen Statistiken
+          Zukunftsszenarien für die MINT-Fachkräfteentwicklung berechnen lassen.", br(),
+          "Wir bauen dabei unsere Datengrundlage stetig weiter aus."
         ))),
 
 
@@ -129,20 +131,12 @@ mod_quellen_ui <- function(id){
         title = "Zitationshinweis",
         p(style = "text-align: justify; font-size = 16px",
           "Inhalte des MINT-DataLab können mit folgender Quellenangabe weitergenutzt werden:
-          \"MINT-DataLab von MINTvernetzt. https://www.mint-vernetzt.de/mint-datalab/\" (mit Abrufdatum). Unter den interaktiven Grafiken sind jeweils eigene Quellenangaben
-          mit Verweis auf die Datenquelle angegeben."
-        ))),
-
-
-    fluidRow(
-      shinydashboard::box(
-        width = 9,
-        title = "Zitationshinweis",
-        p("Inhalte des MINT-DataLab können mit folgender Quellenangabe zitiert werden:
-          \"MINT-DataLab von MINTvernetzt. https://www.mint-vernetzt.de/mint-datalab/\". Unter den interaktiven Grafiken sind jeweils eigene Quellenangaben
+          \"MINT-DataLab von MINTvernetzt. https://www.mint-vernetzt.de/mint-datalab/\" (mit Abrufdatum).
+          Unter den interaktiven Grafiken sind jeweils eigene Quellenangaben
           mit Verweis auf die Datenquelle angegeben.")
-      )
-    ),
+        )
+      ),
+
     fluidRow(
       shinydashboard::box(
         width = 9,
