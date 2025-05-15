@@ -85,7 +85,7 @@ daten_download <- function(r){
       dplyr::left_join(group_col_dt, by = "epa_kat") %>%
       dplyr::arrange(epa_group_order)
 
-    }else if(regio != "Deutschland"){
+    }else if(regio != "Deutschland"){############################################################################
 
       regio <- dplyr::case_when(
         regio == "Brandenburg" | regio == "Berlin" ~ "Brandenburg / Berlin",
@@ -105,6 +105,7 @@ daten_download <- function(r){
                                ", .con = con)
 
       plot_data_raw <- DBI::dbGetQuery(con, df_query)
+
 
       # enthält den Text für den plot
       epa_kat_levels <- c("Engpassberuf",
@@ -620,6 +621,7 @@ argument_fachkraft <- function(r){
     # Entfernen aller Zeilen, bei denen group_col NA ist
     expanded_dt <- expanded_dt[!is.na(expanded_dt$group_col), ]
 
+
     plot_left <- highcharter::hchart(
       object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[1]),
       type = "heatmap",
@@ -652,10 +654,10 @@ argument_fachkraft <- function(r){
                      fontFamily = "Calibri Regular",
                      fontSize = "20px")
       ) %>%
-      highcharter::hc_chart(
+       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular")
       ) %>%
-      highcharter::hc_size(300, 375) %>%
+      highcharter::hc_size(380, 480) %>%
       highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
@@ -738,6 +740,18 @@ argument_fachkraft <- function(r){
   #für Bundesländer
   else if(regio != "Deutschland"){
 
+    if(regio %in% c("Hamburg", "Schleswig-Holstein")){
+      text = "Diese Daten sind zusammengefasst Hamburg / Schleswig-Holstein"
+    } else if(regio %in% c("Niedersachsen", "Bremen")){
+      text = "Diese Daten sind zusammengefasst Niedersachsen / Bremen" }
+    else if(regio %in% c("Berlin", "Brandenburg")){
+      text = "Diese Daten sind zusammengefasst Berlin / Brandenburg"
+    } else if(regio %in% c("Rheinland-Pfalz", "Saarland")){
+      text = "Diese Daten sind zusammengefasst Rheinland-Pfalz / Saarland"
+    } else {
+      text = " "
+    }
+
    regio <- dplyr::case_when(
      regio == "Brandenburg" | regio == "Berlin" ~ "Brandenburg / Berlin",
      regio == "Niedersachsen" | regio == "Bremen" ~ "Niedersachsen / Bremen",
@@ -745,6 +759,65 @@ argument_fachkraft <- function(r){
      regio == "Schleswig-Holstein" | regio == "Hamburg" ~ "Schleswig-Holstein / Hamburg",
      T ~ regio
    )
+
+   # df_query <- glue::glue_sql("
+   # SELECT *
+   # FROM arbeitsmarkt_epa
+   # WHERE jahr = {timerange}
+   # AND indikator = 'Engpassindikator'
+   # AND anforderung IN ({bf*})
+   # AND region = {regio}
+   #                             ", .con = con)
+   #
+   #  plot_data_raw <- DBI::dbGetQuery(con, df_query)
+   #
+   #
+   #  # enthält den Text für den plot
+   #  epa_kat_levels <- c("Engpassberuf",
+   #                      "Anzeichen eines Engpassberufs",
+   #                      "Kein Engpassberuf")
+   #  group_col_dt <- data.frame(
+   #    epa_kat = factor(x = epa_kat_levels,
+   #                     levels = epa_kat_levels),
+   #    epa_group_order = c(1:3),
+   #    group_text = c("Text A",
+   #                   "Text B",
+   #                   "Text C"),
+   #    group_col = c("#EE7775", "#FBBF24", "#35BD97")
+   #  )
+   #
+   #  # Aggregate rausfiltern
+   #  plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$berufsgruppe %in%
+   #                                             c("Gesamt",
+   #                                               "MINT gesamt",
+   #                                               "Informatik",
+   #                                               "Landtechnik",
+   #                                               "Produktionstechnik",
+   #                                               "Bau- und Gebäudetechnik",
+   #                                               "Mathematik, Naturwissenschaften",
+   #                                               "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+   #                                               "Gesundheitstechnik",
+   #                                               "Nicht MINT"
+   #                                             ))
+   #  )
+   #
+   #  if ("MINT gesamt" %in% fach) {
+   #    plot_data_raw <- plot_data_raw %>%
+   #      dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
+   #      dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
+   #      rbind(plot_data_raw)
+   #  }
+   #
+   #  if ("Technik gesamt" %in% fach) {
+   #    plot_data_raw <- plot_data_raw %>%
+   #      dplyr::filter(mint_zuordnung %in% c("Landtechnik",
+   #                                          "Produktionstechnik",
+   #                                          "Bau- und Gebäudetechnik",
+   #                                          "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+   #                                          "Gesundheitstechnik")) %>%
+   #      dplyr::mutate(mint_zuordnung = "Technik gesamt") %>%
+   #      rbind(plot_data_raw)
+   #  }
 
    df_query <- glue::glue_sql("
    SELECT *
@@ -754,44 +827,55 @@ argument_fachkraft <- function(r){
    AND anforderung IN ({bf*})
    AND region = {regio}
                                ", .con = con)
+   plot_data_raw <- DBI::dbGetQuery(con, df_query)
 
-    plot_data_raw <- DBI::dbGetQuery(con, df_query)
+   # Aggregate rausfiltern
+   plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
+                                              c("Gesamt",
+                                                "MINT gesamt",
+                                                "Informatik",
+                                                "Landtechnik",
+                                                "Produktionstechnik",
+                                                "Bau- und Gebäudetechnik",
+                                                "Mathematik, Naturwissenschaften",
+                                                "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                                                "Gesundheitstechnik",
+                                                "Nicht MINT"
+                                              ))
+   )
 
-    # enthält den Text für den plot
-    epa_kat_levels <- c("Engpassberuf",
-                        "Anzeichen eines Engpassberufs",
-                        "Kein Engpassberuf")
-    group_col_dt <- data.frame(
-      epa_kat = factor(x = epa_kat_levels,
-                       levels = epa_kat_levels),
-      epa_group_order = c(1:3),
-      group_text = c("Text A",
-                     "Text B",
-                     "Text C"),
-      group_col = c("#EE7775", "#FBBF24", "#35BD97")
-    )
+   if ("MINT gesamt" %in% fach) {
+     plot_data_raw <- plot_data_raw %>%
+       dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
+       dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
+       rbind(plot_data_raw)
+   }
 
-    # Aggregate rausfiltern
-    plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$berufsgruppe %in%
-                                               c("Gesamt",
-                                                 "MINT gesamt",
-                                                 "Informatik",
-                                                 "Landtechnik",
-                                                 "Produktionstechnik",
-                                                 "Bau- und Gebäudetechnik",
-                                                 "Mathematik, Naturwissenschaften",
-                                                 "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
-                                                 "Gesundheitstechnik",
-                                                 "Nicht MINT"
-                                               ))
-    )
+   if ("Technik gesamt" %in% fach) {
+     plot_data_raw <- plot_data_raw %>%
+       dplyr::filter(mint_zuordnung %in% c("Landtechnik",
+                                           "Produktionstechnik",
+                                           "Bau- und Gebäudetechnik",
+                                           "Verkehrs-, Sicherheits- und Veranstaltungstechnik",
+                                           "Gesundheitstechnik")) %>%
+       dplyr::mutate(mint_zuordnung = "Technik gesamt") %>%
+       rbind(plot_data_raw)
+   }
 
-    if ("MINT gesamt" %in% fach) {
-      plot_data_raw <- plot_data_raw %>%
-        dplyr::filter(!mint_zuordnung %in% c("Nicht MINT", "Gesamt")) %>%
-        dplyr::mutate(mint_zuordnung = "MINT gesamt") %>%
-        rbind(plot_data_raw)
-    }
+   # enthält den Text für den plot
+   epa_kat_levels <- c("Engpassberuf",
+                       "Anzeichen eines Engpassberufs",
+                       "Kein Engpassberuf")
+   group_col_dt <- data.frame(
+     epa_kat = factor(x = epa_kat_levels,
+                      levels = epa_kat_levels),
+     epa_group_order = c(1:3),
+     group_text = c("Text A",
+                    "Text B",
+                    "Text C"),
+     group_col = c("#EE7775", "#FBBF24", "#35BD97")
+   )
+
 
     plot_data <- plot_data_raw %>%
       dplyr::filter(mint_zuordnung %in% fach &
@@ -866,6 +950,15 @@ argument_fachkraft <- function(r){
                      fontFamily = "Calibri Regular",
                      fontSize = "20px")
       ) %>%
+      highcharter::hc_subtitle(text = text,
+                               margin = 5,
+                               align = "center",
+                               style = list(color = "grey",
+                                            useHTML = TRUE,
+                                            fontFamily = "Calibri Regular",
+                                            fontSize = "14px")
+
+      ) %>%
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular")
       ) %>%
@@ -925,6 +1018,15 @@ argument_fachkraft <- function(r){
                        useHTML = TRUE,
                        fontFamily = "Calibri Regular",
                        fontSize = "20px")
+        ) %>%
+        highcharter::hc_subtitle(text = text,
+                                 margin = 5,
+                                 align = "center",
+                                 style = list(color = "grey",
+                                              useHTML = TRUE,
+                                              fontFamily = "Calibri Regular",
+                                              fontSize = "14px")
+
         ) %>%
         highcharter::hc_chart(
           style = list(fontFamily = "Calibri Regular")
@@ -1069,7 +1171,6 @@ argument_nachwuchs <- function(r){
 
   df_auszubildende <- DBI::dbGetQuery(con, query_df)
 
-
   df_azubi_clean <- df_auszubildende %>%
     rename(region = bundesland, fach = fachbereich, indikator = kategorie) %>%
     mutate(
@@ -1077,8 +1178,17 @@ argument_nachwuchs <- function(r){
         fach == "Technik (gesamt)" ~ "Technik (inkl. Ingenieurwesen)",
         TRUE ~ fach
       ),
-      indikator = "Nachwuchs"
-    )
+      indikator = "Nachwuchs",
+      wert = as.numeric(wert)
+    ) %>%
+    mutate(across(c(region, fach, indikator), as.character)) %>%
+    filter(!is.na(wert))
+
+  df_azubi_clean %>%
+    group_by(region, fach, jahr, indikator) %>%
+    summarise(wert = sum(wert, na.rm = TRUE), .groups = "drop")
+
+
 
   df_studi_clean <- df_studierende %>%
     rename(fach = fach) %>%
@@ -1089,6 +1199,12 @@ argument_nachwuchs <- function(r){
       ),
       indikator = "Nachwuchs"
     )
+
+  df_studi_clean <- df_studi_clean %>%
+    dplyr::group_by(region, fach, jahr, indikator) %>%
+    dplyr::summarise(wert = sum(wert), .groups = "drop") %>%
+    dplyr::ungroup()
+
 
   df_nachwuchs <- bind_rows(df_azubi_clean, df_studi_clean)
 
@@ -1142,6 +1258,7 @@ argument_nachwuchs <- function(r){
   hcoptslang <- getOption("highcharter.lang")
   hcoptslang$thousandsSep <- "."
   options(highcharter.lang = hcoptslang)
+
 
   out <- highcharter::hchart(df_nachwuchs_agg, 'line', highcharter::hcaes(x = jahr, y = wert, group = fach)) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%

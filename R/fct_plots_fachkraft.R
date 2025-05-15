@@ -921,7 +921,6 @@ plot_fachkraft_epa_bulas <- function(r) {
                                ", .con = con)
    plot_data_raw <- DBI::dbGetQuery(con, df_query)
 
-
    # Aggregate rausfiltern
    plot_data_raw <- subset(plot_data_raw, !(plot_data_raw$beruf %in%
                                               c("Gesamt",
