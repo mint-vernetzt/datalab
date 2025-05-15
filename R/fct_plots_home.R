@@ -777,44 +777,76 @@ home_comparison_line <- function(r) {
 
   if(abs_selector=="In Prozent"){
 
-
+####deutschlabnd statt ({regio*})
     query_df_alle <- glue::glue_sql("
   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
   FROM zentral
   WHERE jahr IN ({t*})
     AND region IN ({regio*})
-    AND geschlecht = 'Gesamt'
+    AND NOT geschlecht = 'Gesamt'
     AND fachbereich = 'MINT'
     AND indikator IN ({indikator_choice*})
 ", .con = con)
 
     df_alle <- DBI::dbGetQuery(con, query_df_alle)
 
-    if("Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
 
-      query_df_alle_bw <- glue::glue_sql("
-  SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
-  FROM zentral
-  WHERE jahr IN ({t*})
-    AND region = 'Baden-Württemberg'
-    AND geschlecht = 'Gesamt'
-    AND fachbereich = 'MINT'
-    AND bereich = 'Schule'
-", .con = con)
+    # df_alle <- df_alle %>%
+    #   group_by(bereich, indikator, fachbereich, jahr, region)%>%
+    #   summarise(
+    #     Wert = sum(Wert, na.rm = TRUE),
+    #     .groups = "drop"
+    #   ) %>%
+    #   mutate(Geschlecht = "Gesamt") %>%
+    #   select(bereich, indikator, fachbereich, geschlecht, jahr, wert, region)
 
-      df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
 
-      df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
-        dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "jahr", "geschlecht")) %>%
-        dplyr::mutate(wert.x = wert.x - wert.y) %>%
-        dplyr::select(-wert.y) %>%
-        dplyr::rename(wert = wert.x)
 
-      df_alle <- df_alle %>%
-        dplyr::filter(bereich != "Schule") %>%
-        rbind(df_alle_schule)
+    df_alle <- df_alle %>%
+      group_by(bereich, indikator, fachbereich, jahr) %>%
+      summarise(
+        wert = sum(wert, na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      mutate(geschlecht = "Gesamt") %>%
+      select(bereich, indikator, fachbereich, geschlecht, jahr, wert)
 
-    }
+
+
+
+
+#     if("Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
+#
+#       query_df_alle_bw <- glue::glue_sql("
+#   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
+#   FROM zentral
+#   WHERE jahr IN ({t*})
+#     AND region = 'Deutschland'
+#     AND geschlecht = 'Gesamt'
+#     AND fachbereich = 'MINT'
+#     AND bereich = 'Schule'
+# ", .con = con)
+#
+#       df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
+#
+#
+#       # df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
+#       #   dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "jahr", "geschlecht")) %>%
+#       #   dplyr::mutate(wert.x = wert.x - wert.y) %>%
+#       #   dplyr::select(-wert.y) %>%
+#       #   dplyr::rename(wert = wert.x)
+#
+#
+#       # df_alle <- df_alle_bw %>%
+#       #   dplyr::filter(bereich != "Schule") %>%
+#       #   rbind(df_alle_schule)
+#
+#       df_alle <- df_alle_bw
+#
+#       browser()
+#
+#     }
+
 
     df <- df %>%
       dplyr::left_join(df_alle, by = c("indikator", "jahr", "fachbereich", "bereich")) %>%
@@ -822,6 +854,8 @@ home_comparison_line <- function(r) {
       dplyr::rename(geschlecht = geschlecht.x,
                     wert = wert.x) %>%
       dplyr::select(-c(wert.y, geschlecht.y))
+
+
 
 
     df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]

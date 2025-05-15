@@ -234,7 +234,7 @@ international_ui_faecher <- function(region = "EU") {
     #   unique() %>%
     #   sort()
     df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT land
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
   AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern', 'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
@@ -243,10 +243,10 @@ international_ui_faecher <- function(region = "EU") {
 
     selection <- DBI::dbGetQuery(con, df_query)
 
-    selection <- selection %>%
-      dplyr::pull(fachbereich) %>%
-      unique() %>%
-      sort()
+    # selection <- selection %>%
+    #   dplyr::pull(fachbereich) %>%
+    #   unique() %>%
+    #   sort()
 
       }
 
@@ -265,7 +265,7 @@ international_ui_years <- function(region = "EU") {
   if (region == "OECD") {
 
     df_query <- glue::glue_sql("
-  SELECT *
+  SELECT jahr
   FROM studierende_anzahl_oecd
   WHERE geschlecht = 'Gesamt'
 ", .con = con)
@@ -413,15 +413,13 @@ international_ui_country <- function(type = "arbeit", n = NA) {
   selection <- NULL
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT jahr
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
 ", .con = con)
 
   for_year <- DBI::dbGetQuery(con, df_query)
 
-  for_year <- for_year %>%
-    dplyr::collect()
   year <- max(for_year$jahr)
 
   # for studium international
@@ -437,9 +435,6 @@ international_ui_country <- function(type = "arbeit", n = NA) {
 ", .con = con)
 
     tmp_df <- DBI::dbGetQuery(con, df_query)
-
-    tmp_df <- tmp_df %>%
-      dplyr::collect()
 
 
 
@@ -468,15 +463,14 @@ int_schule_ui_country <- function(type = "TIMSS", n = NULL) {
   selection <- NULL
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT land, jahr
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
 ", .con = con)
 
   for_year <- DBI::dbGetQuery(con, df_query)
 
-  for_year <- for_year %>%
-    dplyr::collect()
+
   year <- max(for_year$jahr)
 
   # for studium international
@@ -493,10 +487,6 @@ int_schule_ui_country <- function(type = "TIMSS", n = NULL) {
 ", .con = con)
 
     tmp_df <- DBI::dbGetQuery(con, df_query)
-
-    tmp_df <- tmp_df %>%
-      dplyr::collect()
-
 
     if (!is.na(n)) {
       tmp_df <- tmp_df %>%
@@ -517,30 +507,37 @@ int_schule_ui_country <- function(type = "TIMSS", n = NULL) {
 
   if(type=="TIMSS" && is.null(n)){
 
-
     df_query <- glue::glue_sql("
-  SELECT *
-  FROM schule_timss
+    SELECT DISTINCT land FROM schule_timss
+WHERE ordnung = 'Ressourcen' AND wert IS NOT NULL
 ", .con = con)
 
     selection <- DBI::dbGetQuery(con, df_query)
 
 
-
-    selection <- selection %>%
-      group_by(land) %>%
-      filter(
-        # Behalte nur Länder,
-        # die mindestens eine Zeile mit ordnung == "Ressourcen" und NICHT NA in wert haben
-        any(ordnung == "Ressourcen" & !is.na(wert))
-      ) %>%
-      ungroup() %>%
-    # browser()
-    # # %>%
-      dplyr::filter(!is.na(wert)) %>%
-      dplyr::distinct(land) %>%  #
-      dplyr::arrange(land) %>%   #
-      dplyr::pull(land)
+#     df_query <- glue::glue_sql("
+#   SELECT *
+#   FROM schule_timss
+# ", .con = con)
+#
+#     selection <- DBI::dbGetQuery(con, df_query)
+#
+#
+#
+#     selection <- selection %>%
+#       group_by(land) %>%
+#       filter(
+#         # Behalte nur Länder,
+#         # die mindestens eine Zeile mit ordnung == "Ressourcen" und NICHT NA in wert haben
+#         any(ordnung == "Ressourcen" & !is.na(wert))
+#       ) %>%
+#       ungroup() %>%
+#     # browser()
+#     # # %>%
+#       dplyr::filter(!is.na(wert)) %>%
+#       dplyr::distinct(land) %>%  #
+#       dplyr::arrange(land) %>%   #
+#       dplyr::pull(land)
 
   }
 
@@ -553,15 +550,14 @@ int_pisa_ui_country <- function(type = "TIMSS", n = NULL) {
 
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT land, jahr
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
 ", .con = con)
 
   for_year <- DBI::dbGetQuery(con, df_query)
 
-  for_year <- for_year %>%
-    dplyr::collect()
+
   year <- max(for_year$jahr)
 
   # for studium international
@@ -606,9 +602,6 @@ int_pisa_ui_country <- function(type = "TIMSS", n = NULL) {
                                  "SELECT DISTINCT land
                                  FROM schule_pisa")$land
 
-    print(selection)
-
-
   }
 
   if(type == "PISA" && !is.null(n)){
@@ -638,7 +631,7 @@ fachkraft_ui_years <- function(reg = "DE") {
 if(reg == "DE"){
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT jahr
   FROM arbeitsmarkt_epa_detail
   WHERE indikator = 'Engpassindikator'
 ", .con = con)
@@ -733,7 +726,7 @@ fachkraft_ui_berufe <- function(level = "Fachkräfte", zeitpunkt = 2023) {
   selection <- NULL
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT beruf, wert
   FROM arbeitsmarkt_epa_detail
   WHERE indikator = 'Engpassindikator'
   AND anforderung = {level}
