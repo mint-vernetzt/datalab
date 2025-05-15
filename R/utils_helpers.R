@@ -234,7 +234,7 @@ international_ui_faecher <- function(region = "EU") {
     #   unique() %>%
     #   sort()
     df_query <- glue::glue_sql("
-  SELECT DISTINCT land
+  SELECT DISTINCT land, fachbereich,
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
   AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern', 'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
