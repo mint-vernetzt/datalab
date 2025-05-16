@@ -48,33 +48,65 @@ mod_argumentation_ui <- function(id){
                    class = "btn btn-default",
                    style = "margin-bottom: 20px;"),
 
+          ## So geht's ----
 
             h1("So geht´s"),
-            tags$span(icon("1", style = "margin: 10px; font-size: 16px;"),
-                      "Wählen Sie Ihre gewünschte Region aus."),
-            hr(style="margin-top: 10px;margin-bottom: 10px;"),
-            tags$span(icon("2", style = "margin: 10px; font-size: 16px;"),
-                      "Laden Sie die Daten als Grundlage Ihrer Argumentation herunter."),
-            hr(style="margin-top: 10px;margin-bottom: 10px;"),
-            tags$span(icon("3", style = "margin: 10px; font-size: 16px;"),
-            "Nutzen Sie den DataLab-GPT, der Ihnen basierend auf den Daten eine
-              Argumentation passend zu Ihrer Region erstellt."),
-            hr(style="margin-top: 10px;margin-bottom: 10px;"),
-            tags$span(icon("4", style = "margin: 10px; font-size: 16px;"),
-                      "Laden Sie hier die zugehörigen Grafiken herunter und
-                      ergänzen Sie in Ihrem Bericht."),
 
-            br(),
-            br(),
-            hr(style = "border-top: 2px solid #154194;margin-top: 5px;"),
-            br(),
-
-                )
-          )
+        ),
+        column(
+          width = 3,
+          tags$span(icon("1", style = "margin: 10px; font-size: 16px;"),
+                    style = "font-weight: 600;",
+                    "Gewünschte Region wählen."),
+          img(src='www/Argu_1.png',
+              class = "img-responsive",
+              height = "300px",
+              alt = "Bild Schritt 1",
+              style="display: block; margin-left: auto; margin-right: auto;
+                margin-top: 10px;")
+        ),
+        column(
+          width = 3,
+          tags$span(icon("2", style = "margin: 10px; font-size: 16px;"),
+                    style = "font-weight: 600;",
+                    "Datengrundlage herunterladen."),
+          img(src='www/Argu_2.png',
+              class = "img-responsive",
+              height = "300px",
+              alt = "Bild Schritt 2",
+              style="display: block; margin-left: auto; margin-right: auto;
+                margin-top: 10px;")
+        ),
+        column(
+          width = 3,
+          tags$span(icon("3", style = "margin: 10px; font-size: 16px;"),
+                    style = "font-weight: 600;",
+                    "KI-gestützt Argumentation erstellen."),
+          img(src='www/Argu_3.png',
+              class = "img-responsive",
+              height = "300px",
+              alt = "Bild Schritt 3",
+              style="display: block; margin-left: auto; margin-right: auto;
+                margin-top: 10px;")
+        ),
+        column(
+          width = 3,
+          tags$span(icon("4", style = "margin: 10px; font-size: 16px;"),
+                    style = "font-weight: 600;",
+                    "Grafiken ergänzen."),
+          img(src='www/Argu_4.png',
+              class = "img-responsive",
+              height = "300px",
+              alt = "Bild Schritt 4",
+              style="display: block; margin-left: auto; margin-right: auto;
+                margin-top: 10px;")
+        )
+      )
     ),
 
     column(
       width = 10,
+      style = "margin-top: 40px;",
 
       ## Region-Filter ----
 
