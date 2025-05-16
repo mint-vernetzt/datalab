@@ -807,7 +807,7 @@ plot_fachkraft_epa_item <- function(r) {
     highcharter::hc_chart(
       style = list(fontFamily = "Calibri Regular")
     ) %>%
-    highcharter::hc_size(380, 480) %>%
+    highcharter::hc_size(300, 375) %>%
     highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
@@ -871,7 +871,7 @@ plot_fachkraft_epa_item <- function(r) {
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular")
       )%>%
-      highcharter::hc_size(380, 480) %>%
+      highcharter::hc_size(300, 375) %>%
       highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,

@@ -1808,7 +1808,7 @@ plot_international_schule_migration <- function(r) {
             xanchor = "center",
             yanchor = "top"
           ),
-          ,
+
           annotations = list(
             list(
               text = "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt",

@@ -42,7 +42,7 @@ mod_international_schule_migration_ui <- function(id){
                      shinyWidgets::sliderTextInput(
                        inputId = ns("line_y_timss_int_schule"),
                        label = NULL,
-                       choices = international_ui_years(region = "TIMSS"),
+                       choices = as.character(international_ui_years(region = "TIMSS")),
                        selected = "2023"
                      ),
 
@@ -101,20 +101,56 @@ mod_international_schule_migration_ui <- function(id){
                                    "nach Bildungskapital"),
                        selected = c("nach Bildungskapital"),
                        multiple = FALSE
-                     ),
+                     )),
+#
+#                      p("Länder:"),
+#                      shinyWidgets::pickerInput(
+#                        inputId = ns("regio_int_schule_pisa"),
+#                        label = NULL,
+#                        choices = int_pisa_ui_country("PISA"),
+#                        multiple = TRUE,
+#                        options =  list(
+#                          "max-options" = 10,
+#                          "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"),
+#                        selected = c("OECD Durchschnitt", "Deutschland","Schweden", "Italien", "Türkei","Vereinigte Staaten" )
+#                      )
 
-                     p("Länder:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("regio_int_schule_pisa"),
-                       label = NULL,
-                       choices = int_pisa_ui_country("PISA"),
-                       multiple = TRUE,
-                       options =  list(
-                         "max-options" = 10,
-                         "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"),
-                       selected = c("OECD Durchschnitt", "Deutschland","Schweden", "Italien", "Türkei","Vereinigte Staaten" )
-                     )
-                     ),
+
+# Länder: Jahr == 2022
+conditionalPanel(
+  condition = "input.line_l_int_schule == 'PISA' && input.line_y_pisa_int_schule == '2022'",
+  ns = ns,
+  p("Länder:"),
+  shinyWidgets::pickerInput(
+    inputId = ns("regio_int_schule_pisa"),
+    label = NULL,
+    choices = int_pisa_ui_country("PISA", 2023),
+    multiple = TRUE,
+    options = list(
+      "max-options" = 10,
+      "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"
+    ),
+    selected = c("OECD Durchschnitt", "Deutschland", "Schweden", "Italien", "Türkei", "Vereinigte Staaten")
+  )
+),
+
+# Länder: Jahr ≠ 2022
+conditionalPanel(
+  condition = "input.line_l_int_schule == 'PISA' && input.line_y_pisa_int_schule != '2022'",
+  ns = ns,
+  p("Länder:"),
+  shinyWidgets::pickerInput(
+    inputId = ns("regio_int_schule_pisa"),
+    label = NULL,
+    choices = int_pisa_ui_country("PISA"),
+    multiple = TRUE,
+    options = list(
+      "max-options" = 10,
+      "max-options-text" = "<span style='color: red;'>Maximal 10 Länder auswählen</span>"
+    ),
+    selected = c("OECD Durchschnitt", "Deutschland", "Schweden", "Italien", "Türkei", "Vereinigte Staaten")
+  )
+),
 
     ###
 

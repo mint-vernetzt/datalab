@@ -2034,12 +2034,17 @@ kurse_verlauf_gender <- function(r){
                                ", .con = con)#
   df <- DBI::dbGetQuery(con, df_query)
 
+
   df <-  df %>%
     dplyr::group_by(fachbereich, indikator, jahr) %>%
     dplyr::mutate(props = wert[anzeige_geschlecht == "Frauen"] +
                   wert[anzeige_geschlecht == "Männer"])
 
+
+
   df <- df %>% dplyr::filter(anzeige_geschlecht == "Frauen")
+
+
 
   # calcualte proportions
   df <- df %>% dplyr::group_by(indikator, fachbereich, anzeige_geschlecht, jahr) %>%
@@ -2073,6 +2078,8 @@ kurse_verlauf_gender <- function(r){
 
 
   } else if (abs_rel =="In Prozent") {
+
+
 
     # order years for plot
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
