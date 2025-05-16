@@ -31,19 +31,22 @@ mod_argumentation_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 10,
-            h1("Argumentationshilfe - ein Schnellstart in die Nutzung von MINT-Daten"),
+            h1("Schnellstart: Mit MINT-Daten überzeugend argumentieren"),
             p(style = "text-align: justify; font-size = 20px",
               "Ob für Förderanträge, Kommunikation oder strategische Entscheidungen -
               Daten helfen, überzeugend zu argumentieren.
               Sie wollen Ihre Arbeit mit starken Argumenten unterstreichen, zum Beispiel,
-              um Finanzierungsgesuche zu unterstreichen, im Diskurs mit Politiker:innen MINT-Förderung
+              um in Finanzierungsgesuche zu überzeugen, im Diskurs mit Politiker:innen die Relevanz von MINT-Förderung
               zu bestärken oder das eigene Projekt wirksam ausrichten?"),
             p(style = "text-align: justify; font-size = 20px",
             "Hier finden Sie die Werkzeuge dafür, eine starke Argumentationskette
-            für die MINT-Bildungsförderung in Ihrer Region aufzubauen.",
-              br(),
-            br(),
-              ),
+            für die MINT-Bildungsförderung in Ihrer Region aufzubauen."),
+            p("Ein Beispiel, wie eine solche Argumentation aussehen könnte, basierend auf fünf Statistiken
+            aus dem MINT-DataLab, finden Sie hier:"),
+            tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf",
+                   target = "_blank", tags$span(icon("file", style = "margin-right: 5px;"), " NOCH AUSTAUCHEN Beispiel-Bericht für Hamburg"),
+                   class = "btn btn-default",
+                   style = "margin-bottom: 20px;"),
 
 
             h1("So geht´s"),
@@ -51,7 +54,7 @@ mod_argumentation_ui <- function(id){
                       "Wählen Sie Ihre gewünschte Region aus."),
             hr(style="margin-top: 10px;margin-bottom: 10px;"),
             tags$span(icon("2", style = "margin: 10px; font-size: 16px;"),
-                      "Laden Sie die Daten als Grundlager Ihrer Argumentation herunter."),
+                      "Laden Sie die Daten als Grundlage Ihrer Argumentation herunter."),
             hr(style="margin-top: 10px;margin-bottom: 10px;"),
             tags$span(icon("3", style = "margin: 10px; font-size: 16px;"),
             "Nutzen Sie den DataLab-GPT, der Ihnen basierend auf den Daten eine
@@ -111,11 +114,15 @@ mod_argumentation_ui <- function(id){
       ## Download-Button ----
 
       p(strong(style = "text-align: justify; font-size = 24px",
-               "2. Laden Sie hier die Daten der folgenden Grafiken herunter:")),
-      p("Als Format ist hier ein Text-Dokument gewählt, da Datenuploads von Excel-Datein
-      bei einer kostenfreien Nutzung von ChatGPT nur beschränkt möglich sind. Der für das
-      MINT-DataLab speziell konfigurierte MINT-DataLab-GPT nutz den Rahmen von OpenAI und deren
-      zugrundeliegende Chat-Programme. Hier können die Daten im Text-Format einfach hineinkopiert werden."),
+               "2. Laden Sie hier die Daten als Basis der Argumentationkette herunter:")),
+      p("Als ein Beispiel für eine datenbasierte Argumentationskette haben wir fünf Statistiken
+        aus dem MINT-DataLab ausgewählt. Die Grafiken werden weiter unten auf dieser Seite dargestellt.
+        Die Daten aller Grafiken können hier gesammelt heruntergeladen werden.", br(), br(),
+        "Das Format für den Download ist ein Text-Dokument, da im nächsten Schritt eine speziell
+        angepasste Version von ChatGPT bei der Erstellung der Argumentationskette assistiert.
+        Dieser MINT-DataLab-GPT kann nur im Rahmen des Angebots von ChatGPT bzw. OpenAI genutzt werden.
+        Bei einer kostenfreien Nutzung von ChatGPT sind Daten-Uploads allerdings nur eingeschränkt möglich.
+        Das löst der Daten-Download hier: Die Daten im Text-Format können einfach in den Chat hineinkopiert werden."),
       div(
         style = "margin-bottom: 30px;",
         downloadButton(ns("download_txt"), " Gesammelte Daten herunterladen"),
@@ -124,31 +131,33 @@ mod_argumentation_ui <- function(id){
       ## Absprung GPT + Beispielbericht ----
 
       p(strong(style = "text-align: justify; font-size = 24px",
-               "3. MINT-DataLab-GPT zur automatischen Bericht-Erstellung:")),
+               "3. Laden sie die Daten im MINT-DataLab-GPT hoch und lassen sich KI-gestützt eine Argumentation erstellen:")),
       p("Dieser speziell für das MINT-DataLab konfigurierte MINT-DataLab-GPT
-             führt Sie durch die Erstellung eines kurzen Berichts basierend auf den hier folgenden
-             Statistiken. Es wird eine kurze grundlegende Argumentationskette zusammen mit Ihnen erstellt."  ),
+             führt Sie durch die Erstellung einer Arugmentationskette basierend auf Statistiken des MINT-DataLab und
+             Informationen zu Ihrem Projekt. Bei Bedarf kann die Argumentation auch durch eine Online-Recherche ergänzt werden.", br(), br(),
+        "Der MINT-DataLab-GPT führt einen Dialog mit Ihnen und wird so einen kurze Bericht mit einer möglichen Argumentation mit Ihnen erstellen.", br(),
+        "Öffnen Sie dafür mit folgendem Link den Chat mit dem MINT-DataLab-GPT und folgen Sie den Anweisungen dort."),
 
       tags$a(href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
              tags$span(icon("comments", style = "margin-right: 5px;"),"Zum MINT-DataLab-GPT"), target="_blank",
              class = "btn btn-default",
              style = "margin-bottom: 30px; margin-right: 10px;"),
 
-      tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf",
-             target = "_blank", tags$span(icon("file", style = "margin-right: 5px;"), " Beispiel-Bericht für Hamburg"),
-             class = "btn btn-default",
-             style = "margin-bottom: 30px;"),
 
-
+      ## Grafiken ----
       p(strong(style = "text-align: justify; font-size = 24px;",
                "4. Statistiken und Grafiken als Basis der Argumentationskette:")),
-      p("Hier wurde eine Auswahl an Statistiken getroffen, auf welchen sich ganz allgemein
-        für eine Argumentationskette für mehr MINT-Förderung eignen."),
+      p("Hier finden Sie eine Auswahl an Statistiken, welchen sich
+        für eine Argumentationskette für allgemein mehr MINT-Förderung eignen.
+        Die gesammelten Daten der Statistiken können unter Schritt 2 heruntergeladen werden."),
        p( "Alle Statistiken gibt es in ähnlicher Form, mit mehr Anpassungsmöglichkeiten, auf den weiteren
          Unterseiten des MINT-DataLab. Hinweise dazu, welche Darstellungen aus dem MINT-DataLab über diese hinaus für eine starke Argumentationskette
         genutzt werden können, finden sich in den blauen Boxen rechts der Grafiken."),
       p("Die grünen Boxen unter den Grafiken geben beispielhaft Interpretationen, die für eine Argumentation im Sinne von
-        MINT-Bildungsförderung hinter den Statistiken stecken.",
+        MINT-Bildungsförderung hinter den Statistiken stecken."),
+      p("Wer noch tiefer eintauchen will, kann eine solche Argumentation
+            auch auf allen weiteren Statistiken aus dem MINT-DataLab aufbauen. Nutzen Sie dafür denselben MINT-DataLab-GPT wie
+            unter Schritt 3 verlinkt und die Daten aus den Daten-Downloads der jeweiligen Grafiken.",
         style = "margin-bottom: 30px;")
 
     ),
@@ -157,14 +166,16 @@ mod_argumentation_ui <- function(id){
 
     fluidRow(
              shinydashboard::box(
-               title = "1. Warum Ihre Region MINT braucht",
+               title = "1. Welche Rolle spielt MINT in Ihrer Region",
                width = 12,
                column(
                  width = 9,
-                 p("Als Einstieg kann ein kurzer Überblick über die MINT-Strukturen
-                   der eigenen Region gegeben werden. Ergänzend dazu zeigt die
-                   Entwicklung der Beschäftigten, Studierenden und Auszubildenden
-                   in MINT, wie zentral der MINT-Sektor für eine Region ist und ob
+                 p("Als Einstieg in eine Argumentation kann ein kurzer Überblick über die MINT-Strukturen
+                   der eigenen Region geigenet sein. Hierfür können Sie selbst rechercherien oder den
+                   MINT-DataLab-GPT um eine Recherche bitten."),
+                 p("Ergänzend dazu kann auf die Entwicklung der Beschäftigten, Studierenden und Auszubildenden
+                   in MINT geschaut werden.
+                   Das kann ein Indikator dafür sein, wie zentral der MINT-Sektor für die Region ist und ob
                    die Relevanz eher steigt oder der MINT-Bereich eher hinter anderen
                    Bereichen zurück fällt.")
                ),
@@ -214,7 +225,7 @@ mod_argumentation_ui <- function(id){
                               border: 2px solid #00a87a;
                               color: #154194;
                               border-radius: 10px;",
-                       p(strong("Wenn die Anzahl steigt:")),
+                       p(strong("Wenn die Kurve steigt:")),
                        p("Die Relevanz von MINT für die Region wächst.
                      MINT-Kenntnisse müssen steigen, um steigenden Bedarfe an
                      MINT-Kompetenzen begegnen zu können.
@@ -231,7 +242,7 @@ mod_argumentation_ui <- function(id){
                               border: 2px solid #00a87a;
                               color: #154194;
                               border-radius: 10px;",
-                       p(strong("Wenn die Anzahl gleich bleibt:")),
+                       p(strong("Wenn die Kurve gleich bleibt:")),
                        p("Der MINT-Bereich ist konstant eine wichtige Säule der Region.
                      Gleichzeitig werden MINT-Kompetenzen aufgrund von Digitalisierung
                      und Technologisierung immer wichtiger. In MINT-Angebote zu
@@ -248,7 +259,7 @@ mod_argumentation_ui <- function(id){
                               border: 2px solid #00a87a;
                               color: #154194;
                               border-radius: 10px;",
-                       p(strong("Wenn die Anzahl sinkt:")),
+                       p(strong("Wenn die Kurve sinkt:")),
                        p("Der MINT-Bereich der Region wird kleiner, obwohl aufgrund
                     von Digitalisierung und Technologisierung MINT die Zukunft des
                     Wirtschaft- und Bildungsbereichs prägt. Stärker in MINT-Angebote
@@ -267,10 +278,12 @@ mod_argumentation_ui <- function(id){
         width = 12,
         column(
           width = 8,
-          p("Der Bedarf an MINT-Fachkräften ist bundesweit hoch.
-          Das unterstreicht, wie wichtig MINT-Förderung ist.
-          Die Engpassanalyse der Bundesagentur für Arbeit zeigt das Ausmaß des
-            akuten Fachkräfteengpasses:")
+          p("Der Bedarf an MINT-Fachkräften ist bundesweit hoch. Das zeigt z. B. die MINT-Fachkräftelücke
+          aus dem MINT-Report des IW Köln. Für 2023 wird diese Lücke deutschlandweit auf 209.000 fehlende MINT-Fachkräfte geschätzt.
+          Diese Zahl liegt für die einzelnen Bundesländer so nicht vor.", br(),
+
+          "Dafür kann die Engpassanalyse der Bundesagentur für Arbeit betrachtet werden. Sie zeigt das Ausmaß des
+            akuten Fachkräfteengpasses. Das unterstreicht, wie wichtig MINT-Förderung ist, damit der Fachkräftemangel reduziert werden kann.")
         ),
         column(
           width = 9,
@@ -357,10 +370,13 @@ mod_argumentation_ui <- function(id){
         width = 12,
         column(
           width = 8,
-          p("Schon heute fehlen in vielen Regionen im Besonderen MINT-Fachkräfte.
+          p("Die Grafik zuvor zeigt, schon heute fehlen in vielen Regionen besonders MINT-Fachkräfte.
             Der demografische Wandel wird die Situation weiter verschärfen,
             da ein großer Teil der MINT-Beschäftigten in den nächsten Jahren aus
-            der Berufstätigkeit ausscheiden wird.")
+            der Berufstätigkeit ausscheiden wird.", br(),
+            "Das zeigt folgende Grafik, wenn man die Zahl der MINT-Beschäftigten über 55 Jahren, welche
+            in den nächsten rund 10 Jahren in die Rente eintreten werden, mit der Anzahl an MINT-Beschäftigten
+            unter 25 Jahren, die in den Berufen nachfolgen, vergleicht.")
         ),
         column(
           width = 9,
@@ -427,7 +443,7 @@ mod_argumentation_ui <- function(id){
           p("Viele Faktoren werden zusammen kommen müssen, um die Fachkräftelage
             in MINT zu stabilisieren. Auch, weil der Bedarf an MINT steigt.
             Ein Schlüssel ist, mehr MINT-Nachwuchs zu gewinnen, doch in vielen
-            MINT-Bereichen steht es aktuell nicht gut um Nachwuchs.")
+            MINT-Bereichen steht es aktuell nicht gut um Nachwuchs, wie die folgende Grafik zeigt.")
         ),
         column(
           width = 9,
@@ -528,7 +544,7 @@ mod_argumentation_ui <- function(id){
           width = 8,
           p("Um dem Fachkräftemangel im MINT-Bereich wirksam zu begegnen,
             sind verschiedene Maßnahmen nötig. Besonders entscheidend ist dabei
-            langfristig betrachtet die Förderung des MINT-Nachwuchses, aber auch
+            die Förderung des MINT-Nachwuchses, aber auch
             die gezielte Unterstützung von Frauen.")
         ),
         column(
@@ -547,7 +563,7 @@ mod_argumentation_ui <- function(id){
                                content = paste0("Weitere Informationen zu den Berechnungen des IW Köln im Auftrag von MINTvernetzt lassen sich auf der Seite \"MINT-Fachkräfte\" nachlesen."),
                                placement = "top",
                                trigger = "hover"),
-            tags$a(paste0("Interpretationshilfe"), icon("info-circle"), id = "h_argument_5"),
+            tags$a(paste0("Methodenhinweis"), icon("info-circle"), id = "h_argument_5"),
             br(),
             shinyBS::bsPopover(id="i_argument_5", title = "",
                                content = paste0("Spielen alle Wirkhebel zusammen, können bis 2037 1,4 Mio. zusätzliche MINT-Fachkräfte gewonnen werden. Der stärkste Hebel, mit rund +670.000 MINT-Fachkräften ist die Förderung des MINT-Nachwuchses."),
