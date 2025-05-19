@@ -219,7 +219,13 @@ mod_argumentation_ui <- function(id){
                    in MINT geschaut werden.
                    Das kann ein Indikator dafür sein, wie zentral der MINT-Sektor für die Region ist und ob
                    die Relevanz eher steigt oder der MINT-Bereich eher hinter anderen
-                   Bereichen zurück fällt.")
+                   Bereichen zurück fällt."),
+                 shinyBS::bsPopover(id="anz_argument_1", title = "",
+                                    content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, verändern Sie bitte kurz die Fenstergröße, indem Sie die Menü-Übersicht links ein- und wieder ausklappen oder indem Sie die Seite kurz verkleinern und wieder maximieren. Dann stellen sich die Größenverhältnisse der Grafiken korrekt ein."),
+                                    placement = "top",
+                                    trigger = "hover"),
+                 tags$a(paste0("Ist die Grafik abgeschnitten dargestellt?"), icon("info-question"), id = "anz_argument_1"),
+                 br(),br(),
                ),
                  column(
                    width = 9,

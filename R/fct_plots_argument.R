@@ -912,7 +912,9 @@ argument_fachkraft <- function(r){
       T ~ fach[1]
     )
 
-    titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1," (", timerange, ")")
+    titel_1 <- ifelse(regio == "Saarland",
+                      paste0("Engpassrisiko in MINT-Berufen im ", regio," (", timerange, ")"),
+                      paste0("Engpassrisiko in MINT-Berufen in ", regio," (", timerange, ")"))
 
     # Entfernen aller Zeilen, bei denen group_col NA ist
     expanded_dt <- expanded_dt[!is.na(expanded_dt$group_col), ]
@@ -979,7 +981,9 @@ argument_fachkraft <- function(r){
         T ~ fach[2]
       )
 
-      titel_2 <- paste0("Engpassrisiko in ", fach_2," (", timerange, ")")
+      titel_2 <- ifelse(regio == "Saarland",
+            paste0("Engpassrisiko in Nicht-MINT-Berufen im ", regio," (", timerange, ")"),
+            paste0("Engpassrisiko in Nicht-MINT-Berufen in ", regio," (", timerange, ")"))
 
       used_colors <- group_col_dt %>%
         dplyr::filter(epa_kat %in% (expanded_dt %>%
@@ -1271,7 +1275,9 @@ argument_nachwuchs <- function(r){
     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-    highcharter::hc_title(text = "Zeitverlauf des Nachwuchses in der ausgewählten Region",
+    highcharter::hc_title(text = ifelse(regio == "Saarland",
+                                        paste0("Entwicklung der Nachwuchszahlen in den MINT Disziplinen im ", regio, " (", timerange, ")"),
+                                        paste0("Entwicklung der Nachwuchszahlen in den MINT Disziplinen in ", regio, " (", timerange, ")")),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -1362,7 +1368,7 @@ argument_wirkhebel <- function(r){
   hcoptslang$thousandsSep <- "."
   options(highcharter.lang = hcoptslang)
 
-  titel <- "Einfluss diese vier Wirkhebel auf die Entwicklung der MINT-Fachkräfte bis 2037 <br>"
+  titel <- "Einfluss der folgenden vier Wirkhebel auf die Entwicklung der MINT-Fachkräfte bis 2037 deutschlandweit <br>"
   tooltip <- paste0("Anzahl an MINT-Fachkräften, die bis 2037
                     gewonnen werden können: {point.diff_disp}")
   format <- "{value:, f}"
