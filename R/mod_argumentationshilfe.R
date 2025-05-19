@@ -35,11 +35,11 @@ mod_argumentation_ui <- function(id){
             p(style = "text-align: justify; font-size = 20px",
               "Ob für Förderanträge, Kommunikation oder strategische Entscheidungen -
               Daten helfen, überzeugend zu argumentieren.
-              Sie wollen Ihre Arbeit mit starken Argumenten unterstreichen, zum Beispiel,
-              um in Finanzierungsgesuche zu überzeugen, im Diskurs mit Politiker:innen die Relevanz von MINT-Förderung
-              zu bestärken oder das eigene Projekt wirksam ausrichten?"),
+              Sie wollen Ihre Arbeit mit Zahlen und Fakten unterstreichen, zum Beispiel,
+              um in Finanzierungsanträgen zu überzeugen, im Diskurs mit Politiker:innen die Relevanz von MINT-Förderung
+              zu bestärken oder das eigene Projekt wirksam auszurichten?"),
             p(style = "text-align: justify; font-size = 20px",
-            "Hier finden Sie die Werkzeuge dafür, eine starke Argumentationskette
+            "Hier finden Sie die Werkzeuge, um eine starke Argumentationskette
             für die MINT-Bildungsförderung in Ihrer Region aufzubauen."),
             p("Ein Beispiel, wie eine solche Argumentation aussehen könnte, basierend auf fünf Statistiken
             aus dem MINT-DataLab, finden Sie hier:"),
@@ -50,7 +50,7 @@ mod_argumentation_ui <- function(id){
 
           ## So geht's ----
 
-            h1("So geht´s"),
+            h1("So geht´s:"),
 
         ),
         column(
@@ -60,10 +60,11 @@ mod_argumentation_ui <- function(id){
                     "Gewünschte Region wählen."),
           img(src='www/Argu_1.png',
               class = "img-responsive",
-              height = "300px",
+              height = "150px",
               alt = "Bild Schritt 1",
-              style="display: block; margin-left: auto; margin-right: auto;
-                margin-top: 10px;")
+              style="display: block;
+                margin-top: 10px; height: 300px; border: 2px solid #EAECF0;
+                border-radius: 15px; text-align: left;")
         ),
         column(
           width = 3,
@@ -72,10 +73,11 @@ mod_argumentation_ui <- function(id){
                     "Datengrundlage herunterladen."),
           img(src='www/Argu_2.png',
               class = "img-responsive",
-              height = "300px",
+              height = "150px",
               alt = "Bild Schritt 2",
-              style="display: block; margin-left: auto; margin-right: auto;
-                margin-top: 10px;")
+              style="display: block;
+                margin-top: 10px; height: 300px; border: 2px solid #EAECF0;
+                border-radius: 15px;")
         ),
         column(
           width = 3,
@@ -84,10 +86,11 @@ mod_argumentation_ui <- function(id){
                     "KI-gestützt Argumentation erstellen."),
           img(src='www/Argu_3.png',
               class = "img-responsive",
-              height = "300px",
+              height = "150px",
               alt = "Bild Schritt 3",
-              style="display: block; margin-left: auto; margin-right: auto;
-                margin-top: 10px;")
+              style="display: block;
+                margin-top: 10px; height: 300px; border: 2px solid #EAECF0;
+                border-radius: 15px;")
         ),
         column(
           width = 3,
@@ -96,10 +99,11 @@ mod_argumentation_ui <- function(id){
                     "Grafiken ergänzen."),
           img(src='www/Argu_4.png',
               class = "img-responsive",
-              height = "300px",
+              height = "150px",
               alt = "Bild Schritt 4",
-              style="display: block; margin-left: auto; margin-right: auto;
-                margin-top: 10px;")
+              style="display: block;
+                margin-top: 10px; height: 300px; border: 2px solid #EAECF0;
+                border-radius: 15px;")
         )
       )
     ),
@@ -147,14 +151,15 @@ mod_argumentation_ui <- function(id){
 
       p(strong(style = "text-align: justify; font-size = 24px",
                "2. Laden Sie hier die Daten als Basis der Argumentationkette herunter:")),
-      p("Als ein Beispiel für eine datenbasierte Argumentationskette haben wir fünf Statistiken
+      p("Als Beispiel für eine datenbasierte Argumentationskette haben wir fünf Statistiken
         aus dem MINT-DataLab ausgewählt. Die Grafiken werden weiter unten auf dieser Seite dargestellt.
         Die Daten aller Grafiken können hier gesammelt heruntergeladen werden.", br(), br(),
         "Das Format für den Download ist ein Text-Dokument, da im nächsten Schritt eine speziell
         angepasste Version von ChatGPT bei der Erstellung der Argumentationskette assistiert.
         Dieser MINT-DataLab-GPT kann nur im Rahmen des Angebots von ChatGPT bzw. OpenAI genutzt werden.
         Bei einer kostenfreien Nutzung von ChatGPT sind Daten-Uploads allerdings nur eingeschränkt möglich.
-        Das löst der Daten-Download hier: Die Daten im Text-Format können einfach in den Chat hineinkopiert werden."),
+        Deshalb stellen wir die Daten als Textdatei zur Verfügung - so können Sie die Inhalte einfach
+        per Copy & Paste in den Chat einfügen."),
       div(
         style = "margin-bottom: 30px;",
         downloadButton(ns("download_txt"), " Gesammelte Daten herunterladen"),
@@ -163,11 +168,11 @@ mod_argumentation_ui <- function(id){
       ## Absprung GPT + Beispielbericht ----
 
       p(strong(style = "text-align: justify; font-size = 24px",
-               "3. Laden sie die Daten im MINT-DataLab-GPT hoch und lassen sich KI-gestützt eine Argumentation erstellen:")),
+               "3. Laden Sie die Daten im von uns eigens erstellten MINT-DataLab-GPT hoch und lassen Sie sich KI-gestützt eine Argumentation erstellen:")),
       p("Dieser speziell für das MINT-DataLab konfigurierte MINT-DataLab-GPT
-             führt Sie durch die Erstellung einer Arugmentationskette basierend auf Statistiken des MINT-DataLab und
+             führt Sie durch die Erstellung einer Arugmentationskette basierend auf den Statistiken des MINT-DataLab und
              Informationen zu Ihrem Projekt. Bei Bedarf kann die Argumentation auch durch eine Online-Recherche ergänzt werden.", br(), br(),
-        "Der MINT-DataLab-GPT führt einen Dialog mit Ihnen und wird so einen kurze Bericht mit einer möglichen Argumentation mit Ihnen erstellen.", br(),
+        "Der MINT-DataLab-GPT führt einen Dialog mit Ihnen und wird so einen kurzen Bericht mit einer möglichen Argumentation mit Ihnen erstellen.", br(),
         "Öffnen Sie dafür mit folgendem Link den Chat mit dem MINT-DataLab-GPT und folgen Sie den Anweisungen dort."),
 
       tags$a(href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
@@ -179,20 +184,25 @@ mod_argumentation_ui <- function(id){
       ## Grafiken ----
       p(strong(style = "text-align: justify; font-size = 24px;",
                "4. Statistiken und Grafiken als Basis der Argumentationskette:")),
-      p("Hier finden Sie eine Auswahl an Statistiken, welchen sich
-        für eine Argumentationskette für allgemein mehr MINT-Förderung eignen.
-        Die gesammelten Daten der Statistiken können unter Schritt 2 heruntergeladen werden."),
-       p( "Alle Statistiken gibt es in ähnlicher Form, mit mehr Anpassungsmöglichkeiten, auf den weiteren
-         Unterseiten des MINT-DataLab. Hinweise dazu, welche Darstellungen aus dem MINT-DataLab über diese hinaus für eine starke Argumentationskette
-        genutzt werden können, finden sich in den blauen Boxen rechts der Grafiken."),
+      p("Hier finden Sie eine Auswahl an Statistiken, die sich
+        für eine Argumentationskette eignen, die allgemein MINT-Nachwuchsförderung unterstreicht.
+        Die gesammelten Daten aus den Statistiken können wie unter Schritt 2 beschrieben heruntergeladen werden."),
+       p( "Alle Statistiken gibt es mit zusätzlichen Anpassungsmöglichkeiten auf den Unterseiten des MINT-DataLab.
+       Hinweise dazu, welche Darstellungen aus dem MINT-DataLab über diese hinaus für eine starke Argumentationskette
+        genutzt werden können, finden sich in den blauen Boxen rechts neben den Grafiken."),
       p("Die grünen Boxen unter den Grafiken geben beispielhaft Interpretationen, die für eine Argumentation im Sinne von
-        MINT-Bildungsförderung hinter den Statistiken stecken."),
+        MINT-Bildungsförderung aus den Statistiken abgeleitet werden könnte"),
       p("Wer noch tiefer eintauchen will, kann eine solche Argumentation
             auch auf allen weiteren Statistiken aus dem MINT-DataLab aufbauen. Nutzen Sie dafür denselben MINT-DataLab-GPT wie
-            unter Schritt 3 verlinkt und die Daten aus den Daten-Downloads der jeweiligen Grafiken.",
-        style = "margin-bottom: 30px;")
+            unter Schritt 3 verlinkt und die Daten aus den Daten-Downloads der jeweiligen Grafiken (an den Grafiken oben rechts auswählbar).",
+        style = "margin-bottom: 30px;"),
+
+
+      h1("So kann eine Argumentationskette aussehen:",
+         style= "margin-bottom: 20px;"),
 
     ),
+
 
     ## Box Zeitverlauf MINT----
 
@@ -205,7 +215,7 @@ mod_argumentation_ui <- function(id){
                  p("Als Einstieg in eine Argumentation kann ein kurzer Überblick über die MINT-Strukturen
                    der eigenen Region geigenet sein. Hierfür können Sie selbst rechercherien oder den
                    MINT-DataLab-GPT um eine Recherche bitten."),
-                 p("Ergänzend dazu kann auf die Entwicklung der Beschäftigten, Studierenden und Auszubildenden
+                 p("Ergänzend dazu kann auf die Entwicklung der Zahlen von Beschäftigten, Studierenden und Auszubildenden
                    in MINT geschaut werden.
                    Das kann ein Indikator dafür sein, wie zentral der MINT-Sektor für die Region ist und ob
                    die Relevanz eher steigt oder der MINT-Bereich eher hinter anderen
@@ -239,7 +249,7 @@ mod_argumentation_ui <- function(id){
                               margin-left: 20px;
                               width: 90%;
                               border-radius: 10px;",
-                              p("Weiter Statistiken, die hier ergänzt werden könnten:"),
+                              p("Weitere Statistiken, die hier ergänzt werden könnten:"),
                               p("MINT-Anteil:  \"Alle Bildungsbereiche\", aktueller MINT-Anteil + MINT-Anteil im Zeitverlauf"),
                               p("Bundeslandvergleich: \"Ausbildung & Beruf\", aktueller MINT-Anteil + Bundeslandvergleich")
                    )
@@ -259,7 +269,7 @@ mod_argumentation_ui <- function(id){
                               border-radius: 10px;",
                        p(strong("Wenn die Kurve steigt:")),
                        p("Die Relevanz von MINT für die Region wächst.
-                     MINT-Kenntnisse müssen steigen, um steigenden Bedarfe an
+                     MINT-Kenntnisse müssen ausgebaut werden, um steigenden Bedarfen an
                      MINT-Kompetenzen begegnen zu können.
                      In MINT-Angebote zu investieren heißt, in die Zukunft zu investieren.")
                    )
@@ -295,8 +305,8 @@ mod_argumentation_ui <- function(id){
                        p("Der MINT-Bereich der Region wird kleiner, obwohl aufgrund
                     von Digitalisierung und Technologisierung MINT die Zukunft des
                     Wirtschaft- und Bildungsbereichs prägt. Stärker in MINT-Angebote
-                      zu investieren ist nötig für die zukünftige Wettbewerbsfähigkeit
-                      der Region.")
+                      zu investieren ist für die zukünftige Wettbewerbsfähigkeit
+                      der Region essenziell.")
                    )
                )
                )
@@ -311,11 +321,13 @@ mod_argumentation_ui <- function(id){
         column(
           width = 8,
           p("Der Bedarf an MINT-Fachkräften ist bundesweit hoch. Das zeigt z. B. die MINT-Fachkräftelücke
-          aus dem MINT-Report des IW Köln. Für 2023 wird diese Lücke deutschlandweit auf 209.000 fehlende MINT-Fachkräfte geschätzt.
+          aus dem MINT-Report des IW Köln. Für 2023 wird diese Lücke deutschlandweit auf 209.000 geschätzt.
+          So viele MINT-Fachkräfte fehlen also deutschlandweit.
           Diese Zahl liegt für die einzelnen Bundesländer so nicht vor.", br(),
 
           "Dafür kann die Engpassanalyse der Bundesagentur für Arbeit betrachtet werden. Sie zeigt das Ausmaß des
-            akuten Fachkräfteengpasses. Das unterstreicht, wie wichtig MINT-Förderung ist, damit der Fachkräftemangel reduziert werden kann.")
+            akuten Fachkräfteengpasses. Die Zahlen unterstreichen, wie wichtig MINT-Förderung ist,
+          um den Fachkräftemangel zu reduzieren.")
         ),
         column(
           width = 9,
@@ -345,7 +357,7 @@ mod_argumentation_ui <- function(id){
                               margin-left: 20px;
                               width: 90%;
                               border-radius: 10px;",
-              p("Weiter Statistiken, die hier ergänzt werden könnten:"),
+              p("Weitere Statistiken, die hier ergänzt werden könnten:"),
               p("Fachkräfte-Engpass nach MINT-Disziplin: \"Fokusseite MINT-Fachkräfte\",
                 unter \"Berufsgruppen: aktueller Fachkräftebedarf in MINT\", Fachkräfteengpass der Bundesländer"),
               p("Anteil und Entwicklung der MINT-Disziplinen: \"Ausbildung & Beruf\", unter M-I-N-T, aktueller Anteil MINT-Disziplinen")
@@ -367,7 +379,7 @@ mod_argumentation_ui <- function(id){
                 p(strong("Erhöhter Fachkräftemangel in MINT:")),
                 p("Während viele Branchen mit Fachkräftemangel zu kämpfen haben,
                 ist die Lage in MINT-Berufen, und insbesondere im Technik-Bereich,
-                besonders schlecht. Das unterstreicht, wir brauchen mehr Menschen,
+                besonders schlecht. Das unterstreicht: Wir brauchen mehr Menschen,
                   die sich für MINT interessieren und MINT-Kompetenzen entwickeln,
                   z. B. durch MINT-Bildungsförderung.")
             )
@@ -382,7 +394,7 @@ mod_argumentation_ui <- function(id){
                               border: 2px solid #00a87a;
                               color: #154194;
                               border-radius: 10px;",
-                p(strong("Ähnlich hoher Fachkräftemangel in MINT und nicht MINT:")),
+                p(strong("Ähnlich hoher Fachkräftemangel in MINT und Nicht-MINT:")),
                 p("Viele Branchen haben mit Fachkräftemangel zu kämpfen,
                 so auch der MINT-Bereich. Damit man dem Fachkräftemangel in Zukunft
                   begegnen kann, braucht es mehr Menschen, die sich für MINT
@@ -402,12 +414,12 @@ mod_argumentation_ui <- function(id){
         width = 12,
         column(
           width = 8,
-          p("Die Grafik zuvor zeigt, schon heute fehlen in vielen Regionen besonders MINT-Fachkräfte.
+          p("Die Grafik zuvor zeigt: Schon heute fehlen in vielen Regionen besonders MINT-Fachkräfte.
             Der demografische Wandel wird die Situation weiter verschärfen,
             da ein großer Teil der MINT-Beschäftigten in den nächsten Jahren aus
             der Berufstätigkeit ausscheiden wird.", br(),
-            "Das zeigt folgende Grafik, wenn man die Zahl der MINT-Beschäftigten über 55 Jahren, welche
-            in den nächsten rund 10 Jahren in die Rente eintreten werden, mit der Anzahl an MINT-Beschäftigten
+            "Das veranschaulicht die folgende Grafik, wenn man die Zahl der MINT-Beschäftigten über 55 Jahren, welche
+            in den nächsten rund 10 Jahren in Rente gehen werden, mit der Anzahl an MINT-Beschäftigten
             unter 25 Jahren, die in den Berufen nachfolgen, vergleicht.")
         ),
         column(
@@ -438,7 +450,7 @@ mod_argumentation_ui <- function(id){
                               margin-left: 20px;
                               width: 90%;
                               border-radius: 10px;",
-              p("Weiter Statistiken, die hier ergänzt werden könnten:"),
+              p("Weitere Statistiken, die hier ergänzt werden könnten:"),
               p("MINT-Anteil nach Gruppen: \"Ausbildung & Beruf\", aktueller MINT-Anteil + Gruppenvergleich – Balkendiagramm, Auswahl unter Berufsgruppen treffen"),
 
           )
@@ -457,8 +469,8 @@ mod_argumentation_ui <- function(id){
                               border-radius: 10px;",
                 p(strong("Mehr MINT-Beschäftigte scheiden aus dem Berufsleben aus als nachkommen:")),
                 p("Das wird den Fachkräftemangel verschärfen. Jetzt ist der letzte Moment,
-                  um mit gezielter MINT-Bildungsförderung junge Menschen für MINT zu interessiere,
-                  und die Folgen des demografischen Wandel noch abmildern zu können.")
+                  um mit gezielter MINT-Bildungsförderung junge Menschen für MINT zu interessieren,
+                  und die Folgen des demografischen Wandels noch abmildern zu können.")
             )
           )
 
@@ -473,9 +485,9 @@ mod_argumentation_ui <- function(id){
         column(
           width = 8,
           p("Viele Faktoren werden zusammen kommen müssen, um die Fachkräftelage
-            in MINT zu stabilisieren. Auch, weil der Bedarf an MINT steigt.
+            in MINT zu stabilisieren. Auch, weil der Bedarf an MINT-Kräften steigt.
             Ein Schlüssel ist, mehr MINT-Nachwuchs zu gewinnen, doch in vielen
-            MINT-Bereichen steht es aktuell nicht gut um Nachwuchs, wie die folgende Grafik zeigt.")
+            MINT-Bereichen steht es aktuell nicht gut um den Nachwuchs, wie die folgende Grafik zeigt.")
         ),
         column(
           width = 9,
@@ -505,7 +517,7 @@ mod_argumentation_ui <- function(id){
                               margin-left: 20px;
                               width: 90%;
                               border-radius: 10px;",
-                p("Weiter Statistiken, die hier ergänzt werden könnten:"),
+                p("Weitere Statistiken, die hier ergänzt werden könnten:"),
                 p("Getrennte Betrachtung von Studierenden und Auszubildenden: \"Ausbildung & Beruf\" bzw. \"Studium\",
                   M-I-N-T, Anteil MINT-Fächer im Zeitverlauf"),
             )
@@ -613,7 +625,7 @@ mod_argumentation_ui <- function(id){
                               margin-left: 20px;
                               width: 90%;
                               border-radius: 10px;",
-              p("Weiter Statistiken, die hier ergänzt werden könnten:"),
+              p("Weitere Statistiken, die hier ergänzt werden könnten:"),
               p("Alle Ergebnisse der Zukunftsszenarien für MINT-Fachkräfte: “Fokusseite MINT-Fachkräfte“ Zukunftsszenarien + Wirkhebel"),
           )
         ),
@@ -632,7 +644,7 @@ mod_argumentation_ui <- function(id){
                 p(strong("MINT-Nachwuchs Förderung")),
                 p("Der größte Wirkhebel, um dem akuten MINT-Fachkräftemangel entgegenzuwirken,
                   sind mehr junge Menschen in MINT. Ohne Nachwuchsförderung, z. B. allein über Zuwanderung,
-                  wird die MINT-Lücke nicht schließbar sein. MINT-Bildungsförderung ist die beste Chance, die MINT-Industrie
+                  wird sich die MINT-Lücke nicht schließen lassen. MINT-Bildungsförderung ist die beste Chance, die MINT-Industrie
                   langfristig lebendig zu halten.")
             )
           ),
@@ -647,7 +659,7 @@ mod_argumentation_ui <- function(id){
                               color: #154194;
                               border-radius: 10px;",
                 p(strong("Mädchen und Frauen in MINT fördern")),
-                p("ist ein starker Hebel, um den Fachkräftemangel in MINT zu reduzieren.
+                p("Auch das ist ein starker Hebel, um den Fachkräftemangel in MINT zu reduzieren.
                   Mehr junge Frauen, die sich beruflich für MINT entscheiden,
                   tragen außerdem zu diverseren Perspektiven in MINT bei und so zu
                   einer höheren Qualität in MINT-Forschung und -Entwicklung.")
