@@ -741,13 +741,13 @@ argument_fachkraft <- function(r){
   else if(regio != "Deutschland"){
 
     if(regio %in% c("Hamburg", "Schleswig-Holstein")){
-      text = "Diese Daten sind zusammengefasst Hamburg / Schleswig-Holstein"
+      text = "Es liegen nur Daten zusammengefasst für Hamburg und Schleswig-Holstein vor."
     } else if(regio %in% c("Niedersachsen", "Bremen")){
-      text = "Diese Daten sind zusammengefasst Niedersachsen / Bremen" }
+      text = "Es liegen nur Daten zusammengefasst für Niedersachsen und Bremen vor." }
     else if(regio %in% c("Berlin", "Brandenburg")){
-      text = "Diese Daten sind zusammengefasst Berlin / Brandenburg"
+      text = "Es liegen nur Daten zusammengefasst für Berlin und Brandenburg vor."
     } else if(regio %in% c("Rheinland-Pfalz", "Saarland")){
-      text = "Diese Daten sind zusammengefasst Rheinland-Pfalz / Saarland"
+      text = "Es liegen nur Daten zusammengefasst für Rheinland-Pfalz und das Saarland vor."
     } else {
       text = " "
     }
@@ -1097,8 +1097,8 @@ argument_demografie <- function(r){
 
 
   titel <- ifelse(regio == "Saarland",
-                  paste0("Beschäftigte in MINT nach Altersgruppen im ", regio, " (", timerange, ")"),
-                  paste0("Beschäftigte in MINT nach Altersgruppen in ", regio, " (", timerange, ")"))
+                  paste0("Demografischer Wandel: Beschäftigte in MINT nach Altersgruppen im ", regio, " (", timerange, ")"),
+                  paste0("Demografischer Wandel: Beschäftigte in MINT nach Altersgruppen in ", regio, " (", timerange, ")"))
 
 
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(
@@ -1276,8 +1276,8 @@ argument_nachwuchs <- function(r){
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
     highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
     highcharter::hc_title(text = ifelse(regio == "Saarland",
-                                        paste0("Entwicklung der Nachwuchszahlen in den MINT Disziplinen im ", regio, " (", timerange, ")"),
-                                        paste0("Entwicklung der Nachwuchszahlen in den MINT Disziplinen in ", regio, " (", timerange, ")")),
+                                        paste0("Entwicklung der Nachwuchszahlen in den MINT-Disziplinen im ", regio),
+                                        paste0("Entwicklung der Nachwuchszahlen in den MINT-Disziplinen in ", regio)),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
