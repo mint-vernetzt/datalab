@@ -224,7 +224,7 @@ mod_argumentation_ui <- function(id){
                                     content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, verändern Sie bitte kurz die Fenstergröße, indem Sie die Menü-Übersicht links ein- und wieder ausklappen oder indem Sie die Seite kurz verkleinern und wieder maximieren. Dann stellen sich die Größenverhältnisse der Grafiken korrekt ein."),
                                     placement = "top",
                                     trigger = "hover"),
-                 tags$a(paste0("Ist die Grafik abgeschnitten dargestellt?"), icon("info-question"), id = "anz_argument_1"),
+                 tags$a(paste0("Ist die Grafik abgeschnitten dargestellt?"), icon("question"), id = "anz_argument_1"),
                  br(),br(),
                ),
                  column(
@@ -674,36 +674,42 @@ mod_argumentation_ui <- function(id){
 
         )
 
-      ))
+      )),
+
+    ## FAQ + Nutzungshinweis ----
+
+    hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
+
+    fluidRow(
+      column(
+        width = 9,
+        h3("Fragen und Antworten"),
+        reactable::reactableOutput(ns("faq_table")),
+
+        h3("Nutzungshinweis"),
+        p("Der MINT-DataLab-GPT ist eine KI-Anwendung, die auf Technologie von OpenAI basiert.
+        Die bereitgestellten Inhalte werden automatisiert generiert und können unvollständig,
+        fehlerhaft oder veraltet sein. Die Nutzenden sind daher für eine kritische Prüfung der
+        Ausgaben verantwortlich."),
+        p("Für den MINT-DataLab-GPT gelten folgende Nutzungsbedingungen, auf die auch
+        zu Beginn des Chats hingewiesen wird: ",
+          tags$a(href = "www/Nutzungshinweis_Haftungsausschluss_GPT.pdf", target = "_blank", "Nutzungshinweis MINT-DataLab-GPT")),
+        p("MINTvernetzt und der Stifterverband übernehmen keine Haftung für Schäden
+          oder Nachteile, die aus der Verwendung der bereitgestellten Informationen entstehen.
+          Es gelten die allgemeinen Haftungsausschlüsse, wie im Impressum hinterlegt."),
+        p(),
+        p("Je nach Kontext und Zweck der Nutzung empfehlen wir aus Gründen der Transparenz,
+               auf die Unterstützung durch ein KI-Modell und insbesondere auf den Einsatz des
+               MINT-DataLab-GPT hinzuweisen. Dafür kann folgende Formulierung genutzt werden:",
+          br(),
+          "\"Erstellt unter Verwendung des angepassten GPT-Sprachmodells von
+               MINTvernetzt (MINT-DataLab-GPT) auf Basis von OpenAI-Technologie.\"")
+      )
+    ),
 
 
-    # ,
-    #
-    # fluidRow(
-    #   shinydashboard::box(
-    #     title = "Frauen in MINT",
-    #     width = 12,
-    #     column(
-    #       width = 8,
-    #       p("Text - Allgemeine Erklärung für Grafik")
-    #     ),
-    #     column(
-    #       width = 12,
-    #       shiny::mainPanel(
-    #         shinycssloaders::withSpinner(htmlOutput(ns("plot_argument_frauen")),
-    #                                      color = "#154194"),
-    #         shinyBS::bsPopover(id="h_argument_6", title = "",
-    #                            content = paste0("Erklärung, wenn nötig."),
-    #                            placement = "top",
-    #                            trigger = "hover"),
-    #         tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_argument_6")
-    #       )
-    #     ),
-    #     column(
-    #       width = 8,
-    #       p("Text/Boxen mit Interpretation, je nach Grafik")
-    #     )
-    #   ))
+    funct_footer()
+
     )
 }
 
@@ -757,6 +763,83 @@ mod_argumentation_server <- function(id){
 
     output$plot_argument_frauen <- renderUI({
       argument_frauen(r)
+    })
+
+    #### FAQ Tabelle ----
+    faq_data <- data.frame( #tibble::tibble
+      Frage   = c(
+        "Kann ich den MINT-DataLab-GPT auch ohne OpenAI-Konto nutzen?",
+        "Welche Quellen muss ich angeben, wenn ich die Argumentationshilfe nutze?",
+        "Kann ich auch andere Daten mit dem MINT-DataLab-GPT analysieren?",
+        "Wie kann ich das Ergebnis exportieren?",
+        "Ich habe ein Fehlverhalten festgestellt, wo kann ich das melden?"
+      ),
+      Antwort = c(
+       "Nein, die Nutzung des MINT-DataLab-GPT erfordert ein aktives OpenAI-Konto.
+        Da es sich um einen individualisierten GPT handelt, läuft der Zugriff
+        über die Infrastruktur von OpenAI. Die Registrierung ist kostenlos und
+        in wenigen Schritten möglich.",
+
+        "Beim Herunterladen der Grafiken werden die Quellen der zugrunde liegenden
+        Daten automatisch mit heruntergeladen. Der MINT-DataLab-GPT ergänzt die
+        Quellenangaben zu den verwendeten Daten oder den durchgeführten Online-Recherchen.
+       Je nach Kontext und Zweck der Nutzung empfehlen wir aus Gründen der Transparenz,
+               auf die Unterstützung durch ein KI-Modell und insbesondere auf den Einsatz des
+               MINT-DataLab-GPT hinzuweisen. Dafür kann folgende Formulierung genutzt werden:
+               Erstellt unter Verwendung des angepassten GPT-Sprachmodells von
+               MINTvernetzt (MINT-DataLab-GPT) auf Basis von OpenAI-Technologie.",
+
+        "Der MINT-DataLab-GPT ist auf die Daten des MINT-DataLabs spezialisiert und
+        kann diese fehlerfrei auslesen und interpretieren. Dabei können alle Daten
+        des MINT-DataLabs, auch diejenigen, die nicht auf der Argumentationsseite
+        zu finden sind, ohne Probleme genutzt werden. Bei externen Datenquellen
+        können ggf. Probleme beim Lesen der Datenformate auftreten. Grundsätzlich
+        ist es aber möglich, eigene oder externe Daten ergänzend mit einzuspielen.
+        Wir empfehlen, die Korrektheit der übergebenen Daten unbedingt zu prüfen.",
+
+       "Der MINT-DataLab-GPT liefert Texte oder Textbausteine, die sich flexibel
+        in Berichte oder Anträge integrieren lassen. Wie bei der Nutzung anderer
+        KI-Chats kann zusätzlich das Format des gewünschten Outputs spezifiziert werden,
+        z. B. Stichpunkte für eine Präsentation.",
+
+        "Der MINT-DataLab-GPT ist eine Beta-Version. Mithilfe Ihres Feedbacks können
+        wir die zukünftige Nutzung weiter verbessern. Bitte schreiben Sie uns dafür,
+        kurz und informell, eine Nachricht per Mail: ,
+        <a href='mailto:katharina.brunner@mint-vernetzt.de?subject=Feedback Argumentationshilfe'>
+        E-Mail schreiben</a>. Vielen Dank!"
+      ),
+      stringsAsFactors = FALSE
+    )
+
+    output$faq_table <- reactable::renderReactable({
+
+      faq_data <- faq_data[,-3]
+      reactable::reactable(
+      faq_data,
+      searchable       = FALSE,      # Suchfeld ausblenden (minimalistischer Stil)
+      pagination       = FALSE,      # keine Pagination – wir zeigen alles auf einer Seite
+      wrap             = TRUE,
+      highlight        = TRUE,       # hinterlegt Hover-Zeile leicht
+      outlined         = FALSE,
+      bordered         = FALSE,
+      columnGroups     = NULL,
+
+      columns = list(
+        Frage = reactable::colDef(name = "", minWidth = 300),  # Spaltenkopf ausblenden
+        Antwort = reactable::colDef(show = FALSE, html = TRUE)              # zunächst nicht anzeigen
+      ),
+
+      details = function(index) {
+        # wird geöffnet, sobald der User eine Frage anklickt
+        as.character(
+          tagList(HTML(faq_data$Antwort[index]))
+          )
+        # htmltools::tags$div(class = "faq-answer", faq_data$Antwort[[index]]))
+        #HTML(paste0('<div class = "faq-answer">', faq_data$Antwort[[index]], '</div>'))
+      },
+
+      class = "faq-table"
+    )
     })
 
   })
