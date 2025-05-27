@@ -19,7 +19,7 @@ mod_argumentation_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_Hinweise.jpg',
+            img(src='www/Banna_Argumentation_vorlaeufig.png',
                 class = "img-responsive",
                 height = "300px",
                 alt = "Banner Quellen",
@@ -43,8 +43,8 @@ mod_argumentation_ui <- function(id){
             für die MINT-Bildungsförderung in Ihrer Region aufzubauen."),
             p("Ein Beispiel, wie eine solche Argumentation aussehen könnte, basierend auf fünf Statistiken
             aus dem MINT-DataLab, finden Sie hier:"),
-            tags$a(href = "www/Methodenbericht_MINT-Fachkraefteszenarien.pdf",
-                   target = "_blank", tags$span(icon("file", style = "margin-right: 5px;"), " NOCH AUSTAUCHEN Beispiel-Bericht für Hamburg"),
+            tags$a(href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
+                   target = "_blank", tags$span(icon("file", style = "margin-right: 5px;"), " Beispiel-Bericht für Hamburg"),
                    class = "btn btn-default",
                    style = "margin-bottom: 20px;"),
 
