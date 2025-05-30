@@ -837,11 +837,11 @@ arbeit_fachkraft_ui_years <- function() {
   selection <- NULL
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT jahr
   FROM arbeitsmarkt_fachkraefte
   WHERE indikator IN ('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')
 ", .con = con)
-
+#####################################################
 
   selection <- DBI::dbGetQuery(con, df_query)
 
