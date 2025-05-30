@@ -650,9 +650,9 @@ if(reg == "DE"){
   #   sort()
 
 }else if(reg== "BULA"){
-
+##############################################################
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT jahr
   FROM arbeitsmarkt_epa
   WHERE indikator = 'Engpassindikator'
 ", .con = con)
@@ -867,9 +867,9 @@ arbeit_fachkraft_ui_years <- function() {
 arbeit_fachkraft_ui_region <- function() {
 
   selection <- NULL
-
+##########################################################
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT region
   FROM arbeitsmarkt_fachkraefte
   WHERE indikator IN ('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')
 ", .con = con)
