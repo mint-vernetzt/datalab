@@ -3,6 +3,8 @@ daten_download <- function(r){
 
   regio <- r$region_argumentationshilfe
 
+  region_reserve <- r$region_argumentationshilfe
+
   ### Daten Verlauf MINT ----
   t <- 2017:2023
   absolut_selector <- "Anzahl"
@@ -18,6 +20,11 @@ daten_download <- function(r){
 ", .con = con)
 
   df_beschäftigte <- DBI::dbGetQuery(con, query_df)
+
+  # df_beschäftigte <- df_beschäftigte %>%
+  #   mutate(Bereich = "Beschäftigte MINT",
+  #          Quelle = "Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+  #
 
   ### Daten Fachkräfte ----
   timerange <- 2023
@@ -37,6 +44,8 @@ daten_download <- function(r){
                                ", .con = con)
 
     plot_data_raw <- DBI::dbGetQuery(con, df_query)
+
+
 
     if ("MINT gesamt" %in% fach) {
       plot_data_raw <- plot_data_raw %>%
@@ -85,6 +94,12 @@ daten_download <- function(r){
       dplyr::left_join(group_col_dt, by = "epa_kat") %>%
       dplyr::arrange(epa_group_order)
 
+    # plot_data <- plot_data %>%
+    #   mutate(Bereich = "Engpassindikator",
+    #          Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+    #
+    #
+
     }else if(regio != "Deutschland"){############################################################################
 
       regio <- dplyr::case_when(
@@ -105,7 +120,6 @@ daten_download <- function(r){
                                ", .con = con)
 
       plot_data_raw <- DBI::dbGetQuery(con, df_query)
-
 
       # enthält den Text für den plot
       epa_kat_levels <- c("Engpassberuf",
@@ -152,12 +166,28 @@ daten_download <- function(r){
         dplyr::mutate(value = round_preserve_sum(beruf_num / sum(beruf_num) * 100,0)) %>%
         dplyr::left_join(group_col_dt, by = "epa_kat") %>%
         dplyr::arrange(epa_group_order)
+
+      # plot_data <- plot_data %>%
+      #   mutate(Bereich = "Engpassindikator",
+      #          Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+      #
+
+
     }
 
     ### Daten Demografie ----
     betrachtung <- "Gruppenvergleich - Balkendiagramm"
     timerange <- 2023 #L
     faecher <- "MINT"
+
+
+    regio_logisch <- c()
+    if (regio == "Brandenburg / Berlin") regio_logisch <- c("Brandenburg", "Berlin")
+    else if (regio == "Niedersachsen / Bremen") regio_logisch <- c("Niedersachsen", "Bremen")
+    else if (regio == "Rheinland-Pfalz / Saarland") regio_logisch <- c("Rheinland-Pfalz", "Saarland")
+    else if (regio == "Schleswig-Holstein / Hamburg") regio_logisch <- c("Schleswig-Holstein", "Hamburg")
+    else regio_logisch <- c(regio)
+
 
     gruppe <- c(
       "Beschäftigte",
@@ -166,16 +196,29 @@ daten_download <- function(r){
       "Beschäftigte ü55")
 
     df_query <- glue::glue_sql("
-  SELECT *
-  FROM arbeitsmarkt_detail
-  WHERE jahr = {timerange}
-  AND landkreis = 'alle Landkreise'
-  AND bundesland = {regio}
-  AND anforderung = 'Gesamt'
-  AND geschlecht = 'Gesamt'
-  AND indikator IN ({gruppe*})
-  AND fachbereich = {faecher}
-                               ", .con = con)
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND landkreis = 'alle Landkreise'
+    AND bundesland IN ({regio_logisch*})
+    AND anforderung = 'Gesamt'
+   AND geschlecht = 'Gesamt'
+   AND indikator IN ({gruppe*})
+   AND fachbereich = {faecher}
+", .con = con)
+
+
+  #   df_query <- glue::glue_sql("
+  # SELECT *
+  # FROM arbeitsmarkt_detail
+  # WHERE jahr = {timerange}
+  # AND landkreis = 'alle Landkreise'
+  # AND bundesland = {regio}
+  # AND anforderung = 'Gesamt'
+  # AND geschlecht = 'Gesamt'
+  # AND indikator IN ({gruppe*})
+  # AND fachbereich = {faecher}
+  #                              ", .con = con)
 
     df1 <- DBI::dbGetQuery(con, df_query)
 
@@ -183,12 +226,18 @@ daten_download <- function(r){
       dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
                      "landkreis_zusatz", "landkreis_nummer", "jahr", "anforderung", "geschlecht", "wert")
 
+    # df <- df %>%
+    #   mutate(Bereich = "Demografie MINT",
+    #          Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+
+
+
     ### Nachwuchs ----
     query_df <- glue::glue_sql("
   SELECT region, fach, jahr, indikator, wert
   FROM studierende_detailliert
   WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
-    AND region = {regio}
+    AND region IN ({regio_logisch*})
     AND geschlecht = 'Gesamt'
     AND fach IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Ingenieurwissenschaften (ohne Informatik)')
     AND indikator = 'Studierende'
@@ -200,7 +249,7 @@ daten_download <- function(r){
   SELECT bundesland, fachbereich, jahr, kategorie, wert
   FROM arbeitsmarkt_detail
   WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
-    AND bundesland = {regio}
+    AND bundesland IN ({regio_logisch*})
     AND geschlecht = 'Gesamt'
     AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
     AND kategorie = 'Auszubildende'
@@ -231,10 +280,17 @@ daten_download <- function(r){
 
     df_nachwuchs <- bind_rows(df_azubi_clean, df_studi_clean)
 
+
     df_nachwuchs_agg <- df_nachwuchs %>%
       dplyr::group_by(region, fach, jahr, indikator) %>%
       dplyr::summarise(wert = sum(wert), .groups = "drop") %>%
       dplyr::ungroup()
+
+    # df_nachwuchs_agg <- df_nachwuchs_agg %>%
+    #   mutate(Bereich = "Nachwuchs MINT",
+    #          Quelle = "Destatis, 2024 und Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+    #
+    #
 
     # Entwicklung für Hover berechnen
     df_start <- df_nachwuchs_agg %>%
@@ -253,6 +309,13 @@ daten_download <- function(r){
     df_nachwuchs_agg$display_diff <- ifelse(df_nachwuchs_agg$diff < 0,
                                             paste0("-", df_nachwuchs_agg$diff),
                                             paste0("+", df_nachwuchs_agg$diff))
+
+    df_nachwuchs_agg <- df_nachwuchs_agg %>%
+      filter(!(is.na(wert_alt) |  is.na(wert_neu) | is.na(diff) | is.na(display_diff)))
+
+    # df_nachwuchs_agg <- df_nachwuchs_agg %>%
+    #   na.omit()
+
     ### Wirkhebel ----
     year_filter <- 2037
 
@@ -294,6 +357,10 @@ daten_download <- function(r){
 
     uebersicht_data <- DBI::dbGetQuery(con, df_query)
 
+    # uebersicht_data <- uebersicht_data %>%
+    #   mutate(Bereich = "Wirkhebel MINT",
+    #          Quelle = "Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt")
+
     uebersicht_data <- uebersicht_data %>%
       dplyr::mutate(basis_wert = basis_wert) %>%
       dplyr::select(wirkhebel, basis_wert, wert)%>%
@@ -322,23 +389,45 @@ daten_download <- function(r){
 
     # 1. Beschäftigte MINT
     df_beschäftigte_clean <- df_beschäftigte %>%
-      mutate(Bereich = "Beschäftigte MINT")
+      mutate(Bereich = "Beschäftigte MINT",
+             Quelle = "Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+             Region = region_reserve)
+
+
 
     # 2. Engpassindikator
+    # plot_data_clean <- plot_data %>%
+    #   mutate(Bereich = "Engpassindikator")
     plot_data_clean <- plot_data %>%
-      mutate(Bereich = "Engpassindikator")
+      mutate(Bereich = "Engpassindikator",
+             Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+             Region = region_reserve)
+
 
     # 3. Demografie MINT
+    # df_demografie_clean <- df %>%
+    #   mutate(Bereich = "Demografie MINT")
     df_demografie_clean <- df %>%
-      mutate(Bereich = "Demografie MINT")
+      mutate(Bereich = "Demografie MINT",
+             Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
+             Region = region_reserve)
+
 
     # 4. Nachwuchs (Studierende + Azubis)
+    # df_nachwuchs_clean <- df_nachwuchs_agg %>%
+    #   mutate(Bereich = "Nachwuchs MINT")
     df_nachwuchs_clean <- df_nachwuchs_agg %>%
-      mutate(Bereich = "Nachwuchs MINT")
+      mutate(Bereich = "Nachwuchs MINT",
+             Quelle = "Destatis, 2024 und Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
+
 
     # 5. Wirkhebel (Prognosen)
+    # uebersicht_data_clean <- uebersicht_data %>%
+    #   mutate(Bereich = "Wirkhebel MINT")
     uebersicht_data_clean <- uebersicht_data %>%
-      mutate(Bereich = "Wirkhebel MINT")
+      mutate(Bereich = "Wirkhebel MINT",
+             Quelle = "Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt",
+             Region = "Deutschland (immer deutschland)")
 
     # Falls nötig: Nur gleiche Spaltennamen verwenden
     # Dazu alle Datensätze auf einen gemeinsamen Satz von Spalten bringen
