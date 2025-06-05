@@ -79,22 +79,26 @@ mod_startseite_start_ui <- function(id){
                      class = "btn btn-default",
                      style = "margin-bottom: 30px; margin-top: 10px;")
     ),
+
     column(
-      width = 10,
+      width = 11,
       slickR::slickROutput(ns("slider_output"), width = '800px', height = '500px'),
 
-       # Lernvideo ----
-
-      tags$iframe(
-        width = "960", height = "540",
-        src = "https://www.youtube.com/embed/9Ph3UATlnFs",
-        frameborder = "0",
-        allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
-        allowfullscreen = NA,
-        style = "margin: 40px;"
+      # Lernvideo ----
+      div(
+        style = "display: flex; justify-content: center;",
+        tags$iframe(
+          width = "800", height = "450",
+          src = "https://www.youtube.com/embed/9Ph3UATlnFs",
+          frameborder = "0",
+          allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+          allowfullscreen = NA,
+          style = "margin: 40px;"
+        )
       )
-
     ),
+
+
     column(
       width = 8,
 
