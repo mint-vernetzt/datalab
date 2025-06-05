@@ -21,10 +21,27 @@ daten_download <- function(r){
 
   df_beschäftigte <- DBI::dbGetQuery(con, query_df)
 
+  query_df <- glue::glue_sql("
+  SELECT bereich, indikator, fachbereich, jahr, wert
+  FROM zentral
+  WHERE jahr IN ({t*})
+    AND region = {regio}
+    AND geschlecht = 'Gesamt'
+    AND fachbereich = 'MINT'
+    AND indikator IN ('Studierende', 'Auszubildende')
+", .con = con)
+
+  df_andere <- DBI::dbGetQuery(con, query_df)
+
+  df_alle <- rbind(df_beschäftigte, df_andere)
+
   # df_beschäftigte <- df_beschäftigte %>%
   #   mutate(Bereich = "Beschäftigte MINT",
   #          Quelle = "Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt")
   #
+
+
+
 
   ### Daten Fachkräfte ----
   timerange <- 2023
@@ -253,6 +270,8 @@ daten_download <- function(r){
     AND geschlecht = 'Gesamt'
     AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
     AND kategorie = 'Auszubildende'
+    AND indikator = 'Auszubildende'
+    AND landkreis = 'alle Landkreise'
 ", .con = con)
 
     df_auszubildende <- DBI::dbGetQuery(con, query_df)
@@ -280,7 +299,6 @@ daten_download <- function(r){
 
     df_nachwuchs <- bind_rows(df_azubi_clean, df_studi_clean)
 
-
     df_nachwuchs_agg <- df_nachwuchs %>%
       dplyr::group_by(region, fach, jahr, indikator) %>%
       dplyr::summarise(wert = sum(wert), .groups = "drop") %>%
@@ -295,15 +313,15 @@ daten_download <- function(r){
     # Entwicklung für Hover berechnen
     df_start <- df_nachwuchs_agg %>%
       dplyr::filter(jahr == min(df_nachwuchs_agg$jahr)) %>%
-      dplyr::select(fach, wert) %>%
+      dplyr::select(fach, wert, region) %>%
       dplyr::rename(wert_alt =wert)
     df_ende <- df_nachwuchs_agg %>%
       dplyr::filter(jahr == max(df_nachwuchs_agg$jahr)) %>%
-      dplyr::select(fach, wert) %>%
+      dplyr::select(fach, wert, region) %>%
       dplyr::rename(wert_neu =wert)
     df_nachwuchs_agg <- df_nachwuchs_agg %>%
-      dplyr::left_join(df_start, by = c("fach")) %>%
-      dplyr::left_join(df_ende, by = c("fach")) %>%
+      dplyr::left_join(df_start, by = c("fach", "region")) %>%
+      dplyr::left_join(df_ende, by = c("fach", "region")) %>%
       dplyr::mutate(diff = round(((wert_neu - wert_alt)/wert_alt)*100,1))
 
     df_nachwuchs_agg$display_diff <- ifelse(df_nachwuchs_agg$diff < 0,
@@ -388,7 +406,7 @@ daten_download <- function(r){
     # Alle Datensätze anpassen: Einheitliche Struktur und Bereichsangabe
 
     # 1. Beschäftigte MINT
-    df_beschäftigte_clean <- df_beschäftigte %>%
+    df_beschäftigte_clean <- df_alle %>%
       mutate(Bereich = "Beschäftigte MINT",
              Quelle = "Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt",
              Region = region_reserve)

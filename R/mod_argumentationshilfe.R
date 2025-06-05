@@ -588,7 +588,7 @@ mod_argumentation_ui <- function(id){
     ## Box Wirkhebel Förderung ----
     fluidRow(
       shinydashboard::box(
-        title = "5. Wege aus der Kriese: So stark wirkt MINT-Nachwuchsförderung",
+        title = "5. Wege aus der Krise: So stark wirkt MINT-Nachwuchsförderung",
         width = 12,
         column(
           width = 8,
