@@ -55,6 +55,8 @@ plot_fachkraft_prognose  <- function(r) {
 
   data_list <- split(plot_data, plot_data$wirkhebel)
 
+  browser()
+
   if (filter_wirkhebel[2] == "Frauen in MINT") filter_wirkhebel[2]<-"Mädchen und Frauen in MINT fördern"
   if (filter_wirkhebel[2] == "MINT-Bildung") filter_wirkhebel[2]<-"MINT-Nachwuchs fördern"
   # Texte vorbereiten
@@ -324,7 +326,7 @@ plot_fachkraft_prognose_alle  <- function(r) {
                    bei unterschiedlichen Entwicklungen der Gesamteffekte",
                   titel)
 
-  # plot
+
 
 
   titel <- titel
@@ -439,6 +441,12 @@ plot_fachkraft_prognose_detail  <- function(r) {
     subtitel <- "Die Berechnung schreibt die aktuellen Entwicklungen in den MINT-Fachkräftezahlen bis 2037 fort (Basis-Szenario)."
   }
 
+
+
+  browser()
+
+
+
   hc <- highcharter::highchart() %>%
     highcharter::hc_chart(type = "areaspline") %>%
     highcharter::hc_title(text = paste0("Zukünftige MINT-Fachkräfteentwicklung bis 2037 betrachtet nach ", filter_gruppe), align = "left") %>%
@@ -529,6 +537,8 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
   AND jahr = 2022
                                ", .con = con)
   basis_wert <- DBI::dbGetQuery(con, df_query)
+
+  browser()
 
   basis_wert <- basis_wert %>%
     dplyr::pull(wert)
