@@ -36,6 +36,7 @@ plot_fachkraft_prognose  <- function(r) {
   plot_data <- DBI::dbGetQuery(con, df_query)
 
 
+
   plot_data <- plot_data %>%
     dplyr::group_by("jahr") %>%
     dplyr::mutate(
@@ -74,6 +75,8 @@ plot_fachkraft_prognose  <- function(r) {
                      paste0(filter_indikator[2],
                             " bei der Förderung des MINT-Nachwuchses"),
                      szenario)
+
+
 
   titel <- paste0("Zukünftige MINT-Fachkräfteentwicklung bei aktuellen Verhältnissen
   im Vergleich zu einer ", szenario, " bis 2037")
@@ -203,7 +206,26 @@ plot_fachkraft_prognose  <- function(r) {
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
@@ -278,7 +300,6 @@ plot_fachkraft_prognose_alle  <- function(r) {
     color_vec <- c("#154194", "#D0A9CD", "#8893a7" )
 
   }
-
 
   if(filter_wirkhebel[2] == "Frauen in MINT") filter_wirkhebel[2]<-"Mädchen und Frauen in MINT fördern"
   if(filter_wirkhebel[2] == "MINT-Bildung") filter_wirkhebel[2] <- "MINT-Nachwuchs fördern"
@@ -361,6 +382,7 @@ plot_fachkraft_prognose_detail  <- function(r) {
 
 
   plot_data <- DBI::dbGetQuery(con, df_query)
+
 
 
   plot_data <-plot_data %>%
@@ -562,6 +584,9 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
                   wert_txt = prettyNum(wert, big.mark = ".", decimal.mark = ","),
                   diff_txt = prettyNum(diff, big.mark = ".", decimal.mark = ",")) %>%
     dplyr::arrange(diff)
+
+
+
 
   fig <- plotly::plot_ly(uebersicht_data, color = I("gray80")) %>%
     plotly::add_segments(
@@ -774,6 +799,8 @@ plot_fachkraft_epa_item <- function(r) {
 
 
 
+  titel <- titel_1
+
   plot_left <- highcharter::hchart(
     object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[1]),
     type = "heatmap",
@@ -813,13 +840,34 @@ plot_fachkraft_epa_item <- function(r) {
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
 
 
   if (length(fach) == 2) {
+
+
 
     fach_2 <- dplyr::case_when(
       fach[2] == "MINT gesamt" ~ "MINT",
@@ -829,7 +877,7 @@ plot_fachkraft_epa_item <- function(r) {
     )
 
     titel_2 <- paste0("Engpassrisiko in ", fach_2," (", level,timerange, ")")
-
+    titel <- titel_2
     used_colors <- group_col_dt %>%
       dplyr::filter(epa_kat %in% (expanded_dt %>%
                                     dplyr::filter(mint_zuordnung == fach[2]) %>%
@@ -875,7 +923,26 @@ plot_fachkraft_epa_item <- function(r) {
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
@@ -1022,12 +1089,14 @@ plot_fachkraft_epa_bulas <- function(r) {
      T ~ fach[1]
    )
 
-   titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1," (", level, timerange, ")")
+   titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1," in ", regio ," (", level, timerange, ")")
 
    # Entfernen aller Zeilen, bei denen group_col NA ist
    expanded_dt <- expanded_dt[!is.na(expanded_dt$group_col), ]
 
 
+
+   titel <- titel_1
 
    plot_left <- highcharter::hchart(
      object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[1]),
@@ -1068,7 +1137,26 @@ plot_fachkraft_epa_bulas <- function(r) {
      highcharter::hc_exporting(enabled = TRUE,
                                buttons = list(
                                  contextButton = list(
-                                   menuItems = list("downloadPNG", "downloadCSV")
+                                   menuItems = list("downloadPNG", "downloadCSV",
+                                                    list(
+                                                      text = "Daten für GPT",
+                                                      onclick = htmlwidgets::JS(sprintf(
+                                                        "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                  )
                                )
      )
@@ -1083,7 +1171,7 @@ plot_fachkraft_epa_bulas <- function(r) {
        T ~ fach[2]
      )
 
-     titel_2 <- paste0("Engpassrisiko in ", fach_2," (", level,timerange, ")")
+     titel_2 <- paste0("Engpassrisiko in Berufen in ", fach_2 , " in ", regio, " (", level,timerange, ")")
 
      used_colors <- group_col_dt %>%
        dplyr::filter(epa_kat %in% (expanded_dt %>%
@@ -1091,6 +1179,10 @@ plot_fachkraft_epa_bulas <- function(r) {
                                      dplyr::pull(epa_kat) %>%
                                      unique())) %>%
        dplyr::pull(group_col)
+
+
+
+     titel <- titel_2
 
      plot_right <- highcharter::hchart(
        object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[2]),
@@ -1130,7 +1222,26 @@ plot_fachkraft_epa_bulas <- function(r) {
        highcharter::hc_exporting(enabled = TRUE,
                                  buttons = list(
                                    contextButton = list(
-                                     menuItems = list("downloadPNG", "downloadCSV")
+                                     menuItems = list("downloadPNG", "downloadCSV",
+                                                      list(
+                                                        text = "Daten für GPT",
+                                                        onclick = htmlwidgets::JS(sprintf(
+                                                          "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                    )
                                  )
        )
@@ -1340,6 +1451,12 @@ plot_fachkraft_bar_vakanz  <- function(r) {
   }
 
 
+
+
+
+  titel <- paste0(this_indikator, " in den MINT-Bereichen in ", this_region,
+                  " (", level, timerange, ")")
+
   plot<- highcharter::hchart(
     object = plot_data,
     type = "bar",
@@ -1369,7 +1486,26 @@ plot_fachkraft_bar_vakanz  <- function(r) {
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
@@ -1470,6 +1606,11 @@ plot_fachkraft_detail_item  <- function(r) {
  }
 
 
+
+
+ titel <- paste0("Engpassindikator für ", beruf,
+                 " auf dem ", bf_label, "-Level ", timerange, ": ", plot_solidgauge_data$epa_kat)
+
   plot_left <- highcharter::highchart() %>%
     highcharter::hc_chart(type = "solidgauge") %>%
     highcharter::hc_pane(
@@ -1537,7 +1678,26 @@ plot_fachkraft_detail_item  <- function(r) {
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
@@ -1545,6 +1705,12 @@ plot_fachkraft_detail_item  <- function(r) {
   # count "Engpassanalyse" to add line afterward
   sep_line_risiko <- sum(plot_bar_data$kategorie == "Engpassanalyse") - 0.4
   sep_line_engpass <-  -0.4
+
+
+
+  titel <- paste0("Einzelne Indikatoren der Engpassanalyse (gesamt ",
+                  round(plot_solidgauge_data$wert, 1),
+                  ") für Beruf ", this_beruf, " (", timerange, ")")
 
   plot_right <- highcharter::hchart(
     object = plot_bar_data,
@@ -1580,12 +1746,36 @@ plot_fachkraft_detail_item  <- function(r) {
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
 
   if ("Risikoanalyse" %in% plot_bar_data$kategorie) {
+
+    titel <- ""
+
+
+
     plot_right <- plot_right %>%
       highcharter::hc_xAxis(
         plotLines = list(
@@ -1622,7 +1812,26 @@ plot_fachkraft_detail_item  <- function(r) {
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )

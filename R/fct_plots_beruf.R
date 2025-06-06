@@ -129,8 +129,8 @@ beruf_einstieg_vergleich <- function(r) {
 
     #titel <- ist_saarland(gruppe, regio, timerange)
     titel <- ifelse(regio != "Saarland",
-                    paste0(gruppe, " in ", regio, " (", timerange, ")"),
-                    paste0(gruppe, " im ", regio, " (", timerange, ")"))
+                    paste0(gruppe, " in ", regio, " (Anteil,", timerange, ")"),
+                    paste0(gruppe, " im ", regio, " (Anteil,", timerange, ")"))
 
     tooltip <- paste('Anteil: {point.percentage:.0f} % <br> Anzahl: {point.wert}')
     format <- '{point.percentage:.0f}%'
@@ -167,8 +167,8 @@ beruf_einstieg_vergleich <- function(r) {
 
 
       titel <- ifelse(regio == "Saarland",
-                      paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen im ", regio, " (", timerange, ")"),
-                      paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen in ", regio, " (", timerange, ")"))
+                      paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen im ", regio, " (Anzahl,", timerange, ")"),
+                      paste0("Beschäftigte in MINT in unterschiedlichen Beschäftigtengruppen in ", regio, " (Anzahl,", timerange, ")"))
       out <- balkenbuilder(df, titel, x="indikator", y="wert",group=NULL, tooltip = "Anzahl: {point.wert_disp}", format = "{value:, f}", color = "#b16fab")
     }
 
@@ -292,7 +292,7 @@ beruf_verlauf_single <- function(r) {
     # order years for plot
     df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
-    titel <- paste0("Anteil von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten o. Auszubildenden in ", regio)
+    titel <- paste0("Anzahl von MINT-Beschäftigten und -Auszubildenden an allen Beschäftigten o. Auszubildenden in ", regio)
     tooltip <- "{point.indikator} <br> Anteil: {point.wert_disp}"
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#35bd97", "#5d335a",
@@ -590,9 +590,16 @@ arbeitsmarkt_mint_bulas <- function(r) {
       df$display_abs <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
       df <- df[with(df, order(bundesland, jahr, decreasing = FALSE)), ]
 
-
-
-
+# print(states)
+#
+# ##
+#
+#       if (length(states) == 1){
+#         states = states
+#       } else{
+#         for (i in length(states)
+#
+#       }
 
       titel <- paste0("Anzahl von ", title_help, " in MINT-Berufen")
       tooltip <- "Anzahl: {point.display_abs}"
@@ -1643,7 +1650,7 @@ beruf_verlauf_faecher <- function(r) {
 
 
     # plot
-    titel <- ist_saarland2(optional1="Entwicklung der ", title_help, optional2=" in MINT", regio)
+    titel <- ist_saarland2(optional1="Entwicklung der Anzahl der ", title_help, optional2=" in MINT", regio)
     tooltip <- "{point.indikator} <br> Anzahl: {point.wert_disp}"
     format <- "{value:, f}"
     color <- as.character(colors)
@@ -1950,7 +1957,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
       # plot
 
-      titel <-  paste0("Anteil von ", title_help, " im Berufsfeld ", faecher, " im Berufsfeld ")
+      titel <-  paste0("Anteil von ", title_help, " im Berufsfeld ", faecher, " im Berufsfeld im Zeitraum ", timerange[1], " bis ", timerange[2] )
       tooltip <-"Anteil <br> Bundesland: {point.region} <br> Wert: {point.display_rel} %"
       format <- "{value} %"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
@@ -1972,7 +1979,7 @@ arbeitsmarkt_bula_faecher <- function(r) {
 
 
       # plot
-      titel <-  paste0("Anzahl von ", title_help, " in MINT-Berufen im Berufsfeld ", faecher)
+      titel <-  paste0("Anzahl von ", title_help, " in MINT-Berufen im Berufsfeld ", faecher, " im Zeitraum ", timerange[1], " bis ", timerange[2])
       tooltip <-  "Anzahl: {point.display_abs}"
       format <- "{value:, f}"
       color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24", "#8893a7", "#ee7775", "#9d7265", "#35bd97", "#5d335a",
@@ -2106,6 +2113,8 @@ arbeitsmarkt_überblick_fächer <- function( r) {
   if(indikator_choice == "Auszubildende (1. Jahr)") hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl Auszubildende mit neuem Lehrvertrag: {point.wert}"
 
   # plot
+
+  titel <- paste0( "Überblick über die Berufsfelder von ", title_help, br(), "in ",state, " (", timerange, ")")
   highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = fachbereich)) %>%
     highcharter::hc_tooltip(pointFormat = hover) %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
@@ -2131,7 +2140,29 @@ arbeitsmarkt_überblick_fächer <- function( r) {
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))))
+
+
+                                                   )
                                 )
                               )
     )
@@ -2422,16 +2453,17 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
   }
   else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
 
+
     df$indi_fach <- paste0(df$indikator, " - ", df$fachbereich)
     df <- df[with(df, order(proportion, decreasing = TRUE)), ] ######################################################
     if(gegenwert == "Ja"){
       titel <- ifelse(regio == "Saarland",
-                      paste0("Frauenanteil in MINT- und anderen Berufen im ", regio, " (", timerange, ")"),
-                      paste0("Frauenanteil in MINT- und anderen Berufen in ", regio, " (", timerange, ")"))
+                      paste0("Frauenanteil in ", faecher," und restlichen Berufen im ", regio, " (", timerange, ")"),
+                      paste0("Frauenanteil in ", faecher," und restlichen Berufen in ", regio, " (", timerange, ")"))
     }else{
       titel <- ifelse(regio == "Saarland",
-                      paste0("Frauenanteil in MINT-Berufen im ", regio, " (", timerange, ")"),
-                      paste0("Frauenanteil in MINT-Berufen in ", regio, " (", timerange, ")"))
+                      paste0("Frauenanteil in ", faecher," im ", regio, " (", timerange, ")"),
+                      paste0("Frauenanteil in ", faecher," in ", regio, " (", timerange, ")"))
     }
 
 
@@ -2461,7 +2493,27 @@ arbeitsmarkt_einstieg_pie_gender <- function(r) {
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))))
+                                                     )
                                   )
                                 )
       )
@@ -2517,7 +2569,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
   AND bundesland = {regio}
   AND anforderung = 'Gesamt'
   AND fachbereich = {faecher}
-  AND indikator IN ({faecher*})
+  AND indikator IN ({indi*})
   AND geschlecht = 'Frauen'
                              ", .con = con)
 
@@ -2594,7 +2646,6 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
     }
 
 
-
     titel <-  titel_text
     tooltip <-  "Anteil Frauen  {point.indikator} <br> Wert: {point.prop_disp} %"
     format <- "{value}%"
@@ -2634,7 +2685,7 @@ arbeitsmarkt_einstieg_verlauf_gender <- function(r) {
     }else{
     titel_text <- ifelse(regio == "Saarland",
                          paste0("Entwicklung der Anzahl an Frauen im Berufsfeld ", faecher, " im ", regio),
-                         paste0("Entwicklung der Anzahl an Frauen im Berufsfeld ", faecher, "in ", regio))
+                         paste0("Entwicklung der Anzahl an Frauen im Berufsfeld ", faecher, " in ", regio))
     }
 
 
@@ -2880,12 +2931,13 @@ arbeitsmarkt_wahl_gender <- function(r) {
      title_help <- ifelse(grepl("ausländische Auszubildende", indi), "ausländischer Auszubildender", title_help)
      title_help <- ifelse(grepl("Jahr", indi), "Auszubildender mit neuem Lehrvertrag", title_help)
 
-     titel_w <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil weiblicher ", title_help, ", die kein <br> MINT-Berufsfeld wählen (", timerange, ")"),
-                       paste0("Anteil weiblicher ", title_help, ", die das Berufsfeld <br>", faecher, " wählen (", timerange, ")"))
-     titel_m <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil männlicher ", title_help, ", die kein <br> MINT-Berufsfeld wählen (", timerange, ")"),
-                       paste0("Anteil männlicher ", title_help, ", die das Berufsfeld <br>", faecher, " wählen (", timerange, ")"))
+     titel_w <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil weiblicher ", title_help, ", <br> die kein <br> MINT-Berufsfeld wählen (", timerange, ")"),
+                       paste0("Anteil weiblicher ", title_help, ", <br> die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
+     titel_m <- ifelse(faecher == "Andere Berufsgruppen", paste0("Anteil männlicher ", title_help, ", <br> die kein <br> MINT-Berufsfeld wählen (", timerange, ")"),
+                       paste0("Anteil männlicher ", title_help, ", <br> die das Berufsfeld ", faecher, " wählen (", timerange, ")"))
 
      # plot
+
 
      df <- values_female
      joinby <- c("name", "bundesland")
@@ -3148,7 +3200,13 @@ arbeitsmarkt_top10 <- function( r){
         dplyr::slice(1:10)
     }
 
+
+    titel <- paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")")
     # Create female plot
+
+
+
+
     plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
       highcharter::hc_plotOptions(
         series = list(
@@ -3171,13 +3229,37 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))))
+                                                     )
                                   )
                                 )
       )
 
 
     # Create male plot
+
+
+
+    titel <- paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich ", fb ," in ", bula ," (", time, ")")
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
       highcharter::hc_plotOptions(
         series = list(
@@ -3201,7 +3283,26 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
@@ -3225,6 +3326,7 @@ arbeitsmarkt_top10 <- function( r){
     # das bleibt ohne verallgemeinerung da es spezialisierter ist.
 
     # Create female plot
+    titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb ,"  in ", bula ," (", time, ")")
     plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(
         series = list(
@@ -3247,12 +3349,35 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
 
     # Create male plot
+
+
+
+    titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von männlichen Neu-Auszubildenden im Fachbereich ",fb," in ", bula ," (", time, ")")
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(
         series = list(
@@ -3275,7 +3400,26 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
@@ -3539,6 +3683,9 @@ arbeitsmarkt_lk_detail_map <- function(r) {
 
 
   # create plots
+
+
+  titel <- paste0("Anteil von ", titel_sub1_2, titel_gesamt1, titel_gesamt1_2, " in ", states, " (", timerange, ")")
   highcharter::hcmap(
     paste0("countries/de/de-", state_code ,"-all"),
     data = df1_map,
@@ -3572,7 +3719,26 @@ arbeitsmarkt_lk_detail_map <- function(r) {
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )

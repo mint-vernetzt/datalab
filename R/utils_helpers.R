@@ -996,7 +996,7 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
                                   contextButton = list(
                                     menuItems = list("downloadPNG", "downloadCSV",
                                                      list(
-                                                       text = "Download TXT",
+                                                       text = "Daten für GPT",
                                                        onclick = htmlwidgets::JS(sprintf(
                                                          "function () {
      var date = new Date().toISOString().slice(0,10);
@@ -1041,7 +1041,7 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
                                 buttons = list(
                                   contextButton = list(
                                     menuItems = list("downloadPNG", "downloadCSV",list(
-                                      text = "Download TXT",
+                                      text = "Daten für GPT",
                                       onclick = htmlwidgets::JS(sprintf(
                                         "function () {
      var date = new Date().toISOString().slice(0,10);
@@ -1095,7 +1095,7 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
                                 contextButton = list(
                                   menuItems = list("downloadPNG", "downloadCSV",
                                                    list(
-                                                     text = "Download TXT",
+                                                     text = "Daten für GPT",
                                                      onclick = htmlwidgets::JS(sprintf(
                                                        "function () {
      var date = new Date().toISOString().slice(0,10);
@@ -1112,12 +1112,8 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
-                                                     )
-
-                                                   ))
-                                )
-                              )
+   }", gsub("'", "\\\\'", titel))))
+                                                   )))
     )
 
 
@@ -1148,7 +1144,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                                   contextButton = list(
                                     menuItems = list("downloadPNG", "downloadCSV",
                                                      list(
-                                                       text = "Download TXT",
+                                                       text = "Daten für GPT",
                                                        onclick = htmlwidgets::JS(sprintf(
                                                          "function () {
      var date = new Date().toISOString().slice(0,10);
@@ -1193,7 +1189,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                                   contextButton = list(
                                     menuItems = list("downloadPNG", "downloadCSV",
                                                      list(
-                                                       text = "Download TXT",
+                                                       text = "Daten für GPT",
                                                        onclick = htmlwidgets::JS(sprintf(
                                                          "function () {
      var date = new Date().toISOString().slice(0,10);
@@ -1211,11 +1207,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.click();
      }
    }", gsub("'", "\\\\'", titel))  #
-                                                       )
-
-                                                     ))
-                                  )
-                                )
+                                 )))
+                                    ))
       )
 
   } else if (is.null(group) && !is.null(optional)) {
@@ -1239,7 +1232,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                                   contextButton = list(
                                     menuItems = list("downloadPNG", "downloadCSV",
                                                      list(
-                                                       text = "Download TXT",
+                                                       text = "Daten für GPT",
                                                        onclick = htmlwidgets::JS(sprintf(
                                                          "function () {
      var date = new Date().toISOString().slice(0,10);
@@ -1286,7 +1279,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                                   contextButton = list(
                                     menuItems = list("downloadPNG", "downloadCSV",
                                                      list(
-                                                       text = "Download TXT",
+                                                       text = "Daten für GPT",
                                                        onclick = htmlwidgets::JS(sprintf(
                                                          "function () {
      var date = new Date().toISOString().slice(0,10);
@@ -1342,7 +1335,7 @@ balkenbuilder2 <- function(TF, df, titel , x, y, group, tooltip, format, color){
                                 contextButton = list(
                                   menuItems = list("downloadPNG", "downloadCSV",
                                                    list(
-                                                     text = "Download TXT",
+                                                     text = "Daten für GPT",
                                                      onclick = htmlwidgets::JS(sprintf(
                                                        "function () {
      var date = new Date().toISOString().slice(0,10);
@@ -1399,7 +1392,7 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
                                 contextButton = list(
                                   menuItems = list("downloadPNG", "downloadCSV",
                                                    list(
-                                                     text = "Download TXT",
+                                                     text = "Daten für GPT",
                                                      onclick = htmlwidgets::JS(sprintf(
                                                        "function () {
      var date = new Date().toISOString().slice(0,10);
@@ -1467,7 +1460,7 @@ if(prop==FALSE && wert == FALSE){
                                 contextButton = list(
                                   menuItems = list("downloadPNG", "downloadCSV",
                                                    list(
-                                                     text = "Download TXT",
+                                                     text = "Daten für GPT",
                                                      onclick = htmlwidgets::JS(sprintf(
                                                        "function () {
      var date = new Date().toISOString().slice(0,10);
@@ -1525,7 +1518,7 @@ if(prop==FALSE && wert == FALSE){
                                 contextButton = list(
                                   menuItems = list("downloadPNG", "downloadCSV",
                                                    list(
-                                                     text = "Download TXT",
+                                                     text = "Daten für GPT",
                                                      onclick = htmlwidgets::JS(sprintf(
                                                        "function () {
      var date = new Date().toISOString().slice(0,10);
@@ -1584,7 +1577,7 @@ if(prop==FALSE && wert == FALSE){
                                 contextButton = list(
                                   menuItems = list("downloadPNG", "downloadCSV",
                                                    list(
-                                                     text = "Download TXT",
+                                                     text = "Daten für GPT",
                                                      onclick = htmlwidgets::JS(sprintf(
                                                        "function () {
      var date = new Date().toISOString().slice(0,10);

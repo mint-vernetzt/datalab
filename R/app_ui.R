@@ -86,6 +86,7 @@ app_ui <- function(request) {
           "$('body').addClass('fixed');"
           )),
 
+
           shinydashboard::tabItems(
           shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
           shinydashboard::tabItem(tabName ="argumentationshilfe", mod_argumentation_ui("argumentationshilfe_ui_1")),
@@ -100,6 +101,8 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
           shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),
           shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))
+
+
         )
       )
 ))

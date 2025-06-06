@@ -180,6 +180,9 @@ home_einstieg <- function(r) {
    df <- df[with(df, order(prop, decreasing = TRUE)), ] ####
    titel <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
 
+
+
+   title <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = indikator, group = "fachbereich"))%>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
@@ -201,7 +204,26 @@ home_einstieg <- function(r) {
      highcharter::hc_exporting(enabled = TRUE,
                                buttons = list(
                                  contextButton = list(
-                                   menuItems = list("downloadPNG", "downloadCSV")
+                                   menuItems = list("downloadPNG", "downloadCSV",
+                                                    list(
+                                                      text = "Daten für GPT",
+                                                      onclick = htmlwidgets::JS(sprintf(
+                                                        "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                  )
                                )
      )
@@ -634,6 +656,10 @@ home_einstieg_gender <- function(r) {
 
       df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
+
+
+      titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
+
       out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=prop, group = geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
         highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
@@ -651,7 +677,26 @@ home_einstieg_gender <- function(r) {
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
@@ -670,6 +715,8 @@ home_einstieg_gender <- function(r) {
 
       df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
+
+      title <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
 
       out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = indikator, y = prop, group = geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht} Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
@@ -701,7 +748,26 @@ home_einstieg_gender <- function(r) {
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )

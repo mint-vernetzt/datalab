@@ -117,6 +117,8 @@ daten_download <- function(r){
     #
     #
 
+    save_regio <- regio
+
     }else if(regio != "Deutschland"){############################################################################
 
       regio <- dplyr::case_when(
@@ -126,6 +128,8 @@ daten_download <- function(r){
         regio == "Schleswig-Holstein" | regio == "Hamburg" ~ "Schleswig-Holstein / Hamburg",
         T ~ regio
       )
+
+      save_regio <- regio
 
       df_query <- glue::glue_sql("
        SELECT *
@@ -192,18 +196,19 @@ daten_download <- function(r){
 
     }
 
+
     ### Daten Demografie ----
     betrachtung <- "Gruppenvergleich - Balkendiagramm"
     timerange <- 2023 #L
     faecher <- "MINT"
 
 
-    regio_logisch <- c()
-    if (regio == "Brandenburg / Berlin") regio_logisch <- c("Brandenburg", "Berlin")
-    else if (regio == "Niedersachsen / Bremen") regio_logisch <- c("Niedersachsen", "Bremen")
-    else if (regio == "Rheinland-Pfalz / Saarland") regio_logisch <- c("Rheinland-Pfalz", "Saarland")
-    else if (regio == "Schleswig-Holstein / Hamburg") regio_logisch <- c("Schleswig-Holstein", "Hamburg")
-    else regio_logisch <- c(regio)
+    # regio_logisch <- c()
+    # if (regio == "Brandenburg / Berlin") regio_logisch <- c("Brandenburg", "Berlin")
+    # else if (regio == "Niedersachsen / Bremen") regio_logisch <- c("Niedersachsen", "Bremen")
+    # else if (regio == "Rheinland-Pfalz / Saarland") regio_logisch <- c("Rheinland-Pfalz", "Saarland")
+    # else if (regio == "Schleswig-Holstein / Hamburg") regio_logisch <- c("Schleswig-Holstein", "Hamburg")
+    # else regio_logisch <- c(regio)
 
 
     gruppe <- c(
@@ -211,33 +216,36 @@ daten_download <- function(r){
       "Beschäftigte u25",
       "Beschäftigte 25-55",
       "Beschäftigte ü55")
+#
+#     df_query <- glue::glue_sql("
+#     SELECT *
+#     FROM arbeitsmarkt_detail
+#     WHERE jahr = {timerange}
+#     AND landkreis = 'alle Landkreise'
+#     AND bundesland = {regio}
+#     AND anforderung = 'Gesamt'
+#    AND geschlecht = 'Gesamt'
+#    AND indikator IN ({gruppe*})
+#    AND fachbereich = {faecher}
+# ", .con = con)
 
-    df_query <- glue::glue_sql("
-    SELECT *
-    FROM arbeitsmarkt_detail
-    WHERE jahr = {timerange}
-    AND landkreis = 'alle Landkreise'
-    AND bundesland IN ({regio_logisch*})
-    AND anforderung = 'Gesamt'
-   AND geschlecht = 'Gesamt'
-   AND indikator IN ({gruppe*})
-   AND fachbereich = {faecher}
-", .con = con)
 
+    regio <- r$region_argumentationshilfe
 
-  #   df_query <- glue::glue_sql("
-  # SELECT *
-  # FROM arbeitsmarkt_detail
-  # WHERE jahr = {timerange}
-  # AND landkreis = 'alle Landkreise'
-  # AND bundesland = {regio}
-  # AND anforderung = 'Gesamt'
-  # AND geschlecht = 'Gesamt'
-  # AND indikator IN ({gruppe*})
-  # AND fachbereich = {faecher}
-  #                              ", .con = con)
+  df_query <- glue::glue_sql("
+SELECT *
+FROM arbeitsmarkt_detail
+WHERE jahr = {timerange}
+AND landkreis = 'alle Landkreise'
+AND bundesland = {regio}
+AND anforderung = 'Gesamt'
+AND geschlecht = 'Gesamt'
+AND indikator IN ({gruppe*})
+AND fachbereich = {faecher}
+                             ", .con = con)
 
     df1 <- DBI::dbGetQuery(con, df_query)
+
 
     df <- df1 %>%
       dplyr::select( "indikator", "bundesland", "landkreis", "fachbereich",
@@ -248,13 +256,12 @@ daten_download <- function(r){
     #          Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt")
 
 
-
     ### Nachwuchs ----
     query_df <- glue::glue_sql("
   SELECT region, fach, jahr, indikator, wert
   FROM studierende_detailliert
   WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
-    AND region IN ({regio_logisch*})
+    AND region = {regio}
     AND geschlecht = 'Gesamt'
     AND fach IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Ingenieurwissenschaften (ohne Informatik)')
     AND indikator = 'Studierende'
@@ -266,7 +273,7 @@ daten_download <- function(r){
   SELECT bundesland, fachbereich, jahr, kategorie, wert
   FROM arbeitsmarkt_detail
   WHERE jahr IN (2017, 2018, 2019, 2020, 2021, 2022, 2023)
-    AND bundesland IN ({regio_logisch*})
+    AND bundesland = {regio}
     AND geschlecht = 'Gesamt'
     AND fachbereich IN ('Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
     AND kategorie = 'Auszubildende'
@@ -419,7 +426,7 @@ daten_download <- function(r){
     plot_data_clean <- plot_data %>%
       mutate(Bereich = "Engpassindikator",
              Quelle = "Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt",
-             Region = region_reserve)
+             Region = save_regio)
 
 
     # 3. Demografie MINT
@@ -562,6 +569,9 @@ argument_verlauf <- function(r){
     color1 <- c("#b16fab")
     color2 <-  c("#154194","#66cbaf")
 
+    titel <- titel_beschäftigte
+
+
 
     out_beschäftigte <- highcharter::hchart(df_beschäftigte, 'line', highcharter::hcaes(x = "jahr", y = "wert", group = "indikator")) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -587,10 +597,31 @@ argument_verlauf <- function(r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                       )))
+                                  ))
       )
+
+    titel <- titel_andere
 
     out_andere <- highcharter::hchart(df_andere, 'line', highcharter::hcaes(x = "jahr", y = "wert", group = "indikator")) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -616,9 +647,28 @@ argument_verlauf <- function(r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                       )))
+                                  ))
       )
 
     out <- highcharter::hw_grid(
@@ -729,6 +779,8 @@ argument_fachkraft <- function(r){
     expanded_dt <- expanded_dt[!is.na(expanded_dt$group_col), ]
 
 
+    titel <- titel_1
+
     plot_left <- highcharter::hchart(
       object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[1]),
       type = "heatmap",
@@ -770,9 +822,28 @@ argument_fachkraft <- function(r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                       )))
+                                  ))
       )
 
     fach_2 <- dplyr::case_when(
@@ -831,9 +902,28 @@ argument_fachkraft <- function(r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel_2))  #
+                                                       )))
+                                  ))
       )
 
     out <- highcharter::hw_grid(
@@ -1026,6 +1116,8 @@ argument_fachkraft <- function(r){
     # Entfernen aller Zeilen, bei denen group_col NA ist
     expanded_dt <- expanded_dt[!is.na(expanded_dt$group_col), ]
 
+    titel <- titel_1
+
 
     plot_left <- highcharter::hchart(
       object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[1]),
@@ -1075,9 +1167,28 @@ argument_fachkraft <- function(r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                       )))
+                                  ))
       )
 
 
@@ -1098,6 +1209,8 @@ argument_fachkraft <- function(r){
                                       dplyr::pull(epa_kat) %>%
                                       unique())) %>%
         dplyr::pull(group_col)
+
+      titel <- titel_2
 
       plot_right <- highcharter::hchart(
         object = expanded_dt %>% dplyr::filter(mint_zuordnung == fach[2]),
@@ -1146,9 +1259,28 @@ argument_fachkraft <- function(r){
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
-                                    )
-                                  )
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                         )))
+                                    ))
         )
 
 
@@ -1236,9 +1368,28 @@ argument_demografie <- function(r){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )))
+                                ))
     )
 
 
@@ -1370,6 +1521,9 @@ argument_nachwuchs <- function(r){
   hcoptslang$thousandsSep <- "."
   options(highcharter.lang = hcoptslang)
 
+  titel <- ifelse(regio == "Saarland",
+                  paste0("Entwicklung der Nachwuchszahlen in den MINT-Disziplinen im ", regio),
+                  paste0("Entwicklung der Nachwuchszahlen in den MINT-Disziplinen in ", regio))
 
   out <- highcharter::hchart(df_nachwuchs_agg, 'line', highcharter::hcaes(x = jahr, y = wert, group = fach)) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -1397,9 +1551,28 @@ argument_nachwuchs <- function(r){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )))
+                                ))
     )
 
 
@@ -1488,6 +1661,9 @@ argument_wirkhebel <- function(r){
   final_data <- final_data[with(final_data, order(diff, decreasing = TRUE)),]
   final_data$diff_disp <- prettyNum(final_data$diff, decimal.mark = ",", big.mark = ".")
 
+
+
+
   out <- highcharter::hchart(final_data, 'bar', highcharter::hcaes(
     y = !!sym("diff"),
     x = !!sym("wirkhebel"),
@@ -1516,9 +1692,28 @@ argument_wirkhebel <- function(r){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )))
+                                ))
     )
 
 
