@@ -80,7 +80,15 @@ kurse_einstieg_comparison <- function(r) {
                                  menuItems = list("downloadPNG", "downloadCSV")
                                )
                              )
+   ) %>%
+   highcharter::hc_chart(
+     style = list(fontFamily = "Calibri Regular", fontSize = "14px"),
+     accessibility = list(
+       enabled = TRUE,
+       description = "123"
+     )
    )
+
 
  # titel <- paste0("Anteil von MINT-Belegungen an allen Belegungen in ", regio, " (", timerange,")")
  # tooltip <- "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}"
