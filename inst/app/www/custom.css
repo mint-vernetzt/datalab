@@ -337,3 +337,57 @@ background-color:#FCFCFD;
 .faq-table .rt-thead {
   display: none;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* Stil für die gesamte FAQ-Zeile */
+details {
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Stil für die Zusammenfassung (Frage-Titel) */
+.faq-summary {
+  font-size: 18px;
+  color: #000000; /* MINT-Blau */
+  font-weight: bold;
+  position: relative;
+  padding-left: 28px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+/* Fragezeichen-Icon vor dem Titel */
+.faq-summary::before {
+  content: '❓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 18px;
+  color: #000000; /* MINT-Grün */
+}
+
+/* Wenn geöffnet: anderes Symbol */
+details[open] .faq-summary::before {
+  content: '🔽';
+}
+
+/* Optional: Hover-Farbe */
+.faq-summary:hover {
+  color: #000000;
+}
+
+
+
+
+

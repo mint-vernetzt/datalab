@@ -55,7 +55,7 @@ plot_fachkraft_prognose  <- function(r) {
 
   data_list <- split(plot_data, plot_data$wirkhebel)
 
-  browser()
+ # browser()
 
   if (filter_wirkhebel[2] == "Frauen in MINT") filter_wirkhebel[2]<-"Mädchen und Frauen in MINT fördern"
   if (filter_wirkhebel[2] == "MINT-Bildung") filter_wirkhebel[2]<-"MINT-Nachwuchs fördern"
@@ -443,7 +443,7 @@ plot_fachkraft_prognose_detail  <- function(r) {
 
 
 
-  browser()
+  #browser()
 
 
 
@@ -538,7 +538,7 @@ plot_fachkraft_wirkhebel_analyse  <- function(r) {
                                ", .con = con)
   basis_wert <- DBI::dbGetQuery(con, df_query)
 
-  browser()
+  #browser()
 
   basis_wert <- basis_wert %>%
     dplyr::pull(wert)

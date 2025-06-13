@@ -340,7 +340,7 @@ plot_international_map <- function(r) {
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", title)))))
+   }", gsub("'", "\\\\'", title_m)))))
                                 )
                               )
     )
