@@ -4147,6 +4147,363 @@ plot_ranking_top_faecher <- function(r) {
 
 
 
+### Tab 5 ----
+plot_mint_faecher_frauen <- function(r){
+
+  # load UI inputs from reactive value
+  betrachtung <- r$ansicht_mint_fach_frauen
+  timerange <- r$jahr_mint_fach_frauen_frauen
+  regio <- r$region_mint_fach_frauen
+
+  if(betrachtung == "Einzelansicht - Kuchendiagramm"){
+    label_w <- r$gruppe_mint_fach_pies_frauen
+  }else{
+    label_w <- r$gruppe_mint_fach_balken_frauen
+  }
+  ebene <- r$ebene_mint_fach_frauen
+
+  color_fachbereich <- c(
+    "Ingenieurwissenschaften (inkl. Informatik)" = "#00a87a",
+    "Mathematik, Naturwissenschaften" = "#fcc433",
+    "Alle Nicht MINT-Fächer" = "#efe8e6"
+  )
+
+
+  labelll <- label_w
+
+  label_w <- gsub("weibliche ", "", label_w)
+
+
+
+
+
+  timerange <- as.character(r$jahr_mint_fach_frauen)  #
+  regio <- as.character(r$region_mint_fach_frauen)
+ ### stopifnot(length(regio) == 1)
+
+
+
+
+
+
+
+
+
+  color_fach_pie <- c(
+    "Informatik" = "#2D6BE1",
+    "Elektrotechnik und Informationstechnik" = "#00a87a",
+    "Maschinenbau/Verfahrenstechnik" = "#DDFFF6",
+    "Biologie" = "#fbbf24",
+    "Mathematik" = "#ee7775",
+    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt" =
+      "#35BD97",
+    "Bauingenieurwesen" = "#66CBAF",
+    "Ingenieurwesen allgemein" = "#007655",
+    "Chemie" = "#D97706",
+    "Physik, Astronomie" = "#F59E0B",
+    "Architektur, Innenarchitektur" = "#AFF3E0",
+    "Verkehrstechnik, Nautik" = "#005C43",
+    "Geographie" = "#fde68a",
+    "Pharmazie" = "#FCD34D",
+    "Raumplanung" = "#008F68",
+    "Geowissenschaften (ohne Geographie)" = "#fcc433",
+    "Materialwissenschaft und Werkstofftechnik" = "#004331",
+    "Vermessungswesen" = "#EFFFF7",
+    "Bergbau, Hüttenwesen" = "#EDF3FF",
+    "allgemeine naturwissenschaftliche und mathematische Fächer" = "#FEF3C7",
+
+    "Alle Nicht MINT-Fächer" = "#efe8e6"
+  )
+
+  color_fach_balken <- c(
+    "Informatik" = "#00a87a",
+    "Elektrotechnik und Informationstechnik" = "#00a87a",
+    "Maschinenbau/Verfahrenstechnik" = "#00a87a",
+    "Biologie" = "#fcc433",
+    "Mathematik" = "#fcc433",
+    "Wirtschaftsingenieurwesen mit ingenieurwissenschaftlichem Schwerpunkt" =
+      "#00a87a",
+    "Bauingenieurwesen" = "#00a87a",
+    "Ingenieurwesen allgemein" = "#00a87a",
+    "Chemie" = "#fcc433",
+    "Physik, Astronomie" = "#fcc433",
+    "Architektur, Innenarchitektur" ="#00a87a",
+    "Verkehrstechnik, Nautik" = "#00a87a",
+    "Geographie" = "#fcc433",
+    "allgemeine naturwissenschaftliche und mathematische Fächer" = "#fcc433",
+    "Pharmazie" = "#fcc433",
+    "Geowissenschaften (ohne Geographie)" = "#fcc433",
+    "Materialwissenschaft und Werkstofftechnik" = "#00a87a",
+    "Vermessungswesen" = "#00a87a",
+    "Bergbau, Hüttenwesen" = "#00a87a",
+    "Raumplanung" = "#00a87a",
+    "Alle Nicht MINT-Fächer" = "#efe8e6"
+  )
+
+  # filter dataset based on UI inputs
+  if(ebene == "MINT-Fachbereiche"){
+
+    if (length(label_w) == 0) {
+      stop("Fehler: label_w ist leer und verursacht eine ungültige SQL-Abfrage.")
+    }
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr == {timerange}
+        AND geschlecht = 'Frauen'
+        AND indikator IN ({label_w*})
+        AND region = {regio}
+        AND ((mint_select = 'MINT' AND typ = 'Aggregat') OR fachbereich = 'Nicht MINT')
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
+
+
+
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr == {timerange}
+        AND geschlecht = 'Frauen'
+        AND indikator IN ({label_w*})
+        AND region = {regio}
+        AND fachbereich = 'Gesamt'
+                               ", .con = con)
+
+    alle <- DBI::dbGetQuery(con, df_query)
+
+    alle <- alle %>%
+      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach)
+
+
+  }
+  else{
+
+
+    if (length(label_w) == 0) {
+      stop("Fehler: label_w ist leer und verursacht eine ungültige SQL-Abfrage.")
+    }
+
+    df_query <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {timerange}
+        AND geschlecht = 'Frauen'
+        AND indikator IN ({label_w*})
+        AND region = {regio}
+        AND mint_select = 'MINT'
+        AND NOT typ = 'Aggregat'
+                               ", .con = con)
+
+    df <- DBI::dbGetQuery(con, df_query)
+
+    df <- df %>%
+      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
+
+
+
+    df_query2 <- glue::glue_sql("
+        SELECT *
+        FROM studierende_detailliert
+        WHERE jahr = {timerange}
+        AND geschlecht = 'Frauen'
+        AND indikator IN ({label_w*})
+        AND region = {regio}
+        AND fachbereich = 'MINT'
+                               ", .con = con)
+
+    alle <- DBI::dbGetQuery(con, df_query2)
+
+    alle <- alle %>%
+      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach) #wieso -fah
+
+
+  }
+
+  #Anteil Berechnen
+  df <- df %>%
+    dplyr::left_join(alle, dplyr::join_by("indikator")) %>%
+    dplyr::select(-fachbereich.y) %>%
+    dplyr::rename(wert = wert.x,
+                  wert_ges = wert.y,
+                  fachbereich = fachbereich.x) %>%
+    dplyr::mutate(prop = round(wert/wert_ges * 100, 1))
+
+
+
+  #df vorbeiten für Plot-Darstellung
+  df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+
+
+
+  df <- df[with(df, order(prop, decreasing = FALSE)), ]
+
+#
+  if(ebene == "MINT-Fächergruppen" & betrachtung == "Einzelansicht - Kuchendiagramm"){
+    df <- df %>% dplyr::filter(prop > 2)
+  }
+
+  if(ebene == "MINT-Fachbereiche"){
+    df <- df %>%
+      dplyr::mutate(color = color_fachbereich[fach])
+  }else{
+    df <- df %>%
+      dplyr::mutate(color = color_fach_pie[fach])
+  }
+
+
+  if(betrachtung == "Einzelansicht - Kuchendiagramm"){
+
+    # Überschriften vorbereiten
+    ueberschrift_fct <- function(label){
+      titel_help <- ifelse(label == "weibliche Studierende", paste0(label, "n"), label)
+      titel_help <- ifelse(titel_help == "weibliche internationale Studierende", "weiblichen internationalen Studierenden", titel_help)
+      titel_help <- ifelse(grepl("weibliche Lehr", titel_help), "weiblichen Studierenden (Lehramt)", titel_help)
+      titel_help <- ifelse(titel_help == "weibliche internationale Studienanfänger:innen (1. Hochschulsemester)",
+                           "weiblichen internationalenen Studienanfänger:innen (1. Hochschulsemester)", titel_help)
+      return(titel_help)
+    }
+
+    if(length(label_w)==1){
+      titel_help <- ueberschrift_fct(labelll)
+
+      titel = ifelse(regio == "Saarland",
+                     paste0("MINT-Fächeranteile von ", titel_help , " im ", regio, " (", timerange, ")"),
+                     paste0("MINT-Fächeranteile von ", titel_help , " in ", regio, " (", timerange, ")"))
+      tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
+      color = as.character(df$color)
+
+      out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format='{point.prop}%')
+
+
+    } else if(length(label_w)==2){
+      titel_help1 <- ueberschrift_fct(labelll[1])
+      titel_help2 <- ueberschrift_fct(labelll[2])
+
+      titel <- text = paste0("MINT-Fächeranteile von ", titel_help1 , " in ", regio, " (", timerange, ")")
+      tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
+      color = as.character(df[df$indikator == label_w[1],]$color)
+
+      p1 <- piebuilder(df[df$indikator == label_w[1],], titel, x = "fach", y ="prop", tooltip, color, format='{point.prop}%')
+
+      #noch nutzen?
+
+      out <- p1
+
+    }
+  }
+  else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
+
+    df <- df[with(df, order(prop, decreasing = TRUE)), ]
+
+    if(ebene == "MINT-Fachbereiche"){
+      df <- df %>%
+        dplyr::mutate(color = color_fachbereich[fach])
+      col <- df$color
+      titel <- ifelse(regio == "Saarland",
+                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern im ",regio," (", timerange, ")", br(), "Studierendengruppe: ",labelll),
+                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern in ",regio," (", timerange, ")", br(), "Studierendengruppe: ",labelll))
+    }else{
+      df <- df %>%
+        dplyr::mutate(color = color_fach_balken[fach])
+      col <- df$color
+      titel <- ifelse(regio == "Saarland",
+                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern im ",regio," (", timerange, ")", br(), "Studierendengruppe: ",labelll),
+                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern in ",regio," (", timerange, ")", br(), "Studierendengruppe: ",labelll))
+
+    }
+
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
+      highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
+      highcharter::hc_yAxis(title = list(text=""), labels = list(format = "{value}%")) %>% #x-Achse -->Werte in %
+      highcharter::hc_xAxis(title= list(text="")
+      ) %>%
+      highcharter::hc_plotOptions(bar = list(
+        colorByPoint = TRUE,
+        colors = as.character(df$color)
+      )) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
+                                  )
+                                )
+      )
+
+  }
+
+  return(out)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Internationale Studis ----
 
 
