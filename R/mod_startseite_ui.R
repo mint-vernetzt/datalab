@@ -89,7 +89,7 @@ mod_startseite_start_ui <- function(id){
         style = "display: flex; justify-content: center;",
         tags$iframe(
           width = "800", height = "450",
-          src = "https://www.youtube.com/embed/9Ph3UATlnFs",
+          src = "https://www.youtube.com/embed/cFd8ZvegIhg",
           frameborder = "0",
           allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
           allowfullscreen = NA,
