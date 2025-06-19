@@ -75,6 +75,8 @@ kurse_einstieg_comparison <- function(r) {
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+   highcharter::hc_caption(text = "Quellen: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                           style = list(fontSize = "11px", color = "gray")) %>%
    highcharter::hc_exporting(enabled = TRUE,
                              buttons = list(
                                contextButton = list(
@@ -670,7 +672,8 @@ kurse_waffle_mint <- function(r) {
 
     # # # plot
 
-    titel <- paste0( "Anteil von ", kurs_help, "-Belegungen in ", help_title, " nach Bundesländern (",  timerange, ")"        )
+
+    titel <- paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")")
 
      #nicht in bar wegen categories
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
@@ -682,8 +685,7 @@ kurse_waffle_mint <- function(r) {
         colorByPoint = TRUE,
        colors = as.character(color_fach)
       )) %>%
-      highcharter::hc_title(text = paste0( "Anteil von ", indika, "-Belegungen nach Fächern in ", regio, " (", timerange, ")"
-      ),
+      highcharter::hc_title(text = titel,
       margin = 45,
       align = "center",
       style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%

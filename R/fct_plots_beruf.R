@@ -2773,6 +2773,8 @@ arbeitsmarkt_top10 <- function( r){
       highcharter::hc_chart(
         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
       ) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
@@ -3298,6 +3300,8 @@ arbeitsmarkt_lk_detail_map <- function(r) {
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom"
     ) %>%
+    highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024 freier Download, eigene Berechnungen durch MINTvernetzt.",
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(

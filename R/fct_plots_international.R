@@ -1275,7 +1275,7 @@ if (avg_line == "Ja"){
 
 
   titel <- title_dyn_top
-  
+
   #dies ist schon als funktion automatisiert, too complex
 
   plot_top <- highcharter::hchart(

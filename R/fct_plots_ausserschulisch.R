@@ -1085,7 +1085,7 @@ plot_mv_stimmung <- function(r){
 
 
     # quelle <- "Quelle der Daten: MINTvernetzt 2024."
-    
+
     plot <- df %>%
       highcharter::hchart(
         "bar", highcharter::hcaes(group = antwort , y = wert, x = typ)
@@ -1108,7 +1108,8 @@ plot_mv_stimmung <- function(r){
     highcharter::hc_chart(
       style = list(fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-    
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt 2024.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1145,7 +1146,7 @@ plot_mv_stimmung <- function(r){
  #               "#ee7775", "#fca5a5",
  #               "#66cbaf", "#35bd97" )
  #   tooltip <- paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')
- #   
+ #
 #
  #   plot <- balkenbuilder(df, titel, x, y, group=group, tooltip, format = "1", color = color, stacking = "percent", subtitel = subtitel, quelle =quelle)
 
