@@ -40,7 +40,7 @@ app_ui <- function(request) {
           style = "position: fixed;",
           id = "tabs",
           shinydashboard::menuItem("Startseite",  tabName = "startseite"),
-
+          shinydashboard::menuItem("Argumentationshilfe",  tabName = "argumentationshilfe"),
           p("MINT nach Bereichen:", style = "color: #154194; font-size: 16px; font-weight: 600;
           margin: 5px 0px 0px 10px;"),
           hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
@@ -58,9 +58,6 @@ app_ui <- function(request) {
 
           hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen")
-        #,
-
-
 
         )
       ),
@@ -97,8 +94,10 @@ app_ui <- function(request) {
           "$('body').addClass('fixed');"
           )),
 
+
           shinydashboard::tabItems(
           shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
+          shinydashboard::tabItem(tabName ="argumentationshilfe", mod_argumentation_ui("argumentationshilfe_ui_1")),
           shinydashboard::tabItem(tabName ="home", mod_home_ui("home_ui_1")),
           shinydashboard::tabItem(tabName ="schule", mod_schule_ui("schule_ui_1")),
           shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
@@ -110,6 +109,8 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
           shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),
           shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))
+
+
         )
       )
 ))
@@ -139,8 +140,14 @@ golem_add_external_resources <- function() {
     bundle_resources(
       path = app_sys("app/www"),
       app_title = "DataLab"
-    )
+    ),
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
+
+
+    # nouveau
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+
+
   )
 }

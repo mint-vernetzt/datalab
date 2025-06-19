@@ -33,8 +33,8 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
     shiny::radioButtons(
       inputId = ns("ansicht_mint_fach"),
       label = NULL,
-      choices = c("Einzelansicht - Kuchendiagramm", "Gruppenvergleich - Balkendiagramm"),
-      selected = "Einzelansicht - Kuchendiagramm"
+      choices = c("Gruppenvergleich - Balkendiagramm","Einzelansicht - Kuchendiagramm"),
+      selected = "Gruppenvergleich - Balkendiagramm"
     ),
 
     p("Jahr:"),

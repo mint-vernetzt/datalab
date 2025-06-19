@@ -124,12 +124,15 @@ mod_schule_kurse_ui <- function(id){
                                )
                              ),
                     tabPanel("MINT-Anteil im Zeitverlauf", br(),
-                             shiny::sidebarPanel(
+                             column(
                                width = 3,
-                               mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1"),
-
+                               shiny::sidebarPanel(
+                                 width = 12,
+                                 mod_schule_kurse_einstieg_verlauf_ui("mod_schule_kurse_einstieg_verlauf_ui_1"),
 
                                ),
+                               tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
+                             ),
                              shiny::mainPanel(
                                width = 9,
                                shinycssloaders::withSpinner(htmlOutput(ns("plot_einstieg_verlauf")),
@@ -244,6 +247,28 @@ mod_schule_kurse_ui <- function(id){
         )
 
         ))),
+
+
+
+#
+#   div(
+#     class = "linked-image",
+#     tags$a(
+#       href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
+#       target = "_blank",
+#       tags$img(
+#         src = "www/argument11.png",
+#         alt = "Community Plattform Aufruf",
+#         style = "max-width: 70%; height: auto; cursor: pointer;
+#           margin-bottom: 10px; margin-top: 10px;"
+#       )
+#     )
+#   ),
+#
+
+
+
+
   # Box 3 ----
     fluidRow(id="schule_frauen",
       shinydashboard::box(
@@ -292,12 +317,17 @@ mod_schule_kurse_ui <- function(id){
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
+                             column(
                                width = 3,
-                               tags$style(".well {background-color:#FFFFFF;}"),
-                               tags$head(tags$style(HTML(".small-box {height: 140px}"))),
-                               mod_schule_kurse_verlauf_gender_ui("mod_schule_kurse_verlauf_gender_ui_1")
+                               shiny::sidebarPanel(
+                                 width = 12,
+                                 tags$style(".well {background-color:#FFFFFF;}"),
+                                 tags$head(tags$style(HTML(".small-box {height: 140px}"))),
+                                 mod_schule_kurse_verlauf_gender_ui("mod_schule_kurse_verlauf_gender_ui_1")
                                ),
+                               tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
+                             ),###########
+
                              shiny::mainPanel(
                                width = 9,
                                shinycssloaders::withSpinner(highcharter::highchartOutput(ns("plot_verlauf_gender")),

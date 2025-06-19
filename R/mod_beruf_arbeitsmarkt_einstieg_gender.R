@@ -28,8 +28,8 @@ mod_beruf_arbeitsmarkt_einstieg_gender_ui <- function(id){
     shiny::radioButtons(
       inputId = ns("ansicht_arbeitsmarkt_einstieg_gender"),
       label = NULL,
-      choices = c("Einzelansicht - Kuchendiagramm", "Gruppenvergleich - Balkendiagramm"),
-      selected = "Einzelansicht - Kuchendiagramm"
+      choices = c("Gruppenvergleich - Balkendiagramm","Einzelansicht - Kuchendiagramm"),
+      selected = "Gruppenvergleich - Balkendiagramm"
     ),
     p("Jahr:"),
     shinyWidgets::sliderTextInput(

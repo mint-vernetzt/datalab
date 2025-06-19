@@ -316,3 +316,91 @@ background-color:#FCFCFD;
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+/* Grundlayout der reactable */
+.faq-table .rt-table {
+  border: none;
+  font-size: 15px;
+}
+
+/* Tabellenzeilen */
+.faq-table .rt-td {
+  padding: 8px 6px;
+  border-bottom: 1px solid #e5e5e5;
+  cursor: pointer;          /* Hand-Cursor signalisiert Klickbarkeit */
+}
+
+/* Hover-Effekt für Fragen */
+.faq-table .rt-tr:hover .rt-td {
+  background-color: #f7f7f7;
+}
+
+/* Antwort-Block (Details) */
+.faq-answer {
+  background: #fafafa;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #333;
+  border-left: 3px solid #154194;  /* dezenter Farbakzent links */
+  margin: 0;                       /* verhindert zusätzlichen Abstand */
+}
+
+/* Optional: Header (falls angezeigt) ausblenden */
+.faq-table .rt-thead {
+  display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* Stil für die gesamte FAQ-Zeile */
+details {
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Stil für die Zusammenfassung (Frage-Titel) */
+.faq-summary {
+  font-size: 18px;
+  color: #000000; /* MINT-Blau */
+  font-weight: bold;
+  position: relative;
+  padding-left: 28px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+/* Fragezeichen-Icon vor dem Titel */
+.faq-summary::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 18px;
+  color: #000000; /* MINT-Grün */
+}
+
+/* Wenn geöffnet: anderes Symbol */
+details[open] .faq-summary::before {
+  content: '▾';
+}
+
+/* Optional: Hover-Farbe */
+.faq-summary:hover {
+  color: #000000;
+}
+
+
+
+
+

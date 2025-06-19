@@ -11,6 +11,71 @@ library(tidyr)
 #' @noRd
 
 
+get_top10_hc_plot_options <- function(hc,
+                                      hc_title = "",
+                                      hc_tooltip = "",
+                                      max_percent_used = 100,
+                                      col = "#B16FAB") {
+
+
+  titel <- hc_title
+
+  out <- hc %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        boderWidth = 0,
+        dataLabels = list(enabled = TRUE, format = "{point.wert} %",
+                          style = list(textOutline = "none"))
+      )) %>%
+    highcharter::hc_tooltip(pointFormat = hc_tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = ""),
+                          labels = list(format = "{value} %"),
+                          min = 0,
+                          max = max_percent_used,
+                          tickInterval = 10) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_colors(c(col)) %>%
+    highcharter::hc_title(text = hc_title,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black",
+                                       useHTML = TRUE,
+                                       fontFamily = "SourceSans3-Regular",
+                                       fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
+                                )
+                              )
+    )
+
+  return(out)
+}
+
 
 add_avg_to_hc <- function(hc, hc_mean, type) {
 
@@ -229,7 +294,11 @@ plot_international_map <- function(r) {
   data_map_1 <- df7
 
 
+  titel <- title_m
+
+
   #zu komplex / different
+
   highcharter::highchart(type = "map") %>%
     highcharter::hc_add_series_map(
       map = map_selection,
@@ -256,12 +325,33 @@ plot_international_map <- function(r) {
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom") %>%
+
     highcharter::hc_caption(text = "    Quelle der Daten: Eurostat, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt.",
                             style = list(fontSize = "11px", color = "gray")) %>%
+
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", title_m)))))
                                 )
                               )
     )
@@ -718,7 +808,7 @@ df <- df %>%
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
     get_top10_hc_plot_options(
-      hc_title = paste0(t_quelle1, "Länder mit dem größten Anteil an ", t_gruppe, t_fach, " in ", timerange, t_quelle),
+      hc_title = paste0(t_quelle1, "Länder mit dem größten Anteil an ", t_gruppe, t_fach, " (", timerange, ")",t_quelle),
       hc_tooltip = hover,
       max_percent_used = max_percent_used,
       marker="OECD")
@@ -730,7 +820,7 @@ df <- df %>%
     'bar',
     highcharter::hcaes(y = wert, x = land)) %>%
     get_top10_hc_plot_options(
-      hc_title = paste0(t_quelle1, "Länder mit dem niedrigsten Anteil an ", t_gruppe, t_fach, " in ", timerange, t_quelle),
+      hc_title = paste0(t_quelle1, "Länder mit dem niedrigsten Anteil an ", t_gruppe, t_fach, " (", timerange,")", t_quelle),
       hc_tooltip = hover,
       max_percent_used = max_percent_used,
       marker="OECD")
@@ -1043,7 +1133,13 @@ if (avg_line == "Ja"){
 
   data_avg <- round(mean(data1$wert, na.rm = T),1)
 
+
+
+
+ titel <- title_dyn_top
+
   #dies ist schon als funktion automatisiert, too complex
+
     plot_top <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
       'bar',
@@ -1081,15 +1177,35 @@ if (avg_line == "Ja"){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
 
 
-
+  titel <- title_dyn_bot
 
     #dies ist schon als funktion automatisiert, too complex
+
     plot_bottom <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
       'bar',
@@ -1128,7 +1244,26 @@ if (avg_line == "Ja"){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
@@ -1139,7 +1274,10 @@ if (avg_line == "Ja"){
 } else if (avg_line == "Nein"){
 
 
+  titel <- title_dyn_top
+  
   #dies ist schon als funktion automatisiert, too complex
+
   plot_top <- highcharter::hchart(
     data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
     'bar',
@@ -1170,14 +1308,35 @@ if (avg_line == "Ja"){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
 
 
+  titel <- title_dyn_bot
 
   #dies ist schon als funktion automatisiert, too complex
+
   plot_bottom <- highcharter::hchart(
     data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
     'bar',
@@ -1208,7 +1367,26 @@ if (avg_line == "Ja"){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
@@ -1283,7 +1461,7 @@ plot_international_schule_map <- function(r) {
   # Hover & Titel vorbereiten
   titel <- paste0("Durchnittliche Leistung von Schüler:innen der ", help_l,
                   " im ", fach_m, "-Kompetenztest von ",
-                  label_m, " ", timerange)
+                  label_m, " (", timerange, ")")
 
   dfs$display_wert <- prettyNum(round(dfs$wert, 1),
                                 big.mark = ".",
@@ -1357,7 +1535,26 @@ plot_international_schule_map <- function(r) {
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
 
@@ -1449,6 +1646,11 @@ plot_international_schule_item <- function(r) {
   plot_data$group_col <- ifelse(plot_data$land == "Deutschland" & plot_data$group == "kein signifikanter Unterschied", "#008F68", plot_data$group_col )
 
 
+
+
+  titel <- paste0("Geschlechtsunterschiede der 4.-Klässler:innen im ",
+                  fach_m, "-Kompetenztest von ",
+                  label_m, " (", timerange, ")")
   out <- highcharter::hchart(
     plot_data,
     "item",
@@ -1495,7 +1697,26 @@ plot_international_schule_item <- function(r) {
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
@@ -1719,7 +1940,7 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = "Vergleich der sozialen Statuswerte",
+          title = paste0("Vergleich der sozialen Statuswerte im Bereich ", fach_m, " in ausgewählten Ländern (TIMSS, ", timerange, ")"),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -1796,7 +2017,7 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = "Vergleich der Geschlechter",
+          title = paste0("Vergleich der Geschlechter im Bereich ", fach_m, " in ausgewählten Ländern (TIMSS, ", timerange, ")"),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -1874,7 +2095,7 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = "Vergleich der Geschlechter",
+          title = paste0("Vergleich der Geschlechter im Bereich ", fach_m, " in ausgewählten Ländern (PISA, ", timerange, ")" ),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -1974,7 +2195,7 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = "Vergleich der Zuwanderungsgeschichte",
+          title = paste0("Vergleich der Zuwanderungsgeschichte im Bereich ", fach_m, " in ausgewählten Ländern (PISA, ", timerange, ")") ,
           xaxis = list(title = ""),
           yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -2074,7 +2295,7 @@ plot_international_schule_migration <- function(r) {
         ) %>%
         # Layout anpassen
         plotly::layout(
-          title = "Vergleich des Bildungskapitals",
+          title = paste0("Vergleich des Bildungskapitals im Bereich ", fach_m, " in ausgewählten Ländern (PISA, ", timerange, ")"),
           xaxis = list(title = ""),
           yaxis = list(title = ""),
           margin = list(l = 100, r = 50, t = 50, b = 50),
@@ -3232,7 +3453,10 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
                                 style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = TRUE)
 
+    titel <- title_bot
+
       #dies ist schon als funktion automatisiert, too complex
+
       plot_bottom <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
         'bar',
@@ -3272,7 +3496,26 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
@@ -3284,7 +3527,10 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
     } else if (avg_line == "Nein"){
 
 
+    titel <- title_top
+
       #dies ist schon als funktion automatisiert, too complex
+
       plot_top <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
         'bar',
@@ -3316,13 +3562,36 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
 
 
+     titel <-title_bot
+
+
       #dies ist schon als funktion automatisiert, too complex
+
       plot_bottom <- highcharter::hchart(
         data_fn %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
         'bar',
@@ -3354,7 +3623,26 @@ title_bot <- paste0("Länder Europas mit dem niedrigsten Anteil von ", inpp, "n 
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
@@ -3811,8 +4099,10 @@ plot_international_top10_mint_arb_gender <- function(r) {
     data_avg <- round(mean(data1$wert, na.rm = T),1)
 
 
+   titel <- title_top
 
     #dies ist schon als funktion automatisiert, too complex
+
     plot_top <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
       'bar',
@@ -3851,12 +4141,36 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(#
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
 
+
+   titel <- title_bot
+
     #dies ist schon als funktion automatisiert, too complex
+
     plot_bottom <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
       'bar',
@@ -3896,7 +4210,27 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
@@ -3907,6 +4241,8 @@ plot_international_top10_mint_arb_gender <- function(r) {
   } else if (avg_line == "Nein"){
 
 
+
+   titel <- title_top
 
     plot_top <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice(1:10),
@@ -3939,14 +4275,35 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
 
 
+   titel <- title_bot
 
     #dies ist schon als funktion automatisiert, too complex
+
     plot_bottom <- highcharter::hchart(
       data1 %>% dplyr::arrange(desc(wert)) %>% dplyr::slice_tail(n = 10),
       'bar',
@@ -3978,7 +4335,26 @@ plot_international_top10_mint_arb_gender <- function(r) {
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
@@ -4065,6 +4441,14 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
 
   tmp_df$variable <- factor(tmp_df$variable, levels = c("Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern",
                                                         "Anteil Absolvent*innen nach Fach an allen Fächern"))
+
+
+
+
+
+  titel <- paste0(
+    "Anteil der Ausbildungs-/Studiums-Anfänger*innen und Absolvent*innen in ",
+    fach_m, " in ", timerange)
   # Create the plot
   plot <- highcharter::hchart(object = tmp_df,
                               type = "column",
@@ -4104,7 +4488,27 @@ plot_international_arbeitsmarkt_vergleiche <- function(r) {
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )

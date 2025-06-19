@@ -1224,7 +1224,7 @@ darstellung <- function(id, title = NULL) {
 piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"), format = '{point.prop_besr}%', subtitel = NULL, quelle="Quelle"){
 
   if (is.null(subtitel)){
-    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y))) %>%
+    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y)), name = "value") %>%
       highcharter::hc_tooltip(
         pointFormat=tooltip) %>%
       highcharter::hc_colors(color) %>%
@@ -1252,6 +1252,7 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
      data += '\\n%s';  // <- Quelle anhängen
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -1263,6 +1264,7 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
        link.download = filename;
        link.click();
      }
+
    }",
                                                          gsub("'", "\\\\'", titel),  # Titel escapen
                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
@@ -1274,7 +1276,7 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
                                 )
       )
   } else {
-    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y))) %>%
+    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y)), name = "value") %>%
       highcharter::hc_tooltip(
         pointFormat=tooltip) %>%
       highcharter::hc_colors(color) %>%
@@ -1294,16 +1296,19 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
+
                                     menuItems = list("downloadPNG", "downloadCSV",
                                                      list(
                                                        text = "Daten für GPT",
                                                        onclick = htmlwidgets::JS(sprintf(
                                                          "function () {
+
      var date = new Date().toISOString().slice(0,10);
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
      data += '\\n%s';  // <- Quelle anhängen
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -1315,6 +1320,7 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
        link.download = filename;
        link.click();
      }
+
    }",
                                                          gsub("'", "\\\\'", titel),  # Titel escapen
                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
@@ -1325,7 +1331,6 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
                                   )
                                 )
       )
-
   }
 
   return(out)
@@ -1369,6 +1374,7 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
      data += '\\n%s';  // <- Quelle anhängen
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -1380,6 +1386,7 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
        link.download = filename;
        link.click();
      }
+
    }",
                                                        gsub("'", "\\\\'", titel),  # Titel escapen
                                                        gsub("'", "\\\\'", quelle)  # Quelle escapen
@@ -1436,6 +1443,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
      data += '\\n%s';  // <- Quelle anhängen
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -1447,6 +1455,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.download = filename;
        link.click();
      }
+
    }",
                                                          gsub("'", "\\\\'", titel),  # Titel escapen
                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
@@ -1487,6 +1496,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
      data += '\\n%s';  // <- Quelle anhängen
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -1498,6 +1508,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.download = filename;
        link.click();
      }
+
    }",
                                                          gsub("'", "\\\\'", titel),  # Titel escapen
                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
@@ -1540,6 +1551,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
      data += '\\n%s';  // <- Quelle anhängen
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -1551,6 +1563,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.download = filename;
        link.click();
      }
+
    }",
                                                          gsub("'", "\\\\'", titel),  # Titel escapen
                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
@@ -1595,6 +1608,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
      data += '\\n%s';  // <- Quelle anhängen
 
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
@@ -1606,6 +1620,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.download = filename;
        link.click();
      }
+
    }",
                                                          gsub("'", "\\\\'", titel),  # Titel escapen
                                                          gsub("'", "\\\\'", quelle)  # Quelle escapen
@@ -1901,7 +1916,29 @@ get_top10_hc_plot_options <- function(hc,
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )
+
+                                                   ))
                                 )
                               )
     )
@@ -1942,7 +1979,29 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )
+
+                                                   ))
                                 )
                               )
     )
@@ -1990,7 +2049,29 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )
+
+                                                   ))
                                 )
                               )
     )
@@ -2028,7 +2109,29 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )
+
+                                                   ))
                                 )
                               )
     )
@@ -2157,7 +2260,29 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )
+
+                                                   ))
                                 )
                               )
     )

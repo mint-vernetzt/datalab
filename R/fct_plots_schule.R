@@ -6,7 +6,6 @@ library(dbplyr)
 # Wer wählt MINT ----
 
 
-
 #' A function to plot time series
 #'
 #' @description A function to plot a bar chart
@@ -58,15 +57,17 @@ kurse_einstieg_comparison <- function(r) {
 
    df1 <- df1[with(df1, order(round(proportion,1), decreasing = FALSE)),]
 
+   titel <- paste0("Anteil von MINT-Belegungen in der Schule in ", regio, " (", timerange,")")
 
    #forcats, daher nicht in balkenbuilder
+
  out <-  highcharter::hchart(df1, 'bar', highcharter::hcaes(y = round(proportion,1), x = indikator, group = forcats::fct_rev(fachbereich))) %>%
     highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
     highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
     highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
-    highcharter::hc_title(text = paste0("Anteil von MINT-Belegungen an allen Belegungen in ", regio, " (", timerange,")"),
+    highcharter::hc_title(text = paste0("Anteil von MINT-Belegungen in der Schule in ", regio, " (", timerange,")"),
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -77,7 +78,26 @@ kurse_einstieg_comparison <- function(r) {
    highcharter::hc_exporting(enabled = TRUE,
                              buttons = list(
                                contextButton = list(
-                                 menuItems = list("downloadPNG", "downloadCSV")
+                                 menuItems = list("downloadPNG", "downloadCSV",
+                                                  list(
+                                                    text = "Daten für GPT",
+                                                    onclick = htmlwidgets::JS(sprintf(
+                                                      "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                )
                              )
    )
@@ -174,7 +194,7 @@ kurse_verlauf_single <- function(r) {
    df <- df[with(df, order(jahr, decreasing = FALSE)), ]
 
     # plot
-    titel <- paste0("Anteil von MINT-Belegungen an allen Belegungen in ", regio)
+    titel <- paste0("Anteil von MINT-Belegungen in der Schule in ", regio)
     tooltip <- "Anteil: {point.indikator} <br> Wert: {point.y} %"
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf")
@@ -650,9 +670,11 @@ kurse_waffle_mint <- function(r) {
 
     # # # plot
 
-    #nicht in bar wegen categories
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
-      highcharter::hc_tooltip(pointFormat = "Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
+    titel <- paste0( "Anteil von ", kurs_help, "-Belegungen in ", help_title, " nach Bundesländern (",  timerange, ")"        )
+    
+     #nicht in bar wegen categories
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
+      highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
       highcharter::hc_xAxis(title = list(text = ""), categories = c
       ) %>%
@@ -674,7 +696,26 @@ kurse_waffle_mint <- function(r) {
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                   )
                                 )
       )
@@ -961,9 +1002,6 @@ kurse_map <- function(r) {
     indikator_select <- r$topic_selected_multiple
 
 
-
-
-
     df_query <- glue::glue_sql("
     SELECT indikator, fachbereich, anzeige_geschlecht, region, jahr, wert
     FROM kurse
@@ -1135,33 +1173,47 @@ kurse_map <- function(r) {
 
     df <- df %>% dplyr::arrange(desc(proportion))
 
-    #Plot
-    #net verwendet da kein color
-    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
-      highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
-      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
-      highcharter::hc_xAxis(title = list(text = "")) %>%
-      highcharter::hc_plotOptions(bar = list(
-        colorByPoint = TRUE,
-        colors = ifelse(df$region == "Deutschland", "#b16fab",
-                        ifelse(df$region == "Ostdeutschland (inkl. Berlin)", "#d3a4d7",
-                               ifelse(df$region == "Westdeutschland (o. Berlin)", "#d3a4d7", "#A9A9A9"))))) %>%
-      highcharter::hc_title(text = paste0( "Anteil von ", kurs_help, "-Belegungen in ", help_title, " nach Bundesländern (",  timerange, ")"
-      ),
-      margin = 20,
-      align = "center",
-      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
-      highcharter::hc_chart(
-        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
-      ) %>%
-      highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
-     highcharter::hc_caption(text = "Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-                              style = list(fontSize = "11px", color = "gray")) %>%
-      highcharter::hc_exporting(enabled = TRUE,
-                                buttons = list(
-                                  contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
+  titel <-  paste0( "Anteil von ", kurs_help, "belegungen in ", help_title, " nach Bundesländern (",  timerange, ")" )
+  out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
+    highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
+    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
+    highcharter::hc_xAxis(title = list(text = "")) %>%
+    # highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+    # highcharter::hc_colors(c("#efe8e6", "#b16fab")) %>%
+    highcharter::hc_colors("#b16fab") %>%
+    highcharter::hc_title(text = paste0( "Anteil von ", kurs_help, "belegungen in ", help_title, " nach Bundesländern (",  timerange, ")"
+                                        ),
+                          margin = 20,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+    ) %>%
+    highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
+
                                 )
       )
 
@@ -1518,6 +1570,51 @@ kurse_map <- function(r) {
 #'   }
 #'
 #'   # plot
+#' titel <- paste0( "Anteil von ", indikator_comparison, "-Belegungen nach Fächern in ", state, " (", timerange, ")")
+#  out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
+ #   highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
+#    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%")) %>%
+ #   highcharter::hc_xAxis(title = list(text = ""), categories = c
+  #  ) %>%
+   # highcharter::hc_plotOptions(bar = list(
+    #  colorByPoint = TRUE,
+     # colors = ifelse(df$fachbereich %in% c("MINT-Fächer (gesamt)", "andere Fächer (gesamt)"), "#b16fab", "#d0a9cd"#)
+#    )) %>%
+ #   highcharter::hc_title(text = paste0( "Anteil von ", indikator_comparison, "-Belegungen nach Fächern in ", state, " (", timerange, ")"
+  #                                       ),
+   #                       margin = 45,
+    #                      align = "center",
+     #                     style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+  #  highcharter::hc_chart(
+   #   style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+   # ) %>%
+   # highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+   # highcharter::hc_exporting(enabled = TRUE,
+    #                          buttons = list(
+     #                           contextButton = list(
+      #                            menuItems = list("downloadPNG", "downloadCSV",
+       #                                            list(
+        #                                             text = "Daten für GPT",
+         #                                            onclick = htmlwidgets::JS(sprintf(
+          #                                             "function () {
+    # var date = new Date().toISOString().slice(0,10);
+#     #var chartTitle = '%s'.replace(/\\s+/g, '_');
+ #    var filename = chartTitle + '_' + date + '.txt';
+#
+ #    var data = this.getCSV();
+  #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+   #  if (window.navigator.msSaveBlob) {
+#       window.navigator.msSaveBlob(blob, filename);
+ #    } else {
+  #     var link = document.createElement('a');
+   #    link.href = URL.createObjectURL(blob);
+#       link.download = filename;
+ #      link.click();
+  #   }
+#   }", gsub("'", "\\\\'", titel)))))
+ #                               )
+  #                            )
+   # )                                  
 #'   #net verwendet da kein color explizit und komplexer
 #'   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
 #'     highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
@@ -1943,6 +2040,8 @@ kurse_comparison_gender <- function(r) {
     if(gegenwert == "Ja"){
 
 
+      titel <- paste0("Anteil von Mädchen in MINT- und anderen Fächern in ",regio, " (", timerange, ")")
+
       #nicht als funktion, da es 1) zu komplex und 2) besondere feinheiten enthält, die die funktion balkenbuilder überlasten würde
       out <- highcharter::hchart(df1, 'bar', highcharter::hcaes( x = indikator, y=round(proportion,1), group = anzeige_geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}-Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
@@ -1968,12 +2067,34 @@ kurse_comparison_gender <- function(r) {
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                     )
                                   ))
 
 
     }else if(gegenwert == "Nein"){
+
+
+      titel <- paste0("Anteil von Mädchen in MINT-Fächern in ",regio, " (", timerange, ")"   )
 
       df1 <- df1 %>% dplyr::filter(indikator %in%
                                      c("Grundkurse MINT-Fächer",
@@ -2001,7 +2122,26 @@ kurse_comparison_gender <- function(r) {
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
@@ -2375,6 +2515,9 @@ iqb_standard_zeitverlauf <- function(r){
     kl_select == "9. Klasse" ~ "#b16fab"
   )
 
+
+
+  titel <- paste0("Anteil der Schüler:innen aus ", title_help, ", die den Mindeststandard in Mathematik nicht erreichen (", kl_select, ")")
   out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = region, group=jahr))%>%
     highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
     highcharter::hc_tooltip(pointFormat = "{point.jahr} <br> {point.display_rel} % leistungsschwach")%>%
@@ -2394,7 +2537,26 @@ iqb_standard_zeitverlauf <- function(r){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )
@@ -2558,6 +2720,10 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
       df <- df %>%
         dplyr::mutate(display_rel = prettyNum(df$wert, big.mark = ".", decimal.mark = ","))
 
+
+
+      titel <- paste0("Anteil der Schüler:innen, die den Mindeststandard in Mathematik nicht erreichen, nach Geschlecht in " , bl_select, " (", klasse_select, ")")
+
      out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
         highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
         highcharter::hc_tooltip(pointFormat = "{point.geschlecht} <br> Anteil Mindeststandard nicht erreicht: {point.display_rel} %")%>%
@@ -2582,12 +2748,34 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
        highcharter::hc_exporting(enabled = TRUE,
                                  buttons = list(
                                    contextButton = list(
-                                     menuItems = list("downloadPNG", "downloadCSV")
+                                     menuItems = list("downloadPNG", "downloadCSV",
+                                                      list(
+                                                        text = "Daten für GPT",
+                                                        onclick = htmlwidgets::JS(sprintf(
+                                                          "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                    )
                                  )
        )
     } else{
       df$wert <- round(df$wert,1)
+
+
+    titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")")
 
       out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
         highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -2614,7 +2802,26 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
@@ -2624,6 +2831,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
   else{
     if(indikator_select == "nach Geschlecht" & klasse_select == "9. Klasse") {
       df$wert <- round(df$wert,1)
+
+
+      titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest nach Geschlecht in " , bl_select, " (", klasse_select, ")")
 
       out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = geschlecht))%>%
         highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -2649,7 +2859,26 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
@@ -2657,6 +2886,8 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
       if(klasse_select == "4. Klasse") {
 
         df$wert <- round(df$wert,1)
+
+        titel <- paste0("Durchschnittliche Leistung der Schüler:innen im Mathematik-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")")
 
         out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
           highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -2680,7 +2911,26 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
           highcharter::hc_exporting(enabled = TRUE,
                                     buttons = list(
                                       contextButton = list(
-                                        menuItems = list("downloadPNG", "downloadCSV")
+                                        menuItems = list("downloadPNG", "downloadCSV",
+                                                         list(
+                                                           text = "Daten für GPT",
+                                                           onclick = htmlwidgets::JS(sprintf(
+                                                             "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                       )
                                     )
           )
@@ -2688,6 +2938,9 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
         if(bl_select %in% c("Berlin", "Bremen", "Saarland")){
           df <- df %>% dplyr::filter(jahr == "2018")
           df$wert <- round(df$wert,1)
+
+
+          titel <- paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")")
 
           out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
             highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -2708,12 +2961,34 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
             highcharter::hc_exporting(enabled = TRUE,
                                       buttons = list(
                                         contextButton = list(
-                                          menuItems = list("downloadPNG", "downloadCSV")
+                                          menuItems = list("downloadPNG", "downloadCSV",
+                                                           list(
+                                                             text = "Daten für GPT",
+                                                             onclick = htmlwidgets::JS(sprintf(
+                                                               "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                         )
                                       )
             )
         }else{
           df$wert <- round(df$wert,1)
+
+
+          titel <-  paste0("Durchschnittliche Leistung der Schüler:innen im ", fach_select, "-Kompetenztest ", indikator_select, " in " , bl_select, " (", klasse_select, ")")
 
           out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
             highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
@@ -2735,7 +3010,26 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
             highcharter::hc_exporting(enabled = TRUE,
                                       buttons = list(
                                         contextButton = list(
-                                          menuItems = list("downloadPNG", "downloadCSV")
+                                          menuItems = list("downloadPNG", "downloadCSV",
+                                                           list(
+                                                             text = "Daten für GPT",
+                                                             onclick = htmlwidgets::JS(sprintf(
+                                                               "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                         )
                                       )
             )
@@ -2792,7 +3086,14 @@ iqb_fragebogen <- function(r){
   df$geschlecht <- as.factor(df$geschlecht)
   df$geschlecht <- factor(df$geschlecht, levels = c("Mädchen", "Jungen"))
 
+
+
+
+
+
   # plot
+  titel <- paste0("Selbsteinschätzung des Interesses und der eigenen Fähigkeiten in ", fach_select,
+                  " von Schüler:innen der 4. Klasse (", jahr_select, ")"         )
   out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = round(wert, 1), x = indikator, group = geschlecht))%>%
     highcharter::hc_plotOptions(column = list(pointWidth = 90))%>%
     highcharter::hc_tooltip(pointFormat = "{point.geschlecht} <br> {point.display_rel}")%>%
@@ -2818,7 +3119,26 @@ iqb_fragebogen <- function(r){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                 )
                               )
     )

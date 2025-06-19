@@ -42,6 +42,7 @@ mod_studium_server <- function(id,r){
   mod_studium_studienzahl_einstieg_verlauf_gender_server("mod_studium_studienzahl_einstieg_verlauf_gender_ui_1", r)
   mod_studium_choice_gender_server("mod_studium_studienzahl_choice_gender_ui",r)
   mod_studium_top_faecher_server("mod_studium_top_faecher", r)
+  mod_studium_studienzahl_mintfrauen_server("mod_studium_studienzahl_mintfrauen_ui_1",r)
 
   # Box 4
   mod_studium_studienzahl_ausl_server("mod_studium_studienzahl_ausl_ui",  r)
