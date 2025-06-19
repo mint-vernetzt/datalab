@@ -369,7 +369,7 @@ details {
 
 /* Fragezeichen-Icon vor dem Titel */
 .faq-summary::before {
-  content: '❓';
+  content: '▸';
   position: absolute;
   left: 0;
   top: 0;
@@ -379,7 +379,7 @@ details {
 
 /* Wenn geöffnet: anderes Symbol */
 details[open] .faq-summary::before {
-  content: '🔽';
+  content: '▾';
 }
 
 /* Optional: Hover-Farbe */

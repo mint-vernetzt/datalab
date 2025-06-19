@@ -10,13 +10,13 @@
 mod_studium_studienzahl_mintfrauen_ui <- function(id){
   ns <- NS(id)
   tagList(
-    p("Darstellungsart:"),
-    shiny::radioButtons(
-      inputId = ns("ansicht_mint_fach_frauen"),
-      label = NULL,
-      choices = c("Gruppenvergleich - Balkendiagramm","Einzelansicht - Kuchendiagramm"),
-      selected = "Gruppenvergleich - Balkendiagramm"
-    ),
+    # p("Darstellungsart:"),
+    # shiny::radioButtons(
+    #   inputId = ns("ansicht_mint_fach_frauen"),
+    #   label = NULL,
+    #   choices = c("Gruppenvergleich - Balkendiagramm","Einzelansicht - Kuchendiagramm"),
+    #   selected = "Gruppenvergleich - Balkendiagramm"
+    # ),
 
     p("Jahr:"),
     shinyWidgets::sliderTextInput(
@@ -52,53 +52,27 @@ mod_studium_studienzahl_mintfrauen_ui <- function(id){
       multiple = FALSE,
       selected = c("Deutschland")
     ),
-    p("Fächer-Ebene:"),
+    # p("Fächerebene:"),
+    # shinyWidgets::pickerInput(
+    #   inputId = ns("ebene_mint_fach_frauen"),
+    #   choices = c("MINT-Fachbereiche", "MINT-Fächergruppen"),
+    #   selected = "MINT-Fachbereiche"
+    # ),
+    p("Bereich:"),
     shinyWidgets::pickerInput(
-      inputId = ns("ebene_mint_fach_frauen"),
-      choices = c("MINT-Fachbereiche", "MINT-Fächergruppen"),
-      selected = "MINT-Fachbereiche"
-    ),
-    conditionalPanel(condition = "input.ansicht_mint_fach_frauen ==
-                     'Einzelansicht - Kuchendiagramm'",
-                     ns = ns,
-
-                     p("Studierendengruppen:"),
-                     shinyWidgets::pickerInput(
-                       inputId = ns("gruppe_mint_fach_pies_frauen"),
-                       choices = c("weibliche Studierende",
-                                   "weibliche Studierende (Lehramt)",
-                                   "weibliche internationale Studierende",
-                                   "weibliche Studienanfänger:innen (1. Hochschulsemester)",
-                                   "weibliche internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                   "weibliche Absolvent:innen",
-                                   "weibliche internationale Absolvent:innen"),
-                       selected = c("weibliche Studierende"),
-                       multiple = FALSE
-                     ),
-                     br(),
-                     darstellung("dh_studium_mint_fachh1"),
-                     br(),
-                     br(),
-                     shinyBS::bsPopover(id="ih_studium_mint_fach_211", title="",
-                                        content = paste0("Die erste Darstellung zeigt: Zusammen gerechnet knapp 37 % der Studierenden belegen ein MINT-Fach. Der Großteil davon (26 %) studiert eine Ingenieurwissenschaft, wozu auch ein Informatikstudium zählt."),
-                                        trigger = "hover", placement = "top"),
-                     tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_fach_211")
+      inputId =  ns("ebene_mint_fach_frauen"),
+      choices = c("MINT", "Nicht MINT"),
+      selected = "MINT"
     ),
 
-    conditionalPanel(condition = "input.ansicht_mint_fach_frauen ==
-                     'Gruppenvergleich - Balkendiagramm'",
-                     ns = ns,
                      p("Studierendengruppen:"),
                      shinyWidgets::pickerInput(
                        inputId = ns("gruppe_mint_fach_balken_frauen"),
 
                        choices =c("weibliche Studierende",
                                   "weibliche Studierende (Lehramt)",
-                                  "weibliche internationale Studierende",
                                   "weibliche Studienanfänger:innen (1. Hochschulsemester)",
-                                  "weibliche internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                  "weibliche Absolvent:innen",
-                                  "weibliche internationale Absolvent:innen"),
+                                  "weibliche Absolvent:innen"),
                        selected = c("weibliche Studierende"),
                        multiple = FALSE
                      ),
@@ -109,7 +83,6 @@ mod_studium_studienzahl_mintfrauen_ui <- function(id){
                                         trigger = "hover"),
                      tags$a(paste0("Interpretationshilfe zur Grafik"), icon("info-circle"), id="ih_studium_mint_fach_3_frauen")
     )
-  )
 
 }
 
@@ -119,9 +92,9 @@ mod_studium_studienzahl_mintfrauen_ui <- function(id){
 mod_studium_studienzahl_mintfrauen_server <- function(id, r){
   moduleServer( id, function(input, output, session){
 
-    observeEvent(input$ansicht_mint_fach_frauen, {
-      r$ansicht_mint_fach_frauen <- input$ansicht_mint_fach_frauen
-    })
+    # observeEvent(input$ansicht_mint_fach_frauen, {
+    #   r$ansicht_mint_fach_frauen <- input$ansicht_mint_fach_frauen
+    # })
 
     observeEvent(input$jahr_mint_fach_frauen, {
       r$jahr_mint_fach_frauen <- input$jahr_mint_fach_frauen
@@ -135,9 +108,9 @@ mod_studium_studienzahl_mintfrauen_server <- function(id, r){
       r$ebene_mint_fach_frauen <- input$ebene_mint_fach_frauen
     })
 
-    observeEvent(input$gruppe_mint_fach_pies_frauen, {
-      r$gruppe_mint_fach_pies_frauen <- input$gruppe_mint_fach_pies_frauen
-    })
+    # observeEvent(input$gruppe_mint_fach_pies_frauen, {
+    #   r$gruppe_mint_fach_pies_frauen <- input$gruppe_mint_fach_pies_frauen
+    # })
 
     observeEvent(input$gruppe_mint_fach_balken_frauen, {
       r$gruppe_mint_fach_balken_frauen <- input$gruppe_mint_fach_balken_frauen

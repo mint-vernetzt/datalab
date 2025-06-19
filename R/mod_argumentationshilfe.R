@@ -810,6 +810,7 @@ mod_argumentation_ui <- function(id){
 
         tags$details(
           tags$summary(strong(class = "faq-summary","Kann ich den MINT-DataLab-GPT auch ohne OpenAI-Konto nutzen?")),
+          br(),
           HTML("
     <p><strong>Nein</strong>, die Nutzung des MINT-DataLab-GPT erfordert ein aktives OpenAI-Konto.</p>
     <p>Da es sich um einen individualisierten GPT handelt, läuft der Zugriff über die Infrastruktur von OpenAI. Die Registrierung ist <strong>kostenlos</strong> und in wenigen Schritten möglich.</p>
@@ -818,6 +819,7 @@ mod_argumentation_ui <- function(id){
 
         tags$details(
           tags$summary(strong(class = "faq-summary","Welche Quellen muss ich angeben, wenn ich die Argumentationshilfe nutze?")),
+          br(),
           HTML("
     <p>Beim Herunterladen der Grafiken werden die <strong>Quellen der zugrunde liegenden Daten automatisch</strong> mitgeliefert.</p>
     <p>Der MINT-DataLab-GPT ergänzt diese um Angaben zu verwendeten Daten oder Online-Recherchen.</p>
@@ -828,6 +830,7 @@ mod_argumentation_ui <- function(id){
 
         tags$details(
           tags$summary(class = "faq-summary","Kann ich auch andere Daten mit dem MINT-DataLab-GPT analysieren?"),
+          br(),
           HTML("
     <p>Der MINT-DataLab-GPT ist auf die Daten des MINT-DataLabs spezialisiert, kann jedoch grundsätzlich auch <strong>andere oder eigene Daten</strong> verarbeiten.</p>
     <p>Hinweis: Externe Formate können zu <em>Lesefehlern</em> führen. Bitte prüfen Sie die Korrektheit Ihrer Daten sorgfältig.</p>
@@ -836,6 +839,7 @@ mod_argumentation_ui <- function(id){
 
         tags$details(
           tags$summary(strong(class = "faq-summary","Wie kann ich das Ergebnis exportieren?")),
+          br(),
           HTML("
     <p>Der MINT-DataLab-GPT liefert direkt nutzbare <strong>Textbausteine</strong>, z.B. für Berichte oder Präsentationen.</p>
     <p>Export per <code>.txt</code>-Datei oder durch <em>Copy & Paste</em> möglich.</p>
@@ -846,6 +850,7 @@ mod_argumentation_ui <- function(id){
 
         tags$details(
           tags$summary(strong(class = "faq-summary","Ich habe ein Fehlverhalten festgestellt, wo kann ich das melden?")),
+          br(),
           HTML("
     <p>Der MINT-DataLab-GPT ist aktuell eine <strong>Beta-Version</strong>.</p>
     <p>Bitte senden Sie Feedback formlos per E-Mail an:</p>

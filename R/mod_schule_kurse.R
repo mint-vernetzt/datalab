@@ -365,25 +365,21 @@ mod_schule_kurse_ui <- function(id){
 
 
 
-
-
-
-
-
-  div(
-    class = "linked-image",
-    tags$a(
-      href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
-      target = "_blank",
-      tags$img(
-        src = "www/argument11.png",
-        alt = "Community Plattform Aufruf",
-        style = "max-width: 70%; height: auto; cursor: pointer;
-          margin-bottom: 10px; margin-top: 10px;"
-      )
-    )
-  ),
-
+#
+#   div(
+#     class = "linked-image",
+#     tags$a(
+#       href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
+#       target = "_blank",
+#       tags$img(
+#         src = "www/argument11.png",
+#         alt = "Community Plattform Aufruf",
+#         style = "max-width: 70%; height: auto; cursor: pointer;
+#           margin-bottom: 10px; margin-top: 10px;"
+#       )
+#     )
+#   ),
+#
 
 
 

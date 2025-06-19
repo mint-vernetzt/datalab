@@ -4151,43 +4151,31 @@ plot_ranking_top_faecher <- function(r) {
 plot_mint_faecher_frauen <- function(r){
 
   # load UI inputs from reactive value
-  betrachtung <- r$ansicht_mint_fach_frauen
-  timerange <- r$jahr_mint_fach_frauen_frauen
+  timerange <- r$jahr_mint_fach_frauen
   regio <- r$region_mint_fach_frauen
 
-  if(betrachtung == "Einzelansicht - Kuchendiagramm"){
-    label_w <- r$gruppe_mint_fach_pies_frauen
-  }else{
-    label_w <- r$gruppe_mint_fach_balken_frauen
-  }
+  label_w <- r$gruppe_mint_fach_balken_frauen
+
   ebene <- r$ebene_mint_fach_frauen
+
+  labelll <- label_w
+  label_w <- gsub("weibliche ", "", label_w)
+
 
   color_fachbereich <- c(
     "Ingenieurwissenschaften (inkl. Informatik)" = "#00a87a",
     "Mathematik, Naturwissenschaften" = "#fcc433",
-    "Alle Nicht MINT-Fächer" = "#efe8e6"
+    "Alle Nicht MINT-Fächer" = "#efe8e6",
+    "Humanmedizin/Gesundheitswissenschaften" = "#AFF3E0",
+    "Geisteswissenschaften" = "#2D6BE1",
+    "Kunst, Kunstenwissenschaft" = "#008F68",
+    "Agrar-, Forst- und Ernährungswissenschaften, Veterinärmedizin" = "#EFFFF7",
+    "Außerhalb der Studienbereichsgliederung/Sonstige Fächer" = "#35BD97",
+    "Rechts- Wirtschafts- und Sozialwissenschaften" = "#F59E0B",
+    "Alle Fächer" = "#FEF3C7",
+    "Sport" = "#004331",
+    "Alle MINT-Fächer" = "#ee7775"
   )
-
-
-  labelll <- label_w
-
-  label_w <- gsub("weibliche ", "", label_w)
-
-
-
-
-
-  timerange <- as.character(r$jahr_mint_fach_frauen)  #
-  regio <- as.character(r$region_mint_fach_frauen)
- ### stopifnot(length(regio) == 1)
-
-
-
-
-
-
-
-
 
   color_fach_pie <- c(
     "Informatik" = "#2D6BE1",
@@ -4241,27 +4229,29 @@ plot_mint_faecher_frauen <- function(r){
   )
 
   # filter dataset based on UI inputs
-  if(ebene == "MINT-Fachbereiche"){
+  if(ebene == "MINT"){
 
     if (length(label_w) == 0) {
       stop("Fehler: label_w ist leer und verursacht eine ungültige SQL-Abfrage.")
     }
 
+
     df_query <- glue::glue_sql("
         SELECT *
         FROM studierende_detailliert
         WHERE jahr == {timerange}
+        AND typ = 'Einzelauswahl'
         AND geschlecht = 'Frauen'
         AND indikator IN ({label_w*})
         AND region = {regio}
-        AND ((mint_select = 'MINT' AND typ = 'Aggregat') OR fachbereich = 'Nicht MINT')
+        AND mint_select = 'MINT'
                                ", .con = con)
 
     df <- DBI::dbGetQuery(con, df_query)
 
-    df <- df %>%
-      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
-
+    # df <- df %>%
+    #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
+    #
 
 
 
@@ -4269,21 +4259,23 @@ plot_mint_faecher_frauen <- function(r){
         SELECT *
         FROM studierende_detailliert
         WHERE jahr == {timerange}
-        AND geschlecht = 'Frauen'
+        AND geschlecht = 'Gesamt'
         AND indikator IN ({label_w*})
+        AND typ = 'Einzelauswahl'
         AND region = {regio}
-        AND fachbereich = 'Gesamt'
+        AND mint_select = 'MINT'
                                ", .con = con)
 
     alle <- DBI::dbGetQuery(con, df_query)
-
-    alle <- alle %>%
-      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach)
+#
+#     alle <- alle %>%
+#       dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach)
+#
+#
 
 
   }
   else{
-
 
     if (length(label_w) == 0) {
       stop("Fehler: label_w ist leer und verursacht eine ungültige SQL-Abfrage.")
@@ -4296,43 +4288,52 @@ plot_mint_faecher_frauen <- function(r){
         AND geschlecht = 'Frauen'
         AND indikator IN ({label_w*})
         AND region = {regio}
-        AND mint_select = 'MINT'
-        AND NOT typ = 'Aggregat'
+        AND mint_select = 'Nicht MINT'
                                ", .con = con)
 
     df <- DBI::dbGetQuery(con, df_query)
 
-    df <- df %>%
-      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
-
+    # df <- df %>%
+    #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ)
 
 
     df_query2 <- glue::glue_sql("
         SELECT *
         FROM studierende_detailliert
         WHERE jahr = {timerange}
-        AND geschlecht = 'Frauen'
+        AND geschlecht = 'Gesamt'
         AND indikator IN ({label_w*})
         AND region = {regio}
-        AND fachbereich = 'MINT'
+        AND mint_select = 'Nicht MINT'
                                ", .con = con)
 
     alle <- DBI::dbGetQuery(con, df_query2)
 
-    alle <- alle %>%
-      dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach) #wieso -fah
+  # alle <- alle %>%
+  #   dplyr::select(-region, -geschlecht, - jahr, -bereich, -mint_select, -typ, -fach)
 
 
   }
 
-  #Anteil Berechnen
   df <- df %>%
-    dplyr::left_join(alle, dplyr::join_by("indikator")) %>%
-    dplyr::select(-fachbereich.y) %>%
-    dplyr::rename(wert = wert.x,
-                  wert_ges = wert.y,
-                  fachbereich = fachbereich.x) %>%
-    dplyr::mutate(prop = round(wert/wert_ges * 100, 1))
+    dplyr::left_join(alle,
+                     by = c("region", "jahr", "bereich", "indikator", "mint_select", "typ", "fachbereich", "fach")) %>%
+    dplyr::rename(
+      wert = wert.x,
+      wert_ges = wert.y
+    ) %>%
+    dplyr::mutate(prop = round(wert / wert_ges * 100, 1))
+
+
+  #Anteil Berechnen
+  # df_t <- df %>%
+  #   dplyr::left_join(alle, dplyr::join_by("fach")) %>%
+  #   dplyr::select(-fachbereich.y) %>%
+  #   dplyr::rename(wert = wert.x,
+  #                 wert_ges = wert.y,
+  #                 fachbereich = fachbereich.x) %>%
+  #   dplyr::mutate(prop = round(wert/wert_ges * 100, 1))
+
 
 
 
@@ -4343,12 +4344,8 @@ plot_mint_faecher_frauen <- function(r){
 
   df <- df[with(df, order(prop, decreasing = FALSE)), ]
 
-#
-  if(ebene == "MINT-Fächergruppen" & betrachtung == "Einzelansicht - Kuchendiagramm"){
-    df <- df %>% dplyr::filter(prop > 2)
-  }
 
-  if(ebene == "MINT-Fachbereiche"){
+  if(ebene == "Nicht MINT"){
     df <- df %>%
       dplyr::mutate(color = color_fachbereich[fach])
   }else{
@@ -4357,66 +4354,25 @@ plot_mint_faecher_frauen <- function(r){
   }
 
 
-  if(betrachtung == "Einzelansicht - Kuchendiagramm"){
-
-    # Überschriften vorbereiten
-    ueberschrift_fct <- function(label){
-      titel_help <- ifelse(label == "weibliche Studierende", paste0(label, "n"), label)
-      titel_help <- ifelse(titel_help == "weibliche internationale Studierende", "weiblichen internationalen Studierenden", titel_help)
-      titel_help <- ifelse(grepl("weibliche Lehr", titel_help), "weiblichen Studierenden (Lehramt)", titel_help)
-      titel_help <- ifelse(titel_help == "weibliche internationale Studienanfänger:innen (1. Hochschulsemester)",
-                           "weiblichen internationalenen Studienanfänger:innen (1. Hochschulsemester)", titel_help)
-      return(titel_help)
-    }
-
-    if(length(label_w)==1){
-      titel_help <- ueberschrift_fct(labelll)
-
-      titel = ifelse(regio == "Saarland",
-                     paste0("MINT-Fächeranteile von ", titel_help , " im ", regio, " (", timerange, ")"),
-                     paste0("MINT-Fächeranteile von ", titel_help , " in ", regio, " (", timerange, ")"))
-      tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
-      color = as.character(df$color)
-
-      out <- piebuilder(df, titel, x = "fach", y ="prop", tooltip, color, format='{point.prop}%')
-
-
-    } else if(length(label_w)==2){
-      titel_help1 <- ueberschrift_fct(labelll[1])
-      titel_help2 <- ueberschrift_fct(labelll[2])
-
-      titel <- text = paste0("MINT-Fächeranteile von ", titel_help1 , " in ", regio, " (", timerange, ")")
-      tooltip <- paste('Anteil: {point.prop}% <br> Anzahl: {point.wert}')
-      color = as.character(df[df$indikator == label_w[1],]$color)
-
-      p1 <- piebuilder(df[df$indikator == label_w[1],], titel, x = "fach", y ="prop", tooltip, color, format='{point.prop}%')
-
-      #noch nutzen?
-
-      out <- p1
-
-    }
-  }
-  else if(betrachtung == "Gruppenvergleich - Balkendiagramm"){
-
     df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
-    if(ebene == "MINT-Fachbereiche"){
+    if(ebene == "Nicht MINT"){
       df <- df %>%
         dplyr::mutate(color = color_fachbereich[fach])
       col <- df$color
       titel <- ifelse(regio == "Saarland",
-                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern im ",regio," (", timerange, ")", br(), "Studierendengruppe: ",labelll),
-                      paste0( "Anteil der MINT-Fachbereiche an allen Fächern in ",regio," (", timerange, ")", br(), "Studierendengruppe: ",labelll))
+                      paste0( "Anteil der ", labelll, " an Nicht-MINT-Fächern im ",regio," (", timerange, ")"),
+                      paste0( "Anteil der ", label_w, " an Nicht-MINT-Fächern im ",regio," (", timerange, ")"))
     }else{
       df <- df %>%
         dplyr::mutate(color = color_fach_balken[fach])
       col <- df$color
       titel <- ifelse(regio == "Saarland",
-                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern im ",regio," (", timerange, ")", br(), "Studierendengruppe: ",labelll),
-                      paste0( "Anteil der MINT-Fächergruppen an allen MINT-Fächern in ",regio," (", timerange, ")", br(), "Studierendengruppe: ",labelll))
+                      paste0( "Anteil der ", labelll, " an allen MINT-Fächern im ",regio," (", timerange, ")"),
+                      paste0( "Anteil der ", labelll, " an allen MINT-Fächern im ",regio," (", timerange, ")"))
 
     }
+
 
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y=prop, x= fach))%>%
       highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.prop} % <br> Anzahl: {point.wert}") %>% #Inhalt für Hover-Box
@@ -4458,9 +4414,13 @@ plot_mint_faecher_frauen <- function(r){
                                 )
       )
 
-  }
+
 
   return(out)
+
+
+
+
 }
 
 
