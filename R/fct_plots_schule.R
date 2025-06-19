@@ -671,7 +671,7 @@ kurse_waffle_mint <- function(r) {
     # # # plot
 
     titel <- paste0( "Anteil von ", kurs_help, "-Belegungen in ", help_title, " nach Bundesländern (",  timerange, ")"        )
-    
+
      #nicht in bar wegen categories
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = region)) %>%
       highcharter::hc_tooltip(pointFormat = "{point.fachbereich} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%
@@ -1216,6 +1216,7 @@ kurse_map <- function(r) {
 
                                 )
       )
+    )
 
     return(out)
 
@@ -1614,7 +1615,7 @@ kurse_map <- function(r) {
 #   }", gsub("'", "\\\\'", titel)))))
  #                               )
   #                            )
-   # )                                  
+   # )
 #'   #net verwendet da kein color explizit und komplexer
 #'   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = round(proportion,1), x = fachbereich))%>%
 #'     highcharter::hc_tooltip(pointFormat = "{point.region} <br> Anteil: {point.y} % <br> Anzahl: {point.wert}") %>%

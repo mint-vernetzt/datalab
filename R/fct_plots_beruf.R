@@ -2734,7 +2734,7 @@ arbeitsmarkt_top10 <- function( r){
         dplyr::arrange(desc(wert)) %>%
         dplyr::slice(1:10)
     }
-                                               
+
 
     #balkenbuilder wird nicht verwendet, da es hier erneut spezialiserte balken sind (zB mit extra styl)
 
@@ -2752,7 +2752,7 @@ arbeitsmarkt_top10 <- function( r){
                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
     }else{
-      
+
       titel <- paste0("Höchster Frauenanteil unter den neuen Auszubildenden im Fachbereich " ,fb ," in ", bula, " (", time, ")")
 
     plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
@@ -2801,6 +2801,8 @@ arbeitsmarkt_top10 <- function( r){
 
                                   )
         )
+      )
+
     }
 
 
@@ -2822,7 +2824,7 @@ arbeitsmarkt_top10 <- function( r){
     }else{
 
      titel <- paste0("Höchster Männeranteil unter den neuen Auszubildenden im Fachbereich ", fb ," in ", bula ," (", time, ")")
-      
+
     plot_mann <- highcharter::hchart(berufe_maenner, 'bar', highcharter::hcaes(y = prop, x = beruf)) %>%
       highcharter::hc_plotOptions(
         series = list(
@@ -2908,7 +2910,7 @@ arbeitsmarkt_top10 <- function( r){
 
     }else{
 titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen Neu-Auszubildenden im Fachbereich " ,fb ,"  in ", bula ," (", time, ")")
-   
+
       plot_frau <- highcharter::hchart(berufe_frauen, 'bar', highcharter::hcaes(y = wert, x = beruf)) %>%
       highcharter::hc_plotOptions(
         series = list(
