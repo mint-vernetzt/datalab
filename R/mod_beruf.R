@@ -12,7 +12,7 @@ mod_beruf_ui <- function(id){
   tagList(
     fluidPage(
       fluidRow(
-        mod_beruf_arbeitsmarkt_ui("mod_beruf_arbeitsmarkt_ui_1")
+    mod_beruf_arbeitsmarkt_ui("mod_beruf_arbeitsmarkt_ui_1")
       )
     )
   )

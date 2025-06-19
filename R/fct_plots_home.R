@@ -64,18 +64,20 @@ home_einstieg <- function(r) {
 
     if(nrow(df) == 0){
 
+      #bleibt hier da leer
+
       tooltip <- "Anzahl: {point.display_abs}"
       titel <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df$jahr <- NA
       yformat <- "{value:, f}"
       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
         highcharter::hc_title(text = titel,
                               margin = 45,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
       out <- linebuilder(df, titel, x = "reorder(jahr, wert)", y = "wert", tooltip = tooltip)
 
     }else{
@@ -84,7 +86,9 @@ home_einstieg <- function(r) {
     titel <- paste0(indikator_choice_1, " in ", regio, " (", zeit, ")")
     tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
 
-    out <- piebuilder(df,titel,  x = "fachbereich", y = "prop", tooltip)
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+    out <- piebuilder(df,titel,  x = "fachbereich", y = "prop", tooltip, quelle = quelle)
 
     }
   } else if(length(indikator_choice_1) == 2) {
@@ -93,73 +97,78 @@ home_einstieg <- function(r) {
     df_1 <- df %>% dplyr::filter(indikator == indikator_choice_1[1])
     if(indikator_choice_1[1] == "Leistungskurse") indikator_choice_1[1] <- "Schüler:innen im Leistungskurs"
     titel_1 <- paste0(indikator_choice_1[1], " in ", regio, " (", zeit, ")")
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     df_2 <- df %>% dplyr::filter(indikator == indikator_choice_1[2])
     if(indikator_choice_1[2] == "Leistungskurse") indikator_choice_1[2] <- "Schüler:innen im Leistungskurs"
     titel_2 <- paste0(indikator_choice_1[2], " in ", regio, " (", zeit, ")")
 
-    tooltip <- paste('MINT <br> Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
+    tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
     if(nrow(df_1) == 0){
+
+
+      #es soll kein plot erstellt werden daher hier ein leeres lineplot, pie wurde übernommen unten
       titel1 <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df_1$jahr <- NA
       out1 <- highcharter::hchart(df_1, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
         highcharter::hc_title(text = titel1,
                               margin = 45,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
-      out2 <- highcharter::hchart(df_2, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = prop)) %>%
-        highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')) %>%
-        highcharter::hc_colors(c("#b16fab", "#efe8e6")) %>%
-        highcharter::hc_title(text = titel_2,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE, format='{point.prop_besr}%'), showInLegend = TRUE))
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
 
+      y <- "prop"
+      titel <- titel_2
+      x <- "fachbereich"
+      tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
+      color <-c("#b16fab", "#efe8e6")
+      format <- '{point.prop_besr}%'
+      subtitel <- NULL
+
+      quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+      out2 <- piebuilder(df_2, titel, x, y, tooltip, color, format, subtitel, quelle = quelle)
+
+
+      # ou
     }else if(nrow(df_2) == 0){
+
+    #empty plot
+
       titel2 <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df_2$jahr <- NA
       out2 <- highcharter::hchart(df_2, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
         highcharter::hc_title(text = titel2,
                               margin = 45,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
-      out1 <- highcharter::hchart(df_1, size = 280, type = "pie", mapping = highcharter::hcaes(x = fachbereich, y = prop)) %>%
-        highcharter::hc_tooltip(
-          pointFormat=paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')) %>%
-        highcharter::hc_colors(c( "#b16fab", "#efe8e6")) %>%
-        highcharter::hc_title(text = titel_1,
-                              margin = 45,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-        highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
-                                               dataLabels = list(enabled = TRUE,  format='{point.prop_besr}%'), showInLegend = TRUE))
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
+
+
+
+      tooltip <- paste('Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}')
+      color <- c( "#b16fab", "#efe8e6")
+      format <- '{point.prop_besr}%'
+      quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out1 = piebuilder(df_1, titel_1, x="fachbereich", y="prop", tooltip, color, format, quelle = quelle)
 
 
     }else{
 
-      out_1 <- piebuilder(df_1, titel = titel_1, x = "fachbereich", y = "prop", tooltip)
-      out_2 <- piebuilder(df_2, titel = titel_2, x = "fachbereich", y = "prop", tooltip)
+      out_1 <- piebuilder(df_1, titel = titel_1, x = "fachbereich", y = "prop", tooltip, quelle = quelle)
+      out_2 <- piebuilder(df_2, titel = titel_2, x = "fachbereich", y = "prop", tooltip, quelle = quelle)
 
     }
 
     if(exists("out_1") && exists("out_2")){
+
       out <- highcharter::hw_grid(out_1, out_2, ncol = 2, browsable = TRUE)
 
     } else if(exists("out_1") && !exists("out_2")){
@@ -181,8 +190,10 @@ home_einstieg <- function(r) {
    titel <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
 
 
-
    title <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
+    
+   #dies kann nicht als systemvariable übergeben werden also group
+
    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = indikator, group = "fachbereich"))%>%
       highcharter::hc_tooltip(pointFormat = "Fachbereich: {point.fachbereich} <br> Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}") %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
@@ -192,15 +203,13 @@ home_einstieg <- function(r) {
       highcharter::hc_title(text = paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")"),
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-     # highcharter::hc_subtitle(text = subtitel,
-     #                          margin = 20,
-     #                          align = "center",
-     #                          style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
      highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = F) %>%
+     highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                             style = list(fontSize = "11px", color = "gray")) %>%
      highcharter::hc_exporting(enabled = TRUE,
                                buttons = list(
                                  contextButton = list(
@@ -228,7 +237,6 @@ home_einstieg <- function(r) {
                                )
      )
 
-   # out <- balkenbuilder(df, titel, subtitel ,group = "fachbereich")
 
   }
 
@@ -313,7 +321,10 @@ home_rest_mint_verlauf <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
-    out <- linebuilder(df, titel1,x="jahr", y="prop", group="indikator", tooltip = tooltip, format, color)
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+
+    out <- linebuilder(df, titel1,x="jahr", y="prop", group="indikator", tooltip = tooltip, format, color, quelle = quelle)
 
   } else if (absolut_selector=="Anzahl") {
 
@@ -342,7 +353,8 @@ home_rest_mint_verlauf <- function(r) {
 
     format <- "{value:, f}"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
-    out <- linebuilder(df, titel, x = "jahr", y="wert", group = "indikator", tooltip = tooltip, format, color)
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y="wert", group = "indikator", tooltip = tooltip, format, color, quelle = quelle)
 
 
   }
@@ -472,14 +484,16 @@ home_einstieg_gender <- function(r) {
       titel <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df$jahr <- NA
 
+
+      ##LINE leer plot
       out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
         highcharter::hc_title(text = titel,
                               margin = 45,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
       # wird net verwendet?
       # out <- linebuilder(dt, titel, x = "reorder(jahr, wert)", y = "wert", tooltip)
@@ -493,8 +507,9 @@ home_einstieg_gender <- function(r) {
     titel <- paste0(df_mint$titel_help[1], " in ", regio, " (", zeit, ")")
     tooltip <- paste('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}')
     color = c("#efe8e6", "#154194")
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    mint1 <- piebuilder(df_mint, titel, x = "geschlecht", y = "prop", tooltip, color)
+    mint1 <- piebuilder(df_mint, titel, x = "geschlecht", y = "prop", tooltip, color, quelle = quelle)
 
     if(gegenwert == "Nein"){
 
@@ -505,7 +520,9 @@ home_einstieg_gender <- function(r) {
 
      titel <- paste0(df_mint$titel_help2[1], " in ", regio, " (", zeit, ")")
 
-     nmint1 <- piebuilder(df_rest, titel, x = "geschlecht", y = "prop", tooltip, color)
+     quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
+     nmint1 <- piebuilder(df_rest, titel, x = "geschlecht", y = "prop", tooltip, color, quelle = quelle)
 
      out <- highcharter::hw_grid(
         mint1, nmint1,
@@ -529,14 +546,17 @@ home_einstieg_gender <- function(r) {
     if(indi[1] == "Schüler:innen im Leistungskurs" & nrow(df_1_mint) == 0){
       titel1 <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df_1_mint$jahr <- NA
+
+
+      #nrow 0 daher empty line
       mint1 <- highcharter::hchart(df_1_mint, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
         highcharter::hc_title(text = titel1,
                               margin = 45,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
       mint2 <- piebuilder(df_2_mint, paste0(df_2_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
                           x = "geschlecht", y = "prop",
@@ -548,14 +568,15 @@ home_einstieg_gender <- function(r) {
       titel2 <- "Schüler:innendaten für 2023 sind noch nicht verfügbar."
       df_2_mint$jahr <- NA
 
+      ##empty line plot
       mint2 <- highcharter::hchart(df_2_mint, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
         highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+        highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
         highcharter::hc_title(text = titel1,
                               margin = 45,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
       mint1 <- piebuilder(df_1_mint, paste0(df_1_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
                           x = "geschlecht", y = "prop",
@@ -564,16 +585,18 @@ home_einstieg_gender <- function(r) {
 
       }else{
 
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
      mint1 <- piebuilder(df_1_mint, paste0(df_1_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
                          x = "geschlecht", y = "prop",
                          paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
-                         c("#efe8e6", "#154194"))
+                         c("#efe8e6", "#154194"),quelle = quelle)
 
 
       mint2 <- piebuilder(df_2_mint, paste0(df_2_mint$titel_help[1], " in ", regio, " (", zeit, ")"),
                          x = "geschlecht", y = "prop",
                          paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
-                         c("#efe8e6", "#154194"))
+                         c("#efe8e6", "#154194"), quelle = quelle)
       }
 
       if(gegenwert == "Nein"){
@@ -585,17 +608,20 @@ home_einstieg_gender <- function(r) {
         )
       } else if(gegenwert == "Ja"){
 
+
+
+        #leer line plot daher nicht fkt
         if(indi[1] == "Schüler:innen im Leistungskurs" & nrow(df_1_rest) == 0){
           titel1 <- ""
           df_1_rest$jahr <- NA
           nmint1 <- highcharter::hchart(df_1_rest, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
             highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-            highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+            highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
             highcharter::hc_title(text = titel1,
                                   margin = 45,
                                   align = "center",
-                                  style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+                                  style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
           nmint2 <- piebuilder(df_2_rest, paste0(df_2_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
                                x = "geschlecht", y = "prop",
@@ -605,6 +631,7 @@ home_einstieg_gender <- function(r) {
 
         }else if(indi[2] == "Schüler:innen im Leistungskurs" & nrow(df_2_rest) == 0){
 
+          #leerer line
           nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
                                x = "geschlecht", y = "prop",
                                paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
@@ -614,25 +641,27 @@ home_einstieg_gender <- function(r) {
           df_2_rest$jahr <- NA
           nmint2 <- highcharter::hchart(df_2_rest, 'line', highcharter::hcaes(x = reorder(jahr, wert), y = wert, group = indikator)) %>%
             highcharter::hc_tooltip(pointFormat = "Anzahl: {point.display_abs}") %>%
-            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
-            highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "SourceSans3-Regular")) %>%
+            highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value:, f}"), style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+            highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(fontFamily = "Calibri Regular")) %>%
             highcharter::hc_title(text = titel2,
                                   margin = 45,
                                   align = "center",
-                                  style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px"))
+                                  style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px"))
 
 
         }else{
 
+      quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+
       nmint1 <- piebuilder(df_1_rest, paste0(df_1_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
                            x = "geschlecht", y = "prop",
                            paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
-                           c("#efe8e6", "#154194"))
+                           c("#efe8e6", "#154194"), quelle = quelle)
 
      nmint2 <- piebuilder(df_2_rest, paste0(df_2_rest$titel_help2[1], " in ", regio, " (", zeit, ")"),
                           x = "geschlecht", y = "prop",
                           paste0('Anteil: {point.prop_besr}% <br> Anzahl: {point.wert_besr}'),
-                          c("#efe8e6", "#154194"))
+                          c("#efe8e6", "#154194"), quelle = quelle)
         }
 
      out <-  highcharter::hw_grid(
@@ -657,57 +686,64 @@ home_einstieg_gender <- function(r) {
       df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
 
+   #   titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
 
+ #     out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=prop, group = geschlecht)) %>%
+ #       highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
+ #       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+ #       highcharter::hc_xAxis(title = list(text = "")) %>%
+ #       highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+ #       highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
+ #       highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")"),
+ #                             margin = 25,
+ #                             align = "center",
+ #                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+ #       highcharter::hc_chart(
+ #         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+ #       ) %>%
+ #       highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+ #       highcharter::hc_exporting(enabled = TRUE,
+ #                                 buttons = list(
+ #                                   contextButton = list(
+ #                                     menuItems = list("downloadPNG", "downloadCSV",
+ #                                                      list(
+ #                                                        text = "Daten für GPT",
+ #                                                        onclick = htmlwidgets::JS(sprintf(
+ #                                                          "function () {
+ #    var date = new Date().toISOString().slice(0,10);
+ #    var chartTitle = '%s'.replace(/\\s+/g, '_');
+ #    var filename = chartTitle + '_' + date + '.txt';
+ #
+ #    var data = this.getCSV();
+ #    var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+ #    if (window.navigator.msSaveBlob) {
+ #      window.navigator.msSaveBlob(blob, filename);
+ #    } else {
+ #      var link = document.createElement('a');
+ #      link.href = URL.createObjectURL(blob);
+ #      link.download = filename;
+ #      link.click();
+ #    }
+ #  }", gsub("'", "\\\\'", titel)))))
+  #                                  )
+  #                                )
+  #      )
+
+      x <- "indikator"
+      y <- "prop"
+      group <- "geschlecht"
+      tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
+      stacking <- "percent"
       titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
+      reversed <- FALSE
+      format <- "{value}%"
 
-      out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=prop, group = geschlecht)) %>%
-        highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
-        highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
-        highcharter::hc_xAxis(title = list(text = "")) %>%
-        highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
-        highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
-        highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")"),
-                              margin = 25,
-                              align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
-        highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
-        ) %>%
-        highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+      colors <- c("#154194", "#efe8e6")
 
-     var data = this.getCSV();
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel)))))
-                                    )
-                                  )
-        )
+      quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
+      out <- balkenbuilder(df, titel, x, y, group, tooltip, format="{value}%", color = colors, reverse=reversed, stacking = stacking, quelle = quelle)
 
-      # titel = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
-      # tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
-      # format <- "{value}%"
-      # color <- c("#154194", "#efe8e6")
-      #
-      # out <- balkenbuilder(df, titel , x = "indikator", y = "prop", group = "geschlecht", tooltip, format, color)
 
 
 
@@ -717,6 +753,8 @@ home_einstieg_gender <- function(r) {
 
 
       title <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
+
+      ##balkenbuilder nicht verwendet wegen dem sonderfall Kateogirne
 
       out <- highcharter::hchart(df, 'bar', highcharter::hcaes(x = indikator, y = prop, group = geschlecht)) %>%
         highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht} Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
@@ -740,11 +778,13 @@ home_einstieg_gender <- function(r) {
         highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")"),
                               margin = 25,
                               align = "center",
-                              style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                              style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
         highcharter::hc_chart(
-          style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+          style = list(fontFamily = "Calibri Regular", fontSize = "14px")
         ) %>%
         highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+        highcharter::hc_caption(text = "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
+                                style = list(fontSize = "11px", color = "gray")) %>%
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
@@ -772,12 +812,7 @@ home_einstieg_gender <- function(r) {
                                   )
         )
 
-      # titel = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
-      # tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
-      # format <- "{value}%"
-      # color <- c("#154194", "#efe8e6")
-      #
-      # out <- balkenbuilder(df, titel , x = "indikator", y = "prop", group = "geschlecht", tooltip, format, color)
+
 
     }
 
@@ -807,16 +842,6 @@ home_comparison_line <- function(r) {
   indikator_choice <- r$indikator_start_comparison
   abs_selector <- r$abs_zahlen_start_comparison
 
-  # # filter dataset based on UI inputs
-  # df <- dplyr::tbl(con, from = "zentral") %>%
-  #   dplyr::filter(jahr %in% t,
-  #                 region %in% regio,
-  #                 geschlecht == "Frauen",
-  #                 fachbereich == "MINT",
-  #                 indikator %in% indikator_choice) %>%
-  #   dplyr::select(bereich, indikator, fachbereich, geschlecht, jahr, wert) %>%
-  #   dplyr::collect()
-
 
   query <- glue::glue_sql("
   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
@@ -833,44 +858,76 @@ home_comparison_line <- function(r) {
 
   if(abs_selector=="In Prozent"){
 
-
+####deutschlabnd statt ({regio*})
     query_df_alle <- glue::glue_sql("
   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
   FROM zentral
   WHERE jahr IN ({t*})
     AND region IN ({regio*})
-    AND geschlecht = 'Gesamt'
+    AND NOT geschlecht = 'Gesamt'
     AND fachbereich = 'MINT'
     AND indikator IN ({indikator_choice*})
 ", .con = con)
 
     df_alle <- DBI::dbGetQuery(con, query_df_alle)
 
-    if("Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
 
-      query_df_alle_bw <- glue::glue_sql("
-  SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
-  FROM zentral
-  WHERE jahr IN ({t*})
-    AND region = 'Baden-Württemberg'
-    AND geschlecht = 'Gesamt'
-    AND fachbereich = 'MINT'
-    AND bereich = 'Schule'
-", .con = con)
+    # df_alle <- df_alle %>%
+    #   group_by(bereich, indikator, fachbereich, jahr, region)%>%
+    #   summarise(
+    #     Wert = sum(Wert, na.rm = TRUE),
+    #     .groups = "drop"
+    #   ) %>%
+    #   mutate(Geschlecht = "Gesamt") %>%
+    #   select(bereich, indikator, fachbereich, geschlecht, jahr, wert, region)
 
-      df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
 
-      df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
-        dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "jahr", "geschlecht")) %>%
-        dplyr::mutate(wert.x = wert.x - wert.y) %>%
-        dplyr::select(-wert.y) %>%
-        dplyr::rename(wert = wert.x)
 
-      df_alle <- df_alle %>%
-        dplyr::filter(bereich != "Schule") %>%
-        rbind(df_alle_schule)
+    df_alle <- df_alle %>%
+      group_by(bereich, indikator, fachbereich, jahr) %>%
+      summarise(
+        wert = sum(wert, na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      mutate(geschlecht = "Gesamt") %>%
+      select(bereich, indikator, fachbereich, geschlecht, jahr, wert)
 
-    }
+
+
+
+
+#     if("Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
+#
+#       query_df_alle_bw <- glue::glue_sql("
+#   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
+#   FROM zentral
+#   WHERE jahr IN ({t*})
+#     AND region = 'Deutschland'
+#     AND geschlecht = 'Gesamt'
+#     AND fachbereich = 'MINT'
+#     AND bereich = 'Schule'
+# ", .con = con)
+#
+#       df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
+#
+#
+#       # df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
+#       #   dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "jahr", "geschlecht")) %>%
+#       #   dplyr::mutate(wert.x = wert.x - wert.y) %>%
+#       #   dplyr::select(-wert.y) %>%
+#       #   dplyr::rename(wert = wert.x)
+#
+#
+#       # df_alle <- df_alle_bw %>%
+#       #   dplyr::filter(bereich != "Schule") %>%
+#       #   rbind(df_alle_schule)
+#
+#       df_alle <- df_alle_bw
+#
+#       browser()
+#
+#     }
+
 
     df <- df %>%
       dplyr::left_join(df_alle, by = c("indikator", "jahr", "fachbereich", "bereich")) %>%
@@ -878,6 +935,8 @@ home_comparison_line <- function(r) {
       dplyr::rename(geschlecht = geschlecht.x,
                     wert = wert.x) %>%
       dplyr::select(-c(wert.y, geschlecht.y))
+
+
 
 
     df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]
@@ -902,8 +961,8 @@ home_comparison_line <- function(r) {
     format <- "{value}%"
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24")
 
-
-    out <- linebuilder(df, titel, x = "jahr", y = "prop", group="indikator",tooltip, format)
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+    out <- linebuilder(df, titel, x = "jahr", y = "prop", group="indikator",tooltip, format, quelle = quelle)
 
 
   } else if (abs_selector =="Anzahl"){
@@ -928,8 +987,9 @@ home_comparison_line <- function(r) {
     format <- "{value}"
 
     color <- c("#b16fab", "#154194","#66cbaf", "#fbbf24" )
+    quelle <- "Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt."
 
-    out <- linebuilder(df,titel,x="jahr", y="wert", group="indikator", tooltip, format, color)
+    out <- linebuilder(df,titel,x="jahr", y="wert", group="indikator", tooltip, format, color, quelle = quelle)
 
 
 

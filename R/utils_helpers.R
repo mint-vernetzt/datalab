@@ -114,48 +114,81 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
 
   if(missing(spezif_i)&missing(spezif_r)){
 
-    df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer")) %>%
-      dplyr::select(fach)%>%
-      dplyr::collect()
+    # df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer")) %>%
+    #   dplyr::select(fach)%>%
+    #   dplyr::collect()
+    #
+    # df1 <- df1 %>%
+    #   unique()%>%
+    #   as.vector()%>%
+    #   unlist()%>%
+    #   unname()
+    #
+    # df1 <- sort(df1)
 
-    df1 <- df1 %>%
-      unique()%>%
-      as.vector()%>%
-      unlist()%>%
-      unname()
+    df1_query <- glue::glue_sql("
+  SELECT DISTINCT fach
+  FROM studierende_detailliert
+  WHERE mint_select = 'MINT'
+     OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer')
+  ORDER BY fach
+", .con = con)
 
-    df1 <- sort(df1)
+    df1 <- DBI::dbGetQuery(con, df1_query)
 
   } else if (missing(spezif_i)){
 
-    df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
-      dplyr::filter(region %in%  spezif_r) %>%
-      dplyr::collect()
+    # df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
+    #   dplyr::filter(region %in%  spezif_r) %>%
+    #   dplyr::collect()
+    #
+    # df1 <- df1 %>%dplyr::select(fach)%>%
+    #   unique()%>%
+    #   as.vector()%>%
+    #   unlist()%>%
+    #   unname()
+    #
+    # df1 <- sort(df1)
 
-    df1 <- df1 %>%dplyr::select(fach)%>%
-      unique()%>%
-      as.vector()%>%
-      unlist()%>%
-      unname()
+    df1_query <- glue::glue_sql("
+  SELECT DISTINCT fach
+  FROM studierende_detailliert
+  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer'))
+    AND region IN ({spezif_r*})
+  ORDER BY fach
+", .con = con)
 
-    df1 <- sort(df1)
+    df1 <- DBI::dbGetQuery(con, df1_query) %>%
+      dplyr::pull(fach)
 
   } else if(missing(spezif_r)){
+#
+#     df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+#       dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
+#       dplyr::filter(indikator %in%  spezif_i) %>%
+#       dplyr::collect()
+#
+#     df1 <- df1 %>%dplyr::select(fach)%>%
+#       unique()%>%
+#       as.vector()%>%
+#       unlist()%>%
+#       unname()
+#
+#     df1 <- sort(df1)
 
-    df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
-      dplyr::filter(indikator %in%  spezif_i) %>%
-      dplyr::collect()
+    df1_query <- glue::glue_sql("
+  SELECT DISTINCT fach
+  FROM studierende_detailliert
+  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer'))
+    AND indikator IN ({spezif_i*})
+  ORDER BY fach
+", .con = con)
 
-    df1 <- df1 %>%dplyr::select(fach)%>%
-      unique()%>%
-      as.vector()%>%
-      unlist()%>%
-      unname()
+    df1 <- DBI::dbGetQuery(con, df1_query) %>%
+      dplyr::pull(fach)
 
-    df1 <- sort(df1)
 
   }
 }
@@ -192,15 +225,32 @@ international_ui_faecher <- function(region = "EU") {
   if (region == "arbeit") {
     #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      dplyr::filter(geschlecht == "Gesamt" &
-                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-      ) %>%
-      dplyr::pull(fachbereich) %>%
-      unique() %>%
-      sort()
-  }
+    # selection <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+    #   dplyr::filter(geschlecht == "Gesamt" &
+    #                   variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+    #                                   "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+    #   ) %>%
+    #   dplyr::pull(fachbereich) %>%
+    #   unique() %>%
+    #   sort()
+    df_query <- glue::glue_sql("
+  SELECT DISTINCT land, fachbereich,
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern', 'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+", .con = con)
+
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+    # selection <- selection %>%
+    #   dplyr::pull(fachbereich) %>%
+    #   unique() %>%
+    #   sort()
+
+      }
+
+
 
   return(selection)
 
@@ -213,80 +263,145 @@ international_ui_years <- function(region = "EU") {
 
   # for studium international
   if (region == "OECD") {
-    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    selection <- dplyr::tbl(con, from = "studierende_anzahl_oecd") %>%
-      dplyr::filter(geschlecht == "Gesamt") %>%
+    df_query <- glue::glue_sql("
+  SELECT jahr
+  FROM studierende_anzahl_oecd
+  WHERE geschlecht = 'Gesamt'
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+    selection <- selection %>%
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
+
+
   }
 
   if (region == "EU") {
-    #load(file = system.file(package="datalab","data/studierende_europa.rda"))
 
-    selection <- dplyr::tbl(con, from = "studierende_europa") %>%
-      dplyr::filter(geschlecht == "Gesamt"  &
-                      mint_select == "mint" &
-                      indikator == "Fächerwahl") %>%
-      dplyr::pull(jahr) %>%
-      unique() %>%
-      sort()
-    selection<- selection[-1]
+    # selection <- dplyr::tbl(con, from = "studierende_europa") %>%
+    #   dplyr::filter(geschlecht == "Gesamt"  &
+    #                   mint_select == "mint" &
+    #                   indikator == "Fächerwahl") %>%
+    #   dplyr::pull(jahr) %>%
+    #   unique() %>%
+    #   sort()
+    # selection<- selection[-1]
+
+
+    jahr_query <- glue::glue_sql("
+  SELECT DISTINCT jahr
+  FROM studierende_europa
+  WHERE geschlecht = 'Gesamt'
+    AND mint_select = 'mint'
+    AND indikator = 'Fächerwahl'
+  ORDER BY jahr
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, jahr_query) %>%
+      dplyr::pull(jahr)
+
+    # Entferne das erste Element
+    selection <- selection[-1]
+
+    #
   }
 
   if (region == "Weltweit"){
-    selection <- dplyr::tbl(con, from = "studierende_absolventen_weltweit") %>%
-      dplyr::filter(geschlecht == "Insgesamt") %>%
-      dplyr::filter(jahr != "2022") %>%
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM studierende_absolventen_weltweit
+  WHERE geschlecht = 'Insgesamt'
+  AND jahr != '2022'
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+    selection <- selection %>%
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
+
   }
 
   # for schule international
   if (region == "TIMSS") {
-    #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- dplyr::tbl(con, from = "schule_timss") %>%
-      dplyr::filter(ordnung %in% c("Achievement",
-                                   "Benchmarks") &
-                      indikator %in% c("Mittlerer int'l. Maßstab (475)",
-                                       "Insgesamt")
-      ) %>%
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM schule_timss
+  WHERE ordnung IN ('Achievement', 'Benchmarks')
+  AND indikator IN ('Mittlerer int''l. Maßstab (475)', 'Insgesamt')
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+    selection <- selection %>%
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
+
+
   }
 
   if (region == "PISA") {
-    #load(file = system.file(package="datalab","data/schule_pisa.rda"))
 
-    selection <- dplyr::tbl(con, from = "schule_pisa") %>%
-      dplyr::filter(bereich == "Ländermittel" &
-                      indikator == "Insgesamt" &
-                      !is.na(wert)) %>%
+df_query <- glue::glue_sql("
+  SELECT *
+  FROM schule_pisa
+  WHERE bereich = 'Ländermittel'
+  AND indikator = 'Insgesamt'
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+    selection <- selection %>%
+      dplyr::filter(!is.na(wert))%>%
       dplyr::pull(jahr) %>%
       unique() %>%
       sort()
+
+
   }
 
   # for arbeitsmarkt international
   if (region == "arbeit") {
-    #load(file = system.file(package="datalab","data/schule_timss.rda"))
 
-    selection <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      dplyr::filter(
-        geschlecht == "Gesamt" &
-          # filter year, since before there are not all infos available
-          jahr >= 2013 &
-          variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                          "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
 
-      ) %>%
-      dplyr::pull(jahr) %>%
-      unique() %>%
-      sort()
+    # selection <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+    #   dplyr::filter(
+    #     geschlecht == "Gesamt" &
+    #       jahr >= 2013 &
+    #       variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+    #                       "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+    #
+    #   ) %>%
+    #   dplyr::pull(jahr) %>%
+    #   unique() %>%
+    #   sort()
+
+
+    jahr_query <- glue::glue_sql("
+  SELECT DISTINCT jahr
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+    AND jahr >= 2013
+    AND variable IN (
+      'Anteil Absolvent*innen nach Fach an allen Fächern',
+      'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern'
+    )
+  ORDER BY jahr
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, jahr_query) %>%
+      dplyr::pull(jahr)
+
+
+
   }
 
   return(selection)
@@ -297,24 +412,29 @@ international_ui_country <- function(type = "arbeit", n = NA) {
 
   selection <- NULL
 
-  for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-    dplyr::filter(
-      geschlecht == "Gesamt"
-    ) %>%
-    dplyr::collect()
+  df_query <- glue::glue_sql("
+  SELECT DISTINCT jahr
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+", .con = con)
+
+  for_year <- DBI::dbGetQuery(con, df_query)
+
   year <- max(for_year$jahr)
 
   # for studium international
   if (type == "arbeit") {
-    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      dplyr::filter(geschlecht == "Gesamt" &
-                      jahr == year &
-                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-      ) %>%
-      dplyr::collect()
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+  AND jahr = {year}
+  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern','Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+", .con = con)
+
+    tmp_df <- DBI::dbGetQuery(con, df_query)
 
 
 
@@ -337,31 +457,36 @@ international_ui_country <- function(type = "arbeit", n = NA) {
 
 }
 
-int_schule_ui_country <- function(type = "TIMSS", n = NA) {
+int_schule_ui_country <- function(type = "TIMSS", n = NULL) {
 
 
   selection <- NULL
 
-  for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-    dplyr::filter(
-      geschlecht == "Gesamt"
-    ) %>%
-    dplyr::collect()
+  df_query <- glue::glue_sql("
+  SELECT land, jahr
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+", .con = con)
+
+  for_year <- DBI::dbGetQuery(con, df_query)
+
+
   year <- max(for_year$jahr)
 
   # for studium international
   if (type == "arbeit") {
-    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
-
-    tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      dplyr::filter(geschlecht == "Gesamt" &
-                      jahr == year &
-                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-      ) %>%
-      dplyr::collect()
 
 
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+  AND jahr = {year}
+  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern','Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+", .con = con)
+
+    tmp_df <- DBI::dbGetQuery(con, df_query)
 
     if (!is.na(n)) {
       tmp_df <- tmp_df %>%
@@ -380,38 +505,75 @@ int_schule_ui_country <- function(type = "TIMSS", n = NA) {
       sort()
   }
 
-  if(type=="TIMSS"){
-    selection <- dplyr::tbl(con, from = "schule_timss") %>%
-      dplyr::filter(!is.na(wert)) %>%
-      dplyr::distinct(land) %>%  # Eindeutige Werte direkt in der Datenbank abrufen
-      dplyr::arrange(land) %>%   # Alphabetisch sortieren (in der DB)
-      dplyr::pull(land)          # Extrahiert die Spalte 'land'
+  if(type=="TIMSS" && is.null(n)){
+
+    df_query <- glue::glue_sql("
+    SELECT DISTINCT land FROM schule_timss
+WHERE ordnung = 'Ressourcen' AND wert IS NOT NULL
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, df_query)
+
+
+#     df_query <- glue::glue_sql("
+#   SELECT *
+#   FROM schule_timss
+# ", .con = con)
+#
+#     selection <- DBI::dbGetQuery(con, df_query)
+#
+#
+#
+#     selection <- selection %>%
+#       group_by(land) %>%
+#       filter(
+#         # Behalte nur Länder,
+#         # die mindestens eine Zeile mit ordnung == "Ressourcen" und NICHT NA in wert haben
+#         any(ordnung == "Ressourcen" & !is.na(wert))
+#       ) %>%
+#       ungroup() %>%
+#     # browser()
+#     # # %>%
+#       dplyr::filter(!is.na(wert)) %>%
+#       dplyr::distinct(land) %>%  #
+#       dplyr::arrange(land) %>%   #
+#       dplyr::pull(land)
 
   }
 
 }
 
-int_pisa_ui_country <- function(type = "TIMSS", n = NA) {
+int_pisa_ui_country <- function(type = "TIMSS", n = NULL) {
 
   selection <- NULL
 
-  for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-    dplyr::filter(
-      geschlecht == "Gesamt"
-    ) %>%
-    dplyr::collect()
+
+
+  df_query <- glue::glue_sql("
+  SELECT land, jahr
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+", .con = con)
+
+  for_year <- DBI::dbGetQuery(con, df_query)
+
+
   year <- max(for_year$jahr)
 
   # for studium international
   if (type == "arbeit") {
-    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      dplyr::filter(geschlecht == "Gesamt" &
-                      jahr == year &
-                      variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                                      "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-      ) %>%
+
+    df_query <- glue::glue_sql("
+  SELECT *
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+  AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern','Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
+", .con = con)
+
+    tmp_df <- DBI::dbGetQuery(con, df_query)
+
+    tmp_df <- tmp_df %>%
       dplyr::collect()
 
 
@@ -433,11 +595,29 @@ int_pisa_ui_country <- function(type = "TIMSS", n = NA) {
       sort()
   }
 
-  if(type == "PISA"){
+  if(type == "PISA"  && is.null(n)){
+
 
     selection <- DBI::dbGetQuery(con,
                                  "SELECT DISTINCT land
                                  FROM schule_pisa")$land
+
+  }
+
+  if(type == "PISA" && !is.null(n)){
+
+
+
+    selection <- DBI::dbGetQuery(con,
+                                 "SELECT DISTINCT land
+                                 FROM schule_pisa")
+
+    laender_ausgeschlossen <- c("Luxemburg", "Japan", "Großbritannien")
+
+    selection <- selection %>%
+      filter(!land %in% laender_ausgeschlossen) %>%
+      pull(land)
+
   }
 
 }
@@ -450,19 +630,45 @@ fachkraft_ui_years <- function(reg = "DE") {
 
 if(reg == "DE"){
 
-  selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
-    dplyr::filter(indikator == "Engpassindikator") %>%
+  df_query <- glue::glue_sql("
+  SELECT DISTINCT jahr
+  FROM arbeitsmarkt_epa_detail
+  WHERE indikator = 'Engpassindikator'
+", .con = con)
+
+  selection <- DBI::dbGetQuery(con, df_query)
+
+  selection <- selection %>%
     dplyr::pull(jahr) %>%
     unique() %>%
     sort()
+
+  # selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
+  #   dplyr::filter(indikator == "Engpassindikator") %>%
+  #   dplyr::pull(jahr) %>%
+  #   unique() %>%
+  #   sort()
 
 }else if(reg== "BULA"){
+##############################################################
+  df_query <- glue::glue_sql("
+  SELECT DISTINCT jahr
+  FROM arbeitsmarkt_epa
+  WHERE indikator = 'Engpassindikator'
+", .con = con)
 
-  selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa") %>%
-    dplyr::filter(indikator == "Engpassindikator") %>%
+  selection <- DBI::dbGetQuery(con, df_query)
+
+  selection <- selection %>%
     dplyr::pull(jahr) %>%
     unique() %>%
     sort()
+
+  # selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa") %>%
+  #   dplyr::filter(indikator == "Engpassindikator") %>%
+  #   dplyr::pull(jahr) %>%
+  #   unique() %>%
+  #   sort()
 
 }
 
@@ -519,13 +725,28 @@ fachkraft_ui_berufe <- function(level = "Fachkräfte", zeitpunkt = 2023) {
 
   selection <- NULL
 
-  selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
-    dplyr::filter(indikator == "Engpassindikator" &
-                    anforderung == level &
-                    jahr == zeitpunkt &
-                    !is.na(wert)) %>%
+  df_query <- glue::glue_sql("
+  SELECT beruf, wert
+  FROM arbeitsmarkt_epa_detail
+  WHERE indikator = 'Engpassindikator'
+  AND anforderung = {level}
+  AND jahr = {zeitpunkt}
+", .con = con)
+
+  selection <- DBI::dbGetQuery(con, df_query)
+
+  selection <- selection %>%
+    dplyr::filter(!is.na(wert)) %>%
     dplyr::pull(beruf) %>%
     unique()
+
+  # selection <- dplyr::tbl(con, from = "arbeitsmarkt_epa_detail") %>%
+  #   dplyr::filter(indikator == "Engpassindikator" &
+  #                   anforderung == level &
+  #                   jahr == zeitpunkt &
+  #                   !is.na(wert)) %>%
+  #   dplyr::pull(beruf) %>%
+  #   unique()
 
 
   return(selection)
@@ -615,13 +836,28 @@ arbeit_fachkraft_ui_years <- function() {
 
   selection <- NULL
 
+  df_query <- glue::glue_sql("
+  SELECT DISTINCT jahr
+  FROM arbeitsmarkt_fachkraefte
+  WHERE indikator IN ('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')
+", .con = con)
+#####################################################
 
-  selection <- dplyr::tbl(con, from = "arbeitsmarkt_fachkraefte") %>%
-    dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
-                                   "Arbeitslosen-Stellen-Relation")) %>%
+  selection <- DBI::dbGetQuery(con, df_query)
+
+  selection <- selection %>%
     dplyr::pull(jahr) %>%
     unique() %>%
     sort()
+
+
+
+  # selection <- dplyr::tbl(con, from = "arbeitsmarkt_fachkraefte") %>%
+  #   dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
+  #                                  "Arbeitslosen-Stellen-Relation")) %>%
+  #   dplyr::pull(jahr) %>%
+  #   unique() %>%
+  #   sort()
 
 
   return(selection)
@@ -631,13 +867,25 @@ arbeit_fachkraft_ui_years <- function() {
 arbeit_fachkraft_ui_region <- function() {
 
   selection <- NULL
+##########################################################
+  df_query <- glue::glue_sql("
+  SELECT DISTINCT region
+  FROM arbeitsmarkt_fachkraefte
+  WHERE indikator IN ('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')
+", .con = con)
 
 
-  selection <- dplyr::tbl(con, from = "arbeitsmarkt_fachkraefte") %>%
-    dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
-                                   "Arbeitslosen-Stellen-Relation")) %>%
+  selection <- DBI::dbGetQuery(con, df_query)
+
+  selection <- selection %>%
     dplyr::pull(region) %>%
     unique()
+
+  # selection <- dplyr::tbl(con, from = "arbeitsmarkt_fachkraefte") %>%
+  #   dplyr::filter(indikator %in% c("Abgeschlossene Vakanzzeit",
+  #                                  "Arbeitslosen-Stellen-Relation")) %>%
+  #   dplyr::pull(region) %>%
+  #   unique()
 
 
   return(selection)
@@ -973,7 +1221,7 @@ darstellung <- function(id, title = NULL) {
 # test des funktionszusammenfasser
 
 
-piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"), format = '{point.prop_besr}%', subtitel = NULL){
+piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"), format = '{point.prop_besr}%', subtitel = NULL, quelle="Quelle"){
 
   if (is.null(subtitel)){
     out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y)), name = "value") %>%
@@ -983,14 +1231,14 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>% #SourceSans3-Regular
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>% #Calibri Regular
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
-      # highcharter::hc_caption(text = "Quelle der Daten: auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
-      #                         style = list(fontSize = "11px")) %>%
       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                              dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE)) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1004,6 +1252,9 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1013,11 +1264,14 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
-                                                       )
 
-                                  )
-                                    )
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     )
+                                                     )
                                   )
                                 )
       )
@@ -1029,26 +1283,34 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
       highcharter::hc_title(text = titel,
                             margin = 45,
                             align = "center",
-                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
       highcharter::hc_subtitle(text = subtitel,
-                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "16px")) %>%
       highcharter::hc_chart(
-        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
       highcharter::hc_plotOptions(pie = list(allowPointSelect = TRUE, curser = "pointer",
                                              dataLabels = list(enabled = TRUE, format = format ), showInLegend = TRUE)) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV",list(
-                                      text = "Daten für GPT",
-                                      onclick = htmlwidgets::JS(sprintf(
-                                        "function () {
+
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+
      var date = new Date().toISOString().slice(0,10);
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1058,9 +1320,16 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
-                                      ))
-                                      )))
+
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     )
+                                                     )
+                                  )
+                                )
       )
   }
 
@@ -1072,7 +1341,7 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
 
 #df, titel, x, y, tooltip
 
-linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24")){
+linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24"), quelle="Quelle"){
 
   df <- df %>%
     dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
@@ -1081,7 +1350,7 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
     highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
-    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
     highcharter::hc_title(text = titel,
                           margin = 45,
                           align = "center",
@@ -1090,6 +1359,8 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
     highcharter::hc_chart(
     style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     )  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1103,6 +1374,9 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1112,8 +1386,15 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))))
-                                                   )))
+
+   }",
+                                                       gsub("'", "\\\\'", titel),  # Titel escapen
+                                                       gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                     ))
+
+                                                   ))
+                                )
+                              )
     )
 
 
@@ -1123,9 +1404,17 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
 
 
 balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
-                          optional=NULL, reverse = TRUE){
+                          optional=NULL, reverse = TRUE, TF=NULL, stacking=NULL, subtitel = NULL, quelle="Quelle"){
+
+  if (is.numeric(df[[y]])) {
+  df <- df %>%
+    dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
+  }
+
 
   if(is.null(group) && is.null(optional)){
+
+
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format)) %>%
@@ -1139,6 +1428,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1152,6 +1443,9 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1161,15 +1455,18 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
-                                                       )
+
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
 
                                                      ))
                                   )
                                 )
       )
 
-  } else if (!is.null(group) && is.null(optional)){
+  } else if (!is.null(group) && is.null(optional) && is.null(stacking)){
 
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -1184,6 +1481,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1197,6 +1496,9 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1206,12 +1508,19 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
-                                 )))
-                                    ))
+
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
+                                  )
+                                )
       )
 
-  } else if (is.null(group) && !is.null(optional)) {
+  } else if (is.null(group) && !is.null(optional) && is.null(stacking)) {
+
 
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -1227,6 +1536,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1240,6 +1551,9 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1249,8 +1563,11 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
-                                                       )
+
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
 
                                                      ))
                                   )
@@ -1258,7 +1575,9 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       )
 
 
-  } else if (!is.null(group) && !is.null(optional)){
+  } else if (!is.null(group) && !is.null(optional) && is.null(stacking)){
+
+
 
     out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
       highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -1274,6 +1593,8 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
         style = list(fontFamily = "Calibri Regular", fontSize = "14px")
       ) %>%
       highcharter::hc_legend(enabled = TRUE, reversed = reverse)  %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
@@ -1287,6 +1608,9 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
      var filename = chartTitle + '_' + date + '.txt';
 
      var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1296,8 +1620,11 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
        link.download = filename;
        link.click();
      }
-   }", gsub("'", "\\\\'", titel))  #
-                                                       )
+
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
 
                                                      ))
                                   )
@@ -1305,7 +1632,233 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       )
 
 
-  } else {
+  } else if (!is.null(TF) && !is.null(group) && is.null(stacking)){
+
+
+
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
+      highcharter::hc_tooltip(pointFormat = tooltip) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format), reversedStacks = TF) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45, # o. war vorher /
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
+                                  )
+                                )
+      )
+
+
+  } else if (!is.null(TF) && !is.null(group) && !is.null(stacking)){
+
+
+
+    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
+      highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
+      highcharter::hc_tooltip(pointFormat = tooltip) %>%
+      highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format), reversedStacks = TF) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45, # o. war vorher /
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+      ) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
+                                  )
+                                )
+      )
+
+
+  }  else if(!is.null(stacking) && format == "1" ){
+
+    unused_format <- format
+
+
+
+    out <- df %>% highcharter::hchart("bar", highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group)))%>%
+      highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
+      highcharter::hc_tooltip(pointFormat=tooltip) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               align = "center",
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+      highcharter::hc_yAxis(title = list(text = "")) %>% #######NO FORMAT
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
+                                  )
+                                )
+      )
+
+
+  } else if(!is.null(stacking) && !is.null(group) && format != "1"){
+
+
+    out <- df %>% highcharter::hchart("bar", highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group)))%>%
+      highcharter::hc_plotOptions(bar = list(stacking = stacking )) %>%
+      highcharter::hc_tooltip(pointFormat=tooltip) %>%
+      highcharter::hc_colors(color) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               align = "center",
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+      highcharter::hc_yAxis(title = list(text = ""),  labels = list(format = "{value}%"), reversedStacks =  FALSE) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "Calibri Regular", fontSize = "18px")) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = reverse) %>%
+      highcharter::hc_caption(text = quelle,
+                              style = list(fontSize = "11px", color = "gray")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
+                                  )
+                                )
+      )
+
+
+  }
+
+  else {
     return(1)
   }
 
@@ -1315,21 +1868,51 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
 }
 
 
-balkenbuilder2 <- function(TF, df, titel , x, y, group, tooltip, format, color){
 
-  out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x), group = !!rlang::sym(group))) %>%
-    highcharter::hc_tooltip(pointFormat = tooltip) %>%
-    highcharter::hc_yAxis(title = list(text = ""), labels = list(format = format), reversedStacks = TF) %>%
+
+
+get_top10_hc_plot_options <- function(hc,
+                                      hc_title = "",
+                                      hc_tooltip = "",
+                                      max_percent_used = 100,
+                                      col = "#B16FAB",
+                                      marker = "IEA") {
+  if(marker=="IEA"){
+    its <- "Quelle der Daten: IEA, 2023; OECD, 2023, freier Download, eigene Berechnungen durch MINTvernetzt."
+  } else if (marker=="OECD"){
+    its <- "Quelle der Daten: Eurostat, 2023; OECD, 2023; UNESCO, 2023; freier Download, eigene Berechnungen durch MINTvernetzt."
+
+  }
+
+
+  out <- hc %>%
+    highcharter::hc_plotOptions(
+      series = list(
+        boderWidth = 0,
+        dataLabels = list(enabled = TRUE, format = "{point.wert} %",
+                          style = list(textOutline = "none"))
+      )) %>%
+    highcharter::hc_tooltip(pointFormat = hc_tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = ""),
+                          labels = list(format = "{value} %"),
+                          min = 0,
+                          max = max_percent_used,
+                          tickInterval = 10) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
-    highcharter::hc_colors(color) %>%
-    highcharter::hc_title(text = titel,
-                          margin = 45, # o. war vorher /
+    highcharter::hc_colors(c(col)) %>%
+    highcharter::hc_title(text = hc_title,
+                          margin = 45,
                           align = "center",
-                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+                          style = list(color = "black",
+                                       useHTML = TRUE,
+                                       fontFamily = "Calibri Regular",
+                                       fontSize = "20px")) %>%
     highcharter::hc_chart(
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE) %>%
+    highcharter::hc_caption(text = its,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1361,10 +1944,14 @@ balkenbuilder2 <- function(TF, df, titel , x, y, group, tooltip, format, color){
     )
 
   return(out)
-
 }
 
-balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, optional2){
+
+
+
+
+
+balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, optional2,  quelle="Quelle"){
 
   out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y =!!rlang::sym(y), x = !!rlang::sym(x))) %>%
     highcharter::hc_tooltip(pointFormat = tooltip) %>%
@@ -1387,6 +1974,8 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
       style = list(fontFamily = "Calibri Regular", fontSize = "14px")
     ) %>%
     highcharter::hc_legend(enabled = TRUE, reversed = TRUE)  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1425,7 +2014,7 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
 
 #mapbuilder
 
-mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = map_selection){
+mapbuilder <- function(df, joinby, name, tooltip,titel, mincolor, maxcolor, prop = FALSE, wert = FALSE, map = map_selection, landkarten = FALSE, states=NULL,  quelle="Quelle"){
 
 if(prop==FALSE && wert == FALSE){
   out<- highcharter::hcmap(
@@ -1455,6 +2044,8 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom")  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1485,7 +2076,7 @@ if(prop==FALSE && wert == FALSE){
                               )
     )
 
-} else if(prop == TRUE){
+} else if(prop == TRUE && landkarten == FALSE){
   out<- highcharter::hcmap(
     "countries/de/de-all",
     data = df,
@@ -1513,6 +2104,8 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom")  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1572,6 +2165,98 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_credits(enabled = FALSE) %>%
     highcharter::hc_legend(layout = "horizontal", floating = FALSE,
                            verticalAlign = "bottom")  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                )
+                              )
+    )
+
+} else if (landkarten == TRUE && prop == TRUE && !is.null(states))
+{
+
+  useless <- map
+  mincolor1 <- mincolor
+  maxcolor1 <- maxcolor
+
+
+
+  state_codes <- data.frame(
+    state = c(
+      "Baden-Württemberg",
+      "Bayern",
+      "Berlin",
+      "Brandenburg",
+      "Bremen",
+      "Hamburg",
+      "Hessen",
+      "Mecklenburg-Vorpommern",
+      "Niedersachsen",
+      "Nordrhein-Westfalen",
+      "Rheinland-Pfalz",
+      "Saarland",
+      "Sachsen",
+      "Sachsen-Anhalt",
+      "Schleswig-Holstein",
+      "Thüringen"
+    ),
+    short = c(
+      "bw",
+      "by",
+      "be",
+      "bb",
+      "hb",
+      "hh",
+      "he",
+      "mv",
+      "ni",
+      "nw",
+      "rp",
+      "sl",
+      "sn",
+      "st",
+      "sh",
+      "th"
+    )
+  )
+
+  state_code <- state_codes %>% dplyr::filter(state == states) %>% dplyr::pull()
+
+  out <- highcharter::hcmap(
+    paste0("countries/de/de-", state_code ,"-all"),
+    data = df,
+    value = "prob",
+    joinBy = joinby,
+    borderColor = "#FAFAFA",
+    name = name,
+    borderWidth = 0.1,
+    nullColor = "#A9A9A9",
+    tooltip = list(
+      valueDecimals = 0,
+      valueSuffix = "%"
+    )
+    #,
+    # download_map_data = FALSE
+  ) %>%
+    highcharter::hc_colorAxis(min=0, labels = list(format = "{text}%")) %>%
+    highcharter::hc_title(
+      text = titel,
+      margin = 10,
+      align = "center",
+      style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")
+    ) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri Regular")
+    ) %>% #highcharter::hc_size(600, 550) %>%
+    highcharter::hc_credits(enabled = FALSE) %>%
+    highcharter::hc_legend(layout = "horizontal", floating = FALSE,
+                           verticalAlign = "bottom"
+    ) %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
@@ -1601,6 +2286,9 @@ if(prop==FALSE && wert == FALSE){
                                 )
                               )
     )
+
+
+
 
 }
 

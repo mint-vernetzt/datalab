@@ -10,6 +10,25 @@
 mod_studium_studienzahl_mint_fach_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+
+    tags$head(
+      tags$style(HTML("
+        .dropdown-menu .bs-actionsbox .btn-group .btn {
+          background-color: #e7f1ff !important;  /* Hellblau für die Alle auswählen/abwählen Buttons */
+          color: #000000 !important;
+        }
+        .dropdown-menu .bs-actionsbox .btn-group .btn:hover {
+          background-color: #d0e8ff !important;  /* Etwas dunkleres Blau beim Hover */
+          color: #000000 !important;
+        }
+      "))
+    ),
+
+
+
+
+
     p("Darstellungsart:"),
     shiny::radioButtons(
       inputId = ns("ansicht_mint_fach"),
@@ -62,18 +81,22 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
                      'Einzelansicht - Kuchendiagramm'",
                      ns = ns,
 
-      p("Studierendengruppen:"),
+      p("Studierendengruppen (max. 2):"),
       shinyWidgets::pickerInput(
         inputId = ns("gruppe_mint_fach_pies"),
         choices = c("Studierende",
-                    "Studierende (Lehramt)",
-                    "internationale Studierende",
                     "Studienanfänger:innen (1. Hochschulsemester)",
-                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
                     "Absolvent:innen",
-                    "internationale Absolvent:innen"),
+                    "internationale Studierende",
+                    "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                    "internationale Absolvent:innen",
+                    "Studierende im Lehramt" = "Studierende (Lehramt)",
+                    "Absolvent:innen im Lehramt" ="Absolvent:innen (Lehramt)"),
         selected = c("Studierende"),
-        multiple = FALSE
+        multiple = TRUE,
+        options =  list(
+          "max-options" = 2,
+          "max-options-text" = "<span style='color: red;'>Maximal 2 Studierendengruppen auswählen</span>")
       ),
       br(),
       darstellung("dh_studium_mint_fachh1"),
@@ -92,13 +115,14 @@ mod_studium_studienzahl_mint_fach_ui <- function(id){
                      shinyWidgets::pickerInput(
                        inputId = ns("gruppe_mint_fach_balken"),
 
-                       choices =c("Studierende",
-                                  "Studierende (Lehramt)",
-                                  "internationale Studierende",
-                                  "Studienanfänger:innen (1. Hochschulsemester)",
-                                  "internationale Studienanfänger:innen (1. Hochschulsemester)",
-                                  "Absolvent:innen",
-                                  "internationale Absolvent:innen"),
+                       choices = c("Studierende",
+                                   "Studienanfänger:innen (1. Hochschulsemester)",
+                                   "Absolvent:innen",
+                                   "internationale Studierende",
+                                   "internationale Studienanfänger:innen (1. Hochschulsemester)",
+                                   "internationale Absolvent:innen",
+                                   "Studierende im Lehramt" = "Studierende (Lehramt)",
+                                   "Absolvent:innen im Lehramt" ="Absolvent:innen (Lehramt)"),
                        selected = c("Studierende"),
                        multiple = FALSE
                      ),

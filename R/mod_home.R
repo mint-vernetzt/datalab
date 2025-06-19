@@ -13,6 +13,7 @@ mod_home_ui <- function(id){
     fluidPage(
       fluidRow(
         mod_home_start_ui("mod_home_start_ui_1")
+
       )
     )
   )

@@ -79,9 +79,6 @@ mod_fachkraft_item_detail_server <- function(id, r){
       shinyWidgets::updatePickerInput(
         session,
         inputId = "map_b_fachkraft_arbeit_detail",
-        # choices = ifelse(level == "Fachkräfte", fachkraft_ui_berufe(level = "Fachkräfte"),
-        #                  ifelse(level == "Spezialist*innen", fachkraft_ui_berufe(level = "Spezialist*innen"),
-        #                         fachkraft_ui_berufe(level = "Expert*innen"))),
         choices = fachkraft_ui_berufe(level, zeitpunkt),
         selected = "Berufe Sanitär-, Heizungs-, Klimatechnik"
       )

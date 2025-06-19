@@ -15,8 +15,8 @@ mod_beruf_arbeitsmarkt_top10_ui <- function(id){
     shinyWidgets::sliderTextInput(
       inputId = ns("date_top_beruf"),
       label = NULL,
-      choices = c(2017, 2020, 2022),
-      selected = 2022
+      choices = c(2017, 2020, 2022, 2024),
+      selected = 2024
     ),
     # Region
     p("Region:"),

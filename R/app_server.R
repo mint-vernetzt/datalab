@@ -30,5 +30,5 @@ app_server <- function(input, output, session) {
   mod_ausserschulisch_server("ausserschulisch_ui_1")
 
 
-
 }
+

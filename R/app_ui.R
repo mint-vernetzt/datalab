@@ -6,6 +6,14 @@
 #' @noRd
 app_ui <- function(request) {
   tagList(
+    tags$head(
+      tags$script(HTML("
+        $(document).on('click', '.main-sidebar .sidebar-menu a', function() {
+
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      "))
+    ),
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
