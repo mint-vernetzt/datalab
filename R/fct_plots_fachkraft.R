@@ -202,38 +202,41 @@ plot_fachkraft_prognose  <- function(r) {
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV",
-                                                   list(
-                                                     text = "Daten für GPT",
-                                                     onclick = htmlwidgets::JS(sprintf(
-                                                       "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
-
-     var data = this.getCSV();
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel)))))
+                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  )
                                 )
-                              )
-    )
+                            )
+
+   #                                                 list(
+   #                                                   text = "Daten für GPT",
+   #                                                   onclick = htmlwidgets::JS(sprintf(
+   #                                                     "function () {
+   #   var date = new Date().toISOString().slice(0,10);
+   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
+   #   var filename = chartTitle + '_' + date + '.txt';
+   #
+   #   var data = this.getCSV();
+   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+   #   if (window.navigator.msSaveBlob) {
+   #     window.navigator.msSaveBlob(blob, filename);
+   #   } else {
+   #     var link = document.createElement('a');
+   #     link.href = URL.createObjectURL(blob);
+   #     link.download = filename;
+   #     link.click();
+   #   }
+   # }", gsub("'", "\\\\'", titel)))))
+   #                              )
+   #                            )
+   #  )
 
   return(hc)
 }
 
+#Tab 3
 plot_fachkraft_prognose_alle  <- function(r) {
 
   filter_wirkhebel <- c("Basis-Szenario", r$fachkraft_item_prog_alle_wirkhebel)
-
-
 
   df_query <- glue::glue_sql("
   SELECT *
@@ -320,7 +323,7 @@ plot_fachkraft_prognose_alle  <- function(r) {
   format <- "{value:, f}"
   color <- color_vec
   quelle <- "Vorausberechnung durch IW Köln, 2024, beauftragt durch MINTvernetzt"
-  hc <- linebuilder(plot_data, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
+  hc <- linebuilder_light(plot_data, titel, x = "jahr", y = "wert", group = "indikator", tooltip, format, color, quelle = quelle)
 
 
   return(hc)
@@ -844,7 +847,7 @@ plot_fachkraft_epa_item <- function(r) {
     highcharter::hc_chart(
       style = list(fontFamily = "Calibri Regular")
     ) %>%
-    highcharter::hc_size(300, 375) %>%
+    highcharter::hc_size(380, 480) %>%
     highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
     highcharter::hc_exporting(enabled = TRUE,
@@ -929,7 +932,7 @@ plot_fachkraft_epa_item <- function(r) {
       highcharter::hc_chart(
         style = list(fontFamily = "Calibri Regular")
       )%>%
-      highcharter::hc_size(300, 375) %>%
+      highcharter::hc_size(380, 480) %>%
       highcharter::hc_caption(text = "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.",
                               style = list(fontSize = "11px", color = "gray")) %>%
       highcharter::hc_exporting(enabled = TRUE,
@@ -1106,7 +1109,7 @@ plot_fachkraft_epa_bulas <- function(r) {
 
   titel_1 <- paste0("Engpassrisiko von Berufen in ", fach_1," (", level, timerange, ")")
   titel <- titel_1
-  
+
   # Entfernen aller Zeilen, bei denen group_col NA ist
   expanded_dt <- expanded_dt[!is.na(expanded_dt$group_col), ]
 
@@ -1189,7 +1192,7 @@ plot_fachkraft_epa_bulas <- function(r) {
 
     titel_2 <- paste0("Engpassrisiko in ", fach_2," (", level,timerange, ")")
     titel <- titel_2
-    
+
     used_colors <- group_col_dt %>%
       dplyr::filter(epa_kat %in% (expanded_dt %>%
                                     dplyr::filter(mint_zuordnung == fach[2]) %>%

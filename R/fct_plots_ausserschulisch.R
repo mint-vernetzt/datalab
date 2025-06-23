@@ -1194,8 +1194,6 @@ plot_mv_stimmung <- function(r){
 
 plot_mv_genderb <- function(){
 
-
-
     df_query <- glue::glue_sql("
     SELECT *
     FROM ausserschulisch_genderbefragung
@@ -1217,6 +1215,19 @@ plot_mv_genderb <- function(){
         )
       )
 
+    # tooltip <- paste('Anteil: {point.wert} %')
+    # color <- c("#b16fab", "#154194", "#66cbaf")
+    # titel <- titel
+    # subtitel <- subtitel
+    # format <- '{point.wert}%'
+    #
+    # x = "gruppe"
+    # y = "wert"
+    #
+    # quelle <- "Quelle der Daten: MINTvernetzt 2024"
+    #
+    #
+    # plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel, quelle = quelle )
 
     plot <- df %>%
       highcharter::hchart(
@@ -1248,52 +1259,36 @@ plot_mv_genderb <- function(){
             )
           )
         )
-      ) %>%
-        highcharter::hc_exporting(enabled = TRUE,
-                                  buttons = list(
-                                    contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV",
-                                                       list(
-                                                         text = "Daten für GPT",
-                                                         onclick = htmlwidgets::JS(sprintf(
-                                                           "function () {
-     var date = new Date().toISOString().slice(0,10);
-     var chartTitle = '%s'.replace(/\\s+/g, '_');
-     var filename = chartTitle + '_' + date + '.txt';
+      )
 
-     var data = this.getCSV();
-     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
-     if (window.navigator.msSaveBlob) {
-       window.navigator.msSaveBlob(blob, filename);
-     } else {
-       var link = document.createElement('a');
-       link.href = URL.createObjectURL(blob);
-       link.download = filename;
-       link.click();
-     }
-   }", gsub("'", "\\\\'", titel))  #
-                                                         )))
-                                    ))
-        )
+    #%>%
+   #      highcharter::hc_exporting(enabled = TRUE,
+   #                                buttons = list(
+   #                                  contextButton = list(
+   #                                    menuItems = list("downloadPNG", "downloadCSV",
+   #                                                     list(
+   #                                                       text = "Daten für GPT",
+   #                                                       onclick = htmlwidgets::JS(sprintf(
+   #                                                         "function () {
+   #   var date = new Date().toISOString().slice(0,10);
+   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
+   #   var filename = chartTitle + '_' + date + '.txt';
+   #
+   #   var data = this.getCSV();
+   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+   #   if (window.navigator.msSaveBlob) {
+   #     window.navigator.msSaveBlob(blob, filename);
+   #   } else {
+   #     var link = document.createElement('a');
+   #     link.href = URL.createObjectURL(blob);
+   #     link.download = filename;
+   #     link.click();
+   #   }
+   # }", gsub("'", "\\\\'", titel))  #
+   #                                                       )))
+   #                                  ))
+        # )
 
-
- #   tooltip <- paste('Anteil: {point.wert} %')
-#   color <- c("#b16fab", "#154194", "#66cbaf")
- #   titel <- titel
-#    subtitel <- subtitel
-  #  format <- '{point.wert}%'
-
-
-#    x = "gruppe"
-  #  y = "wert"
-
-  #  quelle <- "Quelle der Daten: MINTvernetzt 2024"
-
-
-#    plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel, quelle = quelle )
-
-#
-#
   return(plot)
 }
 

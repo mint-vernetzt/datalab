@@ -372,26 +372,26 @@ mod_studium_studienzahl_ui <- function(id){
                              tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id="h_studium_fach_1"))
                   ),
                   #neu
-                  tabPanel("Anteil von Frauen an MINT-Fächern", br(),
-
-                           tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
-                             .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                           shiny::sidebarPanel(
-                             width = 3,
-                             mod_studium_studienzahl_mintfrauen_ui("mod_studium_studienzahl_mintfrauen_ui_1")),
-                           shiny::mainPanel(
-                             width = 9,
-                             shinycssloaders::withSpinner(htmlOutput(ns("plot_anteil_mint_faecher_frauen")),
-                                                          color = "#154194"),
-                             p(),
-                             p(style="font-size:12px;color:grey",
-                               "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
-                             shinyBS::bsPopover(id="h_studium_mint_2_fruen", title = "",
-                                                content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierenden, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht-MINT&quot betrachtet.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
-                                                placement = "top",
-                                                trigger = "hover"),
-                             tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_2_fruen"))
-                  ),
+                  # tabPanel("Anteil von Frauen an MINT-Fächern", br(),
+                  #
+                  #          tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
+                  #            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
+                  #          shiny::sidebarPanel(
+                  #            width = 3,
+                  #            mod_studium_studienzahl_mintfrauen_ui("mod_studium_studienzahl_mintfrauen_ui_1")),
+                  #          shiny::mainPanel(
+                  #            width = 9,
+                  #            shinycssloaders::withSpinner(htmlOutput(ns("plot_anteil_mint_faecher_frauen")),
+                  #                                         color = "#154194"),
+                  #            p(),
+                  #            p(style="font-size:12px;color:grey",
+                  #              "Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+                  #            shinyBS::bsPopover(id="h_studium_mint_2_fruen", title = "",
+                  #                               content = paste0("In die Kategorie &quotStudienanfänger:innen (1. Fachsemester)&quot fallen alle Studierenden, die das betrachtete Studium aktuell im ersten Semester studieren. Hierbei werden z. B. auch Studierende mitgezählt, die einen Master beginnen oder in das betrachtete Fach hineingewechselt sind. <br> Unter &quotStudienanfänger:innen (1. Hochschulsemester)&quot nehmen wir nur die Personen in den Blick, die zum ersten mal ein Studium aufnehmen.", "<br><br>Für Studierende im Lehramt wird das belegte Hauptfach für die Kategorisierung in &quotMINT&quot oder &quotNicht-MINT&quot betrachtet.", "<br> <br> Durch Rundungen kann es zu minimalen Abbweichungen zwischen den Grafiken kommen.", "<br><br>Die Zahlen beziehen sich auf die eingeschriebenen Studierenden des Herbst-/Wintersemesters im betrachteten Jahr."),
+                  #                               placement = "top",
+                  #                               trigger = "hover"),
+                  #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_studium_mint_2_fruen"))
+                  # )
         )
         ))),
 
