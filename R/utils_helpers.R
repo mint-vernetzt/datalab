@@ -114,48 +114,81 @@ studi_det_ui_faecher <-function(spezif_i, spezif_r){
 
   if(missing(spezif_i)&missing(spezif_r)){
 
-    df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer")) %>%
-      dplyr::select(fach)%>%
-      dplyr::collect()
+    # df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer")) %>%
+    #   dplyr::select(fach)%>%
+    #   dplyr::collect()
+    #
+    # df1 <- df1 %>%
+    #   unique()%>%
+    #   as.vector()%>%
+    #   unlist()%>%
+    #   unname()
+    #
+    # df1 <- sort(df1)
 
-    df1 <- df1 %>%
-      unique()%>%
-      as.vector()%>%
-      unlist()%>%
-      unname()
+    df1_query <- glue::glue_sql("
+  SELECT DISTINCT fach
+  FROM studierende_detailliert
+  WHERE mint_select = 'MINT'
+     OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer')
+  ORDER BY fach
+", .con = con)
 
-    df1 <- sort(df1)
+    df1 <- DBI::dbGetQuery(con, df1_query)
 
   } else if (missing(spezif_i)){
 
-    df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
-      dplyr::filter(region %in%  spezif_r) %>%
-      dplyr::collect()
+    # df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+    #   dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
+    #   dplyr::filter(region %in%  spezif_r) %>%
+    #   dplyr::collect()
+    #
+    # df1 <- df1 %>%dplyr::select(fach)%>%
+    #   unique()%>%
+    #   as.vector()%>%
+    #   unlist()%>%
+    #   unname()
+    #
+    # df1 <- sort(df1)
 
-    df1 <- df1 %>%dplyr::select(fach)%>%
-      unique()%>%
-      as.vector()%>%
-      unlist()%>%
-      unname()
+    df1_query <- glue::glue_sql("
+  SELECT DISTINCT fach
+  FROM studierende_detailliert
+  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer'))
+    AND region IN ({spezif_r*})
+  ORDER BY fach
+", .con = con)
 
-    df1 <- sort(df1)
+    df1 <- DBI::dbGetQuery(con, df1_query) %>%
+      dplyr::pull(fach)
 
   } else if(missing(spezif_r)){
+#
+#     df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
+#       dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
+#       dplyr::filter(indikator %in%  spezif_i) %>%
+#       dplyr::collect()
+#
+#     df1 <- df1 %>%dplyr::select(fach)%>%
+#       unique()%>%
+#       as.vector()%>%
+#       unlist()%>%
+#       unname()
+#
+#     df1 <- sort(df1)
 
-    df1 <- dplyr::tbl(con, from = "studierende_detailliert") %>%
-      dplyr::filter(mint_select == "MINT"  | fach %in% c("Alle MINT-Fächer", "Alle Nicht MINT-Fächer"))%>%
-      dplyr::filter(indikator %in%  spezif_i) %>%
-      dplyr::collect()
+    df1_query <- glue::glue_sql("
+  SELECT DISTINCT fach
+  FROM studierende_detailliert
+  WHERE (mint_select = 'MINT' OR fach IN ('Alle MINT-Fächer', 'Alle Nicht MINT-Fächer'))
+    AND indikator IN ({spezif_i*})
+  ORDER BY fach
+", .con = con)
 
-    df1 <- df1 %>%dplyr::select(fach)%>%
-      unique()%>%
-      as.vector()%>%
-      unlist()%>%
-      unname()
+    df1 <- DBI::dbGetQuery(con, df1_query) %>%
+      dplyr::pull(fach)
 
-    df1 <- sort(df1)
 
   }
 }
@@ -201,7 +234,7 @@ international_ui_faecher <- function(region = "EU") {
     #   unique() %>%
     #   sort()
     df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT land, fachbereich,
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
   AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern', 'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
@@ -210,10 +243,10 @@ international_ui_faecher <- function(region = "EU") {
 
     selection <- DBI::dbGetQuery(con, df_query)
 
-    selection <- selection %>%
-      dplyr::pull(fachbereich) %>%
-      unique() %>%
-      sort()
+    # selection <- selection %>%
+    #   dplyr::pull(fachbereich) %>%
+    #   unique() %>%
+    #   sort()
 
       }
 
@@ -230,17 +263,9 @@ international_ui_years <- function(region = "EU") {
 
   # for studium international
   if (region == "OECD") {
-    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
-
-    # selection <- dplyr::tbl(con, from = "studierende_anzahl_oecd") %>%
-    #   dplyr::filter(geschlecht == "Gesamt") %>%
-    #   dplyr::pull(jahr) %>%
-    #   unique() %>%
-    #   sort()
-    #
 
     df_query <- glue::glue_sql("
-  SELECT *
+  SELECT jahr
   FROM studierende_anzahl_oecd
   WHERE geschlecht = 'Gesamt'
 ", .con = con)
@@ -256,43 +281,36 @@ international_ui_years <- function(region = "EU") {
   }
 
   if (region == "EU") {
-    #load(file = system.file(package="datalab","data/studierende_europa.rda"))
+
+    # selection <- dplyr::tbl(con, from = "studierende_europa") %>%
+    #   dplyr::filter(geschlecht == "Gesamt"  &
+    #                   mint_select == "mint" &
+    #                   indikator == "Fächerwahl") %>%
+    #   dplyr::pull(jahr) %>%
+    #   unique() %>%
+    #   sort()
+    # selection<- selection[-1]
 
 
-#     df_query <- glue::glue_sql("
-#   SELECT *
-#   FROM studierende_europa
-#   WHERE geschlecht = 'Gesamt'
-#   AND mint_select = 'MINT'
-#   AND indikator = 'Fächerwahl'
-# ", .con = con)
-#
-#     selection <- DBI::dbGetQuery(con, df_query)
-#
-#     selection <- selection %>%
-#       dplyr::pull(jahr) %>%
-#       unique() %>%
-#       sort()
-#     selection <- selection[-1]
+    jahr_query <- glue::glue_sql("
+  SELECT DISTINCT jahr
+  FROM studierende_europa
+  WHERE geschlecht = 'Gesamt'
+    AND mint_select = 'mint'
+    AND indikator = 'Fächerwahl'
+  ORDER BY jahr
+", .con = con)
 
-    selection <- dplyr::tbl(con, from = "studierende_europa") %>%
-      dplyr::filter(geschlecht == "Gesamt"  &
-                      mint_select == "mint" &
-                      indikator == "Fächerwahl") %>%
-      dplyr::pull(jahr) %>%
-      unique() %>%
-      sort()
-    selection<- selection[-1]
+    selection <- DBI::dbGetQuery(con, jahr_query) %>%
+      dplyr::pull(jahr)
+
+    # Entferne das erste Element
+    selection <- selection[-1]
+
     #
   }
 
   if (region == "Weltweit"){
-    # selection <- dplyr::tbl(con, from = "studierende_absolventen_weltweit") %>%
-    #   dplyr::filter(geschlecht == "Insgesamt") %>%
-    #   dplyr::filter(jahr != "2022") %>%
-    #   dplyr::pull(jahr) %>%
-    #   unique() %>%
-    #   sort()
 
     df_query <- glue::glue_sql("
   SELECT *
@@ -312,17 +330,6 @@ international_ui_years <- function(region = "EU") {
 
   # for schule international
   if (region == "TIMSS") {
-    #load(file = system.file(package="datalab","data/schule_timss.rda"))
-
-    # selection <- dplyr::tbl(con, from = "schule_timss") %>%
-    #   dplyr::filter(ordnung %in% c("Achievement",
-    #                                "Benchmarks") &
-    #                   indikator %in% c("Mittlerer int'l. Maßstab (475)",
-    #                                    "Insgesamt")
-    #   ) %>%
-    #   dplyr::pull(jahr) %>%
-    #   unique() %>%
-    #   sort()
 
     df_query <- glue::glue_sql("
   SELECT *
@@ -342,17 +349,8 @@ international_ui_years <- function(region = "EU") {
   }
 
   if (region == "PISA") {
-    #load(file = system.file(package="datalab","data/schule_pisa.rda"))
 
-    # selection <- dplyr::tbl(con, from = "schule_pisa") %>%
-    #   dplyr::filter(bereich == "Ländermittel" &
-    #                   indikator == "Insgesamt" &
-    #                   !is.na(wert)) %>%
-    #   dplyr::pull(jahr) %>%
-    #   unique() %>%
-    #   sort()
-
-    df_query <- glue::glue_sql("
+df_query <- glue::glue_sql("
   SELECT *
   FROM schule_pisa
   WHERE bereich = 'Ländermittel'
@@ -372,37 +370,35 @@ international_ui_years <- function(region = "EU") {
 
   # for arbeitsmarkt international
   if (region == "arbeit") {
-    #load(file = system.file(package="datalab","data/schule_timss.rda"))
-
-#
-    selection <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-      dplyr::filter(
-        geschlecht == "Gesamt" &
-          # filter year, since before there are not all infos available
-          jahr >= 2013 &
-          variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-                          "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-
-      ) %>%
-      dplyr::pull(jahr) %>%
-      unique() %>%
-      sort()
 
 
-#     df_query <- glue::glue_sql("
-#   SELECT *
-#   FROM arbeitsmarkt_anfaenger_absolv_oecd
-#   WHERE bereich = 'Gesamt'
-#   AND jahr >= 2013
-#   AND variable IN ('Anteil Absolvent*innen nach Fach an allen Fächern', 'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern')
-# ", .con = con)
-#
-#     selection <- DBI::dbGetQuery(con, df_query)
-#
-#     selection <- selection %>%
-#       dplyr::pull(jahr) %>%
-#       unique() %>%
-#       sort()
+    # selection <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
+    #   dplyr::filter(
+    #     geschlecht == "Gesamt" &
+    #       jahr >= 2013 &
+    #       variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
+    #                       "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
+    #
+    #   ) %>%
+    #   dplyr::pull(jahr) %>%
+    #   unique() %>%
+    #   sort()
+
+
+    jahr_query <- glue::glue_sql("
+  SELECT DISTINCT jahr
+  FROM arbeitsmarkt_anfaenger_absolv_oecd
+  WHERE geschlecht = 'Gesamt'
+    AND jahr >= 2013
+    AND variable IN (
+      'Anteil Absolvent*innen nach Fach an allen Fächern',
+      'Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern'
+    )
+  ORDER BY jahr
+", .con = con)
+
+    selection <- DBI::dbGetQuery(con, jahr_query) %>%
+      dplyr::pull(jahr)
 
 
 
@@ -416,40 +412,18 @@ international_ui_country <- function(type = "arbeit", n = NA) {
 
   selection <- NULL
 
-  # for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-  #   dplyr::filter(
-  #     geschlecht == "Gesamt"
-  #   ) %>%
-  #   dplyr::collect()
-  # year <- max(for_year$jahr)
-
-
-
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT jahr
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
 ", .con = con)
 
   for_year <- DBI::dbGetQuery(con, df_query)
 
-  for_year <- for_year %>%
-    dplyr::collect()
   year <- max(for_year$jahr)
 
   # for studium international
   if (type == "arbeit") {
-    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
-
-    # tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-    #   dplyr::filter(geschlecht == "Gesamt" &
-    #                   jahr == year &
-    #                   variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-    #                                   "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-    #   ) %>%
-    #   dplyr::collect()
-    #
-
 
 
     df_query <- glue::glue_sql("
@@ -461,9 +435,6 @@ international_ui_country <- function(type = "arbeit", n = NA) {
 ", .con = con)
 
     tmp_df <- DBI::dbGetQuery(con, df_query)
-
-    tmp_df <- tmp_df %>%
-      dplyr::collect()
 
 
 
@@ -486,43 +457,25 @@ international_ui_country <- function(type = "arbeit", n = NA) {
 
 }
 
-int_schule_ui_country <- function(type = "TIMSS", n = NA) {
+int_schule_ui_country <- function(type = "TIMSS", n = NULL) {
 
 
   selection <- NULL
 
-  # for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-  #   dplyr::filter(
-  #     geschlecht == "Gesamt"
-  #   ) %>%
-  #   dplyr::collect()
-  # year <- max(for_year$jahr)
-
-
-
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT land, jahr
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
 ", .con = con)
 
   for_year <- DBI::dbGetQuery(con, df_query)
 
-  for_year <- for_year %>%
-    dplyr::collect()
+
   year <- max(for_year$jahr)
 
   # for studium international
   if (type == "arbeit") {
-    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
 
-    # tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-    #   dplyr::filter(geschlecht == "Gesamt" &
-    #                   jahr == year &
-    #                   variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-    #                                   "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-    #   ) %>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -534,11 +487,6 @@ int_schule_ui_country <- function(type = "TIMSS", n = NA) {
 ", .con = con)
 
     tmp_df <- DBI::dbGetQuery(con, df_query)
-
-    tmp_df <- tmp_df %>%
-      dplyr::collect()
-
-
 
     if (!is.na(n)) {
       tmp_df <- tmp_df %>%
@@ -557,68 +505,63 @@ int_schule_ui_country <- function(type = "TIMSS", n = NA) {
       sort()
   }
 
-  if(type=="TIMSS"){
-    # selection <- dplyr::tbl(con, from = "schule_timss") %>%
-    #   dplyr::filter(!is.na(wert)) %>%
-    #   dplyr::distinct(land) %>%  # Eindeutige Werte direkt in der Datenbank abrufen
-    #   dplyr::arrange(land) %>%   # Alphabetisch sortieren (in der DB)
-    #   dplyr::pull(land)          # Extrahiert die Spalte 'land'
+  if(type=="TIMSS" && is.null(n)){
 
     df_query <- glue::glue_sql("
-  SELECT *
-  FROM schule_timss
+    SELECT DISTINCT land FROM schule_timss
+WHERE ordnung = 'Ressourcen' AND wert IS NOT NULL
 ", .con = con)
 
     selection <- DBI::dbGetQuery(con, df_query)
 
-    selection <- selection %>%
-      dplyr::filter(!is.na(wert)) %>%
-      dplyr::distinct(land) %>%  #
-      dplyr::arrange(land) %>%   #
-      dplyr::pull(land)
 
-
+#     df_query <- glue::glue_sql("
+#   SELECT *
+#   FROM schule_timss
+# ", .con = con)
+#
+#     selection <- DBI::dbGetQuery(con, df_query)
+#
+#
+#
+#     selection <- selection %>%
+#       group_by(land) %>%
+#       filter(
+#         # Behalte nur Länder,
+#         # die mindestens eine Zeile mit ordnung == "Ressourcen" und NICHT NA in wert haben
+#         any(ordnung == "Ressourcen" & !is.na(wert))
+#       ) %>%
+#       ungroup() %>%
+#     # browser()
+#     # # %>%
+#       dplyr::filter(!is.na(wert)) %>%
+#       dplyr::distinct(land) %>%  #
+#       dplyr::arrange(land) %>%   #
+#       dplyr::pull(land)
 
   }
 
 }
 
-int_pisa_ui_country <- function(type = "TIMSS", n = NA) {
+int_pisa_ui_country <- function(type = "TIMSS", n = NULL) {
 
   selection <- NULL
-
-  # for_year <- dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-  #   dplyr::filter(
-  #     geschlecht == "Gesamt"
-  #   ) %>%
-  #   dplyr::collect()
-  # year <- max(for_year$jahr)
 
 
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT land, jahr
   FROM arbeitsmarkt_anfaenger_absolv_oecd
   WHERE geschlecht = 'Gesamt'
 ", .con = con)
 
   for_year <- DBI::dbGetQuery(con, df_query)
 
-  for_year <- for_year %>%
-    dplyr::collect()
+
   year <- max(for_year$jahr)
 
   # for studium international
   if (type == "arbeit") {
-    #load(file = system.file(package="datalab","data/studierende_anzahl_oecd.rda"))
-
-    # tmp_df <-  dplyr::tbl(con, from = "arbeitsmarkt_anfaenger_absolv_oecd") %>%
-    #   dplyr::filter(geschlecht == "Gesamt" &
-    #                   jahr == year &
-    #                   variable %in% c("Anteil Absolvent*innen nach Fach an allen Fächern",
-    #                                   "Anteil Ausbildungs-/Studiumsanfänger*innen nach Fach an allen Fächern")
-    #   ) %>%
-    #   dplyr::collect()
 
 
     df_query <- glue::glue_sql("
@@ -652,11 +595,29 @@ int_pisa_ui_country <- function(type = "TIMSS", n = NA) {
       sort()
   }
 
-  if(type == "PISA"){
+  if(type == "PISA"  && is.null(n)){
+
 
     selection <- DBI::dbGetQuery(con,
                                  "SELECT DISTINCT land
                                  FROM schule_pisa")$land
+
+  }
+
+  if(type == "PISA" && !is.null(n)){
+
+
+
+    selection <- DBI::dbGetQuery(con,
+                                 "SELECT DISTINCT land
+                                 FROM schule_pisa")
+
+    laender_ausgeschlossen <- c("Luxemburg", "Japan", "Großbritannien")
+
+    selection <- selection %>%
+      filter(!land %in% laender_ausgeschlossen) %>%
+      pull(land)
+
   }
 
 }
@@ -670,7 +631,7 @@ fachkraft_ui_years <- function(reg = "DE") {
 if(reg == "DE"){
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT jahr
   FROM arbeitsmarkt_epa_detail
   WHERE indikator = 'Engpassindikator'
 ", .con = con)
@@ -689,9 +650,9 @@ if(reg == "DE"){
   #   sort()
 
 }else if(reg== "BULA"){
-
+##############################################################
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT jahr
   FROM arbeitsmarkt_epa
   WHERE indikator = 'Engpassindikator'
 ", .con = con)
@@ -765,7 +726,7 @@ fachkraft_ui_berufe <- function(level = "Fachkräfte", zeitpunkt = 2023) {
   selection <- NULL
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT beruf, wert
   FROM arbeitsmarkt_epa_detail
   WHERE indikator = 'Engpassindikator'
   AND anforderung = {level}
@@ -876,11 +837,11 @@ arbeit_fachkraft_ui_years <- function() {
   selection <- NULL
 
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT jahr
   FROM arbeitsmarkt_fachkraefte
   WHERE indikator IN ('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')
 ", .con = con)
-
+#####################################################
 
   selection <- DBI::dbGetQuery(con, df_query)
 
@@ -906,9 +867,9 @@ arbeit_fachkraft_ui_years <- function() {
 arbeit_fachkraft_ui_region <- function() {
 
   selection <- NULL
-
+##########################################################
   df_query <- glue::glue_sql("
-  SELECT *
+  SELECT DISTINCT region
   FROM arbeitsmarkt_fachkraefte
   WHERE indikator IN ('Abgeschlossene Vakanzzeit', 'Arbeitslosen-Stellen-Relation')
 ", .con = con)
@@ -1263,7 +1224,7 @@ darstellung <- function(id, title = NULL) {
 piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6"), format = '{point.prop_besr}%', subtitel = NULL, quelle="Quelle"){
 
   if (is.null(subtitel)){
-    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y))) %>%
+    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y)), name = "value") %>%
       highcharter::hc_tooltip(
         pointFormat=tooltip) %>%
       highcharter::hc_colors(color) %>%
@@ -1281,12 +1242,41 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     )
+                                                     )
                                   )
                                 )
       )
   } else {
-    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y))) %>%
+    out <- highcharter::hchart(df, size = 280, type = "pie", mapping = highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y)), name = "value") %>%
       highcharter::hc_tooltip(
         pointFormat=tooltip) %>%
       highcharter::hc_colors(color) %>%
@@ -1306,11 +1296,41 @@ piebuilder <- function(df, titel, x, y, tooltip, color = c("#b16fab", "#efe8e6")
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     )
+                                                     )
                                   )
                                 )
       )
-
   }
 
   return(out)
@@ -1344,7 +1364,35 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+
+   }",
+                                                       gsub("'", "\\\\'", titel),  # Titel escapen
+                                                       gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                     ))
+
+                                                   ))
                                 )
                               )
     )
@@ -1354,6 +1402,35 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
 
 #}
 
+linebuilder_light <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24"), quelle="Quelle"){
+
+  df <- df %>%
+    dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
+
+  out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = !!rlang::sym(group))) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(color) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+    )  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV"))
+                              )
+    )
+
+
+}
 
 balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                           optional=NULL, reverse = TRUE, TF=NULL, stacking=NULL, subtitel = NULL, quelle="Quelle"){
@@ -1385,7 +1462,35 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
                                   )
                                 )
       )
@@ -1410,7 +1515,35 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
                                   )
                                 )
       )
@@ -1437,7 +1570,35 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
                                   )
                                 )
       )
@@ -1466,7 +1627,35 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
                                   )
                                 )
       )
@@ -1494,7 +1683,33 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
                                   )
                                 )
       )
@@ -1523,7 +1738,33 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
                                   )
                                 )
       )
@@ -1556,7 +1797,33 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
                                   )
                                 )
       )
@@ -1586,7 +1853,33 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     data += '\\n%s';  // <- Quelle anhängen
+
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }",
+                                                         gsub("'", "\\\\'", titel),  # Titel escapen
+                                                         gsub("'", "\\\\'", quelle)  # Quelle escapen
+                                                       ))
+
+                                                     ))
                                   )
                                 )
       )
@@ -1652,7 +1945,29 @@ get_top10_hc_plot_options <- function(hc,
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )
+
+                                                   ))
                                 )
                               )
     )
@@ -1693,7 +2008,29 @@ balkenbuilder3 <- function(df, titel , x, y, tooltip, format, color, optional, o
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )
+
+                                                   ))
                                 )
                               )
     )
@@ -1741,7 +2078,29 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )
+
+                                                   ))
                                 )
                               )
     )
@@ -1779,7 +2138,29 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )
+
+                                                   ))
                                 )
                               )
     )
@@ -1908,7 +2289,29 @@ if(prop==FALSE && wert == FALSE){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )
+
+                                                   ))
                                 )
                               )
     )

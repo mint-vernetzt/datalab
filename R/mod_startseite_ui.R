@@ -79,14 +79,35 @@ mod_startseite_start_ui <- function(id){
                      class = "btn btn-default",
                      style = "margin-bottom: 30px; margin-top: 10px;")
     ),
+
     column(
-      width = 10,
-      slickR::slickROutput(ns("slider_output"), width = '800px', height = '500px')
+      width = 11,
+      slickR::slickROutput(ns("slider_output"), width = '800px', height = '500px'),
+
+      # Lernvideo ----
+
+      h5("Lernvideo zu den MINT-Daten",
+         style = "margin-top: 40px;"),
+      p("Auf dem MINT-Campus haben wir ein Video veröffentlich, in dem wir Statistiken
+        zum Thema Frauen in MINT zeigen und einordnen."),
+      div(
+        style = "display: flex; justify-content: center;",
+        tags$iframe(
+          width = "800", height = "450",
+          src = "https://www.youtube.com/embed/cFd8ZvegIhg",
+          frameborder = "0",
+          allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+          allowfullscreen = NA,
+          style = "margin: 40px;"
+        )
+      )
     ),
+
+
     column(
       width = 8,
 
-    # Abbinder ----
+       # Abbinder ----
 
       p(),
       hr(),

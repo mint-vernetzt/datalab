@@ -12,7 +12,6 @@ mod_home_start_ui <- function(id){
   tagList(
 
 
-
     # Banner
        fluidRow(
          div(class = "clean-box",

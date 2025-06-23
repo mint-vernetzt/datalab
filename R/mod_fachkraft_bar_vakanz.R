@@ -69,16 +69,6 @@ mod_fachkraft_bar_vakanz_server <- function(id, r){
         r$map_ind_fachkraft_arbeit_bar <- input$map_ind_fachkraft_arbeit_bar
     })
 
-    # observeEvent(input$map_ind_fachkraft_arbeit_bar, {
-    #   r$map_ind_fachkraft_arbeit_bar <- input$map_ind_fachkraft_arbeit_bar
-    #   if (input$map_ind_fachkraft_arbeit_bar %in% c("Abgeschlossene Vakanzzeit", "Arbeitslosen-Stellen-Relation")) {
-    #     r$map_y_fachkraft_arbeit_bar <- input$map_y_vakanz_fachkraft_arbeit_bar
-    #     r$map_reg_fachkraft_arbeit_bar <- input$map_reg_vakanz_fachkraft_arbeit_bar
-    #   } else  {
-    #     # TODO add selection here for EPA later
-    #   }
-    # })
-
     observeEvent(input$map_y_vakanz_fachkraft_arbeit_bar, {
       r$map_y_fachkraft_arbeit_bar <- input$map_y_vakanz_fachkraft_arbeit_bar
     })

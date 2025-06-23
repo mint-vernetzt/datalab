@@ -225,9 +225,13 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
 
                              tags$head(tags$style(".butt{background-color:#FFFFFF;} .butt{color: #000000;}
                                            .butt{border-color:#FFFFFF;} .butt{float: right;} .butt:hover{background-color: #FFFFFF; border-color:#FFFFFF}")),
-                             shiny::sidebarPanel(
+                             column(
                                width = 3,
-                               mod_beruf_arbeitsmarkt_faecher_verlauf_ui("mod_beruf_arbeitsmarkt_faecher_verlauf_ui_1"),
+                               shiny::sidebarPanel(
+                                 width = 12,
+                                 mod_beruf_arbeitsmarkt_faecher_verlauf_ui("mod_beruf_arbeitsmarkt_faecher_verlauf_ui_1"),
+                               ),
+                               tags$img(src = "www/ti.png", style = "margin-top: 10px; width: 90%; display: block; margin-left: auto; margin-right: auto;")
                              ),
                              shiny::mainPanel(
                                width = 9,
@@ -366,6 +370,36 @@ mod_beruf_arbeitsmarkt_ui <- function(id){
                        tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_4")
                      )
             )
+            # ,
+            # tabPanel("Frauenanteil in MINT-Fächern", br(),
+            #
+            #          shiny::sidebarPanel(
+            #            width = 3,
+            #            mod_beruf_arbeitsmarkt_frauenfaecherteil_ui("mod_beruf_arbeitsmarkt_top10_ui_1"),
+            #            # br(),br()
+            #            # ,
+            #            # downloadButton(
+            #            #   outputId = ns("download_btn_plot_arbeitsmarkt_top10_1"),
+            #            #   label = "Download (links)",
+            #            #   icon = icon("download")),
+            #            # downloadButton(
+            #            #   outputId = ns("download_btn_plot_arbeitsmarkt_top10_2"),
+            #            #   label = "Download (rechts)",
+            #            #   icon = icon("download")),
+            #          ),
+            #          shiny::mainPanel(
+            #            width = 9,
+            #            shinycssloaders::withSpinner(htmlOutput(ns("plot_arbeitsmarkt_top10")),
+            #                                         color = "#154194"),
+            #
+            #            p(style="font-size:12px;color:grey", "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."),
+            #            shinyBS::bsPopover(id = "h_beruf_fach_4", title = "",
+            #                               content = paste0("Hier gezeigt werden nur neue Auszubildende im Fachbereich MINT des jeweiligen Jahres. Ausbildungsberufe mit weniger als zehn neuen Vertragsabschlüssen für das betrachtete Jahr wurden ausgeschlossen. <br><br>In manchen Fällen weisen mehr als zehn Berufe einen Männeranteil von 100 % auf. In diesen Fällen sind die zehn Berufe mit einem Männeranteil von 100 % angezeigt, welche die meisten Neu-Auszubildenden haben.", "<br> <br> In den vorliegenden Daten wird nur zwischen &quotweiblich&quot und &quotmännlich&quot unterschieden."),
+            #                               placement = "top",
+            #                               trigger = "hover"),
+            #            tags$a(paste0("Hinweis zu den Daten"), icon("info-circle"), id = "h_beruf_fach_4")
+            #          )
+            # ),
         )
         ))),
 

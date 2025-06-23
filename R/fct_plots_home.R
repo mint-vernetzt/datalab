@@ -190,6 +190,8 @@ home_einstieg <- function(r) {
    titel <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
 
 
+   title <- paste0("Anteil von MINT nach Bildungsbereichen in ", regio, " (", zeit,")")
+    
    #dies kann nicht als systemvariable übergeben werden also group
 
    out <- highcharter::hchart(df, 'bar', highcharter::hcaes(y = prop, x = indikator, group = "fachbereich"))%>%
@@ -211,7 +213,26 @@ home_einstieg <- function(r) {
      highcharter::hc_exporting(enabled = TRUE,
                                buttons = list(
                                  contextButton = list(
-                                   menuItems = list("downloadPNG", "downloadCSV")
+                                   menuItems = list("downloadPNG", "downloadCSV",
+                                                    list(
+                                                      text = "Daten für GPT",
+                                                      onclick = htmlwidgets::JS(sprintf(
+                                                        "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                  )
                                )
      )
@@ -665,14 +686,56 @@ home_einstieg_gender <- function(r) {
       df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
 
+   #   titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
 
-      x = "indikator"
-      y = "prop"
-      group = "geschlecht"
+ #     out <- highcharter::hchart(df, 'bar', highcharter::hcaes( x = indikator, y=prop, group = geschlecht)) %>%
+ #       highcharter::hc_tooltip(pointFormat = "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}") %>%
+ #       highcharter::hc_yAxis(title = list(text = ""), labels = list(format = "{value}%"),  reversedStacks =  FALSE) %>%
+ #       highcharter::hc_xAxis(title = list(text = "")) %>%
+ #       highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+ #       highcharter::hc_colors(c("#154194", "#efe8e6")) %>%
+ #       highcharter::hc_title(text = paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")"),
+ #                             margin = 25,
+ #                             align = "center",
+ #                             style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+ #       highcharter::hc_chart(
+ #         style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")
+ #       ) %>%
+ #       highcharter::hc_legend(enabled = TRUE, reversed = FALSE) %>%
+ #       highcharter::hc_exporting(enabled = TRUE,
+ #                                 buttons = list(
+ #                                   contextButton = list(
+ #                                     menuItems = list("downloadPNG", "downloadCSV",
+ #                                                      list(
+ #                                                        text = "Daten für GPT",
+ #                                                        onclick = htmlwidgets::JS(sprintf(
+ #                                                          "function () {
+ #    var date = new Date().toISOString().slice(0,10);
+ #    var chartTitle = '%s'.replace(/\\s+/g, '_');
+ #    var filename = chartTitle + '_' + date + '.txt';
+ #
+ #    var data = this.getCSV();
+ #    var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+ #    if (window.navigator.msSaveBlob) {
+ #      window.navigator.msSaveBlob(blob, filename);
+ #    } else {
+ #      var link = document.createElement('a');
+ #      link.href = URL.createObjectURL(blob);
+ #      link.download = filename;
+ #      link.click();
+ #    }
+ #  }", gsub("'", "\\\\'", titel)))))
+  #                                  )
+  #                                )
+  #      )
+
+      x <- "indikator"
+      y <- "prop"
+      group <- "geschlecht"
       tooltip <- "{point.anzeige_geschlecht}Anteil: {point.prop_besr} % <br> Anzahl: {point.wert_besr}"
-      stacking = "percent"
+      stacking <- "percent"
       titel <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
-      reversed = FALSE
+      reversed <- FALSE
       format <- "{value}%"
 
       colors <- c("#154194", "#efe8e6")
@@ -689,6 +752,7 @@ home_einstieg_gender <- function(r) {
       df <- df[with(df, order(prop, decreasing = TRUE)), ]
 
 
+      title <- paste0("Anteil von Frauen in MINT nach Bildungsbereichen in ", regio, " (", zeit, ")")
 
       ##balkenbuilder nicht verwendet wegen dem sonderfall Kateogirne
 
@@ -724,7 +788,26 @@ home_einstieg_gender <- function(r) {
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel)))))
                                     )
                                   )
         )
@@ -760,8 +843,6 @@ home_comparison_line <- function(r) {
   abs_selector <- r$abs_zahlen_start_comparison
 
 
-
-
   query <- glue::glue_sql("
   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
   FROM zentral
@@ -777,44 +858,76 @@ home_comparison_line <- function(r) {
 
   if(abs_selector=="In Prozent"){
 
-
+####deutschlabnd statt ({regio*})
     query_df_alle <- glue::glue_sql("
   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
   FROM zentral
   WHERE jahr IN ({t*})
     AND region IN ({regio*})
-    AND geschlecht = 'Gesamt'
+    AND NOT geschlecht = 'Gesamt'
     AND fachbereich = 'MINT'
     AND indikator IN ({indikator_choice*})
 ", .con = con)
 
     df_alle <- DBI::dbGetQuery(con, query_df_alle)
 
-    if("Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
 
-      query_df_alle_bw <- glue::glue_sql("
-  SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
-  FROM zentral
-  WHERE jahr IN ({t*})
-    AND region = 'Baden-Württemberg'
-    AND geschlecht = 'Gesamt'
-    AND fachbereich = 'MINT'
-    AND bereich = 'Schule'
-", .con = con)
+    # df_alle <- df_alle %>%
+    #   group_by(bereich, indikator, fachbereich, jahr, region)%>%
+    #   summarise(
+    #     Wert = sum(Wert, na.rm = TRUE),
+    #     .groups = "drop"
+    #   ) %>%
+    #   mutate(Geschlecht = "Gesamt") %>%
+    #   select(bereich, indikator, fachbereich, geschlecht, jahr, wert, region)
 
-      df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
 
-      df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
-        dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "jahr", "geschlecht")) %>%
-        dplyr::mutate(wert.x = wert.x - wert.y) %>%
-        dplyr::select(-wert.y) %>%
-        dplyr::rename(wert = wert.x)
 
-      df_alle <- df_alle %>%
-        dplyr::filter(bereich != "Schule") %>%
-        rbind(df_alle_schule)
+    df_alle <- df_alle %>%
+      group_by(bereich, indikator, fachbereich, jahr) %>%
+      summarise(
+        wert = sum(wert, na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      mutate(geschlecht = "Gesamt") %>%
+      select(bereich, indikator, fachbereich, geschlecht, jahr, wert)
 
-    }
+
+
+
+
+#     if("Leistungskurse" %in% indikator_choice & regio == "Deutschland"){
+#
+#       query_df_alle_bw <- glue::glue_sql("
+#   SELECT bereich, indikator, fachbereich, geschlecht, jahr, wert
+#   FROM zentral
+#   WHERE jahr IN ({t*})
+#     AND region = 'Deutschland'
+#     AND geschlecht = 'Gesamt'
+#     AND fachbereich = 'MINT'
+#     AND bereich = 'Schule'
+# ", .con = con)
+#
+#       df_alle_bw <- DBI::dbGetQuery(con, query_df_alle_bw)
+#
+#
+#       # df_alle_schule <- df_alle[df_alle$bereich == "Schule",] %>%
+#       #   dplyr::left_join(df_alle_bw, by = c("bereich", "indikator", "fachbereich", "jahr", "geschlecht")) %>%
+#       #   dplyr::mutate(wert.x = wert.x - wert.y) %>%
+#       #   dplyr::select(-wert.y) %>%
+#       #   dplyr::rename(wert = wert.x)
+#
+#
+#       # df_alle <- df_alle_bw %>%
+#       #   dplyr::filter(bereich != "Schule") %>%
+#       #   rbind(df_alle_schule)
+#
+#       df_alle <- df_alle_bw
+#
+#       browser()
+#
+#     }
+
 
     df <- df %>%
       dplyr::left_join(df_alle, by = c("indikator", "jahr", "fachbereich", "bereich")) %>%
@@ -822,6 +935,8 @@ home_comparison_line <- function(r) {
       dplyr::rename(geschlecht = geschlecht.x,
                     wert = wert.x) %>%
       dplyr::select(-c(wert.y, geschlecht.y))
+
+
 
 
     df <- df[with(df, order(indikator, jahr, decreasing = FALSE)), ]

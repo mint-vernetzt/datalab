@@ -159,9 +159,28 @@ plot_cp_orgas <- function(r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                       )))
+                                  ))
       )
   }else{
 
@@ -212,9 +231,28 @@ plot_cp_orgas <- function(r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                       )))
+                                  ))
       )
 
 
@@ -383,9 +421,28 @@ plot_cp_projekte <- function(r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                       )))
+                                  ))
       )
   }else{
 
@@ -439,9 +496,28 @@ plot_cp_projekte <- function(r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                       )))
+                                  ))
       )
 
 
@@ -604,9 +680,28 @@ plot_cp_profile <- function(r){
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
-                                    )
-                                  )
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                         )))
+                                    ))
         )
 
     }else{
@@ -654,9 +749,28 @@ plot_cp_profile <- function(r){
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
-                                    )
-                                  )
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                         )))
+                                    ))
         )
     }
 
@@ -709,9 +823,28 @@ plot_cp_profile <- function(r){
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
-                                    )
-                                  )
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                         )))
+                                    ))
         )
     }else{
 
@@ -757,9 +890,28 @@ plot_cp_profile <- function(r){
         highcharter::hc_exporting(enabled = TRUE,
                                   buttons = list(
                                     contextButton = list(
-                                      menuItems = list("downloadPNG", "downloadCSV")
-                                    )
-                                  )
+                                      menuItems = list("downloadPNG", "downloadCSV",
+                                                       list(
+                                                         text = "Daten für GPT",
+                                                         onclick = htmlwidgets::JS(sprintf(
+                                                           "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                         )))
+                                    ))
         )
     }
 
@@ -824,8 +976,6 @@ plot_mv_akteursb <- function(r){
     plot <- piebuilder(df, titel, x="indikator", y="wert", tooltip = paste('Anteil: {point.prop}%'), color, format, quelle = quelle)
 
 
-
-
   }else{
 
     abs_rel <- r$abs_rel_mvb_akteur
@@ -868,9 +1018,28 @@ plot_mv_akteursb <- function(r){
       highcharter::hc_exporting(enabled = TRUE,
                                 buttons = list(
                                   contextButton = list(
-                                    menuItems = list("downloadPNG", "downloadCSV")
-                                  )
-                                )
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                       )))
+                                  ))
       )
 
   }
@@ -885,7 +1054,6 @@ plot_mv_stimmung <- function(r){
     frage_typ <-  c("Der Ganztag sollte eher für schulische Zwecke wie Hausaufgabenbetreuung genutzt werden.",
                     "Der Ganztag sollte eher für Freizeitangebote wie Sport, Kunst und Mustik genutzt werden.",
                     "Der Ganztag sollte als Bildungsort genutzt werden und dabei auch MINT-Bildungsangebote einbinden.")
-
 
 
 
@@ -915,18 +1083,72 @@ plot_mv_stimmung <- function(r){
     subtitel <- ifelse(gruppe == "Schule", "N = 18", ifelse(gruppe == "außerschulische Akteur:innen",
                                                             "N = 24", subtitel))
 
-    group = "antwort"
-    y = "wert"
-    x = "typ"
 
-    color <-  c("#efe8e6",
-                "#ee7775", "#fca5a5",
-                "#66cbaf", "#35bd97" )
-    tooltip <- paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')
-    quelle <- "Quelle der Daten: MINTvernetzt 2024."
+    # quelle <- "Quelle der Daten: MINTvernetzt 2024."
 
-    plot <- balkenbuilder(df, titel, x, y, group=group, tooltip, format = "1", color = color, stacking = "percent", subtitel = subtitel, quelle =quelle)
+    plot <- df %>%
+      highcharter::hchart(
+        "bar", highcharter::hcaes(group = antwort , y = wert, x = typ)
+      )%>%
+      highcharter::hc_plotOptions(bar = list(stacking = "percent")) %>%
+      highcharter::hc_tooltip(
+        pointFormat=paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')) %>%
+      highcharter::hc_colors( c("#efe8e6",
+                                "#ee7775", "#fca5a5",
+                                "#66cbaf", "#35bd97" )) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               align = "center",
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
+      highcharter::hc_yAxis(title = list(text = "")) %>%
+      highcharter::hc_xAxis(title = list(text = "")) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "SourceSans3-Regular", fontSize = "18px")) %>%
+      highcharter::hc_legend(enabled = TRUE, reversed = T) %>%
+      highcharter::hc_caption(text = "Quelle der Daten: MINTvernetzt 2024.",
+                              style = list(fontSize = "11px", color = "gray")) %>%
+      highcharter::hc_exporting(enabled = TRUE,
+                                buttons = list(
+                                  contextButton = list(
+                                    menuItems = list("downloadPNG", "downloadCSV",
+                                                     list(
+                                                       text = "Daten für GPT",
+                                                       onclick = htmlwidgets::JS(sprintf(
+                                                         "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
 
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                       )))
+                                  ))
+      )
+
+  #  group = "antwort"
+  #  y = "wert"
+  #  x = "typ"
+
+
+ #   color <-  c("#efe8e6",
+ #               "#ee7775", "#fca5a5",
+ #               "#66cbaf", "#35bd97" )
+ #   tooltip <- paste('\"{point.antwort}\" <br> Anteil: {point.wert}%')
+ #
+#
+ #   plot <- balkenbuilder(df, titel, x, y, group=group, tooltip, format = "1", color = color, stacking = "percent", subtitel = subtitel, quelle =quelle)
 
 
     }else{
@@ -952,14 +1174,14 @@ plot_mv_stimmung <- function(r){
 
 
 
-      colors<-  c("#b16fab", "#154194", "#66cbaf","#fbbf24")
-      tooltip <- paste('Anteil: {point.wert}%')
+    colors<-  c("#b16fab", "#154194", "#66cbaf","#fbbf24")
+     tooltip <- paste('Anteil: {point.wert}%')
       x = "antwort"
       y = "wert"
       titel <- titel
       subtitel <- subtitel
 
-      quelle <- "Quelle der Daten: MINTvernetzt 2024."
+     quelle <- "Quelle der Daten: MINTvernetzt 2024."
 
       plot <- piebuilder(df, titel, x, y, tooltip, colors, format = '{point.wert}%', subtitel, quelle = quelle)
 
@@ -971,8 +1193,6 @@ plot_mv_stimmung <- function(r){
 }
 
 plot_mv_genderb <- function(){
-
-
 
     df_query <- glue::glue_sql("
     SELECT *
@@ -995,22 +1215,80 @@ plot_mv_genderb <- function(){
         )
       )
 
-    tooltip <- paste('Anteil: {point.wert} %')
-    color <- c("#b16fab", "#154194", "#66cbaf")
-    titel <- titel
-    subtitel <- subtitel
-    format <- '{point.wert}%'
+    # tooltip <- paste('Anteil: {point.wert} %')
+    # color <- c("#b16fab", "#154194", "#66cbaf")
+    # titel <- titel
+    # subtitel <- subtitel
+    # format <- '{point.wert}%'
+    #
+    # x = "gruppe"
+    # y = "wert"
+    #
+    # quelle <- "Quelle der Daten: MINTvernetzt 2024"
+    #
+    #
+    # plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel, quelle = quelle )
 
-    x = "gruppe"
-    y = "wert"
+    plot <- df %>%
+      highcharter::hchart(
+        "pie", highcharter::hcaes(x = gruppe, y = wert)
+      )%>%
+      highcharter::hc_tooltip(
+        pointFormat=paste('Anteil: {point.wert} %')) %>%
+      highcharter::hc_colors( c("#b16fab", "#154194", "#66cbaf")) %>%
+      highcharter::hc_title(text = titel,
+                            margin = 45,
+                            align = "center",
+                            style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "20px")) %>%
+      highcharter::hc_subtitle(text = subtitel,
+                               align = "center",
+                               style = list(color = "black", useHTML = TRUE, fontFamily = "SourceSans3-Regular", fontSize = "16px")) %>%
+      highcharter::hc_chart(
+        style = list(fontFamily = "SourceSans3-Regular", fontSize = "14px")) %>%
+      highcharter::hc_caption(text =  "Die Gruppe der bislang moderat aktiven MINT-Bildungsanbieter:innen zeichnet
+                              sich durch einen großen Vernetzungswunsch und eine hohe Motivation aus,
+                              sich aktiv in Netzwerke zum Thema MINT-Förderung für Mädchen einzubringen,
+                              was auf ein großes Aktivierungspotenzial hinweist.
+                              Die Gruppe der hoch Aktiven ist bereits sehr motiviert und engagiert in ihrem Netzwerk. Die kleinste Gruppe der Befragten nimmt lieber passiv an Netzwerkaktivitäten teil.") %>%
+      highcharter::hc_plotOptions(
+        pie = list(
+          dataLabels = list(
+            style = list(
+              fontSize = "14px",  # Schriftgröße für die Labels anpassen
+              fontFamily = "SourceSans3-Regular"
+            )
+          )
+        )
+      )
 
-    quelle <- "Quelle der Daten: MINTvernetzt 2024"
+    #%>%
+   #      highcharter::hc_exporting(enabled = TRUE,
+   #                                buttons = list(
+   #                                  contextButton = list(
+   #                                    menuItems = list("downloadPNG", "downloadCSV",
+   #                                                     list(
+   #                                                       text = "Daten für GPT",
+   #                                                       onclick = htmlwidgets::JS(sprintf(
+   #                                                         "function () {
+   #   var date = new Date().toISOString().slice(0,10);
+   #   var chartTitle = '%s'.replace(/\\s+/g, '_');
+   #   var filename = chartTitle + '_' + date + '.txt';
+   #
+   #   var data = this.getCSV();
+   #   var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+   #   if (window.navigator.msSaveBlob) {
+   #     window.navigator.msSaveBlob(blob, filename);
+   #   } else {
+   #     var link = document.createElement('a');
+   #     link.href = URL.createObjectURL(blob);
+   #     link.download = filename;
+   #     link.click();
+   #   }
+   # }", gsub("'", "\\\\'", titel))  #
+   #                                                       )))
+   #                                  ))
+        # )
 
-
-    plot <- piebuilder(df, titel, x,y, tooltip, color, format, subtitel, quelle = quelle )
-
-#
-#
   return(plot)
 }
 
@@ -1082,12 +1360,15 @@ skf_einrichtungen <- function(r){
   hcoptslang$thousandsSep <- "."
   options(highcharter.lang = hcoptslang)
 
+
   # Hilfe für Überschrift
   helper <- ort_select
   helper <- ifelse(helper == "Alle Einrichtungen", "Kitas, Horte und Grundschulen", helper)
   helper <- ifelse(helper == "Grundschule", "Grundschulen", helper)
   helper <- ifelse(helper == "Kita", "Kitas", helper)
   helper <- ifelse(helper == "Hort", "Horte", helper)
+
+  titel <- paste0(helper, ", die bei Stiftung Kinder forschen aktiv sind")
 
   # Plot erstellem
   out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group = indikator))%>%
@@ -1099,7 +1380,7 @@ skf_einrichtungen <- function(r){
     highcharter::hc_plotOptions(column = list(stacking = "normal")) %>%
     highcharter::hc_plotOptions(column = list(pointWidth = 50))%>%
     highcharter::hc_colors(c("#efe8e6", "#66cbaf")) %>%
-    highcharter::hc_title(text = paste0(helper, ", die bei Stiftung Kinder forschen aktiv sind"),
+    highcharter::hc_title(text = titel,
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -1112,9 +1393,28 @@ skf_einrichtungen <- function(r){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )))
+                                ))
     )
 
   return(out)
@@ -1178,6 +1478,8 @@ skf_personal <- function(r){
   df$indikator[df$indikator == "neu fortgebildete Fach- / Lehrkräfte"] <- "In diesem Jahr fortgebildet"
   df$indikator[df$indikator == "insgesamt fortgebildete Fach- / Lehrkräfte"] <- "Bis jetzt insgesamt fortgebildet"
 
+  titel <- paste0("Geschätzte Anzahl an Fach- und Lehrkräften, die an einer SKf-Fortbildung teilgenommen haben")
+
   # Plot
   out <- highcharter::hchart(df, 'column', highcharter::hcaes(y = wert, x = jahr, group=indikator))%>%
     highcharter::hc_plotOptions(column = list(pointWidth = 50))%>%
@@ -1186,7 +1488,7 @@ skf_personal <- function(r){
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular"), pointsWidth=100) %>%
     highcharter::hc_xAxis(title = list(text = "")) %>%
     highcharter::hc_colors(c("#66cbaf","#8893a7")) %>%
-    highcharter::hc_title(text = paste0("Geschätzte Anzahl an Fach- und Lehrkräften, die an einer SKf-Fortbildung teilgenommen haben"),
+    highcharter::hc_title(text = titel,
                           margin = 45,
                           align = "center",
                           style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
@@ -1199,9 +1501,28 @@ skf_personal <- function(r){
     highcharter::hc_exporting(enabled = TRUE,
                               buttons = list(
                                 contextButton = list(
-                                  menuItems = list("downloadPNG", "downloadCSV")
-                                )
-                              )
+                                  menuItems = list("downloadPNG", "downloadCSV",
+                                                   list(
+                                                     text = "Daten für GPT",
+                                                     onclick = htmlwidgets::JS(sprintf(
+                                                       "function () {
+     var date = new Date().toISOString().slice(0,10);
+     var chartTitle = '%s'.replace(/\\s+/g, '_');
+     var filename = chartTitle + '_' + date + '.txt';
+
+     var data = this.getCSV();
+     var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
+     if (window.navigator.msSaveBlob) {
+       window.navigator.msSaveBlob(blob, filename);
+     } else {
+       var link = document.createElement('a');
+       link.href = URL.createObjectURL(blob);
+       link.download = filename;
+       link.click();
+     }
+   }", gsub("'", "\\\\'", titel))  #
+                                                     )))
+                                ))
     )
 
   return(out)
