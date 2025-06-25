@@ -52,9 +52,13 @@ app_ui <- function(request) {
           p("Fokusseiten:", style = "color: #00A87A; font-size: 16px; font-weight: 600;
           margin: 5px 0px 0px 10px;"),
           hr(style = "border-top: 2px solid #00A87A; margin-top: 5px; margin-bottom: 5px;"),
-          shinydashboard::menuItem("Außerschulische MINT-Bildung", tabName = "ausserschulisch"),
+
           shinydashboard::menuItem("MINT-Fachkräfte",  tabName = "fachkraft"),
           shinydashboard::menuItem("MINT International", tabName = "international"),
+          p("Daten aus der Community:", style = "color: #B16FAB; font-size: 16px; font-weight: 600;
+          margin: 5px 0px 0px 10px;"),
+          hr(style = "border-top: 2px solid #B16FAB; margin-top: 5px; margin-bottom: 5px;"),
+          shinydashboard::menuItem("Außerschulische MINT-Bildung", tabName = "ausserschulisch"),
 
           hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
           shinydashboard::menuItem("Hinweise & Datenquellen",  tabName = "quellen")

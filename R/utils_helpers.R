@@ -1402,6 +1402,35 @@ linebuilder <- function(df, titel, x , y, group = NULL, tooltip, format, color =
 
 #}
 
+linebuilder_light <- function(df, titel, x , y, group = NULL, tooltip, format, color = c("#b16fab", "#154194","#66cbaf", "#fbbf24"), quelle="Quelle"){
+
+  df <- df %>%
+    dplyr::mutate(!!y := round(!!rlang::sym(y), 1))
+
+  out <- highcharter::hchart(df, 'line', highcharter::hcaes(x = !!rlang::sym(x), y = !!rlang::sym(y), group = !!rlang::sym(group))) %>%
+    highcharter::hc_tooltip(pointFormat = tooltip) %>%
+    highcharter::hc_yAxis(title = list(text = " "), labels = list(format = format),
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+    highcharter::hc_xAxis(title = list(text = "Jahr"), allowDecimals = FALSE, style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular")) %>%
+    highcharter::hc_title(text = titel,
+                          margin = 45,
+                          align = "center",
+                          style = list(color = "black", useHTML = TRUE, fontFamily = "Calibri Regular", fontSize = "20px")) %>%
+    highcharter::hc_colors(color) %>%
+    highcharter::hc_chart(
+      style = list(fontFamily = "Calibri Regular", fontSize = "14px")
+    )  %>%
+    highcharter::hc_caption(text = quelle,
+                            style = list(fontSize = "11px", color = "gray")) %>%
+    highcharter::hc_exporting(enabled = TRUE,
+                              buttons = list(
+                                contextButton = list(
+                                  menuItems = list("downloadPNG", "downloadCSV"))
+                              )
+    )
+
+
+}
 
 balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
                           optional=NULL, reverse = TRUE, TF=NULL, stacking=NULL, subtitel = NULL, quelle="Quelle"){
