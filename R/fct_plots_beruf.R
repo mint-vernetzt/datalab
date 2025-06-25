@@ -3044,6 +3044,155 @@ titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen 
 
 
 
+
+#' A function to plot a waffle chart
+#'
+#' @description A function to create a waffle chart for the tab "Beruf"
+#'
+#' @return The return value is a waffle chart
+#' @param df The dataframe "Arbeitsmarkt.xlsx" needs to be used for this function
+#' @param r Reactive variable that stores all the inputs from the UI
+#' @noRd
+
+arbeitsmarkt_faecher_anteil_frauen <- function(r) {
+
+  color_fachbereich <- c(
+    "Informatik" = "#2D6BE1",
+    "Technik (gesamt)" = "#00a87a",
+    "Mathematik, Naturwissenschaften" = "#fcc433",
+    "andere Berufsfelder" = "#efe8e6"
+  )
+  color_fachbereich_balken <- c(
+    "Informatik" = "#2D6BE1",
+    "Technik (gesamt)" = "#00a87a",
+    "Mathematik, Naturwissenschaften" = "#fcc433",
+    "Alle Berufsfelder außer MINT" = "#efe8e6"
+  )
+
+
+
+  timerange <- r$date_arbeitsmarkt_fach_vergleich_frauen
+  regio <- r$region_arbeitsmarkt_fach_vergleich_frauen
+  nicht_mint <- r$gegenwert_arbeitsmarkt_fach_vergleich_frauen
+  indikator_choice <- r$indikator_arbeitsmarkt_fach_vergleich_balken_frauen
+
+  indikator_choice <- gsub("^weibliche ", "", indikator_choice)
+
+
+
+      df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND indikator = {indikator_choice}
+    AND landkreis = 'alle Landkreise'
+    AND anforderung = 'Gesamt'
+    AND geschlecht = 'Frauen'
+    AND bundesland = {regio}
+    AND fachbereich IN ('Alle', 'MINT', 'Mathematik, Naturwissenschaften', 'Informatik', 'Technik (gesamt)')
+                               ", .con = con)
+
+      df <- DBI::dbGetQuery(con, df_query)
+
+      df <- df %>%
+        dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)
+
+      df_andere <- df %>% dplyr::filter(fachbereich=="Alle")
+      df_mint <- df %>% dplyr::filter(fachbereich=="MINT")
+      df_andere$wert <- df_andere$wert - df_mint$wert
+      df_andere$fachbereich[df_andere$fachbereich == "Alle"]<-"Alle Berufsfelder außer MINT"
+      df <- rbind(df, df_andere)
+      df <- df %>% dplyr::filter(fachbereich != "Alle")
+
+
+      df_query <- glue::glue_sql("
+    SELECT *
+    FROM arbeitsmarkt_detail
+    WHERE jahr = {timerange}
+    AND indikator = {indikator_choice}
+    AND landkreis = 'alle Landkreise'
+    AND anforderung = 'Gesamt'
+    AND geschlecht = 'Gesamt'
+    AND bundesland = {regio}
+    AND fachbereich = 'Alle'
+                               ", .con = con)
+
+      df_alle <- DBI::dbGetQuery(con, df_query)
+
+
+
+      df_alle <- df_alle %>%
+        dplyr::select(`bundesland`, `jahr`, `geschlecht`, `indikator`, `fachbereich`, `wert`)
+
+
+      df <- df %>%
+        dplyr::left_join(df_alle,
+                         dplyr::join_by("bundesland", "jahr", "indikator")) %>%
+        dplyr::select(-fachbereich.y) %>%
+        dplyr::rename(fachbereich = fachbereich.x,
+                      wert = wert.x,
+                      wert_ges = wert.y) %>%
+        dplyr::mutate(prop = round(wert/wert_ges * 100,1))
+
+      #Trennpunkte für lange Zahlen ergänzen
+      df$wert <- prettyNum(df$wert, big.mark = ".", decimal.mark = ",")
+      df$display_rel <- prettyNum(df$prop, big.mark = ".", decimal.mark = ",")
+
+      #für Überblick unterarten von Technik wieder raus
+      df <- df %>% dplyr::filter(fachbereich %in% c("Alle Berufsfelder außer MINT",
+                                                    "Mathematik, Naturwissenschaften",
+                                                    "Informatik",
+                                                    "Technik (gesamt)"))
+
+      df <- df[with(df, order(prop, decreasing = TRUE)), ]
+      df <- df %>%
+        dplyr::mutate(color = color_fachbereich_balken[fachbereich])
+
+      # titel-helper
+      title_help <- paste0(indikator_choice, "n")
+      title_help <- ifelse(grepl("ausländische Beschäftigte", indikator_choice), "ausländischen Beschäftigten", title_help)
+      title_help <- ifelse(grepl("ausländische Auszubildende", indikator_choice), "ausländischen Auszubildenden", title_help)
+      title_help <- ifelse(grepl("Jahr", indikator_choice), "Auszubildenden mit neuem Lehrvertrag", title_help)
+      title_help <- ifelse(grepl("u25", indikator_choice), "Beschäftigten unter 25 Jahren", title_help)
+      title_help <- ifelse(grepl("25-55", indikator_choice), "Beschäftigten zwischen 25 und 55 Jahren", title_help)
+      title_help <- ifelse(grepl("ü55", indikator_choice), "Beschäftigten über 55 Jahren", title_help)
+
+      hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl {point.indikator}: {point.wert}"
+      if(indikator_choice == "Auszubildende (1. Jahr)") hover <- "Anteil an allen Berufsfeldern: {point.display_rel} % <br> Anzahl Auszubildende mit neuem Lehrvertrag: {point.wert}"
+
+      titel <- paste0( "Überblick über die Berufsfelder von ", title_help, br(), "in ",regio, " (", timerange, ")")
+      format <- "{value}%"
+      color <- c("#efe8e6","#b16fab")
+      tooltip <- hover
+      optional = list(bar = list(
+        colorByPoint = TRUE,
+        colors = as.character(df$color)
+      ))
+
+
+      quelle <- "Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt."
+      out <- balkenbuilder(df, titel, x="fachbereich", y = "prop", group=NULL, tooltip, format, color, optional, quelle = quelle)
+
+
+  return(out)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Nicht Box 3 ----###################################################
 
 #' A function to plot time series
