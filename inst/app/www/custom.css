@@ -353,15 +353,6 @@ background-color:#FCFCFD;
 
 
 
-
-
-
-
-
-
-
-
-
 /* Stil für die gesamte FAQ-Zeile */
 details {
   margin-bottom: 16px;
@@ -399,6 +390,8 @@ details[open] .faq-summary::before {
 .faq-summary:hover {
   color: #000000;
 }
+
+
 
 
 
