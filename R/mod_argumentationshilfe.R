@@ -19,43 +19,13 @@ mod_argumentation_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_Argumentation.jpg',
+            img(src='www/Banner_Argumentation_vorlaeufig.png',
                 class = "img-responsive",
                 height = "300px",
-                alt = "Banner Quellen",
+                alt = "Banner KI-Analysehilfe",
                 style="display: block; margin-left: auto; margin-right: auto;"
             )))),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  #
-  #
-  #
-  #
-  #
-  #
   #
   #
   #   Argumentation
@@ -113,62 +83,113 @@ mod_argumentation_ui <- function(id){
   #
   # ),
 
-
-
-
     ## Einleitungstext ----
     fluidRow(
       div(class = "clean-box",
           column(
-            width = 10,
-            h1("Schnellstart: Mit MINT-Daten überzeugend argumentieren"),
+            width = 8,
+            h1("KI-unterstützt datenbasierte Berichte und Argumentationen erstellen"),
             p(style = "text-align: justify; font-size = 20px",
               "Ob für Förderanträge, Kommunikation oder strategische Entscheidungen -
-              Daten helfen, überzeugend zu argumentieren.
-              Sie wollen Ihre Arbeit mit Zahlen und Fakten unterstreichen, zum Beispiel,
-              um in Finanzierungsanträgen zu überzeugen, im Diskurs mit Politiker:innen die Relevanz von MINT-Förderung
-              zu bestärken oder das eigene Projekt wirksam auszurichten?"),
+              Daten helfen dabei, die MINT-Bildungswelt zu verstehen und überzeugend
+              zu argumentieren. Sie wollen Ihre Arbeit mit Zahlen und Fakten unterstreichen,
+              zum Beispiel, um in Finanzierungsanträgen zu überzeugen, im Diskurs mit
+              Politiker:innen die Relevanz von MINT-Förderung zu bestärken oder
+              das eigene Projekt wirksam auszurichten?"),
             p(style = "text-align: justify; font-size = 20px",
-            "Hier finden Sie die Werkzeuge, um eine starke Argumentationskette
-            für die MINT-Bildungsförderung in Ihrer Region aufzubauen."),
-            p("Ein Beispiel, wie eine solche Argumentation aussehen könnte, basierend auf fünf Statistiken
-            aus dem MINT-DataLab, finden Sie hier:"),
-            tags$a(href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
-                   target = "_blank", tags$span(icon("file", style = "margin-right: 5px;"), " Beispiel-Bericht für Hamburg"),
-                   class = "btn btn-default",
-                   style = "margin-bottom: 20px;"),
-            br(),
-            ################################
-            shinydashboard::box(
-              title = "Direkt zu den einzelnen Themen auf dieser Seite springen?",
-              width = 7,
-              p(style = "text-align: left; font-size = 16px",tags$a(href="#box1",
-                                                                    span(tags$b(span("Zeitverlauf im MINT-Bereich:")))),"Welche Rolle spielt MINT in ihrer Region?"
-              ),
-              p(style = "text-align: left; font-size = 16px",tags$a(href="#box2",
-                                                                    span(tags$b(span("Fachkräftemangel:")))),"Engpassrisiken von Berufen"
-              ),
-              p(style = "text-align: left; font-size = 16px",tags$a(href="#box3",
-                                                                    span(tags$b(span("Demografie:")))),"Zukunftstrends"
-              ),
-              p(style = "text-align: left; font-size = 16px",tags$a(href="#box4",
-                                                                    span(tags$b(span("Nachwuchs:")))),"Stärkung nach Nachwuchs zur Fachkräftesicherungen"
-              ),
-              p(style = "text-align: left; font-size = 16px",tags$a(href="#box5",
-                                                                    span(tags$b(span("Wirkhebel:")))),"Einfluss auf die Nachwuchsförderung"
-              ),
-              p(style = "text-align: left; font-size = 16px",tags$a(href="#box6",
-                                                                    span(tags$b(span("FAQ, Nutzungshinweis")))),"Fragen und Antworten "
-              )),
-
-          ## So geht's ----
+            "Hier finden Sie die Werkzeuge, um einen aussagestarken MINT-Bericht erstellen
+            zu lassen und eine starke Argumentationskette für die MINT-Bildungsförderung
+            in Ihrer Region aufzubauen."),
             br()
+            ),
+          column(
+            width = 4,
+            tags$div(
+              style = "display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;",
+              tags$strong(
+                "Beispielbericht für Hamburg:",
+                style = "margin: 20px 0px 0px 60px"
+              ),
+              tags$a(
+                href = "www/MINTvernetzt_Argumentationskette_Hamburg.pdf",
+                target = "_blank",
+                tags$img(
+                  src = "www/Bild_Beispielbericht.png",
+                  alt = "Cover Beispielbericht Hamburg",
+                  style = "max-width: 30%; height: auto; cursor: pointer; margin: 10px 0px 0px 70px"
+                )
+              )
+            )
+          ),
 
+        ## Infos zu GPT ----
+
+        column(
+          width = 8,
+          h2("MINT-DataGPT - der KI-Assistent des MINT-DataLab:"),
+          p("Der MINT-DataGPT ist von MINTvernetzt für Datenanalysen erstellt
+            worden und ist eine spezialisierte Form des Chat-GPT von OpenAI.
+            Der MINT-DataGPT nutzt das KI-Modell von OpenAI, für die Nutzung muss
+            dort ein (kostenfreier) Account angelegt werden."),
+          br(),
+          tags$strong("Das sind die Vorteile des MINT-DataGPT:"),
+
+          div(class = "content-box",
+              style = "background-color: #ee777530;
+               color: #000;
+               border: 2px solid #ee7775;
+               margin-left: 20px;
+               width: 90%;
+               border-radius: 10px;
+               display: flex;
+               align-items: center;
+               padding: 10px;",
+              div(
+                class = "linked-image",
+                style = "flex: 0 0 20%;",
+                tags$a(
+                  href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
+                  target = "_blank",
+                  tags$img(
+                    src = "www/Bild_MINT-DataGPT.png",
+                    alt = "MINT-DataGPT Symbolbild",
+                    style = "max-width: 80%; height: auto; cursor: pointer; margin: 0px;"
+                  )
+                )
+              ),
+              div(
+                style = "flex: 1; padding-left: 20px; display: flex;
+                flex-direction: column; justify-content: center;
+                text-align: left;",
+                tags$strong("Maßgeschneidert für MINT-Daten und Analysen"),
+                p("Unser GPT ist speziell konfiguriert darauf, Datenberichte zu erstellen.
+         Es ist ausgerichtet auf unsere Datensätze, und verknüpft diese mit den Fakten
+         aus den Kurzanalysen."),
+                tags$strong("Persönliche Assistenz für überzeugende Berichte und Argumente"),
+                p("Unser GPT begleitet durch den Prozess und kann die Daten nicht nur
+         interpretieren, sondern an individuellem Bedarf ausrichten und um Informationen
+         anreichern, für starke Berichte und Argumentationen."),
+                tags$strong("Erhöhte Quellensicherheit"),
+                p("Unser GPT nutzt als Daten-Quelle die aus dem MINT-DataLab bereitgestellten
+         Statistiken und erstellt automatisch Quellenverzeichnisse. So können
+         die KI-Vorteile genutzt werden, bei erhöhter Quellensicherheit.")
+              )
+          ),
+
+          p("Auf dieser Seite finden Sie einen Einstieg in die Nutzung des MINT-DataGPT,
+            inkl. einer Datenvorauswahl für Ihren Schnellstart in die Erstellung datenbasierter
+            Berichte und Argumentationen. Folgen Sie dafür den Schritten im nächsten Abschnitt."),
+          p(" Darüber hinaus können alle Daten des MINT-DataLab an den interaktiven
+            Grafiken der verschiedenen Seiten für eine Analyse mit dem MINT-DataGPT
+            heruntergeladen werden. Die Download-Funktion finden Sie oben rechts an den Grafiken.")
         ),
+
+
+
+        ## So geht's ----
         column(
           width = 12,
-          p(strong(style = "text-align: justify; font-size: 24px;",
-            "So funktioniert der Ablauf:")),
+          h2("So geht's:"),
         ),
         column(
           width = 3,
