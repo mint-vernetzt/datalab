@@ -1,6 +1,5 @@
 
 
-
 #' helpers
 #'
 #' @description A utils function
@@ -2350,7 +2349,6 @@ get_search_data <- function(term, session) {
 
   return(out)
 }
-
 
 
 

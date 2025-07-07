@@ -9,6 +9,7 @@
 #' @param r Reactive variable that stores all the inputs from the UI
 #' @noRd
 
+
 beruf_einstieg_vergleich <- function(r) {
 
   # load UI inputs from reactive value
