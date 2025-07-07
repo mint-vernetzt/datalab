@@ -19,69 +19,13 @@ mod_argumentation_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_Argumentation_vorlaeufig.png',
+            img(src='www/Banner_KI_Analysehilfe.png',
                 class = "img-responsive",
                 height = "300px",
                 alt = "Banner KI-Analysehilfe",
                 style="display: block; margin-left: auto; margin-right: auto;"
             )))),
 
-  #
-  #
-  #   Argumentation
-  #   p(strong(style = "text-align: justify; font-size = 24px",
-  #            "2. Datengrundlage herunterladen:")),
-  #   p(style = "font-size = 19px", "Als Beispiel für eine datenbasierte Argumentation haben wir fünf Statistiken
-  #       aus dem MINT-DataLab ausgewählt. Die Grafiken werden weiter unten auf dieser Seite dargestellt.
-  #       Die Daten aller Grafiken können hier gesammelt heruntergeladen werden.", br(), br(),
-  #     "Das Format für den Download ist ein Text-Dokument, da im nächsten Schritt eine speziell
-  #       angepasste Version von ChatGPT bei der Erstellung der Argumentationskette assistiert.
-  #       Dieser MINT-DataLab-GPT kann nur im Rahmen des Angebots von ChatGPT bzw. OpenAI genutzt werden.
-  #       Bei einer kostenfreien Nutzung von ChatGPT sind Daten-Uploads allerdings nur eingeschränkt möglich.
-  #       Deshalb stellen wir die Daten als Textdatei zur Verfügung - so können Sie die Inhalte einfach
-  #       per Copy & Paste in den Chat einfügen."),
-  #   div(
-  #     style = "margin-bottom: 30px;",
-  #     downloadButton(ns("download_txt"), " Gesammelte Daten herunterladen"),
-  #   ),
-  #
-  #   ## Absprung GPT + Beispielbericht ----
-  #
-  #   p(strong(style = "text-align: justify; font-size = 24px",
-  #            "3. Laden Sie die Daten im von uns eigens erstellten MINT-DataLab-GPT hoch und lassen Sie sich KI-gestützt eine Argumentation erstellen:")),
-  #   p("Dieser speziell für das MINT-DataLab konfigurierte MINT-DataLab-GPT
-  #            führt Sie durch die Erstellung einer Arugmentationskette basierend auf den Statistiken des MINT-DataLab und
-  #            Informationen zu Ihrem Projekt. Bei Bedarf kann die Argumentation auch durch eine Online-Recherche ergänzt werden.", br(), br(),
-  #     "Der MINT-DataLab-GPT führt einen Dialog mit Ihnen und wird so einen kurzen Bericht mit einer möglichen Argumentation mit Ihnen erstellen.", br(),
-  #     "Öffnen Sie dafür mit folgendem Link den Chat mit dem MINT-DataLab-GPT und folgen Sie den Anweisungen dort."),
-  #
-  #   tags$a(href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
-  #          tags$span(icon("comments", style = "margin-right: 5px;"),"Zum MINT-DataLab-GPT"), target="_blank",
-  #          class = "btn btn-default",
-  #          style = "margin-bottom: 30px; margin-right: 10px;"),
-  #
-  #
-  #   ## Grafiken ----
-  #   p(strong(style = "text-align: justify; font-size = 24px;",
-  #            "4. Statistiken und Grafiken als Basis der Argumentationskette:")),
-  #   p("Hier finden Sie eine Auswahl an Statistiken, die sich
-  #       für eine Argumentationskette eignen, die allgemein MINT-Nachwuchsförderung unterstreicht.
-  #       Die gesammelten Daten aus den Statistiken können wie unter Schritt 2 beschrieben heruntergeladen werden."),
-  #   p( "Alle Statistiken gibt es mit zusätzlichen Anpassungsmöglichkeiten auf den Unterseiten des MINT-DataLab.
-  #      Hinweise dazu, welche Darstellungen aus dem MINT-DataLab über diese hinaus für eine starke Argumentationskette
-  #       genutzt werden können, finden sich in den blauen Boxen rechts neben den Grafiken."),
-  #   p("Die grünen Boxen unter den Grafiken geben beispielhaft Interpretationen, die für eine Argumentation im Sinne von
-  #       MINT-Bildungsförderung aus den Statistiken abgeleitet werden könnte"),
-  #   p("Wer noch tiefer eintauchen will, kann eine solche Argumentation
-  #           auch auf allen weiteren Statistiken aus dem MINT-DataLab aufbauen. Nutzen Sie dafür denselben MINT-DataLab-GPT wie
-  #           unter Schritt 3 verlinkt und die Daten aus den Daten-Downloads der jeweiligen Grafiken (an den Grafiken oben rechts auswählbar).",
-  #     style = "margin-bottom: 30px;"),
-  #
-  #
-  #   h1("So kann eine Argumentationskette aussehen:",
-  #      style= "margin-bottom: 20px;"),
-  #
-  # ),
 
     ## Einleitungstext ----
     fluidRow(
@@ -116,7 +60,8 @@ mod_argumentation_ui <- function(id){
                 tags$img(
                   src = "www/Bild_Beispielbericht.png",
                   alt = "Cover Beispielbericht Hamburg",
-                  style = "max-width: 30%; height: auto; cursor: pointer; margin: 10px 0px 0px 70px"
+                  style = "max-width: 20%; height: auto; cursor: pointer; margin: 10px 0px 0px 70px;
+                  border: 1px solid #EFE8E6;"
                 )
               )
             )
@@ -153,7 +98,7 @@ mod_argumentation_ui <- function(id){
                   tags$img(
                     src = "www/Bild_MINT-DataGPT.png",
                     alt = "MINT-DataGPT Symbolbild",
-                    style = "max-width: 80%; height: auto; cursor: pointer; margin: 0px;"
+                    style = "max-width: 80%; height: auto; cursor: pointer; margin: 0px; border-radius: 10px;"
                   )
                 )
               ),
@@ -189,75 +134,93 @@ mod_argumentation_ui <- function(id){
         ## So geht's ----
         column(
           width = 12,
-          h2("So geht's:"),
+          h2("So geht's:",
+            style = "margin-top: 30px;"),
+          hr(style = "border-top: 2px solid #ee7775; margin-top: 15px; margin-bottom: 15px;")
         ),
+
         column(
-          width = 3,
+          width = 2,
           tags$span(icon("1", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
-                    "Gewünschte Region wählen."),
-          img(src='www/Argu_1.png',
+                    "Region auswählen."),
+          img(src='www/ki_hilfe_schritt_1.png',
               class = "img-responsive",
               height = "150px",
               alt = "Bild Schritt 1",
               style="display: block;
-                margin-top: 10px; height: 300px; border: 2px solid #EAECF0;
+                margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
                 border-radius: 15px; text-align: left;")
         ),
         column(
-          width = 3,
+          width = 2,
           tags$span(icon("2", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
-                    "Datengrundlage herunterladen."),
-          img(src='www/Argu_2.png',
+                    "Daten herunterladen."),
+          img(src='www/ki_hilfe_schritt_2.png',
               class = "img-responsive",
               height = "150px",
               alt = "Bild Schritt 2",
               style="display: block;
-                margin-top: 10px; height: 300px; border: 2px solid #EAECF0;
+                margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
                 border-radius: 15px;")
         ),
         column(
-          width = 3,
+          width = 2,
           tags$span(icon("3", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
-                    "KI-gestützte Argumentation."),
-          img(src='www/Argu_3.png',
+                    "KI-gestützte Analyse erstellen."),
+          img(src='www/ki_hilfe_schritt_3.png',
               class = "img-responsive",
               height = "150px",
               alt = "Bild Schritt 3",
               style="display: block;
-                margin-top: 10px; height: 300px; border: 2px solid #EAECF0;
+                margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
                 border-radius: 15px;")
         ),
         column(
-          width = 3,
+          width = 2,
           tags$span(icon("4", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
                     "Grafiken ergänzen."),
-          img(src='www/Argu_4.png',
+          img(src='www/ki_hilfe_schritt_4.png',
               class = "img-responsive",
               height = "150px",
               alt = "Bild Schritt 4",
               style="display: block;
-                margin-top: 10px; height: 300px; border: 2px solid #EAECF0;
+                margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
                 border-radius: 15px;")
-        )
+          ),
+        column(
+          width = 12,
+          hr(style = "border-top: 2px solid #ee7775; margin-top: 30px; margin-bottom: 15px;")
+        ),
+
       )
     ),
 
-    column(
-      width = 10,
+   div(
       style = "margin-top: 40px;",
 
       ## Region-Filter ----
 
-
-      p(strong(style = "text-align: justify; font-size: 17px;",
-               "1. Gewünschte Region wählen")),
-
+    column(
+      width = 8,
+      style = "display: flex; align-items: center;",
       div(
-        style = "margin-bottom: 30px",
+        style = "margin: 0px 25px 50px 0px;",
+        img(src='www/ki_hilfe_schritt_1.png',
+            class = "img-responsive",
+            alt = "Bild Schritt 1 klein",
+            style="display: block;
+                margin-top: 10px; border: 2px solid #EAECF0;
+                border-radius: 15px; width: 50px;")
+      ),
+      div(
+        style = "flex: 1; margin-bottom: 15px;",
+        p(strong(style = "text-align: justify; font-size: 17px;",
+                 "Region auswählen.")),
+
         shinyWidgets::pickerInput(
           inputId = ns("region_argumentationshilfe"),
           choices = c("Deutschland",
@@ -283,65 +246,110 @@ mod_argumentation_ui <- function(id){
           multiple = FALSE,
           selected = c("Deutschland")
         )
+      )
+    ),
+
+
+
+      ## Daten-Download ----
+
+    column(
+      width = 8,
+      style = "display: flex; align-items: center;",
+       div(
+        style = "margin: 0px 25px 190px 0px;",
+        img(src='www/ki_hilfe_schritt_2.png',
+            class = "img-responsive",
+            alt = "Bild Schritt 2 klein",
+            style="display: block;
+                  margin-top: 10px; border: 2px solid #EAECF0;
+                  border-radius: 15px; width = 85px;")
       ),
-
-      ## Download-Button ----
-
-      p(strong(style = "text-align: justify; font-size: 17px;",
-               "2. Datengrundlage herunterladen")),
-      p(style = "font-size : 15px;", "Als Beispiel für eine datenbasierte Argumentation wurden fünf Statistiken
-        aus dem MINT-DataLab ausgewählt und werden hier dargestellt. Die Daten all dieser fünf Grafiken können hier in einem Dokument heruntergeladen werden.", br(), br(),
-        "Das Format ist ein Text-Dokument, da es am idealsten für die Nutzung unseres MINT-DataLab-GPT funktioniert (Copy & Paste)."),
       div(
-        style = "margin-bottom: 30px;",
-        downloadButton(ns("download_txt"), " Gesammelte Daten herunterladen"),
-      ),
+        style = "margin-bottom: 15px;",
 
-      ## Absprung GPT + Beispielbericht ----
+        p(strong(style = "text-align: justify; font-size: 17px;",
+                 "Daten herunterladen.")),
+        p(style = "font-size : 15px;", "Als Fundament für einen stichhaltigen Datenbericht
+        bzw. datenbasierte Argumentation wurden fünf Statistiken aus dem MINT-DataLab ausgewählt.
+        Die Grafiken zu den Statistiken werden hier auf der Seite dargestellt.
+        Die Daten können hier in einem Dokument gebündelt heruntergeladen werden.",
+          br(), br(),
+          "Das Format ist ein Text-Dokument, da es am idealsten für die Nutzung unseres
+        MINT-DataGPT funktioniert, auch bei kostenfreier OpenAI-Nutzung.
+        (Copy & Paste)."),
 
-      p(strong(style = "text-align: justify; font-size: 17px;",
-               "3. KI-gestützte Argumentation")),
-      p(style = "font-size : 15px;","Das MINT-DataLab-GPT ist speziell für das DataLab kreiert: Es erlaubt einen schnellen Argumentationsaufbau mit den heruntergeladenen Daten.",
-        "Der Link führt zum GPT. Die KI führt Sie durch den Argumentationsaufbau und steht generell zu Fragen und Analysehilfen bereit."),
+        downloadButton(ns("download_txt"), "   Gesammelte Daten herunterladen"),
+      )
+    ),
 
+      ## MINT-DataGPT ----
+
+    column(
+      width = 8,
+      style = "display: flex; align-items: center;",
       div(
-        class = "linked-image",
-        tags$a(
-          href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
-          target = "_blank",
-          tags$img(
-            src = "www/argument11.png",
-            alt = "Community Plattform Aufruf",
-            style = "max-width: 80%; height: auto; cursor: pointer;
-          margin-bottom: 10px; margin-top: 10px;"
-          )
-        )
+        style = "margin: 0px 25px 190px 0px;",
+        img(src='www/ki_hilfe_schritt_3.png',
+            class = "img-responsive",
+            alt = "Bild Schritt 3 klein",
+            style="display: block;
+                  margin-top: 10px; border: 2px solid #EAECF0;
+                  border-radius: 15px; width = 85px;")
       ),
+      div(
+        p(strong(style = "text-align: justify; font-size: 17px; margin-bottom: 15px;",
+                 "KI-gestützte Analyse erstellen.")),
+        p(style = "font-size : 15px;",
+          "Dieser speziell für das MINT-DataLab konfigurierte MINT-DataGPT führt Sie
+          durch die Erstellung von datenbasierten Berichten oder Arugmentationsketten,
+          basierend auf Statistiken des MINT-DataLab und Informationen zu Ihrem Projekt.
+          Bei Bedarf können die Daten durch Online-Rechercheergänzt werden."),
+        tags$a(href="https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
+               "Zum MINT-DataGPT", target="_blank",
+               style = "color: #154194;")
 
-
-
-
-      # tags$a(href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
-      #        tags$span(icon("comments", style = "margin-right: 5px;"),"Zum MINT-DataLab-GPT"), target="_blank",
-      #        class = "btn btn-default",
-      #        style = "margin-bottom: 30px; margin-right: 10px;"),
+      )
+    ),
 
 
       ## Grafiken ----
-      p(strong(style = "text-align: justify; font-size: 17px;",
-               "4. Grafiken ergänzen")),
-      p(style = "font-size : 15px;","Die hier auf der Seite gelisteten Statistiken eignen sich für eine sinnvolle Argumentationskette.
-      Alle Grafiken im gesamten MINT-DataLab bieten die Option 'Daten für GPT' an, um die Daten direkt für den GPT herunterladen zu können.
-        Die gesammelten Daten aus den Statistiken können wie unter Schritt 2 beschrieben heruntergeladen werden."),
-       p( "Die blauen Boxen rechts neben den hier gelisteten Grafiken geben Impulse zur Ergänzung an."),
-      p("Die grünen Boxen unterhalb der Statistiken bieten eine Interpretationshilfe und Trendvorhersage an."),
-
-
-      h1("So kann eine Argumentationskette aussehen:",
-         style= "margin-bottom: 20px;"),
-
+    column(
+      width = 8,
+      style = "display: flex; align-items: center;",
+      div(
+        style = "margin: 0px 25px 190px 0px;",
+        img(src='www/ki_hilfe_schritt_4.png',
+            class = "img-responsive",
+            alt = "Bild Schritt 4 klein",
+            style="display: block;
+                  margin-top: 10px; border: 2px solid #EAECF0;
+                  border-radius: 15px; width = 85px;")
+      ),
+      div(
+        p(strong(style = "text-align: justify; font-size: 17px;",
+                 "Grafiken ergänzen.")),
+        p(style = "font-size : 15px;",
+        "Auf dieser Seite sind die Grafiken der fünf vorausgewählten Statistiken dargestellt.
+        Bei darf können diese Grafiken heruntergeladen und im Datenbericht oder der Argumentation ergänzt werden.
+        Die Download-Option für alle Grafiken des MINT-DataLab findet sich rechts oben an den Grafiken."),
+        br(),
+         p("Die blauen Boxen rechts neben den Grafiken geben Impulse, welche weiteren
+           Statistiken in einem MINT-Bericht ergänzt werden könnten."),
+        p("Die grünen Boxen unter den Grafiken zeigen beispielhaft, wie man anhand
+          der Statistiken für die MINT-Bildungsförderung argumentieren kann.")
+        )
+      )
     ),
 
+
+  column(
+    width = 12,
+    hr(style = "border-top: 2px solid #ee7775; margin-top: 20px; margin-bottom: 15px;"),
+
+    h2("So kann eine datenbasierte Argumentation für MINT-Bildung aussehen:",
+       style= "margin-bottom: 20px; margin-top: 30px;"),
+  ),
 
     ## Box Zeitverlauf MINT----
 
