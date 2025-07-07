@@ -19,7 +19,7 @@ mod_argumentation_ui <- function(id){
       div(class = "clean-box",
           column(
             width = 12,
-            img(src='www/Banner_KI_Analysehilfe.png',
+            img(src='www/Banner_KI-Analysehilfe.png',
                 class = "img-responsive",
                 height = "300px",
                 alt = "Banner KI-Analysehilfe",
@@ -71,7 +71,7 @@ mod_argumentation_ui <- function(id){
 
         column(
           width = 8,
-          h2("MINT-DataGPT - der KI-Assistent des MINT-DataLab:"),
+          h2("MINT-DataGPT - die KI-Assistenz des MINT-DataLab:"),
           p("Der MINT-DataGPT ist von MINTvernetzt für Datenanalysen erstellt
             worden und ist eine spezialisierte Form des Chat-GPT von OpenAI.
             Der MINT-DataGPT nutzt das KI-Modell von OpenAI, für die Nutzung muss
@@ -109,11 +109,11 @@ mod_argumentation_ui <- function(id){
                 tags$strong("Maßgeschneidert für MINT-Daten und Analysen"),
                 p("Unser GPT ist speziell konfiguriert darauf, Datenberichte zu erstellen.
          Es ist ausgerichtet auf unsere Datensätze, und verknüpft diese mit den Fakten
-         aus den Kurzanalysen."),
+         aus den Kurzanalysen des MINT-DataLabs."),
                 tags$strong("Persönliche Assistenz für überzeugende Berichte und Argumente"),
-                p("Unser GPT begleitet durch den Prozess und kann die Daten nicht nur
-         interpretieren, sondern an individuellem Bedarf ausrichten und um Informationen
-         anreichern, für starke Berichte und Argumentationen."),
+                p("Unser GPT begleitet durch den Prozess und kann Daten nicht nur
+         interpretieren, sondern Analysen an Ihrem individuellen Bedarf ausrichten und um Informationen
+         anreichern, für starke Aussagen und Argumente."),
                 tags$strong("Erhöhte Quellensicherheit"),
                 p("Unser GPT nutzt als Daten-Quelle die aus dem MINT-DataLab bereitgestellten
          Statistiken und erstellt automatisch Quellenverzeichnisse. So können
@@ -121,12 +121,13 @@ mod_argumentation_ui <- function(id){
               )
           ),
 
-          p("Auf dieser Seite finden Sie einen Einstieg in die Nutzung des MINT-DataGPT,
-            inkl. einer Datenvorauswahl für Ihren Schnellstart in die Erstellung datenbasierter
-            Berichte und Argumentationen. Folgen Sie dafür den Schritten im nächsten Abschnitt."),
-          p(" Darüber hinaus können alle Daten des MINT-DataLab an den interaktiven
-            Grafiken der verschiedenen Seiten für eine Analyse mit dem MINT-DataGPT
-            heruntergeladen werden. Die Download-Funktion finden Sie oben rechts an den Grafiken.")
+          p("Auf dieser Seite finden Sie einen Einstieg in die Nutzung des MINT-DataGPT. Neben
+          einer FAQ-Sektion am Ende der Seite finden Sie hier einer Datenvorauswahl für
+          Ihren Schnellstart in die Erstellung datenbasierter Berichte und Argumentationen.
+            Folgen Sie dafür den Schritten im nächsten Abschnitt."),
+          p("Darüber hinaus können alle Daten des MINT-DataLab für eine Analyse mit dem MINT-DataGPT
+            heruntergeladen werden. Die Download-Funktion finden Sie oben rechts an den interkativen Grafiken
+            auf den jeweiligen Unterseiten.")
         ),
 
 
@@ -257,7 +258,7 @@ mod_argumentation_ui <- function(id){
       width = 8,
       style = "display: flex; align-items: center;",
        div(
-        style = "margin: 0px 25px 190px 0px;",
+        style = "margin: 0px 25px 130px 0px;",
         img(src='www/ki_hilfe_schritt_2.png',
             class = "img-responsive",
             alt = "Bild Schritt 2 klein",
@@ -272,12 +273,12 @@ mod_argumentation_ui <- function(id){
                  "Daten herunterladen.")),
         p(style = "font-size : 15px;", "Als Fundament für einen stichhaltigen Datenbericht
         bzw. datenbasierte Argumentation wurden fünf Statistiken aus dem MINT-DataLab ausgewählt.
-        Die Grafiken zu den Statistiken werden hier auf der Seite dargestellt.
+        Die Grafiken zu den Statistiken werden auf dieser Seite dargestellt.
         Die Daten können hier in einem Dokument gebündelt heruntergeladen werden.",
           br(), br(),
-          "Das Format ist ein Text-Dokument, da es am idealsten für die Nutzung unseres
-        MINT-DataGPT funktioniert, auch bei kostenfreier OpenAI-Nutzung.
-        (Copy & Paste)."),
+          "Das Format ist ein Text-Dokument, um auch mit einem kostenfreien OpenAI-Account die
+          Funktionen des MINT-DataGPT optimal nutzen zu können.", br(),
+        "Kopieren Sie folgende Inhalte und fügen Sie sie direkt in den GPT-Chat ein."),
 
         downloadButton(ns("download_txt"), "   Gesammelte Daten herunterladen"),
       )
@@ -287,9 +288,9 @@ mod_argumentation_ui <- function(id){
 
     column(
       width = 8,
-      style = "display: flex; align-items: center;",
+      style = "display: flex; align-items: center; margin-bottom: 15px;",
       div(
-        style = "margin: 0px 25px 190px 0px;",
+        style = "margin: 0px 25px 60px 0px;",
         img(src='www/ki_hilfe_schritt_3.png',
             class = "img-responsive",
             alt = "Bild Schritt 3 klein",
@@ -301,13 +302,13 @@ mod_argumentation_ui <- function(id){
         p(strong(style = "text-align: justify; font-size: 17px; margin-bottom: 15px;",
                  "KI-gestützte Analyse erstellen.")),
         p(style = "font-size : 15px;",
-          "Dieser speziell für das MINT-DataLab konfigurierte MINT-DataGPT führt Sie
+          "Der speziell für das MINT-DataLab konfigurierte MINT-DataGPT führt Sie
           durch die Erstellung von datenbasierten Berichten oder Arugmentationsketten,
-          basierend auf Statistiken des MINT-DataLab und Informationen zu Ihrem Projekt.
-          Bei Bedarf können die Daten durch Online-Rechercheergänzt werden."),
+          basierend auf Statistiken des MINT-DataLabs und auf Informationen zu Ihrem Projekt.
+          Bei Bedarf können die Daten durch eine Online-Recherche des GPT ergänzt werden."),
         tags$a(href="https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
                "Zum MINT-DataGPT", target="_blank",
-               style = "color: #154194;")
+               style = "color: #b16fab; font-weight: 600")
 
       )
     ),
@@ -316,9 +317,9 @@ mod_argumentation_ui <- function(id){
       ## Grafiken ----
     column(
       width = 8,
-      style = "display: flex; align-items: center;",
+      style = "display: flex; align-items: center; margin-bottom: 20px;",
       div(
-        style = "margin: 0px 25px 190px 0px;",
+        style = "margin: 0px 25px 130px 0px;",
         img(src='www/ki_hilfe_schritt_4.png',
             class = "img-responsive",
             alt = "Bild Schritt 4 klein",
@@ -330,8 +331,8 @@ mod_argumentation_ui <- function(id){
         p(strong(style = "text-align: justify; font-size: 17px;",
                  "Grafiken ergänzen.")),
         p(style = "font-size : 15px;",
-        "Auf dieser Seite sind die Grafiken der fünf vorausgewählten Statistiken dargestellt.
-        Bei darf können diese Grafiken heruntergeladen und im Datenbericht oder der Argumentation ergänzt werden.
+        "Auf dieser Seite sind die fünf vorausgewählten Statistiken grafisch dargestellt.
+        Bei Bedarf können diese Grafiken heruntergeladen und im Datenbericht oder der Argumentation ergänzt werden.
         Die Download-Option für alle Grafiken des MINT-DataLab findet sich rechts oben an den Grafiken."),
         br(),
          p("Die blauen Boxen rechts neben den Grafiken geben Impulse, welche weiteren
@@ -345,10 +346,10 @@ mod_argumentation_ui <- function(id){
 
   column(
     width = 12,
-    hr(style = "border-top: 2px solid #ee7775; margin-top: 20px; margin-bottom: 15px;"),
+    hr(style = "border-top: 2px solid #ee7775; margin-top: 20px;"),
 
     h2("So kann eine datenbasierte Argumentation für MINT-Bildung aussehen:",
-       style= "margin-bottom: 20px; margin-top: 30px;"),
+       style= "margin-bottom: 30px; margin-top: 40px;"),
   ),
 
     ## Box Zeitverlauf MINT----
@@ -361,7 +362,7 @@ mod_argumentation_ui <- function(id){
                  width = 9,
                  p("Als Einstieg in eine Argumentation kann ein kurzer Überblick über die MINT-Strukturen
                    der eigenen Region geigenet sein. Hierfür können Sie selbst rechercherien oder den
-                   MINT-DataLab-GPT um eine Recherche bitten."),
+                   MINT-DataGPT um eine Recherche bitten."),
                  p("Ergänzend dazu kann auf die Entwicklung der Zahlen von Beschäftigten, Studierenden und Auszubildenden
                    in MINT geschaut werden.
                    Das kann ein Indikator dafür sein, wie zentral der MINT-Sektor für die Region ist und ob
@@ -371,7 +372,7 @@ mod_argumentation_ui <- function(id){
                                     content = paste0("Falls die Grafiken abgeschnitten dargestellt werden, verändern Sie bitte kurz die Fenstergröße, indem Sie die Menü-Übersicht links ein- und wieder ausklappen oder indem Sie die Seite kurz verkleinern und wieder maximieren. Dann stellen sich die Größenverhältnisse der Grafiken korrekt ein."),
                                     placement = "top",
                                     trigger = "hover"),
-                 tags$a(paste0("Ist die Grafik abgeschnitten dargestellt?"), icon("question"), id = "anz_argument_1"),
+                 tags$a(paste0("Ist die Grafik abgeschnitten dargestellt?"), icon("question-circle"), id = "anz_argument_1"),
                  br(),br(),
                ),
                  column(
