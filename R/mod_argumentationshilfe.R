@@ -145,10 +145,10 @@ mod_argumentation_ui <- function(id){
           tags$span(icon("1", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
                     "Region auswählen."),
-          img(src='www/ki_hilfe_schritt_1.png',
+          img(src='www/gpt_schritt_1.jpg',
               class = "img-responsive",
               height = "150px",
-              alt = "Bild Schritt 1",
+              alt = "Symbol Schritt 1 Region wählen",
               style="display: block;
                 margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
                 border-radius: 15px; text-align: left;")
@@ -158,10 +158,10 @@ mod_argumentation_ui <- function(id){
           tags$span(icon("2", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
                     "Daten herunterladen."),
-          img(src='www/ki_hilfe_schritt_2.png',
+          img(src='www/gpt_schritt_2.jpg',
               class = "img-responsive",
               height = "150px",
-              alt = "Bild Schritt 2",
+              alt = "Symbol Schritt 2 Datendownload",
               style="display: block;
                 margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
                 border-radius: 15px;")
@@ -171,10 +171,10 @@ mod_argumentation_ui <- function(id){
           tags$span(icon("3", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
                     "KI-gestützte Analyse erstellen."),
-          img(src='www/ki_hilfe_schritt_3.png',
+          img(src='www/gpt_schritt_3.jpg',
               class = "img-responsive",
               height = "150px",
-              alt = "Bild Schritt 3",
+              alt = "Symbol Schritt 3 GPT-Chat",
               style="display: block;
                 margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
                 border-radius: 15px;")
@@ -184,10 +184,10 @@ mod_argumentation_ui <- function(id){
           tags$span(icon("4", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
                     "Grafiken ergänzen."),
-          img(src='www/ki_hilfe_schritt_4.png',
+          img(src='www/gpt_schritt_4.jpg',
               class = "img-responsive",
               height = "150px",
-              alt = "Bild Schritt 4",
+              alt = "Symbol Schritt 4 Grafiken ergänzen",
               style="display: block;
                 margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
                 border-radius: 15px;")
@@ -210,7 +210,7 @@ mod_argumentation_ui <- function(id){
       style = "display: flex; align-items: center;",
       div(
         style = "margin: 0px 25px 50px 0px;",
-        img(src='www/ki_hilfe_schritt_1.png',
+        img(src='www/gpt_schritt_1.jpg',
             class = "img-responsive",
             alt = "Bild Schritt 1 klein",
             style="display: block;
@@ -259,15 +259,15 @@ mod_argumentation_ui <- function(id){
       style = "display: flex; align-items: center;",
        div(
         style = "margin: 0px 25px 130px 0px;",
-        img(src='www/ki_hilfe_schritt_2.png',
+        img(src='www/gpt_schritt_2.jpg',
             class = "img-responsive",
             alt = "Bild Schritt 2 klein",
             style="display: block;
                   margin-top: 10px; border: 2px solid #EAECF0;
-                  border-radius: 15px; width = 85px;")
+                  border-radius: 15px; width: 85px;")
       ),
       div(
-        style = "margin-bottom: 15px;",
+        style = "margin-bottom: 20px;",
 
         p(strong(style = "text-align: justify; font-size: 17px;",
                  "Daten herunterladen.")),
@@ -291,12 +291,12 @@ mod_argumentation_ui <- function(id){
       style = "display: flex; align-items: center; margin-bottom: 15px;",
       div(
         style = "margin: 0px 25px 60px 0px;",
-        img(src='www/ki_hilfe_schritt_3.png',
+        img(src='www/gpt_schritt_3.jpg',
             class = "img-responsive",
             alt = "Bild Schritt 3 klein",
             style="display: block;
                   margin-top: 10px; border: 2px solid #EAECF0;
-                  border-radius: 15px; width = 85px;")
+                  border-radius: 15px; width: 85px;")
       ),
       div(
         p(strong(style = "text-align: justify; font-size: 17px; margin-bottom: 15px;",
@@ -307,7 +307,7 @@ mod_argumentation_ui <- function(id){
           basierend auf Statistiken des MINT-DataLabs und auf Informationen zu Ihrem Projekt.
           Bei Bedarf können die Daten durch eine Online-Recherche des GPT ergänzt werden."),
         tags$a(href="https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
-               "Zum MINT-DataGPT", target="_blank",
+               "→ Zum MINT-DataGPT", target="_blank",
                style = "color: #b16fab; font-weight: 600")
 
       )
@@ -320,12 +320,12 @@ mod_argumentation_ui <- function(id){
       style = "display: flex; align-items: center; margin-bottom: 20px;",
       div(
         style = "margin: 0px 25px 130px 0px;",
-        img(src='www/ki_hilfe_schritt_4.png',
+        img(src='www/gpt_schritt_4.jpg',
             class = "img-responsive",
             alt = "Bild Schritt 4 klein",
             style="display: block;
                   margin-top: 10px; border: 2px solid #EAECF0;
-                  border-radius: 15px; width = 85px;")
+                  border-radius: 15px; width: 85px;")
       ),
       div(
         p(strong(style = "text-align: justify; font-size: 17px;",
@@ -836,123 +836,77 @@ mod_argumentation_ui <- function(id){
         width = 9,
         # h3("Fragen und Antworten"),
         # reactable::reactableOutput(ns("faq_table")),
-        h3("Fragen und Antworten"),
+        h2("Fragen und Antworten"),
 
         tags$details(
-          tags$summary(strong(class = "faq-summary","Kann ich den MINT-DataLab-GPT auch ohne OpenAI-Konto nutzen?")),
+          tags$summary(strong(class = "faq-summary",
+                              "Kann ich den MINT-DataGPT auch ohne OpenAI-Konto nutzen?")),
           br(),
           HTML("
-    <p><strong>Nein</strong>, die Nutzung des MINT-DataLab-GPT erfordert ein aktives OpenAI-Konto.</p>
+    <p><strong>Nein</strong>, die Nutzung des MINT-DataGPT erfordert ein aktives OpenAI-Konto.</p>
     <p>Da es sich um einen individualisierten GPT handelt, läuft der Zugriff über die Infrastruktur von OpenAI. Die Registrierung ist <strong>kostenlos</strong> und in wenigen Schritten möglich.</p>
   ")
         ),
 
         tags$details(
-          tags$summary(strong(class = "faq-summary","Welche Quellen muss ich angeben, wenn ich die Argumentationshilfe nutze?")),
+          tags$summary(strong(class = "faq-summary",
+                              "Welche Quellen muss ich angeben, wenn ich die Argumentationshilfe nutze?")),
           br(),
           HTML("
-    <p>Beim Herunterladen der Grafiken werden die <strong>Quellen der zugrunde liegenden Daten automatisch</strong> mitgeliefert.</p>
-    <p>Der MINT-DataLab-GPT ergänzt diese um Angaben zu verwendeten Daten oder Online-Recherchen.</p>
-    <p>Empfohlene Formulierung zur Transparenz:</p>
-    <blockquote>Erstellt unter Verwendung des angepassten GPT-Sprachmodells von MINTvernetzt (MINT-DataLab-GPT) auf Basis von OpenAI-Technologie.</blockquote>
+    <p>Beim Herunterladen der Grafiken oder Daten werden die <strong> zugrundeliegenden Datenquellen automatisch</strong> mitgeliefert.</p>
+    <p>Der MINT-DataGPT ergänzt zusätzlich Quellen genutzer Kurzanalysen oder Online-Recherchen.</p>
+    <p>Je nach Kontext oder Zweck der Nutzung empfehlen wir, aus Gründen der Transparenz
+    auf die Unterstützung durch ein KI-Modell und den Einsatz des MINT-DataGPT hinzuweisen.
+    <p>Empfohlene Formulierung:</p>
+    <blockquote>Erstellt unter Verwendung des angepassten GPT-Sprachmodells von MINTvernetzt (MINT-DataGPT) auf Basis von OpenAI-Technologie.</blockquote>
   ")
         ),
 
         tags$details(
-          tags$summary(class = "faq-summary","Kann ich auch andere Daten mit dem MINT-DataLab-GPT analysieren?"),
+          tags$summary(class = "faq-summary",
+                       "Kann ich auch andere Daten mit dem MINT-DataGPT analysieren?"),
           br(),
           HTML("
-    <p>Der MINT-DataLab-GPT ist auf die Daten des MINT-DataLabs spezialisiert, kann jedoch grundsätzlich auch <strong>andere oder eigene Daten</strong> verarbeiten.</p>
-    <p>Hinweis: Externe Formate können zu <em>Lesefehlern</em> führen. Bitte prüfen Sie die Korrektheit Ihrer Daten sorgfältig.</p>
+    <p>Der MINT-DataGPT ist auf die Daten des MINT-DataLabs spezialisiert, kann jedoch grundsätzlich auch <strong>andere oder eigene Daten</strong> verarbeiten.</p>
+    <p>Hinweis: Externe Formate können zu Lesefehlern führen. Bitte prüfen Sie die Korrektheit Ihrer Daten sorgfältig.</p>
   ")
         ),
 
         tags$details(
-          tags$summary(strong(class = "faq-summary","Wie kann ich das Ergebnis exportieren?")),
+          tags$summary(strong(class = "faq-summary",
+                              "Wie kann ich das Ergebnis der Analyse exportieren?")),
           br(),
           HTML("
-    <p>Der MINT-DataLab-GPT liefert direkt nutzbare <strong>Textbausteine</strong>, z.B. für Berichte oder Präsentationen.</p>
-    <p>Export per <code>.txt</code>-Datei oder durch <em>Copy & Paste</em> möglich.</p>
-    <p>Beispielhafter Export:</p>
-    <img src='www/beispiel_export.png' alt='Beispiel Export' style='max-width: 100%; border: 1px solid #ccc; border-radius: 8px;'>
-  ")
+    <p>Der MINT-DataGPT liefert direkt nutzbare <strong>Textbausteine</strong>,
+    die sich felxibel in Berichte oder Anträge integrieren lassen. Wie bei der Nutzung anderer
+         KI-Chats kann zusätzlich das Format des gewünschten Outputs spezifiziert werden.</p>
+    <p>Der Daten-Export für die Nutzung mit dem GPT läuft über eine <code>.txt</code>-Datei. Der Inhalt der Datei kann
+    durch \"Copy & Paste\" direkt in den Chat kopiert werden.</p>  ")
+          # <p>Beispielhafter Export:</p>
+          # <img src='www/beispiel_export.png' alt='Beispiel Export' style='max-width: 100%; border: 1px solid #ccc; border-radius: 8px;'>
         ),
 
         tags$details(
           tags$summary(strong(class = "faq-summary","Ich habe ein Fehlverhalten festgestellt, wo kann ich das melden?")),
           br(),
           HTML("
-    <p>Der MINT-DataLab-GPT ist aktuell eine <strong>Beta-Version</strong>.</p>
-    <p>Bitte senden Sie Feedback formlos per E-Mail an:</p>
+    <p>Wir entwickeln den MINT-DataGPT kontinuierlich weiter und auch das zugrundeliegende
+    KI-Modell von OpenAI kann sich verändern.</p>
+    <p>Falls Ihnen ein Fehlverhalten auffällt oder Sie Feedback haben, wie die Nutzung
+    zukünftig noch verbessert werden könnte, schreiben Sie uns geren eine kurze Nachricht per E-Mail an:</p>
     <p><a href='mailto:katharina.brunner@mint-vernetzt.de?subject=Feedback%20Argumentationshilfe'>katharina.brunner@mint-vernetzt.de</a></p>
     <p>Vielen Dank!</p>
   ")
         ),
 
 
-
-
-
-
-
-
-
-
-
-
-        # bslib::accordion(
-        #   id = "faq",
-
-    #       bslib::accordion_panel(
-    #         "Kann ich den MINT-DataLab-GPT auch ohne OpenAI-Konto nutzen?",
-    #         HTML("
-    #   <p><strong>Nein</strong>, die Nutzung des MINT-DataLab-GPT erfordert ein aktives OpenAI-Konto.</p>
-    #   <p>Da es sich um einen individualisierten GPT handelt, läuft der Zugriff über die Infrastruktur von OpenAI. Die Registrierung ist <strong>kostenlos</strong> und in wenigen Schritten möglich.</p>")),
-    #
-    #       bslib::accordion_panel(
-    #         "Welche Quellen muss ich angeben, wenn ich die Argumentationshilfe nutze?",
-    #         HTML("
-    #   <p>Beim Herunterladen der Grafiken werden die <strong>Quellen der zugrunde liegenden Daten automatisch</strong> mitgeliefert.</p>
-    #   <p>Der MINT-DataLab-GPT ergänzt diese um Angaben zu verwendeten Daten oder Online-Recherchen.</p>
-    #   <p>Empfohlene Formulierung zur Transparenz:</p>
-    #   <blockquote>Erstellt unter Verwendung des angepassten GPT-Sprachmodells von MINTvernetzt (MINT-DataLab-GPT) auf Basis von OpenAI-Technologie.</blockquote>")),
-    #
-    #       bslib::accordion_panel(
-    #         "Kann ich auch andere Daten mit dem MINT-DataLab-GPT analysieren?",
-    #         HTML("
-    #   <p>Der MINT-DataLab-GPT ist auf die Daten des MINT-DataLabs spezialisiert, kann jedoch grundsätzlich auch <strong>andere oder eigene Daten</strong> verarbeiten.</p>
-    #   <p>Hinweis: Externe Formate können zu <em>Lesefehlern</em> führen. Bitte prüfen Sie die Korrektheit Ihrer Daten sorgfältig.</p>
-    # ")),
-    #
-    #       bslib::accordion_panel(
-    #         "Wie kann ich das Ergebnis exportieren?",
-    #         HTML("
-    #   <p>Der MINT-DataLab-GPT liefert direkt nutzbare <strong>Textbausteine</strong>, z. B. für Berichte oder Präsentationen.</p>
-    #   <p>Export per <code>.txt</code>-Datei oder durch <em>Copy & Paste</em> möglich.</p>
-    #   <p>Beispielhafter Export:</p>
-    #   <img src='www/beispiel_export.png' alt='Beispiel Export' style='max-width: 100%; border: 1px solid #ccc; border-radius: 8px;'>
-    # ")),
-    #
-    #       bslib::accordion_panel(
-    #         "Ich habe ein Fehlverhalten festgestellt, wo kann ich das melden?",
-    #         HTML("
-    #   <p>Der MINT-DataLab-GPT ist aktuell eine <strong>Beta-Version</strong>.</p>
-    #   <p>Bitte senden Sie Feedback formlos per E-Mail an:</p>
-    #   <p><a href='mailto:katharina.brunner@mint-vernetzt.de?subject=Feedback%20Argumentationshilfe'>katharina.brunner@mint-vernetzt.de</a></p>
-    #   <p>Vielen Dank!</p>
-    # ")
-    #       )
-    #     ),
-
-
-
         br(),
-        h3("Nutzungshinweis"),
-        p("Der MINT-DataLab-GPT ist eine KI-Anwendung, die auf Technologie von OpenAI basiert.
+        h2("Nutzungshinweis"),
+        p("Der MINT-DataGPT ist eine KI-Anwendung, die auf Technologie von OpenAI basiert.
         Die bereitgestellten Inhalte werden automatisiert generiert und können unvollständig,
-        fehlerhaft oder veraltet sein. Die Nutzenden sind daher für eine kritische Prüfung der
+        fehlerhaft oder veraltet sein. Die Nutzer:innen sind selbst für eine kritische Prüfung der
         Ausgaben verantwortlich."),
-        p("Für den MINT-DataLab-GPT gelten folgende Nutzungsbedingungen, auf die auch
+        p("Für den MINT-DataGPT gelten folgende Nutzungsbedingungen, auf die auch
         zu Beginn des Chats hingewiesen wird: ",
           tags$a(href = "www/Nutzungshinweis_Haftungsausschluss_GPT.pdf", target = "_blank", "Nutzungshinweis MINT-DataLab-GPT")),
         p("MINTvernetzt und der Stifterverband übernehmen keine Haftung für Schäden
@@ -961,10 +915,10 @@ mod_argumentation_ui <- function(id){
         p(),
         p("Je nach Kontext und Zweck der Nutzung empfehlen wir aus Gründen der Transparenz,
                auf die Unterstützung durch ein KI-Modell und insbesondere auf den Einsatz des
-               MINT-DataLab-GPT hinzuweisen. Dafür kann folgende Formulierung genutzt werden:",
+               MINT-DataGPT hinzuweisen. Dafür kann folgende Formulierung genutzt werden:",
           br(),
           "\"Erstellt unter Verwendung des angepassten GPT-Sprachmodells von
-               MINTvernetzt (MINT-DataLab-GPT) auf Basis von OpenAI-Technologie.\"")
+               MINTvernetzt (MINT-DataGPT) auf Basis von OpenAI-Technologie.\"")
       )
     ),
 
