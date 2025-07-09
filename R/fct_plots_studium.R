@@ -152,7 +152,7 @@ studienzahl_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -569,7 +569,7 @@ studierende_bula_mint <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1663,7 +1663,7 @@ plot_mint_faecher <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data ='Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' +  this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2266,7 +2266,7 @@ plot_studierende_bula_faecher <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2933,7 +2933,7 @@ studienzahl_einstieg_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+ this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3537,7 +3537,7 @@ plot_ranking_top_faecher <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3589,7 +3589,7 @@ plot_ranking_top_faecher <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3661,7 +3661,7 @@ plot_ranking_top_faecher <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'   + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3713,7 +3713,7 @@ plot_ranking_top_faecher <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+ this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4319,7 +4319,7 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\'+ this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4381,7 +4381,7 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4455,7 +4455,7 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt \\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4515,7 +4515,7 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4583,7 +4583,7 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+ this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4638,7 +4638,7 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4707,7 +4707,7 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4754,7 +4754,7 @@ plot_auslaender_mint <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -4956,7 +4956,7 @@ plot_auslaender_mint_zeit <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data ='Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+ this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -5008,7 +5008,7 @@ plot_auslaender_mint_zeit <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -5096,7 +5096,7 @@ plot_auslaender_mint_zeit <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -5145,7 +5145,7 @@ plot_auslaender_mint_zeit <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -5496,7 +5496,7 @@ studierende_international_bula_mint <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Destatis, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);

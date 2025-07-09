@@ -606,7 +606,7 @@ argument_verlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024 – eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -656,7 +656,7 @@ argument_verlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quellen: Statistisches Bundesamt, 2024; Bundesagentur für Arbeit, 2024; KMK, 2024, alle auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -831,7 +831,7 @@ argument_fachkraft <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -911,7 +911,7 @@ argument_fachkraft <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1560,7 +1560,7 @@ argument_nachwuchs <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Quelle der Daten: Destatis, 2024 und Bundesagentur für Arbeit, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' +  this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -1701,7 +1701,7 @@ argument_wirkhebel <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Berechnungen durch das IW Köln, 2024, beauftragt durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);

@@ -89,7 +89,7 @@ kurse_einstieg_comparison <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quellen: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -707,7 +707,7 @@ kurse_waffle_mint <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n ' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2079,7 +2079,7 @@ kurse_comparison_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data =   'Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt..\\n\\n' +  this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2134,7 +2134,7 @@ kurse_comparison_gender <- function(r) {
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: KMK, 2024, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2549,7 +2549,7 @@ iqb_standard_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data ='Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2760,7 +2760,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2814,7 +2814,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2871,7 +2871,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2923,7 +2923,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2973,7 +2973,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = ''Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt.\\n\\n+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3022,7 +3022,7 @@ iqb_mathe_mittel_zeitverlauf <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3131,7 +3131,7 @@ iqb_fragebogen <- function(r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Institut zur Qualitätsentwicklung im Bildungswesen, 2022, auf Anfrage, eigene Berechnungen durch MINTvernetzt\\n\\n'+ this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);

@@ -2788,7 +2788,7 @@ arbeitsmarkt_top10 <- function( r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2861,7 +2861,7 @@ arbeitsmarkt_top10 <- function( r){
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -2946,7 +2946,7 @@ titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen 
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
@@ -3014,7 +3014,7 @@ titel <- paste0("Am häufigsten gewählte MINT-Ausbildungsberufe von weiblichen 
      var chartTitle = '%s'.replace(/\\s+/g, '_');
      var filename = chartTitle + '_' + date + '.txt';
 
-     var data = this.getCSV();
+     var data = 'Quelle der Daten: Bundesagentur für Arbeit, 2025, freier Download, eigene Berechnungen durch MINTvernetzt.\\n\\n' + this.getCSV();
      var blob = new Blob([data], { type: 'text/plain;charset=utf-8;' });
      if (window.navigator.msSaveBlob) {
        window.navigator.msSaveBlob(blob, filename);
