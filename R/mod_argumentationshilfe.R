@@ -240,9 +240,10 @@ mod_argumentation_ui <- function(id){
                       "Sachsen",
                       "Sachsen-Anhalt",
                       "Schleswig-Holstein",
-                      "Thüringen",
-                      "Westdeutschland (o. Berlin)",
-                      "Ostdeutschland (inkl. Berlin)"
+                      "Thüringen"
+                      # ,
+                      # "Westdeutschland (o. Berlin)",
+                      # "Ostdeutschland (inkl. Berlin)"
           ),
           multiple = FALSE,
           selected = c("Deutschland")
