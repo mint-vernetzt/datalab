@@ -71,13 +71,13 @@ mod_argumentation_ui <- function(id){
 
         column(
           width = 8,
-          h2("MINT-DataGPT - die KI-Assistenz des MINT-DataLab:"),
-          p("Der MINT-DataGPT ist von MINTvernetzt für Datenanalysen erstellt
+          h2("MINT-DataLab-GPT - die KI-Assistenz für Datenanalysen:"),
+          p("Der MINT-DataLab-GPT ist von MINTvernetzt für Datenanalysen erstellt
             worden und ist eine spezialisierte Form des Chat-GPT von OpenAI.
-            Der MINT-DataGPT nutzt das KI-Modell von OpenAI, für die Nutzung muss
+            Der MINT-DataLab-GPT nutzt das KI-Modell von OpenAI, für die Nutzung muss
             dort ein (kostenfreier) Account angelegt werden."),
           br(),
-          tags$strong("Das sind die Vorteile des MINT-DataGPT:"),
+          tags$strong("Das sind die Vorteile des MINT-DataLab-GPT:"),
 
           div(class = "content-box",
               style = "background-color: #ee777530;
@@ -96,8 +96,8 @@ mod_argumentation_ui <- function(id){
                   href = "https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
                   target = "_blank",
                   tags$img(
-                    src = "www/Bild_MINT-DataGPT.png",
-                    alt = "MINT-DataGPT Symbolbild",
+                    src = "www/Bild_MINT-DataLab-GPT.png",
+                    alt = "MINT-DataLab-GPT Symbolbild",
                     style = "max-width: 80%; height: auto; cursor: pointer; margin: 0px; border-radius: 10px;"
                   )
                 )
@@ -121,11 +121,11 @@ mod_argumentation_ui <- function(id){
               )
           ),
 
-          p("Auf dieser Seite finden Sie einen Einstieg in die Nutzung des MINT-DataGPT. Neben
+          p("Auf dieser Seite finden Sie einen Einstieg in die Nutzung des MINT-DataLab-GPT. Neben
           einer FAQ-Sektion am Ende der Seite finden Sie hier einer Datenvorauswahl für
           Ihren Schnellstart in die Erstellung datenbasierter Berichte und Argumentationen.
             Folgen Sie dafür den Schritten im nächsten Abschnitt."),
-          p("Darüber hinaus können alle Daten des MINT-DataLab für eine Analyse mit dem MINT-DataGPT
+          p("Darüber hinaus können alle Daten des MINT-DataLab für eine Analyse mit dem MINT-DataLab-GPT
             heruntergeladen werden. Die Download-Funktion finden Sie oben rechts an den interkativen Grafiken
             auf den jeweiligen Unterseiten.")
         ),
@@ -145,7 +145,7 @@ mod_argumentation_ui <- function(id){
           tags$span(icon("1", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
                     "Region auswählen."),
-          img(src='www/gpt_schritt_1.jpg',
+          img(src='www/gpt_schritt_1.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 1 Region wählen",
@@ -158,7 +158,7 @@ mod_argumentation_ui <- function(id){
           tags$span(icon("2", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
                     "Daten herunterladen."),
-          img(src='www/gpt_schritt_2.jpg',
+          img(src='www/gpt_schritt_2.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 2 Datendownload",
@@ -171,7 +171,7 @@ mod_argumentation_ui <- function(id){
           tags$span(icon("3", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
                     "KI-gestützte Analyse erstellen."),
-          img(src='www/gpt_schritt_3.jpg',
+          img(src='www/gpt_schritt_3.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 3 GPT-Chat",
@@ -184,7 +184,7 @@ mod_argumentation_ui <- function(id){
           tags$span(icon("4", style = "margin: 10px; font-size: 17px;"),
                     style = "font-weight: 600;",
                     "Grafiken ergänzen."),
-          img(src='www/gpt_schritt_4.jpg',
+          img(src='www/gpt_schritt_4.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 4 Grafiken ergänzen",
@@ -210,7 +210,7 @@ mod_argumentation_ui <- function(id){
       style = "display: flex; align-items: center;",
       div(
         style = "margin: 0px 25px 50px 0px;",
-        img(src='www/gpt_schritt_1.jpg',
+        img(src='www/gpt_schritt_1.png',
             class = "img-responsive",
             alt = "Bild Schritt 1 klein",
             style="display: block;
@@ -260,7 +260,7 @@ mod_argumentation_ui <- function(id){
       style = "display: flex; align-items: center;",
        div(
         style = "margin: 0px 25px 130px 0px;",
-        img(src='www/gpt_schritt_2.jpg',
+        img(src='www/gpt_schritt_2.png',
             class = "img-responsive",
             alt = "Bild Schritt 2 klein",
             style="display: block;
@@ -278,21 +278,21 @@ mod_argumentation_ui <- function(id){
         Die Daten können hier in einem Dokument gebündelt heruntergeladen werden.",
           br(), br(),
           "Das Format ist ein Text-Dokument, um auch mit einem kostenfreien OpenAI-Account die
-          Funktionen des MINT-DataGPT optimal nutzen zu können.", br(),
+          Funktionen des MINT-DataLab-GPT optimal nutzen zu können.", br(),
         "Kopieren Sie folgende Inhalte und fügen Sie sie direkt in den GPT-Chat ein."),
 
         downloadButton(ns("download_txt"), "   Gesammelte Daten herunterladen"),
       )
     ),
 
-      ## MINT-DataGPT ----
+      ## MINT-DataLab-GPT ----
 
     column(
       width = 8,
       style = "display: flex; align-items: center; margin-bottom: 15px;",
       div(
         style = "margin: 0px 25px 60px 0px;",
-        img(src='www/gpt_schritt_3.jpg',
+        img(src='www/gpt_schritt_3.png',
             class = "img-responsive",
             alt = "Bild Schritt 3 klein",
             style="display: block;
@@ -303,12 +303,12 @@ mod_argumentation_ui <- function(id){
         p(strong(style = "text-align: justify; font-size: 17px; margin-bottom: 15px;",
                  "KI-gestützte Analyse erstellen.")),
         p(style = "font-size : 15px;",
-          "Der speziell für das MINT-DataLab konfigurierte MINT-DataGPT führt Sie
+          "Der speziell für das MINT-DataLab konfigurierte MINT-DataLab-GPT führt Sie
           durch die Erstellung von datenbasierten Berichten oder Arugmentationsketten,
           basierend auf Statistiken des MINT-DataLabs und auf Informationen zu Ihrem Projekt.
           Bei Bedarf können die Daten durch eine Online-Recherche des GPT ergänzt werden."),
         tags$a(href="https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
-               "→ Zum MINT-DataGPT", target="_blank",
+               "→ Zum MINT-DataLab-GPT", target="_blank",
                style = "color: #b16fab; font-weight: 600")
 
       )
@@ -321,7 +321,7 @@ mod_argumentation_ui <- function(id){
       style = "display: flex; align-items: center; margin-bottom: 20px;",
       div(
         style = "margin: 0px 25px 130px 0px;",
-        img(src='www/gpt_schritt_4.jpg',
+        img(src='www/gpt_schritt_4.png',
             class = "img-responsive",
             alt = "Bild Schritt 4 klein",
             style="display: block;
@@ -363,7 +363,7 @@ mod_argumentation_ui <- function(id){
                  width = 9,
                  p("Als Einstieg in eine Argumentation kann ein kurzer Überblick über die MINT-Strukturen
                    der eigenen Region geigenet sein. Hierfür können Sie selbst rechercherien oder den
-                   MINT-DataGPT um eine Recherche bitten."),
+                   MINT-DataLab-GPT um eine Recherche bitten."),
                  p("Ergänzend dazu kann auf die Entwicklung der Zahlen von Beschäftigten, Studierenden und Auszubildenden
                    in MINT geschaut werden.
                    Das kann ein Indikator dafür sein, wie zentral der MINT-Sektor für die Region ist und ob
@@ -841,10 +841,10 @@ mod_argumentation_ui <- function(id){
 
         tags$details(
           tags$summary(strong(class = "faq-summary",
-                              "Kann ich den MINT-DataGPT auch ohne OpenAI-Konto nutzen?")),
+                              "Kann ich den MINT-DataLab-GPT auch ohne OpenAI-Konto nutzen?")),
           br(),
           HTML("
-    <p><strong>Nein</strong>, die Nutzung des MINT-DataGPT erfordert ein aktives OpenAI-Konto.</p>
+    <p><strong>Nein</strong>, die Nutzung des MINT-DataLab-GPT erfordert ein aktives OpenAI-Konto.</p>
     <p>Da es sich um einen individualisierten GPT handelt, läuft der Zugriff über die Infrastruktur von OpenAI. Die Registrierung ist <strong>kostenlos</strong> und in wenigen Schritten möglich.</p>
   ")
         ),
@@ -855,20 +855,20 @@ mod_argumentation_ui <- function(id){
           br(),
           HTML("
     <p>Beim Herunterladen der Grafiken oder Daten werden die <strong> zugrundeliegenden Datenquellen automatisch</strong> mitgeliefert.</p>
-    <p>Der MINT-DataGPT ergänzt zusätzlich Quellen genutzer Kurzanalysen oder Online-Recherchen.</p>
+    <p>Der MINT-DataLab-GPT ergänzt zusätzlich Quellen genutzer Kurzanalysen oder Online-Recherchen.</p>
     <p>Je nach Kontext oder Zweck der Nutzung empfehlen wir, aus Gründen der Transparenz
-    auf die Unterstützung durch ein KI-Modell und den Einsatz des MINT-DataGPT hinzuweisen.
+    auf die Unterstützung durch ein KI-Modell und den Einsatz des MINT-DataLab-GPT hinzuweisen.
     <p>Empfohlene Formulierung:</p>
-    <blockquote>Erstellt unter Verwendung des angepassten GPT-Sprachmodells von MINTvernetzt (MINT-DataGPT) auf Basis von OpenAI-Technologie.</blockquote>
+    <blockquote>Erstellt unter Verwendung des angepassten GPT-Sprachmodells von MINTvernetzt (MINT-DataLab-GPT) auf Basis von OpenAI-Technologie.</blockquote>
   ")
         ),
 
         tags$details(
           tags$summary(class = "faq-summary",
-                       "Kann ich auch andere Daten mit dem MINT-DataGPT analysieren?"),
+                       "Kann ich auch andere Daten mit dem MINT-DataLab-GPT analysieren?"),
           br(),
           HTML("
-    <p>Der MINT-DataGPT ist auf die Daten des MINT-DataLabs spezialisiert, kann jedoch grundsätzlich auch <strong>andere oder eigene Daten</strong> verarbeiten.</p>
+    <p>Der MINT-DataLab-GPT ist auf die Daten des MINT-DataLabs spezialisiert, kann jedoch grundsätzlich auch <strong>andere oder eigene Daten</strong> verarbeiten.</p>
     <p>Hinweis: Externe Formate können zu Lesefehlern führen. Bitte prüfen Sie die Korrektheit Ihrer Daten sorgfältig.</p>
   ")
         ),
@@ -878,7 +878,7 @@ mod_argumentation_ui <- function(id){
                               "Wie kann ich das Ergebnis der Analyse exportieren?")),
           br(),
           HTML("
-    <p>Der MINT-DataGPT liefert direkt nutzbare <strong>Textbausteine</strong>,
+    <p>Der MINT-DataLab-GPT liefert direkt nutzbare <strong>Textbausteine</strong>,
     die sich felxibel in Berichte oder Anträge integrieren lassen. Wie bei der Nutzung anderer
          KI-Chats kann zusätzlich das Format des gewünschten Outputs spezifiziert werden.</p>
     <p>Der Daten-Export für die Nutzung mit dem GPT läuft über eine <code>.txt</code>-Datei. Der Inhalt der Datei kann
@@ -891,7 +891,7 @@ mod_argumentation_ui <- function(id){
           tags$summary(strong(class = "faq-summary","Ich habe ein Fehlverhalten festgestellt, wo kann ich das melden?")),
           br(),
           HTML("
-    <p>Wir entwickeln den MINT-DataGPT kontinuierlich weiter und auch das zugrundeliegende
+    <p>Wir entwickeln den MINT-DataLab-GPT kontinuierlich weiter und auch das zugrundeliegende
     KI-Modell von OpenAI kann sich verändern.</p>
     <p>Falls Ihnen ein Fehlverhalten auffällt oder Sie Feedback haben, wie die Nutzung
     zukünftig noch verbessert werden könnte, schreiben Sie uns geren eine kurze Nachricht per E-Mail an:</p>
@@ -903,11 +903,11 @@ mod_argumentation_ui <- function(id){
 
         br(),
         h2("Nutzungshinweis"),
-        p("Der MINT-DataGPT ist eine KI-Anwendung, die auf Technologie von OpenAI basiert.
+        p("Der MINT-DataLab-GPT ist eine KI-Anwendung, die auf Technologie von OpenAI basiert.
         Die bereitgestellten Inhalte werden automatisiert generiert und können unvollständig,
         fehlerhaft oder veraltet sein. Die Nutzer:innen sind selbst für eine kritische Prüfung der
         Ausgaben verantwortlich."),
-        p("Für den MINT-DataGPT gelten folgende Nutzungsbedingungen, auf die auch
+        p("Für den MINT-DataLab-GPT gelten folgende Nutzungsbedingungen, auf die auch
         zu Beginn des Chats hingewiesen wird: ",
           tags$a(href = "www/Nutzungshinweis_Haftungsausschluss_GPT.pdf", target = "_blank", "Nutzungshinweis MINT-DataLab-GPT")),
         p("MINTvernetzt und der Stifterverband übernehmen keine Haftung für Schäden
@@ -916,10 +916,10 @@ mod_argumentation_ui <- function(id){
         p(),
         p("Je nach Kontext und Zweck der Nutzung empfehlen wir aus Gründen der Transparenz,
                auf die Unterstützung durch ein KI-Modell und insbesondere auf den Einsatz des
-               MINT-DataGPT hinzuweisen. Dafür kann folgende Formulierung genutzt werden:",
+               MINT-DataLab-GPT hinzuweisen. Dafür kann folgende Formulierung genutzt werden:",
           br(),
           "\"Erstellt unter Verwendung des angepassten GPT-Sprachmodells von
-               MINTvernetzt (MINT-DataGPT) auf Basis von OpenAI-Technologie.\"")
+               MINTvernetzt (MINT-DataLab-GPT) auf Basis von OpenAI-Technologie.\"")
       )
     ),
 
