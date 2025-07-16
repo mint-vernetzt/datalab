@@ -77,7 +77,7 @@ mod_argumentation_ui <- function(id){
             Der MINT-DataLab-GPT nutzt das KI-Modell von OpenAI, für die Nutzung muss
             dort ein (kostenfreier) Account angelegt werden."),
           br(),
-          tags$strong("Das sind die Vorteile des MINT-DataLab-GPT:"),
+          tags$strong("Das sind die Vorteile des MINT-DataLab-GPT:", style = "font-size: 17px;"),
 
           div(class = "content-box",
               style = "background-color: #ee777530;
@@ -98,7 +98,7 @@ mod_argumentation_ui <- function(id){
                   tags$img(
                     src = "www/Bild_MINT-DataLab-GPT.png",
                     alt = "MINT-DataLab-GPT Symbolbild",
-                    style = "max-width: 80%; height: auto; cursor: pointer; margin: 0px; border-radius: 10px;"
+                    style = "max-width: 100%; height: auto; cursor: pointer; margin: 0px; border-radius: 10px;"
                   )
                 )
               ),
@@ -142,54 +142,58 @@ mod_argumentation_ui <- function(id){
 
         column(
           width = 2,
-          tags$span(icon("1", style = "margin: 10px; font-size: 17px;"),
-                    style = "font-weight: 600;",
-                    "Region auswählen."),
+          tags$span(#icon("1", style = "margin: 10px; font-size: 17px;"),
+                    style = "font-weight: 600; font-size: 17px;
+                    display: block; height: 60px; margin-bottom: 10px;",
+                    "1. Wähle eine Region aus"),
           img(src='www/gpt_schritt_1.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 1 Region wählen",
               style="display: block;
-                margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
+                margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
                 border-radius: 15px; text-align: left;")
         ),
         column(
           width = 2,
-          tags$span(icon("2", style = "margin: 10px; font-size: 17px;"),
-                    style = "font-weight: 600;",
-                    "Daten herunterladen."),
+          tags$span(#icon("2", style = "margin: 10px; font-size: 17px;"),
+                    style = "font-weight: 600; font-size: 17px;
+                    display: block; height: 60px; margin-bottom: 10px;",
+                    "2. Lade die gewünschten Daten herunter"),
           img(src='www/gpt_schritt_2.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 2 Datendownload",
               style="display: block;
-                margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
+                margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
                 border-radius: 15px;")
         ),
         column(
           width = 2,
-          tags$span(icon("3", style = "margin: 10px; font-size: 17px;"),
-                    style = "font-weight: 600;",
-                    "KI-gestützte Analyse erstellen."),
+          tags$span(#icon("3", style = "margin: 10px; font-size: 17px;"),
+                    style = "font-weight: 600; font-size: 17px;
+                    display: block; height: 60px; margin-bottom: 10px;",
+                    "3. Erstelle eine KI-gestützte Analyse"),
           img(src='www/gpt_schritt_3.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 3 GPT-Chat",
               style="display: block;
-                margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
+                margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
                 border-radius: 15px;")
         ),
         column(
           width = 2,
-          tags$span(icon("4", style = "margin: 10px; font-size: 17px;"),
-                    style = "font-weight: 600;",
-                    "Grafiken ergänzen."),
+          tags$span(#icon("4", style = "margin: 10px; font-size: 17px;"),
+                    style = "font-weight: 600; font-size: 17px;
+                    display: block; height: 60px; margin-bottom: 10px;",
+                    "4. Veranschauliche das Analyse-Ergebnis mit Grafiken"),
           img(src='www/gpt_schritt_4.png',
               class = "img-responsive",
               height = "150px",
               alt = "Symbol Schritt 4 Grafiken ergänzen",
               style="display: block;
-                margin-top: 10px; height: 200px; border: 2px solid #EAECF0;
+                margin-top: 10px; height: 200px; border: 2px solid #B16FAB;
                 border-radius: 15px;")
           ),
         column(
@@ -214,8 +218,8 @@ mod_argumentation_ui <- function(id){
             class = "img-responsive",
             alt = "Bild Schritt 1 klein",
             style="display: block;
-                margin-top: 10px; border: 2px solid #EAECF0;
-                border-radius: 15px; width: 50px;")
+                margin-top: 10px; border: 2px solid #B16FAB;
+                border-radius: 15px; max-width: 50px;")
       ),
       div(
         style = "flex: 1; margin-bottom: 15px;",
@@ -264,8 +268,8 @@ mod_argumentation_ui <- function(id){
             class = "img-responsive",
             alt = "Bild Schritt 2 klein",
             style="display: block;
-                  margin-top: 10px; border: 2px solid #EAECF0;
-                  border-radius: 15px; width: 85px;")
+                  margin-top: 10px; border: 2px solid #B16FAB;
+                  border-radius: 15px; max-width: 50px;")
       ),
       div(
         style = "margin-bottom: 20px;",
@@ -296,8 +300,8 @@ mod_argumentation_ui <- function(id){
             class = "img-responsive",
             alt = "Bild Schritt 3 klein",
             style="display: block;
-                  margin-top: 10px; border: 2px solid #EAECF0;
-                  border-radius: 15px; width: 85px;")
+                  margin-top: 10px; border: 2px solid #B16FAB;
+                  border-radius: 15px; max-width: 50px;")
       ),
       div(
         p(strong(style = "text-align: justify; font-size: 17px; margin-bottom: 15px;",
@@ -309,7 +313,7 @@ mod_argumentation_ui <- function(id){
           Bei Bedarf können die Daten durch eine Online-Recherche des GPT ergänzt werden."),
         tags$a(href="https://chatgpt.com/g/g-67e4f41fd91881919a753f4309194bf7-test-mint-datalab-assistent-test",
                "→ Zum MINT-DataLab-GPT", target="_blank",
-               style = "color: #b16fab; font-weight: 600")
+               style = "color: #b16fab; font-weight: 600; font-size: 17px;")
 
       )
     ),
@@ -325,8 +329,8 @@ mod_argumentation_ui <- function(id){
             class = "img-responsive",
             alt = "Bild Schritt 4 klein",
             style="display: block;
-                  margin-top: 10px; border: 2px solid #EAECF0;
-                  border-radius: 15px; width: 85px;")
+                  margin-top: 10px; border: 2px solid #B16FAB;
+                  border-radius: 15px; max-width: 50px;")
       ),
       div(
         p(strong(style = "text-align: justify; font-size: 17px;",
