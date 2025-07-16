@@ -1620,7 +1620,7 @@ balkenbuilder <- function(df, titel , x, y, group=NULL, tooltip, format, color,
    }",
                                                          gsub("'", "\\\\'", titel),  # Titel escapen
                                                          gsub("'", "\\\\'", titel),###
-                                                         gsib("'", "\\\\'", quelle)
+                                                         gsub("'", "\\\\'", quelle)
 
                                                        ))
 
