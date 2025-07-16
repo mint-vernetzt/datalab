@@ -7,6 +7,9 @@
 #' @export
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
+
+
+
 run_app <- function(
   onStart =  function() {
     # Sys.setlocale(category = "LC_ALL", locale = "German_Germany.utf8")
@@ -38,3 +41,4 @@ run_app <- function(
     golem_opts = list(...)
   )
 }
+

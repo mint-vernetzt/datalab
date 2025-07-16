@@ -9,12 +9,10 @@
   font-family: "SourceSans3-Regular";
 }
 
-.h1, .h2, .h3, .h4, .h5,
-.h6, h1, h2, h3, h4, h5, h6
-
 /* Schriften festlegen */
 
-{
+.h1, .h2, .h3, .h4, .h5,
+.h6, h1, h2, h3, h4, h5, h6 {
   font-family: SourceSans3-Bold;
   color: #154194;
   font-size: 22px;
@@ -23,6 +21,11 @@
 * {
   font-family: SourceSans3-Regular;
   font-size: 14px;
+}
+
+h2 {
+  font-size: 18px;
+  margin-block: 20px;
 }
 
 /*
@@ -353,15 +356,6 @@ background-color:#FCFCFD;
 
 
 
-
-
-
-
-
-
-
-
-
 /* Stil für die gesamte FAQ-Zeile */
 details {
   margin-bottom: 16px;
@@ -399,6 +393,10 @@ details[open] .faq-summary::before {
 .faq-summary:hover {
   color: #000000;
 }
+
+
+
+
 
 
 

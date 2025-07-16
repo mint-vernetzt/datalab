@@ -4,19 +4,43 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @noRd
+#'
+
+
 app_ui <- function(request) {
   tagList(
     tags$head(
       tags$script(HTML("
-        $(document).on('click', '.main-sidebar .sidebar-menu a', function() {
+    let lastTab = null;
 
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-      "))
-    ),
+    $(document).on('click', '.main-sidebar .sidebar-menu a', function(e) {
+      const newTab = $(this).attr('data-value');
+
+      if (newTab && newTab !== lastTab) {
+        $('#loader-wrapper').fadeIn(); // Loader anzeigen
+        lastTab = newTab;
+      }
+    });
+
+    Shiny.addCustomMessageHandler('tabDone', function(message) {
+      $('#loader-wrapper').fadeOut(); // Loader ausblenden
+    });
+  "))
+),
+    # tags$head(
+    #   tags$script(HTML("
+    #     $(document).on('click', '.main-sidebar .sidebar-menu a', function() {
+    #
+    #       window.scrollTo({ top: 0, behavior: 'smooth' });
+    #     });
+    #   "))
+    # ),
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
+    div(id = "loader-wrapper", style = "display:none;", div(id = "loader")),
+
+
     shinydashboard::dashboardPage(
       skin = "blue",
       #title="MINTvernetzt - DataLab",
@@ -39,8 +63,11 @@ app_ui <- function(request) {
           # Setting id makes input$tabs give the tabName of currently-selected tab
           style = "position: fixed;",
           id = "tabs",
-          shinydashboard::menuItem("Startseite",  tabName = "startseite"),
-          #shinydashboard::menuItem("Argumentationshilfe",  tabName = "argumentationshilfe"),
+          p("Schnellstart:", style = "color: #ee7775; font-size: 16px; font-weight: 600;
+          margin: 20px 0px 0px 10px;"),
+          hr(style = "border-top: 2px solid #ee7775; margin-top: 5px; margin-bottom: 5px;"),
+          shinydashboard::menuItem("Übersicht",  tabName = "startseite"),
+          shinydashboard::menuItem("Datenanalyse mit KI",  tabName = "ki-analysehilfe"),
           p("MINT nach Bereichen:", style = "color: #154194; font-size: 16px; font-weight: 600;
           margin: 5px 0px 0px 10px;"),
           hr(style = "border-top: 2px solid #154194; margin-top: 5px; margin-bottom: 5px;"),
@@ -98,24 +125,24 @@ app_ui <- function(request) {
           "$('body').addClass('fixed');"
           )),
 
+        uiOutput("main_tab_ui")
 
-          shinydashboard::tabItems(
-          shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
-         # shinydashboard::tabItem(tabName ="argumentationshilfe", mod_argumentation_ui("argumentationshilfe_ui_1")),
-          shinydashboard::tabItem(tabName ="home", mod_home_ui("home_ui_1")),
-          shinydashboard::tabItem(tabName ="schule", mod_schule_ui("schule_ui_1")),
-          shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
-          shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
-          shinydashboard::tabItem(tabName = "ausserschulisch", mod_ausserschulisch_ui("ausserschulisch_ui_1")),
-          shinydashboard::tabItem(tabName = "international", mod_international_ui("mod_international_ui_1")),
-          shinydashboard::tabItem(tabName ="fachkraft", mod_fachkraft_ui("fachkraft_ui_1")),
-          shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
-          shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
-          shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),
-          shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))
+          # shinydashboard::tabItems(
+          # shinydashboard::tabItem(tabName ="startseite", mod_startseite_ui("startseite_ui_1")),
+          # shinydashboard::tabItem(tabName ="ki-analysehilfe", mod_argumentation_ui("argumentationshilfe_ui_1")),
+          # shinydashboard::tabItem(tabName ="home", mod_home_ui("home_ui_1")),
+          # shinydashboard::tabItem(tabName ="schule", mod_schule_ui("schule_ui_1")),
+          # shinydashboard::tabItem(tabName ="studium", mod_studium_ui("studium_ui_1")),
+          # shinydashboard::tabItem(tabName ="beruf", mod_beruf_ui("beruf_ui_1")),
+          # shinydashboard::tabItem(tabName = "ausserschulisch", mod_ausserschulisch_ui("ausserschulisch_ui_1")),
+          # shinydashboard::tabItem(tabName = "international", mod_international_ui("mod_international_ui_1")),
+          # shinydashboard::tabItem(tabName ="fachkraft", mod_fachkraft_ui("fachkraft_ui_1")),
+          # shinydashboard::tabItem(tabName ="quellen", mod_quellen_ui("quellen_ui_1")),
+          # shinydashboard::tabItem(tabName ="kontakt", mod_kontakt_ui("kontakt_ui_1")),
+          # shinydashboard::tabItem(tabName ="impressum", mod_impressum_ui("impressum_ui_1")),
+          # shinydashboard::tabItem(tabName ="datenschutz", mod_datenschutz_ui("datenschutz_ui_1"))
+        # )
 
-
-        )
       )
 ))
 }
@@ -146,8 +173,7 @@ golem_add_external_resources <- function() {
       app_title = "DataLab"
     ),
     # Add here other external resources
-    # for example, you can add shinyalert::useShinyalert()
-
+    # for example, you can add shinyalert::useShinyalert()f
 
     # nouveau
     tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
@@ -155,3 +181,4 @@ golem_add_external_resources <- function() {
 
   )
 }
+

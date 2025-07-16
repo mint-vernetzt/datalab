@@ -4089,3 +4089,139 @@ arbeitsmarkt_fachkraefte <- dat
 usethis::use_data(arbeitsmarkt_fachkraefte , overwrite = T)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Entgelte
+install.packages("readxlsb")
+library(tidyr)
+library(readxlsb)
+library(dplyr)
+library(stringr)
+
+
+
+list <- c("BA028_2024_Entgelte_MINT_D.xlsb", "BA028_2024_Entgelte_MINT_BE.xlsb",
+          "BA028_2024_Entgelte_MINT_SL.xlsb","BA029_2024_Entgelte_MINT_BRB.xlsb",
+          "BA028_2024_Entgelte_MINT_BW.xlsb", "BA028_2024_Entgelte_MINT_BY.xlsb",
+          "BA028_2024_Entgelte_MINT_H.xlsb", "BA028_2024_Entgelte_MINT_HB.xlsb",
+          "BA028_2024_Entgelte_MINT_HH.xlsb", "BA028_2024_Entgelte_MINT_MV.xlsb",
+          "BA028_2024_Entgelte_MINT_NDS.xlsb", "BA028_2024_Entgelte_MINT_NRW.xlsb",
+          "BA028_2024_Entgelte_MINT_RLP.xlsb", "BA028_2024_Entgelte_MINT_S.xlsb",
+          "BA028_2024_Entgelte_MINT_SA.xlsb", "BA028_2024_Entgelte_MINT_SH.xlsb",
+          "BA028_2024_Entgelte_MINT_TH.xlsb")
+
+
+for(i in list){
+  print(i)
+  pfad <- paste0("C:/Users/tko/OneDrive - Stifterverband/2_MINT-Lücke schließen/MINTvernetzt (SV)/MINTv_SV_AP7 MINT-DataLab/02 Datenmaterial/01_Rohdaten/01_Eingang/Bundesagentur für Arbeit/24_Jan_Gehälter/0_DE_BULAS/", i)
+  data <- read_xlsb(pfad, sheet = "Entgelt_MINT")
+
+  data <- data[-c(1:11),]
+  header <- data[1,]
+  header2 <- data[2,c(5:10)]
+  colnames(data) <- header
+  colnames(data)[5:10] <- header2
+
+  data <- data[-c(1:3),]
+  data <- data[,-1]
+  data[data == ""] <- NA
+
+  data_2 <- data %>%
+    fill(`Berufsaggregat MINT`, .direction = "down") %>%
+    mutate(
+      code = str_extract(`Berufsaggregat MINT`, "^\\d+"),
+      berufslevel = str_extract(`Berufsaggregat MINT`, "(Fachkraft|Spezialist|Experten)"),
+      beruf = str_trim(
+        str_remove_all(`Berufsaggregat MINT`, "^\\d+\\s*|(Fachkraft|Spezialist|Experten)$|\\s*-\\s*")
+      )
+    ) %>%
+    select(-`Berufsaggregat MINT`) %>%
+    pivot_longer(
+      cols = starts_with("bis") | starts_with("über"),
+      names_to = "Einkommensgruppe",
+      values_to = "Anzahl"
+    )
+
+
+
+
+
+
+  a <- str_extract(i, "_[A-Za-z]{1,3}\\.")
+  a <- str_extract(a, "_[A-Za-z]{1,3}")
+
+  data_2 <- data_2 %>%
+    mutate(
+      bundesland = a
+    )
+
+  obj_name <- paste0("entgelt", a)
+  print(obj_name)
+  assign(obj_name, data_2)
+
+
+}
+
+
+
+entgelt_alle <- bind_rows(entgelt_BE, entgelt_TH, entgelt_SL, entgelt_SH, entgelt_SA, entgelt_S, entgelt_BRB, entgelt_BW, entgelt_BY, entgelt_D, entgelt_HB, entgelt_H, entgelt_HH, entgelt_MV, entgelt_NDS, entgelt_NRW, entgelt_RLP)
+entgelt_alle <- entgelt_alle %>%
+  mutate(bundesland = case_when(
+    bundesland == "_D"    ~ "Deutschland",
+    bundesland == "_BE"   ~ "Berlin",
+    bundesland == "_TH"   ~ "Thüringen",
+    bundesland == "_SL"   ~ "Saarland",
+    bundesland == "_SH"   ~ "Schleswig-Holstein",
+    bundesland == "_SA"   ~ "Sachsen-Anhalt",
+    bundesland == "_S"    ~ "Sachsen",
+    bundesland == "_BRB"  ~ "Brandenburg",
+    bundesland == "_BW"   ~ "Baden-Württemberg",
+    bundesland == "_BY"   ~ "Bayern",
+    bundesland == "_HB"   ~ "Bremen",
+    bundesland == "_H"    ~ "Hessen",
+    bundesland == "_HH"   ~ "Hamburg",
+    bundesland == "_MV"   ~ "Mecklenburg-Vorpommern",
+    bundesland == "_NDS"  ~ "Niedersachsen",
+    bundesland == "_NRW"  ~ "Nordrhein-Westfalen",
+    bundesland == "_RLP"  ~ "Rheinland-Pfalz",
+    TRUE ~ bundesland  #
+  )) %>%
+  mutate(Anzahl = case_when(
+    Anzahl == "X" ~ NA,
+    Anzahl == "*" ~ NA,
+    TRUE ~ Anzahl
+  )) %>%
+  mutate(
+    Insgesamt = case_when(
+      Insgesamt == "X" ~ NA,
+      Insgesamt == "*" ~ NA,
+      TRUE ~ Insgesamt
+    )) %>%
+  mutate(`Median in €` = case_when(
+    `Median in €` == "X" ~ NA,
+    `Median in €` == "*" ~ NA,
+    TRUE ~ `Median in €`
+  ))
+
+
