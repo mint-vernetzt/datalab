@@ -77,7 +77,7 @@ mod_argumentation_ui <- function(id){
             Der MINT-DataLab-GPT nutzt das KI-Modell von OpenAI, für die Nutzung muss
             dort ein (kostenfreier) Account angelegt werden."),
           br(),
-          tags$strong("Das sind die Vorteile des MINT-DataLab-GPT:", style = "font-size: 17px;"),
+          tags$strong("Das sind die Vorteile des MINT-DataLab-GPT:", style = "font-size: 16px;"),
 
           div(class = "content-box",
               style = "background-color: #ee777530;
@@ -143,7 +143,7 @@ mod_argumentation_ui <- function(id){
         column(
           width = 2,
           tags$span(#icon("1", style = "margin: 10px; font-size: 17px;"),
-                    style = "font-weight: 600; font-size: 17px;
+                    style = "font-weight: 600; font-size: 16px;
                     display: block; height: 60px; margin-bottom: 10px;",
                     "1. Wähle eine Region aus"),
           img(src='www/gpt_schritt_1.png',
@@ -157,7 +157,7 @@ mod_argumentation_ui <- function(id){
         column(
           width = 2,
           tags$span(#icon("2", style = "margin: 10px; font-size: 17px;"),
-                    style = "font-weight: 600; font-size: 17px;
+                    style = "font-weight: 600; font-size: 16px;
                     display: block; height: 60px; margin-bottom: 10px;",
                     "2. Lade die gewünschten Daten herunter"),
           img(src='www/gpt_schritt_2.png',
@@ -171,7 +171,7 @@ mod_argumentation_ui <- function(id){
         column(
           width = 2,
           tags$span(#icon("3", style = "margin: 10px; font-size: 17px;"),
-                    style = "font-weight: 600; font-size: 17px;
+                    style = "font-weight: 600; font-size: 16px;
                     display: block; height: 60px; margin-bottom: 10px;",
                     "3. Erstelle eine KI-gestützte Analyse"),
           img(src='www/gpt_schritt_3.png',
@@ -185,7 +185,7 @@ mod_argumentation_ui <- function(id){
         column(
           width = 2,
           tags$span(#icon("4", style = "margin: 10px; font-size: 17px;"),
-                    style = "font-weight: 600; font-size: 17px;
+                    style = "font-weight: 600; font-size: 16px;
                     display: block; height: 60px; margin-bottom: 10px;",
                     "4. Veranschauliche das Analyse-Ergebnis mit Grafiken"),
           img(src='www/gpt_schritt_4.png',
@@ -223,8 +223,8 @@ mod_argumentation_ui <- function(id){
       ),
       div(
         style = "flex: 1; margin-bottom: 15px;",
-        p(strong(style = "text-align: justify; font-size: 17px;",
-                 "Region auswählen.")),
+        p(strong(style = "text-align: justify; font-size: 16px;",
+                 "Wähle eine Region aus")),
 
         shinyWidgets::pickerInput(
           inputId = ns("region_argumentationshilfe"),
@@ -245,9 +245,6 @@ mod_argumentation_ui <- function(id){
                       "Sachsen-Anhalt",
                       "Schleswig-Holstein",
                       "Thüringen"
-                      # ,
-                      # "Westdeutschland (o. Berlin)",
-                      # "Ostdeutschland (inkl. Berlin)"
           ),
           multiple = FALSE,
           selected = c("Deutschland")
@@ -275,7 +272,7 @@ mod_argumentation_ui <- function(id){
         style = "margin-bottom: 20px;",
 
         p(strong(style = "text-align: justify; font-size: 17px;",
-                 "Daten herunterladen.")),
+                 "Lade die gewünschten Daten herunter")),
         p(style = "font-size : 15px;", "Als Fundament für einen stichhaltigen Datenbericht
         bzw. datenbasierte Argumentation wurden fünf Statistiken aus dem MINT-DataLab ausgewählt.
         Die Grafiken zu den Statistiken werden auf dieser Seite dargestellt.
@@ -305,7 +302,7 @@ mod_argumentation_ui <- function(id){
       ),
       div(
         p(strong(style = "text-align: justify; font-size: 17px; margin-bottom: 15px;",
-                 "KI-gestützte Analyse erstellen.")),
+                 "Erstelle eine KI-gestützte Analyse")),
         p(style = "font-size : 15px;",
           "Der speziell für das MINT-DataLab konfigurierte MINT-DataLab-GPT führt Sie
           durch die Erstellung von datenbasierten Berichten oder Arugmentationsketten,
@@ -334,15 +331,18 @@ mod_argumentation_ui <- function(id){
       ),
       div(
         p(strong(style = "text-align: justify; font-size: 17px;",
-                 "Grafiken ergänzen.")),
+                 "Veranschauliche das Analyse-Ergebnis mit Grafiken")),
         p(style = "font-size : 15px;",
         "Auf dieser Seite sind die fünf vorausgewählten Statistiken grafisch dargestellt.
         Bei Bedarf können diese Grafiken heruntergeladen und im Datenbericht oder der Argumentation ergänzt werden.
         Die Download-Option für alle Grafiken des MINT-DataLab findet sich rechts oben an den Grafiken."),
         br(),
-         p("Die blauen Boxen rechts neben den Grafiken geben Impulse, welche weiteren
-           Statistiken in einem MINT-Bericht ergänzt werden könnten."),
-        p("Die grünen Boxen unter den Grafiken zeigen beispielhaft, wie man anhand
+         p("Die ", tags$span("blauen Boxen", style = "color: #154194;"),
+         " rechts neben den Grafiken geben Impulse, welche weiteren
+           Statistiken in einem MINT-Bericht ergänzt werden könnten.", br(),
+
+           "Die ", tags$span("grünen Boxen", style = "color: 00a87a;"),
+           "unter den Grafiken zeigen beispielhaft, wie man anhand
           der Statistiken für die MINT-Bildungsförderung argumentieren kann.")
         )
       )
@@ -353,7 +353,7 @@ mod_argumentation_ui <- function(id){
     width = 12,
     hr(style = "border-top: 2px solid #ee7775; margin-top: 20px;"),
 
-    h2("So kann eine datenbasierte Argumentation für MINT-Bildung aussehen:",
+    h1("So kann eine datenbasierte Argumentation für MINT-Bildung aussehen:",
        style= "margin-bottom: 30px; margin-top: 40px;"),
   ),
 
